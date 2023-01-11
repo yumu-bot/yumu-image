@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="560" height="110"
+     viewBox="0 0 560 110">
+    <defs>
+        <clipPath id="clip-path">
+            <rect width="560" height="110" rx="12" ry="12" style="fill: none"/>
+        </clipPath>
+    </defs>
+    <title>CardD</title>
+    <g id="Background">
+        <rect width="560" height="110" rx="12" ry="12" style="fill: #1c1719"/>
+        <g style="clip-path: url(#clip-path)">
+            <image width="560" height="110" xlink:href="${background}" style="opacity: 0.5"/>
+        </g>
+    </g>
+    <g id="Mod">
+        <rect x="446" y="6" width="108" height="34" rx="12" ry="12" style="fill: #2a2226"/>
+    </g>
+    <g id="Text">
+    </g>
+</svg>
