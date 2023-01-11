@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="900" height="110"
+     viewBox="0 0 900 110">
+    <defs>
+        <clipPath id="clip-path">
+            <rect x="160" width="570" height="110" rx="20" ry="20" style="fill: none"/>
+        </clipPath>
+        <clipPath id="clip-path-2">
+            <rect x="20" width="176" height="110" rx="20" ry="20" style="fill: none"/>
+        </clipPath>
+        <clipPath id="clip-path-3">
+            <rect x="20" y="0" width="10" height="10" rx="0" ry="0" style="fill: none"/>
+        </clipPath>
+    </defs>
+    <title>Yumu ChocoPanel-SVG-Card1.3</title>
+    <g id="Base">
+        <rect width="900" height="110" rx="20" ry="20" style="fill: #382e32"/>
+    </g>
+    <g id="Score">
+        <rect x="680" width="220" height="110" rx="20" ry="20" style="fill: #fbb03b"/>
+    </g>
+    <g id="Background">
+        <rect x="160" width="570" height="110" rx="20" ry="20" style="fill: #382e32"/>
+        <g style="clip-path: url(#clip-path)">
+            <image width="1920" height="352" transform="translate(140) scale(0.31 0.31)"
+                   xlink:href="${background}"/>
+        </g>
+    </g>
+    <g id="Index">
+        <rect width="60" height="110" rx="20" ry="20" style="fill: #3fa9f5"/>
+    </g>
+    <g id="Avatar">
+        <g style="clip-path: url(#clip-path-2)">
+            <image width="178" height="111" transform="translate(20) scale(0.99 0.99)"
+                   xlink:href="${avatar}"/>
+        </g>
+        <rect x="20" width="176" height="110" style="fill: none"/>
+    </g>
+    <g id="Text">
+    </g>
+
+</svg>

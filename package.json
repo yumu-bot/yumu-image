@@ -1,0 +1,14 @@
+{
+  "name": "nowbot-img",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "convert-svg-to-png": "^0.6.4",
+    "text-to-svg": "^3.1.5"
+  }
+}
