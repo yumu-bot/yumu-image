@@ -16,31 +16,24 @@ app.use(formidable({
     multiples: true,
 }));
 
-app.get('/', (req, res, next) => {
+app.post('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Authorization,X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method' )
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, PUT, DELETE')
-    res.header('Allow', 'GET, POST, PATCH, OPTIONS, PUT, DELETE')
-    console.log("-----")
+    res.header('Allow', 'POST')
     next();
 })
-app.get('/', (req, res) => {
-    res.send("hi");
+
+app.post('/card-D', async (req, res) => {
+    const f = checkData(req, ["background"]);
+    const png = await cardD(f);
+    res.set('Content-Type', 'image/png');
+    res.send(png);
 })
 
-app.post('/convert', async (req, res) => {
-    let form = req.fields;
-    let bg = [];
-    if (req.files["bg"]){
-        console.log(req.files['bg'].path);
-        bg = readImage(req.files['bg'].path);
-    }
-
-    const f = {
-        ...form,
-        background: bg,
-    }
-    const png = await cardD(f);
+app.post('/card-H', async (req, res) => {
+    const f = checkData(req, ["background", "avatar"]);
+    const png = await cardH(f);
     res.set('Content-Type', 'image/png');
     res.send(png);
 })
@@ -49,3 +42,16 @@ app.listen(8555, () => {
     console.log('ok - http://localhost:8555');
     console.log(os.tmpdir())
 })
+
+function checkData(req, files=['']) {
+    let fs = {};
+    for (const file of files) {
+        if (req.files[file]){
+            fs[file] = readImage(req.files[file].path);
+        }
+    }
+    return {
+        ...req.fields,
+        ...fs,
+    };
+}
