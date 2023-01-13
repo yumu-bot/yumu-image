@@ -1,5 +1,6 @@
 import fs from 'fs';
 import TextToSVG from 'text-to-svg';
+import axios from "axios";
 import exports from 'convert-svg-to-png';
 
 const svgToPng = async (svg) => await exports.convert(svg);
@@ -10,7 +11,12 @@ export function readTemplete(path = '') {
     return fs.readFileSync(path, 'utf8');
 }
 export function readImage(path = '') {
-    return fs.readFileSync(path, 'binary')
+    return fs.readFileSync(path, 'binary');
+}
+export async function readNetImage(path = '') {
+    if (path.startsWith("http")) {
+        return (await axios.get(path, {responseType: 'arraybuffer'})).data;
+    }
 }
 
 export const exportPng = svgToPng;
