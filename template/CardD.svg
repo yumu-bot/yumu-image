@@ -9,7 +9,7 @@
     <g id="Background">
         <rect width="560" height="110" rx="12" ry="12" style="fill: #1c1719"/>
         <g style="clip-path: url(#clip-path)">
-            <image width="560" height="110" xlink:href="${background}" style="opacity: 0.5" preserveAspectRatio="xMaxYMax slice" vector-effect="non-scaling-stroke" />
+            <image width="560" height="110" xlink:href="${background}" style="opacity: 0.5" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke" />
         </g>
     </g>
     <g id="Mod">
