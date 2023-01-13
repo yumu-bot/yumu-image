@@ -21,7 +21,7 @@
     <g id="Background">
         <rect x="160" width="570" height="110" rx="20" ry="20" style="fill: #382e32"/>
         <g style="clip-path: url(#clip-path)">
-            <image width="1920" height="352" transform="translate(140) scale(0.31 0.31)"
+            <image width="1920" height="352" transform="translate(140) scale(0.35 0.35)" style="opacity: 0.5"
                    xlink:href="${background}" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>
         </g>
     </g>
@@ -30,7 +30,7 @@
     </g>
     <g id="Avatar">
         <g style="clip-path: url(#clip-path-2)">
-            <image width="178" height="111" transform="translate(20) scale(0.99 0.99)"
+            <image width="178" height="111" transform="translate(20)"
                    xlink:href="${avatar}" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>
         </g>
         <rect x="20" width="176" height="110" style="fill: none"/>
