@@ -1,4 +1,5 @@
-import {exportPng, getBase64Text, readImage, readTemplete, replaceText, torus} from "./util.js";
+import {exportPng, getBase64Text, readImage, readTemplete, replaceText, SaveFiles, torus} from "./util.js";
+import fs from "fs";
 
 export async function cardH(data = {
     background: readImage("image/Yumu ChocoPanel-SVG-Card1.31.png"),
@@ -10,7 +11,7 @@ export async function cardH(data = {
     pp_m: '.15pp',
     color_score: '#fbb03b',
     color_base: '#3fa9f5',
-}) {
+}, getSVG = false) {
     // 正则表达式
     let reg_text = /(?<=<g id="Text">)/;
     let reg_background = '${background}';
@@ -45,7 +46,7 @@ export async function cardH(data = {
     svg = replaceText(svg, getBase64Text(data.avatar), reg_avatar);
 
     // 导出
-    return exportPng(svg);
+    return getSVG ? svg : exportPng(svg);
 }
 
 
@@ -57,10 +58,10 @@ export async function cardD(data = {
     mod:'NM',
     star_b:'8',
     star_m:'.88*',
-}) {
+}, getSVG = false) {
     let reg_text = /(?<=<g id="Text">)/
     let reg_background = '${background}'
-
+    // 文字
     let text_title = torus.getTextPath(data.title, 20, 34, 36, 'left center', "#fff");
     let text_artist = torus.getTextPath(data.artist, 20, 66, 24, 'left center', "#fff");
     let text_info = torus.getTextPath(data.info, 20, 97, 24, 'left center', "#fff");
@@ -82,5 +83,42 @@ export async function cardD(data = {
     svg = replaceText(svg, text_star, reg_text);
     svg = replaceText(svg, getBase64Text(data.background), reg_background);
 
-    return exportPng(svg);
+    return getSVG ? svg : exportPng(svg);
 }
+
+
+export async function Panel(data = {
+    background: readImage("image/Yumu ChocoPanel-SVG-Card1.31.png"),
+    avatar: readImage("image/Yumu ChocoPanel-SVG-Card1.32.png"),
+    name: 'Muziyami',
+    info: '39.2M // 99W-0L 100%',
+    rank: '#1',
+    pp_b: '264',
+    pp_m: '.15pp',
+    color_score: '#fbb03b',
+    color_base: '#3fa9f5',
+}) {
+    let reg_background = '${background}'
+    //
+    let reg_height = /(?<=id="Background">[\s\S]*height=")\d+/
+    let reg_cards = /(?<=<g id="cardH">)/
+
+    const get = (path,x, y) => {
+        return `<image width="900" height="110" x="${x}" y="${y}" xlink:href="${path}" />`
+    }
+
+    let bg1 = await cardH(data, true);
+    let bg2 = await cardH(data, true);
+    const f = new SaveFiles();
+    f.saveSvgText(bg1);
+    f.saveSvgText(bg2);
+    let svg = readTemplete("template/PanelX.svg");
+    svg = svg.replace(reg_height, "100");
+
+
+
+    let out = await exportPng(svg);
+    f.remove()
+    return out;
+}
+
