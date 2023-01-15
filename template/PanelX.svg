@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080">
+    <defs>
+        <clipPath id="banner">
+            <rect width="1920" height="320" style="fill: none"/>
+        </clipPath>
+    </defs>
+    <title>Panel</title>
+    <g id="Background">
+        <rect y="300" width="1920" height="780" rx="20" ry="20" style="fill: #382e32"/>
+        <g style="clip-path: url(#clip-path)">
+            <image width="1920" height="320" xlink:href="${background}" style="opacity: 0.5" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke" />
+            <rect height="9999" width="9999" style="fill: #820000"/>
+        </g>
+    </g>
+    <g id="cardH">
+    </g>
+</svg>
