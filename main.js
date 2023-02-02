@@ -2,11 +2,12 @@ import fs from "fs";
 import express from "express";
 import os from "os";
 import formidable from "express-formidable";
-import {cardD, cardH} from "./src/card.js";
+import {cardD, cardH, Panel} from "./src/card.js";
 import {readImage} from "./src/util.js";
 
 fs.writeFileSync("image/out/cardD.png", await cardD());
 fs.writeFileSync("image/out/cardH.png", await cardH());
+fs.writeFileSync("image/out/panel.png", await Panel());
 
 const app = express();
 app.use(formidable({
@@ -38,11 +39,19 @@ app.post('/card-H', async (req, res) => {
     res.send(png);
 })
 
+app.post('/card-H1', async (req, res) => {
+    const f = checkJsonData(req, ["background", "avatar"]);
+    const png = await cardH(f);
+    res.set('Content-Type', 'image/png');
+    console.log(f);
+    res.send(png);
+})
+
 app.listen(8555, () => {
     console.log('ok - http://localhost:8555');
     console.log(os.tmpdir())
 })
-
+// form: data:text ... img:file
 function checkData(req, files=['']) {
     let fs = {};
     for (const file of files) {
@@ -53,5 +62,20 @@ function checkData(req, files=['']) {
     return {
         ...req.fields,
         ...fs,
+    };
+}
+//  form data: json text{ xxx: xxx} img: file ...
+function checkJsonData(req) {
+    let json = JSON.parse(req.fields['json']);
+    let files = json['file']
+    if (files) {
+        for (const fileName of Object.keys(files)) {
+            if (req.files[files[fileName]]) {
+                json[fileName] = readImage(req.files[files[fileName]].path);
+            }
+        }
+    }
+    return {
+        ...json,
     };
 }
