@@ -2,12 +2,12 @@ import fs from "fs";
 import express from "express";
 import os from "os";
 import formidable from "express-formidable";
-import {cardD, cardH, Panel} from "./src/card.js";
+import {card_D, card_H, Panel_H} from "./src/card.js";
 import {readImage} from "./src/util.js";
 
-fs.writeFileSync("image/out/cardD.png", await cardD());
-fs.writeFileSync("image/out/cardH.png", await cardH());
-fs.writeFileSync("image/out/panel.png", await Panel());
+fs.writeFileSync("image/out/cardD.png", await card_D());
+fs.writeFileSync("image/out/cardH.png", await card_H());
+fs.writeFileSync("image/out/panel_H.png", await Panel_H());
 
 const app = express();
 app.use(formidable({
@@ -27,21 +27,21 @@ app.post('*', (req, res, next) => {
 
 app.post('/card-D', async (req, res) => {
     const f = checkData(req, ["background"]);
-    const png = await cardD(f);
+    const png = await card_D(f);
     res.set('Content-Type', 'image/png');
     res.send(png);
 })
 
 app.post('/card-H', async (req, res) => {
     const f = checkData(req, ["background", "avatar"]);
-    const png = await cardH(f);
+    const png = await card_H(f);
     res.set('Content-Type', 'image/png');
     res.send(png);
 })
 
 app.post('/card-H1', async (req, res) => {
     const f = checkJsonData(req, ["background", "avatar"]);
-    const png = await cardH(f);
+    const png = await card_H(f);
     res.set('Content-Type', 'image/png');
     console.log(f);
     res.send(png);

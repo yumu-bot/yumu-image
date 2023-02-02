@@ -6,14 +6,14 @@ export async function cardA1(){
 }
 
 // 绘制方法 card h  参数有两个,data是数据,data.background就是背景,以此类推,下面声明时写的是当用的时候没有传参数,采用的默认值,
-export async function cardH(data = {
+export async function card_H(data = {
     background: readImage("image/Yumu ChocoPanel-SVG-Card1.31.png"),
     avatar: readImage("image/Yumu ChocoPanel-SVG-Card1.32.png"),
     name: 'Muziyami',
     info: '39.2M // 99W-0L 100%',
     rank: '#1',
     pp_b: '264',
-    pp_m: '.15pp',
+    pp_m: 'pp',
     color_score: '#fbb03b',
     color_base: '#3fa9f5',
 }, getSVG = false) {
@@ -39,7 +39,7 @@ export async function cardH(data = {
     let text_pp = torus.getTextPath(data.pp_b, p1, p4_y, 48, "left center", "#fff") + torus.getTextPath(data.pp_m, p2, p4_y, 24, "left center", "#fff");
 
     // 读取模板
-    let svg = readTemplete('template/CardH.svg');
+    let svg = readTemplete('template/Card_H.svg');
     // 替换模板内容,replaceText(模板, 内容, 正则)
     svg = replaceText(svg, data.color_score, reg_color_score);
     svg = replaceText(svg, data.color_base, reg_color_base);
@@ -56,7 +56,7 @@ export async function cardH(data = {
 }
 
 
-export async function cardD(data = {
+export async function card_D(data = {
     background: readImage("image/BG.png"),
     title:'BeatmapTitle',
     artist:'BeatmapArtist // Mapper',
@@ -80,7 +80,7 @@ export async function cardD(data = {
     let p2 = p4_x - r4_2.width / 2 + r4_1.width / 2
     let text_star = torus.getTextPath(data.star_b, p1, p4_y, 60, "left center", "#fff") + torus.getTextPath(data.star_m, p2, p4_y, 36, "left center", "#fff")
 
-    let svg = readTemplete("template/CardD.svg");
+    let svg = readTemplete("template/Card_D.svg");
 
     svg = replaceText(svg, text_title, reg_text);
     svg = replaceText(svg, text_artist, reg_text);
@@ -93,14 +93,14 @@ export async function cardD(data = {
 }
 
 
-export async function Panel(data = {
+export async function Panel_H(data = {
     background: readImage("image/Yumu ChocoPanel-SVG-Card1.31.png"),
     avatar: readImage("image/Yumu ChocoPanel-SVG-Card1.32.png"),
     name: 'Muziyami',
     info: '39.2M // 99W-0L 100%',
     rank: '#1',
     pp_b: '264',
-    pp_m: '.15pp',
+    pp_m: 'pp',
     color_score: '#fbb03b',
     color_base: '#3fa9f5',
 }) {
@@ -113,12 +113,12 @@ export async function Panel(data = {
         return `<image width="900" height="110" x="${x}" y="${y}" xlink:href="${path}" />`
     }
 
-    let bg1 = await cardH(data, true);
-    let bg2 = await cardH(data, true);
+    let bg1 = await card_H(data, true);
+    let bg2 = await card_H(data, true);
     const f = new SaveFiles();
     f.saveSvgText(bg1);
     f.saveSvgText(bg2);
-    let svg = readTemplete("template/PanelX.svg");
+    let svg = readTemplete("template/Panel_H.svg");
     svg = svg.replace(reg_height, "100");
 
 
