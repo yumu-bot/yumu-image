@@ -5,7 +5,7 @@ import formidable from "express-formidable";
 import {card_D, card_H, card_A1} from "./src/card.js";
 import {readImage} from "./src/util.js";
 import {label_E} from "./src/component.js";
-import {panel_I} from "./src/panel.js"
+import {panel_E, panel_I} from "./src/panel.js"
 
 fs.writeFileSync("image/out/card_A1.png", await card_A1());
 fs.writeFileSync("image/out/card_D.png", await card_D());
@@ -13,6 +13,7 @@ fs.writeFileSync("image/out/card_H.png", await card_H());
 
 fs.writeFileSync("image/out/label_E.png", await label_E());
 
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
 fs.writeFileSync("image/out/panel_I.png", await panel_I());
 
 const app = express();
