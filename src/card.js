@@ -1,8 +1,66 @@
 import {exportPng, getBase64Text, readImage, readTemplete, replaceText, SaveFiles, torus} from "./util.js";
 import fs from "fs";
 
-export async function cardA1(){
-    let svg = readTemplete('template/CardA1.svg');
+export async function card_A1(data = {
+    background: readImage("image/A_CardA1_BG.png"),
+    avatar: readImage("image/A_CardA1_Avatar.png"),
+    country_flag: readImage("image/A_CardA1_CountryFlag.png"),
+    sub_icon1: readImage("image/A_CardA1_SubIcon1.png"),
+    sub_icon2: readImage("image/A_CardA1_SubIcon2.png"),
+    name: 'Muziyami',
+    rank_global: '#28075',
+    rank_country: 'CN#577',
+    info: '95.27% Lv.100(32%)',
+    pp_b: '4396',
+    pp_m: 'PP',
+
+    color_base: '#2a2226',
+}, getSVG = false) {
+    let reg_text = /(?<=<g id="Text">)/;
+    let reg_background = '${background}';
+    let reg_avatar = '${avatar}';
+    let reg_country_flag = '${country_flag}';
+    let reg_sub_icon1 = '${sub_icon1}';
+    let reg_sub_icon2 = '${Sub_Icon2}';
+
+    let reg_color_base = /(?<=fill: )#2a2226/;
+
+    // 文字的 <path>
+    let text_name =
+        torus.getTextPath(data.name, 130, 53.672, 48, "left baseline", "#fff");
+    let text_rank_global =
+        torus.getTextPath(data.rank_global, 20, 165.836, 24, "left baseline", "#fff");
+    let text_rank_country =
+        torus.getTextPath(data.rank_country, 20, 191.836, 24, "left baseline", "#fff");
+    let text_info =
+        torus.getTextPath(data.info, 420, 141.836, 24, "right baseline", "#fff");
+
+    //pp位置计算
+    let text_metrics_pp_b = torus.getTextMetrics(data.pp_b, 0, 0, 60, "right baseline", "#fff");
+    let text_metrics_pp_m = torus.getTextMetrics(data.pp_m, 0, 0, 48, "right baseline", "#fff");
+    let text_pp_b_x = 420 - text_metrics_pp_m.width - text_metrics_pp_b.width;
+    let text_pp_m_x = 420 - text_metrics_pp_m.width;
+
+    let text_pp = torus.getTextPath(data.pp_b, text_pp_b_x, 191.59, 60, "left baseline", "#fff")
+        + torus.getTextPath(data.pp_m, text_pp_m_x, 191.59, 48, "left baseline", "#fff");
+
+    // 读取模板
+    let svg = readTemplete('template/Card_A1.svg');
+    // 替换模板内容,replaceText(模板, 内容, 正则)
+    svg = replaceText(svg, data.color_base, reg_color_base);
+    svg = replaceText(svg, text_name, reg_text);
+    svg = replaceText(svg, text_info, reg_text);
+    svg = replaceText(svg, text_rank_country, reg_text);
+    svg = replaceText(svg, text_rank_global, reg_text);
+    svg = replaceText(svg, text_pp, reg_text);
+    // 替换图片
+    svg = replaceText(svg, getBase64Text(data.background), reg_background);
+    svg = replaceText(svg, getBase64Text(data.avatar), reg_avatar);
+    svg = replaceText(svg, getBase64Text(data.country_flag), reg_country_flag);
+    svg = replaceText(svg, getBase64Text(data.sub_icon1), reg_sub_icon1);
+    svg = replaceText(svg, getBase64Text(data.sub_icon2), reg_sub_icon2);
+
+    return getSVG ? svg : exportPng(svg);
 }
 
 // 绘制方法 card h  参数有两个,data是数据,data.background就是背景,以此类推,下面声明时写的是当用的时候没有传参数,采用的默认值,
