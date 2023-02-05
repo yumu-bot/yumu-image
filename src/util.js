@@ -10,7 +10,7 @@ const UTF8Encoder = new TextEncoder('utf8');
 
 const textToSVGRegular = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
 
-export function readTemplete(path = '') {
+export function readTemplate(path = '') {
     return fs.readFileSync(path, 'utf8');
 }
 export function readImage(path = '') {
