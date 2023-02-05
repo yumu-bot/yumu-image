@@ -1,5 +1,4 @@
-import {exportPng, getBase64Text, readImage, readTemplete, replaceText, SaveFiles, torus} from "./util.js";
-import fs from "fs";
+import {exportPng, getBase64Text, InsertSvg, readImage, readTemplete, replaceText, torus} from "./util.js";
 
 export async function card_A1(data = {
     background: readImage("image/A_CardA1_BG.png"),
@@ -166,23 +165,32 @@ export async function Panel_H(data = {
     //
     let reg_height = /(?<=id="Background">[\s\S]*height=")\d+/
     let reg_cards = /(?<=<g id="cardH">)/
+    let reg_text = /(?<=<g id="Text">)/;
 
-    const get = (path,x, y) => {
+    const get = (path, x, y) => {
         return `<image width="900" height="110" x="${x}" y="${y}" xlink:href="${path}" />`
     }
 
     let bg1 = await card_H(data, true);
+    data.pp_b = '15';
     let bg2 = await card_H(data, true);
-    const f = new SaveFiles();
-    f.saveSvgText(bg1);
-    f.saveSvgText(bg2);
+
+
+    let a1 = torus.getTextPath("24", 20, 97, 24, 'left center', "#fff");
+    let a2 = torus.getTextPath("16", 120, 97, 16, 'left center', "#fff");
+    let a3 = torus.getTextPath("12", 220, 97, 12, 'left center', "#fff");
     let svg = readTemplete("template/Panel_H.svg");
-    svg = svg.replace(reg_height, "100");
+
+    svg = svg.replace(reg_text, a1);
+    svg = svg.replace(reg_text, a2);
+    svg = svg.replace(reg_text, a3);
 
 
-
-    let out = await exportPng(svg);
-    f.remove()
-    return out;
+    return new InsertSvg(svg)
+        .insert(bg1, 10, 100)
+        .insert(bg2, 10, 400)
+        .insert(bg1, 300, 210)
+        .insert(bg2, 300, 510)
+        .export();
 }
 

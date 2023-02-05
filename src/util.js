@@ -3,6 +3,9 @@ import os from "os";
 import TextToSVG from 'text-to-svg';
 import axios from "axios";
 import exports from 'convert-svg-to-png';
+import https from "https";
+
+export const CACHE_PATH = os.tmpdir();
 
 const svgToPng = async (svg) => await exports.convert(svg);
 
@@ -13,9 +16,11 @@ const textToSVGRegular = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
 export function readTemplete(path = '') {
     return fs.readFileSync(path, 'utf8');
 }
+
 export function readImage(path = '') {
     return fs.readFileSync(path, 'binary');
 }
+
 export async function readNetImage(path = '') {
     if (path.startsWith("http")) {
         return (await axios.get(path, {responseType: 'arraybuffer'})).data;
@@ -87,40 +92,101 @@ export function randomString(e) {
     return n
 }
 
-export class SaveFiles{
+export class SaveFiles {
     files = [];
     tmpDir = '';
+
     constructor() {
         let tmp = randomString(6);
-        while (fs.existsSync(`${os.tmpdir()}/${tmp}`)){
+        while (fs.existsSync(`${CACHE_PATH}/${tmp}`)) {
             tmp = randomString(6);
         }
-        this.tmpDir = `${os.tmpdir()}/${tmp}/`;
+        this.tmpDir = `${CACHE_PATH}/${tmp}/`;
         fs.mkdirSync(this.tmpDir);
     };
-    saveSvgText(text){
-        let f = randomString(4)+'.svg';
+
+    saveSvgText(text) {
+        let f = randomString(4) + '.svg';
         while (this.files.includes(f)) {
-            f = randomString(4)+'.svg';
+            f = randomString(4) + '.svg';
         }
         this.files.push(f);
 
         fs.writeFileSync(this.tmpDir + f, UTF8Encoder.encode(text));
+        return this.tmpDir + f;
     };
-    save(file){
+
+    save(file) {
         let f = randomString(4);
         while (this.files.includes(f)) {
             f = randomString(4);
         }
         this.files.push(f);
         fs.writeFileSync(this.tmpDir + f, file);
+        return this.tmpDir + f;
     };
 
-    getAllPath(){
+    getAllPath() {
         return this.files.map(f => this.tmpDir + f);
     };
 
     remove() {
         fs.rmSync(this.tmpDir, {recursive: true});
     };
+}
+
+function createImage(w, h, x, y, path) {
+    return `<image width="${w}" height="${h}" x="${x}" y="${y}" xlink:href="${path}" />`
+}
+
+export class InsertSvg {
+    svg;
+    reg = /(?=<\/svg>)/
+    f_util;
+
+    constructor(svg = "") {
+        this.svg = svg;
+        this.f_util = new SaveFiles();
+    }
+
+    insert(svg = "", x, y) {
+        let w = parseInt(svg.match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
+        let h = parseInt(svg.match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
+        let path = this.f_util.saveSvgText(svg);
+        this.svg = replaceText(this.svg, createImage(w, h, x, y, path), this.reg);
+        return this;
+    }
+
+    async export() {
+        let out = await exportPng(this.svg);
+        this.f_util.remove();
+        return out;
+    }
+}
+
+export async function getFlagSvg(code = "cn") {
+    code = code.toUpperCase();
+    let flag;
+    let path = `image/flag/${code}.svg`;
+    try {
+        fs.accessSync(path, constants.W_OK);
+    } catch (e) {
+        let bit_flag = 0x1f1e6;
+        let char_code_A = 65;
+        let n_1 = bit_flag + code.charCodeAt(0) - char_code_A;
+        let n_2 = bit_flag + code.charCodeAt(1) - char_code_A;
+        let url = `https://osu.ppy.sh/assets/images/flags/${n_1.toString(16)}-${n_2.toString(16)}.svg`;
+
+        await new Promise((resolve) => {
+            https.get(url, res => {
+                let out_stream = fs.createWriteStream(path);
+                res.pipe(out_stream);
+                out_stream.on('finish', () => {
+                    resolve();
+                })
+            })
+        })
+    }
+    flag = fs.readFileSync(path, "utf-8");
+    return flag;
 }
