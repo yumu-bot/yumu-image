@@ -138,7 +138,7 @@ export function randomString(e) {
     return n
 }
 
-export class SaveFiles {
+class SaveFiles {
     files = [];
     tmpDir = '';
 
@@ -176,6 +176,10 @@ export class SaveFiles {
         return this.files.map(f => this.tmpDir + f);
     };
 
+    getDirPath() {
+        return this.tmpDir;
+    };
+
     remove() {
         fs.rmSync(this.tmpDir, {recursive: true});
     };
@@ -185,27 +189,86 @@ function createImage(w, h, x, y, path) {
     return `<image width="${w}" height="${h}" x="${x}" y="${y}" xlink:href="${path}" />`
 }
 
-export class InsertSvg {
+export class SVG {
+    svg;
+    tmp_root = [];
+
+    constructor(svg) {
+        this.svg = svg;
+    }
+
+    setTmpPath(path) {
+        this.tmp_root.push(path);
+    }
+
+    getTmpPath() {
+        return this.tmp_root;
+    }
+
+    getSvgText() {
+        return this.svg;
+    }
+}
+
+export class InsertSvgBuilder {
     svg;
     reg = /(?=<\/svg>)/
-    f_util;
+    f_other = [];
+    f_util = new SaveFiles();
 
     constructor(svg = "") {
         this.svg = svg;
-        this.f_util = new SaveFiles();
     }
 
-    insert(svg = "", x, y) {
+    check(svg) {
+        if (svg instanceof SVG) {
+            this.f_other.push(svg.tmp_root);
+            return svg.getSvgText();
+        }
+        return svg;
+    }
+
+    insertSvg(svg, x, y) {
+        return this.insertSvgReg(svg, x, y, this.reg);
+    }
+
+    insertSvgReg(svg, x, y, reg = /^/) {
+        svg = this.check(svg);
         let w = parseInt(svg.match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
         let h = parseInt(svg.match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
         let path = this.f_util.saveSvgText(svg);
-        this.svg = replaceText(this.svg, createImage(w, h, x, y, path), this.reg);
+        this.svg = replaceText(this.svg, createImage(w, h, x, y, path), reg);
         return this;
     }
 
-    async export() {
-        let out = await exportPng(this.svg);
-        this.f_util.remove();
+    insertFlag(flag, w, h, x, y) {
+        return this.insertFlagReg(flag, w, h, x, y, this.reg);
+    }
+
+    insertFlagReg(flag, w, h, x, y, reg = /^/) {
+        flag = this.check(flag);
+        let path = this.f_util.saveSvgText(flag);
+        this.svg = replaceText(this.svg, createImage(w, h, x, y, path), reg);
+        return this;
+    }
+
+    insertImage(img, reg = /^/) {
+        let path = this.f_util.save(img);
+        this.svg = replaceText(this.svg, path, reg);
+        return this;
+    }
+
+    async export(reuse = false) {
+        let out;
+        if (reuse) {
+            out = new SVG(this.svg);
+            out.setTmpPath(this.f_other);
+            out.setTmpPath(this.f_util.getDirPath());
+        } else {
+            out = await exportPng(this.svg);
+            this.f_util.remove();
+            this.f_other.forEach((dir) => fs.rmSync(dir, {recursive: true}));
+        }
         return out;
     }
 }

@@ -1,6 +1,4 @@
-import {exportPng, getBase64Text, readImage, readTemplate, replaceText, SaveFiles, torus} from "./util.js";
-import fs from "fs";
-import {exportPng, getBase64Text, InsertSvg, readImage, readTemplete, replaceText, torus} from "./util.js";
+import {InsertSvgBuilder, readImage, readTemplate, replaceText, torus} from "./util.js";
 
 export async function card_A1(data = {
     background: readImage("image/A_CardA1_BG.png"),
@@ -16,7 +14,7 @@ export async function card_A1(data = {
     pp_m: 'PP',
 
     color_base: '#2a2226',
-}, getSVG = false) {
+}, reuse = false) {
     let reg_text = /(?<=<g id="Text">)/;
     let reg_background = '${background}';
     let reg_avatar = '${avatar}';
@@ -55,28 +53,30 @@ export async function card_A1(data = {
     svg = replaceText(svg, text_rank_global, reg_text);
     svg = replaceText(svg, text_pp, reg_text);
     // 替换图片
-    svg = replaceText(svg, getBase64Text(data.background), reg_background);
-    svg = replaceText(svg, getBase64Text(data.avatar), reg_avatar);
-    svg = replaceText(svg, getBase64Text(data.country_flag), reg_country_flag);
-    svg = replaceText(svg, getBase64Text(data.sub_icon1), reg_sub_icon1);
-    svg = replaceText(svg, getBase64Text(data.sub_icon2), reg_sub_icon2);
 
-    return getSVG ? svg : exportPng(svg);
+    let out_svg = new InsertSvgBuilder(svg)
+        .insertImage(data.background, reg_background)
+        .insertImage(data.avatar, reg_avatar)
+        .insertImage(data.country_flag, reg_country_flag)
+        .insertImage(data.sub_icon1, reg_sub_icon1)
+        .insertImage(data.sub_icon2, reg_sub_icon2)
+
+    return out_svg.export(reuse);
 }
 
 export async function card_D(data = {
     background: readImage("image/H_CardD_BG.png"),
-    title:'Xin Mei Sang Zui Jiu',
-    artist:'Fushimi Rio // Fia',
-    info:'[OWC HD2] - b114514',
-    mod:'EZ',
-    cs:'CS 4.2',
-    ar:'AR 10.3',
-    od:'OD 11',
-    star_b:'8',
-    star_m:'.88*',
+    title: 'Xin Mei Sang Zui Jiu',
+    artist: 'Fushimi Rio // Fia',
+    info: '[OWC HD2] - b114514',
+    mod: 'EZ',
+    cs: 'CS 4.2',
+    ar: 'AR 10.3',
+    od: 'OD 11',
+    star_b: '8',
+    star_m: '.88*',
     color_mod: '#39b54a',
-}, getSVG = false) {
+}, reuse = false) {
     let reg_text = /(?<=<g id="Text">)/
     let reg_background = '${background}'
     let reg_color_mod = /(?<=fill: )#39b54a/;
@@ -112,9 +112,10 @@ export async function card_D(data = {
     svg = replaceText(svg, text_ar, reg_text);
     svg = replaceText(svg, text_od, reg_text);
     svg = replaceText(svg, text_star, reg_text);
-    svg = replaceText(svg, getBase64Text(data.background), reg_background);
 
-    return getSVG ? svg : exportPng(svg);
+    let out_svg = new InsertSvgBuilder(svg).insertImage(data.background, reg_background);
+
+    return out_svg.export(reuse);
 }
 
 // 绘制方法 card h  参数有两个,data是数据,data.background就是背景,以此类推,下面声明时写的是当用的时候没有传参数,采用的默认值,
@@ -128,7 +129,7 @@ export async function card_H(data = {
     pp_m: 'pp',
     color_score: '#fbb03b',
     color_base: '#3fa9f5',
-}, getSVG = false) {
+}, reuse = false) {
     // 正则表达式
     let reg_text = /(?<=<g id="Text">)/;
     let reg_background = '${background}';
@@ -160,23 +161,23 @@ export async function card_H(data = {
     svg = replaceText(svg, text_rank, reg_text);
     svg = replaceText(svg, text_pp, reg_text);
     // 替换图片
-    svg = replaceText(svg, getBase64Text(data.background), reg_background);
-    svg = replaceText(svg, getBase64Text(data.avatar), reg_avatar);
+    let out_svg = new InsertSvgBuilder(svg)
+        .insertImage(data.background, reg_background)
+        .insertImage(data.avatar, reg_avatar);
 
-    // 导出 getSVG意思是是否返回svg的text,否则直接返回图
-    return getSVG ? svg : exportPng(svg);
+    return out_svg.export(reuse);
 }
 
 
 export async function card_D(data = {
     background: readImage("image/BG.png"),
-    title:'BeatmapTitle',
-    artist:'BeatmapArtist // Mapper',
-    info:'[Difficulty] - b<bid>',
-    mod:'NM',
-    star_b:'8',
-    star_m:'.88*',
-}, getSVG = false) {
+    title: 'BeatmapTitle',
+    artist: 'BeatmapArtist // Mapper',
+    info: '[Difficulty] - b<bid>',
+    mod: 'NM',
+    star_b: '8',
+    star_m: '.88*',
+}, reuse = false) {
     let reg_text = /(?<=<g id="Text">)/
     let reg_background = '${background}'
     // 文字
@@ -192,16 +193,16 @@ export async function card_D(data = {
     let p2 = p4_x - r4_2.width / 2 + r4_1.width / 2
     let text_star = torus.getTextPath(data.star_b, p1, p4_y, 60, "left center", "#fff") + torus.getTextPath(data.star_m, p2, p4_y, 36, "left center", "#fff")
 
-    let svg = readTemplete("template/Card_D.svg");
+    let svg = readTemplate("template/Card_D.svg");
 
     svg = replaceText(svg, text_title, reg_text);
     svg = replaceText(svg, text_artist, reg_text);
     svg = replaceText(svg, text_info, reg_text);
     svg = replaceText(svg, text_mod, reg_text);
     svg = replaceText(svg, text_star, reg_text);
-    svg = replaceText(svg, getBase64Text(data.background), reg_background);
+    let out_svg = new InsertSvgBuilder(svg).insertImage(data.background, reg_background);
 
-    return getSVG ? svg : exportPng(svg);
+    return out_svg.export(reuse);
 }
 
 
@@ -234,18 +235,18 @@ export async function Panel_H(data = {
     let a1 = torus.getTextPath("24", 20, 97, 24, 'left center', "#fff");
     let a2 = torus.getTextPath("16", 120, 97, 16, 'left center', "#fff");
     let a3 = torus.getTextPath("12", 220, 97, 12, 'left center', "#fff");
-    let svg = readTemplete("template/Panel_H.svg");
+    let svg = readTemplate("template/Panel_H.svg");
 
     svg = svg.replace(reg_text, a1);
     svg = svg.replace(reg_text, a2);
     svg = svg.replace(reg_text, a3);
 
 
-    return new InsertSvg(svg)
-        .insert(bg1, 10, 100)
-        .insert(bg2, 10, 400)
-        .insert(bg1, 300, 210)
-        .insert(bg2, 300, 510)
+    return new InsertSvgBuilder(svg)
+        .insertSvg(bg1, 10, 100)
+        .insertSvg(bg2, 10, 400)
+        .insertSvg(bg1, 300, 210)
+        .insertSvg(bg2, 300, 510)
         .export();
 }
 
