@@ -169,7 +169,7 @@ export async function card_H(data = {
 }
 
 
-export async function card_Dz(data = {
+export async function card_(data = {
     background: readImage("image/BG.png"),
     title: 'BeatmapTitle',
     artist: 'BeatmapArtist // Mapper',

@@ -167,8 +167,9 @@ class SaveFiles {
         while (this.files.includes(f)) {
             f = randomString(4);
         }
+        f = f + '.png';
         this.files.push(f);
-        fs.writeFileSync(this.tmpDir + f, file);
+        fs.writeFileSync(this.tmpDir + f, file, 'binary');
         return this.tmpDir + f;
     };
 
