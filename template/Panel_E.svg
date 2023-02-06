@@ -77,14 +77,14 @@
   <g id="Banner">
     <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719;"/>
     <g style="clip-path: url(#clippath);">
-      <image width="1920" height="320" xlink:href="E_Banner.png"/>
+      <image width="1920" height="320" xlink:href="${banner}"/>
     </g>
     <rect width="1920" height="320" rx="20" ry="20" style="opacity: .2;"/>
   </g>
   <g id="Background">
     <rect y="290" width="1920" height="790" rx="20" ry="20" style="fill: #2a2226;"/>
     <g style="clip-path: url(#clippath-1);">
-      <image width="1920" height="790" transform="translate(0 290)" xlink:href="${bg_background}"/>
+      <image width="1920" height="790" transform="translate(0 290)" xlink:href="${judge_background}"/>
     </g>
     <rect y="290" width="1920" height="790" rx="20" ry="20" style="opacity: .4;"/>
   </g>
@@ -96,12 +96,6 @@
       <rect id="RetryRRect" x="1440" y="1020" width="224" height="4" rx="2" ry="2" style="fill: #f6d659;"/>
     </g>
     <g id="RBMapStatic">
-      <rect id="HP" x="1650" y="950" width="210" height="50" style="fill: #9e005d;"/>
-      <rect id="OD" x="1440" y="950" width="210" height="50" style="fill: #93278f;"/>
-      <rect id="CS" x="1440" y="870" width="210" height="50" style="fill: #1b1464;"/>
-      <rect id="AR" x="1650" y="870" width="210" height="50" style="fill: #662d91;"/>
-      <rect id="Length" x="1650" y="790" width="210" height="50" style="fill: #2e3192;"/>
-      <rect id="BPM" x="1440" y="790" width="210" height="50" style="fill: #0071bc;"/>
     </g>
     <g id="JudgeRRects">
       <rect x="900" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
@@ -184,9 +178,6 @@
       <rect id="L6RRect" x="1280" y="630" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
     </g>
     <g id="MRScoreData">
-      <rect id="PP" x="1650" y="680" width="210" height="50" style="fill: #c1272d;"/>
-      <rect id="Combo" x="1440" y="680" width="210" height="50" style="fill: #f15a24;"/>
-      <rect id="Accuracy" x="1230" y="680" width="210" height="50" style="fill: #fbb03b;"/>
     </g>
     <g id="RUMods">
       <g style="clip-path: url(#clippath-3);">
@@ -210,14 +201,14 @@
     <g id="LBMapText">
       <text transform="translate(290.09 1036.84)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">Ponkichi - seros - b1144770</tspan></text>
       <text transform="translate(385.33 1004.75)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 36px; font-weight: 600;"><tspan x="0" y="0">Expert</tspan></text>
-      <text transform="translate(316.02 931.6)" style="fill: #fff; font-family: Alibaba-PuHuiTi-M, &apos;Alibaba PuHuiTi&apos;; font-size: 36px; font-style: italic;"><tspan x="0" y="0">百花魁と白徳利</tspan></text>
+      <text transform="translate(316.02 931.6)" style="fill: #fff; font-family: Alibaba-PuHuiTi-M, &apos;Alibaba PuHuiTi&apos;; font-size: 36px;"><tspan x="0" y="0">百花魁と白徳利</tspan></text>
       <text transform="translate(134.46 883.67)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 48px; font-weight: 600;"><tspan x="0" y="0">Hyakukakai to Shirotokkuri</tspan></text>
     </g>
     <g id="LMMapCover">
       <g style="clip-path: url(#clippath-8);">
-        <image width="380" height="440" transform="translate(250 375)" xlink:href="E_MapCover.jpg"/>
+        <image width="380" height="440" transform="translate(250 375)" xlink:href="${map_background}"/>
       </g>
-      <image id="Hexagon" width="420" height="450" transform="translate(230 370)" xlink:href="E_Hexagon.png"/>
+      <image id="Hexagon" width="420" height="450" transform="translate(230 370)" xlink:href="${map_hexagon}"/>
     </g>
     <g id="LUMapStatus">
       <g>
@@ -233,13 +224,13 @@
     </g>
     <g id="LUMapObject">
       <g style="clip-path: url(#clippath-9);">
-        <image width="18" height="18" transform="translate(746 364)" xlink:href="E_PlayCount.png"/>
+        <image width="18" height="18" transform="translate(746 364)" xlink:href="${map_playcount}"/>
       </g>
       <g style="clip-path: url(#clippath-10);">
-        <image width="18" height="16" transform="translate(746 338)" xlink:href="E_Favorite.png"/>
+        <image width="18" height="16" transform="translate(746 338)" xlink:href="${map_favorite}"/>
       </g>
       <g style="clip-path: url(#clippath-11);">
-        <image width="50" height="50" transform="translate(683 334)" xlink:href="E_MapStatus.png"/>
+        <image width="50" height="50" transform="translate(683 334)" xlink:href="${map_status}"/>
       </g>
     </g>
     <g id="LUStars">

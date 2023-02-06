@@ -13,7 +13,7 @@ export async function label_E(data = {
 
     // 文字的 <path>
     let icon_title = torus.getTextPath(data.icon_title, 50, 14.88, 18, "left baseline", "#a1a1a1");
-    let remark = torus.getTextPath(data.remark, 136.89, 14.88, 18, "left baseline", "#646464");
+    let remark = torus.getTextPath(data.remark, 200, 14.88, 18, "right baseline", "#646464");
 
     let data_b_x = torus.getTextMetrics(data.data_b, 0, 0, 36, "center", "#fff");
 
