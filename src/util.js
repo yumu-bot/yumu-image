@@ -5,7 +5,7 @@ import axios from "axios";
 import exports from 'convert-svg-to-png';
 import https from "https";
 
-export const CACHE_PATH = os.tmpdir();
+export const CACHE_PATH = os.tmpdir() + "n-bot";
 
 const svgToPng = async (svg) => await exports.convert(svg);
 
@@ -167,7 +167,6 @@ class SaveFiles {
         while (this.files.includes(f)) {
             f = randomString(4);
         }
-        f = f + '.png';
         this.files.push(f);
         fs.writeFileSync(this.tmpDir + f, file, 'binary');
         return this.tmpDir + f;
