@@ -222,7 +222,7 @@ export class InsertSvgBuilder {
 
     check(svg) {
         if (svg instanceof SVG) {
-            this.f_other.push(svg.tmp_root);
+            this.f_other.push.apply(svg.tmp_root);
             return svg.getSvgText();
         }
         return svg;
