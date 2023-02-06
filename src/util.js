@@ -27,7 +27,7 @@ export async function readNetImage(path = '') {
     }
 }
 
-export const exportPng = svgToPng;
+const exportPng = svgToPng;
 
 export const torus = {};
 
