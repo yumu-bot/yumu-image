@@ -13,7 +13,7 @@ const UTF8Encoder = new TextEncoder('utf8');
 
 const textToSVGRegular = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
 
-export function readTemplete(path = '') {
+export function readTemplate(path = '') {
     return fs.readFileSync(path, 'utf8');
 }
 
@@ -73,6 +73,52 @@ function getTextMetrics_torus(
         }
     })
 }
+
+export const PuHuiTi = {};
+
+PuHuiTi.getTextPath = getTextPath_PuHuiTi;
+PuHuiTi.getTextMetrics = getTextMetrics_PuHuiTi;
+
+function getTextPath_PuHuiTi(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGRegular.getPath(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "PuHuiTi",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextMetrics_PuHuiTi(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGRegular.getMetrics(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "PuHuiTi",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
 
 export function replaceText(text = '', rep = '', reg = /.*/) {
     return text.replace(reg, rep);

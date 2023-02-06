@@ -1,28 +1,19 @@
 import fs from "fs";
 import express from "express";
 import formidable from "express-formidable";
-import {card_A1, card_D, card_H, Panel_H} from "./src/card.js";
-import {CACHE_PATH, getFlagSvg, readImage} from "./src/util.js";
+import {card_D, card_H, card_A1} from "./src/card.js";
+import {readImage} from "./src/util.js";
+import {label_E} from "./src/component.js";
+import {panel_E, panel_I} from "./src/panel.js"
 
-console.time("1")
-fs.writeFileSync("image/out/cardA1.png", await card_A1());
-console.timeEnd("1")
+fs.writeFileSync("image/out/card_A1.png", await card_A1());
+fs.writeFileSync("image/out/card_D.png", await card_D());
+fs.writeFileSync("image/out/card_H.png", await card_H());
 
-console.time("2")
-fs.writeFileSync("image/out/cardD.png", await card_D());
-console.timeEnd("2")
+fs.writeFileSync("image/out/label_E.png", await label_E());
 
-console.time("3")
-fs.writeFileSync("image/out/cardH.png", await card_H());
-console.timeEnd("3")
-
-console.time("4")
-fs.writeFileSync("image/out/panel_H.png", await Panel_H());
-console.timeEnd("4")
-
-console.time("5")
-fs.writeFileSync("image/out/cn.svg", await getFlagSvg("CN"));
-console.timeEnd("5")
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+fs.writeFileSync("image/out/panel_I.png", await panel_I());
 
 const app = express();
 app.use(formidable({
