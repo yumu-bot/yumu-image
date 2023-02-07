@@ -218,28 +218,34 @@ export class SVG {
 export class InsertSvgBuilder {
     svg;
     reg = /(?=<\/svg>)/
-    f_other;
     f_util = new SaveFiles();
 
     constructor(svg = "") {
         this.svg = svg;
-        this.f_other = [];
     }
 
     check(svg) {
         if (svg instanceof SVG) {
-            this.f_other.push.apply(this.f_other, svg.tmp_root);
             return svg.getSvgText();
         }
         return svg;
     }
 
-    insertSvg(svg, x, y) {
-        return this.insertSvgReg(svg, x, y, this.reg);
+    async insertSvg(svg, x, y) {
+        return await this.insertSvgReg(svg, x, y, this.reg);
     }
 
-    insertSvgReg(svg, x, y, reg = /^/) {
-        svg = this.check(svg);
+    async insertSvgReg(svg, x, y, reg = /^/) {
+        if (svg instanceof SVG) {
+            let path = this.f_util.save(await exportPng(svg.getSvgText()));
+            svg.getTmpPath().forEach(dir => fs.rmSync(dir, {force: true, recursive: true}));
+            let w = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
+            let h = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
+            let img = createImage(w, h, x, y, path);
+            this.svg = replaceText(this.svg, img, reg)
+            return this;
+        }
+
         let w = parseInt(svg.match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
         let h = parseInt(svg.match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
         let path = this.f_util.saveSvgText(svg);
@@ -252,7 +258,6 @@ export class InsertSvgBuilder {
     }
 
     insertFlagReg(flag, w, h, x, y, reg = /^/) {
-        flag = this.check(flag);
         let path = this.f_util.saveSvgText(flag);
         this.svg = replaceText(this.svg, createImage(w, h, x, y, path), reg);
         return this;
@@ -273,9 +278,6 @@ export class InsertSvgBuilder {
         } else {
             out = await exportPng(this.svg);
             this.f_util.remove();
-            this.f_other.forEach((dir) => {
-                fs.rmSync(dir, {force: true, recursive: true});
-            });
         }
         return out;
     }

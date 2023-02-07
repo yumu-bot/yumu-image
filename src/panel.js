@@ -158,17 +158,17 @@ export async function panel_E(data = {
         .insertImage(data.map_hexagon, reg_map_hexagon)
         .insertImage(data.map_favorite, reg_map_favorite)
         .insertImage(data.map_playcount, reg_map_playcount)
-        .insertImage(data.map_status, reg_map_status)
-        .insertSvg(card_A1_impl, 40, 40)
-        .insertSvg(label_acc, 1230, 680)
-        .insertSvg(label_combo, 1440, 680)
-        .insertSvg(label_pp, 1650, 680)
-        .insertSvg(label_bpm, 1440, 790)
-        .insertSvg(label_length, 1650, 790)
-        .insertSvg(label_cs, 1440, 870)
-        .insertSvg(label_ar, 1650, 870)
-        .insertSvg(label_od, 1440, 950)
-        .insertSvg(label_hp, 1650, 950)
+        .insertImage(data.map_status, reg_map_status);
+    await out_svg.insertSvg(card_A1_impl, 40, 40);
+    await out_svg.insertSvg(label_acc, 1230, 680);
+    await out_svg.insertSvg(label_combo, 1440, 680);
+    await out_svg.insertSvg(label_pp, 1650, 680);
+    await out_svg.insertSvg(label_bpm, 1440, 790);
+    await out_svg.insertSvg(label_length, 1650, 790);
+    await out_svg.insertSvg(label_cs, 1440, 870);
+    await out_svg.insertSvg(label_ar, 1650, 870);
+    await out_svg.insertSvg(label_od, 1440, 950);
+    await out_svg.insertSvg(label_hp, 1650, 950);
 
     return out_svg.export(reuse);
 }
@@ -209,11 +209,11 @@ export async function panel_I(data = {
     svg = svg.replace(reg_text, a3);
 
 
-    return new InsertSvgBuilder(svg)
-        .insertSvg(bg1, 10, 100)
-        .insertSvg(bg2, 10, 400)
-        .insertSvg(bg1, 300, 210)
-        .insertSvg(bg2, 300, 510)
-        .export();
+    let out_svg = new InsertSvgBuilder(svg);
+    await out_svg.insertSvg(bg1, 10, 100);
+    await out_svg.insertSvg(bg2, 10, 400);
+    await out_svg.insertSvg(bg1, 300, 210);
+    await out_svg.insertSvg(bg2, 300, 510);
+    return out_svg.export();
 }
 
