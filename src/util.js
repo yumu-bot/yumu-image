@@ -5,7 +5,7 @@ import axios from "axios";
 import exports from 'convert-svg-to-png';
 import https from "https";
 
-export const CACHE_PATH = os.tmpdir() + "n-bot";
+export const CACHE_PATH = os.tmpdir() + "/n-bot";
 
 const svgToPng = async (svg) => await exports.convert(svg);
 
@@ -181,7 +181,8 @@ class SaveFiles {
     };
 
     remove() {
-        fs.rmSync(this.tmpDir, {recursive: true});
+        console.log(this.tmpDir)
+        fs.rmSync(this.tmpDir, {force: true, recursive: true});
     };
 }
 
@@ -201,6 +202,10 @@ export class SVG {
         this.tmp_root.push(path);
     }
 
+    setTmpPaths(path) {
+        this.tmp_root.push.apply(this.tmp_root, path);
+    }
+
     getTmpPath() {
         return this.tmp_root;
     }
@@ -213,16 +218,17 @@ export class SVG {
 export class InsertSvgBuilder {
     svg;
     reg = /(?=<\/svg>)/
-    f_other = [];
+    f_other;
     f_util = new SaveFiles();
 
     constructor(svg = "") {
         this.svg = svg;
+        this.f_other = [];
     }
 
     check(svg) {
         if (svg instanceof SVG) {
-            this.f_other.push.apply(svg.tmp_root);
+            this.f_other.push.apply(this.f_other, svg.tmp_root);
             return svg.getSvgText();
         }
         return svg;
@@ -262,12 +268,14 @@ export class InsertSvgBuilder {
         let out;
         if (reuse) {
             out = new SVG(this.svg);
-            out.setTmpPath(this.f_other);
+            out.setTmpPaths(this.f_other);
             out.setTmpPath(this.f_util.getDirPath());
         } else {
             out = await exportPng(this.svg);
             this.f_util.remove();
-            this.f_other.forEach((dir) => fs.rmSync(dir, {recursive: true}));
+            this.f_other.forEach((dir) => {
+                fs.rmSync(dir, {force: true, recursive: true});
+            });
         }
         return out;
     }

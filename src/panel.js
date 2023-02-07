@@ -134,7 +134,7 @@ export async function panel_E(data = {
     let label_od = await label_E(data.label_od,true);
     let label_hp = await label_E(data.label_hp,true);
 
-    let card_A1 = await card_A1(data.card_A1,true);
+    let card_A1_impl = await card_A1(data.card_A1, true);
 
     let svg = readTemplate('template/Panel_E.svg');
 
@@ -159,6 +159,7 @@ export async function panel_E(data = {
         .insertImage(data.map_favorite, reg_map_favorite)
         .insertImage(data.map_playcount, reg_map_playcount)
         .insertImage(data.map_status, reg_map_status)
+        .insertSvg(card_A1_impl, 40, 40)
         .insertSvg(label_acc, 1230, 680)
         .insertSvg(label_combo, 1440, 680)
         .insertSvg(label_pp, 1650, 680)
@@ -168,7 +169,6 @@ export async function panel_E(data = {
         .insertSvg(label_ar, 1650, 870)
         .insertSvg(label_od, 1440, 950)
         .insertSvg(label_hp, 1650, 950)
-        .insertSvg(card_A1, 40, 40 )
 
     return out_svg.export(reuse);
 }
