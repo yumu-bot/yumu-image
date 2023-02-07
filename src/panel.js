@@ -1,9 +1,22 @@
 import {InsertSvgBuilder, readImage, readTemplate, torus} from "./util.js";
-import {card_H} from "./card.js";
+import {card_A1, card_H} from "./card.js";
 import {label_E} from "./component.js";
 
 
 export async function panel_E(data = {
+    card_A1:{
+        background: readImage("image/A_CardA1_BG.png"),
+        avatar: readImage("image/A_CardA1_Avatar.png"),
+        country_flag: readImage("image/A_CardA1_CountryFlag.png"),
+        sub_icon1: readImage("image/A_CardA1_SubIcon1.png"),
+        sub_icon2: readImage("image/A_CardA1_SubIcon2.png"),
+        name: 'Muziyami',
+        rank_global: '#28075',
+        rank_country: 'CN#577',
+        info: '95.27% Lv.100(32%)',
+        pp_b: '4396',
+        pp_m: 'PP',
+    },
     label_acc:{
         icon: readImage("image/object-score-accpp.png"),
         icon_title: 'Accuracy',
@@ -121,6 +134,8 @@ export async function panel_E(data = {
     let label_od = await label_E(data.label_od,true);
     let label_hp = await label_E(data.label_hp,true);
 
+    let card_A1 = await card_A1(data.card_A1,true);
+
     let svg = readTemplate('template/Panel_E.svg');
 
     let out_svg = new InsertSvgBuilder(svg)
@@ -153,6 +168,7 @@ export async function panel_E(data = {
         .insertSvg(label_ar, 1650, 870)
         .insertSvg(label_od, 1440, 950)
         .insertSvg(label_hp, 1650, 950)
+        .insertSvg(card_A1, 40, 40 )
 
     return out_svg.export(reuse);
 }
