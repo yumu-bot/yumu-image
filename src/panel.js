@@ -174,6 +174,10 @@ export async function panel_E(data = {
     main_score_b: '21',
     main_score_m: '47483647',
 
+    map_public_rating: '9.8', //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
+    map_retry_percent: '54%', //重试率
+    map_fail_percent: '13.2%', //失败率
+
     // 面板颜色和特性
     color_gamemode: '#7ac943',
     main_gamemode: 'osu',
@@ -248,6 +252,13 @@ export async function panel_E(data = {
             torus.getTextMetrics(data.main_score_b, 0, 0, 84, "left baseline", "#fff").width,
             409.43, 60, "left baseline", "#fff");
 
+    let title_density = torus.getTextPath("Density", 900, 802.88, 18, "left baseline", "#a1a1a1");
+    let title_retryfail = torus.getTextPath("Retry // Fail", 900, 922.63, 18, "left baseline", "#a1a1a1");
+    let map_public_rating = torus.getTextPath("Rating " + data.map_public_rating,
+        900, 802.88, 18, "left baseline", "#a1a1a1");
+    let map_retryfail_percent = torus.getTextPath("R " + data.map_retry_percent + " // F " + data.map_retry_percent,
+        900, 802.88, 18, "left baseline", "#a1a1a1");
+
     // 成绩评级
 
     const Stats = (i, data, sum) => {
@@ -284,7 +295,6 @@ export async function panel_E(data = {
         let svg_rect = `<rect id="D${i}RRect" x="${900 + i * 20}" y="${900 - rect_height}" width="16" height="${rect_height}" rx="10" ry="10" style="fill: ${map_density_rrect_color};"/>`;
         svg = replaceText(svg, svg_rect, /(?<=<g id="JudgeRRects">)/);
     })
-
 
 
     // 插入文字和颜色
