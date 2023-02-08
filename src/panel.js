@@ -130,6 +130,9 @@ export async function panel_E(data = {
         judge_7: null,
     },
 
+    // 谱面密度
+    map_density_arr :[1,2,4,5,2,7,2,2,6,4,5,2,2,5,8,5,4,2,5,4,2,6,4,7,5,6],
+
     // 面板图片
     banner: readImage("image/E_Banner.png"),
     judge_background: readImage("image/E_Background.jpg"),
@@ -154,26 +157,26 @@ export async function panel_E(data = {
 
     // 面板文字
 
-    index_lu: 'powered by Yumubot // Score (!ymp / !ymr)',
-    index_ru: 'request time: 2023-10-4 17:59:58 UTC+8',
+    index_leftup: 'powered by Yumubot // Score (!ymp / !ymr)',
+    index_rightup: 'request time: 2023-10-4 17:59:58 UTC+8',
     index_panel_name: 'S v3.6',
-    lucard_sr_b: '6.',
-    lucard_sr_m: '5',
-    lucard_gamemode: '\uE800', // osu! 模式图标
-    lums_fav: '3.9K',
-    lums_pc: '78.2M',
+    srcard_starrating_b: '6.',
+    srcard_starrating_m: '5',
+    srcard_gamemode: '\uE800', // osu! 模式图标
+    map_status_fav: '3.9K',
+    map_status_pc: '78.2M',
 
-    lbmt_title_romanized: 'Hyakukakai to Shirotokkuri',
-    lbmt_title_unicode: '百花魁と白徳利',
-    lbmt_difficulty: 'Expert',
-    lbmt_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136',
+    map_text_title_romanized: 'Hyakukakai to Shirotokkuri',
+    map_text_title_unicode: '百花魁と白徳利',
+    map_text_difficulty: 'Expert',
+    map_text_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136',
 
-    mu_score_b: '21',
-    mu_score_m: '47483647',
+    main_score_b: '21',
+    main_score_m: '47483647',
 
     // 面板颜色和特性
-    color_lucard_gamemode: '#7ac943',
-    gamemode: 'osu',
+    color_gamemode: '#7ac943',
+    main_gamemode: 'osu',
 
 },reuse = false) {
     // 导入模板
@@ -216,39 +219,38 @@ export async function panel_E(data = {
     let card_A1_impl = await card_A1(data.card_A1, true);
 
     // 文字定义
-    let index_lu = torus.getTextPath(data.index_lu, 10, 26.84, 24, "left baseline", "#fff");
-    let index_ru = torus.getTextPath(data.index_ru, 1910, 26.84, 24, "right baseline", "#fff");
-    let tm_index_panel_name =
+    let index_lu = torus.getTextPath(data.index_leftup, 10, 26.84, 24, "left baseline", "#fff");
+    let index_ru = torus.getTextPath(data.index_rightup, 1910, 26.84, 24, "right baseline", "#fff");
+    let tm_ipn =
         torus.getTextMetrics(data.index_panel_name, 0, 0, 48, "left baseline", "#fff");
-    let index_panel_name_x = 607.5 - tm_index_panel_name.width / 2;
-    let index_panel_name = torus.getTextPath(data.index_panel_name, index_panel_name_x, 83.67, 48, "left baseline", "#fff");
+    let ipn_x = 607.5 - tm_ipn.width / 2;
+    let index_panel_name = torus.getTextPath(data.index_panel_name, ipn_x, 83.67, 48, "left baseline", "#fff");
 
-    let tm_lucard_sr_b =
-        torus.getTextMetrics(data.lucard_sr_b, 0, 0, 48, "left baseline", "#fff");
-    let tm_lucard_sr_m =
-        torus.getTextMetrics(data.lucard_sr_m, 0, 0, 36, "left baseline", "#fff");
-    let tm_lucard_sr_x = 160 - (tm_lucard_sr_b.width + tm_lucard_sr_m.width)/2;
-    let lucard_sr = torus.getTextPath(data.lucard_sr_b, tm_lucard_sr_x, 373.67, 48, "left baseline", "#fff") +
-        torus.getTextPath(data.lucard_sr_m, tm_lucard_sr_x + tm_lucard_sr_b.width, 373.67, 36, "left baseline", "#fff");
-    let lucard_gamemode = extra.getTextPath(data.lucard_gamemode, 48, 376.24, 48, "left baseline", data.color_lucard_gamemode);
+    let tm_sr_b =
+        torus.getTextMetrics(data.srcard_starrating_b, 0, 0, 48, "left baseline", "#fff");
+    let tm_sr_m =
+        torus.getTextMetrics(data.srcard_starrating_m, 0, 0, 36, "left baseline", "#fff");
+    let tm_sr_x = 160 - (tm_sr_b.width + tm_sr_m.width)/2;
+    let lucard_sr = torus.getTextPath(data.srcard_starrating_b, tm_sr_x, 373.67, 48, "left baseline", "#fff") +
+        torus.getTextPath(data.srcard_starrating_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
+    let lucard_gamemode = extra.getTextPath(data.srcard_gamemode, 48, 376.24, 48, "left baseline", data.color_gamemode);
 
-    let lums_fav = torus.getTextPath(data.lums_fav, 840, 353.84, 24, "right baseline", "#fff");
-    let lums_pc = torus.getTextPath(data.lums_pc, 840, 380.84, 24, "right baseline", "#fff");
+    let map_status_fav = torus.getTextPath(data.map_status_fav, 840, 353.84, 24, "right baseline", "#fff");
+    let map_status_pc = torus.getTextPath(data.map_status_pc, 840, 380.84, 24, "right baseline", "#fff");
 
-    let lbmt_title_romanized = torus.getTextPath(data.lbmt_title_romanized, 440, 883.67, 48, "center baseline", "#fff");
-    let lbmt_title_unicode = PuHuiTi.getTextPath(data.lbmt_title_unicode, 440, 931.6, 36, "center baseline", "#fff");
-    let lbmt_difficulty = torus.getTextPath(data.lbmt_difficulty, 440, 1004.75, 36, "center baseline", "#fff");
-    let lbmt_artist_mapper_bid = torus.getTextPath(data.lbmt_artist_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
+    let map_text_title_romanized = torus.getTextPath(data.map_text_title_romanized, 440, 883.67, 48, "center baseline", "#fff");
+    let map_text_title_unicode = PuHuiTi.getTextPath(data.map_text_title_unicode, 440, 931.6, 36, "center baseline", "#fff");
+    let map_text_difficulty = torus.getTextPath(data.map_text_difficulty, 440, 1004.75, 36, "center baseline", "#fff");
+    let map_text_artist_mapper_bid = torus.getTextPath(data.map_text_artist_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
 
-    let mu_score = torus.getTextPath(data.mu_score_b, 1215, 409.43, 84, "left baseline", "#fff") +
-        torus.getTextPath(data.mu_score_m, 1215 +
-            torus.getTextMetrics(data.mu_score_b, 0, 0, 84, "left baseline", "#fff").width,
+    let main_score = torus.getTextPath(data.main_score_b, 1215, 409.43, 84, "left baseline", "#fff") +
+        torus.getTextPath(data.main_score_m, 1215 +
+            torus.getTextMetrics(data.main_score_b, 0, 0, 84, "left baseline", "#fff").width,
             409.43, 60, "left baseline", "#fff");
 
     // 成绩评级
-    // 我不会写，写第一个位置哈，其他的y往下偏移40就行
 
-    const judge = (i, data, sum) => {
+    const Stats = (i, data, sum) => {
         let font_y = 412.79 + i * 40;
         let font_index_x = 1266;
         let font_stat_x = 1792;
@@ -268,9 +270,22 @@ export async function panel_E(data = {
 
     for (let i = 1; i <= 6; i++) {
         if (data.score_stats[`judge_${i}`]) {
-            judge(i, data.score_stats[`judge_${i}`], data.score_stats.judge_stat_sum);
+            Stats(i, data.score_stats[`judge_${i}`], data.score_stats.judge_stat_sum);
         }
     }
+
+    // 评级或难度分布
+    // 百度的方法，这也太暴力了吧
+    const density_arr_max = eval("Math.max(" + data.map_density_arr.toString() + ")");
+
+    data.map_density_arr.forEach((item, i) => {
+        let map_density_rrect_color = '#8DCFF4';
+        let rect_height = Math.max((85 * item / density_arr_max),16)
+        let svg_rect = `<rect id="D${i}RRect" x="${900 + i * 20}" y="${900 - rect_height}" width="16" height="${rect_height}" rx="10" ry="10" style="fill: ${map_density_rrect_color};"/>`;
+        svg = replaceText(svg, svg_rect, /(?<=<g id="JudgeRRects">)/);
+    })
+
+
 
     // 插入文字和颜色
     svg = replaceText(svg, index_lu, reg_index);
@@ -278,13 +293,13 @@ export async function panel_E(data = {
     svg = replaceText(svg, index_panel_name, reg_index);
     svg = replaceText(svg, lucard_sr, reg_index);
     svg = replaceText(svg, lucard_gamemode, reg_index);
-    svg = replaceText(svg, lums_fav, reg_index);
-    svg = replaceText(svg, lums_pc, reg_index);
-    svg = replaceText(svg, lbmt_title_romanized, reg_index);
-    svg = replaceText(svg, lbmt_title_unicode, reg_index);
-    svg = replaceText(svg, lbmt_difficulty, reg_index);
-    svg = replaceText(svg, lbmt_artist_mapper_bid, reg_index);
-    svg = replaceText(svg, mu_score, reg_index);
+    svg = replaceText(svg, map_status_fav, reg_index);
+    svg = replaceText(svg, map_status_pc, reg_index);
+    svg = replaceText(svg, map_text_title_romanized, reg_index);
+    svg = replaceText(svg, map_text_title_unicode, reg_index);
+    svg = replaceText(svg, map_text_difficulty, reg_index);
+    svg = replaceText(svg, map_text_artist_mapper_bid, reg_index);
+    svg = replaceText(svg, main_score, reg_index);
 
     // 插入图片
     let out_svg = new InsertSvgBuilder(svg)

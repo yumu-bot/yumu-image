@@ -98,32 +98,6 @@
     <g id="RBMapStatic">
     </g>
     <g id="JudgeRRects">
-      <rect x="900" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="920" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="940" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="960" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="980" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1000" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1020" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1040" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1060" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1080" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1100" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1120" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1140" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1160" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1180" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1200" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1220" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1240" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1260" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1280" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1300" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1320" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1340" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1360" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1380" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1400" y="815" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
     </g>
     <g id="RetryFailGraphArea">
       <rect x="900" y="930" width="520" height="90" style="fill: #d9e021;"/>
@@ -153,20 +127,8 @@
     <g id="MUScore">
     </g>
     <g id="MMScoreIndex">
-      <text transform="translate(1246.44 652.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">0</tspan></text>
-      <text transform="translate(1230.27 612.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">50</tspan></text>
-      <text transform="translate(1215.6 572.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">100</tspan></text>
-      <text transform="translate(1209.69 532.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">200</tspan></text>
-      <text transform="translate(1211.04 492.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">300</tspan></text>
-      <text transform="translate(1213.41 452.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">320</tspan></text>
     </g>
     <g id="MRscoreStat">
-      <text transform="translate(1792 652.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">2</tspan></text>
-      <text transform="translate(1792 612.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">30</tspan></text>
-      <text transform="translate(1792 572.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">15</tspan></text>
-      <text transform="translate(1792 532.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">10</tspan></text>
-      <text transform="translate(1792 492.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">5</tspan></text>
-      <text transform="translate(1792 452.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">1611</tspan></text>
     </g>
     <g id="MMScoreRRect">
     </g>
