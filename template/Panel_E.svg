@@ -169,12 +169,6 @@
       <text transform="translate(1792 452.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">1611</tspan></text>
     </g>
     <g id="MMScoreRRect">
-      <rect id="L1RRect" x="1280" y="430" width="${ss_judge_1_rrect_width}" height="28" rx="10" ry="10" style="fill: ${ss_judge_1_rrect_color};"/>
-      <rect id="L2RRect" x="1280" y="470" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
-      <rect id="L3RRect" x="1280" y="510" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
-      <rect id="L4RRect" x="1280" y="550" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
-      <rect id="L5RRect" x="1280" y="590" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
-      <rect id="L6RRect" x="1280" y="630" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
     </g>
     <g id="MRScoreData">
     </g>

@@ -84,15 +84,15 @@ export async function panel_E(data = {
     // 成绩评级
 
     score_stats:{
-        judge_sum:'12580',
-        judge_1:{
+        judge_stat_sum: '12580',
+        judge_1: {
             index: '320',
             stat: '1611',
             index_color: '#fff',
             stat_color: '#fff',
             rrect_color: '#8DCFF4',
         },
-        judge_2:{
+        judge_2: {
             index: '300',
             stat: '1611',
             index_color: '#fff',
@@ -120,13 +120,14 @@ export async function panel_E(data = {
             stat_color: '#fff',
             rrect_color: '#8DCFF4',
         },
-        judge_6:{
+        judge_6: {
             index: '0',
             stat: '1611',
             index_color: '#fff',
             stat_color: '#fff',
             rrect_color: '#8DCFF4',
         },
+        judge_7: null,
     },
 
     // 面板图片
@@ -246,28 +247,30 @@ export async function panel_E(data = {
 
     // 成绩评级
     // 我不会写，写第一个位置哈，其他的y往下偏移40就行
-    let ss_judge_1_index =
-        torus.getTextPath(data.score_stats.judge_1.index,
-            1266, 452.79, 30, "right baseline", data.score_stats.judge_1.index_color);
-    let ss_judge_1_stat =
-        torus.getTextPath(data.score_stats.judge_1.stat,
-            1792, 452.79, 30, "left baseline", data.score_stats.judge_1.stat_color);
 
-    let ss_judge_1_rrect_width;
-    if (data.score_stats.judge_sum > 0){
-        ss_judge_1_rrect_width = 500 * data.score_stats.judge_1.stat / data.score_stats.judge_sum;
-        if (ss_judge_1_rrect_width < 20) { ss_judge_1_rrect_width = 20;
+    const judge = (i, data, sum) => {
+        let font_y = 412.79 + i * 40;
+        let font_index_x = 1266;
+        let font_stat_x = 1792;
+
+        let index = torus.getTextPath(data.index,
+            font_index_x, font_y, 30, "right baseline", data.index_color);
+        let stat = torus.getTextPath(data.stat,
+            font_stat_x, font_y, 30, "left baseline", data.stat_color);
+        svg = replaceText(svg, index, reg_index);
+        svg = replaceText(svg, stat, reg_index);
+        if (data.stat > 0) {
+            let rect_width = 500 * data.stat / sum
+            let svg_rect = `<rect id="L${i}RRect" x="1280" y="${390 + 40 * i}" width="${Math.max(rect_width, 20)}" height="28" rx="10" ry="10" style="fill: ${data.rrect_color};"/>`;
+            svg = replaceText(svg, svg_rect, /(?<=<g id="MMScoreRRect">)/);
         }
-    } else ss_judge_1_rrect_width = null;
+    };
 
-
-    let reg_judge_1_rrect_width ='${ss_judge_1_rrect_width}';
-    let reg_ss_judge_1_rrect_color = '${ss_judge_1_rrect_color}';
-
-    svg = replaceText(svg, ss_judge_1_index, reg_index);
-    svg = replaceText(svg, ss_judge_1_stat, reg_index);
-    svg = replaceText(svg, ss_judge_1_rrect_width, reg_judge_1_rrect_width);
-    svg = replaceText(svg, data.score_stats.judge_1.rrect_color, reg_ss_judge_1_rrect_color);
+    for (let i = 1; i <= 6; i++) {
+        if (data.score_stats[`judge_${i}`]) {
+            judge(i, data.score_stats[`judge_${i}`], data.score_stats.judge_stat_sum);
+        }
+    }
 
     // 插入文字和颜色
     svg = replaceText(svg, index_lu, reg_index);
