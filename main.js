@@ -1,20 +1,14 @@
 import fs from "fs";
 import express from "express";
 import formidable from "express-formidable";
-import {card_A1, card_D, card_H} from "./src/card.js";
+import {card_D, card_H} from "./src/card.js";
 import {CACHE_PATH, readImage} from "./src/util.js";
-import {label_E} from "./src/component.js";
-import {panel_E, panel_I} from "./src/panel.js"
 
 /*
+//    已经部署在机器上了,提交前请注释掉测试代码
 fs.writeFileSync("image/out/card_A1.png", await card_A1());
-fs.writeFileSync("image/out/card_D.png", await card_D());
-fs.writeFileSync("image/out/card_H.png", await card_H());
-
-fs.writeFileSync("image/out/label_E.png", await label_E());
-*/
-fs.writeFileSync("image/out/panel_E.png", await panel_E());
-fs.writeFileSync("image/out/panel_I.png", await panel_I());
+ */
+fs.mkdir(CACHE_PATH, {recursive: true});
 
 const app = express();
 app.use(formidable({
