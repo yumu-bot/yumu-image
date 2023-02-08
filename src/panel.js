@@ -1,4 +1,4 @@
-import {InsertSvgBuilder, readImage, readTemplate, torus} from "./util.js";
+import {extra, InsertSvgBuilder, PuHuiTi, readImage, readTemplate, replaceText, torus} from "./util.js";
 import {card_A1, card_H} from "./card.js";
 import {label_E} from "./component.js";
 
@@ -81,6 +81,55 @@ export async function panel_E(data = {
         data_m: '1',
     },
 
+    // 成绩评级
+
+    score_stats:{
+        judge_sum:'12580',
+        judge_1:{
+            index: '320',
+            stat: '1611',
+            index_color: '#fff',
+            stat_color: '#fff',
+            rrect_color: '#8DCFF4',
+        },
+        judge_2:{
+            index: '300',
+            stat: '1611',
+            index_color: '#fff',
+            stat_color: '#fff',
+            rrect_color: '#8DCFF4',
+        },
+        judge_3:{
+            index: '200',
+            stat: '1611',
+            index_color: '#fff',
+            stat_color: '#fff',
+            rrect_color: '#8DCFF4',
+        },
+        judge_4:{
+            index: '100',
+            stat: '1611',
+            index_color: '#fff',
+            stat_color: '#fff',
+            rrect_color: '#8DCFF4',
+        },
+        judge_5:{
+            index: '50',
+            stat: '1611',
+            index_color: '#fff',
+            stat_color: '#fff',
+            rrect_color: '#8DCFF4',
+        },
+        judge_6:{
+            index: '0',
+            stat: '1611',
+            index_color: '#fff',
+            stat_color: '#fff',
+            rrect_color: '#8DCFF4',
+        },
+    },
+
+    // 面板图片
     banner: readImage("image/E_Banner.png"),
     judge_background: readImage("image/E_Background.jpg"),
     judge_fc: readImage("image/E_JudgeFullCombo.png"),
@@ -101,8 +150,35 @@ export async function panel_E(data = {
     map_favorite: readImage("image/E_Favorite.png"),
     map_playcount: readImage("image/E_PlayCount.png"),
     map_status: readImage("image/E_MapStatus.png"),
-},reuse = false) {
 
+    // 面板文字
+
+    index_lu: 'powered by Yumubot // Score (!ymp / !ymr)',
+    index_ru: 'request time: 2023-10-4 17:59:58 UTC+8',
+    index_panel_name: 'S v3.6',
+    lucard_sr_b: '6.',
+    lucard_sr_m: '5',
+    lucard_gamemode: '\uE800', // osu! 模式图标
+    lums_fav: '3.9K',
+    lums_pc: '78.2M',
+
+    lbmt_title_romanized: 'Hyakukakai to Shirotokkuri',
+    lbmt_title_unicode: '百花魁と白徳利',
+    lbmt_difficulty: 'Expert',
+    lbmt_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136',
+
+    mu_score_b: '21',
+    mu_score_m: '47483647',
+
+    // 面板颜色和特性
+    color_lucard_gamemode: '#7ac943',
+    gamemode: 'osu',
+
+},reuse = false) {
+    // 导入模板
+    let svg = readTemplate('template/Panel_E.svg');
+
+    // 路径定义
     let reg_banner = '${banner}';
     let reg_judge_background = '${judge_background}';
     let reg_judge_fc = '${judge_fc}';
@@ -124,6 +200,9 @@ export async function panel_E(data = {
     let reg_map_playcount = '${map_playcount}';
     let reg_map_status = '${map_status}';
 
+    let reg_index = /(?<=<g id="Index">)/;
+
+    // 卡片定义
     let label_acc = await label_E(data.label_acc,true);
     let label_combo = await label_E(data.label_combo,true);
     let label_pp = await label_E(data.label_pp,true);
@@ -133,11 +212,78 @@ export async function panel_E(data = {
     let label_ar = await label_E(data.label_ar,true);
     let label_od = await label_E(data.label_od,true);
     let label_hp = await label_E(data.label_hp,true);
-
     let card_A1_impl = await card_A1(data.card_A1, true);
 
-    let svg = readTemplate('template/Panel_E.svg');
+    // 文字定义
+    let index_lu = torus.getTextPath(data.index_lu, 10, 26.84, 24, "left baseline", "#fff");
+    let index_ru = torus.getTextPath(data.index_ru, 1910, 26.84, 24, "right baseline", "#fff");
+    let tm_index_panel_name =
+        torus.getTextMetrics(data.index_panel_name, 0, 0, 48, "left baseline", "#fff");
+    let index_panel_name_x = 607.5 - tm_index_panel_name.width / 2;
+    let index_panel_name = torus.getTextPath(data.index_panel_name, index_panel_name_x, 83.67, 48, "left baseline", "#fff");
 
+    let tm_lucard_sr_b =
+        torus.getTextMetrics(data.lucard_sr_b, 0, 0, 48, "left baseline", "#fff");
+    let tm_lucard_sr_m =
+        torus.getTextMetrics(data.lucard_sr_m, 0, 0, 36, "left baseline", "#fff");
+    let tm_lucard_sr_x = 160 - (tm_lucard_sr_b.width + tm_lucard_sr_m.width)/2;
+    let lucard_sr = torus.getTextPath(data.lucard_sr_b, tm_lucard_sr_x, 373.67, 48, "left baseline", "#fff") +
+        torus.getTextPath(data.lucard_sr_m, tm_lucard_sr_x + tm_lucard_sr_b.width, 373.67, 36, "left baseline", "#fff");
+    let lucard_gamemode = extra.getTextPath(data.lucard_gamemode, 48, 376.24, 48, "left baseline", data.color_lucard_gamemode);
+
+    let lums_fav = torus.getTextPath(data.lums_fav, 840, 353.84, 24, "right baseline", "#fff");
+    let lums_pc = torus.getTextPath(data.lums_pc, 840, 380.84, 24, "right baseline", "#fff");
+
+    let lbmt_title_romanized = torus.getTextPath(data.lbmt_title_romanized, 440, 883.67, 48, "center baseline", "#fff");
+    let lbmt_title_unicode = PuHuiTi.getTextPath(data.lbmt_title_unicode, 440, 931.6, 36, "center baseline", "#fff");
+    let lbmt_difficulty = torus.getTextPath(data.lbmt_difficulty, 440, 1004.75, 36, "center baseline", "#fff");
+    let lbmt_artist_mapper_bid = torus.getTextPath(data.lbmt_artist_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
+
+    let mu_score = torus.getTextPath(data.mu_score_b, 1215, 409.43, 84, "left baseline", "#fff") +
+        torus.getTextPath(data.mu_score_m, 1215 +
+            torus.getTextMetrics(data.mu_score_b, 0, 0, 84, "left baseline", "#fff").width,
+            409.43, 60, "left baseline", "#fff");
+
+    // 成绩评级
+    // 我不会写，写第一个位置哈，其他的y往下偏移40就行
+    let ss_judge_1_index =
+        torus.getTextPath(data.score_stats.judge_1.index,
+            1266, 452.79, 30, "right baseline", data.score_stats.judge_1.index_color);
+    let ss_judge_1_stat =
+        torus.getTextPath(data.score_stats.judge_1.stat,
+            1792, 452.79, 30, "left baseline", data.score_stats.judge_1.stat_color);
+
+    let ss_judge_1_rrect_width;
+    if (data.score_stats.judge_sum > 0){
+        ss_judge_1_rrect_width = 500 * data.score_stats.judge_1.stat / data.score_stats.judge_sum;
+        if (ss_judge_1_rrect_width < 20) { ss_judge_1_rrect_width = 20;
+        }
+    } else ss_judge_1_rrect_width = null;
+
+
+    let reg_judge_1_rrect_width ='${ss_judge_1_rrect_width}';
+    let reg_ss_judge_1_rrect_color = '${ss_judge_1_rrect_color}';
+
+    svg = replaceText(svg, ss_judge_1_index, reg_index);
+    svg = replaceText(svg, ss_judge_1_stat, reg_index);
+    svg = replaceText(svg, ss_judge_1_rrect_width, reg_judge_1_rrect_width);
+    svg = replaceText(svg, data.score_stats.judge_1.rrect_color, reg_ss_judge_1_rrect_color);
+
+    // 插入文字和颜色
+    svg = replaceText(svg, index_lu, reg_index);
+    svg = replaceText(svg, index_ru, reg_index);
+    svg = replaceText(svg, index_panel_name, reg_index);
+    svg = replaceText(svg, lucard_sr, reg_index);
+    svg = replaceText(svg, lucard_gamemode, reg_index);
+    svg = replaceText(svg, lums_fav, reg_index);
+    svg = replaceText(svg, lums_pc, reg_index);
+    svg = replaceText(svg, lbmt_title_romanized, reg_index);
+    svg = replaceText(svg, lbmt_title_unicode, reg_index);
+    svg = replaceText(svg, lbmt_difficulty, reg_index);
+    svg = replaceText(svg, lbmt_artist_mapper_bid, reg_index);
+    svg = replaceText(svg, mu_score, reg_index);
+
+    // 插入图片
     let out_svg = new InsertSvgBuilder(svg)
         .insertImage(data.banner, reg_banner)
         .insertImage(data.judge_background, reg_judge_background)

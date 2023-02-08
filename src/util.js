@@ -11,7 +11,9 @@ const svgToPng = async (svg) => await exports.convert(svg);
 
 const UTF8Encoder = new TextEncoder('utf8');
 
-const textToSVGRegular = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
+const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
+const textToSVGPuHuiTi = TextToSVG.loadSync("font/Alibaba-PuHuiTi-Medium.ttf");
+const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 
 export function readTemplate(path = '') {
     return fs.readFileSync(path, 'utf8');
@@ -42,7 +44,7 @@ function getTextPath_torus(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGRegular.getPath(text, {
+    return textToSVGTorusSB.getPath(text, {
         x: x,
         y: y,
         fontSize: size,
@@ -62,7 +64,7 @@ function getTextMetrics_torus(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGRegular.getMetrics(text, {
+    return textToSVGTorusSB.getMetrics(text, {
         x: x,
         y: y,
         fontSize: size,
@@ -87,12 +89,57 @@ function getTextPath_PuHuiTi(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGRegular.getPath(text, {
+    return textToSVGPuHuiTi.getPath(text, {
         x: x,
         y: y,
         fontSize: size,
         anchor: anchor,
         fontFamily: "PuHuiTi",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+export const extra = {};
+
+extra.getTextPath = getTextPath_extra;
+extra.getTextMetrics = getTextMetrics_extra;
+
+function getTextPath_extra(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGextra.getPath(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "extra",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextMetrics_extra(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGTorusSB.getMetrics(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "extra",
         attributes: {
             fill: fill
         }
@@ -107,7 +154,7 @@ function getTextMetrics_PuHuiTi(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGRegular.getMetrics(text, {
+    return textToSVGTorusSB.getMetrics(text, {
         x: x,
         y: y,
         fontSize: size,

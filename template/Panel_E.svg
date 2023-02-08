@@ -151,7 +151,6 @@
       <image id="Rank" width="114" height="144" transform="translate(998 413)" xlink:href="${score_rank}"/>
     </g>
     <g id="MUScore">
-      <text transform="translate(1215 409.43)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="font-size: 84px;">114</tspan><tspan x="109.62" y="0" style="font-size: 60px;">5140</tspan></text>
     </g>
     <g id="MMScoreIndex">
       <text transform="translate(1246.44 652.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">0</tspan></text>
@@ -170,7 +169,7 @@
       <text transform="translate(1792 452.79)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">1611</tspan></text>
     </g>
     <g id="MMScoreRRect">
-      <rect id="L1RRect" x="1280" y="430" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
+      <rect id="L1RRect" x="1280" y="430" width="${ss_judge_1_rrect_width}" height="28" rx="10" ry="10" style="fill: ${ss_judge_1_rrect_color};"/>
       <rect id="L2RRect" x="1280" y="470" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
       <rect id="L3RRect" x="1280" y="510" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
       <rect id="L4RRect" x="1280" y="550" width="500" height="28" rx="10" ry="10" style="fill: #8dcff4;"/>
@@ -199,10 +198,6 @@
   </g>
   <g id="LMap">
     <g id="LBMapText">
-      <text transform="translate(290.09 1036.84)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">Ponkichi - seros - b1144770</tspan></text>
-      <text transform="translate(385.33 1004.75)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 36px; font-weight: 600;"><tspan x="0" y="0">Expert</tspan></text>
-      <text transform="translate(316.02 931.6)" style="fill: #fff; font-family: Alibaba-PuHuiTi-M, &apos;Alibaba PuHuiTi&apos;; font-size: 36px;"><tspan x="0" y="0">百花魁と白徳利</tspan></text>
-      <text transform="translate(134.46 883.67)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 48px; font-weight: 600;"><tspan x="0" y="0">Hyakukakai to Shirotokkuri</tspan></text>
     </g>
     <g id="LMMapCover">
       <g style="clip-path: url(#clippath-8);">
@@ -213,13 +208,9 @@
     <g id="LUMapStatus">
       <g>
         <rect id="StarRRect" x="670" y="330" width="190" height="60" rx="20" ry="20" style="fill: #7ac943;"/>
-        <text id="PlayCountText" transform="translate(775.78 380.84)" style="fill: #7ac943; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">76.9M</tspan></text>
-        <text id="CollectionText" transform="translate(795.36 353.84)" style="fill: #7ac943; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">3.7K</tspan></text>
       </g>
       <g>
         <rect id="StarRRect-2" data-name="StarRRect" x="670" y="330" width="190" height="60" rx="20" ry="20" style="fill: #382e32;"/>
-        <text id="PlayCountText-2" data-name="PlayCountText" transform="translate(775.78 380.84)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">76.9M</tspan></text>
-        <text id="CollectionText-2" data-name="CollectionText" transform="translate(795.36 353.84)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">3.7K</tspan></text>
       </g>
     </g>
     <g id="LUMapObject">
@@ -287,17 +278,12 @@
     </g>
     <g id="LUCard">
       <rect id="StarRRect-3" data-name="StarRRect" x="40" y="330" width="190" height="60" rx="20" ry="20" style="fill: #382e32;"/>
-      <text id="Gamemode" transform="translate(48 376.24)" style="fill: #7ac943; font-family: extra, extra; font-size: 48px;"><tspan x="0" y="0"></tspan></text>
-      <text transform="translate(119.67 373.67)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="font-size: 48px;">4.</tspan><tspan x="38.5" y="0" style="font-size: 36px;">98</tspan></text>
     </g>
   </g>
   <g id="MainCard">
     <rect x="40" y="40" width="430" height="210" rx="20" ry="20" style="fill: #382e32;"/>
+    <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>
   </g>
   <g id="Index">
-    <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>
-    <text transform="translate(543.44 83.67)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 48px; font-weight: 600;"><tspan x="0" y="0">Score</tspan></text>
-    <text transform="translate(10 26.84)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">powered by Yumubot // Score (!ymp / !ymr)</tspan></text>
-    <text transform="translate(1459.67 26.84)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0" xml:space="preserve"> request time: 2021-10-4 17:59:58 UTC+8</tspan></text>
   </g>
 </svg>
