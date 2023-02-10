@@ -1,6 +1,6 @@
 import {extra, InsertSvgBuilder, PuHuiTi, readImage, readTemplate, replaceText, torus} from "./util.js";
 import {card_A1, card_H} from "./card.js";
-import {label_E, LABLE_OPTION} from "./component.js";
+import {label_E, LABEL_OPTION} from "./component.js";
 
 export async function panel_E(data = {
     card_A1: {
@@ -89,7 +89,7 @@ export async function panel_E(data = {
             stat_color: '#fff',
             rrect_color: '#79C471',
         },
-        judge_40: {
+        judge_4: {
             index: '100',
             stat: '0',
             index_color: '#fff',
@@ -110,11 +110,115 @@ export async function panel_E(data = {
             stat_color: '#fff',
             rrect_color: '#ED6C9E',
         },
-        judge_4: null,
+        judge_7: null,
     },
 
     // 谱面密度
     map_density_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
+    // 重试和失败数组 retry / exit
+    map_retry_arr: [
+        0,
+        0,
+        0,
+        747,
+        882,
+        451,
+        207,
+        225,
+        18,
+        162,
+        189,
+        243,
+        271,
+        162,
+        371,
+        180,
+        207,
+        99,
+        99,
+        72,
+        81,
+        108,
+        0,
+        81,
+        18,
+        45,
+        27,
+        227,
+        81,
+        46,
+        72,
+        63,
+        45,
+        145,
+        37,
+        81,
+        36,
+        28,
+        9,
+        63,
+        126,
+        54,
+        18,
+        36,
+        11,
+        0,
+        23,
+        27,
+        9,
+        0,
+        0,
+        9,
+        0,
+        19,
+        18,
+        18,
+        0,
+        36,
+        36,
+        18,
+        18,
+        18,
+        9,
+        0,
+        27,
+        46,
+        45,
+        19,
+        0,
+        36,
+        27,
+        20,
+        0,
+        45,
+        27,
+        9,
+        36,
+        64,
+        9,
+        9,
+        9,
+        9,
+        0,
+        45,
+        18,
+        10,
+        0,
+        18,
+        9,
+        55,
+        45,
+        36,
+        0,
+        27,
+        18,
+        27,
+        36,
+        54,
+        27,
+        9
+    ],
+    map_fail_arr: [0, 45, 18, 468, 2039, 822, 463, 930, 578, 225, 306, 225, 419, 271, 165, 495, 234, 162, 128, 144, 171, 262, 54, 63, 18, 27, 36, 54, 198, 110, 189, 154, 117, 128, 81, 46, 91, 81, 45, 92, 198, 180, 36, 82, 90, 54, 127, 109, 81, 27, 18, 9, 37, 9, 36, 45, 27, 18, 9, 36, 10, 0, 18, 0, 1, 9, 9, 9, 37, 18, 18, 37, 0, 45, 18, 18, 0, 27, 45, 45, 0, 9, 18, 18, 19, 10, 9, 36, 36, 0, 36, 18, 0, 18, 0, 9, 63, 27, 54, 9],
 
     // 面板图片
     banner: readImage("image/E_Banner.png"),
@@ -138,8 +242,8 @@ export async function panel_E(data = {
     index_leftup: 'powered by Yumubot // Score (!ymp / !ymr)',
     index_rightup: 'request time: 2023-10-4 17:59:58 UTC+8',
     index_panel_name: 'S v3.6',
-    srcard_starrating_b: '6.',
-    srcard_starrating_m: '5',
+    srcard_starrating_b: '2.',
+    srcard_starrating_m: '2',
     srcard_gamemode: '\uE800', // osu! 模式图标
     map_status_fav: '3.9K',
     map_status_pc: '78.2M',
@@ -153,8 +257,9 @@ export async function panel_E(data = {
     main_score_m: '47483647',
 
     map_public_rating: '9.8', //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
-    map_retry_percent: '54%', //重试率
-    map_fail_percent: '13.2%', //失败率
+    map_retry_percent: '54', //重试率%
+    map_fail_percent: '13.2', //失败率%
+
 
     // 面板颜色和特性
     color_gamemode: '#7ac943',
@@ -184,30 +289,31 @@ export async function panel_E(data = {
     let reg_index = /(?<=<g id="Index">)/;
 
     // 卡片定义
-    console.time("lable");
+    console.time("label");
     let label_acc =
-        await label_E({...LABLE_OPTION.ACC, ...data.label_data.acc}, true);
+        await label_E({...LABEL_OPTION.ACC, ...data.label_data.acc}, true);
     let label_combo =
-        await label_E({...LABLE_OPTION.COMBO, ...data.label_data.combo}, true);
+        await label_E({...LABEL_OPTION.COMBO, ...data.label_data.combo}, true);
     let label_pp =
-        await label_E({...LABLE_OPTION.PP, ...data.label_data.pp}, true);
+        await label_E({...LABEL_OPTION.PP, ...data.label_data.pp}, true);
     let label_bpm =
-        await label_E({...LABLE_OPTION.BPM, ...data.label_data.bpm}, true);
+        await label_E({...LABEL_OPTION.BPM, ...data.label_data.bpm}, true);
     let label_length =
-        await label_E({...LABLE_OPTION.LENGTH, ...data.label_data.length}, true);
+        await label_E({...LABEL_OPTION.LENGTH, ...data.label_data.length}, true);
 
     let label_cs =
-        await label_E({...LABLE_OPTION.CS, ...data.label_data.cs}, true);
+        await label_E({...LABEL_OPTION.CS, ...data.label_data.cs}, true);
     let label_ar =
-        await label_E({...LABLE_OPTION.AR, ...data.label_data.ar}, true);
+        await label_E({...LABEL_OPTION.AR, ...data.label_data.ar}, true);
     let label_od =
-        await label_E({...LABLE_OPTION.OD, ...data.label_data.od}, true);
+        await label_E({...LABEL_OPTION.OD, ...data.label_data.od}, true);
     let label_hp =
-        await label_E({...LABLE_OPTION.HP, ...data.label_data.hp}, true);
+        await label_E({...LABEL_OPTION.HP, ...data.label_data.hp}, true);
 
     let card_A1_impl = await card_A1(data.card_A1, true);
-    console.timeEnd("lable");
+    console.timeEnd("label");
     console.time("txt");
+
     // 文字定义
     let index_lu = torus.getTextPath(data.index_leftup, 10, 26.84, 24, "left baseline", "#fff");
     let index_ru = torus.getTextPath(data.index_rightup, 1910, 26.84, 24, "right baseline", "#fff");
@@ -221,9 +327,9 @@ export async function panel_E(data = {
     let tm_sr_m =
         torus.getTextMetrics(data.srcard_starrating_m, 0, 0, 36, "left baseline", "#fff");
     let tm_sr_x = 160 - (tm_sr_b.width + tm_sr_m.width) / 2;
-    let lucard_sr = torus.getTextPath(data.srcard_starrating_b, tm_sr_x, 373.67, 48, "left baseline", "#fff") +
+    let srcard_starrating = torus.getTextPath(data.srcard_starrating_b, tm_sr_x, 373.67, 48, "left baseline", "#fff") +
         torus.getTextPath(data.srcard_starrating_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
-    let lucard_gamemode = extra.getTextPath(data.srcard_gamemode, 48, 376.24, 48, "left baseline", data.color_gamemode);
+    let srcard_gamemode = extra.getTextPath(data.srcard_gamemode, 48, 376.24, 48, "left baseline", data.color_gamemode);
 
     let map_status_fav = torus.getTextPath(data.map_status_fav, 840, 353.84, 24, "right baseline", "#fff");
     let map_status_pc = torus.getTextPath(data.map_status_pc, 840, 380.84, 24, "right baseline", "#fff");
@@ -241,9 +347,9 @@ export async function panel_E(data = {
     let title_density = torus.getTextPath("Density", 900, 802.88, 18, "left baseline", "#a1a1a1");
     let title_retryfail = torus.getTextPath("Retry // Fail", 900, 922.63, 18, "left baseline", "#a1a1a1");
     let map_public_rating = torus.getTextPath("Rating " + data.map_public_rating,
-        900, 802.88, 18, "left baseline", "#a1a1a1");
-    let map_retryfail_percent = torus.getTextPath("R " + data.map_retry_percent + " // F " + data.map_retry_percent,
-        900, 802.88, 18, "left baseline", "#a1a1a1");
+        1420, 802.88, 18, "right baseline", "#a1a1a1");
+    let map_retryfail_percent = torus.getTextPath("R " + data.map_retry_percent + "% // F " + data.map_fail_percent + "%",
+        1420, 922.63, 18, "right baseline", "#a1a1a1");
 
     console.timeEnd("txt");
     console.time("stats");
@@ -284,13 +390,77 @@ export async function panel_E(data = {
         svg = replaceText(svg, svg_rect, /(?<=<g id="JudgeRRects">)/);
     })
 
+    // 星数
+    // 纯文本纯天然无污染！（就是挺奇怪的，怎么href需要下到bot的根目录了
+    const Star = (data) => {
+        let sr_b = Number(data.srcard_starrating_b);
+        let sr_m = Number(data.srcard_starrating_b + data.srcard_starrating_m) - sr_b;
+
+        if (sr_b >= 10) {
+            sr_b = 10;
+            sr_m = 0
+        }
+
+        for (let i = 1; i <= sr_b; i++) {
+            let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
+        <image id="EPanel${i}Star" width="40" height="40" transform="translate(40 ${35 * (i - 1) + 396})" xlink:href="nowbot-image/image/E_Star.png"/>
+        </g>`;
+            svg = replaceText(svg, sr_b_svg, /(?<=<g id="LUStars">)/);
+        }
+
+        let sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
+        <image id="EPanel${sr_b + 1}Star" width="40" height="40" transform="translate(40 ${35 * sr_b + 396}) translate(${20 * (1 - sr_m)} ${20 * (1 - sr_m)}) scale(${sr_m})"
+        xlink:href="nowbot-image/image/E_Star.png"/>
+        </g>`;
+
+        svg = replaceText(svg, sr_m_svg, /(?<=<g id="LUStars">)/);
+    }
+
+    Star(data);
+
+    //最右下的失败率
+    const RFrect = (data) => {
+        let rect_svg = `<rect id="BaseRRect" x="1440" y="1020" width="420" height="4" rx="2" ry="2" style="fill: #a1a1a1;"/>
+      <rect id="RetryRRect" x="1440" y="1020" width="${4.2 * (Number(data.map_fail_percent) + Number(data.map_retry_percent))}" height="4" rx="2" ry="2" style="fill: #f6d659;"/>
+      <rect id="FailRRect" x="1440" y="1020" width="${4.2 * data.map_fail_percent}" height="4" rx="2" ry="2" style="fill: #ed6c9e;"/>`
+
+        svg = replaceText(svg, rect_svg, /(?<=<g id="RBRetryFailRRect">)/);
+    }
+
+    RFrect(data);
+
+    //中下的失败率重试率图像
+    const RFGraph = (arr, color) => {
+        const step = 520 / arr.length
+        const max = Math.max.apply(Math, arr);
+        const start_x = 900;
+        const start_y = 1020;
+
+        // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?) 开根号是为了让数据不那么极端
+        // 高度本来是90，但老是超高，缩短一点
+        let path_svg = `<svg> <path d="M ${start_x} ${start_y - (Math.pow(arr.shift() / max,0.5) * 75)} S `;
+
+        arr.forEach((item,i) => {
+            let lineto_x = start_x + step * (i+1)
+            let lineto_y = start_y - (Math.pow(item / max,0.5) * 75);
+
+            path_svg += `${lineto_x} ${lineto_y} `
+        })
+
+        path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 5px;"/> </svg>`
+
+        svg = replaceText(svg, path_svg, /(?<=<g id="RetryFailGraphArea">)/);
+    }
+
+    RFGraph(data.map_fail_arr, '#ed6c9e');
+    RFGraph(data.map_retry_arr, '#f6d659');
 
     // 插入文字和颜色
     svg = replaceText(svg, index_lu, reg_index);
     svg = replaceText(svg, index_ru, reg_index);
     svg = replaceText(svg, index_panel_name, reg_index);
-    svg = replaceText(svg, lucard_sr, reg_index);
-    svg = replaceText(svg, lucard_gamemode, reg_index);
+    svg = replaceText(svg, srcard_starrating, reg_index);
+    svg = replaceText(svg, srcard_gamemode, reg_index);
     svg = replaceText(svg, map_status_fav, reg_index);
     svg = replaceText(svg, map_status_pc, reg_index);
     svg = replaceText(svg, map_text_title_romanized, reg_index);
@@ -298,6 +468,10 @@ export async function panel_E(data = {
     svg = replaceText(svg, map_text_difficulty, reg_index);
     svg = replaceText(svg, map_text_artist_mapper_bid, reg_index);
     svg = replaceText(svg, main_score, reg_index);
+    svg = replaceText(svg, title_density, reg_index);
+    svg = replaceText(svg, title_retryfail, reg_index);
+    svg = replaceText(svg, map_public_rating, reg_index);
+    svg = replaceText(svg, map_retryfail_percent, reg_index);
 
     // 插入模组
     let insertMod = (i, mod) => {

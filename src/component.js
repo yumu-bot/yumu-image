@@ -1,6 +1,6 @@
 import {InsertSvgBuilder, readExportFileV3, readTemplate, replaceText, torus} from "./util.js";
 
-export const LABLE_OPTION = {
+export const LABEL_OPTION = {
     ACC: {
         icon: readExportFileV3("object-score-accpp.png"),
         icon_title: 'Accuracy'
@@ -39,7 +39,7 @@ export const LABLE_OPTION = {
     },
 }
 export async function label_E(data = {
-    icon: LABLE_OPTION.ACC,
+    icon: LABEL_OPTION.ACC,
     icon_title: 'Accuracy',
     remark: '-1.64%',
     data_b: '98',
