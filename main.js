@@ -9,7 +9,11 @@ import {panel_E} from "./src/panel.js";
 //    已经部署在机器上了,提交前请注释掉测试代码
 fs.writeFileSync("image/out/card_A1.png", await card_A1());
  */
+
 fs.mkdirSync(CACHE_PATH, {recursive: true});
+console.time()
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd()
 
 const app = express();
 app.use(formidable({

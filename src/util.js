@@ -4,8 +4,11 @@ import TextToSVG from 'text-to-svg';
 import axios from "axios";
 import exports from 'convert-svg-to-png';
 import https from "https";
+import path from "path";
 
-export const CACHE_PATH = os.tmpdir() + "/n-bot";
+const path_util = path;
+export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
+export const EXPORT_FILE_V3 = "image";
 
 const svgToPng = async (svg) => await exports.convert(svg);
 
@@ -21,6 +24,10 @@ export function readTemplate(path = '') {
 
 export function readImage(path = '') {
     return fs.readFileSync(path, 'binary');
+}
+
+export function readExportFileV3(path = '') {
+    return fs.readFileSync(path_util.join(EXPORT_FILE_V3, path), 'binary');
 }
 
 export async function readNetImage(path = '') {
@@ -370,4 +377,42 @@ export async function getFlagSvg(code = "cn") {
     }
     flag = fs.readFileSync(path, "utf-8");
     return flag;
+}
+
+const Mod = {
+    "NM": 0,
+    "EZ": 2,
+    "HD": 8,
+    "HR": 16,
+    "DT": 64,
+    "HT": 256,
+    "FL": 1024,
+}
+
+export function hasMod(modInt = 0, mod = '') {
+    return Mod[mod] ? (modInt & Mod[mod]) !== 0 : false;
+}
+
+export function getModInt(mod = ['']) {
+    return mod.map(v => {
+        return Mod[v] ? Mod[v] : 0
+    }).reduce((sum, v) => sum + v, 0);
+}
+
+export function addMod(modInt = 0, mod = '') {
+    return Mod[mod] ? modInt | Mod[mod] : modInt;
+}
+
+export function getAllMod(modInt) {
+    let mods = [];
+    for (const [mod, i] of Object.entries(Mod)) {
+        if (modInt & i) {
+            mods.push(mod);
+        }
+    }
+    return mods;
+}
+
+export function delMod(modInt = 0, mod = '') {
+    return Mod[mod] ? modInt & ~Mod[mod] : modInt;
 }

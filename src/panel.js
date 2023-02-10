@@ -1,10 +1,9 @@
 import {extra, InsertSvgBuilder, PuHuiTi, readImage, readTemplate, replaceText, torus} from "./util.js";
 import {card_A1, card_H} from "./card.js";
-import {label_E} from "./component.js";
-
+import {label_E, LABLE_OPTION} from "./component.js";
 
 export async function panel_E(data = {
-    card_A1:{
+    card_A1: {
         background: readImage("image/A_CardA1_BG.png"),
         avatar: readImage("image/A_CardA1_Avatar.png"),
         country_flag: readImage("image/A_CardA1_CountryFlag.png"),
@@ -17,73 +16,57 @@ export async function panel_E(data = {
         pp_b: '4396',
         pp_m: 'PP',
     },
-    label_acc:{
-        icon: readImage("image/object-score-accpp.png"),
-        icon_title: 'Accuracy',
-        remark: '-1.64%',
-        data_b: '98.',
-        data_m: '36%',
-    },
-    label_combo:{
-        icon: readImage("image/object-score-combo.png"),
-        icon_title: 'Combo',
-        remark: '9999x',
-        data_b: '547',
-        data_m: 'x',
-    },
-    label_pp:{
-        icon: readImage("image/object-score-pp.png"),
-        icon_title: 'PP',
-        remark: '',
-        data_b: '2048.',
-        data_m: '2',
-    },
-    label_bpm:{
-        icon: readImage("image/object-score-beatsperminute.png"),
-        icon_title: 'BPM',
-        remark: '154.4ms',
-        data_b: '210.',
-        data_m: '1',
-    },
-    label_length:{
-        icon: readImage("image/object-score-length.png"),
-        icon_title: 'Length',
-        remark: '3:04',
-        data_b: '3:',
-        data_m: '06',
-    },
-    label_cs:{
-        icon: readImage("image/object-score-circlesize.png"),
-        icon_title: 'CS',
-        remark: '154px',
-        data_b: '4.',
-        data_m: '2',
-    },
-    label_ar:{
-        icon: readImage("image/object-score-accpp.png"),
-        icon_title: 'AR',
-        remark: '450ms',
-        data_b: '10.',
-        data_m: '3 (9)',
-    },
-    label_od:{
-        icon: readImage("image/object-score-approachrate.png"),
-        icon_title: 'OD',
-        remark: '16ms',
-        data_b: '9.',
-        data_m: '82 (8.1)',
-    },
-    label_hp:{
-        icon: readImage("image/object-score-healthpoint.png"),
-        icon_title: 'HP',
-        remark: '-',
-        data_b: '6.',
-        data_m: '1',
+    label_data: {
+        acc: {
+            remark: '-1.64%',
+            data_b: '98.',
+            data_m: '36%',
+        },
+        combo: {
+            remark: '9999x',
+            data_b: '547',
+            data_m: 'x',
+        },
+        pp: {
+            remark: '',
+            data_b: '2048.',
+            data_m: '2',
+        },
+        bpm: {
+            remark: '154.4ms',
+            data_b: '210.',
+            data_m: '1',
+        },
+        length: {
+            remark: '3:04',
+            data_b: '3:',
+            data_m: '06',
+        },
+        cs: {
+            remark: '154px',
+            data_b: '4.',
+            data_m: '2',
+        },
+        ar: {
+            remark: '450ms',
+            data_b: '10.',
+            data_m: '3 (9)',
+        },
+        od: {
+            remark: '16ms',
+            data_b: '9.',
+            data_m: '82 (8.1)',
+        },
+        hp: {
+            remark: '-',
+            data_b: '6.',
+            data_m: '1',
+        },
     },
 
     // 成绩评级
 
-    score_stats:{
+    score_stats: {
         judge_stat_sum: '12580',
         judge_1: {
             index: '320',
@@ -99,21 +82,21 @@ export async function panel_E(data = {
             stat_color: '#fff',
             rrect_color: '#8DCFF4',
         },
-        judge_3:{
+        judge_3: {
             index: '200',
             stat: '1611',
             index_color: '#fff',
             stat_color: '#fff',
             rrect_color: '#8DCFF4',
         },
-        judge_4:{
+        judge_4: {
             index: '100',
             stat: '1611',
             index_color: '#fff',
             stat_color: '#fff',
             rrect_color: '#8DCFF4',
         },
-        judge_5:{
+        judge_5: {
             index: '50',
             stat: '1611',
             index_color: '#fff',
@@ -131,7 +114,7 @@ export async function panel_E(data = {
     },
 
     // 谱面密度
-    map_density_arr :[1,2,4,5,2,7,2,2,6,4,5,2,2,5,8,5,4,2,5,4,2,6,4,7,5,6],
+    map_density_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
 
     // 面板图片
     banner: readImage("image/E_Banner.png"),
@@ -143,11 +126,6 @@ export async function panel_E(data = {
     colored_circle: readImage("image/E_ColoredCircle.png"),
     colored_ring: readImage("image/E_ColoredRing.png"),
     score_rank: readImage("image/E_ScoreRank.png"),
-    mod1: readImage("image/E_Mod.png"),
-    mod2: readImage("image/E_Mod.png"),
-    mod3: readImage("image/E_Mod.png"),
-    mod4: readImage("image/E_Mod.png"),
-    mod5: readImage("image/E_Mod.png"),
     star: readImage("image/E_Star.png"),
     map_background: readImage("image/E_MapCover.jpg"),
     map_hexagon: readImage("image/E_Hexagon.png"),
@@ -182,10 +160,9 @@ export async function panel_E(data = {
     color_gamemode: '#7ac943',
     main_gamemode: 'osu',
 
-},reuse = false) {
+}, reuse = false) {
     // 导入模板
     let svg = readTemplate('template/Panel_E.svg');
-
     // 路径定义
     let reg_banner = '${banner}';
     let reg_judge_background = '${judge_background}';
@@ -196,6 +173,7 @@ export async function panel_E(data = {
     let reg_colored_circle = '${colored_circle}';
     let reg_colored_ring = '${colored_ring}';
     let reg_score_rank = '${score_rank}';
+    let reg_mod = /(?<=<g id="RUMods">)/
     let reg_mod1 = '${mod1}';
     let reg_mod2 = '${mod2}';
     let reg_mod3 = '${mod3}';
@@ -211,17 +189,30 @@ export async function panel_E(data = {
     let reg_index = /(?<=<g id="Index">)/;
 
     // 卡片定义
-    let label_acc = await label_E(data.label_acc,true);
-    let label_combo = await label_E(data.label_combo,true);
-    let label_pp = await label_E(data.label_pp,true);
-    let label_bpm = await label_E(data.label_bpm,true);
-    let label_length = await label_E(data.label_length,true);
-    let label_cs = await label_E(data.label_cs,true);
-    let label_ar = await label_E(data.label_ar,true);
-    let label_od = await label_E(data.label_od,true);
-    let label_hp = await label_E(data.label_hp,true);
-    let card_A1_impl = await card_A1(data.card_A1, true);
+    console.time("lable");
+    let label_acc =
+        await label_E({...LABLE_OPTION.ACC, ...data.label_data.acc}, true);
+    let label_combo =
+        await label_E({...LABLE_OPTION.COMBO, ...data.label_data.combo}, true);
+    let label_pp =
+        await label_E({...LABLE_OPTION.PP, ...data.label_data.pp}, true);
+    let label_bpm =
+        await label_E({...LABLE_OPTION.BPM, ...data.label_data.bpm}, true);
+    let label_length =
+        await label_E({...LABLE_OPTION.LENGTH, ...data.label_data.length}, true);
 
+    let label_cs =
+        await label_E({...LABLE_OPTION.CS, ...data.label_data.cs}, true);
+    let label_ar =
+        await label_E({...LABLE_OPTION.AR, ...data.label_data.ar}, true);
+    let label_od =
+        await label_E({...LABLE_OPTION.OD, ...data.label_data.od}, true);
+    let label_hp =
+        await label_E({...LABLE_OPTION.HP, ...data.label_data.hp}, true);
+
+    let card_A1_impl = await card_A1(data.card_A1, true);
+    console.timeEnd("lable");
+    console.time("txt");
     // 文字定义
     let index_lu = torus.getTextPath(data.index_leftup, 10, 26.84, 24, "left baseline", "#fff");
     let index_ru = torus.getTextPath(data.index_rightup, 1910, 26.84, 24, "right baseline", "#fff");
@@ -234,7 +225,7 @@ export async function panel_E(data = {
         torus.getTextMetrics(data.srcard_starrating_b, 0, 0, 48, "left baseline", "#fff");
     let tm_sr_m =
         torus.getTextMetrics(data.srcard_starrating_m, 0, 0, 36, "left baseline", "#fff");
-    let tm_sr_x = 160 - (tm_sr_b.width + tm_sr_m.width)/2;
+    let tm_sr_x = 160 - (tm_sr_b.width + tm_sr_m.width) / 2;
     let lucard_sr = torus.getTextPath(data.srcard_starrating_b, tm_sr_x, 373.67, 48, "left baseline", "#fff") +
         torus.getTextPath(data.srcard_starrating_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
     let lucard_gamemode = extra.getTextPath(data.srcard_gamemode, 48, 376.24, 48, "left baseline", data.color_gamemode);
@@ -259,6 +250,8 @@ export async function panel_E(data = {
     let map_retryfail_percent = torus.getTextPath("R " + data.map_retry_percent + " // F " + data.map_retry_percent,
         900, 802.88, 18, "left baseline", "#a1a1a1");
 
+    console.timeEnd("txt");
+    console.time("stats");
     // 成绩评级
 
     const Stats = (i, data, sum) => {
@@ -286,12 +279,12 @@ export async function panel_E(data = {
     }
 
     // 评级或难度分布
-    // 百度的方法，这也太暴力了吧
-    const density_arr_max = eval("Math.max(" + data.map_density_arr.toString() + ")");
+    // 百度的方法，这也太暴力了吧 我不是很理解,为什么要用 eval ? eval是执行一段js代码的字符串,既然是在写js代码,直接写上
+    const density_arr_max = Math.max.apply(Math, data.map_density_arr);
 
     data.map_density_arr.forEach((item, i) => {
         let map_density_rrect_color = '#8DCFF4';
-        let rect_height = Math.max((85 * item / density_arr_max),16)
+        let rect_height = Math.max((85 * item / density_arr_max), 16);
         let svg_rect = `<rect id="D${i}RRect" x="${900 + i * 20}" y="${900 - rect_height}" width="16" height="${rect_height}" rx="10" ry="10" style="fill: ${map_density_rrect_color};"/>`;
         svg = replaceText(svg, svg_rect, /(?<=<g id="JudgeRRects">)/);
     })
@@ -311,6 +304,24 @@ export async function panel_E(data = {
     svg = replaceText(svg, map_text_artist_mapper_bid, reg_index);
     svg = replaceText(svg, main_score, reg_index);
 
+    let insertMod = (i, mod) => {
+        let offset_x = 1810 - i * 50;
+        return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${mod}"/>`;
+    }
+
+    let all_mod = ['HD', 'HR', 'DT'];
+    if (all_mod.length <= 3) {
+        all_mod.forEach((val, i) => {
+            svg = replaceText(svg, insertMod(2 * i + 1, `\${${val}}`), reg_mod);
+        });
+    } else {
+        all_mod.forEach((val, i) => {
+            svg = replaceText(svg, insertMod(i + 1, `\${${val}}`), reg_mod);
+        });
+    }
+
+    console.timeEnd("stats");
+    console.time("img");
     // 插入图片
     let out_svg = new InsertSvgBuilder(svg)
         .insertImage(data.banner, reg_banner)
@@ -322,29 +333,52 @@ export async function panel_E(data = {
         .insertImage(data.colored_circle, reg_colored_circle)
         .insertImage(data.colored_ring, reg_colored_ring)
         .insertImage(data.score_rank, reg_score_rank)
-        .insertImage(data.mod1, reg_mod1)
-        .insertImage(data.mod2, reg_mod2)
-        .insertImage(data.mod3, reg_mod3)
-        .insertImage(data.mod4, reg_mod4)
-        .insertImage(data.mod5, reg_mod5)
         .insertImage(data.star, reg_star)
         .insertImage(data.map_background, reg_map_background)
         .insertImage(data.map_hexagon, reg_map_hexagon)
         .insertImage(data.map_favorite, reg_map_favorite)
         .insertImage(data.map_playcount, reg_map_playcount)
         .insertImage(data.map_status, reg_map_status);
+    all_mod.forEach((v) => {
+        out_svg.insertImage(readImage("image/E_Mod.png"), `\${${v}}`);
+    })
+    console.timeEnd("img");
+    console.time("svg");
+    console.time("svg1");
     await out_svg.insertSvg(card_A1_impl, 40, 40);
+    console.timeEnd("svg1");
+    console.time("svg2");
     await out_svg.insertSvg(label_acc, 1230, 680);
+    console.timeEnd("svg2");
+    console.time("svg3");
     await out_svg.insertSvg(label_combo, 1440, 680);
+    console.timeEnd("svg3");
+    console.time("svg4");
     await out_svg.insertSvg(label_pp, 1650, 680);
+    console.timeEnd("svg4");
+    console.time("svg5");
     await out_svg.insertSvg(label_bpm, 1440, 790);
+    console.timeEnd("svg5");
+    console.time("svg6");
     await out_svg.insertSvg(label_length, 1650, 790);
+    console.timeEnd("svg6");
+    console.time("svg7");
     await out_svg.insertSvg(label_cs, 1440, 870);
+    console.timeEnd("svg7");
+    console.time("svg8");
     await out_svg.insertSvg(label_ar, 1650, 870);
+    console.timeEnd("svg8");
+    console.time("svg9");
     await out_svg.insertSvg(label_od, 1440, 950);
+    console.timeEnd("svg9");
+    console.time("svg10");
     await out_svg.insertSvg(label_hp, 1650, 950);
-
-    return out_svg.export(reuse);
+    console.timeEnd("svg10");
+    console.timeEnd("svg");
+    console.time("export");
+    let o = out_svg.export(reuse);
+    console.timeEnd("export");
+    return o;
 }
 
 export async function panel_I(data = {

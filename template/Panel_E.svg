@@ -135,21 +135,7 @@
     <g id="MRScoreData">
     </g>
     <g id="RUMods">
-      <g style="clip-path: url(#clippath-3);">
-        <use transform="translate(1760 350)" xlink:href="#image-1A"/>
-      </g>
-      <g style="clip-path: url(#clippath-4);">
-        <use transform="translate(1710 350)" xlink:href="#image-1C"/>
-      </g>
-      <g style="clip-path: url(#clippath-5);">
-        <use transform="translate(1660 350)" xlink:href="#image-1B"/>
-      </g>
-      <g style="clip-path: url(#clippath-6);">
-        <use transform="translate(1610 350)" xlink:href="#image-1D"/>
-      </g>
-      <g style="clip-path: url(#clippath-7);">
-        <use transform="translate(1560 350)" xlink:href="#image-1E"/>
-      </g>
+
     </g>
   </g>
   <g id="LMap">
