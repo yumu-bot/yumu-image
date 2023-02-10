@@ -219,6 +219,17 @@ class SaveFiles {
         return this.tmpDir + f;
     };
 
+    move(path) {
+        let f = randomString(4);
+        while (this.files.includes(f)) {
+            f = randomString(4);
+        }
+        this.files.push(f);
+        fs.copyFileSync(path, this.tmpDir + f);
+        fs.rmSync(path);
+        return this.tmpDir + f;
+    }
+
     getAllPath() {
         return this.files.map(f => this.tmpDir + f);
     };
@@ -228,7 +239,6 @@ class SaveFiles {
     };
 
     remove() {
-        console.log(this.tmpDir)
         fs.rmSync(this.tmpDir, {force: true, recursive: true});
     };
 }
@@ -311,7 +321,12 @@ export class InsertSvgBuilder {
     }
 
     insertImage(img, reg = /^/) {
-        let path = this.f_util.save(img);
+        let path;
+        if (img.startsWith(CACHE_PATH)) {
+            path = this.f_util.move(img);
+        } else {
+            path = this.f_util.save(img);
+        }
         this.svg = replaceText(this.svg, path, reg);
         return this;
     }
