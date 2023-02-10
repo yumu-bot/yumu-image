@@ -67,50 +67,50 @@ export async function panel_E(data = {
     // 成绩评级
 
     score_stats: {
-        judge_stat_sum: '12580',
+        judge_stat_sum: '1385',
         judge_1: {
             index: '320',
-            stat: '1611',
+            stat: '911',
             index_color: '#fff',
             stat_color: '#fff',
             rrect_color: '#8DCFF4',
         },
         judge_2: {
             index: '300',
-            stat: '1611',
+            stat: '430',
             index_color: '#fff',
             stat_color: '#fff',
-            rrect_color: '#8DCFF4',
+            rrect_color: '#FEF668',
         },
         judge_3: {
             index: '200',
-            stat: '1611',
+            stat: '41',
             index_color: '#fff',
             stat_color: '#fff',
-            rrect_color: '#8DCFF4',
+            rrect_color: '#79C471',
         },
-        judge_4: {
+        judge_40: {
             index: '100',
-            stat: '1611',
+            stat: '0',
             index_color: '#fff',
             stat_color: '#fff',
-            rrect_color: '#8DCFF4',
+            rrect_color: '#5E8AC6',
         },
         judge_5: {
             index: '50',
-            stat: '1611',
+            stat: '0',
             index_color: '#fff',
             stat_color: '#fff',
-            rrect_color: '#8DCFF4',
+            rrect_color: '#A1A1A1',
         },
         judge_6: {
             index: '0',
-            stat: '1611',
+            stat: '3',
             index_color: '#fff',
             stat_color: '#fff',
-            rrect_color: '#8DCFF4',
+            rrect_color: '#ED6C9E',
         },
-        judge_7: null,
+        judge_4: null,
     },
 
     // 谱面密度
@@ -174,11 +174,6 @@ export async function panel_E(data = {
     let reg_colored_ring = '${colored_ring}';
     let reg_score_rank = '${score_rank}';
     let reg_mod = /(?<=<g id="RUMods">)/
-    let reg_mod1 = '${mod1}';
-    let reg_mod2 = '${mod2}';
-    let reg_mod3 = '${mod3}';
-    let reg_mod4 = '${mod4}';
-    let reg_mod5 = '${mod5}';
     let reg_star = '${star}';
     let reg_map_background = '${map_background}';
     let reg_map_hexagon = '${map_hexagon}';
@@ -304,19 +299,20 @@ export async function panel_E(data = {
     svg = replaceText(svg, map_text_artist_mapper_bid, reg_index);
     svg = replaceText(svg, main_score, reg_index);
 
+    // 插入模组
     let insertMod = (i, mod) => {
-        let offset_x = 1810 - i * 50;
+        let offset_x = 1760 - i * 50;
         return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${mod}"/>`;
     }
 
-    let all_mod = ['HD', 'HR', 'DT'];
-    if (all_mod.length <= 3) {
+    let all_mod = ['HD', 'HR', 'DT', 'NF'];
+    if (all_mod.length <= 2) {
         all_mod.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(2 * i + 1, `\${${val}}`), reg_mod);
+            svg = replaceText(svg, insertMod(2 * i, `\${${val}}`), reg_mod);
         });
     } else {
         all_mod.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(i + 1, `\${${val}}`), reg_mod);
+            svg = replaceText(svg, insertMod(i, `\${${val}}`), reg_mod);
         });
     }
 
