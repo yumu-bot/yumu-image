@@ -1,4 +1,13 @@
-import {extra, InsertSvgBuilder, PuHuiTi, readImage, readTemplate, replaceText, torus} from "./util.js";
+import {
+    extra,
+    InsertSvgBuilder,
+    PuHuiTi,
+    readExportFileV3,
+    readImage,
+    readTemplate,
+    replaceText,
+    torus
+} from "./util.js";
 import {card_A1, card_H} from "./card.js";
 import {label_E, LABEL_OPTION} from "./component.js";
 
@@ -493,7 +502,7 @@ export async function panel_E(data = {
 
         for (let i = 1; i <= sr_b; i++) {
             let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
-        <image id="EPanel${i}Star" width="40" height="40" transform="translate(40 ${35 * (i - 1) + 396})" xlink:href="nowbot-image/image/E_Star.png"/>
+            <image id="EPanel${i}Star" width="40" height="40" transform="translate(40 ${35 * (i - 1) + 396})" xlink:href=${readExportFileV3("E_Star.png")}/>
         </g>`;
             svg = replaceText(svg, sr_b_svg, /(?<=<g id="LUStars">)/);
         }
