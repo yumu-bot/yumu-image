@@ -69,7 +69,7 @@ app.post('/panel_E', async (req, res) => {
 })
 
 app.listen(process.env["PORT"] | 8555, () => {
-    console.log(` ok - http://localhost:${process.env["PORT"] | 8555}\n cache path: ${CACHE_PATH}`);
+    console.log(`== Done. ==http://localhost:${process.env["PORT"] | 8555}\n cache path: ${CACHE_PATH}`);
 })
 
 // form: data:text ... img:file

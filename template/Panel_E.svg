@@ -7,9 +7,6 @@
     <clipPath id="clippath-PE-BG">
       <rect y="290" width="1920" height="790" rx="20" ry="20" style="fill: none;"/>
     </clipPath>
-    <clipPath id="clippath-PE-CC">
-      <polygon id="RingMask" points="1055 485 1055 330 1210 330 1210 630 900 630 900 330 960 330 1055 485" style="fill: none;"/>
-    </clipPath>
     <clipPath id="clippath-PE-MC">
       <polygon points="440 375 250 485 250 705 440 815 630 705 630 485 440 375" style="fill: none;"/>
     </clipPath>
@@ -84,16 +81,8 @@
   </g>
   <g id="RUStat">
     <g id="LBPassStat">
-      <image width="150" height="40" transform="translate(1060 690)" xlink:href="${judge_fc}"/>
-      <image width="150" height="40" transform="translate(900 690)" xlink:href="${judge_nm}"/>
-      <image width="150" height="40" transform="translate(1060 640)" xlink:href="${judge_cl}"/>
-      <image width="150" height="40" transform="translate(900 640)" xlink:href="${judge_pl}"/>
     </g>
     <g id="LURank">
-      <image id="ColoredCircle" width="210" height="210" transform="translate(950 380)" xlink:href="${colored_circle}"/>
-      <g style="clip-path: url(#clippath-PE-CC);">
-        <image width="270" height="270" transform="translate(920 350)" xlink:href="${colored_ring}"/>
-      </g>
       <image id="Rank" width="114" height="144" transform="translate(998 413)" xlink:href="${score_rank}"/>
     </g>
     <g id="MUScore">
@@ -194,7 +183,7 @@
     </g>
   </g>
   <g id="MainCard">
-    <rect x="40" y="40" width="430" height="210" rx="20" ry="20" style="fill: #382e32;"/>
+    <rect x="40" y="40" width="430" height="210" rx="20" ry="20" style="fill: none;"/>
     <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>
   </g>
   <g id="Index">

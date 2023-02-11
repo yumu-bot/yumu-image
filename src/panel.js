@@ -115,120 +115,215 @@ export async function panel_E(data = {
 
     // 谱面密度
     map_density_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
-    // 重试和失败数组 retry / exit
+    // 重试和失败数组 retry / fail 注意，retry叫exit
     map_retry_arr: [
         0,
         0,
         0,
-        747,
-        882,
-        451,
-        207,
-        225,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        27,
         18,
-        162,
-        189,
-        243,
-        271,
-        162,
-        371,
-        180,
-        207,
-        99,
-        99,
-        72,
+        360,
+        396,
+        234,
+        45,
         81,
+        54,
+        63,
+        90,
+        153,
+        135,
+        36,
+        9,
+        63,
+        54,
+        36,
+        144,
+        54,
+        9,
+        9,
+        36,
+        18,
+        45,
+        45,
+        36,
         108,
-        0,
-        81,
-        18,
-        45,
-        27,
-        227,
-        81,
-        46,
-        72,
         63,
-        45,
-        145,
-        37,
-        81,
-        36,
-        28,
-        9,
-        63,
-        126,
-        54,
-        18,
-        36,
-        11,
-        0,
-        23,
-        27,
         9,
         0,
         0,
-        9,
         0,
-        19,
-        18,
-        18,
-        0,
-        36,
-        36,
-        18,
-        18,
-        18,
-        9,
         0,
         27,
-        46,
-        45,
-        19,
         0,
-        36,
+        0,
+        0,
+        0,
+        0,
         27,
-        20,
-        0,
-        45,
-        27,
-        9,
-        36,
-        64,
-        9,
-        9,
-        9,
-        9,
-        0,
-        45,
-        18,
-        10,
         0,
         18,
+        0,
+        0,
+        0,
+        18,
+        18,
+        18,
+        0,
+        0,
+        0,
         9,
-        55,
-        45,
-        36,
+        18,
+        9,
+        0,
+        9,
+        9,
+        0,
+        9,
+        0,
+        9,
+        18,
+        9,
+        0,
         0,
         27,
-        18,
+        0,
+        0,
+        0,
+        0,
         27,
-        36,
-        54,
-        27,
+        9,
+        9,
+        0,
+        9,
+        9,
+        0,
+        0,
+        0,
+        9,
+        0,
+        0,
+        9,
+        9,
+        0,
         9
     ],
-    map_fail_arr: [0, 45, 18, 468, 2039, 822, 463, 930, 578, 225, 306, 225, 419, 271, 165, 495, 234, 162, 128, 144, 171, 262, 54, 63, 18, 27, 36, 54, 198, 110, 189, 154, 117, 128, 81, 46, 91, 81, 45, 92, 198, 180, 36, 82, 90, 54, 127, 109, 81, 27, 18, 9, 37, 9, 36, 45, 27, 18, 9, 36, 10, 0, 18, 0, 1, 9, 9, 9, 37, 18, 18, 37, 0, 45, 18, 18, 0, 27, 45, 45, 0, 9, 18, 18, 19, 10, 9, 36, 36, 0, 36, 18, 0, 18, 0, 9, 63, 27, 54, 9],
+    map_fail_arr: [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        9,
+        54,
+        9,
+        36,
+        27,
+        9,
+        18,
+        0,
+        0,
+        18,
+        18,
+        45,
+        27,
+        27,
+        18,
+        90,
+        36,
+        18,
+        36,
+        0,
+        18,
+        45,
+        36,
+        27,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        18,
+        0,
+        45,
+        27,
+        9,
+        0,
+        18,
+        90,
+        9,
+        0,
+        0,
+        9,
+        9,
+        9,
+        27,
+        0,
+        9,
+        27,
+        0,
+        0,
+        0,
+        0,
+        9,
+        9,
+        0,
+        0,
+        0,
+        0,
+        0,
+        9,
+        0,
+        9,
+        18,
+        18,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        9,
+        9,
+        0
+    ],
 
     // 面板图片
     banner: readImage("image/E_Banner.png"),
     judge_background: readImage("image/E_Background.jpg"),
-    judge_fc: readImage("image/E_JudgeFullCombo.png"),
-    judge_nm: readImage("image/E_JudgeNoMiss.png"),
-    judge_cl: readImage("image/E_JudgeClear.png"),
-    judge_pl: readImage("image/E_JudgePlayed.png"),
-    colored_circle: readImage("image/E_ColoredCircle.png"),
-    colored_ring: readImage("image/E_ColoredRing.png"),
     score_rank: readImage("image/E_ScoreRank.png"),
     star: readImage("image/E_Star.png"),
     map_background: readImage("image/E_MapCover.jpg"),
@@ -243,7 +338,7 @@ export async function panel_E(data = {
     index_rightup: 'request time: 2023-10-4 17:59:58 UTC+8',
     index_panel_name: 'S v3.6',
     srcard_starrating_b: '2.',
-    srcard_starrating_m: '2',
+    srcard_starrating_m: '6',
     srcard_gamemode: '\uE800', // osu! 模式图标
     map_status_fav: '3.9K',
     map_status_pc: '78.2M',
@@ -260,10 +355,11 @@ export async function panel_E(data = {
     map_retry_percent: '54', //重试率%
     map_fail_percent: '13.2', //失败率%
 
+    score_acc_progress: '44.3', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
     // 面板颜色和特性
     color_gamemode: '#7ac943',
-    main_gamemode: 'osu',
+    score_categorize: "fullcombo", // played, clear, nomiss, fullcombo
 
 }, reuse = false) {
     // 导入模板
@@ -271,12 +367,6 @@ export async function panel_E(data = {
     // 路径定义
     let reg_banner = '${banner}';
     let reg_judge_background = '${judge_background}';
-    let reg_judge_fc = '${judge_fc}';
-    let reg_judge_nm = '${judge_nm}';
-    let reg_judge_cl = '${judge_cl}';
-    let reg_judge_pl = '${judge_pl}';
-    let reg_colored_circle = '${colored_circle}';
-    let reg_colored_ring = '${colored_ring}';
     let reg_score_rank = '${score_rank}';
     let reg_mod = /(?<=<g id="RUMods">)/
     let reg_star = '${star}';
@@ -393,12 +483,12 @@ export async function panel_E(data = {
     // 星数
     // 纯文本纯天然无污染！（就是挺奇怪的，怎么href需要下到bot的根目录了
     const Star = (data) => {
-        let sr_b = Number(data.srcard_starrating_b);
-        let sr_m = Number(data.srcard_starrating_b + data.srcard_starrating_m) - sr_b;
+        let sr_b = Number(data.srcard_starrating_b); // 缩放让小星星不会太小
+        let sr_m_scale = Math.pow(Number(data.srcard_starrating_b + data.srcard_starrating_m) - sr_b, 0.8);
 
         if (sr_b >= 10) {
             sr_b = 10;
-            sr_m = 0
+            sr_m_scale = 0
         }
 
         for (let i = 1; i <= sr_b; i++) {
@@ -409,7 +499,7 @@ export async function panel_E(data = {
         }
 
         let sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
-        <image id="EPanel${sr_b + 1}Star" width="40" height="40" transform="translate(40 ${35 * sr_b + 396}) translate(${20 * (1 - sr_m)} ${20 * (1 - sr_m)}) scale(${sr_m})"
+        <image id="EPanel${sr_b + 1}Star" width="40" height="40" transform="translate(40 ${35 * sr_b + 396}) translate(${20 * (1 - sr_m_scale)} ${20 * (1 - sr_m_scale)}) scale(${sr_m_scale})"
         xlink:href="nowbot-image/image/E_Star.png"/>
         </g>`;
 
@@ -430,30 +520,113 @@ export async function panel_E(data = {
     RFrect(data);
 
     //中下的失败率重试率图像
+    /*
     const RFGraph = (arr, color) => {
         const step = 520 / arr.length
         const max = Math.max.apply(Math, arr);
         const start_x = 900;
         const start_y = 1020;
 
-        // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?) 开根号是为了让数据不那么极端
-        // 高度本来是90，但老是超高，缩短一点
-        let path_svg = `<svg> <path d="M ${start_x} ${start_y - (Math.pow(arr.shift() / max,0.5) * 75)} S `;
+        // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
+        // 高度本来是90，但老是超高，缩短一点 0211更新，超高问题得到了解决
+        let path_svg = `<svg> <path d="M ${start_x} ${start_y - (arr.shift() / max * 90)} S `;
 
         arr.forEach((item,i) => {
             let lineto_x = start_x + step * (i+1)
-            let lineto_y = start_y - (Math.pow(item / max,0.5) * 75);
-
-            path_svg += `${lineto_x} ${lineto_y} `
+            let lineto_y = start_y - (item / max * 90);
+            path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step/2} ${lineto_y} ` // 第一个xy是点位置，第二个是控制点位置
         })
-
-        path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 5px;"/> </svg>`
-
+        path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 3px;"/> </svg>`
         svg = replaceText(svg, path_svg, /(?<=<g id="RetryFailGraphArea">)/);
     }
+    */
 
-    RFGraph(data.map_fail_arr, '#ed6c9e');
-    RFGraph(data.map_retry_arr, '#f6d659');
+    const RFGraph = (arr, color, max) => {
+        const step = 520 / arr.length //一步好像刚好5.2px
+        const start_x = 900;
+        const start_y = 1020;
+
+        let rect_svg =`<g>`
+
+        arr.forEach((item,i) => {
+            let lineto_x = start_x + step * (i)
+            let lineto_y = start_y - (item / max * 90);
+            rect_svg += `<rect id="RFrect${i}" x="${lineto_x}" y="${lineto_y}" width="${step}" height="${start_y - lineto_y}" rx="2" ry="2" style="fill: ${color};"/>`
+        })
+        rect_svg += `</g>`
+        svg = replaceText(svg, rect_svg, /(?<=<g id="RetryFailGraphArea">)/);
+    }
+
+    let RFarr = data.map_fail_arr.map(function(v, i) {return v + data.map_retry_arr[i];});
+
+    RFGraph(data.map_fail_arr, '#ed6c9e', Math.max.apply(Math, RFarr));
+    RFGraph(RFarr, '#f6d659', Math.max.apply(Math, RFarr)); // 这里是retry
+
+
+    // 成绩分类（中间四个照片）
+    const ScoreCategory = (sc) => {
+        let pl_link = 'default';
+        let cl_link = 'default';
+        let nm_link = 'default';
+        let fc_link = 'default';
+
+        if (sc === "played") {pl_link = ''}
+        if (sc === "clear") {cl_link = ''}
+        if (sc === "nomiss") {nm_link = ''}
+        if (sc === "fullcombo") {fc_link = ''}
+
+        let score_svg = `
+      <image width="150" height="40" transform="translate(1060 690)" xlink:href="nowbot-image/image/object-score-fullcombo${fc_link}.png"/>
+      <image width="150" height="40" transform="translate(900 690)" xlink:href="nowbot-image/image/object-score-nomiss${nm_link}.png"/>
+      <image width="150" height="40" transform="translate(1060 640)" xlink:href="nowbot-image/image/object-score-clear${cl_link}.png"/>
+      <image width="150" height="40" transform="translate(900 640)" xlink:href="nowbot-image/image/object-score-play${pl_link}.png"/>`
+
+        svg = replaceText(svg, score_svg, /(?<=<g id="LBPassStat">)/);
+    }
+
+    ScoreCategory(data.score_categorize);
+
+    //成绩圆环显示 中点1075 485 x900-1210 y330-640 r=105px
+    const Ring = (acc) => {
+        let a;//assist points 中继点
+        let rad = 2 * Math.PI * acc / 100; //弧度
+
+        const mx = 1055;
+        const my = 485;
+        const r = 105 * Math.sqrt(2);//正方形的外接圆
+        let cx = mx + r * Math.sin(rad);
+        let cy = my - r * Math.cos(rad);
+        let c = `${cx} ${cy} `;//control point 控制点
+
+        if (acc <= 12.5) {
+            a = "";
+        } else if (acc <= 37.5) {
+            a = "1210 330 ";
+        } else if (acc <= 62.5) {
+            a = "1210 330 1210 640";
+        } else if (acc <= 87.5) {
+            a = "1210 330 1210 640 900 640";
+        } else {
+            a = "1210 330 1210 640 900 640 900 330";
+        }
+
+        let clippath =
+            `<clipPath id="clippath-PE-CC">
+        <polygon id="RingMask" points="1055 485 1055 330 ${a} ${c} 1055 485" style="fill: none;"/>
+        </clipPath>`;
+
+        svg = replaceText(svg, clippath, /(?<=<defs>)/);
+
+        let ring_svg =
+            `<image id="ColoredCircle" width="210" height="210" transform="translate(950 380)" xlink:href="nowbot-image/image/object-score-coloredcircle.png"/><g style="clip-path: url(#clippath-PE-CC);">
+        <image width="270" height="270" transform="translate(920 350)" xlink:href="nowbot-image/image/object-score-coloredring.png"/>
+      </g>`
+
+        svg = replaceText(svg, ring_svg, /(?<=<g id="LURank">)/);
+    }
+
+    Ring(data.score_acc_progress);
+
 
     // 插入文字和颜色
     svg = replaceText(svg, index_lu, reg_index);
@@ -496,12 +669,6 @@ export async function panel_E(data = {
     let out_svg = new InsertSvgBuilder(svg)
         .insertImage(data.banner, reg_banner)
         .insertImage(data.judge_background, reg_judge_background)
-        .insertImage(data.judge_fc, reg_judge_fc)
-        .insertImage(data.judge_nm, reg_judge_nm)
-        .insertImage(data.judge_cl, reg_judge_cl)
-        .insertImage(data.judge_pl, reg_judge_pl)
-        .insertImage(data.colored_circle, reg_colored_circle)
-        .insertImage(data.colored_ring, reg_colored_ring)
         .insertImage(data.score_rank, reg_score_rank)
         .insertImage(data.star, reg_star)
         .insertImage(data.map_background, reg_map_background)
@@ -514,9 +681,9 @@ export async function panel_E(data = {
     })
     console.timeEnd("img");
     console.time("svg");
-    console.time("svg1");
+    console.time("svgA1");
     await out_svg.insertSvg(card_A1_impl, 40, 40);
-    console.timeEnd("svg1");
+    console.timeEnd("svgA1");
     console.time("svg2");
     await out_svg.insertSvg(label_acc, 1230, 680);
     console.timeEnd("svg2");
