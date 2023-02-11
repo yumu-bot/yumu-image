@@ -491,31 +491,27 @@ export async function panel_E(data = {
 
     // 星数
     // 纯文本纯天然无污染！（就是挺奇怪的，怎么href需要下到bot的根目录了
-    const Star = (data) => {
-        let sr_b = Number(data.srcard_starrating_b); // 缩放让小星星不会太小
-        let sr_m_scale = Math.pow(Number(data.srcard_starrating_b + data.srcard_starrating_m) - sr_b, 0.8);
+    let sr_b = parseInt(data.srcard_starrating_b); // 缩放让小星星不会太小 parseInt 可以处理小数点 ====================================
+    let sr_m_scale = Math.pow(parseFloat("0." + data.srcard_starrating_m), 0.8); //========================= 我观察了一下逻辑,就是取小数点吧
 
-        if (sr_b >= 10) {
-            sr_b = 10;
-            sr_m_scale = 0
-        }
+    if (sr_b >= 10) {
+        sr_b = 10;
+        sr_m_scale = 0
+    }
 
-        for (let i = 1; i <= sr_b; i++) {
-            let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
+    for (let i = 1; i <= sr_b; i++) {
+        let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
             <image id="EPanel${i}Star" width="40" height="40" transform="translate(40 ${35 * (i - 1) + 396})" xlink:href=${readExportFileV3("E_Star.png")}/>
         </g>`;
-            svg = replaceText(svg, sr_b_svg, /(?<=<g id="LUStars">)/);
-        }
+        svg = replaceText(svg, sr_b_svg, /(?<=<g id="LUStars">)/);
+    }
 
-        let sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
+    let sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
         <image id="EPanel${sr_b + 1}Star" width="40" height="40" transform="translate(40 ${35 * sr_b + 396}) translate(${20 * (1 - sr_m_scale)} ${20 * (1 - sr_m_scale)}) scale(${sr_m_scale})"
         xlink:href="nowbot-image/image/E_Star.png"/>
         </g>`;
 
-        svg = replaceText(svg, sr_m_svg, /(?<=<g id="LUStars">)/);
-    }
-
-    Star(data);
+    svg = replaceText(svg, sr_m_svg, /(?<=<g id="LUStars">)/);
 
     //最右下的失败率
     const RFrect = (data) => {
