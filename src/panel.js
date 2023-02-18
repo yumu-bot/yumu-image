@@ -2,22 +2,22 @@ import {
     extra,
     InsertSvgBuilder,
     PuHuiTi,
-    readExportFileV3,
+    getExportFileV3Path,
     readImage,
     readTemplate,
     replaceText,
-    torus
+    torus, implantImage, implantSvgBody
 } from "./util.js";
 import {card_A1, card_H} from "./card.js";
 import {label_E, LABEL_OPTION} from "./component.js";
 
 export async function panel_E(data = {
     card_A1: {
-        background: readImage("image/A_CardA1_BG.png"),
-        avatar: readImage("image/A_CardA1_Avatar.png"),
-        country_flag: readImage("image/A_CardA1_CountryFlag.png"),
-        sub_icon1: readImage("image/A_CardA1_SubIcon1.png"),
-        sub_icon2: readImage("image/A_CardA1_SubIcon2.png"),
+        background: 'PanelObject/A_CardA1_BG.png',
+        avatar: 'PanelObject/A_CardA1_Avatar.png',
+        country_flag: 'PanelObject/A_CardA1_CountryFlag.png',
+        sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
+        sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
         name: 'Muziyami',
         rank_global: '#28075',
         rank_country: 'CN#577',
@@ -125,230 +125,31 @@ export async function panel_E(data = {
     // 谱面密度
     map_density_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
     // 重试和失败数组 retry / fail 注意，retry叫exit
-    map_retry_arr: [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        27,
-        18,
-        360,
-        396,
-        234,
-        45,
-        81,
-        54,
-        63,
-        90,
-        153,
-        135,
-        36,
-        9,
-        63,
-        54,
-        36,
-        144,
-        54,
-        9,
-        9,
-        36,
-        18,
-        45,
-        45,
-        36,
-        108,
-        63,
-        9,
-        0,
-        0,
-        0,
-        0,
-        27,
-        0,
-        0,
-        0,
-        0,
-        0,
-        27,
-        0,
-        18,
-        0,
-        0,
-        0,
-        18,
-        18,
-        18,
-        0,
-        0,
-        0,
-        9,
-        18,
-        9,
-        0,
-        9,
-        9,
-        0,
-        9,
-        0,
-        9,
-        18,
-        9,
-        0,
-        0,
-        27,
-        0,
-        0,
-        0,
-        0,
-        27,
-        9,
-        9,
-        0,
-        9,
-        9,
-        0,
-        0,
-        0,
-        9,
-        0,
-        0,
-        9,
-        9,
-        0,
-        9
-    ],
-    map_fail_arr: [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        9,
-        54,
-        9,
-        36,
-        27,
-        9,
-        18,
-        0,
-        0,
-        18,
-        18,
-        45,
-        27,
-        27,
-        18,
-        90,
-        36,
-        18,
-        36,
-        0,
-        18,
-        45,
-        36,
-        27,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        18,
-        0,
-        45,
-        27,
-        9,
-        0,
-        18,
-        90,
-        9,
-        0,
-        0,
-        9,
-        9,
-        9,
-        27,
-        0,
-        9,
-        27,
-        0,
-        0,
-        0,
-        0,
-        9,
-        9,
-        0,
-        0,
-        0,
-        0,
-        0,
-        9,
-        0,
-        9,
-        18,
-        18,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        9,
-        9,
-        0
-    ],
+    map_retry_arr: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,18,360,396,234,45,81,54,63,90,153,135,36,9,63,54,36,144,54,9,9,36,18,45,45,36,108,63,9,0,0,0,0,27,0,0,0,0,0,27,0,18,0,0,0,18,18,18,0,0,0,9,18,9,0,9,9,0,9,0,9,18,9,0,0,27,0,0,0,0,27,9,9,0,9,9,0,0,0,9,0,0,9,9,0,9],
+    map_fail_arr: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,54,9,36,27,9,18,0,0,18,18,45,27,27,18,90,36,18,36,0,18,45,36,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,18,0,45,27,9,0,18,90,9,0,0,9,9,9,27,0,9,27,0,0,0,0,9,9,0,0,0,0,0,9,0,9,18,18,0,0,0,0,0,0,0,0,0,0,9,9,0],
+
+    mods_arr: ['HD', 'HR', 'DT', 'NF'],
 
     // 面板图片
-    banner: readImage("image/E_Banner.png"),
-    judge_background: readImage("image/E_Background.jpg"),
-    score_rank: readImage("image/E_ScoreRank.png"),
-    star: readImage("image/E_Star.png"),
-    map_background: readImage("image/E_MapCover.jpg"),
-    map_hexagon: readImage("image/E_Hexagon.png"),
-    map_favorite: readImage("image/E_Favorite.png"),
-    map_playcount: readImage("image/E_PlayCount.png"),
-    map_status: readImage("image/E_MapStatus.png"),
+    banner: 'PanelObject/E_Banner.png',
+    map_background: 'PanelObject/E_MapCover.jpg',
+
+    judge_background: 'object-score-backimage-SH.jpg',
+    score_rank: 'object-score-SH.png',
+    star: 'object-beatmap-star.png',
+    map_hexagon: 'object-beatmap-hexagon.png',
+    map_favorite: 'object-beatmap-favorite.png',
+    map_playcount: 'object-beatmap-playcount.png',
+    map_status: 'object-beatmap-ranked.png',
 
     // 面板文字
 
-    index_leftup: 'powered by Yumubot // Score (!ymp / !ymr)',
-    index_rightup: 'request time: 2023-10-4 17:59:58 UTC+8',
+    index_powered: 'powered by Yumubot // Score (!ymp / !ymr)',
+    index_request_time: 'request time: 2023-10-4 17:59:58 UTC+8',
     index_panel_name: 'S v3.6',
-    srcard_starrating_b: '2.',
-    srcard_starrating_m: '6',
-    srcard_gamemode: '\uE800', // osu! 模式图标
+
+    star_rating: '6.6',
+    game_mode: '\uE800', // osu! 模式图标
     map_status_fav: '3.9K',
     map_status_pc: '78.2M',
 
@@ -364,7 +165,7 @@ export async function panel_E(data = {
     map_retry_percent: '54', //重试率%
     map_fail_percent: '13.2', //失败率%
 
-    score_acc_progress: '44.3', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
+    score_acc_progress: '97.8', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
     // 面板颜色和特性
     color_gamemode: '#7ac943',
@@ -374,16 +175,16 @@ export async function panel_E(data = {
     // 导入模板
     let svg = readTemplate('template/Panel_E.svg');
     // 路径定义
-    let reg_banner = '${banner}';
-    let reg_judge_background = '${judge_background}';
-    let reg_score_rank = '${score_rank}';
+    let reg_maincard = /(?<=<g id="MainCard">)/;
+    let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/;
+    let reg_judge_background = /(?<=<g style="clip-path: url\(#clippath-PE-BG\);">)/;
+    let reg_score_rank = /(?<=<g id="LURank">)/;
     let reg_mod = /(?<=<g id="RUMods">)/
-    let reg_star = '${star}';
-    let reg_map_background = '${map_background}';
-    let reg_map_hexagon = '${map_hexagon}';
-    let reg_map_favorite = '${map_favorite}';
-    let reg_map_playcount = '${map_playcount}';
-    let reg_map_status = '${map_status}';
+    let reg_map_background = /(?<=<g style="clip-path: url\(#clippath-PE-MC\);">)/;
+    let reg_map_hexagon = /(?<=<g id="LUMapStatus">)/; // 移到上一层
+    let reg_map_favorite = /(?<=<g id="LUMapObject">)/;
+    let reg_map_playcount = /(?<=<g id="LUMapObject">)/;
+    let reg_map_status = /(?<=<g style="clip-path: url\(#clippath-PE-ST\);">)/;
 
     let reg_index = /(?<=<g id="Index">)/;
 
@@ -409,51 +210,67 @@ export async function panel_E(data = {
     let label_hp =
         await label_E({...LABEL_OPTION.HP, ...data.label_data.hp}, true);
 
-    let card_A1_impl = await card_A1(data.card_A1, true);
+    let card_A1_impl =
+        await card_A1(data.card_A1, true);
     console.timeEnd("label");
     console.time("txt");
 
+    //预处理 8.34* -> 8, 0.34, 8., 34,
+    const sr_b = parseInt(data.star_rating);
+    const sr_m = parseFloat((data.star_rating - sr_b).toString().slice(0,4));
+    const text_sr_b = sr_b + '.';
+    const text_sr_m = (data.star_rating - sr_b).toString().slice(2,4);
+
     // 文字定义
-    let index_lu = torus.getTextPath(data.index_leftup, 10, 26.84, 24, "left baseline", "#fff");
-    let index_ru = torus.getTextPath(data.index_rightup, 1910, 26.84, 24, "right baseline", "#fff");
+    let index_powered = torus.getTextPath(data.index_powered, 10, 26.84, 24, "left baseline", "#fff");
+    let index_request_time = torus.getTextPath(data.index_request_time, 1910, 26.84, 24, "right baseline", "#fff");
     let tm_ipn =
         torus.getTextMetrics(data.index_panel_name, 0, 0, 48, "left baseline", "#fff");
     let ipn_x = 607.5 - tm_ipn.width / 2;
     let index_panel_name = torus.getTextPath(data.index_panel_name, ipn_x, 83.67, 48, "left baseline", "#fff");
 
     let tm_sr_b =
-        torus.getTextMetrics(data.srcard_starrating_b, 0, 0, 48, "left baseline", "#fff");
+        torus.getTextMetrics(text_sr_b, 0, 0, 48, "left baseline", "#fff");
     let tm_sr_m =
-        torus.getTextMetrics(data.srcard_starrating_m, 0, 0, 36, "left baseline", "#fff");
+        torus.getTextMetrics(text_sr_m, 0, 0, 36, "left baseline", "#fff");
     let tm_sr_x = 160 - (tm_sr_b.width + tm_sr_m.width) / 2;
-    let srcard_starrating = torus.getTextPath(data.srcard_starrating_b, tm_sr_x, 373.67, 48, "left baseline", "#fff") +
-        torus.getTextPath(data.srcard_starrating_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
-    let srcard_gamemode = extra.getTextPath(data.srcard_gamemode, 48, 376.24, 48, "left baseline", data.color_gamemode);
+    let star_rating = torus.getTextPath(text_sr_b, tm_sr_x, 373.67, 48, "left baseline", "#fff") +
+        torus.getTextPath(text_sr_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
+    let game_mode = extra.getTextPath(data.game_mode, 48, 376.24, 48, "left baseline", data.color_gamemode);
 
     let map_status_fav = torus.getTextPath(data.map_status_fav, 840, 353.84, 24, "right baseline", "#fff");
     let map_status_pc = torus.getTextPath(data.map_status_pc, 840, 380.84, 24, "right baseline", "#fff");
 
-    let map_text_title_romanized = torus.getTextPath(data.map_text_title_romanized, 440, 883.67, 48, "center baseline", "#fff");
-    let map_text_title_unicode = PuHuiTi.getTextPath(data.map_text_title_unicode, 440, 931.6, 36, "center baseline", "#fff");
-    let map_text_difficulty = torus.getTextPath(data.map_text_difficulty, 440, 1004.75, 36, "center baseline", "#fff");
-    let map_text_artist_mapper_bid = torus.getTextPath(data.map_text_artist_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
+    let map_text_title_romanized =
+        torus.getTextPath(data.map_text_title_romanized, 440, 883.67, 48, "center baseline", "#fff");
+    let map_text_title_unicode =
+        PuHuiTi.getTextPath(data.map_text_title_unicode, 440, 931.6, 36, "center baseline", "#fff");
+    let map_text_difficulty =
+        torus.getTextPath(data.map_text_difficulty, 440, 1004.75, 36, "center baseline", "#fff");
+    let map_text_artist_mapper_bid =
+        torus.getTextPath(data.map_text_artist_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
 
-    let main_score = torus.getTextPath(data.main_score_b, 1215, 409.43, 84, "left baseline", "#fff") +
+    let main_score =
+        torus.getTextPath(data.main_score_b, 1215, 409.43, 84, "left baseline", "#fff") +
         torus.getTextPath(data.main_score_m, 1215 +
             torus.getTextMetrics(data.main_score_b, 0, 0, 84, "left baseline", "#fff").width,
             409.43, 60, "left baseline", "#fff");
 
-    let title_density = torus.getTextPath("Density", 900, 802.88, 18, "left baseline", "#a1a1a1");
-    let title_retryfail = torus.getTextPath("Retry // Fail", 900, 922.63, 18, "left baseline", "#a1a1a1");
-    let map_public_rating = torus.getTextPath("Rating " + data.map_public_rating,
+    let title_density =
+        torus.getTextPath("Density", 900, 802.88, 18, "left baseline", "#a1a1a1");
+    let title_retryfail =
+        torus.getTextPath("Retry // Fail", 900, 922.63, 18, "left baseline", "#a1a1a1");
+    let map_public_rating =
+        torus.getTextPath("Rating " + data.map_public_rating,
         1420, 802.88, 18, "right baseline", "#a1a1a1");
-    let map_retryfail_percent = torus.getTextPath("R " + data.map_retry_percent + "% // F " + data.map_fail_percent + "%",
+    let map_retryfail_percent =
+        torus.getTextPath("R " + data.map_retry_percent + "% // F " + data.map_fail_percent + "%",
         1420, 922.63, 18, "right baseline", "#a1a1a1");
 
     console.timeEnd("txt");
     console.time("stats");
+    
     // 成绩评级
-
     const Stats = (i, data, sum) => {
         let font_y = 412.79 + i * 40;
         let font_index_x = 1266;
@@ -490,31 +307,32 @@ export async function panel_E(data = {
     })
 
     // 星数
-    // 纯文本纯天然无污染！（就是挺奇怪的，怎么href需要下到bot的根目录了
-    let sr_b = parseInt(data.srcard_starrating_b); // 缩放让小星星不会太小 parseInt 可以处理小数点 ====================================
-    let sr_m_scale = Math.pow(parseFloat("0." + data.srcard_starrating_m), 0.8); //========================= 我观察了一下逻辑,就是取小数点吧
+    function Star (data, sr_b, sr_m) {
+        let sr_m_scale = Math.pow(sr_m, 0.8);
 
-    if (sr_b >= 10) {
-        sr_b = 10;
-        sr_m_scale = 0
-    }
+        if (sr_b >= 10) {
+            sr_b = 10;
+            sr_m_scale = 0
+        }
 
-    for (let i = 1; i <= sr_b; i++) {
-        let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
-            <image id="EPanel${i}Star" width="40" height="40" transform="translate(40 ${35 * (i - 1) + 396})" xlink:href=${readExportFileV3("E_Star.png")}/>
+        for (let i = 1; i <= sr_b; i++) {
+            let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
+            <image id="EPanel${i}Star" width="40" height="40" transform="translate(40 ${35 * (i - 1) + 396})" xlink:href="${getExportFileV3Path(data.star)}"/>
         </g>`;
-        svg = replaceText(svg, sr_b_svg, /(?<=<g id="LUStars">)/);
-    }
+            svg = replaceText(svg, sr_b_svg, /(?<=<g id="LUStars">)/);
+        }
 
-    let sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
-        <image id="EPanel${sr_b + 1}Star" width="40" height="40" transform="translate(40 ${35 * sr_b + 396}) translate(${20 * (1 - sr_m_scale)} ${20 * (1 - sr_m_scale)}) scale(${sr_m_scale})"
-        xlink:href="nowbot-image/image/E_Star.png"/>
+        let sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
+        <image id="EPanel${sr_b + 1}Star" width="40" height="40" transform="translate(40 ${35 * sr_b + 396}) translate(${20 * (1 - sr_m_scale)} ${20 * (1 - sr_m_scale)}) scale(${sr_m_scale})"xlink:href="${getExportFileV3Path(data.star)}"/>
         </g>`;
 
-    svg = replaceText(svg, sr_m_svg, /(?<=<g id="LUStars">)/);
+        svg = replaceText(svg, sr_m_svg, /(?<=<g id="LUStars">)/);
+    }
+
+    Star(data, sr_b, sr_m);
 
     //最右下的失败率
-    const RFrect = (data) => {
+    function RFrect (data) {
         let rect_svg = `<rect id="BaseRRect" x="1440" y="1020" width="420" height="4" rx="2" ry="2" style="fill: #a1a1a1;"/>
       <rect id="RetryRRect" x="1440" y="1020" width="${4.2 * (Number(data.map_fail_percent) + Number(data.map_retry_percent))}" height="4" rx="2" ry="2" style="fill: #f6d659;"/>
       <rect id="FailRRect" x="1440" y="1020" width="${4.2 * data.map_fail_percent}" height="4" rx="2" ry="2" style="fill: #ed6c9e;"/>`
@@ -525,10 +343,14 @@ export async function panel_E(data = {
     RFrect(data);
 
     //中下的失败率重试率图像
+    let RFsum_arr = data.map_fail_arr.map(function(v, i) {return v + data.map_retry_arr[i];});
+    let RFarr_max = Math.max.apply(Math, RFsum_arr);
+
     /*
-    const RFGraph = (arr, color) => {
+    let RFdiff_arr = RFsum_arr.map(function(v) {return RFarr_max - v;});
+
+    function RFLineChart (arr, color, max){
         const step = 520 / arr.length
-        const max = Math.max.apply(Math, arr);
         const start_x = 900;
         const start_y = 1020;
 
@@ -544,9 +366,12 @@ export async function panel_E(data = {
         path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 3px;"/> </svg>`
         svg = replaceText(svg, path_svg, /(?<=<g id="RetryFailGraphArea">)/);
     }
-    */
 
-    const RFGraph = (arr, color, max) => {
+    RFLineChart(RFdiff_arr, '#a1a1a1', RFarr_max);
+
+     */
+
+    function RFBarChart (arr, color, max){
         const step = 520 / arr.length //一步好像刚好5.2px
         const start_x = 900;
         const start_y = 1020;
@@ -562,14 +387,11 @@ export async function panel_E(data = {
         svg = replaceText(svg, rect_svg, /(?<=<g id="RetryFailGraphArea">)/);
     }
 
-    let RFarr = data.map_fail_arr.map(function(v, i) {return v + data.map_retry_arr[i];});
-
-    RFGraph(data.map_fail_arr, '#ed6c9e', Math.max.apply(Math, RFarr));
-    RFGraph(RFarr, '#f6d659', Math.max.apply(Math, RFarr)); // 这里是retry
-
+    RFBarChart(data.map_fail_arr, '#ed6c9e', RFarr_max);
+    RFBarChart(RFsum_arr, '#f6d659', RFarr_max); // 这里是retry
 
     // 成绩分类（中间四个照片）
-    const ScoreCategory = (sc) => {
+    function ScoreCategory (sc) {
         let pl_link = 'default';
         let cl_link = 'default';
         let nm_link = 'default';
@@ -580,39 +402,37 @@ export async function panel_E(data = {
         if (sc === "nomiss") {nm_link = ''}
         if (sc === "fullcombo") {fc_link = ''}
 
-        let score_svg = `
-      <image width="150" height="40" transform="translate(1060 690)" xlink:href="nowbot-image/image/object-score-fullcombo${fc_link}.png"/>
-      <image width="150" height="40" transform="translate(900 690)" xlink:href="nowbot-image/image/object-score-nomiss${nm_link}.png"/>
-      <image width="150" height="40" transform="translate(1060 640)" xlink:href="nowbot-image/image/object-score-clear${cl_link}.png"/>
-      <image width="150" height="40" transform="translate(900 640)" xlink:href="nowbot-image/image/object-score-play${pl_link}.png"/>`
-
-        svg = replaceText(svg, score_svg, /(?<=<g id="LBPassStat">)/);
+        let reg = /(?<=<g id="LBPassStat">)/
+        svg = implantImage(svg,150,40,1060,690,1,`object-score-fullcombo${fc_link}.png`,reg)
+        svg = implantImage(svg,150,40,900,690,1,`object-score-nomiss${nm_link}.png`,reg)
+        svg = implantImage(svg,150,40,1060,640,1,`object-score-clear${cl_link}.png`,reg)
+        svg = implantImage(svg,150,40,900,640,1,`object-score-play${pl_link}.png`,reg)
     }
 
     ScoreCategory(data.score_categorize);
 
     //成绩圆环显示 中点1075 485 x900-1210 y330-640 r=105px
-    const Ring = (acc) => {
+    function Ring (acc) {
         let a;//assist points 中继点
         let rad = 2 * Math.PI * acc / 100; //弧度
 
         const mx = 1055;
         const my = 485;
-        const r = 105 * Math.sqrt(2);//正方形的外接圆
+        const r = 105 * Math.sqrt(2);//正方形的外接圆半径
         let cx = mx + r * Math.sin(rad);
         let cy = my - r * Math.cos(rad);
         let c = `${cx} ${cy} `;//control point 控制点
 
         if (acc <= 12.5) {
-            a = "";
+            a = '';
         } else if (acc <= 37.5) {
-            a = "1210 330 ";
+            a = '1210 330 ';
         } else if (acc <= 62.5) {
-            a = "1210 330 1210 640";
+            a = '1210 330 1210 640';
         } else if (acc <= 87.5) {
-            a = "1210 330 1210 640 900 640";
+            a = '1210 330 1210 640 900 640';
         } else {
-            a = "1210 330 1210 640 900 640 900 330";
+            a = '1210 330 1210 640 900 640 900 330';
         }
 
         let clippath =
@@ -623,8 +443,8 @@ export async function panel_E(data = {
         svg = replaceText(svg, clippath, /(?<=<defs>)/);
 
         let ring_svg =
-            `<image id="ColoredCircle" width="210" height="210" transform="translate(950 380)" xlink:href="nowbot-image/image/object-score-coloredcircle.png"/><g style="clip-path: url(#clippath-PE-CC);">
-        <image width="270" height="270" transform="translate(920 350)" xlink:href="nowbot-image/image/object-score-coloredring.png"/>
+            `<image id="ColoredCircle" width="210" height="210" transform="translate(950 380)" xlink:href="${getExportFileV3Path('object-score-coloredcircle.png')}"/><g style="clip-path: url(#clippath-PE-CC);">
+        <image width="270" height="270" transform="translate(920 350)" xlink:href="${getExportFileV3Path('object-score-coloredring.png')}"/>
       </g>`
 
         svg = replaceText(svg, ring_svg, /(?<=<g id="LURank">)/);
@@ -632,13 +452,12 @@ export async function panel_E(data = {
 
     Ring(data.score_acc_progress);
 
-
     // 插入文字和颜色
-    svg = replaceText(svg, index_lu, reg_index);
-    svg = replaceText(svg, index_ru, reg_index);
+    svg = replaceText(svg, index_powered, reg_index);
+    svg = replaceText(svg, index_request_time, reg_index);
     svg = replaceText(svg, index_panel_name, reg_index);
-    svg = replaceText(svg, srcard_starrating, reg_index);
-    svg = replaceText(svg, srcard_gamemode, reg_index);
+    svg = replaceText(svg, star_rating, reg_index);
+    svg = replaceText(svg, game_mode, reg_index);
     svg = replaceText(svg, map_status_fav, reg_index);
     svg = replaceText(svg, map_status_pc, reg_index);
     svg = replaceText(svg, map_text_title_romanized, reg_index);
@@ -652,39 +471,70 @@ export async function panel_E(data = {
     svg = replaceText(svg, map_retryfail_percent, reg_index);
 
     // 插入模组
-    let insertMod = (i, mod) => {
+    let insertMod = (mod, i) => {
         let offset_x = 1760 - i * 50;
-        return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${mod}"/>`;
+
+        return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
     }
 
-    let all_mod = ['HD', 'HR', 'DT', 'NF'];
-    if (all_mod.length <= 2) {
-        all_mod.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(2 * i, `\${${val}}`), reg_mod);
+    if (data.mods_arr.length <= 2) {
+        data.mods_arr.forEach((val, i) => {
+            svg = replaceText(svg, insertMod(val, 2 * i), reg_mod);
         });
     } else {
-        all_mod.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(i, `\${${val}}`), reg_mod);
+        data.mods_arr.forEach((val, i) => {
+            svg = replaceText(svg, insertMod(val, i), reg_mod);
         });
     }
 
     console.timeEnd("stats");
     console.time("img");
-    // 插入图片
+
+    console.time('newSVG')
+    // 插入图片和部件（新方法 ==============================================================================================
+    svg = implantSvgBody(svg,40,40,card_A1_impl,reg_maincard);
+
+    svg = implantSvgBody(svg,1230,680,label_acc,reg_mod);
+    svg = implantSvgBody(svg,1440,680,label_combo,reg_mod);
+    svg = implantSvgBody(svg,1650,680,label_pp,reg_mod);
+    svg = implantSvgBody(svg,1440,790,label_bpm,reg_mod);
+    svg = implantSvgBody(svg,1650,790,label_length,reg_mod);
+    svg = implantSvgBody(svg,1440,870,label_cs,reg_mod);
+    svg = implantSvgBody(svg,1650,870,label_ar,reg_mod);
+    svg = implantSvgBody(svg,1440,950,label_od,reg_mod);
+    svg = implantSvgBody(svg,1650,950,label_hp,reg_mod);
+    
+    svg = implantImage(svg,1920,320,0,0,1,data.banner,reg_banner);
+    svg = implantImage(svg,1920,790,0,290,1,data.judge_background,reg_judge_background);
+    svg = implantImage(svg,150,150,980,405,1,data.score_rank,reg_score_rank); //微调了x，让它增加了5
+    svg = implantImage(svg,380,440,250,375,1,data.map_background,reg_map_background);
+    svg = implantImage(svg,420,450,230,370,1,data.map_hexagon,reg_map_hexagon);
+    svg = implantImage(svg,18,18,746,364,1,data.map_favorite,reg_map_favorite);
+    svg = implantImage(svg,18,16,746,338,1,data.map_playcount,reg_map_playcount);
+    svg = implantImage(svg,50,50,683,334,1,data.map_status,reg_map_status);
+
+    console.timeEnd('newSVG')
+    let out_svg = new InsertSvgBuilder(svg)
+
+    // 插入图片和部件（旧方法 ==============================================================================================
+    /*
     let out_svg = new InsertSvgBuilder(svg)
         .insertImage(data.banner, reg_banner)
         .insertImage(data.judge_background, reg_judge_background)
         .insertImage(data.score_rank, reg_score_rank)
-        .insertImage(data.star, reg_star)
         .insertImage(data.map_background, reg_map_background)
         .insertImage(data.map_hexagon, reg_map_hexagon)
         .insertImage(data.map_favorite, reg_map_favorite)
         .insertImage(data.map_playcount, reg_map_playcount)
         .insertImage(data.map_status, reg_map_status);
-    all_mod.forEach((v) => {
-        out_svg.insertImage(readImage("image/E_Mod.png"), `\${${v}}`);
+    data.mods_arr.forEach((v) => {
+        out_svg.insertImage(readImage(getExportFileV3Path('Mods/' + v + '.png')), `\${${v}}`);
     })
+        */
+
     console.timeEnd("img");
+
+    /*
     console.time("svg");
     console.time("svgA1");
     await out_svg.insertSvg(card_A1_impl, 40, 40);
@@ -717,6 +567,8 @@ export async function panel_E(data = {
     await out_svg.insertSvg(label_hp, 1650, 950);
     console.timeEnd("svg10");
     console.timeEnd("svg");
+     */
+
     console.time("export");
     let o = out_svg.export(reuse);
     console.timeEnd("export");

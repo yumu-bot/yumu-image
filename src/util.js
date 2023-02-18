@@ -8,7 +8,7 @@ import path from "path";
 
 const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
-export const EXPORT_FILE_V3 = "image";
+export const EXPORT_FILE_V3 = "D:/ExportFileV3/";
 
 const svgToPng = async (svg) => await exports.convert(svg);
 
@@ -28,6 +28,10 @@ export function readImage(path = '') {
 
 export function readExportFileV3(path = '') {
     return fs.readFileSync(path_util.join(EXPORT_FILE_V3, path), 'binary');
+}
+
+export function getExportFileV3Path(path = '') {
+    return path_util.join(EXPORT_FILE_V3, path);
 }
 
 export async function readNetImage(path = '') {
@@ -174,9 +178,35 @@ function getTextMetrics_PuHuiTi(
 }
 
 
-export function replaceText(text = '', rep = '', reg = /.*/) {
-    return text.replace(reg, rep);
+export function replaceText(base = '', replace = '', reg = /.*/) {
+    return base.replace(reg, replace);
 }
+
+export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
+    let replace = `\r\n<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${getExportFileV3Path(image)}" style="opacity: ${opacity};"/>`
+    return base.replace(reg, replace);
+}
+
+export function implantSvgBody(base = '', x, y, replace = '', reg = /.*/) {
+    replace = `<g transform="translate(${x} ${y})">` + replace + '</g>'
+    return base.replace(reg, replace);
+}
+
+export function makeSvgBodyToSvg(svgBody = '', w, h) {
+    let head = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${w} ${h}">`
+    let tail = `</svg>`
+    return head + svgBody + tail
+}
+
+export function getStarRatingColor(SR){
+    if (SR <= 0.14){
+
+    } else if (SR >= 9) {
+
+    }
+}
+
 
 export function getBase64Text(buffer) {
     let data = Buffer.from(buffer, 'binary').toString('base64');

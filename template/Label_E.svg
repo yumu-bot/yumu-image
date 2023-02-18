@@ -1,15 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="210" height="50" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 210 50">
   <defs>
-    <clipPath id="clippath">
-      <rect width="50" height="50" style="fill: none;"/>
-    </clipPath>
   </defs>
   <g id="Icon">
-    <g style="clip-path: url(#clippath);">
-      <image width="50" height="50" xlink:href="${icon}"/>
-    </g>
   </g>
   <g id="Text">
   </g>
-</svg>

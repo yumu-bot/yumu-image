@@ -1,11 +1,11 @@
-import {InsertSvgBuilder, readImage, readTemplate, replaceText, torus} from "./util.js";
+import {InsertSvgBuilder, readImage, readTemplate, implantImage, replaceText, torus} from "./util.js";
 
 export async function card_A1(data = {
-    background: readImage("image/A_CardA1_BG.png"),
-    avatar: readImage("image/A_CardA1_Avatar.png"),
-    country_flag: readImage("image/A_CardA1_CountryFlag.png"),
-    sub_icon1: readImage("image/A_CardA1_SubIcon1.png"),
-    sub_icon2: readImage("image/A_CardA1_SubIcon2.png"),
+    background: 'PanelObject/A_CardA1_BG.png',
+    avatar: 'PanelObject/A_CardA1_Avatar.png',
+    country_flag: 'PanelObject/A_CardA1_CountryFlag.png',
+    sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
+    sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
     name: 'Muziyami',
     rank_global: '#28075',
     rank_country: 'CN#577',
@@ -16,11 +16,11 @@ export async function card_A1(data = {
     color_base: '#2a2226',
 }, reuse = false) {
     let reg_text = /(?<=<g id="Text">)/;
-    let reg_background = '${background}';
-    let reg_avatar = '${avatar}';
-    let reg_country_flag = '${country_flag}';
-    let reg_sub_icon1 = '${sub_icon1}';
-    let reg_sub_icon2 = '${Sub_Icon2}';
+    let reg_background = /(?<=<g style="clip-path: url\(#clippath-CA1-1\);">)/;
+    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CA1-2\);">)/;
+    let reg_country_flag = /(?<=<g style="clip-path: url\(#clippath-CA1-3\);">)/;
+    let reg_sub_icon1 = /(?<=<g style="clip-path: url\(#clippath-CA1-4\);">)/;
+    let reg_sub_icon2 = /(?<=<g style="clip-path: url\(#clippath-CA1-5\);">)/;
 
     let reg_color_base = /(?<=fill: )#2a2226/;
 
@@ -54,6 +54,14 @@ export async function card_A1(data = {
     svg = replaceText(svg, text_pp, reg_text);
     // 替换图片
 
+    svg = implantImage(svg,430,210,0,0,0.5, data.background, reg_background)
+    svg = implantImage(svg,100,100,20,20,1, data.avatar, reg_avatar)
+    svg = implantImage(svg,60,44,130,68,1, data.country_flag, reg_country_flag)
+    svg = implantImage(svg,40,40,200,70,1, data.sub_icon1, reg_sub_icon1)
+    svg = implantImage(svg,40,40,250,70,1, data.sub_icon2, reg_sub_icon2)
+
+    return svg.toString();
+    /*
     let out_svg = new InsertSvgBuilder(svg)
         .insertImage(data.background, reg_background)
         .insertImage(data.avatar, reg_avatar)
@@ -62,6 +70,7 @@ export async function card_A1(data = {
         .insertImage(data.sub_icon2, reg_sub_icon2)
 
     return out_svg.export(reuse);
+    */
 }
 
 export async function card_D(data = {

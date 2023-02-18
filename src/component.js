@@ -1,40 +1,46 @@
-import {InsertSvgBuilder, readExportFileV3, readTemplate, replaceText, torus} from "./util.js";
+import {
+    getExportFileV3Path,
+    readTemplate,
+    implantImage,
+    replaceText,
+    torus
+} from "./util.js";
 
 export const LABEL_OPTION = {
     ACC: {
-        icon: readExportFileV3("object-score-accpp.png"),
+        icon: "object-score-accpp.png",
         icon_title: 'Accuracy'
     },
     COMBO: {
-        icon: readExportFileV3("object-score-combo.png"),
+        icon: "object-score-combo.png",
         icon_title: 'Combo'
     },
     PP: {
-        icon: readExportFileV3("object-score-pp.png"),
+        icon: "object-score-pp.png",
         icon_title: 'PP'
     },
     BPM: {
-        icon: readExportFileV3("object-score-beatsperminute.png"),
+        icon: "object-score-beatsperminute.png",
         icon_title: 'BPM'
     },
     LENGTH: {
-        icon: readExportFileV3("object-score-length.png"),
+        icon: "object-score-length.png",
         icon_title: 'Length'
     },
     CS: {
-        icon: readExportFileV3("object-score-circlesize.png"),
+        icon: "object-score-circlesize.png",
         icon_title: 'CS'
     },
     AR: {
-        icon: readExportFileV3("object-score-approachrate.png"),
+        icon: "object-score-approachrate.png",
         icon_title: 'AR'
     },
     OD: {
-        icon: readExportFileV3("object-score-overalldifficulty.png"),
+        icon: "object-score-overalldifficulty.png",
         icon_title: 'OD'
     },
     HP: {
-        icon: readExportFileV3("object-score-healthpoint.png"),
+        icon: "object-score-healthpoint.png",
         icon_title: 'HP'
     },
 }
@@ -67,12 +73,12 @@ export async function label_E(data = {
         datas = datas + torus.getTextPath(data.data_m, 56 + data_b_x.width, 44.75, 24, "left baseline", "#fff");
     }
 
-
     // 替换模板内容,replaceText(模板, 内容, 正则)
     svg = replaceText(svg, icon_title, reg_text);
     svg = replaceText(svg, datas, reg_text);
+    svg = implantImage(svg,50,50,0,0,1,`${data.icon}`,reg_text)
 
-    let out_svg = new InsertSvgBuilder(svg).insertImage(data.icon, reg_icon);
+    // let out_svg = new InsertSvgBuilder(svg).insertImage(data.icon, reg_icon);
 
-    return out_svg.export(reuse);
+    return svg.toString();
 }
