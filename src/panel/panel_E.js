@@ -7,9 +7,9 @@ import {
     readTemplate,
     replaceText,
     torus, implantImage, implantSvgBody
-} from "./util.js";
-import {card_A1, card_H} from "./card.js";
-import {label_E, LABEL_OPTION} from "./component.js";
+} from "../util.js";
+import {card_A1, card_H} from "../card.js";
+import {label_E, LABEL_OPTION} from "../component.js";
 
 export async function panel_E(data = {
     card_A1: {
@@ -74,7 +74,6 @@ export async function panel_E(data = {
     },
 
     // 成绩评级
-
     score_stats: {
         judge_stat_sum: '1385',
         judge_1: {
@@ -153,10 +152,10 @@ export async function panel_E(data = {
     map_status_fav: '3.9K',
     map_status_pc: '78.2M',
 
-    map_text_title_romanized: 'Hyakukakai to Shirotokkuri',
-    map_text_title_unicode: '百花魁と白徳利',
-    map_text_difficulty: 'Expert',
-    map_text_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136',
+    map_title_romanized: 'Hyakukakai to Shirotokkuri',
+    map_title_unicode: '百花魁と白徳利',
+    map_difficulty: 'Expert',
+    map_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136',
 
     main_score_b: '21',
     main_score_m: '47483647',
@@ -189,7 +188,7 @@ export async function panel_E(data = {
     let reg_index = /(?<=<g id="Index">)/;
 
     // 卡片定义
-    console.time("label");
+    //console.time("label");
     let label_acc =
         await label_E({...LABEL_OPTION.ACC, ...data.label_data.acc}, true);
     let label_combo =
@@ -212,8 +211,8 @@ export async function panel_E(data = {
 
     let card_A1_impl =
         await card_A1(data.card_A1, true);
-    console.timeEnd("label");
-    console.time("txt");
+    //console.timeEnd("label");
+    //console.time("txt");
 
     //预处理 8.34* -> 8, 0.34, 8., 34,
     const sr_b = parseInt(data.star_rating);
@@ -241,14 +240,14 @@ export async function panel_E(data = {
     let map_status_fav = torus.getTextPath(data.map_status_fav, 840, 353.84, 24, "right baseline", "#fff");
     let map_status_pc = torus.getTextPath(data.map_status_pc, 840, 380.84, 24, "right baseline", "#fff");
 
-    let map_text_title_romanized =
-        torus.getTextPath(data.map_text_title_romanized, 440, 883.67, 48, "center baseline", "#fff");
-    let map_text_title_unicode =
-        PuHuiTi.getTextPath(data.map_text_title_unicode, 440, 931.6, 36, "center baseline", "#fff");
-    let map_text_difficulty =
-        torus.getTextPath(data.map_text_difficulty, 440, 1004.75, 36, "center baseline", "#fff");
-    let map_text_artist_mapper_bid =
-        torus.getTextPath(data.map_text_artist_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
+    let map_title_romanized =
+        torus.getTextPath(data.map_title_romanized, 440, 883.67, 48, "center baseline", "#fff");
+    let map_title_unicode =
+        PuHuiTi.getTextPath(data.map_title_unicode, 440, 931.6, 36, "center baseline", "#fff");
+    let map_difficulty =
+        torus.getTextPath(data.map_difficulty, 440, 1004.75, 36, "center baseline", "#fff");
+    let map_artist_mapper_bid =
+        torus.getTextPath(data.map_artist_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
 
     let main_score =
         torus.getTextPath(data.main_score_b, 1215, 409.43, 84, "left baseline", "#fff") +
@@ -267,8 +266,8 @@ export async function panel_E(data = {
         torus.getTextPath("R " + data.map_retry_percent + "% // F " + data.map_fail_percent + "%",
         1420, 922.63, 18, "right baseline", "#a1a1a1");
 
-    console.timeEnd("txt");
-    console.time("stats");
+    //console.timeEnd("txt");
+    //console.time("stats");
     
     // 成绩评级
     const Stats = (i, data, sum) => {
@@ -460,10 +459,10 @@ export async function panel_E(data = {
     svg = replaceText(svg, game_mode, reg_index);
     svg = replaceText(svg, map_status_fav, reg_index);
     svg = replaceText(svg, map_status_pc, reg_index);
-    svg = replaceText(svg, map_text_title_romanized, reg_index);
-    svg = replaceText(svg, map_text_title_unicode, reg_index);
-    svg = replaceText(svg, map_text_difficulty, reg_index);
-    svg = replaceText(svg, map_text_artist_mapper_bid, reg_index);
+    svg = replaceText(svg, map_title_romanized, reg_index);
+    svg = replaceText(svg, map_title_unicode, reg_index);
+    svg = replaceText(svg, map_difficulty, reg_index);
+    svg = replaceText(svg, map_artist_mapper_bid, reg_index);
     svg = replaceText(svg, main_score, reg_index);
     svg = replaceText(svg, title_density, reg_index);
     svg = replaceText(svg, title_retryfail, reg_index);
@@ -487,10 +486,10 @@ export async function panel_E(data = {
         });
     }
 
-    console.timeEnd("stats");
-    console.time("img");
+    //console.timeEnd("stats");
+    //console.time("img");
 
-    console.time('newSVG')
+    //console.time('newSVG')
     // 插入图片和部件（新方法 ==============================================================================================
     svg = implantSvgBody(svg,40,40,card_A1_impl,reg_maincard);
 
@@ -513,7 +512,7 @@ export async function panel_E(data = {
     svg = implantImage(svg,18,16,746,338,1,data.map_playcount,reg_map_playcount);
     svg = implantImage(svg,50,50,683,334,1,data.map_status,reg_map_status);
 
-    console.timeEnd('newSVG')
+    //console.timeEnd('newSVG')
     let out_svg = new InsertSvgBuilder(svg)
 
     // 插入图片和部件（旧方法 ==============================================================================================
@@ -532,7 +531,7 @@ export async function panel_E(data = {
     })
         */
 
-    console.timeEnd("img");
+    //console.timeEnd("img");
 
     /*
     console.time("svg");
@@ -569,53 +568,8 @@ export async function panel_E(data = {
     console.timeEnd("svg");
      */
 
-    console.time("export");
+    //console.time("export");
     let o = out_svg.export(reuse);
-    console.timeEnd("export");
+    //console.timeEnd("export");
     return o;
 }
-
-export async function panel_I(data = {
-    background: readImage("image/I_CardH_BG.png"),
-    avatar: readImage("image/I_CardH_Avatar.png"),
-    name: 'Muziyami',
-    info: '39.2M // 99W-0L 100%',
-    rank: '#1',
-    pp_b: '264',
-    pp_m: 'pp',
-    color_score: '#fbb03b',
-    color_base: '#3fa9f5',
-}) {
-    let reg_background = '${background}'
-    //
-    let reg_height = /(?<=id="Background">[\s\S]*height=")\d+/
-    let reg_cards = /(?<=<g id="cardH">)/
-    let reg_text = /(?<=<g id="Text">)/;
-
-    const get = (path, x, y) => {
-        return `<image width="900" height="110" x="${x}" y="${y}" xlink:href="${path}" />`
-    }
-
-    let bg1 = await card_H(data, true);
-    data.pp_b = '15';
-    let bg2 = await card_H(data, true);
-
-
-    let a1 = torus.getTextPath("24", 20, 97, 24, 'left center', "#fff");
-    let a2 = torus.getTextPath("16", 120, 97, 16, 'left center', "#fff");
-    let a3 = torus.getTextPath("12", 220, 97, 12, 'left center', "#fff");
-    let svg = readTemplate("template/Panel_I.svg");
-
-    svg = svg.replace(reg_text, a1);
-    svg = svg.replace(reg_text, a2);
-    svg = svg.replace(reg_text, a3);
-
-
-    let out_svg = new InsertSvgBuilder(svg);
-    await out_svg.insertSvg(bg1, 10, 100);
-    await out_svg.insertSvg(bg2, 10, 400);
-    await out_svg.insertSvg(bg1, 300, 210);
-    await out_svg.insertSvg(bg2, 300, 510);
-    return out_svg.export();
-}
-

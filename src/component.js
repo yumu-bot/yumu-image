@@ -43,7 +43,61 @@ export const LABEL_OPTION = {
         icon: "object-score-healthpoint.png",
         icon_title: 'HP'
     },
+    RKS: {
+        icon: "object-score-max.png",
+        icon_title: 'Ranked Score',
+        remark: 'RS',
+    },
+    TTS: {
+        icon: "object-score-circlesize.png",
+        icon_title: 'Total Score',
+        remark: 'TTS',
+    },
+    PC: {
+        icon: "object-score-combo.png",
+        icon_title: 'Play Count',
+        remark: 'PC',
+    },
+    PT: {
+        icon: "object-score-length.png",
+        icon_title: 'Play Time',
+        remark: 'PT',
+    },
+    MPL: {
+        icon: "object-score-approachrate.png",
+        icon_title: 'Map Played',
+        remark: '',
+    },
+    REP: {
+        icon: "object-score-aimpp.png",
+        icon_title: 'Rep be Watched',
+        remark: '',
+    },
+    FAN: {
+        icon: "object-score-healthpoint.png",
+        icon_title: 'Follower',
+        remark: 'Fans',
+    },
+    TTH: {
+        icon: "object-score-overalldifficulty.png",
+        icon_title: 'Total Hits',
+        remark: 'TTH',
+    },
 }
+
+//label_D 与 label_E 一样
+export async function label_D(data = {
+    icon: LABEL_OPTION.RKS,
+    icon_title: 'Ranked Score',
+    remark: 'RS',
+    data_b: '98.',
+    data_m: '4 K',
+}, reuse = false) {
+
+    await label_E(data,false)
+}
+
+
 export async function label_E(data = {
     icon: LABEL_OPTION.ACC,
     icon_title: 'Accuracy',

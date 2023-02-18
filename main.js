@@ -3,7 +3,7 @@ import express from "express";
 import formidable from "express-formidable";
 import {card_D, card_H} from "./src/card.js";
 import {CACHE_PATH, readImage} from "./src/util.js";
-import {panel_E} from "./src/panel.js";
+import {panel_E} from "./src/panel/panel_E.js";
 
 /*
 //    已经部署在机器上了,提交前请注释掉测试代码
@@ -61,6 +61,17 @@ app.post('/panel_E', async (req, res) => {
     try {
         const f = checkJsonData(req);
         const png = await panel_E(f);
+        res.set('Content-Type', 'image/png');
+        res.send(png);
+    } catch (e) {
+        res.status(500).send(e.stack);
+    }
+})
+
+app.post('/panel_D', async (req, res) => {
+    try {
+        const f = checkJsonData(req);
+        const png = await panel_D(f);
         res.set('Content-Type', 'image/png');
         res.send(png);
     } catch (e) {
