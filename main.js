@@ -1,7 +1,7 @@
 import fs from "fs";
 import express from "express";
 import formidable from "express-formidable";
-import {card_D, card_H} from "./src/card.js";
+import {card_D, card_H} from "./src/card/cardA1.js";
 import {CACHE_PATH, readImage} from "./src/util.js";
 import {panel_E} from "./src/panel/panel_E.js";
 

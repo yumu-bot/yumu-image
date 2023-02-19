@@ -1,5 +1,5 @@
 import {InsertSvgBuilder, readImage, readTemplate, torus} from "../util";
-import {card_H} from "../card";
+import {card_H} from "../card/cardA1";
 
 export async function panel_I(data = {
     background: readImage("image/I_CardH_BG.png"),

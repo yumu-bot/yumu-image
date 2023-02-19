@@ -3,13 +3,12 @@ import {
     InsertSvgBuilder,
     PuHuiTi,
     getExportFileV3Path,
-    readImage,
     readTemplate,
     replaceText,
     torus, implantImage, implantSvgBody
 } from "../util.js";
-import {card_A1, card_H} from "../card.js";
-import {label_E, LABEL_OPTION} from "../component.js";
+import {card_A1} from "../card/cardA1.js";
+import {label_E, LABEL_OPTION} from "../component/label.js";
 
 export async function panel_E(data = {
     card_A1: {
@@ -199,7 +198,6 @@ export async function panel_E(data = {
         await label_E({...LABEL_OPTION.BPM, ...data.label_data.bpm}, true);
     let label_length =
         await label_E({...LABEL_OPTION.LENGTH, ...data.label_data.length}, true);
-
     let label_cs =
         await label_E({...LABEL_OPTION.CS, ...data.label_data.cs}, true);
     let label_ar =

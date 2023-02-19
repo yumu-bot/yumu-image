@@ -1,0 +1,41 @@
+  <defs>
+    <clipPath id="clippath-CJ-1">
+      <rect x=".5" y=".5" width="310" height="80" rx="12" ry="12" style="fill: none;"/>
+    </clipPath>
+    <clipPath id="clippath-CJ-2">
+      <rect width="120" height="80" rx="10" ry="10" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Background">
+    <rect width="310" height="80" rx="10" ry="10" style="fill: #382e32;"/>
+    <g style="clip-path: url(#clippath-CJ-1);">
+    </g>
+  </g>
+  <g id="Cover">
+    <rect width="120" height="80" rx="10" ry="10" style="fill: #46393f;"/>
+    <g style="clip-path: url(#clippath-CJ-2);">
+    </g>
+  </g>
+  <g id="Stat">
+    <g id="Rank">
+      <rect x="130" y="54" width="40" height="20" rx="10" ry="10" style="fill: #ff0;"/>
+      <text transform="translate(144.717 69.877)" style="font-family: Torus-SemiBold, Torus; font-size: 18px; font-weight: 600;"><tspan x="0" y="0">X</tspan></text>
+    </g>
+    <g id="Mod">
+      <circle id="Mod5" cx="193" cy="55" r="5" style="fill: aqua;"/>
+      <circle id="Mod4" cx="179" cy="55" r="5" style="fill: #fff;"/>
+      <circle id="Mod3" cx="207" cy="69" r="5" style="fill: #ed1c24;"/>
+      <circle id="Mod2" cx="193" cy="69" r="5" style="fill: #15ff57;"/>
+      <circle id="Mod1" cx="179" cy="69" r="5" style="fill: #ff0;"/>
+    </g>
+  </g>
+  <g id="Overlay">
+    <rect x="5" y="5" width="40" height="20" rx="10" ry="10" style="fill: #f15a24;"/>
+    <text transform="translate(12.319 20.877)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 18px; font-weight: 600;"><tspan x="0" y="0">4.6</tspan></text>
+  </g>
+  <g id="Text">
+    <text transform="translate(209.553 49.224)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 16px; font-weight: 600;"><tspan x="0" y="0">98.47% 436x</tspan></text>
+    <text transform="translate(130 34.224)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 16px; font-weight: 600;"><tspan x="0" y="0">Fushimi Rio ...</tspan></text>
+    <text transform="translate(130 17.877)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 18px; font-weight: 600;"><tspan x="0" y="0">Fia is a Cheater</tspan></text>
+    <text transform="translate(233.215 73.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="font-size: 30px;">727</tspan><tspan x="45.869" y="0" style="font-size: 18px;">PP</tspan></text>
+  </g>

@@ -4,7 +4,7 @@ import {
     implantImage,
     replaceText,
     torus
-} from "./util.js";
+} from "../util.js";
 
 export const LABEL_OPTION = {
     ACC: {

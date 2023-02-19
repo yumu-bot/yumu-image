@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080">
+  <defs>
+    <clipPath id="clippath-PD-1">
+      <rect width="1920" height="320" rx="20" ry="20" style="fill: none;"/>
+    </clipPath>
+    <clipPath id="clippath-PD-2">
+      <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: none;"/>
+    </clipPath>
+    <clipPath id="clippath-PD-3">
+      <rect x="40" y="330" width="560" height="710" rx="20" ry="20" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Banner">
+    <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719;"/>
+    <g style="clip-path: url(#clippath-PD-1);">
+      <image width="1920" height="320" xlink:href="D_Banner.png"/>
+    </g>
+    <rect width="1920" height="320" rx="20" ry="20" style="opacity: .2;"/>
+  </g>
+  <g id="Background">
+    <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: #2a2226;"/>
+    <g style="clip-path: url(#clippath-PD-2);">
+      <image width="1920" height="790" transform="translate(0 290)" xlink:href="D_Background.png" style="opacity: .5;"/>
+    </g>
+  </g>
+  <g id="UserDataCard">
+    <rect x="980" y="685" width="900" height="355" rx="20" ry="20" style="fill: #382e32;"/>
+    <g id="LabelDR">
+      <rect x="1661" y="835" width="210" height="50" style="fill: #f0f;"/>
+      <rect x="1441" y="835" width="210" height="50" style="fill: #f0f;"/>
+      <rect x="1220" y="835" width="210" height="50" style="fill: #f0f;"/>
+      <rect x="1000" y="835" width="210" height="50" style="fill: #f0f;"/>
+      <rect x="1661" y="755" width="210" height="50" style="fill: #f0f;"/>
+      <rect x="1441" y="755" width="210" height="50" style="fill: #f0f;"/>
+      <rect x="1220" y="755" width="210" height="50" style="fill: #f0f;"/>
+      <rect x="1000" y="755" width="210" height="50" style="fill: #f0f;"/>
+    </g>
+    <g id="UserActivityR">
+      <rect x="1002" y="915" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
+      <rect x="1022" y="978" width="16" height="22" rx="8" ry="8" style="fill: #8dcff4;"/>
+      <rect x="1042" y="978" width="16" height="22" rx="8" ry="8" style="fill: #8dcff4;"/>
+    </g>
+    <g id="UserDataText">
+      <text id="Month3" transform="translate(1768.209 1024.836)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2023-20</tspan></text>
+      <text id="Month2" transform="translate(1383.969 1024.836)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2023-10</tspan></text>
+      <text id="Month1" transform="translate(995 1024.836)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2023-15</tspan></text>
+      <text id="MaxPC" transform="translate(1372.856 912.224)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 16px; font-weight: 600;"><tspan x="0" y="0">9941</tspan></text>
+      <text transform="translate(1477.349 725.836)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">osu!mania (4K 9999PP 7K 9999PP)</tspan></text>
+      <text transform="translate(1000 725.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">User Data</tspan></text>
+    </g>
+  </g>
+  <g id="RankingCard">
+    <rect x="980" y="330" width="900" height="335" rx="20" ry="20" style="fill: #382e32;"/>
+    <g id="BPActivityR">
+      <rect x="1042" y="525" width="16" height="85" rx="8" ry="8" style="fill: #a1a1a1;"/>
+      <rect x="1062" y="588" width="16" height="22" rx="8" ry="8" style="fill: #a1a1a1;"/>
+      <rect x="1082" y="588" width="16" height="22" rx="8" ry="8" style="fill: #a1a1a1;"/>
+    </g>
+    <g id="RankingText">
+      <text id="Day3" transform="translate(1789.809 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">0d</tspan></text>
+      <text id="Day2" transform="translate(1394.836 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">-90d</tspan></text>
+      <text id="Day1" transform="translate(1040 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">-90d</tspan></text>
+      <text id="Rank3" transform="translate(988.364 616.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2.1K</tspan></text>
+      <text id="Rank2" transform="translate(985.053 509.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2.0K</tspan></text>
+      <text id="Rank1" transform="translate(987.956 402.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">1.9K</tspan></text>
+      <text id="MaxBP" transform="translate(1412.801 522.224)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 16px; font-weight: 600;"><tspan x="0" y="0">BP+1</tspan></text>
+      <text transform="translate(1602.975 374.754)" style="font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="fill: #f2f2f2; font-size: 36px;">#7942468</tspan><tspan x="166.283" y="0" xml:space="preserve" style="fill: #a1a1a1; font-size: 24px;"> CN#581</tspan></text>
+      <text transform="translate(1000 370.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Ranking</tspan></text>
+    </g>
+  </g>
+  <g id="GradeCard">
+    <rect x="620" y="880" width="340" height="160" rx="20" ry="20" style="fill: #382e32;"/>
+    <g id="GradeText">
+      <text transform="translate(868.976 998.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">1611</tspan></text>
+      <text transform="translate(763.976 998.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">1611</tspan></text>
+      <text transform="translate(658.976 998.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">1611</tspan></text>
+      <text transform="translate(635 915.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Grades</tspan></text>
+      <text transform="translate(647.956 1024.877)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 18px; font-weight: 600;"><tspan x="0" y="0">(1144770)</tspan></text>
+      <text transform="translate(753.73 1024.877)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 18px; font-weight: 600;"><tspan x="0" y="0">(1146381)</tspan></text>
+    </g>
+    <g id="GradeImage">
+      <image width="31" height="39" transform="translate(669 930)" xlink:href="object-score-X-small.png"/>
+      <image width="25" height="35" transform="translate(777 932)" xlink:href="object-score-S-small.png"/>
+      <image width="30" height="34" transform="translate(880 933)" xlink:href="object-score-A-small.png"/>
+    </g>
+  </g>
+  <g id="BPCard">
+    <rect x="620" y="685" width="340" height="175" rx="20" ry="20" style="fill: #382e32;"/>
+    <g id="CardK">
+      <rect x="875" y="795" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
+      <rect x="795" y="795" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
+      <rect x="715" y="795" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
+      <rect x="635" y="795" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
+      <rect x="875" y="735" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
+      <rect x="795" y="735" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
+      <rect x="715" y="735" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
+      <rect x="635" y="735" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
+    </g>
+    <g id="BPText">
+      <text transform="translate(635 720.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">BPs</tspan></text>
+    </g>
+  </g>
+  <g id="RecentCard">
+    <rect x="620" y="330" width="340" height="335" rx="20" ry="20" style="fill: #382e32;"/>
+    <g id="CardJ">
+      <rect x="635" y="570" width="310" height="80" rx="10" ry="10" style="fill: #54454c;"/>
+      <rect x="635" y="475" width="310" height="80" rx="10" ry="10" style="fill: #54454c;"/>
+      <rect x="635" y="380" width="310" height="80" rx="10" ry="10" style="fill: #54454c;"/>
+    </g>
+    <g id="RecentText">
+      <text transform="translate(635 365.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Recents</tspan></text>
+    </g>
+  </g>
+  <g id="MascotCard">
+    <g id="Mascot">
+      <rect x="40" y="330" width="560" height="710" rx="20" ry="20" style="fill: #46393f;"/>
+      <g style="clip-path: url(#clippath-PD-3);">
+        <image width="560" height="710" transform="translate(40 330)" xlink:href="D_Mascot.png"/>
+      </g>
+      <g>
+        <rect x="40" y="330" width="560" height="710" rx="20" ry="20" style="fill: #46393f; opacity: .8;"/>
+        <rect x="40.297" y="330.297" width="559.406" height="709.406" rx="20" ry="20" style="fill: #46393f; opacity: .792;"/>
+        <rect x="40.594" y="330.594" width="558.812" height="708.812" rx="20" ry="20" style="fill: #46393f; opacity: .784;"/>
+        <rect x="40.891" y="330.891" width="558.218" height="708.218" rx="20" ry="20" style="fill: #46393f; opacity: .776;"/>
+        <rect x="41.188" y="331.188" width="557.624" height="707.624" rx="20" ry="20" style="fill: #473940; opacity: .768;"/>
+        <rect x="41.485" y="331.485" width="557.03" height="707.03" rx="20" ry="20" style="fill: #473a40; opacity: .76;"/>
+        <rect x="41.782" y="331.782" width="556.436" height="706.436" rx="20" ry="20" style="fill: #473a40; opacity: .752;"/>
+        <rect x="42.079" y="332.079" width="555.842" height="705.842" rx="20" ry="20" style="fill: #473a40; opacity: .745;"/>
+        <rect x="42.376" y="332.376" width="555.248" height="705.248" rx="20" ry="20" style="fill: #473a40; opacity: .737;"/>
+        <rect x="42.673" y="332.673" width="554.653" height="704.653" rx="20" ry="20" style="fill: #473a40; opacity: .729;"/>
+        <rect x="42.97" y="332.97" width="554.059" height="704.059" rx="20" ry="20" style="fill: #473a40; opacity: .721;"/>
+        <rect x="43.267" y="333.267" width="553.465" height="703.465" rx="20" ry="20" style="fill: #483a40; opacity: .713;"/>
+        <rect x="43.564" y="333.564" width="552.871" height="702.871" rx="20" ry="20" style="fill: #483a41; opacity: .705;"/>
+        <rect x="43.861" y="333.861" width="552.277" height="702.277" rx="20" ry="20" style="fill: #483b41; opacity: .697;"/>
+        <rect x="44.158" y="334.158" width="551.683" height="701.683" rx="20" ry="20" style="fill: #483b41; opacity: .689;"/>
+        <rect x="44.455" y="334.455" width="551.089" height="701.089" rx="20" ry="20" style="fill: #483b41; opacity: .681;"/>
+        <rect x="44.752" y="334.752" width="550.495" height="700.495" rx="20" ry="20" style="fill: #483b41; opacity: .673;"/>
+        <rect x="45.05" y="335.05" width="549.901" height="699.901" rx="20" ry="20" style="fill: #483b41; opacity: .665;"/>
+        <rect x="45.347" y="335.347" width="549.307" height="699.307" rx="20" ry="20" style="fill: #483b41; opacity: .657;"/>
+        <rect x="45.644" y="335.644" width="548.713" height="698.713" rx="20" ry="20" style="fill: #493b41; opacity: .65;"/>
+        <rect x="45.941" y="335.941" width="548.119" height="698.119" rx="20" ry="20" style="fill: #493b42; opacity: .642;"/>
+        <rect x="46.238" y="336.238" width="547.525" height="697.525" rx="20" ry="20" style="fill: #493b42; opacity: .634;"/>
+        <rect x="46.535" y="336.535" width="546.931" height="696.931" rx="20" ry="20" style="fill: #493c42; opacity: .626;"/>
+        <rect x="46.832" y="336.832" width="546.337" height="696.337" rx="20" ry="20" style="fill: #493c42; opacity: .618;"/>
+        <rect x="47.129" y="337.129" width="545.743" height="695.743" rx="20" ry="20" style="fill: #493c42; opacity: .61;"/>
+        <rect x="47.426" y="337.426" width="545.149" height="695.149" rx="20" ry="20" style="fill: #493c42; opacity: .602;"/>
+        <rect x="47.723" y="337.723" width="544.554" height="694.554" rx="20" ry="20" style="fill: #4a3c42; opacity: .594;"/>
+        <rect x="48.02" y="338.02" width="543.96" height="693.96" rx="20" ry="20" style="fill: #4a3c42; opacity: .586;"/>
+        <rect x="48.317" y="338.317" width="543.366" height="693.366" rx="20" ry="20" style="fill: #4a3c43; opacity: .578;"/>
+        <rect x="48.614" y="338.614" width="542.772" height="692.772" rx="20" ry="20" style="fill: #4a3c43; opacity: .57;"/>
+        <rect x="48.911" y="338.911" width="542.178" height="692.178" rx="20" ry="20" style="fill: #4a3d43; opacity: .562;"/>
+        <rect x="49.208" y="339.208" width="541.584" height="691.584" rx="20" ry="20" style="fill: #4a3d43; opacity: .554;"/>
+        <rect x="49.505" y="339.505" width="540.99" height="690.99" rx="20" ry="20" style="fill: #4a3d43; opacity: .547;"/>
+        <rect x="49.802" y="339.802" width="540.396" height="690.396" rx="20" ry="20" style="fill: #4b3d43; opacity: .539;"/>
+        <rect x="50.099" y="340.099" width="539.802" height="689.802" rx="20" ry="20" style="fill: #4b3d43; opacity: .531;"/>
+        <rect x="50.396" y="340.396" width="539.208" height="689.208" rx="20" ry="20" style="fill: #4b3d44; opacity: .523;"/>
+        <rect x="50.693" y="340.693" width="538.614" height="688.614" rx="20" ry="20" style="fill: #4b3d44; opacity: .515;"/>
+        <rect x="50.99" y="340.99" width="538.02" height="688.02" rx="20" ry="20" style="fill: #4b3d44; opacity: .507;"/>
+        <rect x="51.287" y="341.287" width="537.426" height="687.426" rx="20" ry="20" style="fill: #4b3e44; opacity: .499;"/>
+        <rect x="51.584" y="341.584" width="536.832" height="686.832" rx="20" ry="20" style="fill: #4b3e44; opacity: .491;"/>
+        <rect x="51.881" y="341.881" width="536.238" height="686.238" rx="20" ry="20" style="fill: #4c3e44; opacity: .483;"/>
+        <rect x="52.178" y="342.178" width="535.644" height="685.644" rx="20" ry="20" style="fill: #4c3e44; opacity: .475;"/>
+        <rect x="52.475" y="342.475" width="535.05" height="685.05" rx="20" ry="20" style="fill: #4c3e44; opacity: .467;"/>
+        <rect x="52.772" y="342.772" width="534.455" height="684.455" rx="20" ry="20" style="fill: #4c3e45; opacity: .459;"/>
+        <rect x="53.069" y="343.069" width="533.861" height="683.861" rx="20" ry="20" style="fill: #4c3e45; opacity: .451;"/>
+        <rect x="53.366" y="343.366" width="533.267" height="683.267" rx="20" ry="20" style="fill: #4c3e45; opacity: .444;"/>
+        <rect x="53.663" y="343.663" width="532.673" height="682.673" rx="20" ry="20" style="fill: #4c3e45; opacity: .436;"/>
+        <rect x="53.96" y="343.96" width="532.079" height="682.079" rx="20" ry="20" style="fill: #4d3f45; opacity: .428;"/>
+        <rect x="54.257" y="344.257" width="531.485" height="681.485" rx="20" ry="20" style="fill: #4d3f45; opacity: .42;"/>
+        <rect x="54.554" y="344.554" width="530.891" height="680.891" rx="20" ry="20" style="fill: #4d3f45; opacity: .412;"/>
+        <rect x="54.851" y="344.851" width="530.297" height="680.297" rx="20" ry="20" style="fill: #4d3f45; opacity: .404;"/>
+        <rect x="55.149" y="345.149" width="529.703" height="679.703" rx="20" ry="20" style="fill: #4d3f46; opacity: .396;"/>
+        <rect x="55.446" y="345.446" width="529.109" height="679.109" rx="20" ry="20" style="fill: #4d3f46; opacity: .388;"/>
+        <rect x="55.743" y="345.743" width="528.515" height="678.515" rx="20" ry="20" style="fill: #4d3f46; opacity: .38;"/>
+        <rect x="56.04" y="346.04" width="527.921" height="677.921" rx="20" ry="20" style="fill: #4d3f46; opacity: .372;"/>
+        <rect x="56.337" y="346.337" width="527.327" height="677.327" rx="20" ry="20" style="fill: #4e4046; opacity: .364;"/>
+        <rect x="56.634" y="346.634" width="526.733" height="676.733" rx="20" ry="20" style="fill: #4e4046; opacity: .356;"/>
+        <rect x="56.931" y="346.931" width="526.139" height="676.139" rx="20" ry="20" style="fill: #4e4046; opacity: .349;"/>
+        <rect x="57.228" y="347.228" width="525.545" height="675.545" rx="20" ry="20" style="fill: #4e4046; opacity: .341;"/>
+        <rect x="57.525" y="347.525" width="524.95" height="674.95" rx="20" ry="20" style="fill: #4e4047; opacity: .333;"/>
+        <rect x="57.822" y="347.822" width="524.356" height="674.356" rx="20" ry="20" style="fill: #4e4047; opacity: .325;"/>
+        <rect x="58.119" y="348.119" width="523.762" height="673.762" rx="20" ry="20" style="fill: #4e4047; opacity: .317;"/>
+        <rect x="58.416" y="348.416" width="523.168" height="673.168" rx="20" ry="20" style="fill: #4f4047; opacity: .309;"/>
+        <rect x="58.713" y="348.713" width="522.574" height="672.574" rx="20" ry="20" style="fill: #4f4047; opacity: .301;"/>
+        <rect x="59.01" y="349.01" width="521.98" height="671.98" rx="20" ry="20" style="fill: #4f4147; opacity: .293;"/>
+        <rect x="59.307" y="349.307" width="521.386" height="671.386" rx="20" ry="20" style="fill: #4f4147; opacity: .285;"/>
+        <rect x="59.604" y="349.604" width="520.792" height="670.792" rx="20" ry="20" style="fill: #4f4147; opacity: .277;"/>
+        <rect x="59.901" y="349.901" width="520.198" height="670.198" rx="20" ry="20" style="fill: #4f4148; opacity: .269;"/>
+        <rect x="60.198" y="350.198" width="519.604" height="669.604" rx="20" ry="20" style="fill: #4f4148; opacity: .261;"/>
+        <rect x="60.495" y="350.495" width="519.01" height="669.01" rx="20" ry="20" style="fill: #504148; opacity: .253;"/>
+        <rect x="60.792" y="350.792" width="518.416" height="668.416" rx="20" ry="20" style="fill: #504148; opacity: .246;"/>
+        <rect x="61.089" y="351.089" width="517.822" height="667.822" rx="20" ry="20" style="fill: #504148; opacity: .238;"/>
+        <rect x="61.386" y="351.386" width="517.228" height="667.228" rx="20" ry="20" style="fill: #504248; opacity: .23;"/>
+        <rect x="61.683" y="351.683" width="516.634" height="666.634" rx="20" ry="20" style="fill: #504248; opacity: .222;"/>
+        <rect x="61.98" y="351.98" width="516.04" height="666.04" rx="20" ry="20" style="fill: #504249; opacity: .214;"/>
+        <rect x="62.277" y="352.277" width="515.446" height="665.446" rx="20" ry="20" style="fill: #504249; opacity: .206;"/>
+        <rect x="62.574" y="352.574" width="514.851" height="664.851" rx="20" ry="20" style="fill: #514249; opacity: .198;"/>
+        <rect x="62.871" y="352.871" width="514.257" height="664.257" rx="20" ry="20" style="fill: #514249; opacity: .19;"/>
+        <rect x="63.168" y="353.168" width="513.663" height="663.663" rx="20" ry="20" style="fill: #514249; opacity: .182;"/>
+        <rect x="63.465" y="353.465" width="513.069" height="663.069" rx="20" ry="20" style="fill: #514249; opacity: .174;"/>
+        <rect x="63.762" y="353.762" width="512.475" height="662.475" rx="20" ry="20" style="fill: #514349; opacity: .166;"/>
+        <rect x="64.059" y="354.059" width="511.881" height="661.881" rx="20" ry="20" style="fill: #514349; opacity: .158;"/>
+        <rect x="64.356" y="354.356" width="511.287" height="661.287" rx="20" ry="20" style="fill: #51434a; opacity: .15;"/>
+        <rect x="64.653" y="354.653" width="510.693" height="660.693" rx="20" ry="20" style="fill: #52434a; opacity: .143;"/>
+        <rect x="64.95" y="354.95" width="510.099" height="660.099" rx="20" ry="20" style="fill: #52434a; opacity: .135;"/>
+        <rect x="65.248" y="355.248" width="509.505" height="659.505" rx="20" ry="20" style="fill: #52434a; opacity: .127;"/>
+        <rect x="65.545" y="355.545" width="508.911" height="658.911" rx="20" ry="20" style="fill: #52434a; opacity: .119;"/>
+        <rect x="65.842" y="355.842" width="508.317" height="658.317" rx="20" ry="20" style="fill: #52434a; opacity: .111;"/>
+        <rect x="66.139" y="356.139" width="507.723" height="657.723" rx="20" ry="20" style="fill: #52434a; opacity: .103;"/>
+        <rect x="66.436" y="356.436" width="507.129" height="657.129" rx="20" ry="20" style="fill: #52444a; opacity: .095;"/>
+        <rect x="66.733" y="356.733" width="506.535" height="656.535" rx="20" ry="20" style="fill: #52444b; opacity: .087;"/>
+        <rect x="67.03" y="357.03" width="505.941" height="655.941" rx="20" ry="20" style="fill: #53444b; opacity: .079;"/>
+        <rect x="67.327" y="357.327" width="505.347" height="655.347" rx="20" ry="20" style="fill: #53444b; opacity: .071;"/>
+        <rect x="67.624" y="357.624" width="504.752" height="654.752" rx="20" ry="20" style="fill: #53444b; opacity: .063;"/>
+        <rect x="67.921" y="357.921" width="504.158" height="654.158" rx="20" ry="20" style="fill: #53444b; opacity: .055;"/>
+        <rect x="68.218" y="358.218" width="503.564" height="653.564" rx="20" ry="20" style="fill: #53444b; opacity: .048;"/>
+        <rect x="68.515" y="358.515" width="502.97" height="652.97" rx="20" ry="20" style="fill: #53444b; opacity: .04;"/>
+        <rect x="68.812" y="358.812" width="502.376" height="652.376" rx="20" ry="20" style="fill: #53454b; opacity: .032;"/>
+        <rect x="69.109" y="359.109" width="501.782" height="651.782" rx="20" ry="20" style="fill: #54454c; opacity: .024;"/>
+        <rect x="69.406" y="359.406" width="501.188" height="651.188" rx="20" ry="20" style="fill: #54454c; opacity: .016;"/>
+        <rect x="69.703" y="359.703" width="500.594" height="650.594" rx="20" ry="20" style="fill: #54454c; opacity: .008;"/>
+        <rect x="70" y="360" width="500" height="650" rx="20" ry="20" style="fill: #54454c; opacity: 0;"/>
+      </g>
+    </g>
+    <g id="MascotName">
+      <rect x="60" y="350" width="210" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>
+      <text transform="translate(76.051 380.754)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="font-size: 36px;">pippi </tspan><tspan x="92.662" y="0" style="font-size: 24px; letter-spacing: -.046em;">L</tspan><tspan x="103.846" y="0" style="font-size: 24px; letter-spacing: -.05em;">v</tspan><tspan x="115.51" y="0" style="font-size: 24px; letter-spacing: 0em;">.</tspan><tspan x="121.486" y="0" style="font-size: 36px;">105</tspan></text>
+    </g>
+    <g id="Progress">
+      <rect x="500" y="350" width="80" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>
+      <text transform="translate(510.798 380.754)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="font-size: 36px;">36</tspan><tspan x="40.86" y="0" style="font-size: 24px;">%</tspan></text>
+    </g>
+    <g id="ProgressRRect">
+      <rect id="ProgressBaseR" x="60" y="1016" width="520" height="4" rx="2" ry="2" style="fill: #54454c;"/>
+      <rect id="ProgressR" x="60" y="1016" width="430" height="4" rx="2" ry="2" style="fill: #fc2;"/>
+    </g>
+  </g>
+  <g id="MainCard">
+    <rect x="40" y="40" width="430" height="210" rx="20" ry="20" style="fill: #382e32;"/>
+  </g>
+  <g id="Index">
+    <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>
+    <text transform="translate(534.493 83.672)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 48px; font-weight: 600;"><tspan x="0" y="0">I v3.6B</tspan></text>
+    <text transform="translate(10 26.836)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">powered by Yumubot // PlayerInfo (!ymi)</tspan></text>
+    <text transform="translate(1459.671 26.836)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0" xml:space="preserve"> request time: 2021-10-4 17:59:58 UTC+8</tspan></text>
+  </g>
+</svg>
