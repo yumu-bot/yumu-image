@@ -1,9 +1,11 @@
 import fs from "fs";
 import express from "express";
 import formidable from "express-formidable";
-import {card_D, card_H} from "./src/card/cardA1.js";
 import {CACHE_PATH, readImage} from "./src/util.js";
+import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
+import {card_D} from "./src/card/cardD.js";
+import {card_H} from "./src/card/cardH.js";
 
 /*
 //    已经部署在机器上了,提交前请注释掉测试代码
@@ -12,7 +14,12 @@ fs.writeFileSync("image/out/card_A1.png", await card_A1());
 
 fs.mkdirSync(CACHE_PATH, {recursive: true});
 console.time()
+console.time('D')
+fs.writeFileSync("image/out/panel_D.png", await panel_D());
+console.timeEnd('D')
+console.time('E')
 fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
 console.timeEnd()
 
 const app = express();
@@ -30,7 +37,6 @@ app.post('*', (req, res, next) => {
     res.header('Allow', 'POST')
     next();
 })
-
 app.post('/card-D', async (req, res) => {
     const f = checkData(req, ["background"]);
     const png = await card_D(f);

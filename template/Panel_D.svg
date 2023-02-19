@@ -27,14 +27,6 @@
   <g id="UserDataCard">
     <rect x="980" y="685" width="900" height="355" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="LabelDR">
-      <rect x="1661" y="835" width="210" height="50" style="fill: #f0f;"/>
-      <rect x="1441" y="835" width="210" height="50" style="fill: #f0f;"/>
-      <rect x="1220" y="835" width="210" height="50" style="fill: #f0f;"/>
-      <rect x="1000" y="835" width="210" height="50" style="fill: #f0f;"/>
-      <rect x="1661" y="755" width="210" height="50" style="fill: #f0f;"/>
-      <rect x="1441" y="755" width="210" height="50" style="fill: #f0f;"/>
-      <rect x="1220" y="755" width="210" height="50" style="fill: #f0f;"/>
-      <rect x="1000" y="755" width="210" height="50" style="fill: #f0f;"/>
     </g>
     <g id="UserActivityR">
       <rect x="1002" y="915" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
@@ -103,11 +95,14 @@
   </g>
   <g id="RecentCard">
     <rect x="620" y="330" width="340" height="335" rx="20" ry="20" style="fill: #382e32;"/>
-    <g id="CardJ">
+    <g id="CardJBase">
       <rect x="635" y="570" width="310" height="80" rx="10" ry="10" style="fill: #54454c;"/>
       <rect x="635" y="475" width="310" height="80" rx="10" ry="10" style="fill: #54454c;"/>
       <rect x="635" y="380" width="310" height="80" rx="10" ry="10" style="fill: #54454c;"/>
     </g>
+    <g id="CardJ">
+    </g>
+  </g>
     <g id="RecentText">
       <text transform="translate(635 365.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Recents</tspan></text>
     </g>
@@ -237,7 +232,6 @@
     </g>
   </g>
   <g id="MainCard">
-    <rect x="40" y="40" width="430" height="210" rx="20" ry="20" style="fill: #382e32;"/>
   </g>
   <g id="Index">
     <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>

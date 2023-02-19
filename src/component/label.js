@@ -49,7 +49,7 @@ export const LABEL_OPTION = {
         remark: 'RS',
     },
     TTS: {
-        icon: "object-score-circlesize.png",
+        icon: "object-score-aimpp.png",
         icon_title: 'Total Score',
         remark: 'TTS',
     },
@@ -69,7 +69,7 @@ export const LABEL_OPTION = {
         remark: '',
     },
     REP: {
-        icon: "object-score-aimpp.png",
+        icon: "object-score-circlesize.png",
         icon_title: 'Rep be Watched',
         remark: '',
     },
@@ -86,17 +86,6 @@ export const LABEL_OPTION = {
 }
 
 //label_D 与 label_E 一样
-export async function label_D(data = {
-    icon: LABEL_OPTION.RKS,
-    icon_title: 'Ranked Score',
-    remark: 'RS',
-    data_b: '98.',
-    data_m: '4 K',
-}, reuse = false) {
-
-    await label_E(data,false)
-}
-
 
 export async function label_E(data = {
     icon: LABEL_OPTION.ACC,

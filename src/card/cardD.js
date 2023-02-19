@@ -1,4 +1,4 @@
-import {InsertSvgBuilder, readImage, readTemplate, replaceText, torus} from "../util";
+import {InsertSvgBuilder, readImage, readTemplate, replaceText, torus} from "../util.js";
 
 export async function card_D(data = {
     background: readImage("image/H_CardD_BG.png"),

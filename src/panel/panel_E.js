@@ -5,7 +5,7 @@ import {
     getExportFileV3Path,
     readTemplate,
     replaceText,
-    torus, implantImage, implantSvgBody
+    torus, implantImage, implantSvgBody, getStarRatingColor
 } from "../util.js";
 import {card_A1} from "../card/cardA1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -146,7 +146,7 @@ export async function panel_E(data = {
     index_request_time: 'request time: 2023-10-4 17:59:58 UTC+8',
     index_panel_name: 'S v3.6',
 
-    star_rating: '6.6',
+    star_rating: '0.1',
     game_mode: '\uE800', // osu! 模式图标
     map_status_fav: '3.9K',
     map_status_pc: '78.2M',
@@ -165,8 +165,8 @@ export async function panel_E(data = {
 
     score_acc_progress: '97.8', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
-    // 面板颜色和特性
-    color_gamemode: '#7ac943',
+    // 面板颜色和特性 颜色已经写成方法
+    //color_gamemode: '#7ac943',
     score_categorize: "fullcombo", // played, clear, nomiss, fullcombo
 
 }, reuse = false) {
@@ -213,10 +213,21 @@ export async function panel_E(data = {
     //console.time("txt");
 
     //预处理 8.34* -> 8, 0.34, 8., 34,
-    const sr_b = parseInt(data.star_rating);
-    const sr_m = parseFloat((data.star_rating - sr_b).toString().slice(0,4));
-    const text_sr_b = sr_b + '.';
-    const text_sr_m = (data.star_rating - sr_b).toString().slice(2,4);
+    let sr_b = parseInt(data.star_rating);
+    let sr_m = parseFloat((data.star_rating - sr_b).toString().slice(0,4));
+    let text_sr_b;
+    if (sr_m === 0){
+        text_sr_b = sr_b.toString();
+    } else {
+        text_sr_b = sr_b + '.';
+    }
+
+    let text_sr_m = (data.star_rating - sr_b).toString().slice(2,4);
+
+    if (sr_b >= 10) {
+        text_sr_b = '10';
+        text_sr_m = '+';
+    }
 
     // 文字定义
     let index_powered = torus.getTextPath(data.index_powered, 10, 26.84, 24, "left baseline", "#fff");
@@ -233,7 +244,7 @@ export async function panel_E(data = {
     let tm_sr_x = 160 - (tm_sr_b.width + tm_sr_m.width) / 2;
     let star_rating = torus.getTextPath(text_sr_b, tm_sr_x, 373.67, 48, "left baseline", "#fff") +
         torus.getTextPath(text_sr_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
-    let game_mode = extra.getTextPath(data.game_mode, 48, 376.24, 48, "left baseline", data.color_gamemode);
+    let game_mode = extra.getTextPath(data.game_mode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
 
     let map_status_fav = torus.getTextPath(data.map_status_fav, 840, 353.84, 24, "right baseline", "#fff");
     let map_status_pc = torus.getTextPath(data.map_status_pc, 840, 380.84, 24, "right baseline", "#fff");

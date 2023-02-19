@@ -1,4 +1,4 @@
-import {implantImage, readTemplate} from "../util";
+import {implantImage, readTemplate} from "../util.js";
 
 export async function card_J(data = {
     map_cover: 'PanelObject/D_CardJ_Cover.png',

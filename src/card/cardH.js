@@ -1,4 +1,4 @@
-import {InsertSvgBuilder, readImage, readTemplate, replaceText, torus} from "../util";
+import {InsertSvgBuilder, readImage, readTemplate, replaceText, torus} from "../util.js";
 
 // 绘制方法 card h  参数有两个,data是数据,data.background就是背景,以此类推,下面声明时写的是当用的时候没有传参数,采用的默认值,
 export async function card_H(data = {

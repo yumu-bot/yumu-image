@@ -1,4 +1,4 @@
-import {InsertSvgBuilder, readImage, readTemplate, implantImage, replaceText, torus} from "../util.js";
+import {readTemplate, implantImage, replaceText, torus} from "../util.js";
 
 export async function card_A1(data = {
     background: 'PanelObject/A_CardA1_BG.png',
