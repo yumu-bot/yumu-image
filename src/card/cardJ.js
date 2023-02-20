@@ -1,16 +1,16 @@
-import {implantImage, readTemplate, torus} from "../util.js";
+import {get2SizeTorusTextPath, implantImage, readTemplate, torus} from "../util.js";
 
 export async function card_J(data = {
     map_cover: 'PanelObject/D_CardJ_Cover.png',
     map_background: 'PanelObject/D_CardJ_Background.png',
-    map_title_romanized: 'Fia is a Cheater',
-    map_difficulty_name: 'Fushimi Rio also cheated',
-    star_rating: '4.86',
-    score_rank: 'S',
-    accuracy: '98.36', //%
-    combo: '536', //x
+    map_title_romanized: '',
+    map_difficulty_name: '',
+    star_rating: '0',
+    score_rank: 'F',
+    accuracy: '0', //%
+    combo: '0', //x
     mods_arr: ['HD', 'HR', 'DT', 'NF'],
-    pp: '736' //pp
+    pp: '0' //pp
 
 }, reuse = false) {
     let reg_text = /(?<=<g id="Text">)/;
@@ -30,9 +30,16 @@ export async function card_J(data = {
     let map_difficulty_name =
         torus.getTextPath(data.map_difficulty_name, 130, 34.224, 16, "left baseline", "#a1a1a1");
 
-    let star_rating = 0;
-    let combo = 0;
-    let map_line3_text =
+    let map_line3_text = data.accuracy + '% ' + data.combo + 'x';
+    let map_line3 =
+        torus.getTextPath(map_line3, 300, 49.224, 16, "right baseline", "#a1a1a1");
+
+    let pp = get2SizeTorusTextPath(data.pp, 'PP', 30, 18, 300, 73.795, 'right baseline', '#a1a1a1')
+
+    let rank_color = '#fff'; if (data.score_rank === 'X') rank_color = '#000'
+
+    let rank =
+        torus.getTextPath(data.score_rank, 150, 69.877, 18, "center baseline", rank_color);
 
     // 替换模板
 

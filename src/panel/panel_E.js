@@ -268,8 +268,6 @@ export async function panel_E(data = {
         torus.getTextPath(data.main_score_m, 1215 +
             torus.getTextMetrics(data.main_score_b, 0, 0, 84, "left baseline", "#fff").width,
             409.43, 60, "left baseline", "#fff");
-
-    let main_score = get2SizeTorusTextPath(data.main_score_b, data.main_score_m, 84, 60, 1215, 409.43, 'left baseline', '#FFF');
      */
 
     let main_score = get2SizeTorusTextPath(getRoundedNumberLargerStr(data.score,-1), getRoundedNumberSmallerStr(data.score,-1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
