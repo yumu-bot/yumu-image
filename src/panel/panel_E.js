@@ -146,7 +146,7 @@ export async function panel_E(data = {
     index_request_time: 'request time: 2023-10-4 17:59:58 UTC+8',
     index_panel_name: 'S v3.6',
 
-    star_rating: '0.1',
+    star_rating: '4.35',
     game_mode: '\uE800', // osu! 模式图标
     map_status_fav: '3.9K',
     map_status_pc: '78.2M',
@@ -206,7 +206,6 @@ export async function panel_E(data = {
         await label_E({...LABEL_OPTION.OD, ...data.label_data.od}, true);
     let label_hp =
         await label_E({...LABEL_OPTION.HP, ...data.label_data.hp}, true);
-
     let card_A1_impl =
         await card_A1(data.card_A1, true);
     //console.timeEnd("label");
@@ -524,7 +523,7 @@ export async function panel_E(data = {
     //console.timeEnd('newSVG')
     let out_svg = new InsertSvgBuilder(svg)
 
-    // 插入图片和部件（旧方法 ==============================================================================================
+    // 插入图片和部件（旧方法
     /*
     let out_svg = new InsertSvgBuilder(svg)
         .insertImage(data.banner, reg_banner)

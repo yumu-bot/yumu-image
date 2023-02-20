@@ -183,7 +183,7 @@ export function replaceText(base = '', replace = '', reg = /.*/) {
 }
 
 export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
-    let replace = `\r\n<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${getExportFileV3Path(image)}" style="opacity: ${opacity};"/>`
+    let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${getExportFileV3Path(image)}" style="opacity: ${opacity};"/>`
     return base.replace(reg, replace);
 }
 
@@ -210,13 +210,12 @@ export function getStarRatingColor(SR = 0){
     let r1 = 0;
     let b1 = 0;
     let g1 = 0;
+    let r2;
+    let b2;
+    let g2;
     let s = 0;
+    let gamma = 2.2; //伽马值
 
-    if (SR < 0.1){
-        color = '#AAAAAA'
-    } else if (SR >= 9) {
-        color = '#000'
-    }
 
     if (SR < 1.25) {
         r0 = 66; g0 = 144; b0 = 251;
@@ -267,13 +266,25 @@ export function getStarRatingColor(SR = 0){
         r0 = 24; g0 = 21; b0 = 142;
         r1 = 0; g1 = 0; b1 = 0;
         s = (SR - 7.7) / (9 - 7.7)
-
     }
 
-    let colorR = Math.round(r0 + s * (r1 - r0)).toString(16)
-    let colorG = Math.round(g0 + s * (g1 - g0)).toString(16)
-    let colorB = Math.round(b0 + s * (b1 - b0)).toString(16)
+    // https://zhuanlan.zhihu.com/p/37800433/ 伽马的作用
+
+    r2 = Math.pow((1 - s) * Math.pow(r0, gamma) + s * Math.pow(r1, gamma), 1 / gamma);
+    g2 = Math.pow((1 - s) * Math.pow(g0, gamma) + s * Math.pow(g1, gamma), 1 / gamma);
+    b2 = Math.pow((1 - s) * Math.pow(b0, gamma) + s * Math.pow(b1, gamma), 1 / gamma);
+
+    let colorR = Math.round(r2).toString(16).padStart(2,'0')
+    let colorG = Math.round(g2).toString(16).padStart(2,'0')
+    let colorB = Math.round(b2).toString(16).padStart(2,'0')
+
     color = '#' + colorR + colorG + colorB
+
+    if (SR < 0.1){
+        color = '#AAAAAA';
+    } else if (SR >= 9) {
+        color = '#000';
+    }
 
     return color;
 }
