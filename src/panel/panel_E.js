@@ -5,7 +5,13 @@ import {
     getExportFileV3Path,
     readTemplate,
     replaceText,
-    torus, implantImage, implantSvgBody, getStarRatingColor
+    torus,
+    implantImage,
+    implantSvgBody,
+    getStarRatingColor,
+    get2SizeTorusTextPath,
+    getRoundedNumberLargerStr,
+    getRoundedNumberSmallerStr
 } from "../util.js";
 import {card_A1} from "../card/cardA1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -156,8 +162,7 @@ export async function panel_E(data = {
     map_difficulty: 'Expert',
     map_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136',
 
-    main_score_b: '21',
-    main_score_m: '47483647',
+    score: '1611',
 
     map_public_rating: '9.8', //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
     map_retry_percent: '54', //重试率%
@@ -257,11 +262,17 @@ export async function panel_E(data = {
     let map_artist_mapper_bid =
         torus.getTextPath(data.map_artist_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
 
+    /*
     let main_score =
         torus.getTextPath(data.main_score_b, 1215, 409.43, 84, "left baseline", "#fff") +
         torus.getTextPath(data.main_score_m, 1215 +
             torus.getTextMetrics(data.main_score_b, 0, 0, 84, "left baseline", "#fff").width,
             409.43, 60, "left baseline", "#fff");
+
+    let main_score = get2SizeTorusTextPath(data.main_score_b, data.main_score_m, 84, 60, 1215, 409.43, 'left baseline', '#FFF');
+     */
+
+    let main_score = get2SizeTorusTextPath(getRoundedNumberLargerStr(data.score,-1), getRoundedNumberSmallerStr(data.score,-1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
 
     let title_density =
         torus.getTextPath("Density", 900, 802.88, 18, "left baseline", "#a1a1a1");

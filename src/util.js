@@ -199,6 +199,195 @@ ${svgBody}
 </svg>`;
 }
 
+// 数字处理并显示
+
+/**
+ * @function 获取大小文本的 torus 字体 SVG 路径
+ * @return {String}
+ * @param largerText {String} 较大的文本
+ * @param smallerText {String} 较小的文本
+ * @param largeSize {Number} 大文本尺寸
+ * @param smallSize {Number} 小文本尺寸
+ * @param x {Number} 锚点横坐标
+ * @param y {Number} 锚点横坐标
+ * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
+ * @param color {String} 十六进制颜色，#FFF
+ */
+
+export function get2SizeTorusTextPath (largerText, smallerText, largeSize, smallSize, x, y, anchor,color) {
+    let width_b = torus.getTextMetrics(largerText, x, y, largeSize, anchor, color).width;
+    let width_m = torus.getTextMetrics(smallerText, x, y, smallSize, anchor, color).width;
+    let width_a = (width_b + width_m) / 2; // 全长的一半长
+
+    let out;
+
+    if (anchor === "left baseline") {
+        out = torus.getTextPath(largerText, x, y, largeSize, anchor, color) +
+        torus.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+
+    } else if (anchor === "right baseline") {
+        out = torus.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            torus.getTextPath(smallerText, x, y, smallSize, anchor, color);
+
+    } else if (anchor === "center baseline") {
+        out = torus.getTextPath(largerText, x - width_a, y, largeSize, anchor, color) +
+        torus.getTextPath(smallerText, x + width_a, y, smallSize, anchor, color);
+    }
+
+    return out;
+}
+
+/**
+ * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
+ * @return {String} 返回大数字的字符串
+ * @param number 数字
+ * @param level 等级，现在支持lv -1, 0, 1, 2 注意配套使用
+ */
+export function getRoundedNumberLargerStr (number = 0, level = 0) {
+    let o;
+
+    // lv0是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
+    // lv-1是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
+
+    const SpecialRoundedLargeNum = (number) => {
+        let p = 0
+
+        if (number <= Math.pow(10, 8)) {
+            p = 4; //5671 1234 -> 5671
+
+        } else if (number <= Math.pow(10, 12)) {
+            p = 8; //794 5671 1234 -> 794
+
+        }  else if (number <= Math.pow(10, 16)) {
+            p = 12; //794 5671 1234 0000 -> 794
+
+        } else {
+            return '';
+        }
+
+        return Math.floor(number / Math.pow(10, p)).toString();
+    }
+
+    if (level === -1) {
+        if (number <= Math.pow(10, 7)) {
+            return number.toString().padStart(7,'0').slice(0, -4);// 4 5671 -> 004
+
+        } else {
+            return SpecialRoundedLargeNum(number);
+        }
+    }
+
+    if (level === 0) {
+        return SpecialRoundedLargeNum(number);
+    }
+
+    //旧 level
+
+    if (level >= 1){
+        while (number >= 1000 || number <= -1000) {
+            number /= 1000;
+        }
+
+        o = Math.round(number).toString() + '.';
+
+        //如果小数太小，可不要小数点
+        if (number - Math.round(number) <= 0.0001) {
+            o = o.slice(0, -1);
+        }
+
+        return o;
+    }
+}
+
+/**
+ * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
+ * @return {String} 返回小数字的字符串
+ * @param number 数字
+ * @param level 等级，现在支持lv -1, 0, 1, 2 注意配套使用
+ */
+export function getRoundedNumberSmallerStr (number = 0, level = 0) {
+    let o;
+
+    const SpecialRoundedSmallNum = (number) => {
+        let s = 0;
+
+        if (number <= Math.pow(10, 8)) {
+            s = -4; //5671 1234 -> 1234
+
+        } else if (number <= Math.pow(10, 12)) {
+            s = -8; //794 5671 1234 -> 5671 1234
+
+        }  else if (number <= Math.pow(10, 16)) {
+            s = -12 ; //794 5671 1234 0000 -> 5671 1234 0000
+
+        }
+
+        o = Math.floor(number).toString().slice(s);
+        return o;
+
+    }
+
+    if (level === -1) {
+        if (number <= Math.pow(10, 4)) {
+            return number.toString().padStart(4,'0');// 000 0671 -> 0671
+
+        } else {
+            return SpecialRoundedSmallNum(number);
+        }
+    }
+
+    if (level === 0) {
+        return SpecialRoundedSmallNum(number);
+    }
+
+    //旧 level
+
+    let unit = getRoundedNumberUnit(number, level)
+
+    while (number >= 1000 || number <= -1000) {
+        number /= 1000;
+    }
+
+    if (level === 1) {
+        if (number >= 100) {
+            number /= 1000;
+        }
+        o = (number - Math.round(number * 10) / 10).toString().slice(2);
+    } else if (level === 2) {
+        o = (number - Math.round(number * 1000) / 1000).toString().slice(2);
+    }
+
+    return o + unit;
+}
+
+function getRoundedNumberUnit (number = 0, level = 0) {
+    let unit;
+    let m = 1 + level;
+
+    if (level < 1 || level > 2) return '';
+
+    if (number < Math.pow(10, m)) {  //level==1->100 level==2->1000
+        unit = '';
+    } else if (number < Math.pow(10, (m += 3))) {
+        unit = 'K';
+    } else if (number < Math.pow(10, (m += 3))) {
+        unit = 'M';
+    } else if (number < Math.pow(10, (m += 3))) {
+        unit = 'G';
+    } else if (number < Math.pow(10, (m += 3))) {
+        unit = 'T';
+    } else if (number < Math.pow(10, (m += 3))) {
+        unit = 'P';
+    } else if (number < Math.pow(10, (m += 3))) {
+        unit = 'E';
+    } else if (number < Math.pow(10, m + 3)) {
+        unit = 'Z';
+    } else {
+        unit = ''
+    }
+    return unit;
+}
+
 //色彩管理。或许开个 color util 会更好？=====================================================================================
 
 export function getStarRatingColor(SR = 0){

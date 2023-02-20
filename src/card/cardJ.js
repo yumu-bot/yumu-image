@@ -1,4 +1,4 @@
-import {implantImage, readTemplate} from "../util.js";
+import {implantImage, readTemplate, torus} from "../util.js";
 
 export async function card_J(data = {
     map_cover: 'PanelObject/D_CardJ_Cover.png',
@@ -24,8 +24,17 @@ export async function card_J(data = {
     // 读取模板
     let svg = readTemplate('template/Card_J.svg');
 
-    // 替换模板
+    // 替换文字
+    let map_title_romanized =
+        torus.getTextPath(data.map_title_romanized, 130, 17.877, 18, "left baseline", "#fff");
+    let map_difficulty_name =
+        torus.getTextPath(data.map_difficulty_name, 130, 34.224, 16, "left baseline", "#a1a1a1");
 
+    let star_rating = 0;
+    let combo = 0;
+    let map_line3_text =
+
+    // 替换模板
 
     // 替换图片
 
