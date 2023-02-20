@@ -193,10 +193,10 @@ export function implantSvgBody(base = '', x, y, replace = '', reg = /.*/) {
 }
 
 export function makeSvgBodyToSvg(svgBody = '', w, h) {
-    let head = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${w} ${h}">`
-    let tail = `</svg>`
-    return head + svgBody + tail
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${w} ${h}">
+${svgBody}
+</svg>`;
 }
 
 //色彩管理。或许开个 color util 会更好？=====================================================================================
