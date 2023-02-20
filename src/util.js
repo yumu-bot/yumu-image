@@ -250,7 +250,7 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
     // lv-1是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
 
     const SpecialRoundedLargeNum = (number) => {
-        let p = 0
+        let p = 0;
 
         if (number <= Math.pow(10, 8)) {
             p = 4; //5671 1234 -> 5671
@@ -264,8 +264,13 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
         } else {
             return '';
         }
+        let re = Math.floor(number / Math.pow(10, p));
 
-        return Math.floor(number / Math.pow(10, p)).toString();
+        if (re === 0){
+            return ''
+        } else {
+            return re.toString()
+        }
     }
 
     if (level === -1) {
@@ -278,25 +283,32 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
     }
 
     if (level === 0) {
-        return SpecialRoundedLargeNum(number);
+        if (number <= Math.pow(10, 4)) {
+            return Math.floor(number).toString()
+
+        } else {
+            return SpecialRoundedLargeNum(number);
+        }
     }
 
     //旧 level
 
-    if (level >= 1){
-        while (number >= 1000 || number <= -1000) {
-            number /= 1000;
-        }
+    if (level === 1) {
+        while (number >= 100 || number <= -100) { number /= 100;}
+    }
 
-        o = Math.round(number).toString() + '.';
+    if (level === 2) {
+        while (number >= 1000 || number <= -1000) { number /= 1000;}
+    }
 
         //如果小数太小，可不要小数点
-        if (number - Math.round(number) <= 0.0001) {
-            o = o.slice(0, -1);
+        if (number - Math.floor(number) >= 0.0001) {
+            o = Math.floor(number).toString() + '.';
+        } else {
+            o = Math.floor(number).toString()
         }
 
         return o;
-    }
 }
 
 /**
@@ -322,7 +334,7 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
 
         }
 
-        o = Math.floor(number).toString().slice(s);
+        o = number.toString().slice(s);
         return o;
 
     }
@@ -333,31 +345,37 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
 
         } else {
             return SpecialRoundedSmallNum(number);
+
         }
     }
 
     if (level === 0) {
+        if (number <= Math.pow(10, 4)) {
+            return ''
+        } else {
         return SpecialRoundedSmallNum(number);
+
+        }
     }
 
     //旧 level
 
     let unit = getRoundedNumberUnit(number, level)
 
-    while (number >= 1000 || number <= -1000) {
-        number /= 1000;
-    }
+
 
     if (level === 1) {
-        if (number >= 100) {
-            number /= 1000;
-        }
-        o = (number - Math.round(number * 10) / 10).toString().slice(2);
-    } else if (level === 2) {
-        o = (number - Math.round(number * 1000) / 1000).toString().slice(2);
+        while (number >= 100 || number <= -100) { number /= 100; }
+        o = (number - Math.floor(number)).toString().slice(2,4);
+        return o + unit;
     }
 
-    return o + unit;
+    if (level === 2) {
+        while (number >= 1000 || number <= -1000) { number /= 1000; }
+        o = (number - Math.floor(number)).toString().slice(2,6);
+
+        return o + unit;
+    }
 }
 
 function getRoundedNumberUnit (number = 0, level = 0) {

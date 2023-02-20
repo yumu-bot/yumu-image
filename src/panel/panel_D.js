@@ -1,6 +1,12 @@
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/cardA1.js";
-import {getStarRatingColor, implantSvgBody, InsertSvgBuilder, readTemplate} from "../util.js";
+import {
+    getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getStarRatingColor,
+    implantSvgBody,
+    InsertSvgBuilder,
+    readTemplate
+} from "../util.js";
 import {card_J} from "../card/cardJ.js";
 
 export async function panel_D (data = {
@@ -20,36 +26,29 @@ export async function panel_D (data = {
 
     label_data: {
         rks: {
-            data_b: '98.',
-            data_m: '3G',
+            data: '2147483647',
         },
         tts: {
-            data_b: '547.',
-            data_m: '3G',
+            data: '1919810114',
         },
         pc: {
-            data_b: '19',
-            data_m: '2048',
+            data: '192048',
         },
         pt: {
             data_b: '210.',
             data_m: '1d',
         },
         mpl: {
-            data_b: '1',
-            data_m: '7748',
+            data: '17748',
         },
         rep: {
-            data_b: '4396',
-            data_m: '',
+            data: '4396',
         },
         fan: {
-            data_b: '1076',
-            data_m: '',
+            data: '1076',
         },
         tth: {
-            data_b: '29.',
-            data_m: '82M',
+            data: '298074',
         },
     },
 
@@ -58,15 +57,25 @@ export async function panel_D (data = {
             map_cover: 'PanelObject/D_CardJ_Cover.png',
             map_background: 'PanelObject/D_CardJ_Background.png',
             map_title_romanized: 'Fia is a Cheater',
-            map_difficulty_name: 'Fushimi Rio also cheated',
+            map_difficulty_name: 'Fushimi Rio SB!!!111',
             star_rating: '4.86',
-            score_rank: 'S',
-            accuracy: '98.36', //%
+            score_rank: 'XH',
+            accuracy: '100', //%
             combo: '536', //x
-            mods_arr: ['HD', 'HR', 'DT', 'NF'],
+            mods_arr: ['HD', 'HR', 'DT', 'NF', 'FL'],
             pp: '736' //pp
         },
         card_J_2: {
+            map_cover: 'PanelObject/D_CardJ_Cover.png',
+            map_background: 'PanelObject/D_CardJ_Background.png',
+            map_title_romanized: 'Surasthana Fantasia',
+            map_difficulty_name: 'Blessing for yor birthday',
+            star_rating: '5.32',
+            score_rank: 'D',
+            accuracy: '21.44', //%
+            combo: '241', //x
+            mods_arr: ['EZ', 'HD', 'DT'],
+            pp: '4' //pp
 
         },
         card_J_3: {
@@ -94,23 +103,38 @@ export async function panel_D (data = {
     let reg_label = /(?<=<g id="LabelDR">)/;
 
     // 卡片定义
+    let rks_b = getRoundedNumberLargerStr(data.label_data.rks.data,2);
+    let rks_m = getRoundedNumberSmallerStr(data.label_data.rks.data,2);
+    let tts_b = getRoundedNumberLargerStr(data.label_data.tts.data,2);
+    let tts_m = getRoundedNumberSmallerStr(data.label_data.tts.data,2);
+    let pc_b = getRoundedNumberLargerStr(data.label_data.pc.data,1);
+    let pc_m = getRoundedNumberSmallerStr(data.label_data.pc.data,1);
+    let mpl_b = getRoundedNumberLargerStr(data.label_data.mpl.data,0);
+    let mpl_m = getRoundedNumberSmallerStr(data.label_data.mpl.data,0);
+    let rep_b = getRoundedNumberLargerStr(data.label_data.rep.data,0);
+    let rep_m = getRoundedNumberSmallerStr(data.label_data.rep.data,0);
+    let fan_b = getRoundedNumberLargerStr(data.label_data.fan.data,0);
+    let fan_m = getRoundedNumberSmallerStr(data.label_data.fan.data,0);
+    let tth_b = getRoundedNumberLargerStr(data.label_data.tth.data,1);
+    let tth_m = getRoundedNumberSmallerStr(data.label_data.tth.data,1);
+
     let label_rks =
-        await label_E({...LABEL_OPTION.RKS, ...data.label_data.rks}, true);
+        await label_E({...LABEL_OPTION.RKS, data_b: rks_b, data_m: rks_m}, true);
     let label_tts =
-        await label_E({...LABEL_OPTION.TTS, ...data.label_data.tts}, true);
+        await label_E({...LABEL_OPTION.TTS, data_b: tts_b, data_m: tts_m}, true);
     let label_pc =
-        await label_E({...LABEL_OPTION.PC, ...data.label_data.pc}, true);
+        await label_E({...LABEL_OPTION.PC, data_b: pc_b, data_m: pc_m}, true);
     let label_pt =
         await label_E({...LABEL_OPTION.PT, ...data.label_data.pt}, true);
 
     let label_mpl =
-        await label_E({...LABEL_OPTION.MPL, ...data.label_data.mpl}, true);
+        await label_E({...LABEL_OPTION.MPL, data_b: mpl_b, data_m: mpl_m}, true);
     let label_rep =
-        await label_E({...LABEL_OPTION.REP, ...data.label_data.rep}, true);
+        await label_E({...LABEL_OPTION.REP, data_b: rep_b, data_m: rep_m}, true);
     let label_fan =
-        await label_E({...LABEL_OPTION.FAN, ...data.label_data.fan}, true);
+        await label_E({...LABEL_OPTION.FAN, data_b: fan_b, data_m: fan_m}, true);
     let label_tth =
-        await label_E({...LABEL_OPTION.TTH, ...data.label_data.tth}, true);
+        await label_E({...LABEL_OPTION.TTH, data_b: tth_b, data_m: tth_m}, true);
 
     let card_A1_impl =
         await card_A1(data.card_A1, true);
