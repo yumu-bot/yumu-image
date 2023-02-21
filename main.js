@@ -7,8 +7,8 @@ import {panel_E} from "./src/panel/panel_E.js";
 import {card_D} from "./src/card/cardD.js";
 import {card_H} from "./src/card/cardH.js";
 
-/*
 //    已经部署在机器上了,提交前请注释掉测试代码
+/*
 fs.writeFileSync("image/out/card_A1.png", await card_A1());
  */
 
@@ -18,7 +18,7 @@ console.time('D')
 fs.writeFileSync("image/out/panel_D.png", await panel_D());
 console.timeEnd('D')
 console.time('E')
-fs.writeFileSync("image/out/panel_E.png", await panel_E());
+// fs.writeFileSync("image/out/panel_E.png", await panel_E());
 console.timeEnd('E')
 console.timeEnd()
 

@@ -8,6 +8,7 @@ import {
     readTemplate
 } from "../util.js";
 import {card_J} from "../card/cardJ.js";
+import {card_K} from "../card/cardK.js";
 
 export async function panel_D (data = {
     card_A1: {
@@ -24,6 +25,7 @@ export async function panel_D (data = {
         pp_m: 'PP',
     },
 
+    // D标签
     label_data: {
         rks: {
             data: '2147483647',
@@ -52,6 +54,7 @@ export async function panel_D (data = {
         },
     },
 
+    // J卡
     recent_play: {
         card_J_1: {
             map_cover: 'PanelObject/D_CardJ_Cover.png',
@@ -83,6 +86,42 @@ export async function panel_D (data = {
         },
     },
 
+    // K卡
+    bp_list:{
+        card_K_1: {
+            map_background: 'PanelObject/D_CardK_Background.png',
+            star_rating: '2.7',
+            score_rank: 'X',
+            bp_ranking: '1',
+            bp_pp: '369'
+        },
+        card_K_2: {
+            map_background: 'PanelObject/D_CardK_Background.png',
+            star_rating: '6.21',
+            score_rank: 'SH',
+            bp_ranking: '2',
+            bp_pp: '304'
+        },
+        card_K_3: {
+
+        },
+        card_K_4: {
+
+        },
+        card_K_5: {
+
+        },
+        card_K_6: {
+
+        },
+        card_K_7: {
+
+        },
+        card_K_8: {
+            
+        },
+    },
+
     //用户数据
     //bp固定39个值，pc固定43个值，当然也可以传原数组，其他的交给面板完成
     user_ranking_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
@@ -100,6 +139,7 @@ export async function panel_D (data = {
     // 路径定义
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_cardj = /(?<=<g id="CardJ">)/;
+    let reg_cardk = /(?<=<g id="CardK">)/;
     let reg_label = /(?<=<g id="LabelDR">)/;
 
     // 卡片定义
@@ -144,12 +184,37 @@ export async function panel_D (data = {
         await card_J(data.recent_play.card_J_2, true);
     let card_J_3_impl =
         await card_J(data.recent_play.card_J_3, true);
+    let card_K_1_impl =
+        await card_K(data.bp_list.card_K_1, true);
+    let card_K_2_impl =
+        await card_K(data.bp_list.card_K_2, true);
+    let card_K_3_impl =
+        await card_K(data.bp_list.card_K_3, true);
+    let card_K_4_impl =
+        await card_K(data.bp_list.card_K_4, true);
+    let card_K_5_impl =
+        await card_K(data.bp_list.card_K_5, true);
+    let card_K_6_impl =
+        await card_K(data.bp_list.card_K_6, true);
+    let card_K_7_impl =
+        await card_K(data.bp_list.card_K_7, true);
+    let card_K_8_impl =
+        await card_K(data.bp_list.card_K_8, true);
 
     // 插入图片和部件（新方法
     svg = implantSvgBody(svg,40,40,card_A1_impl,reg_maincard);
     svg = implantSvgBody(svg,635,380,card_J_1_impl,reg_cardj);
     svg = implantSvgBody(svg,635,475,card_J_2_impl,reg_cardj);
     svg = implantSvgBody(svg,635,570,card_J_3_impl,reg_cardj);
+
+    svg = implantSvgBody(svg,635,735,card_K_1_impl,reg_cardk);
+    svg = implantSvgBody(svg,715,735,card_K_2_impl,reg_cardk);
+    svg = implantSvgBody(svg,795,735,card_K_3_impl,reg_cardk);
+    svg = implantSvgBody(svg,875,735,card_K_4_impl,reg_cardk);
+    svg = implantSvgBody(svg,635,795,card_K_5_impl,reg_cardk);
+    svg = implantSvgBody(svg,715,795,card_K_6_impl,reg_cardk);
+    svg = implantSvgBody(svg,795,795,card_K_7_impl,reg_cardk);
+    svg = implantSvgBody(svg,875,795,card_K_8_impl,reg_cardk);
 
     svg = implantSvgBody(svg,1000,755,label_rks,reg_label);
     svg = implantSvgBody(svg,1220,755,label_tts,reg_label);

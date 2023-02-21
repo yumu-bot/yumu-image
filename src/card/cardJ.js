@@ -34,7 +34,35 @@ export async function card_J(data = {
 
 
     // 读取模板
-    let svg = readTemplate('template/Card_J.svg');
+    let svg = `  <defs>
+        <clipPath id="clippath-CJ-1">
+        <rect width="310" height="80" rx="12" ry="12" style="fill: none;"/>
+        </clipPath>
+    <clipPath id="clippath-CJ-2">
+        <rect width="120" height="80" rx="10" ry="10" style="fill: none;"/>
+    </clipPath>
+</defs>
+    <g id="Base">
+        <rect width="310" height="80" rx="10" ry="10" style="fill: #46393f;"/>
+    </g>
+    <g id="Background">
+        <g style="clip-path: url(#clippath-CJ-1);">
+        </g>
+    </g>
+    <g id="Cover">
+        <g style="clip-path: url(#clippath-CJ-2);">
+        </g>
+    </g>
+    <g id="Stat">
+        <g id="Rank">
+        </g>
+        <g id="Mod">
+        </g>
+    </g>
+    <g id="Overlay">
+    </g>
+    <g id="Text">
+    </g>`;
 
 
     // 替换文字
@@ -85,7 +113,6 @@ export async function card_J(data = {
         }
     }
 
-
     // 替换模板
 
     svg = replaceText(svg, map_title_romanized, reg_text);
@@ -100,7 +127,7 @@ export async function card_J(data = {
 
     // 替换图片
 
-    svg = data.map_background ? implantImage(svg,310,80,0,0,1, data.map_background, reg_background) : svg;
+    svg = data.map_background ? implantImage(svg,310,80,0,0,0.8, data.map_background, reg_background) : svg;
     svg = data.map_cover ? implantImage(svg,120,80,0,0,1, data.map_cover, reg_cover) : svg;
 
     return svg.toString();

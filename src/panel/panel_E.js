@@ -137,9 +137,6 @@ export async function panel_E(data = {
     // 面板图片
     banner: 'PanelObject/E_Banner.png',
     map_background: 'PanelObject/E_MapCover.jpg',
-
-    judge_background: 'object-score-backimage-SH.jpg',
-    score_rank: 'object-score-SH.png',
     star: 'object-beatmap-star.png',
     map_hexagon: 'object-beatmap-hexagon.png',
     map_favorite: 'object-beatmap-favorite.png',
@@ -152,6 +149,7 @@ export async function panel_E(data = {
     index_request_time: 'request time: 2023-10-4 17:59:58 UTC+8',
     index_panel_name: 'S v3.6',
 
+    score_rank: 'D',
     star_rating: '4.35',
     game_mode: '\uE800', // osu! 模式图标
     map_status_fav: '3.9K',
@@ -519,10 +517,32 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg,1650,870,label_ar,reg_mod);
     svg = implantSvgBody(svg,1440,950,label_od,reg_mod);
     svg = implantSvgBody(svg,1650,950,label_hp,reg_mod);
-    
+
+    // 插入评级大照片和背景。
+
+    function scoreRankSVGShown (rank = 'D') {
+        let w; //很奇怪，输出明明好好的，但是位置不对
+        switch (rank) {
+            case 'XH': w = 0; break;
+            case 'X': w = 0; break;
+            case 'SH': w = 0; break;
+            case 'S': w = 0; break;
+            case 'SP': w = 0; break;
+            case 'A': w = 0; break;
+            case 'B': w = 5; break;
+            case 'C': w = -5; break;
+            case 'D': w = 10; break;
+            case 'F': w = 5; break;
+        }
+
+        svg = implantImage(svg,1920,790,0,290,0.8,`object-score-backimage-${rank}.jpg`,reg_judge_background);
+        svg = implantImage(svg,150 + w,150,980,405,1,`object-score-${rank}.png`,reg_score_rank); //微调了x，让它增加了5
+    }
+
+    scoreRankSVGShown(data.score_rank)
+
+
     svg = implantImage(svg,1920,320,0,0,1,data.banner,reg_banner);
-    svg = implantImage(svg,1920,790,0,290,1,data.judge_background,reg_judge_background);
-    svg = implantImage(svg,150,150,980,405,1,data.score_rank,reg_score_rank); //微调了x，让它增加了5
     svg = implantImage(svg,380,440,250,375,1,data.map_background,reg_map_background);
     svg = implantImage(svg,420,450,230,370,1,data.map_hexagon,reg_map_hexagon);
     svg = implantImage(svg,18,18,746,364,1,data.map_favorite,reg_map_favorite);

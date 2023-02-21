@@ -86,14 +86,6 @@
   <g id="BPCard">
     <rect x="620" y="685" width="340" height="175" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="CardK">
-      <rect x="875" y="795" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
-      <rect x="795" y="795" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
-      <rect x="715" y="795" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
-      <rect x="635" y="795" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
-      <rect x="875" y="735" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
-      <rect x="795" y="735" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
-      <rect x="715" y="735" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
-      <rect x="635" y="735" width="70" height="50" rx="10" ry="10" style="fill: #54454c;"/>
     </g>
     <g id="BPText">
       <text transform="translate(635 720.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">BPs</tspan></text>
