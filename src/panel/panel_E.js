@@ -17,6 +17,7 @@ import {card_A1} from "../card/cardA1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
 
 export async function panel_E(data = {
+    // A1卡
     card_A1: {
         background: 'PanelObject/A_CardA1_BG.png',
         avatar: 'PanelObject/A_CardA1_Avatar.png',
@@ -30,6 +31,8 @@ export async function panel_E(data = {
         pp_b: '4396',
         pp_m: 'PP',
     },
+
+    // E标签
     label_data: {
         acc: {
             remark: '-1.64%',
@@ -128,6 +131,7 @@ export async function panel_E(data = {
 
     // 谱面密度
     map_density_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
+
     // 重试和失败数组 retry / fail 注意，retry叫exit
     map_retry_arr: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,18,360,396,234,45,81,54,63,90,153,135,36,9,63,54,36,144,54,9,9,36,18,45,45,36,108,63,9,0,0,0,0,27,0,0,0,0,0,27,0,18,0,0,0,18,18,18,0,0,0,9,18,9,0,9,9,0,9,0,9,18,9,0,0,27,0,0,0,0,27,9,9,0,9,9,0,0,0,9,0,0,9,9,0,9],
     map_fail_arr: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,54,9,36,27,9,18,0,0,18,18,45,27,27,18,90,36,18,36,0,18,45,36,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,18,0,45,27,9,0,18,90,9,0,0,9,9,9,27,0,9,27,0,0,0,0,9,9,0,0,0,0,0,9,0,9,18,18,0,0,0,0,0,0,0,0,0,0,9,9,0],
@@ -135,7 +139,7 @@ export async function panel_E(data = {
     mods_arr: ['HD', 'HR', 'DT', 'NF'],
 
     // 面板图片
-    banner: 'PanelObject/E_Banner.png',
+    banner: 'PanelObject/E_Banner.png',// banner更新
     map_background: 'PanelObject/E_MapCover.jpg',
     star: 'object-beatmap-star.png',
     map_hexagon: 'object-beatmap-hexagon.png',
@@ -150,8 +154,11 @@ export async function panel_E(data = {
     index_panel_name: 'S v3.6',
 
     score_rank: 'D',
-    star_rating: '4.35',
-    game_mode: '\uE800', // osu! 模式图标
+    star_rating: '3.42',
+    score: '2154980',
+    score_acc_progress: '97.8', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
+
+    game_mode: 'osu', // osu taiko catch mania
     map_status_fav: '3.9K',
     map_status_pc: '78.2M',
 
@@ -159,14 +166,9 @@ export async function panel_E(data = {
     map_title_unicode: '百花魁と白徳利',
     map_difficulty: 'Expert',
     map_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136',
-
-    score: '1611',
-
     map_public_rating: '9.8', //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
     map_retry_percent: '54', //重试率%
     map_fail_percent: '13.2', //失败率%
-
-    score_acc_progress: '97.8', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
     // 面板颜色和特性 颜色已经写成方法
     //color_gamemode: '#7ac943',
@@ -246,7 +248,16 @@ export async function panel_E(data = {
     let tm_sr_x = 160 - (tm_sr_b.width + tm_sr_m.width) / 2;
     let star_rating = torus.getTextPath(text_sr_b, tm_sr_x, 373.67, 48, "left baseline", "#fff") +
         torus.getTextPath(text_sr_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
-    let game_mode = extra.getTextPath(data.game_mode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
+
+    let game_mode_unicode;
+    switch (data.game_mode){
+        case 'osu' : game_mode_unicode = '\uE800'; break;
+        case 'taiko' : game_mode_unicode = '\uE801'; break;
+        case 'catch' : game_mode_unicode = '\uE802'; break;
+        case 'mania' : game_mode_unicode = '\uE803'; break;
+        default : game_mode_unicode = ''; break;
+    }
+    let game_mode = extra.getTextPath(game_mode_unicode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
 
     let map_status_fav = torus.getTextPath(data.map_status_fav, 840, 353.84, 24, "right baseline", "#fff");
     let map_status_pc = torus.getTextPath(data.map_status_pc, 840, 380.84, 24, "right baseline", "#fff");
@@ -503,6 +514,33 @@ export async function panel_E(data = {
 
     //console.timeEnd("stats");
     //console.time("img");
+    // 插入评级大照片和背景
+
+    function scoreRankSVGShown (rank = 'D') {
+        let w = 0; //很奇怪，输出明明好好的，但是位置不对
+        switch (rank) {
+            case 'B': w = 5; break;
+            case 'C': w = -5; break;
+            case 'D': w = 10; break;
+            case 'F': w = 5; break;
+        }
+
+        svg = implantImage(svg,1920,790,0,290,0.8,`object-score-backimage-${rank}.jpg`,reg_judge_background);
+        svg = implantImage(svg,150 + w,150,980,405,1,`object-score-${rank}.png`,reg_score_rank); //微调了x，让它增加了5
+    }
+
+    scoreRankSVGShown(data.score_rank);
+
+    //插入新版 banner
+    let banner_overlay = 'banner-overlay.png';
+    let banner_rrect = `<rect width="1920" height="320" rx="20" ry="20" style="fill: ${getStarRatingColor(data.star_rating)}; opacity: 0.8;"/>`;
+
+    if (data.star_rating){
+        svg = implantImage(svg,1920,320,0,0,1,banner_overlay,reg_banner);
+        svg = replaceText(svg, banner_rrect, reg_banner);
+    } else {
+        svg = implantImage(svg,1920,320,0,0,1,data.banner,reg_banner);
+    }
 
     //console.time('newSVG')
     // 插入图片和部件（新方法 ==============================================================================================
@@ -518,31 +556,6 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg,1440,950,label_od,reg_mod);
     svg = implantSvgBody(svg,1650,950,label_hp,reg_mod);
 
-    // 插入评级大照片和背景。
-
-    function scoreRankSVGShown (rank = 'D') {
-        let w; //很奇怪，输出明明好好的，但是位置不对
-        switch (rank) {
-            case 'XH': w = 0; break;
-            case 'X': w = 0; break;
-            case 'SH': w = 0; break;
-            case 'S': w = 0; break;
-            case 'SP': w = 0; break;
-            case 'A': w = 0; break;
-            case 'B': w = 5; break;
-            case 'C': w = -5; break;
-            case 'D': w = 10; break;
-            case 'F': w = 5; break;
-        }
-
-        svg = implantImage(svg,1920,790,0,290,0.8,`object-score-backimage-${rank}.jpg`,reg_judge_background);
-        svg = implantImage(svg,150 + w,150,980,405,1,`object-score-${rank}.png`,reg_score_rank); //微调了x，让它增加了5
-    }
-
-    scoreRankSVGShown(data.score_rank)
-
-
-    svg = implantImage(svg,1920,320,0,0,1,data.banner,reg_banner);
     svg = implantImage(svg,380,440,250,375,1,data.map_background,reg_map_background);
     svg = implantImage(svg,420,450,230,370,1,data.map_hexagon,reg_map_hexagon);
     svg = implantImage(svg,18,18,746,364,1,data.map_favorite,reg_map_favorite);

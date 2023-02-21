@@ -50,17 +50,17 @@
       <rect x="40" y="711" width="39" height="39" style="fill: none;"/>
     </clipPath>
   </defs>
+  <g id="BannerBase">
+    <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719"/>
+  </g>
   <g id="Banner">
-    <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719;"/>
     <g style="clip-path: url(#clippath-PE-BR);">
     </g>
-    <rect width="1920" height="320" rx="20" ry="20" style="opacity: .2;"/>
   </g>
   <g id="Background">
     <rect y="290" width="1920" height="790" rx="20" ry="20" style="fill: #2a2226;"/>
     <g style="clip-path: url(#clippath-PE-BG);">
     </g>
-    <rect y="290" width="1920" height="790" rx="20" ry="20" style="opacity: 0;"/>
   </g>
   <g id="RBJudge_MapStatic">
     <rect id="RBBackground" x="880" y="770" width="1000" height="270" rx="20" ry="20" style="fill: #382e32;"/>

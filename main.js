@@ -18,7 +18,7 @@ console.time('D')
 fs.writeFileSync("image/out/panel_D.png", await panel_D());
 console.timeEnd('D')
 console.time('E')
-// fs.writeFileSync("image/out/panel_E.png", await panel_E());
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
 console.timeEnd('E')
 console.timeEnd()
 

@@ -10,11 +10,12 @@
     <clipPath id="clippath-PD-3">
       <rect x="40" y="330" width="560" height="710" rx="20" ry="20" style="fill: none;"/>
     </clipPath>
-    <filter id="inset-shadow" height="150%" width="150%" x="-25%" y="-25%" filterUnits="userSpaceOnUse">
+    <filter id="inset-shadow-PD-4" height="150%" width="150%" x="-25%" y="-25%" filterUnits="userSpaceOnUse">
       <feFlood flood-color="#000"/>
       <feComposite in2="SourceGraphic" operator="out"/>
-      <feGaussianBlur stdDeviation="5" result="blur"/>
-      <feComposite operator="atop" in2="SourceGraphic"/>
+      <feMorphology operator="dilate" radius="15" />
+      <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
+      <feComposite in2="SourceGraphic" operator="atop"/>
     </filter>
   </defs>
   <g id="Banner">
@@ -110,10 +111,11 @@
     </g>
   </g>
   <g id="MascotCard">
+   <g id="MascotBase">
+    <rect x="40" y="330" width="560" height="710" rx="20" ry="20" style="fill: #46393f;"/>
+   </g>
     <g id="Mascot">
-      <rect x="40" y="330" width="560" height="710" rx="20" ry="20" style="fill: #46393f;"/>
-      <g style="clip-path: url(#clippath-PD-3);" filter="url(#inset-shadow)">
-        <image width="560" height="710" transform="translate(40 330)" xlink:href="D_Mascot.png"/>
+      <g style="clip-path: url(#clippath-PD-3);" filter="url(#inset-shadow-PD-4)">
       </g>
     </g>
     <g id="MascotName">
@@ -124,17 +126,17 @@
       <rect x="500" y="350" width="80" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>
       <text transform="translate(510.798 380.754)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="font-size: 36px;">36</tspan><tspan x="40.86" y="0" style="font-size: 24px;">%</tspan></text>
     </g>
-    <g id="ProgressRRect">
+    <g id="ProgressBase">
       <rect id="ProgressBaseR" x="60" y="1016" width="520" height="4" rx="2" ry="2" style="fill: #54454c;"/>
-      <rect id="ProgressR" x="60" y="1016" width="430" height="4" rx="2" ry="2" style="fill: #fc2;"/>
+    </g>
+    <g id="ProgressRRect">
     </g>
   </g>
   <g id="MainCard">
   </g>
-  <g id="Index">
+  <g id="IndexBase">
     <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>
-    <text transform="translate(534.493 83.672)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 48px; font-weight: 600;"><tspan x="0" y="0">I v3.6B</tspan></text>
-    <text transform="translate(10 26.836)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">powered by Yumubot // PlayerInfo (!ymi)</tspan></text>
-    <text transform="translate(1459.671 26.836)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0" xml:space="preserve"> request time: 2021-10-4 17:59:58 UTC+8</tspan></text>
+  </g>
+  <g id="Index">
   </g>
 </svg>

@@ -10,6 +10,8 @@ const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = "D:/ExportFileV3/";
 
+const mascot_pic_sum_arr = [5,0,0,0,0,0,0,0,0]; //吉祥物的对应的照片数量，和随机banner一样的
+
 const svgToPng = async (svg) => await exports.convert(svg);
 
 const UTF8Encoder = new TextEncoder('utf8');
@@ -17,6 +19,7 @@ const UTF8Encoder = new TextEncoder('utf8');
 const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
 const textToSVGPuHuiTi = TextToSVG.loadSync("font/Alibaba-PuHuiTi-Medium.ttf");
 const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
+
 
 export function readTemplate(path = '') {
     return fs.readFileSync(path, 'utf8');
@@ -362,8 +365,6 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
 
     let unit = getRoundedNumberUnit(number, level)
 
-
-
     if (level === 1) {
         while (number >= 100 || number <= -100) { number /= 100; }
         o = (number - Math.floor(number)).toString().slice(2,4);
@@ -499,24 +500,24 @@ export function getStarRatingColor(SR = 0){
 export function getModColor(Mod = ''){
     let color;
     switch (Mod) {
-        case "NF": color = '#42A5F5'; break;
-        case "EZ": color = '#4CAF50'; break;
-        case "HD": color = '#FDD835'; break;
+        case "NF": color = '#00A0E9'; break;
+        case "EZ": color = '#22AC38'; break;
+        case "HD": color = '#F8B551'; break;
         case "HR": color = '#D32F2F'; break;
         case "SD": color = '#FF9800'; break;
-        case "DT": color = '#3F51B5'; break;
-        case "RX": color = '#CDDC39'; break;
+        case "DT": color = '#0068B7'; break;
+        case "RX": color = '#BFC31F'; break;
         case "HT": color = '#BDBDBD'; break;
-        case "NC": color = '#673AB7'; break;
+        case "NC": color = '#601986'; break;
         case "FL": color = '#000'; break;
-        case "AT": color = '#4FC3F7'; break;
-        case "CN": color = '#4FC3F7'; break;
-        case "SO": color = '#795548'; break;
-        case "AP": color = '#DCE775'; break;
-        case "PF": color = '#FFFF00'; break;
+        case "AT": color = '#00B7EE'; break;
+        case "CN": color = '#00B7EE'; break;
+        case "SO": color = '#B28850'; break;
+        case "AP": color = '#B3D465'; break;
+        case "PF": color = '#FFF100'; break;
         case "XK": color = '#616161'; break;
-        case "RD": color = '#388E3C'; break;
-        case "TD": color = '#81D4FA'; break;
+        case "RD": color = '#009944'; break;
+        case "TD": color = '#7ECEF4'; break;
         default: color = '#fff'; break;
     }
 
@@ -529,17 +530,84 @@ export function getRankColor(Rank = 'F'){
         case "XH": color = '#FAFAFA'; break;
         case "X": color = '#FFFF00'; break;
         case "SH": color = '#BDBDBD'; break;
-        case "SP": color = '#FFC107'; break; // S+
+        case "SP": color = '#E86100'; break; // S+
         case "S": color = '#FF9800'; break;
-        case "A": color = '#4CAF50'; break;
-        case "B": color = '#42A5F5'; break;
-        case "C": color = '#673AB7'; break;
+        case "A": color = '#22AC38'; break;
+        case "B": color = '#00A0E9'; break;
+        case "C": color = '#601986'; break;
         case "D": color = '#D32F2F'; break;
         case "F": color = '#616161'; break;
         default: color = '#fff'; break;
     }
 
     return color;
+}
+
+/**
+ * @function 随机提供游戏模式对应的吉祥物名字
+ * @return {String} 返回吉祥物名字
+ * @param gamemode 游戏模式，'osu' 'taiko' 等
+ */
+export function getMascotName (gamemode = 'osu') {
+    let r = Math.random(),
+        //on = 1, //pippi
+        tn = 6, //Mocha, Aiko, Alisa, Chirou, Tama, Taikonator
+        //cn = 1, //Yuzu
+        mn = 2, //Mani, Mari
+
+        t = Math.floor(tn * r) + 1,
+        m = Math.floor(mn * r) + 1;
+
+    switch (gamemode) {
+        case 'osu':
+            return 'pippi';
+        case 'taiko': {
+            switch (t) {
+                case 1 : return 'Mocha';
+                case 2 : return 'Aiko';
+                case 3 : return 'Alisa';
+                case 4 : return 'Chirou';
+                case 5 : return 'Tama';
+                case 6 : return 'Taikonator';
+            }
+            break;
+        }
+        case 'catch': return 'Yuzu';
+        case 'mania': {
+            switch (m) {
+                case 1 : return 'Mani';
+                case 2 : return 'Mari';
+            }
+            break;
+        }
+    }
+}
+/**
+ * @function 提供吉祥物名字对应的链接
+ * @return {String} 返回吉祥物链接
+ * @param mascotname 吉祥物名字
+ */
+export function getMascotPath (mascotname = 'pippi') {
+    let r = Math.random();
+    let i;
+    let path;
+
+    switch (mascotname){
+        case 'pippi': i = 0; break;
+        case 'Mocha': i = 1; break;
+        case 'Aiko': i = 2; break;
+        case 'Alisa': i = 3; break;
+        case 'Chirou': i = 4; break;
+        case 'Tama': i = 5; break;
+        case 'Taikonator': i = 6; break;
+        case 'Yuzu': i = 7; break;
+        case 'Mani': i = 8; break;
+        case 'Mari': i = 8; break;
+    }
+
+    path = Math.floor(mascot_pic_sum_arr[i] * r) + 1;
+
+    return `Mascots/${mascotname}_${path}.png`;
 }
 
 export function getBase64Text(buffer) {

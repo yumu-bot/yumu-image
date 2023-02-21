@@ -1,11 +1,12 @@
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/cardA1.js";
 import {
+    getMascotName, getMascotPath,
     getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
-    getStarRatingColor,
+    getStarRatingColor, implantImage,
     implantSvgBody,
     InsertSvgBuilder,
-    readTemplate
+    readTemplate, replaceText, torus
 } from "../util.js";
 import {card_J} from "../card/cardJ.js";
 import {card_K} from "../card/cardK.js";
@@ -129,7 +130,9 @@ export async function panel_D (data = {
     user_pc_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
 
     user_lv: '106',
-    user_progress: '36' //%
+    user_progress: '36', //%
+
+    game_mode: 'osu', // osu taiko catch mania
 
 }, reuse = false) {
 
@@ -141,6 +144,10 @@ export async function panel_D (data = {
     let reg_cardj = /(?<=<g id="CardJ">)/;
     let reg_cardk = /(?<=<g id="CardK">)/;
     let reg_label = /(?<=<g id="LabelDR">)/;
+
+    let reg_mascot = /(?<=filter="url\(#inset-shadow-PD-4\)">)/;
+
+    let reg_index = /(?<=<g id="Index">)/;
 
     // 卡片定义
     let rks_b = getRoundedNumberLargerStr(data.label_data.rks.data,2);
@@ -200,6 +207,32 @@ export async function panel_D (data = {
         await card_K(data.bp_list.card_K_7, true);
     let card_K_8_impl =
         await card_K(data.bp_list.card_K_8, true);
+
+    // 文字定义
+    let index_powered = torus.getTextPath(data.index_powered, 10, 26.84, 24, "left baseline", "#fff");
+    let index_request_time = torus.getTextPath(data.index_request_time, 1910, 26.84, 24, "right baseline", "#fff");
+    let tm_ipn =
+        torus.getTextMetrics(data.index_panel_name, 0, 0, 48, "left baseline", "#fff");
+    let ipn_x = 607.5 - tm_ipn.width / 2;
+    let index_panel_name = torus.getTextPath(data.index_panel_name, ipn_x, 83.67, 48, "left baseline", "#fff");
+
+    // 插入进度
+    let user_lv = torus.getTextPath(data.user_lv ? data.user_lv : 0, 10, 26.84, 24, "left baseline", "#fff");
+    let user_progress = data.user_progress ? data.user_progress : 0;
+
+    let progress_rrect = `<rect id="ProgressR" x="60" y="1016" width="${520 * (data.user_progress ? data.user_progress : 0) / 100}" height="4" rx="2" ry="2" style="fill: #fc2;"/>`
+
+    // 插入吉祥物
+    let mascot_name = getMascotName(data.game_mode);
+    let mascot_link = getMascotPath(mascot_name);
+
+    svg = implantImage(svg, 560, 710, 40, 330, 1, mascot_link, reg_mascot);
+
+    // 插入文字
+
+    svg = replaceText(svg, index_powered, reg_index);
+    svg = replaceText(svg, index_request_time, reg_index);
+    svg = replaceText(svg, index_panel_name, reg_index);
 
     // 插入图片和部件（新方法
     svg = implantSvgBody(svg,40,40,card_A1_impl,reg_maincard);
