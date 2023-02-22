@@ -137,7 +137,7 @@ export async function panel_D (data = {
     bonus_pp: '471',
     om4k_pp: '2754',
     om7k_pp: '1045',
-    game_mode: 'mania', // osu taiko catch mania
+    game_mode: 'osu', // osu taiko catch mania
 
     grade_XH: 65472,
     grade_X: 75038,

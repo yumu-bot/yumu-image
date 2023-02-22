@@ -774,6 +774,9 @@ export function maximumArrayToFixedLength (arr = [0], target_length = 0) {
             }
         })
 
+        //有时候最后一位取不到，只能靠这个方法来解决了
+        if (out.length < target_length) out.push(arr[arr.length - 1])
+
         return out;
     }
 }
