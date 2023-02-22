@@ -11,7 +11,7 @@ import {
     getStarRatingColor,
     get2SizeTorusTextPath,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr
+    getRoundedNumberSmallerStr, getRandomBannerPath
 } from "../util.js";
 import {card_A1} from "../card/cardA1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -139,7 +139,6 @@ export async function panel_E(data = {
     mods_arr: ['HD', 'HR', 'DT', 'NF'],
 
     // 面板图片
-    banner: 'PanelObject/E_Banner.png',// banner更新
     map_background: 'PanelObject/E_MapCover.jpg',
     star: 'object-beatmap-star.png',
     map_hexagon: 'object-beatmap-hexagon.png',
@@ -153,8 +152,8 @@ export async function panel_E(data = {
     index_request_time: 'request time: 2023-10-4 17:59:58 UTC+8',
     index_panel_name: 'S v3.6',
 
-    score_rank: 'D',
-    star_rating: '3.42',
+    score_rank: 'S',
+    star_rating: '',
     score: '2154980',
     score_acc_progress: '97.8', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
@@ -217,8 +216,8 @@ export async function panel_E(data = {
     //console.time("txt");
 
     //预处理 8.34* -> 8, 0.34, 8., 34,
-    let sr_b = parseInt(data.star_rating);
-    let sr_m = parseFloat((data.star_rating - sr_b).toString().slice(0,4));
+    let sr_b = parseInt(data.star_rating || '0');
+    let sr_m = parseFloat(data.star_rating ? (data.star_rating - sr_b).toString().slice(0,4) : 0);
     let text_sr_b;
     if (sr_m === 0){
         text_sr_b = sr_b.toString();
@@ -228,8 +227,10 @@ export async function panel_E(data = {
 
     let text_sr_m = (data.star_rating - sr_b).toString().slice(2,4);
 
-    if (sr_b >= 10) {
-        text_sr_b = '10';
+    if (text_sr_m.substring(1) === '0') text_sr_m = text_sr_m.slice(-1);
+
+    if (sr_b >= 20) {
+        text_sr_b = '20';
         text_sr_m = '+';
     }
 
@@ -539,7 +540,7 @@ export async function panel_E(data = {
         svg = implantImage(svg,1920,320,0,0,1,banner_overlay,reg_banner);
         svg = replaceText(svg, banner_rrect, reg_banner);
     } else {
-        svg = implantImage(svg,1920,320,0,0,1,data.banner,reg_banner);
+        svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
     }
 
     //console.time('newSVG')

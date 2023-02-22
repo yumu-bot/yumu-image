@@ -11,6 +11,8 @@ export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = "D:/ExportFileV3/";
 
 const mascot_pic_sum_arr = [5,0,0,0,0,0,0,0,0]; //吉祥物的对应的照片数量，和随机banner一样的
+const bannerTotal = 40;//banner 数量
+const mascotBGTotal = 13;//吉祥物 BG 数量
 
 const svgToPng = async (svg) => await exports.convert(svg);
 
@@ -49,6 +51,7 @@ export const torus = {};
 
 torus.getTextPath = getTextPath_torus;
 torus.getTextMetrics = getTextMetrics_torus;
+torus.getTextWidth = getTextWidth_torus;
 
 function getTextPath_torus(
     text = '',
@@ -90,10 +93,27 @@ function getTextMetrics_torus(
     })
 }
 
+function getTextWidth_torus(
+    text = '',
+    size = 0,
+) {
+    return textToSVGTorusSB.getMetrics(text, {
+        x: 0,
+        y: 0,
+        fontSize: size,
+        anchor: 'center baseline',
+        fontFamily: "Torus",
+        attributes: {
+            fill: '#fff'
+        }
+    }).width
+}
+
 export const PuHuiTi = {};
 
 PuHuiTi.getTextPath = getTextPath_PuHuiTi;
 PuHuiTi.getTextMetrics = getTextMetrics_PuHuiTi;
+PuHuiTi.getTextWidth = getTextWidth_PuHuiTi;
 
 function getTextPath_PuHuiTi(
     text = '',
@@ -113,6 +133,22 @@ function getTextPath_PuHuiTi(
             fill: fill
         }
     })
+}
+
+function getTextWidth_PuHuiTi(
+    text = '',
+    size = 0,
+) {
+    return textToSVGTorusSB.getMetrics(text, {
+        x: 0,
+        y: 0,
+        fontSize: size,
+        anchor: 'center baseline',
+        fontFamily: "PuHuiTi",
+        attributes: {
+            fill: '#fff'
+        }
+    }).width
 }
 
 export const extra = {};
@@ -244,13 +280,15 @@ export function get2SizeTorusTextPath (largerText, smallerText, largeSize, small
  * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
  * @return {String} 返回大数字的字符串
  * @param number 数字
- * @param level 等级，现在支持lv -1, 0, 1, 2 注意配套使用
+ * @param level 等级，现在支持lv -1, 0, 1, 2, 3 注意配套使用
+ * lv3是保留一位数,0-999-1.0K-99K-0.1M-99M
+ * lv2是保留四位数
+ * lv1是保留两位数
+ * lv0是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
+ * lv-1是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  */
 export function getRoundedNumberLargerStr (number = 0, level = 0) {
     let o;
-
-    // lv0是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
-    // lv-1是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
 
     const SpecialRoundedLargeNum = (number) => {
         let p = 0;
@@ -294,6 +332,7 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
         }
     }
 
+
     //旧 level
 
     if (level === 1) {
@@ -304,21 +343,53 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
         while (number >= 1000 || number <= -1000) { number /= 1000;}
     }
 
-        //如果小数太小，可不要小数点
-        if (number - Math.floor(number) >= 0.0001) {
-            o = Math.floor(number).toString() + '.';
-        } else {
-            o = Math.floor(number).toString()
-        }
+    //如果小数太小，可不要小数点
+    if (number - Math.floor(number) >= 0.0001) {
+        o = Math.floor(number).toString() + '.';
+    } else {
+        o = Math.floor(number).toString();
+    }
 
-        return o;
+    let s1 = number.toString().slice(0,1) + '.';
+    let s2 = number.toString().slice(0,2);
+
+    if (level === 3) {
+        if (number < Math.pow(10, 3)) {
+        o = Math.floor(number).toString();
+        } else if (number < Math.pow(10, 4)) {
+        o = s1;
+        } else if (number < Math.pow(10, 5)) {
+        o = s2;
+        } else if (number < Math.pow(10, 6)) {
+        o = s1;
+        } else if (number < Math.pow(10, 7)) {
+        o = s2;
+        } else if (number < Math.pow(10, 8)) {
+        o = s1;
+        } else if (number < Math.pow(10, 9)) {
+        o = s2;
+        } else if (number < Math.pow(10, 10)) {
+        o = s1;
+        } else if (number < Math.pow(10, 11)) {
+        o = s2;
+        } else if (number < Math.pow(10, 12)) {
+        o = s1;
+        } else if (number < Math.pow(10, 13)) {
+        o = s2;
+        } else if (number < Math.pow(10, 14)) {
+        o = s1;
+        } else if (number < Math.pow(10, 15)) {
+        o = s2;
+        } else o = Math.floor(number).toString();
+    }
+    return o;
 }
 
 /**
  * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
  * @return {String} 返回小数字的字符串
  * @param number 数字
- * @param level 等级，现在支持lv -1, 0, 1, 2 注意配套使用
+ * @param level 等级，现在支持lv -1, 0, 1, 2, 3 注意配套使用
  */
 export function getRoundedNumberSmallerStr (number = 0, level = 0) {
     let o;
@@ -377,13 +448,46 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
 
         return o + unit;
     }
+
+    let s1 = Math.floor(number).toString().slice(2,3)
+    
+    if (level === 3) {
+        if (number < Math.pow(10, 3)) {
+            o = unit;
+        } else if (number < Math.pow(10, 4)) {
+            o = s1 + unit;
+        } else if (number < Math.pow(10, 5)) {
+            o = unit;
+        } else if (number < Math.pow(10, 6)) {
+            o = s1 + unit;
+        } else if (number < Math.pow(10, 7)) {
+            o = unit;
+        } else if (number < Math.pow(10, 8)) {
+            o = s1 + unit;
+        } else if (number < Math.pow(10, 9)) {
+            o = unit;
+        } else if (number < Math.pow(10, 10)) {
+            o = s1 + unit;
+        } else if (number < Math.pow(10, 11)) {
+            o = unit;
+        } else if (number < Math.pow(10, 12)) {
+            o = s1 + unit;
+        } else if (number < Math.pow(10, 13)) {
+            o = unit;
+        } else if (number < Math.pow(10, 14)) {
+            o = s1 + unit;
+        } else if (number < Math.pow(10, 15)) {
+            o = unit;
+        } else o = '';
+    }
+    return o;
 }
 
 function getRoundedNumberUnit (number = 0, level = 0) {
     let unit;
     let m = 1 + level;
 
-    if (level < 1 || level > 2) return '';
+    if (level < 1 || level > 3) return '';
 
     if (number < Math.pow(10, m)) {  //level==1->100 level==2->1000
         unit = '';
@@ -549,14 +653,13 @@ export function getRankColor(Rank = 'F'){
  * @param gamemode 游戏模式，'osu' 'taiko' 等
  */
 export function getMascotName (gamemode = 'osu') {
-    let r = Math.random(),
-        //on = 1, //pippi
+    let //on = 1, //pippi
         tn = 6, //Mocha, Aiko, Alisa, Chirou, Tama, Taikonator
         //cn = 1, //Yuzu
         mn = 2, //Mani, Mari
 
-        t = Math.floor(tn * r) + 1,
-        m = Math.floor(mn * r) + 1;
+        t = getRandom(tn),
+        m = getRandom(mn);
 
     switch (gamemode) {
         case 'osu':
@@ -588,7 +691,6 @@ export function getMascotName (gamemode = 'osu') {
  * @param mascotname 吉祥物名字
  */
 export function getMascotPath (mascotname = 'pippi') {
-    let r = Math.random();
     let i;
     let path;
 
@@ -605,9 +707,98 @@ export function getMascotPath (mascotname = 'pippi') {
         case 'Mari': i = 8; break;
     }
 
-    path = Math.floor(mascot_pic_sum_arr[i] * r) + 1;
+    path = getRandom(mascot_pic_sum_arr[i]);
 
     return `Mascots/${mascotname}_${path}.png`;
+}
+
+/**
+ * @function 获取随机的头图路径
+ * @return {String} 返回头图路径
+ */
+export function getRandomBannerPath () {
+    let i = getRandom(bannerTotal)
+    return `Banner/b${i}.png`
+}
+
+/**
+ * @function 获取随机的吉祥物背景路径
+ * @return {String} 返回吉祥物背景路径
+ */
+export function getRandomMascotBGPath () {
+    let i = getRandom(mascotBGTotal)
+    return `Background/${i}.png`
+}
+/**
+ * @function 修整数组，太短则在前面补0，太长则卡掉前面的
+ * @return {Number[]} 返回裁剪好的数组
+ * @param arr 需要裁剪的数组
+ * @param target_length 需要的数组长度
+ */
+export function modifyArrayToFixedLength (arr = [0], target_length = 0) {
+    if (arr.length < target_length) {
+        for (let i = arr.length; i > 0; i--) {
+            arr.unshift(0);
+        }
+        return arr;
+
+    } else {
+        return arr.slice(arr.length - target_length);
+    }
+}
+/**
+ * @function 取最大值数组，太短则在前面补0，太长则取最大值，继承于DataUtil: get group 26方法
+ * @return {Number[]} 返回处理好的数组
+ * @param arr 需要处理的数组
+ * @param target_length 需要的数组长度
+ */
+export function maximumArrayToFixedLength (arr = [0], target_length = 0) {
+    if (arr.length < target_length) {
+        for (let i = arr.length; i > 0; i--) {
+            arr.unshift(0);
+        }
+        return arr;
+
+    } else {
+        let steps = (arr.length - 1) / (target_length - 1);
+        let out = [arr[0]];
+        let stepSum = steps;
+        let maxItem = 0;
+        arr.forEach((item, i) => {
+            if (i < stepSum) {
+                maxItem = Math.max(maxItem, item);
+            } else {
+                out.push(Math.max(maxItem, arr[i]));
+                maxItem = 0;
+                stepSum += steps;
+            }
+        })
+
+        return out;
+    }
+}
+
+/**
+ * @function 给游戏模式扩展或缩减名字
+ * @return {String} 返回吉祥物背景路径
+ * @param gamemode 默认游戏模式，osu taiko catch mania
+ * @param level 等级，0为不变，1为全写 osu!standard，-1为简写 o t m c
+ */
+export function getGameMode (gamemode = 'osu', level = 0) {
+    switch (level) {
+        case -1: switch (gamemode) {
+            case 'osu': return 'o';
+            case 'taiko': return 't';
+            case 'catch': return 'c';
+            case 'mania': return 'm';
+        } break;
+        case 1: switch (gamemode) {
+            case 'osu': return 'osu!standard';
+            case 'taiko': return 'osu!taiko';
+            case 'catch': return 'osu!catch';
+            case 'mania': return 'osu!mania';
+        }
+    }
 }
 
 export function getBase64Text(buffer) {
@@ -847,4 +1038,8 @@ export function getAllMod(modInt) {
 
 export function delMod(modInt = 0, mod = '') {
     return Mod[mod] ? modInt & ~Mod[mod] : modInt;
+}
+
+export function getRandom (range = 0) {
+    return Math.floor(Math.random() * range) + 1;
 }

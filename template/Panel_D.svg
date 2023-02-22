@@ -21,14 +21,11 @@
   <g id="Banner">
     <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719;"/>
     <g style="clip-path: url(#clippath-PD-1);">
-      <image width="1920" height="320" xlink:href="D_Banner.png"/>
     </g>
-    <rect width="1920" height="320" rx="20" ry="20" style="opacity: .2;"/>
   </g>
   <g id="Background">
     <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: #2a2226;"/>
     <g style="clip-path: url(#clippath-PD-2);">
-      <image width="1920" height="790" transform="translate(0 290)" xlink:href="D_Background.png" style="opacity: .5;"/>
     </g>
   </g>
   <g id="UserDataCard">
@@ -36,52 +33,30 @@
     <g id="LabelDR">
     </g>
     <g id="UserActivityR">
-      <rect x="1002" y="915" width="16" height="85" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1022" y="978" width="16" height="22" rx="8" ry="8" style="fill: #8dcff4;"/>
-      <rect x="1042" y="978" width="16" height="22" rx="8" ry="8" style="fill: #8dcff4;"/>
     </g>
     <g id="UserDataText">
-      <text id="Month3" transform="translate(1768.209 1024.836)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2023-20</tspan></text>
-      <text id="Month2" transform="translate(1383.969 1024.836)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2023-10</tspan></text>
-      <text id="Month1" transform="translate(995 1024.836)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2023-15</tspan></text>
-      <text id="MaxPC" transform="translate(1372.856 912.224)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 16px; font-weight: 600;"><tspan x="0" y="0">9941</tspan></text>
-      <text transform="translate(1477.349 725.836)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">osu!mania (4K 9999PP 7K 9999PP)</tspan></text>
       <text transform="translate(1000 725.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">User Data</tspan></text>
     </g>
   </g>
   <g id="RankingCard">
     <rect x="980" y="330" width="900" height="335" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="BPActivityR">
-      <rect x="1042" y="525" width="16" height="85" rx="8" ry="8" style="fill: #a1a1a1;"/>
-      <rect x="1062" y="588" width="16" height="22" rx="8" ry="8" style="fill: #a1a1a1;"/>
-      <rect x="1082" y="588" width="16" height="22" rx="8" ry="8" style="fill: #a1a1a1;"/>
+    </g>
+    <g id="RankingGraph">
     </g>
     <g id="RankingText">
       <text id="Day3" transform="translate(1789.809 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">0d</tspan></text>
-      <text id="Day2" transform="translate(1394.836 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">-90d</tspan></text>
+      <text id="Day2" transform="translate(1394.836 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">-45d</tspan></text>
       <text id="Day1" transform="translate(1040 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">-90d</tspan></text>
-      <text id="Rank3" transform="translate(988.364 616.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2.1K</tspan></text>
-      <text id="Rank2" transform="translate(985.053 509.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">2.0K</tspan></text>
-      <text id="Rank1" transform="translate(987.956 402.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">1.9K</tspan></text>
-      <text id="MaxBP" transform="translate(1412.801 522.224)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 16px; font-weight: 600;"><tspan x="0" y="0">BP+1</tspan></text>
-      <text transform="translate(1602.975 374.754)" style="font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="fill: #f2f2f2; font-size: 36px;">#7942468</tspan><tspan x="166.283" y="0" xml:space="preserve" style="fill: #a1a1a1; font-size: 24px;"> CN#581</tspan></text>
       <text transform="translate(1000 370.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Ranking</tspan></text>
     </g>
   </g>
   <g id="GradeCard">
     <rect x="620" y="880" width="340" height="160" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="GradeText">
-      <text transform="translate(868.976 998.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">1611</tspan></text>
-      <text transform="translate(763.976 998.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">1611</tspan></text>
-      <text transform="translate(658.976 998.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">1611</tspan></text>
       <text transform="translate(635 915.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Grades</tspan></text>
-      <text transform="translate(647.956 1024.877)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 18px; font-weight: 600;"><tspan x="0" y="0">(1144770)</tspan></text>
-      <text transform="translate(753.73 1024.877)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 18px; font-weight: 600;"><tspan x="0" y="0">(1146381)</tspan></text>
     </g>
     <g id="GradeImage">
-      <image width="31" height="39" transform="translate(669 930)" xlink:href="object-score-X-small.png"/>
-      <image width="25" height="35" transform="translate(777 932)" xlink:href="object-score-S-small.png"/>
-      <image width="30" height="34" transform="translate(880 933)" xlink:href="object-score-A-small.png"/>
     </g>
   </g>
   <g id="BPCard">
@@ -119,12 +94,8 @@
       </g>
     </g>
     <g id="MascotName">
-      <rect x="60" y="350" width="210" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>
-      <text transform="translate(76.051 380.754)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="font-size: 36px;">pippi </tspan><tspan x="92.662" y="0" style="font-size: 24px; letter-spacing: -.046em;">L</tspan><tspan x="103.846" y="0" style="font-size: 24px; letter-spacing: -.05em;">v</tspan><tspan x="115.51" y="0" style="font-size: 24px; letter-spacing: 0em;">.</tspan><tspan x="121.486" y="0" style="font-size: 36px;">105</tspan></text>
     </g>
     <g id="Progress">
-      <rect x="500" y="350" width="80" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>
-      <text transform="translate(510.798 380.754)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="font-size: 36px;">36</tspan><tspan x="40.86" y="0" style="font-size: 24px;">%</tspan></text>
     </g>
     <g id="ProgressBase">
       <rect id="ProgressBaseR" x="60" y="1016" width="520" height="4" rx="2" ry="2" style="fill: #54454c;"/>
