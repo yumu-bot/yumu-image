@@ -258,9 +258,9 @@ export async function panel_D (data = {
     let index_panel_name = torus.getTextPath(data.index_panel_name,
         ipn_x, 83.67, 48, "left baseline", "#fff");
 
-    let rank_country_text = ' ' + data.country || '??' + '#' + data.rank_country || '0';
+    let rank_country_text = ' ' + (data.country || '') + '#' + (data.rank_country || '0');
 
-    let rank_global = torus.getTextPath(data.rank_global || '0',
+    let rank_global = torus.getTextPath('#' + data.rank_global || '0',
         1860 - torus.getTextWidth(rank_country_text, 24),
         374.754, 36, "right baseline", "#fff");
     let rank_country = torus.getTextPath(rank_country_text, 1860, 374.754, 24, "right baseline", "#a1a1a1");
