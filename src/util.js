@@ -52,6 +52,7 @@ export const torus = {};
 torus.getTextPath = getTextPath_torus;
 torus.getTextMetrics = getTextMetrics_torus;
 torus.getTextWidth = getTextWidth_torus;
+torus.cutStringTail = cutStringTail_torus;
 
 function getTextPath_torus(
     text = '',
@@ -109,11 +110,33 @@ function getTextWidth_torus(
     }).width
 }
 
+function cutStringTail_torus(
+    text = '',
+    size = 36,
+    maxWidth = 0,
+) {
+    if (torus.getTextWidth(text,size) <= maxWidth) {
+        return text;
+    }
+
+    let dot3 = '...'
+    let dot3_width = torus.getTextWidth(dot3, size);
+    let out_text = '';
+    maxWidth -= dot3_width;
+    
+    for (let i = 0; torus.getTextWidth(out_text,size) < maxWidth; i++) {
+        out_text += text.slice(i, i+1);
+    }
+
+    return out_text.slice(0,-1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
+}
+
 export const PuHuiTi = {};
 
 PuHuiTi.getTextPath = getTextPath_PuHuiTi;
 PuHuiTi.getTextMetrics = getTextMetrics_PuHuiTi;
 PuHuiTi.getTextWidth = getTextWidth_PuHuiTi;
+PuHuiTi.cutStringTail = cutStringTail_PuHuiTi;
 
 function getTextPath_PuHuiTi(
     text = '',
@@ -149,6 +172,27 @@ function getTextWidth_PuHuiTi(
             fill: '#fff'
         }
     }).width
+}
+
+function cutStringTail_PuHuiTi(
+    text = '',
+    size = 36,
+    maxWidth = 0,
+) {
+    if (PuHuiTi.getTextWidth(text,size) <= maxWidth) {
+        return text;
+    }
+
+    let dot3 = '...'
+    let dot3_width = PuHuiTi.getTextWidth(dot3, size);
+    let out_text = '';
+    maxWidth -= dot3_width;
+
+    for (let i = 0; PuHuiTi.getTextWidth(out_text,size) < maxWidth; i++) {
+        out_text += text.slice(i, i+1);
+    }
+
+    return out_text.slice(0,-1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
 }
 
 export const extra = {};
@@ -667,9 +711,7 @@ export function getRankColor(Rank = 'F'){
  * @param brightness 亮度。2-蜡笔色、1-浅色、0-纯色、-1暗色、-2深黑。
  */
 export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
-    if (staffArray.length !== 13) {
-        throw new Error('staffArray length should be 13')
-    }
+    if (staffArray.length !== 13) throw new Error('staffArray length should be exactly 13')
 
     let colorArr = [];
     
@@ -707,8 +749,8 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
         case -2: colorArr = colorB_2Arr; break;
     }
 
-    if (base >= staffArray[13]) {
-        return colorArr[14];
+    if (base >= staffArray[12]) {
+        return colorArr[13];
     }
 
     for (let i = 0; i < 13; i++) {

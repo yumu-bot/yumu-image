@@ -8,18 +8,18 @@ import {
 } from "../util.js";
 
 export async function card_D(data = {
-    background: '',
+    background: 'PanelObject/H_CardD_BG.png',
     title: 'Xin Mei Sang Zui Jiu',
     artist: 'Fushimi Rio',
     mapper: 'Fia',
     difficulty: 'OWC HD2',
     bid: '1146381',
-    mod: 'EZ',
-    cs: '4.2',
-    ar: '10.3',
-    od: '11',
-    hp: '6',
-    star_rating: '8.88',
+    mod: 'NM',
+    cs: 4.2,
+    ar: 10.3,
+    od: 11,
+    hp: 6,
+    star_rating: 8.88,
     game_mode: 'osu'
 
 }, reuse = false) {
@@ -38,24 +38,38 @@ export async function card_D(data = {
 
     // 文字
     let text_title =
-        torus.getTextPath(data.title, 20, 33.754, 36, 'left baseline', "#fff");
-    let text_artist =
-        torus.getTextPath(data.artist, 20, 65.836, 24, 'left baseline', "#fff");
+        torus.getTextPath(
+            torus.cutStringTail(data.title,36,420),
+            20, 33.754, 36, 'left baseline', "#fff");
+
+    let mapper = data.mapper;
+    let artist = torus.cutStringTail(
+        data.artist,
+        24,
+        360 - torus.getTextWidth(' // ' + mapper, 24))
+
+    let text_artist_and_mapper =
+        torus.getTextPath(artist + ' // ' + mapper,20, 65.836, 24, 'left baseline', "#fff");
 
     let bid = data.bid || 0;
-    let info = '[' + data.difficulty + '] - b' + bid;
+    let difficulty_name =
+        torus.cutStringTail(data.difficulty,
+            24,
+            360 - torus.getTextWidth('[] - b' + bid, 24));
+
+    let info = '[' + difficulty_name + '] - b' + bid;
     let text_info =
         torus.getTextPath(info, 20, 96.836, 24, 'left baseline', "#fff");
 
     let text_mod =
-        torus.getTextPath(data.mod, 500, 30.754, 36, 'centre baseline', "#fff");
+        torus.getTextPath(data.mod, 500, 30.754, 36, 'center baseline', "#fff");
 
     let text_star_b = getStarRatingObject(data.star_rating,2);
     let text_star_m = getStarRatingObject(data.star_rating,3) + '*';
-    let star_m_width = 550 - torus.getTextWidth(text_star_m,36);
+    let star_m_width = torus.getTextWidth(text_star_m,36);
     let text_star =
-        torus.getTextPath(text_star_b, 500 - star_m_width, 96.59, 60, "left baseline", "#fff") +
-        torus.getTextPath(text_star_m, 500, 96.59, 36, "right baseline", "#fff")
+        torus.getTextPath(text_star_b, 550 - star_m_width, 96.59, 60, "right baseline", "#fff") +
+        torus.getTextPath(text_star_m, 550, 96.59, 36, "right baseline", "#fff")
 
     let text_mod_color = getModColor(data.mod);
 
@@ -99,10 +113,8 @@ export async function card_D(data = {
             sd_circle3 = hp_color;
         } break;
         case "mania" : {
-            sd_name1 = 'Key';
             sd_name2 = 'OD';
             sd_name3 = 'HP';
-            sd_circle1 = cs_color;
             sd_circle2 = od_color;
             sd_circle3 = hp_color;
         } break;
@@ -139,13 +151,13 @@ export async function card_D(data = {
 
     svg = replaceText(svg, text_mod_color, reg_mod_color);
     svg = replaceText(svg, text_title, reg_text);
-    svg = replaceText(svg, text_artist, reg_text);
+    svg = replaceText(svg, text_artist_and_mapper, reg_text);
     svg = replaceText(svg, text_info, reg_text);
     svg = replaceText(svg, text_mod, reg_text);
     svg = replaceText(svg, text_star, reg_text);
 
     // 插入图片
-    svg = implantImage(svg,560,110,0,0,0.5,'H_CardD_BG.png', reg_background)
+    svg = implantImage(svg,560,110,0,0,0.5, data.background, reg_background)
     /*
     let out_svg = new InsertSvgBuilder(svg).insertImage(data.background, reg_background);
 

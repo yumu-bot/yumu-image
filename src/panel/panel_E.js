@@ -25,11 +25,13 @@ export async function panel_E(data = {
         sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
         sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
         name: 'Muziyami',
-        rank_global: '#28075',
-        rank_country: 'CN#577',
-        info: '95.27% Lv.100(32%)',
-        pp_b: '4396',
-        pp_m: 'PP',
+        rank_global: '28075',
+        rank_country: '577',
+        country: 'CN',
+        acc: '95.27',
+        level: '100',
+        progress: '32',
+        pp: '4396',
     },
 
     // E标签
@@ -250,13 +252,21 @@ export async function panel_E(data = {
     let map_status_pc = torus.getTextPath(data.map_status_pc, 840, 380.84, 24, "right baseline", "#fff");
 
     let map_title_romanized =
-        torus.getTextPath(data.map_title_romanized, 440, 883.67, 48, "center baseline", "#fff");
+        torus.getTextPath(
+            torus.cutStringTail(data.map_title_romanized,48,860),
+            440, 883.67, 48, "center baseline", "#fff");
     let map_title_unicode =
-        PuHuiTi.getTextPath(data.map_title_unicode, 440, 931.6, 36, "center baseline", "#fff");
+        PuHuiTi.getTextPath(
+            torus.cutStringTail(data.map_title_unicode,36,860),
+            440, 931.6, 36, "center baseline", "#fff");
     let map_difficulty =
-        torus.getTextPath(data.map_difficulty, 440, 1004.75, 36, "center baseline", "#fff");
+        torus.getTextPath(
+            torus.cutStringTail(data.map_difficulty,36,860),
+            440, 1004.75, 36, "center baseline", "#fff");
     let map_artist_mapper_bid =
-        torus.getTextPath(data.map_artist_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
+        torus.getTextPath(
+            torus.cutStringTail(data.map_artist_mapper_bid,24,860),
+            440, 1036.84, 24, "center baseline", "#fff");
 
     /*
     let main_score =

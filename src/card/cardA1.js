@@ -7,11 +7,13 @@ export async function card_A1(data = {
     sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
     sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
     name: 'Muziyami',
-    rank_global: '#28075',
-    rank_country: 'CN#577',
-    info: '95.27% Lv.100(32%)',
-    pp_b: '4396',
-    pp_m: 'PP',
+    rank_global: '28075',
+    rank_country: '577',
+    country: 'CN',
+    acc: '95.27',
+    level: '100',
+    progress: '32',
+    pp: '4396',
 
     color_base: '#2a2226',
 }, reuse = false) {
@@ -26,22 +28,27 @@ export async function card_A1(data = {
 
     // 文字的 <path>
     let text_name =
-        torus.getTextPath(data.name, 130, 53.672, 48, "left baseline", "#fff");
+        torus.getTextPath(torus.cutStringTail(data.name,48,290),
+            130, 53.672, 48, "left baseline", "#fff");
     let text_rank_global =
-        torus.getTextPath(data.rank_global, 20, 165.836, 24, "left baseline", "#fff");
+        torus.getTextPath('#' + data.rank_global, 20, 165.836, 24, "left baseline", "#fff");
     let text_rank_country =
-        torus.getTextPath(data.rank_country, 20, 191.836, 24, "left baseline", "#fff");
+        torus.getTextPath(data.country + '#' + data.rank_country, 20, 191.836, 24, "left baseline", "#fff");
+
+    let level = data.level || 0;
+    let progress = data.progress || 0;
+    let info = data.acc + '% Lv.' + level + '(' + progress + '%)';
     let text_info =
-        torus.getTextPath(data.info, 420, 141.836, 24, "right baseline", "#fff");
+        torus.getTextPath(info, 420, 141.836, 24, "right baseline", "#fff");
 
     //pp位置计算
-    let text_metrics_pp_b = torus.getTextMetrics(data.pp_b, 0, 0, 60, "right baseline", "#fff");
-    let text_metrics_pp_m = torus.getTextMetrics(data.pp_m, 0, 0, 48, "right baseline", "#fff");
-    let text_pp_b_x = 420 - text_metrics_pp_m.width - text_metrics_pp_b.width;
-    let text_pp_m_x = 420 - text_metrics_pp_m.width;
+    let pp = data.pp || 0;
 
-    let text_pp = torus.getTextPath(data.pp_b, text_pp_b_x, 191.59, 60, "left baseline", "#fff")
-        + torus.getTextPath(data.pp_m, text_pp_m_x, 191.59, 48, "left baseline", "#fff");
+    let text_pp = torus.getTextPath(pp,
+            420 - torus.getTextWidth('PP',48),
+            191.59, 60, "right baseline", "#fff")
+        + torus.getTextPath('PP',
+            420, 191.59, 48, "right baseline", "#fff");
 
     // 读取模板
     let svg = readTemplate('template/Card_A1.svg');

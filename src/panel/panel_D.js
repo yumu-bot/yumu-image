@@ -21,11 +21,13 @@ export async function panel_D (data = {
         sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
         sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
         name: 'Muziyami',
-        rank_global: '#28075',
-        rank_country: 'CN#577',
-        info: '95.27% Lv.100(32%)',
-        pp_b: '4396',
-        pp_m: 'PP',
+        rank_global: '28075',
+        rank_country: '577',
+        country: 'CN',
+        acc: '95.27',
+        level: '100',
+        progress: '32',
+        pp: '4396',
     },
 
     // D标签
