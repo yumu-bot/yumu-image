@@ -4,6 +4,7 @@ import formidable from "express-formidable";
 import {CACHE_PATH, readImage} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
+import {panel_H} from "./src/panel/panel_H.js";
 import {card_D} from "./src/card/cardD.js";
 import {card_H} from "./src/card/cardH.js";
 
@@ -14,12 +15,9 @@ fs.writeFileSync("image/out/card_A1.png", await card_A1());
 
 fs.mkdirSync(CACHE_PATH, {recursive: true});
 console.time()
-console.time('D')
-fs.writeFileSync("image/out/panel_D.png", await panel_D());
-console.timeEnd('D')
-console.time('E')
-fs.writeFileSync("image/out/panel_E.png", await panel_E());
-console.timeEnd('E')
+console.time('H')
+fs.writeFileSync("image/out/panel_H.png", await panel_H());
+console.timeEnd('H')
 console.timeEnd()
 
 const app = express();
@@ -78,6 +76,17 @@ app.post('/panel_D', async (req, res) => {
     try {
         const f = checkJsonData(req);
         const png = await panel_D(f);
+        res.set('Content-Type', 'image/png');
+        res.send(png);
+    } catch (e) {
+        res.status(500).send(e.stack);
+    }
+})
+
+app.post('/panel_H', async (req, res) => {
+    try {
+        const f = checkJsonData(req);
+        const png = await panel_H(f);
         res.set('Content-Type', 'image/png');
         res.send(png);
     } catch (e) {

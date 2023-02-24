@@ -1,9 +1,9 @@
-import {InsertSvgBuilder, readImage, readTemplate, torus} from "../util";
-import {card_H} from "../card/cardA1";
+import {getExportFileV3Path, InsertSvgBuilder, readTemplate, replaceText, torus} from "../util.js";
+import {card_H} from "../card/cardH.js";
 
 export async function panel_I(data = {
-    background: readImage("image/I_CardH_BG.png"),
-    avatar: readImage("image/I_CardH_Avatar.png"),
+    background: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
+    avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
     name: 'Muziyami',
     info: '39.2M // 99W-0L 100%',
     rank: '#1',
@@ -32,9 +32,9 @@ export async function panel_I(data = {
     let a3 = torus.getTextPath("12", 220, 97, 12, 'left center', "#fff");
     let svg = readTemplate("template/Panel_I.svg");
 
-    svg = svg.replace(reg_text, a1);
-    svg = svg.replace(reg_text, a2);
-    svg = svg.replace(reg_text, a3);
+    svg = replaceText(svg, a1, reg_text);
+    svg = replaceText(svg, a2, reg_text);
+    svg = replaceText(svg, a3, reg_text);
 
 
     let out_svg = new InsertSvgBuilder(svg);

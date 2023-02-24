@@ -11,7 +11,7 @@ import {
     getStarRatingColor,
     get2SizeTorusTextPath,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getRandomBannerPath
+    getRoundedNumberSmallerStr, getRandomBannerPath, getStarRatingObject, getColorInSpectrum
 } from "../util.js";
 import {card_A1} from "../card/cardA1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -140,7 +140,7 @@ export async function panel_E(data = {
 
     // 面板图片
     map_background: 'PanelObject/E_MapCover.jpg',
-    star: 'object-beatmap-star.png',
+    star: 'object-beatmap-star_rating.png',
     map_hexagon: 'object-beatmap-hexagon.png',
     map_favorite: 'object-beatmap-favorite.png',
     map_playcount: 'object-beatmap-playcount.png',
@@ -153,7 +153,7 @@ export async function panel_E(data = {
     index_panel_name: 'S v3.6',
 
     score_rank: 'S',
-    star_rating: '',
+    star_rating: '9.992',
     score: '2154980',
     score_acc_progress: '97.8', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
@@ -215,24 +215,10 @@ export async function panel_E(data = {
     //console.timeEnd("label");
     //console.time("txt");
 
-    //预处理 8.34* -> 8, 0.34, 8., 34,
-    let sr_b = parseInt(data.star_rating || '0');
-    let sr_m = parseFloat(data.star_rating ? (data.star_rating - sr_b).toString().slice(0,4) : 0);
-    let text_sr_b;
-    if (sr_m === 0){
-        text_sr_b = sr_b.toString();
-    } else {
-        text_sr_b = sr_b + '.';
-    }
-
-    let text_sr_m = (data.star_rating - sr_b).toString().slice(2,4);
-
-    if (text_sr_m.substring(1) === '0') text_sr_m = text_sr_m.slice(-1);
-
-    if (sr_b >= 20) {
-        text_sr_b = '20';
-        text_sr_m = '+';
-    }
+    let sr_b = getStarRatingObject(data.star_rating, 0)
+    let sr_m = getStarRatingObject(data.star_rating, 1)
+    let text_sr_b = getStarRatingObject(data.star_rating, 2)
+    let text_sr_m = getStarRatingObject(data.star_rating, 3)
 
     // 文字定义
     let index_powered = torus.getTextPath(data.index_powered, 10, 26.84, 24, "left baseline", "#fff");

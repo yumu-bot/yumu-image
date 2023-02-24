@@ -622,6 +622,19 @@ export function getModColor(Mod = ''){
         case "XK": color = '#616161'; break;
         case "RD": color = '#009944'; break;
         case "TD": color = '#7ECEF4'; break;
+
+        case "NM": color = '#22AC38'; break;
+        case "FM": color = '#00A0E9'; break;
+        case "EX": color = '#FF9800'; break;
+        case "TB": color = '#000'; break;
+
+        case "RC": color = '#22AC38'; break;
+        case "LN": color = '#00A0E9'; break;
+        case "HB": color = '#FF9800'; break;
+        case "SV": color = '#920783'; break;
+
+        case "SP": color = '#EA68A2'; break;
+
         default: color = '#fff'; break;
     }
 
@@ -645,6 +658,98 @@ export function getRankColor(Rank = 'F'){
     }
 
     return color;
+}
+/**
+ * @function 获取数据在某组数组中的对应位置的色彩。色彩是PS中蓝色往左到深蓝色。
+ * @return {String} 返回色彩
+ * @param base 数据
+ * @param staffArray 从小到大，用于标定的正数数组。必须有13个元素。蓝-1-2-绿-3-黄-橙-4-红-5-粉-6-紫-深蓝
+ * @param brightness 亮度。2-蜡笔色、1-浅色、0-纯色、-1暗色、-2深黑。
+ */
+export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
+    if (staffArray.length !== 13) {
+        throw new Error('staffArray length should be 13')
+    }
+
+    let colorArr = [];
+    
+    let colorB2Arr = [
+        '#7FCEF4','#85CCC9','#8AC998','#ACD598',
+        '#CCE199','#FFF899','#FACC89','#F6B380',
+        '#F29B76','#F29C9F','#F19FC2','#C491BF',
+        '#AA89BE','#8F82BC'];
+    let colorB1Arr = [
+        '#00B7EE','#12B4B1','#31B16C','#7FC269',
+        '#B3D465','#FFF45C','#F7B551','#F19149',
+        '#EC6841','#EB6877','#EA68A2','#AD5DA1',
+        '#8957A1','#5F52A0'];
+    let colorB0Arr = [
+        '#00A1E9','#009E97','#009944','#23AC39',
+        '#8FC41F','#FFF100','#F39800','#EB6101',
+        '#E60013','#E50050','#E4007F','#930883',
+        '#601986','#1D2088'];
+    let colorB_1Arr = [
+        '#0075A9','#00736D','#007130','#0D7D25',
+        '#648C0C','#B7AB00','#AD6B00','#A84200',
+        '#A40000','#A40036','#A4005B','#6A005F',
+        '#450062','#110B64'];
+    let colorB_2Arr = [
+        '#005982','#005853','#005620','#005F16',
+        '#496A00','#8A8100','#834F00','#7F2E00',
+        '#7D0000','#7D0023','#7E0043','#500047',
+        '#32004A','#05004C'];
+    
+    switch (brightness) {
+        case 2: colorArr = colorB2Arr; break;
+        case 1: colorArr = colorB1Arr; break;
+        case 0: colorArr = colorB0Arr; break;
+        case -1: colorArr = colorB_1Arr; break;
+        case -2: colorArr = colorB_2Arr; break;
+    }
+
+    if (base >= staffArray[13]) {
+        return colorArr[14];
+    }
+
+    for (let i = 0; i < 13; i++) {
+        if (base < staffArray[i]) {
+            return colorArr[i];
+        }
+    }
+}
+
+/**
+ * @function 预处理星数成想要的部分。
+ * @return 返回 8, 0.34, 8., 34。前两个是数据，后两个是字符串
+ * @param starRating 星数
+ * @param whichData 要哪个数据？可输入0, 1, 2, 3，分别是整数、小数、整数带小数点部分、纯小数部分
+ */
+export function getStarRatingObject (starRating = 0, whichData = 0){
+    let sr_b = parseInt(starRating || '0');
+    let sr_m = parseFloat(starRating ? (starRating - sr_b).toString().slice(0,4) : 0);
+    let text_sr_b;
+    if (sr_m === 0){
+        text_sr_b = sr_b.toString();
+    } else {
+        text_sr_b = sr_b + '.';
+    }
+
+    let text_sr_m = (starRating - sr_b).toString().slice(2,4);
+
+    if (text_sr_m.slice(1) === '0') text_sr_m = text_sr_m.slice(0,1);
+
+    if (sr_b >= 20) {
+        text_sr_b = '20';
+        text_sr_m = '+';
+    }
+
+    switch (whichData) {
+        case 0: return sr_b;
+        case 1: return sr_m;
+        case 2: return text_sr_b;
+        case 3: return text_sr_m;
+    }
+
 }
 
 /**

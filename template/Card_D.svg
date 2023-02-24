@@ -1,19 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="560" height="110" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 560 110">
   <defs>
-    <clipPath id="clippath">
-      <rect width="560" height="110" rx="12" ry="12" style="fill: none;"/>
+    <clipPath id="clippath-CD-1">
+      <path d="m446,20C446,9,437,0,426,0H20C9,0,0,9,0,20v70c0,11,9,20,20,20h520c11,0,20-9,20-20v-50h-94c-11.046,0-20-8.954-20-20Z" style="fill: none;"/>
     </clipPath>
   </defs>
-  <g id="Background">
-    <rect width="560" height="110" rx="12" ry="12" style="fill: #1c1719;"/>
-    <g style="clip-path: url(#clippath);">
-      <image width="560" height="110" xlink:href="${background}" style="opacity: .5;"/>
-    </g>
+  <g id="Base">
+  <rect y="0" width="560" height="110" rx="20" ry="20" style="fill: #382e32;"/>
   </g>
   <g id="Mod">
-    <rect x="446" y="6" width="108" height="34" rx="12" ry="12" style="fill: #39b54a;"/>
+    <g id="ModColor">
+      <rect y="0" width="560" height="110" rx="20" ry="20" style="fill: ${mod_color};"/>
+    </g>
+  </g>
+  <g id="Background">
+    <path d="m446,20C446,9,437,0,426,0H20C9,0,0,9,0,20v70c0,11,9,20,20,20h520c11,0,20-9,20-20v-50h-94c-11.046,0-20-8.954-20-20Z" style="fill: #382e32;"/>
+    <g style="clip-path: url(#clippath-CD-1);">
+    </g>
+  </g>
+  <g id="SongDifficulty">
+    <g id="SDText">
+    </g>
+    <g id="SDCircle">
+      <circle id="SDCircle3" cx="432.5" cy="89.5" r="7.5" style="fill: ${sd_circle3};"/>
+      <circle id="SDCircle2" cx="411.5" cy="89.5" r="7.5" style="fill: ${sd_circle2};"/>
+      <circle id="SDCircle1" cx="390.5" cy="89.5" r="7.5" style="fill: ${sd_circle1};"/>
+    </g>
   </g>
   <g id="Text">
   </g>
-</svg>

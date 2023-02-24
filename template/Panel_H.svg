@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080">
+  <defs>
+    <clipPath id="clippath-PH-1">
+      <rect width="1920" height="320" rx="20" ry="20" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Banner">
+    <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719;"/>
+    <g style="clip-path: url(#clippath-PH-1);">
+    </g>
+  </g>
+  <g id="Background">
+    <rect y="290" width="1920" height="790" rx="20" ry="20" style="fill: #2a2226;"/>
+  </g>
+  <g id="BodyCard">
+    <g id="_3Maps" data-name="3Maps">
+      <rect id="_3M3" data-name="3M3" x="1270" y="330" width="560" height="110" rx="20" ry="20" style="fill: #46393f;"/>
+      <rect id="_3M2" data-name="3M2" x="680" y="330" width="560" height="110" rx="20" ry="20" style="fill: #46393f;"/>
+      <rect id="_3M1" data-name="3M1" x="80" y="330" width="560" height="110" rx="20" ry="20" style="fill: #46393f;"/>
+    </g>
+    <g id="_2Maps" data-name="2Maps">
+      <rect id="_2M1" data-name="2M1" x="380" y="480" width="560" height="110" rx="20" ry="20" style="fill: #46393f;"/>
+      <rect id="_2M1-2" data-name="2M1" x="970" y="480" width="560" height="110" rx="20" ry="20" style="fill: #46393f;"/>
+    </g>
+    <g id="_1Map" data-name="1Map">
+      <rect id="_1M1" data-name="1M1" x="680" y="630" width="560" height="110" rx="20" ry="20" style="fill: #46393f;"/>
+    </g>
+  </g>
+  <g id="MainCard">
+  </g>
+  <g id="Index">
+    <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>
+    <text transform="translate(559.21 83.67)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 48px; font-weight: 600;"><tspan x="0" y="0">Pool</tspan></text>
+    <text transform="translate(10 26.84)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">powered by Yumubot // Mappool (!ymma)</tspan></text>
+    <text transform="translate(1459.67 26.84)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0" xml:space="preserve"> request time: 2021-10-4 17:59:58 UTC+8</tspan></text>
+  </g>
+</svg>

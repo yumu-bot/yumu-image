@@ -1,4 +1,4 @@
-import {InsertSvgBuilder, readImage, readTemplate, replaceText, torus} from "../util.js";
+import {implantImage, InsertSvgBuilder, readImage, readTemplate, replaceText, torus} from "../util.js";
 
 // 绘制方法 card h  参数有两个,data是数据,data.background就是背景,以此类推,下面声明时写的是当用的时候没有传参数,采用的默认值,
 export async function card_H(data = {
@@ -42,7 +42,11 @@ export async function card_H(data = {
     svg = replaceText(svg, text_info, reg_text);
     svg = replaceText(svg, text_rank, reg_text);
     svg = replaceText(svg, text_pp, reg_text);
+
     // 替换图片
+
+    svg = implantImage(svg,560,110,0,0,0.5,'I_CardH_BG.png', reg_background)
+
     let out_svg = new InsertSvgBuilder(svg)
         .insertImage(data.background, reg_background)
         .insertImage(data.avatar, reg_avatar);
