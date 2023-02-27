@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080">
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="${height}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 ${height}">
   <defs>
     <clipPath id="clippath-PH-1">
       <rect width="1920" height="320" rx="20" ry="20" style="fill: none;"/>

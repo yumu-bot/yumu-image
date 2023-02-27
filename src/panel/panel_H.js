@@ -42,7 +42,7 @@ export async function panel_H (data = {
             ar: 10.3,
             od: 11,
             hp: 5,
-            star_rating: 1.1,
+            star_rating: 1.19,
             game_mode: 'osu',
         }, {
             background: 'PanelObject/H_CardD_BG2.png',
@@ -144,48 +144,6 @@ export async function panel_H (data = {
             hp: 5,
             star_rating: 3.1,
             game_mode: 'osu',
-        },{
-            background: '',
-            title: 'Xin Mei Sang Zui Jiu',
-            artist: 'Fushimi Rio',
-            mapper: 'Fia',
-            difficulty: 'Hello',
-            bid: '1146381',
-            mod: 'DT',
-            cs: 7,
-            ar: 10.3,
-            od: 11,
-            hp: 5,
-            star_rating: 3.2,
-            game_mode: 'osu',
-        },{
-            background: '',
-            title: 'Xin Mei Sang Zui Jiu',
-            artist: 'Fushimi Rio',
-            mapper: 'Fia',
-            difficulty: 'Hello',
-            bid: '1146381',
-            mod: 'DT',
-            cs: 7,
-            ar: 10.3,
-            od: 11,
-            hp: 5,
-            star_rating: 3.3,
-            game_mode: 'osu',
-        },{
-            background: '',
-            title: 'Xin Mei Sang Zui Jiu',
-            artist: 'Fushimi Rio',
-            mapper: 'Fia',
-            difficulty: 'Hello',
-            bid: '1146381',
-            mod: 'DT',
-            cs: 7,
-            ar: 10.3,
-            od: 11,
-            hp: 5,
-            star_rating: 3.4,
-            game_mode: 'osu',
         }],
     },
 
@@ -200,6 +158,7 @@ export async function panel_H (data = {
     let svg = readTemplate("template/Panel_H.svg");
 
     // 路径定义
+    let reg_height = '${height}'
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PH-1\);">)/;
@@ -230,6 +189,8 @@ export async function panel_H (data = {
 
      */
 
+    let rowTotal;
+
     async function BodyCard(data) {
         let arr2 = data.map_pool;
         let nameSpace = Object.keys(arr2)
@@ -242,14 +203,14 @@ export async function panel_H (data = {
             let remainder = mapNum - (rowNum - 1) * 3; // 余数
             let row3Num = 0;
 
-
+            // 获取一个模组池子里有三列的行的数量
             if (remainder === 0) {
                 row3Num = rowNum;
             } else {
                 row3Num = rowNum - 1
             }
 
-
+            //渲染
             for (let j = 0; j < row3Num; j++) {
 
                 for (let k = 0; k < 3; k++) {
@@ -263,9 +224,10 @@ export async function panel_H (data = {
             }
             rowSum += rowNum
         }
+        rowTotal = rowSum;
     }
 
-
+    //渲染单张卡片
     async function implantCardD(object, row = 1, column = 1, maxColumn = 3) {
         let x;
         let y;
@@ -292,7 +254,17 @@ export async function panel_H (data = {
         svg = implantSvgBody(svg, x, y, card_D_impl, reg_card_d);
     }
 
+    //执行上面的代码，顺便设置面板高度
     await BodyCard(data);
+
+    let panelHeight;
+    if (rowTotal) {
+        panelHeight = 330 + 150 * rowTotal
+    } else {
+        panelHeight = 1080;
+    }
+
+    svg = replaceText(svg, panelHeight, reg_height);
 
     // 插入文字
 

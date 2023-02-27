@@ -767,8 +767,14 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
  * @param whichData 要哪个数据？可输入0, 1, 2, 3，分别是整数、小数、整数带小数点部分、纯小数部分
  */
 export function getStarRatingObject (starRating = 0, whichData = 0){
-    let sr_b = parseInt(starRating || '0');
-    let sr_m = parseFloat(starRating ? (starRating - sr_b).toString().slice(0,4) : 0);
+
+    //去除小数，保留两位
+    let sr = starRating || 0;
+
+    //避免浮点缺陷
+    let sr_b = Math.floor(sr);
+    let sr_m = Math.round((sr - sr_b) * 100) / 100;
+
     let text_sr_b;
     if (sr_m === 0){
         text_sr_b = sr_b.toString();
@@ -776,9 +782,12 @@ export function getStarRatingObject (starRating = 0, whichData = 0){
         text_sr_b = sr_b + '.';
     }
 
-    let text_sr_m = (starRating - sr_b).toString().slice(2,4);
-
-    if (text_sr_m.slice(1) === '0') text_sr_m = text_sr_m.slice(0,1);
+    let text_sr_m = sr_m.toString().slice(2,4);
+    if (text_sr_m.slice(1) === '0') {
+        text_sr_m = text_sr_m.slice(0,1);
+    } else if (text_sr_m === '00') {
+        text_sr_m = '';
+    }
 
     if (sr_b >= 20) {
         text_sr_b = '20';
