@@ -128,15 +128,3 @@ export async function label_E(data = {
 
     return svg.toString();
 }
-
-// ******************************************************************************* 如果你想将 LABEL_OPTION.xx 展开到参数里,请使用下面的方法
-
-export async function _label_E(data = {
-    ...LABEL_OPTION.RKS,  //                                                    <--使用这种方式
-    data_b: '98',
-    data_m: '.36%',
-}, reuse = false) {
-    // todo
-}
-
-// 这样就  data = {icon:"xx.jpg", icon_title: "XX", remark:'xxx', data_b:'', data_m:''}

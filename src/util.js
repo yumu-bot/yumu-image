@@ -8,7 +8,7 @@ import path from "path";
 
 const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
-export const EXPORT_FILE_V3 = "D:/ExportFileV3/";
+export const EXPORT_FILE_V3 = process.env.EXPORT_FILE;
 
 const mascot_pic_sum_arr = [5,0,0,0,0,0,0,0,0]; //吉祥物的对应的照片数量，和随机banner一样的
 const bannerTotal = 40;//banner 数量
