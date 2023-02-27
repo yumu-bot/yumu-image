@@ -17,6 +17,10 @@ export async function card_A1(data = {
 
     color_base: '#2a2226',
 }, reuse = false) {
+    // 读取模板
+    let svg = readTemplate('template/Card_A1.svg');
+
+    // 正则
     let reg_text = /(?<=<g id="Text">)/;
     let reg_background = /(?<=<g style="clip-path: url\(#clippath-CA1-1\);">)/;
     let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CA1-2\);">)/;
@@ -50,8 +54,6 @@ export async function card_A1(data = {
         + torus.getTextPath('PP',
             420, 191.59, 48, "right baseline", "#fff");
 
-    // 读取模板
-    let svg = readTemplate('template/Card_A1.svg');
     // 替换模板内容,replaceText(模板, 内容, 正则)
     svg = replaceText(svg, data.color_base, reg_color_base);
     svg = replaceText(svg, text_name, reg_text);

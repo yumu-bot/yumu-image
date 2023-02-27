@@ -268,7 +268,6 @@ export async function panel_H (data = {
     svg = replaceText(svg, panelHeight, reg_height);
 
     // 插入文字
-
     svg = replaceText(svg, index_powered, reg_index);
     svg = replaceText(svg, index_request_time, reg_index);
     svg = replaceText(svg, index_panel_name, reg_index);

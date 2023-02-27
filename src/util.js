@@ -959,6 +959,21 @@ export function getGameMode (gamemode = 'osu', level = 0) {
         }
     }
 }
+/**
+ * @function 获取谱面状态的图片链接
+ */
+export function getMapStatusPath (status = 'notsubmitted'){
+    switch (status) {
+        case "ranked": return 'object-beatmap-ranked.png';
+        case "approved": return 'object-beatmap-ranked.png';
+        case "qualified": return 'object-beatmap-qualified.png';
+        case "loved": return 'object-beatmap-loved.png';
+        case "pending": return 'object-beatmap-unranked.png';
+        case "workinprogress": return 'object-beatmap-unranked.png';
+        case "notsubmitted": return 'object-beatmap-unranked.png';
+        case "graveyard": return 'object-beatmap-unranked.png';
+    }
+}
 
 //获取现在的时间 (UTC+8)
 export function getNowTimeStamp () {

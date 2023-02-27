@@ -47,9 +47,7 @@ export async function card_H(data = {
 
     svg = implantImage(svg,560,110,0,0,0.5,'I_CardH_BG.png', reg_background)
 
-    let out_svg = new InsertSvgBuilder(svg)
-        .insertImage(data.background, reg_background)
-        .insertImage(data.avatar, reg_avatar);
+    let out_svg = new InsertSvgBuilder(svg);
 
     return out_svg.export(reuse);
 }
