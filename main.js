@@ -5,13 +5,6 @@ import {CACHE_PATH, readImage} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
 import {panel_H} from "./src/panel/panel_H.js";
-import {card_D} from "./src/card/cardD.js";
-import {card_H} from "./src/card/cardH.js";
-
-//    已经部署在机器上了,提交前请注释掉测试代码
-/*
-fs.writeFileSync("image/out/card_A1.png", await card_A1());
- */
 
 fs.mkdirSync(CACHE_PATH, {recursive: true});
 console.time()
@@ -40,30 +33,6 @@ app.post('*', (req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, PUT, DELETE')
     res.header('Allow', 'POST')
     next();
-})
-app.post('/card-D', async (req, res) => {
-    const f = checkData(req, ["background"]);
-    const png = await card_D(f);
-    res.set('Content-Type', 'image/png');
-    res.send(png);
-})
-
-app.post('/card-H', async (req, res) => {
-    const f = checkData(req, ["background", "avatar"]);
-    const png = await card_H(f);
-    res.set('Content-Type', 'image/png');
-    res.send(png);
-})
-
-app.post('/card-H1', async (req, res) => {
-    try {
-        const f = checkJsonData(req, ["background", "avatar"]);
-        const png = await card_H(f);
-        res.set('Content-Type', 'image/png');
-        res.send(png);
-    } catch (e) {
-        res.status(500).send(e.stack);
-    }
 })
 
 //**************************************************** panel ****************************

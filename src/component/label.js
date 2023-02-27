@@ -82,8 +82,7 @@ export const LABEL_OPTION = {
 //label_D 与 label_E 一样
 
 export async function label_E(data = {
-    icon: LABEL_OPTION.ACC,
-    icon_title: 'Accuracy',
+    ...LABEL_OPTION.ACC,
     remark: '-1.64%',
     data_b: '98',
     data_m: '.36%',
@@ -118,25 +117,7 @@ export async function label_E(data = {
         let remark = torus.getTextPath(data.remark, 200, 14.88, 18, "right baseline", "#646464");
         svg = replaceText(svg, remark, reg_text);
     }
-    // ${data.icon} 就是字符串化 data.icon ,另外可能你的参数层级出了问题,看下面的注释
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_text)// 注意 LABEL_OPTION.xx = {icon:"xx.jpg", icon_title: "XX"}
-    // 所以此方法的默认参数是 {icon: {icon:"xx.jpg", icon_title: "ACC"}, icon_title: "ACC"}
-    // 而你大部分的传入是 {icon:"xx.jpg", icon_title: "ACC"}
-    // 我猜测你想展开到data里,看最底下的注释
-
-    // let out_svg = new InsertSvgBuilder(svg).insertImage(data.icon, reg_icon);
+    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_text)
 
     return svg.toString();
 }
-
-// ******************************************************************************* 如果你想将 LABEL_OPTION.xx 展开到参数里,请使用下面的方法
-
-export async function _label_E(data = {
-    ...LABEL_OPTION.RKS,  //                                                    <--使用这种方式
-    data_b: '98',
-    data_m: '.36%',
-}, reuse = false) {
-    // todo
-}
-
-// 这样就  data = {icon:"xx.jpg", icon_title: "XX", remark:'xxx', data_b:'', data_m:''}
