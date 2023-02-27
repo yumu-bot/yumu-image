@@ -1,9 +1,10 @@
 import {
+    getMatchNameSplitted,
     getNowTimeStamp,
     getRandomBannerPath,
     implantImage,
     implantSvgBody,
-    InsertSvgBuilder,
+    InsertSvgBuilder, readImage,
     readTemplate,
     replaceText,
     torus
@@ -14,8 +15,8 @@ import {card_A2} from "../card/cardA2.js";
 export async function panel_C(data = {
     // A2卡
     card_A2: {
-        background: 'PanelObject/A_CardA1_BG.png',
-        match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)',
+        background: 'PanelObject/A_CardA1_BG.png', //给我他们最后一局的谱面背景即可
+        match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)', //比赛标题
         match_round: 11,
         match_time: '20:25-22:03',
         match_date: '2020-03-21',
@@ -25,6 +26,17 @@ export async function panel_C(data = {
         wins_team_blue: 6,
     },
     // H卡
+    card_H: {
+        background: readImage("image/I_CardH_BG.png"),
+        avatar: readImage("image/I_CardH_Avatar.png"),
+        name: 'Muziyami',
+        info: '39.2M // 99W-0L 100%',
+        rank: '#1',
+        pp_b: '264',
+        pp_m: 'pp',
+        color_score: '#fbb03b',
+        color_base: '#3fa9f5',
+    },
 
     // 面板文字
     index_powered: 'powered by Yumubot // Yumu Rating v3.5 Public (!ymra)',
@@ -42,41 +54,6 @@ export async function panel_C(data = {
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PC-1\);">)/;
 
-    // 切割比赛标题给A2卡
-    function Split (text = ''){
-        let out = []
-        let name = '';
-        let team1 = '';
-        let team2 = '';
-        let isTeam1 = true;
-        let position = 0;
-
-        for (let i = 0; i < text.length; i++) {
-            let char = text.slice(i, i+1);
-
-            if (char === '：' || char === ':') {
-                name = text.slice(0, i);
-            }
-
-            if (char === '(' || char === '（') {
-                position = i
-            }
-
-            if (char === ')' || char === '）') {
-                if (isTeam1) {
-                    team1 = text.slice(position + 1, i)
-                    isTeam1 = false;
-                } else {
-                    team2 = text.slice(position + 1, i)
-                }
-            }
-        }
-        out.push(name, team1, team2)
-        return out;
-    }
-
-    let wins_team_red = data.card_A2.wins_team_red || 0;
-    let wins_team_blue = data.card_A2.wins_team_blue || 0;
 
     // 文字定义
     let index_powered = torus.getTextPath(data.index_powered,
@@ -86,7 +63,8 @@ export async function panel_C(data = {
     let index_panel_name = torus.getTextPath(data.index_panel_name,
         607.5, 83.67, 48, "center baseline", "#fff");
 
-    let title = Split(data.card_A2.match_title);
+    // 切割比赛标题给A2卡
+    let title = getMatchNameSplitted(data.card_A2.match_title);
     let title1 = title[0];
     let title2 = title[1] + ' vs ' + title[2];
     let left1 = data.card_A2.match_round ? 'Round ' + data.card_A2.match_round : '-';
@@ -94,6 +72,8 @@ export async function panel_C(data = {
     let left3 = data.card_A2.match_date;
     let right1 = 'AVG.SR ' + data.card_A2.average_star_rating;
     let right2 = 'AVG.Time ' + data.card_A2.average_drain_time;
+    let wins_team_red = data.card_A2.wins_team_red || 0;
+    let wins_team_blue = data.card_A2.wins_team_blue || 0;
     let right3b = wins_team_red + ' : ' + wins_team_blue;
 
     // 导入A2卡
@@ -108,7 +88,18 @@ export async function panel_C(data = {
             right1: right1,
             right2: right2,
             right3b: right3b}, true);
+    // 导入H卡
 
+    // 计算面板高度
+    let rowTotal;
+    let panelHeight;
+    if (rowTotal) {
+        panelHeight = 330 + 150 * rowTotal
+    } else {
+        panelHeight = 1080;
+    }
+
+    svg = replaceText(svg, panelHeight, reg_height);
 
     // 插入文字
     svg = replaceText(svg, index_powered, reg_index);

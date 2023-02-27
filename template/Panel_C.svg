@@ -8,7 +8,6 @@
     <g id="Banner">
         <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719;"/>
         <g style="clip-path: url(#clippath-PC-1);">
-            <image width="1920" height="320" xlink:href="C_Banner.png" style="opacity: .7;"/>
         </g>
     </g>
     <g id="Background">
@@ -19,10 +18,9 @@
     </g>
     <g id="MainCard">
     </g>
-    <g id="Index">
+    <g id="IndexBase">
         <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>
-        <text transform="translate(560.269 83.672)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 48px; font-weight: 600;"><tspan x="0" y="0">MRA</tspan></text>
-        <text transform="translate(10 26.836)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">powered by Yumubot // Yumu Rating v3.5 Public (!ymra)</tspan></text>
-        <text transform="translate(1459.671 26.836)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0" xml:space="preserve"> request time: 2021-10-4 17:59:58 UTC+8</tspan></text>
+    </g>
+    <g id="Index">
     </g>
 </svg>

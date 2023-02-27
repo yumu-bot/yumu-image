@@ -20,7 +20,7 @@ export async function card_A1(data = {
     // 读取模板
     let svg = readTemplate('template/Card_A1.svg');
 
-    // 正则
+    // 路径定义
     let reg_text = /(?<=<g id="Text">)/;
     let reg_background = /(?<=<g style="clip-path: url\(#clippath-CA1-1\);">)/;
     let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CA1-2\);">)/;

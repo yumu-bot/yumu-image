@@ -266,7 +266,7 @@ export function replaceText(base = '', replace = '', reg = /.*/) {
 }
 
 export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
-    let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${getExportFileV3Path(image)}" style="opacity: ${opacity};"/>`
+    let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${getExportFileV3Path(image)}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
     return base.replace(reg, replace);
 }
 
@@ -764,7 +764,7 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
  * @function 预处理星数成想要的部分。
  * @return 返回 8, 0.34, 8., 34。前两个是数据，后两个是字符串
  * @param starRating 星数
- * @param whichData 要哪个数据？可输入0, 1, 2, 3，分别是整数、小数、整数带小数点部分、纯小数部分
+ * @param whichData 要哪个数据？可输入0, 1, 2, 3, 4，分别是整数、小数、整数带小数点部分、纯小数部分（两位以下，纯小数部分（一位以下
  */
 export function getStarRatingObject (starRating = 0, whichData = 0){
 
@@ -789,9 +789,15 @@ export function getStarRatingObject (starRating = 0, whichData = 0){
         text_sr_m = '';
     }
 
+    let text_sr_mm = sr_m.toString().slice(2,3);
+    if (text_sr_m.slice(1) === '0') {
+        text_sr_m = text_sr_m.slice(0,1);
+    }
+
     if (sr_b >= 20) {
         text_sr_b = '20';
         text_sr_m = '+';
+        text_sr_mm = '+'
     }
 
     switch (whichData) {
@@ -799,6 +805,7 @@ export function getStarRatingObject (starRating = 0, whichData = 0){
         case 1: return sr_m;
         case 2: return text_sr_b;
         case 3: return text_sr_m;
+        case 4: return text_sr_mm;
     }
 
 }
@@ -985,6 +992,43 @@ export function getNowTimeStamp () {
         t.getMinutes() + ':' +
         t.getSeconds() + '.' +
         t.getMilliseconds();
+}
+
+/**
+ * @function 获取分割好的比赛名字
+ * @return {String[]}0 - 比赛名称 1 - 左边队伍 2 - 右边队伍
+ * @param text 输入比赛名字
+ */
+export function getMatchNameSplitted (text = ''){
+    let out = []
+    let name = '';
+    let team1 = '';
+    let team2 = '';
+    let isTeam1 = true;
+    let position = 0;
+
+    for (let i = 0; i < text.length; i++) {
+        let char = text.slice(i, i+1);
+
+        if (char === '：' || char === ':') {
+            name = text.slice(0, i);
+        }
+
+        if (char === '(' || char === '（') {
+            position = i
+        }
+
+        if (char === ')' || char === '）') {
+            if (isTeam1) {
+                team1 = text.slice(position + 1, i)
+                isTeam1 = false;
+            } else {
+                team2 = text.slice(position + 1, i)
+            }
+        }
+    }
+    out.push(name, team1, team2)
+    return out;
 }
 
 export function getBase64Text(buffer) {

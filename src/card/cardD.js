@@ -26,7 +26,7 @@ export async function card_D(data = {
     //读取面板
     let svg = readTemplate("template/Card_D.svg");
 
-    //正则
+    // 路径定义
     let reg_text = /(?<=<g id="Text">)/
     let reg_background = /(?<=<g style="clip-path: url\(#clippath-CD-1\);">)/
     let reg_mod_color = '${mod_color}';
@@ -36,7 +36,7 @@ export async function card_D(data = {
     let reg_sd_circle2 = '${sd_circle2}';
     let reg_sd_circle3 = '${sd_circle3}';
 
-    // 文字
+    // 文字定义
     let text_title =
         torus.getTextPath(
             torus.cutStringTail(data.title,36,420),

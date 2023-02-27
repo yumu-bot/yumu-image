@@ -1,53 +1,86 @@
-import {implantImage, InsertSvgBuilder, readImage, readTemplate, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, implantImage, readTemplate, replaceText, torus} from "../util.js";
 
-// 绘制方法 card h  参数有两个,data是数据,data.background就是背景,以此类推,下面声明时写的是当用的时候没有传参数,采用的默认值,
 export async function card_H(data = {
-    background: readImage("image/I_CardH_BG.png"),
-    avatar: readImage("image/I_CardH_Avatar.png"),
-    name: 'Muziyami',
-    info: '39.2M // 99W-0L 100%',
-    rank: '#1',
-    pp_b: '264',
-    pp_m: 'pp',
-    color_score: '#fbb03b',
-    color_base: '#3fa9f5',
+    background: '',
+    cover: '',
+    title: '',
+    left1: '',
+    left2: '',
+    index_b: '',
+    index_m: '',
+    label1: '',
+    label2: '',
+    label3: '',
+    label4: '',
+    mods_arr: [],
+
+    color_index: '#46393F',
+    color_left: '#46393F',
+    color_label1: '',
+    color_label2: '',
+    color_label3: '',
+    color_label4: '',
+
 }, reuse = false) {
-    // 正则表达式
-    let reg_text = /(?<=<g id="Text">)/;
-    let reg_background = '${background}';
-    let reg_avatar = '${avatar}';
-    let reg_color_score = /(?<=fill: )#fbb03b/;
-    let reg_color_base = /(?<=fill: )#3fa9f5/;
-
-    // 文字的 <path>
-    let text_name = torus.getTextPath(data.name, 210, 40, 36, "left center", "#fff");
-    let text_info = torus.getTextPath(data.info, 210, 70, 24, "left center", "#fff");
-    let text_rank = torus.getTextPath(data.rank, 210, 100, 24, "left center", "#fff");
-
-    // pp位置计算 这部分同样是文字的<path>
-    let r4_1 = torus.getTextMetrics(data.pp_b, 0, 0, 48, "center", "#fff");
-    let r4_2 = torus.getTextMetrics(data.pp_m, 0, 0, 24, "center", "#fff");
-    let p4_x = 815;
-    let p4_y = 72;
-    let p1 = p4_x - (r4_1.width + r4_2.width) / 2;
-    let p2 = p4_x - r4_2.width / 2 + r4_1.width / 2;
-    let text_pp = torus.getTextPath(data.pp_b, p1, p4_y, 48, "left center", "#fff") + torus.getTextPath(data.pp_m, p2, p4_y, 24, "left center", "#fff");
-
     // 读取模板
-    let svg = readTemplate('template/Card_H.svg');
-    // 替换模板内容,replaceText(模板, 内容, 正则)
-    svg = replaceText(svg, data.color_score, reg_color_score);
-    svg = replaceText(svg, data.color_base, reg_color_base);
-    svg = replaceText(svg, text_name, reg_text);
-    svg = replaceText(svg, text_info, reg_text);
-    svg = replaceText(svg, text_rank, reg_text);
-    svg = replaceText(svg, text_pp, reg_text);
+    let svg = readTemplate('template/Card_H0.svg');
 
-    // 替换图片
+    // 路径定义
+    let reg_text = /(?<=<g id="Text">)/;
+    let reg_background = /(?<=<g style="clip-path: url\(#clippath-CH-1\);">)/;
+    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CH-2\);">)/;
+    let reg_mod = /(?<=<g id="Mods">)/;
 
-    svg = implantImage(svg,560,110,0,0,0.5,'I_CardH_BG.png', reg_background)
+    // 插入模组
+    let insertMod = (mod, i) => {
+        let offset_x = 620 - i * 20;
 
-    let out_svg = new InsertSvgBuilder(svg);
+        return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
+    }
 
-    return out_svg.export(reuse);
+    if (data.mods_arr.length <= 2) {
+        data.mods_arr.forEach((val, i) => {
+            svg = replaceText(svg, insertMod(val, 2 * i), reg_mod);
+        });
+    } else {
+        data.mods_arr.forEach((val, i) => {
+            svg = replaceText(svg, insertMod(val, i), reg_mod);
+        });
+    }
+
+    // 插入四个小标签
+
+
+    // 计算标题的长度
+    let title_max_width = 500;
+    let left_max_width = 500;
+    let mods_width;
+    let label_width = torus.getTextWidth(data.label3,24);
+
+    switch (data.mods_arr.length) {
+        case 0: mods_width = 0; break;
+        case 1: mods_width = 100; break;
+        case 2: mods_width = 140; break;
+        case 3: mods_width = 140; break;
+        case 4: mods_width = 160; break;
+        case 5: mods_width = 180; break;
+    }
+
+    title_max_width -= (Math.max(mods_width, ));
+    left_max_width -= mods_width;
+
+    // 文字定义
+
+
+    let text_title = torus.cutStringTail(data.title, 36, )
+    let title = torus.getTextPath(data.title || '', 20, 46.6, 36, 'left baseline', '#fff');
+
+
+    // 插入文字
+    svg = replaceText(svg, title, reg_text)
+
+    // 插入图片
+    svg = data.background ? implantImage(svg,900,110,0,0,0.5, data.background, reg_background) : svg;
+
+    return svg.toString();
 }
