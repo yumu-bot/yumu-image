@@ -7,13 +7,13 @@ export async function card_A1(data = {
     sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
     sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
     name: 'Muziyami',
-    rank_global: '28075',
-    rank_country: '577',
+    rank_global: 28075,
+    rank_country: 577,
     country: 'CN',
-    acc: '95.27',
-    level: '100',
-    progress: '32',
-    pp: '4396',
+    acc: 95.27,
+    level: 100,
+    progress: 32,
+    pp: 4396,
 
     color_base: '#2a2226',
 }, reuse = false) {
@@ -44,7 +44,7 @@ export async function card_A1(data = {
     //pp位置计算
     let pp = data.pp || 0;
 
-    let text_pp = torus.getTextPath(pp,
+    let text_pp = torus.getTextPath(pp.toString(),
             420 - torus.getTextWidth('PP',48),
             191.59, 60, "right baseline", "#fff")
         + torus.getTextPath('PP',

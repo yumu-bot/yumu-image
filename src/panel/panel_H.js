@@ -1,4 +1,5 @@
 import {
+    getNowTimeStamp,
     getRandomBannerPath,
     implantImage,
     implantSvgBody,
@@ -19,13 +20,13 @@ export async function panel_H (data = {
         sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
         sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
         name: 'Muziyami',
-        rank_global: '28075',
-        rank_country: '577',
+        rank_global: 28075,
+        rank_country: 577,
         country: 'CN',
-        acc: '95.27',
-        level: '100',
-        progress: '32',
-        pp: '4396',
+        acc: 95.27,
+        level: 100,
+        progress: 32,
+        pp: 4396,
     },
 
     //D卡
@@ -150,7 +151,7 @@ export async function panel_H (data = {
 
     // 面板文字
     index_powered: 'powered by Yumubot // Mappool (!ymmp)',
-    index_request_time: 'request time: 2023-10-4 17:59:58 UTC+8',
+    index_request_time: 'request time: ' + getNowTimeStamp(),
     index_panel_name: 'MP v3.6',
 
 }, reuse = false) {

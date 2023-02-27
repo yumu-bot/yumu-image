@@ -960,6 +960,18 @@ export function getGameMode (gamemode = 'osu', level = 0) {
     }
 }
 
+//获取现在的时间 (UTC+8)
+export function getNowTimeStamp () {
+    const t = new Date;
+    return t.getFullYear() + '-' +
+        t.getMonth() + '-' +
+        t.getDay() + ' ' +
+        t.getHours() + ':' +
+        t.getMinutes() + ':' +
+        t.getSeconds() + '.' +
+        t.getMilliseconds();
+}
+
 export function getBase64Text(buffer) {
     let data = Buffer.from(buffer, 'binary').toString('base64');
     return 'data:image/png;base64,' + data;

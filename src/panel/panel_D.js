@@ -2,7 +2,7 @@ import {label_E, LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/cardA1.js";
 import {
     getGameMode,
-    getMascotName, getMascotPath, getRandomBannerPath, getRandomMascotBGPath,
+    getMascotName, getMascotPath, getNowTimeStamp, getRandomBannerPath, getRandomMascotBGPath,
     getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     implantImage,
     implantSvgBody,
@@ -21,13 +21,13 @@ export async function panel_D (data = {
         sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
         sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
         name: 'Muziyami',
-        rank_global: '28075',
-        rank_country: '577',
+        rank_global: 28075,
+        rank_country: 577,
         country: 'CN',
-        acc: '95.27',
-        level: '100',
-        progress: '32',
-        pp: '4396',
+        acc: 95.27,
+        level: 100,
+        progress: 32,
+        pp: 4396,
     },
 
     // D标签
@@ -129,7 +129,7 @@ export async function panel_D (data = {
 
     // 面板文字
     index_powered: 'powered by Yumubot // UserInfo (!ymi)',
-    index_request_time: 'request time: 2023-10-4 17:59:58 UTC+8',
+    index_request_time: 'request time: ' + getNowTimeStamp(),
     index_panel_name: 'I v3.6',
 
     // 用户数据

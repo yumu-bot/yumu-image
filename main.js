@@ -15,6 +15,12 @@ fs.writeFileSync("image/out/card_A1.png", await card_A1());
 
 fs.mkdirSync(CACHE_PATH, {recursive: true});
 console.time()
+console.time('D')
+fs.writeFileSync("image/out/panel_D.png", await panel_D());
+console.timeEnd('D')
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
 console.time('H')
 fs.writeFileSync("image/out/panel_H.png", await panel_H());
 console.timeEnd('H')
