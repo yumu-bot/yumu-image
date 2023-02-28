@@ -1,9 +1,8 @@
-import {readTemplate, implantImage, replaceText, torus} from "../util.js";
+import {readTemplate, implantImage, replaceText, torus, getFlagPath} from "../util.js";
 
 export async function card_A1(data = {
     background: 'PanelObject/A_CardA1_BG.png',
     avatar: 'PanelObject/A_CardA1_Avatar.png',
-    country_flag: 'PanelObject/A_CardA1_CountryFlag.png',
     sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
     sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
     name: 'Muziyami',
@@ -61,11 +60,11 @@ export async function card_A1(data = {
     svg = replaceText(svg, text_rank_country, reg_text);
     svg = replaceText(svg, text_rank_global, reg_text);
     svg = replaceText(svg, text_pp, reg_text);
+    svg = replaceText(svg, getFlagPath(data.country,130,68), reg_country_flag); //高44宽60吧
     // 替换图片
 
     svg = implantImage(svg,430,210,0,0,0.5, data.background, reg_background)
     svg = implantImage(svg,100,100,20,20,1, data.avatar, reg_avatar)
-    svg = implantImage(svg,60,44,130,68,1, data.country_flag, reg_country_flag)
     svg = implantImage(svg,40,40,200,70,1, data.sub_icon1, reg_sub_icon1)
     svg = implantImage(svg,40,40,250,70,1, data.sub_icon2, reg_sub_icon2)
 

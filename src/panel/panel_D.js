@@ -27,7 +27,6 @@ export async function panel_D (data = {
     card_A1: {
         background: 'PanelObject/A_CardA1_BG.png',
         avatar: 'PanelObject/A_CardA1_Avatar.png',
-        country_flag: getFlagPath('CN'), //记得改对应的 card_A1()
         sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
         sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
         name: 'Muziyami',

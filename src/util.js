@@ -1237,10 +1237,11 @@ export async function getFlagSvg(code = "cn") {
     return flag;
 }
 
-export async function getFlagPath(code = "cn") {
+export async function getFlagPath(code = "cn", x, y) {
     let svg = getFlagSvg(code);
     let len = svg.length;
-    return svg.substring(60, len - 6);
+    let out = `<g transform="${x} ${y}">` + svg.substring(60, len - 6) + '</g>';
+    return out;
 }
 
 const Mod = {
