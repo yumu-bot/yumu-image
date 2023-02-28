@@ -1,13 +1,23 @@
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/cardA1.js";
 import {
+    getFlagPath,
     getGameMode,
-    getMascotName, getMascotPath, getNowTimeStamp, getRandomBannerPath, getRandomMascotBGPath,
-    getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getMascotName,
+    getMascotPath,
+    getNowTimeStamp,
+    getRandomBannerPath,
+    getRandomMascotBGPath,
+    getRoundedNumberLargerStr,
+    getRoundedNumberSmallerStr,
     implantImage,
     implantSvgBody,
-    InsertSvgBuilder, maximumArrayToFixedLength, modifyArrayToFixedLength,
-    readTemplate, replaceText, torus
+    InsertSvgBuilder,
+    maximumArrayToFixedLength,
+    modifyArrayToFixedLength,
+    readTemplate,
+    replaceText,
+    torus
 } from "../util.js";
 import {card_J} from "../card/cardJ.js";
 import {card_K} from "../card/cardK.js";
@@ -17,7 +27,7 @@ export async function panel_D (data = {
     card_A1: {
         background: 'PanelObject/A_CardA1_BG.png',
         avatar: 'PanelObject/A_CardA1_Avatar.png',
-        country_flag: 'PanelObject/A_CardA1_CountryFlag.png',
+        country_flag: getFlagPath('CN'), //记得改对应的 card_A1()
         sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
         sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
         name: 'Muziyami',
