@@ -163,7 +163,7 @@ export async function panel_H (data = {
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PH-1\);">)/;
-    let reg_card_d = /(?<=<g id="BodyCard">)/;
+    let reg_bodycard = /(?<=<g id="BodyCard">)/;
 
     // 卡片定义
     let card_A1_impl = await card_A1(data.card_A1, true);
@@ -252,7 +252,7 @@ export async function panel_H (data = {
         let card_D_impl =
             await card_D(object, true);
 
-        svg = implantSvgBody(svg, x, y, card_D_impl, reg_card_d);
+        svg = implantSvgBody(svg, x, y, card_D_impl, reg_bodycard);
     }
 
     //执行上面的代码，顺便设置面板高度

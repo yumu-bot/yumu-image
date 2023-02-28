@@ -503,12 +503,15 @@ export async function panel_E(data = {
         return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
     }
 
-    if (data.mods_arr.length <= 2) {
-        data.mods_arr.forEach((val, i) => {
+    let mods_arr = data.mods_arr ? data.mods_arr : ['']
+    let mods_arr_length = mods_arr.length;
+
+    if (0 < mods_arr_length <= 2) {
+        mods_arr.forEach((val, i) => {
             svg = replaceText(svg, insertMod(val, 2 * i), reg_mod);
         });
-    } else {
-        data.mods_arr.forEach((val, i) => {
+    } else if (mods_arr_length > 2) {
+        mods_arr.forEach((val, i) => {
             svg = replaceText(svg, insertMod(val, i), reg_mod);
         });
     }

@@ -5,6 +5,7 @@ import axios from "axios";
 import exports from 'convert-svg-to-png';
 import https from "https";
 import path from "path";
+import moment from "moment";
 
 const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
@@ -298,8 +299,8 @@ ${svgBody}
  */
 
 export function get2SizeTorusTextPath (largerText, smallerText, largeSize, smallSize, x, y, anchor,color) {
-    let width_b = torus.getTextMetrics(largerText, x, y, largeSize, anchor, color).width;
-    let width_m = torus.getTextMetrics(smallerText, x, y, smallSize, anchor, color).width;
+    let width_b = torus.getTextWidth(largerText, largeSize);
+    let width_m = torus.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
 
     let out;
@@ -313,8 +314,8 @@ export function get2SizeTorusTextPath (largerText, smallerText, largeSize, small
             torus.getTextPath(smallerText, x, y, smallSize, anchor, color);
 
     } else if (anchor === "center baseline") {
-        out = torus.getTextPath(largerText, x - width_a, y, largeSize, anchor, color) +
-        torus.getTextPath(smallerText, x + width_a, y, smallSize, anchor, color);
+        out = torus.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+        torus.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
     }
 
     return out;
@@ -984,14 +985,18 @@ export function getMapStatusPath (status = 'notsubmitted'){
 
 //获取现在的时间 (UTC+8)
 export function getNowTimeStamp () {
+    return moment().format("YYYY-MM-DD kk:mm:ss.SSS Z");
+        /*
     const t = new Date;
-    return t.getFullYear() + '-' +
+        t.getFullYear() + '-' +
         t.getMonth() + '-' +
         t.getDay() + ' ' +
         t.getHours() + ':' +
         t.getMinutes() + ':' +
         t.getSeconds() + '.' +
         t.getMilliseconds();
+
+         */
 }
 
 /**
@@ -1230,6 +1235,12 @@ export async function getFlagSvg(code = "cn") {
     }
     flag = fs.readFileSync(path, "utf-8");
     return flag;
+}
+
+export async function getFlagPath(code = "cn") {
+    let svg = getFlagSvg(code);
+    let len = svg.length;
+    return svg.substring(60, len - 6);
 }
 
 const Mod = {
