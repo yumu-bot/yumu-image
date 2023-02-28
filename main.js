@@ -1,7 +1,6 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, readImage} from "./src/util.js";
-import {panel_D} from "./src/panel/panel_D.js";
+import {CACHE_PATH, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_E} from "./src/panel/panel_E.js";
 import {panel_H} from "./src/panel/panel_H.js";
 
@@ -35,10 +34,29 @@ app.post('/panel_E', async (req, res) => {
 
 app.post('/panel_D', async (req, res) => {
     try {
-        const f = checkJsonData(req);
-        const png = await panel_D(f);
-        res.set('Content-Type', 'image/png');
-        res.send(png);
+        console.log(req.fields);
+        let data = req.fields;
+        const f = new SaveFiles();
+        const card_a1 = {
+            background: f.save(await readNetImage(data.cover_url)),
+            avatar: f.save(await readNetImage(data.avatar_url)),
+            sub_icon1: data['support_level'] > 0 ? 'PanelObject/A_CardA1_SubIcon1.png' : '',
+            sub_icon2: '',
+            name: data['username'],
+            rank_global: data['globalRank'],
+            rank_country: data['countryRank'],
+            country: data?.country['countryCode'],
+            acc: data['accuracy'],
+            level: data['levelProgress'],
+            progress: data['accuracy'],
+            pp: data['pp'],
+        };
+
+        const label_data = {}
+
+        const png = readImage("");
+        // res.set('Content-Type', 'image/png');
+        res.send("ok");
     } catch (e) {
         res.status(500).send(e.stack);
     }
