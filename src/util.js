@@ -5,6 +5,7 @@ import axios from "axios";
 import exports from 'convert-svg-to-png';
 import https from "https";
 import path from "path";
+import moment from "moment";
 
 const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
@@ -266,7 +267,7 @@ export function replaceText(base = '', replace = '', reg = /.*/) {
 }
 
 export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
-    let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${getExportFileV3Path(image)}" style="opacity: ${opacity};"/>`
+    let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${getExportFileV3Path(image)}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
     return base.replace(reg, replace);
 }
 
@@ -298,8 +299,8 @@ ${svgBody}
  */
 
 export function get2SizeTorusTextPath (largerText, smallerText, largeSize, smallSize, x, y, anchor,color) {
-    let width_b = torus.getTextMetrics(largerText, x, y, largeSize, anchor, color).width;
-    let width_m = torus.getTextMetrics(smallerText, x, y, smallSize, anchor, color).width;
+    let width_b = torus.getTextWidth(largerText, largeSize);
+    let width_m = torus.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
 
     let out;
@@ -313,8 +314,8 @@ export function get2SizeTorusTextPath (largerText, smallerText, largeSize, small
             torus.getTextPath(smallerText, x, y, smallSize, anchor, color);
 
     } else if (anchor === "center baseline") {
-        out = torus.getTextPath(largerText, x - width_a, y, largeSize, anchor, color) +
-        torus.getTextPath(smallerText, x + width_a, y, smallSize, anchor, color);
+        out = torus.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+        torus.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
     }
 
     return out;
@@ -764,7 +765,7 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
  * @function 预处理星数成想要的部分。
  * @return 返回 8, 0.34, 8., 34。前两个是数据，后两个是字符串
  * @param starRating 星数
- * @param whichData 要哪个数据？可输入0, 1, 2, 3，分别是整数、小数、整数带小数点部分、纯小数部分
+ * @param whichData 要哪个数据？可输入0, 1, 2, 3, 4，分别是整数、小数、整数带小数点部分、纯小数部分（两位以下，纯小数部分（一位以下
  */
 export function getStarRatingObject (starRating = 0, whichData = 0){
 
@@ -789,9 +790,15 @@ export function getStarRatingObject (starRating = 0, whichData = 0){
         text_sr_m = '';
     }
 
+    let text_sr_mm = sr_m.toString().slice(2,3);
+    if (text_sr_m.slice(1) === '0') {
+        text_sr_m = text_sr_m.slice(0,1);
+    }
+
     if (sr_b >= 20) {
         text_sr_b = '20';
         text_sr_m = '+';
+        text_sr_mm = '+'
     }
 
     switch (whichData) {
@@ -799,6 +806,7 @@ export function getStarRatingObject (starRating = 0, whichData = 0){
         case 1: return sr_m;
         case 2: return text_sr_b;
         case 3: return text_sr_m;
+        case 4: return text_sr_mm;
     }
 
 }
@@ -959,17 +967,73 @@ export function getGameMode (gamemode = 'osu', level = 0) {
         }
     }
 }
+/**
+ * @function 获取谱面状态的图片链接
+ */
+export function getMapStatusPath (status = 'notsubmitted'){
+    switch (status) {
+        case "ranked": return 'object-beatmap-ranked.png';
+        case "approved": return 'object-beatmap-ranked.png';
+        case "qualified": return 'object-beatmap-qualified.png';
+        case "loved": return 'object-beatmap-loved.png';
+        case "pending": return 'object-beatmap-unranked.png';
+        case "workinprogress": return 'object-beatmap-unranked.png';
+        case "notsubmitted": return 'object-beatmap-unranked.png';
+        case "graveyard": return 'object-beatmap-unranked.png';
+    }
+}
 
 //获取现在的时间 (UTC+8)
 export function getNowTimeStamp () {
+    return moment().format("YYYY-MM-DD kk:mm:ss.SSS Z");
+        /*
     const t = new Date;
-    return t.getFullYear() + '-' +
+        t.getFullYear() + '-' +
         t.getMonth() + '-' +
         t.getDay() + ' ' +
         t.getHours() + ':' +
         t.getMinutes() + ':' +
         t.getSeconds() + '.' +
         t.getMilliseconds();
+
+         */
+}
+
+/**
+ * @function 获取分割好的比赛名字
+ * @return {String[]}0 - 比赛名称 1 - 左边队伍 2 - 右边队伍
+ * @param text 输入比赛名字
+ */
+export function getMatchNameSplitted (text = ''){
+    let out = []
+    let name = '';
+    let team1 = '';
+    let team2 = '';
+    let isTeam1 = true;
+    let position = 0;
+
+    for (let i = 0; i < text.length; i++) {
+        let char = text.slice(i, i+1);
+
+        if (char === '：' || char === ':') {
+            name = text.slice(0, i);
+        }
+
+        if (char === '(' || char === '（') {
+            position = i
+        }
+
+        if (char === ')' || char === '）') {
+            if (isTeam1) {
+                team1 = text.slice(position + 1, i)
+                isTeam1 = false;
+            } else {
+                team2 = text.slice(position + 1, i)
+            }
+        }
+    }
+    out.push(name, team1, team2)
+    return out;
 }
 
 export function getBase64Text(buffer) {
@@ -1171,6 +1235,12 @@ export async function getFlagSvg(code = "cn") {
     }
     flag = fs.readFileSync(path, "utf-8");
     return flag;
+}
+
+export async function getFlagPath(code = "cn") {
+    let svg = getFlagSvg(code);
+    let len = svg.length;
+    return svg.substring(60, len - 6);
 }
 
 const Mod = {

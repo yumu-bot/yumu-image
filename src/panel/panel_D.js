@@ -133,12 +133,12 @@ export async function panel_D (data = {
     index_panel_name: 'I v3.6',
 
     // 用户数据
-    rank_country: '581',
-    rank_global: '114514',
+    rank_country: 581,
+    rank_global: 114514,
     country: 'CN',
-    bonus_pp: '471',
-    om4k_pp: '2754',
-    om7k_pp: '1045',
+    bonus_pp: 471,
+    om4k_pp: 2754,
+    om7k_pp: 1045,
     game_mode: 'osu', // osu taiko catch mania
 
     grade_XH: 65472,

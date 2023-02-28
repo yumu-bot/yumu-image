@@ -1,16 +1,23 @@
-import {getExportFileV3Path, InsertSvgBuilder, readTemplate, replaceText, torus} from "../util.js";
+import {InsertSvgBuilder, readTemplate, replaceText, torus} from "../util.js";
 import {card_H} from "../card/cardH.js";
+import {card_A2} from "../card/cardA2.js";
 
 export async function panel_I(data = {
-    background: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
-    avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
-    name: 'Muziyami',
-    info: '39.2M // 99W-0L 100%',
-    rank: '#1',
-    pp_b: '264',
-    pp_m: 'pp',
-    color_score: '#fbb03b',
-    color_base: '#3fa9f5',
+    // A2卡
+    card_A2: {
+        background: 'PanelObject/A_CardA1_BG.png',
+        match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)',
+        match_round: 0,
+        match_time: '17:32-22:34',
+        match_date: '2021-02-16',
+        average_star_rating: 5.46,
+        average_drain_time: '3:46'
+
+    },
+    // H卡
+
+
+
 }) {
     let reg_background = '${background}'
     //

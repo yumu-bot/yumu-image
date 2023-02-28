@@ -11,7 +11,11 @@ import {
     getStarRatingColor,
     get2SizeTorusTextPath,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getRandomBannerPath, getStarRatingObject, getNowTimeStamp
+    getRoundedNumberSmallerStr,
+    getRandomBannerPath,
+    getStarRatingObject,
+    getNowTimeStamp,
+    getMapStatusPath
 } from "../util.js";
 import {card_A1} from "../card/cardA1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -146,7 +150,7 @@ export async function panel_E(data = {
     map_hexagon: 'object-beatmap-hexagon.png',
     map_favorite: 'object-beatmap-favorite.png',
     map_playcount: 'object-beatmap-playcount.png',
-    map_status: 'object-beatmap-ranked.png',
+    map_status: 'ranked', //ranked approved loved graveyard notsubmitted qualified pending workinprogress
 
     // 面板文字
 
@@ -173,7 +177,7 @@ export async function panel_E(data = {
 
     // 面板颜色和特性 颜色已经写成方法
     //color_gamemode: '#7ac943',
-    score_categorize: "fullcombo", // played, clear, nomiss, fullcombo
+    score_categorize: 'fullcombo', // played, clear, nomiss, fullcombo
 
 }, reuse = false) {
     // 导入模板
@@ -499,12 +503,15 @@ export async function panel_E(data = {
         return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
     }
 
-    if (data.mods_arr.length <= 2) {
-        data.mods_arr.forEach((val, i) => {
+    let mods_arr = data.mods_arr ? data.mods_arr : ['']
+    let mods_arr_length = mods_arr.length;
+
+    if (0 < mods_arr_length <= 2) {
+        mods_arr.forEach((val, i) => {
             svg = replaceText(svg, insertMod(val, 2 * i), reg_mod);
         });
-    } else {
-        data.mods_arr.forEach((val, i) => {
+    } else if (mods_arr_length > 2) {
+        mods_arr.forEach((val, i) => {
             svg = replaceText(svg, insertMod(val, i), reg_mod);
         });
     }
@@ -539,6 +546,9 @@ export async function panel_E(data = {
         svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
     }
 
+    // 插入谱面状态
+    let status = getMapStatusPath(data.map_status);
+
     //console.time('newSVG')
     // 插入图片和部件（新方法 ==============================================================================================
     svg = implantSvgBody(svg,40,40,card_A1_impl,reg_maincard);
@@ -557,7 +567,7 @@ export async function panel_E(data = {
     svg = implantImage(svg,420,450,230,370,1,data.map_hexagon,reg_map_hexagon);
     svg = implantImage(svg,18,18,746,364,1,data.map_favorite,reg_map_favorite);
     svg = implantImage(svg,18,16,746,338,1,data.map_playcount,reg_map_playcount);
-    svg = implantImage(svg,50,50,683,334,1,data.map_status,reg_map_status);
+    svg = implantImage(svg,50,50,683,334,1,status,reg_map_status);
 
     //console.timeEnd('newSVG')
     let out_svg = new InsertSvgBuilder(svg)
