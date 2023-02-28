@@ -1213,7 +1213,7 @@ export class InsertSvgBuilder {
 export async function getFlagSvg(code = "cn") {
     code = code.toUpperCase();
     let flag;
-    let path = `image/flag/${code}.svg`;
+    let path = getExportFileV3Path(`Flags/${code}`);
     try {
         fs.accessSync(path, constants.W_OK);
     } catch (e) {
@@ -1238,20 +1238,28 @@ export async function getFlagSvg(code = "cn") {
 }
 
 export async function getFlagPath(code = "cn", x, y) {
-    let svg = getFlagSvg(code);
+    let svg = getFlagSvg(code).toString();
     let len = svg.length;
-    let out = `<g transform="${x} ${y}">` + svg.substring(60, len - 6) + '</g>';
-    return out;
+    return `<g transform="${x} ${y}">` + svg.substring(60, len - 6) + '</g>';
 }
 
 const Mod = {
     "NM": 0,
+    "NF": 1,
     "EZ": 2,
+    "NV": 4,
     "HD": 8,
     "HR": 16,
+    "SD": 32,
     "DT": 64,
+    "RX": 128,
     "HT": 256,
+    "NC": 512,
     "FL": 1024,
+    "AT": 2048,
+    "SO": 4096,
+    "AP": 8192,
+    "PF": 16384,
 }
 
 export function hasMod(modInt = 0, mod = '') {

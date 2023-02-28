@@ -48,7 +48,7 @@ export async function card_H(data = {
     let mods_arr = data.mods_arr ? data.mods_arr : ['']
     let mods_arr_length = mods_arr.length;
 
-    if (0 < mods_arr_length <= 2) {
+    if (mods_arr_length <= 2 && mods_arr_length > 0) {
         mods_arr.forEach((val, i) => {
             svg = replaceText(svg, insertMod(val, 2 * i), reg_mod);
         });
