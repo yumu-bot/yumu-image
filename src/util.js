@@ -51,6 +51,7 @@ const exportPng = svgToPng;
 export const torus = {};
 
 torus.getTextPath = getTextPath_torus;
+torus.get2SizeTextPath = get2SizeTextPath_torus;
 torus.getTextMetrics = getTextMetrics_torus;
 torus.getTextWidth = getTextWidth_torus;
 torus.cutStringTail = cutStringTail_torus;
@@ -130,6 +131,43 @@ function cutStringTail_torus(
     }
 
     return out_text.slice(0,-1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
+}
+
+
+/**
+ * @function 获取大小文本的 torus 字体 SVG 路径
+ * @return {String}
+ * @param largerText {String} 较大的文本
+ * @param smallerText {String} 较小的文本
+ * @param largeSize {Number} 大文本尺寸
+ * @param smallSize {Number} 小文本尺寸
+ * @param x {Number} 锚点横坐标
+ * @param y {Number} 锚点横坐标
+ * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
+ * @param color {String} 十六进制颜色，#FFF
+ */
+
+function get2SizeTextPath_torus (largerText, smallerText, largeSize, smallSize, x, y, anchor,color) {
+    let width_b = torus.getTextWidth(largerText, largeSize);
+    let width_m = torus.getTextWidth(smallerText, smallSize);
+    let width_a = (width_b + width_m) / 2; // 全长的一半长
+
+    let out;
+
+    if (anchor === "left baseline") {
+        out = torus.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            torus.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+
+    } else if (anchor === "right baseline") {
+        out = torus.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            torus.getTextPath(smallerText, x, y, smallSize, anchor, color);
+
+    } else if (anchor === "center baseline") {
+        out = torus.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            torus.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+    }
+
+    return out;
 }
 
 export const PuHuiTi = {};
@@ -285,41 +323,6 @@ ${svgBody}
 
 // 数字处理并显示
 
-/**
- * @function 获取大小文本的 torus 字体 SVG 路径
- * @return {String}
- * @param largerText {String} 较大的文本
- * @param smallerText {String} 较小的文本
- * @param largeSize {Number} 大文本尺寸
- * @param smallSize {Number} 小文本尺寸
- * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点横坐标
- * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
- * @param color {String} 十六进制颜色，#FFF
- */
-
-export function get2SizeTorusTextPath (largerText, smallerText, largeSize, smallSize, x, y, anchor,color) {
-    let width_b = torus.getTextWidth(largerText, largeSize);
-    let width_m = torus.getTextWidth(smallerText, smallSize);
-    let width_a = (width_b + width_m) / 2; // 全长的一半长
-
-    let out;
-
-    if (anchor === "left baseline") {
-        out = torus.getTextPath(largerText, x, y, largeSize, anchor, color) +
-        torus.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
-
-    } else if (anchor === "right baseline") {
-        out = torus.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            torus.getTextPath(smallerText, x, y, smallSize, anchor, color);
-
-    } else if (anchor === "center baseline") {
-        out = torus.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-        torus.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
-    }
-
-    return out;
-}
 
 /**
  * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
@@ -328,7 +331,7 @@ export function get2SizeTorusTextPath (largerText, smallerText, largeSize, small
  * @param level 等级，现在支持lv -1, 0, 1, 2, 3 注意配套使用
  * lv3是保留一位数,0-999-1.0K-99K-0.1M-99M
  * lv2是保留四位数
- * lv1是保留两位数
+ * lv1是保留两位数,945671 -> 945.67K
  * lv0是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  * lv-1是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  */
@@ -680,7 +683,7 @@ export function getModColor(Mod = ''){
 
         case "SP": color = '#EA68A2'; break;
 
-        default: color = '#fff'; break;
+        default: color = 'none'; break;
     }
 
     return color;

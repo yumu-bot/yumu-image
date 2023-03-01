@@ -9,7 +9,6 @@ import {
     implantImage,
     implantSvgBody,
     getStarRatingColor,
-    get2SizeTorusTextPath,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getRandomBannerPath,
@@ -153,7 +152,7 @@ export async function panel_E(data = {
 
     // 面板文字
 
-    index_powered: 'powered by Yumubot // Score (!ymp / !ymr)',
+    index_powered: 'powered by Yumubot v0.3.0 EA // Score (!ymp / !ymr / !yms)',
     index_request_time: 'request time: ' + getNowTimeStamp(),
     index_panel_name: 'S v3.6',
 
@@ -279,7 +278,7 @@ export async function panel_E(data = {
             409.43, 60, "left baseline", "#fff");
      */
 
-    let main_score = get2SizeTorusTextPath(getRoundedNumberLargerStr(data.score,-1), getRoundedNumberSmallerStr(data.score,-1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
+    let main_score = torus.get2SizeTextPath(getRoundedNumberLargerStr(data.score,-1), getRoundedNumberSmallerStr(data.score,-1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
 
     let title_density =
         torus.getTextPath("Density", 900, 802.88, 18, "left baseline", "#a1a1a1");

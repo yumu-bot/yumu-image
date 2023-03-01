@@ -137,7 +137,7 @@ export async function panel_D (data = {
     },
 
     // 面板文字
-    index_powered: 'powered by Yumubot // UserInfo (!ymi)',
+    index_powered: 'powered by Yumubot v0.3.0 EA // UserInfo (!ymi)',
     index_request_time: 'request time: ' + getNowTimeStamp(),
     index_panel_name: 'I v3.6',
 

@@ -1,9 +1,8 @@
 import {
-    get2SizeTorusTextPath, getExportFileV3Path, getModColor,
+    getModColor,
     getRankColor,
     getStarRatingColor,
     implantImage,
-    readTemplate,
     replaceText,
     torus
 } from "../util.js";
@@ -76,7 +75,7 @@ export async function card_J(data = {
     let map_line3 =
         torus.getTextPath(map_line3_text, 300, 47.571, 14, "right baseline", "#a1a1a1");
 
-    let pp = data.pp ? get2SizeTorusTextPath(data.pp, 'PP', 30, 18, 300, 73.795, 'right baseline', '#fff') : '';
+    let pp = data.pp ? torus.get2SizeTextPath(data.pp, 'PP', 30, 18, 300, 73.795, 'right baseline', '#fff') : '';
 
     let rank_text_color = '#fff'; if (data.score_rank === 'X' || data.score_rank === 'XH') rank_text_color = '#000'
     let rank =

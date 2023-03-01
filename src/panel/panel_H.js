@@ -150,7 +150,7 @@ export async function panel_H (data = {
 
 
     // 面板文字
-    index_powered: 'powered by Yumubot // Mappool (!ymmp)',
+    index_powered: 'powered by Yumubot v0.3.0 EA // Mappool (!ymmp)',
     index_request_time: 'request time: ' + getNowTimeStamp(),
     index_panel_name: 'MP v3.6',
 

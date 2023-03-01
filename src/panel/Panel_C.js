@@ -129,7 +129,7 @@ export async function panel_C(data = {
     },
 
     // 面板文字
-    index_powered: 'powered by Yumubot // Yumu Rating v3.5 Public (!ymra)',
+    index_powered: 'powered by Yumubot v0.3.0 EA // Yumu Rating v3.5 (!ymra)',
     index_request_time: 'request time: ' + getNowTimeStamp(),
     index_panel_name: 'MRA',
 
@@ -154,7 +154,7 @@ export async function panel_C(data = {
     let index_panel_name = torus.getTextPath(data.index_panel_name,
         607.5, 83.67, 48, "center baseline", "#fff");
 
-    // 切割比赛标题给A2卡
+    // 导入A2卡
     let title = getMatchNameSplitted(data.match.match_title);
     let title1 = title[0];
     let title2 = title[1] + ' vs ' + title[2];
@@ -162,12 +162,11 @@ export async function panel_C(data = {
     let left2 = data.match.match_time;
     let left3 = data.match.match_date;
     let right1 = 'AVG.SR ' + data.match.average_star_rating;
-    let right2 = 'mp/' + data.match.mpid || 0;
+    let right2 = 'mp' + data.match.mpid || 0;
     let wins_team_red = data.match.wins_team_red || 0;
     let wins_team_blue = data.match.wins_team_blue || 0;
     let right3b = wins_team_red + ' : ' + wins_team_blue;
 
-    // 导入A2卡
     let card_A2_impl =
         await card_A2({data,
             title1: title1,
