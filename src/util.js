@@ -883,6 +883,7 @@ export function getStarRatingObject(starRating = 0, whichData = 0) {
  * @param gamemode 游戏模式，'osu' 'taiko' 等
  */
 export function getMascotName(gamemode = 'osu') {
+    gamemode = gamemode.toLowerCase();
     let //on = 1, //pippi
         tn = 6, //Mocha, Aiko, Alisa, Chirou, Tama, Taikonator
         //cn = 1, //Yuzu
@@ -1029,6 +1030,7 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0) {
  * @param level 等级，0为不变，1为全写 osu!standard，-1为简写 o t m c
  */
 export function getGameMode(gamemode = 'osu', level = 0) {
+    gamemode = gamemode.toLowerCase();
     switch (level) {
         case -1: switch (gamemode) {
             case 'osu': return 'o';
