@@ -4,8 +4,7 @@ import {
     getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     implantImage,
     implantSvgBody,
-    InsertSvgBuilder, readImage,
-    readTemplate,
+    InsertSvgBuilder, readTemplate,
     replaceText,
     torus
 } from "../util.js";
