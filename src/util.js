@@ -11,7 +11,7 @@ const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = "D:/ExportFileV3/";
 
-const mascot_pic_sum_arr = [5,0,0,0,0,0,0,0,0]; //吉祥物的对应的照片数量，和随机banner一样的
+const mascot_pic_sum_arr = [5, 0, 0, 0, 0, 0, 0, 0, 0]; //吉祥物的对应的照片数量，和随机banner一样的
 const bannerTotal = 40;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
@@ -117,7 +117,7 @@ function cutStringTail_torus(
     size = 36,
     maxWidth = 0,
 ) {
-    if (torus.getTextWidth(text,size) <= maxWidth) {
+    if (torus.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
 
@@ -125,12 +125,12 @@ function cutStringTail_torus(
     let dot3_width = torus.getTextWidth(dot3, size);
     let out_text = '';
     maxWidth -= dot3_width;
-    
-    for (let i = 0; torus.getTextWidth(out_text,size) < maxWidth; i++) {
-        out_text += text.slice(i, i+1);
+
+    for (let i = 0; torus.getTextWidth(out_text, size) < maxWidth; i++) {
+        out_text += text.slice(i, i + 1);
     }
 
-    return out_text.slice(0,-1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
+    return out_text.slice(0, -1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
 }
 
 
@@ -147,7 +147,7 @@ function cutStringTail_torus(
  * @param color {String} 十六进制颜色，#FFF
  */
 
-function get2SizeTextPath_torus (largerText, smallerText, largeSize, smallSize, x, y, anchor,color) {
+function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
     let width_b = torus.getTextWidth(largerText, largeSize);
     let width_m = torus.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -218,7 +218,7 @@ function cutStringTail_PuHuiTi(
     size = 36,
     maxWidth = 0,
 ) {
-    if (PuHuiTi.getTextWidth(text,size) <= maxWidth) {
+    if (PuHuiTi.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
 
@@ -227,11 +227,11 @@ function cutStringTail_PuHuiTi(
     let out_text = '';
     maxWidth -= dot3_width;
 
-    for (let i = 0; PuHuiTi.getTextWidth(out_text,size) < maxWidth; i++) {
-        out_text += text.slice(i, i+1);
+    for (let i = 0; PuHuiTi.getTextWidth(out_text, size) < maxWidth; i++) {
+        out_text += text.slice(i, i + 1);
     }
 
-    return out_text.slice(0,-1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
+    return out_text.slice(0, -1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
 }
 
 export const extra = {};
@@ -355,7 +355,7 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
         }
         let re = Math.floor(number / Math.pow(10, p));
 
-        if (re === 0){
+        if (re === 0) {
             return ''
         } else {
             return re.toString()
@@ -364,7 +364,7 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
 
     if (level === -1) {
         if (number <= Math.pow(10, 7)) {
-            return number.toString().padStart(7,'0').slice(0, -4);// 4 5671 -> 004
+            return number.toString().padStart(7, '0').slice(0, -4);// 4 5671 -> 004
 
         } else {
             return SpecialRoundedLargeNum(number);
@@ -394,36 +394,36 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
         o = Math.floor(number).toString();
     }
 
-    let s1 = number.toString().slice(0,1) + '.';
-    let s2 = number.toString().slice(0,2);
+    let s1 = number.toString().slice(0, 1) + '.';
+    let s2 = number.toString().slice(0, 2);
 
     if (level === 3) {
         if (number < Math.pow(10, 3)) {
-        o = Math.floor(number).toString();
+            o = Math.floor(number).toString();
         } else if (number < Math.pow(10, 4)) {
-        o = s1;
+            o = s1;
         } else if (number < Math.pow(10, 5)) {
-        o = s2;
+            o = s2;
         } else if (number < Math.pow(10, 6)) {
-        o = s1;
+            o = s1;
         } else if (number < Math.pow(10, 7)) {
-        o = s2;
+            o = s2;
         } else if (number < Math.pow(10, 8)) {
-        o = s1;
+            o = s1;
         } else if (number < Math.pow(10, 9)) {
-        o = s2;
+            o = s2;
         } else if (number < Math.pow(10, 10)) {
-        o = s1;
+            o = s1;
         } else if (number < Math.pow(10, 11)) {
-        o = s2;
+            o = s2;
         } else if (number < Math.pow(10, 12)) {
-        o = s1;
+            o = s1;
         } else if (number < Math.pow(10, 13)) {
-        o = s2;
+            o = s2;
         } else if (number < Math.pow(10, 14)) {
-        o = s1;
+            o = s1;
         } else if (number < Math.pow(10, 15)) {
-        o = s2;
+            o = s2;
         } else o = Math.floor(number).toString();
     }
     return o;
@@ -435,7 +435,7 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
  * @param number 数字
  * @param level 等级，现在支持lv -1, 0, 1, 2, 3 注意配套使用
  */
-export function getRoundedNumberSmallerStr (number = 0, level = 0) {
+export function getRoundedNumberSmallerStr(number = 0, level = 0) {
     let o;
 
     const SpecialRoundedSmallNum = (number) => {
@@ -447,8 +447,8 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
         } else if (number <= Math.pow(10, 12)) {
             s = -8; //794 5671 1234 -> 5671 1234
 
-        }  else if (number <= Math.pow(10, 16)) {
-            s = -12 ; //794 5671 1234 0000 -> 5671 1234 0000
+        } else if (number <= Math.pow(10, 16)) {
+            s = -12; //794 5671 1234 0000 -> 5671 1234 0000
 
         }
 
@@ -459,7 +459,7 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
 
     if (level === -1) {
         if (number <= Math.pow(10, 4)) {
-            return number.toString().padStart(4,'0');// 000 0671 -> 0671
+            return number.toString().padStart(4, '0');// 000 0671 -> 0671
 
         } else {
             return SpecialRoundedSmallNum(number);
@@ -504,8 +504,8 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
         }
     }
 
-    let s1 = Math.floor(number).toString().slice(2,3)
-    
+    let s1 = Math.floor(number).toString().slice(2, 3)
+
     if (level === 3) {
         if (number < Math.pow(10, 3)) {
             o = unit;
@@ -538,7 +538,7 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
     return o;
 }
 
-function getRoundedNumberUnit (number = 0, level = 0) {
+function getRoundedNumberUnit(number = 0, level = 0) {
     let unit;
     let m = 3;
 
@@ -568,7 +568,7 @@ function getRoundedNumberUnit (number = 0, level = 0) {
 
 //色彩管理。或许开个 color util 会更好？=====================================================================================
 
-export function getStarRatingColor(SR = 0){
+export function getStarRatingColor(SR = 0) {
 
     let color;
     let r0 = 0;
@@ -585,53 +585,93 @@ export function getStarRatingColor(SR = 0){
 
 
     if (SR < 1.25) {
-        r0 = 66; g0 = 144; b0 = 251;
-        r1 = 79; g1 = 192; b1 = 255;
+        r0 = 66;
+        g0 = 144;
+        b0 = 251;
+        r1 = 79;
+        g1 = 192;
+        b1 = 255;
         s = (SR - 0.1) / (1.25 - 0.1)
 
     } else if (SR < 2) {
-        r0 = 79; g0 = 192; b0 = 255;
-        r1 = 79; g1 = 255; b1 = 213;
+        r0 = 79;
+        g0 = 192;
+        b0 = 255;
+        r1 = 79;
+        g1 = 255;
+        b1 = 213;
         s = (SR - 1.25) / (2 - 1.25)
 
     } else if (SR < 2.5) {
-        r0 = 79; g0 = 255; b0 = 213;
-        r1 = 124; g1 = 255; b1 = 79;
+        r0 = 79;
+        g0 = 255;
+        b0 = 213;
+        r1 = 124;
+        g1 = 255;
+        b1 = 79;
         s = (SR - 2) / (2.5 - 2)
 
     } else if (SR < 3.3) {
-        r0 = 124; g0 = 255; b0 = 79;
-        r1 = 246; g1 = 240; b1 = 92;
+        r0 = 124;
+        g0 = 255;
+        b0 = 79;
+        r1 = 246;
+        g1 = 240;
+        b1 = 92;
         s = (SR - 2.5) / (3.3 - 2.5)
 
     } else if (SR < 4.2) {
-        r0 = 246; g0 = 240; b0 = 92;
-        r1 = 255; g1 = 104; b1 = 104;
+        r0 = 246;
+        g0 = 240;
+        b0 = 92;
+        r1 = 255;
+        g1 = 104;
+        b1 = 104;
         s = (SR - 3.3) / (4.2 - 3.3)
 
     } else if (SR < 4.9) {
-        r0 = 255; g0 = 104; b0 = 104;
-        r1 = 255; g1 = 78; b1 = 111;
+        r0 = 255;
+        g0 = 104;
+        b0 = 104;
+        r1 = 255;
+        g1 = 78;
+        b1 = 111;
         s = (SR - 4.2) / (4.9 - 4.2)
 
     } else if (SR < 5.8) {
-        r0 = 255; g0 = 78; b0 = 111;
-        r1 = 198; g1 = 69; b1 = 184;
+        r0 = 255;
+        g0 = 78;
+        b0 = 111;
+        r1 = 198;
+        g1 = 69;
+        b1 = 184;
         s = (SR - 4.9) / (5.8 - 4.9)
 
     } else if (SR < 6.7) {
-        r0 = 198; g0 = 69; b0 = 184;
-        r1 = 101; g1 = 99; b1 = 222;
+        r0 = 198;
+        g0 = 69;
+        b0 = 184;
+        r1 = 101;
+        g1 = 99;
+        b1 = 222;
         s = (SR - 5.8) / (6.7 - 5.8)
 
     } else if (SR < 7.7) {
-        r0 = 101; g0 = 99; b0 = 222;
-        r1 = 24; g1 = 21; b1 = 142;
+        r0 = 101;
+        g0 = 99;
+        b0 = 222;
+        r1 = 24;
+        g1 = 21;
+        b1 = 142;
         s = (SR - 6.7) / (7.7 - 6.7)
 
     } else if (SR < 9) {
-        r0 = 24; g0 = 21; b0 = 142;
-        r1 = 0; g1 = 0; b1 = 0;
+        r0 = 24;
+        g0 = 21;
+        b0 = 142;
+        r1 = 0;
+        g1 = 0;
+        b1 = 0;
         s = (SR - 7.7) / (9 - 7.7)
     }
 
@@ -641,13 +681,13 @@ export function getStarRatingColor(SR = 0){
     g2 = Math.pow((1 - s) * Math.pow(g0, gamma) + s * Math.pow(g1, gamma), 1 / gamma);
     b2 = Math.pow((1 - s) * Math.pow(b0, gamma) + s * Math.pow(b1, gamma), 1 / gamma);
 
-    let colorR = Math.round(r2).toString(16).padStart(2,'0')
-    let colorG = Math.round(g2).toString(16).padStart(2,'0')
-    let colorB = Math.round(b2).toString(16).padStart(2,'0')
+    let colorR = Math.round(r2).toString(16).padStart(2, '0')
+    let colorG = Math.round(g2).toString(16).padStart(2, '0')
+    let colorB = Math.round(b2).toString(16).padStart(2, '0')
 
     color = '#' + colorR + colorG + colorB
 
-    if (SR < 0.1){
+    if (SR < 0.1) {
         color = '#AAAAAA';
     } else if (SR >= 9) {
         color = '#000';
@@ -656,7 +696,7 @@ export function getStarRatingColor(SR = 0){
     return color;
 }
 
-export function getModColor(Mod = ''){
+export function getModColor(Mod = '') {
     let color;
     switch (Mod) {
         case "NF": color = '#00A0E9'; break;
@@ -696,7 +736,7 @@ export function getModColor(Mod = ''){
     return color;
 }
 
-export function getRankColor(Rank = 'F'){
+export function getRankColor(Rank = 'F') {
     let color;
     switch (Rank) {
         case "XH": color = '#FAFAFA'; break;
@@ -714,6 +754,7 @@ export function getRankColor(Rank = 'F'){
 
     return color;
 }
+
 /**
  * @function 获取数据在某组数组中的对应位置的色彩。色彩是PS中蓝色往左到深蓝色。
  * @return {String} 返回色彩
@@ -725,39 +766,49 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
     if (staffArray.length !== 13) throw new Error('staffArray length should be exactly 13')
 
     let colorArr = [];
-    
+
     let colorB2Arr = [
-        '#7FCEF4','#85CCC9','#8AC998','#ACD598',
-        '#CCE199','#FFF899','#FACC89','#F6B380',
-        '#F29B76','#F29C9F','#F19FC2','#C491BF',
-        '#AA89BE','#8F82BC'];
+        '#7FCEF4', '#85CCC9', '#8AC998', '#ACD598',
+        '#CCE199', '#FFF899', '#FACC89', '#F6B380',
+        '#F29B76', '#F29C9F', '#F19FC2', '#C491BF',
+        '#AA89BE', '#8F82BC'];
     let colorB1Arr = [
-        '#00B7EE','#12B4B1','#31B16C','#7FC269',
-        '#B3D465','#FFF45C','#F7B551','#F19149',
-        '#EC6841','#EB6877','#EA68A2','#AD5DA1',
-        '#8957A1','#5F52A0'];
+        '#00B7EE', '#12B4B1', '#31B16C', '#7FC269',
+        '#B3D465', '#FFF45C', '#F7B551', '#F19149',
+        '#EC6841', '#EB6877', '#EA68A2', '#AD5DA1',
+        '#8957A1', '#5F52A0'];
     let colorB0Arr = [
-        '#00A1E9','#009E97','#009944','#23AC39',
-        '#8FC41F','#FFF100','#F39800','#EB6101',
-        '#E60013','#E50050','#E4007F','#930883',
-        '#601986','#1D2088'];
+        '#00A1E9', '#009E97', '#009944', '#23AC39',
+        '#8FC41F', '#FFF100', '#F39800', '#EB6101',
+        '#E60013', '#E50050', '#E4007F', '#930883',
+        '#601986', '#1D2088'];
     let colorB_1Arr = [
-        '#0075A9','#00736D','#007130','#0D7D25',
-        '#648C0C','#B7AB00','#AD6B00','#A84200',
-        '#A40000','#A40036','#A4005B','#6A005F',
-        '#450062','#110B64'];
+        '#0075A9', '#00736D', '#007130', '#0D7D25',
+        '#648C0C', '#B7AB00', '#AD6B00', '#A84200',
+        '#A40000', '#A40036', '#A4005B', '#6A005F',
+        '#450062', '#110B64'];
     let colorB_2Arr = [
-        '#005982','#005853','#005620','#005F16',
-        '#496A00','#8A8100','#834F00','#7F2E00',
-        '#7D0000','#7D0023','#7E0043','#500047',
-        '#32004A','#05004C'];
-    
+        '#005982', '#005853', '#005620', '#005F16',
+        '#496A00', '#8A8100', '#834F00', '#7F2E00',
+        '#7D0000', '#7D0023', '#7E0043', '#500047',
+        '#32004A', '#05004C'];
+
     switch (brightness) {
-        case 2: colorArr = colorB2Arr; break;
-        case 1: colorArr = colorB1Arr; break;
-        case 0: colorArr = colorB0Arr; break;
-        case -1: colorArr = colorB_1Arr; break;
-        case -2: colorArr = colorB_2Arr; break;
+        case 2:
+            colorArr = colorB2Arr;
+            break;
+        case 1:
+            colorArr = colorB1Arr;
+            break;
+        case 0:
+            colorArr = colorB0Arr;
+            break;
+        case -1:
+            colorArr = colorB_1Arr;
+            break;
+        case -2:
+            colorArr = colorB_2Arr;
+            break;
     }
 
     if (base >= staffArray[12]) {
@@ -777,7 +828,7 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
  * @param starRating 星数
  * @param whichData 要哪个数据？可输入0, 1, 2, 3, 4，分别是整数、小数、整数带小数点部分、纯小数部分（两位以下，纯小数部分（一位以下
  */
-export function getStarRatingObject (starRating = 0, whichData = 0){
+export function getStarRatingObject(starRating = 0, whichData = 0) {
 
     //去除小数，保留两位
     let sr = starRating || 0;
@@ -787,22 +838,22 @@ export function getStarRatingObject (starRating = 0, whichData = 0){
     let sr_m = Math.round((sr - sr_b) * 100) / 100;
 
     let text_sr_b;
-    if (sr_m === 0){
+    if (sr_m === 0) {
         text_sr_b = sr_b.toString();
     } else {
         text_sr_b = sr_b + '.';
     }
 
-    let text_sr_m = sr_m.toString().slice(2,4);
+    let text_sr_m = sr_m.toString().slice(2, 4);
     if (text_sr_m.slice(1) === '0') {
-        text_sr_m = text_sr_m.slice(0,1);
+        text_sr_m = text_sr_m.slice(0, 1);
     } else if (text_sr_m === '00') {
         text_sr_m = '';
     }
 
-    let text_sr_mm = sr_m.toString().slice(2,3);
+    let text_sr_mm = sr_m.toString().slice(2, 3);
     if (text_sr_m.slice(1) === '0') {
-        text_sr_m = text_sr_m.slice(0,1);
+        text_sr_m = text_sr_m.slice(0, 1);
     }
 
     if (sr_b >= 20) {
@@ -812,11 +863,16 @@ export function getStarRatingObject (starRating = 0, whichData = 0){
     }
 
     switch (whichData) {
-        case 0: return sr_b;
-        case 1: return sr_m;
-        case 2: return text_sr_b;
-        case 3: return text_sr_m;
-        case 4: return text_sr_mm;
+        case 0:
+            return sr_b;
+        case 1:
+            return sr_m;
+        case 2:
+            return text_sr_b;
+        case 3:
+            return text_sr_m;
+        case 4:
+            return text_sr_mm;
     }
 
 }
@@ -826,7 +882,7 @@ export function getStarRatingObject (starRating = 0, whichData = 0){
  * @return {String} 返回吉祥物名字
  * @param gamemode 游戏模式，'osu' 'taiko' 等
  */
-export function getMascotName (gamemode = 'osu') {
+export function getMascotName(gamemode = 'osu') {
     let //on = 1, //pippi
         tn = 6, //Mocha, Aiko, Alisa, Chirou, Tama, Taikonator
         //cn = 1, //Yuzu
@@ -840,31 +896,41 @@ export function getMascotName (gamemode = 'osu') {
             return 'pippi';
         case 'taiko': {
             switch (t) {
-                case 1 : return 'Mocha';
-                case 2 : return 'Aiko';
-                case 3 : return 'Alisa';
-                case 4 : return 'Chirou';
-                case 5 : return 'Tama';
-                case 6 : return 'Taikonator';
+                case 1 :
+                    return 'Mocha';
+                case 2 :
+                    return 'Aiko';
+                case 3 :
+                    return 'Alisa';
+                case 4 :
+                    return 'Chirou';
+                case 5 :
+                    return 'Tama';
+                case 6 :
+                    return 'Taikonator';
             }
             break;
         }
-        case 'catch': return 'Yuzu';
+        case 'catch':
+            return 'Yuzu';
         case 'mania': {
             switch (m) {
-                case 1 : return 'Mani';
-                case 2 : return 'Mari';
+                case 1 :
+                    return 'Mani';
+                case 2 :
+                    return 'Mari';
             }
             break;
         }
     }
 }
+
 /**
  * @function 提供吉祥物名字对应的链接
  * @return {String} 返回吉祥物链接
  * @param mascotname 吉祥物名字
  */
-export function getMascotPath (mascotname = 'pippi') {
+export function getMascotPath(mascotname = 'pippi') {
     let i;
     let path;
 
@@ -880,7 +946,6 @@ export function getMascotPath (mascotname = 'pippi') {
         case 'Mani': i = 8; break;
         case 'Mari': i = 8; break;
     }
-
     path = getRandom(mascot_pic_sum_arr[i]);
 
     return `Mascots/${mascotname}_${path}.png`;
@@ -890,7 +955,7 @@ export function getMascotPath (mascotname = 'pippi') {
  * @function 获取随机的头图路径
  * @return {String} 返回头图路径
  */
-export function getRandomBannerPath () {
+export function getRandomBannerPath() {
     let i = getRandom(bannerTotal)
     return `Banner/b${i}.png`
 }
@@ -899,17 +964,18 @@ export function getRandomBannerPath () {
  * @function 获取随机的吉祥物背景路径
  * @return {String} 返回吉祥物背景路径
  */
-export function getRandomMascotBGPath () {
+export function getRandomMascotBGPath() {
     let i = getRandom(mascotBGTotal)
     return `Background/${i}.png`
 }
+
 /**
  * @function 修整数组，太短则在前面补0，太长则卡掉前面的
  * @return {Number[]} 返回裁剪好的数组
  * @param arr 需要裁剪的数组
  * @param target_length 需要的数组长度
  */
-export function modifyArrayToFixedLength (arr = [0], target_length = 0) {
+export function modifyArrayToFixedLength(arr = [0], target_length = 0) {
     if (arr.length < target_length) {
         for (let i = arr.length; i > 0; i--) {
             arr.unshift(0);
@@ -920,13 +986,14 @@ export function modifyArrayToFixedLength (arr = [0], target_length = 0) {
         return arr.slice(arr.length - target_length);
     }
 }
+
 /**
  * @function 取最大值数组，太短则在前面补0，太长则取最大值，继承于DataUtil: get group 26方法
  * @return {Number[]} 返回处理好的数组
  * @param arr 需要处理的数组
  * @param target_length 需要的数组长度
  */
-export function maximumArrayToFixedLength (arr = [0], target_length = 0) {
+export function maximumArrayToFixedLength(arr = [0], target_length = 0) {
     if (arr.length < target_length) {
         for (let i = arr.length; i > 0; i--) {
             arr.unshift(0);
@@ -961,7 +1028,7 @@ export function maximumArrayToFixedLength (arr = [0], target_length = 0) {
  * @param gamemode 默认游戏模式，osu taiko catch mania
  * @param level 等级，0为不变，1为全写 osu!standard，-1为简写 o t m c
  */
-export function getGameMode (gamemode = 'osu', level = 0) {
+export function getGameMode(gamemode = 'osu', level = 0) {
     switch (level) {
         case -1: switch (gamemode) {
             case 'osu': return 'o';
@@ -977,36 +1044,45 @@ export function getGameMode (gamemode = 'osu', level = 0) {
         }
     }
 }
+
 /**
  * @function 获取谱面状态的图片链接
  */
-export function getMapStatusPath (status = 'notsubmitted'){
+export function getMapStatusPath(status = 'notsubmitted') {
     switch (status) {
-        case "ranked": return 'object-beatmap-ranked.png';
-        case "approved": return 'object-beatmap-ranked.png';
-        case "qualified": return 'object-beatmap-qualified.png';
-        case "loved": return 'object-beatmap-loved.png';
-        case "pending": return 'object-beatmap-unranked.png';
-        case "workinprogress": return 'object-beatmap-unranked.png';
-        case "notsubmitted": return 'object-beatmap-unranked.png';
-        case "graveyard": return 'object-beatmap-unranked.png';
+        case "ranked":
+            return 'object-beatmap-ranked.png';
+        case "approved":
+            return 'object-beatmap-ranked.png';
+        case "qualified":
+            return 'object-beatmap-qualified.png';
+        case "loved":
+            return 'object-beatmap-loved.png';
+        case "pending":
+            return 'object-beatmap-unranked.png';
+        case "workinprogress":
+            return 'object-beatmap-unranked.png';
+        case "notsubmitted":
+            return 'object-beatmap-unranked.png';
+        case "graveyard":
+            return 'object-beatmap-unranked.png';
     }
 }
 
 //获取现在的时间 (UTC+8)
-export function getNowTimeStamp () {
+export function getNowTimeStamp() {
     return moment().format("YYYY-MM-DD kk:mm:ss.SSS Z");
-        /*
-    const t = new Date;
-        t.getFullYear() + '-' +
-        t.getMonth() + '-' +
-        t.getDay() + ' ' +
-        t.getHours() + ':' +
-        t.getMinutes() + ':' +
-        t.getSeconds() + '.' +
-        t.getMilliseconds();
+    /*
+const t = new Date;
+    t.getFullYear() + '-' +
+    t.getMonth() + '-' +
+    t.getDay() + ' ' +
+    t.getHours() + ':' +
+    t.getMinutes() + ':' +
+    t.getSeconds() + '.' +
+    t.getMilliseconds();
 
-         */
+     */
 }
 
 /**
@@ -1014,7 +1090,7 @@ export function getNowTimeStamp () {
  * @return {String[]}0 - 比赛名称 1 - 左边队伍 2 - 右边队伍
  * @param text 输入比赛名字
  */
-export function getMatchNameSplitted (text = ''){
+export function getMatchNameSplitted(text = '') {
     let out = []
     let name = '';
     let team1 = '';
@@ -1023,7 +1099,7 @@ export function getMatchNameSplitted (text = ''){
     let position = 0;
 
     for (let i = 0; i < text.length; i++) {
-        let char = text.slice(i, i+1);
+        let char = text.slice(i, i + 1);
 
         if (char === '：' || char === ':') {
             name = text.slice(0, i);
@@ -1060,7 +1136,7 @@ export function randomString(e) {
     return n
 }
 
-class SaveFiles {
+export class SaveFiles {
     files = [];
     tmpDir = '';
 
@@ -1300,6 +1376,6 @@ export function delMod(modInt = 0, mod = '') {
     return Mod[mod] ? modInt & ~Mod[mod] : modInt;
 }
 
-export function getRandom (range = 0) {
+export function getRandom(range = 0) {
     return Math.floor(Math.random() * range) + 1;
 }
