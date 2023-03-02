@@ -25,8 +25,7 @@ export async function card_A2(data = {
     let reg_background = /(?<=<g style="clip-path: url\(#clippath-CA2-1\);">)/;
     let reg_top_icons = /(?<=<g id="TopIcons">)/;
 
-    // 文字定义
-
+    //赋予字体
     let title_font;
     if (data.title_font === 'PuHuiTi') {
         title_font = PuHuiTi;
@@ -34,13 +33,34 @@ export async function card_A2(data = {
         title_font = torus;
     }
 
-    let title1 = title_font.getTextPath(data.title1, 20, 46.6, 36, 'left baseline', '#fff');
-    let title2 = title_font.getTextPath(data.title2, 20, 77.4, 24, 'left baseline', '#fff');
-    let title3 = title_font.getTextPath(data.title3, 20, 107.4, 24, 'left baseline', '#fff');
+    // 宽度限制
+    let title1_maxWidth = 390;
+    if (data.map_status) title1_maxWidth = 350;
+
+    let title_maxWidth = 390;
+
+    let right3_width = title_font.getTextWidth(data.right3b, 60) + title_font.getTextWidth(data.right3m, 48);
+    let left_maxWidth = 390 - right3_width;
+
+    // 文字定义
+
+    let title1 = title_font.getTextPath(
+        title_font.cutStringTail(data.title1, 36, title1_maxWidth),
+        20, 46.6, 36, 'left baseline', '#fff');
+    let title2 = title_font.getTextPath(
+        title_font.cutStringTail(data.title2, 24, title_maxWidth),
+        20, 77.4, 24, 'left baseline', '#fff');
+    let title3 = title_font.getTextPath(
+        title_font.cutStringTail(data.title3, 24, title_maxWidth),
+        20, 107.4, 24, 'left baseline', '#fff');
 
     let left1 = torus.getTextPath(data.left1, 20, 140.836, 24, 'left baseline', '#fff');
-    let left2 = torus.getTextPath(data.left2, 20, 165.836, 24, 'left baseline', '#fff');
-    let left3 = torus.getTextPath(data.left3, 20, 191.836, 24, 'left baseline', '#fff');
+    let left2 = torus.getTextPath(
+        torus.cutStringTail(data.left2, 20, left_maxWidth),
+        20, 165.836, 24, 'left baseline', '#fff');
+    let left3 = torus.getTextPath(
+        torus.cutStringTail(data.left3, 20, left_maxWidth),
+        20, 191.836, 24, 'left baseline', '#fff');
 
     let right1 = torus.getTextPath(data.right1, 420, 114.836, 24, 'right baseline', '#fff');
     let right2 = torus.getTextPath(data.right2, 420, 141.836, 24, 'right baseline', '#fff');

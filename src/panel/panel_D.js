@@ -1,13 +1,23 @@
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/cardA1.js";
 import {
+    getFlagPath,
     getGameMode,
-    getMascotName, getMascotPath, getNowTimeStamp, getRandomBannerPath, getRandomMascotBGPath,
-    getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getMascotName,
+    getMascotPath,
+    getNowTimeStamp,
+    getRandomBannerPath,
+    getRandomMascotBGPath,
+    getRoundedNumberLargerStr,
+    getRoundedNumberSmallerStr,
     implantImage,
     implantSvgBody,
-    InsertSvgBuilder, maximumArrayToFixedLength, modifyArrayToFixedLength,
-    readTemplate, replaceText, torus
+    InsertSvgBuilder,
+    maximumArrayToFixedLength,
+    modifyArrayToFixedLength,
+    readTemplate,
+    replaceText,
+    torus
 } from "../util.js";
 import {card_J} from "../card/cardJ.js";
 import {card_K} from "../card/cardK.js";
@@ -17,7 +27,6 @@ export async function panel_D (data = {
     card_A1: {
         background: 'PanelObject/A_CardA1_BG.png',
         avatar: 'PanelObject/A_CardA1_Avatar.png',
-        country_flag: 'PanelObject/A_CardA1_CountryFlag.png',
         sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
         sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
         name: 'Muziyami',
@@ -128,7 +137,7 @@ export async function panel_D (data = {
     },
 
     // 面板文字
-    index_powered: 'powered by Yumubot // UserInfo (!ymi)',
+    index_powered: 'powered by Yumubot v0.3.0 EA // UserInfo (!ymi)',
     index_request_time: 'request time: ' + getNowTimeStamp(),
     index_panel_name: 'I v3.6',
 

@@ -1,4 +1,11 @@
-import {implantImage, replaceText, torus} from "../util.js";
+import {
+    getExportFileV3Path, getModColor,
+    getRoundedNumberLargerStr,
+    getRoundedNumberSmallerStr,
+    implantImage,
+    replaceText,
+    torus
+} from "../util.js";
 
 export const LABEL_OPTION = {
     ACC: {
@@ -82,8 +89,7 @@ export const LABEL_OPTION = {
 //label_D 与 label_E 一样
 
 export async function label_E(data = {
-    icon: LABEL_OPTION.ACC,
-    icon_title: 'Accuracy',
+    ...LABEL_OPTION.ACC,
     remark: '-1.64%',
     data_b: '98',
     data_m: '.36%',
@@ -118,13 +124,81 @@ export async function label_E(data = {
         let remark = torus.getTextPath(data.remark, 200, 14.88, 18, "right baseline", "#646464");
         svg = replaceText(svg, remark, reg_text);
     }
-    // ${data.icon} 就是字符串化 data.icon ,另外可能你的参数层级出了问题,看下面的注释
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_text)// 注意 LABEL_OPTION.xx = {icon:"xx.jpg", icon_title: "XX"}
-    // 所以此方法的默认参数是 {icon: {icon:"xx.jpg", icon_title: "ACC"}, icon_title: "ACC"}
-    // 而你大部分的传入是 {icon:"xx.jpg", icon_title: "ACC"}
-    // 我猜测你想展开到data里,看最底下的注释
+    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_text)
 
-    // let out_svg = new InsertSvgBuilder(svg).insertImage(data.icon, reg_icon);
+    return svg.toString();
+}
+
+export async function label_F1(data = {
+    avatar: 'PanelObject/F_LabelF1_Avatar.png',
+    name: 'Guozi on osu',
+    mods_arr: [],
+    score: 268397,
+    rank: 6,
+    maxWidth: 100,
+    label_color: '#46393f',
+
+}, reuse = false) {
+    //导入模板
+    let svg = `  <defs>
+    <clipPath id="clippath-LF1-1">
+      <circle cx="50" cy="50" r="50" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Avatar">
+    <circle cx="50" cy="50" r="50" style="fill: #46393f;"/>
+    <g style="clip-path: url(#clippath-LF1-1);">
+    </g>
+  </g>
+  <g id="Mods">
+  </g>
+  <g id="Label">
+  </g>
+  <g id="Text">
+  </g>`
+
+    //正则
+    let reg_text = /(?<=<g id="Text">)/;
+    let reg_mod = /(?<=<g id="Mods">)/;
+    let reg_label = /(?<=<g id="Label">)/;
+    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF1-1\);">)/;
+
+    //插入模组
+    let insertMod = (mod, i) => {
+        let offset_x = 100 - i * 10;
+        let mod_color = getModColor(mod);
+
+        return `<circle id="Mod${i}" cx="${offset_x}" cy="90" r="10" style="fill: ${mod_color};"/>`;
+    }
+
+    let mods_arr = data.mods_arr ? data.mods_arr : ['']
+
+    mods_arr.forEach((val, i) => {
+        svg = replaceText(svg, insertMod(val, i), reg_mod);
+    });
+
+    //定义文本
+    let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
+    let name = torus.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
+
+    let score_b = getRoundedNumberLargerStr(data.score || 0, 1);
+    let score_m = getRoundedNumberSmallerStr(data.score || 0, 1);
+
+    let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', '#fff');
+
+    let rank = torus.getTextPath(data.rank.toString() || '0', 15, 15.877, 18, 'center baseline', '#fff');
+
+    let label_color = `
+    <rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${data.label_color || '#46393f'};"/>`;
+
+    //插入文本
+    svg = replaceText(svg, name, reg_text);
+    svg = replaceText(svg, score, reg_text);
+    svg = replaceText(svg, rank, reg_text);
+    svg = replaceText(svg, label_color, reg_label);
+
+    //插入图片
+    svg = implantImage(svg, 100,100,0,0,1, data.avatar || 'avatar-guest.png', reg_avatar);
 
     return svg.toString();
 }

@@ -1,4 +1,4 @@
-import {get2SizeTorusTextPath, getExportFileV3Path, implantImage, readTemplate, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, implantImage, readTemplate, replaceText, torus} from "../util.js";
 
 export async function card_H(data = {
     background: '',
@@ -48,7 +48,7 @@ export async function card_H(data = {
     let mods_arr = data.mods_arr ? data.mods_arr : ['']
     let mods_arr_length = mods_arr.length;
 
-    if (0 < mods_arr_length <= 2) {
+    if (mods_arr_length <= 2 && mods_arr_length > 0) {
         mods_arr.forEach((val, i) => {
             svg = replaceText(svg, insertMod(val, 2 * i), reg_mod);
         });
@@ -72,7 +72,7 @@ export async function card_H(data = {
     let label3 = torus.getTextPath(data.label3 || '', 710 - label3_width / 2, 34.836, 24, 'center baseline', '#fff');
     let label4 = torus.getTextPath(data.label4 || '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
 
-    let index = get2SizeTorusTextPath(
+    let index = torus.get2SizeTextPath(
         data.index_b, data.index_m,
         data.index_b_size || 48, data.index_m_size || 36, 815,73.672,'center baseline', data.color_index)
 
