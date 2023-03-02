@@ -3,6 +3,8 @@ import formidable from "express-formidable";
 import {CACHE_PATH, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_E} from "./src/panel/panel_E.js";
 import {panel_H} from "./src/panel/panel_H.js";
+import {panel_D} from "./src/panel/panel_D.js";
+import fs from "fs";
 
 const app = express();
 app.use(formidable({
@@ -33,33 +35,133 @@ app.post('/panel_E', async (req, res) => {
 })
 
 app.post('/panel_D', async (req, res) => {
+    const saveFile = new SaveFiles();
     try {
         console.log(req.fields);
-        let data = req.fields;
-        const f = new SaveFiles();
+        console.log(req.fields['user']['rank_history']['history']);
+        let user = req.fields?.user;
         const card_a1 = {
-            background: f.save(await readNetImage(data.cover_url)),
-            avatar: f.save(await readNetImage(data.avatar_url)),
-            sub_icon1: data['support_level'] > 0 ? 'PanelObject/A_CardA1_SubIcon1.png' : '',
+            background: saveFile.save(await readNetImage(user.cover_url)),
+            avatar: saveFile.save(await readNetImage(user.avatar_url)),
+            sub_icon1: user['support_level'] > 0 ? 'PanelObject/A_CardA1_SubIcon1.png' : '',
             sub_icon2: '',
-            name: data['username'],
-            rank_global: data['globalRank'],
-            rank_country: data['countryRank'],
-            country: data?.country['countryCode'],
-            acc: data['accuracy'],
-            level: data['levelProgress'],
-            progress: data['accuracy'],
-            pp: data['pp'],
+            name: user['username'],
+            rank_global: user['globalRank'],
+            rank_country: user['countryRank'],
+            country: user?.country['countryCode'],
+            acc: user['accuracy'],
+            level: user['levelProgress'],
+            progress: user['accuracy'],
+            pp: user['pp'],
         };
 
-        const label_data = {}
+        const label_data = {
+            rks: {
+                data: user?.statistics?.ranked_score,
+            },
+            tts: {
+                data: user?.statistics?.total_score,
+            },
+            pc: {
+                data: user?.statistics?.total_count,
+            },
+            pt: {
+                data_b: '0.',
+                data_m: '0d',
+            },
+            mpl: {
+                data: user?.beatmap_playcounts_cont,
+            },
+            rep: {
+                data: user?.statistics?.replays_watched_by_others,
+            },
+            fan: {
+                data: user?.follower_count,
+            },
+            tth: {
+                data: user?.totalHits,
+            },
+        }
 
-        const png = readImage("");
-        // res.set('Content-Type', 'image/png');
-        res.send("ok");
+        if (user?.statistics?.total_score) {
+            let d = Math.floor(user?.statistics?.total_score / 86400);
+            let d_f = Math.floor(4285217 % 86400 / 864).toString().padStart(2, '0')
+            label_data.pt.data_b = `${d}.`;
+            label_data.pt.data_m = `${d_f}d`;
+        }
+
+        let reList = req.fields['re-list'];
+        const recent_play = [];
+        for (const re of reList) {
+            let d = {
+                map_cover: saveFile.save(await readNetImage(re.beatmapset.covers.cover)),
+                map_background: saveFile.save(await readNetImage(re.beatmapset.covers.cover)),
+                map_title_romanized: re.beatmapset.title_unicode,
+                map_difficulty_name: re.beatmap.version,
+                star_rating: re.beatmap.difficulty_rating,
+                score_rank: re.rank,
+                accuracy: re.accuracy, //%
+                combo: re.max_combo, //x
+                mods_arr: re.mods,
+                pp: re.pp //pp
+            }
+            recent_play.push(d);
+        }
+
+        let bpList = req.fields['bp-list'];
+        const bp_list = [];
+
+        for (const bp of bpList) {
+            let d = {
+                map_background: saveFile.save(await readNetImage(bp.beatmapset.covers.cover)),
+                star_rating: bp.beatmap.difficulty_rating,
+                score_rank: bp.rank,
+                bp_pp: bp.pp
+            }
+        }
+
+        const op = {
+            rank_country: user?.statistics?.country_rank,
+            rank_global: user?.statistics?.global_rank,
+            country: user?.country['countryCode'],
+            bonus_pp: 416.6667 * (1 - 0.9994 ** user?.beatmap_playcounts_cont),
+            om4k_pp: user?.statistics?.pp4K,
+            om7k_pp: user?.statistics?.pp4K,
+            game_mode: user.playmode, // osu taiko catch mania
+
+            grade_XH: user?.statistics?.ssh,
+            grade_X: user?.statistics?.ss,
+            grade_SH: user?.statistics?.sh,
+            grade_S: user?.statistics?.s,
+            grade_A: user?.statistics?.a,
+
+            user_lv: user.levelCurrent,
+            user_progress: user.levelCurrent, //%
+
+            user_bp_arr: req.fields['bp-time'],
+            user_ranking_arr: user?.rank_history,
+            user_pc_arr: [],
+            user_pc_last_date: '2022-05-01'
+        }
+
+        const d_data = {
+            ...op,
+            card_A1: card_a1,
+            label_data: label_data,
+            recent_play: recent_play,
+            bp_list: bp_list,
+        }
+        const png = await panel_D(d_data);
+        res.set('Content-Type', 'image/png');
+        res.send(png);
+        fs.writeFileSync("image/out/panel_D.png", png);
     } catch (e) {
+        console.error(e);
         res.status(500).send(e.stack);
+    } finally {
+        saveFile.remove();
     }
+    res.end();
 })
 
 app.post('/panel_H', async (req, res) => {
