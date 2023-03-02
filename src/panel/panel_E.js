@@ -16,7 +16,7 @@ import {
     getNowTimeStamp,
     getMapStatusPath
 } from "../util.js";
-import {card_A1} from "../card/cardA1.js";
+import {card_A1} from "../card/card_A1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
 
 export async function panel_E(data = {
@@ -494,11 +494,11 @@ export async function panel_E(data = {
     svg = replaceText(svg, map_public_rating, reg_index);
     svg = replaceText(svg, map_retryfail_percent, reg_index);
 
-    // 插入模组
-    let insertMod = (mod, i) => {
-        let offset_x = 1760 - i * 50;
+    // 插入模组，因为先插的在上面，所以从左边插
+    let insertMod = (mod, i, offset_x) => {
+        let x = offset_x + i * 50;
 
-        return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
+        return `<image transform="translate(${x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
     }
 
     let mods_arr = data.mods_arr ? data.mods_arr : ['']
@@ -506,11 +506,11 @@ export async function panel_E(data = {
 
     if (mods_arr_length <= 2 && mods_arr_length > 0) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, 2 * i), reg_mod);
+            svg = replaceText(svg, insertMod(val, 2 * i, 1760 - (mods_arr_length - 1) * 100), reg_mod);
         });
     } else if (mods_arr_length > 2) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, i), reg_mod);
+            svg = replaceText(svg, insertMod(val, i, 1760 - (mods_arr_length - 1) * 50), reg_mod);
         });
     }
 

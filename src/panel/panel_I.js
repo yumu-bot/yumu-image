@@ -1,6 +1,6 @@
 import {InsertSvgBuilder, readTemplate, replaceText, torus} from "../util.js";
-import {card_H} from "../card/cardH.js";
-import {card_A2} from "../card/cardA2.js";
+import {card_H} from "../card/card_H.js";
+import {card_A2} from "../card/card_A2.js";
 
 export async function panel_I(data = {
     // A2卡

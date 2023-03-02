@@ -9,8 +9,8 @@ import {
     replaceText,
     torus
 } from "../util.js";
-import {card_H} from "../card/cardH.js";
-import {card_A2} from "../card/cardA2.js";
+import {card_H} from "../card/card_H.js";
+import {card_A2} from "../card/card_A2.js";
 
 export async function panel_C(data = {
     // A2卡
@@ -125,7 +125,23 @@ export async function panel_C(data = {
             class_color: '#fff', //部分字体需要显示为黑色
             label_mvp: '',
         }],
-        none: [],// 没分队的
+        none: [{
+            team: 'none',
+            team_color: '#a1a1a1',
+            player_name: 'Fushimi Rio',
+            player_avatar: 'PanelObject/I_CardH_Avatar.png',
+            player_banner: 'PanelObject/I_CardH_BG.png',
+            player_score: 57434,
+            player_win: 5,
+            player_lose: 1,
+            player_rank: 4,
+            player_rws: 32.44,
+            player_mra: 0.97,
+            mra_color: '#fefefe',
+            label_class: 'Fia',
+            class_color: '#000',
+            label_mvp: '',
+        }],// 没分队的
     },
 
     // 面板文字
@@ -226,7 +242,7 @@ export async function panel_C(data = {
         rowSum += arr2['none'].length / 2;
 
         if (tianxuanzhizi){
-            await implantCardH(tianxuanzhizi, rowSum + 1, 1);
+            await implantCardH(tianxuanzhizi, rowSum + 1, 1,1);
             rowSum ++;
         }
         rowTotal = rowSum;
