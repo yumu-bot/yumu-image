@@ -8,8 +8,8 @@ import {
     replaceText,
     torus
 } from "../util.js";
-import {card_A1} from "../card/cardA1.js";
-import {card_D} from "../card/cardD.js";
+import {card_A1} from "../card/card_A1.js";
+import {card_D} from "../card/card_D.js";
 
 export async function panel_H (data = {
     // A1卡 应该是A2，但是管他呢

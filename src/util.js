@@ -383,11 +383,7 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
 
     //旧 level
 
-    if (level === 1) {
-        while (number >= 100 || number <= -100) { number /= 100;}
-    }
-
-    if (level === 2) {
+    if (level === 1 || level === 2) {
         while (number >= 1000 || number <= -1000) { number /= 1000;}
     }
 
@@ -485,16 +481,27 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
     let unit = getRoundedNumberUnit(number, level)
 
     if (level === 1) {
-        while (number >= 100 || number <= -100) { number /= 100; }
-        o = (number - Math.floor(number)).toString().slice(2,4);
-        return o + unit;
+        while (number >= 1000 || number <= -1000) { number /= 1000; }
+        let numStr = number.toString();
+
+        if (numStr.indexOf('.') === -1){
+            return unit;
+        } else {
+            o = numStr.slice(numStr.indexOf('.') + 1,numStr.indexOf('.') + 3);
+            return o + unit;
+        }
     }
 
     if (level === 2) {
         while (number >= 1000 || number <= -1000) { number /= 1000; }
-        o = (number - Math.floor(number)).toString().slice(2,6);
+        let numStr = number.toString();
 
-        return o + unit;
+        if (numStr.indexOf('.') === -1){
+            return unit;
+        } else {
+            o = numStr.slice(numStr.indexOf('.') + 1,numStr.indexOf('.') + 5);
+            return o + unit;
+        }
     }
 
     let s1 = Math.floor(number).toString().slice(2,3)
@@ -533,7 +540,7 @@ export function getRoundedNumberSmallerStr (number = 0, level = 0) {
 
 function getRoundedNumberUnit (number = 0, level = 0) {
     let unit;
-    let m = 1 + level;
+    let m = 3;
 
     if (level < 1 || level > 3) return '';
 

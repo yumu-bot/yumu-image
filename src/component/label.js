@@ -164,17 +164,18 @@ export async function label_F1(data = {
     let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF1-1\);">)/;
 
     //插入模组
-    let insertMod = (mod, i) => {
-        let offset_x = 100 - i * 10;
+    let insertMod = (mod, i, offset_x) => {
+        let x = offset_x + i * 10;
         let mod_color = getModColor(mod);
 
-        return `<circle id="Mod${i}" cx="${offset_x}" cy="90" r="10" style="fill: ${mod_color};"/>`;
+        return `<circle id="Mod${i}" cx="${x}" cy="90" r="10" style="fill: ${mod_color};"/>`;
     }
 
     let mods_arr = data.mods_arr ? data.mods_arr : ['']
+    let mods_arr_length = mods_arr.length;
 
     mods_arr.forEach((val, i) => {
-        svg = replaceText(svg, insertMod(val, i), reg_mod);
+        svg = replaceText(svg, insertMod(val, i, 100 - mods_arr_length * 10), reg_mod);
     });
 
     //定义文本

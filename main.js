@@ -2,14 +2,14 @@ import fs from "fs";
 import express from "express";
 import formidable from "express-formidable";
 import {CACHE_PATH, readImage} from "./src/util.js";
-import {panel_C} from "./src/panel/Panel_C.js";
+import {panel_C} from "./src/panel/panel_C.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
 import {panel_F} from "./src/panel/panel_F.js";
 import {panel_H} from "./src/panel/panel_H.js";
 import {panel_I} from "./src/panel/panel_I.js";
-import {card_D} from "./src/card/cardD.js";
-import {card_H} from "./src/card/cardH.js";
+import {card_D} from "./src/card/card_D.js";
+import {card_H} from "./src/card/card_H.js";
 
 //    已经部署在机器上了,提交前请注释掉测试代码
 /*

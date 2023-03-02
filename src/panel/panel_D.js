@@ -1,5 +1,5 @@
 import {label_E, LABEL_OPTION} from "../component/label.js";
-import {card_A1} from "../card/cardA1.js";
+import {card_A1} from "../card/card_A1.js";
 import {
     getFlagPath,
     getGameMode,
@@ -19,8 +19,8 @@ import {
     replaceText,
     torus
 } from "../util.js";
-import {card_J} from "../card/cardJ.js";
-import {card_K} from "../card/cardK.js";
+import {card_J} from "../card/card_J.js";
+import {card_K} from "../card/card_K.js";
 
 export async function panel_D (data = {
     // A1卡
