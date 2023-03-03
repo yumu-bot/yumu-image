@@ -129,8 +129,8 @@ export async function panel_D(data = {
     //返回上面数组最后一个元素对应的年月日
     user_pc_last_date: '2022-05-01',
 
-    user_lv: '24',
-    user_progress: '98', //%
+    user_lv: 24, //和A卡一致
+    user_progress: 98, //和A卡一致
 
 
 }, reuse = false) {
