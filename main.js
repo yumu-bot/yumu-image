@@ -49,7 +49,7 @@ app.post('/panel_D', async (req, res) => {
             rank_global: user['globalRank'],
             rank_country: user['countryRank'],
             country: user?.country['countryCode'],
-            acc: user['accuracy'],
+            acc: Math.floor(user['accuracy'] * 100) / 100,
             level: user['levelCurrent'],
             progress: user['levelProgress'],
             pp: user['pp'],
@@ -97,7 +97,7 @@ app.post('/panel_D', async (req, res) => {
             let d = {
                 map_cover: cover,
                 map_background: cover,
-                map_title_romanized: re.beatmapset.title_unicode,
+                map_title_romanized: re.beatmapset.title,
                 map_difficulty_name: re.beatmap.version,
                 star_rating: re.beatmap.difficulty_rating,
                 score_rank: re.rank,
