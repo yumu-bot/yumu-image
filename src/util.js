@@ -311,7 +311,7 @@ export function replaceText(base = '', replace = '', reg = /.*/) {
 }
 
 export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
-    let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${getExportFileV3Path(image)}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
+    let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
     return base.replace(reg, replace);
 }
 
@@ -1174,21 +1174,21 @@ export function getGameMode(gamemode = 'osu', level = 0) {
 export function getMapStatusPath(status = 'notsubmitted') {
     switch (status) {
         case "ranked":
-            return 'object-beatmap-ranked.png';
+            return getExportFileV3Path('object-beatmap-ranked.png');
         case "approved":
-            return 'object-beatmap-ranked.png';
+            return getExportFileV3Path('object-beatmap-ranked.png');
         case "qualified":
-            return 'object-beatmap-qualified.png';
+            return getExportFileV3Path('object-beatmap-qualified.png');
         case "loved":
-            return 'object-beatmap-loved.png';
+            return getExportFileV3Path('object-beatmap-loved.png');
         case "pending":
-            return 'object-beatmap-unranked.png';
+            return getExportFileV3Path('object-beatmap-unranked.png');
         case "workinprogress":
-            return 'object-beatmap-unranked.png';
+            return getExportFileV3Path('object-beatmap-unranked.png');
         case "notsubmitted":
-            return 'object-beatmap-unranked.png';
+            return getExportFileV3Path('object-beatmap-unranked.png');
         case "graveyard":
-            return 'object-beatmap-unranked.png';
+            return getExportFileV3Path('object-beatmap-unranked.png');
     }
 }
 
