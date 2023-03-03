@@ -3,7 +3,6 @@ import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
-import {panel_F} from "./src/panel/panel_F.js";
 import {panel_H} from "./src/panel/panel_H.js";
 import fs from "fs";
 
@@ -75,7 +74,7 @@ app.post('/panel_D', async (req, res) => {
             rank_global: user['globalRank'],
             rank_country: user['countryRank'],
             country: user?.country['countryCode'],
-            acc: user['accuracy'],
+            acc: Math.floor(user['accuracy'] * 100) / 100,
             level: user['levelCurrent'],
             progress: user['levelProgress'],
             pp: user['pp'],
@@ -123,7 +122,7 @@ app.post('/panel_D', async (req, res) => {
             let d = {
                 map_cover: cover,
                 map_background: cover,
-                map_title_romanized: re.beatmapset.title_unicode,
+                map_title_romanized: re.beatmapset.title,
                 map_difficulty_name: re.beatmap.version,
                 star_rating: re.beatmap.difficulty_rating,
                 score_rank: re.rank,
