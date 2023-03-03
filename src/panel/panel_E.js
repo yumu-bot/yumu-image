@@ -1,20 +1,20 @@
 import {
+    exportPng,
     extra,
-    InsertSvgBuilder,
-    PuHuiTi,
     getExportFileV3Path,
-    readTemplate,
-    replaceText,
-    torus,
-    implantImage,
-    implantSvgBody,
-    getStarRatingColor,
+    getMapStatusPath,
+    getNowTimeStamp,
+    getRandomBannerPath,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
-    getRandomBannerPath,
+    getStarRatingColor,
     getStarRatingObject,
-    getNowTimeStamp,
-    getMapStatusPath
+    implantImage,
+    implantSvgBody,
+    PuHuiTi,
+    readTemplate,
+    replaceText,
+    torus
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -567,64 +567,5 @@ export async function panel_E(data = {
     svg = implantImage(svg,18,16,746,338,1,data.map_playcount,reg_map_playcount);
     svg = implantImage(svg,50,50,683,334,1,status,reg_map_status);
 
-    //console.timeEnd('newSVG')
-    let out_svg = new InsertSvgBuilder(svg)
-
-    // 插入图片和部件（旧方法
-    /*
-    let out_svg = new InsertSvgBuilder(svg)
-        .insertImage(data.banner, reg_banner)
-        .insertImage(data.judge_background, reg_judge_background)
-        .insertImage(data.score_rank, reg_score_rank)
-        .insertImage(data.map_background, reg_map_background)
-        .insertImage(data.map_hexagon, reg_map_hexagon)
-        .insertImage(data.map_favorite, reg_map_favorite)
-        .insertImage(data.map_playcount, reg_map_playcount)
-        .insertImage(data.map_status, reg_map_status);
-    data.mods_arr.forEach((v) => {
-        out_svg.insertImage(readImage(getExportFileV3Path('Mods/' + v + '.png')), `\${${v}}`);
-    })
-        */
-
-    //console.timeEnd("img");
-
-    /*
-    console.time("svg");
-    console.time("svgA1");
-    await out_svg.insertSvg(card_A1_impl, 40, 40);
-    console.timeEnd("svgA1");
-    console.time("svg2");
-    await out_svg.insertSvg(label_acc, 1230, 680);
-    console.timeEnd("svg2");
-    console.time("svg3");
-    await out_svg.insertSvg(label_combo, 1440, 680);
-    console.timeEnd("svg3");
-    console.time("svg4");
-    await out_svg.insertSvg(label_pp, 1650, 680);
-    console.timeEnd("svg4");
-    console.time("svg5");
-    await out_svg.insertSvg(label_bpm, 1440, 790);
-    console.timeEnd("svg5");
-    console.time("svg6");
-    await out_svg.insertSvg(label_length, 1650, 790);
-    console.timeEnd("svg6");
-    console.time("svg7");
-    await out_svg.insertSvg(label_cs, 1440, 870);
-    console.timeEnd("svg7");
-    console.time("svg8");
-    await out_svg.insertSvg(label_ar, 1650, 870);
-    console.timeEnd("svg8");
-    console.time("svg9");
-    await out_svg.insertSvg(label_od, 1440, 950);
-    console.timeEnd("svg9");
-    console.time("svg10");
-    await out_svg.insertSvg(label_hp, 1650, 950);
-    console.timeEnd("svg10");
-    console.timeEnd("svg");
-     */
-
-    //console.time("export");
-    let o = out_svg.export(reuse);
-    //console.timeEnd("export");
-    return o;
+    return await exportPng(svg);
 }

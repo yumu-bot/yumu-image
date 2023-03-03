@@ -9,7 +9,13 @@ import moment from "moment";
 
 const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
-export const EXPORT_FILE_V3 = process.env.EXPORT_FILE;
+export const EXPORT_FILE_V3 = process.env.EXPORT_FILE
+
+export function initPath() {
+    let path = process.env.EXPORT_FILE;
+    fs.access(path, fs.constants.F_OK, (e) => fs.mkdirSync(path, {recursive: true}));
+    return path;
+}
 
 const mascot_pic_sum_arr = [5, 0, 0, 0, 0, 0, 0, 0, 0]; //吉祥物的对应的照片数量，和随机banner一样的
 const bannerTotal = 40;//banner 数量
@@ -33,11 +39,11 @@ export function readImage(path = '') {
 }
 
 export function readExportFileV3(path = '') {
-    return fs.readFileSync(path_util.join(EXPORT_FILE_V3, path), 'binary');
+    return fs.readFileSync(path_util.join(EXPORT_FILE_V3(), path), 'binary');
 }
 
 export function getExportFileV3Path(path = '') {
-    return path_util.join(EXPORT_FILE_V3, path);
+    return path_util.join(EXPORT_FILE_V3(), path);
 }
 
 export async function readNetImage(path = '') {
@@ -46,7 +52,7 @@ export async function readNetImage(path = '') {
     }
 }
 
-const exportPng = svgToPng;
+export const exportPng = svgToPng;
 
 export const torus = {};
 
@@ -335,7 +341,7 @@ ${svgBody}
  * lv0是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  * lv-1是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  */
-export function getRoundedNumberLargerStr (number = 0, level = 0) {
+export function getRoundedNumberLargerStr(number = 0, level = 0) {
     let o;
 
     const SpecialRoundedLargeNum = (number) => {
@@ -347,7 +353,7 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
         } else if (number <= Math.pow(10, 12)) {
             p = 8; //794 5671 1234 -> 794
 
-        }  else if (number <= Math.pow(10, 16)) {
+        } else if (number <= Math.pow(10, 16)) {
             p = 12; //794 5671 1234 0000 -> 794
 
         } else {
@@ -384,7 +390,9 @@ export function getRoundedNumberLargerStr (number = 0, level = 0) {
     //旧 level
 
     if (level === 1 || level === 2) {
-        while (number >= 1000 || number <= -1000) { number /= 1000;}
+        while (number >= 1000 || number <= -1000) {
+            number /= 1000;
+        }
     }
 
     //如果小数太小，可不要小数点
@@ -471,7 +479,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         if (number <= Math.pow(10, 4)) {
             return ''
         } else {
-        return SpecialRoundedSmallNum(number);
+            return SpecialRoundedSmallNum(number);
 
         }
     }
@@ -481,25 +489,29 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
     let unit = getRoundedNumberUnit(number, level)
 
     if (level === 1) {
-        while (number >= 1000 || number <= -1000) { number /= 1000; }
+        while (number >= 1000 || number <= -1000) {
+            number /= 1000;
+        }
         let numStr = number.toString();
 
-        if (numStr.indexOf('.') === -1){
+        if (numStr.indexOf('.') === -1) {
             return unit;
         } else {
-            o = numStr.slice(numStr.indexOf('.') + 1,numStr.indexOf('.') + 3);
+            o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 3);
             return o + unit;
         }
     }
 
     if (level === 2) {
-        while (number >= 1000 || number <= -1000) { number /= 1000; }
+        while (number >= 1000 || number <= -1000) {
+            number /= 1000;
+        }
         let numStr = number.toString();
 
-        if (numStr.indexOf('.') === -1){
+        if (numStr.indexOf('.') === -1) {
             return unit;
         } else {
-            o = numStr.slice(numStr.indexOf('.') + 1,numStr.indexOf('.') + 5);
+            o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 5);
             return o + unit;
         }
     }
@@ -699,38 +711,94 @@ export function getStarRatingColor(SR = 0) {
 export function getModColor(Mod = '') {
     let color;
     switch (Mod) {
-        case "NF": color = '#00A0E9'; break;
-        case "EZ": color = '#22AC38'; break;
-        case "HD": color = '#F8B551'; break;
-        case "HR": color = '#D32F2F'; break;
-        case "SD": color = '#FF9800'; break;
-        case "DT": color = '#0068B7'; break;
-        case "RX": color = '#BFC31F'; break;
-        case "HT": color = '#BDBDBD'; break;
-        case "NC": color = '#601986'; break;
-        case "FL": color = '#000'; break;
-        case "AT": color = '#00B7EE'; break;
-        case "CN": color = '#00B7EE'; break;
-        case "SO": color = '#B28850'; break;
-        case "AP": color = '#B3D465'; break;
-        case "PF": color = '#FFF100'; break;
-        case "XK": color = '#616161'; break;
-        case "RD": color = '#009944'; break;
-        case "TD": color = '#7ECEF4'; break;
+        case "NF":
+            color = '#00A0E9';
+            break;
+        case "EZ":
+            color = '#22AC38';
+            break;
+        case "HD":
+            color = '#F8B551';
+            break;
+        case "HR":
+            color = '#D32F2F';
+            break;
+        case "SD":
+            color = '#FF9800';
+            break;
+        case "DT":
+            color = '#0068B7';
+            break;
+        case "RX":
+            color = '#BFC31F';
+            break;
+        case "HT":
+            color = '#BDBDBD';
+            break;
+        case "NC":
+            color = '#601986';
+            break;
+        case "FL":
+            color = '#000';
+            break;
+        case "AT":
+            color = '#00B7EE';
+            break;
+        case "CN":
+            color = '#00B7EE';
+            break;
+        case "SO":
+            color = '#B28850';
+            break;
+        case "AP":
+            color = '#B3D465';
+            break;
+        case "PF":
+            color = '#FFF100';
+            break;
+        case "XK":
+            color = '#616161';
+            break;
+        case "RD":
+            color = '#009944';
+            break;
+        case "TD":
+            color = '#7ECEF4';
+            break;
 
-        case "NM": color = '#22AC38'; break;
-        case "FM": color = '#00A0E9'; break;
-        case "EX": color = '#FF9800'; break;
-        case "TB": color = '#000'; break;
+        case "NM":
+            color = '#22AC38';
+            break;
+        case "FM":
+            color = '#00A0E9';
+            break;
+        case "EX":
+            color = '#FF9800';
+            break;
+        case "TB":
+            color = '#000';
+            break;
 
-        case "RC": color = '#22AC38'; break;
-        case "LN": color = '#00A0E9'; break;
-        case "HB": color = '#FF9800'; break;
-        case "SV": color = '#920783'; break;
+        case "RC":
+            color = '#22AC38';
+            break;
+        case "LN":
+            color = '#00A0E9';
+            break;
+        case "HB":
+            color = '#FF9800';
+            break;
+        case "SV":
+            color = '#920783';
+            break;
 
-        case "SP": color = '#EA68A2'; break;
+        case "SP":
+            color = '#EA68A2';
+            break;
 
-        default: color = 'none'; break;
+        default:
+            color = 'none';
+            break;
     }
 
     return color;
@@ -739,17 +807,39 @@ export function getModColor(Mod = '') {
 export function getRankColor(Rank = 'F') {
     let color;
     switch (Rank) {
-        case "XH": color = '#FAFAFA'; break;
-        case "X": color = '#FFFF00'; break;
-        case "SH": color = '#BDBDBD'; break;
-        case "SP": color = '#E86100'; break; // S+
-        case "S": color = '#FF9800'; break;
-        case "A": color = '#22AC38'; break;
-        case "B": color = '#00A0E9'; break;
-        case "C": color = '#601986'; break;
-        case "D": color = '#D32F2F'; break;
-        case "F": color = '#616161'; break;
-        default: color = '#fff'; break;
+        case "XH":
+            color = '#FAFAFA';
+            break;
+        case "X":
+            color = '#FFFF00';
+            break;
+        case "SH":
+            color = '#BDBDBD';
+            break;
+        case "SP":
+            color = '#E86100';
+            break; // S+
+        case "S":
+            color = '#FF9800';
+            break;
+        case "A":
+            color = '#22AC38';
+            break;
+        case "B":
+            color = '#00A0E9';
+            break;
+        case "C":
+            color = '#601986';
+            break;
+        case "D":
+            color = '#D32F2F';
+            break;
+        case "F":
+            color = '#616161';
+            break;
+        default:
+            color = '#fff';
+            break;
     }
 
     return color;
@@ -935,17 +1025,37 @@ export function getMascotPath(mascotname = 'pippi') {
     let i;
     let path;
 
-    switch (mascotname){
-        case 'pippi': i = 0; break;
-        case 'Mocha': i = 1; break;
-        case 'Aiko': i = 2; break;
-        case 'Alisa': i = 3; break;
-        case 'Chirou': i = 4; break;
-        case 'Tama': i = 5; break;
-        case 'Taikonator': i = 6; break;
-        case 'Yuzu': i = 7; break;
-        case 'Mani': i = 8; break;
-        case 'Mari': i = 8; break;
+    switch (mascotname) {
+        case 'pippi':
+            i = 0;
+            break;
+        case 'Mocha':
+            i = 1;
+            break;
+        case 'Aiko':
+            i = 2;
+            break;
+        case 'Alisa':
+            i = 3;
+            break;
+        case 'Chirou':
+            i = 4;
+            break;
+        case 'Tama':
+            i = 5;
+            break;
+        case 'Taikonator':
+            i = 6;
+            break;
+        case 'Yuzu':
+            i = 7;
+            break;
+        case 'Mani':
+            i = 8;
+            break;
+        case 'Mari':
+            i = 8;
+            break;
     }
     path = getRandom(mascot_pic_sum_arr[i]);
 
@@ -1032,18 +1142,29 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0) {
 export function getGameMode(gamemode = 'osu', level = 0) {
     gamemode = gamemode.toLowerCase();
     switch (level) {
-        case -1: switch (gamemode) {
-            case 'osu': return 'o';
-            case 'taiko': return 't';
-            case 'catch': return 'c';
-            case 'mania': return 'm';
-        } break;
-        case 1: switch (gamemode) {
-            case 'osu': return 'osu!standard';
-            case 'taiko': return 'osu!taiko';
-            case 'catch': return 'osu!catch';
-            case 'mania': return 'osu!mania';
-        }
+        case -1:
+            switch (gamemode) {
+                case 'osu':
+                    return 'o';
+                case 'taiko':
+                    return 't';
+                case 'catch':
+                    return 'c';
+                case 'mania':
+                    return 'm';
+            }
+            break;
+        case 1:
+            switch (gamemode) {
+                case 'osu':
+                    return 'osu!standard';
+                case 'taiko':
+                    return 'osu!taiko';
+                case 'catch':
+                    return 'osu!catch';
+                case 'mania':
+                    return 'osu!mania';
+            }
     }
 }
 

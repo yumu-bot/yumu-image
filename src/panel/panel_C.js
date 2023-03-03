@@ -1,10 +1,13 @@
 import {
+    exportPng,
     getMatchNameSplitted,
     getNowTimeStamp,
-    getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getRandomBannerPath,
+    getRoundedNumberLargerStr,
+    getRoundedNumberSmallerStr,
     implantImage,
     implantSvgBody,
-    InsertSvgBuilder, readTemplate,
+    readTemplate,
     replaceText,
     torus
 } from "../util.js";
@@ -318,7 +321,6 @@ export async function panel_C(data = {
 
     svg = replaceText(svg, panelHeight, reg_height);
 
-    let out_svg = new InsertSvgBuilder(svg);
-    return out_svg.export();
+    return await exportPng(svg);
 }
 

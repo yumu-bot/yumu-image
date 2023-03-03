@@ -1,4 +1,4 @@
-import {readTemplate, implantImage, replaceText, torus, getFlagPath} from "../util.js";
+import {implantImage, readTemplate, replaceText, torus} from "../util.js";
 
 export async function card_A1(data = {
     background: 'PanelObject/A_CardA1_BG.png',
@@ -60,7 +60,7 @@ export async function card_A1(data = {
     svg = replaceText(svg, text_rank_country, reg_text);
     svg = replaceText(svg, text_rank_global, reg_text);
     svg = replaceText(svg, text_pp, reg_text);
-    svg = replaceText(svg, getFlagPath(data.country,130,68), reg_country_flag); //高44宽60吧
+    // svg = replaceText(svg, getFlagPath(data.country,130,68), reg_country_flag); //高44宽60吧
     // 替换图片
 
     svg = implantImage(svg,430,210,0,0,0.5, data.background, reg_background)

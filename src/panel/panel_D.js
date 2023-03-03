@@ -1,6 +1,7 @@
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/card_A1.js";
 import {
+    exportPng,
     getGameMode,
     getMascotName,
     getMascotPath,
@@ -11,7 +12,6 @@ import {
     getRoundedNumberSmallerStr,
     implantImage,
     implantSvgBody,
-    InsertSvgBuilder,
     maximumArrayToFixedLength,
     modifyArrayToFixedLength,
     readTemplate,
@@ -247,6 +247,7 @@ export async function panel_D(data = {
         svg = replaceText(svg, path_svg, reg_ranking_graph);
     }
 
+    console.log(data.user_ranking_arr)
     RFRankChart(data.user_ranking_arr, '#FFCC22', user_ranking_max, user_ranking_min);
 
     // 绘制BP活动
@@ -519,8 +520,5 @@ export async function panel_D(data = {
     svg = implantSvgBody(svg, 1440, 835, label_fan, reg_label);
     svg = implantSvgBody(svg, 1660, 835, label_tth, reg_label);
 
-
-    let out_svg = new InsertSvgBuilder(svg)
-
-    return out_svg.export(reuse);
+    return await exportPng(svg);
 }

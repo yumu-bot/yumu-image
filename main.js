@@ -1,10 +1,12 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, readImage, readNetImage, SaveFiles} from "./src/util.js";
+import {CACHE_PATH, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_E} from "./src/panel/panel_E.js";
 import {panel_H} from "./src/panel/panel_H.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import fs from "fs";
+
+initPath();
 
 const app = express();
 app.use(formidable({
@@ -139,7 +141,7 @@ app.post('/panel_D', async (req, res) => {
             user_progress: user.levelCurrent, //%
 
             user_bp_arr: req.fields['bp-time'],
-            user_ranking_arr: user?.rank_history,
+            user_ranking_arr: user?.rank_history.history,
             user_pc_arr: [],
             user_pc_last_date: '2022-05-01'
         }

@@ -1,11 +1,11 @@
 import {
+    exportPng,
     getMatchNameSplitted,
     getNowTimeStamp,
     getRandomBannerPath,
     getStarRatingObject,
     implantImage,
     implantSvgBody,
-    InsertSvgBuilder,
     readTemplate,
     replaceText,
     torus
@@ -241,6 +241,5 @@ export async function panel_F (data = {
         },  true);
     svg = implantSvgBody(svg,40,40,card_A2_impl,reg_maincard);
 
-    let out_svg = new InsertSvgBuilder(svg);
-    return out_svg.export();
+    return await exportPng(svg);
 }
