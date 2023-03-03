@@ -1,11 +1,4 @@
-import {
-    getModColor,
-    getRankColor,
-    getStarRatingColor,
-    implantImage,
-    replaceText,
-    torus
-} from "../util.js";
+import {getModColor, getRankColor, getStarRatingColor, implantImage, replaceText, torus} from "../util.js";
 
 export async function card_J(data = {
     map_cover: '',
@@ -126,8 +119,8 @@ export async function card_J(data = {
 
     // 替换图片
 
-    svg = data.map_background ? implantImage(svg,310,80,0,0,0.8, data.map_background, reg_background) : svg;
-    svg = data.map_cover ? implantImage(svg,120,80,0,0,1, data.map_cover, reg_cover) : svg;
+    svg = data.map_background ? implantImage(svg, 310, 80, 0, 0, 0.5, data.map_background, reg_background) : svg;
+    svg = data.map_cover ? implantImage(svg, 120, 80, 0, 0, 1, data.map_cover, reg_cover) : svg;
 
     return svg.toString();
 
