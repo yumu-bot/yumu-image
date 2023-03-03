@@ -138,8 +138,8 @@ app.post('/panel_D', async (req, res) => {
             grade_S: user?.statistics?.s,
             grade_A: user?.statistics?.a,
 
-            user_lv: user.level.current,
-            user_progress: user.level.progress, //%
+            user_lv: 0,
+            user_progress: 0, //%
 
             user_bp_arr: req.fields['bp-time'],
             user_ranking_arr: user?.rank_history.history,
