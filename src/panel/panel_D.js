@@ -258,7 +258,8 @@ export async function panel_D(data = {
     RFRankChart(data.user_ranking_arr, '#FFCC22', user_ranking_max, user_ranking_min);
 
     // 绘制 BP活动 直方图
-    let bp_arr = maximumArrayToFixedLength(data.user_bp_arr.reverse(), 39)
+
+    let bp_arr = maximumArrayToFixedLength(data.user_bp_arr, 39)
 
     let user_bp_activity_max = Math.max.apply(Math, bp_arr);
     let user_bp_activity_max_fixed = Math.max(user_bp_activity_max, 5); //保底机制
