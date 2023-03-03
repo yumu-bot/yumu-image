@@ -2,6 +2,7 @@ import {label_E, LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/card_A1.js";
 import {
     exportPng,
+    getExportFileV3Path,
     getGameMode,
     getMascotName,
     getMascotPath,
@@ -24,7 +25,7 @@ import {card_K} from "../card/card_K.js";
 export async function panel_D(data = {
     // A1卡
     card_A1: {
-        background: 'PanelObject/A_CardA1_BG.png',
+        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
         avatar: 'PanelObject/A_CardA1_Avatar.png',
         sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
         sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
@@ -200,8 +201,8 @@ export async function panel_D(data = {
     }
 
     let card_Ks = [];
-    for (const i of data.bp_list) {
-        data.bp_list[i].bp_ranking = i + 1;
+    for (const i in data.bp_list) {
+        data.bp_list[i].bp_ranking = 1 + parseInt(i);
         card_Ks.push(await card_K(data.bp_list[i], true))
     }
 
@@ -497,9 +498,9 @@ export async function panel_D(data = {
     // 插入图片和部件（新方法
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     svg = implantImage(svg, 1920, 1080, 0, 280, 0.5, getRandomMascotBGPath(), reg_mascot_bg);
-    svg = implantImage(svg, 31, 39, 669, 930, 1, 'object-score-X-small.png', reg_grade_image);
-    svg = implantImage(svg, 25, 35, 777, 932, 1, 'object-score-S-small.png', reg_grade_image);
-    svg = implantImage(svg, 30, 34, 880, 933, 1, 'object-score-A-small.png', reg_grade_image);
+    svg = implantImage(svg, 31, 39, 669, 930, 1, getExportFileV3Path('object-score-X-small.png'), reg_grade_image);
+    svg = implantImage(svg, 25, 35, 777, 932, 1, getExportFileV3Path('object-score-S-small.png'), reg_grade_image);
+    svg = implantImage(svg, 30, 34, 880, 933, 1, getExportFileV3Path('object-score-A-small.png'), reg_grade_image);
 
     svg = implantSvgBody(svg, 40, 40, card_A1_impl, reg_maincard);
 

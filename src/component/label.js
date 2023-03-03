@@ -1,5 +1,6 @@
 import {
-    getExportFileV3Path, getModColor,
+    getExportFileV3Path,
+    getModColor,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     implantImage,
@@ -9,78 +10,78 @@ import {
 
 export const LABEL_OPTION = {
     ACC: {
-        icon: "object-score-accpp.png",
+        icon: getExportFileV3Path("object-score-accpp.png"),
         icon_title: 'Accuracy'
     },
     COMBO: {
-        icon: "object-score-combo.png",
+        icon: getExportFileV3Path("object-score-combo.png"),
         icon_title: 'Combo'
     },
     PP: {
-        icon: "object-score-pp.png",
+        icon: getExportFileV3Path("object-score-pp.png"),
         icon_title: 'PP'
     },
     BPM: {
-        icon: "object-score-beatsperminute.png",
+        icon: getExportFileV3Path("object-score-beatsperminute.png"),
         icon_title: 'BPM'
     },
     LENGTH: {
-        icon: "object-score-length.png",
+        icon: getExportFileV3Path("object-score-length.png"),
         icon_title: 'Length'
     },
     CS: {
-        icon: "object-score-circlesize.png",
+        icon: getExportFileV3Path("object-score-circlesize.png"),
         icon_title: 'CS'
     },
     AR: {
-        icon: "object-score-approachrate.png",
+        icon: getExportFileV3Path("object-score-approachrate.png"),
         icon_title: 'AR'
     },
     OD: {
-        icon: "object-score-overalldifficulty.png",
+        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
         icon_title: 'OD'
     },
     HP: {
-        icon: "object-score-healthpoint.png",
+        icon: getExportFileV3Path("object-score-healthpoint.png"),
         icon_title: 'HP'
     },
     RKS: {
-        icon: "object-score-max.png",
+        icon: getExportFileV3Path("object-score-max.png"),
         icon_title: 'Ranked Score',
         remark: 'RS',
     },
     TTS: {
-        icon: "object-score-aimpp.png",
+        icon: getExportFileV3Path("object-score-aimpp.png"),
         icon_title: 'Total Score',
         remark: 'TTS',
     },
     PC: {
-        icon: "object-score-combo.png",
+        icon: getExportFileV3Path("object-score-combo.png"),
         icon_title: 'Play Count',
         remark: 'PC',
     },
     PT: {
-        icon: "object-score-length.png",
+        icon: getExportFileV3Path("object-score-length.png"),
         icon_title: 'Play Time',
         remark: 'PT',
     },
     MPL: {
-        icon: "object-score-approachrate.png",
+        icon: getExportFileV3Path("object-score-approachrate.png"),
         icon_title: 'Map Played',
         remark: '',
     },
     REP: {
-        icon: "object-score-circlesize.png",
+        icon: getExportFileV3Path("object-score-circlesize.png"),
         icon_title: 'Rep be Watched',
         remark: '',
     },
     FAN: {
-        icon: "object-score-healthpoint.png",
+        icon: getExportFileV3Path("object-score-healthpoint.png"),
         icon_title: 'Follower',
         remark: 'Fans',
     },
     TTH: {
-        icon: "object-score-overalldifficulty.png",
+        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
         icon_title: 'Total Hits',
         remark: 'TTH',
     },
@@ -199,7 +200,7 @@ export async function label_F1(data = {
     svg = replaceText(svg, label_color, reg_label);
 
     //插入图片
-    svg = implantImage(svg, 100,100,0,0,1, data.avatar || 'avatar-guest.png', reg_avatar);
+    svg = implantImage(svg, 100, 100, 0, 0, 1, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
 
     return svg.toString();
 }

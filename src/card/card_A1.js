@@ -1,10 +1,10 @@
-import {implantImage, readTemplate, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, implantImage, readTemplate, replaceText, torus} from "../util.js";
 
 export async function card_A1(data = {
-    background: 'PanelObject/A_CardA1_BG.png',
-    avatar: 'PanelObject/A_CardA1_Avatar.png',
-    sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
-    sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
+    background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
+    avatar: getExportFileV3Path('PanelObject/A_CardA1_Avatar.png'),
+    sub_icon1: getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png'),
+    sub_icon2: getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png'),
     name: 'Muziyami',
     rank_global: 28075,
     rank_country: 577,

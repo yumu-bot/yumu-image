@@ -12,7 +12,7 @@ export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE
 
 export function initPath() {
-    let path = process.env.EXPORT_FILE;
+    let path = CACHE_PATH;
     fs.access(path, fs.constants.F_OK, (e) => fs.mkdirSync(path, {recursive: true}));
     return path;
 }
@@ -1059,7 +1059,7 @@ export function getMascotPath(mascotname = 'pippi') {
     }
     path = getRandom(mascot_pic_sum_arr[i]);
 
-    return `Mascots/${mascotname}_${path}.png`;
+    return getExportFileV3Path(`Mascots/${mascotname}_${path}.png`);
 }
 
 /**
@@ -1068,7 +1068,7 @@ export function getMascotPath(mascotname = 'pippi') {
  */
 export function getRandomBannerPath() {
     let i = getRandom(bannerTotal)
-    return `Banner/b${i}.png`
+    return getExportFileV3Path(`Banner/b${i}.png`);
 }
 
 /**
@@ -1077,7 +1077,7 @@ export function getRandomBannerPath() {
  */
 export function getRandomMascotBGPath() {
     let i = getRandom(mascotBGTotal)
-    return `Background/${i}.png`
+    return getExportFileV3Path(`Background/${i}.png`);
 }
 
 /**

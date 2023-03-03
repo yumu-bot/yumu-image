@@ -1,5 +1,6 @@
 import {
     exportPng,
+    getExportFileV3Path,
     getNowTimeStamp,
     getRandomBannerPath,
     implantImage,
@@ -14,11 +15,11 @@ import {card_D} from "../card/card_D.js";
 export async function panel_H (data = {
     // A1卡 应该是A2，但是管他呢
     card_A1: {
-        background: 'PanelObject/A_CardA1_BG.png',
-        avatar: 'PanelObject/A_CardA1_Avatar.png',
-        country_flag: 'PanelObject/A_CardA1_CountryFlag.png',
-        sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
-        sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
+        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
+        avatar: getExportFileV3Path('PanelObject/A_CardA1_Avatar.png'),
+        country_flag: getExportFileV3Path('PanelObject/A_CardA1_CountryFlag.png'),
+        sub_icon1: getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png'),
+        sub_icon2: getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png'),
         name: 'Muziyami',
         rank_global: 28075,
         rank_country: 577,
@@ -32,7 +33,7 @@ export async function panel_H (data = {
     //D卡
     map_pool: {
         NM: [{
-            background: 'PanelObject/H_CardD_BG.png',
+            background: getExportFileV3Path('PanelObject/H_CardD_BG.png'),
             title: 'Xin Mei Sang Zui Jiu? Cheater',
             artist: 'Fushimi Rio',
             mapper: 'Fia',
@@ -46,7 +47,7 @@ export async function panel_H (data = {
             star_rating: 1.19,
             game_mode: 'osu',
         }, {
-            background: 'PanelObject/H_CardD_BG2.png',
+            background: getExportFileV3Path('PanelObject/H_CardD_BG2.png'),
             title: 'Blessing',
             artist: 'Nico Nico Chorus',
             mapper: 'Ujimatsu Chiya',
@@ -60,7 +61,7 @@ export async function panel_H (data = {
             star_rating: 1.2,
             game_mode: 'osu',
         }, {
-            background: 'PanelObject/H_CardD_BG2.png',
+            background: getExportFileV3Path('PanelObject/H_CardD_BG2.png'),
             title: 'Blessing',
             artist: 'Nico Nico Chorus',
             mapper: 'Ujimatsu Chiya',
@@ -74,7 +75,7 @@ export async function panel_H (data = {
             star_rating: 1.3,
             game_mode: 'osu',
         }, {
-            background: 'PanelObject/H_CardD_BG2.png',
+            background: getExportFileV3Path('PanelObject/H_CardD_BG2.png'),
             title: 'Blessing',
             artist: 'Nico Nico Chorus',
             mapper: 'Ujimatsu Chiya',
@@ -88,7 +89,7 @@ export async function panel_H (data = {
             star_rating: 1.4,
             game_mode: 'osu',
         }, {
-            background: 'PanelObject/H_CardD_BG2.png',
+            background: getExportFileV3Path('PanelObject/H_CardD_BG2.png'),
             title: 'Blessing',
             artist: 'Nico Nico Chorus',
             mapper: 'Ujimatsu Chiya',

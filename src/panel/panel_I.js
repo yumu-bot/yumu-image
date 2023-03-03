@@ -1,11 +1,10 @@
-import {InsertSvgBuilder, readTemplate, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, InsertSvgBuilder, readTemplate, replaceText, torus} from "../util.js";
 import {card_H} from "../card/card_H.js";
-import {card_A2} from "../card/card_A2.js";
 
 export async function panel_I(data = {
     // A2卡
     card_A2: {
-        background: 'PanelObject/A_CardA1_BG.png',
+        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
         match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)',
         match_round: 0,
         match_time: '17:32-22:34',

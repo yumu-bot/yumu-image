@@ -1,5 +1,6 @@
 import {
     exportPng,
+    getExportFileV3Path,
     getMatchNameSplitted,
     getNowTimeStamp,
     getRandomBannerPath,
@@ -32,7 +33,7 @@ export async function panel_F (data = {
     },
 
     beatmap: [{
-        background: 'PanelObject/A_CardA1_BG.png',
+        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
         title: 'Kan Saete Kuyashiiwa',
         artist: 'ZUTOMAYO',
         mapper: 'Nathan', //creator
@@ -61,38 +62,38 @@ export async function panel_F (data = {
         },
         red: [{
             player_name: 'na-gi', //妈的 为什么get match不给用户名啊
-            player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
             player_score: 464277,
             player_mods: [],
             player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
         }, {
             player_name: '- Rainbow -',
-            player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
             player_score: 412096,
             player_mods: [],
             player_rank: 2
         }, {
             player_name: 'Guozi on osu',
-            player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
             player_score: 0,//268397,
             player_mods: [],
             player_rank: 6,
         }],
         blue: [{
             player_name: 'Greystrip_VoV',
-            player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
             player_score: 403437,
             player_mods: ['HD'],
             player_rank: 3,
         }, {
             player_name: 'Mars New',
-            player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
             player_score: 371937,
             player_mods: [],
             player_rank: 4,
         }, {
             player_name: 'No Rank',
-            player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
             player_score: 371007,
             player_mods: [],
             player_rank: 5,

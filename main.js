@@ -1,6 +1,6 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
+import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
 import {panel_F} from "./src/panel/panel_F.js";
@@ -74,15 +74,15 @@ app.post('/panel_D', async (req, res) => {
         const card_a1 = {
             background: saveFile.save(await readNetImage(user.cover_url)),
             avatar: saveFile.save(await readNetImage(user.avatar_url)),
-            sub_icon1: user['support_level'] > 0 ? 'PanelObject/A_CardA1_SubIcon1.png' : '',
+            sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
             sub_icon2: '',
             name: user['username'],
             rank_global: user['globalRank'],
             rank_country: user['countryRank'],
             country: user?.country['countryCode'],
             acc: user['accuracy'],
-            level: user['levelProgress'],
-            progress: user['accuracy'],
+            level: user['levelCurrent'],
+            progress: user['levelProgress'],
             pp: user['pp'],
         };
 
@@ -94,14 +94,14 @@ app.post('/panel_D', async (req, res) => {
                 data: user?.statistics?.total_score,
             },
             pc: {
-                data: user?.statistics?.total_count,
+                data: user?.statistics?.play_count,
             },
             pt: {
                 data_b: '0.',
                 data_m: '0d',
             },
             mpl: {
-                data: user?.beatmap_playcounts_cont,
+                data: user?.beatmap_playcounts_count,
             },
             rep: {
                 data: user?.statistics?.replays_watched_by_others,
@@ -115,8 +115,8 @@ app.post('/panel_D', async (req, res) => {
         }
 
         if (user?.statistics?.total_score) {
-            let d = Math.floor(user?.statistics?.total_score / 86400);
-            let d_f = Math.floor(4285217 % 86400 / 864).toString().padStart(2, '0')
+            let d = Math.floor(user?.statistics?.play_time / 86400);
+            let d_f = Math.floor(user?.statistics?.play_time % 86400 / 864).toString().padStart(2, '0')
             label_data.pt.data_b = `${d}.`;
             label_data.pt.data_m = `${d_f}d`;
         }
@@ -124,9 +124,10 @@ app.post('/panel_D', async (req, res) => {
         let reList = req.fields['re-list'];
         const recent_play = [];
         for (const re of reList) {
+            const cover = saveFile.save(await readNetImage(re.beatmapset.covers.cover));
             let d = {
-                map_cover: saveFile.save(await readNetImage(re.beatmapset.covers.cover)),
-                map_background: saveFile.save(await readNetImage(re.beatmapset.covers.cover)),
+                map_cover: cover,
+                map_background: cover,
                 map_title_romanized: re.beatmapset.title_unicode,
                 map_difficulty_name: re.beatmap.version,
                 star_rating: re.beatmap.difficulty_rating,
@@ -149,6 +150,7 @@ app.post('/panel_D', async (req, res) => {
                 score_rank: bp.rank,
                 bp_pp: bp.pp
             }
+            bp_list.push(d);
         }
 
         const op = {

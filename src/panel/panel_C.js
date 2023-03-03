@@ -1,5 +1,6 @@
 import {
     exportPng,
+    getExportFileV3Path,
     getMatchNameSplitted,
     getNowTimeStamp,
     getRandomBannerPath,
@@ -17,7 +18,7 @@ import {card_A2} from "../card/card_A2.js";
 export async function panel_C(data = {
     // A2卡
     match: {
-        background: 'PanelObject/A_CardA1_BG.png', //给我他们最后一局的谱面背景即可
+        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'), //给我他们最后一局的谱面背景即可
         match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)', //比赛标题
         match_round: 11,
         match_time: '20:25-22:03',//比赛开始到比赛结束。如果跨了一天，需要加24小时
@@ -33,8 +34,8 @@ export async function panel_C(data = {
             team: 'red',
             team_color: '#D32F2F',
             player_name: 'na-gi',
-            player_avatar: 'PanelObject/I_CardH_Avatar.png',
-            player_banner: 'PanelObject/I_CardH_BG.png',
+            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
             player_score: 464277,
             player_win: 5,
             player_lose: 1,
@@ -45,12 +46,12 @@ export async function panel_C(data = {
             label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
             class_color: '#fff', //部分字体需要显示为黑色
             label_mvp: '',
-        },{
+        }, {
             team: 'red',
             team_color: '#D32F2F',
             player_name: '- Rainbow -',
-            player_avatar: 'PanelObject/I_CardH_Avatar.png',
-            player_banner: 'PanelObject/I_CardH_BG.png',
+            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
             player_score: 412096,
             player_win: 5,
             player_lose: 1,
@@ -61,12 +62,12 @@ export async function panel_C(data = {
             label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
             class_color: '#fff', //部分字体需要显示为黑色
             label_mvp: '',
-        },{
+        }, {
             team: 'red',
             team_color: '#D32F2F',
             player_name: 'Guozi on Osu',
-            player_avatar: 'PanelObject/I_CardH_Avatar.png',
-            player_banner: 'PanelObject/I_CardH_BG.png',
+            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
             player_score: 268397,
             player_win: 5,
             player_lose: 1,
@@ -82,8 +83,8 @@ export async function panel_C(data = {
             team: 'blue',
             team_color: '#00A0E9',
             player_name: 'Mars New',
-            player_avatar: 'PanelObject/I_CardH_Avatar.png',
-            player_banner: 'PanelObject/I_CardH_BG.png',
+            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
             player_score: 371937,
             player_win: 5,
             player_lose: 1,
@@ -94,12 +95,12 @@ export async function panel_C(data = {
             label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
             class_color: '#fff', //部分字体需要显示为黑色
             label_mvp: '',
-        },{
+        }, {
             team: 'blue',
             team_color: '#00A0E9',
             player_name: 'No Rank',
-            player_avatar: 'PanelObject/I_CardH_Avatar.png',
-            player_banner: 'PanelObject/I_CardH_BG.png',
+            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
             player_score: 371007,
             player_win: 5,
             player_lose: 1,
@@ -110,12 +111,12 @@ export async function panel_C(data = {
             label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
             class_color: '#fff', //部分字体需要显示为黑色
             label_mvp: '',
-        },{
+        }, {
             team: 'blue',
             team_color: '#00A0E9',
             player_name: 'GreySTrip_VoV',
-            player_avatar: 'PanelObject/I_CardH_Avatar.png',
-            player_banner: 'PanelObject/I_CardH_BG.png',
+            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
             player_score: 403437,
             player_win: 5,
             player_lose: 1,
@@ -131,8 +132,8 @@ export async function panel_C(data = {
             team: 'none',
             team_color: '#a1a1a1',
             player_name: 'Fushimi Rio',
-            player_avatar: 'PanelObject/I_CardH_Avatar.png',
-            player_banner: 'PanelObject/I_CardH_BG.png',
+            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
             player_score: 57434,
             player_win: 5,
             player_lose: 1,

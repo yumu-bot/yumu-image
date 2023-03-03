@@ -1,7 +1,15 @@
-import {readTemplate, implantImage, replaceText, torus, getMapStatusPath, PuHuiTi} from "../util.js";
+import {
+    getExportFileV3Path,
+    getMapStatusPath,
+    implantImage,
+    PuHuiTi,
+    readTemplate,
+    replaceText,
+    torus
+} from "../util.js";
 
 export async function card_A2(data = {
-    background: 'PanelObject/A_CardA1_BG.png',
+    background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
     map_status: '',
 
     title1: '',

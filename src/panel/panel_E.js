@@ -22,10 +22,10 @@ import {label_E, LABEL_OPTION} from "../component/label.js";
 export async function panel_E(data = {
     // A1卡
     card_A1: {
-        background: 'PanelObject/A_CardA1_BG.png',
-        avatar: 'PanelObject/A_CardA1_Avatar.png',
-        sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
-        sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
+        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
+        avatar: getExportFileV3Path('PanelObject/A_CardA1_Avatar.png'),
+        sub_icon1: getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png'),
+        sub_icon2: getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png'),
         name: 'Muziyami',
         rank_global: 28075,
         rank_country: 577,
@@ -137,17 +137,17 @@ export async function panel_E(data = {
     map_density_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
 
     // 重试和失败数组 retry / fail 注意，retry叫exit
-    map_retry_arr: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,18,360,396,234,45,81,54,63,90,153,135,36,9,63,54,36,144,54,9,9,36,18,45,45,36,108,63,9,0,0,0,0,27,0,0,0,0,0,27,0,18,0,0,0,18,18,18,0,0,0,9,18,9,0,9,9,0,9,0,9,18,9,0,0,27,0,0,0,0,27,9,9,0,9,9,0,0,0,9,0,0,9,9,0,9],
-    map_fail_arr: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,54,9,36,27,9,18,0,0,18,18,45,27,27,18,90,36,18,36,0,18,45,36,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,18,0,45,27,9,0,18,90,9,0,0,9,9,9,27,0,9,27,0,0,0,0,9,9,0,0,0,0,0,9,0,9,18,18,0,0,0,0,0,0,0,0,0,0,9,9,0],
+    map_retry_arr: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 18, 360, 396, 234, 45, 81, 54, 63, 90, 153, 135, 36, 9, 63, 54, 36, 144, 54, 9, 9, 36, 18, 45, 45, 36, 108, 63, 9, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 27, 0, 18, 0, 0, 0, 18, 18, 18, 0, 0, 0, 9, 18, 9, 0, 9, 9, 0, 9, 0, 9, 18, 9, 0, 0, 27, 0, 0, 0, 0, 27, 9, 9, 0, 9, 9, 0, 0, 0, 9, 0, 0, 9, 9, 0, 9],
+    map_fail_arr: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 54, 9, 36, 27, 9, 18, 0, 0, 18, 18, 45, 27, 27, 18, 90, 36, 18, 36, 0, 18, 45, 36, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 45, 27, 9, 0, 18, 90, 9, 0, 0, 9, 9, 9, 27, 0, 9, 27, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 9, 0, 9, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 0],
 
     mods_arr: ['HD', 'HR', 'DT', 'NF'],
 
     // 面板图片
-    map_background: 'PanelObject/E_MapCover.jpg',
-    star: 'object-beatmap-star.png',
-    map_hexagon: 'object-beatmap-hexagon.png',
-    map_favorite: 'object-beatmap-favorite.png',
-    map_playcount: 'object-beatmap-playcount.png',
+    map_background: getExportFileV3Path('PanelObject/E_MapCover.jpg'),
+    star: getExportFileV3Path('object-beatmap-star.png'),
+    map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
+    map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
+    map_playcount: getExportFileV3Path('object-beatmap-playcount.png'),
     map_status: 'ranked', //ranked approved loved graveyard notsubmitted qualified pending workinprogress
 
     // 面板文字
