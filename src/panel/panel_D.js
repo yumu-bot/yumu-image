@@ -248,7 +248,6 @@ export async function panel_D(data = {
         svg = replaceText(svg, path_svg, reg_ranking_graph);
     }
 
-    console.log(data.user_ranking_arr)
     RFRankChart(data.user_ranking_arr, '#FFCC22', user_ranking_max, user_ranking_min);
 
     // 绘制BP活动

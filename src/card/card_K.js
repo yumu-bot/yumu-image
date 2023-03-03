@@ -38,7 +38,7 @@ export async function card_K(data = {
     let bp_ranking = data.bp_ranking ?
         torus.getTextPath(data.bp_ranking, 35, 26.795, 30, "center baseline", "#fff") : '';
     let bp_pp = data.bp_pp ?
-        torus.getTextPath(data.bp_pp + 'PP', 35, 45.224, 16, "center baseline", "#fff") : '';
+        torus.getTextPath(Math.floor(data.bp_pp) + 'PP', 35, 45.224, 16, "center baseline", "#fff") : '';
 
     // 定义圆圈
     let circle_sr = data.star_rating ?
