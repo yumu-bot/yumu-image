@@ -3,39 +3,10 @@ import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
-import {panel_F} from "./src/panel/panel_F.js";
 import {panel_H} from "./src/panel/panel_H.js";
 import fs from "fs";
 
 initPath();
-
-
-fs.mkdirSync(CACHE_PATH, {recursive: true});
-console.time('F')
-fs.writeFileSync("image/out/panel_F.png", await panel_F());
-console.timeEnd('F')
-/*
-console.time()
-console.time('C')
-fs.writeFileSync("image/out/panel_C.png", await panel_C());
-console.timeEnd('C')
-console.time('D')
-fs.writeFileSync("image/out/panel_D.png", await panel_D());
-console.timeEnd('D')
-console.time('E')
-fs.writeFileSync("image/out/panel_E.png", await panel_E());
-console.timeEnd('E')
-console.time('F')
-fs.writeFileSync("image/out/panel_F.png", await panel_F());
-console.timeEnd('F')
-console.time('H')
-fs.writeFileSync("image/out/panel_H.png", await panel_H());
-console.timeEnd('H')
-console.time('I')
-fs.writeFileSync("image/out/panel_I.png", await panel_I());
-console.timeEnd('I')
-console.timeEnd()
- */
 
 const app = express();
 app.use(formidable({
