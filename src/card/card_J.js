@@ -5,12 +5,12 @@ export async function card_J(data = {
     map_background: '',
     map_title_romanized: 'no title',
     map_difficulty_name: 'who made this',
-    star_rating: '0',
+    star_rating: 0,
     score_rank: 'F',
-    accuracy: '0', //%
-    combo: '0', //x
+    accuracy: 0, //%
+    combo: 0, //x
     mods_arr: [],
-    pp: '0' //pp
+    pp: 0 //pp
 
 }, reuse = false) {
 
@@ -68,7 +68,7 @@ export async function card_J(data = {
     let map_line3 =
         torus.getTextPath(map_line3_text, 300, 47.571, 14, "right baseline", "#a1a1a1");
 
-    let pp = data.pp ? torus.get2SizeTextPath(data.pp, 'PP', 30, 18, 300, 73.795, 'right baseline', '#fff') : '';
+    let pp = data.pp ? torus.get2SizeTextPath(data.pp.toString(), 'PP', 30, 18, 300, 73.795, 'right baseline', '#fff') : '';
 
     let rank_text_color = '#fff'; if (data.score_rank === 'X' || data.score_rank === 'XH') rank_text_color = '#000'
     let rank =
@@ -119,7 +119,7 @@ export async function card_J(data = {
 
     // 替换图片
 
-    svg = data.map_background ? implantImage(svg, 310, 80, 0, 0, 0.5, data.map_background, reg_background) : svg;
+    svg = data.map_background ? implantImage(svg, 310, 80, 0, 0, 0.2, data.map_background, reg_background) : svg;
     svg = data.map_cover ? implantImage(svg, 120, 80, 0, 0, 1, data.map_cover, reg_cover) : svg;
 
     return svg.toString();

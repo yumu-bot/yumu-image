@@ -88,11 +88,17 @@ export async function panel_D(data = {
     bp_list: [
         {
             map_background: 'PanelObject/D_CardK_Background.png',
-            star_rating: '2.7',
+            star_rating: 2.7,
             score_rank: 'X',
-            bp_ranking: '1',
+            bp_ranking: 1,
             bp_pp: '369'
-        },
+        }, {
+            map_background: 'PanelObject/D_CardK_Background.png',
+            star_rating: 2.7,
+            score_rank: 'X',
+            bp_ranking: 2,
+            bp_pp: '369'
+        }
     ],
 
 
@@ -115,6 +121,7 @@ export async function panel_D(data = {
     user_ranking_arr: [24954, 24973, 24997, 25020, 25044, 25069, 25092, 25108, 25138, 25158, 25177, 25198, 25221, 25249, 25273, 25306, 25326, 25340, 25368, 25393, 25419, 25403, 25430, 25465, 25346, 25370, 25403, 25433, 25461, 25486, 25501, 25533, 25560, 25592, 25615, 25636, 25664, 25666, 25687, 25715, 25741, 25759, 25792, 25824, 25849, 25879, 25898, 25928, 25956, 25989, 26024, 26055, 26082, 26105, 26133, 26139, 26171, 26203, 26239, 26262, 26294, 26323, 26351, 26383, 26411, 26443, 26285, 26305, 26326, 26338, 26367, 26404, 26434, 26442, 26457, 26487, 26519, 26533, 26563, 26602, 26621, 26645, 26663, 26687, 26704, 26736, 26762, 26779, 26793, 26774],
 
     //过去90天内的bp新增数量，可以提供90个值。有算法
+    //202303 给进来的bp好像是反的，修正一下
     user_bp_arr: [1, 2, 4, 5, 2, 7, 1, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 1, 0, 5, 0, 2, 0, 0, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 4, 2, 5, 8, 5, 4, 2, 5, 13, 2, 6, 4, 7, 5, 6, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7],
 
     user_pc_arr: [41, 56, 468, 256, 278, 430, 478, 277, 260, 183, 458, 395, 531, 236, 462, 280, 450, 375, 316, 192, 202, 129, 177, 139, 465, 89, 80, 111, 273, 370, 226, 28, 71, 61, 126, 510, 418, 715, 552, 245, 183, 144, 122, 247, 170, 212, 693, 770, 346, 474, 830, 724, 806, 870, 950, 752, 999, 837, 574, 766, 1091, 752, 423, 454, 586, 366, 459, 316, 127, 216, 418, 467, 292, 190, 292, 384, 249],
@@ -122,8 +129,8 @@ export async function panel_D(data = {
     //返回上面数组最后一个元素对应的年月日
     user_pc_last_date: '2022-05-01',
 
-    user_lv: '24',
-    user_progress: '98', //%
+    user_lv: 24, //和A卡一致
+    user_progress: 98, //和A卡一致
 
 
 }, reuse = false) {
@@ -250,8 +257,8 @@ export async function panel_D(data = {
 
     RFRankChart(data.user_ranking_arr, '#FFCC22', user_ranking_max, user_ranking_min);
 
-    // 绘制BP活动
-    let bp_arr = maximumArrayToFixedLength(data.user_bp_arr, 39)
+    // 绘制 BP活动 直方图
+    let bp_arr = maximumArrayToFixedLength(data.user_bp_arr.reverse(), 39)
 
     let user_bp_activity_max = Math.max.apply(Math, bp_arr);
     let user_bp_activity_max_fixed = Math.max(user_bp_activity_max, 5); //保底机制
@@ -275,7 +282,7 @@ export async function panel_D(data = {
 
     let bp_activity_text = torus.getTextPath(`BP+${user_bp_activity_max}`,
         1050 + bp_arr.findIndex((item) => item === user_bp_activity_max) * 20,
-        515 + 90 * (5 - Math.min(user_bp_activity_max, 5)),
+        515 + 90 * (5 - Math.min(user_bp_activity_max, 5) / 5),
         16,
         'center baseline',
         '#a1a1a1');
