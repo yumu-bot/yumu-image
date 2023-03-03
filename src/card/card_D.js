@@ -148,7 +148,6 @@ export async function card_D(data = {
 
     // 替换文字
 
-
     svg = replaceText(svg, text_mod_color, reg_mod_color);
     svg = replaceText(svg, text_title, reg_text);
     svg = replaceText(svg, text_artist_and_mapper, reg_text);

@@ -11,7 +11,7 @@ import {
     torus
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
-import {label_F1} from "../component/label.js";
+import {card_C} from "../card/card_C.js";
 
 export async function panel_F (data = {
 
@@ -31,34 +31,34 @@ export async function panel_F (data = {
         is_team_vs: true,// 比赛有哪怕一局不是team vs，都是false
     },
 
-    beatmap: {
-        0: {
-            background: 'PanelObject/A_CardA1_BG.png',
-            title: 'Kan Saete Kuyashiiwa',
-            artist: 'ZUTOMAYO',
-            mapper: 'Nathan', //creator
-            difficulty: 'Luscent\'s Extra',
-            status: 'ranked',
-            bid: 2167576,
-            star_rating: 5.63,
+    beatmap: [{
+        background: 'PanelObject/A_CardA1_BG.png',
+        title: 'Kan Saete Kuyashiiwa',
+        artist: 'ZUTOMAYO',
+        mapper: 'Nathan', //creator
+        difficulty: 'Luscent\'s Extra',
+        status: 'ranked',
+        bid: 2167576,
+        star_rating: 5.63,
 
-            //这些数据event没有，需要get beatmap attribute
-            cs: 4,
-            ar: 9,
-            od: 8,
+        //这些数据event没有，需要get beatmap attribute
+        cs: 4,
+        ar: 9,
+        od: 8,
 
-            //这些是提供给F卡的额外数据
-            is_team_vs: true,
-            is_team_red_win: true, //如果不是teamvs，这个值默认false
+    }],
+    // C卡 events
+    scores: [{
+        statistics: {
+            is_team_vs: true, // TFF表示平局，当然，这个很少见
+            is_team_red_win: true, //如果不是team vs，这个值默认false
+            is_team_blue_win: true, //如果不是team vs，这个值默认false
             score_team_red: 1144770,
             score_team_blue: 1146381,
             score_total: 2567413,
             wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
             wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
-    },
-    // F卡 events
-    scores: [{
         red: [{
             player_name: 'na-gi', //妈的 为什么get match不给用户名啊
             player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
@@ -72,26 +72,26 @@ export async function panel_F (data = {
             player_mods: [],
             player_rank: 2
         }, {
-            player_name: '- Rainbow -',
+            player_name: 'Guozi on osu',
             player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
-            player_score: 268397,
+            player_score: 0,//268397,
             player_mods: [],
             player_rank: 6,
         }],
         blue: [{
-            player_name: '- Rainbow -',
+            player_name: 'Greystrip_VoV',
             player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
             player_score: 403437,
             player_mods: ['HD'],
             player_rank: 3,
         }, {
-            player_name: '- Rainbow -',
+            player_name: 'Mars New',
             player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
             player_score: 371937,
             player_mods: [],
             player_rank: 4,
         }, {
-            player_name: '- Rainbow -',
+            player_name: 'No Rank',
             player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
             player_score: 371007,
             player_mods: [],
@@ -99,9 +99,21 @@ export async function panel_F (data = {
         }],
         none: [{
 
-        }],
+        }]
     },{
+        statistics: {
+            is_team_vs: true, // TFF表示平局，当然，这个很少见
+            is_team_red_win: true, //如果不是team vs，这个值默认false
+            is_team_blue_win: true, //如果不是team vs，这个值默认false
+            score_team_red: 1144770,
+            score_team_blue: 1146381,
+            score_total: 2567413,
+            wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
+            wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0,
+        },
         red:[],
+        blue:[],
+        none:[],
     }],
 
     // 面板文字
@@ -118,7 +130,8 @@ export async function panel_F (data = {
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PF-1\);">)/;
-    let reg_bodycard = /(?<=<g id="BodyCard">)/;
+    let reg_card_c = /(?<=<g id="CardC">)/;
+    let reg_card_a2 = /(?<=<g id="CardA2">)/;
 
 
     // 文字定义
@@ -137,6 +150,18 @@ export async function panel_F (data = {
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
+
+    // 导入成绩卡（C卡
+
+    let card_Cs = [];
+    for (const i of data.scores) {
+        card_Cs.push(await card_C(i, true));
+    }
+
+    for (const i in card_Cs) {
+        svg = implantSvgBody(svg, 510, 330 + i * 250, card_Cs[i], reg_card_c)
+    }
+
 
     // 导入谱面卡(A2卡
     async function implantBeatMapCardA2(object, x, y) {
@@ -171,7 +196,7 @@ export async function panel_F (data = {
                 right3m: right3m,
             }, true);
 
-        svg = implantSvgBody(svg, x, y, card_A2_beatmap_impl, reg_bodycard);
+        svg = implantSvgBody(svg, x, y, card_A2_beatmap_impl, reg_card_a2);
     }
 
     let beatmap_arr = data.beatmap;
@@ -184,34 +209,6 @@ export async function panel_F (data = {
         await implantBeatMapCardA2(beatmap_arr[beatmap_number],40,330 + beatmap_rowSum * 250);
         beatmap_rowSum += 1;
     }
-
-
-    // 导入对局情况卡（F1卡
-    async function implantRoundLabelF1(object, x, y) {
-        let label_F1_impl =
-            await label_F1({
-                avatar: object.player_avatar,
-                name: object.player_name,
-                mods_arr: object.player_mods,
-                score: object.player_score,
-                rank: object.player_rank,
-                maxWidth: 100,
-                label_color: getUserRankColor(object.player_rank),
-            })
-        svg = replaceText(svg, label_F1_impl, reg_index);
-    }
-
-    //获取玩家名次的背景色，给一二三名赋予特殊的颜色
-    function getUserRankColor (rank = 0) {
-        switch (rank) {
-            case 1: return '#B7AA00'; //冠军
-            case 2: return '#A0A0A0'; //亚军
-            case 3: return '#AC6A00'; //季军
-            default: return '#46393f'
-        }
-    }
-
-    await implantRoundLabelF1(data.scores["0"]["red"]["2"]);
 
 
     // 导入比赛简介卡（A2卡

@@ -39,11 +39,11 @@ export function readImage(path = '') {
 }
 
 export function readExportFileV3(path = '') {
-    return fs.readFileSync(path_util.join(EXPORT_FILE_V3(), path), 'binary');
+    return fs.readFileSync(path_util.join(EXPORT_FILE_V3, path), 'binary');
 }
 
 export function getExportFileV3Path(path = '') {
-    return path_util.join(EXPORT_FILE_V3(), path);
+    return path_util.join(EXPORT_FILE_V3, path);
 }
 
 export async function readNetImage(path = '') {

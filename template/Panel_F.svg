@@ -14,8 +14,7 @@
     <rect y="290" width="1920" height="790" rx="20" ry="20" style="fill: #2a2226;"/>
   </g>
   <g id="BodyCard">
-    <g id="CardF">
-      <rect x="510" y="330" width="1370" height="210" rx="20" ry="20" style="fill: #46393f;"/>
+    <g id="CardC">
     </g>
     <g id="CardA2">
     </g>
