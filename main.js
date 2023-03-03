@@ -76,8 +76,8 @@ app.post('/panel_D', async (req, res) => {
             country: user?.country['countryCode'],
             acc: Math.floor(user['accuracy'] * 100) / 100,
             level: user['levelCurrent'],
-            progress: user['levelProgress'],
-            pp: user['pp'],
+            progress: Math.floor(user['levelProgress']),
+            pp: Math.floor(user['pp']),
         };
 
         const label_data = {
@@ -126,10 +126,10 @@ app.post('/panel_D', async (req, res) => {
                 map_difficulty_name: re.beatmap.version,
                 star_rating: re.beatmap.difficulty_rating,
                 score_rank: re.rank,
-                accuracy: re.accuracy, //%
+                accuracy: Math.floor(re.accuracy * 100) / 100, //%
                 combo: re.max_combo, //x
                 mods_arr: re.mods,
-                pp: re.pp //pp
+                pp: Math.floor(re.pp) //pp
             }
             recent_play.push(d);
         }
