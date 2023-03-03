@@ -39,8 +39,6 @@ app.post('/panel_E', async (req, res) => {
 app.post('/panel_D', async (req, res) => {
     const saveFile = new SaveFiles();
     try {
-        console.log(req.fields);
-        console.log(req.fields['user']['rank_history']['history']);
         let user = req.fields?.user;
         const card_a1 = {
             background: saveFile.save(await readNetImage(user.cover_url)),
