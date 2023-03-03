@@ -131,13 +131,13 @@ export async function card_C (data = {
     }
 
 
-    function getHeadToHeadWidthArrayNormal (data){
+    function getHeadToHeadWidthArrayNormal (data) {
 
     }
 
     //
 
-    async function implantRoundLabelF1(object, x, y) {
+    async function implantRoundLabelF1 (object, x, y) {
         let label_F1_impl =
             await label_F1({
                 avatar: object.player_avatar,

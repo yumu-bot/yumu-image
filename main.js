@@ -11,9 +11,6 @@ initPath();
 
 
 fs.mkdirSync(CACHE_PATH, {recursive: true});
-console.time('F')
-fs.writeFileSync("image/out/panel_F.png", await panel_F());
-console.timeEnd('F')
 /*
 console.time()
 console.time('C')
