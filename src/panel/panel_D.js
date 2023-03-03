@@ -282,7 +282,7 @@ export async function panel_D(data = {
 
     let bp_activity_text = torus.getTextPath(`BP+${user_bp_activity_max}`,
         1050 + bp_arr.findIndex((item) => item === user_bp_activity_max) * 20,
-        515 + 90 * (5 - Math.min(user_bp_activity_max, 5) / 5),
+        515 + 90 * (5 - Math.min(user_bp_activity_max, 5)) / 5,
         16,
         'center baseline',
         '#a1a1a1');
