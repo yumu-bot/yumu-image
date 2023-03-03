@@ -127,7 +127,7 @@ app.post('/panel_D', async (req, res) => {
                 map_difficulty_name: re.beatmap.version,
                 star_rating: re.beatmap.difficulty_rating,
                 score_rank: re.rank,
-                accuracy: Math.floor(re.accuracy * 100) / 100, //%
+                accuracy: Math.floor(re.accuracy * 10000) / 100, //这玩意传进来就是零点几？
                 combo: re.max_combo, //x
                 mods_arr: re.mods,
                 pp: Math.floor(re.pp) //pp
