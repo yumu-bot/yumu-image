@@ -129,8 +129,8 @@ export async function panel_D(data = {
     //返回上面数组最后一个元素对应的年月日
     user_pc_last_date: '2022-05-01',
 
-    user_lv: '24',
-    user_progress: '98', //%
+    user_lv: 24, //和A卡一致
+    user_progress: 98, //和A卡一致
 
 
 }, reuse = false) {
@@ -258,7 +258,8 @@ export async function panel_D(data = {
     RFRankChart(data.user_ranking_arr, '#FFCC22', user_ranking_max, user_ranking_min);
 
     // 绘制 BP活动 直方图
-    let bp_arr = maximumArrayToFixedLength(data.user_bp_arr.reverse(), 39)
+
+    let bp_arr = maximumArrayToFixedLength(data.user_bp_arr, 39)
 
     let user_bp_activity_max = Math.max.apply(Math, bp_arr);
     let user_bp_activity_max_fixed = Math.max(user_bp_activity_max, 5); //保底机制
@@ -282,7 +283,7 @@ export async function panel_D(data = {
 
     let bp_activity_text = torus.getTextPath(`BP+${user_bp_activity_max}`,
         1050 + bp_arr.findIndex((item) => item === user_bp_activity_max) * 20,
-        515 + 90 * (5 - Math.min(user_bp_activity_max, 5) / 5),
+        515 + 75 * (5 - Math.min(user_bp_activity_max, 5)) / 5, //本来是90，缩减一点
         16,
         'center baseline',
         '#a1a1a1');
@@ -334,7 +335,7 @@ export async function panel_D(data = {
 
     let pc_activity_text = torus.getTextPath(`${user_pc_activity_max}PC`,
         1010 + pc_arr.findIndex((item) => item === user_pc_activity_max) * 20,
-        905 + 90 * (5 - Math.min(user_pc_activity_max, 5)),
+        905 + 75 * (5 - Math.min(user_pc_activity_max, 5)) / 5, //本来是90，缩减一点
         16,
         'center baseline',
         '#a1a1a1');

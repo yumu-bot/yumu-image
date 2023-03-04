@@ -3,6 +3,7 @@ import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
+import {panel_F} from "./src/panel/panel_F.js";
 import {panel_H} from "./src/panel/panel_H.js";
 import fs from "fs";
 
@@ -51,8 +52,8 @@ app.post('/panel_D', async (req, res) => {
             country: user?.country['countryCode'],
             acc: Math.floor(user['accuracy'] * 100) / 100,
             level: user['levelCurrent'],
-            progress: user['levelProgress'],
-            pp: user['pp'],
+            progress: Math.floor(user['levelProgress']),
+            pp: Math.floor(user['pp']),
         };
 
         const label_data = {
@@ -101,10 +102,10 @@ app.post('/panel_D', async (req, res) => {
                 map_difficulty_name: re.beatmap.version,
                 star_rating: re.beatmap.difficulty_rating,
                 score_rank: re.rank,
-                accuracy: re.accuracy, //%
+                accuracy: Math.floor(re.accuracy * 10000) / 100, //这玩意传进来就是零点几？
                 combo: re.max_combo, //x
                 mods_arr: re.mods,
-                pp: re.pp //pp
+                pp: Math.floor(re.pp) //pp
             }
             recent_play.push(d);
         }
@@ -137,8 +138,8 @@ app.post('/panel_D', async (req, res) => {
             grade_S: user?.statistics?.s,
             grade_A: user?.statistics?.a,
 
-            user_lv: user.levelCurrent,
-            user_progress: user.levelCurrent, //%
+            user_lv: 0,
+            user_progress: 0, //%
 
             user_bp_arr: req.fields['bp-time'],
             user_ranking_arr: user?.rank_history.history,

@@ -5,12 +5,12 @@ export async function card_J(data = {
     map_background: '',
     map_title_romanized: 'no title',
     map_difficulty_name: 'who made this',
-    star_rating: '0',
+    star_rating: 0,
     score_rank: 'F',
-    accuracy: '0', //%
-    combo: '0', //x
+    accuracy: 0, //%
+    combo: 0, //x
     mods_arr: [],
-    pp: '0' //pp
+    pp: 0 //pp
 
 }, reuse = false) {
 
@@ -56,19 +56,26 @@ export async function card_J(data = {
     <g id="Text">
     </g>`;
 
+    // 定义文字
+    let text_map_title_romanized = torus.cutStringTail(data.map_title_romanized || '', 18, 170);
+    let text_map_difficulty_name = torus.cutStringTail(data.map_difficulty_name || '', 14, 170);
+    let text_pp = data.pp.toString();
 
     // 替换文字
     let map_title_romanized =
-        torus.getTextPath(data.map_title_romanized, 130, 17.877, 18, "left baseline", "#fff");
+        torus.getTextPath(text_map_title_romanized , 130, 17.877, 18, "left baseline", "#fff");
     let map_difficulty_name =
-        torus.getTextPath(data.map_difficulty_name, 130, 32.571, 14, "left baseline", "#a1a1a1");
+        torus.getTextPath(text_map_difficulty_name, 130, 32.571, 14, "left baseline", "#a1a1a1");
 
     let map_line3_text = (data.accuracy || data.combo) ? data.accuracy + '% ' + data.combo + 'x' : '';
 
     let map_line3 =
         torus.getTextPath(map_line3_text, 300, 47.571, 14, "right baseline", "#a1a1a1");
 
-    let pp = data.pp ? torus.get2SizeTextPath(data.pp, 'PP', 30, 18, 300, 73.795, 'right baseline', '#fff') : '';
+    let pp = data.pp ?
+        torus.get2SizeTextPath(text_pp, 'PP', 30, 18, 300, 73.795, 'right baseline', '#fff')
+        :
+        torus.getTextPath('-', 300, 73.795, 30, 'right baseline', '#fff');
 
     let rank_text_color = '#fff'; if (data.score_rank === 'X' || data.score_rank === 'XH') rank_text_color = '#000'
     let rank =
@@ -119,7 +126,7 @@ export async function card_J(data = {
 
     // 替换图片
 
-    svg = data.map_background ? implantImage(svg, 310, 80, 0, 0, 0.5, data.map_background, reg_background) : svg;
+    svg = data.map_background ? implantImage(svg, 310, 80, 0, 0, 0.2, data.map_background, reg_background) : svg;
     svg = data.map_cover ? implantImage(svg, 120, 80, 0, 0, 1, data.map_cover, reg_cover) : svg;
 
     return svg.toString();

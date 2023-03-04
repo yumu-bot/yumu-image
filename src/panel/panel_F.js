@@ -6,7 +6,7 @@ import {
     getRandomBannerPath,
     getStarRatingObject,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, maximumArrayToFixedLength,
     readTemplate,
     replaceText,
     torus
