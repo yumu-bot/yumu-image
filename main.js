@@ -35,10 +35,7 @@ console.timeEnd()
 
 const app = express();
 app.use(formidable({
-    encoding: 'utf-8',
-    uploadDir: CACHE_PATH,
-    autoClean: true,
-    multiples: true,
+    encoding: 'utf-8', uploadDir: CACHE_PATH, autoClean: true, multiples: true,
 }));
 
 app.post('*', (req, res, next) => {
@@ -147,6 +144,52 @@ app.post('/panel_D', async (req, res) => {
             bp_list.push(d);
         }
 
+        const mpc = user.monthlyPlaycounts;
+        let fd = mpc[0]?.startDate;
+        const dataArr = [];
+        if (fd) {
+            let pData = fd;
+            const mpcObj = {}
+            mpc.forEach(e => {
+                mpcObj[e.startDate] = e.count;
+            })
+            let [year, month, day] = pData.split('-').map(i => parseInt(i));
+            const nowDate = new Date();
+            const thisYear = nowDate.getUTCFullYear();
+            const thisMonth = nowDate.getUTCMonth() + 1;
+            // 如果修改起始日期 参考下面例子
+            //  year = thisYear - 1; //修改年
+            //  month = month === 12 ? 1 : month + 1; //修改月
+            // fd = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-'); //修改要传递的起始日期
+            while (true) {
+                if (year >= thisYear && month >= thisMonth) {
+                    break;
+                }
+
+                let key = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
+
+                if (key in mpcObj) {
+                    dataArr.push(mpcObj[key]);
+                } else {
+                    dataArr.push(0);
+                }
+
+
+                if (month < 12) {
+                    month += 1;
+                } else {
+                    month = 1;
+                    year += 1;
+                }
+            }
+        } else {
+            const nowDate = new Date();
+            const thisYear = nowDate.getUTCFullYear();
+            const thisMonth = nowDate.getUTCMonth() + 1;
+            fd = [thisYear, thisMonth, 1].map(i => i.toString().padStart(2, '0')).join('-');
+        }
+
+
         const op = {
             rank_country: user?.statistics?.country_rank,
             rank_global: user?.statistics?.global_rank,
@@ -167,16 +210,12 @@ app.post('/panel_D', async (req, res) => {
 
             user_bp_arr: req.fields['bp-time'],
             user_ranking_arr: user?.rank_history.history,
-            user_pc_arr: [],
-            user_pc_last_date: '2023-03-01'
+            user_pc_arr: dataArr,
+            user_pc_last_date: fd
         }
 
         const d_data = {
-            ...op,
-            card_A1: card_a1,
-            label_data: label_data,
-            recent_play: recent_play,
-            bp_list: bp_list,
+            ...op, card_A1: card_a1, label_data: label_data, recent_play: recent_play, bp_list: bp_list,
         }
         const png = await panel_D(d_data);
         res.set('Content-Type', 'image/png');
@@ -215,8 +254,7 @@ function checkData(req, files = ['']) {
         }
     }
     return {
-        ...req.fields,
-        ...fs,
+        ...req.fields, ...fs,
     };
 }
 
