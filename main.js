@@ -168,7 +168,7 @@ app.post('/panel_D', async (req, res) => {
             user_bp_arr: req.fields['bp-time'],
             user_ranking_arr: user?.rank_history.history,
             user_pc_arr: [],
-            user_pc_last_date: '2022-05-01'
+            user_pc_last_date: '2023-03-01'
         }
 
         const d_data = {

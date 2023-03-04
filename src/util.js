@@ -449,14 +449,17 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
     const SpecialRoundedSmallNum = (number) => {
         let s = 0;
 
-        if (number <= Math.pow(10, 8)) {
+        if (number < Math.pow(10, 8)) {
             s = -4; //5671 1234 -> 1234
 
-        } else if (number <= Math.pow(10, 12)) {
+        } else if (number < Math.pow(10, 12)) {
             s = -8; //794 5671 1234 -> 5671 1234
 
-        } else if (number <= Math.pow(10, 16)) {
+        } else if (number < Math.pow(10, 16)) {
             s = -12; //794 5671 1234 0000 -> 5671 1234 0000
+
+        } else if (number < Math.pow(10, 20)) {
+            s = -16;
 
         }
 
@@ -516,7 +519,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         }
     }
 
-    let s1 = Math.floor(number).toString().slice(2, 3)
+    let s1 = Math.floor(number).toString().slice(1, 2)
 
     if (level === 3) {
         if (number < Math.pow(10, 3)) {
@@ -550,31 +553,60 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
     return o;
 }
 
+//只给 level 1, 2, 3 提供单位
 function getRoundedNumberUnit(number = 0, level = 0) {
     let unit;
     let m = 3;
 
-    if (level < 1 || level > 3) return '';
+    if (level === 1 || level === 2) {
 
-    if (number < Math.pow(10, m)) {  //level==1->100 level==2->1000
-        unit = '';
-    } else if (number < Math.pow(10, (m += 3))) {
-        unit = 'K';
-    } else if (number < Math.pow(10, (m += 3))) {
-        unit = 'M';
-    } else if (number < Math.pow(10, (m += 3))) {
-        unit = 'G';
-    } else if (number < Math.pow(10, (m += 3))) {
-        unit = 'T';
-    } else if (number < Math.pow(10, (m += 3))) {
-        unit = 'P';
-    } else if (number < Math.pow(10, (m += 3))) {
-        unit = 'E';
-    } else if (number < Math.pow(10, m + 3)) {
-        unit = 'Z';
+        if (number < Math.pow(10, 3)) {  //level==1->100 level==2->1000
+            unit = '';
+        } else if (number < Math.pow(10, 6)) {
+            unit = 'K';
+        } else if (number < Math.pow(10, 9)) {
+            unit = 'M';
+        } else if (number < Math.pow(10, 12)) {
+            unit = 'G';
+        } else if (number < Math.pow(10, 15)) {
+            unit = 'T';
+        } else if (number < Math.pow(10, 18)) {
+            unit = 'P';
+        } else if (number < Math.pow(10, 21)) {
+            unit = 'E';
+        } else if (number < Math.pow(10, 24)) {
+            unit = 'Z';
+        } else {
+            unit = ''
+        }
+
+    } else if (level === 3) {
+
+        if (number < Math.pow(10, 3)) { //0.1K，但是数据还没到1K的位置，就给100了
+            unit = '';
+        } else if (number < Math.pow(10, 5)) { // 1000 -> 1.0K 99 000 -> 99K 从这开始，和上面相比就要减一了
+            unit = 'K';
+        } else if (number < Math.pow(10, 8)) {
+            unit = 'M';
+        } else if (number < Math.pow(10, 11)) {
+            unit = 'G';
+        } else if (number < Math.pow(10, 14)) {
+            unit = 'T';
+        } else if (number < Math.pow(10, 17)) {
+            unit = 'P';
+        } else if (number < Math.pow(10, 20)) {
+            unit = 'E';
+        } else if (number < Math.pow(10, 23)) {
+            unit = 'Z';
+        } else {
+            unit = ''
+        }
+
     } else {
-        unit = ''
+
+        return '';
     }
+
     return unit;
 }
 
