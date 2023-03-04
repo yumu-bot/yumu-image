@@ -7,9 +7,6 @@ import {panel_H} from "./src/panel/panel_H.js";
 import fs from "fs";
 
 initPath();
-
-
-fs.mkdirSync(CACHE_PATH, {recursive: true});
 /*
 console.time()
 console.time('C')
@@ -145,16 +142,14 @@ app.post('/panel_D', async (req, res) => {
         }
 
         const mpc = user.monthlyPlaycounts;
-        console.info(mpc);
-        let fd = mpc[0]?.startDate;
+        let fd = mpc?.[0]?.startDate;
         const dataArr = [];
         if (fd) {
-            let pData = fd;
-            const mpcObj = {}
-            mpc.forEach(e => {
-                mpcObj[e.startDate] = e.count;
-            })
-            let [year, month, day] = pData.split('-').map(i => parseInt(i));
+            const mpcObj = mpc.reduce((obj, {startDate, count}) => {
+                obj[startDate] = count;
+                return obj;
+            }, {});
+            let [year, month, day] = fd.split('-').map(Number);
             const nowDate = new Date();
             const thisYear = nowDate.getUTCFullYear();
             const thisMonth = nowDate.getUTCMonth() + 1;
@@ -167,14 +162,13 @@ app.post('/panel_D', async (req, res) => {
                     break;
                 }
 
-                let key = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
+                const key = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
 
                 if (key in mpcObj) {
                     dataArr.push(mpcObj[key]);
                 } else {
                     dataArr.push(0);
                 }
-
 
                 if (month < 12) {
                     month += 1;
@@ -183,11 +177,12 @@ app.post('/panel_D', async (req, res) => {
                     year += 1;
                 }
             }
+            fd = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
         } else {
             const nowDate = new Date();
             const thisYear = nowDate.getUTCFullYear();
             const thisMonth = nowDate.getUTCMonth() + 1;
-            fd = [thisYear, thisMonth, 1].map(i => i.toString().padStart(2, '0')).join('-');
+            fd = `${thisYear}-${thisMonth.toString().padStart(2, '0')}-01`;
         }
 
 
@@ -214,7 +209,6 @@ app.post('/panel_D', async (req, res) => {
             user_pc_arr: dataArr,
             user_pc_last_date: fd
         }
-
         const d_data = {
             ...op, card_A1: card_a1, label_data: label_data, recent_play: recent_play, bp_list: bp_list,
         }
@@ -222,6 +216,7 @@ app.post('/panel_D', async (req, res) => {
         res.set('Content-Type', 'image/png');
         res.send(png);
         fs.writeFileSync("image/out/panel_D.png", png);
+        fs.writeFileSync("image/out/test.json", JSON.stringify(d_data));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
