@@ -142,16 +142,14 @@ app.post('/panel_D', async (req, res) => {
         }
 
         const mpc = user.monthlyPlaycounts;
-        console.info(mpc);
-        let fd = mpc[0]?.startDate;
+        let fd = mpc?.[0]?.startDate;
         const dataArr = [];
         if (fd) {
-            let pData = fd;
-            const mpcObj = {}
-            mpc.forEach(e => {
-                mpcObj[e.startDate] = e.count;
-            })
-            let [year, month, day] = pData.split('-').map(i => parseInt(i));
+            const mpcObj = mpc.reduce((obj, {startDate, count}) => {
+                obj[startDate] = count;
+                return obj;
+            }, {});
+            let [year, month, day] = fd.split('-').map(Number);
             const nowDate = new Date();
             const thisYear = nowDate.getUTCFullYear();
             const thisMonth = nowDate.getUTCMonth() + 1;
@@ -164,7 +162,7 @@ app.post('/panel_D', async (req, res) => {
                     break;
                 }
 
-                let key = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
+                const key = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
 
                 if (key in mpcObj) {
                     dataArr.push(mpcObj[key]);
@@ -179,11 +177,12 @@ app.post('/panel_D', async (req, res) => {
                     year += 1;
                 }
             }
+            fd = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
         } else {
             const nowDate = new Date();
             const thisYear = nowDate.getUTCFullYear();
             const thisMonth = nowDate.getUTCMonth() + 1;
-            fd = [thisYear, thisMonth, 1].map(i => i.toString().padStart(2, '0')).join('-');
+            fd = `${thisYear}-${thisMonth.toString().padStart(2, '0')}-01`;
         }
 
 
@@ -210,7 +209,6 @@ app.post('/panel_D', async (req, res) => {
             user_pc_arr: dataArr,
             user_pc_last_date: fd
         }
-        console.log(dataArr.length);
         const d_data = {
             ...op, card_A1: card_a1, label_data: label_data, recent_play: recent_play, bp_list: bp_list,
         }
