@@ -3,7 +3,6 @@ import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
-import {panel_F} from "./src/panel/panel_F.js";
 import {panel_H} from "./src/panel/panel_H.js";
 import fs from "fs";
 
@@ -155,7 +154,7 @@ app.post('/panel_D', async (req, res) => {
             bonus_pp: 416.6667 * (1 - 0.9994 ** user?.beatmap_playcounts_cont),
             om4k_pp: user?.statistics?.pp4K,
             om7k_pp: user?.statistics?.pp4K,
-            game_mode: user.playmode, // osu taiko catch mania
+            game_mode: req.fields?.mode, // osu taiko catch mania
 
             grade_XH: user?.statistics?.ssh,
             grade_X: user?.statistics?.ss,
