@@ -135,7 +135,7 @@ export async function card_C (data = {
 
     }
 
-    //
+    // 插入F1 - F3标签的功能函数
 
     async function implantRoundLabelF1 (object, x, y) {
         let label_F1_impl =
@@ -160,13 +160,18 @@ export async function card_C (data = {
             await label_F2({
                 avatar: object.player_avatar,
                 name: object.player_name,
-                mods_arr: object.player_mods,
-                score: object.player_score,
-                rank: object.player_rank,
-                maxWidth: 100,
                 label_color: getUserRankColor(object.player_rank),
             })
         svg = implantSvgBody(svg, x, y, label_F2_impl, reg_bodycard);
+    }
+
+
+    async function implantRoundLabelF3(object, x, y) {
+        let label_F3_impl =
+            await label_F3({
+                avatar: object.player_avatar,
+            })
+        svg = implantSvgBody(svg, x, y, label_F3_impl, reg_bodycard);
     }
 
     //获取玩家名次的背景色，给一二三名赋予特殊的颜色

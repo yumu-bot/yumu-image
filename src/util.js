@@ -1120,7 +1120,7 @@ export function getRandomMascotBGPath() {
  */
 export function modifyArrayToFixedLength(arr = [0], target_length = 0) {
     if (arr.length < target_length) {
-        for (let i = arr.length; i > 0; i--) {
+        for (let i = (target_length - arr.length); i > 0; i--) {
             arr.unshift(0);
         }
         return arr;
