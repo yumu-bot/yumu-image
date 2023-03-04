@@ -145,6 +145,7 @@ app.post('/panel_D', async (req, res) => {
         }
 
         const mpc = user.monthlyPlaycounts;
+        console.info(mpc);
         let fd = mpc[0]?.startDate;
         const dataArr = [];
         if (fd) {
