@@ -17,7 +17,9 @@ export function initPath() {
     return path;
 }
 
-const mascot_pic_sum_arr = [5, 0, 0, 0, 0, 0, 0, 0, 0]; //吉祥物的对应的照片数量，和随机banner一样的
+const mascot_pic_sum_arr = [24, 12, 3, 2, 4, 1, 2, 2, 2]; //吉祥物的对应的照片数量，和随机banner一样的
+// pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
+
 const bannerTotal = 40;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
@@ -1006,30 +1008,60 @@ export function getStarRatingObject(starRating = 0, whichData = 0) {
  */
 export function getMascotName(gamemode = 'osu') {
     gamemode = gamemode.toLowerCase();
-    let //on = 1, //pippi
-        tn = 6, //Mocha, Aiko, Alisa, Chirou, Tama, Taikonator
-        //cn = 1, //Yuzu
-        mn = 2, //Mani, Mari
 
-        t = getRandom(tn),
-        m = getRandom(mn);
+    // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
+    let arr = mascot_pic_sum_arr;
+
+    let t_sum = 0;
+    let t_arr = [];
+
+    let m_sum = 0;
+    let m_arr = [];
+
+    for (let i = 1; i < 7; i++) {
+        t_sum += arr[i];
+        t_arr.push(t_sum);
+    }
+
+    for (let i = 8; i < 10; i++) {
+        m_sum += arr[i];
+        m_arr.push(m_sum);
+    }
+
+    let tr = getRandom(t_sum);
+    let mr = getRandom(m_sum);
+
+    let t = 0;
+    let m = 0;
+
+    for (let i = 0; i < t_arr.length; i++) {
+        if (t_arr[i] >= tr) {
+            t = i; break;
+        }
+    }
+
+    for (let i = 0; i < m_arr.length; i++) {
+        if (m_arr[i] >= mr) {
+            m = i; break;
+        }
+    }
 
     switch (gamemode) {
         case 'osu':
             return 'pippi';
         case 'taiko': {
             switch (t) {
-                case 1 :
+                case 0 :
                     return 'Mocha';
-                case 2 :
+                case 1 :
                     return 'Aiko';
-                case 3 :
+                case 2 :
                     return 'Alisa';
-                case 4 :
+                case 3 :
                     return 'Chirou';
-                case 5 :
+                case 4 :
                     return 'Tama';
-                case 6 :
+                case 5 :
                     return 'Taikonator';
             }
             break;
@@ -1038,9 +1070,9 @@ export function getMascotName(gamemode = 'osu') {
             return 'Yuzu';
         case 'mania': {
             switch (m) {
-                case 1 :
+                case 0 :
                     return 'Mani';
-                case 2 :
+                case 1 :
                     return 'Mari';
             }
             break;
@@ -1531,6 +1563,7 @@ export function delMod(modInt = 0, mod = '') {
     return Mod[mod] ? modInt & ~Mod[mod] : modInt;
 }
 
-export function getRandom(range = 0) {
-    return Math.floor(Math.random() * range) + 1;
+//获取一个1到目标数的随机值
+export function getRandom(range = 1) {
+    return Math.floor(parseInt(moment().format("SSS")) / 1000 * (range - 1)) + 1;
 }
