@@ -7,9 +7,6 @@ import {panel_H} from "./src/panel/panel_H.js";
 import fs from "fs";
 
 initPath();
-
-
-fs.mkdirSync(CACHE_PATH, {recursive: true});
 /*
 console.time()
 console.time('C')
@@ -175,7 +172,6 @@ app.post('/panel_D', async (req, res) => {
                     dataArr.push(0);
                 }
 
-
                 if (month < 12) {
                     month += 1;
                 } else {
@@ -214,7 +210,7 @@ app.post('/panel_D', async (req, res) => {
             user_pc_arr: dataArr,
             user_pc_last_date: fd
         }
-
+        console.log(dataArr.length);
         const d_data = {
             ...op, card_A1: card_a1, label_data: label_data, recent_play: recent_play, bp_list: bp_list,
         }
@@ -222,6 +218,7 @@ app.post('/panel_D', async (req, res) => {
         res.set('Content-Type', 'image/png');
         res.send(png);
         fs.writeFileSync("image/out/panel_D.png", png);
+        fs.writeFileSync("image/out/test.json", JSON.stringify(d_data));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
