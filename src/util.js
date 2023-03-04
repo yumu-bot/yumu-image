@@ -460,6 +460,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
 
         } else if (number < Math.pow(10, 20)) {
             s = -16;
+
         }
 
         o = number.toString().slice(s);
@@ -555,6 +556,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
 //只给 level 1, 2, 3 提供单位
 function getRoundedNumberUnit(number = 0, level = 0) {
     let unit;
+    let m = 3;
 
     if (level === 1 || level === 2) {
 

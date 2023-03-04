@@ -3,18 +3,39 @@ import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
-import {panel_F} from "./src/panel/panel_F.js";
 import {panel_H} from "./src/panel/panel_H.js";
 import fs from "fs";
 
 initPath();
 
+
+fs.mkdirSync(CACHE_PATH, {recursive: true});
+/*
+console.time()
+console.time('C')
+fs.writeFileSync("image/out/panel_C.png", await panel_C());
+console.timeEnd('C')
+console.time('D')
+fs.writeFileSync("image/out/panel_D.png", await panel_D());
+console.timeEnd('D')
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
+console.time('F')
+fs.writeFileSync("image/out/panel_F.png", await panel_F());
+console.timeEnd('F')
+console.time('H')
+fs.writeFileSync("image/out/panel_H.png", await panel_H());
+console.timeEnd('H')
+console.time('I')
+fs.writeFileSync("image/out/panel_I.png", await panel_I());
+console.timeEnd('I')
+console.timeEnd()
+ */
+
 const app = express();
 app.use(formidable({
-    encoding: 'utf-8',
-    uploadDir: CACHE_PATH,
-    autoClean: true,
-    multiples: true,
+    encoding: 'utf-8', uploadDir: CACHE_PATH, autoClean: true, multiples: true,
 }));
 
 app.post('*', (req, res, next) => {
@@ -123,6 +144,52 @@ app.post('/panel_D', async (req, res) => {
             bp_list.push(d);
         }
 
+        const mpc = user.monthlyPlaycounts;
+        let fd = mpc[0]?.startDate;
+        const dataArr = [];
+        if (fd) {
+            let pData = fd;
+            const mpcObj = {}
+            mpc.forEach(e => {
+                mpcObj[e.startDate] = e.count;
+            })
+            let [year, month, day] = pData.split('-').map(i => parseInt(i));
+            const nowDate = new Date();
+            const thisYear = nowDate.getUTCFullYear();
+            const thisMonth = nowDate.getUTCMonth() + 1;
+            // 如果修改起始日期 参考下面例子
+            //  year = thisYear - 1; //修改年
+            //  month = month === 12 ? 1 : month + 1; //修改月
+            // fd = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-'); //修改要传递的起始日期
+            while (true) {
+                if (year >= thisYear && month >= thisMonth) {
+                    break;
+                }
+
+                let key = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
+
+                if (key in mpcObj) {
+                    dataArr.push(mpcObj[key]);
+                } else {
+                    dataArr.push(0);
+                }
+
+
+                if (month < 12) {
+                    month += 1;
+                } else {
+                    month = 1;
+                    year += 1;
+                }
+            }
+        } else {
+            const nowDate = new Date();
+            const thisYear = nowDate.getUTCFullYear();
+            const thisMonth = nowDate.getUTCMonth() + 1;
+            fd = [thisYear, thisMonth, 1].map(i => i.toString().padStart(2, '0')).join('-');
+        }
+
+
         const op = {
             rank_country: user?.statistics?.country_rank,
             rank_global: user?.statistics?.global_rank,
@@ -130,7 +197,7 @@ app.post('/panel_D', async (req, res) => {
             bonus_pp: 416.6667 * (1 - 0.9994 ** user?.beatmap_playcounts_cont),
             om4k_pp: user?.statistics?.pp4K,
             om7k_pp: user?.statistics?.pp4K,
-            game_mode: user.playmode, // osu taiko catch mania
+            game_mode: req.fields?.mode, // osu taiko catch mania
 
             grade_XH: user?.statistics?.ssh,
             grade_X: user?.statistics?.ss,
@@ -143,16 +210,12 @@ app.post('/panel_D', async (req, res) => {
 
             user_bp_arr: req.fields['bp-time'],
             user_ranking_arr: user?.rank_history.history,
-            user_pc_arr: [],
-            user_pc_last_date: '2023-03-01'
+            user_pc_arr: dataArr,
+            user_pc_last_date: fd
         }
 
         const d_data = {
-            ...op,
-            card_A1: card_a1,
-            label_data: label_data,
-            recent_play: recent_play,
-            bp_list: bp_list,
+            ...op, card_A1: card_a1, label_data: label_data, recent_play: recent_play, bp_list: bp_list,
         }
         const png = await panel_D(d_data);
         res.set('Content-Type', 'image/png');
@@ -191,8 +254,7 @@ function checkData(req, files = ['']) {
         }
     }
     return {
-        ...req.fields,
-        ...fs,
+        ...req.fields, ...fs,
     };
 }
 
