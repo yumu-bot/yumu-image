@@ -167,9 +167,9 @@ app.post('/panel_D', async (req, res) => {
             rank_country: user?.statistics?.country_rank,
             rank_global: user?.statistics?.global_rank,
             country: user?.country['countryCode'],
-            bonus_pp: 416.6667 * (1 - 0.9994 ** user?.beatmap_playcounts_cont),
+            bonus_pp: 1000 / 2.4 * (1 - 0.9994 ** user?.beatmap_playcounts_count), // 416.6667
             om4k_pp: user?.statistics?.pp4K,
-            om7k_pp: user?.statistics?.pp4K,
+            om7k_pp: user?.statistics?.pp7K,
             game_mode: req.fields?.mode, // osu taiko catch mania
 
             grade_XH: user?.statistics?.ssh,
