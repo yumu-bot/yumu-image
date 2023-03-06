@@ -1066,7 +1066,7 @@ export function getMascotName(gamemode = 'osu') {
             }
             break;
         }
-        case 'catch':
+        case 'fruits':
             return 'Yuzu';
         case 'mania': {
             switch (m) {
@@ -1212,7 +1212,7 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return 'o';
                 case 'taiko':
                     return 't';
-                case 'catch':
+                case 'fruits':
                     return 'c';
                 case 'mania':
                     return 'm';
@@ -1224,7 +1224,7 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return 'osu!standard';
                 case 'taiko':
                     return 'osu!taiko';
-                case 'catch':
+                case 'fruits':
                     return 'osu!catch';
                 case 'mania':
                     return 'osu!mania';
