@@ -459,10 +459,10 @@ export async function panel_D(data = {
     let user_data_text;
 
     if (game_mode !== 'osu!mania') {
-        user_data_text = game_mode + ' (bonus: ' + parseInt(bonus_pp) + ' PP)';
+        user_data_text = game_mode + ' (bonus: ' + Math.floor(bonus_pp) + ' PP)';
     } else {
-        user_data_text = game_mode + ' (bonus: ' + parseInt(bonus_pp) + ' PP // 4K: '
-            + parseInt(om4k_pp) + ' PP // 7K: ' + parseInt(om7k_pp) + ' PP)';
+        user_data_text = game_mode + ' (bonus: ' + Math.floor(bonus_pp) + ' PP // 4K: '
+            + Math.floor(om4k_pp) + ' PP // 7K: ' + Math.floor(om7k_pp) + ' PP)';
     }
 
     let user_data = torus.getTextPath(
