@@ -3,7 +3,6 @@ import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
-import {panel_H} from "./src/panel/panel_H.js";
 
 initPath();
 /*
@@ -58,20 +57,7 @@ app.post('/panel_D', async (req, res) => {
     const saveFile = new SaveFiles();
     try {
         let user = req.fields?.user;
-        const card_a1 = {
-            background: saveFile.save(await readNetImage(user.cover_url)),
-            avatar: saveFile.save(await readNetImage(user.avatar_url)),
-            sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
-            sub_icon2: '',
-            name: user['username'],
-            rank_global: user['globalRank'],
-            rank_country: user['countryRank'],
-            country: user?.country['countryCode'],
-            acc: Math.floor(user['accuracy'] * 100) / 100,
-            level: user['levelCurrent'],
-            progress: Math.floor(user['levelProgress']),
-            pp: Math.floor(user['pp']),
-        };
+        const card_a1 = await generate.user2CardA1(user);
 
         const label_data = {
             rks: {
@@ -223,10 +209,12 @@ app.post('/panel_D', async (req, res) => {
     res.end();
 })
 
-app.post('/panel_H', async (req, res) => {
+app.post('/panel_E', async (req, res) => {
     try {
-        const f = checkJsonData(req);
-        const png = await panel_H(f);
+        let user = req.fields?.user;
+        const card_a1 = await generate.user2CardA1(user);
+        const label_data = {};
+        const png = await panel_E(user);
         res.set('Content-Type', 'image/png');
         res.send(png);
     } catch (e) {
@@ -277,4 +265,23 @@ function checkJsonData(req) {
     let json = JSON.parse(req.fields['json']);
     parseImage(json);
     return json;
+}
+
+let generate = {
+    user2CardA1: async (user) => {
+        return {
+            background: saveFile.save(await readNetImage(user.cover_url)),
+            avatar: saveFile.save(await readNetImage(user.avatar_url)),
+            sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
+            sub_icon2: '',
+            name: user['username'],
+            rank_global: user['globalRank'],
+            rank_country: user['countryRank'],
+            country: user?.country['countryCode'],
+            acc: Math.floor(user['accuracy'] * 100) / 100,
+            level: user['levelCurrent'],
+            progress: Math.floor(user['levelProgress']),
+            pp: Math.floor(user['pp']),
+        };
+    }
 }
