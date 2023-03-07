@@ -4,7 +4,6 @@ import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, Save
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
 import {panel_H} from "./src/panel/panel_H.js";
-import fs from "fs";
 
 initPath();
 /*
@@ -215,8 +214,6 @@ app.post('/panel_D', async (req, res) => {
         const png = await panel_D(d_data);
         res.set('Content-Type', 'image/png');
         res.send(png);
-        fs.writeFileSync("image/out/panel_D.png", png);
-        fs.writeFileSync("image/out/test.json", JSON.stringify(d_data));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
