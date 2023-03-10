@@ -1,10 +1,9 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
+import {CACHE_PATH, getExportFileV3Path, getModInt, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
-import {panel_H} from "./src/panel/panel_H.js";
-import fs from "fs";
+import {Beatmap, Calculator} from "rosu-pp";
 
 initPath();
 const app = express();
@@ -21,7 +20,7 @@ app.post('*', (req, res, next) => {
 })
 
 //**************************************************** panel ****************************
-app.post('/panel_E', async (req, res) => {
+app.post('/panel_Ex', async (req, res) => {
     try {
         const f = checkJsonData(req);
         const png = await panel_E(f);
@@ -36,20 +35,7 @@ app.post('/panel_D', async (req, res) => {
     const saveFile = new SaveFiles();
     try {
         let user = req.fields?.user;
-        const card_a1 = {
-            background: saveFile.save(await readNetImage(user.cover_url)),
-            avatar: saveFile.save(await readNetImage(user.avatar_url)),
-            sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
-            sub_icon2: '',
-            name: user['username'],
-            rank_global: user['globalRank'],
-            rank_country: user['countryRank'],
-            country: user?.country['countryCode'],
-            acc: Math.floor(user['accuracy'] * 100) / 100,
-            level: user['levelCurrent'],
-            progress: Math.floor(user['levelProgress']),
-            pp: Math.floor(user['pp']),
-        };
+        const card_a1 = await generate.user2CardA1(user, saveFile);
 
         const label_data = {
             rks: {
@@ -167,7 +153,7 @@ app.post('/panel_D', async (req, res) => {
             rank_country: user?.statistics?.country_rank,
             rank_global: user?.statistics?.global_rank,
             country: user?.country['countryCode'],
-            bonus_pp: 1000 / 2.4 * (1 - 0.9994 ** user?.beatmap_playcounts_count), // 416.6667
+            bonus_pp: req.fields['pp-bonus'] | '-', // 416.6667
             om4k_pp: user?.statistics?.pp4K,
             om7k_pp: user?.statistics?.pp7K,
             game_mode: req.fields?.mode, // osu taiko catch mania
@@ -192,8 +178,6 @@ app.post('/panel_D', async (req, res) => {
         const png = await panel_D(d_data);
         res.set('Content-Type', 'image/png');
         res.send(png);
-        fs.writeFileSync("image/out/panel_D.png", png);
-        fs.writeFileSync("image/out/test.json", JSON.stringify(d_data));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
@@ -203,10 +187,33 @@ app.post('/panel_D', async (req, res) => {
     res.end();
 })
 
-app.post('/panel_H', async (req, res) => {
+app.post('/panel_E', async (req, res) => {
     try {
-        const f = checkJsonData(req);
-        const png = await panel_H(f);
+        let user = req.fields?.user;
+
+        let c = new Beatmap({
+            path: '/home/spring/Downloads/REDALiCE - VEGA (Kloyd) [AdveNt\'s Hyper].osu'
+        });
+        let s = new Calculator({
+            mode: 0,
+            mods: getModInt(['HD']),
+            combo: 747,
+            nMisses: 0,
+            n50: 0,
+            n100: 34,
+            n300: 494,
+        })
+
+        let currAttrs = s.performance(c);
+        console.log(currAttrs.pp);
+        s.combo(868);
+        currAttrs = s.performance(c);
+        console.log(currAttrs.pp);
+
+        console.log(req.fields)
+        const card_a1 = await generate.user2CardA1(user, saveFile);
+        const label_data = {};
+        const png = await panel_E(user);
         res.set('Content-Type', 'image/png');
         res.send(png);
     } catch (e) {
@@ -257,4 +264,23 @@ function checkJsonData(req) {
     let json = JSON.parse(req.fields['json']);
     parseImage(json);
     return json;
+}
+
+let generate = {
+    user2CardA1: async (user, saveFile) => {
+        return {
+            background: saveFile.save(await readNetImage(user.cover_url)),
+            avatar: saveFile.save(await readNetImage(user.avatar_url)),
+            sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
+            sub_icon2: '',
+            name: user['username'],
+            rank_global: user['globalRank'],
+            rank_country: user['countryRank'],
+            country: user?.country['countryCode'],
+            acc: Math.floor(user['accuracy'] * 100) / 100,
+            level: user['levelCurrent'],
+            progress: Math.floor(user['levelProgress']),
+            pp: Math.floor(user['pp']),
+        };
+    }
 }

@@ -88,6 +88,45 @@ export async function panel_E(data = {
     // 成绩评级
     score_stats: {
         judge_stat_sum: '1385',
+        judges: [
+            {
+                index: '320',
+                stat: '911',
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#8DCFF4',
+            }, {
+                index: '300',
+                stat: '430',
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#FEF668',
+            }, {
+                index: '200',
+                stat: '41',
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#79C471',
+            }, {
+                index: '100',
+                stat: '0',
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#5E8AC6',
+            }, {
+                index: '50',
+                stat: '0',
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#A1A1A1',
+            }, {
+                index: '0',
+                stat: '3',
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#ED6C9E',
+            },
+        ],
         judge_1: {
             index: '320',
             stat: '911',
@@ -241,12 +280,22 @@ export async function panel_E(data = {
         torus.getTextPath(text_sr_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
 
     let game_mode_unicode;
-    switch (data.game_mode){
-        case 'osu' : game_mode_unicode = '\uE800'; break;
-        case 'taiko' : game_mode_unicode = '\uE801'; break;
-        case 'catch' : game_mode_unicode = '\uE802'; break;
-        case 'mania' : game_mode_unicode = '\uE803'; break;
-        default : game_mode_unicode = ''; break;
+    switch (data.game_mode) {
+        case 'osu' :
+            game_mode_unicode = '\uE800';
+            break;
+        case 'taiko' :
+            game_mode_unicode = '\uE801';
+            break;
+        case 'catch' :
+            game_mode_unicode = '\uE802';
+            break;
+        case 'mania' :
+            game_mode_unicode = '\uE803';
+            break;
+        default :
+            game_mode_unicode = '';
+            break;
     }
     let game_mode = extra.getTextPath(game_mode_unicode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
 
@@ -255,19 +304,19 @@ export async function panel_E(data = {
 
     let map_title_romanized =
         torus.getTextPath(
-            torus.cutStringTail(data.map_title_romanized,48,860),
+            torus.cutStringTail(data.map_title_romanized, 48, 860),
             440, 883.67, 48, "center baseline", "#fff");
     let map_title_unicode =
         PuHuiTi.getTextPath(
-            torus.cutStringTail(data.map_title_unicode,36,860),
+            torus.cutStringTail(data.map_title_unicode, 36, 860),
             440, 931.6, 36, "center baseline", "#fff");
     let map_difficulty =
         torus.getTextPath(
-            torus.cutStringTail(data.map_difficulty,36,860),
+            torus.cutStringTail(data.map_difficulty, 36, 860),
             440, 1004.75, 36, "center baseline", "#fff");
     let map_artist_mapper_bid =
         torus.getTextPath(
-            torus.cutStringTail(data.map_artist_mapper_bid,24,860),
+            torus.cutStringTail(data.map_artist_mapper_bid, 24, 860),
             440, 1036.84, 24, "center baseline", "#fff");
 
     /*
@@ -278,7 +327,7 @@ export async function panel_E(data = {
             409.43, 60, "left baseline", "#fff");
      */
 
-    let main_score = torus.get2SizeTextPath(getRoundedNumberLargerStr(data.score,-1), getRoundedNumberSmallerStr(data.score,-1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
+    let main_score = torus.get2SizeTextPath(getRoundedNumberLargerStr(data.score, -1), getRoundedNumberSmallerStr(data.score, -1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
 
     let title_density =
         torus.getTextPath("Density", 900, 802.88, 18, "left baseline", "#a1a1a1");
@@ -286,14 +335,14 @@ export async function panel_E(data = {
         torus.getTextPath("Retry // Fail", 900, 922.63, 18, "left baseline", "#a1a1a1");
     let map_public_rating =
         torus.getTextPath("Rating " + data.map_public_rating,
-        1420, 802.88, 18, "right baseline", "#a1a1a1");
+            1420, 802.88, 18, "right baseline", "#a1a1a1");
     let map_retryfail_percent =
         torus.getTextPath("R " + data.map_retry_percent + "% // F " + data.map_fail_percent + "%",
-        1420, 922.63, 18, "right baseline", "#a1a1a1");
+            1420, 922.63, 18, "right baseline", "#a1a1a1");
 
     //console.timeEnd("txt");
     //console.time("stats");
-    
+
     // 成绩评级
     const Stats = (i, data, sum) => {
         let font_y = 412.79 + i * 40;
@@ -314,13 +363,12 @@ export async function panel_E(data = {
     };
 
     for (let i = 1; i <= 6; i++) {
-        if (data.score_stats[`judge_${i}`]) {
-            Stats(i, data.score_stats[`judge_${i}`], data.score_stats.judge_stat_sum);
+        if (data?.score_stats?.judges[i]) {
+            Stats(i, data?.score_stats?.judges[i], data.score_stats.judge_stat_sum);
         }
     }
 
     // 评级或难度分布
-    // 百度的方法，这也太暴力了吧 我不是很理解,为什么要用 eval ? eval是执行一段js代码的字符串,既然是在写js代码,直接写上
     const density_arr_max = Math.max.apply(Math, data.map_density_arr);
 
     data.map_density_arr.forEach((item, i) => {
@@ -331,7 +379,7 @@ export async function panel_E(data = {
     })
 
     // 星数
-    function Star (data, sr_b, sr_m) {
+    function Star(data, sr_b, sr_m) {
         let sr_m_scale = Math.pow(sr_m, 0.8);
 
         if (sr_b >= 10) {
@@ -356,7 +404,7 @@ export async function panel_E(data = {
     Star(data, sr_b, sr_m);
 
     //最右下的失败率
-    function RFrect (data) {
+    function RFrect(data) {
         let rect_svg = `<rect id="BaseRRect" x="1440" y="1020" width="420" height="4" rx="2" ry="2" style="fill: #a1a1a1;"/>
       <rect id="RetryRRect" x="1440" y="1020" width="${4.2 * (Number(data.map_fail_percent) + Number(data.map_retry_percent))}" height="4" rx="2" ry="2" style="fill: #f6d659;"/>
       <rect id="FailRRect" x="1440" y="1020" width="${4.2 * data.map_fail_percent}" height="4" rx="2" ry="2" style="fill: #ed6c9e;"/>`
@@ -367,7 +415,9 @@ export async function panel_E(data = {
     RFrect(data);
 
     //中下的失败率重试率图像
-    let RFsum_arr = data.map_fail_arr.map(function(v, i) {return v + data.map_retry_arr[i];});
+    let RFsum_arr = data.map_fail_arr.map(function (v, i) {
+        return v + data.map_retry_arr[i];
+    });
     let RFarr_max = Math.max.apply(Math, RFsum_arr);
 
     /*
@@ -395,14 +445,14 @@ export async function panel_E(data = {
 
      */
 
-    function RFBarChart (arr, color, max){
+    function RFBarChart(arr, color, max) {
         const step = 520 / arr.length //一步好像刚好5.2px
         const start_x = 900;
         const start_y = 1020;
 
-        let rect_svg =`<g>`
+        let rect_svg = `<g>`
 
-        arr.forEach((item,i) => {
+        arr.forEach((item, i) => {
             let lineto_x = start_x + step * (i)
             let lineto_y = start_y - (item / max * 90);
             rect_svg += `<rect id="RFrect${i}" x="${lineto_x}" y="${lineto_y}" width="${step}" height="${start_y - lineto_y}" rx="2" ry="2" style="fill: ${color};"/>`
@@ -415,28 +465,36 @@ export async function panel_E(data = {
     RFBarChart(RFsum_arr, '#f6d659', RFarr_max); // 这里是retry
 
     // 成绩分类（中间四个照片）
-    function ScoreCategory (sc) {
+    function ScoreCategory(sc) {
         let pl_link = 'default';
         let cl_link = 'default';
         let nm_link = 'default';
         let fc_link = 'default';
 
-        if (sc === "played") {pl_link = ''}
-        if (sc === "clear") {cl_link = ''}
-        if (sc === "nomiss") {nm_link = ''}
-        if (sc === "fullcombo") {fc_link = ''}
+        if (sc === "played") {
+            pl_link = ''
+        }
+        if (sc === "clear") {
+            cl_link = ''
+        }
+        if (sc === "nomiss") {
+            nm_link = ''
+        }
+        if (sc === "fullcombo") {
+            fc_link = ''
+        }
 
         let reg = /(?<=<g id="LBPassStat">)/
-        svg = implantImage(svg,150,40,1060,690,1,`object-score-fullcombo${fc_link}.png`,reg)
-        svg = implantImage(svg,150,40,900,690,1,`object-score-nomiss${nm_link}.png`,reg)
-        svg = implantImage(svg,150,40,1060,640,1,`object-score-clear${cl_link}.png`,reg)
-        svg = implantImage(svg,150,40,900,640,1,`object-score-play${pl_link}.png`,reg)
+        svg = implantImage(svg, 150, 40, 1060, 690, 1, `object-score-fullcombo${fc_link}.png`, reg)
+        svg = implantImage(svg, 150, 40, 900, 690, 1, `object-score-nomiss${nm_link}.png`, reg)
+        svg = implantImage(svg, 150, 40, 1060, 640, 1, `object-score-clear${cl_link}.png`, reg)
+        svg = implantImage(svg, 150, 40, 900, 640, 1, `object-score-play${pl_link}.png`, reg)
     }
 
     ScoreCategory(data.score_categorize);
 
     //成绩圆环显示 中点1075 485 x900-1210 y330-640 r=105px
-    function Ring (acc) {
+    function Ring(acc) {
         let a;//assist points 中继点
         let rad = 2 * Math.PI * acc / 100; //弧度
 
@@ -518,17 +576,25 @@ export async function panel_E(data = {
     //console.time("img");
     // 插入评级大照片和背景
 
-    function scoreRankSVGShown (rank = 'D') {
+    function scoreRankSVGShown(rank = 'D') {
         let w = 0; //很奇怪，输出明明好好的，但是位置不对
         switch (rank) {
-            case 'B': w = 5; break;
-            case 'C': w = -5; break;
-            case 'D': w = 10; break;
-            case 'F': w = 5; break;
+            case 'B':
+                w = 5;
+                break;
+            case 'C':
+                w = -5;
+                break;
+            case 'D':
+                w = 10;
+                break;
+            case 'F':
+                w = 5;
+                break;
         }
 
-        svg = implantImage(svg,1920,790,0,290,0.8,`object-score-backimage-${rank}.jpg`,reg_judge_background);
-        svg = implantImage(svg,150 + w,150,980,405,1,`object-score-${rank}.png`,reg_score_rank); //微调了x，让它增加了5
+        svg = implantImage(svg, 1920, 790, 0, 290, 0.8, `object-score-backimage-${rank}.jpg`, reg_judge_background);
+        svg = implantImage(svg, 150 + w, 150, 980, 405, 1, `object-score-${rank}.png`, reg_score_rank); //微调了x，让它增加了5
     }
 
     scoreRankSVGShown(data.score_rank);
@@ -537,11 +603,11 @@ export async function panel_E(data = {
     let banner_overlay = 'banner-overlay.png';
     let banner_rrect = `<rect width="1920" height="320" rx="20" ry="20" style="fill: ${getStarRatingColor(data.star_rating)}; opacity: 0.8;"/>`;
 
-    if (data.star_rating){
-        svg = implantImage(svg,1920,320,0,0,1,banner_overlay,reg_banner);
+    if (data.star_rating) {
+        svg = implantImage(svg, 1920, 320, 0, 0, 1, banner_overlay, reg_banner);
         svg = replaceText(svg, banner_rrect, reg_banner);
     } else {
-        svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
+        svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     }
 
     // 插入谱面状态
@@ -549,23 +615,23 @@ export async function panel_E(data = {
 
     //console.time('newSVG')
     // 插入图片和部件（新方法 ==============================================================================================
-    svg = implantSvgBody(svg,40,40,card_A1_impl,reg_maincard);
+    svg = implantSvgBody(svg, 40, 40, card_A1_impl, reg_maincard);
 
-    svg = implantSvgBody(svg,1230,680,label_acc,reg_mod);
-    svg = implantSvgBody(svg,1440,680,label_combo,reg_mod);
-    svg = implantSvgBody(svg,1650,680,label_pp,reg_mod);
-    svg = implantSvgBody(svg,1440,790,label_bpm,reg_mod);
-    svg = implantSvgBody(svg,1650,790,label_length,reg_mod);
-    svg = implantSvgBody(svg,1440,870,label_cs,reg_mod);
-    svg = implantSvgBody(svg,1650,870,label_ar,reg_mod);
-    svg = implantSvgBody(svg,1440,950,label_od,reg_mod);
-    svg = implantSvgBody(svg,1650,950,label_hp,reg_mod);
+    svg = implantSvgBody(svg, 1230, 680, label_acc, reg_mod);
+    svg = implantSvgBody(svg, 1440, 680, label_combo, reg_mod);
+    svg = implantSvgBody(svg, 1650, 680, label_pp, reg_mod);
+    svg = implantSvgBody(svg, 1440, 790, label_bpm, reg_mod);
+    svg = implantSvgBody(svg, 1650, 790, label_length, reg_mod);
+    svg = implantSvgBody(svg, 1440, 870, label_cs, reg_mod);
+    svg = implantSvgBody(svg, 1650, 870, label_ar, reg_mod);
+    svg = implantSvgBody(svg, 1440, 950, label_od, reg_mod);
+    svg = implantSvgBody(svg, 1650, 950, label_hp, reg_mod);
 
-    svg = implantImage(svg,380,440,250,375,1,data.map_background,reg_map_background);
-    svg = implantImage(svg,420,450,230,370,1,data.map_hexagon,reg_map_hexagon);
-    svg = implantImage(svg,18,18,746,364,1,data.map_favorite,reg_map_favorite);
-    svg = implantImage(svg,18,16,746,338,1,data.map_playcount,reg_map_playcount);
-    svg = implantImage(svg,50,50,683,334,1,status,reg_map_status);
+    svg = implantImage(svg, 380, 440, 250, 375, 1, data.map_background, reg_map_background);
+    svg = implantImage(svg, 420, 450, 230, 370, 1, data.map_hexagon, reg_map_hexagon);
+    svg = implantImage(svg, 18, 18, 746, 364, 1, data.map_favorite, reg_map_favorite);
+    svg = implantImage(svg, 18, 16, 746, 338, 1, data.map_playcount, reg_map_playcount);
+    svg = implantImage(svg, 50, 50, 683, 334, 1, status, reg_map_status);
 
     return await exportPng(svg);
 }
