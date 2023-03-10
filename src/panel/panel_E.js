@@ -369,7 +369,6 @@ export async function panel_E(data = {
     }
 
     // 评级或难度分布
-    // 百度的方法，这也太暴力了吧 我不是很理解,为什么要用 eval ? eval是执行一段js代码的字符串,既然是在写js代码,直接写上
     const density_arr_max = Math.max.apply(Math, data.map_density_arr);
 
     data.map_density_arr.forEach((item, i) => {
