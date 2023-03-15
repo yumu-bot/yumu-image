@@ -189,18 +189,12 @@ export async function panel_E(data = {
     map_playcount: getExportFileV3Path('object-beatmap-playcount.png'),
     map_status: 'ranked', //ranked approved loved graveyard notsubmitted qualified pending workinprogress
 
-    // 面板文字
-
-    index_powered: 'powered by Yumubot v0.3.0 EA // Score (!ymp / !ymr / !yms)',
-    index_request_time: 'request time: ' + getNowTimeStamp(),
-    index_panel_name: 'S v3.6',
-
     score_rank: 'S',
     star_rating: '4.79',
     score: '2154980',
     score_acc_progress: '97.8', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
-    game_mode: 'osu', // osu taiko catch mania
+    game_mode: 'osu', // osu taiko fruits mania
     map_status_fav: '3.9K',
     map_status_pc: '78.2M',
 
@@ -233,6 +227,11 @@ export async function panel_E(data = {
 
     let reg_index = /(?<=<g id="Index">)/;
 
+    // 面板文字
+    const index_powered = 'powered by Yumubot v0.3.0 EA // Score (!ymp / !ymr / !yms)';
+    const index_request_time = 'request time: ' + getNowTimeStamp();
+    const index_panel_name = 'S v3.6';
+
     // 卡片定义
     //console.time("label");
     let label_acc =
@@ -264,12 +263,12 @@ export async function panel_E(data = {
     let text_sr_m = getStarRatingObject(data.star_rating, 3)
 
     // 文字定义
-    let index_powered = torus.getTextPath(data.index_powered, 10, 26.84, 24, "left baseline", "#fff");
-    let index_request_time = torus.getTextPath(data.index_request_time, 1910, 26.84, 24, "right baseline", "#fff");
+    let index_powered_path = torus.getTextPath(index_powered, 10, 26.84, 24, "left baseline", "#fff");
+    let index_request_time_path = torus.getTextPath(index_request_time, 1910, 26.84, 24, "right baseline", "#fff");
     let tm_ipn =
-        torus.getTextMetrics(data.index_panel_name, 0, 0, 48, "left baseline", "#fff");
+        torus.getTextMetrics(index_panel_name, 0, 0, 48, "left baseline", "#fff");
     let ipn_x = 607.5 - tm_ipn.width / 2;
-    let index_panel_name = torus.getTextPath(data.index_panel_name, ipn_x, 83.67, 48, "left baseline", "#fff");
+    let index_panel_name_path = torus.getTextPath(index_panel_name, ipn_x, 83.67, 48, "left baseline", "#fff");
 
     let tm_sr_b =
         torus.getTextMetrics(text_sr_b, 0, 0, 48, "left baseline", "#fff");
@@ -280,14 +279,14 @@ export async function panel_E(data = {
         torus.getTextPath(text_sr_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
 
     let game_mode_unicode;
-    switch (data.game_mode) {
+    switch (data.game_mode.toLowerCase()) {
         case 'osu' :
             game_mode_unicode = '\uE800';
             break;
         case 'taiko' :
             game_mode_unicode = '\uE801';
             break;
-        case 'catch' :
+        case 'fruits' :
             game_mode_unicode = '\uE802';
             break;
         case 'mania' :
@@ -535,9 +534,9 @@ export async function panel_E(data = {
     Ring(data.score_acc_progress);
 
     // 插入文字和颜色
-    svg = replaceText(svg, index_powered, reg_index);
-    svg = replaceText(svg, index_request_time, reg_index);
-    svg = replaceText(svg, index_panel_name, reg_index);
+    svg = replaceText(svg, index_powered_path, reg_index);
+    svg = replaceText(svg, index_request_time_path, reg_index);
+    svg = replaceText(svg, index_panel_name_path, reg_index);
     svg = replaceText(svg, star_rating, reg_index);
     svg = replaceText(svg, game_mode, reg_index);
     svg = replaceText(svg, map_status_fav, reg_index);

@@ -1,9 +1,8 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, getExportFileV3Path, getModInt, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
+import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
-import {Beatmap, Calculator} from "rosu-pp";
 
 initPath();
 const app = express();
@@ -188,36 +187,136 @@ app.post('/panel_D', async (req, res) => {
 })
 
 app.post('/panel_E', async (req, res) => {
+    const saveFile = new SaveFiles();
     try {
-        let user = req.fields?.user;
-
-        let c = new Beatmap({
-            path: '/home/spring/Downloads/REDALiCE - VEGA (Kloyd) [AdveNt\'s Hyper].osu'
-        });
-        let s = new Calculator({
-            mode: 0,
-            mods: getModInt(['HD']),
-            combo: 747,
-            nMisses: 0,
-            n50: 0,
-            n100: 34,
-            n300: 494,
-        })
-
-        let currAttrs = s.performance(c);
-        console.log(currAttrs.pp);
-        s.combo(868);
-        currAttrs = s.performance(c);
-        console.log(currAttrs.pp);
-
-        console.log(req.fields)
+        const user = req.fields?.user;
+        const score = req.fields?.score;
         const card_a1 = await generate.user2CardA1(user, saveFile);
-        const label_data = {};
-        const png = await panel_E(user);
+        const newLable = (remark, data_b, data_m) => {
+            return {
+                remark: remark,
+                data_b: data_b,
+                data_m: data_m,
+            }
+        }
+        const label_data = {
+            acc: newLable('-', Math.floor(score * 100), `${Math.floor(score * 10000) % 100}%`),
+            combo: newLable(`${score.beatmap.max_combo}x`, score.max_combo, 'x'),
+            pp: newLable('', `${Math.floor(score.pp)}.`, `${Math.floor(score.pp * 100) % 100}`),
+            bpm: newLable('', score.beatmap.bpm, `${Math.floor(score.beatmap.bpm * 100) % 100 ? Math.floor(score.beatmap.bpm * 100) % 100 : ''}`),
+            length: newLable(`${score.beatmap.total_length / 60}:${score.beatmap.total_length % 60}`, `${score.beatmap.total_length / 60}:`, score.beatmap.total_length % 60),
+            cs: newLable('', `${Math.floor(score.beatmap.cs)}.`, Math.floor(score.beatmap.cs * 100) % 100),
+            ar: newLable('', `${Math.floor(score.beatmap.ar)}.`, Math.floor(score.beatmap.ar * 100) % 100),
+            od: newLable('', `${Math.floor(score.beatmap.accuracy)}.`, Math.floor(score.beatmap.accuracy * 100) % 100),
+            hp: newLable('-', `${Math.floor(score.beatmap.drain)}.`, Math.floor(score.beatmap.drain * 100) % 100),
+        };
+        const newJudge = (n320, n300, n200, n100, n50, n0) => {
+            const judges = [];
+            if (n320) {
+                judges.push({
+                    index: '320',
+                    stat: n320,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                })
+            } else judges.push({});
+            if (n300) {
+                judges.push({
+                    index: '300',
+                    stat: n300,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                })
+            } else judges.push({});
+            if (n200) {
+                judges.push({
+                    index: '200',
+                    stat: n200,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#79C471',
+                })
+            } else judges.push({});
+            if (n100) {
+                judges.push({
+                    index: '100',
+                    stat: n100,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#5E8AC6',
+                })
+            } else judges.push({});
+            if (n50) {
+                judges.push({
+                    index: '50',
+                    stat: n50,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#A1A1A1',
+                })
+            } else judges.push({});
+            if (n0) {
+                judges.push({
+                    index: '0',
+                    stat: n0,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#ED6C9E',
+                })
+            } else judges.push({});
+
+            return judges;
+        }
+        const score_stats = {
+            judge_stat_sum: (score.beatmap.count_sliders + score.beatmap.count_spinners + score.beatmap.count_circles),
+            judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss)
+        }
+
+        const data = {
+            map_density_arr: [],
+            map_retry_arr: [],
+            map_fail_arr: [],
+            mods_arr: score.mods,
+
+            map_background: saveFile.save(await readNetImage(score.beatmapset.covers.cover)),
+            star: getExportFileV3Path('object-beatmap-star.png'),
+            map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
+            map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
+            map_playcount: getExportFileV3Path('object-beatmap-playcount.png'),
+            map_status: 'ranked',
+
+            score_rank: score.rank,
+            star_rating: score.beatmap.difficulty_rating,
+            score: score.score,
+            score_acc_progress: Math.floor(score.accuracy * 10000) / 100,
+
+            game_mode: score.mode.toLowerCase(),
+            map_status_fav: score.beatmapset.favourite_count,
+            map_status_pc: score.beatmapset.play_count,
+
+            map_title_romanized: score.beatmapset.title,
+            map_title_unicode: score.beatmapset.title_unicode,
+            map_difficulty: score.beatmap.version,
+            map_artist_mapper_bid: `${score.beatmapset.artist} // ${score.beatmapset.creator} // ${score.beatmap.id}`,
+            map_public_rating: '9.8', //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
+            map_retry_percent: '54', //重试率%
+            map_fail_percent: '13.2', //失败率%
+
+            score_categorize: '',
+
+            card_A1: card_a1,
+            label_data: label_data,
+            score_stats: score_stats,
+        }
+        const png = await panel_E(data);
         res.set('Content-Type', 'image/png');
         res.send(png);
     } catch (e) {
         res.status(500).send(e.stack);
+    } finally {
+        saveFile.remove();
     }
 })
 

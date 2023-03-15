@@ -6,6 +6,7 @@ import exports from 'convert-svg-to-png';
 import https from "https";
 import path from "path";
 import moment from "moment";
+import {Beatmap, Calculator} from "rosu-pp";
 
 const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
@@ -1566,4 +1567,25 @@ export function delMod(modInt = 0, mod = '') {
 //获取一个1到目标数的随机值
 export function getRandom(range = 1) {
     return Math.floor(parseInt(moment().format("SSS")) / 1000 * (range - 1)) + 1;
+}
+
+export function getPP(bid, score) {
+    let c = new Beatmap({
+        path: '/home/spring/Downloads/REDALiCE - VEGA (Kloyd) [AdveNt\'s Hyper].osu'
+    });
+    let s = new Calculator({
+        mode: 0,
+        mods: getModInt(['HD']),
+        combo: 747,
+        nMisses: 0,
+        n50: 0,
+        n100: 34,
+        n300: 494,
+    })
+
+    let currAttrs = s.performance(c);
+    console.log(currAttrs.pp);
+    s.combo(868);
+    currAttrs = s.performance(c);
+    console.log(currAttrs.pp);
 }
