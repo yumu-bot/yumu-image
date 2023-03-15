@@ -592,8 +592,8 @@ export async function panel_E(data = {
                 break;
         }
 
-        svg = implantImage(svg, 1920, 790, 0, 290, 0.8, `object-score-backimage-${rank}.jpg`, reg_judge_background);
-        svg = implantImage(svg, 150 + w, 150, 980, 405, 1, `object-score-${rank}.png`, reg_score_rank); //微调了x，让它增加了5
+        svg = implantImage(svg, 1920, 790, 0, 290, 0.8, getExportFileV3Path(`object-score-backimage-${rank}.jpg`), reg_judge_background);
+        svg = implantImage(svg, 150 + w, 150, 980, 405, 1, getExportFileV3Path(`object-score-${rank}.png`), reg_score_rank); //微调了x，让它增加了5
     }
 
     scoreRankSVGShown(data.score_rank);
