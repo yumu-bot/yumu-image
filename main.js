@@ -204,7 +204,7 @@ app.post('/panel_E', async (req, res) => {
             combo: newLable(`${score.beatmap.max_combo}x`, score.max_combo, 'x'),
             pp: newLable('', `${Math.floor(score.pp)}.`, `${Math.floor(score.pp * 100) % 100}`),
             bpm: newLable('', score.beatmap.bpm, `${Math.floor(score.beatmap.bpm * 100) % 100 ? Math.floor(score.beatmap.bpm * 100) % 100 : ''}`),
-            length: newLable(`${score.beatmap.total_length / 60}:${score.beatmap.total_length % 60}`, `${score.beatmap.total_length / 60}:`, score.beatmap.total_length % 60),
+            length: newLable(`${Math.floor(score.beatmap.total_length / 60)}:${Math.floor(score.beatmap.total_length) % 60}`, `${Math.floor(score.beatmap.total_length / 60)}:`, Math.floor(score.beatmap.total_length) % 60),
             cs: newLable('', `${Math.floor(score.beatmap.cs)}.`, Math.floor(score.beatmap.cs * 100) % 100),
             ar: newLable('', `${Math.floor(score.beatmap.ar)}.`, Math.floor(score.beatmap.ar * 100) % 100),
             od: newLable('', `${Math.floor(score.beatmap.accuracy)}.`, Math.floor(score.beatmap.accuracy * 100) % 100),
