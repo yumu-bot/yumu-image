@@ -484,10 +484,10 @@ export async function panel_E(data = {
         }
 
         let reg = /(?<=<g id="LBPassStat">)/
-        svg = implantImage(svg, 150, 40, 1060, 690, 1, `object-score-fullcombo${fc_link}.png`, reg)
-        svg = implantImage(svg, 150, 40, 900, 690, 1, `object-score-nomiss${nm_link}.png`, reg)
-        svg = implantImage(svg, 150, 40, 1060, 640, 1, `object-score-clear${cl_link}.png`, reg)
-        svg = implantImage(svg, 150, 40, 900, 640, 1, `object-score-play${pl_link}.png`, reg)
+        svg = implantImage(svg, 150, 40, 1060, 690, 1, getExportFileV3Path(`object-score-fullcombo${fc_link}.png`), reg)
+        svg = implantImage(svg, 150, 40, 900, 690, 1, getExportFileV3Path(`object-score-nomiss${nm_link}.png`), reg)
+        svg = implantImage(svg, 150, 40, 1060, 640, 1, getExportFileV3Path(`object-score-clear${cl_link}.png`), reg)
+        svg = implantImage(svg, 150, 40, 900, 640, 1, getExportFileV3Path(`object-score-play${pl_link}.png`), reg)
     }
 
     ScoreCategory(data.score_categorize);
@@ -599,7 +599,7 @@ export async function panel_E(data = {
     scoreRankSVGShown(data.score_rank);
 
     //插入新版 banner
-    let banner_overlay = 'banner-overlay.png';
+    let banner_overlay = getExportFileV3Path('banner-overlay.png');
     let banner_rrect = `<rect width="1920" height="320" rx="20" ry="20" style="fill: ${getStarRatingColor(data.star_rating)}; opacity: 0.8;"/>`;
 
     if (data.star_rating) {
