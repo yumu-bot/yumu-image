@@ -296,7 +296,44 @@ app.post('/panel_E', async (req, res) => {
             judge_stat_sum: (score.beatmap.count_sliders + score.beatmap.count_spinners + score.beatmap.count_circles),
             judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss)
         }
-        const png = await panel_E(user);
+
+        const data = {
+            map_density_arr: [],
+            map_retry_arr: [],
+            map_fail_arr: [],
+            mods_arr: score.mods,
+
+            map_background: saveFile.save(await readNetImage(score.beatmapset.covers.cover)),
+            star: getExportFileV3Path('object-beatmap-star.png'),
+            map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
+            map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
+            map_playcount: getExportFileV3Path('object-beatmap-playcount.png'),
+            map_status: 'ranked',
+
+            score_rank: score.rank,
+            star_rating: score.beatmap.difficulty_rating,
+            score: score.score,
+            score_acc_progress: Math.floor(score.accuracy * 10000) / 100,
+
+            game_mode: score.mode.toLowerCase(),
+            map_status_fav: score.beatmapset.favourite_count,
+            map_status_pc: score.beatmapset.play_count,
+
+            map_title_romanized: score.beatmapset.title,
+            map_title_unicode: score.beatmapset.title_unicode,
+            map_difficulty: score.beatmap.version,
+            map_artist_mapper_bid: `${score.beatmapset.artist} // ${score.beatmapset.creator} // ${score.beatmap.id}`,
+            map_public_rating: '9.8', //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
+            map_retry_percent: '54', //重试率%
+            map_fail_percent: '13.2', //失败率%
+
+            score_categorize: '',
+
+            card_A1: card_a1,
+            label_data: label_data,
+            score_stats: score_stats,
+        }
+        const png = await panel_E(data);
         res.set('Content-Type', 'image/png');
         res.send(png);
     } catch (e) {
