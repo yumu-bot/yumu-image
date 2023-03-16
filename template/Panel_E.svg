@@ -108,67 +108,13 @@
       </g>
     </g>
     <g id="LUMapObject">
-      <g style="clip-path: url(#clippath-PE-PC);">
-      </g>
-      <g style="clip-path: url(#clippath-PE-FV);">
-      </g>
       <g style="clip-path: url(#clippath-PE-ST);">
       </g>
     </g>
     <g id="LUStars">
-      <g id="_1Star" data-name="1Star">
-        <g style="clip-path: url(#clippath-PE-R1);">
-          <use transform="translate(40 396)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
-      <g id="_2Star" data-name="2Star">
-        <g style="clip-path: url(#clippath-PE-R2);">
-          <use transform="translate(40 431)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
-      <g id="_3Star" data-name="3Star">
-        <g style="clip-path: url(#clippath-PE-R3);">
-          <use transform="translate(40 466)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
-      <g id="_4Star" data-name="4Star">
-        <g style="clip-path: url(#clippath-PE-R4);">
-          <use transform="translate(40 501)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
-      <g id="_5Star" data-name="5Star">
-        <g style="clip-path: url(#clippath-PE-R5);">
-          <use transform="translate(40 536)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
-      <g id="_6Star" data-name="6Star">
-        <g style="clip-path: url(#clippath-PE-R6);">
-          <use transform="translate(40 571)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
-      <g id="_7Star" data-name="7Star">
-        <g style="clip-path: url(#clippath-PE-R7);">
-          <use transform="translate(40 606)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
-      <g id="_8Star" data-name="8Star">
-        <g style="clip-path: url(#clippath-PE-R8);">
-          <use transform="translate(40 641)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
-      <g id="_9Star" data-name="9Star">
-        <g style="clip-path: url(#clippath-PE-R9);">
-          <use transform="translate(40 676)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
-      <g id="_10Star" data-name="10Star">
-        <g style="clip-path: url(#clippath-PE-R10);">
-          <use transform="translate(40 711)" xlink:href="image/E_Star.png"/>
-        </g>
-      </g>
     </g>
     <g id="LUCard">
-      <rect id="StarRRect-3" data-name="StarRRect" x="40" y="330" width="190" height="60" rx="20" ry="20" style="fill: #382e32;"/>
+      <rect id="StarRRect-3" x="40" y="330" width="190" height="60" rx="20" ry="20" style="fill: #382e32;"/>
     </g>
   </g>
   <g id="MainCard">

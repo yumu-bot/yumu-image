@@ -178,8 +178,8 @@ export async function panel_E(data = {
     let reg_mod = /(?<=<g id="RUMods">)/
     let reg_map_background = /(?<=<g style="clip-path: url\(#clippath-PE-MC\);">)/;
     let reg_map_hexagon = /(?<=<g id="LUMapStatus">)/; // 移到上一层
-    let reg_map_favorite = /(?<=<g style="clip-path: url\(#clippath-PE-PC\);">)/;
-    let reg_map_playcount = /(?<=<g style="clip-path: url\(#clippath-PE-FV\);">)/;
+    let reg_map_favorite = /(?<=<g id="LUMapObject">)/;
+    let reg_map_playcount = /(?<=<g id="LUMapObject">)/;
     let reg_map_status = /(?<=<g style="clip-path: url\(#clippath-PE-ST\);">)/;
 
     let reg_index = /(?<=<g id="Index">)/;
