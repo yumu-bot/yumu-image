@@ -199,7 +199,7 @@ app.post('/panel_E', async (req, res) => {
             }
         }
         const label_data = {
-            acc: newLabel('-', Math.floor(score * 100), `${Math.floor(score * 10000) % 100}%`),
+            acc: newLabel('-', Math.floor(score.accuracy * 100), `${Math.floor(score.accuracy * 10000) % 100}%`),
             combo: newLabel(`${score.beatmap.max_combo}x`, score.max_combo, 'x'),
             pp: newLabel('', `${Math.floor(score.pp)}.`, `${Math.floor(score.pp * 100) % 100}`),
             bpm: newLabel('', score.beatmap.bpm, `${Math.floor(score.beatmap.bpm * 100) % 100 ? Math.floor(score.beatmap.bpm * 100) % 100 : ''}`),
@@ -244,7 +244,7 @@ app.post('/panel_E', async (req, res) => {
                         }); break;
                     }
 
-                    case 'fruits': {
+                    case 'fruit': {
                         judges.push({
                             index: '300',
                             stat: n300,
@@ -298,7 +298,7 @@ app.post('/panel_E', async (req, res) => {
                             rrect_color: '#79C471',
                         }); break;
                     }
-                    case 'fruits': {
+                    case 'fruit': {
                         judges.push({
                             index: '100',
                             stat: n100,
@@ -328,7 +328,7 @@ app.post('/panel_E', async (req, res) => {
                             stat: n50,
                             index_color: '#fff',
                             stat_color: '#fff',
-                            rrect_color: '#5E8AC6',
+                            rrect_color: '#FEF668',
                         }); break;
                     }
                     case 'mania': {
@@ -353,7 +353,7 @@ app.post('/panel_E', async (req, res) => {
                 })
             } else judges.push({});
 
-            if (n200 && gamemode === 'fruits') { //ctb的n200 （丢小果
+            if (n200 && gamemode === 'fruit') { //ctb的n200 （丢小果
                 judges.push({
                     index: 'MD',
                     stat: n200,
@@ -370,7 +370,7 @@ app.post('/panel_E', async (req, res) => {
             switch (gamemode) {
                 case 'osu': return n300 + n100 + n50 + n0;
                 case 'taiko': return n300 + n100 + n0;
-                case 'fruits': return Math.max( n300 + n100 + n50 + n0, n200); //小果miss(katu)也要传过去的
+                case 'fruit': return Math.max( n300 + n100 + n50 + n0, n200); //小果miss(katu)也要传过去的
                 case 'mania': return n320 + n300 + n200 + n100 + n50 + n0;
                 default: return n320 + n300 + n200 + n100 + n50 + n0;
             }
@@ -408,9 +408,9 @@ app.post('/panel_E', async (req, res) => {
             map_title_unicode: score.beatmapset.title_unicode,
             map_difficulty: score.beatmap.version,
             map_artist_mapper_bid: `${score.beatmapset.artist} // ${score.beatmapset.creator} // ${score.beatmap.id}`,
-            map_public_rating: '9.8', //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
-            map_retry_percent: '54', //重试率%
-            map_fail_percent: '13.2', //失败率%
+            map_public_rating: 9.8, //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
+            map_retry_percent: 54, //重试率%
+            map_fail_percent: 13.2, //失败率%
 
             score_categorize: '',
 
