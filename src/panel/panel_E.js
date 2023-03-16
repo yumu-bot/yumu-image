@@ -178,8 +178,8 @@ export async function panel_E(data = {
     let reg_mod = /(?<=<g id="RUMods">)/
     let reg_map_background = /(?<=<g style="clip-path: url\(#clippath-PE-MC\);">)/;
     let reg_map_hexagon = /(?<=<g id="LUMapStatus">)/; // 移到上一层
-    let reg_map_favorite = /(?<=<g id="LUMapObject">)/;
-    let reg_map_playcount = /(?<=<g id="LUMapObject">)/;
+    let reg_map_favorite = /(?<=<g style="clip-path: url\(#clippath-PE-PC\);">)/;
+    let reg_map_playcount = /(?<=<g style="clip-path: url\(#clippath-PE-FV\);">)/;
     let reg_map_status = /(?<=<g style="clip-path: url\(#clippath-PE-ST\);">)/;
 
     let reg_index = /(?<=<g id="Index">)/;
@@ -597,8 +597,8 @@ export async function panel_E(data = {
 
     svg = implantImage(svg, 380, 410, 250, 390, 1, data.map_background, reg_map_background);
     svg = implantImage(svg, 420, 450, 230, 370, 1, data.map_hexagon, reg_map_hexagon);
-    svg = implantImage(svg, 18, 18, 746, 364, 1, data.map_favorite, reg_map_favorite);
-    svg = implantImage(svg, 18, 16, 746, 338, 1, data.map_playcount, reg_map_playcount);
+    svg = implantImage(svg, 18, 18, 746, 338, 1, data.map_favorite, reg_map_favorite);
+    svg = implantImage(svg, 18, 16, 746, 364, 1, data.map_playcount, reg_map_playcount);
     svg = implantImage(svg, 50, 50, 683, 334, 1, status, reg_map_status);
 
     return await exportPng(svg);

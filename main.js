@@ -199,15 +199,34 @@ app.post('/panel_E', async (req, res) => {
             }
         }
         const label_data = {
-            acc: newLabel('-', Math.floor(score.accuracy * 100), `${Math.floor(score.accuracy * 10000) % 100}%`),
-            combo: newLabel(`${score.beatmap.max_combo}x`, score.max_combo, 'x'),
-            pp: newLabel('', `${Math.floor(score.pp)}.`, `${Math.floor(score.pp * 100) % 100}`),
-            bpm: newLabel('', score.beatmap.bpm, `${Math.floor(score.beatmap.bpm * 100) % 100 ? Math.floor(score.beatmap.bpm * 100) % 100 : ''}`),
-            length: newLabel(`${Math.floor(score.beatmap.total_length / 60)}:${Math.floor(score.beatmap.total_length) % 60}`, `${Math.floor(score.beatmap.total_length / 60)}:`, Math.floor(score.beatmap.total_length) % 60),
-            cs: newLabel('', `${Math.floor(score.beatmap.cs)}.`, Math.floor(score.beatmap.cs * 100) % 100),
-            ar: newLabel('', `${Math.floor(score.beatmap.ar)}.`, Math.floor(score.beatmap.ar * 100) % 100),
-            od: newLabel('', `${Math.floor(score.beatmap.accuracy)}.`, Math.floor(score.beatmap.accuracy * 100) % 100),
-            hp: newLabel('-', `${Math.floor(score.beatmap.drain)}.`, Math.floor(score.beatmap.drain * 100) % 100),
+            acc: newLabel('-',
+                Math.floor(score.accuracy * 100).toString(),
+                `${Math.floor(score.accuracy * 10000) % 100}%`),
+
+            combo: newLabel(`${score.beatmap.max_combo}x`,
+                score.max_combo.toString(),
+                'x'),
+            pp: newLabel('',
+                `${Math.floor(score.pp)}.`,
+                `${Math.floor(score.pp * 100) % 100}`),
+            bpm: newLabel('',
+                score.beatmap.bpm.toString(),
+                `${Math.floor(score.beatmap.bpm * 100) % 100 ? Math.floor(score.beatmap.bpm * 100) % 100 : ''}`),
+            length: newLabel(`${Math.floor(score.beatmap.total_length / 60)}:${Math.floor(score.beatmap.total_length) % 60}`,
+                `${Math.floor(score.beatmap.total_length / 60)}:`,
+                Math.floor(score.beatmap.total_length) % 60),
+            cs: newLabel('',
+                `${Math.floor(score.beatmap.cs)}.`,
+                Math.floor(score.beatmap.cs * 10) % 10),
+            ar: newLabel('',
+                `${Math.floor(score.beatmap.ar)}.`,
+                Math.floor(score.beatmap.ar * 10) % 10),
+            od: newLabel('',
+                `${Math.floor(score.beatmap.accuracy)}.`,
+                Math.floor(score.beatmap.accuracy * 10) % 10),
+            hp: newLabel('-',
+                `${Math.floor(score.beatmap.drain)}.`,
+                Math.floor(score.beatmap.drain * 10) % 10),
         };
         const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
             const judges = [];
