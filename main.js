@@ -6,9 +6,9 @@ import {panel_E} from "./src/panel/panel_E.js";
 import fs from "fs";
 
 initPath();
-console.time('E')
-fs.writeFileSync("image/out/panel_E.png", await panel_E());
-console.timeEnd('E')
+console.time('D')
+fs.writeFileSync("image/out/panel_D.png", await panel_D());
+console.timeEnd('D')
 
 /*
 console.time()
@@ -234,9 +234,10 @@ app.post('/panel_E', async (req, res) => {
             od: newLabel('', `${Math.floor(score.beatmap.accuracy)}.`, Math.floor(score.beatmap.accuracy * 100) % 100),
             hp: newLabel('-', `${Math.floor(score.beatmap.drain)}.`, Math.floor(score.beatmap.drain * 100) % 100),
         };
-        const newJudge = (n320, n300, n200, n100, n50, n0) => {
+        const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
             const judges = [];
-            if (n320) {
+
+            if (n320 && gamemode === 'mania') { //只有mania有n320
                 judges.push({
                     index: '320',
                     stat: n320,
@@ -245,16 +246,53 @@ app.post('/panel_E', async (req, res) => {
                     rrect_color: '#8DCFF4',
                 })
             } else judges.push({});
+
             if (n300) {
-                judges.push({
-                    index: '300',
-                    stat: n300,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: '#FEF668',
-                })
+                switch (gamemode){
+                    case 'osu': {
+                        judges.push({
+                            index: '300',
+                            stat: n300,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#8DCFF4',
+                        }); break;
+                    }
+
+                    case 'taiko': {
+                        judges.push({
+                            index: '300',
+                            stat: n300,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#8DCFF4',
+                        }); break;
+                    }
+
+                    case 'fruits': {
+                        judges.push({
+                            index: '300',
+                            stat: n300,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#8DCFF4',
+                        }); break;
+                    }
+
+                    case 'mania': {
+                        judges.push({
+                            index: '300',
+                            stat: n300,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#FEF668',
+                        }); break;
+                    }
+                }
+
             } else judges.push({});
-            if (n200) {
+
+            if (n200 && gamemode === 'mania') {
                 judges.push({
                     index: '200',
                     stat: n200,
@@ -263,24 +301,74 @@ app.post('/panel_E', async (req, res) => {
                     rrect_color: '#79C471',
                 })
             } else judges.push({});
+
             if (n100) {
-                judges.push({
-                    index: '100',
-                    stat: n100,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: '#5E8AC6',
-                })
+
+                switch (gamemode) {
+                    case 'osu': {
+                        judges.push({
+                            index: '100',
+                            stat: n100,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#79C471',
+                        }); break;
+                    }
+                    case 'taiko': {
+                        judges.push({
+                            index: '100',
+                            stat: n100,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#79C471',
+                        }); break;
+                    }
+                    case 'fruits': {
+                        judges.push({
+                            index: '100',
+                            stat: n100,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#79C471',
+                        }); break;
+                    }
+                    case 'mania': {
+                        judges.push({
+                            index: '100',
+                            stat: n100,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#5E8AC6',
+                        }); break;
+                    }
+                }
+
+
             } else judges.push({});
+
             if (n50) {
-                judges.push({
-                    index: '50',
-                    stat: n50,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: '#A1A1A1',
-                })
+                switch (gamemode) {
+                    case 'osu': {
+                        judges.push({
+                            index: '50',
+                            stat: n50,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#5E8AC6',
+                        }); break;
+                    }
+                    case 'mania': {
+                        judges.push({
+                            index: '50',
+                            stat: n50,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#A1A1A1',
+                        }); break;
+                    }
+                }
             } else judges.push({});
+
             if (n0) {
                 judges.push({
                     index: '0',
@@ -291,10 +379,32 @@ app.post('/panel_E', async (req, res) => {
                 })
             } else judges.push({});
 
+            if (n200 && gamemode === 'fruits') { //ctb的n200 （丢小果
+                judges.push({}); //留空格？
+                judges.push({
+                    index: 'MD',
+                    stat: n200,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#A1A1A1',
+                })
+            }
+
             return judges;
         }
+
+        const sumJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
+            switch (gamemode) {
+                case 'osu': return n300 + n100 + n50 + n0;
+                case 'taiko': return n300 + n100 + n0;
+                case 'fruits': return Math.max( n300 + n100 + n50 + n0, n200); //小果miss(katu)也要传过去的
+                case 'mania': return n320 + n300 + n200 + n100 + n50 + n0;
+                default: return n320 + n300 + n200 + n100 + n50 + n0;
+            }
+        }
+
         const score_stats = {
-            judge_stat_sum: (score.beatmap.count_sliders + score.beatmap.count_spinners + score.beatmap.count_circles),
+            judge_stat_sum: sumJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode.toLowerCase()),
             judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss)
         }
 
@@ -392,8 +502,8 @@ function checkJsonData(req) {
 let generate = {
     user2CardA1: async (user) => {
         return {
-            background: await readNetImage(user.cover_url),
-            avatar: await readNetImage(user.avatar_url),
+            background: await readNetImage(user.cover_url, getExportFileV3Path('card-default.png')),
+            avatar: await readNetImage(user.avatar_url, getExportFileV3Path('avatar-guest.png')),
             sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
             sub_icon2: '',
             name: user['username'],
