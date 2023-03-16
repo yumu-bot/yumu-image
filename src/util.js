@@ -429,6 +429,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
         o = Math.floor(number).toString();
     }
 
+    let s0 = '0.';
     let s1 = number.toString().slice(0, 1) + '.';
     let s2 = number.toString().slice(0, 2);
 
@@ -440,25 +441,27 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
         } else if (number < Math.pow(10, 5)) {
             o = s2;
         } else if (number < Math.pow(10, 6)) {
-            o = s1;
+            o = s0;
         } else if (number < Math.pow(10, 7)) {
-            o = s2;
-        } else if (number < Math.pow(10, 8)) {
             o = s1;
-        } else if (number < Math.pow(10, 9)) {
+        } else if (number < Math.pow(10, 8)) {
             o = s2;
+        } else if (number < Math.pow(10, 9)) {
+            o = s0;
         } else if (number < Math.pow(10, 10)) {
             o = s1;
         } else if (number < Math.pow(10, 11)) {
             o = s2;
         } else if (number < Math.pow(10, 12)) {
-            o = s1;
+            o = s0;
         } else if (number < Math.pow(10, 13)) {
-            o = s2;
-        } else if (number < Math.pow(10, 14)) {
             o = s1;
-        } else if (number < Math.pow(10, 15)) {
+        } else if (number < Math.pow(10, 14)) {
             o = s2;
+        } else if (number < Math.pow(10, 15)) {
+            o = s0;
+        } else if (number < Math.pow(10, 16)) {
+            o = s1;
         } else o = Math.floor(number).toString();
     }
     return o;
@@ -546,7 +549,8 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         }
     }
 
-    let s1 = Math.floor(number).toString().slice(1, 2)
+    let s0 = Math.floor(number).toString().slice(0, 1);
+    let s1 = Math.floor(number).toString().slice(1, 2);
 
     if (level === 3) {
         if (number < Math.pow(10, 3)) {
@@ -556,25 +560,27 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         } else if (number < Math.pow(10, 5)) {
             o = unit;
         } else if (number < Math.pow(10, 6)) {
-            o = s1 + unit;
+            o = s0 + unit;
         } else if (number < Math.pow(10, 7)) {
-            o = unit;
-        } else if (number < Math.pow(10, 8)) {
             o = s1 + unit;
-        } else if (number < Math.pow(10, 9)) {
+        } else if (number < Math.pow(10, 8)) {
             o = unit;
+        } else if (number < Math.pow(10, 9)) {
+            o = s0 + unit;
         } else if (number < Math.pow(10, 10)) {
             o = s1 + unit;
         } else if (number < Math.pow(10, 11)) {
             o = unit;
         } else if (number < Math.pow(10, 12)) {
-            o = s1 + unit;
+            o = s0 + unit;
         } else if (number < Math.pow(10, 13)) {
-            o = unit;
-        } else if (number < Math.pow(10, 14)) {
             o = s1 + unit;
-        } else if (number < Math.pow(10, 15)) {
+        } else if (number < Math.pow(10, 14)) {
             o = unit;
+        } else if (number < Math.pow(10, 15)) {
+            o = s0 + unit;
+        } else if (number < Math.pow(10, 16)) {
+            o = s1 + unit;
         } else o = '';
     }
     return o;

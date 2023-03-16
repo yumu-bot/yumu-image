@@ -87,13 +87,13 @@ export async function panel_D(data = {
     // K卡 max: 8
     bp_list: [
         {
-            map_background: 'PanelObject/D_CardK_Background.png',
+            map_background: 'beatmap-defaultBG.jpg',
             star_rating: 2.7,
             score_rank: 'X',
             bp_ranking: 1,
             bp_pp: '369'
         }, {
-            map_background: 'PanelObject/D_CardK_Background.png',
+            map_background: 'beatmap-defaultBG.jpg',
             star_rating: 2.7,
             score_rank: 'X',
             bp_ranking: 2,
@@ -231,9 +231,20 @@ export async function panel_D(data = {
         374.754, 36, "right baseline", "#fff");
     let rank_country = torus.getTextPath(rank_country_text, 1860, 374.754, 24, "right baseline", "#a1a1a1");
 
-    // 绘制rank曲线
-    let user_ranking_max = Math.max.apply(Math, data.user_ranking_arr);
-    let user_ranking_min = Math.min.apply(Math, data.user_ranking_arr);
+
+    // 绘制rank曲线。
+    let ranking_arr = data.user_ranking_arr;
+    let ranking_nozero_arr = [];
+
+    let user_ranking_max = Math.max.apply(Math, ranking_arr);
+
+    //处理rank数组，如果有0，补最大值
+    ranking_arr.forEach((v) => {
+        if (v === 0) v = user_ranking_max;
+        ranking_nozero_arr.push(v);
+    });
+
+    let user_ranking_min = Math.min.apply(Math, ranking_nozero_arr);
     let user_ranking_mid = (user_ranking_max + user_ranking_min) / 2;
 
     function RFRankChart(arr, color, max, min) {
@@ -257,7 +268,7 @@ export async function panel_D(data = {
         svg = replaceText(svg, path_svg, reg_ranking_graph);
     }
 
-    RFRankChart(data.user_ranking_arr, '#FFCC22', user_ranking_max, user_ranking_min);
+    RFRankChart(ranking_nozero_arr, '#FFCC22', user_ranking_max, user_ranking_min);
 
     // 绘制 BP活动 直方图
 
