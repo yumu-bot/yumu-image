@@ -87,41 +87,41 @@ export async function panel_E(data = {
 
     // 成绩评级
     score_stats: {
-        judge_stat_sum: '1385',
+        judge_stat_sum: 1385,
         judges: [
             {
                 index: '320',
-                stat: '911',
+                stat: 911,
                 index_color: '#fff',
                 stat_color: '#fff',
                 rrect_color: '#8DCFF4',
             }, {
                 index: '300',
-                stat: '430',
+                stat: 430,
                 index_color: '#fff',
                 stat_color: '#fff',
                 rrect_color: '#FEF668',
             }, {
                 index: '200',
-                stat: '41',
+                stat: 41,
                 index_color: '#fff',
                 stat_color: '#fff',
                 rrect_color: '#79C471',
             }, {
                 index: '100',
-                stat: '0',
+                stat: 0,
                 index_color: '#fff',
                 stat_color: '#fff',
                 rrect_color: '#5E8AC6',
             }, {
                 index: '50',
-                stat: '0',
+                stat: 0,
                 index_color: '#fff',
                 stat_color: '#fff',
                 rrect_color: '#A1A1A1',
             }, {
                 index: '0',
-                stat: '3',
+                stat: 3,
                 index_color: '#fff',
                 stat_color: '#fff',
                 rrect_color: '#ED6C9E',
@@ -241,13 +241,13 @@ export async function panel_E(data = {
             game_mode_unicode = '\uE800';
             break;
         case 'taiko' :
-            game_mode_unicode = '\uE801';
+            game_mode_unicode = '\uE803';
             break;
         case 'fruits' :
-            game_mode_unicode = '\uE802';
+            game_mode_unicode = '\uE801';
             break;
         case 'mania' :
-            game_mode_unicode = '\uE803';
+            game_mode_unicode = '\uE802';
             break;
         default :
             game_mode_unicode = '';
@@ -301,26 +301,28 @@ export async function panel_E(data = {
 
     // 成绩评级
     const Stats = (i, data, sum) => {
-        let font_y = 412.79 + i * 40;
+        let font_y = 412.79 + (i + 1) * 40;
         let font_index_x = 1266;
         let font_stat_x = 1792;
 
-        let index = torus.getTextPath(data.index,
+        let index = torus.getTextPath(data.index.toString(),
             font_index_x, font_y, 30, "right baseline", data.index_color);
-        let stat = torus.getTextPath(data.stat,
+        let stat = torus.getTextPath(data.stat.toString(),
             font_stat_x, font_y, 30, "left baseline", data.stat_color);
+
         svg = replaceText(svg, index, reg_index);
         svg = replaceText(svg, stat, reg_index);
+
         if (data.stat > 0) {
             let rect_width = 500 * data.stat / sum
-            let svg_rect = `<rect id="L${i}RRect" x="1280" y="${390 + 40 * i}" width="${Math.max(rect_width, 20)}" height="28" rx="10" ry="10" style="fill: ${data.rrect_color};"/>`;
+            let svg_rect = `<rect id="L${i}RRect" x="1280" y="${390 + 40 * (i + 1)}" width="${Math.max(rect_width, 20)}" height="28" rx="10" ry="10" style="fill: ${data.rrect_color};"/>`;
             svg = replaceText(svg, svg_rect, /(?<=<g id="MMScoreRRect">)/);
         }
     };
 
-    for (let i = 1; i <= 6; i++) {
+    for (let i = 0; i < 6; i++) {
         if (data?.score_stats?.judges[i]) {
-            Stats(i, data?.score_stats?.judges[i], data.score_stats.judge_stat_sum);
+            Stats(i, data?.score_stats?.judges[i], parseInt(data.score_stats.judge_stat_sum));
         }
     }
 

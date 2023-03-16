@@ -6,9 +6,9 @@ import {panel_E} from "./src/panel/panel_E.js";
 import fs from "fs";
 
 initPath();
-console.time('D')
-fs.writeFileSync("image/out/panel_D.png", await panel_D());
-console.timeEnd('D')
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
 
 /*
 console.time()
@@ -245,7 +245,7 @@ app.post('/panel_E', async (req, res) => {
                     stat_color: '#fff',
                     rrect_color: '#8DCFF4',
                 })
-            } else judges.push({});
+            } // else judges.push({}); //好像不用顶掉这个
 
             if (n300) {
                 switch (gamemode){
@@ -300,7 +300,7 @@ app.post('/panel_E', async (req, res) => {
                     stat_color: '#fff',
                     rrect_color: '#79C471',
                 })
-            } else judges.push({});
+            } // else judges.push({}); //好像不用顶掉这个
 
             if (n100) {
 
@@ -342,7 +342,6 @@ app.post('/panel_E', async (req, res) => {
                         }); break;
                     }
                 }
-
 
             } else judges.push({});
 
