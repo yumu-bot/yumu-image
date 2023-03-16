@@ -1,20 +1,24 @@
 import fs from 'fs';
 import os from "os";
+import crypto from 'crypto';
 import TextToSVG from 'text-to-svg';
 import axios from "axios";
 import exports from 'convert-svg-to-png';
 import https from "https";
 import path from "path";
 import moment from "moment";
-import {Beatmap, Calculator} from "rosu-pp";
 
 const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE
 
+const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
+export const OSU_BUFFER_PATH = IMG_BUFFER_PATH + "/osu";
+const MD5 = crypto.createHash("md5");
+
 export function initPath() {
-    let path = CACHE_PATH;
-    fs.access(path, fs.constants.F_OK, (e) => fs.mkdirSync(path, {recursive: true}));
+    fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
+    fs.access(OSU_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     return path;
 }
 
@@ -51,8 +55,22 @@ export function getExportFileV3Path(path = '') {
 
 export async function readNetImage(path = '') {
     if (path.startsWith("http")) {
-        return (await axios.get(path, {responseType: 'arraybuffer'})).data;
+        return "";
     }
+    const bufferName = MD5.update(path).digest('hex');
+    const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
+    try {
+        fs.accessSync(bufferPath, fs.constants.F_OK);
+        if (fs.statSync(bufferPath).size <= 4 * 1024) {
+            throw Error();
+        }
+        return bufferPath;
+    } catch (e) {
+        //no file
+    }
+    const data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
+    fs.writeFileSync(bufferPath, data, 'binary');
+    return bufferPath;
 }
 
 export const exportPng = svgToPng;
@@ -1037,13 +1055,15 @@ export function getMascotName(gamemode = 'osu') {
 
     for (let i = 0; i < t_arr.length; i++) {
         if (t_arr[i] >= tr) {
-            t = i; break;
+            t = i;
+            break;
         }
     }
 
     for (let i = 0; i < m_arr.length; i++) {
         if (m_arr[i] >= mr) {
-            m = i; break;
+            m = i;
+            break;
         }
     }
 
@@ -1567,25 +1587,4 @@ export function delMod(modInt = 0, mod = '') {
 //获取一个1到目标数的随机值
 export function getRandom(range = 1) {
     return Math.floor(parseInt(moment().format("SSS")) / 1000 * (range - 1)) + 1;
-}
-
-export function getPP(bid, score) {
-    let c = new Beatmap({
-        path: '/home/spring/Downloads/REDALiCE - VEGA (Kloyd) [AdveNt\'s Hyper].osu'
-    });
-    let s = new Calculator({
-        mode: 0,
-        mods: getModInt(['HD']),
-        combo: 747,
-        nMisses: 0,
-        n50: 0,
-        n100: 34,
-        n300: 494,
-    })
-
-    let currAttrs = s.performance(c);
-    console.log(currAttrs.pp);
-    s.combo(868);
-    currAttrs = s.performance(c);
-    console.log(currAttrs.pp);
 }

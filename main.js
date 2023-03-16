@@ -1,10 +1,12 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage, SaveFiles} from "./src/util.js";
+import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
+import {calcPerformancePoints} from "./src/compute-pp.js";
 
 initPath();
+calcPerformancePoints(4033395, 0, 'osu');
 const app = express();
 app.use(formidable({
     encoding: 'utf-8', uploadDir: CACHE_PATH, autoClean: true, multiples: true,
@@ -31,10 +33,9 @@ app.post('/panel_Ex', async (req, res) => {
 })
 
 app.post('/panel_D', async (req, res) => {
-    const saveFile = new SaveFiles();
     try {
         let user = req.fields?.user;
-        const card_a1 = await generate.user2CardA1(user, saveFile);
+        const card_a1 = await generate.user2CardA1(user);
 
         const label_data = {
             rks: {
@@ -74,7 +75,7 @@ app.post('/panel_D', async (req, res) => {
         let reList = req.fields['re-list'];
         const recent_play = [];
         for (const re of reList) {
-            const cover = saveFile.save(await readNetImage(re.beatmapset.covers.cover));
+            const cover = await readNetImage(re.beatmapset.covers.cover);
             let d = {
                 map_cover: cover,
                 map_background: cover,
@@ -95,7 +96,7 @@ app.post('/panel_D', async (req, res) => {
 
         for (const bp of bpList) {
             let d = {
-                map_background: saveFile.save(await readNetImage(bp.beatmapset.covers.cover)),
+                map_background: await readNetImage(bp.beatmapset.covers.cover),
                 star_rating: bp.beatmap.difficulty_rating,
                 score_rank: bp.rank,
                 bp_pp: bp.pp
@@ -180,18 +181,15 @@ app.post('/panel_D', async (req, res) => {
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
-    } finally {
-        saveFile.remove();
     }
     res.end();
 })
 
 app.post('/panel_E', async (req, res) => {
-    const saveFile = new SaveFiles();
     try {
         const user = req.fields?.user;
         const score = req.fields?.score;
-        const card_a1 = await generate.user2CardA1(user, saveFile);
+        const card_a1 = await generate.user2CardA1(user);
         const newLable = (remark, data_b, data_m) => {
             return {
                 remark: remark,
@@ -280,7 +278,7 @@ app.post('/panel_E', async (req, res) => {
             map_fail_arr: [],
             mods_arr: score.mods,
 
-            map_background: saveFile.save(await readNetImage(score.beatmapset.covers.cover)),
+            map_background: await readNetImage(score.beatmapset.covers.cover),
             star: getExportFileV3Path('object-beatmap-star.png'),
             map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
             map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
@@ -315,8 +313,6 @@ app.post('/panel_E', async (req, res) => {
         res.send(png);
     } catch (e) {
         res.status(500).send(e.stack);
-    } finally {
-        saveFile.remove();
     }
 })
 
@@ -366,10 +362,10 @@ function checkJsonData(req) {
 }
 
 let generate = {
-    user2CardA1: async (user, saveFile) => {
+    user2CardA1: async (user) => {
         return {
-            background: saveFile.save(await readNetImage(user.cover_url)),
-            avatar: saveFile.save(await readNetImage(user.avatar_url)),
+            background: await readNetImage(user.cover_url),
+            avatar: await readNetImage(user.avatar_url),
             sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
             sub_icon2: '',
             name: user['username'],
