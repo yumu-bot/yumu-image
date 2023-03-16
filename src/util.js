@@ -1231,8 +1231,8 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0) {
 }
 
 /**
- * @function 给游戏模式扩展或缩减名字
- * @return {String} 返回吉祥物背景路径
+ * @function 获取游戏模式
+ * @return {String} 游戏模式
  * @param gamemode 默认游戏模式，osu taiko catch mania
  * @param level 等级，0为不变，1为全写 osu!standard，-1为简写 o t m c
  */
@@ -1245,7 +1245,7 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return 'o';
                 case 'taiko':
                     return 't';
-                case 'fruits':
+                case 'fruit':
                     return 'c';
                 case 'mania':
                     return 'm';
@@ -1257,7 +1257,7 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return 'osu!standard';
                 case 'taiko':
                     return 'osu!taiko';
-                case 'fruits':
+                case 'fruit':
                     return 'osu!catch';
                 case 'mania':
                     return 'osu!mania';

@@ -147,21 +147,21 @@ export async function panel_E(data = {
     map_status: 'ranked', //ranked approved loved graveyard notsubmitted qualified pending workinprogress
 
     score_rank: 'S',
-    star_rating: '4.79',
-    score: '2154980',
-    score_acc_progress: '97.8', //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
+    star_rating: 4.79,
+    score: 1144770,
+    score_acc_progress: 97.8, //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
-    game_mode: 'osu', // osu taiko fruits mania
-    map_status_fav: '3.9K',
-    map_status_pc: '78.2M',
+    game_mode: 'osu', // osu taiko fruit mania
+    map_status_fav: 3900,
+    map_status_pc: 782547,
 
     map_title_romanized: 'Hyakukakai to Shirotokkuri',
     map_title_unicode: '百花魁と白徳利',
     map_difficulty: 'Expert',
     map_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136',
-    map_public_rating: '9.8', //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
-    map_retry_percent: '54', //重试率%
-    map_fail_percent: '13.2', //失败率%
+    map_public_rating: 9.8, //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
+    map_retry_percent: 54, //重试率%
+    map_fail_percent: 13.2, //失败率%
 
     // 面板颜色和特性 颜色已经写成方法
     //color_gamemode: '#7ac943',
@@ -243,7 +243,7 @@ export async function panel_E(data = {
         case 'taiko' :
             game_mode_unicode = '\uE803';
             break;
-        case 'fruits' :
+        case 'fruit' :
             game_mode_unicode = '\uE801';
             break;
         case 'mania' :
@@ -255,8 +255,11 @@ export async function panel_E(data = {
     }
     let game_mode = extra.getTextPath(game_mode_unicode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
 
-    let map_status_fav = torus.getTextPath(data.map_status_fav, 840, 353.84, 24, "right baseline", "#fff");
-    let map_status_pc = torus.getTextPath(data.map_status_pc, 840, 380.84, 24, "right baseline", "#fff");
+    let map_fav = getRoundedNumberLargerStr((data.map_status_fav || 0), 3) + getRoundedNumberSmallerStr((data.map_status_fav || 0), 3);
+    let map_pc = getRoundedNumberLargerStr((data.map_status_pc || 0), 3) + getRoundedNumberSmallerStr((data.map_status_pc || 0), 3);
+
+    let map_status_fav = torus.getTextPath(map_fav, 840, 353.84, 24, "right baseline", "#fff");
+    let map_status_pc = torus.getTextPath(map_pc, 840, 380.84, 24, "right baseline", "#fff");
 
     let map_title_romanized =
         torus.getTextPath(
