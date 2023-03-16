@@ -405,7 +405,7 @@ app.post('/panel_E', async (req, res) => {
 
         const score_stats = {
             judge_stat_sum: sumJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode.toLowerCase()),
-            judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss)
+            judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode.toLowerCase())
         }
 
         const data = {
