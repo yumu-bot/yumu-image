@@ -6,6 +6,32 @@ import {panel_E} from "./src/panel/panel_E.js";
 import fs from "fs";
 
 initPath();
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
+
+/*
+console.time()
+console.time('C')
+fs.writeFileSync("image/out/panel_C.png", await panel_C());
+console.timeEnd('C')
+console.time('D')
+fs.writeFileSync("image/out/panel_D.png", await panel_D());
+console.timeEnd('D')
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
+console.time('F')
+fs.writeFileSync("image/out/panel_F.png", await panel_F());
+console.timeEnd('F')
+console.time('H')
+fs.writeFileSync("image/out/panel_H.png", await panel_H());
+console.timeEnd('H')
+console.time('I')
+fs.writeFileSync("image/out/panel_I.png", await panel_I());
+console.timeEnd('I')
+console.timeEnd()
+ */
 
 const app = express();
 app.use(formidable({
@@ -219,7 +245,7 @@ app.post('/panel_E', async (req, res) => {
                     stat_color: '#fff',
                     rrect_color: '#8DCFF4',
                 })
-            } else judges.push({});
+            } // else judges.push({}); //好像不用顶掉这个
 
             if (n300) {
                 switch (gamemode){
@@ -274,7 +300,7 @@ app.post('/panel_E', async (req, res) => {
                     stat_color: '#fff',
                     rrect_color: '#79C471',
                 })
-            } else judges.push({});
+            } // else judges.push({}); //好像不用顶掉这个
 
             if (n100) {
 
@@ -316,7 +342,6 @@ app.post('/panel_E', async (req, res) => {
                         }); break;
                     }
                 }
-
 
             } else judges.push({});
 
