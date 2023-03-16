@@ -73,7 +73,7 @@ export async function readNetImage(path = '', defaultImagePath) {
         data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
     } catch (e) {
         console.error("download error", e);
-        return defaultImagePath || "";
+        return defaultImagePath || getExportFileV3Path('error.png');
     }
     fs.writeFileSync(bufferPath, data, 'binary');
     return bufferPath;

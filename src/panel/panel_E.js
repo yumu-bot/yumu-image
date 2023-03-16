@@ -139,7 +139,7 @@ export async function panel_E(data = {
     mods_arr: ['HD', 'HR', 'DT', 'NF'],
 
     // 面板图片
-    map_background: getExportFileV3Path('PanelObject/E_MapCover.jpg'),
+    map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
     star: getExportFileV3Path('object-beatmap-star.png'),
     map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
     map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
@@ -345,13 +345,13 @@ export async function panel_E(data = {
 
         for (let i = 1; i <= sr_b; i++) {
             let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
-            <image id="EPanel${i}Star" width="40" height="40" transform="translate(40 ${35 * (i - 1) + 396})" xlink:href="${getExportFileV3Path(data.star)}"/>
+            <image id="EPanel${i}Star" width="40" height="40" transform="translate(40 ${35 * (i - 1) + 396})" xlink:href="${data.star}"/>
         </g>`;
             svg = replaceText(svg, sr_b_svg, /(?<=<g id="LUStars">)/);
         }
 
         let sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
-        <image id="EPanel${sr_b + 1}Star" width="40" height="40" transform="translate(40 ${35 * sr_b + 396}) translate(${20 * (1 - sr_m_scale)} ${20 * (1 - sr_m_scale)}) scale(${sr_m_scale})"xlink:href="${getExportFileV3Path(data.star)}"/>
+        <image id="EPanel${sr_b + 1}Star" width="40" height="40" transform="translate(40 ${35 * sr_b + 396}) translate(${20 * (1 - sr_m_scale)} ${20 * (1 - sr_m_scale)}) scale(${sr_m_scale})" xlink:href="${data.star}"/>
         </g>`;
 
         svg = replaceText(svg, sr_m_svg, /(?<=<g id="LUStars">)/);
@@ -583,7 +583,7 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg, 1440, 950, label_od, reg_mod);
     svg = implantSvgBody(svg, 1650, 950, label_hp, reg_mod);
 
-    svg = implantImage(svg, 380, 440, 250, 375, 1, data.map_background, reg_map_background);
+    svg = implantImage(svg, 380, 410, 250, 390, 1, data.map_background, reg_map_background);
     svg = implantImage(svg, 420, 450, 230, 370, 1, data.map_hexagon, reg_map_hexagon);
     svg = implantImage(svg, 18, 18, 746, 364, 1, data.map_favorite, reg_map_favorite);
     svg = implantImage(svg, 18, 16, 746, 338, 1, data.map_playcount, reg_map_playcount);

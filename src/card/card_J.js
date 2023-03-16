@@ -1,10 +1,10 @@
 import {getModColor, getRankColor, getStarRatingColor, implantImage, replaceText, torus} from "../util.js";
 
 export async function card_J(data = {
-    map_cover: '',
-    map_background: '',
-    map_title_romanized: 'no title',
-    map_difficulty_name: 'who made this',
+    map_cover: 'beatmap-defaultBG.jpg',
+    map_background: 'beatmap-defaultBG.jpg',
+    map_title_romanized: '',
+    map_difficulty_name: '',
     star_rating: 0,
     score_rank: 'F',
     accuracy: 0, //%

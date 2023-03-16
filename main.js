@@ -3,8 +3,36 @@ import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
+import fs from "fs";
 
 initPath();
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
+
+/*
+console.time()
+console.time('C')
+fs.writeFileSync("image/out/panel_C.png", await panel_C());
+console.timeEnd('C')
+console.time('D')
+fs.writeFileSync("image/out/panel_D.png", await panel_D());
+console.timeEnd('D')
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
+console.time('F')
+fs.writeFileSync("image/out/panel_F.png", await panel_F());
+console.timeEnd('F')
+console.time('H')
+fs.writeFileSync("image/out/panel_H.png", await panel_H());
+console.timeEnd('H')
+console.time('I')
+fs.writeFileSync("image/out/panel_I.png", await panel_I());
+console.timeEnd('I')
+console.timeEnd()
+ */
+
 const app = express();
 app.use(formidable({
     encoding: 'utf-8', uploadDir: CACHE_PATH, autoClean: true, multiples: true,
@@ -73,10 +101,10 @@ app.post('/panel_D', async (req, res) => {
         let reList = req.fields['re-list'];
         const recent_play = [];
         for (const re of reList) {
-            const cover = await readNetImage(re.beatmapset.covers.cover);
+            const covers_card = await readNetImage(re.beatmapset.covers.card, getExportFileV3Path('beatmap-defaultBG.jpg')); //card获取快
             let d = {
-                map_cover: cover,
-                map_background: cover,
+                map_cover: covers_card,
+                map_background: covers_card,
                 map_title_romanized: re.beatmapset.title,
                 map_difficulty_name: re.beatmap.version,
                 star_rating: re.beatmap.difficulty_rating,
@@ -94,7 +122,7 @@ app.post('/panel_D', async (req, res) => {
 
         for (const bp of bpList) {
             let d = {
-                map_background: await readNetImage(bp.beatmapset.covers.cover),
+                map_background: await readNetImage(bp.beatmapset.covers.list, getExportFileV3Path('beatmap-defaultBG.jpg')),
                 star_rating: bp.beatmap.difficulty_rating,
                 score_rank: bp.rank,
                 bp_pp: bp.pp
@@ -188,7 +216,7 @@ app.post('/panel_E', async (req, res) => {
         const user = req.fields?.user;
         const score = req.fields?.score;
         const card_a1 = await generate.user2CardA1(user);
-        const newLable = (remark, data_b, data_m) => {
+        const newLabel = (remark, data_b, data_m) => {
             return {
                 remark: remark,
                 data_b: data_b,
@@ -196,15 +224,15 @@ app.post('/panel_E', async (req, res) => {
             }
         }
         const label_data = {
-            acc: newLable('-', Math.floor(score * 100), `${Math.floor(score * 10000) % 100}%`),
-            combo: newLable(`${score.beatmap.max_combo}x`, score.max_combo, 'x'),
-            pp: newLable('', `${Math.floor(score.pp)}.`, `${Math.floor(score.pp * 100) % 100}`),
-            bpm: newLable('', score.beatmap.bpm, `${Math.floor(score.beatmap.bpm * 100) % 100 ? Math.floor(score.beatmap.bpm * 100) % 100 : ''}`),
-            length: newLable(`${Math.floor(score.beatmap.total_length / 60)}:${Math.floor(score.beatmap.total_length) % 60}`, `${Math.floor(score.beatmap.total_length / 60)}:`, Math.floor(score.beatmap.total_length) % 60),
-            cs: newLable('', `${Math.floor(score.beatmap.cs)}.`, Math.floor(score.beatmap.cs * 100) % 100),
-            ar: newLable('', `${Math.floor(score.beatmap.ar)}.`, Math.floor(score.beatmap.ar * 100) % 100),
-            od: newLable('', `${Math.floor(score.beatmap.accuracy)}.`, Math.floor(score.beatmap.accuracy * 100) % 100),
-            hp: newLable('-', `${Math.floor(score.beatmap.drain)}.`, Math.floor(score.beatmap.drain * 100) % 100),
+            acc: newLabel('-', Math.floor(score * 100), `${Math.floor(score * 10000) % 100}%`),
+            combo: newLabel(`${score.beatmap.max_combo}x`, score.max_combo, 'x'),
+            pp: newLabel('', `${Math.floor(score.pp)}.`, `${Math.floor(score.pp * 100) % 100}`),
+            bpm: newLabel('', score.beatmap.bpm, `${Math.floor(score.beatmap.bpm * 100) % 100 ? Math.floor(score.beatmap.bpm * 100) % 100 : ''}`),
+            length: newLabel(`${Math.floor(score.beatmap.total_length / 60)}:${Math.floor(score.beatmap.total_length) % 60}`, `${Math.floor(score.beatmap.total_length / 60)}:`, Math.floor(score.beatmap.total_length) % 60),
+            cs: newLabel('', `${Math.floor(score.beatmap.cs)}.`, Math.floor(score.beatmap.cs * 100) % 100),
+            ar: newLabel('', `${Math.floor(score.beatmap.ar)}.`, Math.floor(score.beatmap.ar * 100) % 100),
+            od: newLabel('', `${Math.floor(score.beatmap.accuracy)}.`, Math.floor(score.beatmap.accuracy * 100) % 100),
+            hp: newLabel('-', `${Math.floor(score.beatmap.drain)}.`, Math.floor(score.beatmap.drain * 100) % 100),
         };
         const newJudge = (n320, n300, n200, n100, n50, n0) => {
             const judges = [];
@@ -276,7 +304,8 @@ app.post('/panel_E', async (req, res) => {
             map_fail_arr: [],
             mods_arr: score.mods,
 
-            map_background: await readNetImage(score.beatmapset.covers.cover),
+            map_background: await readNetImage(score.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg')),
+            //很糊的全图
             star: getExportFileV3Path('object-beatmap-star.png'),
             map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
             map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),

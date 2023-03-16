@@ -1,7 +1,7 @@
 import {getRankColor, getStarRatingColor, implantImage, replaceText, torus} from "../util.js";
 
 export async function card_K(data = {
-    map_background: 'PanelObject/D_CardK_Background.png',
+    map_background: 'beatmap-defaultBG.jpg',
     star_rating: '4.35',
     score_rank: 'D',
     bp_ranking: '1',

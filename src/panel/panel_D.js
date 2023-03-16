@@ -71,8 +71,8 @@ export async function panel_D(data = {
     // J卡 max: 3
     recent_play: [
         {
-            map_cover: 'PanelObject/D_CardJ_Cover.png',
-            map_background: 'PanelObject/D_CardJ_Background.png',
+            map_cover: 'beatmap-defaultBG.jpg',
+            map_background: 'beatmap-defaultBG.jpg',
             map_title_romanized: 'Fia is a Cheater',
             map_difficulty_name: 'Fushimi Rio SB!!!111',
             star_rating: '4.86',
@@ -248,6 +248,9 @@ export async function panel_D(data = {
         arr.forEach((item, i) => {
             let lineto_x = start_x + step * (i + 1)
             let lineto_y = start_y - ((max - item) / delta * 230);
+
+            if (item === 0) lineto_y = start_y; //处理 rank 为 0 的情况
+
             path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 8} ${lineto_y} ` // 第一个xy是点位置，第二个是控制点位置
         })
         path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 4px;"/> </svg>`
