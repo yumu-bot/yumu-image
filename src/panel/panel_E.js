@@ -262,10 +262,17 @@ export async function panel_E(data = {
         torus.getTextPath(
             torus.cutStringTail(data.map_title_romanized, 48, 860),
             440, 883.67, 48, "center baseline", "#fff");
-    let map_title_unicode =
-        PuHuiTi.getTextPath(
-            torus.cutStringTail(data.map_title_unicode, 36, 860),
-            440, 931.6, 36, "center baseline", "#fff");
+    let map_title_unicode;
+    //如果两个相等，就不要unicode显示了
+    if (data.map_title_romanized !== data.map_title_unicode) {
+        map_title_unicode =
+            PuHuiTi.getTextPath(
+                torus.cutStringTail(data.map_title_unicode, 36, 860),
+                440, 931.6, 36, "center baseline", "#fff");
+    } else {
+        map_title_unicode = '';
+    }
+
     let map_difficulty =
         torus.getTextPath(
             torus.cutStringTail(data.map_difficulty, 36, 860),
