@@ -200,7 +200,7 @@ app.post('/panel_E', async (req, res) => {
         }
         const label_data = {
             acc: newLabel('-',
-                Math.floor(score.accuracy * 100).toString(),
+                `${Math.floor(score.accuracy * 100).toString()}.`,
                 `${Math.floor(score.accuracy * 10000) % 100}%`),
 
             combo: newLabel(`${score.beatmap.max_combo}x`,
