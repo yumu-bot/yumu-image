@@ -310,6 +310,7 @@ app.post('/panel_E', async (req, res) => {
         res.set('Content-Type', 'image/png');
         res.send(png);
     } catch (e) {
+        console.error("e", e);
         res.status(500).send(e.stack);
     }
 })

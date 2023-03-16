@@ -53,22 +53,28 @@ export function getExportFileV3Path(path = '') {
     return path_util.join(EXPORT_FILE_V3, path);
 }
 
-export async function readNetImage(path = '') {
-    if (path.startsWith("http")) {
-        return "";
+export async function readNetImage(path = '', defaultImagePath) {
+    if (!path.startsWith("http")) {
+        return defaultImagePath || "";
     }
-    const bufferName = MD5.update(path).digest('hex');
+    const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
     try {
         fs.accessSync(bufferPath, fs.constants.F_OK);
         if (fs.statSync(bufferPath).size <= 4 * 1024) {
-            throw Error();
+            throw Error("size err");
         }
         return bufferPath;
     } catch (e) {
         //no file
     }
-    const data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
+    let data;
+    try {
+        data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
+    } catch (e) {
+        console.error("download error", e);
+        return defaultImagePath || "";
+    }
     fs.writeFileSync(bufferPath, data, 'binary');
     return bufferPath;
 }
