@@ -5,34 +5,6 @@ import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
 import fs from "fs";
 
-initPath();
-console.time('E')
-fs.writeFileSync("image/out/panel_E.png", await panel_E());
-console.timeEnd('E')
-
-/*
-console.time()
-console.time('C')
-fs.writeFileSync("image/out/panel_C.png", await panel_C());
-console.timeEnd('C')
-console.time('D')
-fs.writeFileSync("image/out/panel_D.png", await panel_D());
-console.timeEnd('D')
-console.time('E')
-fs.writeFileSync("image/out/panel_E.png", await panel_E());
-console.timeEnd('E')
-console.time('F')
-fs.writeFileSync("image/out/panel_F.png", await panel_F());
-console.timeEnd('F')
-console.time('H')
-fs.writeFileSync("image/out/panel_H.png", await panel_H());
-console.timeEnd('H')
-console.time('I')
-fs.writeFileSync("image/out/panel_I.png", await panel_I());
-console.timeEnd('I')
-console.timeEnd()
- */
-
 const app = express();
 app.use(formidable({
     encoding: 'utf-8', uploadDir: CACHE_PATH, autoClean: true, multiples: true,
