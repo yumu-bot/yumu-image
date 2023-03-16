@@ -3,10 +3,8 @@ import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
-import {calcPerformancePoints} from "./src/compute-pp.js";
 
 initPath();
-calcPerformancePoints(4033395, 0, 'osu');
 const app = express();
 app.use(formidable({
     encoding: 'utf-8', uploadDir: CACHE_PATH, autoClean: true, multiples: true,

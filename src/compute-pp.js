@@ -41,7 +41,7 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
     }
     let calculator = new Calculator({
         mode: mode_int,
-        mods: score.mods.length === 0 ? getModInt(score.mods) : mode_int,
+        mods: (score.mods && score.mods.length === 0) ? getModInt(score.mods) : mode_int,
         combo: score.combo,
         nMisses: score.count_miss,
         n50: score.count_50,
