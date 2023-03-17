@@ -239,8 +239,8 @@ export async function panel_E(data = {
 
     let game_mode = extra.getTextPath(game_mode_unicode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
 
-    let map_fav = getRoundedNumberLargerStr((data.map_status_fav || 0), 1) + getRoundedNumberSmallerStr((data.map_status_fav || 0), 1);
-    let map_pc = getRoundedNumberLargerStr((data.map_status_pc || 0), 1) + getRoundedNumberSmallerStr((data.map_status_pc || 0), 1);
+    let map_fav = getRoundedNumberLargerStr((data.map_status_fav || 0), 3) + getRoundedNumberSmallerStr((data.map_status_fav || 0), 3);
+    let map_pc = getRoundedNumberLargerStr((data.map_status_pc || 0), 3) + getRoundedNumberSmallerStr((data.map_status_pc || 0), 3);
 
     let map_status_fav = torus.getTextPath(map_fav, 840, 353.84, 24, "right baseline", "#fff");
     let map_status_pc = torus.getTextPath(map_pc, 840, 380.84, 24, "right baseline", "#fff");
@@ -291,9 +291,15 @@ export async function panel_E(data = {
         let font_index_x = 1266;
         let font_stat_x = 1792;
 
-        let index = torus.getTextPath(data.index.toString(),
+        let text_index = data.index || '';
+        let text_stat = data.stat || '';
+
+        if (data.index === 0) text_index = '0'; // js会把0识别成false
+        if (data.stat === 0) text_stat = '0';
+
+        let index = torus.getTextPath(text_index.toString(),
             font_index_x, font_y, 30, "right baseline", data.index_color);
-        let stat = torus.getTextPath(data.stat.toString(),
+        let stat = torus.getTextPath(text_stat.toString(),
             font_stat_x, font_y, 30, "left baseline", data.stat_color);
 
         svg = replaceText(svg, index, reg_index);
@@ -308,7 +314,7 @@ export async function panel_E(data = {
 
     for (let i = 0; i < 6; i++) {
         if (data?.score_stats?.judges[i]) {
-            Stats(i, data?.score_stats?.judges[i], parseInt(data.score_stats.judge_stat_sum));
+            Stats(i, data?.score_stats?.judges[i], data.score_stats.judge_stat_sum);
         }
     }
 
