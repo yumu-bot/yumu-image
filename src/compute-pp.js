@@ -17,7 +17,7 @@ const statistics = {
 }
 
 export async function calcPerformancePoints(bid, score = statistics, mode) {
-    mode = mode || 'osu';
+    mode = mode.toLowerCase() || 'osu';
 
     const osuFilePath = await getOsuFilePath(bid, mode);
 
@@ -33,6 +33,7 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
             mode_int = 1;
             break;
         case 'fruits':
+        case 'catch':
             mode_int = 2;
             break;
         case 'mania':
@@ -51,12 +52,19 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
 
     const currAttrs = calculator.performance(beatMap);
     const now_pp = currAttrs.pp;
-    calculator.combo(score.max_combo);
-    const full_pp = currAttrs.pp;
-    return {
-        pp: now_pp,
-        full_pp: full_pp
-    };
+    if (score?.max_combo) {
+        calculator.combo(score.max_combo);
+        const full_pp = currAttrs.pp;
+        return {
+            pp: now_pp,
+            full_pp: full_pp
+        };
+    } else {
+        return {
+            pp: now_pp,
+        };
+    }
+
 }
 
 async function getOsuFilePath(bid, mode) {

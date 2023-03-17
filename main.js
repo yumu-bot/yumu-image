@@ -3,6 +3,7 @@ import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, getGameMode, initPath, readImage, readNetImage} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
+import {calcPerformancePoints} from "./src/compute-pp.js";
 
 initPath();
 //这里放测试代码
@@ -198,6 +199,25 @@ app.post('/panel_E', async (req, res) => {
                 data_m: data_m,
             }
         }
+
+        const score_statistics = {
+            ...score.statistics,
+            combo: score.max_combo,
+            max_combo: score.beatmap.max_combo,
+            mods: score.mods,
+        }
+        let pp = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode);
+        const label_number_data = {
+            acc: score.accuracy, // 0.9546
+            combo: score.max_combo,
+            pp: pp,
+            bpm: score.beatmap.bpm,
+            length: score.beatmap.total_length, // second
+            cs: score.beatmap.cs,
+            ar: score.beatmap.ar,
+            od: score.beatmap.accuracy,
+            hp: score.beatmap.drain,
+        }
         const label_data = {
             acc: newLabel('-',
                 `${Math.floor(score.accuracy * 100).toString()}.`,
@@ -206,27 +226,13 @@ app.post('/panel_E', async (req, res) => {
             combo: newLabel(`${score.beatmap.max_combo}x`,
                 score.max_combo.toString(),
                 'x'),
-            pp: newLabel('',
-                `${Math.floor(score.pp)}.`,
-                `${Math.floor(score.pp * 100) % 100}`),
-            bpm: newLabel('',
-                score.beatmap.bpm.toString(),
-                `${Math.floor(score.beatmap.bpm * 100) % 100 ? Math.floor(score.beatmap.bpm * 100) % 100 : ''}`),
-            length: newLabel(`${Math.floor(score.beatmap.total_length / 60)}:${Math.floor(score.beatmap.total_length) % 60}`,
-                `${Math.floor(score.beatmap.total_length / 60)}:`,
-                Math.floor(score.beatmap.total_length) % 60),
-            cs: newLabel('',
-                `${Math.floor(score.beatmap.cs)}.`,
-                Math.floor(score.beatmap.cs * 10) % 10),
-            ar: newLabel('',
-                `${Math.floor(score.beatmap.ar)}.`,
-                Math.floor(score.beatmap.ar * 10) % 10),
-            od: newLabel('',
-                `${Math.floor(score.beatmap.accuracy)}.`,
-                Math.floor(score.beatmap.accuracy * 10) % 10),
-            hp: newLabel('-',
-                `${Math.floor(score.beatmap.drain)}.`,
-                Math.floor(score.beatmap.drain * 10) % 10),
+            pp: pp.pp,
+            bpm: score.beatmap.bpm,
+            length: score.beatmap.total_length,
+            cs: score.beatmap.cs,
+            ar: score.beatmap.ar,
+            od: score.beatmap.accuracy,
+            hp: score.beatmap.drain,
         };
         const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
             const judges = [];
@@ -523,9 +529,12 @@ app.post('/panel_E', async (req, res) => {
             switch (mode) {
                 case 'o': return n300 + n100 + n50 + n0;
                 case 't': return n300 + n100 + n0;
-                case 'c': return Math.max((n300 + n100 + n50 + n0), n200); //小果miss(katu)也要传过去的
-                case 'm': return n320 + n300 + n200 + n100 + n50 + n0;
-                default: return n320 + n300 + n200 + n100 + n50 + n0;
+                case 'c':
+                    return Math.max((n300 + n100 + n50 + n0), n200); //小果miss(katu)也要传过去的
+                case 'm':
+                    return n320 + n300 + n200 + n100 + n50 + n0;
+                default:
+                    return n320 + n300 + n200 + n100 + n50 + n0;
             }
         }
 
@@ -533,6 +542,18 @@ app.post('/panel_E', async (req, res) => {
             judge_stat_sum: sumJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode),
             judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode)
         }
+
+        let score_categorize;
+        if (score.beatmap.max_combo === score.max_combo) {
+            score_categorize = 'fullcombo';
+        } else if (score.statistics.count_miss === 0) {
+            score_categorize = 'nomiss';
+        } else if (score.rank !== 'F') {
+            score_categorize = 'clear'; //failed
+        } else {
+            score_categorize = 'played';
+        }
+
 
         const data = {
             map_density_arr: [],
@@ -565,10 +586,11 @@ app.post('/panel_E', async (req, res) => {
             map_retry_percent: 54, //重试率%
             map_fail_percent: 13.2, //失败率%
 
-            score_categorize: '',
+            score_categorize: score_categorize,
 
             card_A1: card_a1,
             label_data: label_data,
+            label_number_data: label_number_data,
             score_stats: score_stats,
         }
         const png = await panel_E(data);
