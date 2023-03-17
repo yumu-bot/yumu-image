@@ -1,6 +1,6 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, getExportFileV3Path, initPath, readImage, readNetImage} from "./src/util.js";
+import {CACHE_PATH, getExportFileV3Path, getGameMode, initPath, readImage, readNetImage} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {panel_E} from "./src/panel/panel_E.js";
 
@@ -230,9 +230,10 @@ app.post('/panel_E', async (req, res) => {
         };
         const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
             const judges = [];
+            const mode = getGameMode(gamemode,1);
 
-            switch (gamemode.toLowerCase()) {
-                case 'osu': {
+            switch (mode) {
+                case 'o': {
                     judges.push({
                         index: '300',
                         stat: n300,
@@ -260,7 +261,7 @@ app.post('/panel_E', async (req, res) => {
                     }); break;
                 }
 
-                case 'taiko': {
+                case 't': {
                     judges.push({
                         index: '300',
                         stat: n300,
@@ -282,7 +283,7 @@ app.post('/panel_E', async (req, res) => {
                     }); break;
                 }
 
-                case 'fruits': {
+                case 'c': {
                     judges.push({
                         index: '300',
                         stat: n300,
@@ -316,7 +317,7 @@ app.post('/panel_E', async (req, res) => {
                     }); break;
                 }
 
-                case 'mania': {
+                case 'm': {
                     judges.push({
                         index: '320',
                         stat: n320,
@@ -517,11 +518,13 @@ app.post('/panel_E', async (req, res) => {
         }
 
         const sumJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
-            switch (gamemode.toLowerCase()) {
-                case 'osu': return n300 + n100 + n50 + n0;
-                case 'taiko': return n300 + n100 + n0;
-                case 'fruits': return Math.max((n300 + n100 + n50 + n0), n200); //小果miss(katu)也要传过去的
-                case 'mania': return n320 + n300 + n200 + n100 + n50 + n0;
+            const mode = getGameMode(gamemode, 1)
+
+            switch (mode) {
+                case 'o': return n300 + n100 + n50 + n0;
+                case 't': return n300 + n100 + n0;
+                case 'c': return Math.max((n300 + n100 + n50 + n0), n200); //小果miss(katu)也要传过去的
+                case 'm': return n320 + n300 + n200 + n100 + n50 + n0;
                 default: return n320 + n300 + n200 + n100 + n50 + n0;
             }
         }
