@@ -579,7 +579,6 @@ app.post('/panel_E', async (req, res) => {
 
             card_A1: card_a1,
             label_data: label_data,
-            label_number_data: label_number_data,
             score_stats: score_stats,
         }
         const png = await panel_E(data);
