@@ -207,17 +207,6 @@ app.post('/panel_E', async (req, res) => {
             mods: score.mods,
         }
         let pp = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode);
-        const label_number_data = {
-            acc: score.accuracy, // 0.9546
-            combo: score.max_combo,
-            pp: pp,
-            bpm: score.beatmap.bpm,
-            length: score.beatmap.total_length, // second
-            cs: score.beatmap.cs,
-            ar: score.beatmap.ar,
-            od: score.beatmap.accuracy,
-            hp: score.beatmap.drain,
-        }
         const label_data = {
             acc: newLabel('-',
                 `${Math.floor(score.accuracy * 100).toString()}.`,
@@ -226,7 +215,7 @@ app.post('/panel_E', async (req, res) => {
             combo: newLabel(`${score.beatmap.max_combo}x`,
                 score.max_combo.toString(),
                 'x'),
-            pp: pp.pp,
+            pp: pp,
             bpm: score.beatmap.bpm,
             length: score.beatmap.total_length,
             cs: score.beatmap.cs,

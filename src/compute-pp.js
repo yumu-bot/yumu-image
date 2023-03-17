@@ -54,7 +54,8 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
     const now_pp = currAttrs.pp;
     if (score?.max_combo) {
         calculator.combo(score.max_combo);
-        const full_pp = currAttrs.pp;
+
+        const full_pp = calculator.performance(beatMap).pp;
         return {
             pp: now_pp,
             full_pp: full_pp
