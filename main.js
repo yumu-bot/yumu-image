@@ -231,6 +231,135 @@ app.post('/panel_E', async (req, res) => {
         const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
             const judges = [];
 
+            switch (gamemode) {
+                case 'osu': {
+                    judges.push({
+                        index: '300',
+                        stat: n300,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#8DCFF4',
+                    }, {
+                        index: '100',
+                        stat: n100,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#79C471',
+                    }, {
+                        index: '50',
+                        stat: n50,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#FEF668',
+                    }, {}, {
+                        index: '0',
+                        stat: n0,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#ED6C9E',
+                    }); break;
+                }
+
+                case 'taiko': {
+                    judges.push({
+                        index: '300',
+                        stat: n300,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#8DCFF4',
+                    },{
+                        index: '150',
+                        stat: n100,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#79C471',
+                    },{},{
+                        index: '0',
+                        stat: n0,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#ED6C9E',
+                    }); break;
+                }
+
+                case 'fruits': {
+                    judges.push({
+                        index: '300',
+                        stat: n300,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#8DCFF4',
+                    },{
+                        index: '100',
+                        stat: n100,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#79C471',
+                    },{
+                        index: '50',
+                        stat: n50,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#FEF668',
+                    },{},{
+                        index: '0',
+                        stat: n0,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#ED6C9E',
+                    },{
+                        index: 'MD',
+                        stat: n200,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#A1A1A1',
+                    }); break;
+                }
+
+                case 'mania': {
+                    judges.push({
+                        index: '320',
+                        stat: n320,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#8DCFF4',
+                    },{
+                        index: '300',
+                        stat: n300,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#FEF668',
+                    },{
+                        index: '200',
+                        stat: n200,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#79C471',
+                    },{
+                        index: '100',
+                        stat: n100,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#5E8AC6',
+                    },{
+                        index: '50',
+                        stat: n50,
+                        index_color: '#fff',
+                        stat_color: '#fff',
+                        rrect_color: '#A1A1A1',
+                    },{
+                        index: '0',
+                            stat: n0,
+                            index_color: '#fff',
+                            stat_color: '#fff',
+                            rrect_color: '#ED6C9E',
+                    }); break;
+                }
+
+            }
+
+/*
+
             if (n320 && gamemode === 'mania') { //只有mania有n320
                 judges.push({
                     index: '320',
@@ -263,7 +392,7 @@ app.post('/panel_E', async (req, res) => {
                         }); break;
                     }
 
-                    case 'fruit': {
+                    case 'fruits': {
                         judges.push({
                             index: '300',
                             stat: n300,
@@ -317,7 +446,7 @@ app.post('/panel_E', async (req, res) => {
                             rrect_color: '#79C471',
                         }); break;
                     }
-                    case 'fruit': {
+                    case 'fruits': {
                         judges.push({
                             index: '100',
                             stat: n100,
@@ -372,7 +501,7 @@ app.post('/panel_E', async (req, res) => {
                 })
             } else judges.push({});
 
-            if (n200 && gamemode === 'fruit') { //ctb的n200 （丢小果
+            if (n200 && gamemode === 'fruits') { //ctb的n200 （丢小果
                 judges.push({
                     index: 'MD',
                     stat: n200,
@@ -382,6 +511,8 @@ app.post('/panel_E', async (req, res) => {
                 })
             }
 
+ */
+
             return judges;
         }
 
@@ -389,7 +520,7 @@ app.post('/panel_E', async (req, res) => {
             switch (gamemode) {
                 case 'osu': return n300 + n100 + n50 + n0;
                 case 'taiko': return n300 + n100 + n0;
-                case 'fruit': return Math.max( n300 + n100 + n50 + n0, n200); //小果miss(katu)也要传过去的
+                case 'fruits': return Math.max((n300 + n100 + n50 + n0), n200); //小果miss(katu)也要传过去的
                 case 'mania': return n320 + n300 + n200 + n100 + n50 + n0;
                 default: return n320 + n300 + n200 + n100 + n50 + n0;
             }

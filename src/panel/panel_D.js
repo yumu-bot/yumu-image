@@ -466,7 +466,7 @@ export async function panel_D(data = {
     let progress_rrect = `<rect id="ProgressR" x="60" y="1016" width="${520 * (data.user_progress || 0) / 100}" height="4" rx="2" ry="2" style="fill: #fc2;"/>`
 
     // 插入右下面板右上提示
-    let game_mode = getGameMode(data.game_mode, 1);
+    let game_mode = getGameMode(data.game_mode, 2);
     let bonus_pp = data.bonus_pp || 0;
     let om4k_pp = data.om4k_pp || 0;
     let om7k_pp = data.om7k_pp || 0;
