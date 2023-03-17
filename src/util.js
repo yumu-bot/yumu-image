@@ -1247,6 +1247,8 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return 't';
                 case 'fruits':
                     return 'c';
+                case 'catch':
+                    return 'c'; //我怀疑现在的接水果给的不是fruits
                 case 'mania':
                     return 'm';
             } break;
@@ -1258,6 +1260,8 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return 'osu!taiko';
                 case 'fruits':
                     return 'osu!catch';
+                case 'catch':
+                    return 'osu!catch'; //我怀疑现在的接水果给的不是fruits
                 case 'mania':
                     return 'osu!mania';
             } break;
@@ -1269,6 +1273,8 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return '\uE803';
                 case 'fruits':
                     return '\uE801';
+                case 'catch':
+                    return '\uE801'; //我怀疑现在的接水果给的不是fruits
                 case 'mania':
                     return '\uE802';
             } break;
