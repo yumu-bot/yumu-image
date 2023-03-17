@@ -231,7 +231,7 @@ app.post('/panel_E', async (req, res) => {
         const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
             const judges = [];
 
-            switch (gamemode) {
+            switch (gamemode.toLowerCase()) {
                 case 'osu': {
                     judges.push({
                         index: '300',
@@ -517,7 +517,7 @@ app.post('/panel_E', async (req, res) => {
         }
 
         const sumJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
-            switch (gamemode) {
+            switch (gamemode.toLowerCase()) {
                 case 'osu': return n300 + n100 + n50 + n0;
                 case 'taiko': return n300 + n100 + n0;
                 case 'fruits': return Math.max((n300 + n100 + n50 + n0), n200); //小果miss(katu)也要传过去的
@@ -527,8 +527,8 @@ app.post('/panel_E', async (req, res) => {
         }
 
         const score_stats = {
-            judge_stat_sum: sumJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode.toLowerCase()),
-            judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode.toLowerCase())
+            judge_stat_sum: sumJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode),
+            judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode)
         }
 
         const data = {
