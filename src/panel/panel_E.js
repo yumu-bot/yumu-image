@@ -1,7 +1,7 @@
 import {
     exportPng,
     extra,
-    getExportFileV3Path,
+    getExportFileV3Path, getGameMode,
     getMapStatusPath,
     getNowTimeStamp,
     getRandomBannerPath,
@@ -151,7 +151,7 @@ export async function panel_E(data = {
     score: 1144770,
     score_acc_progress: 97.8, //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
-    game_mode: 'osu', // osu taiko fruit mania
+    game_mode: 'osu', // osu taiko fruits mania
     map_status_fav: 3900,
     map_status_pc: 782547,
 
@@ -235,28 +235,12 @@ export async function panel_E(data = {
     let star_rating = torus.getTextPath(text_sr_b, tm_sr_x, 373.67, 48, "left baseline", "#fff") +
         torus.getTextPath(text_sr_m, tm_sr_x + tm_sr_b.width, 373.67, 36, "left baseline", "#fff");
 
-    let game_mode_unicode;
-    switch (data.game_mode.toLowerCase()) {
-        case 'osu' :
-            game_mode_unicode = '\uE800';
-            break;
-        case 'taiko' :
-            game_mode_unicode = '\uE803';
-            break;
-        case 'fruit' :
-            game_mode_unicode = '\uE801';
-            break;
-        case 'mania' :
-            game_mode_unicode = '\uE802';
-            break;
-        default :
-            game_mode_unicode = '';
-            break;
-    }
+    let game_mode_unicode = getGameMode(data.game_mode, -1);
+
     let game_mode = extra.getTextPath(game_mode_unicode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
 
-    let map_fav = getRoundedNumberLargerStr((data.map_status_fav || 0), 3) + getRoundedNumberSmallerStr((data.map_status_fav || 0), 3);
-    let map_pc = getRoundedNumberLargerStr((data.map_status_pc || 0), 3) + getRoundedNumberSmallerStr((data.map_status_pc || 0), 3);
+    let map_fav = getRoundedNumberLargerStr((data.map_status_fav || 0), 1) + getRoundedNumberSmallerStr((data.map_status_fav || 0), 1);
+    let map_pc = getRoundedNumberLargerStr((data.map_status_pc || 0), 1) + getRoundedNumberSmallerStr((data.map_status_pc || 0), 1);
 
     let map_status_fav = torus.getTextPath(map_fav, 840, 353.84, 24, "right baseline", "#fff");
     let map_status_pc = torus.getTextPath(map_pc, 840, 380.84, 24, "right baseline", "#fff");
@@ -284,14 +268,6 @@ export async function panel_E(data = {
         torus.getTextPath(
             torus.cutStringTail(data.map_artist_mapper_bid, 24, 860),
             440, 1036.84, 24, "center baseline", "#fff");
-
-    /*
-    let main_score =
-        torus.getTextPath(data.main_score_b, 1215, 409.43, 84, "left baseline", "#fff") +
-        torus.getTextPath(data.main_score_m, 1215 +
-            torus.getTextMetrics(data.main_score_b, 0, 0, 84, "left baseline", "#fff").width,
-            409.43, 60, "left baseline", "#fff");
-     */
 
     let main_score = torus.get2SizeTextPath(getRoundedNumberLargerStr(data.score, -1), getRoundedNumberSmallerStr(data.score, -1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
 

@@ -1234,34 +1234,44 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0) {
  * @function 获取游戏模式
  * @return {String} 游戏模式
  * @param gamemode 默认游戏模式，osu taiko catch mania
- * @param level 等级，0为不变，1为全写 osu!standard，-1为简写 o t m c
+ * @param level 等级，0为不变，2为全写 osu!standard，-1为获取他们的unicode字符 \uE801，1为简写 o t m c
  */
 export function getGameMode(gamemode = 'osu', level = 0) {
     gamemode = gamemode.toLowerCase();
     switch (level) {
-        case -1:
+        case 1:
             switch (gamemode) {
                 case 'osu':
                     return 'o';
                 case 'taiko':
                     return 't';
-                case 'fruit':
+                case 'fruits':
                     return 'c';
                 case 'mania':
                     return 'm';
-            }
-            break;
-        case 1:
+            } break;
+        case 2:
             switch (gamemode) {
                 case 'osu':
                     return 'osu!standard';
                 case 'taiko':
                     return 'osu!taiko';
-                case 'fruit':
+                case 'fruits':
                     return 'osu!catch';
                 case 'mania':
                     return 'osu!mania';
-            }
+            } break;
+        case -1:
+            switch (gamemode) {
+                case 'osu':
+                    return '\uE800';
+                case 'taiko':
+                    return '\uE803';
+                case 'fruits':
+                    return '\uE801';
+                case 'mania':
+                    return '\uE802';
+            } break;
     }
 }
 
