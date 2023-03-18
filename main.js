@@ -2,8 +2,8 @@ import express from "express";
 import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, getGameMode, initPath, readImage, readNetImage} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
-import {panel_E} from "./src/panel/panel_E.js";
-import {calcPerformancePoints} from "./src/compute-pp.js";
+import {newJudge, panel_E} from "./src/panel/panel_E.js";
+import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
 
 initPath();
 //这里放测试代码
@@ -222,301 +222,16 @@ app.post('/panel_E', async (req, res) => {
             od: score.beatmap.accuracy,
             hp: score.beatmap.drain,
         };
-        const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
-            const judges = [];
-            const mode = getGameMode(gamemode,1);
 
-            switch (mode) {
-                case 'o': {
-                    judges.push({
-                        index: '300',
-                        stat: n300,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#8DCFF4',
-                    }, {
-                        index: '100',
-                        stat: n100,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#79C471',
-                    }, {
-                        index: '50',
-                        stat: n50,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#FEF668',
-                    }, {}, {
-                        index: '0',
-                        stat: n0,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#ED6C9E',
-                    }); break;
-                }
-
-                case 't': {
-                    judges.push({
-                        index: '300',
-                        stat: n300,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#8DCFF4',
-                    },{
-                        index: '150',
-                        stat: n100,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#79C471',
-                    },{},{
-                        index: '0',
-                        stat: n0,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#ED6C9E',
-                    }); break;
-                }
-
-                case 'c': {
-                    judges.push({
-                        index: '300',
-                        stat: n300,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#8DCFF4',
-                    },{
-                        index: '100',
-                        stat: n100,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#79C471',
-                    },{
-                        index: '50',
-                        stat: n50,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#FEF668',
-                    },{},{
-                        index: '0',
-                        stat: n0,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#ED6C9E',
-                    },{
-                        index: 'MD',
-                        stat: n200,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#A1A1A1',
-                    }); break;
-                }
-
-                case 'm': {
-                    judges.push({
-                        index: '320',
-                        stat: n320,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#8DCFF4',
-                    },{
-                        index: '300',
-                        stat: n300,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#FEF668',
-                    },{
-                        index: '200',
-                        stat: n200,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#79C471',
-                    },{
-                        index: '100',
-                        stat: n100,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#5E8AC6',
-                    },{
-                        index: '50',
-                        stat: n50,
-                        index_color: '#fff',
-                        stat_color: '#fff',
-                        rrect_color: '#A1A1A1',
-                    },{
-                        index: '0',
-                            stat: n0,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#ED6C9E',
-                    }); break;
-                }
-
-            }
-
-/*
-
-            if (n320 && gamemode === 'mania') { //只有mania有n320
-                judges.push({
-                    index: '320',
-                    stat: n320,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
-                })
-            } // else judges.push({}); //好像不用顶掉这个
-
-            if (n300) {
-                switch (gamemode){
-                    case 'osu': {
-                        judges.push({
-                            index: '300',
-                            stat: n300,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#8DCFF4',
-                        }); break;
-                    }
-
-                    case 'taiko': {
-                        judges.push({
-                            index: '300',
-                            stat: n300,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#8DCFF4',
-                        }); break;
-                    }
-
-                    case 'fruits': {
-                        judges.push({
-                            index: '300',
-                            stat: n300,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#8DCFF4',
-                        }); break;
-                    }
-
-                    case 'mania': {
-                        judges.push({
-                            index: '300',
-                            stat: n300,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#FEF668',
-                        }); break;
-                    }
-                }
-
-            } else judges.push({});
-
-            if (n200 && gamemode === 'mania') {
-                judges.push({
-                    index: '200',
-                    stat: n200,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: '#79C471',
-                })
-            } // else judges.push({}); //好像不用顶掉这个
-
-            if (n100) {
-
-                switch (gamemode) {
-                    case 'osu': {
-                        judges.push({
-                            index: '100',
-                            stat: n100,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#79C471',
-                        }); break;
-                    }
-                    case 'taiko': {
-                        judges.push({
-                            index: '100',
-                            stat: n100,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#79C471',
-                        }); break;
-                    }
-                    case 'fruits': {
-                        judges.push({
-                            index: '100',
-                            stat: n100,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#79C471',
-                        }); break;
-                    }
-                    case 'mania': {
-                        judges.push({
-                            index: '100',
-                            stat: n100,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#5E8AC6',
-                        }); break;
-                    }
-                }
-
-            } else judges.push({});
-
-            if (n50) {
-                switch (gamemode) {
-                    case 'osu': {
-                        judges.push({
-                            index: '50',
-                            stat: n50,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#FEF668',
-                        }); break;
-                    }
-                    case 'mania': {
-                        judges.push({
-                            index: '50',
-                            stat: n50,
-                            index_color: '#fff',
-                            stat_color: '#fff',
-                            rrect_color: '#A1A1A1',
-                        }); break;
-                    }
-                }
-            } else judges.push({});
-
-            if (n0) {
-                judges.push({
-                    index: '0',
-                    stat: n0,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
-                })
-            } else judges.push({});
-
-            if (n200 && gamemode === 'fruits') { //ctb的n200 （丢小果
-                judges.push({
-                    index: 'MD',
-                    stat: n200,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: '#A1A1A1',
-                })
-            }
-
- */
-
-            return judges;
-        }
 
         const sumJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
             const mode = getGameMode(gamemode, 1)
 
             switch (mode) {
-                case 'o': return n300 + n100 + n50 + n0;
-                case 't': return n300 + n100 + n0;
+                case 'o':
+                    return n300 + n100 + n50 + n0;
+                case 't':
+                    return n300 + n100 + n0;
                 case 'c':
                     return Math.max((n300 + n100 + n50 + n0), n200); //小果miss(katu)也要传过去的
                 case 'm':
@@ -542,11 +257,13 @@ app.post('/panel_E', async (req, res) => {
             score_categorize = 'played';
         }
 
-
+        let map_public_rating = Math.floor(score.beatmapset.ratings.reduce((s, v, i) => s + v * i) / score.beatmapset.ratings.reduce((s, v) => s + v) * 100) / 100;
+        let map_fail_percent = (score.beatmap.fail.reduce((s, v) => s + v) / score.beatmap.playcount).toFixed(2).substring(2);
+        let map_retry_percent = (score.beatmap.exit.reduce((s, v) => s + v) / score.beatmap.playcount).toFixed(2).substring(2);
         const data = {
-            map_density_arr: [],
-            map_retry_arr: [],
-            map_fail_arr: [],
+            map_density_arr: await getDensityArray(score.beatmap.id, score.mode),
+            map_fail_arr: score.beatmap.fail,
+            map_retry_arr: score.beatmap.exit,
             mods_arr: score.mods,
 
             map_background: await readNetImage(score.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg')),
@@ -570,9 +287,9 @@ app.post('/panel_E', async (req, res) => {
             map_title_unicode: score.beatmapset.title_unicode,
             map_difficulty: score.beatmap.version,
             map_artist_mapper_bid: `${score.beatmapset.artist} // ${score.beatmapset.creator} // ${score.beatmap.id}`,
-            map_public_rating: 9.8, //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
-            map_retry_percent: 54, //重试率%
-            map_fail_percent: 13.2, //失败率%
+            map_public_rating: map_public_rating.toString(), //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
+            map_fail_percent: map_fail_percent, //失败率%
+            map_retry_percent: map_retry_percent, //重试率%
 
             score_categorize: score_categorize,
 

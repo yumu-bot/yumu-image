@@ -1,4 +1,5 @@
 import fs from "fs";
+import readline from "readline";
 import axios from "axios";
 import {Beatmap, Calculator} from "rosu-pp";
 import {getModInt, OSU_BUFFER_PATH} from "./util.js";
@@ -18,7 +19,7 @@ const statistics = {
 export async function calcPerformancePoints(bid, score = statistics, mode) {
     let mode_int;
     if (mode && typeof mode === 'string') {
-        mode = mode || mode.toLowerCase() || 'osu';
+        mode = mode ? mode.toLowerCase() : 'osu';
         switch (mode) {
             case 'osu':
                 mode_int = 0;
@@ -88,8 +89,8 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
 }
 
 async function getOsuFilePath(bid, mode) {
-    const filePath = `${OSU_BUFFER_PATH}/${bid}.osu`;
-    mode = mode || 'osu';
+    mode = mode ? mode.toLowerCase() : 'osu';
+    const filePath = `${OSU_BUFFER_PATH}/${bid}-${mode}.osu`;
     try {
         fs.accessSync(filePath);
     } catch (e) {
@@ -101,4 +102,43 @@ async function getOsuFilePath(bid, mode) {
         }
     }
     return filePath;
+}
+
+export async function getDensityArray(bid, mode) {
+    const filePath = await getOsuFilePath(bid, mode);
+    const input = fs.createReadStream(filePath);
+    const rl = readline.createInterface({
+        input: input,
+        crlfDelay: Infinity,
+    });
+    let record = false
+    const timeList = [];
+    for await (const l of rl) {
+        if (l === '[HitObjects]') {
+            record = true;
+            continue;
+        }
+        if (record) {
+            let time = parseInt(l.split(',')[2]);
+            timeList.push(time);
+        }
+    }
+    const arrayLength = 26;
+    const dataList = new Array(arrayLength).fill(0);
+
+    const step = Math.floor((timeList[timeList.length - 1] - timeList[0]) / arrayLength) + 1;
+    let stepEnd = timeList[0] + step;
+    let item = 0;
+    for (const tm of timeList) {
+        if (tm >= stepEnd) {
+            item++;
+            if (item >= arrayLength) {
+                dataList[item - 1]++;
+                break;
+            }
+            stepEnd += step;
+        }
+        dataList[item]++;
+    }
+    return dataList;
 }
