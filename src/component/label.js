@@ -204,3 +204,85 @@ export async function label_F1(data = {
 
     return svg.toString();
 }
+
+export async function label_F2(data = {
+    avatar: 'avatar-guest.png',
+    name: 'Guozi on osu',
+    mods_arr: [], //这个用不到
+    score: 268397,
+    rank: 6,
+    label_color: '#46393f',
+
+}, reuse = false) {
+
+    //导入模板
+    let svg = `  <defs>
+    <clipPath id="clippath-LF2-1">
+      <circle cx="15" cy="15" r="15" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Avatar">
+    <circle cx="15" cy="15" r="15" style="fill: #46393f;"/>
+    <g style="clip-path: url(#clippath-LF2-1);">
+    </g>
+  </g>
+  <g id="Label">
+  </g>
+  <g id="Text">
+  </g>`
+
+    //正则
+    let reg_text = /(?<=<g id="Text">)/;
+    let reg_label = /(?<=<g id="Label">)/;
+    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF2-1\);">)/;
+
+    //定义文本
+    let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
+    let name = torus.getTextPath(text_name, 52, 13.877, 18, 'left baseline', '#fff');
+
+    let score_b = getRoundedNumberLargerStr(data.score || 0, 1);
+    let score_m = getRoundedNumberSmallerStr(data.score || 0, 1);
+
+    let score = torus.getTextPath(score_b + score_m, 52, 27.877, 14,'left baseline', '#fff');
+
+    let rank = torus.getTextPath(data.rank.toString() || '0', 40, 27.877, 14, 'center baseline', '#fff');
+
+    let label_color = `
+    <rect x="30" y="16" width="20" height="14" rx="7" ry="7" style="fill: ${data.label_color || '#46393f'};"/>`;
+
+    //插入文本
+    svg = replaceText(svg, name, reg_text);
+    svg = replaceText(svg, score, reg_text);
+    svg = replaceText(svg, rank, reg_text);
+    svg = replaceText(svg, label_color, reg_label);
+
+    //插入图片
+    svg = implantImage(svg, 30, 30, 0, 0, 1, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+
+    return svg.toString();
+}
+
+export async function label_F3(data = {
+    avatar: 'avatar-guest.png',
+
+}, reuse = false) {
+    //导入模板
+    let svg = `  <defs>
+    <clipPath id="clippath-LF3-1">
+      <circle cx="15" cy="15" r="15" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Avatar">
+    <circle cx="15" cy="15" r="15" style="fill: #46393f;"/>
+    <g style="clip-path: url(#clippath-LF3-1);">
+    </g>
+  </g>`
+
+    //正则
+    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF3-1\);">)/;
+
+    //插入图片
+    svg = implantImage(svg, 30, 30, 0, 0, 1, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+
+    return svg.toString();
+}

@@ -1,5 +1,5 @@
 import {implantSvgBody, readTemplate, replaceText} from "../util.js";
-import {label_F1} from "../component/label.js";
+import {label_F1, label_F2, label_F3} from "../component/label.js";
 
 export async function card_C (data = {
     statistics: {
