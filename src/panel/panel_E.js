@@ -455,7 +455,7 @@ export async function panel_E(data = {
 
         const mx = 1055;
         const my = 485;
-        const r = 105 * Math.sqrt(2);//正方形的外接圆半径
+        const r = 105;//* Math.sqrt(2)，正方形的外接圆半径 放大一点算了
         let cx = mx + r * Math.sin(rad);
         let cy = my - r * Math.cos(rad);
         let c = `${cx} ${cy} `;//control point 控制点

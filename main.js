@@ -274,7 +274,7 @@ app.post('/panel_E', async (req, res) => {
             map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
             map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
             map_playcount: getExportFileV3Path('object-beatmap-playcount.png'),
-            map_status: 'ranked',
+            map_status: score.beatmap.status.toLowerCase(),
 
             score_rank: score.rank,
             star_rating: score.beatmap.difficulty_rating,
