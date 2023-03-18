@@ -71,6 +71,8 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
         n50: score.count_50,
         n100: score.count_100,
         n300: score.count_300,
+        nGeki: score.count_geki,
+        nKatu: score.count_katu,
     })
 
     const now_pp = calculator.performance(beatMap);
