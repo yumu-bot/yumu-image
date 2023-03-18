@@ -203,7 +203,6 @@ app.post('/panel_E', async (req, res) => {
         const score_statistics = {
             ...score.statistics,
             combo: score.max_combo,
-            max_combo: score.beatmap.max_combo,
             mods: score.mods,
         }
         let pp = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode);
