@@ -1591,7 +1591,7 @@ export function hasMod(modInt = 0, mod = '') {
 export function getModInt(mod = ['']) {
     return mod.map(v => {
         return Mod[v] ? Mod[v] : 0
-    }).reduce((sum, v) => sum + v, 0);
+    }).reduce((sum, v) => sum | v);
 }
 
 export function addMod(modInt = 0, mod = '') {
