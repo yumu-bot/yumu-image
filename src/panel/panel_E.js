@@ -1,7 +1,8 @@
 import {
     exportPng,
     extra,
-    getExportFileV3Path, getGameMode,
+    getExportFileV3Path,
+    getGameMode,
     getMapStatusPath,
     getNowTimeStamp,
     getRandomBannerPath,
@@ -48,41 +49,13 @@ export async function panel_E(data = {
             data_b: '547',
             data_m: 'x',
         },
-        pp: {
-            remark: '',
-            data_b: '2048.',
-            data_m: '2',
-        },
-        bpm: {
-            remark: '154.4ms',
-            data_b: '210.',
-            data_m: '1',
-        },
-        length: {
-            remark: '3:04',
-            data_b: '3:',
-            data_m: '06',
-        },
-        cs: {
-            remark: '154px',
-            data_b: '4.',
-            data_m: '2',
-        },
-        ar: {
-            remark: '450ms',
-            data_b: '10.',
-            data_m: '3 (9)',
-        },
-        od: {
-            remark: '16ms',
-            data_b: '9.',
-            data_m: '82 (8.1)',
-        },
-        hp: {
-            remark: '-',
-            data_b: '6.',
-            data_m: '1',
-        },
+        pp: {full_pp: 233, pp: 155.5},
+        bpm: 175,
+        length: 153,
+        cs: 4,
+        ar: 9.2,
+        od: 9,
+        hp: 4.5,
     },
 
     // 成绩评级
@@ -191,24 +164,53 @@ export async function panel_E(data = {
 
     // 卡片定义
     //console.time("label");
+
     let label_acc =
         await label_E({...LABEL_OPTION.ACC, ...data.label_data.acc}, true);
     let label_combo =
         await label_E({...LABEL_OPTION.COMBO, ...data.label_data.combo}, true);
     let label_pp =
-        await label_E({...LABEL_OPTION.PP, ...data.label_data.pp}, true);
+        await label_E({
+            ...LABEL_OPTION.PP,
+            remark: Math.round(data.label_data.pp.full_pp).toString(),
+            data_b: Math.round(data.label_data.pp.pp).toString()
+        }, true);
     let label_bpm =
-        await label_E({...LABEL_OPTION.BPM, ...data.label_data.bpm}, true);
+        await label_E({
+            ...LABEL_OPTION.BPM,
+            data_b: Math.floor(data.label_data.bpm) + (data.label_data.bpm % 1 === 0 ? '' : '.'),
+            data_m: data.label_data.bpm % 1 === 0 ? '' : (data.label_data.bpm % 1).toFixed(2)
+        }, true);
     let label_length =
-        await label_E({...LABEL_OPTION.LENGTH, ...data.label_data.length}, true);
+        await label_E({
+            ...LABEL_OPTION.LENGTH,
+            data_b: Math.floor(data.label_data.length / 60) + ':',
+            data_m: Math.floor(data.label_data.length % 60).toString()
+        }, true);
     let label_cs =
-        await label_E({...LABEL_OPTION.CS, ...data.label_data.cs}, true);
+        await label_E({
+            ...LABEL_OPTION.CS,
+            data_b: Math.floor(data.label_data.cs) + (data.label_data.cs % 1 === 0 ? '' : '.'),
+            data_m: data.label_data.cs % 1 === 0 ? '' : (data.label_data.cs % 1).toFixed(2).toString().substring(2)
+        }, true);
     let label_ar =
-        await label_E({...LABEL_OPTION.AR, ...data.label_data.ar}, true);
+        await label_E({
+            ...LABEL_OPTION.AR,
+            data_b: Math.floor(data.label_data.ar) + (data.label_data.ar % 1 === 0 ? '' : '.'),
+            data_m: data.label_data.ar % 1 === 0 ? '' : (data.label_data.ar % 1).toFixed(2).toString().substring(2)
+        }, true);
     let label_od =
-        await label_E({...LABEL_OPTION.OD, ...data.label_data.od}, true);
+        await label_E({
+            ...LABEL_OPTION.OD,
+            data_b: Math.floor(data.label_data.od) + (data.label_data.od % 1 === 0 ? '' : '.'),
+            data_m: data.label_data.od % 1 === 0 ? '' : (data.label_data.od % 1).toFixed(2).toString().substring(2)
+        }, true);
     let label_hp =
-        await label_E({...LABEL_OPTION.HP, ...data.label_data.hp}, true);
+        await label_E({
+            ...LABEL_OPTION.HP,
+            data_b: Math.floor(data.label_data.hp) + (data.label_data.hp % 1 === 0 ? '' : '.'),
+            data_m: data.label_data.hp % 1 === 0 ? '' : (data.label_data.hp % 1).toFixed(2).toString().substring(2)
+        }, true);
     let card_A1_impl =
         await card_A1(data.card_A1, true);
     //console.timeEnd("label");
