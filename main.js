@@ -257,9 +257,11 @@ app.post('/panel_E', async (req, res) => {
             score_categorize = 'played';
         }
 
-        let map_public_rating = Math.floor(score.beatmapset.ratings.reduce((s, v, i) => s + v * i) / score.beatmapset.ratings.reduce((s, v) => s + v) * 100) / 100;
-        let map_fail_percent = (score.beatmap.fail.reduce((s, v) => s + v) / score.beatmap.playcount).toFixed(2).substring(2);
-        let map_retry_percent = (score.beatmap.exit.reduce((s, v) => s + v) / score.beatmap.playcount).toFixed(2).substring(2);
+        const allRatingNum = score.beatmapset.ratings.reduce((s, v) => s + v);
+        const allRatingVal = score.beatmapset.ratings.reduce((s, v, i) => s + v * i);
+        const map_public_rating = allRatingVal ? Math.floor(allRatingVal / allRatingNum * 100) / 100 : 0;
+        const map_fail_percent = (score.beatmap.fail.reduce((s, v) => s + v) / score.beatmap.playcount).toFixed(2).substring(2);
+        const map_retry_percent = (score.beatmap.exit.reduce((s, v) => s + v) / score.beatmap.playcount).toFixed(2).substring(2);
         const data = {
             map_density_arr: await getDensityArray(score.beatmap.id, score.mode),
             map_fail_arr: score.beatmap.fail,
