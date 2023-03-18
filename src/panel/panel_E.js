@@ -191,25 +191,25 @@ export async function panel_E(data = {
         await label_E({
             ...LABEL_OPTION.CS,
             data_b: Math.floor(data.label_data.cs) + (data.label_data.cs % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.cs % 1 === 0 ? '' : (data.label_data.cs % 1).toFixed(2).toString().substring(2)
+            data_m: data.label_data.cs % 1 === 0 ? '' : (data.label_data.cs % 1).toFixed(2).substring(2)
         }, true);
     let label_ar =
         await label_E({
             ...LABEL_OPTION.AR,
             data_b: Math.floor(data.label_data.ar) + (data.label_data.ar % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.ar % 1 === 0 ? '' : (data.label_data.ar % 1).toFixed(2).toString().substring(2)
+            data_m: data.label_data.ar % 1 === 0 ? '' : (data.label_data.ar % 1).toFixed(2).substring(2)
         }, true);
     let label_od =
         await label_E({
             ...LABEL_OPTION.OD,
             data_b: Math.floor(data.label_data.od) + (data.label_data.od % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.od % 1 === 0 ? '' : (data.label_data.od % 1).toFixed(2).toString().substring(2)
+            data_m: data.label_data.od % 1 === 0 ? '' : (data.label_data.od % 1).toFixed(2).substring(2)
         }, true);
     let label_hp =
         await label_E({
             ...LABEL_OPTION.HP,
             data_b: Math.floor(data.label_data.hp) + (data.label_data.hp % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.hp % 1 === 0 ? '' : (data.label_data.hp % 1).toFixed(2).toString().substring(2)
+            data_m: data.label_data.hp % 1 === 0 ? '' : (data.label_data.hp % 1).toFixed(2).substring(2)
         }, true);
     let card_A1_impl =
         await card_A1(data.card_A1, true);
@@ -321,14 +321,17 @@ export async function panel_E(data = {
     }
 
     // 评级或难度分布
-    const density_arr_max = Math.max.apply(Math, data.map_density_arr);
+    if (data.map_density_arr) {
+        const density_arr_max = Math.max.apply(Math, data.map_density_arr);
 
-    data.map_density_arr.forEach((item, i) => {
-        let map_density_rrect_color = '#8DCFF4';
-        let rect_height = Math.max((85 * item / density_arr_max), 16);
-        let svg_rect = `<rect id="D${i}RRect" x="${900 + i * 20}" y="${900 - rect_height}" width="16" height="${rect_height}" rx="10" ry="10" style="fill: ${map_density_rrect_color};"/>`;
-        svg = replaceText(svg, svg_rect, /(?<=<g id="JudgeRRects">)/);
-    })
+        data.map_density_arr.forEach((item, i) => {
+            let map_density_rrect_color = '#8DCFF4';
+            let rect_height = Math.max((85 * item / density_arr_max), 16);
+            let svg_rect = `<rect id="D${i}RRect" x="${900 + i * 20}" y="${900 - rect_height}" width="16" height="${rect_height}" rx="10" ry="10" style="fill: ${map_density_rrect_color};"/>`;
+            svg = replaceText(svg, svg_rect, /(?<=<g id="JudgeRRects">)/);
+        })
+    }
+
 
     // 星数
     function Star(data, sr_b, sr_m) {
@@ -586,4 +589,142 @@ export async function panel_E(data = {
     svg = implantImage(svg, 50, 50, 683, 334, 1, status, reg_map_status);
 
     return await exportPng(svg);
+}
+
+export const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
+    const judges = [];
+    const mode = getGameMode(gamemode, 1);
+
+    switch (mode) {
+        case 'o': {
+            judges.push({
+                index: '300',
+                stat: n300,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#8DCFF4',
+            }, {
+                index: '100',
+                stat: n100,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#79C471',
+            }, {
+                index: '50',
+                stat: n50,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#FEF668',
+            }, {}, {
+                index: '0',
+                stat: n0,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#ED6C9E',
+            });
+            break;
+        }
+
+        case 't': {
+            judges.push({
+                index: '300',
+                stat: n300,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#8DCFF4',
+            }, {
+                index: '150',
+                stat: n100,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#79C471',
+            }, {}, {
+                index: '0',
+                stat: n0,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#ED6C9E',
+            });
+            break;
+        }
+
+        case 'c': {
+            judges.push({
+                index: '300',
+                stat: n300,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#8DCFF4',
+            }, {
+                index: '100',
+                stat: n100,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#79C471',
+            }, {
+                index: '50',
+                stat: n50,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#FEF668',
+            }, {}, {
+                index: '0',
+                stat: n0,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#ED6C9E',
+            }, {
+                index: 'MD',
+                stat: n200,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#A1A1A1',
+            });
+            break;
+        }
+
+        case 'm': {
+            judges.push({
+                index: '320',
+                stat: n320,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#8DCFF4',
+            }, {
+                index: '300',
+                stat: n300,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#FEF668',
+            }, {
+                index: '200',
+                stat: n200,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#79C471',
+            }, {
+                index: '100',
+                stat: n100,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#5E8AC6',
+            }, {
+                index: '50',
+                stat: n50,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#A1A1A1',
+            }, {
+                index: '0',
+                stat: n0,
+                index_color: '#fff',
+                stat_color: '#fff',
+                rrect_color: '#ED6C9E',
+            });
+            break;
+        }
+
+    }
+
+    return judges;
 }
