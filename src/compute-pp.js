@@ -72,16 +72,17 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
         n300: score.count_300,
     })
 
-    const currAttrs = calculator.performance(beatMap);
+    const now_pp = calculator.performance(beatMap);
     const maxCombo = calculator.difficulty(beatMap).maxCombo
-    const now_pp = currAttrs.pp;
     calculator.combo(maxCombo);
     calculator.n300(score.count_300 + score.count_miss);
     calculator.nMisses(0);
-    const full_pp = calculator.performance(beatMap).pp;
+    const full_pp = calculator.performance(beatMap);
     return {
-        pp: now_pp,
-        full_pp: full_pp
+        pp: now_pp.pp,
+        pp_all: now_pp,
+        full_pp: full_pp.pp,
+        full_pp_all: full_pp,
     };
 
 }
