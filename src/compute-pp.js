@@ -65,12 +65,14 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
 
     let calculator = new Calculator({
         mode: mode_int,
-        mods: (score.mods && score.mods.length === 0) ? getModInt(score.mods) : mode_int,
+        mods: (score.mods && score.mods.length !== 0) ? getModInt(score.mods) : 0,
         combo: score.combo,
         nMisses: score.count_miss,
         n50: score.count_50,
         n100: score.count_100,
         n300: score.count_300,
+        nGeki: score.count_geki,
+        nKatu: score.count_katu,
     })
 
     const now_pp = calculator.performance(beatMap);
