@@ -1,4 +1,6 @@
 import {
+    ar2ms,
+    cs2px,
     exportPng,
     extra,
     getExportFileV3Path,
@@ -190,24 +192,28 @@ export async function panel_E(data = {
     let label_cs =
         await label_E({
             ...LABEL_OPTION.CS,
+            remark: cs2px(data.label_data.cs) + 'px',
             data_b: Math.floor(data.label_data.cs) + (data.label_data.cs % 1 === 0 ? '' : '.'),
             data_m: data.label_data.cs % 1 === 0 ? '' : (data.label_data.cs % 1).toFixed(2).substring(2)
         }, true);
     let label_ar =
         await label_E({
             ...LABEL_OPTION.AR,
+            remark: ar2ms(data.label_data.ar) + 'ms',
             data_b: Math.floor(data.label_data.ar) + (data.label_data.ar % 1 === 0 ? '' : '.'),
             data_m: data.label_data.ar % 1 === 0 ? '' : (data.label_data.ar % 1).toFixed(2).substring(2)
         }, true);
     let label_od =
         await label_E({
             ...LABEL_OPTION.OD,
+            remark: ar2ms(data.label_data.od) + 'ms',
             data_b: Math.floor(data.label_data.od) + (data.label_data.od % 1 === 0 ? '' : '.'),
             data_m: data.label_data.od % 1 === 0 ? '' : (data.label_data.od % 1).toFixed(2).substring(2)
         }, true);
     let label_hp =
         await label_E({
             ...LABEL_OPTION.HP,
+            remark: '-',
             data_b: Math.floor(data.label_data.hp) + (data.label_data.hp % 1 === 0 ? '' : '.'),
             data_m: data.label_data.hp % 1 === 0 ? '' : (data.label_data.hp % 1).toFixed(2).substring(2)
         }, true);

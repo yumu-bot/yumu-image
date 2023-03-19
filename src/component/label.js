@@ -122,7 +122,7 @@ export async function label_E(data = {
     `;
 
     if (data.remark) {
-        let remark = torus.getTextPath(data.remark, 200, 14.88, 18, "right baseline", "#646464");
+        let remark = torus.getTextPath(data.remark, 200, 14.88, 18, "right baseline", "#fff");
         svg = replaceText(svg, remark, reg_text);
     }
     svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_text)

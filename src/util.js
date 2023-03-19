@@ -1584,6 +1584,24 @@ const Mod = {
     "PF": 16384,
 }
 
+export function ar2ms(ar) {
+    if (0 < ar - 5) {
+        if (ar > 11) return 300;
+        return Math.floor(1200 - (150 * (ar - 5)));
+    } else {
+        return Math.floor(1800 - (120 * ar));
+    }
+}
+
+export function od2ms(od) {
+    if (od > 10) return 20;
+    return Math.floor(80 - (6 * od));
+}
+
+export function cs2px(cs) {
+    return (54.4 - 4.48 * cs).toFixed(2);
+}
+
 export function hasMod(modInt = 0, mod = '') {
     return Mod[mod] ? (modInt & Mod[mod]) !== 0 : false;
 }
