@@ -194,28 +194,28 @@ export async function panel_E(data = {
             ...LABEL_OPTION.CS,
             remark: cs2px(data.label_data.cs) + 'px',
             data_b: Math.floor(data.label_data.cs) + (data.label_data.cs % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.cs % 1 === 0 ? '' : (data.label_data.cs % 1).toFixed(2).substring(2)
+            data_m: data.label_data.cs % 1 === 0 ? '' : (data.label_data.cs % 1).toFixed(1).substring(2)
         }, true);
     let label_ar =
         await label_E({
             ...LABEL_OPTION.AR,
             remark: ar2ms(data.label_data.ar) + 'ms',
             data_b: Math.floor(data.label_data.ar) + (data.label_data.ar % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.ar % 1 === 0 ? '' : (data.label_data.ar % 1).toFixed(2).substring(2)
+            data_m: data.label_data.ar % 1 === 0 ? '' : (data.label_data.ar % 1).toFixed(1).substring(2)
         }, true);
     let label_od =
         await label_E({
             ...LABEL_OPTION.OD,
             remark: ar2ms(data.label_data.od) + 'ms',
             data_b: Math.floor(data.label_data.od) + (data.label_data.od % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.od % 1 === 0 ? '' : (data.label_data.od % 1).toFixed(2).substring(2)
+            data_m: data.label_data.od % 1 === 0 ? '' : (data.label_data.od % 1).toFixed(1).substring(2)
         }, true);
     let label_hp =
         await label_E({
             ...LABEL_OPTION.HP,
             remark: '-',
             data_b: Math.floor(data.label_data.hp) + (data.label_data.hp % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.hp % 1 === 0 ? '' : (data.label_data.hp % 1).toFixed(2).substring(2)
+            data_m: data.label_data.hp % 1 === 0 ? '' : (data.label_data.hp % 1).toFixed(1).substring(2)
         }, true);
     let card_A1_impl =
         await card_A1(data.card_A1, true);
@@ -461,7 +461,7 @@ export async function panel_E(data = {
 
         const mx = 1055;
         const my = 485;
-        const r = 105;//* Math.sqrt(2)，正方形的外接圆半径 放大一点算了
+        const r = 105 * 2;//* Math.sqrt(2)，正方形的外接圆半径 放大一点算了
         let cx = mx + r * Math.sin(rad);
         let cy = my - r * Math.cos(rad);
         let c = `${cx} ${cy} `;//control point 控制点
