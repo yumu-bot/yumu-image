@@ -206,7 +206,7 @@ export async function panel_E(data = {
     let label_od =
         await label_E({
             ...LABEL_OPTION.OD,
-            remark: ar2ms(data.label_data.od) + 'ms',
+            remark: od2ms(data.label_data.od) + 'ms',
             data_b: Math.floor(data.label_data.od) + (data.label_data.od % 1 === 0 ? '' : '.'),
             data_m: data.label_data.od % 1 === 0 ? '' : (data.label_data.od % 1).toFixed(1).substring(2)
         }, true);
