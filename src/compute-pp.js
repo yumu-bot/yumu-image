@@ -104,7 +104,7 @@ async function getOsuFilePath(bid, mode) {
     try {
         fs.accessSync(filePath);
     } catch (e) {
-        let data = await axios.get(`https://osu.ppy.sh/${mode}/${bid}`);
+        let data = await axios.get(`https://osu.ppy.sh/osu/${bid}`);
         if (data.status === 200) {
             fs.writeFileSync(filePath, data.data, {flag: 'a'});
         } else {
