@@ -1,6 +1,6 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, getExportFileV3Path, getGameMode, initPath, readImage, readNetImage} from "./src/util.js";
+import {CACHE_PATH, getExportFileV3Path, getGameMode, hasMod, initPath, readImage, readNetImage} from "./src/util.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {newJudge, panel_E} from "./src/panel/panel_E.js";
 import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
@@ -205,7 +205,13 @@ app.post('/panel_E', async (req, res) => {
             combo: score.max_combo,
             mods: score.mods,
         }
-        let pp = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode);
+        const pp = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode);
+        let map_length = score.beatmap.total_length || 0;
+        if (hasMod(pp.attr.mods_int, "DT")) {
+            map_length = (map_length * 2 / 3).toFixed(0);
+        } else if (hasMod(pp.attr.mods_int, "DT")) {
+            map_length = (map_length * 3 / 2).toFixed(0);
+        }
         const label_data = {
             acc: newLabel('-',
                 `${Math.floor(score.accuracy * 100).toString()}.`,
@@ -215,12 +221,7 @@ app.post('/panel_E', async (req, res) => {
                 score.max_combo.toString(),
                 'x'),
             pp: pp,
-            bpm: score.beatmap.bpm,
-            length: score.beatmap.total_length,
-            cs: score.beatmap.cs,
-            ar: score.beatmap.ar,
-            od: score.beatmap.accuracy,
-            hp: score.beatmap.drain,
+            length: map_length,
         };
 
 
@@ -277,7 +278,7 @@ app.post('/panel_E', async (req, res) => {
             map_status: score.beatmap.status.toLowerCase(),
 
             score_rank: score.rank,
-            star_rating: score.beatmap.difficulty_rating,
+            star_rating: pp.attr.stars,
             score: score.score,
             score_acc_progress: Math.floor(score.accuracy * 10000) / 100,
 
@@ -298,6 +299,7 @@ app.post('/panel_E', async (req, res) => {
             card_A1: card_a1,
             label_data: label_data,
             score_stats: score_stats,
+            attr: pp.attr,
         }
         const png = await panel_E(data);
         res.set('Content-Type', 'image/png');

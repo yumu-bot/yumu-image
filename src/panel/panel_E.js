@@ -1,5 +1,4 @@
 import {
-    ar2ms,
     cs2px,
     exportPng,
     extra,
@@ -14,7 +13,6 @@ import {
     getStarRatingObject,
     implantImage,
     implantSvgBody,
-    od2ms,
     PuHuiTi,
     readTemplate,
     replaceText,
@@ -55,10 +53,6 @@ export async function panel_E(data = {
         pp: {full_pp: 233, pp: 155.5},
         bpm: 175,
         length: 153,
-        cs: 4,
-        ar: 9.2,
-        od: 9,
-        hp: 4.5,
     },
 
     // 成绩评级
@@ -142,6 +136,23 @@ export async function panel_E(data = {
     // 面板颜色和特性 颜色已经写成方法
     //color_gamemode: '#7ac943',
     score_categorize: 'fullcombo', // played, clear, nomiss, fullcombo
+    attr: {
+        mode: 0,
+        version: 14,
+        nCircles: 1,
+        nSliders: 1,
+        nSpinners: 1,
+        ar: 9.7,
+        cs: 4,
+        hp: 5.6,
+        od: 9.3,
+        arHitWindow: 500,
+        odHitWindow: 23.733332951863606,
+        clockRate: 1.5,
+        bpm: 234.00023400023397,
+        stars: 0,
+        maxCombo: 0,
+    }
 
 }, reuse = false) {
     // 导入模板
@@ -178,45 +189,51 @@ export async function panel_E(data = {
             remark: Math.round(data.label_data.pp.full_pp).toString(),
             data_b: Math.round(data.label_data.pp.pp).toString()
         }, true);
+    let showPoint = data.attr.bpm % 1 <= 0.01;
     let label_bpm =
         await label_E({
             ...LABEL_OPTION.BPM,
-            data_b: Math.floor(data.label_data.bpm) + (data.label_data.bpm % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.bpm % 1 === 0 ? '' : (data.label_data.bpm % 1).toFixed(2)
+            data_b: Math.floor(data.attr.bpm) + (showPoint ? '' : '.'),
+            data_m: showPoint ? '' : (data.attr.bpm % 1).toFixed(2).substring(2)
         }, true);
+
     let label_length =
         await label_E({
             ...LABEL_OPTION.LENGTH,
             data_b: Math.floor(data.label_data.length / 60) + ':',
-            data_m: Math.floor(data.label_data.length % 60).toString()
+            data_m: Math.floor(data.label_data.length % 60).toFixed(0)
         }, true);
+    showPoint = data.attr.cs % 1 <= 0.01;
     let label_cs =
         await label_E({
             ...LABEL_OPTION.CS,
-            remark: cs2px(data.label_data.cs) + 'px',
-            data_b: Math.floor(data.label_data.cs) + (data.label_data.cs % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.cs % 1 === 0 ? '' : (data.label_data.cs % 1).toFixed(1).substring(2)
+            remark: cs2px(data.attr.cs) + 'px',
+            data_b: Math.floor(data.attr.cs) + (showPoint ? '' : '.'),
+            data_m: showPoint ? '' : (data.attr.cs % 1).toFixed(1).substring(2)
         }, true);
+    showPoint = data.attr.ar % 1 <= 0.01;
     let label_ar =
         await label_E({
             ...LABEL_OPTION.AR,
-            remark: ar2ms(data.label_data.ar) + 'ms',
-            data_b: Math.floor(data.label_data.ar) + (data.label_data.ar % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.ar % 1 === 0 ? '' : (data.label_data.ar % 1).toFixed(1).substring(2)
+            remark: data.attr.arHitWindow.toFixed(0) + 'ms',
+            data_b: Math.floor(data.attr.ar) + (showPoint ? '' : '.'),
+            data_m: showPoint ? '' : (data.attr.ar % 1).toFixed(1).substring(2)
         }, true);
+    showPoint = data.attr.od % 1 <= 0.01;
     let label_od =
         await label_E({
             ...LABEL_OPTION.OD,
-            remark: od2ms(data.label_data.od) + 'ms',
-            data_b: Math.floor(data.label_data.od) + (data.label_data.od % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.od % 1 === 0 ? '' : (data.label_data.od % 1).toFixed(1).substring(2)
+            remark: data.attr.odHitWindow.toFixed(0) + 'ms',
+            data_b: Math.floor(data.attr.od) + (showPoint ? '' : '.'),
+            data_m: showPoint ? '' : (data.attr.od % 1).toFixed(1).substring(2)
         }, true);
+    showPoint = data.attr.hp % 1 <= 0.01;
     let label_hp =
         await label_E({
             ...LABEL_OPTION.HP,
             remark: '-',
-            data_b: Math.floor(data.label_data.hp) + (data.label_data.hp % 1 === 0 ? '' : '.'),
-            data_m: data.label_data.hp % 1 === 0 ? '' : (data.label_data.hp % 1).toFixed(1).substring(2)
+            data_b: Math.floor(data.attr.hp) + (showPoint ? '' : '.'),
+            data_m: showPoint ? '' : (data.attr.hp % 1).toFixed(1).substring(2)
         }, true);
     let card_A1_impl =
         await card_A1(data.card_A1, true);

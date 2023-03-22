@@ -62,10 +62,10 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
-
+    const mods = (score.mods && score.mods.length !== 0) ? getModInt(score.mods) : 0;
     let calculator = new Calculator({
         mode: mode_int,
-        mods: (score.mods && score.mods.length !== 0) ? getModInt(score.mods) : 0,
+        mods: mods,
         combo: score.combo,
         nMisses: score.count_miss,
         n50: score.count_50,
@@ -76,7 +76,14 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
     })
 
     const now_pp = calculator.performance(beatMap);
-    const maxCombo = calculator.difficulty(beatMap).maxCombo
+    const difficulty = calculator.difficulty(beatMap);
+    const attr = {
+        ...calculator.mapAttributes(beatMap),
+        stars: difficulty.stars,
+        maxCombo: difficulty.maxCombo,
+        mods_int: mods,
+    };
+    const maxCombo = difficulty.maxCombo;
     calculator.combo(maxCombo);
     calculator.n300(score.count_300 + score.count_miss);
     calculator.nMisses(0);
@@ -86,6 +93,7 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
         pp_all: now_pp,
         full_pp: full_pp.pp,
         full_pp_all: full_pp,
+        attr: attr,
     };
 
 }
