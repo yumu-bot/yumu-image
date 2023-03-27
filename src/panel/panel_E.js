@@ -220,7 +220,7 @@ export async function panel_E(data = {
             remark: cs2px(data.attr.cs) + 'px',
             data_b: Math.floor(data.attr.cs) + (showPoint ? '' : '.'),
             data_m: (showPoint ? '' : (data.attr.cs % 1).toFixed(1).substring(2)) + (
-                labelChanged ? ` (${data.label_data.cs})` : '')
+                (labelChanged && (data.attr.cs !== data.label_data.cs)) ? ` (${data.label_data.cs})` : '')
         }, true);
     labelPoint = data.attr.ar % 1;
     showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
