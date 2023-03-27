@@ -11,6 +11,7 @@ import {
     getRoundedNumberSmallerStr,
     getStarRatingColor,
     getStarRatingObject,
+    hasAnyMod,
     implantImage,
     implantSvgBody,
     PuHuiTi,
@@ -50,7 +51,13 @@ export async function panel_E(data = {
             data_b: '547',
             data_m: 'x',
         },
-        pp: {full_pp: 233, pp: 155.5},
+        pp: {
+            pp: 0,
+            pp_all: 0,
+            full_pp: 0,
+            full_pp_all: 0,
+            attr: {},
+        },
         bpm: 175,
         length: 153,
     },
@@ -189,7 +196,9 @@ export async function panel_E(data = {
             remark: Math.round(data.label_data.pp.full_pp).toString(),
             data_b: Math.round(data.label_data.pp.pp).toString()
         }, true);
-    let showPoint = data.attr.bpm % 1 <= 0.01;
+    const labelChanged = hasAnyMod(data.attr.mods_int, ["EZ", "HR", "DT", "HT"])
+    let labelPoint = data.attr.bpm % 1;
+    let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
     let label_bpm =
         await label_E({
             ...LABEL_OPTION.BPM,
@@ -203,37 +212,41 @@ export async function panel_E(data = {
             data_b: Math.floor(data.label_data.length / 60) + ':',
             data_m: Math.floor(data.label_data.length % 60).toFixed(0).padStart(2, '0')
         }, true);
-    showPoint = data.attr.cs % 1 <= 0.01;
+    labelPoint = data.attr.cs % 1;
+    showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
     let label_cs =
         await label_E({
             ...LABEL_OPTION.CS,
             remark: cs2px(data.attr.cs) + 'px',
             data_b: Math.floor(data.attr.cs) + (showPoint ? '' : '.'),
-            data_m: showPoint ? '' : (data.attr.cs % 1).toFixed(1).substring(2)
+            data_m: (showPoint ? '' : (data.attr.cs % 1).toFixed(1).substring(2)) + (labelChanged ? `(${data.label_data.cs})` : '')
         }, true);
-    showPoint = data.attr.ar % 1 <= 0.01;
+    labelPoint = data.attr.ar % 1;
+    showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
     let label_ar =
         await label_E({
             ...LABEL_OPTION.AR,
             remark: data.attr.arHitWindow.toFixed(0) + 'ms',
             data_b: Math.floor(data.attr.ar) + (showPoint ? '' : '.'),
-            data_m: showPoint ? '' : (data.attr.ar % 1).toFixed(1).substring(2)
+            data_m: (showPoint ? '' : (data.attr.ar % 1).toFixed(1).substring(2)) + (labelChanged ? `(${data.label_data.ar})` : '')
         }, true);
-    showPoint = data.attr.od % 1 <= 0.01;
+    labelPoint = data.attr.od % 1;
+    showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
     let label_od =
         await label_E({
             ...LABEL_OPTION.OD,
             remark: data.attr.odHitWindow.toFixed(0) + 'ms',
             data_b: Math.floor(data.attr.od) + (showPoint ? '' : '.'),
-            data_m: showPoint ? '' : (data.attr.od % 1).toFixed(1).substring(2)
+            data_m: (showPoint ? '' : (data.attr.od % 1).toFixed(1).substring(2)) + (labelChanged ? `(${data.label_data.od})` : '')
         }, true);
-    showPoint = data.attr.hp % 1 <= 0.01;
+    labelPoint = data.attr.hp % 1;
+    showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
     let label_hp =
         await label_E({
             ...LABEL_OPTION.HP,
             remark: '-',
             data_b: Math.floor(data.attr.hp) + (showPoint ? '' : '.'),
-            data_m: showPoint ? '' : (data.attr.hp % 1).toFixed(1).substring(2)
+            data_m: (showPoint ? '' : (data.attr.hp % 1).toFixed(1).substring(2)) + (labelChanged ? `(${data.label_data.hp})` : '')
         }, true);
     let card_A1_impl =
         await card_A1(data.card_A1, true);

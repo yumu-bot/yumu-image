@@ -221,6 +221,10 @@ app.post('/panel_E', async (req, res) => {
                 score.max_combo.toString(),
                 'x'),
             pp: pp,
+            ar: score.beatmap.ar,
+            od: score.beatmap.accuracy,
+            cs: score.beatmap.cs,
+            hp: score.beatmap.drain,
             length: map_length,
         };
 

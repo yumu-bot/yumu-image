@@ -1606,6 +1606,22 @@ export function hasMod(modInt = 0, mod = '') {
     return Mod[mod] ? (modInt & Mod[mod]) !== 0 : false;
 }
 
+export function hasAnyMod(modInt = 0, mod = ['']) {
+    if (!mod) return false;
+    for (const v of mod) {
+        if ((Mod[v] & modInt) !== 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function hasAllMod(modInt = 0, mod = ['']) {
+    if (!mod) return false;
+    const all = getModInt(mod);
+    return (all & modInt) === all;
+}
+
 export function getModInt(mod = ['']) {
     return mod.map(v => {
         return Mod[v] ? Mod[v] : 0
