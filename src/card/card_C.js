@@ -70,70 +70,50 @@ export async function card_C (data = {
     let blue_width_arr = [];
     let none_width_arr = [];
 
-    //计算每个值的长度，当人数小于等于 4 时
-    function getTeamVsWidthArrayNormal (data){
+    if (data.red.length + data.blue.length <= 8 || data.none.length <= 8) {
+        red_width_arr = getTeamVsWidthArrayNormal(data, 'red');
+        blue_width_arr = getTeamVsWidthArrayNormal(data, 'blue');
+        none_width_arr = getTeamVsWidthArrayNormal(data, 'none');
+    }
 
+    //当队伍人数小于等于4时，计算每个值的长度（正常
+    function getTeamVsWidthArrayNormal (data, team = 'none'){
+        if (!data[team]) return [];
+
+        let team_width_arr = [];
         let total_score;
-        let red_score = 0;
-        let blue_score = 0;
-        let delta_score = Math.abs(data.statistics.score_team_red - data.statistics.score_team_blue);
+        let team_score = data.statistics[`score_team_${team}`] | 0;
 
         //获取分数，从小到大排列
-        let red_score_arr = [];
-        for (const i of data.red) {
-            red_score_arr.unshift(i.player_score);
-        }
-        let blue_score_arr = [];
-        for (const i of data.blue) {
-            blue_score_arr.unshift(i.player_score);
+        let team_score_arr = [];
+        for (const i of data[team]) {
+            team_score_arr.unshift(i.player_score);
         }
 
-        red_score_arr.forEach((item) => {
-            red_score += item;
-        })
-        blue_score_arr.forEach((item) => {
-            blue_score += item;
+        team_score_arr.forEach((item) => {
+            team_score += item;
         })
 
-        total_score = red_score + blue_score;
+        total_score = data.statistics.score_total | 0;
 
-        //获取每个人需要的宽度
-        const red_width = Math.min(Math.max(red_score / total_score * 1330, 400), 1030);
-        const blue_width = Math.min(Math.max(blue_score / total_score * 1330, 400), 1030);
+        //获取每个人需要的宽度、用于计算的值
+        let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, 400), 1030);
+        let team_score_calc = team_score;
 
-        //用于计算的值
-        let red_width_calc = red_width;
-        let blue_width_calc = blue_width;
-        let red_score_calc = red_score;
-        let blue_score_calc = blue_score;
-
-        for (let i of red_score_arr) {
+        for (let i of team_score_arr) {
             if ((i / total_score * 1330) < 100) {
-                red_width_arr.push(100);
-                red_width_calc -= 100;
-                red_score_calc -= i;
+                team_width_arr.push(100);
+                team_width_calc -= 100;
+                team_score_calc -= i;
             } else {
-                let i2 = red_width_calc * i / red_score_calc;
-                red_width_arr.push(i2);
+                let i2 = team_width_calc * i / team_score_calc;
+                team_width_arr.push(i2);
             }
         }
 
-        for (let i of blue_score_arr) {
-            if ((i / total_score * 1330) < 100) {
-                blue_width_arr.push(100);
-                blue_width_calc -= 100;
-                blue_score_calc -= i;
-            } else {
-                let i2 = blue_width_calc * i / blue_score_calc;
-                blue_width_arr.push(i2);
-            }
-        }
+        return team_width_arr;
     }
 
-
-    function getHeadToHeadWidthArrayNormal (data) {
-
-    }
 
     // 插入F1 - F3标签的功能函数
 
@@ -149,10 +129,6 @@ export async function card_C (data = {
                 label_color: getUserRankColor(object.player_rank),
             })
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
-    }
-
-    if (data.red[0]){
-        await implantRoundLabelF1(data.red[0],0, 0);
     }
 
     async function implantRoundLabelF2(object, x, y) {
