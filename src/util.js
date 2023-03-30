@@ -13,12 +13,14 @@ export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE
 
 const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
+const FLAG_PATH = process.env.FLAG_PATH || CACHE_PATH + "/flag"
 export const OSU_BUFFER_PATH = IMG_BUFFER_PATH + "/osu";
 const MD5 = crypto.createHash("md5");
 
 export function initPath() {
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(OSU_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
+    fs.access(FLAG_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     return path;
 }
 
@@ -1535,9 +1537,9 @@ export class InsertSvgBuilder {
 export async function getFlagSvg(code = "cn") {
     code = code.toUpperCase();
     let flag;
-    let path = getExportFileV3Path(`Flags/${code}`);
+    let path = `${FLAG_PATH}/${code}`;
     try {
-        fs.accessSync(path, constants.W_OK);
+        fs.accessSync(path, fs.constants.W_OK);
     } catch (e) {
         let bit_flag = 0x1f1e6;
         let char_code_A = 65;
@@ -1560,9 +1562,9 @@ export async function getFlagSvg(code = "cn") {
 }
 
 export async function getFlagPath(code = "cn", x, y) {
-    let svg = getFlagSvg(code).toString();
+    let svg = await getFlagSvg(code);
     let len = svg.length;
-    return `<g transform="${x} ${y}">` + svg.substring(60, len - 6) + '</g>';
+    return `<g transform="translate(${x} ${y}) scale(1.45)">` + svg.substring(60, len - 6) + '</g>';
 }
 
 const Mod = {

@@ -1,4 +1,4 @@
-import {getExportFileV3Path, implantImage, readTemplate, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, getFlagPath, implantImage, readTemplate, replaceText, torus} from "../util.js";
 
 export async function card_A1(data = {
     background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
@@ -31,7 +31,7 @@ export async function card_A1(data = {
 
     // 文字的 <path>
     let text_name =
-        torus.getTextPath(torus.cutStringTail(data.name,48,290),
+        torus.getTextPath(torus.cutStringTail(data.name, 48, 290),
             130, 53.672, 48, "left baseline", "#fff");
     let text_rank_global =
         torus.getTextPath('#' + data.rank_global, 20, 165.836, 24, "left baseline", "#fff");
@@ -48,7 +48,7 @@ export async function card_A1(data = {
     let pp = data.pp || 0;
 
     let text_pp = torus.getTextPath(pp.toString(),
-            420 - torus.getTextWidth('PP',48),
+            420 - torus.getTextWidth('PP', 48),
             191.59, 60, "right baseline", "#fff")
         + torus.getTextPath('PP',
             420, 191.59, 48, "right baseline", "#fff");
@@ -60,14 +60,16 @@ export async function card_A1(data = {
     svg = replaceText(svg, text_rank_country, reg_text);
     svg = replaceText(svg, text_rank_global, reg_text);
     svg = replaceText(svg, text_pp, reg_text);
-    // svg = replaceText(svg, getFlagPath(data.country,130,68), reg_country_flag); //高44宽60吧
+    let flagSvg = await getFlagPath(data.country, 130, 64);
+    svg = replaceText(svg, flagSvg, reg_country_flag); //高44宽60吧
     // 替换图片
 
-    svg = implantImage(svg,430,210,0,0,0.5, data.background, reg_background)
-    svg = implantImage(svg,100,100,20,20,1, data.avatar, reg_avatar)
-    svg = implantImage(svg,40,40,200,70,1, data.sub_icon1, reg_sub_icon1)
-    svg = implantImage(svg,40,40,250,70,1, data.sub_icon2, reg_sub_icon2)
+    svg = implantImage(svg, 430, 210, 0, 0, 0.5, data.background, reg_background)
+    svg = implantImage(svg, 100, 100, 20, 20, 1, data.avatar, reg_avatar)
+    svg = implantImage(svg, 40, 40, 200, 70, 1, data.sub_icon1, reg_sub_icon1)
+    svg = implantImage(svg, 40, 40, 250, 70, 1, data.sub_icon2, reg_sub_icon2)
 
+    console.log(svg);
     return svg.toString();
     /*
     let out_svg = new InsertSvgBuilder(svg)
