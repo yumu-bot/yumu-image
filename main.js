@@ -254,7 +254,7 @@ app.post('/panel_E', async (req, res) => {
         let score_categorize;
         if (score.mods.includes('NF')) {
             score_categorize = 'played';
-        } else if (score.beatmap.max_combo === score.max_combo) {
+        } else if (score.perfect) {
             score_categorize = 'fullcombo';
         } else if (score.statistics.count_miss === 0) {
             score_categorize = 'nomiss';
