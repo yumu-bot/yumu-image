@@ -1620,7 +1620,7 @@ export function od2ms(od, mode = 'o') {
         }
     }
     if (ms.substr(-2) === '00') return ms.slice(0, -3) + 'ms';
-    if (ms.substr(-1) === '0') return ms.slice(0, -2) + 'ms';
+    if (ms.substr(-1) === '0') return ms.slice(0, -1) + 'ms';
     return ms + 'ms';
 }
 
@@ -1628,7 +1628,7 @@ export function cs2px(cs, mode = 'o') {
     if (mode === 'o') {
         let osupixel = (54.4 - 4.48 * cs).toFixed(2);
         if (osupixel.substr(-2) === '00') return osupixel.slice(0, -3) + 'px';
-        if (osupixel.substr(-1) === '0') return osupixel.slice(0, -2) + 'px';
+        if (osupixel.substr(-1) === '0') return osupixel.slice(0, -1) + 'px';
         return osupixel + 'px';
     } else if (mode === 'm') {
         return cs.toFixed(0) + 'Keys'
