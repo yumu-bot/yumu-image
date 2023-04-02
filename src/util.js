@@ -1603,12 +1603,12 @@ export function od2ms(od, mode = 'o') {
     let ms;
     switch (mode) {
         case 'o': {
-            if (od > 10) return '20ms';
+            if (od > 11) return '14ms';
             ms = (80 - (6 * od)).toFixed(2);
             break;
         }
         case 't': {
-            if (od > 10) return '20ms';
+            if (od > 10) return '17ms';
             ms = (50 - (3 * od)).toFixed(2);
             break;
         }
@@ -1616,7 +1616,7 @@ export function od2ms(od, mode = 'o') {
             return '-';
         }
         case 'm': {
-            if (od > 10) return '34ms';
+            if (od > 11) return '31ms';
             ms = (64 - (3 * od)).toFixed(2);
             break;
         }
