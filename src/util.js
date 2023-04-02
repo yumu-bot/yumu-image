@@ -1589,7 +1589,7 @@ const Mod = {
 export function ar2ms(ar, mode = 'o') {
     if (mode === 'o' || mode === 'c') {
         if (0 < ar - 5) {
-            if (ar > 11) return 300;
+            if (ar > 11) return '300ms';
             return Math.floor(1200 - (150 * (ar - 5))) + 'ms';
         } else {
             return Math.floor(1800 - (120 * ar)) + 'ms';
@@ -1600,32 +1600,38 @@ export function ar2ms(ar, mode = 'o') {
 }
 
 export function od2ms(od, mode = 'o') {
+    let ms;
     switch (mode) {
         case 'o': {
-            if (od > 10) return 20;
-            return Math.floor(80 - (6 * od)) + 'ms';
+            if (od > 10) return '20ms';
+            ms = (80 - (6 * od)).toFixed(2);
+            break;
         }
         case 't': {
-            if (od > 10) return 20;
-            return Math.floor(50 - (3 * od)) + 'ms';
+            if (od > 10) return '20ms';
+            ms = (50 - (3 * od)).toFixed(2);
         }
         case 'c': {
             return '-';
         }
         case 'm': {
-            if (od > 10) return 34;
-            return Math.floor(64 - (3 * od)) + 'ms';
+            if (od > 10) return '34ms';
+            ms = (64 - (3 * od)).toFixed(2);
         }
     }
+    if (ms.substr(-2) === '00') return ms.slice(0, -3) + 'ms';
+    if (ms.substr(-1) === '0') return ms.slice(0, -2) + 'ms';
+    return ms + 'ms';
 }
 
 export function cs2px(cs, mode = 'o') {
     if (mode === 'o') {
-        let osupixel = (54.4 - 4.48 * cs).toFixed(2).toString();
+        let osupixel = (54.4 - 4.48 * cs).toFixed(2);
         if (osupixel.substr(-2) === '00') return osupixel.slice(0, -3) + 'px';
+        if (osupixel.substr(-1) === '0') return osupixel.slice(0, -2) + 'px';
         return osupixel + 'px';
     } else if (mode === 'm') {
-        return cs.toFixed(0) + 'Key'
+        return cs.toFixed(0) + 'Keys'
     } else {
         return '-';
     }
