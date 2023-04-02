@@ -1610,6 +1610,7 @@ export function od2ms(od, mode = 'o') {
         case 't': {
             if (od > 10) return '20ms';
             ms = (50 - (3 * od)).toFixed(2);
+            break;
         }
         case 'c': {
             return '-';
@@ -1617,6 +1618,7 @@ export function od2ms(od, mode = 'o') {
         case 'm': {
             if (od > 10) return '34ms';
             ms = (64 - (3 * od)).toFixed(2);
+            break;
         }
     }
     if (ms.substr(-2) === '00') return ms.slice(0, -3) + 'ms';
