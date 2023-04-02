@@ -1609,12 +1609,12 @@ export function od2ms(od, mode = 'o') {
             if (od > 10) return 20;
             return Math.floor(50 - (3 * od)) + 'ms';
         }
+        case 'c': {
+            return '-';
+        }
         case 'm': {
             if (od > 10) return 34;
             return Math.floor(64 - (3 * od)) + 'ms';
-        }
-        default : {
-            return '-'
         }
     }
 }
