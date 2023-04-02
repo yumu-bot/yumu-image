@@ -1621,7 +1621,9 @@ export function od2ms(od, mode = 'o') {
 
 export function cs2px(cs, mode = 'o') {
     if (mode === 'o') {
-        return (54.4 - 4.48 * cs).toFixed(2) + 'px';
+        let osupixel = (54.4 - 4.48 * cs).toFixed(2).toString();
+        if (osupixel.substr(-2) === '00') return osupixel.slice(0, -3) + 'px';
+        return osupixel + 'px';
     } else if (mode === 'm') {
         return cs.toFixed(0) + 'Key'
     } else {

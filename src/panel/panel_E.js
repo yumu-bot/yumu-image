@@ -185,6 +185,20 @@ export async function panel_E(data = {
     const index_panel_name = 'S v3.6';
 
     // 卡片定义
+
+    //不显示部分无用的数据
+    let isDisplayCS = true;
+    let isDisplayAR = true;
+    let isDisplayOD = true;
+
+    const mode = getGameMode(data.game_mode, 1) || 'o';
+
+    switch (mode) {
+        case 't' : isDisplayAR = false; isDisplayCS = false; break;
+        case 'c' : isDisplayOD = false; break;
+        case 'm' : isDisplayAR = false; break;
+    }
+
     //console.time("label");
 
     let label_acc =
@@ -219,27 +233,27 @@ export async function panel_E(data = {
     let label_cs =
         await label_E({
             ...LABEL_OPTION.CS,
-            remark: cs2px(data.attr.cs, getGameMode(data.game_mode,1)),
-            data_b: Math.floor(data.attr.cs) + (showPoint ? '' : '.'),
-            data_m: (showPoint ? '' : (data.attr.cs % 1).toFixed(1).substring(2)) + (labelChangedCSHP ? `(${data.label_data.cs})` : '')
+            remark: cs2px(data.attr.cs, mode),
+            data_b: isDisplayCS ? Math.floor(data.attr.cs) + (showPoint ? '' : '.') : '-',
+            data_m: isDisplayCS ? (showPoint ? '' : (data.attr.cs % 1).toFixed(1).substring(2)) + (labelChangedCSHP ? `(${data.label_data.cs})` : '') : ''
         }, true);
     labelPoint = data.attr.ar % 1;
     showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
     let label_ar =
         await label_E({
             ...LABEL_OPTION.AR,
-            remark: ar2ms(data.attr.ar, getGameMode(data.game_mode,1)),
-            data_b: Math.floor(data.attr.ar) + (showPoint ? '' : '.'),
-            data_m: (showPoint ? '' : (data.attr.ar % 1).toFixed(1).substring(2)) + (labelChangedAROD ? `(${data.label_data.ar})` : '')
+            remark: ar2ms(data.attr.ar, mode),
+            data_b: isDisplayAR ? Math.floor(data.attr.ar) + (showPoint ? '' : '.') : '-',
+            data_m: isDisplayAR ? (showPoint ? '' : (data.attr.ar % 1).toFixed(1).substring(2)) + (labelChangedAROD ? `(${data.label_data.ar})` : '') : ''
         }, true);
     labelPoint = data.attr.od % 1;
     showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
     let label_od =
         await label_E({
             ...LABEL_OPTION.OD,
-            remark: od2ms(data.attr.od, getGameMode(data.game_mode,1)),
-            data_b: Math.floor(data.attr.od) + (showPoint ? '' : '.'),
-            data_m: (showPoint ? '' : (data.attr.od % 1).toFixed(1).substring(2)) + (labelChangedAROD ? `(${data.label_data.od})` : '')
+            remark: od2ms(data.attr.od, mode),
+            data_b: isDisplayOD ? Math.floor(data.attr.od) + (showPoint ? '' : '.') : '-',
+            data_m: isDisplayOD ? (showPoint ? '' : (data.attr.od % 1).toFixed(1).substring(2)) + (labelChangedAROD ? `(${data.label_data.od})` : '') : ''
         }, true);
     labelPoint = data.attr.hp % 1;
     showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
