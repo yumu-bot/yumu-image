@@ -1586,22 +1586,47 @@ const Mod = {
     "PF": 16384,
 }
 
-export function ar2ms(ar) {
-    if (0 < ar - 5) {
-        if (ar > 11) return 300;
-        return Math.floor(1200 - (150 * (ar - 5)));
+export function ar2ms(ar, mode = 'o') {
+    if (mode === 'o' || mode === 'c') {
+        if (0 < ar - 5) {
+            if (ar > 11) return 300;
+            return Math.floor(1200 - (150 * (ar - 5))) + 'ms';
+        } else {
+            return Math.floor(1800 - (120 * ar)) + 'ms';
+        }
     } else {
-        return Math.floor(1800 - (120 * ar));
+        return '-'
     }
 }
 
-export function od2ms(od) {
-    if (od > 10) return 20;
-    return Math.floor(80 - (6 * od));
+export function od2ms(od, mode = 'o') {
+    switch (mode) {
+        case 'o': {
+            if (od > 10) return 20;
+            return Math.floor(80 - (6 * od)) + 'ms';
+        }
+        case 't': {
+            if (od > 10) return 20;
+            return Math.floor(50 - (3 * od)) + 'ms';
+        }
+        case 'c': {
+            if (od > 10) return 34;
+            return Math.floor(64 - (3 * od)) + 'ms';
+        }
+        default : {
+            return '-'
+        }
+    }
 }
 
-export function cs2px(cs) {
-    return (54.4 - 4.48 * cs).toFixed(2);
+export function cs2px(cs, mode = 'o') {
+    if (mode === 'o') {
+        return (54.4 - 4.48 * cs).toFixed(2) + 'px';
+    } else if (mode === 'm') {
+        return cs.toFixed(0) + 'Key'
+    } else {
+        return '-';
+    }
 }
 
 export function hasMod(modInt = 0, mod = '') {

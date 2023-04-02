@@ -1,4 +1,5 @@
 import {
+    ar2ms,
     cs2px,
     exportPng,
     extra,
@@ -13,7 +14,7 @@ import {
     getStarRatingObject,
     hasAnyMod,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, od2ms,
     PuHuiTi,
     readTemplate,
     replaceText,
@@ -218,7 +219,7 @@ export async function panel_E(data = {
     let label_cs =
         await label_E({
             ...LABEL_OPTION.CS,
-            remark: cs2px(data.attr.cs) + 'px',
+            remark: cs2px(data.attr.cs, getGameMode(data.game_mode,1)),
             data_b: Math.floor(data.attr.cs) + (showPoint ? '' : '.'),
             data_m: (showPoint ? '' : (data.attr.cs % 1).toFixed(1).substring(2)) + (labelChangedCSHP ? `(${data.label_data.cs})` : '')
         }, true);
@@ -227,7 +228,7 @@ export async function panel_E(data = {
     let label_ar =
         await label_E({
             ...LABEL_OPTION.AR,
-            remark: data.attr.arHitWindow.toFixed(0) + 'ms',
+            remark: ar2ms(data.attr.ar, getGameMode(data.game_mode,1)),
             data_b: Math.floor(data.attr.ar) + (showPoint ? '' : '.'),
             data_m: (showPoint ? '' : (data.attr.ar % 1).toFixed(1).substring(2)) + (labelChangedAROD ? `(${data.label_data.ar})` : '')
         }, true);
@@ -236,7 +237,7 @@ export async function panel_E(data = {
     let label_od =
         await label_E({
             ...LABEL_OPTION.OD,
-            remark: data.attr.odHitWindow.toFixed(0) + 'ms',
+            remark: od2ms(data.attr.od, getGameMode(data.game_mode,1)),
             data_b: Math.floor(data.attr.od) + (showPoint ? '' : '.'),
             data_m: (showPoint ? '' : (data.attr.od % 1).toFixed(1).substring(2)) + (labelChangedAROD ? `(${data.label_data.od})` : '')
         }, true);
