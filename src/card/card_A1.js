@@ -29,6 +29,9 @@ export async function card_A1(data = {
 
     let reg_color_base = /(?<=fill: )#2a2226/;
 
+    data.rank_country = data.rank_country || '-';
+    data.rank_global = data.rank_global || '-';
+
     // 文字的 <path>
     let text_name =
         torus.getTextPath(torus.cutStringTail(data.name, 48, 290),
@@ -69,7 +72,6 @@ export async function card_A1(data = {
     svg = implantImage(svg, 40, 40, 200, 70, 1, data.sub_icon1, reg_sub_icon1)
     svg = implantImage(svg, 40, 40, 250, 70, 1, data.sub_icon2, reg_sub_icon2)
 
-    console.log(svg);
     return svg.toString();
     /*
     let out_svg = new InsertSvgBuilder(svg)
