@@ -257,10 +257,11 @@ app.post('/panel_E', async (req, res) => {
             judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode)
         }
 
+        const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
         let score_categorize;
         if (score.mods.includes('NF')) {
             score_categorize = 'played';
-        } else if (score.perfect) {
+        } else if (score.perfect || isTaikoPerfect) {
             score_categorize = 'perfect';
         } else if (score.statistics.count_miss === 0) {
             score_categorize = 'nomiss';
