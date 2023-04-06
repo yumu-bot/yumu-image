@@ -150,7 +150,7 @@ export async function panel_E(data = {
 
     // 面板颜色和特性 颜色已经写成方法
     //color_gamemode: '#7ac943',
-    score_categorize: 'fullcombo', // played, clear, nomiss, fullcombo
+    score_categorize: 'perfect', // played, clear, nomiss, perfect // 原叫做 fullcombo
     attr: {
         mode: 0,
         version: 14,
@@ -490,7 +490,7 @@ export async function panel_E(data = {
         let pl_link = 'default';
         let cl_link = 'default';
         let nm_link = 'default';
-        let fc_link = 'default';
+        let pf_link = 'default';
 
         if (sc === "played") {
             pl_link = ''
@@ -501,12 +501,12 @@ export async function panel_E(data = {
         if (sc === "nomiss") {
             nm_link = ''
         }
-        if (sc === "fullcombo") {
-            fc_link = ''
+        if (sc === "perfect") {
+            pf_link = ''
         }
 
         let reg = /(?<=<g id="LBPassStat">)/
-        svg = implantImage(svg, 150, 40, 1060, 690, 1, getExportFileV3Path(`object-score-fullcombo${fc_link}.png`), reg)
+        svg = implantImage(svg, 150, 40, 1060, 690, 1, getExportFileV3Path(`object-score-perfect${pf_link}.png`), reg)
         svg = implantImage(svg, 150, 40, 900, 690, 1, getExportFileV3Path(`object-score-nomiss${nm_link}.png`), reg)
         svg = implantImage(svg, 150, 40, 1060, 640, 1, getExportFileV3Path(`object-score-clear${cl_link}.png`), reg)
         svg = implantImage(svg, 150, 40, 900, 640, 1, getExportFileV3Path(`object-score-play${pl_link}.png`), reg)

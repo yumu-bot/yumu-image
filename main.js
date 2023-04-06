@@ -212,7 +212,7 @@ app.post('/panel_E', async (req, res) => {
         if (hasMod(pp.attr.mods_int, "DT")) {
             map_length = (map_length * 2 / 3).toFixed(0);
             map_drain = (map_drain * 2 / 3).toFixed(0);
-        } else if (hasMod(pp.attr.mods_int, "DT")) {
+        } else if (hasMod(pp.attr.mods_int, "HT")) {
             map_length = (map_length * 3 / 2).toFixed(0);
             map_drain = (map_drain * 3 / 2).toFixed(0);
         }
@@ -261,7 +261,7 @@ app.post('/panel_E', async (req, res) => {
         if (score.mods.includes('NF')) {
             score_categorize = 'played';
         } else if (score.perfect) {
-            score_categorize = 'fullcombo';
+            score_categorize = 'perfect';
         } else if (score.statistics.count_miss === 0) {
             score_categorize = 'nomiss';
         } else if (score.rank !== 'F') {
