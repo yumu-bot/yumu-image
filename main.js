@@ -295,7 +295,11 @@ app.post('/panel_E', async (req, res) => {
             map_title_romanized: score.beatmapset.title,
             map_title_unicode: score.beatmapset.title_unicode,
             map_difficulty: score.beatmap.version,
-            map_artist_mapper_bid: `${score.beatmapset.artist} // ${score.beatmapset.creator} // ${score.beatmap.id}`,
+
+            map_artist: score.beatmapset.artist,
+            map_mapper: score.beatmapset.creator,
+            map_bid: score.beatmap.id,
+
             map_public_rating: map_public_rating.toString(), //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
             map_fail_percent: map_fail_percent, //失败率%
             map_retry_percent: map_retry_percent, //重试率%

@@ -137,7 +137,12 @@ export async function panel_E(data = {
     map_title_romanized: 'Hyakukakai to Shirotokkuri',
     map_title_unicode: '百花魁と白徳利',
     map_difficulty: 'Expert',
-    map_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136',
+    // map_artist_mapper_bid: 'Ponkichi // yf_bmp // b3614136', //不用啦
+
+    map_artist: 'Ponkichi',
+    map_mapper: 'yf_bmp',
+    map_bid: 3614136,
+
     map_public_rating: 9.8, //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
     map_retry_percent: 54, //重试率%
     map_fail_percent: 13.2, //失败率%
@@ -322,10 +327,12 @@ export async function panel_E(data = {
         torus.getTextPath(
             torus.cutStringTail(data.map_difficulty, 36, 860),
             440, 1004.75, 36, "center baseline", "#fff");
+
+    let map_mapper_bid = ` // ${data.map_mapper || '?'} // ${data.map_bid || 0}`
+    let map_mapper_bid_width = torus.getTextWidth(map_mapper_bid, 24);
+    let map_artist = torus.cutStringTail(data.map_artist || '', 24, 860 - map_mapper_bid_width);
     let map_artist_mapper_bid =
-        torus.getTextPath(
-            torus.cutStringTail(data.map_artist_mapper_bid, 24, 860),
-            440, 1036.84, 24, "center baseline", "#fff");
+        torus.getTextPath(map_artist + map_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
 
     let main_score = torus.get2SizeTextPath(getRoundedNumberLargerStr(data.score, -1), getRoundedNumberSmallerStr(data.score, -1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
 
