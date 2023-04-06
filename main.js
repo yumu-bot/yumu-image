@@ -206,12 +206,17 @@ app.post('/panel_E', async (req, res) => {
             mods: score.mods,
         }
         const pp = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode);
+
         let map_length = score.beatmap.total_length || 0;
+        let map_drain = score.beatmap.hit_length || 0;
         if (hasMod(pp.attr.mods_int, "DT")) {
             map_length = (map_length * 2 / 3).toFixed(0);
+            map_drain = (map_drain * 2 / 3).toFixed(0);
         } else if (hasMod(pp.attr.mods_int, "DT")) {
             map_length = (map_length * 3 / 2).toFixed(0);
+            map_drain = (map_drain * 3 / 2).toFixed(0);
         }
+
         const label_data = {
             acc: newLabel('-',
                 `${Math.floor(score.accuracy * 100).toString()}.`,
@@ -226,6 +231,7 @@ app.post('/panel_E', async (req, res) => {
             cs: score.beatmap.cs,
             hp: score.beatmap.drain,
             length: map_length,
+            drain: map_drain,
         };
 
 

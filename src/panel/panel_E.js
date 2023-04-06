@@ -61,7 +61,8 @@ export async function panel_E(data = {
             attr: {},
         },
         bpm: 175,
-        length: 153,
+        length: 153, //总时长
+        drain: 143, //掉血时长（物件时长
     },
 
     // 成绩评级
@@ -232,7 +233,9 @@ export async function panel_E(data = {
     let label_length =
         await label_E({
             ...LABEL_OPTION.LENGTH,
-            remark: data.label_data.length + 's',
+            remark: Math.floor(data.label_data.drain / 60)
+                + ':'
+                + Math.floor(data.label_data.drain % 60).toFixed(0).padStart(2, '0'),
             data_b: Math.floor(data.label_data.length / 60) + ':',
             data_m: Math.floor(data.label_data.length % 60).toFixed(0).padStart(2, '0')
         }, true);
