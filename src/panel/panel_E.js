@@ -397,9 +397,17 @@ export async function panel_E(data = {
         }
     }
 
+    // 评级或难度分布矩形的缩放，SR1为0.1倍，SR7为1倍
+    let density_scale = 1;
+    if (data.star_rating <= 1) {
+        density_scale = 0.1;
+    } else if (data.star_rating <= 7) {
+        density_scale = Math.sqrt(((data.star_rating - 1) / 6 * 0.9) + 0.1); //类似对数增长，比如4星高度就是原来的 0.707 倍
+    }
+
     // 评级或难度分布
     if (data.map_density_arr) {
-        const density_arr_max = Math.max.apply(Math, data.map_density_arr);
+        const density_arr_max = Math.max.apply(Math, data.map_density_arr) / density_scale;
 
         data.map_density_arr.forEach((item, i) => {
             let map_density_rrect_color = '#8DCFF4';
