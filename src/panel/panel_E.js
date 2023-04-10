@@ -230,7 +230,7 @@ export async function panel_E(data = {
     let label_bpm =
         await label_E({
             ...LABEL_OPTION.BPM,
-            remark: (data.attr.bpm > 0) ? (60000 / data.attr.bpm).toFixed(2) + 'ms' : '-',
+            remark: (data.attr.bpm > 0) ? (60000 / data.attr.bpm).toFixed(0) + 'ms' : '-',
             data_b: Math.floor(data.attr.bpm) + (showPoint ? '' : '.'),
             data_m: showPoint ? '' : (data.attr.bpm % 1).toFixed(1).substring(2)
         }, true);
