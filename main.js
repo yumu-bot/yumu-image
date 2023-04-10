@@ -226,11 +226,13 @@ app.post('/panel_E', async (req, res) => {
             }
         }
 
+        let labelPoint = score.accuracy % 1;
+        let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
+
         const label_data = {
             acc: newLabel(accRemark,
-                `${Math.floor(score.accuracy * 100).toString()}.`,
-                `${Math.floor(score.accuracy * 10000) % 100}%`),
-
+                Math.floor(score.accuracy * 100) + (showPoint ? '' : '.'),
+                showPoint ? '%' : ((Math.floor(score.accuracy * 10000) % 100) + '%')),
             combo: newLabel(`${score.beatmap.max_combo}x`,
                 score.max_combo.toString(),
                 'x'),
