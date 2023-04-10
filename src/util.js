@@ -35,7 +35,7 @@ const svgToPng = async (svg) => await exports.convert(svg);
 const UTF8Encoder = new TextEncoder('utf8');
 
 const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
-const textToSVGPuHuiTi = TextToSVG.loadSync("font/Alibaba-PuHuiTi-Medium.ttf");
+const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi-2-75-SemiBold.ttf"); //v1版本是 Alibaba-PuHuiTi-Medium.ttf
 const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 
 
