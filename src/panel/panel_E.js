@@ -124,7 +124,7 @@ export async function panel_E(data = {
     map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
     map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
     map_playcount: getExportFileV3Path('object-beatmap-playcount.png'),
-    map_status: 'ranked', //ranked approved loved graveyard notsubmitted qualified pending workinprogress
+    map_status: 'ranked', //ranked approved loved graveyard notsubmitted qualified pending wip
 
     score_rank: 'S',
     star_rating: 4.79,

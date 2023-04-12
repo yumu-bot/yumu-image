@@ -1289,20 +1289,13 @@ export function getGameMode(gamemode = 'osu', level = 0) {
 export function getMapStatusPath(status = 'notsubmitted') {
     switch (status) {
         case "ranked":
-            return getExportFileV3Path('object-beatmap-ranked.png');
         case "approved":
             return getExportFileV3Path('object-beatmap-ranked.png');
         case "qualified":
             return getExportFileV3Path('object-beatmap-qualified.png');
         case "loved":
             return getExportFileV3Path('object-beatmap-loved.png');
-        case "pending":
-            return getExportFileV3Path('object-beatmap-unranked.png');
-        case "workinprogress":
-            return getExportFileV3Path('object-beatmap-unranked.png');
-        case "notsubmitted":
-            return getExportFileV3Path('object-beatmap-unranked.png');
-        case "graveyard":
+        default:
             return getExportFileV3Path('object-beatmap-unranked.png');
     }
 }
