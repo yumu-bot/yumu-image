@@ -257,7 +257,7 @@ app.post('/panel_E', async (req, res) => {
                 case 'c':
                     return Math.max(n300, n100, n50, n0, n200); //小果miss(katu)也要传过去的
                 case 'm':
-                    return n320 + n300 + n200 + n100 + n50 + n0;
+                    return Math.max(n320 + n300, n200, n100, n50, n0);
                 default:
                     return n320 + n300 + n200 + n100 + n50 + n0;
             }
