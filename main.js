@@ -205,7 +205,7 @@ app.post('/panel_E', async (req, res) => {
             combo: score.max_combo,
             mods: score.mods,
         }
-        const pp = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode);
+        const pp = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode, !(score.beatmap.ranked && score.beatmap.ranked === 1));
 
         let map_length = score.beatmap.total_length || 0;
         let map_drain = score.beatmap.hit_length || 0;
