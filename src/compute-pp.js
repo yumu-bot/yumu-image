@@ -16,7 +16,7 @@ const statistics = {
     mods_int: 0,
 }
 
-export async function calcPerformancePoints(bid, score = statistics, mode) {
+export async function calcPerformancePoints(bid, score = statistics, mode, reload = false) {
     let mode_int;
     if (mode && typeof mode === 'string') {
         mode = mode ? mode.toLowerCase() : 'osu';
@@ -57,7 +57,7 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
         }
     }
 
-    const osuFilePath = await getOsuFilePath(bid, mode);
+    const osuFilePath = await getOsuFilePath(bid, mode, reload);
 
     let beatMap = new Beatmap({
         path: osuFilePath,
@@ -98,15 +98,31 @@ export async function calcPerformancePoints(bid, score = statistics, mode) {
 
 }
 
-async function getOsuFilePath(bid, mode) {
+async function getOsuFilePath(bid, mode, reload = false) {
     mode = mode ? mode.toLowerCase() : 'osu';
     const filePath = `${OSU_BUFFER_PATH}/${bid}-${mode}.osu`;
+
     try {
-        fs.accessSync(filePath);
+        if (!reload) {
+            fs.accessSync(filePath);
+            const f = fs.readFileSync(filePath, 'binary');
+            let map = new Beatmap().fromBytes(f)
+            const attr = new Calculator().difficulty(map);
+            if (attr.stars > 10) {
+                reload = true;
+            }
+        }
     } catch (e) {
+        reload = true;
+    }
+
+    if (reload) {
         let data = await axios.get(`https://osu.ppy.sh/osu/${bid}`);
         if (data.status === 200) {
+            const d = data.data;
+
             fs.writeFileSync(filePath, data.data, {flag: 'a'});
+
         } else {
             throw new Error("download error: " + data.statusText);
         }
