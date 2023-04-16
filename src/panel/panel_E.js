@@ -124,7 +124,7 @@ export async function panel_E(data = {
     map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
     map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
     map_playcount: getExportFileV3Path('object-beatmap-playcount.png'),
-    map_status: 'ranked', //ranked approved loved graveyard notsubmitted qualified pending workinprogress
+    map_status: 'ranked', //ranked approved loved graveyard notsubmitted qualified pending wip
 
     score_rank: 'S',
     star_rating: 4.79,
@@ -134,6 +134,10 @@ export async function panel_E(data = {
     game_mode: 'osu', // osu taiko fruits mania
     map_status_fav: 3900,
     map_status_pc: 782547,
+
+    //这里是难度自己的通过率和游玩次数
+    diff_status_passcount: 139943,
+    diff_status_playcount: 1871185,
 
     map_title_romanized: 'Hyakukakai to Shirotokkuri',
     map_title_unicode: '百花魁と白徳利',
@@ -146,7 +150,8 @@ export async function panel_E(data = {
 
     map_public_rating: 9.8, //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
     map_retry_percent: 54, //重试率%
-    map_fail_percent: 13.2, //失败率%
+    map_fail_percent: 13, //失败率%
+    map_pass_percent: 33, //通过率%
 
     // 面板颜色和特性 颜色已经写成方法
     //color_gamemode: '#7ac943',
@@ -225,7 +230,7 @@ export async function panel_E(data = {
     let label_bpm =
         await label_E({
             ...LABEL_OPTION.BPM,
-            remark: (data.attr.bpm > 0) ? (60000 / data.attr.bpm).toFixed(2) + 'ms' : '-',
+            remark: (data.attr.bpm > 0) ? (60000 / data.attr.bpm).toFixed(0) + 'ms' : '-',
             data_b: Math.floor(data.attr.bpm) + (showPoint ? '' : '.'),
             data_m: showPoint ? '' : (data.attr.bpm % 1).toFixed(1).substring(2)
         }, true);
@@ -346,8 +351,14 @@ export async function panel_E(data = {
     let map_public_rating =
         torus.getTextPath("Rating " + data.map_public_rating,
             1420, 802.88, 18, "right baseline", "#a1a1a1");
-    let map_retryfail_percent =
-        torus.getTextPath("R " + data.map_retry_percent + "% // F " + data.map_fail_percent + "%",
+    let map_passretryfail_percent =
+        torus.getTextPath( "P "
+            + data.map_pass_percent
+            + "% // R "
+            + data.map_retry_percent
+            + "% // F "
+            + data.map_fail_percent
+            + "%",
             1420, 922.63, 18, "right baseline", "#a1a1a1");
 
     //console.timeEnd("txt");
@@ -386,9 +397,17 @@ export async function panel_E(data = {
         }
     }
 
+    // 评级或难度分布矩形的缩放，SR1为0.1倍，SR7为1倍
+    let density_scale = 1;
+    if (data.star_rating <= 1) {
+        density_scale = 0.1;
+    } else if (data.star_rating <= 7) {
+        density_scale = Math.sqrt(((data.star_rating - 1) / 6 * 0.9) + 0.1); //类似对数增长，比如4星高度就是原来的 0.707 倍
+    }
+
     // 评级或难度分布
     if (data.map_density_arr) {
-        const density_arr_max = Math.max.apply(Math, data.map_density_arr);
+        const density_arr_max = Math.max.apply(Math, data.map_density_arr) / density_scale;
 
         data.map_density_arr.forEach((item, i) => {
             let map_density_rrect_color = '#8DCFF4';
@@ -427,7 +446,7 @@ export async function panel_E(data = {
     //最右下的失败率
     function RFrect(data) {
         let rect_svg = `<rect id="BaseRRect" x="1440" y="1020" width="420" height="4" rx="2" ry="2" style="fill: #a1a1a1;"/>
-      <rect id="RetryRRect" x="1440" y="1020" width="${4.2 * (Number(data.map_fail_percent) + Number(data.map_retry_percent))}" height="4" rx="2" ry="2" style="fill: #f6d659;"/>
+      <rect id="RetryRRect" x="1440" y="1020" width="${4.2 * data.map_fail_percent + 4.2 * data.map_retry_percent}" height="4" rx="2" ry="2" style="fill: #f6d659;"/>
       <rect id="FailRRect" x="1440" y="1020" width="${4.2 * data.map_fail_percent}" height="4" rx="2" ry="2" style="fill: #ed6c9e;"/>`
 
         svg = replaceText(svg, rect_svg, /(?<=<g id="RBRetryFailRRect">)/);
@@ -571,7 +590,7 @@ export async function panel_E(data = {
     svg = replaceText(svg, title_density, reg_index);
     svg = replaceText(svg, title_retryfail, reg_index);
     svg = replaceText(svg, map_public_rating, reg_index);
-    svg = replaceText(svg, map_retryfail_percent, reg_index);
+    svg = replaceText(svg, map_passretryfail_percent, reg_index);
 
     // 插入模组，因为先插的在上面，所以从左边插
     let insertMod = (mod, i, offset_x) => {

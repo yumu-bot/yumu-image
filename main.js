@@ -217,11 +217,22 @@ app.post('/panel_E', async (req, res) => {
             map_drain = (map_drain * 3 / 2).toFixed(0);
         }
 
-        const label_data = {
-            acc: newLabel('-',
-                `${Math.floor(score.accuracy * 100).toString()}.`,
-                `${Math.floor(score.accuracy * 10000) % 100}%`),
+        let accRemark = '-';
+        if (getGameMode(score.mode, 1) === 'm') {
+            if (score.statistics.count_geki >= score.statistics.count_300) {
+                accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
+            } else {
+                accRemark =  '1:'+ (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+            }
+        }
 
+        let labelPoint = (score.accuracy * 100) % 1;
+        let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
+
+        const label_data = {
+            acc: newLabel(accRemark,
+                Math.floor(score.accuracy * 100) + (showPoint ? '' : '.'),
+                showPoint ? '%' : ((score.accuracy * 100) % 1).toFixed(2).substring(2) + '%'),
             combo: newLabel(`${score.beatmap.max_combo}x`,
                 score.max_combo.toString(),
                 'x'),
@@ -244,9 +255,9 @@ app.post('/panel_E', async (req, res) => {
                 case 't':
                     return n300 + n100 + n0;
                 case 'c':
-                    return Math.max((n300 + n100 + n50 + n0), n200); //小果miss(katu)也要传过去的
+                    return Math.max(n300 + n100 + n0, n50, n200); //小果miss(katu)也要传过去的
                 case 'm':
-                    return n320 + n300 + n200 + n100 + n50 + n0;
+                    return Math.max(n320 + n300, n200, n100, n50, n0);
                 default:
                     return n320 + n300 + n200 + n100 + n50 + n0;
             }
@@ -274,8 +285,15 @@ app.post('/panel_E', async (req, res) => {
         const allRatingNum = score.beatmapset.ratings.reduce((s, v) => s + v);
         const allRatingVal = score.beatmapset.ratings.reduce((s, v, i) => s + v * i);
         const map_public_rating = allRatingVal ? Math.floor(allRatingVal / allRatingNum * 100) / 100 : 0;
-        const map_fail_percent = (score.beatmap.fail.reduce((s, v) => s + v) / score.beatmap.playcount).toFixed(2).substring(2);
-        const map_retry_percent = (score.beatmap.exit.reduce((s, v) => s + v) / score.beatmap.playcount).toFixed(2).substring(2);
+
+        const map_fail_sum = score.beatmap.fail.reduce((s, v) => s + v) || 0;
+        const map_retry_sum = score.beatmap.exit.reduce((s, v) => s + v) || 0;
+        const map_notpass_sum = map_fail_sum + map_retry_sum || 0; //虚假的未通过人数
+        const map_notpass_real_percent = (score.beatmap.playcount - score.beatmap.passcount) / score.beatmap.playcount || 1; //真实的未通过率
+        const map_fail_percent = (map_fail_sum / map_notpass_sum * map_notpass_real_percent * 100).toFixed(0);
+        const map_retry_percent = (map_retry_sum / map_notpass_sum * map_notpass_real_percent * 100).toFixed(0);
+        const map_pass_percent = (100 - map_fail_percent - map_retry_percent).toFixed(0);
+
         const data = {
             map_density_arr: await getDensityArray(score.beatmap.id, score.mode),
             map_fail_arr: score.beatmap.fail,
@@ -310,6 +328,7 @@ app.post('/panel_E', async (req, res) => {
             map_public_rating: map_public_rating.toString(), //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
             map_fail_percent: map_fail_percent, //失败率%
             map_retry_percent: map_retry_percent, //重试率%
+            map_pass_percent: map_pass_percent, //通过率%
 
             score_categorize: score_categorize,
 

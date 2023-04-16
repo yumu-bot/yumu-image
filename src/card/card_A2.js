@@ -78,8 +78,8 @@ export async function card_A2(data = {
         torus.getTextPath(data.right3m, 420, 191.59, 48, 'right baseline', '#fff');
 
     // 插入谱面状态
-    let status = getMapStatusPath(data.map_status);
-    let background = data.background || 'PanelObject/A_CardA1_BG.png';
+    let status = getMapStatusPath(data.map_status || '');
+    let background = data.background || getExportFileV3Path('PanelObject/A_CardA1_BG.png');
 
     svg = implantImage(svg,430,210,0,0,0.5, background, reg_background);
     svg = data.map_status ? implantImage(svg,50,50,370,10,1, status, reg_top_icons) : svg;
