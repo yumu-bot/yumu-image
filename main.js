@@ -290,9 +290,9 @@ app.post('/panel_E', async (req, res) => {
         const map_retry_sum = score.beatmap.exit.reduce((s, v) => s + v) || 0;
         const map_notpass_sum = map_fail_sum + map_retry_sum || 0; //虚假的未通过人数
         const map_notpass_real_percent = (score.beatmap.playcount - score.beatmap.passcount) / score.beatmap.playcount || 1; //真实的未通过率
-        const map_fail_percent = (map_fail_sum / map_notpass_sum * map_notpass_real_percent * 100).toFixed(0);
-        const map_retry_percent = (map_retry_sum / map_notpass_sum * map_notpass_real_percent * 100).toFixed(0);
-        const map_pass_percent = (100 - map_fail_percent - map_retry_percent).toFixed(0);
+        const map_fail_percent = (map_fail_sum / map_notpass_sum * map_notpass_real_percent * 100).toFixed(0) || 0;
+        const map_retry_percent = (map_retry_sum / map_notpass_sum * map_notpass_real_percent * 100).toFixed(0) || 0;
+        const map_pass_percent = (100 - map_fail_percent - map_retry_percent).toFixed(0) || 100;
 
         const data = {
             map_density_arr: await getDensityArray(score.beatmap.id, score.mode),
