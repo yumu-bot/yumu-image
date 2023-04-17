@@ -6,7 +6,7 @@ import {
     extra,
     getExportFileV3Path,
     getGameMode,
-    getMapStatusPath,
+    getMapStatusV3Path,
     getNowTimeStamp,
     getRandomBannerPath,
     getRoundedNumberLargerStr,
@@ -19,7 +19,7 @@ import {
     PuHuiTi,
     readTemplate,
     replaceText,
-    torus
+    torus,
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -124,7 +124,7 @@ export async function panel_E(data = {
     map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
     map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
     map_playcount: getExportFileV3Path('object-beatmap-playcount.png'),
-    map_status: 'ranked', //ranked approved loved graveyard notsubmitted qualified pending wip
+    map_status: 'graveyard', //ranked approved loved graveyard notsubmitted qualified pending wip
 
     score_rank: 'S',
     star_rating: 4.79,
@@ -194,7 +194,7 @@ export async function panel_E(data = {
     // 面板文字
     const index_powered = 'powered by Yumubot v0.3.0 EA // Score (!ymp / !ymr / !yms)';
     const index_request_time = 'request time: ' + getNowTimeStamp();
-    const index_panel_name = 'S v3.6';
+    const index_panel_name = 'Score';
 
     // 卡片定义
 
@@ -316,20 +316,37 @@ export async function panel_E(data = {
     let map_status_fav = torus.getTextPath(map_fav, 840, 353.84, 24, "right baseline", "#fff");
     let map_status_pc = torus.getTextPath(map_pc, 840, 380.84, 24, "right baseline", "#fff");
 
-    let map_title_romanized =
-        torus.getTextPath(
-            torus.cutStringTail(data.map_title_romanized, 48, 860),
-            440, 883.67, 48, "center baseline", "#fff");
+    let map_title_romanized;
     let map_title_unicode;
-    //如果两个相等，就不要unicode显示了
-    if (data.map_title_romanized !== data.map_title_unicode) {
+
+    //如果两个相等，就不要unicode显示了 230417更新，如果不要unicode且超长，超长的字符放在下面
+    if (data.map_title_romanized === data.map_title_unicode) {
+        let map_title_romanized_text = torus.cutStringTail(data.map_title_romanized, 48, 860,false);
+
+        let map_title_overlong_text;
+        if (map_title_romanized_text.length === data.map_title_romanized.toString().length) {
+            map_title_overlong_text = '';
+        } else {
+            map_title_overlong_text = data.map_title_romanized.toString().substring(map_title_romanized_text.length);
+        }
+
+        map_title_romanized = torus.getTextPath(
+            map_title_romanized_text,
+            440, 883.67, 48, "center baseline", "#fff");
         map_title_unicode =
-            PuHuiTi.getTextPath(
-                torus.cutStringTail(data.map_title_unicode, 36, 860),
+            torus.getTextPath(
+                torus.cutStringTail(map_title_overlong_text, 36, 860),
                 440, 931.6, 36, "center baseline", "#fff");
     } else {
-        map_title_unicode = '';
+        map_title_romanized = torus.getTextPath(
+            torus.cutStringTail(data.map_title_romanized, 48, 860),
+            440, 883.67, 48, "center baseline", "#fff");
+        map_title_unicode =
+            PuHuiTi.getTextPath(
+                PuHuiTi.cutStringTail(data.map_title_unicode, 36, 860),
+                440, 931.6, 36, "center baseline", "#fff");;
     }
+
 
     let map_difficulty =
         torus.getTextPath(
@@ -651,7 +668,8 @@ export async function panel_E(data = {
     }
 
     // 插入谱面状态
-    let status = getMapStatusPath(data.map_status);
+    //let status = getSVGBody(getMapStatusSVGV3Path(data.map_status));
+    let status = getMapStatusV3Path(data.map_status);
 
     //console.time('newSVG')
     // 插入图片和部件（新方法 ==============================================================================================
@@ -667,10 +685,19 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg, 1440, 950, label_od, reg_mod);
     svg = implantSvgBody(svg, 1650, 950, label_hp, reg_mod);
 
+    // 图片 SVG 化
+    svg = implantSvgBody(svg,746,338,
+        '<path d="m13,1c3,0,5,2,5,5s-5,7-6,8l-3,3-3-3C5,13,0,9,0,6,0,3.906,2,1,5,1s4,3,4,3c0,0,1-3,4-3Z" style="fill: #fff;"/>',
+        reg_map_favorite);
+    svg = implantSvgBody(svg,746,364,
+        '<path d="m9,0C4.029,0,0,4.029,0,9s4.029,9,9,9,9-4.029,9-9S13.971,0,9,0Zm-3,14V4l8,5-8,5Z" style="fill: #fff;"/>',
+        reg_map_playcount);
+    //svg = implantSvgBody(svg, 683, 334, status, reg_map_status);
+
     svg = implantImage(svg, 380, 410, 250, 390, 1, data.map_background, reg_map_background);
     svg = implantImage(svg, 420, 450, 230, 370, 1, data.map_hexagon, reg_map_hexagon);
-    svg = implantImage(svg, 18, 18, 746, 338, 1, data.map_favorite, reg_map_favorite);
-    svg = implantImage(svg, 18, 16, 746, 364, 1, data.map_playcount, reg_map_playcount);
+    //svg = implantImage(svg, 18, 18, 746, 338, 1, data.map_favorite, reg_map_favorite);
+    //svg = implantImage(svg, 18, 16, 746, 364, 1, data.map_playcount, reg_map_playcount);
     svg = implantImage(svg, 50, 50, 683, 334, 1, status, reg_map_status);
 
     return await exportPng(svg);
