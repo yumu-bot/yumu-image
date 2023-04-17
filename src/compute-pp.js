@@ -105,12 +105,6 @@ async function getOsuFilePath(bid, mode, reload = false) {
     try {
         if (!reload) {
             fs.accessSync(filePath);
-            const f = fs.readFileSync(filePath, 'binary');
-            let map = new Beatmap().fromBytes(f)
-            const attr = new Calculator().difficulty(map);
-            if (attr.stars > 10) {
-                reload = true;
-            }
         }
     } catch (e) {
         reload = true;
@@ -119,10 +113,7 @@ async function getOsuFilePath(bid, mode, reload = false) {
     if (reload) {
         let data = await axios.get(`https://osu.ppy.sh/osu/${bid}`);
         if (data.status === 200) {
-            const d = data.data;
-
-            fs.writeFileSync(filePath, data.data, {flag: 'a'});
-
+            fs.writeFileSync(filePath, data.data, {flag: 'w'});
         } else {
             throw new Error("download error: " + data.statusText);
         }
