@@ -152,13 +152,14 @@ function cutStringTail_torus(
     text = '',
     size = 36,
     maxWidth = 0,
+    isDot3Needed = true,
 ) {
     if (torus.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
 
-    let dot3 = '...'
-    let dot3_width = torus.getTextWidth(dot3, size);
+    let dot3 = '...';
+    let dot3_width = isDot3Needed ? torus.getTextWidth(dot3, size) : 0;
     let out_text = '';
     maxWidth -= dot3_width;
 
@@ -166,7 +167,7 @@ function cutStringTail_torus(
         out_text += text.slice(i, i + 1);
     }
 
-    return out_text.slice(0, -1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
+    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
 }
 
 
@@ -1408,9 +1409,25 @@ export function getGameMode(gamemode = 'osu', level = 0) {
 }
 
 /**
- * @function 获取谱面状态的图片链接
+ * @function 拆分svg头尾，只保留身体，方便插入
  */
-export function getMapStatusPath(status = 'notsubmitted') {
+export function getSVGBody (V3Path = '') {
+    let reg1 = '<?xml version="1.0" encoding="UTF-8"?>';
+    let reg2 = /<svg?[A-Za-z0-9\"\=:./ ]*\>?/;
+    let reg3 = '</svg>'
+
+    var data = fs.readFileSync(V3Path, "utf-8")
+        .replace(reg1, '')
+        .replace(reg2, '')
+        .replace(reg3, '');
+
+    return data;
+}
+
+/**
+ * @function 获取谱面状态的路径
+ */
+export function getMapStatusV3Path(status = 'notsubmitted') {
     switch (status) {
         case "ranked":
         case "approved":
