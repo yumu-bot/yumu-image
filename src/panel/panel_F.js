@@ -18,7 +18,7 @@ export async function panel_F (data = {
 
     // A2卡
     match: {
-        background: 'PanelObject/A_CardA1_BG.png', //给我他们最后一局的谱面背景即可
+        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'), //给我他们最后一局的谱面背景即可
         match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)', //match name
         match_round: 11,
         match_time: '20:25-22:03',//比赛开始到比赛结束。如果跨了一天，需要加24小时 match start_time
@@ -34,13 +34,28 @@ export async function panel_F (data = {
 
     beatmap: [{
         background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-        title: 'Kan Saete Kuyashiiwa',
-        artist: 'ZUTOMAYO',
-        mapper: 'Nathan', //creator
-        difficulty: 'Luscent\'s Extra',
+        title: 'Back to Marie',
+        artist: 'Kumagai Eri(cv.Seto Asami)',
+        mapper: 'Yunomi', //creator
+        difficulty: 'Catharsis',
         status: 'ranked',
-        bid: 2167576,
-        star_rating: 5.63,
+        bid: 1000684,
+        star_rating: 5.66,
+
+        //这些数据event没有，需要get beatmap attribute
+        cs: 4,
+        ar: 9.2,
+        od: 8.5,
+
+    },{
+        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
+        title: 'Crystal Illusion',
+        artist: 'P4KOO',
+        mapper: 'Beomsan', //creator
+        difficulty: 'Down\'s Insane',
+        status: 'ranked',
+        bid: 1674896,
+        star_rating: 5.03,
 
         //这些数据event没有，需要get beatmap attribute
         cs: 4,
@@ -52,13 +67,13 @@ export async function panel_F (data = {
     scores: [{
         statistics: {
             is_team_vs: true, // TFF表示平局，当然，这个很少见
-            is_team_red_win: true, //如果不是team vs，这个值默认false
+            is_team_red_win: false, //如果不是team vs，这个值默认false
             is_team_blue_win: true, //如果不是team vs，这个值默认false
             score_team_red: 1144770,
             score_team_blue: 1146381,
-            score_total: 2567413,
+            score_total: 2291151,
             wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
-            wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
+            wins_team_blue_before: 4,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
         red: [{
             player_name: 'na-gi', //妈的 为什么get match不给用户名啊
@@ -75,7 +90,7 @@ export async function panel_F (data = {
         }, {
             player_name: 'Guozi on osu',
             player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 0,//268397,
+            player_score: 268397,
             player_mods: [],
             player_rank: 6,
         }],
@@ -104,17 +119,55 @@ export async function panel_F (data = {
     },{
         statistics: {
             is_team_vs: true, // TFF表示平局，当然，这个很少见
-            is_team_red_win: true, //如果不是team vs，这个值默认false
+            is_team_red_win: false, //如果不是team vs，这个值默认false
             is_team_blue_win: true, //如果不是team vs，这个值默认false
-            score_team_red: 1144770,
-            score_team_blue: 1146381,
-            score_total: 2567413,
+            score_team_red: 1753432,
+            score_team_blue: 1806035,
+            score_total: 3559467,
             wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
-            wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0,
+            wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
-        red:[],
-        blue:[],
-        none:[],
+        red: [{
+            player_name: 'na-gi', //妈的 为什么get match不给用户名啊
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+            player_score: 863600,
+            player_mods: ['HD'],
+            player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
+        }, {
+            player_name: '- Rainbow -',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+            player_score: 519658,
+            player_mods: ['HD'],
+            player_rank: 4
+        }, {
+            player_name: 'Phirida',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+            player_score: 370174,
+            player_mods: ['HD'],
+            player_rank: 5,
+        }],
+        blue: [{
+            player_name: 'No Rank',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+            player_score: 849988,
+            player_mods: ['HD'],
+            player_rank: 2,
+        }, {
+            player_name: 'Greystrip_VoV',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+            player_score: 586554,
+            player_mods: ['HD'],
+            player_rank: 3,
+        }, {
+            player_name: 'Mars New',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+            player_score: 369493,
+            player_mods: ['HD'],
+            player_rank: 6,
+        }],
+        none: [{
+
+        }]
     }],
 
     // 面板文字
@@ -167,6 +220,7 @@ export async function panel_F (data = {
     // 导入谱面卡(A2卡
     async function implantBeatMapCardA2(object, x, y) {
 
+        let background = object.background;
         let title1 = object.title || 'Unknown Title';
         let title2 = object.artist || 'Unknown Artist';
         let title3 = object.mapper || 'God Made This';
@@ -185,6 +239,7 @@ export async function panel_F (data = {
         let card_A2_beatmap_impl =
             await card_A2({
                 data,
+                background: background,
                 title1: title1,
                 title2: title2,
                 title3: title3,
@@ -213,6 +268,7 @@ export async function panel_F (data = {
 
 
     // 导入比赛简介卡（A2卡
+    let background = data.match.background;
     let title = getMatchNameSplitted(data.match.match_title);
     let title1 = title[0];
     let title2 = title[1] + ' vs ' + title[2];
@@ -227,6 +283,7 @@ export async function panel_F (data = {
 
     let card_A2_impl =
         await card_A2({data,
+            background: background,
             title1: title1,
             title2: title2,
             title_font: 'PuHuiTi',

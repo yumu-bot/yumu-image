@@ -37,6 +37,7 @@ const UTF8Encoder = new TextEncoder('utf8');
 const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
 const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi-2-75-SemiBold.ttf"); //v1版本是 Alibaba-PuHuiTi-Medium.ttf
 const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
+const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
 
 
 export function readTemplate(path = '') {
@@ -204,6 +205,129 @@ function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x
 
     return out;
 }
+
+export const torusRegular = {};
+
+torusRegular.getTextPath = getTextPath_torusRegular;
+torusRegular.get2SizeTextPath = get2SizeTextPath_torusRegular;
+torusRegular.getTextMetrics = getTextMetrics_torusRegular;
+torusRegular.getTextWidth = getTextWidth_torusRegular;
+torusRegular.cutStringTail = cutStringTail_torusRegular;
+
+function getTextPath_torusRegular(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGTorusRegular.getPath(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "TorusRegular",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextMetrics_torusRegular(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGTorusRegular.getMetrics(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "TorusRegular",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextWidth_torusRegular(
+    text = '',
+    size = 0,
+) {
+    return textToSVGTorusRegular.getMetrics(text, {
+        x: 0,
+        y: 0,
+        fontSize: size,
+        anchor: 'center baseline',
+        fontFamily: "TorusRegular",
+        attributes: {
+            fill: '#fff'
+        }
+    }).width
+}
+
+function cutStringTail_torusRegular(
+    text = '',
+    size = 36,
+    maxWidth = 0,
+) {
+    if (torusRegular.getTextWidth(text, size) <= maxWidth) {
+        return text;
+    }
+
+    let dot3 = '...'
+    let dot3_width = torusRegular.getTextWidth(dot3, size);
+    let out_text = '';
+    maxWidth -= dot3_width;
+
+    for (let i = 0; torusRegular.getTextWidth(out_text, size) < maxWidth; i++) {
+        out_text += text.slice(i, i + 1);
+    }
+
+    return out_text.slice(0, -1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
+}
+
+
+/**
+ * @function 获取大小文本的 torusRegular 字体 SVG 路径
+ * @return {String}
+ * @param largerText {String} 较大的文本
+ * @param smallerText {String} 较小的文本
+ * @param largeSize {Number} 大文本尺寸
+ * @param smallSize {Number} 小文本尺寸
+ * @param x {Number} 锚点横坐标
+ * @param y {Number} 锚点横坐标
+ * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
+ * @param color {String} 十六进制颜色，#FFF
+ */
+
+function get2SizeTextPath_torusRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+    let width_b = torusRegular.getTextWidth(largerText, largeSize);
+    let width_m = torusRegular.getTextWidth(smallerText, smallSize);
+    let width_a = (width_b + width_m) / 2; // 全长的一半长
+
+    let out;
+
+    if (anchor === "left baseline") {
+        out = torusRegular.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            torusRegular.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+
+    } else if (anchor === "right baseline") {
+        out = torusRegular.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            torusRegular.getTextPath(smallerText, x, y, smallSize, anchor, color);
+
+    } else if (anchor === "center baseline") {
+        out = torusRegular.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            torusRegular.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+    }
+
+    return out;
+}
+
 
 export const PuHuiTi = {};
 
