@@ -254,6 +254,10 @@ app.post('/panel_E', async (req, res) => {
                     accRemark = '-'; break; //跳出了
                 } else {
                     switch (score.rank) {
+                        case 'XH' : accRemark = 'PF'; break;
+                        case 'X' : accRemark = 'PF'; break;
+                        case 'SH' : accRemark = 'to SSH!'; break;
+                        case 'S' : accRemark = 'to SS!'; break;
                         case 'A' : isMissed ? accRemark = `-miss S` : `-${aim300 - n300} S`; break;
                         case 'B' : accRemark = `-${aim300 - n300} A`; break;
                         case 'C' : accRemark = `-${aim300 - n300} B`; break;
