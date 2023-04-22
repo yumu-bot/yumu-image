@@ -217,13 +217,52 @@ app.post('/panel_E', async (req, res) => {
             map_drain = (map_drain * 3 / 2).toFixed(0);
         }
 
-        let accRemark = '-';
-        if (getGameMode(score.mode, 1) === 'm') {
-            if (score.statistics.count_geki >= score.statistics.count_300) {
-                accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
-            } else {
-                accRemark =  '1:'+ (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
-            }
+        let accRemark;
+        switch (getGameMode(score.mode, 1)) {
+
+            case 'm' : {
+                if (score.statistics.count_geki >= score.statistics.count_300) {
+                    accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
+                } else {
+                    accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+                }
+            } break;
+
+            case 't' : {
+                let aim300x = 100;
+                let aim300;
+                let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_miss;
+                let n300 = score.statistics.count_300;
+
+                switch (score.rank) {
+                    case 'XH' :
+                    case 'X' :
+                    case 'SH' :
+                    case 'S' : aim300x = 100; break;
+                    case 'A' : aim300x = 90; break;
+                    case 'B' : aim300x = 80; break;
+                    case 'C' : aim300x = 70; break;
+                    case 'D' : aim300x = 60; break;
+                    default : aim300x = 0; break;
+                }
+
+                aim300 = Math.ceil(nTotal * aim300x / 100);
+
+                if (aim300 <= n300) {
+                    accRemark = '-'; break; //跳出了
+                } else {
+                    switch (score.rank) {
+                        case 'A' : accRemark = `-${aim300 - n300} S`; break;
+                        case 'B' : accRemark = `-${aim300 - n300} A`; break;
+                        case 'C' : accRemark = `-${aim300 - n300} B`; break;
+                        case 'D' : accRemark = `-${aim300 - n300} C`; break;
+                        default : accRemark = '-'; break;
+                    }
+                }
+
+            } break;
+
+            default : accRemark = '-'; break;
         }
 
         let labelPoint = (score.accuracy * 100) % 1;
