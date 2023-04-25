@@ -220,18 +220,56 @@ app.post('/panel_E', async (req, res) => {
         let accRemark;
         switch (getGameMode(score.mode, 1)) {
 
-            case 'm' : {
-                if (score.statistics.count_geki >= score.statistics.count_300) {
-                    accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
-                } else {
-                    accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+            case 'o' : {
+                let aim300x = 100;
+                let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_50 + score.statistics.count_miss;
+                let n50 = score.statistics.count_50;
+                let n300 = score.statistics.count_300;
+                let aim300 = Math.ceil(nTotal * aim300x / 100);
+                let aim50 = Math.ceil(nTotal / 100);
+
+                let isMissed = false;
+                let is50over1p = false;
+
+                if (score.statistics.count_miss > 0) isMissed = true;
+                if (n50 * 100 > nTotal) is50over1p = true;
+
+                switch (score.rank) {
+                    case 'XH' :
+                    case 'X' :
+                    case 'SH' :
+                    case 'S' : aim300x = 100; break;
+                    case 'A' : isMissed ? aim300x = 100 : aim300x = 90; break;
+                    case 'B' : isMissed ? aim300x = 90 : aim300x = 80; break;
+                    case 'C' : isMissed ? aim300x = 80 : aim300x = 70; break;
+                    case 'D' : aim300x = 60; break;
+                    default : aim300x = 60; break;
                 }
+
+                if (aim300 < n300) {
+                    accRemark = '-'; break; //跳出了
+                } else {
+                    switch (score.rank) {
+                        case 'XH' : accRemark = 'AP'; break;
+                        case 'X' : accRemark = 'AP'; break;
+                        case 'SH' : accRemark = 'to XH!'; break;
+                        case 'S' : accRemark = 'to SS!'; break;
+                        case 'A' : isMissed ? (accRemark = `-miss S`) :
+                            (is50over1p ? (accRemark = `-${aim50 - n50} bad`) :
+                                (accRemark = `-${aim300 - n300} S`)); break;
+                        case 'B' : accRemark = `-${aim300 - n300} A`; break;
+                        case 'C' : accRemark = `-${aim300 - n300} B`; break;
+                        case 'D' : accRemark = `-${aim300 - n300} C`; break;
+                        default : accRemark = '-'; break;
+                    }
+                }
+
             } break;
 
             case 't' : {
                 let aim300x = 100;
-                let aim300;
                 let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_miss;
+                let aim300 = Math.ceil(nTotal * aim300x / 100);
                 let n300 = score.statistics.count_300;
                 let isMissed = false;
                 if (score.statistics.count_miss > 0) isMissed = true;
@@ -248,17 +286,15 @@ app.post('/panel_E', async (req, res) => {
                     default : aim300x = 60; break;
                 }
 
-                aim300 = Math.ceil(nTotal * aim300x / 100);
-
-                if (aim300 <= n300) {
+                if (aim300 < n300) {
                     accRemark = '-'; break; //跳出了
                 } else {
                     switch (score.rank) {
-                        case 'XH' : accRemark = 'PF'; break;
-                        case 'X' : accRemark = 'PF'; break;
-                        case 'SH' : accRemark = 'to SSH!'; break;
+                        case 'XH' : accRemark = 'AP'; break;
+                        case 'X' : accRemark = 'AP'; break;
+                        case 'SH' : accRemark = 'to XH!'; break;
                         case 'S' : accRemark = 'to SS!'; break;
-                        case 'A' : isMissed ? accRemark = `-miss S` : `-${aim300 - n300} S`; break;
+                        case 'A' : isMissed ? accRemark = `-miss S` : accRemark = `-${aim300 - n300} S`; break;
                         case 'B' : accRemark = `-${aim300 - n300} A`; break;
                         case 'C' : accRemark = `-${aim300 - n300} B`; break;
                         case 'D' : accRemark = `-${aim300 - n300} C`; break;
@@ -266,6 +302,31 @@ app.post('/panel_E', async (req, res) => {
                     }
                 }
 
+            } break;
+
+
+            case 'c' : {
+
+                switch (score.rank) {
+                    case 'XH' : accRemark = 'AP'; break;
+                    case 'X' : accRemark = 'AP'; break;
+                    case 'SH' : accRemark = `-${(100 - score.accuracy * 100).toFixed(1)}% XH`; break;
+                    case 'S' : accRemark = `-${(100 - score.accuracy * 100).toFixed(1)}% SS`; break;
+                    case 'A' : accRemark = `-${(98 - score.accuracy * 100).toFixed(1)}% S`; break;
+                    case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(1)}% A`; break;
+                    case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(1)}% B`; break;
+                    case 'D' : accRemark = `-${(85 - score.accuracy * 100).toFixed(1)}% C`; break;
+                    default : accRemark = '-'; break;
+                }
+
+            } break;
+
+            case 'm' : {
+                if (score.statistics.count_geki >= score.statistics.count_300) {
+                    accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
+                } else {
+                    accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+                }
             } break;
 
             default : accRemark = '-'; break;
