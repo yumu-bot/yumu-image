@@ -220,8 +220,9 @@ export async function panel_E(data = {
     let label_pp =
         await label_E({
             ...LABEL_OPTION.PP,
-            remark: Math.round(data.label_data.pp.full_pp).toString(),
-            data_b: Math.round(data.label_data.pp.pp).toString()
+            remark: Math.round(data.label_data.pp.full_pp).toString() + 'PP',
+            data_b: Math.round(data.label_data.pp.pp).toString(),
+            data_m: 'PP'
         }, true);
     const labelChangedAROD = hasAnyMod(data.attr.mods_int, ["EZ", "HR", "DT", "HT"])
     const labelChangedCSHP = hasAnyMod(data.attr.mods_int, ["EZ", "HR"])
