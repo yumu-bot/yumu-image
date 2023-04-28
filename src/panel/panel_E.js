@@ -289,10 +289,10 @@ export async function panel_E(data = {
     //console.timeEnd("label");
     //console.time("txt");
 
-    let sr_b = getStarRatingObject(data.star_rating, 0)
-    let sr_m = getStarRatingObject(data.star_rating, 1)
-    let text_sr_b = getStarRatingObject(data.star_rating, 2)
-    let text_sr_m = getStarRatingObject(data.star_rating, 3)
+    let sr_b = getStarRatingObject(data.star_rating, 0);
+    let sr_m = getStarRatingObject(data.star_rating, 1);
+    let text_sr_b = getStarRatingObject(data.star_rating, 2);
+    let text_sr_m = getStarRatingObject(data.star_rating, 3);
 
     // 文字定义
     let index_powered_path = torus.getTextPath(index_powered, 10, 26.84, 24, "left baseline", "#fff");
