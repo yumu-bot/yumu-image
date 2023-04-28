@@ -74,7 +74,8 @@ export async function panel_D(data = {
             map_cover: 'beatmap-defaultBG.jpg',
             map_background: 'beatmap-defaultBG.jpg',
             map_title_romanized: 'Fia is a Cheater',
-            map_difficulty_name: 'Fushimi Rio SB!!!111',
+            map_artist: 'Fushimi',
+            map_difficulty_name: 'Xin mei sang zui jiu',
             star_rating: '4.86',
             score_rank: 'XH',
             accuracy: '100', //%
@@ -414,7 +415,7 @@ export async function panel_D(data = {
     svg = implantImage(svg, 560, 710, 40, 330, 1, mascot_link, reg_mascot);
 
     // 插入进度
-    let mascot_name_width = torus.getTextWidth((mascot_name_data || ''), 36)
+    let mascot_name_width = torus.getTextWidth((mascot_name_data || 'pippi'), 36)
     let user_lv_text_width = torus.getTextWidth(' Lv.', 24);
     let user_lv_width = torus.getTextWidth((data.user_lv.toString() || '0'), 36);
     let user_progress_width =
@@ -428,7 +429,7 @@ export async function panel_D(data = {
     let mascot_mark2_rrect_width = user_progress_width + 30;
 
     let mascot_mark1 =
-        torus.getTextPath((mascot_name_data || ''),
+        torus.getTextPath((mascot_name_data || 'pippi'),
             75,
             380.754,
             36,

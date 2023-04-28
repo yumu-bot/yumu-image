@@ -82,6 +82,7 @@ app.post('/panel_D', async (req, res) => {
                 map_cover: covers_card,
                 map_background: covers_card,
                 map_title_romanized: re.beatmapset.title,
+                map_artist: re.beatmapset.artist,
                 map_difficulty_name: re.beatmap.version,
                 star_rating: re.beatmap.difficulty_rating,
                 score_rank: re.rank,
@@ -323,9 +324,9 @@ app.post('/panel_E', async (req, res) => {
 
             case 'm' : {
                 if (score.statistics.count_geki >= score.statistics.count_300) {
-                    accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
+                    accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ' : 1';
                 } else {
-                    accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+                    accRemark = '1 : ' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
                 }
             } break;
 
