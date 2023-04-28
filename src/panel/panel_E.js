@@ -310,8 +310,8 @@ export async function panel_E(data = {
 
     let game_mode = extra.getTextPath(game_mode_unicode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
 
-    let map_fav = getRoundedNumberLargerStr((data.map_status_fav || 0), 3) + getRoundedNumberSmallerStr((data.map_status_fav || 0), 3);
-    let map_pc = getRoundedNumberLargerStr((data.map_status_pc || 0), 3) + getRoundedNumberSmallerStr((data.map_status_pc || 0), 3);
+    let map_fav = getRoundedNumberLargerStr((data.map_status_fav || 0), 2) + getRoundedNumberSmallerStr((data.map_status_fav || 0), 2);
+    let map_pc = getRoundedNumberLargerStr((data.map_status_pc || 0), 2) + getRoundedNumberSmallerStr((data.map_status_pc || 0), 2);
 
     let map_status_fav = torus.getTextPath(map_fav, 840, 353.84, 24, "right baseline", "#fff");
     let map_status_pc = torus.getTextPath(map_pc, 840, 380.84, 24, "right baseline", "#fff");

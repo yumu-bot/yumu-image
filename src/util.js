@@ -488,12 +488,13 @@ ${svgBody}
  * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
  * @return {String} 返回大数字的字符串
  * @param number 数字
- * @param level 等级，现在支持lv -1, 0, 1, 2, 3 注意配套使用
- * lv3是保留一位数,0-999-1.0K-99K-0.1M-99M
- * lv2是保留四位数
- * lv1是保留两位数,945671 -> 945.67K
- * lv0是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
- * lv-1是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
+ * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
+ * lv4是保留四位数 945671 -> 945.6710K
+ * lv3是保留两位数,945671 -> 945.67K
+ * lv2是保留一位数
+ * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
+ * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
+ * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  */
 export function getRoundedNumberLargerStr(number = 0, level = 0) {
     let o;
@@ -543,7 +544,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
 
     //旧 level
 
-    if (level === 1 || level === 2) {
+    if (level === 2 || level === 3 || level === 4) {
         while (number >= 1000 || number <= -1000) {
             number /= 1000;
         }
@@ -560,7 +561,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
     let s1 = number.toString().slice(0, 1) + '.';
     let s2 = number.toString().slice(0, 2);
 
-    if (level === 3) {
+    if (level === 1) {
         if (number < Math.pow(10, 3)) {
             o = Math.floor(number).toString();
         } else if (number < Math.pow(10, 4)) {
@@ -598,7 +599,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
  * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
  * @return {String} 返回小数字的字符串
  * @param number 数字
- * @param level 等级，现在支持lv -1, 0, 1, 2, 3 注意配套使用
+ * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
  */
 export function getRoundedNumberSmallerStr(number = 0, level = 0) {
     let o;
@@ -648,7 +649,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
 
     let unit = getRoundedNumberUnit(number, level)
 
-    if (level === 1) {
+    if (level === 2 || level === 3 || level === 4) {
         while (number >= 1000 || number <= -1000) {
             number /= 1000;
         }
@@ -657,21 +658,12 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         if (numStr.indexOf('.') === -1) {
             return unit;
         } else {
-            o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 3);
-            return o + unit;
-        }
-    }
-
-    if (level === 2) {
-        while (number >= 1000 || number <= -1000) {
-            number /= 1000;
-        }
-        let numStr = number.toString();
-
-        if (numStr.indexOf('.') === -1) {
-            return unit;
-        } else {
-            o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 5);
+            switch (level) {
+                case 2: o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 2); break;
+                case 3: o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 3); break;
+                case 4: o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 5); break;
+                default: return unit;
+            }
             return o + unit;
         }
     }
@@ -679,7 +671,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
     let s0 = Math.floor(number).toString().slice(0, 1);
     let s1 = Math.floor(number).toString().slice(1, 2);
 
-    if (level === 3) {
+    if (level === 1) {
         if (number < Math.pow(10, 3)) {
             o = unit;
         } else if (number < Math.pow(10, 4)) {

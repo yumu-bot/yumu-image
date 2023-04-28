@@ -268,8 +268,8 @@ export async function panel_C(data = {
         x = x_base + 940 * (column - 1);
         y = 330 + 150 * (row - 1);
 
-        let left1 = getRoundedNumberLargerStr(object.player_score, 1) +
-            getRoundedNumberSmallerStr(object.player_score, 1) +
+        let left1 = getRoundedNumberLargerStr(object.player_score, 3) +
+            getRoundedNumberSmallerStr(object.player_score, 3) +
             ' // ' +
             object.player_win +
             'W-' + object.player_lose +
@@ -282,8 +282,8 @@ export async function panel_C(data = {
             ' (' +
             Math.round(object.player_rws * 100)/100 +
             ')';
-        let index_b = getRoundedNumberLargerStr(object.player_mra, 1);
-        let index_m = getRoundedNumberSmallerStr(object.player_mra, 1);
+        let index_b = getRoundedNumberLargerStr(object.player_mra, 3);
+        let index_m = getRoundedNumberSmallerStr(object.player_mra, 3);
 
         let color_label3 = '#382E32';
         let color_label4 = '#382E32';

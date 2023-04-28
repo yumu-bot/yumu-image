@@ -165,20 +165,20 @@ export async function panel_D(data = {
 
 
     // 卡片定义
-    let rks_b = getRoundedNumberLargerStr(data.label_data.rks.data, 2);
-    let rks_m = getRoundedNumberSmallerStr(data.label_data.rks.data, 2);
-    let tts_b = getRoundedNumberLargerStr(data.label_data.tts.data, 2);
-    let tts_m = getRoundedNumberSmallerStr(data.label_data.tts.data, 2);
-    let pc_b = getRoundedNumberLargerStr(data.label_data.pc.data, 1);
-    let pc_m = getRoundedNumberSmallerStr(data.label_data.pc.data, 1);
+    let rks_b = getRoundedNumberLargerStr(data.label_data.rks.data, 4);
+    let rks_m = getRoundedNumberSmallerStr(data.label_data.rks.data, 4);
+    let tts_b = getRoundedNumberLargerStr(data.label_data.tts.data, 4);
+    let tts_m = getRoundedNumberSmallerStr(data.label_data.tts.data, 4);
+    let pc_b = getRoundedNumberLargerStr(data.label_data.pc.data, 0);
+    let pc_m = getRoundedNumberSmallerStr(data.label_data.pc.data, 0);
     let mpl_b = getRoundedNumberLargerStr(data.label_data.mpl.data, 0);
     let mpl_m = getRoundedNumberSmallerStr(data.label_data.mpl.data, 0);
     let rep_b = getRoundedNumberLargerStr(data.label_data.rep.data, 0);
     let rep_m = getRoundedNumberSmallerStr(data.label_data.rep.data, 0);
     let fan_b = getRoundedNumberLargerStr(data.label_data.fan.data, 0);
     let fan_m = getRoundedNumberSmallerStr(data.label_data.fan.data, 0);
-    let tth_b = getRoundedNumberLargerStr(data.label_data.tth.data, 1);
-    let tth_m = getRoundedNumberSmallerStr(data.label_data.tth.data, 1);
+    let tth_b = getRoundedNumberLargerStr(data.label_data.tth.data, 4);
+    let tth_m = getRoundedNumberSmallerStr(data.label_data.tth.data, 4);
 
     let label_rks =
         await label_E({...LABEL_OPTION.RKS, data_b: rks_b, data_m: rks_m}, true);
@@ -306,9 +306,9 @@ export async function panel_D(data = {
     RFBPActivityChart(bp_arr, '#a1a1a1', user_bp_activity_max_fixed);
 
     // 绘制纵坐标，注意max在下面
-    let rank_axis_y_min = getRoundedNumberLargerStr(user_ranking_min, 3) + getRoundedNumberSmallerStr(user_ranking_min, 3);
-    let rank_axis_y_mid = getRoundedNumberLargerStr(user_ranking_mid, 3) + getRoundedNumberSmallerStr(user_ranking_mid, 3);
-    let rank_axis_y_max = getRoundedNumberLargerStr(user_ranking_max, 3) + getRoundedNumberSmallerStr(user_ranking_max, 3);
+    let rank_axis_y_min = getRoundedNumberLargerStr(user_ranking_min, 1) + getRoundedNumberSmallerStr(user_ranking_min, 1);
+    let rank_axis_y_mid = getRoundedNumberLargerStr(user_ranking_mid, 1) + getRoundedNumberSmallerStr(user_ranking_mid, 1);
+    let rank_axis_y_max = getRoundedNumberLargerStr(user_ranking_max, 1) + getRoundedNumberSmallerStr(user_ranking_max, 1);
 
     let rank_axis =
         torus.getTextPath(rank_axis_y_min, 1010, 402.836, 24, 'center baseline', '#fc2') +

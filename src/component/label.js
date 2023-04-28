@@ -183,8 +183,8 @@ export async function label_F1(data = {
     let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
     let name = torus.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
 
-    let score_b = getRoundedNumberLargerStr(data.score || 0, 1);
-    let score_m = getRoundedNumberSmallerStr(data.score || 0, 1);
+    let score_b = getRoundedNumberLargerStr(data.score || 0, 3);
+    let score_m = getRoundedNumberSmallerStr(data.score || 0, 3);
 
     let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', '#fff');
 
@@ -240,8 +240,8 @@ export async function label_F2(data = {
     let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
     let name = torus.getTextPath(text_name, 52, 13.877, 18, 'left baseline', '#fff');
 
-    let score_b = getRoundedNumberLargerStr(data.score || 0, 1);
-    let score_m = getRoundedNumberSmallerStr(data.score || 0, 1);
+    let score_b = getRoundedNumberLargerStr(data.score || 0, 3);
+    let score_m = getRoundedNumberSmallerStr(data.score || 0, 3);
 
     let score = torus.getTextPath(score_b + score_m, 52, 27.877, 14,'left baseline', '#fff');
 
