@@ -685,11 +685,11 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg, 1440, 950, label_od, reg_mod);
     svg = implantSvgBody(svg, 1650, 950, label_hp, reg_mod);
 
-    // 图片 SVG 化
-    svg = implantSvgBody(svg,746,338,
+    // 图片 SVG 化 这里原来的x是746 因为右边太窄了往左移动了6
+    svg = implantSvgBody(svg,740,338,
         '<path d="m13,1c3,0,5,2,5,5s-5,7-6,8l-3,3-3-3C5,13,0,9,0,6,0,3.906,2,1,5,1s4,3,4,3c0,0,1-3,4-3Z" style="fill: #fff;"/>',
         reg_map_favorite);
-    svg = implantSvgBody(svg,746,364,
+    svg = implantSvgBody(svg,740,364,
         '<path d="m9,0C4.029,0,0,4.029,0,9s4.029,9,9,9,9-4.029,9-9S13.971,0,9,0Zm-3,14V4l8,5-8,5Z" style="fill: #fff;"/>',
         reg_map_playcount);
     //svg = implantSvgBody(svg, 683, 334, status, reg_map_status);
