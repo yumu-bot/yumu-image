@@ -705,12 +705,12 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
     return o;
 }
 
-//只给 level 1, 2, 3 提供单位
+//只给 level 1, 2, 3, 4 提供单位
 function getRoundedNumberUnit(number = 0, level = 0) {
     let unit;
     let m = 3;
 
-    if (level === 1 || level === 2) {
+    if (level === 2 || level === 3 || level === 4) {
 
         if (number < Math.pow(10, 3)) {  //level==1->100 level==2->1000
             unit = '';
@@ -732,7 +732,7 @@ function getRoundedNumberUnit(number = 0, level = 0) {
             unit = ''
         }
 
-    } else if (level === 3) {
+    } else if (level === 1) {
 
         if (number < Math.pow(10, 3)) { //0.1K，但是数据还没到1K的位置，就给100了
             unit = '';
