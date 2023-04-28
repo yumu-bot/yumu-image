@@ -310,11 +310,12 @@ export async function panel_E(data = {
 
     let game_mode = extra.getTextPath(game_mode_unicode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
 
+    //这里因为改了缩进方法所以 x 往右移动了 5px，原来是 840
     let map_fav = getRoundedNumberLargerStr((data.map_status_fav || 0), 2) + getRoundedNumberSmallerStr((data.map_status_fav || 0), 2);
     let map_pc = getRoundedNumberLargerStr((data.map_status_pc || 0), 2) + getRoundedNumberSmallerStr((data.map_status_pc || 0), 2);
 
-    let map_status_fav = torus.getTextPath(map_fav, 840, 353.84, 24, "right baseline", "#fff");
-    let map_status_pc = torus.getTextPath(map_pc, 840, 380.84, 24, "right baseline", "#fff");
+    let map_status_fav = torus.getTextPath(map_fav, 845, 353.84, 24, "right baseline", "#fff");
+    let map_status_pc = torus.getTextPath(map_pc, 845, 380.84, 24, "right baseline", "#fff");
 
     let map_title_romanized;
     let map_title_unicode;
@@ -685,7 +686,7 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg, 1440, 950, label_od, reg_mod);
     svg = implantSvgBody(svg, 1650, 950, label_hp, reg_mod);
 
-    // 图片 SVG 化 这里原来的x是746 因为右边太窄了往左移动了6
+    // 图片 SVG 化 这里原来的x是746 因为右边太窄了往左移动了6，文字也移动了
     svg = implantSvgBody(svg,740,338,
         '<path d="m13,1c3,0,5,2,5,5s-5,7-6,8l-3,3-3-3C5,13,0,9,0,6,0,3.906,2,1,5,1s4,3,4,3c0,0,1-3,4-3Z" style="fill: #fff;"/>',
         reg_map_favorite);
