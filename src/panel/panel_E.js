@@ -213,6 +213,9 @@ export async function panel_E(data = {
 
     //console.time("label");
 
+    let isDisplayPP = true;
+    if (data.label_data.pp.full_pp > 100000) isDisplayPP = false;
+
     let label_acc =
         await label_E({...LABEL_OPTION.ACC, ...data.label_data.acc}, true);
     let label_combo =
@@ -220,8 +223,8 @@ export async function panel_E(data = {
     let label_pp =
         await label_E({
             ...LABEL_OPTION.PP,
-            remark: Math.round(data.label_data.pp.full_pp).toString() + 'PP',
-            data_b: Math.round(data.label_data.pp.pp).toString(),
+            remark: isDisplayPP ? Math.round(data.label_data.pp.full_pp).toString() + 'PP' : 'Inf.PP',
+            data_b: isDisplayPP ? Math.round(data.label_data.pp.pp).toString() : 'Inf.',
             data_m: 'PP'
         }, true);
     const labelChangedAROD = hasAnyMod(data.attr.mods_int, ["EZ", "HR", "DT", "HT"])
