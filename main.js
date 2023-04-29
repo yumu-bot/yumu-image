@@ -226,7 +226,6 @@ app.post('/panel_E', async (req, res) => {
                 let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_50 + score.statistics.count_miss;
                 let n50 = score.statistics.count_50;
                 let n300 = score.statistics.count_300;
-                let aim300 = Math.ceil(nTotal * aim300x / 100);
                 let aim50 = Math.ceil(nTotal / 100);
 
                 let isMissed = false;
@@ -246,6 +245,8 @@ app.post('/panel_E', async (req, res) => {
                     case 'D' : aim300x = 60; break;
                     default : aim300x = 60; break;
                 }
+
+                let aim300 = Math.ceil(nTotal * aim300x / 100);
 
                 if (aim300 < n300) {
                     accRemark = '-'; break; //跳出了
@@ -270,7 +271,6 @@ app.post('/panel_E', async (req, res) => {
             case 't' : {
                 let aim300x = 100;
                 let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_miss;
-                let aim300 = Math.ceil(nTotal * aim300x / 100);
                 let n300 = score.statistics.count_300;
                 let isMissed = false;
                 if (score.statistics.count_miss > 0) isMissed = true;
@@ -286,6 +286,8 @@ app.post('/panel_E', async (req, res) => {
                     case 'D' : aim300x = 60; break;
                     default : aim300x = 60; break;
                 }
+
+                let aim300 = Math.ceil(nTotal * aim300x / 100);
 
                 if (aim300 < n300) {
                     accRemark = '-'; break; //跳出了
