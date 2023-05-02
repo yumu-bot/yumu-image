@@ -156,7 +156,7 @@ app.post('/panel_D', async (req, res) => {
             rank_country: user?.statistics?.country_rank,
             rank_global: user?.statistics?.global_rank,
             country: user?.country['countryCode'],
-            bonus_pp: req.fields['pp-bonus'] || '-', // 416.6667
+            bonus_pp: req.fields?.bonus_pp, // 416.6667
             om4k_pp: user?.statistics?.pp4K,
             om7k_pp: user?.statistics?.pp7K,
             game_mode: req.fields?.mode, // osu taiko catch mania

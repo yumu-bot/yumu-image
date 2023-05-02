@@ -468,16 +468,15 @@ export async function panel_D(data = {
 
     // 插入右下面板右上提示
     let game_mode = getGameMode(data.game_mode, 2);
-    let bonus_pp = data.bonus_pp || 0;
-    let om4k_pp = data.om4k_pp || 0;
-    let om7k_pp = data.om7k_pp || 0;
+    let bonus_pp = Math.floor(data.bonus_pp) || 0;
+    let om4k_pp = Math.floor(data.om4k_pp) || 0;
+    let om7k_pp = Math.floor(data.om7k_pp) || 0;
     let user_data_text;
 
     if (game_mode !== 'osu!mania') {
-        user_data_text = game_mode + ' (bonus: ' + Math.floor(bonus_pp) + ' PP)';
+        user_data_text = game_mode + ' (bonus: ' + bonus_pp + ' PP)';
     } else {
-        user_data_text = game_mode + ' (bonus: ' + Math.floor(bonus_pp) + ' PP // 4K: '
-            + Math.floor(om4k_pp) + ' PP // 7K: ' + Math.floor(om7k_pp) + ' PP)';
+        user_data_text = game_mode + ' (bonus: ' + bonus_pp + ' PP // 4K: ' + om4k_pp + ' PP // 7K: ' + om7k_pp + ' PP)';
     }
 
     let user_data = torus.getTextPath(
