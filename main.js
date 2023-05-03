@@ -1,6 +1,7 @@
 import express from "express";
 import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, getGameMode, hasMod, initPath, readImage, readNetImage} from "./src/util.js";
+import {panel_C} from "./src/panel/panel_C.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {newJudge, panel_E} from "./src/panel/panel_E.js";
 import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
@@ -27,6 +28,19 @@ app.post('/panel_Ex', async (req, res) => {
     try {
         const f = checkJsonData(req);
         const png = await panel_E(f);
+        res.set('Content-Type', 'image/png');
+        res.send(png);
+    } catch (e) {
+        res.status(500).send(e.stack);
+    }
+})
+
+app.post('/panel_C', async (req, res) => {
+    try {
+
+
+
+        const png = await panel_C(f);
         res.set('Content-Type', 'image/png');
         res.send(png);
     } catch (e) {
@@ -516,5 +530,13 @@ let generate = {
             progress: Math.floor(user['levelProgress']),
             pp: Math.floor(user['pp']),
         };
+    },
+
+    match2CardA2: async (match) => {
+        return {
+
+        };
     }
+
+
 }
