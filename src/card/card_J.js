@@ -103,8 +103,8 @@ export async function card_J(data = {
     // 替换模组
 
     let insertMod = (mod, i, j) => {
-        let offset_x = 179 + i * 10; //原来是 14，后面做了调整
-        let offset_y = 69 - j * 10;
+        let offset_x = 179 + i * 14;
+        let offset_y = 69 - j * 12; //原来是 14，后面做了调整
 
         return `<circle id="Mod${i}${j}" cx="${offset_x}" cy="${offset_y}" r="5" style="fill: ${getModColor(mod)};"/>`
     }
