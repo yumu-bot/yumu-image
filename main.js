@@ -424,7 +424,8 @@ app.post('/panel_E', async (req, res) => {
             mods_arr: score.mods,
 
             map_background: await readNetImage(score.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg')),
-            //很糊的全图
+            map_banner: await readNetImage(score.beatmapset.covers["slimcover"], getExportFileV3Path('beatmap-DLfailBG.jpg')),
+
             star: getExportFileV3Path('object-beatmap-star.png'),
             map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
             map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),

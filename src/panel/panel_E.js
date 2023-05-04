@@ -120,6 +120,7 @@ export async function panel_E(data = {
 
     // 面板图片
     map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
+    map_banner: getExportFileV3Path('beatmap-defaultBG.jpg'),
     star: getExportFileV3Path('object-beatmap-star.png'),
     map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
     map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
@@ -661,7 +662,15 @@ export async function panel_E(data = {
 
     scoreRankSVGShown(data.score_rank);
 
-    //插入新版 banner
+    //插入新版 banner 感觉没人看星数，用谱面图吧
+
+    let banner_overlay = getExportFileV3Path('banner-overlay.png');
+    let banner_beatmap = data.map_banner;
+
+    svg = implantImage(svg, 1920, 320, 0, 0, 1, banner_overlay, reg_banner);
+    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, banner_beatmap, reg_banner);
+
+    /*
     let banner_overlay = getExportFileV3Path('banner-overlay.png');
     let banner_rrect = `<rect width="1920" height="320" rx="20" ry="20" style="fill: ${getStarRatingColor(data.star_rating)}; opacity: 0.8;"/>`;
 
@@ -671,6 +680,8 @@ export async function panel_E(data = {
     } else {
         svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     }
+
+     */
 
     // 插入谱面状态
     //let status = getSVGBody(getMapStatusSVGV3Path(data.map_status));
