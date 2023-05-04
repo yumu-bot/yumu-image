@@ -11,15 +11,18 @@ import {
 export const LABEL_OPTION = {
     ACC: {
         icon: getExportFileV3Path("object-score-accpp.png"),
-        icon_title: 'Accuracy'
+        icon_title: 'Accuracy',
+        color_remark: '#fff',
     },
     COMBO: {
         icon: getExportFileV3Path("object-score-combo.png"),
-        icon_title: 'Combo'
+        icon_title: 'Combo',
+        color_remark: '#fff',
     },
     PP: {
         icon: getExportFileV3Path("object-score-pp.png"),
-        icon_title: 'PP'
+        icon_title: 'PP',
+        color_remark: '#fff',
     },
     BPM: {
         icon: getExportFileV3Path("object-score-beatsperminute.png"),
@@ -94,6 +97,7 @@ export async function label_E(data = {
     remark: '-1.64%',
     data_b: '98',
     data_m: '.36%',
+    color_remark: '#aaa',
 }, reuse = false) {
     // 正则表达式
     let reg_text = /(?<=<g id="Text">)/;
@@ -122,7 +126,7 @@ export async function label_E(data = {
     `;
 
     if (data.remark) {
-        let remark = torus.getTextPath(data.remark, 200, 14.88, 18, "right baseline", "#fff");
+        let remark = torus.getTextPath(data.remark, 200, 14.88, 18, "right baseline", data.color_remark);
         svg = replaceText(svg, remark, reg_text);
     }
     svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_text)
