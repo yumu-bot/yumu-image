@@ -664,11 +664,11 @@ export async function panel_E(data = {
 
     //插入新版 banner 感觉没人看星数，用谱面图吧
 
-    let banner_overlay = getExportFileV3Path('banner-overlay.png');
+    // let banner_overlay = getExportFileV3Path('banner-overlay.png');
     let banner_beatmap = data.map_banner;
 
-    svg = implantImage(svg, 1920, 320, 0, 0, 1, banner_overlay, reg_banner);
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, banner_beatmap, reg_banner);
+    //svg = implantImage(svg, 1920, 320, 0, 0, 1, banner_overlay, reg_banner);
+    svg = implantImage(svg, 1920, 320, 0, 0, 0.6, banner_beatmap, reg_banner);
 
     /*
     let banner_overlay = getExportFileV3Path('banner-overlay.png');
