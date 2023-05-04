@@ -1252,7 +1252,7 @@ export function getMascotName(gamemode = 'osu') {
                     return 'Tama';
                 case 6 :
                     return 'Taikonator';
-            }
+            } break;
         }
         case 'fruits':
         case 'catch':
@@ -1263,8 +1263,8 @@ export function getMascotName(gamemode = 'osu') {
                     return 'Mani';
                 case 9 :
                     return 'Mari';
-            }
-        } break;
+            } break;
+        }
 
         default : return 'pippi';
     }
