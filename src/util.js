@@ -1168,8 +1168,8 @@ export function getMascotName(gamemode = 'osu') {
     const t_rand = getRandom(t_sum);
     const m_rand = getRandom(m_sum);
 
-    let t;
-    let m;
+    let t = 1;
+    let m = 8;
 
     let sum = 0;
 
@@ -1184,7 +1184,7 @@ export function getMascotName(gamemode = 'osu') {
 
     sum = 0;
 
-    for (let i = 1; i <= 6; i++) {
+    for (let i = 8; i <= 9; i++) {
         sum += arr[i];
 
         if (m_rand <= sum) {
@@ -1193,6 +1193,7 @@ export function getMascotName(gamemode = 'osu') {
         }
     }
 
+    sum = 0;
 
 
     /*
@@ -1255,7 +1256,7 @@ export function getMascotName(gamemode = 'osu') {
         }
         case 'fruits':
         case 'catch':
-            return 'Yuzu';
+            return 'Yuzu'; break;
         case 'mania': {
             switch (m) {
                 case 8 :
@@ -1263,7 +1264,7 @@ export function getMascotName(gamemode = 'osu') {
                 case 9 :
                     return 'Mari';
             }
-        }
+        } break;
 
         default : return 'pippi';
     }
