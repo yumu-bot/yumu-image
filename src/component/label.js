@@ -26,67 +26,81 @@ export const LABEL_OPTION = {
     },
     BPM: {
         icon: getExportFileV3Path("object-score-beatsperminute.png"),
-        icon_title: 'BPM'
+        icon_title: 'BPM',
+        color_remark: '#aaa',
     },
     LENGTH: {
         icon: getExportFileV3Path("object-score-length.png"),
-        icon_title: 'Length'
+        icon_title: 'Length',
+        color_remark: '#aaa',
     },
     CS: {
         icon: getExportFileV3Path("object-score-circlesize.png"),
-        icon_title: 'CS'
+        icon_title: 'CS',
+        color_remark: '#aaa',
     },
     AR: {
         icon: getExportFileV3Path("object-score-approachrate.png"),
-        icon_title: 'AR'
+        icon_title: 'AR',
+        color_remark: '#aaa',
     },
     OD: {
         icon: getExportFileV3Path("object-score-overalldifficulty.png"),
-        icon_title: 'OD'
+        icon_title: 'OD',
+        color_remark: '#aaa',
     },
     HP: {
         icon: getExportFileV3Path("object-score-healthpoint.png"),
-        icon_title: 'HP'
+        icon_title: 'HP',
+        color_remark: '#aaa',
     },
     RKS: {
         icon: getExportFileV3Path("object-score-max.png"),
         icon_title: 'Ranked Score',
         remark: 'RS',
+        color_remark: '#aaa',
     },
     TTS: {
         icon: getExportFileV3Path("object-score-aimpp.png"),
         icon_title: 'Total Score',
         remark: 'TTS',
+        color_remark: '#aaa',
     },
     PC: {
         icon: getExportFileV3Path("object-score-combo.png"),
         icon_title: 'Play Count',
         remark: 'PC',
+        color_remark: '#aaa',
     },
     PT: {
         icon: getExportFileV3Path("object-score-length.png"),
         icon_title: 'Play Time',
         remark: 'PT',
+        color_remark: '#aaa',
     },
     MPL: {
         icon: getExportFileV3Path("object-score-approachrate.png"),
         icon_title: 'Map Played',
         remark: '',
+        color_remark: '#aaa',
     },
     REP: {
         icon: getExportFileV3Path("object-score-circlesize.png"),
         icon_title: 'Rep be Watched',
         remark: '',
+        color_remark: '#aaa',
     },
     FAN: {
         icon: getExportFileV3Path("object-score-healthpoint.png"),
         icon_title: 'Follower',
         remark: 'Fans',
+        color_remark: '#aaa',
     },
     TTH: {
         icon: getExportFileV3Path("object-score-overalldifficulty.png"),
         icon_title: 'Total Hits',
         remark: 'TTH',
+        color_remark: '#aaa',
     },
 }
 
