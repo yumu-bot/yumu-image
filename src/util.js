@@ -1849,5 +1849,5 @@ export function delMod(modInt = 0, mod = '') {
 
 //获取一个1到目标数的随机值
 export function getRandom(range = 1) {
-    return Math.floor(parseInt(moment().format("SSS")) / 1000 * (range - 1)) + 1;
+    return Math.round(parseInt(moment().format("SSS")) / 999 * (range - 1)) + 1;
 }
