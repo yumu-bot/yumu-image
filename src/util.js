@@ -1188,7 +1188,7 @@ export function getMascotName(gamemode = 'osu') {
         sum += arr[i];
 
         if (m_rand <= sum) {
-            t = i;
+            m = i;
             break;
         }
     }
@@ -1252,9 +1252,10 @@ export function getMascotName(gamemode = 'osu') {
                     return 'Tama';
                 case 6 :
                     return 'Taikonator';
-            } break;
-        }
+            }
+        } break;
         case 'fruits':
+            return 'Yuzu'; break;
         case 'catch':
             return 'Yuzu'; break;
         case 'mania': {
@@ -1263,10 +1264,8 @@ export function getMascotName(gamemode = 'osu') {
                     return 'Mani';
                 case 9 :
                     return 'Mari';
-            } break;
-        }
-
-        default : return 'pippi';
+            }
+        } break;
     }
 }
 
