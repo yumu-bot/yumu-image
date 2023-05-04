@@ -1159,9 +1159,43 @@ export function getStarRatingObject(starRating = 0, whichData = 0) {
 export function getMascotName(gamemode = 'osu') {
     gamemode = gamemode.toLowerCase();
 
-    // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
-    let arr = mascot_pic_sum_arr;
+    // pippi, Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
+    const arr = mascot_pic_sum_arr;
 
+    const t_sum = arr[1] + arr[2] + arr[3] + arr[4] + arr[5] + arr[6];
+    const m_sum = arr[8] + arr[9];
+
+    const t_rand = getRandom(t_sum);
+    const m_rand = getRandom(m_sum);
+
+    let t;
+    let m;
+
+    let sum = 0;
+
+    for (let i = 1; i <= 6; i++) {
+        sum += arr[i];
+
+        if (t_rand <= sum) {
+            t = i;
+            break;
+        }
+    }
+
+    sum = 0;
+
+    for (let i = 1; i <= 6; i++) {
+        sum += arr[i];
+
+        if (m_rand <= sum) {
+            t = i;
+            break;
+        }
+    }
+
+
+
+    /*
     let t_sum = 0;
     let t_arr = [];
 
@@ -1198,37 +1232,40 @@ export function getMascotName(gamemode = 'osu') {
         }
     }
 
+     */
+
     switch (gamemode) {
         case 'osu':
             return 'pippi';
         case 'taiko': {
             switch (t) {
-                case 0 :
-                    return 'Mocha';
                 case 1 :
-                    return 'Aiko';
+                    return 'Mocha';
                 case 2 :
-                    return 'Alisa';
+                    return 'Aiko';
                 case 3 :
-                    return 'Chirou';
+                    return 'Alisa';
                 case 4 :
-                    return 'Tama';
+                    return 'Chirou';
                 case 5 :
+                    return 'Tama';
+                case 6 :
                     return 'Taikonator';
             }
-            break;
         }
         case 'fruits':
+        case 'catch':
             return 'Yuzu';
         case 'mania': {
             switch (m) {
-                case 0 :
+                case 8 :
                     return 'Mani';
-                case 1 :
+                case 9 :
                     return 'Mari';
             }
-            break;
         }
+
+        default : return 'pippi';
     }
 }
 
