@@ -327,8 +327,8 @@ app.post('/panel_E', async (req, res) => {
                 switch (score.rank) {
                     case 'XH' : accRemark = 'AP'; break;
                     case 'X' : accRemark = 'AP'; break;
-                    case 'SH' : accRemark = `-${(100 - score.accuracy * 100).toFixed(1)}% XH`; break;
-                    case 'S' : accRemark = `-${(100 - score.accuracy * 100).toFixed(1)}% SS`; break;
+                    case 'SH' : accRemark = `to XH!`; break;
+                    case 'S' : accRemark = `to SS!`; break;
                     case 'A' : accRemark = `-${(98 - score.accuracy * 100).toFixed(1)}% S`; break;
                     case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(1)}% A`; break;
                     case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(1)}% B`; break;
@@ -526,10 +526,10 @@ let generate = {
             rank_global: user['globalRank'],
             rank_country: user['countryRank'],
             country: user?.country['countryCode'],
-            acc: Math.floor(user['accuracy'] * 100) / 100,
+            acc: Math.round(user['accuracy'] * 100) / 100,
             level: user['levelCurrent'],
             progress: Math.floor(user['levelProgress']),
-            pp: Math.floor(user['pp']),
+            pp: Math.round(user['pp']),
         };
     },
 
