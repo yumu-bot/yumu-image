@@ -581,6 +581,15 @@ export async function panel_E(data = {
             a = '1210 330 1210 640 900 640 900 330';
         }
 
+        let cr_name = 'osu';
+        switch (data.game_mode) {
+            case "osu": cr_name = 'osu'; break;
+            case 'taiko':
+            case 'mania': cr_name = 'taikomania'; break;
+            case 'catch':
+            case 'fruits': cr_name = 'catch'; break;
+        }
+
         let clippath =
             `<clipPath id="clippath-PE-CC">
         <polygon id="RingMask" points="1055 485 1055 330 ${a} ${c} 1055 485" style="fill: none;"/>
@@ -589,8 +598,7 @@ export async function panel_E(data = {
         svg = replaceText(svg, clippath, /(?<=<defs>)/);
 
         let ring_svg =
-            `<image id="ColoredCircle" width="210" height="210" transform="translate(950 380)" xlink:href="${getExportFileV3Path('object-score-coloredcircle.png')}"/><g style="clip-path: url(#clippath-PE-CC);">
-        <image width="270" height="270" transform="translate(920 350)" xlink:href="${getExportFileV3Path('object-score-coloredring.png')}"/>
+            `<image id="ColoredCircle" width="210" height="210" transform="translate(950 380)" xlink:href="${getExportFileV3Path(`object-score-coloredcircle-${cr_name}.png`)}"/><g style="clip-path: url(#clippath-PE-CC);"><image width="270" height="270" transform="translate(920 350)" xlink:href="${getExportFileV3Path('object-score-coloredring.png')}"/>
       </g>`
 
         svg = replaceText(svg, ring_svg, /(?<=<g id="LURank">)/);
