@@ -98,12 +98,12 @@ app.post('/panel_D', async (req, res) => {
                 map_title_romanized: re.beatmapset.title,
                 map_artist: re.beatmapset.artist,
                 map_difficulty_name: re.beatmap.version,
-                star_rating: re.beatmap.difficulty_rating,
+                star_rating: Math.round(re.beatmap.difficulty_rating * 100) / 100,
                 score_rank: re.rank,
-                accuracy: Math.floor(re.accuracy * 10000) / 100, //这玩意传进来就是零点几？  是
+                accuracy: Math.round(re.accuracy * 10000) / 100, //这玩意传进来就是零点几？  是
                 combo: re.max_combo, //x
                 mods_arr: re.mods,
-                pp: Math.floor(re.pp) //pp
+                pp: Math.round(re.pp) //pp
             }
             recent_play.push(d);
         }
@@ -354,7 +354,7 @@ app.post('/panel_E', async (req, res) => {
 
         const label_data = {
             acc: newLabel(accRemark,
-                Math.floor(score.accuracy * 100) + (showPoint ? '' : '.'),
+                Math.round(score.accuracy * 100) + (showPoint ? '' : '.'),
                 showPoint ? '%' : ((score.accuracy * 100) % 1).toFixed(2).substring(2) + '%'),
             combo: newLabel(`${score.beatmap.max_combo}x`,
                 score.max_combo.toString(),
@@ -435,7 +435,7 @@ app.post('/panel_E', async (req, res) => {
             score_rank: score.rank,
             star_rating: pp.attr.stars,
             score: score.score,
-            score_acc_progress: Math.floor(score.accuracy * 10000) / 100,
+            score_acc_progress: Math.round(score.accuracy * 10000) / 100,
 
             game_mode: score.mode.toLowerCase(),
             map_status_fav: score.beatmapset.favourite_count,
