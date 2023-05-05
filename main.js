@@ -38,9 +38,32 @@ app.post('/panel_Ex', async (req, res) => {
 app.post('/panel_C', async (req, res) => {
     try {
 
+        const match = await generate.match2CardA2(matchinfo);
 
+        let redArr = [];
+        let blueArr = [];
+        let noneArr = [];
 
-        const png = await panel_C(f);
+        for (const i in redUsers) {
+            let h = await generate.userMatchData2CardH(redUsers[i]);
+            redArr.push(h);
+        }
+
+        for (const i in blueUsers) {
+            let h = await generate.userMatchData2CardH(blueUsers[i]);
+            blueArr.push(h);
+        }
+
+        for (const i in noneUsers) {
+            let h = await generate.userMatchData2CardH(noneUsers[i]);
+            noneArr.push(h);
+        }
+
+        const player = {redArr, blueArr, noneArr};
+
+        const c_data = {match, player}
+
+        const png = await panel_C(c_data);
         res.set('Content-Type', 'image/png');
         res.send(png);
     } catch (e) {
@@ -537,11 +560,47 @@ let generate = {
         };
     },
 
-    match2CardA2: async (match) => {
+    match2CardA2: async (matchInfo) => {
         return {
+            background: getExportFileV3Path('card-default.png'), //给我他们最后一局的谱面背景即可
+            match_title: matchInfo.name, //比赛标题
+            match_round: 11,
+            match_time: matchInfo.startTime,//比赛开始到比赛结束。如果跨了一天，需要加24小时
+            match_date: matchInfo.endTime,//比赛开始的日期
+            average_star_rating: 5.46,
+            mpid: matchInfo.id,
+            wins_team_red: 5,
+            wins_team_blue: 6,
+        };
+    },
 
+    userMatchData2CardH: async (user) => {
+
+        let team_color;
+        switch (user.team.toLowerCase()) {
+            case 'red': team_color = '#D32F2F'; break;
+            case 'blue': team_color = '#00A0E9'; break;
+            default: team_color = '#aaa'; break;
+        }
+
+        return {
+            team: user.team.toLowerCase(),
+            team_color: team_color,
+            player_name: user.username,
+            player_avatar: await readNetImage(user.userData.avatarUrl, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
+            player_banner: await readNetImage(user.userData.coverUrl, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
+            player_score: user.scores.reduce(function (prev, curr) {
+                return prev + curr;
+            }),
+            player_win: user.wins,
+            player_lose: user.lose,
+            player_rank: user.index,
+            player_rws: user.RWS, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+            player_mra: user.MRA, // 木斗力
+            mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
+            label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
+            class_color: '#fff', //部分字体需要显示为黑色
+            label_mvp: (user.index === 1) ? 'MVP' : '',
         };
     }
-
-
 }
