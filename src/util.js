@@ -1105,7 +1105,7 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
 export function getStarRatingObject(starRating = 0, whichData = 0) {
 
     //去除小数，保留两位
-    let sr = starRating || 0;
+    let sr = (Math.round(starRating * 100) / 100) || 0;
 
     //避免浮点缺陷
     let sr_b = Math.floor(sr);

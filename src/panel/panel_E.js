@@ -128,9 +128,9 @@ export async function panel_E(data = {
     map_status: 'graveyard', //ranked approved loved graveyard notsubmitted qualified pending wip
 
     score_rank: 'S',
-    star_rating: 4.79,
+    star_rating: 4.999999,
     score: 1144770,
-    score_acc_progress: 97.8, //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
+    score_acc_progress: 97.9999, //acc 虽然上面给了，但是那个是给面板渲染的，而且这里有可能还有乘一个进度
 
     game_mode: 'osu', // osu taiko fruits mania
     map_status_fav: 3900,
@@ -157,6 +157,7 @@ export async function panel_E(data = {
     // 面板颜色和特性 颜色已经写成方法
     //color_gamemode: '#7ac943',
     score_categorize: 'perfect', // played, clear, nomiss, perfect // 原叫做 fullcombo
+    score_isbest: true, // 是否最高分
     attr: {
         mode: 0,
         version: 14,
@@ -527,24 +528,23 @@ export async function panel_E(data = {
     RFBarChart(data.map_fail_arr, '#ed6c9e', RFarr_max);
     RFBarChart(RFsum_arr, '#f6d659', RFarr_max); // 这里是retry
 
-    // 成绩分类（中间四个照片）
-    function ScoreCategory(sc) {
+    // 成绩分类（中间四个照片），顺便把左上角的 personal best 加了
+    function ScoreCategory(sc = 'played', pb = false) {
         let pl_link = 'default';
         let cl_link = 'default';
         let nm_link = 'default';
         let pf_link = 'default';
+        let pb_link = 'default';
 
-        if (sc === "played") {
-            pl_link = ''
+        switch (sc) {
+            case "played": pl_link = ''; break;
+            case "clear": cl_link = ''; break;
+            case "nomiss": nm_link = ''; break;
+            case "perfect": pf_link = ''; break;
         }
-        if (sc === "clear") {
-            cl_link = ''
-        }
-        if (sc === "nomiss") {
-            nm_link = ''
-        }
-        if (sc === "perfect") {
-            pf_link = ''
+
+        if (pb) {
+            pb_link = ''
         }
 
         let reg = /(?<=<g id="LBPassStat">)/
@@ -552,9 +552,10 @@ export async function panel_E(data = {
         svg = implantImage(svg, 150, 40, 900, 690, 1, getExportFileV3Path(`object-score-nomiss${nm_link}.png`), reg)
         svg = implantImage(svg, 150, 40, 1060, 640, 1, getExportFileV3Path(`object-score-clear${cl_link}.png`), reg)
         svg = implantImage(svg, 150, 40, 900, 640, 1, getExportFileV3Path(`object-score-play${pl_link}.png`), reg)
+        svg = implantImage(svg, 40, 40, 900, 350, 1, getExportFileV3Path(`object-score-personalbest${pb_link}.png`), reg)
     }
 
-    ScoreCategory(data.score_categorize);
+    ScoreCategory(data.score_categorize, data.score_isbest);
 
     //成绩圆环显示 中点1075 485 x900-1210 y330-640 r=105px
     function Ring(acc) {

@@ -349,13 +349,14 @@ app.post('/panel_E', async (req, res) => {
             default : accRemark = '-'; break;
         }
 
+        let roundacc = Math.round(score.accuracy * 10000) / 100
         let labelPoint = (score.accuracy * 100) % 1;
         let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
 
         const label_data = {
             acc: newLabel(accRemark,
-                Math.round(score.accuracy * 100) + (showPoint ? '' : '.'),
-                showPoint ? '%' : ((score.accuracy * 100) % 1).toFixed(2).substring(2) + '%'),
+                Math.floor(roundacc) + (showPoint ? '' : '.'),
+                showPoint ? '%' : labelPoint.toFixed(2).substring(2) + '%'),
             combo: newLabel(`${score.beatmap.max_combo}x`,
                 score.max_combo.toString(),
                 'x'),
@@ -390,6 +391,8 @@ app.post('/panel_E', async (req, res) => {
             judge_stat_sum: sumJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode),
             judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode)
         }
+
+        const score_isbest = (score.best_id !== null);
 
         const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
         let score_categorize;
@@ -455,6 +458,7 @@ app.post('/panel_E', async (req, res) => {
             map_pass_percent: map_pass_percent, //通过率%
 
             score_categorize: score_categorize,
+            score_isbest: score_isbest,
 
             card_A1: card_a1,
             label_data: label_data,
