@@ -64,9 +64,9 @@ app.post('/panel_C', async (req, res) => {
             noneArr.push(h);
         }
 
-        const player = {redArr, blueArr, noneArr};
+        const player = {red: redArr, blue: blueArr, none: noneArr};
 
-        const c_data = {match, player}
+        const c_data = {match: match, player: player}
 
         const png = await panel_C(c_data);
         res.set('Content-Type', 'image/png');
