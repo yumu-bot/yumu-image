@@ -147,8 +147,6 @@ export async function panel_C(data = {
         }],// 没分队的
     },
 
-
-
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');
@@ -176,9 +174,9 @@ export async function panel_C(data = {
 
     // 导入A2卡
     let title, title1, title2;
-    let isTeamvs = data.match.match_title.toLowerCase().match('vs')
+    let isContainVS = data.match.match_title.toLowerCase().match('vs')
 
-    if (isTeamvs){
+    if (isContainVS){
         title = getMatchNameSplitted(data.match.match_title);
         title1 = title[0];
         title2 = title[1] + ' vs ' + title[2];
@@ -196,7 +194,7 @@ export async function panel_C(data = {
     let wins_team_blue = data.match.wins_team_blue || 0;
     let right3b;
 
-    if (isTeamvs) {
+    if (isContainVS) {
         right3b = wins_team_red + ' : ' + wins_team_blue;
     } else {
         right3b = '';
