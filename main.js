@@ -43,7 +43,7 @@ app.post('/panel_C', async (req, res) => {
         const noneUsers = req.fields?.noneUsers;
         const matchInfo = req.fields?.matchInfo;
 
-        const match = await generate.match2CardA2(matchInfo);
+        const match = await generate.matchInfo2CardA2(matchInfo);
 
         let redArr = [];
         let blueArr = [];
@@ -576,7 +576,7 @@ let generate = {
         };
     },
 
-    match2CardA2: async (matchInfo) => {
+    matchInfo2CardA2: async (matchInfo) => {
         return {
             background: getExportFileV3Path('card-default.png'), //给我他们最后一局的谱面背景即可
             match_title: matchInfo.name, //比赛标题
