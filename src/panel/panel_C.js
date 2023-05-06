@@ -248,7 +248,7 @@ export async function panel_C(data = {
         //渲染不在队伍（无队伍）
         if (arr2['none']) {
             let tianxuanzhizi;
-            if (arr2['none'].length % 2 !== 0){
+            if (arr2['none'].length % 2 === 1){
                 tianxuanzhizi = arr2['none'].pop();
             }
 
@@ -256,14 +256,14 @@ export async function panel_C(data = {
                 let i2 = 0;
 
                 for (let j = 0; j < 2; j++) {
-                    await implantCardH(arr2['none'][i2], rowSum + j + 1, 2);
+                    await implantCardH(arr2['none'][i2], rowSum + i + 1, j + 1, 2);
                     i2 ++;
                 }
             }
             rowSum += arr2['none'].length / 2;
 
             if (tianxuanzhizi){
-                await implantCardH(tianxuanzhizi, rowSum + 1, 1,1);
+                await implantCardH(tianxuanzhizi, rowSum + 1, 1, 1);
                 rowSum ++;
             }
         }
@@ -293,7 +293,7 @@ export async function panel_C(data = {
             object.player_win +
             'W-' + object.player_lose +
             'L (' +
-            (Math.floor(object.player_win / (object.player_win + object.player_lose)) * 100) +
+            Math.round((object.player_win / (object.player_win + object.player_lose)) * 100) +
             '%)';
         let left2 = '#' +
             (object.player_rank || 0)+
