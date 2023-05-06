@@ -177,7 +177,7 @@ export async function panel_C(data = {
     // 导入A2卡
     let title, title1, title2;
     let isTitleContainsVS = data.match.match_title.toLowerCase().match('vs');
-    let isTeamVS = data.player.none != null;
+    let isTeamVS = data.player.none = null;
 
     if (isTitleContainsVS){
         title = getMatchNameSplitted(data.match.match_title);
