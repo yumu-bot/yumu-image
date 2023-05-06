@@ -41,9 +41,9 @@ app.post('/panel_C', async (req, res) => {
         const redUsers = req.fields?.redUsers;
         const blueUsers = req.fields?.blueUsers;
         const noneUsers = req.fields?.noneUsers;
-        const matchInfo = req.fields?.matchInfo;
+        const matchData = req.fields?.matchData;
 
-        const match = await generate.match2CardA2(matchInfo);
+        const match = await generate.match2CardA2(matchData);
 
         let redArr = [];
         let blueArr = [];
@@ -576,15 +576,15 @@ let generate = {
         };
     },
 
-    match2CardA2: async (matchInfo) => {
+    match2CardA2: async (match) => {
         return {
             background: getExportFileV3Path('card-default.png'), //给我他们最后一局的谱面背景即可
-            match_title: matchInfo.name, //比赛标题
+            match_title: match.matchInfo.name, //比赛标题
             match_round: 11,
-            match_time: matchInfo.startTime,//比赛开始到比赛结束。如果跨了一天，需要加24小时
-            match_date: matchInfo.endTime,//比赛开始的日期
+            match_time: match.matchInfo.startTime,//比赛开始到比赛结束。如果跨了一天，需要加24小时
+            match_date: match.matchInfo.endTime,//比赛开始的日期
             average_star_rating: 5.46,
-            mpid: matchInfo.id,
+            mpid: match.matchInfo.id,
             wins_team_red: 5,
             wins_team_blue: 6,
         };
