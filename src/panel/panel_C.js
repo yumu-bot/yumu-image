@@ -154,7 +154,8 @@ export async function panel_C(data = {
     let svg = readTemplate('template/Panel_C.svg');
 
     // 路径定义
-    let reg_height = '${height}'
+    let reg_cardheight = '${cardheight}'
+    let reg_panelheight = '${panelheight}'
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PC-1\);">)/;
@@ -245,24 +246,26 @@ export async function panel_C(data = {
         rowSum += Math.max(arr2['red'].length, arr2['blue'].length)
 
         //渲染不在队伍（无队伍）
-        let tianxuanzhizi;
-        if (arr2['none'].length % 2 !== 0){
-            tianxuanzhizi = arr2['none'].pop();
-        }
-
-        for (let i = 0; i < arr2['none'].length / 2; i++) {
-            let i2 = 0;
-
-            for (let j = 0; j < 2; j++) {
-                await implantCardH(arr2['none'][i2], rowSum + j + 1, 2);
-                i2 ++;
+        if (arr2['none']) {
+            let tianxuanzhizi;
+            if (arr2['none'].length % 2 !== 0){
+                tianxuanzhizi = arr2['none'].pop();
             }
-        }
-        rowSum += arr2['none'].length / 2;
 
-        if (tianxuanzhizi){
-            await implantCardH(tianxuanzhizi, rowSum + 1, 1,1);
-            rowSum ++;
+            for (let i = 0; i < arr2['none'].length / 2; i++) {
+                let i2 = 0;
+
+                for (let j = 0; j < 2; j++) {
+                    await implantCardH(arr2['none'][i2], rowSum + j + 1, 2);
+                    i2 ++;
+                }
+            }
+            rowSum += arr2['none'].length / 2;
+
+            if (tianxuanzhizi){
+                await implantCardH(tianxuanzhizi, rowSum + 1, 1,1);
+                rowSum ++;
+            }
         }
         rowTotal = rowSum;
     }
@@ -290,8 +293,7 @@ export async function panel_C(data = {
             object.player_win +
             'W-' + object.player_lose +
             'L (' +
-            Math.floor(Math.round(
-                object.player_win / (object.player_win + object.player_lose))) * 100 +
+            (Math.floor(object.player_win / (object.player_win + object.player_lose)) * 100) +
             '%)';
         let left2 = '#' +
             (object.player_rank || 0)+
@@ -329,14 +331,18 @@ export async function panel_C(data = {
     await BodyCard(data);
 
     // 计算面板高度
-    let panelHeight;
+    let panelHeight, cardHeight;
+
     if (rowTotal) {
-        panelHeight = 330 + 150 * rowTotal
+        panelHeight = 330 + 150 * rowTotal;
+        cardHeight = 40 + 150 * rowTotal;
     } else {
         panelHeight = 1080;
+        cardHeight = 790;
     }
 
-    svg = replaceText(svg, panelHeight, reg_height);
+    svg = replaceText(svg, panelHeight, reg_panelheight);
+    svg = replaceText(svg, cardHeight, reg_cardheight);
 
     return await exportPng(svg);
 }
