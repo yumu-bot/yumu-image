@@ -147,10 +147,6 @@ export async function panel_C(data = {
         }],// 没分队的
     },
 
-    // 面板文字
-    index_powered: 'powered by Yumubot v0.3.0 EA // Yumu Rating v3.5 (!ymra)',
-    index_request_time: 'request time: ' + getNowTimeStamp(),
-    index_panel_name: 'MRA',
 
 
 }) {
@@ -164,27 +160,47 @@ export async function panel_C(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PC-1\);">)/;
     let reg_bodycard = /(?<=<g id="BodyCard">)/;
 
+    // 面板文字
+    const index_powered = 'powered by Yumubot v0.3.0 EA // Yumu Rating v3.5 (!ymra)';
+    const index_request_time = 'request time: ' + getNowTimeStamp();
+    const index_panel_name = 'MRA';
 
     // 文字定义
-    let index_powered = torus.getTextPath(data.index_powered,
+    const index_powered_path = torus.getTextPath(index_powered,
         10, 26.84, 24, "left baseline", "#fff");
-    let index_request_time = torus.getTextPath(data.index_request_time,
+    const index_request_time_path = torus.getTextPath(index_request_time,
         1910, 26.84, 24, "right baseline", "#fff");
-    let index_panel_name = torus.getTextPath(data.index_panel_name,
+    const index_panel_name_path = torus.getTextPath(index_panel_name,
         607.5, 83.67, 48, "center baseline", "#fff");
 
     // 导入A2卡
-    let title = getMatchNameSplitted(data.match.match_title);
-    let title1 = title[0];
-    let title2 = title[1] + ' vs ' + title[2];
+    let title, title1, title2;
+    let isTeamvs = data.match.match_title.toLowerCase().match('vs')
+
+    if (isTeamvs){
+        title = getMatchNameSplitted(data.match.match_title);
+        title1 = title[0];
+        title2 = title[1] + ' vs ' + title[2];
+    } else {
+        title1 = data.match.match_title;
+        title2 = '';
+    }
+
     let left1 = data.match.match_round ? 'Round ' + data.match.match_round : '-';
-    let left2 = data.match.match_time;
-    let left3 = data.match.match_date;
+    let left2 = data.match.match_time || 'time?';
+    let left3 = data.match.match_date || 'date?';
     let right1 = 'AVG.SR ' + data.match.average_star_rating;
     let right2 = 'mp' + data.match.mpid || 0;
     let wins_team_red = data.match.wins_team_red || 0;
     let wins_team_blue = data.match.wins_team_blue || 0;
-    let right3b = wins_team_red + ' : ' + wins_team_blue;
+    let right3b;
+
+    if (isTeamvs) {
+        right3b = wins_team_red + ' : ' + wins_team_blue;
+    } else {
+        right3b = '';
+    }
+
 
     let card_A2_impl =
         await card_A2({data,
@@ -200,9 +216,9 @@ export async function panel_C(data = {
         },  true);
 
     // 插入主面板的文字
-    svg = replaceText(svg, index_powered, reg_index);
-    svg = replaceText(svg, index_request_time, reg_index);
-    svg = replaceText(svg, index_panel_name, reg_index);
+    svg = replaceText(svg, index_powered_path, reg_index);
+    svg = replaceText(svg, index_request_time_path, reg_index);
+    svg = replaceText(svg, index_panel_name_path, reg_index);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);

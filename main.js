@@ -608,9 +608,9 @@ let generate = {
             player_score: user.scores.reduce(function (prev, curr) {
                 return prev + curr;
             }),
-            player_win: user.wins,
-            player_lose: user.lose,
-            player_rank: user.index,
+            player_win: user.wins || 0,
+            player_lose: user.lost || 0,
+            player_rank: user.index || 0,
             player_rws: user.RWS, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
             player_mra: user.MRA, // 木斗力
             mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
