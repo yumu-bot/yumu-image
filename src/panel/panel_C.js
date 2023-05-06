@@ -293,13 +293,15 @@ export async function panel_C(data = {
             ' // ' ;
 
         if (isTeamVS) {
-            left1 += object.player_win +
+            left1 = left1 +
+                object.player_win +
                 'W-' + object.player_lose +
                 'L (' +
                 Math.round((object.player_win / (object.player_win + object.player_lose)) * 100) +
                 '%)';
         } else {
-            left1 += object.player_win +
+            left1 = left1 +
+                object.player_win +
                 'R played';
         }
 
