@@ -1,6 +1,6 @@
 import {
     getExportFileV3Path,
-    getModColor,
+    getModColor, getModInt,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     implantImage,
@@ -301,6 +301,21 @@ export async function label_F3(data = {
 
     //插入图片
     svg = implantImage(svg, 30, 30, 0, 0, 1, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+
+    return svg.toString();
+}
+
+//BPA-J面板-Mod标签
+export async function label_J1(data = {
+    mod: 'DT',
+    remark: '-1.64%',
+    data_b: '98',
+    data_m: '.36%',
+    color_remark: '#aaa',
+}, reuse = false) {
+    let svg = '';
+
+    let mod_text = getModInt()
 
     return svg.toString();
 }

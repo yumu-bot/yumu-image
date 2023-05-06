@@ -4,6 +4,7 @@ import {CACHE_PATH, getExportFileV3Path, getGameMode, hasMod, initPath, readImag
 import {panel_C} from "./src/panel/panel_C.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {newJudge, panel_E} from "./src/panel/panel_E.js";
+import {panel_J} from "./src/panel/panel_J.js";
 import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
 
 initPath();
@@ -37,8 +38,12 @@ app.post('/panel_Ex', async (req, res) => {
 
 app.post('/panel_C', async (req, res) => {
     try {
+        const redUsers = req.fields?.redUsers;
+        const blueUsers = req.fields?.blueUsers;
+        const noneUsers = req.fields?.noneUsers;
+        const matchInfo = req.fields?.matchInfo;
 
-        const match = await generate.match2CardA2(matchinfo);
+        const match = await generate.match2CardA2(matchInfo);
 
         let redArr = [];
         let blueArr = [];
@@ -493,6 +498,17 @@ app.post('/panel_E', async (req, res) => {
         res.send(png);
     } catch (e) {
         console.error("e", e);
+        res.status(500).send(e.stack);
+    }
+})
+
+app.post('/panel_J', async (req, res) => {
+    try {
+        const f = checkJsonData(req);
+        const png = await panel_J(f);
+        res.set('Content-Type', 'image/png');
+        res.send(png);
+    } catch (e) {
         res.status(500).send(e.stack);
     }
 })

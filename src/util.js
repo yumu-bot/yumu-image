@@ -1822,6 +1822,39 @@ export function hasAllMod(modInt = 0, mod = ['']) {
     return (all & modInt) === all;
 }
 
+export function getModFullName (mod = 'NM') {
+    switch (mod.toUpperCase()) {
+        case "4K": return '4Keys';
+        case "5K": return '5Keys';
+        case "6K": return '6Keys';
+        case "7K": return '7Keys';
+        case "8K": return '8Keys';
+        case "9K": return '9Keys';
+        case "AP": return 'AutoPilot';
+        case "AU": return 'Autoplay';
+        case "CN": return 'Cinema';
+        case "CP": return 'Co-op';
+        case "DT": return 'DoubleTime';
+        case "EZ": return 'Easy';
+        case "FI": return 'FadeIn';
+        case "FL": return 'Flashlight';
+        case "HD": return 'Hidden';
+        case "HR": return 'HardRock';
+        case "HT": return 'HalfTime';
+        case "MR": return 'Mirror';
+        case "NC": return 'NightCore';
+        case "NF": return 'NoFail';
+        case "PF": return 'Perfect';
+        case "RD": return 'Random';
+        case "RX": return 'Relax';
+        case "SD": return 'SuddenDeath';
+        case "SO": return 'SponOut';
+        case "TD": return 'TouchDevice';
+        case "TP": return 'TargetPractice';
+        default: return 'NoMod';
+    }
+}
+
 export function getModInt(mod = ['']) {
     return mod.map(v => {
         return Mod[v] ? Mod[v] : 0
