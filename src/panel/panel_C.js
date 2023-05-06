@@ -176,9 +176,10 @@ export async function panel_C(data = {
 
     // 导入A2卡
     let title, title1, title2;
-    let isTeamvs = data.match.match_title.toLowerCase().match('vs')
+    let isTitleContainsVS = data.match.match_title.toLowerCase().match('vs');
+    let isTeamVS = data.player.none != null;
 
-    if (isTeamvs){
+    if (isTitleContainsVS){
         title = getMatchNameSplitted(data.match.match_title);
         title1 = title[0];
         title2 = title[1] + ' vs ' + title[2];
@@ -196,7 +197,7 @@ export async function panel_C(data = {
     let wins_team_blue = data.match.wins_team_blue || 0;
     let right3b;
 
-    if (isTeamvs) {
+    if (isTeamVS) {
         right3b = wins_team_red + ' : ' + wins_team_blue;
     } else {
         right3b = '';
@@ -289,12 +290,19 @@ export async function panel_C(data = {
 
         let left1 = getRoundedNumberLargerStr(object.player_score, 3) +
             getRoundedNumberSmallerStr(object.player_score, 3) +
-            ' // ' +
-            object.player_win +
-            'W-' + object.player_lose +
-            'L (' +
-            Math.round((object.player_win / (object.player_win + object.player_lose)) * 100) +
-            '%)';
+            ' // ' ;
+
+        if (isTeamVS) {
+            left1 += object.player_win +
+                'W-' + object.player_lose +
+                'L (' +
+                Math.round((object.player_win / (object.player_win + object.player_lose)) * 100) +
+                '%)';
+        } else {
+            left1 += object.player_win +
+                'R played';
+        }
+
         let left2 = '#' +
             (object.player_rank || 0)+
             ' (' +
