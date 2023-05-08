@@ -136,9 +136,9 @@ export async function panel_D(data = {
 }, reuse = false) {
 
     // 面板文字
-    data.index_powered = 'powered by Yumubot v0.3.0 EA // UserInfo (!ymi)';
+    data.index_powered = 'powered by Yumubot v0.3.0 EA // Information (!ymi)';
     data.index_request_time = 'request time: ' + getNowTimeStamp();
-    data.index_panel_name = 'I v3.6';
+    data.index_panel_name = 'Info';
 
     // 导入模板
     let svg = readTemplate('template/Panel_D.svg');
