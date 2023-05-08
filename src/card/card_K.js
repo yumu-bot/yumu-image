@@ -4,7 +4,7 @@ export async function card_K(data = {
     map_background: 'beatmap-defaultBG.jpg',
     star_rating: 4.35,
     score_rank: 'D',
-    bp_ranking: 1,
+    bp_ranking: 1, //感觉暂时不使用这个也可以
     bp_pp: 369,
     bp_remark: 'PP',// PP
 
@@ -36,8 +36,8 @@ export async function card_K(data = {
   </g>`;
 
     // 替换文字
-    let bp_ranking = data.bp_ranking ?
-        torus.getTextPath(data.bp_ranking.toString(), 35, 26.795, 30, "center baseline", "#fff") : '';
+    // let bp_ranking = data.bp_ranking ?
+    //    torus.getTextPath(data.bp_ranking.toString(), 35, 26.795, 30, "center baseline", "#fff") : '';
     let bp_pp = data.bp_pp ?
         torus.getTextPath(Math.floor(data.bp_pp).toString() + (data.bp_remark ? data.bp_remark : 'PP'), 35, 45.224, 16, "center baseline", "#fff") : '';
 
@@ -49,7 +49,7 @@ export async function card_K(data = {
 
     // 替换模板
 
-    svg = replaceText(svg, bp_ranking, reg_text);
+    // svg = replaceText(svg, bp_ranking, reg_text);
     svg = replaceText(svg, bp_pp, reg_text);
     svg = replaceText(svg, circle_sr, reg_overlay);
     svg = replaceText(svg, circle_rank, reg_overlay);
