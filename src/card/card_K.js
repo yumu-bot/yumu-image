@@ -2,10 +2,11 @@ import {getRankColor, getStarRatingColor, implantImage, replaceText, torus} from
 
 export async function card_K(data = {
     map_background: 'beatmap-defaultBG.jpg',
-    star_rating: '4.35',
+    star_rating: 4.35,
     score_rank: 'D',
-    bp_ranking: '1',
-    bp_pp: '369PP' // PP
+    bp_ranking: 1,
+    bp_pp: 369,
+    bp_remark: 'PP',// PP
 
 }, reuse = false) {
 
@@ -36,9 +37,9 @@ export async function card_K(data = {
 
     // 替换文字
     let bp_ranking = data.bp_ranking ?
-        torus.getTextPath(data.bp_ranking, 35, 26.795, 30, "center baseline", "#fff") : '';
+        torus.getTextPath(data.bp_ranking.toString(), 35, 26.795, 30, "center baseline", "#fff") : '';
     let bp_pp = data.bp_pp ?
-        torus.getTextPath(Math.floor(data.bp_pp) + 'PP', 35, 45.224, 16, "center baseline", "#fff") : '';
+        torus.getTextPath(Math.floor(data.bp_pp).toString() + (data.bp_remark ? data.bp_remark : 'PP'), 35, 45.224, 16, "center baseline", "#fff") : '';
 
     // 定义圆圈
     let circle_sr = data.star_rating ?

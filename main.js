@@ -144,7 +144,7 @@ app.post('/panel_D', async (req, res) => {
                 map_background: await readNetImage(bp.beatmapset.covers.list, getExportFileV3Path('beatmap-defaultBG.jpg')),
                 star_rating: bp.beatmap.difficulty_rating,
                 score_rank: bp.rank,
-                bp_pp: (bp.pp.toString() + 'PP'),
+                bp_pp: bp.pp,
             }
             bp_list.push(d);
         }
