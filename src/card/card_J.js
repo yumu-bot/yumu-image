@@ -1,8 +1,16 @@
-import {getModColor, getRankColor, getStarRatingColor, implantImage, replaceText, torus} from "../util.js";
+import {
+    getExportFileV3Path,
+    getModColor,
+    getRankColor,
+    getStarRatingColor,
+    implantImage,
+    replaceText,
+    torus
+} from "../util.js";
 
 export async function card_J(data = {
-    map_cover: 'beatmap-defaultBG.jpg',
-    map_background: 'beatmap-defaultBG.jpg',
+    map_cover: getExportFileV3Path('beatmap-defaultBG.jpg'),
+    map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
     map_title_romanized: '',
     map_artist: '',
     map_difficulty_name: '',

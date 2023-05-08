@@ -5,7 +5,7 @@ export async function card_K(data = {
     star_rating: '4.35',
     score_rank: 'D',
     bp_ranking: '1',
-    bp_pp: '369' // PP
+    bp_pp: '369PP' // PP
 
 }, reuse = false) {
 

@@ -92,13 +92,13 @@ export async function panel_D(data = {
             star_rating: 2.7,
             score_rank: 'X',
             bp_ranking: 1,
-            bp_pp: '369'
+            bp_pp: '369PP'
         }, {
             map_background: 'beatmap-defaultBG.jpg',
             star_rating: 2.7,
             score_rank: 'X',
             bp_ranking: 2,
-            bp_pp: '369'
+            bp_pp: '369PP'
         }
     ],
 
@@ -490,11 +490,11 @@ export async function panel_D(data = {
     svg = replaceText(svg, user_data, reg_user_data_text);
 
     // 评级数量
-    let grade_X = torus.getTextPath(data.grade_X.toString(), 685, 998.795, 30, 'center baseline', '#fff')
-    let grade_S = torus.getTextPath(data.grade_S.toString(), 790, 998.795, 30, 'center baseline', '#fff')
+    let grade_X = torus.getTextPath((data.grade_X + data.grade_XH).toString(), 685, 998.795, 30, 'center baseline', '#fff')
+    let grade_S = torus.getTextPath((data.grade_S + data.grade_SH).toString(), 790, 998.795, 30, 'center baseline', '#fff')
     let grade_A = torus.getTextPath(data.grade_A.toString(), 895, 998.795, 30, 'center baseline', '#fff')
-    let grade_XH = torus.getTextPath(`(${data.grade_XH})`, 685, 1024.877, 18, 'center baseline', '#a1a1a1')
-    let grade_SH = torus.getTextPath(`(${data.grade_SH})`, 790, 1024.877, 18, 'center baseline', '#a1a1a1')
+    let grade_XH = torus.getTextPath(`(+${data.grade_XH})`, 685, 1024.877, 18, 'center baseline', '#a1a1a1')
+    let grade_SH = torus.getTextPath(`(+${data.grade_SH})`, 790, 1024.877, 18, 'center baseline', '#a1a1a1')
 
     svg = replaceText(svg, grade_X, reg_grade_text);
     svg = replaceText(svg, grade_S, reg_grade_text);

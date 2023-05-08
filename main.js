@@ -144,7 +144,7 @@ app.post('/panel_D', async (req, res) => {
                 map_background: await readNetImage(bp.beatmapset.covers.list, getExportFileV3Path('beatmap-defaultBG.jpg')),
                 star_rating: bp.beatmap.difficulty_rating,
                 score_rank: bp.rank,
-                bp_pp: bp.pp
+                bp_pp: bp.pp + 'PP',
             }
             bp_list.push(d);
         }
@@ -198,7 +198,7 @@ app.post('/panel_D', async (req, res) => {
             rank_country: user?.statistics?.country_rank,
             rank_global: user?.statistics?.global_rank,
             country: user?.country['countryCode'],
-            bonus_pp: req.fields?.bonus_pp, // 416.6667
+            bonus_pp: req.fields['bonus_pp'], // 416.6667
             om4k_pp: user?.statistics?.pp4K,
             om7k_pp: user?.statistics?.pp7K,
             game_mode: req.fields?.mode, // osu taiko catch mania

@@ -1,9 +1,9 @@
 import {
     getExportFileV3Path,
-    getModColor, getModInt,
+    getModColor, getModFullName, getModInt,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
-    implantImage,
+    implantImage, implantSvgBody,
     replaceText,
     torus
 } from "../util.js";
@@ -101,6 +101,10 @@ export const LABEL_OPTION = {
         icon_title: 'Total Hits',
         remark: 'TTH',
         color_remark: '#aaa',
+    },
+    SR: {
+        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon_title: 'Star Rating',
     },
 }
 
@@ -305,17 +309,67 @@ export async function label_F3(data = {
     return svg.toString();
 }
 
-//BPA-J面板-Mod标签
+//BPA-J1-Mod标签
 export async function label_J1(data = {
     mod: 'DT',
-    remark: '-1.64%',
-    data_b: '98',
-    data_m: '.36%',
-    color_remark: '#aaa',
+    count: 88,
+    pp: 1611,
 }, reuse = false) {
-    let svg = '';
+    let svg = `<g id="Mod">\n <path d="m56.357,4.496l11.865,18c2.201,3.339,2.201,7.668,0,11.007l-11.865,18c-1.85,2.807-4.987,4.496-8.349,4.496h-26.142c-3.362,0-6.499-1.689-8.349-4.496L1.651,33.504c-2.201-3.339-2.201-7.668,0-11.007L13.516,4.496C15.366,1.689,18.503,0,21.865,0h26.142c3.362,0,6.499,1.689,8.349,4.496Z" style="fill: ${modcolor};"/>\n </g>\n <g id="Text">\n </g>`;
 
-    let mod_text = getModInt()
+    //正则
+    let reg_text = /(?<=<g id="Text">)/;
+    let reg_mod = /(?<=<g id="Mod">)/;
+    let reg_modcolor = '${modcolor}';
+
+    //定义文本
+    let mod = data.mod || '';
+
+    let mod_abbr = torus.getTextPath(mod, 35, 36.795, 30, 'center baseline', '#fff');
+    let mod_fullname = torus.getTextPath(getModFullName(mod), 75 ,12.877, 18, 'left baseline', '#fff');
+    let mod_count = torus.getTextPath(data.count + 'x', 75 ,28.877, 18, 'left baseline', '#aaa');
+    let pp = torus.get2SizeTextPath(
+        data.pp.toString() || '0', 'PP',
+        30, 18,
+        210, 54.795,
+        'right baseline', '#fff');
+    let mod_color = getModColor(mod);
+
+    //插入文本
+    svg = replaceText(svg, mod_abbr, reg_mod);
+    svg = replaceText(svg, mod_fullname, reg_text);
+    svg = replaceText(svg, mod_count, reg_text);
+    svg = replaceText(svg, pp, reg_text);
+    svg = replaceText(svg, mod_color, reg_modcolor);
+
+    return svg.toString();
+}
+
+//BPA-J2-谱师标签
+export async function label_J2(data = {
+    index: 1,
+    avatar: getExportFileV3Path('avatar-guest.png'),
+    name: 'Sotrash',
+    count: 88,
+    pp: 1611,
+}, reuse = false) {
+    let svg = `<g id="Mod">\n <path d="m56.357,4.496l11.865,18c2.201,3.339,2.201,7.668,0,11.007l-11.865,18c-1.85,2.807-4.987,4.496-8.349,4.496h-26.142c-3.362,0-6.499-1.689-8.349-4.496L1.651,33.504c-2.201-3.339-2.201-7.668,0-11.007L13.516,4.496C15.366,1.689,18.503,0,21.865,0h26.142c3.362,0,6.499,1.689,8.349,4.496Z" style="fill: ${modcolor};"/>\n </g>\n <g id="Text">\n </g>`;
+
+    //正则
+    let reg_text = /(?<=<g id="Text">)/;
+    let reg_mod = /(?<=<g id="Mod">)/;
+    let reg_avatar = /(?<=<g id="Head">)/;
+    let reg_modcolor = '${modcolor}';
+
+    //定义文本
+    svg = implantImage(svg, 70, 70, 8, 8, 1, data.avatar, reg_avatar);
+
+
+
+    //插入文本
+
+    //插入图片
+    svg = implantImage(svg, 70, 70, 8, 8, 1, data.avatar, reg_avatar);
 
     return svg.toString();
 }
