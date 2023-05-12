@@ -6,6 +6,7 @@ import {panel_D} from "./src/panel/panel_D.js";
 import {newJudge, panel_E} from "./src/panel/panel_E.js";
 import {panel_J} from "./src/panel/panel_J.js";
 import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
+import {Markdown as MarkDownToImage} from "./src/markdown.js";
 
 initPath();
 //这里放测试代码
@@ -513,6 +514,17 @@ app.post('/panel_J', async (req, res) => {
     }
 })
 
+app.post('/md', async (req, res) => {
+
+    try {
+        const data = await MarkDownToImage(req.fields.md || "# Error: no value", req.fields.width || 600);
+        res.set('Content-Type', 'image/png');
+        res.send(data);
+    } catch (e) {
+        res.status(500).send(e.stack);
+    }
+})
+
 app.listen(process.env.PORT, () => {
     console.log(`== Done. ==http://localhost:${process.env.PORT}\n cache path: ${CACHE_PATH}`);
 })
@@ -529,6 +541,7 @@ function checkData(req, files = ['']) {
         ...req.fields, ...fs,
     };
 }
+
 
 //  form data: json text{ xxx: xxx, img:"img:xxx"} img: file xxx
 const IMAGE_FLAG_START = "img:";
