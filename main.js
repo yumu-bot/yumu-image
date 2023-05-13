@@ -297,9 +297,9 @@ app.post('/panel_E', async (req, res) => {
                     switch (score.rank) {
                         case 'XH' : accRemark = 'AP'; break;
                         case 'X' : accRemark = 'AP'; break;
-                        case 'SH' : accRemark = 'to XH!'; break;
-                        case 'S' : accRemark = 'to SS!'; break;
-                        case 'A' : isMissed ? (accRemark = `-miss S`) :
+                        case 'SH' : accRemark = '>>XH!'; break;
+                        case 'S' : accRemark = '>>SS!'; break;
+                        case 'A' : isMissed ? (accRemark = `-x S`) :
                             (is50over1p ? (accRemark = `-${aim50 - n50} bad`) :
                                 (accRemark = `-${aim300 - n300} S`)); break;
                         case 'B' : accRemark = `-${aim300 - n300} A`; break;
@@ -338,9 +338,9 @@ app.post('/panel_E', async (req, res) => {
                     switch (score.rank) {
                         case 'XH' : accRemark = 'AP'; break;
                         case 'X' : accRemark = 'AP'; break;
-                        case 'SH' : accRemark = 'to XH!'; break;
-                        case 'S' : accRemark = 'to SS!'; break;
-                        case 'A' : isMissed ? accRemark = `-miss S` : accRemark = `-${aim300 - n300} S`; break;
+                        case 'SH' : accRemark = '>>XH!'; break;
+                        case 'S' : accRemark = '>>SS!'; break;
+                        case 'A' : isMissed ? accRemark = `-x S` : accRemark = `-${aim300 - n300} S`; break;
                         case 'B' : accRemark = `-${aim300 - n300} A`; break;
                         case 'C' : accRemark = `-${aim300 - n300} B`; break;
                         case 'D' : accRemark = `-${aim300 - n300} C`; break;
@@ -356,12 +356,12 @@ app.post('/panel_E', async (req, res) => {
                 switch (score.rank) {
                     case 'XH' : accRemark = 'AP'; break;
                     case 'X' : accRemark = 'AP'; break;
-                    case 'SH' : accRemark = `to XH!`; break;
-                    case 'S' : accRemark = `to SS!`; break;
-                    case 'A' : accRemark = `-${(98 - score.accuracy * 100).toFixed(1)}% S`; break;
-                    case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(1)}% A`; break;
-                    case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(1)}% B`; break;
-                    case 'D' : accRemark = `-${(85 - score.accuracy * 100).toFixed(1)}% C`; break;
+                    case 'SH' : accRemark = `>>XH!`; break;
+                    case 'S' : accRemark = `>>SS!`; break;
+                    case 'A' : accRemark = `-${(98 - score.accuracy * 100).toFixed(2)}%`; break;
+                    case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(2)}%`; break;
+                    case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(2)}%`; break;
+                    case 'D' : accRemark = `-${(85 - score.accuracy * 100).toFixed(2)}%`; break;
                     default : accRemark = '-'; break;
                 }
 
@@ -369,9 +369,9 @@ app.post('/panel_E', async (req, res) => {
 
             case 'm' : {
                 if (score.statistics.count_geki >= score.statistics.count_300) {
-                    accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ' : 1';
+                    accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
                 } else {
-                    accRemark = '1 : ' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+                    accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
                 }
             } break;
 

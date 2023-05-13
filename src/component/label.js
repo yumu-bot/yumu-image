@@ -122,7 +122,8 @@ export async function label_E(data = {
     let reg_icon = '${icon}';
 
     // 文字的 <path>
-    let icon_title = torus.getTextPath(data.icon_title, 50, 14.88, 18, "left baseline", "#a1a1a1");
+    //原来是 x=50，感觉位置怪怪的
+    let icon_title = torus.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#a1a1a1");
 
     let datas = torus.getTextPath(data.data_b, 56, 44.75, 36, "left baseline", "#fff");
 
@@ -147,7 +148,7 @@ export async function label_E(data = {
         let remark = torus.getTextPath(data.remark, 200, 14.88, 18, "right baseline", data.color_remark);
         svg = replaceText(svg, remark, reg_text);
     }
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_text)
+    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
 
     return svg.toString();
 }
