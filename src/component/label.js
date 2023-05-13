@@ -119,7 +119,7 @@ export async function label_E(data = {
 }, reuse = false) {
     // 正则表达式
     let reg_text = /(?<=<g id="Text">)/;
-    let reg_icon = '${icon}';
+    let reg_icon = /(?<=<g id="Icon">)/;
 
     // 文字的 <path>
     //原来是 x=50，感觉位置怪怪的
