@@ -50,18 +50,18 @@ app.post('/panel_C', async (req, res) => {
         let blueArr = [];
         let noneArr = [];
 
-        for (const i in redUsers) {
-            let h = await generate.userMatchData2CardH(redUsers[i]);
+        for (const user of redUsers) {
+            let h = await generate.userMatchData2CardH(user);
             redArr.push(h);
         }
 
-        for (const i in blueUsers) {
-            let h = await generate.userMatchData2CardH(blueUsers[i]);
+        for (const user of blueUsers) {
+            let h = await generate.userMatchData2CardH(user);
             blueArr.push(h);
         }
 
-        for (const i in noneUsers) {
-            let h = await generate.userMatchData2CardH(noneUsers[i]);
+        for (const user of noneUsers) {
+            let h = await generate.userMatchData2CardH(user);
             noneArr.push(h);
         }
 
@@ -574,8 +574,8 @@ function checkJsonData(req) {
 let generate = {
     user2CardA1: async (user) => {
         return {
-            background: await readNetImage(user.cover_url, getExportFileV3Path('card-default.png')),
-            avatar: await readNetImage(user.avatar_url, getExportFileV3Path('avatar-guest.png')),
+            background: await readNetImage(user.cover.url, getExportFileV3Path('card-default.png')),
+            avatar: await readNetImage(user.avatar.url, getExportFileV3Path('avatar-guest.png')),
             sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
             sub_icon2: '',
             name: user['username'],
@@ -624,9 +624,11 @@ let generate = {
             player_win: user.wins || 0,
             player_lose: user.lost || 0,
             player_rank: user.index || 0,
-            player_rws: user.RWS, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
-            player_mra: user.MRA, // 木斗力
+            player_rws: user.rws, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+            player_mra: user.mra, // 木斗力
             mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
+            playerLabelV1: user.playerLabelV1,
+            playerLabelV2: user.playerLabelV2,
             label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
             class_color: '#fff', //部分字体需要显示为黑色
             label_mvp: (user.index === 1) ? 'MVP' : '',
