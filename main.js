@@ -54,18 +54,18 @@ app.post('/panel_C', async (req, res) => {
         let blueArr = [];
         let noneArr = [];
 
-        for (const user of redUsers) {
-            let h = await generate.userMatchData2CardH(user);
+        for (const i in redUsers) {
+            let h = await generate.userMatchData2CardH(redUsers[i]);
             redArr.push(h);
         }
 
-        for (const user of blueUsers) {
-            let h = await generate.userMatchData2CardH(user);
+        for (const i in blueUsers) {
+            let h = await generate.userMatchData2CardH(blueUsers[i]);
             blueArr.push(h);
         }
 
-        for (const user of noneUsers) {
-            let h = await generate.userMatchData2CardH(user);
+        for (const i in noneUsers) {
+            let h = await generate.userMatchData2CardH(noneUsers[i]);
             noneArr.push(h);
         }
 
