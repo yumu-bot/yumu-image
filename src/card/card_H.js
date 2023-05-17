@@ -66,7 +66,8 @@ export async function card_H(data = {
     let color_label3 = data.color_label3 || 'none';
     let color_label4 = data.color_label4 || 'none';
 
-    let font_l4 = data.font_label4 === 'PuHuiTi' ? PuHuiTi : torus;
+    let font_l4 = torus;
+    if (data.font_label4 === 'PuHuiTi') font_l4 = PuHuiTi;
 
     let label3_width = torus.getTextWidth(data.label3 || '', 24) + 30;
     let label4_width = font_l4.getTextWidth(data.label4 || '', 24) + 30;
