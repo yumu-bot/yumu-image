@@ -304,6 +304,11 @@ export async function panel_C(data = {
         let color_label3 = '#382E32';
         let color_label4 = '#382E32';
 
+        let label_en = getPlayerLabelItems(object, 0);
+        let label_zh = getPlayerLabelItems(object, 1);
+        let mra_color = getPlayerLabelItems(object, 2);
+        let class_color = getPlayerLabelItems(object, 3);
+
         let card_H_impl =
             await card_H({
                 background: object.player_banner,
@@ -313,13 +318,15 @@ export async function panel_C(data = {
                 left2: left2,
                 index_b: index_b,
                 index_m: index_m,
-                label3: object.label_class,
-                label4: object.label_mvp,
+                label3: label_en,
+                label4: label_zh,
                 color_label3: color_label3,
                 color_label4: color_label4,
                 color_left: object.team_color,
-                color_right: object.mra_color,
-                color_index: object.class_color,
+                color_right: mra_color,
+                color_index: class_color,
+
+                font_label4: 'PuHuiTi',
 
             }, true);
 
@@ -327,6 +334,76 @@ export async function panel_C(data = {
     }
 
     await BodyCard(data);
+
+    // 获取玩家标签的各项物品，0 是全称，1 是 中文称呼，2 是 v1.2 的九色卡色标，3 是文字的颜色
+    function getPlayerLabelItems(object, whichData = 0) {
+        const v1 = object.player_Label_V1;
+        const v2 = object.player_Label_V2;
+
+        let en;
+        let zh;
+        let back_color;
+        let text_color = '#fff';
+
+        switch (v1) {
+            case 'BC': back_color = '#F8F32C'; text_color = '#2A2226'; break;
+            case 'CA': back_color = '#E69820'; break;
+            case 'MF': back_color = '#54A238'; break;
+            case 'SP': back_color = '#B3CF61'; break;
+            case 'WF': back_color = '#3559AD'; break;
+            case 'GE': back_color = '#B6B6B6'; break;
+            case 'GU': back_color = '#5291E3'; break;
+            case 'SU': back_color = '#4F187B'; break;
+            case 'SG': back_color = '#C22C75'; break;
+            case 'NO': back_color = '#CE696F'; break;
+            case 'FU': back_color = '#B23D2F'; break;
+            default: back_color = '#2A2226';
+        }
+
+        switch (v2) {
+            case 'SMA': en = 'Strongest Marshal'; zh = '最强元帅'; break;
+            case 'CMA': en = 'Competent Marshal'; zh = '称职元帅'; break;
+            case 'IMA': en = 'Indomitable Marshal'; zh = '不屈元帅'; break;
+            case 'EGE': en = 'Ever-Victorious General'; zh = '常胜将军'; break;
+            case 'AGE': en = 'Assiduous General'; zh = '勤奋将军'; break;
+            case 'SGE': en = 'Striven General'; zh = '尽力将军'; break;
+            case 'BMF': en = 'Breakthrough Main Force'; zh = '突破主力'; break;
+            case 'RMF': en = 'Reliable Main Force'; zh = '可靠主力'; break;
+            case 'SMF': en = 'Staunch Main Force'; zh = '坚守主力'; break;
+            case 'EAS': en = 'Elite Assassin'; zh = '精锐刺客'; break;
+            case 'NAS': en = 'Normal Assassin'; zh = '普通刺客'; break;
+            case 'FAS': en = 'Fake Assassin'; zh = '冒牌刺客'; break;
+            case 'GCW': en = 'Gold Collar Worker'; zh = '金领工人'; break;
+            case 'WCW': en = 'White Collar Worker'; zh = '白领工人'; break;
+            case 'BCW': en = 'Blue Collar Worker'; zh = '蓝领工人'; break;
+            case 'KPS': en = 'Key Person'; zh = '关键人'; break;
+            case 'CMN': en = 'Common Man'; zh = '普通人'; break;
+            case 'PSB': en = 'Passer-by'; zh = '路人甲'; break;
+            case 'MAC': en = 'Major Character'; zh = '主要角色'; break;
+            case 'MIC': en = 'Minor Character'; zh = '次要角色'; break;
+            case 'FIG': en = 'Figurant'; zh = '群众演员'; break;
+            case 'SAM': en = 'Stable as Mountain'; zh = '稳如泰山'; break;
+            case 'HAS': en = 'Hard as Stone'; zh = '坚若磐石'; break;
+            case 'SIN': en = 'Seriously Injured'; zh = '伤痕累累'; break;
+            case 'ANI': en = 'Advanced Ninja'; zh = '上等忍者'; break;
+            case 'MNI': en = 'Mediocre Ninja'; zh = '普通忍者'; break;
+            case 'LCS': en = 'Lower-class'; zh = '不入流'; break;
+            case 'LKD': en = 'Lucky Dog'; zh = '幸运儿'; break;
+            case 'QAP': en = 'Qualified Apprentice'; zh = '合格学徒'; break;
+            case 'BGN': en = 'Beginner'; zh = '初学者'; break;
+            case 'LSS': en = 'Life-saving Straw'; zh = '救命稻草'; break;
+            case 'LSP': en = 'Little Spark'; zh = '点点星火'; break;
+            case 'BDT': en = 'Burnt Dust'; zh = '湮灭尘埃'; break;
+            default: en = 'Unknown'; zh = '未知'; break;
+        }
+
+        switch (whichData) {
+            case 0: return en;
+            case 1: return zh;
+            case 2: return back_color;
+            case 3: return text_color;
+        }
+    }
 
     // 计算面板高度
     let panelHeight, cardHeight;

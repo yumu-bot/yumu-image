@@ -363,14 +363,14 @@ export async function label_J2(data = {
     let reg_modcolor = '${modcolor}';
 
     //定义文本
-    svg = implantImage(svg, 70, 70, 8, 8, 1, data.avatar, reg_avatar);
-
+    let index = torus.getTextPath(data.index, 14,  21.836, 24, 'center baseline')
 
 
     //插入文本
 
     //插入图片
-    svg = implantImage(svg, 70, 70, 8, 8, 1, data.avatar, reg_avatar);
+    svg = implantImage(svg, 70, 70, 8, 8, 1,
+        data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
 
     return svg.toString();
 }

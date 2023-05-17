@@ -1,4 +1,4 @@
-import {getExportFileV3Path, implantImage, readTemplate, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, implantImage, readTemplate, replaceText, torus, PuHuiTi} from "../util.js";
 
 export async function card_H(data = {
     background: '',
@@ -23,6 +23,8 @@ export async function card_H(data = {
     color_label2: '',
     color_label3: '',
     color_label4: '',
+
+    font_label4: 'torus',
 
 }, reuse = false) {
     // 读取模板
@@ -64,22 +66,24 @@ export async function card_H(data = {
     let color_label3 = data.color_label3 || 'none';
     let color_label4 = data.color_label4 || 'none';
 
+    let font_l4 = data.font_label4 === 'PuHuiTi' ? PuHuiTi : torus;
+
     let label3_width = torus.getTextWidth(data.label3 || '', 24) + 30;
-    let label4_width = torus.getTextWidth(data.label4 || '', 24) + 30;
+    let label4_width = font_l4.getTextWidth(data.label4 || '', 24) + 30;
 
     let label1 = torus.getTextPath(data.label1 || '', 50, 20.877, 18, 'center baseline', '#fff');
     let label2 = torus.getTextPath(data.label2 || '', 50, 96.877, 18, 'center baseline', '#fff');
     let label3 = torus.getTextPath(data.label3 || '', 710 - label3_width / 2, 34.836, 24, 'center baseline', '#fff');
-    let label4 = torus.getTextPath(data.label4 || '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
+    let label4 = font_l4.getTextPath(data.label4 || '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
 
     let index = torus.get2SizeTextPath(
         data.index_b, data.index_m,
         data.index_b_size || 48, data.index_m_size || 36, 815,73.672,'center baseline', data.color_index)
 
-    let rrect_label1 = `<rect x="30" y="5" width="40" height="20" rx="10" ry="10" style="fill: ${color_label1};"/>`;
-    let rrect_label2 = `<rect x="30" y="5" width="40" height="20" rx="10" ry="10" style="fill: ${color_label2};"/>`;
-    let rrect_label3 = `<rect x="${710 - label3_width}" y="10" width="${label3_width}" height="34" rx="17" ry="17" style="fill: ${color_label3};"/>`;
-    let rrect_label4 = `<rect x="${710 - label4_width}" y="54" width="${label4_width}" height="34" rx="17" ry="17" style="fill: ${color_label4};"/>`;
+    let rrect_label1 = data.label1 ? `<rect x="30" y="5" width="40" height="20" rx="10" ry="10" style="fill: ${color_label1};"/>` : '';
+    let rrect_label2 = data.label2 ? `<rect x="30" y="5" width="40" height="20" rx="10" ry="10" style="fill: ${color_label2};"/>` : '';
+    let rrect_label3 = data.label3 ? `<rect x="${710 - label3_width}" y="10" width="${label3_width}" height="34" rx="17" ry="17" style="fill: ${color_label3};"/>` : '';
+    let rrect_label4 = data.label4 ? `<rect x="${710 - label4_width}" y="54" width="${label4_width}" height="34" rx="17" ry="17" style="fill: ${color_label4};"/>` : '';
 
     svg = replaceText(svg, data.color_right || 'none', reg_color_right);
     svg = replaceText(svg, data.color_left || 'none', reg_color_left);

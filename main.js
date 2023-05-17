@@ -43,6 +43,7 @@ app.post('/panel_C', async (req, res) => {
         const blueUsers = req.fields?.blueUsers;
         const noneUsers = req.fields?.noneUsers;
         const matchInfo = req.fields?.matchInfo;
+        const sid = req.fields?.sid;
 
         const match = await generate.matchInfo2CardA2(matchInfo);
 
@@ -624,12 +625,14 @@ let generate = {
             player_win: user.wins || 0,
             player_lose: user.lost || 0,
             player_rank: user.index || 0,
-            player_rws: user.RWS, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
-            player_mra: user.MRA, // 木斗力
-            mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
-            label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
-            class_color: '#fff', //部分字体需要显示为黑色
-            label_mvp: (user.index === 1) ? 'MVP' : '',
+            player_rws: user.rws, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+            player_mra: user.mra, // 木斗力
+            player_Label_V1: user.playerLabelV1,
+            player_Label_V2: user.playerLabelV2,
+            //mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
+            //label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
+            //class_color: '#fff', //部分字体需要显示为黑色
+            //label_mvp: (user.index === 1) ? 'MVP' : '',
         };
     }
 }
