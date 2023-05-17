@@ -578,8 +578,8 @@ function checkJsonData(req) {
 let generate = {
     user2CardA1: async (user) => {
         return {
-            background: await readNetImage(user.cover.url, getExportFileV3Path('card-default.png')),
-            avatar: await readNetImage(user.avatar.url, getExportFileV3Path('avatar-guest.png')),
+            background: await readNetImage(user.cover_url, getExportFileV3Path('card-default.png')),
+            avatar: await readNetImage(user.avatar_url, getExportFileV3Path('avatar-guest.png')),
             sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
             sub_icon2: '',
             name: user['username'],
