@@ -27,6 +27,7 @@ export async function panel_C(data = {
         mpid: 59438351,
         wins_team_red: 5,
         wins_team_blue: 6,
+        is_team_vs : true,
     },
     // H卡
     player: {
@@ -174,9 +175,9 @@ export async function panel_C(data = {
 
     // 导入A2卡
     let title, title1, title2;
-    let isContainVS = data.match.match_title.toLowerCase().match('vs')
+    let isTeamVS = data.match.is_team_vs;
 
-    if (isContainVS){
+    if (isTeamVS){
         title = getMatchNameSplitted(data.match.match_title);
         title1 = title[0];
         title2 = title[1] + ' vs ' + title[2];
@@ -194,10 +195,10 @@ export async function panel_C(data = {
     let wins_team_blue = data.match.wins_team_blue || 0;
     let right3b;
 
-    if (isContainVS) {
+    if (isTeamVS) {
         right3b = wins_team_red + ' : ' + wins_team_blue;
     } else {
-        right3b = '';
+        right3b = (wins_team_red + wins_team_blue).toString() + 'x';
     }
 
 

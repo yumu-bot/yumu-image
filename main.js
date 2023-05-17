@@ -44,8 +44,11 @@ app.post('/panel_C', async (req, res) => {
         const noneUsers = req.fields?.noneUsers;
         const matchInfo = req.fields?.matchInfo;
         const sid = req.fields?.sid;
+        const redWins = req.fields?.redWins;
+        const blueWins = req.fields?.blueWins;
+        const isTeamVS = req.fields?.isTeamVS;
 
-        const match = await generate.matchInfo2CardA2(matchInfo);
+        const match = await generate.matchInfo2CardA2(matchInfo, sid, redWins, blueWins, isTeamVS);
 
         let redArr = [];
         let blueArr = [];
@@ -590,17 +593,18 @@ let generate = {
         };
     },
 
-    matchInfo2CardA2: async (matchInfo) => {
+    matchInfo2CardA2: async (matchInfo, sid, redWins, blueWins, isTeamVs) => {
         return {
-            background: getExportFileV3Path('card-default.png'), //给我他们最后一局的谱面背景即可
+            background: await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/cover.jpg', getExportFileV3Path('card-default.png')), //给我他们最后一局的谱面背景即可
             match_title: matchInfo.name, //比赛标题
-            match_round: 11,
+            match_round: (redWins + blueWins),
             match_time: matchInfo.startTime,//比赛开始到比赛结束。如果跨了一天，需要加24小时
             match_date: matchInfo.endTime,//比赛开始的日期
-            average_star_rating: 5.46,
+            average_star_rating: 'null',
             mpid: matchInfo.id,
-            wins_team_red: 5,
-            wins_team_blue: 6,
+            wins_team_red: redWins,
+            wins_team_blue: blueWins,
+            is_team_vs: isTeamVs,
         };
     },
 
@@ -625,8 +629,8 @@ let generate = {
             player_win: user.wins || 0,
             player_lose: user.lost || 0,
             player_rank: user.index || 0,
-            player_rws: user.rws, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
-            player_mra: user.mra, // 木斗力
+            player_rws: (user.rws * 100) || 0, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+            player_mra: user.mra || 0, // 木斗力
             player_Label_V1: user.playerLabelV1,
             player_Label_V2: user.playerLabelV2,
             //mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
