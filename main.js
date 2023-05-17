@@ -595,14 +595,15 @@ let generate = {
 
     matchInfo2CardA2: async (matchInfo, sid, redWins, blueWins, isTeamVs) => {
         let match_round = redWins + blueWins;
+        const background_path = 'https://assets.ppy.sh/beatmaps/' + sid + '/covers/cover.jpg';
 
         return {
-            background: await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/cover.jpg', getExportFileV3Path('card-default.png')), //给我他们最后一局的谱面背景即可
+            background: await readNetImage(background_path, getExportFileV3Path('card-default.png')), //给我他们最后一局的谱面背景即可
             match_title: matchInfo.name, //比赛标题
             match_round: match_round,
             match_time: matchInfo.startTime,//比赛开始到比赛结束。如果跨了一天，需要加24小时
             match_date: matchInfo.endTime,//比赛开始的日期
-            average_star_rating: 'null',
+            average_star_rating: 0,
             mpid: matchInfo.id,
             wins_team_red: redWins,
             wins_team_blue: blueWins,
@@ -625,16 +626,16 @@ let generate = {
             team: user.team.toLowerCase(),
             team_color: team_color,
             player_name: user.username,
-            player_avatar: await readNetImage(user.userData.avatar_url, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
-            player_banner: await readNetImage(user.userData.cover_url, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
+            player_avatar: await readNetImage(user.userData.avatar.url, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
+            player_banner: await readNetImage(user.userData.cover.url, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
             player_score: user.scores.reduce(function (prev, curr) {
                 return prev + curr;
             }),
-            player_win: user.wins || 0,
-            player_lose: user.lost || 0,
+            player_win: user.wins,
+            player_lose: user.lost,
             player_rank: user.index || 0,
-            player_rws: rws || 0, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
-            player_mra: user.mra || 0, // 木斗力
+            player_rws: rws, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+            player_mra: user.mra, // 木斗力
             player_Label_V1: user.playerLabelV1,
             player_Label_V2: user.playerLabelV2,
             //mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
