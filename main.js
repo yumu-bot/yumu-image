@@ -616,8 +616,8 @@ let generate = {
             team: user.team.toLowerCase(),
             team_color: team_color,
             player_name: user.username,
-            player_avatar: await readNetImage(user.userData.avatarUrl, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
-            player_banner: await readNetImage(user.userData.coverUrl, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
+            player_avatar: await readNetImage(user.userData.avatar_Url, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
+            player_banner: await readNetImage(user.userData.cover_Url, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
             player_score: user.scores.reduce(function (prev, curr) {
                 return prev + curr;
             }),
