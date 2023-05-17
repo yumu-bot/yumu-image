@@ -594,10 +594,12 @@ let generate = {
     },
 
     matchInfo2CardA2: async (matchInfo, sid, redWins, blueWins, isTeamVs) => {
+        let match_round = redWins + blueWins;
+
         return {
             background: await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/cover.jpg', getExportFileV3Path('card-default.png')), //给我他们最后一局的谱面背景即可
             match_title: matchInfo.name, //比赛标题
-            match_round: (redWins + blueWins),
+            match_round: match_round,
             match_time: matchInfo.startTime,//比赛开始到比赛结束。如果跨了一天，需要加24小时
             match_date: matchInfo.endTime,//比赛开始的日期
             average_star_rating: 'null',
@@ -617,6 +619,8 @@ let generate = {
             default: team_color = '#aaa'; break;
         }
 
+        let rws = user.rws * 100;
+
         return {
             team: user.team.toLowerCase(),
             team_color: team_color,
@@ -629,7 +633,7 @@ let generate = {
             player_win: user.wins || 0,
             player_lose: user.lost || 0,
             player_rank: user.index || 0,
-            player_rws: (user.rws * 100) || 0, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+            player_rws: rws || 0, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
             player_mra: user.mra || 0, // 木斗力
             player_Label_V1: user.playerLabelV1,
             player_Label_V2: user.playerLabelV2,

@@ -198,7 +198,7 @@ export async function panel_C(data = {
     if (isTeamVS) {
         right3b = wins_team_red + ' : ' + wins_team_blue;
     } else {
-        right3b = (wins_team_red + wins_team_blue).toString() + 'x';
+        right3b = data.match.match_round + 'x';
     }
 
 
