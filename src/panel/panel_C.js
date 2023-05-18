@@ -32,6 +32,7 @@ export async function panel_C(data = {
     // H卡
     player: {
         red: [{
+            /*
             team: 'red',
             team_color: '#D32F2F',
             player_name: 'na-gi',
@@ -79,57 +80,62 @@ export async function panel_C(data = {
             label_class: '1611 Dust', //玩家分类PRO MRA v3.4 功能
             class_color: '#fff', //部分字体需要显示为黑色
             label_mvp: 'MVP',
+            */
         }],
         blue: [{
-            team: 'blue',
-            team_color: '#00A0E9',
-            player_name: 'Mars New',
-            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
-            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
-            player_score: 371937,
-            player_win: 5,
-            player_lose: 1,
-            player_rank: 4,
-            player_rws: 32.44, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
-            player_mra: 0.97, // 木斗力
-            mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
-            label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
-            class_color: '#fff', //部分字体需要显示为黑色
-            label_mvp: '',
-        }, {
-            team: 'blue',
-            team_color: '#00A0E9',
-            player_name: 'No Rank',
-            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
-            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
-            player_score: 371007,
-            player_win: 5,
-            player_lose: 1,
-            player_rank: 5,
-            player_rws: 32.36, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
-            player_mra: 0.97, // 木斗力
-            mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
-            label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
-            class_color: '#fff', //部分字体需要显示为黑色
-            label_mvp: '',
-        }, {
-            team: 'blue',
-            team_color: '#00A0E9',
-            player_name: 'GreySTrip_VoV',
-            player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
-            player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
-            player_score: 403437,
-            player_win: 5,
-            player_lose: 1,
-            player_rank: 3,
-            player_rws: 35.19, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
-            player_mra: 1.06, // 木斗力
-            mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
-            label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
-            class_color: '#fff', //部分字体需要显示为黑色
-            label_mvp: '',
+            /*
+           team: 'blue',
+           team_color: '#00A0E9',
+           player_name: 'Mars New',
+           player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+           player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
+           player_score: 371937,
+           player_win: 5,
+           player_lose: 1,
+           player_rank: 4,
+           player_rws: 32.44, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+           player_mra: 0.97, // 木斗力
+           mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
+           label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
+           class_color: '#fff', //部分字体需要显示为黑色
+           label_mvp: '',
+       }, {
+           team: 'blue',
+           team_color: '#00A0E9',
+           player_name: 'No Rank',
+           player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+           player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
+           player_score: 371007,
+           player_win: 5,
+           player_lose: 1,
+           player_rank: 5,
+           player_rws: 32.36, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+           player_mra: 0.97, // 木斗力
+           mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
+           label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
+           class_color: '#fff', //部分字体需要显示为黑色
+           label_mvp: '',
+       }, {
+           team: 'blue',
+           team_color: '#00A0E9',
+           player_name: 'GreySTrip_VoV',
+           player_avatar: getExportFileV3Path('PanelObject/I_CardH_Avatar.png'),
+           player_banner: getExportFileV3Path('PanelObject/I_CardH_BG.png'),
+           player_score: 403437,
+           player_win: 5,
+           player_lose: 1,
+           player_rank: 3,
+           player_rws: 35.19, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+           player_mra: 1.06, // 木斗力
+           mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
+           label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
+           class_color: '#fff', //部分字体需要显示为黑色
+           label_mvp: '',
+
+            */
         }],
         none: [{
+            /*
             team: 'none',
             team_color: '#a1a1a1',
             player_name: 'Fushimi Rio',
@@ -145,6 +151,8 @@ export async function panel_C(data = {
             label_class: 'Fia',
             class_color: '#000',
             label_mvp: '',
+
+             */
         }],// 没分队的
     },
 
@@ -175,9 +183,12 @@ export async function panel_C(data = {
 
     // 导入A2卡
     let title, title1, title2;
-    let isTeamVS = data.match.is_team_vs;
+    let isTeamVS = true;
+    if (! data.player.red || !data.player.blue) isTeamVS = false;
 
-    if (isTeamVS){
+    let isContainVS = data.match.match_title.toLowerCase().match('vs')
+
+    if (isContainVS){
         title = getMatchNameSplitted(data.match.match_title);
         title1 = title[0];
         title2 = title[1] + ' vs ' + title[2];
@@ -198,7 +209,7 @@ export async function panel_C(data = {
     if (isTeamVS) {
         right3b = wins_team_red + ' : ' + wins_team_blue;
     } else {
-        right3b = data.match.match_round + 'x';
+        right3b = '-';
     }
 
 
