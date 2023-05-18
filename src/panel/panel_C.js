@@ -184,7 +184,9 @@ export async function panel_C(data = {
     // 导入A2卡
     let title, title1, title2;
     let isTeamVS = true;
-    if (data.player.red === null || data.player.blue === null) isTeamVS = false;
+    if (data.match.wins_team_red <= 0 && data.match.wins_team_blue <= 0) {
+        isTeamVS = false;
+    }
 
     let isContainVS = data.match.match_title.toLowerCase().match('vs')
 
