@@ -358,18 +358,18 @@ export async function panel_C(data = {
         let text_color = '#fff';
 
         switch (v1) {
-            case 'BC': back_color = '#F8F32C'; text_color = '#2A2226'; break;
-            case 'CA': back_color = '#E69820'; break;
-            case 'MF': back_color = '#54A238'; break;
-            case 'SP': back_color = '#B3CF61'; break;
-            case 'WF': back_color = '#3559AD'; break;
-            case 'GE': back_color = '#B6B6B6'; break;
-            case 'GU': back_color = '#5291E3'; break;
-            case 'SU': back_color = '#4F187B'; break;
-            case 'SG': back_color = '#C22C75'; break;
-            case 'NO': back_color = '#CE696F'; break;
-            case 'FU': back_color = '#B23D2F'; break;
-            default: back_color = '#2A2226';
+            case 'BC': back_color = '#FFF100'; text_color = '#382E32'; break;
+            case 'CA': back_color = '#FF9800'; break;
+            case 'MF': back_color = '#22AC38'; break;
+            case 'SP': back_color = '#B3D465'; break;
+            case 'WF': back_color = '#0068B7'; break;
+            case 'GE': back_color = '#BDBDBD'; break;
+            case 'GU': back_color = '#00A0E9'; break;
+            case 'SU': back_color = '#601986'; break;
+            case 'SG': back_color = '#601986'; break;
+            case 'NO': back_color = '#EB6877'; break;
+            case 'FU': back_color = '#D32F2F'; break;
+            default: back_color = '#382E32';
         }
 
         switch (v2) {
