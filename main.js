@@ -592,8 +592,8 @@ let generate = {
             background: await readNetImage(background_path, getExportFileV3Path('card-default.png')), //给我他们最后一局的谱面背景即可
             match_title: matchInfo.name, //比赛标题
             match_round: match_round,
-            match_time: matchInfo.start_time,//比赛开始到比赛结束。如果跨了一天，需要加24小时
-            match_date: matchInfo.end_Time,//比赛开始的日期
+            match_time: matchInfo.startTime,//比赛开始到比赛结束。如果跨了一天，需要加24小时
+            match_date: matchInfo.endTime,//比赛开始的日期
             average_star_rating: 0,
             mpid: matchInfo.id,
             wins_team_red: redWins,
