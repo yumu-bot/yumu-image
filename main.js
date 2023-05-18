@@ -569,7 +569,7 @@ function checkJsonData(req) {
 let generate = {
     user2CardA1: async (user) => {
         const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.cover_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
         return {
             background,
             avatar,
