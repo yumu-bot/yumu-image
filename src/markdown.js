@@ -5,7 +5,17 @@ const page = await browser.newPage();
 
 const path = `${process.cwd()}/template/markDownTemplate/index.html`;
 
-export async function Markdown(md = "", width = 600) {
+export async function router(req, res) {
+    try {
+        const data = await Markdown(req.fields.md || "# Error: no value", req.fields.width || 600);
+        res.set('Content-Type', 'image/png');
+        res.send(data);
+    } catch (e) {
+        res.status(500).send(e.stack);
+    }
+}
+
+async function Markdown(md = "", width = 600) {
 
     await page.setViewport({
         width: width,

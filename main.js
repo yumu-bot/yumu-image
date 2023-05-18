@@ -6,7 +6,7 @@ import {panel_D} from "./src/panel/panel_D.js";
 import {newJudge, panel_E} from "./src/panel/panel_E.js";
 import {panel_J} from "./src/panel/panel_J.js";
 import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
-import {Markdown as MarkDownToImage} from "./src/markdown.js";
+import {router as MarkdownRouter} from "./src/markdown.js";
 
 initPath();
 //这里放测试代码
@@ -518,16 +518,7 @@ app.post('/panel_J', async (req, res) => {
     }
 })
 
-app.post('/md', async (req, res) => {
-
-    try {
-        const data = await MarkDownToImage(req.fields.md || "# Error: no value", req.fields.width || 600);
-        res.set('Content-Type', 'image/png');
-        res.send(data);
-    } catch (e) {
-        res.status(500).send(e.stack);
-    }
-})
+app.post('/md', MarkdownRouter);
 
 app.listen(process.env.PORT, () => {
     console.log(`== Done. ==http://localhost:${process.env.PORT}\n cache path: ${CACHE_PATH}`);
@@ -578,8 +569,8 @@ function checkJsonData(req) {
 let generate = {
     user2CardA1: async (user) => {
         return {
-            background: await readNetImage(user.cover_url, getExportFileV3Path('card-default.png')),
-            avatar: await readNetImage(user.avatar_url, getExportFileV3Path('avatar-guest.png')),
+            background: await readNetImage(user.cover.url, getExportFileV3Path('card-default.png')),
+            avatar: await readNetImage(user.avatar.url, getExportFileV3Path('avatar-guest.png')),
             sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
             sub_icon2: '',
             name: user['username'],
@@ -626,7 +617,7 @@ let generate = {
             team: user.team.toLowerCase(),
             team_color: team_color,
             player_name: user.username,
-            player_avatar: await readNetImage(user.userData.avatar.url, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
+            player_avatar: await readNetImage(user.userData.avatar_url, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
             player_banner: await readNetImage(user.userData.cover.url, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
             player_score: user.scores.reduce(function (prev, curr) {
                 return prev + curr;
