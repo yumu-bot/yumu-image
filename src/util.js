@@ -58,7 +58,7 @@ export function getExportFileV3Path(path = '') {
 
 export async function readNetImage(path = '', defaultImagePath) {
     if (!path.startsWith("http")) {
-        return defaultImagePath || "";
+        return readImage(path) || "";
     }
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
@@ -76,7 +76,7 @@ export async function readNetImage(path = '', defaultImagePath) {
         data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
     } catch (e) {
         console.error("download error", e);
-        return defaultImagePath || getExportFileV3Path('error.png');
+        return await readNetImage(defaultImagePath) || getExportFileV3Path('error.png');
     }
     fs.writeFileSync(bufferPath, data, 'binary');
     return bufferPath;
