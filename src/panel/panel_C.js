@@ -264,10 +264,9 @@ export async function panel_C(data = {
                 tianxuanzhizi = arr2['none'].pop();
             }
 
-            for (let i = 0; i < arr2['none'].length / 2; i++) {
-
+            for (let i = 0; i < arr2['none'].length; i += 2) {
                 for (let j = 0; j < 2; j++) {
-                    await implantCardH(arr2['none'][i], rowSum + i + 1, j + 1, 2, isTeamVS);
+                    await implantCardH(arr2['none'][(i + j)], rowSum + i + 1, j + 1, 2, isTeamVS);
                 }
             }
             rowSum += arr2['none'].length / 2;
