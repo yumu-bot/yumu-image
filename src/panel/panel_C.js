@@ -265,11 +265,9 @@ export async function panel_C(data = {
             }
 
             for (let i = 0; i < arr2['none'].length / 2; i++) {
-                let i2 = 0;
 
                 for (let j = 0; j < 2; j++) {
-                    await implantCardH(arr2['none'][i2], rowSum + i + 1, j + 1, 2);
-                    i2 ++;
+                    await implantCardH(arr2['none'][i], rowSum + i + 1, j + 1, 2);
                 }
             }
             rowSum += arr2['none'].length / 2;
