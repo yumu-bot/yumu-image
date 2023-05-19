@@ -273,14 +273,14 @@ export async function panel_C(data = {
             rowSum += arr2['none'].length / 2;
 
             if (tianxuanzhizi){
-                await implantCardH(tianxuanzhizi, rowSum + 1, 1, 1);
+                await implantCardH(tianxuanzhizi, rowSum + 1, 1, 1, isTeamVS);
                 rowSum ++;
             }
         }
         rowTotal = rowSum;
     }
 
-    async function implantCardH(object, row = 1, column = 1, maxColumn = 2) {
+    async function implantCardH(object, row = 1, column = 1, maxColumn = 2, isVS = true) {
         let x;
         let y;
         let x_base;
@@ -297,14 +297,25 @@ export async function panel_C(data = {
         x = x_base + 940 * (column - 1);
         y = 330 + 150 * (row - 1);
 
-        let left1 = getRoundedNumberLargerStr(object.player_score, 3) +
-            getRoundedNumberSmallerStr(object.player_score, 3) +
-            ' // ' +
-            object.player_win +
-            'W-' + object.player_lose +
-            'L (' +
-            Math.round((object.player_win / (object.player_win + object.player_lose)) * 100) +
-            '%)';
+        let left1;
+
+        if (isVS) {
+            left1 = getRoundedNumberLargerStr(object.player_score, 3) +
+                getRoundedNumberSmallerStr(object.player_score, 3) +
+                ' // ' +
+                object.player_win +
+                'W-' + object.player_lose +
+                'L (' +
+                Math.round((object.player_win / (object.player_win + object.player_lose)) * 100) +
+                '%)';
+        } else {
+            left1 = getRoundedNumberLargerStr(object.player_score, 3) +
+                getRoundedNumberSmallerStr(object.player_score, 3) +
+                ' // ' +
+                object.player_win +
+                'R';
+        }
+
         let left2 = '#' +
             (object.player_rank || 0)+
             ' (' +
