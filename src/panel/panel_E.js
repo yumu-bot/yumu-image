@@ -23,6 +23,7 @@ import {
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
+import moment from "moment";
 
 export async function panel_E(data = {
     // A1卡
@@ -158,6 +159,8 @@ export async function panel_E(data = {
     //color_gamemode: '#7ac943',
     score_categorize: 'perfect', // played, clear, nomiss, perfect // 原叫做 fullcombo
     score_isbest: true, // 是否最高分
+    score_time: '2022-03-14T07:46:47+00:00',
+
     attr: {
         mode: 0,
         version: 14,
@@ -194,8 +197,10 @@ export async function panel_E(data = {
     let reg_index = /(?<=<g id="Index">)/;
 
     // 面板文字
+    const score_time = moment(data.score_time, 'YYYY-MM-DD[T]HH:mm:SSZZ').format("YYYY-MM-DD HH:mm:SS[ +8]");
+
     const index_powered = 'powered by Yumubot v0.3.0 EA // Score (!ymp / !ymr / !yms)';
-    const index_request_time = 'request time: ' + getNowTimeStamp();
+    const index_request_time = 'score time: ' + score_time + ' // request time: ' + getNowTimeStamp();
     const index_panel_name = 'Score';
 
     // 卡片定义
