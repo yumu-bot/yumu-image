@@ -159,7 +159,7 @@ export async function panel_E(data = {
     //color_gamemode: '#7ac943',
     score_categorize: 'perfect', // played, clear, nomiss, perfect // 原叫做 fullcombo
     score_isbest: true, // 是否最高分
-    score_time: '2022-03-14T07:46:47Z',
+    score_time: '2022-03-14T00:46:47Z',
 
     attr: {
         mode: 0,
@@ -197,7 +197,7 @@ export async function panel_E(data = {
     let reg_index = /(?<=<g id="Index">)/;
 
     // 面板文字
-    const score_time = moment(data.score_time + '+00:00', 'YYYY-MM-DD[T]HH:mm:SS[Z]ZZ').format("YYYY-MM-DD HH:mm:SS[ +8]");
+    const score_time = moment(data.score_time, 'YYYY-MM-DD[T]HH:mm:SSZ').format("YYYY-MM-DD HH:mm:SS[ +8]");
 
     const index_powered = 'powered by Yumubot v0.3.0 EA // Score (!ymp / !ymr / !yms)';
     const index_request_time = 'score time: ' + score_time + ' // request time: ' + getNowTimeStamp();
