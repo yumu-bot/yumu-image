@@ -197,7 +197,7 @@ export async function panel_E(data = {
     let reg_index = /(?<=<g id="Index">)/;
 
     // 面板文字
-    const score_time = moment(data.score_time, 'YYYY-MM-DD[T]HH:mm:SSZ').format("YYYY-MM-DD HH:mm:SS[ +8]");
+    const score_time = moment(data.score_time, 'YYYY-MM-DD[T]HH:mm:SS[Z]').utcOffset(-8).format("YYYY-MM-DD HH:mm:SS[ +8]");
 
     const index_powered = 'powered by Yumubot v0.3.0 EA // Score (!ymp / !ymr / !yms)';
     const index_request_time = 'score time: ' + score_time + ' // request time: ' + getNowTimeStamp();
