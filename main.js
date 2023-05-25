@@ -427,7 +427,7 @@ app.post('/panel_E', async (req, res) => {
 
         const score_isbest = (score.best_id !== null);
 
-        const score_time = score.created_at;
+        const score_time = score.created_at; //create_at_str 根本获取不到，我怀疑你bp只做了这个解析，pr或者recent没做，数据都获取不到
 
         const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
         let score_categorize;
