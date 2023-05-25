@@ -196,8 +196,8 @@ export async function panel_E(data = {
 
     let reg_index = /(?<=<g id="Index">)/;
 
-    // 面板文字，这里主程序传过来是错误的utc时间，把utc0视作了utc+8，所以偏移变成了 16 个小时
-    const score_time = moment(data.score_time, 'YYYY-MM-DD[T]HH:mm:SS[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm:SS[ +8]");
+    // 面板文字
+    const score_time = moment(data.score_time, 'YYYY-MM-DD[T]HH:mm:SSZ').utcOffset(8).format("YYYY-MM-DD HH:mm:SS[ +8]");
 
     const index_powered = 'powered by Yumubot v0.3.0 EA // Score (!ymp / !ymr / !yms)';
     const index_request_time = 'score time: ' + score_time + ' // request time: ' + getNowTimeStamp();

@@ -427,7 +427,7 @@ app.post('/panel_E', async (req, res) => {
 
         const score_isbest = (score.best_id !== null);
 
-        const score_time = score.created_at;
+        const score_time = score.created_at_str;
 
         const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
         let score_categorize;
