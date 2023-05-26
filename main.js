@@ -271,15 +271,18 @@ app.post('/panel_E', async (req, res) => {
             case 'o' : {
                 let aim300x = 100;
                 let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_50 + score.statistics.count_miss;
-                let n50 = score.statistics.count_50;
                 let n300 = score.statistics.count_300;
+                let n100 = score.statistics.count_100;
+                let n50 = score.statistics.count_50;
                 let aim50 = Math.ceil(nTotal / 100);
 
                 let isMissed = false;
                 let is50over1p = false;
+                let isNoImperfect = false;
 
                 if (score.statistics.count_miss > 0) isMissed = true;
                 if (n50 * 100 > nTotal) is50over1p = true;
+                if (n50 + n100 === 0) isNoImperfect = true;
 
                 switch (score.rank) {
                     case 'XH' :
@@ -303,8 +306,11 @@ app.post('/panel_E', async (req, res) => {
                         case 'X' : accRemark = 'AP'; break;
                         case 'SH' : accRemark = '>>XH!'; break;
                         case 'S' : accRemark = '>>SS!'; break;
-                        case 'A' : isMissed ? (accRemark = `-x S`) :
-                            (is50over1p ? (accRemark = `-${aim50 - n50} bad`) :
+                        case 'A' : isMissed ?
+                            (isNoImperfect ?
+                                accRemark = `-x SS` : accRemark = `-x S`) :
+                            (is50over1p ?
+                                (accRemark = `-${aim50 - n50} bad`) :
                                 (accRemark = `-${aim300 - n300} S`)); break;
                         case 'B' : accRemark = `-${aim300 - n300} A`; break;
                         case 'C' : accRemark = `-${aim300 - n300} B`; break;
@@ -319,8 +325,12 @@ app.post('/panel_E', async (req, res) => {
                 let aim300x = 100;
                 let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_miss;
                 let n300 = score.statistics.count_300;
+
                 let isMissed = false;
+                let isNoImperfect = false;
+
                 if (score.statistics.count_miss > 0) isMissed = true;
+                if (score.statistics.count_100 === 0) isNoImperfect = true;
 
                 switch (score.rank) {
                     case 'XH' :
@@ -344,7 +354,7 @@ app.post('/panel_E', async (req, res) => {
                         case 'X' : accRemark = 'AP'; break;
                         case 'SH' : accRemark = '>>XH!'; break;
                         case 'S' : accRemark = '>>SS!'; break;
-                        case 'A' : isMissed ? accRemark = `-x S` : accRemark = `-${aim300 - n300} S`; break;
+                        case 'A' : isMissed ? (isNoImperfect ? accRemark = `-x SS` : accRemark = `-x S`) : (accRemark = `-${aim300 - n300} S`); break;
                         case 'B' : accRemark = `-${aim300 - n300} A`; break;
                         case 'C' : accRemark = `-${aim300 - n300} B`; break;
                         case 'D' : accRemark = `-${aim300 - n300} C`; break;
