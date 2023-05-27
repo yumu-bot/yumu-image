@@ -1472,7 +1472,7 @@ export function getMapStatusV3Path(status = 'notsubmitted') {
 
 //获取现在的时间 (UTC+8)
 export function getNowTimeStamp() {
-    return moment().format("YYYY-MM-DD HH:mm:SS[ +8]");
+    return moment().format("YYYY-MM-DD HH:mm:ss[ +8]");
     /*
 const t = new Date;
     t.getFullYear() + '-' +
