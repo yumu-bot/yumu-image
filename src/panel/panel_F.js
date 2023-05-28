@@ -6,13 +6,14 @@ import {
     getRandomBannerPath,
     getStarRatingObject,
     implantImage,
-    implantSvgBody, maximumArrayToFixedLength,
+    implantSvgBody,
     readTemplate,
     replaceText,
     torus
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
+import {getMapAttributes} from "../compute-pp.js";
 
 export async function panel_F (data = {
 
@@ -32,40 +33,20 @@ export async function panel_F (data = {
         is_team_vs: true,// 比赛有哪怕一局不是team vs，都是false
     },
 
-    beatmap: [{
-        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-        title: 'Back to Marie',
-        artist: 'Kumagai Eri(cv.Seto Asami)',
-        mapper: 'Yunomi', //creator
-        difficulty: 'Catharsis',
-        status: 'ranked',
-        bid: 1000684,
-        star_rating: 5.66,
-
-        //这些数据event没有，需要get beatmap attribute
-        cs: 4,
-        ar: 9.2,
-        od: 8.5,
-
-    },{
-        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-        title: 'Crystal Illusion',
-        artist: 'P4KOO',
-        mapper: 'Beomsan', //creator
-        difficulty: 'Down\'s Insane',
-        status: 'ranked',
-        bid: 1674896,
-        star_rating: 5.03,
-
-        //这些数据event没有，需要get beatmap attribute
-        cs: 4,
-        ar: 9,
-        od: 8,
-
-    }],
     // C卡 events
     scores: [{
         statistics: {
+            // 谱面部分参数
+            background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
+            title: 'Back to Marie',
+            artist: 'Kumagai Eri(cv.Seto Asami)',
+            mapper: 'Yunomi', //creator
+            difficulty: 'Catharsis',
+            status: 'ranked',
+            bid: 1000684,
+
+            // 星级,四维在这里算(考虑到dt的影响
+
             is_team_vs: true, // TFF表示平局，当然，这个很少见
             is_team_red_win: false, //如果不是team vs，这个值默认false
             is_team_blue_win: true, //如果不是team vs，这个值默认false
@@ -75,36 +56,38 @@ export async function panel_F (data = {
             wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
             wins_team_blue_before: 4,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
-        red: [{
-            player_name: 'na-gi', //妈的 为什么get match不给用户名啊
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 464277,
-            player_mods: [],
-            player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
-        }, {
-            player_name: '- Rainbow -',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 412096,
-            player_mods: [],
-            player_rank: 2
-        }, {
-            player_name: 'Guozi on osu',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 268397,
-            player_mods: [],
-            player_rank: 6,
-        }],
-        blue: [{
-            player_name: 'Greystrip_VoV',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 403437,
-            player_mods: ['HD'],
-            player_rank: 3,
-        }, {
-            player_name: 'Mars New',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 371937,
-            player_mods: [],
+        red: [
+            {
+                player_name: 'na-gi', //妈的 为什么get match不给用户名啊
+                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+                player_score: 464277,
+                player_mods: [],
+                player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
+            }, {
+                player_name: '- Rainbow -',
+                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+                player_score: 412096,
+                player_mods: [],
+                player_rank: 2
+            }, {
+                player_name: 'Guozi on osu',
+                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+                player_score: 268397,
+                player_mods: [],
+                player_rank: 6,
+            }],
+        blue: [
+            {
+                player_name: 'Greystrip_VoV',
+                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+                player_score: 403437,
+                player_mods: ['HD'],
+                player_rank: 3,
+            }, {
+                player_name: 'Mars New',
+                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+                player_score: 371937,
+                player_mods: [],
             player_rank: 4,
         }, {
             player_name: 'No Rank',
@@ -255,15 +238,26 @@ export async function panel_F (data = {
         svg = implantSvgBody(svg, x, y, card_A2_beatmap_impl, reg_card_a2);
     }
 
-    let beatmap_arr = data.beatmap;
-    let beatmap_nameSpace = Object.keys(beatmap_arr);
-    let beatmap_rowSum = 0; //总共的行数
+    let beatmap_arr = await Promise.all(data.scores.map(async (e) => {
+        const d = e.statistics;
+        const attr = await getMapAttributes(d.bid,)
+        return {
+            background: d.background,
+            title: d.title,
+            artist: d.artist,
+            mapper: d.mapper, //creator
+            difficulty: d.difficulty,
+            status: d.status,
 
-    for (let i = 0; i < beatmap_nameSpace.length; i++) {
-        let beatmap_number = beatmap_nameSpace[i];
-
-        await implantBeatMapCardA2(beatmap_arr[beatmap_number],40,330 + beatmap_rowSum * 250);
-        beatmap_rowSum += 1;
+            bid: d.bid,
+            star_rating: attr.stars,
+            cs: attr.cs,
+            ar: attr.ar,
+            od: attr.od,
+        }
+    }));
+    for (const index in beatmap_arr) {
+        await implantBeatMapCardA2(beatmap_arr[index], 40, 330 + index * 250);
     }
 
 

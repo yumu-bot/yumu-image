@@ -16,6 +16,20 @@ const statistics = {
     mods_int: 0,
 }
 
+export async function getMapAttributes(bid, mods, mode_int = 0) {
+    const osuFilePath = await getOsuFilePath(bid, mode_int, false);
+    const beatMap = new Beatmap({
+        path: osuFilePath,
+    });
+    let calculator = new Calculator({
+        mods: mods,
+    })
+    return {
+        ...calculator.difficulty(beatMap),
+        ...calculator.mapAttributes(beatMap)
+    };
+}
+
 export async function calcPerformancePoints(bid, score = statistics, mode, reload = false) {
     let mode_int;
     if (mode && typeof mode === 'string') {
