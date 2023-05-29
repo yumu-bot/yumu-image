@@ -361,7 +361,7 @@ function getTextWidth_PuHuiTi(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusSB.getMetrics(text, {
+    return textToSVGPuHuiTi.getMetrics(text, {
         x: 0,
         y: 0,
         fontSize: size,
@@ -427,7 +427,7 @@ function getTextMetrics_extra(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTorusSB.getMetrics(text, {
+    return textToSVGextra.getMetrics(text, {
         x: x,
         y: y,
         fontSize: size,
@@ -447,7 +447,7 @@ function getTextMetrics_PuHuiTi(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTorusSB.getMetrics(text, {
+    return textToSVGextra.getMetrics(text, {
         x: x,
         y: y,
         fontSize: size,
@@ -890,6 +890,17 @@ export function getStarRatingColor(SR = 0) {
     }
 
     return color;
+}
+
+
+//获取玩家名次的背景色，给一二三名赋予特殊的颜色
+export function getUserRankColor (rank = 0) {
+    switch (rank) {
+        case 1: return '#B7AA00'; //冠军
+        case 2: return '#A0A0A0'; //亚军
+        case 3: return '#AC6A00'; //季军
+        default: return '#46393f';
+    }
 }
 
 export function getModColor(Mod = '') {

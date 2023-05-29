@@ -1,9 +1,9 @@
 import {
     getExportFileV3Path,
-    getModColor, getModFullName, getModInt,
+    getModColor, getModFullName,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
-    implantImage, implantSvgBody,
+    getRoundedNumberSmallerStr, getUserRankColor,
+    implantImage,
     replaceText,
     torus
 } from "../util.js";
@@ -160,7 +160,6 @@ export async function label_F1(data = {
     score: 268397,
     rank: 6,
     maxWidth: 100,
-    label_color: '#46393f',
 
 }, reuse = false) {
     //导入模板
@@ -214,7 +213,7 @@ export async function label_F1(data = {
     let rank = torus.getTextPath(data.rank.toString() || '0', 15, 15.877, 18, 'center baseline', '#fff');
 
     let label_color = `
-    <rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${data.label_color || '#46393f'};"/>`;
+    <rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${getUserRankColor(data.rank) || '#46393f'};"/>`;
 
     //插入文本
     svg = replaceText(svg, name, reg_text);
@@ -271,7 +270,7 @@ export async function label_F2(data = {
     let rank = torus.getTextPath(data.rank.toString() || '0', 40, 27.877, 14, 'center baseline', '#fff');
 
     let label_color = `
-    <rect x="30" y="16" width="20" height="14" rx="7" ry="7" style="fill: ${data.label_color || '#46393f'};"/>`;
+    <rect x="30" y="16" width="20" height="14" rx="7" ry="7" style="fill: ${getUserRankColor(data.rank) || '#46393f'};"/>`;
 
     //插入文本
     svg = replaceText(svg, name, reg_text);
@@ -354,19 +353,41 @@ export async function label_J2(data = {
     count: 88,
     pp: 1611,
 }, reuse = false) {
-    let svg = `<g id="Mod">\n <path d="m56.357,4.496l11.865,18c2.201,3.339,2.201,7.668,0,11.007l-11.865,18c-1.85,2.807-4.987,4.496-8.349,4.496h-26.142c-3.362,0-6.499-1.689-8.349-4.496L1.651,33.504c-2.201-3.339-2.201-7.668,0-11.007L13.516,4.496C15.366,1.689,18.503,0,21.865,0h26.142c3.362,0,6.499,1.689,8.349,4.496Z" style="fill: ${modcolor};"/>\n </g>\n <g id="Text">\n </g>`;
+    let svg = `  <defs>
+    <clipPath id="clippath-LJ2">
+      <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Head">
+    <circle cx="14" cy="14" r="14" style="fill: ${index_color}）;"/>
+    <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: #46393f;"/>
+    <g style="clip-path: url(#clippath-LJ2);">
+    </g>
+  </g>
+  <g id="Index">
+  </g>
+  <g id="Text">
+  </g>`;
 
     //正则
     let reg_text = /(?<=<g id="Text">)/;
-    let reg_mod = /(?<=<g id="Mod">)/;
-    let reg_avatar = /(?<=<g id="Head">)/;
-    let reg_modcolor = '${modcolor}';
+    let reg_index = /(?<=<g id="Index">)/;
+    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LJ2\);">)/;
+    let reg_index_color = '${index_color}';
 
     //定义文本
-    let index = torus.getTextPath(data.index, 14,  21.836, 24, 'center baseline')
-
+    let index = torus.getTextPath(data.index.toString(), 14,  21.836, 24, 'center baseline', '#fff');
+    let name = torus.getTextPath(data.name,87.867, 21.836, 24,  'left baseline', '#fff');
+    let count = torus.getTextPath(data.count.toString(),87.867, 49.836, 24,  'left baseline', '#aaa');
+    let pp = torus.get2SizeTextPath(data.pp.toString() || '0', 'PP', 30, 18, 248, 76.795, 'right baseline', '#fff')
+    let index_color = getUserRankColor(index);
 
     //插入文本
+    svg = replaceText(svg, index, reg_index);
+    svg = replaceText(svg, name, reg_text);
+    svg = replaceText(svg, count, reg_text);
+    svg = replaceText(svg, pp, reg_text);
+    svg = replaceText(svg, index_color, reg_index_color);
 
     //插入图片
     svg = implantImage(svg, 70, 70, 8, 8, 1,

@@ -297,7 +297,6 @@ export async function card_C (data = {
                 score: object.player_score || '',
                 rank: object.player_rank || '',
                 maxWidth: 100,
-                label_color: getUserRankColor(object.player_rank),
             })
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
     }
@@ -307,7 +306,6 @@ export async function card_C (data = {
             await label_F2({
                 avatar: object.player_avatar,
                 name: object.player_name,
-                label_color: getUserRankColor(object.player_rank),
             })
         svg = implantSvgBody(svg, x, y, label_F2_impl, reg_bodycard);
     }
@@ -324,16 +322,6 @@ export async function card_C (data = {
     function implantScoreBar(color = '#D7D7D7', x, y, w, h) {
         let RRect = `<rect width="${w}" height="${h}" rx="15" ry="15" style="fill: ${color};"/>`
         svg = implantSvgBody(svg, x, y, RRect, reg_scorebar)
-    }
-
-    //获取玩家名次的背景色，给一二三名赋予特殊的颜色
-    function getUserRankColor (rank = 0) {
-        switch (rank) {
-            case 1: return '#B7AA00'; //冠军
-            case 2: return '#A0A0A0'; //亚军
-            case 3: return '#AC6A00'; //季军
-            default: return '#46393f'
-        }
     }
 
     return svg.toString();
