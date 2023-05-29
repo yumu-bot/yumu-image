@@ -310,9 +310,9 @@ app.post('/panel_E', async (req, res) => {
                         case 'A' : isMissed ?
                             (isNoImperfect ? accRemark = `-x SS` : accRemark = `-x S`) :
                             (is50over1p ? (accRemark = `-${aim50 - n50} bad`) : (accRemark = `-${nTotal - n300} SS`)); break;
-                        case 'B' : accRemark = `-${aim300 - n300} A`; break;
-                        case 'C' : accRemark = `-${aim300 - n300} B`; break;
-                        case 'D' : accRemark = `-${aim300 - n300} C`; break;
+                        case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-`); break;
+                        case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-`); break;
+                        case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-`); break;
                         default : accRemark = '-'; break;
                     }
                 }
@@ -353,9 +353,9 @@ app.post('/panel_E', async (req, res) => {
                         case 'SH' : accRemark = '>>XH!'; break;
                         case 'S' : accRemark = '>>SS!'; break;
                         case 'A' : isMissed ? (isNoImperfect ? accRemark = `-x SS` : accRemark = `-${aim300 - n300} S`) : (accRemark = `-${nTotal - n300} SS`); break;
-                        case 'B' : accRemark = `-${aim300 - n300} A`; break;
-                        case 'C' : accRemark = `-${aim300 - n300} B`; break;
-                        case 'D' : accRemark = `-${aim300 - n300} C`; break;
+                        case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`); break;
+                        case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`); break;
+                        case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`); break;
                         default : accRemark = '-'; break;
                     }
                 }
