@@ -15,11 +15,18 @@ import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
 import {getMapAttributes} from "../compute-pp.js";
 
-export async function panel_F (data = {
+export async function router(req, res) {
+    const data = req.fields;
+    const png = await panel_F(data);
+    res.set('Content-Type', 'image/png');
+    res.send(png);
+}
+
+export async function panel_F(data = {
 
     // A2卡
     match: {
-        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'), //给我他们最后一局的谱面背景即可
+        background: "https://assets.ppy.sh/beatmaps/113458/covers/cover.jpg?1650639448", //给我他们最后一局的谱面背景即可
         match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)', //match name
         match_round: 11,
         match_time: '20:25-22:03',//比赛开始到比赛结束。如果跨了一天，需要加24小时 match start_time
@@ -34,16 +41,17 @@ export async function panel_F (data = {
     },
 
     // C卡 events
-    scores: [{
-        statistics: {
-            // 谱面部分参数
-            background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-            title: 'Back to Marie',
-            artist: 'Kumagai Eri(cv.Seto Asami)',
-            mapper: 'Yunomi', //creator
-            difficulty: 'Catharsis',
-            status: 'ranked',
-            bid: 1000684,
+    scores: [
+        {
+            statistics: {
+                // 谱面部分参数
+                background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
+                title: 'Back to Marie',
+                artist: 'Kumagai Eri(cv.Seto Asami)',
+                mapper: 'Yunomi', //creator
+                difficulty: 'Catharsis',
+                status: 'ranked',
+                bid: 1000684,
 
             // 星级,四维在这里算(考虑到dt的影响
 

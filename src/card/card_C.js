@@ -137,15 +137,18 @@ export async function card_C (data = {
     let blue_score_arr = [];
     let none_score_arr = [];
 
-    for (let i = 0; i < data.red.length; i++) {
-        red_score_arr.push(data.red[i].player_score);
-    }
-    for (let i = 0; i < data.blue.length; i++) {
-        blue_score_arr.push(data.blue[i].player_score);
-    }
-    for (let i = 0; i < data.none.length; i++) {
-        none_score_arr.push(data.none[i].player_score);
-    }
+    if (data.red)
+        for (let i = 0; i < data.red.length; i++) {
+            red_score_arr.push(data.red[i].player_score);
+        }
+    if (data.blue)
+        for (let i = 0; i < data.blue.length; i++) {
+            blue_score_arr.push(data.blue[i].player_score);
+        }
+    if (data.none)
+        for (let i = 0; i < data.none.length; i++) {
+            none_score_arr.push(data.none[i].player_score);
+        }
 
     // 计算长度
     let red_width_arr;

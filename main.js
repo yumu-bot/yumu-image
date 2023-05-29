@@ -7,6 +7,7 @@ import {newJudge, panel_E} from "./src/panel/panel_E.js";
 import {panel_J} from "./src/panel/panel_J.js";
 import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
 import {router as MarkdownRouter} from "./src/markdown.js";
+import {router as PanelFRouter} from "./src/panel/panel_F.js";
 
 initPath();
 //这里放测试代码
@@ -532,6 +533,11 @@ app.post('/panel_J', async (req, res) => {
 })
 
 app.post('/md', MarkdownRouter);
+app.post('/panel_F', PanelFRouter);
+
+app.post('/testApi', async (req, res) => {
+    console.log(req.fields)
+})
 
 app.listen(process.env.PORT, () => {
     console.log(`== Done. ==http://localhost:${process.env.PORT}\n cache path: ${CACHE_PATH}`);
