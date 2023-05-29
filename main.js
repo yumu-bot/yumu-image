@@ -308,11 +308,8 @@ app.post('/panel_E', async (req, res) => {
                         case 'SH' : accRemark = '>>XH!'; break;
                         case 'S' : accRemark = '>>SS!'; break;
                         case 'A' : isMissed ?
-                            (isNoImperfect ?
-                                accRemark = `-x SS` : accRemark = `-x S`) :
-                            (is50over1p ?
-                                (accRemark = `-${aim50 - n50} bad`) :
-                                (accRemark = `-${aim300 - n300} S`)); break;
+                            (isNoImperfect ? accRemark = `-x SS` : accRemark = `-x S`) :
+                            (is50over1p ? (accRemark = `-${aim50 - n50} bad`) : (accRemark = `-${nTotal - n300} SS`)); break;
                         case 'B' : accRemark = `-${aim300 - n300} A`; break;
                         case 'C' : accRemark = `-${aim300 - n300} B`; break;
                         case 'D' : accRemark = `-${aim300 - n300} C`; break;
@@ -355,7 +352,7 @@ app.post('/panel_E', async (req, res) => {
                         case 'X' : accRemark = 'AP'; break;
                         case 'SH' : accRemark = '>>XH!'; break;
                         case 'S' : accRemark = '>>SS!'; break;
-                        case 'A' : isMissed ? (isNoImperfect ? accRemark = `-x SS` : accRemark = `-x S`) : (accRemark = `-${aim300 - n300} S`); break;
+                        case 'A' : isMissed ? (isNoImperfect ? accRemark = `-x SS` : accRemark = `-${aim300 - n300} S`) : (accRemark = `-${nTotal - n300} SS`); break;
                         case 'B' : accRemark = `-${aim300 - n300} A`; break;
                         case 'C' : accRemark = `-${aim300 - n300} B`; break;
                         case 'D' : accRemark = `-${aim300 - n300} C`; break;
