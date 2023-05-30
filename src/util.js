@@ -722,7 +722,12 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
                     o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 5);
                     break;
             }
-            return o + unit;
+
+            if (parseInt(o) !== 0) {
+                return o + unit;
+            } else {
+                return unit;
+            };
         }
     }
 
