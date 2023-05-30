@@ -191,7 +191,7 @@ export async function label_F1(data = {
         let x = offset_x + i * 10;
         let mod_color = getModColor(mod);
 
-        if (mod.equals('NF')) return ''; //不画NF的图标，因为没必要
+        if (mod === 'NF') return ''; //不画NF的图标，因为没必要
         return `<circle id="Mod${i}" cx="${x}" cy="90" r="10" style="fill: ${mod_color};"/>`;
     }
 
