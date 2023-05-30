@@ -191,10 +191,11 @@ export async function label_F1(data = {
         let x = offset_x + i * 10;
         let mod_color = getModColor(mod);
 
+        if (mod.equals('NF')) return ''; //不画NF的图标，因为没必要
         return `<circle id="Mod${i}" cx="${x}" cy="90" r="10" style="fill: ${mod_color};"/>`;
     }
 
-    let mods_arr = data.mods_arr ? data.mods_arr : ['']
+    let mods_arr = data.mods_arr || ['']
     let mods_arr_length = mods_arr.length;
 
     mods_arr.forEach((val, i) => {
@@ -205,8 +206,8 @@ export async function label_F1(data = {
     let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
     let name = torus.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
 
-    let score_b = getRoundedNumberLargerStr(data.score || 0, 3);
-    let score_m = getRoundedNumberSmallerStr(data.score || 0, 3);
+    let score_b = getRoundedNumberLargerStr(data.score || 0, 5);
+    let score_m = getRoundedNumberSmallerStr(data.score || 0, 5);
 
     let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', '#fff');
 
