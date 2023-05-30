@@ -62,6 +62,7 @@ export async function card_C (data = {
     let reg_bodycard = /(?<=<g id="BodyCard">)/;
     let reg_redpoint = /(?<=<g id="RedPoint">)/;
     let reg_bluepoint = /(?<=<g id="BluePoint">)/;
+    let reg_getpoint = /(?<=<<g id="GetPoint">)/;
     let reg_scorebar = /(?<=<g id="ScoreBar">)/;
     let reg_backcolor = '${backcolor}';
 
@@ -104,13 +105,13 @@ export async function card_C (data = {
             svg = replaceText(svg, red_color_list[0], reg_backcolor);
             red_font = torus;
             blue_font = torusRegular;
-            svg = implantSvgBody(svg, 30 + 16 * Math.max(data.statistics.wins_team_red_before - 1, 0),176, red_point_plus, reg_redpoint);
+            svg = implantSvgBody(svg, 30 + 16 * Math.max(data.statistics.wins_team_red_before - 1, 0),176, red_point_plus, reg_getpoint);
 
         } else if (data.statistics.is_team_blue_win) {
             svg = replaceText(svg, blue_color_list[0], reg_backcolor);
             red_font = torusRegular;
             blue_font = torus;
-            svg = implantSvgBody(svg, 1338 - 16 * Math.max(data.statistics.wins_team_blue_before - 1, 0),176, blue_point_plus, reg_bluepoint);
+            svg = implantSvgBody(svg, 1338 - 16 * Math.max(data.statistics.wins_team_blue_before - 1, 0),176, blue_point_plus, reg_getpoint);
 
         } else {
             red_font = torusRegular;
