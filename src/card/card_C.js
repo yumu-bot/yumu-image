@@ -271,7 +271,7 @@ export async function card_C (data = {
         let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, 400), 930);
         let team_score_calc = team_score;
 
-        for (let i of team_score_arr) {
+        for (const i of team_score_arr) {
             if ((i / total_score * 1330) < 100) {
                 team_width_arr.push(100);
                 team_width_calc -= 100;

@@ -3,7 +3,7 @@ import {
     getExportFileV3Path,
     getMatchNameSplitted,
     getNowTimeStamp,
-    getRandomBannerPath,
+    getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     getStarRatingObject,
     implantImage,
     implantSvgBody,
@@ -161,11 +161,6 @@ export async function panel_F(data = {
         }]
     }],
 
-    // 面板文字
-    index_powered: 'powered by Yumubot v0.3.0 EA // Match Monitor Now (!ymmn)',
-    index_request_time: 'request time: ' + getNowTimeStamp(),
-    index_panel_name: 'MN v3.6',
-
 }, reuse = false) {
     // 导入模板
     let svg = readTemplate('template/Panel_F.svg');
@@ -178,20 +173,24 @@ export async function panel_F(data = {
     let reg_card_c = /(?<=<g id="CardC">)/;
     let reg_card_a2 = /(?<=<g id="CardA2">)/;
 
+    // 面板文字
+    const index_powered = 'powered by Yumubot v0.3.0 EA // Match Monitor Now (!ymmn)';
+    const index_request_time = 'request time: ' + getNowTimeStamp();
+    const index_panel_name = 'M.Now';
 
-    // 文字定义
-    let index_powered = torus.getTextPath(data.index_powered,
+    const index_powered_path = torus.getTextPath(index_powered,
         10, 26.84, 24, "left baseline", "#fff");
-    let index_request_time = torus.getTextPath(data.index_request_time,
+    const index_request_time_path = torus.getTextPath(index_request_time,
         1910, 26.84, 24, "right baseline", "#fff");
-    let index_panel_name = torus.getTextPath(data.index_panel_name,
+    const index_panel_name_path = torus.getTextPath(index_panel_name,
         607.5, 83.67, 48, "center baseline", "#fff");
 
+    // 文字定义
 
     // 插入主面板的文字
-    svg = replaceText(svg, index_powered, reg_index);
-    svg = replaceText(svg, index_request_time, reg_index);
-    svg = replaceText(svg, index_panel_name, reg_index);
+    svg = replaceText(svg, index_powered_path, reg_index);
+    svg = replaceText(svg, index_request_time_path, reg_index);
+    svg = replaceText(svg, index_panel_name_path, reg_index);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
@@ -249,6 +248,10 @@ export async function panel_F(data = {
     let beatmap_arr = await Promise.all(data.scores.map(async (e) => {
         const d = e.statistics;
         const attr = await getMapAttributes(d.bid,)
+        const cs = getRoundedNumberLargerStr(attr.cs, 2) + getRoundedNumberSmallerStr(attr.cs, 2);
+        const ar = getRoundedNumberLargerStr(attr.ar, 2) + getRoundedNumberSmallerStr(attr.ar, 2);
+        const od = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
+
         return {
             background: d.background,
             title: d.title,
@@ -259,15 +262,19 @@ export async function panel_F(data = {
 
             bid: d.bid,
             star_rating: attr.stars,
-            cs: attr.cs,
-            ar: attr.ar,
-            od: attr.od,
+            cs: cs,
+            ar: ar,
+            od: od,
         }
     }));
+
+    //导入谱面卡的同时计算面板高度
+    let panel_height = 330;
     for (const index in beatmap_arr) {
         await implantBeatMapCardA2(beatmap_arr[index], 40, 330 + index * 250);
+        panel_height += 250;
     }
-
+    svg = replaceText(svg, panel_height, reg_height);
 
     // 导入比赛简介卡（A2卡
     let background = data.match.background;
