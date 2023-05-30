@@ -506,7 +506,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
         case 2:
         case 3:
         case 4: return f2_4(); break;
-        case 5:
+        case 5: return f5(); break;
     }
 
     function f_1() {
@@ -568,7 +568,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
 
     //旧 level
     function f2_4() {
-        while (number >= 1000 || number <= -1000) {
+        while (Math.abs(number) >= 1000) {
             number /= 1000;
         }
 
@@ -586,7 +586,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
     }
 
     function f5() {
-        while (number >= 10000 || number <= -10000) {
+        while (Math.abs(number) >= 10000) {
             number /= 10000;
         }
 
