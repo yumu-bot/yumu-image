@@ -167,6 +167,7 @@ export async function panel_F(data = {
 
     // 路径定义
     let reg_height = '${height}'
+    let reg_panelheight = '${panelheight}'
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PF-1\);">)/;
@@ -268,13 +269,16 @@ export async function panel_F(data = {
         }
     }));
 
-    //导入谱面卡的同时计算面板高度
+    //导入谱面卡的同时计算面板高度和背景高度
     let panel_height = 330;
+    let background_height = 40;
     for (const index in beatmap_arr) {
         await implantBeatMapCardA2(beatmap_arr[index], 40, 330 + index * 250);
         panel_height += 250;
+        background_height += 250;
     }
-    svg = replaceText(svg, panel_height, reg_height);
+    svg = replaceText(svg, panel_height, reg_panelheight);
+    svg = replaceText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
     let background = data.match.background;
