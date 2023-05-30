@@ -62,7 +62,7 @@ export async function card_C (data = {
     let reg_bodycard = /(?<=<g id="BodyCard">)/;
     let reg_redpoint = /(?<=<g id="RedPoint">)/;
     let reg_bluepoint = /(?<=<g id="BluePoint">)/;
-    let reg_pluspoint = /(?<=<<g id="PlusPoint">)/;
+    let reg_pluspoint = /(?<=<g id="PlusPoint">)/;
     let reg_scorebar = /(?<=<g id="ScoreBar">)/;
     let reg_backcolor = '${backcolor}';
 
