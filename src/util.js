@@ -439,7 +439,7 @@ function getTextMetrics_extra(
     })
 }
 
-function getTextMetrics_PuHuiTi(
+async function getTextMetrics_PuHuiTi(
     text = '',
     x = 0,
     y = 0,
@@ -447,7 +447,7 @@ function getTextMetrics_PuHuiTi(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTorusSB.getMetrics(text, {
+    return await textToSVGTorusSB.getMetrics(text, {
         x: x,
         y: y,
         fontSize: size,
@@ -456,7 +456,7 @@ function getTextMetrics_PuHuiTi(
         attributes: {
             fill: fill
         }
-    })
+    });
 }
 
 
