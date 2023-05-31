@@ -190,6 +190,7 @@ export async function card_C (data = {
         let push; //正数表示从大到小取值
         let isReverse; //下面的分数矩形是否该反向渲染，只有蓝色矩形是右对齐
         let colorList;
+        let isWin;
 
         //获取赋值方向和初始坐标
         switch (team.toLowerCase()) {
@@ -200,6 +201,7 @@ export async function card_C (data = {
                 startAssign = teamScoreArr.length - 1;
                 startX = 1360; //teamWidthArr ? 1360 - teamWidthArr.reduce(function (sum, value) { return sum + value; }) : 1360;
                 colorList = blue_color_list;
+                isWin = data.statistics.is_team_blue_win;
                 break;
             case 'red':
                 direction = 1;
@@ -208,6 +210,7 @@ export async function card_C (data = {
                 startAssign = teamScoreArr.length - 1;
                 startX = 20;
                 colorList = red_color_list;
+                isWin = data.statistics.is_team_red_win;
                 break;
             default:
                 direction = 1;
@@ -216,6 +219,7 @@ export async function card_C (data = {
                 startAssign = 0;
                 startX = 20;
                 colorList = none_color_list;
+                isWin = true;
                 break;
         }
 
@@ -230,13 +234,6 @@ export async function card_C (data = {
 
             // 画F标签
             if (data[`${team}`]) {
-                let isWin;
-                if (team !== "none") {
-                    isWin = data[`is_team_${team}_win`];
-                } else {
-                    isWin = true;
-                }
-
                 await implantRoundLabelF1(
                     data[`${team}`][j],
                     calculateX + (width * direction / 2 - 50),
@@ -297,7 +294,7 @@ export async function card_C (data = {
 
     // 插入F1 - F3标签的功能函数
 
-    async function implantRoundLabelF1 (object, x, y, isWin = true) {
+    async function implantRoundLabelF1 (object, x, y, isWin) {
         let label_F1_impl =
             await label_F1({
                 avatar: object.player_avatar || '',
