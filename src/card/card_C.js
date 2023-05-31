@@ -273,13 +273,13 @@ export async function card_C (data = {
         let team_score_calc = team_score;
 
         for (const i of team_score_arr) {
-            if ((i / total_score * 1330) < 100) {
+            let width = team_width_calc * i / team_score_calc
+            if (width < 100) {
                 team_width_arr.push(100);
                 team_width_calc -= 100;
                 team_score_calc -= i;
             } else {
-                let i2 = team_width_calc * i / team_score_calc;
-                team_width_arr.push(i2);
+                team_width_arr.push(width);
             }
         }
 
