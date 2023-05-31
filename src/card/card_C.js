@@ -230,10 +230,18 @@ export async function card_C (data = {
 
             // 画F标签
             if (data[`${team}`]) {
+                let isWin;
+                if (team !== "none") {
+                    isWin = data[`is_team_${team}_win`];
+                } else {
+                    isWin = true;
+                }
+
                 await implantRoundLabelF1(
                     data[`${team}`][j],
                     calculateX + (width * direction / 2 - 50),
-                    startY - 130);
+                    startY - 130,
+                    isWin);
             }
 
             //画矩形
@@ -289,7 +297,7 @@ export async function card_C (data = {
 
     // 插入F1 - F3标签的功能函数
 
-    async function implantRoundLabelF1 (object, x, y) {
+    async function implantRoundLabelF1 (object, x, y, isWin = true) {
         let label_F1_impl =
             await label_F1({
                 avatar: object.player_avatar || '',
@@ -298,6 +306,7 @@ export async function card_C (data = {
                 score: object.player_score || '',
                 rank: object.player_rank || '',
                 maxWidth: 100,
+                isWin: isWin,
             })
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
     }

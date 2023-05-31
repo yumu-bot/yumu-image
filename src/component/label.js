@@ -160,6 +160,7 @@ export async function label_F1(data = {
     score: 268397,
     rank: 6,
     maxWidth: 100,
+    isWin: true,
 
 }, reuse = false) {
     //导入模板
@@ -222,8 +223,12 @@ export async function label_F1(data = {
     svg = replaceText(svg, rank, reg_text);
     svg = replaceText(svg, label_color, reg_label);
 
-    //插入图片
-    svg = implantImage(svg, 100, 100, 0, 0, 1, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+    //插入图片，如果输了就变灰
+    let isWin = data.isWin;
+    let opa = 1;
+    if (!isWin) opa = 0.6;
+
+    svg = implantImage(svg, 100, 100, 0, 0, opa, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
 
     return svg.toString();
 }
