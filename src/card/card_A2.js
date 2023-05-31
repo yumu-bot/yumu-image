@@ -47,7 +47,7 @@ export async function card_A2(data = {
 
     let title_maxWidth = 390;
 
-    let right3_width = title_font.getTextWidth(data.right3b, 60) + title_font.getTextWidth(data.right3m, 48);
+    let right3_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
     let left_maxWidth = 390 - right3_width;
 
     // 文字定义
@@ -62,7 +62,9 @@ export async function card_A2(data = {
         title_font.cutStringTail(data.title3, 24, title_maxWidth),
         20, 107.4, 24, 'left baseline', '#fff');
 
-    let left1 = torus.getTextPath(data.left1, 20, 140.836, 24, 'left baseline', '#fff');
+    let left1 = torus.getTextPath(
+        torus.cutStringTail(data.left1, 20, left_maxWidth),
+        20, 140.836, 24, 'left baseline', '#fff');
     let left2 = torus.getTextPath(
         torus.cutStringTail(data.left2, 20, left_maxWidth),
         20, 165.836, 24, 'left baseline', '#fff');
@@ -79,7 +81,7 @@ export async function card_A2(data = {
 
     // 插入谱面状态
     let status = getMapStatusV3Path(data.map_status || '');
-    let background = data.background || getExportFileV3Path('PanelObject/A_CardA1_BG.png');
+    let background = data.background || getExportFileV3Path('beatmap-DLfailBG.jpg');
 
     svg = implantImage(svg,430,210,0,0,0.5, background, reg_background);
     svg = data.map_status ? implantImage(svg,50,50,370,10,1, status, reg_top_icons) : svg;

@@ -211,7 +211,7 @@ export async function panel_F(data = {
     // 导入谱面卡(A2卡
     async function implantBeatMapCardA2(object, x, y) {
 
-        let background = object.background;
+        let background = object.background || getExportFileV3Path('beatmap-DLfailBG.jpg');
         let title1 = object.title || 'Unknown Title';
         let title2 = object.artist || 'Unknown Artist';
         let title3 = object.mapper || 'God Made This';
@@ -254,7 +254,7 @@ export async function panel_F(data = {
         const od = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
 
         return {
-            background: d.background,
+            background: d.background || getExportFileV3Path('beatmap-DLfailBG.jpg'),
             title: d.title,
             artist: d.artist,
             mapper: d.mapper, //creator
