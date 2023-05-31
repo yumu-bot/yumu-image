@@ -62,6 +62,7 @@ export async function card_C (data = {
     let reg_bodycard = /(?<=<g id="BodyCard">)/;
     let reg_redpoint = /(?<=<g id="RedPoint">)/;
     let reg_bluepoint = /(?<=<g id="BluePoint">)/;
+    let reg_pluspoint = /(?<=<g id="PlusPoint">)/;
     let reg_scorebar = /(?<=<g id="ScoreBar">)/;
     let reg_backcolor = '${backcolor}';
 
@@ -104,13 +105,13 @@ export async function card_C (data = {
             svg = replaceText(svg, red_color_list[0], reg_backcolor);
             red_font = torus;
             blue_font = torusRegular;
-            svg = implantSvgBody(svg, 30 + 16 * data.statistics.wins_team_red_before,176, red_point_plus, reg_redpoint);
+            svg = implantSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0),176, red_point_plus, reg_pluspoint);
 
         } else if (data.statistics.is_team_blue_win) {
             svg = replaceText(svg, blue_color_list[0], reg_backcolor);
             red_font = torusRegular;
             blue_font = torus;
-            svg = implantSvgBody(svg, 1338 - 16 * data.statistics.wins_team_blue_before,176, blue_point_plus, reg_bluepoint);
+            svg = implantSvgBody(svg, 1338 - 16 * Math.max((data.statistics.wins_team_blue_before - 1), 0),176, blue_point_plus, reg_pluspoint);
 
         } else {
             red_font = torusRegular;
@@ -118,9 +119,9 @@ export async function card_C (data = {
             svg = replaceText(svg, '', reg_backcolor);
         }
 
-        let red_text = red_font.getTextPath(red_score.toString(), mid_x - 5, 196.836, 24, 'right baseline', '#fff');
-        let blue_text = blue_font.getTextPath(blue_score.toString(), mid_x + 5, 196.836, 24, 'left baseline', '#fff');
-        let delta_text = torus.getTextPath(delta_score.toString(), mid_x, 132.877, 18, 'center baseline', '#fff');
+        let red_text = (red_score !== 0) ? red_font.getTextPath(red_score.toString(), mid_x - 5, 196.836, 24, 'right baseline', '#fff') : '';
+        let blue_text = (blue_score !== 0) ? blue_font.getTextPath(blue_score.toString(), mid_x + 5, 196.836, 24, 'left baseline', '#fff') : '';
+        let delta_text = (delta_score !== 0) ? torus.getTextPath(delta_score.toString(), mid_x, 132.877, 18, 'center baseline', '#fff') : '';
 
         svg = replaceText(svg, red_text, reg_text);
         svg = replaceText(svg, blue_text, reg_text);
@@ -271,7 +272,7 @@ export async function card_C (data = {
         let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, 400), 930);
         let team_score_calc = team_score;
 
-        for (let i of team_score_arr) {
+        for (const i of team_score_arr) {
             if ((i / total_score * 1330) < 100) {
                 team_width_arr.push(100);
                 team_width_calc -= 100;
@@ -297,7 +298,6 @@ export async function card_C (data = {
                 score: object.player_score || '',
                 rank: object.player_rank || '',
                 maxWidth: 100,
-                label_color: getUserRankColor(object.player_rank),
             })
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
     }
@@ -307,7 +307,6 @@ export async function card_C (data = {
             await label_F2({
                 avatar: object.player_avatar,
                 name: object.player_name,
-                label_color: getUserRankColor(object.player_rank),
             })
         svg = implantSvgBody(svg, x, y, label_F2_impl, reg_bodycard);
     }
@@ -324,16 +323,6 @@ export async function card_C (data = {
     function implantScoreBar(color = '#D7D7D7', x, y, w, h) {
         let RRect = `<rect width="${w}" height="${h}" rx="15" ry="15" style="fill: ${color};"/>`
         svg = implantSvgBody(svg, x, y, RRect, reg_scorebar)
-    }
-
-    //获取玩家名次的背景色，给一二三名赋予特殊的颜色
-    function getUserRankColor (rank = 0) {
-        switch (rank) {
-            case 1: return '#B7AA00'; //冠军
-            case 2: return '#A0A0A0'; //亚军
-            case 3: return '#AC6A00'; //季军
-            default: return '#46393f'
-        }
     }
 
     return svg.toString();

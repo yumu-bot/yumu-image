@@ -311,15 +311,12 @@ app.post('/panel_E', async (req, res) => {
                         case 'SH' : accRemark = '>>XH!'; break;
                         case 'S' : accRemark = '>>SS!'; break;
                         case 'A' : isMissed ?
-                            (isNoImperfect ?
-                                accRemark = `-x SS` : accRemark = `-x S`) :
-                            (is50over1p ?
-                                (accRemark = `-${aim50 - n50} bad`) :
-                                (accRemark = `-${aim300 - n300} S`)); break;
-                        case 'B' : accRemark = `-${aim300 - n300} A`; break;
-                        case 'C' : accRemark = `-${aim300 - n300} B`; break;
-                        case 'D' : accRemark = `-${aim300 - n300} C`; break;
-                        default : accRemark = '-'; break;
+                            (isNoImperfect ? accRemark = `-x SS` : accRemark = `-x S`) :
+                            (is50over1p ? (accRemark = `-${aim50 - n50} bad`) : (accRemark = `-${nTotal - n300} SS`)); break;
+                        case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-`); break;
+                        case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-`); break;
+                        case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-`); break;
+                        default : accRemark = 'fail..'; break;
                     }
                 }
 
@@ -358,11 +355,11 @@ app.post('/panel_E', async (req, res) => {
                         case 'X' : accRemark = 'AP'; break;
                         case 'SH' : accRemark = '>>XH!'; break;
                         case 'S' : accRemark = '>>SS!'; break;
-                        case 'A' : isMissed ? (isNoImperfect ? accRemark = `-x SS` : accRemark = `-x S`) : (accRemark = `-${aim300 - n300} S`); break;
-                        case 'B' : accRemark = `-${aim300 - n300} A`; break;
-                        case 'C' : accRemark = `-${aim300 - n300} B`; break;
-                        case 'D' : accRemark = `-${aim300 - n300} C`; break;
-                        default : accRemark = '-'; break;
+                        case 'A' : isMissed ? (isNoImperfect ? accRemark = `-x SS` : accRemark = `-${aim300 - n300} S`) : (accRemark = `-${nTotal - n300} SS`); break;
+                        case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`); break;
+                        case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`); break;
+                        case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`); break;
+                        default : accRemark = 'fail..'; break;
                     }
                 }
 
@@ -380,7 +377,7 @@ app.post('/panel_E', async (req, res) => {
                     case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(2)}%`; break;
                     case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(2)}%`; break;
                     case 'D' : accRemark = `-${(85 - score.accuracy * 100).toFixed(2)}%`; break;
-                    default : accRemark = '-'; break;
+                    default : accRemark = 'fail..'; break;
                 }
 
             } break;
@@ -393,7 +390,7 @@ app.post('/panel_E', async (req, res) => {
                 }
             } break;
 
-            default : accRemark = '-'; break;
+            default : accRemark = 'fail..'; break;
         }
 
         let roundacc = Math.round(score.accuracy * 10000) / 100

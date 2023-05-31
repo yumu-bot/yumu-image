@@ -361,7 +361,7 @@ function getTextWidth_PuHuiTi(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusSB.getMetrics(text, {
+    return textToSVGPuHuiTi.getMetrics(text, {
         x: 0,
         y: 0,
         fontSize: size,
@@ -427,7 +427,7 @@ function getTextMetrics_extra(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTorusSB.getMetrics(text, {
+    return textToSVGextra.getMetrics(text, {
         x: x,
         y: y,
         fontSize: size,
@@ -447,7 +447,7 @@ async function getTextMetrics_PuHuiTi(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return await textToSVGTorusSB.getMetrics(text, {
+    return await textToSVGextra.getMetrics(text, {
         x: x,
         y: y,
         fontSize: size,
@@ -489,6 +489,7 @@ ${svgBody}
  * @return {String} 返回大数字的字符串
  * @param number 数字
  * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
+ * lv5是保留两位数，但是是为了比赛特殊设置的，进位使用了万-亿的设置
  * lv4是保留四位数 945671 -> 945.6710K
  * lv3是保留两位数,945671 -> 945.67K
  * lv2是保留一位数
@@ -497,33 +498,18 @@ ${svgBody}
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  */
 export function getRoundedNumberLargerStr(number = 0, level = 0) {
-    let o;
 
-    const SpecialRoundedLargeNum = (number) => {
-        let p = 0;
-
-        if (number <= Math.pow(10, 8)) {
-            p = 4; //5671 1234 -> 5671
-
-        } else if (number <= Math.pow(10, 12)) {
-            p = 8; //794 5671 1234 -> 794
-
-        } else if (number <= Math.pow(10, 16)) {
-            p = 12; //794 5671 1234 0000 -> 794
-
-        } else {
-            return '';
-        }
-        let re = Math.floor(number / Math.pow(10, p));
-
-        if (re === 0) {
-            return ''
-        } else {
-            return re.toString()
-        }
+    switch (level) {
+        case -1: return f_1(); break;
+        case 0: return f0(); break;
+        case 1: return f1(); break;
+        case 2:
+        case 3:
+        case 4: return f2_4(); break;
+        case 5: return f5(); break;
     }
 
-    if (level === -1) {
+    function f_1() {
         if (number <= Math.pow(10, 7)) {
             return number.toString().padStart(7, '0').slice(0, -4);// 4 5671 -> 004
 
@@ -532,7 +518,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
         }
     }
 
-    if (level === 0) {
+    function f0() {
         if (number <= Math.pow(10, 4)) {
             return Math.floor(number).toString()
 
@@ -542,26 +528,12 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
     }
 
 
-    //旧 level
+    function f1() {
+        let o;
+        let s0 = '0.';
+        let s1 = number.toString().slice(0, 1) + '.';
+        let s2 = number.toString().slice(0, 2);
 
-    if (level === 2 || level === 3 || level === 4) {
-        while (number >= 1000 || number <= -1000) {
-            number /= 1000;
-        }
-    }
-
-    //如果小数太小，可不要小数点
-    if (number - Math.floor(number) >= 0.0001) {
-        o = Math.floor(number).toString() + '.';
-    } else {
-        o = Math.floor(number).toString();
-    }
-
-    let s0 = '0.';
-    let s1 = number.toString().slice(0, 1) + '.';
-    let s2 = number.toString().slice(0, 2);
-
-    if (level === 1) {
         if (number < Math.pow(10, 3)) {
             o = Math.floor(number).toString();
         } else if (number < Math.pow(10, 4)) {
@@ -591,87 +563,109 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
         } else if (number < Math.pow(10, 16)) {
             o = s1;
         } else o = Math.floor(number).toString();
+        return o;
     }
-    return o;
+
+    //旧 level
+    function f2_4() {
+        while (Math.abs(number) >= 1000) {
+            number /= 1000;
+        }
+
+        //如果小数太小，可不要小数点
+        let o;
+        let b = 0.1;//boundary
+        if (level === 3) b = 0.01;
+        if (level === 4) b = 0.0001;
+        if (Math.abs(number - Math.floor(number)) >= b) {
+            o = Math.floor(number).toString() + '.';
+        } else {
+            o = Math.floor(number).toString();
+        }
+        return o;
+    }
+
+    function f5() {
+        while (Math.abs(number) >= 10000) {
+            number /= 10000;
+        }
+
+        //如果小数太小，可不要小数点
+        let o;
+        if (Math.abs(number - Math.floor(number)) >= 0.01) {
+            o = Math.floor(number).toString() + '.';
+        } else {
+            o = Math.floor(number).toString();
+        }
+        return o;
+    }
+
+    function SpecialRoundedLargeNum (number) {
+        let p = 0;
+
+        if (number <= Math.pow(10, 8)) {
+            p = 4; //5671 1234 -> 5671
+
+        } else if (number <= Math.pow(10, 12)) {
+            p = 8; //794 5671 1234 -> 794
+
+        } else if (number <= Math.pow(10, 16)) {
+            p = 12; //794 5671 1234 0000 -> 794
+
+        } else {
+            return '';
+        }
+        let re = Math.floor(number / Math.pow(10, p));
+
+        if (re === 0) {
+            return ''
+        } else {
+            return re.toString()
+        }
+    }
+
 }
 
 /**
  * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
  * @return {String} 返回小数字的字符串
  * @param number 数字
- * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
+ * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4, 5 注意配套使用
  */
 export function getRoundedNumberSmallerStr(number = 0, level = 0) {
-    let o;
 
-    const SpecialRoundedSmallNum = (number) => {
-        let s = 0;
-
-        if (number < Math.pow(10, 8)) {
-            s = -4; //5671 1234 -> 1234
-
-        } else if (number < Math.pow(10, 12)) {
-            s = -8; //794 5671 1234 -> 5671 1234
-
-        } else if (number < Math.pow(10, 16)) {
-            s = -12; //794 5671 1234 0000 -> 5671 1234 0000
-
-        } else if (number < Math.pow(10, 20)) {
-            s = -16;
-
-        }
-
-        o = number.toString().slice(s);
-        return o;
-
+    switch (level) {
+        case -1: return f_1(); break;
+        case 0: return f0(); break;
+        case 1: return f1(); break;
+        case 2:
+        case 3:
+        case 4: return f2_4(); break;
+        case 5: return f5(); break;
     }
 
-    if (level === -1) {
+    function f_1 () {
         if (number <= Math.pow(10, 4)) {
             return number.toString().padStart(4, '0');// 000 0671 -> 0671
-
         } else {
             return SpecialRoundedSmallNum(number);
-
         }
     }
 
-    if (level === 0) {
+    function f0 () {
         if (number <= Math.pow(10, 4)) {
             return ''
         } else {
             return SpecialRoundedSmallNum(number);
-
         }
     }
 
-    //旧 level
+    function f1 () {
+        let o;
+        let unit = getRoundedNumberUnit(number, level);
+        let s0 = Math.floor(number).toString().slice(0, 1);
+        let s1 = Math.floor(number).toString().slice(1, 2);
 
-    let unit = getRoundedNumberUnit(number, level)
-
-    if (level === 2 || level === 3 || level === 4) {
-        while (number >= 1000 || number <= -1000) {
-            number /= 1000;
-        }
-        let numStr = number.toString();
-
-        if (numStr.indexOf('.') === -1) {
-            return unit;
-        } else {
-            switch (level) {
-                case 2: o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 2); break;
-                case 3: o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 3); break;
-                case 4: o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 5); break;
-                default: return unit;
-            }
-            return o + unit;
-        }
-    }
-
-    let s0 = Math.floor(number).toString().slice(0, 1);
-    let s1 = Math.floor(number).toString().slice(1, 2);
-
-    if (level === 1) {
         if (number < Math.pow(10, 3)) {
             o = unit;
         } else if (number < Math.pow(10, 4)) {
@@ -701,8 +695,78 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         } else if (number < Math.pow(10, 16)) {
             o = s1 + unit;
         } else o = '';
+        return o;
     }
-    return o;
+
+    //旧 level
+
+    function f2_4 () {
+        let o;
+        let unit = getRoundedNumberUnit(number, level);
+        while (number >= 1000 || number <= -1000) {
+            number /= 1000;
+        }
+        let numStr = number.toString();
+
+        if (numStr.indexOf('.') === -1) {
+            return unit;
+        } else {
+            switch (level) {
+                case 2:
+                    o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 2);
+                    break;
+                case 3:
+                    o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 3);
+                    break;
+                case 4:
+                    o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 5);
+                    break;
+            }
+
+            if (parseInt(o) !== 0) {
+                return o + unit;
+            } else {
+                return unit;
+            };
+        }
+    }
+
+    function f5 () {
+        let o;
+        let unit = getRoundedNumberUnit(number, level);
+        while (number >= 10000 || number <= -10000) {
+            number /= 10000;
+        }
+        let numStr = number.toString();
+
+        if (numStr.indexOf('.') === -1) {
+            return unit;
+        } else {
+            o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 3);
+        }
+        return o + unit;
+    }
+
+    function SpecialRoundedSmallNum (number) {
+        let s = 0;
+        let o;
+
+        if (number < Math.pow(10, 8)) {
+            s = -4; //5671 1234 -> 1234
+
+        } else if (number < Math.pow(10, 12)) {
+            s = -8; //794 5671 1234 -> 5671 1234
+
+        } else if (number < Math.pow(10, 16)) {
+            s = -12; //794 5671 1234 0000 -> 5671 1234 0000
+
+        } else if (number < Math.pow(10, 20)) {
+            s = -16;
+
+        }
+        o = number.toString().slice(s);
+        return o;
+    }
 }
 
 //只给 level 1, 2, 3, 4 提供单位
@@ -710,7 +774,15 @@ function getRoundedNumberUnit(number = 0, level = 0) {
     let unit;
     let m = 3;
 
-    if (level === 2 || level === 3 || level === 4) {
+    switch (level) {
+        case 1: return f1(); break;
+        case 2:
+        case 3:
+        case 4: return f2_4(); break;
+        case 5: return f5(); break;
+    }
+
+    function f2_4 () {
 
         if (number < Math.pow(10, 3)) {  //level==1->100 level==2->1000
             unit = '';
@@ -731,8 +803,10 @@ function getRoundedNumberUnit(number = 0, level = 0) {
         } else {
             unit = ''
         }
+        return unit;
+    }
 
-    } else if (level === 1) {
+    function f1 () {
 
         if (number < Math.pow(10, 3)) { //0.1K，但是数据还没到1K的位置，就给100了
             unit = '';
@@ -753,13 +827,25 @@ function getRoundedNumberUnit(number = 0, level = 0) {
         } else {
             unit = ''
         }
-
-    } else {
-
-        return '';
+        return unit;
     }
+    function f5 () {
 
-    return unit;
+        if (number < Math.pow(10, 4)) {  //level==1->100 level==2->1000
+            unit = '';
+        } else if (number < Math.pow(10, 8)) {
+            unit = 'w';
+        } else if (number < Math.pow(10, 12)) {
+            unit = 'e';
+        } else if (number < Math.pow(10, 16)) {
+            unit = 'T';
+        } else if (number < Math.pow(10, 20)) {
+            unit = 'j';
+        } else {
+            unit = ''
+        }
+        return unit;
+    }
 }
 
 //色彩管理。或许开个 color util 会更好？=====================================================================================
@@ -890,6 +976,21 @@ export function getStarRatingColor(SR = 0) {
     }
 
     return color;
+}
+
+
+//获取玩家名次的背景色，给一二三名赋予特殊的颜色
+export function getUserRankColor(rank = 0) {
+    switch (rank) {
+        case 1:
+            return '#B7AA00'; //冠军
+        case 2:
+            return '#A0A0A0'; //亚军
+        case 3:
+            return '#AC6A00'; //季军
+        default:
+            return '#46393f';
+    }
 }
 
 export function getModColor(Mod = '') {
@@ -1253,11 +1354,14 @@ export function getMascotName(gamemode = 'osu') {
                 case 6 :
                     return 'Taikonator';
             }
-        } break;
+        }
+            break;
         case 'fruits':
-            return 'Yuzu'; break;
+            return 'Yuzu';
+            break;
         case 'catch':
-            return 'Yuzu'; break;
+            return 'Yuzu';
+            break;
         case 'mania': {
             switch (m) {
                 case 8 :
@@ -1265,7 +1369,8 @@ export function getMascotName(gamemode = 'osu') {
                 case 9 :
                     return 'Mari';
             }
-        } break;
+        }
+            break;
     }
 }
 
@@ -1407,7 +1512,8 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return 'c'; //我怀疑现在的接水果给的不是fruits
                 case 'mania':
                     return 'm';
-            } break;
+            }
+            break;
         case 2:
             switch (gamemode) {
                 case 'osu':
@@ -1420,7 +1526,8 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return 'osu!catch'; //我怀疑现在的接水果给的不是fruits
                 case 'mania':
                     return 'osu!mania';
-            } break;
+            }
+            break;
         case -1:
             switch (gamemode) {
                 case 'osu':
@@ -1433,14 +1540,15 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return '\uE801'; //我怀疑现在的接水果给的不是fruits
                 case 'mania':
                     return '\uE802';
-            } break;
+            }
+            break;
     }
 }
 
 /**
  * @function 拆分svg头尾，只保留身体，方便插入
  */
-export function getSVGBody (V3Path = '') {
+export function getSVGBody(V3Path = '') {
     let reg1 = '<?xml version="1.0" encoding="UTF-8"?>';
     let reg2 = /<svg?[A-Za-z0-9\"\=:./ ]*\>?/;
     let reg3 = '</svg>'
@@ -1822,36 +1930,64 @@ export function hasAllMod(modInt = 0, mod = ['']) {
     return (all & modInt) === all;
 }
 
-export function getModFullName (mod = 'NM') {
+export function getModFullName(mod = 'NM') {
     switch (mod.toUpperCase()) {
-        case "4K": return '4Keys';
-        case "5K": return '5Keys';
-        case "6K": return '6Keys';
-        case "7K": return '7Keys';
-        case "8K": return '8Keys';
-        case "9K": return '9Keys';
-        case "AP": return 'AutoPilot';
-        case "AU": return 'Autoplay';
-        case "CN": return 'Cinema';
-        case "CP": return 'Co-op';
-        case "DT": return 'DoubleTime';
-        case "EZ": return 'Easy';
-        case "FI": return 'FadeIn';
-        case "FL": return 'Flashlight';
-        case "HD": return 'Hidden';
-        case "HR": return 'HardRock';
-        case "HT": return 'HalfTime';
-        case "MR": return 'Mirror';
-        case "NC": return 'NightCore';
-        case "NF": return 'NoFail';
-        case "PF": return 'Perfect';
-        case "RD": return 'Random';
-        case "RX": return 'Relax';
-        case "SD": return 'SuddenDeath';
-        case "SO": return 'SponOut';
-        case "TD": return 'TouchDevice';
-        case "TP": return 'TargetPractice';
-        default: return 'NoMod';
+        case "4K":
+            return '4Keys';
+        case "5K":
+            return '5Keys';
+        case "6K":
+            return '6Keys';
+        case "7K":
+            return '7Keys';
+        case "8K":
+            return '8Keys';
+        case "9K":
+            return '9Keys';
+        case "AP":
+            return 'AutoPilot';
+        case "AU":
+            return 'Autoplay';
+        case "CN":
+            return 'Cinema';
+        case "CP":
+            return 'Co-op';
+        case "DT":
+            return 'DoubleTime';
+        case "EZ":
+            return 'Easy';
+        case "FI":
+            return 'FadeIn';
+        case "FL":
+            return 'Flashlight';
+        case "HD":
+            return 'Hidden';
+        case "HR":
+            return 'HardRock';
+        case "HT":
+            return 'HalfTime';
+        case "MR":
+            return 'Mirror';
+        case "NC":
+            return 'NightCore';
+        case "NF":
+            return 'NoFail';
+        case "PF":
+            return 'Perfect';
+        case "RD":
+            return 'Random';
+        case "RX":
+            return 'Relax';
+        case "SD":
+            return 'SuddenDeath';
+        case "SO":
+            return 'SponOut';
+        case "TD":
+            return 'TouchDevice';
+        case "TP":
+            return 'TargetPractice';
+        default:
+            return 'NoMod';
     }
 }
 
