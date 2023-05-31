@@ -260,10 +260,10 @@ export async function card_C (data = {
         let total_score;
         let team_score = data.statistics[`score_team_${team}`] || 0;
 
-        //获取分数，从大到小排列
+        //获取分数，从小到大排列
         let team_score_arr = [];
         for (const i of data[team]) {
-            team_score_arr.push(i.player_score);
+            team_score_arr.unshift(i.player_score);
         }
 
         total_score = data.statistics.score_total || 0;
@@ -275,11 +275,11 @@ export async function card_C (data = {
         for (const i of team_score_arr) {
             let width = team_width_calc * i / team_score_calc
             if (width < 100) {
-                team_width_arr.push(100);
+                team_width_arr.unshift(100);
                 team_width_calc -= 100;
                 team_score_calc -= i;
             } else {
-                team_width_arr.push(width);
+                team_width_arr.unshift(width);
             }
         }
 
