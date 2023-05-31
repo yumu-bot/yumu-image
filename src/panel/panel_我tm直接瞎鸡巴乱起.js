@@ -22,7 +22,7 @@ export async function panel瞎鸡巴乱起(strArray = ['']) {
         befY += h + 10;
         return line;
     }));
-    let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${maxWidth + 50} ${befY + 20}">
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${maxWidth + 50}" height="${befY + 20}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${maxWidth + 50} ${befY + 20}">
     <rect width="100%" height="100%" fill="#263339" />
     ${textLine.join("\n")}
 </svg>`
