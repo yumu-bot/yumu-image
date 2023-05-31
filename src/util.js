@@ -18,6 +18,21 @@ export const OSU_BUFFER_PATH = IMG_BUFFER_PATH + "/osu";
 const MD5 = crypto.createHash("md5");
 
 export function initPath() {
+    axios.interceptors.response.use((response) => response, (error) => {
+        const {config, response} = error;
+        console.error("request err", error);
+        if (response && response.status === 403) {
+            return Promise.reject(error);
+        }
+        console.log('re send');
+        if (config?.errTime) {
+            config.errTime += 1;
+            return config.errTime > 5 ? Promise.reject(error) : axios(config);
+        } else {
+            config.errTime = 1
+            return axios(config);
+        }
+    })
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(OSU_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(FLAG_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
