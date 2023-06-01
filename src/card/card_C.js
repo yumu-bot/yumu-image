@@ -190,6 +190,7 @@ export async function card_C (data = {
         let push; //正数表示从大到小取值
         let isReverse; //下面的分数矩形是否该反向渲染，只有蓝色矩形是右对齐
         let colorList;
+        let isWin;
 
         //获取赋值方向和初始坐标
         switch (team.toLowerCase()) {
@@ -200,6 +201,7 @@ export async function card_C (data = {
                 startAssign = teamScoreArr.length - 1;
                 startX = 1360; //teamWidthArr ? 1360 - teamWidthArr.reduce(function (sum, value) { return sum + value; }) : 1360;
                 colorList = blue_color_list;
+                isWin = data.statistics.is_team_blue_win;
                 break;
             case 'red':
                 direction = 1;
@@ -208,6 +210,7 @@ export async function card_C (data = {
                 startAssign = teamScoreArr.length - 1;
                 startX = 20;
                 colorList = red_color_list;
+                isWin = data.statistics.is_team_red_win;
                 break;
             default:
                 direction = 1;
@@ -216,6 +219,7 @@ export async function card_C (data = {
                 startAssign = 0;
                 startX = 20;
                 colorList = none_color_list;
+                isWin = true;
                 break;
         }
 
@@ -233,7 +237,8 @@ export async function card_C (data = {
                 await implantRoundLabelF1(
                     data[`${team}`][j],
                     calculateX + (width * direction / 2 - 50),
-                    startY - 130);
+                    startY - 130,
+                    isWin);
             }
 
             //画矩形
@@ -260,10 +265,10 @@ export async function card_C (data = {
         let total_score;
         let team_score = data.statistics[`score_team_${team}`] || 0;
 
-        //获取分数，从大到小排列
+        //获取分数，从小到大排列
         let team_score_arr = [];
         for (const i of data[team]) {
-            team_score_arr.push(i.player_score);
+            team_score_arr.unshift(i.player_score);
         }
 
         total_score = data.statistics.score_total || 0;
@@ -273,13 +278,13 @@ export async function card_C (data = {
         let team_score_calc = team_score;
 
         for (const i of team_score_arr) {
-            if ((i / total_score * 1330) < 100) {
-                team_width_arr.push(100);
+            let width = team_width_calc * i / team_score_calc
+            if (width < 100) {
+                team_width_arr.unshift(100);
                 team_width_calc -= 100;
                 team_score_calc -= i;
             } else {
-                let i2 = team_width_calc * i / team_score_calc;
-                team_width_arr.push(i2);
+                team_width_arr.unshift(width);
             }
         }
 
@@ -289,7 +294,7 @@ export async function card_C (data = {
 
     // 插入F1 - F3标签的功能函数
 
-    async function implantRoundLabelF1 (object, x, y) {
+    async function implantRoundLabelF1 (object, x, y, isWin) {
         let label_F1_impl =
             await label_F1({
                 avatar: object.player_avatar || '',
@@ -298,6 +303,7 @@ export async function card_C (data = {
                 score: object.player_score || '',
                 rank: object.player_rank || '',
                 maxWidth: 100,
+                isWin: isWin,
             })
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
     }
