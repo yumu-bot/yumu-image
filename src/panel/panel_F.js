@@ -3,7 +3,9 @@ import {
     getExportFileV3Path,
     getMatchNameSplitted,
     getNowTimeStamp,
-    getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getRandomBannerPath,
+    getRoundedNumberLargerStr,
+    getRoundedNumberSmallerStr,
     getStarRatingObject,
     implantImage,
     implantSvgBody,
@@ -31,7 +33,6 @@ export async function panel_F(data = {
         match_round: 11,
         match_time: '20:25-22:03',//比赛开始到比赛结束。如果跨了一天，需要加24小时 match start_time
         match_date: '2020-03-21',//比赛开始的日期 match start_time
-        average_star_rating: 5.46,//算
         mpid: 59438351,
         wins_team_red: 5,
         wins_team_blue: 6,
@@ -52,17 +53,17 @@ export async function panel_F(data = {
                 difficulty: 'Catharsis',
                 status: 'ranked',
                 bid: 1000684,
+                delete: false,
+                // 星级,四维在这里算(考虑到dt的影响
 
-            // 星级,四维在这里算(考虑到dt的影响
-
-            is_team_vs: true, // TFF表示平局，当然，这个很少见
-            is_team_red_win: false, //如果不是team vs，这个值默认false
-            is_team_blue_win: true, //如果不是team vs，这个值默认false
-            score_team_red: 1144770,
-            score_team_blue: 1146381,
-            score_total: 2291151,
-            wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
-            wins_team_blue_before: 4,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
+                is_team_vs: true, // TFF表示平局，当然，这个很少见
+                is_team_red_win: false, //如果不是team vs，这个值默认false
+                is_team_blue_win: true, //如果不是team vs，这个值默认false
+                score_team_red: 1144770,
+                score_team_blue: 1146381,
+                score_total: 2291151,
+                wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
+                wins_team_blue_before: 4,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
         red: [
             {
@@ -207,6 +208,45 @@ export async function panel_F(data = {
         svg = implantSvgBody(svg, 510, 330 + i * 250, card_Cs[i], reg_card_c)
     }
 
+    let beatmap_arr = await Promise.all(data.scores.map(async (e) => {
+        const d = e.statistics;
+        if (d.delete) {
+            return {
+                background: '', // <-------  记得改
+                title: 'Delete Map',
+                artist: '',
+                mapper: '', //creator
+                difficulty: '',
+                status: 0,
+
+                bid: 0,
+                star_rating: 0,
+                cs: 0,
+                ar: 0,
+                od: 0,
+            }
+        }
+        const attr = await getMapAttributes(d.bid, d.mod_int);
+        const cs = getRoundedNumberLargerStr(attr.cs, 2) + getRoundedNumberSmallerStr(attr.cs, 2);
+        const ar = getRoundedNumberLargerStr(attr.ar, 2) + getRoundedNumberSmallerStr(attr.ar, 2);
+        const od = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
+
+        return {
+            background: d.background,
+            title: d.title,
+            artist: d.artist,
+            mapper: d.mapper, //creator
+            difficulty: d.difficulty,
+            status: d.status,
+
+            bid: d.bid,
+            star_rating: attr.stars,
+            cs: cs,
+            ar: ar,
+            od: od,
+        }
+    }));
+
 
     // 导入谱面卡(A2卡
     async function implantBeatMapCardA2(object, x, y) {
@@ -246,28 +286,7 @@ export async function panel_F(data = {
         svg = implantSvgBody(svg, x, y, card_A2_beatmap_impl, reg_card_a2);
     }
 
-    let beatmap_arr = await Promise.all(data.scores.map(async (e) => {
-        const d = e.statistics;
-        const attr = await getMapAttributes(d.bid,)
-        const cs = getRoundedNumberLargerStr(attr.cs, 2) + getRoundedNumberSmallerStr(attr.cs, 2);
-        const ar = getRoundedNumberLargerStr(attr.ar, 2) + getRoundedNumberSmallerStr(attr.ar, 2);
-        const od = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
 
-        return {
-            background: d.background,
-            title: d.title,
-            artist: d.artist,
-            mapper: d.mapper, //creator
-            difficulty: d.difficulty,
-            status: d.status,
-
-            bid: d.bid,
-            star_rating: attr.stars,
-            cs: cs,
-            ar: ar,
-            od: od,
-        }
-    }));
 
     //导入谱面卡的同时计算面板高度和背景高度
     let panel_height = 330;
@@ -288,14 +307,18 @@ export async function panel_F(data = {
     let left1 = data.match.match_round ? 'Round ' + data.match.match_round : '-';
     let left2 = data.match.match_time;
     let left3 = data.match.match_date;
-    let right1 = 'AVG.SR ' + data.match.average_star_rating;
+    let right1 = 'AVG.SR ' + beatmap_arr
+        .filter(b => b.star_rating > 0)
+        .map(b => b.star_rating)
+        .reduce((pv, cv, i, all) => pv + (cv / all.length));
     let right2 = 'mp' + data.match.mpid || 0;
     let wins_team_red = data.match.wins_team_red || 0;
     let wins_team_blue = data.match.wins_team_blue || 0;
     let right3b = wins_team_red + ' : ' + wins_team_blue;
 
     let card_A2_impl =
-        await card_A2({data,
+        await card_A2({
+            data,
             background: background,
             title1: title1,
             title2: title2,
