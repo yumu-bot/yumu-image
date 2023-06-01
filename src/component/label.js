@@ -161,6 +161,7 @@ export async function label_F1(data = {
     rank: 6,
     maxWidth: 100,
     isWin: true,
+    scoreTextColor : '#fff',
 
 }, reuse = false) {
     //导入模板
@@ -210,7 +211,7 @@ export async function label_F1(data = {
     let score_b = getRoundedNumberLargerStr(data.score || 0, 5);
     let score_m = getRoundedNumberSmallerStr(data.score || 0, 5);
 
-    let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', '#fff');
+    let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor || '#fff');
 
     let rank = torus.getTextPath(data.rank.toString() || '0', 15, 15.877, 18, 'center baseline', '#fff');
 

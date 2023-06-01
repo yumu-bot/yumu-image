@@ -16,6 +16,7 @@ import {
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
 import {getMapAttributes} from "../compute-pp.js";
+import moment from "moment";
 
 export async function router(req, res) {
     const data = req.fields;
@@ -32,7 +33,8 @@ export async function panel_F(data = {
         match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)', //match name
         match_round: 11,
         match_time: '20:25-22:03',//比赛开始到比赛结束。如果跨了一天，需要加24小时 match start_time
-        match_date: '2020-03-21',//比赛开始的日期 match start_time
+        match_time_start: 0, //本来要的是比赛开始的日期 match start_time '2020-03-21'
+        match_time_end: 0,
         mpid: 59438351,
         wins_team_red: 5,
         wins_team_blue: 6,
@@ -286,8 +288,6 @@ export async function panel_F(data = {
         svg = implantSvgBody(svg, x, y, card_A2_beatmap_impl, reg_card_a2);
     }
 
-
-
     //导入谱面卡的同时计算面板高度和背景高度
     let panel_height = 330;
     let background_height = 40;
@@ -303,15 +303,15 @@ export async function panel_F(data = {
     let background = data.match.background;
     let title = getMatchNameSplitted(data.match.match_title);
     let title1 = title[0];
-    let title2 = data.match.is_team_vs ? title[1] + ' vs ' + title[2] : '-';
-    let left1 = data.match.match_round ? data.match.match_round + 'x Rounds' : '-';
+    let title2 = data.match.is_team_vs ? (title[1] + ' vs ' + title[2]) : '-';
+    let left1 = data.match.match_round + 'x Rounds';
     let left2 = data.match.match_time;
-    let left3 = data.match.match_date;
+    let left3 = moment(data.match.match_time_start, 'X').format('YYYY-MM-DD');
     let right1 = 'AVG.SR ' + beatmap_arr
         .filter(b => b.star_rating > 0)
         .map(b => b.star_rating)
         .reduce((pv, cv, i, all) => pv + (cv / all.length)).toFixed(2);
-    let right2 = 'mp' + data.match.mpid || 0;
+    let right2 = 'mp' + data.match.mpid;
     let wins_team_red = data.match.wins_team_red || 0;
     let wins_team_blue = data.match.wins_team_blue || 0;
     let right3b = wins_team_red + ' : ' + wins_team_blue;
