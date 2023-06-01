@@ -211,7 +211,7 @@ export async function label_F1(data = {
     let score_b = getRoundedNumberLargerStr(data.score || 0, 5);
     let score_m = getRoundedNumberSmallerStr(data.score || 0, 5);
 
-    let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor || '#fff');
+    let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor);
 
     let rank = torus.getTextPath(data.rank.toString() || '0', 15, 15.877, 18, 'center baseline', '#fff');
 
@@ -227,7 +227,7 @@ export async function label_F1(data = {
     //插入图片，如果输了就变灰
     let isWin = data.isWin;
     let opa = 1;
-    if (!isWin) opa = 0.2;
+    if (!isWin) opa = 0.3;
 
     svg = implantImage(svg, 100, 100, 0, 0, opa, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
 

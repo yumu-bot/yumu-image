@@ -65,10 +65,18 @@ export async function card_C(data = {
     let reg_backcolor = '${backcolor}';
 
     // 色板定义
-    const red_color_list = ['#C32C4A', '#851932', '#630922', '#64003C']
-    const blue_color_list = ['#008FE3', '#00669F', '#004C77', '#002D5C']
-    const none_color_list = ['#D7D7D7', '#C3C3C3', '#ADADAD', '#7F7F7F'
-        , '#666666', '#4B4B4B', '#2D2D2D', '#000000']
+    const red_color_list = ['#D56E74', '#CB3554', '#801D34', '#601025',
+        '#61003F', '#811554', '#CA2C82', '#D46DA1',
+        '#925C9F', '#792984', '#4F1056', '#3B0041',
+        '#110043', '#1D105A', '#302787', '#59509E']
+    const blue_color_list = ['#55B1EF', '#009DEA', '#006899', '#004E74',
+        '#002D59', '#0D3F75', '#1B62B2', '#587EC2',
+        '#5867AF', '#28479B', '#182B66', '#0B1C4D',
+        '#110043', '#1D105A', '#302787', '#59509E']
+    const none_color_list = ['#fff', '#ddd', '#bbb', '#999',
+        '#777', '#555', '#666', '#888',
+        '#aaa', '#ccc', '#eee', '#fff',
+        '#ddd', '#bbb', '#999', '#777']
 
     // 渲染文字和底板
     //组队赛时
@@ -225,7 +233,7 @@ export async function card_C(data = {
                 startX = 1360;
                 colorList = none_color_list;
                 isWin = true;
-                scoreTextColor = '#312A2D';
+                scoreTextColor = '#382e32';
                 break;
         }
 
