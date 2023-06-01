@@ -226,7 +226,7 @@ export async function label_F1(data = {
     //插入图片，如果输了就变灰
     let isWin = data.isWin;
     let opa = 1;
-    if (!isWin) opa = 0.6;
+    if (!isWin) opa = 0.2;
 
     svg = implantImage(svg, 100, 100, 0, 0, opa, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
 
