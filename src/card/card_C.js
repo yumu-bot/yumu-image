@@ -1,4 +1,13 @@
-import {implantSvgBody, readTemplate, replaceText, torus, torusRegular} from "../util.js";
+import {
+    getExportFileV3Path,
+    implantImage,
+    implantSvgBody,
+    readNetImage,
+    readTemplate,
+    replaceText,
+    torus,
+    torusRegular
+} from "../util.js";
 import {label_F1, label_F2, label_F3} from "../component/label.js";
 
 export async function card_C(data = {
@@ -63,6 +72,7 @@ export async function card_C(data = {
     let reg_pluspoint = /(?<=<g id="PlusPoint">)/;
     let reg_scorebar = /(?<=<g id="ScoreBar">)/;
     let reg_backcolor = '${backcolor}';
+    let reg_h2hfirstavatar = /(?<=<g id="h2hFirstAvatar">)/;
 
     // 色板定义
     const red_color_list = ['#D56E74', '#CB3554', '#801D34', '#601025',
@@ -141,6 +151,7 @@ export async function card_C(data = {
 
         svg = replaceText(svg, '#382e32', reg_backcolor);
         svg = replaceText(svg, none_text, reg_text);
+        svg = implantImage(svg, 1380, 210, 0, 0, 0.3, await readNetImage(data.none[0].player_avatar, getExportFileV3Path('avatar-guest.png')), reg_h2hfirstavatar);
     }
 
     // 导入成绩

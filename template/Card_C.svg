@@ -1,7 +1,14 @@
+<defs>
+  <clipPath id="clippath-CC-1">
+    <rect width="1380" height="210" rx="20" ry="20" style="fill: none;"/>
+  </clipPath>
+</defs>
   <g id="Background">
     <rect width="1380" height="210" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="BackColor" style="opacity: .2;">
       <rect width="1380" height="210" rx="20" ry="20" style="fill: ${backcolor};"/>
+    </g>
+    <g id="h2hFirstAvatar">
     </g>
   </g>
   <g id="ScoreBar">
