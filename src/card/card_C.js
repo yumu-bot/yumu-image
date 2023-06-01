@@ -115,7 +115,7 @@ export async function card_C(data = {
         } else {
             red_font = torusRegular;
             blue_font = torusRegular;
-            svg = replaceText(svg, '', reg_backcolor);
+            svg = replaceText(svg, '#382e32', reg_backcolor);
         }
 
         let red_text = (red_score !== 0) ? red_font.getTextPath(red_score.toString(), mid_x - 5, 196.836, 24, 'right baseline', '#fff') : '';
@@ -131,7 +131,7 @@ export async function card_C(data = {
         let total_score = data.statistics.score_total;
         let none_text = (total_score !== 0) ? torus.getTextPath(total_score.toString(), 670, 196.836, 24, 'center baseline', '#fff') : '';
 
-        svg = replaceText(svg, '', reg_backcolor);
+        svg = replaceText(svg, '#382e32', reg_backcolor);
         svg = replaceText(svg, none_text, reg_text);
     }
 
@@ -319,7 +319,7 @@ export async function card_C(data = {
                 rank: object.player_rank || '',
                 maxWidth: 100,
                 isWin: isWin,
-                score_color: scoreTextColor,
+                scoreTextColor: scoreTextColor,
             })
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
     }
