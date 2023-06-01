@@ -193,6 +193,7 @@ export async function card_C(data = {
         let isReverse; //下面的分数矩形是否该反向渲染，只有蓝色矩形是右对齐
         let colorList;
         let isWin;
+        let scoreTextColor; //分数颜色，如果是 none，则使用黑色
 
         //获取赋值方向和初始坐标
         switch (team.toLowerCase()) {
@@ -204,6 +205,7 @@ export async function card_C(data = {
                 startX = 1360;
                 colorList = blue_color_list;
                 isWin = data.statistics.is_team_blue_win;
+                scoreTextColor = '#fff';
                 break;
             case 'red':
                 direction = 1;
@@ -213,6 +215,7 @@ export async function card_C(data = {
                 startX = 20;
                 colorList = red_color_list;
                 isWin = data.statistics.is_team_red_win;
+                scoreTextColor = '#fff';
                 break;
             case 'none':
                 direction = -1;
@@ -222,6 +225,7 @@ export async function card_C(data = {
                 startX = 1360;
                 colorList = none_color_list;
                 isWin = true;
+                scoreTextColor = '#312A2D';
                 break;
         }
 
@@ -240,7 +244,8 @@ export async function card_C(data = {
                     data[`${team}`][j],
                     calculateX + (width * direction / 2 - 50),
                     startY - 130,
-                    isWin);
+                    isWin,
+                    scoreTextColor);
             }
 
             //画矩形
@@ -261,15 +266,20 @@ export async function card_C(data = {
 
     //当队伍人数小于等于4时，计算每个值的长度（正常
     function getTeamVsWidthArrayNormal(data, team = 'none') {
+        let isTeamVs = data.statistics.is_team_vs;
+        let minWidth;
+
         if (!data[team]) return [];
 
         let team_width_arr = [];
         let total_score = data.statistics.score_total;
         let team_score;
-        if (data.statistics.is_team_vs) {
+        if (isTeamVs) {
             team_score = data.statistics[`score_team_${team}`];
+            minWidth = 400;
         } else {
             team_score = total_score;
+            minWidth = 0;
         }
 
         //获取分数，从小到大排列
@@ -279,7 +289,7 @@ export async function card_C(data = {
         }
 
         //获取每个人需要的宽度、用于计算的值
-        let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, 400), 930);
+        let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, minWidth), 1330 - minWidth);
         let team_score_calc = team_score;
 
         for (const i of team_score_arr) {
@@ -299,7 +309,7 @@ export async function card_C(data = {
 
     // 插入F1 - F3标签的功能函数
 
-    async function implantRoundLabelF1(object, x, y, isWin) {
+    async function implantRoundLabelF1(object, x, y, isWin, scoreTextColor) {
         let label_F1_impl =
             await label_F1({
                 avatar: object.player_avatar || '',
@@ -309,6 +319,7 @@ export async function card_C(data = {
                 rank: object.player_rank || '',
                 maxWidth: 100,
                 isWin: isWin,
+                score_color: scoreTextColor,
             })
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
     }
