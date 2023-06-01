@@ -302,7 +302,7 @@ export async function panel_F(data = {
     // 导入比赛简介卡（A2卡
     let background = data.match.background;
     let title = getMatchNameSplitted(data.match.match_title);
-    let title1 = title[0];
+    let title1 = data.match.is_team_vs ? title[0] : data.match.match_title;
     let title2 = data.match.is_team_vs ? (title[1] + ' vs ' + title[2]) : '-';
     let left1 = data.match.match_round + 'x Rounds';
     let left2 = data.match.match_time;
@@ -314,7 +314,7 @@ export async function panel_F(data = {
     let right2 = 'mp' + data.match.mpid;
     let wins_team_red = data.match.wins_team_red || 0;
     let wins_team_blue = data.match.wins_team_blue || 0;
-    let right3b = wins_team_red + ' : ' + wins_team_blue;
+    let right3b = data.match.is_team_vs ? (wins_team_red + ':' + wins_team_blue) : 'H2H';
 
     let card_A2_impl =
         await card_A2({
