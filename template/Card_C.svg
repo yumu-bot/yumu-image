@@ -8,7 +8,7 @@
     <g id="BackColor" style="opacity: .2;">
       <rect width="1380" height="210" rx="20" ry="20" style="fill: ${backcolor};"/>
     </g>
-    <g id="h2hFirstAvatar" style="clip-path: url(#clippath-CC-1);">
+    <g style="clip-path: url(#clippath-CC-1);">
     </g>
   </g>
   <g id="ScoreBar">

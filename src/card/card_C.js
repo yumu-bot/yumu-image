@@ -59,7 +59,13 @@ export async function card_C(data = {
         player_mods: [],
         player_rank: 5,
     }],
-    none: [{}]
+    none: [{
+        player_name: 'No Rank',
+        player_avatar: 'PanelObject/F_LabelF1_Avatar.png',
+        player_score: 371007,
+        player_mods: [],
+        player_rank: 1,
+    }]
 }, reuse = false) {
     //读取面板
     let svg = readTemplate("template/Card_C.svg");
@@ -72,7 +78,7 @@ export async function card_C(data = {
     let reg_pluspoint = /(?<=<g id="PlusPoint">)/;
     let reg_scorebar = /(?<=<g id="ScoreBar">)/;
     let reg_backcolor = '${backcolor}';
-    let reg_h2hfirstavatar = /(?<=<g id="h2hFirstAvatar">)/;
+    let reg_h2hfirstavatar = /(?<=<g style="clip-path: url\(#clippath-CC-1\);">)/;
 
     // 色板定义
     const red_color_list = ['#D56E74', '#CB3554', '#801D34', '#601025',

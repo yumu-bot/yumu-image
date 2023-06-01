@@ -1644,7 +1644,7 @@ export function getMatchNameSplitted(text = '') {
     }
 
     //转换失败的保底机制
-    if (name === '' && team1 === '' && team2 === '') name = text;
+    if (name === '' || team1 === '' || team2 === '') name = text;
     out.push(name, team1, team2)
     return out;
 }

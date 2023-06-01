@@ -302,8 +302,8 @@ export async function panel_F(data = {
     // 导入比赛简介卡（A2卡
     let background = data.match.background;
     let title = getMatchNameSplitted(data.match.match_title);
-    let title1 = data.match.is_team_vs ? title[0] : data.match.match_title;
-    let title2 = data.match.is_team_vs ? (title[1] + ' vs ' + title[2]) : '';
+    let title1 = title[0];
+    let title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
     let left1 = data.match.match_round + 'x Rounds';
     let left2 = data.match.match_time;
     let left3 = moment(data.match.match_time_start, 'X').format('YYYY-MM-DD');
