@@ -212,12 +212,12 @@ export async function panel_F(data = {
         const d = e.statistics;
         if (d.delete) {
             return {
-                background: '', // <-------  记得改
+                background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
                 title: 'Delete Map',
                 artist: '',
                 mapper: '', //creator
                 difficulty: '',
-                status: 0,
+                status: '',
 
                 bid: 0,
                 star_rating: 0,
@@ -303,14 +303,14 @@ export async function panel_F(data = {
     let background = data.match.background;
     let title = getMatchNameSplitted(data.match.match_title);
     let title1 = title[0];
-    let title2 = title[1] + ' vs ' + title[2];
-    let left1 = data.match.match_round ? 'Round ' + data.match.match_round : '-';
+    let title2 = data.match.is_team_vs ? title[1] + ' vs ' + title[2] : '-';
+    let left1 = data.match.match_round ? data.match.match_round + 'x Rounds' : '-';
     let left2 = data.match.match_time;
     let left3 = data.match.match_date;
     let right1 = 'AVG.SR ' + beatmap_arr
         .filter(b => b.star_rating > 0)
         .map(b => b.star_rating)
-        .reduce((pv, cv, i, all) => pv + (cv / all.length));
+        .reduce((pv, cv, i, all) => pv + (cv / all.length)).toFixed(2);
     let right2 = 'mp' + data.match.mpid || 0;
     let wins_team_red = data.match.wins_team_red || 0;
     let wins_team_blue = data.match.wins_team_blue || 0;

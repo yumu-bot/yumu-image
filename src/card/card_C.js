@@ -1,7 +1,7 @@
 import {implantSvgBody, readTemplate, replaceText, torus, torusRegular} from "../util.js";
 import {label_F1, label_F2, label_F3} from "../component/label.js";
 
-export async function card_C (data = {
+export async function card_C(data = {
     statistics: {
         is_team_vs: true, // TFF表示平局，当然，这个很少见
         is_team_red_win: true, //如果不是team vs，这个值默认false
@@ -50,9 +50,7 @@ export async function card_C (data = {
         player_mods: [],
         player_rank: 5,
     }],
-    none: [{
-
-    }]
+    none: [{}]
 }, reuse = false) {
     //读取面板
     let svg = readTemplate("template/Card_C.svg");
@@ -67,10 +65,10 @@ export async function card_C (data = {
     let reg_backcolor = '${backcolor}';
 
     // 色板定义
-    const red_color_list = ['#C32C4A','#851932','#630922','#64003C']
-    const blue_color_list = ['#008FE3','#00669F','#004C77','#002D5C']
-    const none_color_list = ['#D7D7D7','#C3C3C3','#ADADAD','#7F7F7F'
-        ,'#666666','#4B4B4B','#2D2D2D','#000000']
+    const red_color_list = ['#C32C4A', '#851932', '#630922', '#64003C']
+    const blue_color_list = ['#008FE3', '#00669F', '#004C77', '#002D5C']
+    const none_color_list = ['#D7D7D7', '#C3C3C3', '#ADADAD', '#7F7F7F'
+        , '#666666', '#4B4B4B', '#2D2D2D', '#000000']
 
     // 渲染文字和底板
     //组队赛时
@@ -87,16 +85,17 @@ export async function card_C (data = {
         let blue_point_plus = '<rect width="12" height="24" rx="6" ry="6" style="fill: #91C4F1;"/>';
 
         for (let i = 0; i < data.statistics.wins_team_red_before; i++) {
-            svg = implantSvgBody(svg, 30 + 16 * i,176, red_point, reg_redpoint);
+            svg = implantSvgBody(svg, 30 + 16 * i, 176, red_point, reg_redpoint);
         }
 
         for (let i = 0; i < data.statistics.wins_team_blue_before; i++) {
-            svg = implantSvgBody(svg, 1338 - 16 * i,176, blue_point, reg_bluepoint);
+            svg = implantSvgBody(svg, 1338 - 16 * i, 176, blue_point, reg_bluepoint);
         }
 
         // 上左右分数
-        let mid_x = Math.min(Math.max((red_score / total_score * 1330), 400), 930) + 20 + 5;
-        let delta_score = Math.abs(red_score - blue_score) || 0;
+        let isTeamVs = data.statistics.is_team_vs; //none特供
+        let mid_x = isTeamVs ? Math.min(Math.max((red_score / total_score * 1330), 400), 930) + 20 + 5 : 0;
+        let delta_score = isTeamVs ? Math.abs(red_score - blue_score) : 0;
         let red_font;
         let blue_font;
 
@@ -105,13 +104,13 @@ export async function card_C (data = {
             svg = replaceText(svg, red_color_list[0], reg_backcolor);
             red_font = torus;
             blue_font = torusRegular;
-            svg = implantSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0),176, red_point_plus, reg_pluspoint);
+            svg = implantSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0), 176, red_point_plus, reg_pluspoint);
 
         } else if (data.statistics.is_team_blue_win) {
             svg = replaceText(svg, blue_color_list[0], reg_backcolor);
             red_font = torusRegular;
             blue_font = torus;
-            svg = implantSvgBody(svg, 1338 - 16 * Math.max((data.statistics.wins_team_blue_before - 1), 0),176, blue_point_plus, reg_pluspoint);
+            svg = implantSvgBody(svg, 1338 - 16 * Math.max((data.statistics.wins_team_blue_before - 1), 0), 176, blue_point_plus, reg_pluspoint);
 
         } else {
             red_font = torusRegular;
@@ -127,10 +126,13 @@ export async function card_C (data = {
         svg = replaceText(svg, blue_text, reg_text);
         svg = replaceText(svg, delta_text, reg_text);
 
+    } else {
+        //个人赛时
+        let total_score = data.statistics.score_total;
+        let none_text = (total_score !== 0) ? torus.getTextPath(total_score.toString(), 670, 196.836, 24, 'center baseline', '#fff') : '';
 
-    } else { //个人赛时
-        //上底色
         svg = replaceText(svg, '', reg_backcolor);
+        svg = replaceText(svg, none_text, reg_text);
     }
 
     // 导入成绩
@@ -179,7 +181,7 @@ export async function card_C (data = {
         blue_width_arr = getTeamVsWidthArrayNormal(data, 'blue');
         none_width_arr = getTeamVsWidthArrayNormal(data, 'none');
     }
-    
+
     // 常规方法赋值
     async function implantMainNormal(data, team = 'none', teamScoreArr = [0], teamWidthArr = [0]) {
 
@@ -199,7 +201,7 @@ export async function card_C (data = {
                 push = -1;
                 isReverse = true;
                 startAssign = teamScoreArr.length - 1;
-                startX = 1360; //teamWidthArr ? 1360 - teamWidthArr.reduce(function (sum, value) { return sum + value; }) : 1360;
+                startX = 1360;
                 colorList = blue_color_list;
                 isWin = data.statistics.is_team_blue_win;
                 break;
@@ -212,12 +214,12 @@ export async function card_C (data = {
                 colorList = red_color_list;
                 isWin = data.statistics.is_team_red_win;
                 break;
-            default:
-                direction = 1;
-                push = 1;
-                isReverse = false;
-                startAssign = 0;
-                startX = 20;
+            case 'none':
+                direction = -1;
+                push = -1;
+                isReverse = true;
+                startAssign = teamScoreArr.length - 1;
+                startX = 1360;
                 colorList = none_color_list;
                 isWin = true;
                 break;
@@ -258,20 +260,23 @@ export async function card_C (data = {
     }
 
     //当队伍人数小于等于4时，计算每个值的长度（正常
-    function getTeamVsWidthArrayNormal (data, team = 'none'){
+    function getTeamVsWidthArrayNormal(data, team = 'none') {
         if (!data[team]) return [];
 
         let team_width_arr = [];
-        let total_score;
-        let team_score = data.statistics[`score_team_${team}`] || 0;
+        let total_score = data.statistics.score_total;
+        let team_score;
+        if (data.statistics.is_team_vs) {
+            team_score = data.statistics[`score_team_${team}`];
+        } else {
+            team_score = total_score;
+        }
 
         //获取分数，从小到大排列
         let team_score_arr = [];
         for (const i of data[team]) {
             team_score_arr.unshift(i.player_score);
         }
-
-        total_score = data.statistics.score_total || 0;
 
         //获取每个人需要的宽度、用于计算的值
         let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, 400), 930);
@@ -294,7 +299,7 @@ export async function card_C (data = {
 
     // 插入F1 - F3标签的功能函数
 
-    async function implantRoundLabelF1 (object, x, y, isWin) {
+    async function implantRoundLabelF1(object, x, y, isWin) {
         let label_F1_impl =
             await label_F1({
                 avatar: object.player_avatar || '',
