@@ -307,10 +307,10 @@ export async function panel_F(data = {
     let left1 = data.match.match_round + 'x Rounds';
     let left2 = data.match.match_time;
     let left3 = moment(data.match.match_time_start, 'X').format('YYYY-MM-DD');
-    let right1 = 'AVG.SR ' + beatmap_arr
+    const avg_star = beatmap_arr
         .filter(b => b.star_rating > 0)
-        .map(b => b.star_rating)
-        .reduce((pv, cv, i, all) => pv + (cv / all.length)).toFixed(2);
+        .map(b => b.star_rating);
+    let right1 = 'AVG.SR ' + (avg_star.reduce((pv, cv) => pv + cv) / avg_star.length).toFixed(2);
     let right2 = 'mp' + data.match.mpid;
     let wins_team_red = data.match.wins_team_red || 0;
     let wins_team_blue = data.match.wins_team_blue || 0;
