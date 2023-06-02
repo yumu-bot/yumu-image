@@ -1,7 +1,6 @@
 import express from "express";
 import formidable from "express-formidable";
 import {CACHE_PATH, getExportFileV3Path, getGameMode, hasMod, initPath, readImage, readNetImage} from "./src/util.js";
-import {panel_B} from "./src/panel/panel_B.js";
 import {panel_C} from "./src/panel/panel_C.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {newJudge, panel_E} from "./src/panel/panel_E.js";
