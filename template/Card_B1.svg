@@ -1,0 +1,23 @@
+<defs>
+    <clipPath id="clippath-B1-1">
+        <rect x="20" y="0" width="390" height="95" rx="20" ry="20" style="fill: none;"/>
+    </clipPath>
+    <clipPath id="clippath-B1-2">
+        <rect x="120" y="0" width="390" height="95" rx="20" ry="20" style="fill: none;"/>
+    </clipPath>
+</defs>
+  <g id="Background">
+  <rect x="${reg_rect}" y="0" width="390" height="95" rx="20" ry="20" style="fill: #46393F;"/>
+    <g style="clip-path: url(#clippath-B1-1);">
+
+    </g>
+    <g style="clip-path: url(#clippath-B1-2);">
+
+    </g>
+  </g>
+  <g id="BodyCard">
+    <g id="Label">
+    </g>
+    <g id="Text">
+    </g>
+  </g>

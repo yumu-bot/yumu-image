@@ -3,7 +3,7 @@ import {
     getModColor, getModFullName,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr, getUserRankColor,
-    implantImage,
+    implantImage, PuHuiTi,
     replaceText,
     torus
 } from "../util.js";
@@ -108,7 +108,92 @@ export const LABEL_OPTION = {
     },
 }
 
-//label_D 与 label_E 一样
+
+export const PPM_OPTION = {
+    ACC: {
+        icon: getExportFileV3Path("object-score-accpp.png"),
+        icon_title: '准度',
+        remark: 'Accuracy',
+        data_b: 'Acc',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    PTT: {
+        icon: getExportFileV3Path("object-score-max.png"),
+        icon_title: '潜力',
+        remark: 'Potential',
+        data_b: 'Ptt',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    STA: {
+        icon: getExportFileV3Path("object-score-length.png"),
+        icon_title: '耐力',
+        remark: 'Stamina',
+        data_b: 'Sta',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    STB: {
+        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon_title: '稳定',
+        remark: 'Stability',
+        data_b: 'Stb',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    PRE: {
+        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon_title: '彩率',
+        remark: 'Precision',
+        data_b: 'Pre',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    EFT: {
+        icon: getExportFileV3Path("object-score-healthpoint.png"),
+        icon_title: '肝力',
+        remark: 'Effort',
+        data_b: 'Eft',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    STH: {
+        icon: getExportFileV3Path("object-score-beatsperminute.png"),
+        icon_title: '强度',
+        remark: 'Strength',
+        data_b: 'Sth',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    OVA: {
+        icon: getExportFileV3Path("object-score-aimpp.png"),
+        icon_title: '综合',
+        remark: 'Overall',
+        data_b: 'Ova',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    SAN: {
+        icon: getExportFileV3Path("object-score-spdpp.png"),
+        icon_title: '理智',
+        remark: 'Sanity',
+        data_b: 'San',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+}
+
+//label_B、label_D 与 label_E 一样
 
 export async function label_E(data = {
     ...LABEL_OPTION.ACC,
@@ -116,14 +201,15 @@ export async function label_E(data = {
     data_b: '98',
     data_m: '.36%',
     color_remark: '#aaa',
+    title_font: torus,
 }, reuse = false) {
     // 正则表达式
-    let reg_text = /(?<=<g id="Text">)/;
-    let reg_icon = /(?<=<g id="Icon">)/;
+    let reg_text = /(?<=<g id="Text_LE">)/;
+    let reg_icon = /(?<=<g id="Icon_LE">)/;
 
     // 文字的 <path>
     //原来是 x=50，感觉位置怪怪的
-    let icon_title = torus.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#a1a1a1");
+    let icon_title = data.title_font.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#a1a1a1");
 
     let datas = torus.getTextPath(data.data_b, 56, 44.75, 36, "left baseline", "#fff");
 
@@ -134,11 +220,9 @@ export async function label_E(data = {
 
     // 尽量减少文件的读取,少量文字的模板请直接写在代码里(是少量的,东西多了还是要读取模板)
     let svg = `
-        <defs>
-        </defs>
-        <g id="Icon">
+        <g id="Icon_LE">
         </g>
-        <g id="Text">
+        <g id="Text_LE">
             ${icon_title}
             ${datas}
         </g>

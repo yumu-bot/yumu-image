@@ -1,0 +1,17 @@
+<defs>
+    <clipPath id="clippath-B2-1">
+        <rect width="320" height="160" rx="20" ry="20" style="fill: none;"/>
+    </clipPath>
+</defs>
+  <g id="Background">
+  <rect width="320" height="160" rx="20" ry="20" style="fill: #46393F;"/>
+    <g style="clip-path: url(#clippath-B2-1);">
+
+    </g>
+  </g>
+  <g id="BodyCard">
+    <g id="Label">
+    </g>
+    <g id="Text">
+    </g>
+  </g>

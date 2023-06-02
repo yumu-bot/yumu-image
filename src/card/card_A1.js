@@ -29,21 +29,23 @@ export async function card_A1(data = {
 
     let reg_color_base = /(?<=fill: )#2a2226/;
 
-    data.rank_country = data.rank_country || '-';
-    data.rank_global = data.rank_global || '-';
+    let rank_country = data.rank_country || '-';
+    let rank_global = data.rank_global || '-';
+    let country = data.country || '??'
 
     // 文字的 <path>
     let text_name =
         torus.getTextPath(torus.cutStringTail(data.name, 48, 290),
             130, 53.672, 48, "left baseline", "#fff");
     let text_rank_global =
-        torus.getTextPath('#' + data.rank_global, 20, 165.836, 24, "left baseline", "#fff");
+        torus.getTextPath('#' + rank_global, 20, 165.836, 24, "left baseline", "#fff");
     let text_rank_country =
-        torus.getTextPath(data.country + '#' + data.rank_country, 20, 191.836, 24, "left baseline", "#fff");
+        torus.getTextPath(country+ '#' + rank_country, 20, 191.836, 24, "left baseline", "#fff");
 
     let level = data.level || 0;
     let progress = data.progress || 0;
-    let info = data.acc + '% Lv.' + level + '(' + progress + '%)';
+    let acc = data.acc || 0
+    let info = acc + '% Lv.' + level + '(' + progress + '%)';
     let text_info =
         torus.getTextPath(info, 420, 141.836, 24, "right baseline", "#fff");
 

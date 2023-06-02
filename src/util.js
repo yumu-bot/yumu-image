@@ -1104,19 +1104,28 @@ export function getModColor(Mod = '') {
     return color;
 }
 
+/**
+ * @function 获取评级颜色
+ * @return {String} 返回色彩
+ * @param {String} 输入评级
+ */
 export function getRankColor(Rank = 'F') {
     let color;
     switch (Rank) {
         case "XH":
+        case "SSH":
+        case "X+":
             color = '#FAFAFA';
             break;
         case "X":
+        case "SS":
             color = '#FFFF00';
             break;
         case "SH":
             color = '#BDBDBD';
             break;
         case "SP":
+        case "S+":
             color = '#E86100';
             break; // S+
         case "S":
@@ -1310,46 +1319,6 @@ export function getMascotName(gamemode = 'osu') {
     }
 
     sum = 0;
-
-
-    /*
-    let t_sum = 0;
-    let t_arr = [];
-
-    let m_sum = 0;
-    let m_arr = [];
-
-    for (let i = 1; i < 7; i++) {
-        t_sum += arr[i];
-        t_arr.push(t_sum);
-    }
-
-    for (let i = 8; i < 10; i++) {
-        m_sum += arr[i];
-        m_arr.push(m_sum);
-    }
-
-    let tr = getRandom(t_sum);
-    let mr = getRandom(m_sum);
-
-    let t = 0;
-    let m = 0;
-
-    for (let i = 0; i < t_arr.length; i++) {
-        if (t_arr[i] >= tr) {
-            t = i;
-            break;
-        }
-    }
-
-    for (let i = 0; i < m_arr.length; i++) {
-        if (m_arr[i] >= mr) {
-            m = i;
-            break;
-        }
-    }
-
-     */
 
     switch (gamemode) {
         case 'osu':
