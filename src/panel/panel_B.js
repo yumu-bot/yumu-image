@@ -1,7 +1,6 @@
 import {
     exportPng,
     getExportFileV3Path,
-    getGameMode,
     getNowTimeStamp, getRandomBannerPath, implantImage,
     implantSvgBody,
     readTemplate,
@@ -11,6 +10,13 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {card_B1} from "../card/card_B1.js";
 import {card_B2} from "../card/card_B2.js";
+
+export async function router(req, res) {
+    const data = req.fields;
+    const png = await panel_B(data);
+    res.set('Content-Type', 'image/png');
+    res.send(png);
+}
 
 export async function panel_B(data = {
     // A1卡
