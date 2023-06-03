@@ -92,9 +92,15 @@ export async function panel_B(data = {
     if (data.card_A1[0].sub_icon2 > 0) {
         data.card_A1[0].sub_icon1 = getExportFileV3Path('object-card-supporter.png');
         data.card_A1[0].sub_icon2 = null;
+    } else {
+        data.card_A1[0].sub_icon1 = null;
+        data.card_A1[0].sub_icon2 = null;
     }
     if (data.card_A1[1] && data.card_A1[1].sub_icon2 > 0) {
         data.card_A1[1].sub_icon1 = getExportFileV3Path('object-card-supporter.png');
+        data.card_A1[1].sub_icon2 = null;
+    } else {
+        data.card_A1[1].sub_icon1 = null;
         data.card_A1[1].sub_icon2 = null;
     }
 
