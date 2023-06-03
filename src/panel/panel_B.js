@@ -159,8 +159,8 @@ export async function panel_B(data = {
     // 获取卡片
     for (const name of VALUE_NAMES) {
         if (!data.card_b_1[name]) continue;
-        card_B1_lefts.push(await card_B1({parameter: name, number: data.card_b_1[name]}, true, false));
-        number_left.push(data.card_b_1[name] * scale_left);
+        card_B1_lefts.push(await card_B1({parameter: name, number: data.card_b_1[name] * 100}, true, false));
+        number_left.push(data.card_b_1[name] * 100 * scale_left);
     }
 
     for (let j = 0; j < 6; j++) {
@@ -173,8 +173,8 @@ export async function panel_B(data = {
 
         for (const name of VALUE_NAMES) {
             if (!data.card_b_2[name]) continue;
-            card_B1_rights.push(await card_B1({parameter: name, number: data.card_b_2[name]}, true, false));
-            number_right.push(data.card_b_2[name] * scale_right);
+            card_B1_rights.push(await card_B1({parameter: name, number: data.card_b_2[name] * 100}, true, false));
+            number_right.push(data.card_b_2[name] * 100 * scale_right);
         }
 
         svg = implantSvgBody(svg, 0, 0, drawHexagon(number_right, '#FF0000'), reg_hexagon);
