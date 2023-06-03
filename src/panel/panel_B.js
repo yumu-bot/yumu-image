@@ -152,7 +152,7 @@ export async function panel_B(data = {
     console.timeLog("logTime-panelB", "两侧数据")
     // 获取卡片
     for (const name of VALUE_NAMES) {
-        if (typeof data.card_b_1[name] === 'number') continue;
+        if (typeof data.card_b_1[name] !== 'number') continue;
         card_B1_lefts.push(await card_B1({parameter: name, number: data.card_b_1[name] * 100}, true, false));
         number_left.push(data.card_b_1[name] * 100 * scale_left);
     }
@@ -167,7 +167,7 @@ export async function panel_B(data = {
         svg = implantSvgBody(svg, 1450, 40, await card_A1(data.card_A1[1], true), reg_card_a1);
 
         for (const name of VALUE_NAMES) {
-            if (typeof data.card_b_2[name] === 'number') continue;
+            if (typeof data.card_b_2[name] !== 'number') continue;
             card_B1_rights.push(await card_B1({parameter: name, number: data.card_b_2[name] * 100}, true, true));
             number_right.push(data.card_b_2[name] * 100 * scale_right);
         }
