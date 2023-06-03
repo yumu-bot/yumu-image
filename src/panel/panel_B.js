@@ -1,7 +1,9 @@
 import {
     exportPng,
     getExportFileV3Path,
-    getNowTimeStamp, getRandomBannerPath, implantImage,
+    getNowTimeStamp,
+    getRandomBannerPath,
+    implantImage,
     implantSvgBody,
     readTemplate,
     replaceText,
@@ -18,6 +20,8 @@ export async function router(req, res) {
     res.send(png);
 }
 
+const VALUE_NAMES = ['ACC', 'PTT', 'STA', 'STB', 'PRE', 'EFT', 'STH'] // OVA 跟 SAN 单独处理
+
 export async function panel_B(data = {
     // A1卡
     card_A1: [{
@@ -33,63 +37,33 @@ export async function panel_B(data = {
         level: 100,
         progress: 32,
         pp: 4396,
-    },{}],
+    }, {}],
 
-    // B卡
-    card_B:[{
-        parameter: 'ACC',
-        number: 108
-    },{
-        parameter: 'PTT',
-        number: 112
-    },{
-        parameter: 'STA',
-        number: 79
-    },{
-        parameter: 'STB',
-        number: 103.4
-    },{
-        parameter: 'EFT',
-        number: 0
-    },{
-        parameter: 'STH',
-        number: 74.6
-    },{
-        parameter: 'OVA',
-        number: 98.23423141123
-    },{
-        parameter: 'SAN',
-        number: 5.2
-    },{ //注意，这里是第二个玩家的数据，等等。
-        parameter: 'ACC',
-        number: 98.23423141123
-    },{
-        parameter: 'PTT',
-        number: 112
-    },{
-        parameter: 'STA',
-        number: 79
-    },{
-        parameter: 'STB',
-        number: 103.4
-    },{
-        parameter: 'EFT',
-        number: 0
-    },{
-        parameter: 'STH',
-        number: 74.6
-    },{
-        parameter: 'OVA',
-        number: 98.23423141123
-    },{
-        parameter: 'SAN',
-        number: 5.2
-    }],
+    card_b_1: {
+        ACC: '',
+        PTT: '',
+        STA: '',
+        STB: '',
+        EFT: '',
+        STH: '',
+        OVA: '',
+        SAN: '',
+    },
+    card_b_2: {
+        ACC: '',
+        PTT: '',
+        STA: '',
+        STB: '',
+        EFT: '',
+        STH: '',
+        OVA: '',
+        SAN: '',
+    },
 
     //其他统计数据
     statistics: {
         isVS: false, //是PPMVS吗？不是则false
-        gameMode: 'osu',
+        gameMode: 0, // 这里改用mode_int
     }
 
 }) {
@@ -106,7 +80,24 @@ export async function panel_B(data = {
 
     // 条件定义
     const isVS = data.statistics.isVS;
-    const game_mode = data.statistics.gameMode;
+    let game_mode;
+    switch (data.statistics.gameMode) {
+        case 0:
+            game_mode = 'osu';
+            break;
+        case 1:
+            game_mode = 'osu';
+            break;
+        case 2:
+            game_mode = 'osu';
+            break;
+        case 3:
+            game_mode = 'osu';
+            break;
+        default:
+            game_mode = 'osu';
+            break;
+    }
 
     // 面板文字
     const index_powered = 'powered by Yumubot v0.3.0 EA // PP Minus v2.4 (!ppm/!ppmvs)';
@@ -145,7 +136,7 @@ export async function panel_B(data = {
 
     if (isVS) {
         let mePP = data.card_A1[0].pp || 0;
-        let yourPP =  data.card_A1[1].pp || 0;
+        let yourPP = data.card_A1[1].pp || 0;
 
         if (mePP >= yourPP && yourPP > 0) {
             scale_right = yourPP / mePP;
@@ -155,9 +146,11 @@ export async function panel_B(data = {
     }
 
 
-    for (let i = 0; i < 6; i++) {
-        card_B1_lefts.push(await card_B1(data.card_B[i], true,false));
-        number_left.push(data.card_B[i].number * scale_left);
+    // 获取卡片
+    for (const name of VALUE_NAMES) {
+        if (!data.card_b_1[name]) continue;
+        card_B1_lefts.push(await card_B1({parameter: name, number: data.card_b_1[name]}, true, false));
+        number_left.push(data.card_b_1[name] * scale_left);
     }
 
     for (let j = 0; j < 6; j++) {
@@ -168,9 +161,10 @@ export async function panel_B(data = {
     if (isVS) {
         svg = implantSvgBody(svg, 1450, 40, await card_A1(data.card_A1[1], true), reg_card_a1);
 
-        for (let i = 8; i < 14; i++) {
-            card_B1_rights.push(await card_B1(data.card_B[i], true,true));
-            number_right.push(data.card_B[i].number * scale_right);
+        for (const name of VALUE_NAMES) {
+            if (!data.card_b_2[name]) continue;
+            card_B1_rights.push(await card_B1({parameter: name, number: data.card_b_2[name]}, true, false));
+            number_right.push(data.card_b_2[name] * scale_right);
         }
 
         svg = implantSvgBody(svg, 0, 0, drawHexagon(number_right, '#FF0000'), reg_hexagon);
@@ -179,15 +173,15 @@ export async function panel_B(data = {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
         }
 
-        card_B2_centers.push(await card_B2(data.card_B[6], true));
-        card_B2_centers.push(await card_B2(data.card_B[14], true));
+        card_B2_centers.push(await card_B2(data.card_b_1.OVA, true));
+        card_B2_centers.push(await card_B2(data.card_b_2.OVA, true));
 
         svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
         svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
     } else {
 
-        card_B2_centers.push(await card_B2(data.card_B[6], true));
-        card_B2_centers.push(await card_B2(data.card_B[7], true));
+        card_B2_centers.push(await card_B2(data.OVA, true));
+        card_B2_centers.push(await card_B2(data.OVA, true));
 
         svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
         svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
@@ -195,7 +189,8 @@ export async function panel_B(data = {
 
     // 画六个标识
     let parameters = [];
-    for (const i of data.card_B) {
+    for (const i of VALUE_NAMES) {
+        if (!data.card_b_1[i]) continue;
         parameters.push(i.parameter);
     }
     svg = implantSvgBody(svg, 0, 0, drawHexIndex(parameters), reg_hexagon);
@@ -204,7 +199,7 @@ export async function panel_B(data = {
     svg = implantSvgBody(svg, 0, 0, drawHexagon(number_left, '#00A8EC'), reg_hexagon);
 
     const hexagon = getExportFileV3Path('object-hexagon.png');
-    svg = implantImage(svg,484,433,718,384,1, hexagon, reg_hexagon);
+    svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
 
 
     return await exportPng(svg);
