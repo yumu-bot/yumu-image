@@ -211,7 +211,7 @@ export async function label_E(data = {
 
     // 文字的 <path>
     //原来是 x=50，感觉位置怪怪的
-    let icon_title = data.title_font.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#a1a1a1");
+    let icon_title = torus.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#a1a1a1");
 
     let datas = torus.getTextPath(data.data_b, 56, 44.75, 36, "left baseline", "#fff");
 
