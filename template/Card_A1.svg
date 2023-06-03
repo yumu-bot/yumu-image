@@ -9,10 +9,10 @@
             <rect id="CountryFlag" x="130" y="68" width="60" height="44" style="fill: none;"/>
         </clipPath>
         <clipPath id="clippath-CA1-4">
-            <rect id="Mutual" x="200" y="70" width="40" height="40" style="fill: none;"/>
+            <rect id="Mutual" x="195" y="70" width="40" height="40" style="fill: none;"/>
         </clipPath>
         <clipPath id="clippath-CA1-5">
-            <rect id="Supporter" x="250" y="70" width="40" height="40" style="fill: none;"/>
+            <rect id="Supporter" x="245" y="70" width="40" height="40" style="fill: none;"/>
         </clipPath>
     </defs>
     <g id="Background">

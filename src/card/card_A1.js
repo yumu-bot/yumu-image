@@ -3,7 +3,7 @@ import {getExportFileV3Path, getFlagPath, implantImage, readTemplate, replaceTex
 export async function card_A1(data = {
     background: getExportFileV3Path('card-default.png'),
     avatar: getExportFileV3Path('avatar-guest.png'),
-    sub_icon1: getExportFileV3Path('object-card-supporter'),
+    sub_icon1: getExportFileV3Path('object-card-supporter.png'),
     sub_icon2: null,
     name: 'Muziyami',
     rank_global: 28075,
@@ -71,10 +71,8 @@ export async function card_A1(data = {
 
     svg = data.background ? implantImage(svg, 430, 210, 0, 0, 0.5, data.background, reg_background) : svg;
     svg = data.avatar ? implantImage(svg, 100, 100, 20, 20, 1, data.avatar, reg_avatar) : svg;
-    svg = data.sub_icon1 ? implantImage(svg, 40, 40, 200, 70, 1, data.sub_icon1, reg_sub_icon1) : svg;
-    svg = data.sub_icon2 ? implantImage(svg, 40, 40, 250, 70, 1, data.sub_icon2, reg_sub_icon2) : svg;
-
-    console.log(data.sub_icon2 ? 'A' : 'B')
+    svg = data.sub_icon1 ? implantImage(svg, 40, 40, 195, 70, 1, data.sub_icon1, reg_sub_icon1) : svg;
+    svg = data.sub_icon2 ? implantImage(svg, 40, 40, 245, 70, 1, data.sub_icon2, reg_sub_icon2) : svg;
 
     return svg.toString();
     /*

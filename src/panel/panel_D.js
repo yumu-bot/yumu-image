@@ -25,10 +25,10 @@ import {card_K} from "../card/card_K.js";
 export async function panel_D(data = {
     // A1卡
     card_A1: {
-        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-        avatar: 'PanelObject/A_CardA1_Avatar.png',
-        sub_icon1: 'PanelObject/A_CardA1_SubIcon1.png',
-        sub_icon2: 'PanelObject/A_CardA1_SubIcon2.png',
+        background: getExportFileV3Path('card-default.png'),
+        avatar: getExportFileV3Path('avatar-guest.png'),
+        sub_icon1: getExportFileV3Path('object-card-supporter.png'),
+        sub_icon2: '',
         name: 'Muziyami',
         rank_global: 28075,
         rank_country: 577,
@@ -71,8 +71,8 @@ export async function panel_D(data = {
     // J卡 max: 3
     recent_play: [
         {
-            map_cover: 'beatmap-defaultBG.jpg',
-            map_background: 'beatmap-defaultBG.jpg',
+            map_cover: getExportFileV3Path('beatmap-defaultBG.jpg'),
+            map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
             map_title_romanized: 'Fia is a Cheater',
             map_artist: 'Fushimi',
             map_difficulty_name: 'Xin mei sang zui jiu',
@@ -88,13 +88,13 @@ export async function panel_D(data = {
     // K卡 max: 8
     bp_list: [
         {
-            map_background: 'beatmap-defaultBG.jpg',
+            map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
             star_rating: 2.7,
             score_rank: 'X',
             bp_ranking: 1,
             bp_pp: '369PP'
         }, {
-            map_background: 'beatmap-defaultBG.jpg',
+            map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
             star_rating: 2.7,
             score_rank: 'X',
             bp_ranking: 2,
