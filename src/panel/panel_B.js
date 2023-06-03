@@ -98,6 +98,8 @@ export async function panel_B(data = {
         data.card_A1[1].sub_icon2 = null;
     }
 
+    console.time("logTime-panelB")
+
     const index_powered_path = torus.getTextPath(index_powered,
         10, 26.84, 24, "left baseline", "#fff");
     const index_request_time_path = torus.getTextPath(index_request_time,
@@ -115,7 +117,7 @@ export async function panel_B(data = {
     svg = replaceText(svg, index_request_time_path, reg_index);
     svg = replaceText(svg, index_panel_name_path, reg_index);
     svg = replaceText(svg, game_mode_path, reg_index);
-
+    console.timeLog("logTime-panelB", "计算")
     // 主计算
     svg = implantSvgBody(svg, 40, 40, await card_A1(data.card_A1[0], true), reg_card_a1);
 
@@ -139,14 +141,13 @@ export async function panel_B(data = {
         }
     }
 
-
+    console.timeLog("logTime-panelB", "两侧数据")
     // 获取卡片
     for (const name of VALUE_NAMES) {
         if (!data.card_b_1[name]) continue;
         card_B1_lefts.push(await card_B1({parameter: name, number: data.card_b_1[name] * 100}, true, false));
         number_left.push(data.card_b_1[name] * 100 * scale_left);
     }
-
     svg = implantSvgBody(svg, 0, 0, drawHexagon(number_left, '#00A8EC'), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
@@ -174,9 +175,9 @@ export async function panel_B(data = {
         card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA}, true));
         card_B2_centers.push(await card_B2({parameter: "SAN", number: data.card_b_1.SAN}, true));
     }
-        svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
-        svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
-
+    svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
+    svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
+    console.timeLog("logTime-panelB", "画标识")
     // 画六个标识
     svg = implantSvgBody(svg, 0, 0, drawHexIndex(game_mode), reg_hexagon);
 
@@ -184,9 +185,10 @@ export async function panel_B(data = {
 
     const hexagon = getExportFileV3Path('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
-
-
-    return await exportPng(svg);
+    console.timeLog("logTime-panelB", "svg构造完成")
+    const d = await exportPng(svg);
+    console.timeEnd("logTime-panelB");
+    return d;
 }
 
 function drawHexIndex(gamemode = 'osu') {
