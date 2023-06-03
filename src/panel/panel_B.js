@@ -182,20 +182,14 @@ export async function panel_B(data = {
         for (const j in card_B1_rights) {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
         }
-
-        card_B2_centers.push(await card_B2(data.card_b_1.OVA, true));
-        card_B2_centers.push(await card_B2(data.card_b_2.OVA, true));
-
-        svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
-        svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
+        card_B2_centers.push(await card_B2({parameter: "Overall.L", number: data.card_b_1.OVA}, true));
+        card_B2_centers.push(await card_B2({parameter: "Overall.R", number: data.card_b_2.OVA}, true));
     } else {
-
-        card_B2_centers.push(await card_B2(data.OVA, true));
-        card_B2_centers.push(await card_B2(data.OVA, true));
-
+        card_B2_centers.push(await card_B2({parameter: "Overall", number: data.card_b_1.OVA * 100}, true));
+        card_B2_centers.push(await card_B2({parameter: "Sanity", number: data.card_b_1.SAN}, true));
+    }
         svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
         svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
-    }
 
     // 画六个标识
     let parameters = [];
