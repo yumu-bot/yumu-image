@@ -42,7 +42,7 @@ export function initPath() {
 const mascot_pic_sum_arr = [39, 14, 3, 2, 6, 1, 1, 2, 2, 3]; //吉祥物的对应的照片数量，和随机banner一样的
 // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
 
-const bannerTotal = 100;//banner 数量
+const bannerTotal = 110;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
 const svgToPng = async (svg) => await exports.convert(svg);
