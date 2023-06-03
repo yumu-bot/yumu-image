@@ -3,10 +3,10 @@ import {exportPng, getExportFileV3Path, readTemplate} from "../util.js";
 export async function panel_J(data = {
     // A1卡
     card_A1: {
-        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-        avatar: getExportFileV3Path('PanelObject/A_CardA1_Avatar.png'),
-        sub_icon1: getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png'),
-        sub_icon2: getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png'),
+        background: getExportFileV3Path('card-default.png'),
+        avatar: getExportFileV3Path('avatar-guest.png'),
+        sub_icon1: getExportFileV3Path('object-card-supporter.png'),
+        sub_icon2: null,
         name: 'Muziyami',
         rank_global: 28075,
         rank_country: 577,
@@ -60,7 +60,7 @@ export async function panel_J(data = {
         min_m: '04',
 
         card_Ks: [{
-            map_background: 'beatmap-defaultBG.jpg',
+            map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
             star_rating: '4.35',
             score_rank: 'D',
             bp_ranking: '', // 这里空字符串
@@ -94,7 +94,7 @@ export async function panel_J(data = {
         pp: 1611,
     },{},{},{}],
 
-    // J3标签 max: 2+4
+    // J3标签 max: 2+4，第一个第二个是固定的满 combo FC 和不满 Combo FC，第三个到第七个
     label_J3s: [{
         rank: 'PF',
         percent: 98.99,

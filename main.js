@@ -356,7 +356,7 @@ app.post('/panel_E', async (req, res) => {
                         case 'X' : accRemark = 'AP'; break;
                         case 'SH' : accRemark = '>>XH!'; break;
                         case 'S' : accRemark = '>>SS!'; break;
-                        case 'A' : isMissed ? (isNoImperfect ? accRemark = `-x SS` : accRemark = `-${aim300 - n300} S`) : (accRemark = `-${nTotal - n300} SS`); break;
+                        case 'A' : isMissed ? (isNoImperfect ? (accRemark = `-x SS`) : (accRemark = `-${aim300 - n300} S`)) : (accRemark = `-${aim300 - n300} SS`); break;
                         case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`); break;
                         case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`); break;
                         case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`); break;

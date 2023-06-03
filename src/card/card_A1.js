@@ -1,4 +1,12 @@
-import {getExportFileV3Path, getFlagPath, implantImage, readTemplate, replaceText, torus} from "../util.js";
+import {
+    getExportFileV3Path,
+    getFlagPath,
+    getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    implantImage,
+    readTemplate,
+    replaceText,
+    torus
+} from "../util.js";
 
 export async function card_A1(data = {
     background: getExportFileV3Path('card-default.png'),
@@ -44,13 +52,13 @@ export async function card_A1(data = {
 
     let level = data.level || 0;
     let progress = data.progress || 0;
-    let acc = data.acc || 0
+    let acc = getRoundedNumberLargerStr(data.acc,3) + getRoundedNumberSmallerStr(data.acc,3) || 0
     let info = acc + '% Lv.' + level + '(' + progress + '%)';
     let text_info =
         torus.getTextPath(info, 420, 141.836, 24, "right baseline", "#fff");
 
     //pp位置计算
-    let pp = data.pp || 0;
+    let pp = Math.round(data.pp) || 0;
 
     let text_pp = torus.getTextPath(pp.toString(),
             420 - torus.getTextWidth('PP', 48),

@@ -40,24 +40,24 @@ export async function panel_B(data = {
     }, {}],
 
     card_b_1: {
-        ACC: 0.1195,
+        ACC: 0.1195, // 0-1
         PTT: 0.85,
         STA: 0.76,
         STB: 0.543,
         EFT: 0.645,
         STH: 0.984,
-        OVA: 0.746,
-        SAN: 125.45,
+        OVA: 99.4, // 0-100
+        SAN: 125.45, // 0-100
     },
     card_b_2: {
-        ACC: 0.64,
+        ACC: 0.64, // 0-1
         PTT: 0.8743,
         STA: 0.7658,
         STB: 0.353,
         EFT: 0.995,
         STH: 1.004,
-        OVA: 0.746,
-        SAN: 5.45,
+        OVA: 74.6, // 0-100
+        SAN: 5.45, // 0-100
     },
 
     //其他统计数据
@@ -167,10 +167,10 @@ export async function panel_B(data = {
         for (const j in card_B1_rights) {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
         }
-        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA * 100}, true));
-        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_2.OVA * 100}, true));
+        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA}, true));
+        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_2.OVA}, true));
     } else {
-        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA * 100}, true));
+        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA}, true));
         card_B2_centers.push(await card_B2({parameter: "SAN", number: data.card_b_1.SAN}, true));
     }
         svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
