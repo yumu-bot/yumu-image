@@ -1,6 +1,7 @@
 import {
     exportPng,
-    getExportFileV3Path, getGameMode,
+    getExportFileV3Path,
+    getGameMode,
     getNowTimeStamp,
     getRandomBannerPath,
     implantImage,
@@ -92,7 +93,7 @@ export async function panel_B(data = {
         data.card_A1[0].sub_icon1 = getExportFileV3Path('object-card-supporter.png');
         data.card_A1[0].sub_icon2 = null;
     }
-    if (data.card_A1[1].sub_icon2 > 0) {
+    if (data.card_A1[1] && data.card_A1[1].sub_icon2 > 0) {
         data.card_A1[1].sub_icon1 = getExportFileV3Path('object-card-supporter.png');
         data.card_A1[1].sub_icon2 = null;
     }
