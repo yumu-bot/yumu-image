@@ -1482,7 +1482,16 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0) {
  * @param level 等级，0为不变，2为全写 osu!standard，-1为获取他们的unicode字符 \uE801，1为简写 o t m c
  */
 export function getGameMode(gamemode = 'osu', level = 0) {
-    gamemode = gamemode.toLowerCase();
+    gamemode = gamemode.toString().toLowerCase();
+
+    //如果是输入数字，则修改
+    switch (gamemode) {
+        case '0': gamemode = 'osu'; break;
+        case '1': gamemode = 'taiko'; break;
+        case '2': gamemode = 'catch'; break;
+        case '3': gamemode = 'mania'; break;
+    }
+
     switch (level) {
         case 1:
             switch (gamemode) {
@@ -1526,6 +1535,8 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return '\uE802';
             }
             break;
+        default:
+            return gamemode;
     }
 }
 

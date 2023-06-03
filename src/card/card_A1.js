@@ -1,10 +1,10 @@
 import {getExportFileV3Path, getFlagPath, implantImage, readTemplate, replaceText, torus} from "../util.js";
 
 export async function card_A1(data = {
-    background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-    avatar: getExportFileV3Path('PanelObject/A_CardA1_Avatar.png'),
-    sub_icon1: getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png'),
-    sub_icon2: getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png'),
+    background: getExportFileV3Path('card-default.png'),
+    avatar: getExportFileV3Path('avatar-guest.png'),
+    sub_icon1: getExportFileV3Path('object-card-supporter'),
+    sub_icon2: null,
     name: 'Muziyami',
     rank_global: 28075,
     rank_country: 577,
@@ -40,7 +40,7 @@ export async function card_A1(data = {
     let text_rank_global =
         torus.getTextPath('#' + rank_global, 20, 165.836, 24, "left baseline", "#fff");
     let text_rank_country =
-        torus.getTextPath(country+ '#' + rank_country, 20, 191.836, 24, "left baseline", "#fff");
+        torus.getTextPath(country + '#' + rank_country, 20, 191.836, 24, "left baseline", "#fff");
 
     let level = data.level || 0;
     let progress = data.progress || 0;
@@ -69,10 +69,12 @@ export async function card_A1(data = {
     svg = replaceText(svg, flagSvg, reg_country_flag); //高44宽60吧
     // 替换图片
 
-    svg = implantImage(svg, 430, 210, 0, 0, 0.5, data.background, reg_background)
-    svg = implantImage(svg, 100, 100, 20, 20, 1, data.avatar, reg_avatar)
-    svg = implantImage(svg, 40, 40, 200, 70, 1, data.sub_icon1, reg_sub_icon1)
-    svg = implantImage(svg, 40, 40, 250, 70, 1, data.sub_icon2, reg_sub_icon2)
+    svg = data.background ? implantImage(svg, 430, 210, 0, 0, 0.5, data.background, reg_background) : svg;
+    svg = data.avatar ? implantImage(svg, 100, 100, 20, 20, 1, data.avatar, reg_avatar) : svg;
+    svg = data.sub_icon1 ? implantImage(svg, 40, 40, 200, 70, 1, data.sub_icon1, reg_sub_icon1) : svg;
+    svg = data.sub_icon2 ? implantImage(svg, 40, 40, 250, 70, 1, data.sub_icon2, reg_sub_icon2) : svg;
+
+    console.log(data.sub_icon2 ? 'A' : 'B')
 
     return svg.toString();
     /*

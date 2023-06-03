@@ -204,6 +204,7 @@ export async function label_E(data = {
     data_b: '98',
     data_m: '.36%',
     color_remark: '#aaa',
+    title_font: torus,
 }, reuse = false) {
     // 正则表达式
     let reg_text = /(?<=<g id="Text_LE">)/;
@@ -211,7 +212,8 @@ export async function label_E(data = {
 
     // 文字的 <path>
     //原来是 x=50，感觉位置怪怪的
-    let icon_title = torus.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#a1a1a1");
+    let title_font = data.title_font || torus;
+    let icon_title = title_font.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#a1a1a1");
 
     let datas = torus.getTextPath(data.data_b, 56, 44.75, 36, "left baseline", "#fff");
 

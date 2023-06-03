@@ -1,6 +1,6 @@
 import {
     exportPng,
-    getExportFileV3Path,
+    getExportFileV3Path, getGameMode,
     getNowTimeStamp,
     getRandomBannerPath,
     implantImage,
@@ -25,10 +25,10 @@ const VALUE_NAMES = ['ACC', 'PTT', 'STA', 'STB', 'PRE', 'EFT', 'STH'] // OVA 跟
 export async function panel_B(data = {
     // A1卡
     card_A1: [{
-        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-        avatar: getExportFileV3Path('PanelObject/A_CardA1_Avatar.png'),
-        sub_icon1: getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png'),
-        sub_icon2: getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png'),
+        background: getExportFileV3Path('card-default.png'),
+        avatar: getExportFileV3Path('avatar-guest.png'),
+        sub_icon1: null,
+        sub_icon2: 2,
         name: 'Muziyami',
         rank_global: 28075,
         rank_country: 577,
@@ -40,24 +40,24 @@ export async function panel_B(data = {
     }, {}],
 
     card_b_1: {
-        ACC: '',
-        PTT: '',
-        STA: '',
-        STB: '',
-        EFT: '',
-        STH: '',
-        OVA: '',
-        SAN: '',
+        ACC: 0.1195,
+        PTT: 0.85,
+        STA: 0.76,
+        STB: 0.543,
+        EFT: 0.645,
+        STH: 0.984,
+        OVA: 0.746,
+        SAN: 125.45,
     },
     card_b_2: {
-        ACC: '',
-        PTT: '',
-        STA: '',
-        STB: '',
-        EFT: '',
-        STH: '',
-        OVA: '',
-        SAN: '',
+        ACC: 0.64,
+        PTT: 0.8743,
+        STA: 0.7658,
+        STB: 0.353,
+        EFT: 0.995,
+        STH: 1.004,
+        OVA: 0.746,
+        SAN: 5.45,
     },
 
     //其他统计数据
@@ -80,24 +80,7 @@ export async function panel_B(data = {
 
     // 条件定义
     const isVS = data.statistics.isVS;
-    let game_mode;
-    switch (data.statistics.gameMode) {
-        case 0:
-            game_mode = 'osu';
-            break;
-        case 1:
-            game_mode = 'osu';
-            break;
-        case 2:
-            game_mode = 'osu';
-            break;
-        case 3:
-            game_mode = 'osu';
-            break;
-        default:
-            game_mode = 'osu';
-            break;
-    }
+    let game_mode = getGameMode(data.statistics.gameMode, 0);
 
     // 面板文字
     const index_powered = 'powered by Yumubot v0.3.0 EA // PP Minus v2.4 (!ppm/!ppmvs)';
@@ -105,13 +88,13 @@ export async function panel_B(data = {
     const index_panel_name = 'PPM';
 
     // sub_icon1 传的 countryCode , sub_icon2 是 撒泼特等级,如果不是0就是撒泼特,这俩你自行判断一下
-    if (data.card_A1[0]) {
-        data.card_A1[0].sub_icon1 = getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png');
-        data.card_A1[0].sub_icon2 = getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png');
+    if (data.card_A1[0].sub_icon2 > 0) {
+        data.card_A1[0].sub_icon1 = getExportFileV3Path('object-card-supporter.png');
+        data.card_A1[0].sub_icon2 = null;
     }
-    if (data.card_A1[1]) {
-        data.card_A1[1].sub_icon1 = getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png');
-        data.card_A1[1].sub_icon2 = getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png');
+    if (data.card_A1[1].sub_icon2 > 0) {
+        data.card_A1[1].sub_icon1 = getExportFileV3Path('object-card-supporter.png');
+        data.card_A1[1].sub_icon2 = null;
     }
 
     const index_powered_path = torus.getTextPath(index_powered,
@@ -124,7 +107,7 @@ export async function panel_B(data = {
 
     // 插入图片和部件（新方法
 
-    svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
+    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
     // 插入主面板的文字
     svg = replaceText(svg, index_powered_path, reg_index);
@@ -163,6 +146,8 @@ export async function panel_B(data = {
         number_left.push(data.card_b_1[name] * 100 * scale_left);
     }
 
+    svg = implantSvgBody(svg, 0, 0, drawHexagon(number_left, '#00A8EC'), reg_hexagon);
+
     for (let j = 0; j < 6; j++) {
         svg = implantSvgBody(svg, 40, 350 + j * 115, card_B1_lefts[j], reg_left);
     }
@@ -173,7 +158,7 @@ export async function panel_B(data = {
 
         for (const name of VALUE_NAMES) {
             if (!data.card_b_2[name]) continue;
-            card_B1_rights.push(await card_B1({parameter: name, number: data.card_b_2[name] * 100}, true, false));
+            card_B1_rights.push(await card_B1({parameter: name, number: data.card_b_2[name] * 100}, true, true));
             number_right.push(data.card_b_2[name] * 100 * scale_right);
         }
 
@@ -182,25 +167,19 @@ export async function panel_B(data = {
         for (const j in card_B1_rights) {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
         }
-        card_B2_centers.push(await card_B2({parameter: "Overall.L", number: data.card_b_1.OVA}, true));
-        card_B2_centers.push(await card_B2({parameter: "Overall.R", number: data.card_b_2.OVA}, true));
+        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA * 100}, true));
+        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_2.OVA * 100}, true));
     } else {
-        card_B2_centers.push(await card_B2({parameter: "Overall", number: data.card_b_1.OVA * 100}, true));
-        card_B2_centers.push(await card_B2({parameter: "Sanity", number: data.card_b_1.SAN}, true));
+        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA * 100}, true));
+        card_B2_centers.push(await card_B2({parameter: "SAN", number: data.card_b_1.SAN}, true));
     }
         svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
         svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
 
     // 画六个标识
-    let parameters = [];
-    for (const i of VALUE_NAMES) {
-        if (!data.card_b_1[i]) continue;
-        parameters.push(i.parameter);
-    }
-    svg = implantSvgBody(svg, 0, 0, drawHexIndex(parameters), reg_hexagon);
+    svg = implantSvgBody(svg, 0, 0, drawHexIndex(game_mode), reg_hexagon);
 
     // 画六边形和其他
-    svg = implantSvgBody(svg, 0, 0, drawHexagon(number_left, '#00A8EC'), reg_hexagon);
 
     const hexagon = getExportFileV3Path('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
@@ -209,7 +188,7 @@ export async function panel_B(data = {
     return await exportPng(svg);
 }
 
-function drawHexIndex(data = ['']) {
+function drawHexIndex(gamemode = 'osu') {
     let cx = 960;
     let cy = 600;
     let r = 230 + 30; // 中点到边点的距离
@@ -218,8 +197,16 @@ function drawHexIndex(data = ['']) {
     let reg_rrect = /(?<=<g id="RRect">)/;
     let reg_text = /(?<=<g id="IndexText">)/;
 
+    const VALUE_NORMAL = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH'];
+    const VALUE_MANIA = ['ACC', 'PTT', 'STA', 'PRE', 'EFT', 'STH'];
+
     for (let i = 0; i < 6; i++){
-        let param = data[i];
+        let param;
+        if (gamemode === 'mania') {
+            param = VALUE_MANIA[i];
+        } else {
+            param = VALUE_NORMAL[i];
+        }
 
         let PI_3 = Math.PI / 3;
         let x = cx - r * Math.cos(PI_3 * i);

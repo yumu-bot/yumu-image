@@ -7,7 +7,7 @@ import {newJudge, panel_E} from "./src/panel/panel_E.js";
 import {panel_J} from "./src/panel/panel_J.js";
 import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
 import {router as MarkdownRouter} from "./src/markdown.js";
-import {router as PanelBRouter} from "./src/panel/panel_B.js";
+import {panel_B, router as PanelBRouter} from "./src/panel/panel_B.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as DrawLineRouter} from "./src/panel/panel_我tm直接瞎鸡巴乱起.js";
 
