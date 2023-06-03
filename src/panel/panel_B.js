@@ -104,13 +104,23 @@ export async function panel_B(data = {
     const index_request_time = 'request time: ' + getNowTimeStamp();
     const index_panel_name = 'PPM';
 
+    // sub_icon1 传的 countryCode , sub_icon2 是 撒泼特等级,如果不是0就是撒泼特,这俩你自行判断一下
+    if (data.card_A1[0]) {
+        data.card_A1[0].sub_icon1 = getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png');
+        data.card_A1[0].sub_icon2 = getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png');
+    }
+    if (data.card_A1[1]) {
+        data.card_A1[1].sub_icon1 = getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png');
+        data.card_A1[1].sub_icon2 = getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png');
+    }
+
     const index_powered_path = torus.getTextPath(index_powered,
         10, 26.84, 24, "left baseline", "#fff");
     const index_request_time_path = torus.getTextPath(index_request_time,
         1910, 26.84, 24, "right baseline", "#fff");
     const index_panel_name_path = torus.getTextPath(index_panel_name,
         607.5, 83.67, 48, "center baseline", "#fff");
-    const game_mode_path = torus.getTextPath(game_mode, 960,614, 60, 'center baseline', '#fff');
+    const game_mode_path = torus.getTextPath(game_mode, 960, 614, 60, 'center baseline', '#fff');
 
     // 插入图片和部件（新方法
 
