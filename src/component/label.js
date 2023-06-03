@@ -1,9 +1,12 @@
 import {
     getExportFileV3Path,
-    getModColor, getModFullName,
+    getModColor,
+    getModFullName,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getUserRankColor,
-    implantImage, PuHuiTi,
+    getRoundedNumberSmallerStr,
+    getUserRankColor,
+    implantImage,
+    PuHuiTi,
     replaceText,
     torus
 } from "../util.js";
@@ -201,7 +204,6 @@ export async function label_E(data = {
     data_b: '98',
     data_m: '.36%',
     color_remark: '#aaa',
-    title_font: torus,
 }, reuse = false) {
     // 正则表达式
     let reg_text = /(?<=<g id="Text_LE">)/;
