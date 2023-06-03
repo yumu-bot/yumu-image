@@ -1012,7 +1012,7 @@ export function getModColor(Mod = '') {
     let color;
     switch (Mod) {
         case "NF":
-            color = '#00A0E9';
+            color = '#0068B7';
             break;
         case "EZ":
             color = '#22AC38';
@@ -1027,7 +1027,7 @@ export function getModColor(Mod = '') {
             color = '#FF9800';
             break;
         case "DT":
-            color = '#0068B7';
+            color = '#00A0E9';
             break;
         case "RX":
             color = '#BFC31F';
@@ -1036,7 +1036,7 @@ export function getModColor(Mod = '') {
             color = '#BDBDBD';
             break;
         case "NC":
-            color = '#601986';
+            color = '#9922EE';
             break;
         case "FL":
             color = '#000';
@@ -1138,7 +1138,7 @@ export function getRankColor(Rank = 'F') {
             color = '#00A0E9';
             break;
         case "C":
-            color = '#601986';
+            color = '#9922EE';
             break;
         case "D":
             color = '#D32F2F';

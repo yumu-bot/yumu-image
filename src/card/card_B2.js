@@ -36,10 +36,10 @@ export async function card_B2(data = {
     let rank_text;
 
     if (parameter !== 'SAN') {
-        rank_text = torus.getTextPath(rank, 310, 68, 60, 'right baseline', color);
+        rank_text = torus.getTextPath(rank, 305, 58, 60, 'right baseline', color);
     } else {
         let sanityGrade = getSanityGrade (data.number);
-        rank_text = torus.getTextPath(sanityGrade, 310, 68, 60, 'right baseline', color);
+        rank_text = torus.getTextPath(sanityGrade, 305, 58, 60, 'right baseline', color);
     }
 
     let number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 160, 140, 'center baseline', '#fff');
@@ -86,23 +86,23 @@ function getSanityGrade (data = 0) {
     let grade;
 
     if (data >= 120) {
-        grade = '...';
+        grade = '?';
     } else if (data >= 100) {
-        grade = 'O';
+        grade = '++';
     } else if (data >= 95) {
-        grade = 'O';
+        grade = '+';
     } else if (data >= 90) {
-        grade = 'O';
+        grade = '-';
     } else if (data >= 80) {
-        grade = '!';
+        grade = '--';
     } else if (data >= 70) {
-        grade = '!!';
+        grade = '!';
     } else if (data >= 60) {
-        grade = '!!!';
+        grade = '!!';
     } else if (data >= 20) {
-        grade = 'X';
+        grade = '!!!';
     } else {
-        grade = 'U';
+        grade = 'X';
     }
 
     return grade;
