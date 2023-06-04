@@ -1,7 +1,7 @@
 import {
     exportPng,
     getExportFileV3Path,
-    getMatchNameSplitted,
+    getMatchNameSplitted, getModInt,
     getNowTimeStamp,
     getRandomBannerPath,
     getRoundedNumberLargerStr,
@@ -212,13 +212,18 @@ export async function panel_F(data = {
 
     let beatmap_arr = await Promise.all(data.scores.map(async (e) => {
         const d = e.statistics;
+        const mods = e.red[0].player_mods || e.none[0].player_mods || e.blue[0].player_mods || '';
+        let mod = '';
+
+        if (mods.indexOf("DT") !== -1) mod = 'DT';
+
         if (d.delete) {
             return {
                 background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
-                title: 'Delete Map',
-                artist: '',
-                mapper: '', //creator
-                difficulty: '',
+                title: 'Deleted Map',
+                artist: '?',
+                mapper: '?', //creator
+                difficulty: '?',
                 status: '',
 
                 bid: 0,
@@ -228,7 +233,7 @@ export async function panel_F(data = {
                 od: 0,
             }
         }
-        const attr = await getMapAttributes(d.bid, d.mod_int);
+        const attr = await getMapAttributes(d.bid, mod);
         const cs = getRoundedNumberLargerStr(attr.cs, 2) + getRoundedNumberSmallerStr(attr.cs, 2);
         const ar = getRoundedNumberLargerStr(attr.ar, 2) + getRoundedNumberSmallerStr(attr.ar, 2);
         const od = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
