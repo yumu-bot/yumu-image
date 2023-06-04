@@ -219,8 +219,8 @@ export async function panel_F(data = {
         } else {
             mods = e.none[0].player_mods || '';
         }
-        let mod = '';
-        if (mods.indexOf("DT") !== -1) mod = 'DT';
+        let mod_int = 0;
+        if (mods.indexOf("DT") !== -1) mod_int = 64;
 
         if (d.delete) {
             return {
@@ -238,7 +238,7 @@ export async function panel_F(data = {
                 od: 0,
             }
         }
-        const attr = await getMapAttributes(d.bid, mod);
+        const attr = await getMapAttributes(d.bid, mod_int);
         const cs = getRoundedNumberLargerStr(attr.cs, 2) + getRoundedNumberSmallerStr(attr.cs, 2);
         const ar = getRoundedNumberLargerStr(attr.ar, 2) + getRoundedNumberSmallerStr(attr.ar, 2);
         const od = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
