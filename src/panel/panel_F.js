@@ -212,9 +212,14 @@ export async function panel_F(data = {
 
     let beatmap_arr = await Promise.all(data.scores.map(async (e) => {
         const d = e.statistics;
-        const mods = e.red[0].player_mods || e.none[0].player_mods || e.blue[0].player_mods || '';
-        let mod = '';
 
+        let mods;
+        if (data.match.is_team_vs) {
+            mods = e.red[0].player_mods;
+        } else {
+            mods = e.none[0].player_mods || '';
+        }
+        let mod = '';
         if (mods.indexOf("DT") !== -1) mod = 'DT';
 
         if (d.delete) {
