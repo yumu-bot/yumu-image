@@ -21,7 +21,7 @@ export function initPath() {
     axios.interceptors.response.use((response) => response, (error) => {
         const {config, response} = error;
         console.error("request err", error);
-        if (response && response.status === 403) {
+        if (response && (response.status === 403 || response.status === 404)) {
             return Promise.reject(error);
         }
         console.log('re send');
@@ -60,7 +60,11 @@ export function readTemplate(path = '') {
 }
 
 export function readImage(path = '') {
-    return fs.readFileSync(path, 'binary');
+    try {
+        return fs.readFileSync(path, 'binary');
+    } catch (e) {
+        return undefined;
+    }
 }
 
 export function readExportFileV3(path = '') {
@@ -72,8 +76,8 @@ export function getExportFileV3Path(path = '') {
 }
 
 export async function readNetImage(path = '', defaultImagePath) {
-    if (!path.startsWith("http")) {
-        return readImage(path) || "";
+    if (!path || !path.startsWith("http")) {
+        return readImage(path);
     }
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
@@ -91,7 +95,7 @@ export async function readNetImage(path = '', defaultImagePath) {
         data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
     } catch (e) {
         console.error("download error", e);
-        return await readNetImage(defaultImagePath) || getExportFileV3Path('error.png');
+        return defaultImagePath || getExportFileV3Path('error.png');
     }
     fs.writeFileSync(bufferPath, data, 'binary');
     return bufferPath;
