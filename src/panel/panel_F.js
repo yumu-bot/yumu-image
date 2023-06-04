@@ -1,7 +1,7 @@
 import {
     exportPng,
     getExportFileV3Path,
-    getMatchNameSplitted, getModInt,
+    getMatchNameSplitted,
     getNowTimeStamp,
     getRandomBannerPath,
     getRoundedNumberLargerStr,
