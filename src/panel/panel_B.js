@@ -41,7 +41,7 @@ export async function panel_B(data = {
     }, {}],
 
     card_b_1: {
-        ACC: 0.1195, // 0-1
+        ACC: 1.1195, // 0-1
         PTT: 0.85,
         STA: 0.76,
         STB: 0.543,
@@ -116,8 +116,11 @@ export async function panel_B(data = {
         607.5, 83.67, 48, "center baseline", "#fff");
     const game_mode_path = torus.getTextPath(game_mode, 960, 614, 60, 'center baseline', '#fff');
 
-    // 插入图片和部件（新方法
+    console.timeLog("logTime-panelB", "画标识")
+    // 画六个标识
+    svg = implantSvgBody(svg, 0, 0, drawHexIndex(game_mode), reg_hexagon);
 
+    // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
     // 插入主面板的文字
@@ -150,6 +153,7 @@ export async function panel_B(data = {
     }
 
     console.timeLog("logTime-panelB", "两侧数据")
+
     // 获取卡片
     for (const name of VALUE_NAMES) {
         if (typeof data.card_b_1[name] !== 'number') continue;
@@ -185,9 +189,6 @@ export async function panel_B(data = {
     }
     svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
     svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
-    console.timeLog("logTime-panelB", "画标识")
-    // 画六个标识
-    svg = implantSvgBody(svg, 0, 0, drawHexIndex(game_mode), reg_hexagon);
 
     // 画六边形和其他
 
