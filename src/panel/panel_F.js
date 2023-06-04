@@ -305,8 +305,9 @@ export async function panel_F(data = {
     let title1 = title[0];
     let title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
     let left1 = data.match.match_round + 'x Rounds';
-    let left2 = data.match.match_time;
-    let left3 = moment(data.match.match_time_start, 'X').format('YYYY-MM-DD');
+    let left2 = moment(data.match.match_time, 'HH:mm[-]').utcOffset(960).format('HH:mm') + '-' +
+        moment(data.match.match_time, '[-]HH:mm').utcOffset(960).format('HH:mm');
+    let left3 = moment(data.match.match_time_start, 'X').utcOffset(960).format('YYYY-MM-DD');
     const avg_star = beatmap_arr
         .filter(b => b.star_rating > 0)
         .map(b => b.star_rating);
@@ -314,7 +315,7 @@ export async function panel_F(data = {
     let right2 = 'mp' + data.match.mpid;
     let wins_team_red = data.match.wins_team_red || 0;
     let wins_team_blue = data.match.wins_team_blue || 0;
-    let right3b = data.match.is_team_vs ? (wins_team_red + ':' + wins_team_blue) : 'h2h';
+    let right3b = data.match.is_team_vs ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
 
     let card_A2_impl =
         await card_A2({
