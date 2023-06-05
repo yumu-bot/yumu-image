@@ -4,10 +4,10 @@ import {CACHE_PATH, getExportFileV3Path, getGameMode, hasMod, initPath, readImag
 import {panel_C} from "./src/panel/panel_C.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {newJudge, panel_E} from "./src/panel/panel_E.js";
-import {panel_J} from "./src/panel/panel_J.js";
+import {router as PanelJRouter} from "./src/panel/panel_J.js";
 import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
 import {router as MarkdownRouter} from "./src/markdown.js";
-import {panel_B, router as PanelBRouter} from "./src/panel/panel_B.js";
+import {router as PanelBRouter} from "./src/panel/panel_B.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as DrawLineRouter} from "./src/panel/panel_我tm直接瞎鸡巴乱起.js";
 
@@ -522,16 +522,7 @@ app.post('/panel_E', async (req, res) => {
     }
 })
 
-app.post('/panel_J', async (req, res) => {
-    try {
-        const f = checkJsonData(req);
-        const png = await panel_J(f);
-        res.set('Content-Type', 'image/png');
-        res.send(png);
-    } catch (e) {
-        res.status(500).send(e.stack);
-    }
-})
+app.post('/panel_J', PanelJRouter)
 
 app.post('/md', MarkdownRouter);
 app.post('/panel_F', PanelFRouter);
