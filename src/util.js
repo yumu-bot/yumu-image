@@ -1888,7 +1888,7 @@ export function getAccIndex (score) {
                 case 'B' : isMissed ? aim300x = 90 : aim300x = 80; break;
                 case 'C' : isMissed ? aim300x = 80 : aim300x = 70; break;
                 case 'D' : aim300x = 60; break;
-                default : aim300x = 60; break;
+                default : aim300x = 100; break;
             }
 
             let aim300 = Math.ceil(nTotal * aim300x / 100);
@@ -1936,7 +1936,7 @@ export function getAccIndex (score) {
                 case 'B' : isMissed ? aim300x = 90 : aim300x = 80; break;
                 case 'C' : isMissed ? aim300x = 80 : aim300x = 70; break;
                 case 'D' : aim300x = 60; break;
-                default : aim300x = 60; break;
+                default : aim300x = 100; break;
             }
 
             let aim300 = Math.ceil(nTotal * aim300x / 100);
