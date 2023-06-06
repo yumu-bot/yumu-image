@@ -43,5 +43,6 @@ const colorLazerGroup = ["#F5409B", "#E04D4D", "#B2FFF8", "#CBAAFF",
      */
 
 function getRandomColor() {
-    return colorLazerGroup[getRandom(16)];
+    let i = getRandom(16);
+    return colorLazerGroup[i];
 }
