@@ -9,7 +9,7 @@ import {calcPerformancePoints, getDensityArray} from "./src/compute-pp.js";
 import {router as MarkdownRouter} from "./src/markdown.js";
 import {panel_B, router as PanelBRouter} from "./src/panel/panel_B.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
-import {router as DrawLineRouter} from "./src/panel/panel_我tm直接瞎鸡巴乱起.js";
+import {router as DrawLineRouter} from "./src/panel/panel_Alpha.js";
 
 initPath();
 //这里放测试代码
