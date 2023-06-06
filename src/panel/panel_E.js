@@ -8,7 +8,6 @@ import {
     getGameMode,
     getMapStatusV3Path,
     getNowTimeStamp,
-    getRandomBannerPath,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getStarRatingColor,

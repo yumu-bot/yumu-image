@@ -1,4 +1,4 @@
-import {exportPng, getRandom, PuHuiTi} from "../util.js";
+import {exportPng, PuHuiTi} from "../util.js";
 
 export async function router(req, res) {
     try {

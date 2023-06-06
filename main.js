@@ -1,6 +1,15 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, getExportFileV3Path, getGameMode, hasMod, initPath, readImage, readNetImage} from "./src/util.js";
+import {
+    getAccIndex,
+    CACHE_PATH,
+    getExportFileV3Path,
+    getGameMode,
+    hasMod,
+    initPath,
+    readImage,
+    readNetImage
+} from "./src/util.js";
 import {panel_C} from "./src/panel/panel_C.js";
 import {panel_D} from "./src/panel/panel_D.js";
 import {newJudge, panel_E} from "./src/panel/panel_E.js";
@@ -270,136 +279,12 @@ app.post('/panel_E', async (req, res) => {
             map_drain = (map_drain * 3 / 2).toFixed(0);
         }
 
-        let accRemark;
-        switch (getGameMode(score.mode, 1)) {
-
-            case 'o' : {
-                let aim300x = 100;
-                let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_50 + score.statistics.count_miss;
-                let n300 = score.statistics.count_300;
-                let n100 = score.statistics.count_100;
-                let n50 = score.statistics.count_50;
-                let aim50 = Math.ceil(nTotal / 100);
-
-                let isMissed = false;
-                let is50over1p = false;
-                let isNoImperfect = false;
-
-                if (score.statistics.count_miss > 0) isMissed = true;
-                if (n50 * 100 > nTotal) is50over1p = true;
-                if (n50 + n100 === 0) isNoImperfect = true;
-
-                switch (score.rank) {
-                    case 'XH' :
-                    case 'X' :
-                    case 'SH' :
-                    case 'S' : aim300x = 100; break;
-                    case 'A' : isMissed ? aim300x = 100 : aim300x = 90; break;
-                    case 'B' : isMissed ? aim300x = 90 : aim300x = 80; break;
-                    case 'C' : isMissed ? aim300x = 80 : aim300x = 70; break;
-                    case 'D' : aim300x = 60; break;
-                    default : aim300x = 60; break;
-                }
-
-                let aim300 = Math.ceil(nTotal * aim300x / 100);
-
-                if (aim300 < n300) {
-                    accRemark = '-'; break; //跳出了
-                } else {
-                    switch (score.rank) {
-                        case 'XH' : accRemark = 'AP'; break;
-                        case 'X' : accRemark = 'AP'; break;
-                        case 'SH' : accRemark = '>>XH!'; break;
-                        case 'S' : accRemark = '>>SS!'; break;
-                        case 'A' : isMissed ?
-                            (isNoImperfect ? accRemark = `-x SS` : accRemark = `-x S`) :
-                            (is50over1p ? (accRemark = `-${aim50 - n50} bad`) : (accRemark = `-${nTotal - n300} SS`)); break;
-                        case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-`); break;
-                        case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-`); break;
-                        case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-`); break;
-                        default : accRemark = 'fail..'; break;
-                    }
-                }
-
-            } break;
-
-            case 't' : {
-                let aim300x = 100;
-                let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_miss;
-                let n300 = score.statistics.count_300;
-
-                let isMissed = false;
-                let isNoImperfect = false;
-
-                if (score.statistics.count_miss > 0) isMissed = true;
-                if (score.statistics.count_100 === 0) isNoImperfect = true;
-
-                switch (score.rank) {
-                    case 'XH' :
-                    case 'X' :
-                    case 'SH' :
-                    case 'S' : aim300x = 100; break;
-                    case 'A' : isMissed ? aim300x = 100 : aim300x = 90; break;
-                    case 'B' : isMissed ? aim300x = 90 : aim300x = 80; break;
-                    case 'C' : isMissed ? aim300x = 80 : aim300x = 70; break;
-                    case 'D' : aim300x = 60; break;
-                    default : aim300x = 60; break;
-                }
-
-                let aim300 = Math.ceil(nTotal * aim300x / 100);
-
-                if (aim300 < n300) {
-                    accRemark = '-'; break; //跳出了
-                } else {
-                    switch (score.rank) {
-                        case 'XH' : accRemark = 'AP'; break;
-                        case 'X' : accRemark = 'AP'; break;
-                        case 'SH' : accRemark = '>>XH!'; break;
-                        case 'S' : accRemark = '>>SS!'; break;
-                        case 'A' : isMissed ? (isNoImperfect ? (accRemark = `-x SS`) : (accRemark = `-${aim300 - n300} S`)) : (accRemark = `-${aim300 - n300} SS`); break;
-                        case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`); break;
-                        case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`); break;
-                        case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`); break;
-                        default : accRemark = 'fail..'; break;
-                    }
-                }
-
-            } break;
-
-
-            case 'c' : {
-
-                switch (score.rank) {
-                    case 'XH' : accRemark = 'AP'; break;
-                    case 'X' : accRemark = 'AP'; break;
-                    case 'SH' : accRemark = `>>XH!`; break;
-                    case 'S' : accRemark = `>>SS!`; break;
-                    case 'A' : accRemark = `-${(98 - score.accuracy * 100).toFixed(2)}%`; break;
-                    case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(2)}%`; break;
-                    case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(2)}%`; break;
-                    case 'D' : accRemark = `-${(85 - score.accuracy * 100).toFixed(2)}%`; break;
-                    default : accRemark = 'fail..'; break;
-                }
-
-            } break;
-
-            case 'm' : {
-                if (score.statistics.count_geki >= score.statistics.count_300) {
-                    accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
-                } else {
-                    accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
-                }
-            } break;
-
-            default : accRemark = 'fail..'; break;
-        }
-
         let roundacc = Math.round(score.accuracy * 10000) / 100
         let labelPoint = (score.accuracy * 100) % 1;
         let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
 
         const label_data = {
-            acc: newLabel(accRemark,
+            acc: newLabel(getAccIndex(score),
                 Math.floor(roundacc) + (showPoint ? '' : '.'),
                 showPoint ? '%' : labelPoint.toFixed(2).substring(2) + '%'),
             combo: newLabel(`${score.beatmap.max_combo}x`,

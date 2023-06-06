@@ -1840,7 +1840,7 @@ export async function getFlagPath(code = "cn", x, y) {
     return `<g transform="translate(${x} ${y}) scale(1.45)">` + svg.substring(60, len - 6) + '</g>';
 }
 
-const Mod = {
+const ModInt = {
     "NM": 0,
     "NF": 1,
     "EZ": 2,
@@ -1859,9 +1859,143 @@ const Mod = {
     "PF": 16384,
 }
 
+export function getAccIndex (score) {
+    let accRemark;
+    switch (getGameMode(score.mode, 1)) {
+
+        case 'o' : {
+            let aim300x = 100;
+            let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_50 + score.statistics.count_miss;
+            let n300 = score.statistics.count_300;
+            let n100 = score.statistics.count_100;
+            let n50 = score.statistics.count_50;
+            let aim50 = Math.ceil(nTotal / 100);
+
+            let isMissed = false;
+            let is50over1p = false;
+            let perfectExceptMiss = false;
+
+            if (score.statistics.count_miss > 0) isMissed = true;
+            if (n50 * 100 > nTotal) is50over1p = true;
+            if (n50 + n100 === 0) perfectExceptMiss = true;
+
+            switch (score.rank) {
+                case 'XH' :
+                case 'X' :
+                case 'SH' :
+                case 'S' : aim300x = 100; break;
+                case 'A' : isMissed ? aim300x = 100 : aim300x = 90; break;
+                case 'B' : isMissed ? aim300x = 90 : aim300x = 80; break;
+                case 'C' : isMissed ? aim300x = 80 : aim300x = 70; break;
+                case 'D' : aim300x = 60; break;
+                default : aim300x = 60; break;
+            }
+
+            let aim300 = Math.ceil(nTotal * aim300x / 100);
+
+            if (aim300 < n300) {
+                accRemark = '-'; break; //跳出了
+            } else {
+                switch (score.rank) {
+                    case 'XH' : accRemark = 'AP'; break;
+                    case 'X' : accRemark = 'AP'; break;
+                    case 'SH' : accRemark = '>>XH!'; break;
+                    case 'S' : accRemark = '>>SS!'; break;
+                    case 'A' : isMissed ?
+                        (perfectExceptMiss ? accRemark = `-x SS` :  // 有miss，无不良判定
+                            accRemark = `-x S`) : // 有miss，有不良判定
+                        (is50over1p ?
+                            (accRemark = `-${aim50 - n50} bad`) :
+                                accRemark = `-${nTotal - n300} SS`); break;
+                    case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-`); break;
+                    case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-`); break;
+                    case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-`); break;
+                    default : accRemark = 'fail..'; break;
+                }
+            }
+
+        } break;
+
+        case 't' : {
+            let aim300x = 100;
+            let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_miss;
+            let n300 = score.statistics.count_300;
+
+            let isMissed = false;
+            let perfectExceptMiss = false;
+
+            if (score.statistics.count_miss > 0) isMissed = true;
+            if (score.statistics.count_100 === 0) perfectExceptMiss = true;
+
+            switch (score.rank) {
+                case 'XH' :
+                case 'X' :
+                case 'SH' :
+                case 'S' : aim300x = 100; break;
+                case 'A' : isMissed ? aim300x = 100 : aim300x = 90; break;
+                case 'B' : isMissed ? aim300x = 90 : aim300x = 80; break;
+                case 'C' : isMissed ? aim300x = 80 : aim300x = 70; break;
+                case 'D' : aim300x = 60; break;
+                default : aim300x = 60; break;
+            }
+
+            let aim300 = Math.ceil(nTotal * aim300x / 100);
+
+            if (aim300 < n300) {
+                accRemark = '-'; break; //跳出了
+            } else {
+                switch (score.rank) {
+                    case 'XH' : accRemark = 'AP'; break;
+                    case 'X' : accRemark = 'AP'; break;
+                    case 'SH' : accRemark = '>>XH!'; break;
+                    case 'S' : accRemark = '>>SS!'; break;
+                    case 'A' : isMissed ?
+                        (perfectExceptMiss ?
+                            (accRemark = `-${aim300 - n300} SS`) : // 有miss，无不良判定
+                            (accRemark = `-x S`)) : // 有miss，有不良判定
+                        (accRemark = `-${aim300 - n300} SS`); break;
+                    case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`); break;
+                    case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`); break;
+                    case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`); break;
+                    default : accRemark = 'fail..'; break;
+                }
+            }
+
+        } break;
+
+        case 'c' : {
+
+            switch (score.rank) {
+                case 'XH' : accRemark = 'AP'; break;
+                case 'X' : accRemark = 'AP'; break;
+                case 'SH' : accRemark = `>>XH!`; break;
+                case 'S' : accRemark = `>>SS!`; break;
+                case 'A' : accRemark = `-${(98 - score.accuracy * 100).toFixed(2)}%`; break;
+                case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(2)}%`; break;
+                case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(2)}%`; break;
+                case 'D' : accRemark = `-${(85 - score.accuracy * 100).toFixed(2)}%`; break;
+                default : accRemark = 'fail..'; break;
+            }
+
+        } break;
+
+        case 'm' : {
+            if (score.statistics.count_geki >= score.statistics.count_300) {
+                accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
+            } else {
+                accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+            }
+        } break;
+
+        default : accRemark = 'fail..'; break;
+    }
+
+    return accRemark;
+}
+
 export function ar2ms(ar, mode = 'o') {
     if (mode === 'o' || mode === 'c') {
-        if (0 < ar - 5) {
+        if (ar > 5) {
             if (ar > 11) return '300ms';
             return Math.floor(1200 - (150 * (ar - 5))) + 'ms';
         } else {
@@ -1877,12 +2011,12 @@ export function od2ms(od, mode = 'o') {
     switch (mode) {
         case 'o': {
             if (od > 11) return '14ms';
-            ms = (80 - (6 * od)).toFixed(2);
+            ms = Math.floor(80 - (6 * od));
             break;
         }
         case 't': {
             if (od > 10) return '17ms';
-            ms = (50 - (3 * od)).toFixed(2);
+            ms = Math.floor(50 - (3 * od));
             break;
         }
         case 'c': {
@@ -1890,36 +2024,37 @@ export function od2ms(od, mode = 'o') {
         }
         case 'm': {
             if (od > 11) return '31ms';
-            ms = (64 - (3 * od)).toFixed(2);
+            if (od < 0) return '64ms';
+            ms = Math.floor(64 - (3 * od));
             break;
         }
     }
-    if (ms.substr(-2) === '00') return ms.slice(0, -3) + 'ms';
-    if (ms.substr(-1) === '0') return ms.slice(0, -1) + 'ms';
+    if (ms.substr(-3) === '.00') return ms.slice(0, -3) + 'ms';
+    if (ms.substr(-2) === '.0') return ms.slice(0, -2) + 'ms';
     return ms + 'ms';
 }
 
 export function cs2px(cs, mode = 'o') {
     if (mode === 'o') {
         let osupixel = (54.4 - 4.48 * cs).toFixed(2);
-        if (osupixel.substr(-2) === '00') return osupixel.slice(0, -3) + 'px';
-        if (osupixel.substr(-1) === '0') return osupixel.slice(0, -1) + 'px';
+        if (osupixel.substr(-3) === '.00') return osupixel.slice(0, -3) + 'px';
+        if (osupixel.substr(-2) === '.0') return osupixel.slice(0, -2) + 'px';
         return osupixel + 'px';
     } else if (mode === 'm') {
-        return cs.toFixed(0) + 'Keys'
+        return cs.toFixed(0) + ' Keys'
     } else {
         return '-';
     }
 }
 
 export function hasMod(modInt = 0, mod = '') {
-    return Mod[mod] ? (modInt & Mod[mod]) !== 0 : false;
+    return ModInt[mod] ? (modInt & ModInt[mod]) !== 0 : false;
 }
 
 export function hasAnyMod(modInt = 0, mod = ['']) {
     if (!mod) return false;
     for (const v of mod) {
-        if ((Mod[v] & modInt) !== 0) {
+        if ((ModInt[v] & modInt) !== 0) {
             return true;
         }
     }
@@ -1995,17 +2130,17 @@ export function getModFullName(mod = 'NM') {
 
 export function getModInt(mod = ['']) {
     return mod.map(v => {
-        return Mod[v] ? Mod[v] : 0
+        return ModInt[v] ? ModInt[v] : 0
     }).reduce((sum, v) => sum | v);
 }
 
 export function addMod(modInt = 0, mod = '') {
-    return Mod[mod] ? modInt | Mod[mod] : modInt;
+    return ModInt[mod] ? modInt | ModInt[mod] : modInt;
 }
 
 export function getAllMod(modInt) {
     let mods = [];
-    for (const [mod, i] of Object.entries(Mod)) {
+    for (const [mod, i] of Object.entries(ModInt)) {
         if (modInt & i) {
             mods.push(mod);
         }
@@ -2014,7 +2149,7 @@ export function getAllMod(modInt) {
 }
 
 export function delMod(modInt = 0, mod = '') {
-    return Mod[mod] ? modInt & ~Mod[mod] : modInt;
+    return ModInt[mod] ? modInt & ~ModInt[mod] : modInt;
 }
 
 //获取一个1到目标数的随机整数。如果range小于1，则返回0-1的随机小数。
