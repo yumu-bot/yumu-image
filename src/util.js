@@ -1910,7 +1910,7 @@ export function getAccIndex (score) {
                     case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-`); break;
                     case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-`); break;
                     case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-`); break;
-                    default : accRemark = 'fail..'; break;
+                    default : accRemark = `~ [${getApproximateRank(score)}]`; break;
                 }
             }
 
@@ -1957,7 +1957,7 @@ export function getAccIndex (score) {
                     case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`); break;
                     case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`); break;
                     case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`); break;
-                    default : accRemark = 'fail..'; break;
+                    default : accRemark = `~ [${getApproximateRank(score)}]`; break;
                 }
             }
 
@@ -1974,16 +1974,23 @@ export function getAccIndex (score) {
                 case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(2)}%`; break;
                 case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(2)}%`; break;
                 case 'D' : accRemark = `-${(85 - score.accuracy * 100).toFixed(2)}%`; break;
-                default : accRemark = 'fail..'; break;
+                default : accRemark = `~ [${getApproximateRank(score)}]`; break;
             }
 
         } break;
 
         case 'm' : {
-            if (score.statistics.count_geki >= score.statistics.count_300) {
-                accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
-            } else {
-                accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+            switch (score.rank) {
+                case 'F' : {
+                    accRemark = `~ [${getApproximateRank(score)}]`; break;
+                } break;
+                default : {
+                    if (score.statistics.count_geki >= score.statistics.count_300) {
+                        accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
+                    } else {
+                        accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+                    }
+                } break;
             }
         } break;
 
@@ -1991,6 +1998,101 @@ export function getAccIndex (score) {
     }
 
     return accRemark;
+}
+
+
+export function getApproximateRank (score) {
+    let rank = 'F';
+
+    let n300 = score.statistics.count_300;
+    let n100 = score.statistics.count_100;
+    let n50 = score.statistics.count_50;
+    let n0 = score.statistics.count_miss;
+    let nGeki = score.statistics.count_geki;
+    let nKatu = score.statistics.count_katu;
+    let nTotal;
+    let acc = score.accuracy;
+
+    let isMissed = false;
+    if (n0 > 0) isMissed = true;
+
+    switch (getGameMode(score.mode, 1)) {
+        case 'o' : {
+            nTotal = n300 + n100 + n50 + n0;
+
+            let is50over1p = false;
+            if (n50 / nTotal > 0.01) is50over1p = true;
+
+
+            if (n300 = nTotal) {
+                rank = 'SS';
+            } else if (n300 / nTotal >= 0.9) {
+                rank = isMissed ? 'A' : is50over1p ? 'S' : 'A';
+            } else if (n300 / nTotal >= 0.8) {
+                rank = isMissed ? 'B' : 'A';
+            } else if (n300 / nTotal >= 0.7) {
+                rank = isMissed ? 'C' : 'B';
+            } else if (n300 / nTotal >= 0.6) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+
+        case 't' : {
+            nTotal = n300 + n100 + n0;
+
+            if (n300 = nTotal) {
+                rank = 'SS';
+            } else if (n300 / nTotal >= 0.9) {
+                rank = isMissed ? 'A' : 'S';
+            } else if (n300 / nTotal >= 0.8) {
+                rank = isMissed ? 'B' : 'A';
+            } else if (n300 / nTotal >= 0.7) {
+                rank = isMissed ? 'C' : 'B';
+            } else if (n300 / nTotal >= 0.6) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+
+        case 'c' : {
+
+            if (acc = 1) {
+                rank = 'SS';
+            } else if (acc > 0.98) {
+                rank = 'S';
+            } else if (acc > 0.94) {
+                rank = 'A';
+            } else if (acc > 0.90) {
+                rank = 'B';
+            } else if (acc > 0.85) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+
+        case 'm' : {
+
+            if (acc = 1) {
+                rank = 'SS';
+            } else if (acc >= 0.95) {
+                rank = 'S';
+            } else if (acc >= 0.90) {
+                rank = 'A';
+            } else if (acc >= 0.80) {
+                rank = 'B';
+            } else if (acc >= 0.70) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+    }
+
+    return rank;
 }
 
 export function ar2ms(ar, mode = 'o') {
