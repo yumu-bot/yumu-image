@@ -1910,7 +1910,7 @@ export function getAccIndex (score) {
                     case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-`); break;
                     case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-`); break;
                     case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-`); break;
-                    default : accRemark = `~ [${getApproximateRank(score)}]`; break;
+                    default : accRemark = `~ ${getApproximateRank(score)}`; break;
                 }
             }
 
@@ -1957,7 +1957,7 @@ export function getAccIndex (score) {
                     case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`); break;
                     case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`); break;
                     case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`); break;
-                    default : accRemark = `~ [${getApproximateRank(score)}]`; break;
+                    default : accRemark = `~ ${getApproximateRank(score)}`; break;
                 }
             }
 
@@ -1974,7 +1974,7 @@ export function getAccIndex (score) {
                 case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(2)}%`; break;
                 case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(2)}%`; break;
                 case 'D' : accRemark = `-${(85 - score.accuracy * 100).toFixed(2)}%`; break;
-                default : accRemark = `~ [${getApproximateRank(score)}]`; break;
+                default : accRemark = `~ ${getApproximateRank(score)}`; break;
             }
 
         } break;
@@ -1982,7 +1982,7 @@ export function getAccIndex (score) {
         case 'm' : {
             switch (score.rank) {
                 case 'F' : {
-                    accRemark = `~ [${getApproximateRank(score)}]`; break;
+                    accRemark = `~ ${getApproximateRank(score)}`; break;
                 } break;
                 default : {
                     if (score.statistics.count_geki >= score.statistics.count_300) {
