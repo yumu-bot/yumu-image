@@ -2024,7 +2024,7 @@ export function getApproximateRank (score) {
             if (n50 / nTotal > 0.01) is50over1p = true;
 
 
-            if (n300 = nTotal) {
+            if (n300 === nTotal) {
                 rank = 'SS';
             } else if (n300 / nTotal >= 0.9) {
                 rank = isMissed ? 'A' : is50over1p ? 'S' : 'A';
@@ -2042,7 +2042,7 @@ export function getApproximateRank (score) {
         case 't' : {
             nTotal = n300 + n100 + n0;
 
-            if (n300 = nTotal) {
+            if (n300 === nTotal) {
                 rank = 'SS';
             } else if (n300 / nTotal >= 0.9) {
                 rank = isMissed ? 'A' : 'S';
@@ -2059,7 +2059,7 @@ export function getApproximateRank (score) {
 
         case 'c' : {
 
-            if (acc = 1) {
+            if (acc === 1) {
                 rank = 'SS';
             } else if (acc > 0.98) {
                 rank = 'S';
@@ -2076,7 +2076,7 @@ export function getApproximateRank (score) {
 
         case 'm' : {
 
-            if (acc = 1) {
+            if (acc === 1) {
                 rank = 'SS';
             } else if (acc >= 0.95) {
                 rank = 'S';
