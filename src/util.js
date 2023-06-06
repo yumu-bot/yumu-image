@@ -2011,12 +2011,12 @@ export function od2ms(od, mode = 'o') {
     switch (mode) {
         case 'o': {
             if (od > 11) return '14ms';
-            ms = Math.floor(80 - (6 * od));
+            ms = Math.floor(80 - (6 * od)).toString();
             break;
         }
         case 't': {
             if (od > 10) return '17ms';
-            ms = Math.floor(50 - (3 * od));
+            ms = Math.floor(50 - (3 * od)).toString();
             break;
         }
         case 'c': {
@@ -2025,7 +2025,7 @@ export function od2ms(od, mode = 'o') {
         case 'm': {
             if (od > 11) return '31ms';
             if (od < 0) return '64ms';
-            ms = Math.floor(64 - (3 * od));
+            ms = Math.floor(64 - (3 * od)).toString();
             break;
         }
     }

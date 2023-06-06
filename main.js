@@ -20,8 +20,31 @@ import {router as PanelBRouter} from "./src/panel/panel_B.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as DrawLineRouter} from "./src/panel/panel_Alpha.js";
 
+import fs from "fs";
+
 initPath();
 //这里放测试代码
+
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
+
+/*
+console.time()
+console.time('B')
+fs.writeFileSync("image/out/panel_B.png", await panel_B());
+console.timeEnd('B')
+console.time('C')
+fs.writeFileSync("image/out/panel_C.png", await panel_C());
+console.timeEnd('C')
+console.time('D')
+fs.writeFileSync("image/out/panel_D.png", await panel_D());
+console.timeEnd('D')
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await panel_E());
+console.timeEnd('E')
+
+ */
 
 const app = express();
 
