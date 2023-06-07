@@ -913,7 +913,7 @@ export function getV3Score (v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mod
     }
 
     let comboScore = score * bonus * comboRate * Math.max((combo / Math.max(maxcombo, 1)), 1);
-    let accScore = score * bonus * Math.pow(acc, accIndex);
+    let accScore = score * bonus * accRate * Math.pow(acc, accIndex);
 
     return comboScore + accScore;
 
