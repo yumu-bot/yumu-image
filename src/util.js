@@ -867,6 +867,54 @@ function getRoundedNumberUnit(number = 0, level = 0) {
     }
 }
 
+export function getV3Score (acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gamemode = 'osu') {
+
+    let score = 1000000;
+    let mode = getGameMode(gamemode, 1);
+    let modBonus = [];
+    let bonus = 1;
+    let comboRate = 0.7;
+    let accRate = 0.3;
+    let accIndex = 10;
+
+    switch (mode){
+        case 'o' : {
+            modBonus = ModBonusSTD;
+            comboRate = 0.7;
+            accRate = 0.3;
+            accIndex = 1;
+        } break;
+        case 't' : {
+            modBonus = ModBonusTAIKO;
+            comboRate = 0.25;
+            accRate = 0.75;
+            accIndex = 3.6;
+        } break;
+        case 'c' : { //实现没做好，暂时使用 std 的方案
+            modBonus = ModBonusCATCH;
+            comboRate = 0.7;
+            accRate = 0.3;
+            accIndex = 1;
+        } break;
+        case 'm' : {
+            modBonus = ModBonusMANIA;
+            comboRate = 0.01;
+            accRate = 0.99;
+            accIndex = 10;
+        } break;
+    }
+
+    for (const v of mods) {
+        bonus *= modBonus[v];
+    }
+
+    let comboScore = score * bonus * comboRate * Math.max((combo / Math.max(maxcombo, 1)), 1);
+    let accScore = score * bonus * Math.pow(acc, accIndex);
+
+    return comboScore + accScore;
+
+}
+
 //色彩管理。或许开个 color util 会更好？=====================================================================================
 
 export function getStarRatingColor(SR = 0) {
@@ -1857,6 +1905,84 @@ const ModInt = {
     "SO": 4096,
     "AP": 8192,
     "PF": 16384,
+}
+
+const ModBonusSTD = {
+    "NM": 1,
+    "NF": 1,
+    "EZ": 0.5,
+    "NV": 1,
+    "HD": 1.06,
+    "HR": 1.06,
+    "SD": 1,
+    "DT": 1.12,
+    "RX": 0.1,
+    "HT": 0.3,
+    "NC": 1.12,
+    "FL": 1.12,
+    "AT": 1,
+    "SO": 0.9,
+    "AP": 1,
+    "PF": 1,
+}
+
+const ModBonusTAIKO = {
+    "NM": 1,
+    "NF": 1,
+    "EZ": 0.5,
+    "NV": 1,
+    "HD": 1.06,
+    "HR": 1.06,
+    "SD": 1,
+    "DT": 1.12,
+    "RX": 0.1,
+    "HT": 0.3,
+    "NC": 1.12,
+    "FL": 1.12,
+    "AT": 1,
+    "SO": 0.9,
+    "AP": 1,
+    "PF": 1,
+}
+
+const ModBonusCATCH = {
+    "NM": 1,
+    "NF": 1,
+    "EZ": 0.5,
+    "NV": 1,
+    "HD": 1.06,
+    "HR": 1.12,
+    "SD": 1,
+    "DT": 1.12,
+    "RX": 0.1,
+    "HT": 0.5,
+    "NC": 1.12,
+    "FL": 1.12,
+    "AT": 1,
+    "SO": 0.9,
+    "AP": 1,
+    "PF": 1,
+}
+
+const ModBonusMANIA = {
+    "NM": 1,
+    "NF": 1,
+    "EZ": 0.5,
+    "NV": 1,
+    "HD": 1,
+    "HR": 1,
+    "SD": 1,
+    "DT": 1,
+    "RX": 0,
+    "HT": 0.5,
+    "NC": 1,
+    "FL": 1,
+    "AT": 1,
+    "SO": 0,
+    "AP": 1,
+    "PF": 1,
+    "MR": 1,
+    "FI": 1,
 }
 
 export function getAccIndex (score) {

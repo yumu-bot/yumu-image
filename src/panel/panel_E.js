@@ -18,7 +18,7 @@ import {
     PuHuiTi,
     readTemplate,
     replaceText,
-    torus,
+    torus, getV3Score,
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -370,7 +370,8 @@ export async function panel_E(data = {
     let map_artist_mapper_bid =
         torus.getTextPath(map_artist + map_mapper_bid, 440, 1036.84, 24, "center baseline", "#fff");
 
-    let main_score = torus.get2SizeTextPath(getRoundedNumberLargerStr(data.score, -1), getRoundedNumberSmallerStr(data.score, -1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
+    let v3score = getV3Score(data.score_acc_progress / 100, parseInt(data.label_data.combo.data_b), data.attr.maxCombo, data.mods_arr, data.game_mode);
+    let main_score = torus.get2SizeTextPath(getRoundedNumberLargerStr(v3score, -1), getRoundedNumberSmallerStr(v3score, -1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
 
     let title_density =
         torus.getTextPath("Density", 900, 802.88, 18, "left baseline", "#a1a1a1");
