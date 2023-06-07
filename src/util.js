@@ -882,7 +882,7 @@ export function getV3Score (v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mod
             modBonus = ModBonusSTD;
             comboRate = 0.7;
             accRate = 0.3;
-            accIndex = 1;
+            accIndex = 3.6;
         } break;
         case 't' : {
             modBonus = ModBonusTAIKO;
@@ -894,7 +894,7 @@ export function getV3Score (v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mod
             modBonus = ModBonusCATCH;
             comboRate = 0.7;
             accRate = 0.3;
-            accIndex = 1;
+            accIndex = 3.6;
         } break;
         case 'm' : { //骂娘不需要转换
             /*
@@ -912,10 +912,11 @@ export function getV3Score (v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mod
         bonus *= modBonus[v];
     }
 
-    let comboScore = score * bonus * comboRate * Math.max((combo / Math.max(maxcombo, 1)), 1);
-    let accScore = score * bonus * accRate * Math.pow(acc, accIndex);
+    let comboScore = comboRate * (combo / Math.max(maxcombo, 1));
+    let accScore = accRate * Math.pow(acc, accIndex);
+    console.log(accScore)
 
-    return comboScore + accScore;
+    return Math.floor(score * bonus * (comboScore + accScore));
 
 }
 
