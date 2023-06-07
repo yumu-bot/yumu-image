@@ -372,8 +372,8 @@ export async function panel_E(data = {
 
     let v3score = getV3Score(data.score,
         data.score_acc_progress / 100,
+        parseInt(data.label_data.combo.data_b),
         parseInt(data.label_data.combo.remark.slice(0,-1)),
-        data.attr.maxCombo,
         data.mods_arr,
         data.game_mode);
     let main_score = torus.get2SizeTextPath(getRoundedNumberLargerStr(v3score, -1), getRoundedNumberSmallerStr(v3score, -1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');
