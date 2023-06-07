@@ -867,7 +867,7 @@ function getRoundedNumberUnit(number = 0, level = 0) {
     }
 }
 
-export function getV3Score (acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gamemode = 'osu') {
+export function getV3Score (v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gamemode = 'osu') {
 
     let score = 1000000;
     let mode = getGameMode(gamemode, 1);
@@ -896,11 +896,15 @@ export function getV3Score (acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gam
             accRate = 0.3;
             accIndex = 1;
         } break;
-        case 'm' : {
+        case 'm' : { //骂娘不需要转换
+            /*
             modBonus = ModBonusMANIA;
             comboRate = 0.01;
             accRate = 0.99;
             accIndex = 10;
+
+             */
+            return v1score;
         } break;
     }
 
