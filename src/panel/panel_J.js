@@ -1,4 +1,6 @@
-import {exportPng, readTemplate} from "../util.js";
+import {exportPng, PanelGenerate, readTemplate} from "../util.js";
+import {card_A1} from "../card/card_A1";
+import {card_J} from "../card/card_J";
 
 export async function router(req, res) {
     try {
@@ -18,160 +20,6 @@ export async function panel_J(data = {
         "occupation": null,
         "discord": null,
         "interests": null,
-        "monthlyPlaycounts": [
-            {
-                "startDate": "2020-05-01",
-                "count": 43
-            },
-            {
-                "startDate": "2020-06-01",
-                "count": 809
-            },
-            {
-                "startDate": "2020-07-01",
-                "count": 671
-            },
-            {
-                "startDate": "2020-08-01",
-                "count": 1417
-            },
-            {
-                "startDate": "2020-09-01",
-                "count": 2060
-            },
-            {
-                "startDate": "2020-10-01",
-                "count": 1504
-            },
-            {
-                "startDate": "2020-11-01",
-                "count": 2291
-            },
-            {
-                "startDate": "2020-12-01",
-                "count": 3004
-            },
-            {
-                "startDate": "2021-01-01",
-                "count": 2615
-            },
-            {
-                "startDate": "2021-02-01",
-                "count": 1552
-            },
-            {
-                "startDate": "2021-03-01",
-                "count": 1861
-            },
-            {
-                "startDate": "2021-04-01",
-                "count": 1715
-            },
-            {
-                "startDate": "2021-05-01",
-                "count": 1631
-            },
-            {
-                "startDate": "2021-06-01",
-                "count": 1313
-            },
-            {
-                "startDate": "2021-07-01",
-                "count": 580
-            },
-            {
-                "startDate": "2021-08-01",
-                "count": 226
-            },
-            {
-                "startDate": "2021-09-01",
-                "count": 345
-            },
-            {
-                "startDate": "2021-10-01",
-                "count": 135
-            },
-            {
-                "startDate": "2021-11-01",
-                "count": 108
-            },
-            {
-                "startDate": "2021-12-01",
-                "count": 114
-            },
-            {
-                "startDate": "2022-01-01",
-                "count": 85
-            },
-            {
-                "startDate": "2022-02-01",
-                "count": 255
-            },
-            {
-                "startDate": "2022-03-01",
-                "count": 1478
-            },
-            {
-                "startDate": "2022-04-01",
-                "count": 1317
-            },
-            {
-                "startDate": "2022-05-01",
-                "count": 1262
-            },
-            {
-                "startDate": "2022-06-01",
-                "count": 1112
-            },
-            {
-                "startDate": "2022-07-01",
-                "count": 1061
-            },
-            {
-                "startDate": "2022-08-01",
-                "count": 550
-            },
-            {
-                "startDate": "2022-09-01",
-                "count": 548
-            },
-            {
-                "startDate": "2022-10-01",
-                "count": 647
-            },
-            {
-                "startDate": "2022-11-01",
-                "count": 474
-            },
-            {
-                "startDate": "2022-12-01",
-                "count": 908
-            },
-            {
-                "startDate": "2023-01-01",
-                "count": 742
-            },
-            {
-                "startDate": "2023-02-01",
-                "count": 549
-            },
-            {
-                "startDate": "2023-03-01",
-                "count": 665
-            },
-            {
-                "startDate": "2023-04-01",
-                "count": 692
-            },
-            {
-                "startDate": "2023-05-01",
-                "count": 686
-            },
-            {
-                "startDate": "2023-06-01",
-                "count": 124
-            }
-        ],
         "playCount": 36485,
         "globalRank": 30495,
         "countryRank": 529,
@@ -202,18 +50,6 @@ export async function panel_J(data = {
         "beatmap_playcounts_count": 6765,
         "mapping_follower_count": 5,
         "has_supported": true,
-        "profile_order": [
-            "me",
-            "top_ranks",
-            "recent_activity",
-            "medals",
-            "historical",
-            "beatmaps",
-            "kudosu"
-        ],
-        "previous_usernames": [
-            "coooool"
-        ],
         "join_date": "2020-05-15T14:10:44+00:00",
         "max_friends": 500,
         "comments_count": 11,
@@ -257,107 +93,8 @@ export async function panel_J(data = {
             "countryCode": "TW",
             "countryName": "Taiwan"
         },
-        "kudosu": {
-            "total": 0,
-            "available": 0
-        },
-        "rank_history": {
-            "mode": "OSU",
-            "history": [
-                34768,
-                34791,
-                34814,
-                34835,
-                34864,
-                34901,
-                34909,
-                34932,
-                34927,
-                34942,
-                34976,
-                34795,
-                34774,
-                34286,
-                33368,
-                33387,
-                33410,
-                33432,
-                33457,
-                33476,
-                33491,
-                33504,
-                33461,
-                33472,
-                33474,
-                33503,
-                33410,
-                33423,
-                33450,
-                33477,
-                33501,
-                33532,
-                33553,
-                33573,
-                33592,
-                33616,
-                33634,
-                33654,
-                33679,
-                33695,
-                33716,
-                33555,
-                33568,
-                32953,
-                32982,
-                33002,
-                33023,
-                33045,
-                33045,
-                33057,
-                33073,
-                33080,
-                33100,
-                33125,
-                33145,
-                33167,
-                33179,
-                33199,
-                33211,
-                33237,
-                33268,
-                33298,
-                32386,
-                32418,
-                32445,
-                32464,
-                32485,
-                32461,
-                32493,
-                32515,
-                32526,
-                32173,
-                32195,
-                32220,
-                31603,
-                31599,
-                31617,
-                31642,
-                31634,
-                31655,
-                30936,
-                30947,
-                30970,
-                30988,
-                31002,
-                31014,
-                30440,
-                30453,
-                30474,
-                30495
-            ]
-        }
     },
-    bp: [
+    bpTop5: [
         {
             "accuracy": 0.9738946378174976,
             "mods": [],
@@ -516,9 +253,89 @@ export async function panel_J(data = {
             },
             "create_at_str": "2023-05-26T11:59:37Z"
         },
+    ],
+
+    bpLast5: [],
+
+    bpLength: [ //第一个是最大值，第二个是中值（不是平均值），第三个是最小值。如果bp不足2个，中值和最小值留null，如果bp不足3个，中值留null
+        {
+            "index": 154, //这个得自己算，和对应的数据有关系。length给秒数（整数），combo给连击（整数），star rating给星数（小数）
+            "ranking": 1, //排名，得自己计数，bp是bp几
+            "list@2x": "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            "difficulty_rating": 6.38, //bp.beatmap.difficulty_rating
+            "rank": "A", //bp.rank
+        },
+    ],
+
+    bpCombo: [], //数据格式同上
+
+    bpSR: [],
+
+    // 最喜爱谱师，只需要给6个
+    favorite_mappers:[
+        {
+            "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
+            "username": "-Spring Night-",
+            "map_count": 50,
+            "pp_count": 16247,
+        },
+        {
+            "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
+            "username": "-Spring Night-",
+            "map_count": 50,
+            "pp_count": 16247,
+        },
+    ],
+
+    // 右上角的 BP 分布，给数组
+    pp_arr: [114, 514, 1919, 810], //给pp
+    rank_arr: ['A','SS','B'], //给评级的统计数据。
+    rank_count_arr: [0,0,0,0,0,0,0], //给评级的统计数据。依次为：SSH、SS、SH、S、A、B、C、D的数量
+
+    rank_attr: [ //第一个给Perfect数量（真FC），第二个给FC数量（包括真假FC），第三个之后到第八个都给评级数量。越牛逼的越靠上
+        {
+            "index": "PF",
+            "map_count": 50,
+            "pp_count": 16247,
+            "percent": 0.94, //这里是pp_count 除以 (总PP - 奖励PP) 得到的值，0-1
+        },
+        {
+            "index": "FC",
+            "map_count": 50,
+            "pp_count": 16247,
+            "percent": 0.94,
+        },
+        {
+            "index": "SS",
+            "map_count": 50,
+            "pp_count": 16247,
+            "percent": 0.94,
+        },
     ]
+
+    //
+
 }) {
     let svg = readTemplate('template/Panel_J.svg');
+
+    //
+
+    // A1卡构建
+    let cardA1 = await card_A1(PanelGenerate.user2CardA1(data.card_A1), true);
+
+    // J卡构建
+    let cardJs_top = [];
+    let cardJs_last = [];
+
+    for (const bp in data.bpTop5) {
+        cardJs_top.push(await card_J(PanelGenerate.bp2CardJ(bp), true));
+    }
+
+    for (const bp in data.bpLast5) {
+        cardJs_last.push(await card_J(PanelGenerate.bp2CardJ(bp), true));
+    }
+
+    //
 
     return await exportPng(svg);
 }

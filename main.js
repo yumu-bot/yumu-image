@@ -8,7 +8,7 @@ import {
     hasMod,
     initPath,
     readImage,
-    readNetImage
+    readNetImage, PanelGenerate
 } from "./src/util.js";
 import {panel_C} from "./src/panel/panel_C.js";
 import {panel_D} from "./src/panel/panel_D.js";
@@ -62,24 +62,24 @@ app.post('/panel_C', async (req, res) => {
         const blueWins = req.fields?.blueWins;
         const isTeamVS = req.fields?.isTeamVS;
 
-        const match = await generate.matchInfo2CardA2(matchInfo, sid, redWins, blueWins, isTeamVS);
+        const match = await PanelGenerate.matchInfo2CardA2(matchInfo, sid, redWins, blueWins, isTeamVS);
 
         let redArr = [];
         let blueArr = [];
         let noneArr = [];
 
         for (const i in redUsers) {
-            let h = await generate.userMatchData2CardH(redUsers[i]);
+            let h = await PanelGenerate.userMatchData2CardH(redUsers[i]);
             redArr.push(h);
         }
 
         for (const i in blueUsers) {
-            let h = await generate.userMatchData2CardH(blueUsers[i]);
+            let h = await PanelGenerate.userMatchData2CardH(blueUsers[i]);
             blueArr.push(h);
         }
 
         for (const i in noneUsers) {
-            let h = await generate.userMatchData2CardH(noneUsers[i]);
+            let h = await PanelGenerate.userMatchData2CardH(noneUsers[i]);
             noneArr.push(h);
         }
 
@@ -98,7 +98,7 @@ app.post('/panel_C', async (req, res) => {
 app.post('/panel_D', async (req, res) => {
     try {
         let user = req.fields?.user;
-        const card_a1 = await generate.user2CardA1(user);
+        const card_a1 = await PanelGenerate.user2CardA1(user);
 
         const label_data = {
             rks: {
@@ -253,7 +253,7 @@ app.post('/panel_E', async (req, res) => {
     try {
         const user = req.fields?.user;
         const score = req.fields?.score;
-        const card_a1 = await generate.user2CardA1(user);
+        const card_a1 = await PanelGenerate.user2CardA1(user);
         const newLabel = (remark, data_b, data_m) => {
             return {
                 remark: remark,
@@ -461,77 +461,4 @@ function checkJsonData(req) {
     let json = JSON.parse(req.fields['json']);
     parseImage(json);
     return json;
-}
-
-let generate = {
-    user2CardA1: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
-        return {
-            background,
-            avatar,
-            sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
-            sub_icon2: '',
-            name: user['username'],
-            rank_global: user['globalRank'],
-            rank_country: user['countryRank'],
-            country: user?.country['countryCode'],
-            acc: Math.round(user['accuracy'] * 100) / 100,
-            level: user['levelCurrent'],
-            progress: Math.floor(user['levelProgress']),
-            pp: Math.round(user['pp']),
-        };
-    },
-
-    matchInfo2CardA2: async (matchInfo, sid, redWins, blueWins, isTeamVs) => {
-        let match_round = redWins + blueWins;
-        const background_path = 'https://assets.ppy.sh/beatmaps/' + sid + '/covers/cover.jpg';
-
-        return {
-            background: await readNetImage(background_path, getExportFileV3Path('card-default.png')), //给我他们最后一局的谱面背景即可
-            match_title: matchInfo.name, //比赛标题
-            match_round: match_round,
-            match_time: matchInfo.startTime,//比赛开始到比赛结束。如果跨了一天，需要加24小时
-            match_date: matchInfo.endTime,//比赛开始的日期
-            average_star_rating: 0,
-            mpid: matchInfo.id,
-            wins_team_red: redWins,
-            wins_team_blue: blueWins,
-            is_team_vs: isTeamVs,
-        };
-    },
-
-    userMatchData2CardH: async (user) => {
-
-        let team_color;
-        switch (user.team.toLowerCase()) {
-            case 'red': team_color = '#D32F2F'; break;
-            case 'blue': team_color = '#00A0E9'; break;
-            default: team_color = '#aaa'; break;
-        }
-
-        let rws = user.rws * 100;
-
-        return {
-            team: user.team.toLowerCase(),
-            team_color: team_color,
-            player_name: user.username,
-            player_avatar: await readNetImage(user.userData.avatar_url, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
-            player_banner: await readNetImage(user.userData.cover.url, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
-            player_score: user.scores.reduce(function (prev, curr) {
-                return prev + curr;
-            }),
-            player_win: user.wins,
-            player_lose: user.lost,
-            player_rank: user.index || 0,
-            player_rws: rws, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
-            player_mra: user.mra, // 木斗力
-            player_Label_V1: user.playerLabelV1,
-            player_Label_V2: user.playerLabelV2,
-            //mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
-            //label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
-            //class_color: '#fff', //部分字体需要显示为黑色
-            //label_mvp: (user.index === 1) ? 'MVP' : '',
-        };
-    }
 }
