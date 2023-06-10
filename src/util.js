@@ -763,6 +763,10 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         } else {
             o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 3);
         }
+
+        if (o === '00') o = '';
+        if (o.substring(1) === '0') o = o.slice(0,1);
+
         return o + unit;
     }
 
