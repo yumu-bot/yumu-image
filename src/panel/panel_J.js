@@ -1,6 +1,6 @@
 import {exportPng, PanelGenerate, readTemplate} from "../util.js";
-import {card_A1} from "../card/card_A1";
-import {card_J} from "../card/card_J";
+import {card_A1} from "../card/card_A1.js";
+import {card_J} from "../card/card_J.js";
 
 export async function router(req, res) {
     try {
