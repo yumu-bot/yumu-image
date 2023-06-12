@@ -18,20 +18,30 @@ export const OSU_BUFFER_PATH = IMG_BUFFER_PATH + "/osu";
 const MD5 = crypto.createHash("md5");
 
 export function initPath() {
+    axios.defaults.timeout = 2000;
+    axios.defaults.retry = 5;
+    axios.defaults.retryDelay = 1000;
     axios.interceptors.response.use((response) => response, (error) => {
-        const {config, response} = error;
-        console.error("request err", error);
-        if (response && (response.status === 403 || response.status === 404)) {
-            return Promise.reject(error);
+        const {config} = error;
+
+        config.__errTime = config.__errTime || 0;
+        if (error.code === 'ECONNABORTED' && config.__errTime <= config.retry) {
+            console.log(`${config.method} ${config.url} timeout, re send: ${config.__errTime}`);
+            config.__errTime += 1;
+            let backoff = new Promise(function (resolve) {
+                setTimeout(function () {
+                    resolve();
+                }, config.retryDelay || 1);
+            });
+            if (config.__errTime >= 3) {
+                config.timeout += 2000;
+            }
+            return backoff.then(function () {
+                return axios(config);
+            });
         }
-        console.log('re send');
-        if (config?.errTime) {
-            config.errTime += 1;
-            return config.errTime > 5 ? Promise.reject(error) : axios(config);
-        } else {
-            config.errTime = 1
-            return axios(config);
-        }
+        console.error("request err", config);
+        return Promise.reject(error);
     })
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(OSU_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
@@ -519,13 +529,23 @@ ${svgBody}
 export function getRoundedNumberLargerStr(number = 0, level = 0) {
 
     switch (level) {
-        case -1: return f_1(); break;
-        case 0: return f0(); break;
-        case 1: return f1(); break;
+        case -1:
+            return f_1();
+            break;
+        case 0:
+            return f0();
+            break;
+        case 1:
+            return f1();
+            break;
         case 2:
         case 3:
-        case 4: return f2_4(); break;
-        case 5: return f5(); break;
+        case 4:
+            return f2_4();
+            break;
+        case 5:
+            return f5();
+            break;
     }
 
     function f_1() {
@@ -619,7 +639,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
         return o;
     }
 
-    function SpecialRoundedLargeNum (number) {
+    function SpecialRoundedLargeNum(number) {
         let p = 0;
 
         if (number <= Math.pow(10, 8)) {
@@ -654,16 +674,26 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
 export function getRoundedNumberSmallerStr(number = 0, level = 0) {
 
     switch (level) {
-        case -1: return f_1(); break;
-        case 0: return f0(); break;
-        case 1: return f1(); break;
+        case -1:
+            return f_1();
+            break;
+        case 0:
+            return f0();
+            break;
+        case 1:
+            return f1();
+            break;
         case 2:
         case 3:
-        case 4: return f2_4(); break;
-        case 5: return f5(); break;
+        case 4:
+            return f2_4();
+            break;
+        case 5:
+            return f5();
+            break;
     }
 
-    function f_1 () {
+    function f_1() {
         if (number <= Math.pow(10, 4)) {
             return number.toString().padStart(4, '0');// 000 0671 -> 0671
         } else {
@@ -671,7 +701,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         }
     }
 
-    function f0 () {
+    function f0() {
         if (number <= Math.pow(10, 4)) {
             return ''
         } else {
@@ -679,7 +709,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         }
     }
 
-    function f1 () {
+    function f1() {
         let o;
         let unit = getRoundedNumberUnit(number, level);
         let s0 = Math.floor(number).toString().slice(0, 1);
@@ -719,7 +749,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
 
     //旧 level
 
-    function f2_4 () {
+    function f2_4() {
         let o;
         let unit = getRoundedNumberUnit(number, level);
         while (number >= 1000 || number <= -1000) {
@@ -746,11 +776,12 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
                 return o + unit;
             } else {
                 return unit;
-            };
+            }
+            ;
         }
     }
 
-    function f5 () {
+    function f5() {
         let o;
         let unit = getRoundedNumberUnit(number, level);
         while (number >= 10000 || number <= -10000) {
@@ -770,7 +801,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         return o + unit;
     }
 
-    function SpecialRoundedSmallNum (number) {
+    function SpecialRoundedSmallNum(number) {
         let s = 0;
         let o;
 
@@ -798,14 +829,20 @@ function getRoundedNumberUnit(number = 0, level = 0) {
     let m = 3;
 
     switch (level) {
-        case 1: return f1(); break;
+        case 1:
+            return f1();
+            break;
         case 2:
         case 3:
-        case 4: return f2_4(); break;
-        case 5: return f5(); break;
+        case 4:
+            return f2_4();
+            break;
+        case 5:
+            return f5();
+            break;
     }
 
-    function f2_4 () {
+    function f2_4() {
 
         if (number < Math.pow(10, 3)) {  //level==1->100 level==2->1000
             unit = '';
@@ -829,7 +866,7 @@ function getRoundedNumberUnit(number = 0, level = 0) {
         return unit;
     }
 
-    function f1 () {
+    function f1() {
 
         if (number < Math.pow(10, 3)) { //0.1K，但是数据还没到1K的位置，就给100了
             unit = '';
@@ -852,7 +889,8 @@ function getRoundedNumberUnit(number = 0, level = 0) {
         }
         return unit;
     }
-    function f5 () {
+
+    function f5() {
 
         if (number < Math.pow(10, 4)) {  //level==1->100 level==2->1000
             unit = '';
@@ -871,7 +909,7 @@ function getRoundedNumberUnit(number = 0, level = 0) {
     }
 }
 
-export function getV3Score (v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gamemode = 'osu') {
+export function getV3Score(v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gamemode = 'osu') {
 
     let score = 1000000;
     let mode = getGameMode(gamemode, 1);
@@ -881,25 +919,28 @@ export function getV3Score (v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mod
     let accRate = 0.3;
     let accIndex = 10;
 
-    switch (mode){
+    switch (mode) {
         case 'o' : {
             modBonus = ModBonusSTD;
             comboRate = 0.7;
             accRate = 0.3;
             accIndex = 3.6;
-        } break;
+        }
+            break;
         case 't' : {
             modBonus = ModBonusTAIKO;
             comboRate = 0.25;
             accRate = 0.75;
             accIndex = 3.6;
-        } break;
+        }
+            break;
         case 'c' : { //实现没做好，暂时使用 std 的方案
             modBonus = ModBonusCATCH;
             comboRate = 0.7;
             accRate = 0.3;
             accIndex = 3.6;
-        } break;
+        }
+            break;
         case 'm' : { //骂娘不需要转换
             /*
             modBonus = ModBonusMANIA;
@@ -909,7 +950,8 @@ export function getV3Score (v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mod
 
              */
             return v1score;
-        } break;
+        }
+            break;
     }
 
     for (const v of mods) {
@@ -1547,10 +1589,18 @@ export function getGameMode(gamemode = 'osu', level = 0) {
 
     //如果是输入数字，则修改
     switch (gamemode) {
-        case '0': gamemode = 'osu'; break;
-        case '1': gamemode = 'taiko'; break;
-        case '2': gamemode = 'catch'; break;
-        case '3': gamemode = 'mania'; break;
+        case '0':
+            gamemode = 'osu';
+            break;
+        case '1':
+            gamemode = 'taiko';
+            break;
+        case '2':
+            gamemode = 'catch';
+            break;
+        case '3':
+            gamemode = 'mania';
+            break;
     }
 
     switch (level) {
@@ -1994,7 +2044,7 @@ const ModBonusMANIA = {
     "FI": 1,
 }
 
-export function getAccIndex (score) {
+export function getAccIndex(score) {
     let accRemark;
     switch (getGameMode(score.mode, 1)) {
 
@@ -2018,38 +2068,70 @@ export function getAccIndex (score) {
                 case 'XH' :
                 case 'X' :
                 case 'SH' :
-                case 'S' : aim300x = 100; break;
-                case 'A' : isMissed ? aim300x = 100 : aim300x = 90; break;
-                case 'B' : isMissed ? aim300x = 90 : aim300x = 80; break;
-                case 'C' : isMissed ? aim300x = 80 : aim300x = 70; break;
-                case 'D' : aim300x = 60; break;
-                default : aim300x = 100; break;
+                case 'S' :
+                    aim300x = 100;
+                    break;
+                case 'A' :
+                    isMissed ? aim300x = 100 : aim300x = 90;
+                    break;
+                case 'B' :
+                    isMissed ? aim300x = 90 : aim300x = 80;
+                    break;
+                case 'C' :
+                    isMissed ? aim300x = 80 : aim300x = 70;
+                    break;
+                case 'D' :
+                    aim300x = 60;
+                    break;
+                default :
+                    aim300x = 100;
+                    break;
             }
 
             let aim300 = Math.ceil(nTotal * aim300x / 100);
 
             if (aim300 < n300) {
-                accRemark = '-'; break; //跳出了
+                accRemark = '-';
+                break; //跳出了
             } else {
                 switch (score.rank) {
-                    case 'XH' : accRemark = 'AP'; break;
-                    case 'X' : accRemark = 'AP'; break;
-                    case 'SH' : accRemark = '>>XH!'; break;
-                    case 'S' : accRemark = '>>SS!'; break;
-                    case 'A' : isMissed ?
-                        (perfectExceptMiss ? accRemark = `-x SS` :  // 有miss，无不良判定
-                            accRemark = `-x S`) : // 有miss，有不良判定
-                        (is50over1p ?
-                            (accRemark = `-${aim50 - n50} bad`) :
-                                accRemark = `-${nTotal - n300} SS`); break;
-                    case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-`); break;
-                    case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-`); break;
-                    case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-`); break;
-                    default : accRemark = `~ ${getApproximateRank(score)}`; break;
+                    case 'XH' :
+                        accRemark = 'AP';
+                        break;
+                    case 'X' :
+                        accRemark = 'AP';
+                        break;
+                    case 'SH' :
+                        accRemark = '>>XH!';
+                        break;
+                    case 'S' :
+                        accRemark = '>>SS!';
+                        break;
+                    case 'A' :
+                        isMissed ?
+                            (perfectExceptMiss ? accRemark = `-x SS` :  // 有miss，无不良判定
+                                accRemark = `-x S`) : // 有miss，有不良判定
+                            (is50over1p ?
+                                (accRemark = `-${aim50 - n50} bad`) :
+                                accRemark = `-${nTotal - n300} SS`);
+                        break;
+                    case 'B' :
+                        isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-`);
+                        break;
+                    case 'C' :
+                        isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-`);
+                        break;
+                    case 'D' :
+                        isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-`);
+                        break;
+                    default :
+                        accRemark = `~ ${getApproximateRank(score)}`;
+                        break;
                 }
             }
 
-        } break;
+        }
+            break;
 
         case 't' : {
             let aim300x = 100;
@@ -2066,77 +2148,134 @@ export function getAccIndex (score) {
                 case 'XH' :
                 case 'X' :
                 case 'SH' :
-                case 'S' : aim300x = 100; break;
-                case 'A' : isMissed ? aim300x = 100 : aim300x = 90; break;
-                case 'B' : isMissed ? aim300x = 90 : aim300x = 80; break;
-                case 'C' : isMissed ? aim300x = 80 : aim300x = 70; break;
-                case 'D' : aim300x = 60; break;
-                default : aim300x = 100; break;
+                case 'S' :
+                    aim300x = 100;
+                    break;
+                case 'A' :
+                    isMissed ? aim300x = 100 : aim300x = 90;
+                    break;
+                case 'B' :
+                    isMissed ? aim300x = 90 : aim300x = 80;
+                    break;
+                case 'C' :
+                    isMissed ? aim300x = 80 : aim300x = 70;
+                    break;
+                case 'D' :
+                    aim300x = 60;
+                    break;
+                default :
+                    aim300x = 100;
+                    break;
             }
 
             let aim300 = Math.ceil(nTotal * aim300x / 100);
 
             if (aim300 < n300) {
-                accRemark = '-'; break; //跳出了
+                accRemark = '-';
+                break; //跳出了
             } else {
                 switch (score.rank) {
-                    case 'XH' : accRemark = 'AP'; break;
-                    case 'X' : accRemark = 'AP'; break;
-                    case 'SH' : accRemark = '>>XH!'; break;
-                    case 'S' : accRemark = '>>SS!'; break;
-                    case 'A' : isMissed ?
-                        (perfectExceptMiss ?
-                            (accRemark = `-${aim300 - n300} SS`) : // 有miss，无不良判定
-                            (accRemark = `-x S`)) : // 有miss，有不良判定
-                        (accRemark = `-${aim300 - n300} SS`); break;
-                    case 'B' : isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`); break;
-                    case 'C' : isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`); break;
-                    case 'D' : isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`); break;
-                    default : accRemark = `~ ${getApproximateRank(score)}`; break;
+                    case 'XH' :
+                        accRemark = 'AP';
+                        break;
+                    case 'X' :
+                        accRemark = 'AP';
+                        break;
+                    case 'SH' :
+                        accRemark = '>>XH!';
+                        break;
+                    case 'S' :
+                        accRemark = '>>SS!';
+                        break;
+                    case 'A' :
+                        isMissed ?
+                            (perfectExceptMiss ?
+                                (accRemark = `-${aim300 - n300} SS`) : // 有miss，无不良判定
+                                (accRemark = `-x S`)) : // 有miss，有不良判定
+                            (accRemark = `-${aim300 - n300} SS`);
+                        break;
+                    case 'B' :
+                        isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`);
+                        break;
+                    case 'C' :
+                        isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`);
+                        break;
+                    case 'D' :
+                        isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`);
+                        break;
+                    default :
+                        accRemark = `~ ${getApproximateRank(score)}`;
+                        break;
                 }
             }
 
-        } break;
+        }
+            break;
 
         case 'c' : {
 
             switch (score.rank) {
-                case 'XH' : accRemark = 'AP'; break;
-                case 'X' : accRemark = 'AP'; break;
-                case 'SH' : accRemark = `>>XH!`; break;
-                case 'S' : accRemark = `>>SS!`; break;
-                case 'A' : accRemark = `-${(98 - score.accuracy * 100).toFixed(2)}%`; break;
-                case 'B' : accRemark = `-${(94 - score.accuracy * 100).toFixed(2)}%`; break;
-                case 'C' : accRemark = `-${(90 - score.accuracy * 100).toFixed(2)}%`; break;
-                case 'D' : accRemark = `-${(85 - score.accuracy * 100).toFixed(2)}%`; break;
-                default : accRemark = `~ ${getApproximateRank(score)}`; break;
+                case 'XH' :
+                    accRemark = 'AP';
+                    break;
+                case 'X' :
+                    accRemark = 'AP';
+                    break;
+                case 'SH' :
+                    accRemark = `>>XH!`;
+                    break;
+                case 'S' :
+                    accRemark = `>>SS!`;
+                    break;
+                case 'A' :
+                    accRemark = `-${(98 - score.accuracy * 100).toFixed(2)}%`;
+                    break;
+                case 'B' :
+                    accRemark = `-${(94 - score.accuracy * 100).toFixed(2)}%`;
+                    break;
+                case 'C' :
+                    accRemark = `-${(90 - score.accuracy * 100).toFixed(2)}%`;
+                    break;
+                case 'D' :
+                    accRemark = `-${(85 - score.accuracy * 100).toFixed(2)}%`;
+                    break;
+                default :
+                    accRemark = `~ ${getApproximateRank(score)}`;
+                    break;
             }
 
-        } break;
+        }
+            break;
 
         case 'm' : {
             switch (score.rank) {
                 case 'F' : {
-                    accRemark = `~ ${getApproximateRank(score)}`; break;
-                } break;
+                    accRemark = `~ ${getApproximateRank(score)}`;
+                    break;
+                }
+                    break;
                 default : {
                     if (score.statistics.count_geki >= score.statistics.count_300) {
                         accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
                     } else {
                         accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
                     }
-                } break;
+                }
+                    break;
             }
-        } break;
+        }
+            break;
 
-        default : accRemark = 'fail..'; break;
+        default :
+            accRemark = 'fail..';
+            break;
     }
 
     return accRemark;
 }
 
 
-export function getApproximateRank (score) {
+export function getApproximateRank(score) {
     let rank = 'F';
 
     let n300 = score.statistics.count_300;
@@ -2439,9 +2578,15 @@ export const PanelGenerate = {
 
         let team_color;
         switch (user.team.toLowerCase()) {
-            case 'red': team_color = '#D32F2F'; break;
-            case 'blue': team_color = '#00A0E9'; break;
-            default: team_color = '#aaa'; break;
+            case 'red':
+                team_color = '#D32F2F';
+                break;
+            case 'blue':
+                team_color = '#00A0E9';
+                break;
+            default:
+                team_color = '#aaa';
+                break;
         }
 
         let rws = user.rws * 100;
