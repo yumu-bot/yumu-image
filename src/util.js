@@ -963,7 +963,6 @@ export function getV3Score(v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods
 
     let comboScore = comboRate * (combo / Math.max(maxcombo, 1));
     let accScore = accRate * Math.pow(acc, accIndex);
-    console.log(accScore)
 
     return Math.floor(score * bonus * (comboScore + accScore));
 
@@ -2598,8 +2597,8 @@ export const PanelGenerate = {
             team: user.team.toLowerCase(),
             team_color: team_color,
             player_name: user.username,
-            player_avatar: await readNetImage(user.userData.avatar_url, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
-            player_banner: await readNetImage(user.userData.cover.url, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
+            player_avatar: await readNetImage(user.userData?.avatar_url, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
+            player_banner: await readNetImage(user.userData?.cover?.url, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
             player_score: user.scores.reduce(function (prev, curr) {
                 return prev + curr;
             }),
