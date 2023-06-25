@@ -46,6 +46,9 @@ export function initPath() {
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(OSU_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(FLAG_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
+    console.log("缓存目录: ", CACHE_PATH);
+    console.log("图像缓存", IMG_BUFFER_PATH);
+    console.log("osu文件缓存", OSU_BUFFER_PATH);
     return path;
 }
 
