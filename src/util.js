@@ -21,6 +21,11 @@ export function initPath() {
     axios.defaults.timeout = 2000;
     axios.defaults.retry = 5;
     axios.defaults.retryDelay = 1000;
+    axios.defaults.proxy = {
+        host: '127.0.0.1',
+        port: 7890,
+        protocol: "http",
+    }
     axios.interceptors.response.use((response) => response, (error) => {
         const {config} = error;
 
