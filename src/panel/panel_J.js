@@ -1,4 +1,12 @@
-import {exportPng, PanelGenerate, readTemplate} from "../util.js";
+import {
+    exportPng, getNowTimeStamp,
+    getRandomBannerPath,
+    implantImage, implantSvgBody,
+    PanelGenerate,
+    readTemplate,
+    replaceText,
+    torus
+} from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_J} from "../card/card_J.js";
 
@@ -253,6 +261,12 @@ export async function panel_J(data = {
             },
             "create_at_str": "2023-05-26T11:59:37Z"
         },
+        {
+
+        },
+        {
+
+        }
     ],
 
     bpLast5: [],
@@ -292,6 +306,19 @@ export async function panel_J(data = {
     rank_arr: ['A','SS','B'], //给评级的统计数据。
     rank_count_arr: [0,0,0,0,0,0,0], //给评级的统计数据。依次为：SSH、SS、SH、S、A、B、C、D的数量
 
+    mods_attr:[
+        {
+            "index": "HD",
+            "map_count": 50,
+            "pp_count": 4396,
+        },
+        {
+            "index": "DT",
+            "map_count": 12,
+            "pp_count": 17,
+        }
+    ],
+
     rank_attr: [ //第一个给Perfect数量（真FC），第二个给FC数量（包括真假FC），第三个之后到第八个都给评级数量。越牛逼的越靠上
         {
             "index": "PF",
@@ -318,24 +345,72 @@ export async function panel_J(data = {
 }) {
     let svg = readTemplate('template/Panel_J.svg');
 
-    //
+    // 路径定义
+    let reg_index = /(?<=<g id="Index">)/;
+    let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PJ-1\);">)/;
+    let reg_topbp = /(?<=<g id="TopBP">)/;
+    let reg_lastbp = /(?<=<g id="LastBP">)/;
+    let reg_maincard = /(?<=<g id="MainCard">)/;
+
+    // 面板文字
+    const index_powered = 'powered by Yumubot v0.3.0 EA // BP Analysis (!ymba)';
+    const index_request_time = 'request time: ' + getNowTimeStamp();
+    const index_panel_name = 'BPA';
+
+    const index_top5bp = 'Top 5 BPs';
+    const index_last5bp = 'Top 5 BPs';
+
+    const index_mods = 'Mods'
+
+    const index_powered_path = torus.getTextPath(index_powered,
+        10, 26.84, 24, "left baseline", "#fff");
+    const index_request_time_path = torus.getTextPath(index_request_time,
+        1910, 26.84, 24, "right baseline", "#fff");
+    const index_panel_name_path = torus.getTextPath(index_panel_name,
+        607.5, 83.67, 48, "center baseline", "#fff");
+
+    const index_top5bp_path = torus.getTextPath(index_top5bp,
+        55, 365.795, 30, "left baseline", "#fff");
+    const index_last5bp_path = torus.getTextPath(index_last5bp,
+        380, 365.795, 30, "left baseline", "#fff");
+
+    // 插入文字
+    svg = replaceText(svg, index_powered_path, reg_index);
+    svg = replaceText(svg, index_request_time_path, reg_index);
+    svg = replaceText(svg, index_panel_name_path, reg_index);
+    svg = replaceText(svg, index_top5bp_path, reg_index);
+    svg = replaceText(svg, index_last5bp_path, reg_index);
 
     // A1卡构建
-    let cardA1 = await card_A1(PanelGenerate.user2CardA1(data.card_A1), true);
+    let cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
 
     // J卡构建
     let cardJs_top = [];
     let cardJs_last = [];
 
-    for (const bp in data.bpTop5) {
-        cardJs_top.push(await card_J(PanelGenerate.bp2CardJ(bp), true));
+    for (const i in data.bpTop5) {
+        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpTop5[i]),true);
+        cardJs_top.push(h);
     }
 
-    for (const bp in data.bpLast5) {
-        cardJs_last.push(await card_J(PanelGenerate.bp2CardJ(bp), true));
+    for (const i in data.bpLast5) {
+        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpLast5[i]),true);
+        cardJs_last.push(h);
     }
 
-    //
+    // 插入图片和部件（新方法
+    svg = implantSvgBody(svg, 40, 40, cardA1, reg_maincard);
+
+    for (const i in cardJs_top) {
+        svg = implantSvgBody(svg, 55, 380 + i * 95, cardJs_top[i], reg_topbp);
+    }
+
+    for (const i in cardJs_last) {
+        svg = implantSvgBody(svg, 380, 380 + i * 95, cardJs_last[i], reg_lastbp);
+    }
+
+    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+
 
     return await exportPng(svg);
 }

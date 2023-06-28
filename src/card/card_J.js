@@ -25,50 +25,51 @@ export async function card_J(data = {
 
     // 正则
 
-    let reg_text = /(?<=<g id="Text">)/;
-    let reg_overlay = /(?<=<g id="Overlay">)/;
-    let reg_mod = /(?<=<g id="Mod">)/;
-    let reg_rank = /(?<=<g id="Rank">)/;
+    let reg_text = /(?<=<g id="Text_CJ">)/;
+    let reg_overlay = /(?<=<g id="Overlay_CJ">)/;
+    let reg_mod = /(?<=<g id="Mod_CJ">)/;
+    let reg_rank = /(?<=<g id="Rank_CJ">)/;
 
     let reg_background = /(?<=<g style="clip-path: url\(#clippath-CJ-1\);">)/
     let reg_cover = /(?<=<g style="clip-path: url\(#clippath-CJ-2\);">)/
 
 
     // 读取模板
-    let svg = `  <defs>
-        <clipPath id="clippath-CJ-1">
-        <rect width="310" height="80" rx="12" ry="12" style="fill: none;"/>
-        </clipPath>
-    <clipPath id="clippath-CJ-2">
-        <rect width="120" height="80" rx="10" ry="10" style="fill: none;"/>
-    </clipPath>
+    let svg = `
+  <defs>
+  <clipPath id="clippath-CJ-1">
+     <rect width="310" height="80" rx="12" ry="12" style="fill: none;"/>
+  </clipPath>
+  <clipPath id="clippath-CJ-2">
+     <rect width="120" height="80" rx="10" ry="10" style="fill: none;"/>
+  </clipPath>
 </defs>
-    <g id="Base">
+    <g id="Base_CJ">
         <rect width="310" height="80" rx="10" ry="10" style="fill: #46393f;"/>
     </g>
-    <g id="Background">
+    <g id="Background_CJ">
         <g style="clip-path: url(#clippath-CJ-1);">
         </g>
     </g>
-    <g id="Cover">
+    <g id="Cover_CJ">
         <g style="clip-path: url(#clippath-CJ-2);">
         </g>
     </g>
-    <g id="Stat">
-        <g id="Rank">
+    <g id="Stat_CJ">
+        <g id="Rank_CJ">
         </g>
-        <g id="Mod">
+        <g id="Mod_CJ">
         </g>
     </g>
-    <g id="Overlay">
+    <g id="Overlay_CJ">
     </g>
-    <g id="Text">
+    <g id="Text_CJ">
     </g>`;
 
     // 定义文字
     let text_map_title_romanized = torus.cutStringTail(data.map_title_romanized || '', 18, 170);
     let text_map_artist = torus.cutStringTail(data.map_artist || '', 14, 170);
-    let text_pp = data.pp.toString();
+    let text_pp = data.pp;
 
     // 替换文字
     let map_title_romanized =
@@ -88,7 +89,7 @@ export async function card_J(data = {
         torus.getTextPath(text_map_difficulty_name, 130, 47.571, 14, "left baseline", "#fff");
 
     let pp = data.pp ?
-        torus.get2SizeTextPath(text_pp, 'PP', 30, 18, 300, 73.795, 'right baseline', '#fff')
+        torus.get2SizeTextPath(text_pp.toString(), 'PP', 30, 18, 300, 73.795, 'right baseline', '#fff')
         :
         torus.getTextPath('-', 300, 73.795, 30, 'right baseline', '#fff');
 

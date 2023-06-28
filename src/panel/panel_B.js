@@ -81,7 +81,7 @@ export async function panel_B(data = {
 
     // 条件定义
     const isVS = data.statistics.isVS;
-    let game_mode = getGameMode(data.statistics.gameMode, 0);
+    const game_mode = getGameMode(data.statistics.gameMode, 0);
 
     // 面板文字
     const index_powered = 'powered by Yumubot v0.3.0 EA // PP Minus v2.4 (!ppm/!ppmvs)';
