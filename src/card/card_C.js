@@ -152,12 +152,26 @@ export async function card_C(data = {
 
     } else {
         //个人赛时
+
+        //个人赛取最大值，因为此时第一号并不一定是第一名
+        let first_index = 0;
+        let first_score = 0;
+        let none_arr = data.none || [{player_score: 0}];
+
+        none_arr.forEach((v, i) => {
+            if (v.player_score >= first_score) {
+                first_score = v.player_score ;
+                first_index = i;
+            }
+        })
+
+        //个人赛主计算
         let total_score = data.statistics.score_total;
         let none_text = (total_score !== 0) ? torus.getTextPath(total_score.toString(), 670, 196.836, 24, 'center baseline', '#fff') : '';
 
         svg = replaceText(svg, '#382e32', reg_backcolor);
         svg = replaceText(svg, none_text, reg_text);
-        svg = implantImage(svg, 1380, 210, 0, 0, 0.3, await readNetImage(data.none[0].player_avatar, getExportFileV3Path('avatar-guest.png')), reg_h2hfirstavatar);
+        svg = implantImage(svg, 1380, 210, 0, 0, 0.3, await readNetImage(data.none[first_index].player_avatar, getExportFileV3Path('avatar-guest.png')), reg_h2hfirstavatar);
     }
 
     // 导入成绩
