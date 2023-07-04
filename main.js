@@ -1,14 +1,15 @@
 import express from "express";
 import formidable from "express-formidable";
 import {
-    getAccIndex,
     CACHE_PATH,
+    getAccIndex,
     getExportFileV3Path,
     getGameMode,
     hasMod,
     initPath,
+    PanelGenerate,
     readImage,
-    readNetImage, PanelGenerate
+    readNetImage
 } from "./src/util.js";
 import {panel_C} from "./src/panel/panel_C.js";
 import {panel_D} from "./src/panel/panel_D.js";
@@ -19,6 +20,7 @@ import {router as MarkdownRouter} from "./src/markdown.js";
 import {router as PanelBRouter} from "./src/panel/panel_B.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as DrawLineRouter} from "./src/panel/panel_Alpha.js";
+import {router as GetMapAttrRouter} from "./src/mapAttributes.js";
 
 initPath();
 //这里放测试代码
@@ -410,6 +412,7 @@ app.post('/panel_E', async (req, res) => {
 app.post('/panel_J', PanelJRouter)
 
 app.post('/md', MarkdownRouter);
+app.post('/attr', GetMapAttrRouter);
 app.post('/panel_F', PanelFRouter);
 app.post('/panel_B', PanelBRouter);
 

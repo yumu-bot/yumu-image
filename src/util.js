@@ -54,6 +54,11 @@ export function initPath() {
     console.log("缓存目录: ", CACHE_PATH);
     console.log("图像缓存", IMG_BUFFER_PATH);
     console.log("osu文件缓存", OSU_BUFFER_PATH);
+
+    Number.prototype.fixed = function () {
+        return fixed(this);
+    }
+
     return path;
 }
 
@@ -1921,6 +1926,10 @@ export class InsertSvgBuilder {
     }
 }
 
+function fixed(i) {
+    return parseFloat(i.toFixed(2));
+}
+
 export async function getFlagSvg(code = "cn") {
     code = code.toUpperCase();
     let flag;
@@ -2550,7 +2559,7 @@ export const PanelGenerate = {
         return {
             background,
             avatar,
-            sub_icon1: user['support_level'] > 0 ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
+            sub_icon1: user['support_level'] > 0 || user.is_supporter ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
             sub_icon2: '',
             name: user['username'],
             rank_global: user['globalRank'],
