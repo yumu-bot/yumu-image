@@ -197,8 +197,6 @@ export async function card_C(data = {
     let blue_width_arr;
     let none_width_arr;
 
-    console.log(data.red.length + data.blue.length)
-
     //主分支
     if ((data.statistics.is_team_vs && (data.red.length + data.blue.length) <= 8) || (!data.statistics.is_team_vs && data.none.length <= 8)) { //data.statistics
         if (data.statistics.is_team_vs) {
