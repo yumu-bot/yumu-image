@@ -125,13 +125,13 @@ export async function card_C(data = {
 
         //上底色、左右分数和最亮的那个得点
         if (data.statistics.is_team_red_win) {
-            svg = replaceText(svg, red_color_list[0], reg_backcolor);
+            svg = replaceText(svg, red_color_list[1], reg_backcolor); //其实 1 才是最正的那个颜色
             red_font = torus;
             blue_font = torusRegular;
             svg = implantSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0), 176, red_point_plus, reg_pluspoint);
 
         } else if (data.statistics.is_team_blue_win) {
-            svg = replaceText(svg, blue_color_list[0], reg_backcolor);
+            svg = replaceText(svg, blue_color_list[1], reg_backcolor);
             red_font = torusRegular;
             blue_font = torus;
             svg = implantSvgBody(svg, 1338 - 16 * Math.max((data.statistics.wins_team_blue_before - 1), 0), 176, blue_point_plus, reg_pluspoint);
@@ -197,50 +197,60 @@ export async function card_C(data = {
     let blue_width_arr;
     let none_width_arr;
 
+    console.log(data.red.length + data.blue.length)
+
     //主分支
-    if (data.statistics) { //data.red.length + data.blue.length <= 8 || data.none.length <= 8
+    if ((data.statistics.is_team_vs && (data.red.length + data.blue.length) <= 8) || (!data.statistics.is_team_vs && data.none.length <= 8)) { //data.statistics
         if (data.statistics.is_team_vs) {
-            red_width_arr = getTeamVsWidthArrayNormal(data, 'red');
-            blue_width_arr = getTeamVsWidthArrayNormal(data, 'blue');
+            red_width_arr = getTeamVsWidthArray(data, 'red', true);
+            blue_width_arr = getTeamVsWidthArray(data, 'blue', true);
             if (red_width_arr !== []) {
-                await implantMainNormal(data, 'red', red_score_arr, red_width_arr);
+                await implantCardC(data, 'red', red_score_arr, red_width_arr, true);
             }
             if (blue_width_arr !== []) {
-                await implantMainNormal(data, 'blue', blue_score_arr, blue_width_arr);
+                await implantCardC(data, 'blue', blue_score_arr, blue_width_arr, true);
             }
         } else {
-            none_width_arr = getTeamVsWidthArrayNormal(data, 'none');
+            none_width_arr = getTeamVsWidthArray(data, 'none', true);
             if (none_width_arr !== []) {
-                await implantMainNormal(data, 'none', none_score_arr, none_width_arr);
+                await implantCardC(data, 'none', none_score_arr, none_width_arr, true);
             }
         }
     } else {
-        //比较麻烦，还需要针对超短的数据
-        red_width_arr = getTeamVsWidthArrayNormal(data, 'red');
-        blue_width_arr = getTeamVsWidthArrayNormal(data, 'blue');
-        none_width_arr = getTeamVsWidthArrayNormal(data, 'none');
+        //特殊分支，比较麻烦，还需要针对超短的数据
+        if (data.statistics.is_team_vs) {
+            red_width_arr = getTeamVsWidthArray(data, 'red', false);
+            blue_width_arr = getTeamVsWidthArray(data, 'blue', false);
+            if (red_width_arr !== []) {
+                await implantCardC(data, 'red', red_score_arr, red_width_arr, false);
+            }
+            if (blue_width_arr !== []) {
+                await implantCardC(data, 'blue', blue_score_arr, blue_width_arr, false);
+            }
+        } else {
+            none_width_arr = getTeamVsWidthArray(data, 'none', false);
+            if (none_width_arr !== []) {
+                await implantCardC(data, 'none', none_score_arr, none_width_arr, false);
+            }
+        }
     }
 
-    // 常规方法赋值
-    async function implantMainNormal(data, team = 'none', teamScoreArr = [0], teamWidthArr = [0]) {
+    // 导入卡片的主函数
+    async function implantCardC(data, team = 'none', teamScoreArr = [0], teamWidthArr = [0], isLess4 = true) {
 
         let startX;
         let startY = 140; //分数条上沿
-        let startAssign; //赋值起始位置
         let direction; //正数表示从左往右渲染
-        let push; //正数表示从大到小取值
-        let isReverse; //下面的分数矩形是否该反向渲染，只有蓝色矩形是右对齐
-        let colorList;
-        let isWin;
-        let scoreTextColor; //分数颜色，如果是 none，则使用黑色
+        let isReverse; //下面的分数矩形是否该反向渲染，蓝队和1v1是右对齐
+        let colorList; //颜色表
+        let isWin; //是否获胜，1v1默认true
+        let scoreTextColor; //分数的数字颜色，如果是 none，则使用1c色
 
         //获取赋值方向和初始坐标
         switch (team.toLowerCase()) {
             case 'blue':
                 direction = -1;
-                push = -1;
                 isReverse = true;
-                startAssign = teamScoreArr.length - 1;
                 startX = 1360;
                 colorList = blue_color_list;
                 isWin = data.statistics.is_team_blue_win;
@@ -248,9 +258,7 @@ export async function card_C(data = {
                 break;
             case 'red':
                 direction = 1;
-                push = -1;
                 isReverse = false;
-                startAssign = teamScoreArr.length - 1;
                 startX = 20;
                 colorList = red_color_list;
                 isWin = data.statistics.is_team_red_win;
@@ -258,55 +266,177 @@ export async function card_C(data = {
                 break;
             case 'none':
                 direction = -1;
-                push = -1;
                 isReverse = true;
-                startAssign = teamScoreArr.length - 1;
                 startX = 1360;
                 colorList = none_color_list;
                 isWin = true;
-                scoreTextColor = '#382e32';
+                scoreTextColor = '#1C1719';
                 break;
         }
 
-        //主调用
-        let calculateX = startX;
-        let rectSum = 0;
-        let rectColor = '';
+        let less = countLessMinWidth(teamWidthArr, 100);
 
-        for (let i = 0; i < teamWidthArr.length; i++) {
-            let j = startAssign + push * i;
-            let width = teamWidthArr[j];
+        if (isLess4) {
+            //主调用
+            await implantMain ();
 
-            // 画F标签
-            if (data[`${team}`]) {
-                await implantRoundLabelF1(
-                    data[`${team}`][j],
-                    calculateX + (width * direction / 2 - 50),
-                    startY - 130,
-                    isWin,
-                    scoreTextColor);
+        } else if (less === 0) {
+            await implantMain ();
+
+        } else if (less <= 12) {
+            //特殊调用：需要使用 label F2 / F3
+            await implantSpecial (less);
+        } else {
+            return '';
+        }
+
+        //特殊调用
+        async function implantSpecial (less = 0) {
+
+            let calculateX = startX;
+            let rectSum = 0;
+            let rectColor = '';
+
+            //画分数低于最低值的选手
+            /*
+            if (less <= 4) {
+                //比较小的F2
+                for (let i = teamWidthArr.length - less; i < teamWidthArr.length; i++) {
+                    let j = teamScoreArr.length - 1 - i; //取反，实际上是从小到大用
+                    let k = i - (teamWidthArr.length - less) + 1;//从 1 开始
+
+                    if (data[`${team}`]) {
+                        await implantRoundLabelF2(
+                            data[`${team}`][j],
+                            isReverse ? startX - 100 : startX,
+                            startY - 35 * k, //从 1 开始
+                            isWin);
+                    }
+                }
+            } else
+                */
+                if (less <= 12) {
+                //最小的 F3
+                for (let i = 0; i < less / 4; i++) {
+                    // i 是横坐标，最大只能有 3 个 i
+                    for (let j = 0; j <= 3; j++) {
+                        // j 是纵坐标，0-3
+                        let k = teamWidthArr.length - less + (i * 3 + j);
+                        let width = teamWidthArr[k];
+
+                        if (data[`${team}`][k]) {
+                            await implantRoundLabelF3(
+                                data[`${team}`][k],
+                                !isReverse ? startX + 34 * i : startX - 30 - 34 * i,
+                                startY - 35 - 34 * j, //从 1 开始
+                                isWin);
+                            //结算
+                            calculateX += width * direction; //red 往右，是加起来， none，blue 往左
+                        }
+                    }
+                }
             }
+
+            //结算一次，把位置空出来
+            //calculateX += 100 * direction; //red 往右，是加起来， none，blue 往左
+
+            //画分数高于最低值的选手
+            for (let i = 0; i < (teamWidthArr.length - less); i++) {
+                let j = teamScoreArr.length - less - 1 - i; //取反，实际上是从小到大用
+                let width = teamWidthArr[j];
+
+                if (data[`${team}`]) {
+                    await implantRoundLabelF1(
+                        data[`${team}`][j],
+                        calculateX + (width * direction / 2 - 50),
+                        startY - 130,
+                        isWin,
+                        scoreTextColor);
+                }
+
+                //结算
+                calculateX += width * direction; //red 往右，是加起来， none，blue 往左
+            }
+
+            calculateX = startX; //画矩形的calculateX归0
 
             //画矩形
-            rectSum += width;
-            rectColor = colorList[j];
-            if (data[`${team}`]) {
-                await implantScoreBar(rectColor,
-                    (!isReverse ? startX : (calculateX - width)), //反转的使用位置
-                    startY,
-                    rectSum,
-                    30);
-            }
+            for (let i = 0; i < teamWidthArr.length; i++) {
+                let j = teamScoreArr.length - 1 - i; //取反，实际上是从小到大用
+                let width = teamWidthArr[j];
 
-            //结算
-            calculateX += width * direction; //red 往右，是加起来， none，blue 往左
+                //画矩形
+                rectSum += width;
+                rectColor = colorList[j];
+                if (data[`${team}`]) {
+                    await implantScoreBar(rectColor,
+                        (!isReverse ? startX : (calculateX - width)), //反转的使用位置
+                        startY,
+                        rectSum,
+                        30);
+                }
+
+                //结算
+                calculateX += width * direction; //red 往右，是加起来， none，blue 往左
+            }
+        }
+
+        //主调用，也是一般的调用方法
+        async function implantMain () {
+
+            let calculateX = startX;
+            let rectSum = 0;
+            let rectColor = '';
+
+            for (let i = 0; i < teamWidthArr.length; i++) {
+                let j = teamScoreArr.length - 1 - i; //以前叫startAssign + push * i
+                let width = teamWidthArr[j];
+
+                // 画F标签
+                if (data[`${team}`]) {
+                    await implantRoundLabelF1(
+                        data[`${team}`][j],
+                        calculateX + (width * direction / 2 - 50),
+                        startY - 130,
+                        isWin,
+                        scoreTextColor);
+                }
+
+                //画矩形
+                rectSum += width;
+                rectColor = colorList[j];
+                if (data[`${team}`]) {
+                    await implantScoreBar(rectColor,
+                        (!isReverse ? startX : (calculateX - width)), //反转的使用位置
+                        startY,
+                        rectSum,
+                        30);
+                }
+
+                //结算
+                calculateX += width * direction; //red 往右，是加起来， none，blue 往左
+            }
+        }
+
+        //计算小于额定宽度的选手的数量
+        function countLessMinWidth(teamWidthArr = [0], minWidth = 0) {
+            let count = 0;
+
+            teamWidthArr.forEach((v,i) => {
+                if (v < minWidth) {
+                    count ++;
+                }
+            })
+
+            return count;
         }
     }
 
-    //当队伍人数小于等于4时，计算每个值的长度（正常
-    function getTeamVsWidthArrayNormal(data, team = 'none') {
+    //计算每个队内选手应该获得的宽度
+    function getTeamVsWidthArray(data, team = 'none', isLess4 = true) {
         let isTeamVs = data.statistics.is_team_vs;
-        let minWidth;
+        let teamMinWidth;
+        let playerMinWidth;
 
         if (!data[team]) return [];
 
@@ -314,11 +444,19 @@ export async function card_C(data = {
         let total_score = data.statistics.score_total;
         let team_score;
         if (isTeamVs) {
-            team_score = data.statistics[`score_team_${team}`];
-            minWidth = 400;
+            if (isLess4) {
+                team_score = data.statistics[`score_team_${team}`];
+                teamMinWidth = 400;
+                playerMinWidth = 100;
+            } else {
+                team_score = data.statistics[`score_team_${team}`];
+                teamMinWidth = 20;
+                playerMinWidth = 20;
+            }
         } else {
             team_score = total_score;
-            minWidth = 0;
+            teamMinWidth = 0;
+            playerMinWidth = 0;
         }
 
         //获取分数，从小到大排列
@@ -328,22 +466,24 @@ export async function card_C(data = {
         }
 
         //获取每个人需要的宽度、用于计算的值
-        let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, minWidth), 1330 - minWidth);
+        let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, teamMinWidth), 1330 - teamMinWidth);
         let team_score_calc = team_score;
 
         for (const i of team_score_arr) {
             let width = team_width_calc * i / team_score_calc
-            if (width < 100) {
-                team_width_arr.unshift(100);
-                team_width_calc -= 100;
+            //常规的限宽分支
+            if (width < playerMinWidth) { //原来是100
+                team_width_arr.unshift(playerMinWidth);
+                team_width_calc -= playerMinWidth;
                 team_score_calc -= i;
             } else {
+                //特殊分支和常规的不限宽分支
                 team_width_arr.unshift(width);
             }
         }
-
         return team_width_arr;
     }
+
 
 
     // 插入F1 - F3标签的功能函数
@@ -363,20 +503,24 @@ export async function card_C(data = {
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
     }
 
-    async function implantRoundLabelF2(object, x, y) {
+    async function implantRoundLabelF2(object, x, y, isWin, scoreTextColor) {
         let label_F2_impl =
             await label_F2({
-                avatar: object.player_avatar,
-                name: object.player_name,
+                avatar: object.player_avatar || '',
+                name: object.player_name || '',
+                rank: object.player_rank || '',
+                isWin: isWin,
+                scoreTextColor: scoreTextColor,
             })
         svg = implantSvgBody(svg, x, y, label_F2_impl, reg_bodycard);
     }
 
 
-    async function implantRoundLabelF3(object, x, y) {
+    async function implantRoundLabelF3(object, x, y, isWin) {
         let label_F3_impl =
             await label_F3({
-                avatar: object.player_avatar,
+                avatar: object.player_avatar || '',
+                isWin: isWin,
             })
         svg = implantSvgBody(svg, x, y, label_F3_impl, reg_bodycard);
     }

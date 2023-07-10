@@ -115,22 +115,40 @@ export async function panel_F(data = {
             is_team_vs: true, // TFF表示平局，当然，这个很少见
             is_team_red_win: false, //如果不是team vs，这个值默认false
             is_team_blue_win: true, //如果不是team vs，这个值默认false
-            score_team_red: 1753432,
+            score_team_red: 3540000,
             score_team_blue: 1806035,
-            score_total: 3559467,
+            score_total: 5346035,
             wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
             wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
         red: [{
             player_name: 'na-gi', //妈的 为什么get match不给用户名啊
             player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 863600,
+            player_score: 900000,
             player_mods: ['HD'],
             player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
         }, {
             player_name: '- Rainbow -',
             player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 519658,
+            player_score: 800000,
+            player_mods: ['HD'],
+            player_rank: 4
+        }, {
+            player_name: 'Phirida',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+            player_score: 700000,
+            player_mods: ['HD'],
+            player_rank: 5,
+        }, {
+            player_name: 'na-gi', //妈的 为什么get match不给用户名啊
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+            player_score: 600000,
+            player_mods: ['HD'],
+            player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
+        }, {
+            player_name: '- Rainbow -',
+            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+            player_score: 500000,
             player_mods: ['HD'],
             player_rank: 4
         }, {
@@ -210,6 +228,39 @@ export async function panel_F(data = {
         svg = implantSvgBody(svg, 510, 330 + i * 250, card_Cs[i], reg_card_c)
     }
 
+    // 测试用代码，毕竟本地跑没法 promise
+    /*
+    let beatmap_arr = [{
+        // 谱面部分参数
+
+        background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
+        title: 'Deleted Map',
+        artist: '?',
+        mapper: '?', //creator
+        difficulty: '?',
+        status: '',
+
+        bid: 0,
+        star_rating: 9.96,
+        cs: 0,
+        ar: 0,
+        od: 0,
+    },{
+        background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
+        title: 'Deleted Map',
+        artist: '?',
+        mapper: '?', //creator
+        difficulty: '?',
+        status: '',
+
+        bid: 0,
+        star_rating: 9.96,
+        cs: 0,
+        ar: 0,
+        od: 0,
+    }];
+     */
+
     let beatmap_arr = await Promise.all(data.scores.map(async (e) => {
         const d = e.statistics;
 
@@ -258,6 +309,7 @@ export async function panel_F(data = {
             od: od,
         }
     }));
+
 
 
     // 导入谱面卡(A2卡

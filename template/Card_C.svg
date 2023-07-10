@@ -5,7 +5,7 @@
 </defs>
   <g id="Background">
     <rect width="1380" height="210" rx="20" ry="20" style="fill: #382e32;"/>
-    <g id="BackColor" style="opacity: .2;">
+    <g id="BackColor" style="opacity: .4;">
       <rect width="1380" height="210" rx="20" ry="20" style="fill: ${backcolor};"/>
     </g>
     <g style="clip-path: url(#clippath-CC-1);">

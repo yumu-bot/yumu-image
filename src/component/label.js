@@ -328,7 +328,9 @@ export async function label_F2(data = {
     mods_arr: [], //这个用不到
     score: 268397,
     rank: 6,
+    maxWidth: 100,
     label_color: '#46393f',
+    isWin: true,
 
 }, reuse = false) {
 
@@ -355,7 +357,7 @@ export async function label_F2(data = {
 
     //定义文本
     let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
-    let name = torus.getTextPath(text_name, 52, 13.877, 18, 'left baseline', '#fff');
+    let name = torus.getTextPath(text_name, 32, 13.877, 18, 'left baseline', '#fff');
 
     let score_b = getRoundedNumberLargerStr(data.score || 0, 3);
     let score_m = getRoundedNumberSmallerStr(data.score || 0, 3);
@@ -373,14 +375,20 @@ export async function label_F2(data = {
     svg = replaceText(svg, rank, reg_text);
     svg = replaceText(svg, label_color, reg_label);
 
+    //插入图片，如果输了就变灰
+    let isWin = data.isWin;
+    let opa = 1;
+    if (!isWin) opa = 0.3;
+
     //插入图片
-    svg = implantImage(svg, 30, 30, 0, 0, 1, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+    svg = implantImage(svg, 30, 30, 0, 0, opa, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
 
     return svg.toString();
 }
 
 export async function label_F3(data = {
     avatar: 'avatar-guest.png',
+    isWin: true,
 
 }, reuse = false) {
     //导入模板
@@ -398,8 +406,12 @@ export async function label_F3(data = {
     //正则
     let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF3-1\);">)/;
 
-    //插入图片
-    svg = implantImage(svg, 30, 30, 0, 0, 1, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+    //插入图片，如果输了就变灰
+    let isWin = data.isWin;
+    let opa = 1;
+    if (!isWin) opa = 0.3;
+
+    svg = implantImage(svg, 30, 30, 0, 0, opa, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
 
     return svg.toString();
 }
