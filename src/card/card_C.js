@@ -179,18 +179,22 @@ export async function card_C(data = {
     let blue_score_arr = [];
     let none_score_arr = [];
 
-    if (data.red)
+    if (data.red) {
         for (let i = 0; i < data.red.length; i++) {
             red_score_arr.push(data.red[i].player_score);
         }
-    if (data.blue)
+    }
+    if (data.blue) {
         for (let i = 0; i < data.blue.length; i++) {
             blue_score_arr.push(data.blue[i].player_score);
         }
-    if (data.none)
+    }
+    if (data.none) {
         for (let i = 0; i < data.none.length; i++) {
             none_score_arr.push(data.none[i].player_score);
         }
+    }
+
 
     // 计算长度
     let red_width_arr;
@@ -198,8 +202,13 @@ export async function card_C(data = {
     let none_width_arr;
 
     //主分支
-    if ((data.statistics.is_team_vs && (data.red.length + data.blue.length) <= 8) || (!data.statistics.is_team_vs && data.none.length <= 8)) { //data.statistics
-        if (data.statistics.is_team_vs) {
+    const red_length = data.red ? data.red.length : 0;
+    const blue_length = data.blue ? data.blue.length : 0;
+    const none_length = data.none ? data.none.length : 0;
+    const is_team_vs = data.statistics.is_team_vs;
+
+    if ((is_team_vs && (red_length + blue_length) <= 8) || (!is_team_vs && none_length <= 8)) { //data.statistics
+        if (is_team_vs) {
             red_width_arr = getTeamVsWidthArray(data, 'red', true);
             blue_width_arr = getTeamVsWidthArray(data, 'blue', true);
             if (red_width_arr !== []) {
@@ -216,7 +225,7 @@ export async function card_C(data = {
         }
     } else {
         //特殊分支，比较麻烦，还需要针对超短的数据
-        if (data.statistics.is_team_vs) {
+        if (is_team_vs) {
             red_width_arr = getTeamVsWidthArray(data, 'red', false);
             blue_width_arr = getTeamVsWidthArray(data, 'blue', false);
             if (red_width_arr !== []) {
