@@ -328,7 +328,7 @@ export async function card_C(data = {
                     // i 是横坐标，最大只能有 3 个 i
                     for (let j = 0; j <= 3; j++) {
                         // j 是纵坐标，0-3
-                        let k = teamWidthArr.length - less + (i * 3 + j);
+                        let k = teamWidthArr.length - less + (i * 4 + j);
                         let width = teamWidthArr[k];
 
                         if (data[`${team}`][k]) {
@@ -450,6 +450,8 @@ export async function card_C(data = {
         let team_width_arr = [];
         let total_score = data.statistics.score_total;
         let team_score;
+
+        //team vs以及1v1的最窄间距限制
         if (isTeamVs) {
             if (isLess4) {
                 team_score = data.statistics[`score_team_${team}`];
@@ -461,9 +463,15 @@ export async function card_C(data = {
                 playerMinWidth = 20;
             }
         } else {
-            team_score = total_score;
-            teamMinWidth = 0;
-            playerMinWidth = 0;
+            if (isLess4) {
+                team_score = total_score;
+                teamMinWidth = 0;
+                playerMinWidth = 100;
+            } else {
+                team_score = total_score;
+                teamMinWidth = 0;
+                playerMinWidth = 0;
+            }
         }
 
         //获取分数，从小到大排列
