@@ -48,7 +48,7 @@ export async function panel_F(data = {
         {
             statistics: {
                 // 谱面部分参数
-                background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
+                background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
                 title: 'Back to Marie',
                 artist: 'Kumagai Eri(cv.Seto Asami)',
                 mapper: 'Yunomi', //creator
@@ -66,121 +66,104 @@ export async function panel_F(data = {
                 score_total: 2291151,
                 wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
                 wins_team_blue_before: 4,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
-        },
-        red: [
-            {
+            },
+            red: [
+                {
+                    player_name: 'na-gi', //妈的 为什么get match不给用户名啊
+                    player_avatar: getExportFileV3Path('avatar-guest.png'),
+                    player_score: 464277,
+                    player_mods: [],
+                    player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
+                }, {
+                    player_name: '- Rainbow -',
+                    player_avatar: getExportFileV3Path('avatar-guest.png'),
+                    player_score: 412096,
+                    player_mods: [],
+                    player_rank: 2
+                }, {
+                    player_name: 'Guozi on osu',
+                    player_avatar: getExportFileV3Path('avatar-guest.png'),
+                    player_score: 268397,
+                    player_mods: [],
+                    player_rank: 6,
+                }],
+            blue: [
+                {
+                    player_name: 'Greystrip_VoV',
+                    player_avatar: getExportFileV3Path('avatar-guest.png'),
+                    player_score: 403437,
+                    player_mods: ['HD'],
+                    player_rank: 3,
+                }, {
+                    player_name: 'Mars New',
+                    player_avatar: getExportFileV3Path('avatar-guest.png'),
+                    player_score: 371937,
+                    player_mods: [],
+                    player_rank: 4,
+                }, {
+                    player_name: 'No Rank',
+                    player_avatar: getExportFileV3Path('avatar-guest.png'),
+                    player_score: 371007,
+                    player_mods: [],
+                    player_rank: 5,
+                }],
+            none: [{
+
+            }]
+        },{
+            statistics: {
+                is_team_vs: true, // TFF表示平局，当然，这个很少见
+                is_team_red_win: false, //如果不是team vs，这个值默认false
+                is_team_blue_win: false, //如果不是team vs，这个值默认false
+                score_team_red: 1144770,
+                score_team_blue: 1146381,
+                score_total: 2291151,
+                wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
+                wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
+            },
+            red: [{
                 player_name: 'na-gi', //妈的 为什么get match不给用户名啊
-                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+                player_avatar: getExportFileV3Path('avatar-guest.png'),
                 player_score: 464277,
                 player_mods: [],
                 player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
             }, {
                 player_name: '- Rainbow -',
-                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+                player_avatar: getExportFileV3Path('avatar-guest.png'),
                 player_score: 412096,
                 player_mods: [],
                 player_rank: 2
             }, {
                 player_name: 'Guozi on osu',
-                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
+                player_avatar: getExportFileV3Path('avatar-guest.png'),
                 player_score: 268397,
                 player_mods: [],
                 player_rank: 6,
             }],
-        blue: [
-            {
-                player_name: 'Greystrip_VoV',
-                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-                player_score: 403437,
-                player_mods: ['HD'],
-                player_rank: 3,
-            }, {
-                player_name: 'Mars New',
-                player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-                player_score: 371937,
-                player_mods: [],
-            player_rank: 4,
-        }, {
-            player_name: 'No Rank',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 371007,
-            player_mods: [],
-            player_rank: 5,
-        }],
-        none: [{
+            blue: [
+                {
+                    player_name: 'Greystrip_VoV',
+                    player_avatar: getExportFileV3Path('avatar-guest.png'),
+                    player_score: 403437,
+                    player_mods: ['HD'],
+                    player_rank: 3,
+                }, {
+                    player_name: 'Mars New',
+                    player_avatar: getExportFileV3Path('avatar-guest.png'),
+                    player_score: 371937,
+                    player_mods: [],
+                    player_rank: 4,
+                }, {
+                    player_name: 'No Rank',
+                    player_avatar: getExportFileV3Path('avatar-guest.png'),
+                    player_score: 371007,
+                    player_mods: [],
+                    player_rank: 5,
+                }],
+            none: [{
 
-        }]
-    },{
-        statistics: {
-            is_team_vs: true, // TFF表示平局，当然，这个很少见
-            is_team_red_win: false, //如果不是team vs，这个值默认false
-            is_team_blue_win: true, //如果不是team vs，这个值默认false
-            score_team_red: 3540000,
-            score_team_blue: 1806035,
-            score_total: 5346035,
-            wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
-            wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
-        },
-        red: [{
-            player_name: 'na-gi', //妈的 为什么get match不给用户名啊
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 900000,
-            player_mods: ['HD'],
-            player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
-        }, {
-            player_name: '- Rainbow -',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 800000,
-            player_mods: ['HD'],
-            player_rank: 4
-        }, {
-            player_name: 'Phirida',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 700000,
-            player_mods: ['HD'],
-            player_rank: 5,
-        }, {
-            player_name: 'na-gi', //妈的 为什么get match不给用户名啊
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 600000,
-            player_mods: ['HD'],
-            player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
-        }, {
-            player_name: '- Rainbow -',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 500000,
-            player_mods: ['HD'],
-            player_rank: 4
-        }, {
-            player_name: 'Phirida',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 370174,
-            player_mods: ['HD'],
-            player_rank: 5,
+            }]
         }],
-        blue: [{
-            player_name: 'No Rank',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 849988,
-            player_mods: ['HD'],
-            player_rank: 2,
-        }, {
-            player_name: 'Greystrip_VoV',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 586554,
-            player_mods: ['HD'],
-            player_rank: 3,
-        }, {
-            player_name: 'Mars New',
-            player_avatar: getExportFileV3Path('PanelObject/F_LabelF1_Avatar.png'),
-            player_score: 369493,
-            player_mods: ['HD'],
-            player_rank: 6,
-        }],
-        none: [{
-
-        }]
-    }],
 
 }, reuse = false) {
     // 导入模板
