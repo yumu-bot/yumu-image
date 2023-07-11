@@ -202,9 +202,9 @@ callsites@^3.0.0:
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
 cargo-cp-artifact@^0.1:
-  version "0.1.7"
-  resolved "https://registry.npmmirror.com/cargo-cp-artifact/-/cargo-cp-artifact-0.1.7.tgz#1181b9d6e71f00f17c068c05e3cd1b0864783341"
-  integrity sha512-pxEV9p1on8vu3BOKstVisF9TwMyGKCBRvzaVpQHuU2sLULCKrn3MJWx/4XlNzmG6xNCTPf78DJ7WCGgr2mOzjg==
+  version "0.1.8"
+  resolved "https://registry.npmmirror.com/cargo-cp-artifact/-/cargo-cp-artifact-0.1.8.tgz#353814f49f6aa76601a4bcb3ea5f3071180b90de"
+  integrity sha512-3j4DaoTrsCD1MRkTF2Soacii0Nx7UHCce0EwUf4fHnggwiE4fbmF2AbnfzayR36DF8KGadfh7M/Yfy625kgPlA==
 
 chalk@^2.0.0:
   version "2.4.2"
@@ -343,6 +343,13 @@ convert-svg-core@^0.6.4:
     pollock "^0.2.0"
     puppeteer "^13.7.0"
     tmp "^0.2.1"
+
+convert-svg-to-jpeg@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.npmmirror.com/convert-svg-to-jpeg/-/convert-svg-to-jpeg-0.6.4.tgz#65a107922fbc466a5f31dea1610a0e2c6e16545a"
+  integrity sha512-mRiDxo2V5zQh2e6dLqGElMh/+7cmoaxaJ2lKHCOXYoW2Q5QpBv79KiCU6cZbCAylde6QURBFh3e+SsosFIGwYA==
+  dependencies:
+    convert-svg-core "^0.6.4"
 
 convert-svg-to-png@^0.6.4:
   version "0.6.4"

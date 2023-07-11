@@ -1,9 +1,9 @@
 import {
     ar2ms,
     cs2px,
-    od2ms,
     exportPng,
     extra,
+    getAccIndex,
     getExportFileV3Path,
     getGameMode,
     getMapStatusV3Path,
@@ -13,16 +13,181 @@ import {
     getStarRatingColor,
     getStarRatingObject,
     hasAnyMod,
+    hasMod,
     implantImage,
     implantSvgBody,
+    od2ms,
+    PanelGenerate,
     PuHuiTi,
+    readNetImage,
     readTemplate,
     replaceText,
-    torus, getV3Score,
+    torus,
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import moment from "moment";
+import {calcPerformancePoints, getDensityArray} from "../compute-pp.js";
+
+export async function router(req, res) {
+    try {
+        const user = req.fields?.user;
+        const score = req.fields?.score;
+        const card_a1 = await PanelGenerate.user2CardA1(user);
+        const newLabel = (remark, data_b, data_m) => {
+            return {
+                remark: remark,
+                data_b: data_b,
+                data_m: data_m,
+            }
+        }
+
+        const score_statistics = {
+            ...score.statistics,
+            combo: score.max_combo,
+            mods: score.mods,
+        }
+        const pp = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode, !(score.beatmap.ranked && score.beatmap.ranked === 1));
+
+        let map_length = score.beatmap.total_length || 0;
+        let map_drain = score.beatmap.hit_length || 0;
+        if (hasMod(pp.attr.mods_int, "DT")) {
+            map_length = (map_length * 2 / 3).toFixed(0);
+            map_drain = (map_drain * 2 / 3).toFixed(0);
+        } else if (hasMod(pp.attr.mods_int, "HT")) {
+            map_length = (map_length * 3 / 2).toFixed(0);
+            map_drain = (map_drain * 3 / 2).toFixed(0);
+        }
+
+        let roundacc = Math.round(score.accuracy * 10000) / 100
+        let labelPoint = (score.accuracy * 100) % 1;
+        let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
+
+        const label_data = {
+            acc: newLabel(getAccIndex(score),
+                Math.floor(roundacc) + (showPoint ? '' : '.'),
+                showPoint ? '%' : labelPoint.toFixed(2).substring(2) + '%'),
+            combo: newLabel(`${score.beatmap.max_combo}x`,
+                score.max_combo.toString(),
+                'x'),
+            pp: pp,
+            ar: score.beatmap.ar,
+            od: score.beatmap.accuracy,
+            cs: score.beatmap.cs,
+            hp: score.beatmap.drain,
+            length: map_length,
+            drain: map_drain,
+        };
+
+
+        const sumJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
+            const mode = getGameMode(gamemode, 1)
+
+            switch (mode) {
+                case 'o':
+                    return n300 + n100 + n50 + n0;
+                case 't':
+                    return n300 + n100 + n0;
+                case 'c':
+                    return Math.max(n300 + n100 + n0, n50, n200); //小果miss(katu)也要传过去的
+                case 'm':
+                    return Math.max(n320 + n300, n200, n100, n50, n0);
+                default:
+                    return n320 + n300 + n200 + n100 + n50 + n0;
+            }
+        }
+
+        const score_stats = {
+            judge_stat_sum: sumJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode),
+            judges: newJudge(score.statistics.count_geki, score.statistics.count_300, score.statistics.count_katu, score.statistics.count_100, score.statistics.count_50, score.statistics.count_miss, score.mode)
+        }
+
+        const score_isbest = (score.best_id !== null);
+
+        const score_time = score.created_at; //create_at_str 根本获取不到，我怀疑你bp只做了这个解析，pr或者recent没做，数据都获取不到
+
+        const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
+        let score_categorize;
+        if (score.mods.includes('NF')) {
+            score_categorize = 'played';
+        } else if (score.perfect || isTaikoPerfect) {
+            score_categorize = 'perfect';
+        } else if (score.statistics.count_miss === 0) {
+            score_categorize = 'nomiss';
+        } else if (score.rank !== 'F') {
+            score_categorize = 'clear'; //failed
+        } else {
+            score_categorize = 'played';
+        }
+
+        const allRatingNum = score.beatmapset.ratings.reduce((s, v) => s + v);
+        const allRatingVal = score.beatmapset.ratings.reduce((s, v, i) => s + v * i);
+        const map_public_rating = allRatingVal ? Math.floor(allRatingVal / allRatingNum * 100) / 100 : 0;
+
+        const map_fail_sum = score.beatmap.fail.reduce((s, v) => s + v) || 0;
+        const map_retry_sum = score.beatmap.exit.reduce((s, v) => s + v) || 0;
+        const map_notpass_sum = map_fail_sum + map_retry_sum || 0; //虚假的未通过人数
+        const map_notpass_real_percent = (score.beatmap.playcount - score.beatmap.passcount) / score.beatmap.playcount || 1; //真实的未通过率
+        const map_fail_percent = (map_fail_sum / map_notpass_sum * map_notpass_real_percent * 100).toFixed(0) || 0;
+        const map_retry_percent = (map_retry_sum / map_notpass_sum * map_notpass_real_percent * 100).toFixed(0) || 0;
+        const map_pass_percent = (100 - map_fail_percent - map_retry_percent).toFixed(0) || 100;
+
+        const data = {
+            map_density_arr: await getDensityArray(score.beatmap.id, score.mode),
+            map_fail_arr: score.beatmap.fail,
+            map_retry_arr: score.beatmap.exit,
+            mods_arr: score.mods,
+
+            map_background: await readNetImage(score.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg')),
+            map_banner: await readNetImage(score.beatmapset.covers["slimcover"], getExportFileV3Path('beatmap-DLfailBG.jpg')),
+
+            star: getExportFileV3Path('object-beatmap-star.png'),
+            map_hexagon: getExportFileV3Path('object-beatmap-hexagon.png'),
+            map_favorite: getExportFileV3Path('object-beatmap-favorite.png'),
+            map_playcount: getExportFileV3Path('object-beatmap-playcount.png'),
+            map_status: score.beatmap.status.toLowerCase(),
+
+            score_rank: score.rank,
+            star_rating: pp.attr.stars,
+            score: score.score,
+            score_acc_progress: Math.round(score.accuracy * 10000) / 100,
+
+            game_mode: score.mode.toLowerCase(),
+            map_status_fav: score.beatmapset.favourite_count,
+            map_status_pc: score.beatmapset.play_count,
+
+            map_title_romanized: score.beatmapset.title,
+            map_title_unicode: score.beatmapset.title_unicode,
+            map_difficulty: score.beatmap.version,
+
+            map_artist: score.beatmapset.artist,
+            map_mapper: score.beatmapset.creator,
+            map_bid: score.beatmap.id,
+
+            map_public_rating: map_public_rating.toString(), //大众评分，就是大家给谱面打的分，结算后往下拉的那个星星就是
+            map_fail_percent: map_fail_percent, //失败率%
+            map_retry_percent: map_retry_percent, //重试率%
+            map_pass_percent: map_pass_percent, //通过率%
+
+            score_categorize: score_categorize,
+            score_isbest: score_isbest,
+            score_time: score_time,
+
+            card_A1: card_a1,
+            label_data: label_data,
+            score_stats: score_stats,
+            score_miss: score.statistics.count_miss, //这里传个miss把
+            attr: pp.attr,
+        }
+        const png = await panel_E(data);
+        res.set('Content-Type', 'image/jpeg');
+        res.send(png);
+    } catch (e) {
+        console.error("e", e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
 
 export async function panel_E(data = {
     // A1卡

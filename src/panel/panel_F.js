@@ -19,14 +19,19 @@ import {getMapAttributes} from "../compute-pp.js";
 import moment from "moment";
 
 export async function router(req, res) {
-    const data = req.fields;
-    const png = await panel_F(data);
-    res.set('Content-Type', 'image/png');
-    res.send(png);
+    try {
+        const data = req.fields;
+        const png = await panel_F(data);
+        res.set('Content-Type', 'image/jpeg');
+        res.send(png);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
 }
 
 export async function panel_F(data = {
-
     // A2卡
     match: {
         background: "https://assets.ppy.sh/beatmaps/113458/covers/cover.jpg?1650639448", //给我他们最后一局的谱面背景即可

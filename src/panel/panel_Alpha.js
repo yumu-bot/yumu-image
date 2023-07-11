@@ -3,7 +3,7 @@ import {exportPng, PuHuiTi} from "../util.js";
 export async function router(req, res) {
     try {
         const data = await panel_Alpha(req.fields.strs || []);
-        res.set('Content-Type', 'image/png');
+        res.set('Content-Type', 'image/jpeg');
         res.send(data);
     } catch (e) {
         res.status(500).send(e.stack);

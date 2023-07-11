@@ -3,7 +3,7 @@ import os from "os";
 import crypto from 'crypto';
 import TextToSVG from 'text-to-svg';
 import axios from "axios";
-import exports from 'convert-svg-to-png';
+import exports from 'convert-svg-to-jpeg';
 import https from "https";
 import path from "path";
 import moment from "moment";
@@ -27,10 +27,21 @@ export function initPath() {
         protocol: "http",
     }
     axios.interceptors.response.use((response) => response, (error) => {
-        const {config} = error;
+        const {config, response} = error;
 
         config.__errTime = config.__errTime || 0;
-        if (error.code === 'ECONNABORTED' && config.__errTime <= config.retry) {
+        config.__retryCount = config.__retryCount || 1;
+
+        if (response?.status === 429) {
+            let backoff = new Promise(function (resolve) {
+                setTimeout(function () {
+                    resolve();
+                }, (Math.pow(2, config.__retryCount) * 1000) || config.retryDelay || 1);  // 指数退避
+            });
+            return backoff.then(function () {
+                return axios(config);
+            })
+        } else if (error.code === 'ECONNABORTED' && config.__errTime <= config.retry) {
             console.log(`${config.method} ${config.url} timeout, re send: ${config.__errTime}`);
             config.__errTime += 1;
             let backoff = new Promise(function (resolve) {
@@ -38,8 +49,8 @@ export function initPath() {
                     resolve();
                 }, config.retryDelay || 1);
             });
-            if (config.__errTime >= 3) {
-                config.timeout += 2000;
+            if (config.__errTime >= 2) {
+                config.timeout += config.__errTime * 2000;
             }
             return backoff.then(function () {
                 return axios(config);
@@ -68,7 +79,7 @@ const mascot_pic_sum_arr = [39, 14, 3, 2, 6, 1, 1, 2, 2, 3]; //吉祥物的对�
 const bannerTotal = 110;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
-const svgToPng = async (svg) => await exports.convert(svg);
+const svgToPng = async (svg) => await exports.convert(svg, {quality: 80});
 
 const UTF8Encoder = new TextEncoder('utf8');
 
@@ -1878,7 +1889,7 @@ export function getMatchNameSplitted(text = '') {
 
 export function getBase64Text(buffer) {
     let data = Buffer.from(buffer, 'binary').toString('base64');
-    return 'data:image/png;base64,' + data;
+    return 'data:image/jpeg;base64,' + data;
 }
 
 export function randomString(e) {
