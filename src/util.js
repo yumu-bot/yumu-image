@@ -27,10 +27,21 @@ export function initPath() {
         protocol: "http",
     }
     axios.interceptors.response.use((response) => response, (error) => {
-        const {config} = error;
+        const {config, response} = error;
 
         config.__errTime = config.__errTime || 0;
+        config.__retryCount = config.__retryCount || 0;
 
+        if (response.status === 426) {
+            let backoff = new Promise(function (resolve) {
+                setTimeout(function () {
+                    resolve();
+                }, (Math.pow(2, config.__retryCount) * 1000) || config.retryDelay || 1);  // 指数退避
+            });
+            return backoff.then(function () {
+                return axios(config);
+            })
+        }
         if (error.code === 'ECONNABORTED' && config.__errTime <= config.retry) {
             console.log(`${config.method} ${config.url} timeout, re send: ${config.__errTime}`);
             config.__errTime += 1;
