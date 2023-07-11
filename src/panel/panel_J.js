@@ -9,6 +9,7 @@ import {
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_J} from "../card/card_J.js";
+import {card_L} from "../card/card_L.js";
 
 export async function router(req, res) {
     try {
@@ -281,9 +282,25 @@ export async function panel_J(data = {
         },
     ],
 
-    bpCombo: [], //数据格式同上
+    bpCombo: [
+        {
+            "index": 998,
+            "ranking": 2,
+            "list@2x": "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843",
+            "difficulty_rating": 4.42,
+            "rank": "A",
+        },
+    ], //数据格式同上
 
-    bpSR: [],
+    bpSR: [
+        {
+            "index": 5.42,
+            "ranking": 9,
+            "list@2x": "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843",
+            "difficulty_rating": 5.42,
+            "rank": "A",
+        },
+    ], //数据格式同上
 
     // 最喜爱谱师，只需要给6个
     favorite_mappers:[
@@ -350,6 +367,7 @@ export async function panel_J(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PJ-1\);">)/;
     let reg_topbp = /(?<=<g id="TopBP">)/;
     let reg_lastbp = /(?<=<g id="LastBP">)/;
+    let reg_card_l = /(?<=<g id="Card_L">)/;
     let reg_maincard = /(?<=<g id="MainCard">)/;
 
     // 面板文字
@@ -358,7 +376,7 @@ export async function panel_J(data = {
     const index_panel_name = 'BPA';
 
     const index_top5bp = 'Top 5 BPs';
-    const index_last5bp = 'Top 5 BPs';
+    const index_last5bp = 'Last 5 BPs';
 
     const index_mods = 'Mods';
 
@@ -382,7 +400,7 @@ export async function panel_J(data = {
     svg = replaceText(svg, index_last5bp_path, reg_index);
 
     // A1卡构建
-    let cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
+    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
 
     // J卡构建
     let cardJs_top = [];
@@ -398,6 +416,16 @@ export async function panel_J(data = {
         cardJs_last.push(h);
     }
 
+    // L卡构建
+    let cardLs = [];
+
+    const L1 = await card_L({name: 'Length', card_K: data.bpLength}, true);
+    const L2 = await card_L({name: 'Combo', card_K: data.bpCombo}, true);
+    const L3 = await card_L({name: 'SR', card_K: data.bpSR}, true);
+
+    cardLs.push(L1, L2, L3);
+
+
     // 插入图片和部件（新方法
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_maincard);
 
@@ -407,6 +435,10 @@ export async function panel_J(data = {
 
     for (const i in cardJs_last) {
         svg = implantSvgBody(svg, 380, 380 + i * 95, cardJs_last[i], reg_lastbp);
+    }
+
+    for (const i in cardLs) {
+        svg = implantSvgBody(svg, 50 + i * 305, 880, cardLs[i], reg_card_l);
     }
 
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);

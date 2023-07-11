@@ -67,9 +67,6 @@
   <g id="StatusCard">
     <rect x="40" y="875" width="920" height="165" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="Card_L">
-      <rect x="50" y="880" width="285" height="150" style="fill: lime;"/>
-      <rect x="660" y="880" width="285" height="150" style="fill: lime;"/>
-      <rect x="355" y="880" width="285" height="150" style="fill: lime;"/>
     </g>
   </g>
   <g id="MapperCard">
