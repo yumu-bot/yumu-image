@@ -15,14 +15,21 @@ import {card_B1} from "../card/card_B1.js";
 import {card_B2} from "../card/card_B2.js";
 
 export async function router(req, res) {
-    const data = req.fields;
-    const png = await panel_B(data);
-    res.set('Content-Type', 'image/png');
-    res.send(png);
+    try {
+        const data = req.fields;
+        const png = await panel_B(data);
+        res.set('Content-Type', 'image/jpeg');
+        res.send(png);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
 }
 
 const VALUE_NAMES = ['ACC', 'PTT', 'STA', 'STB', 'PRE', 'EFT', 'STH'] // OVA 跟 SAN 单独处理
 
+// ppm 面板
 export async function panel_B(data = {
     // A1卡
     card_A1: [{

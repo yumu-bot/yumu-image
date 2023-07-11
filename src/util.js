@@ -3,7 +3,7 @@ import os from "os";
 import crypto from 'crypto';
 import TextToSVG from 'text-to-svg';
 import axios from "axios";
-import exports from 'convert-svg-to-png';
+import exports from 'convert-svg-to-jpeg';
 import https from "https";
 import path from "path";
 import moment from "moment";
@@ -30,6 +30,7 @@ export function initPath() {
         const {config} = error;
 
         config.__errTime = config.__errTime || 0;
+
         if (error.code === 'ECONNABORTED' && config.__errTime <= config.retry) {
             console.log(`${config.method} ${config.url} timeout, re send: ${config.__errTime}`);
             config.__errTime += 1;
@@ -68,7 +69,7 @@ const mascot_pic_sum_arr = [39, 14, 3, 2, 6, 1, 1, 2, 2, 3]; //吉祥物的对�
 const bannerTotal = 110;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
-const svgToPng = async (svg) => await exports.convert(svg);
+const svgToPng = async (svg) => await exports.convert(svg, {quality: 80});
 
 const UTF8Encoder = new TextEncoder('utf8');
 
@@ -1878,7 +1879,7 @@ export function getMatchNameSplitted(text = '') {
 
 export function getBase64Text(buffer) {
     let data = Buffer.from(buffer, 'binary').toString('base64');
-    return 'data:image/png;base64,' + data;
+    return 'data:image/jpeg;base64,' + data;
 }
 
 export function randomString(e) {

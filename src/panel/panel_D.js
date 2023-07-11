@@ -15,6 +15,8 @@ import {
     implantSvgBody,
     maximumArrayToFixedLength,
     modifyArrayToFixedLength,
+    PanelGenerate,
+    readNetImage,
     readTemplate,
     replaceText,
     torus
@@ -22,7 +24,162 @@ import {
 import {card_J} from "../card/card_J.js";
 import {card_K} from "../card/card_K.js";
 
-export async function panel_D(data = {
+export async function router(req, res) {
+    try {
+        let user = req.fields?.user;
+        const card_a1 = await PanelGenerate.user2CardA1(user);
+
+        const label_data = {
+            rks: {
+                data: user?.statistics?.ranked_score,
+            },
+            tts: {
+                data: user?.statistics?.total_score,
+            },
+            pc: {
+                data: user?.statistics?.play_count,
+            },
+            pt: {
+                data_b: '0.',
+                data_m: '0d',
+            },
+            mpl: {
+                data: user?.beatmap_playcounts_count,
+            },
+            rep: {
+                data: user?.statistics?.replays_watched_by_others,
+            },
+            fan: {
+                data: user?.follower_count,
+            },
+            tth: {
+                data: user?.totalHits,
+            },
+        }
+
+        if (user?.statistics?.total_score) {
+            let d = Math.floor(user?.statistics?.play_time / 86400);
+            let d_f = Math.floor(user?.statistics?.play_time % 86400 / 864).toString().padStart(2, '0')
+            label_data.pt.data_b = `${d}.`;
+            label_data.pt.data_m = `${d_f}d`;
+        }
+
+        let reList = req.fields['re-list'];
+        const recent_play = [];
+        for (const re of reList) {
+            const covers_card = await readNetImage(re.beatmapset.covers.card, getExportFileV3Path('beatmap-defaultBG.jpg')); //card获取快
+            let d = {
+                map_cover: covers_card,
+                map_background: covers_card,
+                map_title_romanized: re.beatmapset.title,
+                map_artist: re.beatmapset.artist,
+                map_difficulty_name: re.beatmap.version,
+                star_rating: Math.round(re.beatmap.difficulty_rating * 100) / 100,
+                score_rank: re.rank,
+                accuracy: Math.round(re.accuracy * 10000) / 100, //这玩意传进来就是零点几？  是
+                combo: re.max_combo, //x
+                mods_arr: re.mods,
+                pp: Math.round(re.pp) //pp
+            }
+            recent_play.push(d);
+        }
+
+        let bpList = req.fields['bp-list'];
+        const bp_list = [];
+
+        for (const bp of bpList) {
+            let d = {
+                map_background: await readNetImage(bp.beatmapset.covers.list, getExportFileV3Path('beatmap-defaultBG.jpg')),
+                star_rating: bp.beatmap.difficulty_rating,
+                score_rank: bp.rank,
+                bp_pp: bp.pp,
+            }
+            bp_list.push(d);
+        }
+
+        const mpc = user.monthlyPlaycounts;
+        let fd = mpc?.[0]?.startDate;
+        const dataArr = [];
+        if (fd) {
+            const mpcObj = mpc.reduce((obj, {startDate, count}) => {
+                obj[startDate] = count;
+                return obj;
+            }, {});
+            let [year, month, day] = fd.split('-').map(Number);
+            const nowDate = new Date();
+            const thisYear = nowDate.getUTCFullYear();
+            const thisMonth = nowDate.getUTCMonth() + 1;
+            // 如果修改起始日期 参考下面例子
+            //  year = thisYear - 1; //修改年
+            //  month = month === 12 ? 1 : month + 1; //修改月
+            // fd = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-'); //修改要传递的起始日期
+            while (true) {
+                if (year >= thisYear && month >= thisMonth) {
+                    break;
+                }
+
+                const key = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
+
+                if (key in mpcObj) {
+                    dataArr.push(mpcObj[key]);
+                } else {
+                    dataArr.push(0);
+                }
+
+                if (month < 12) {
+                    month += 1;
+                } else {
+                    month = 1;
+                    year += 1;
+                }
+            }
+            fd = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
+        } else {
+            const nowDate = new Date();
+            const thisYear = nowDate.getUTCFullYear();
+            const thisMonth = nowDate.getUTCMonth() + 1;
+            fd = `${thisYear}-${thisMonth.toString().padStart(2, '0')}-01`;
+        }
+
+
+        const op = {
+            rank_country: user?.statistics?.country_rank,
+            rank_global: user?.statistics?.global_rank,
+            country: user?.country['countryCode'],
+            bonus_pp: req.fields['bonus_pp'], // 416.6667
+            om4k_pp: user?.statistics?.pp4K,
+            om7k_pp: user?.statistics?.pp7K,
+            game_mode: req.fields?.mode, // osu taiko catch mania
+
+            grade_XH: user?.statistics?.ssh,
+            grade_X: user?.statistics?.ss,
+            grade_SH: user?.statistics?.sh,
+            grade_S: user?.statistics?.s,
+            grade_A: user?.statistics?.a,
+
+            user_lv: user['levelCurrent'],
+            user_progress: Math.floor(user['levelProgress']), //%
+
+            user_bp_arr: req.fields['bp-time'],
+            user_ranking_arr: user?.rank_history.history,
+            user_pc_arr: dataArr,
+            user_pc_last_date: fd
+        }
+        const d_data = {
+            ...op, card_A1: card_a1, label_data: label_data, recent_play: recent_play, bp_list: bp_list,
+        }
+
+        const png = await panel_D(d_data);
+        res.set('Content-Type', 'image/jpeg');
+        res.send(png);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
+
+async function panel_D(data = {
     // A1卡
     card_A1: {
         background: getExportFileV3Path('card-default.png'),

@@ -1,7 +1,9 @@
 import {
-    exportPng, getNowTimeStamp,
+    exportPng,
+    getNowTimeStamp,
     getRandomBannerPath,
-    implantImage, implantSvgBody,
+    implantImage,
+    implantSvgBody,
     PanelGenerate,
     readTemplate,
     replaceText,
@@ -13,7 +15,7 @@ import {card_J} from "../card/card_J.js";
 export async function router(req, res) {
     try {
         const data = await panel_J(req.fields || {});
-        res.set('Content-Type', 'image/png');
+        res.set('Content-Type', 'image/jpeg');
         res.send(data);
     } catch (e) {
         res.status(500).send(e.stack);
@@ -261,12 +263,6 @@ export async function panel_J(data = {
             },
             "create_at_str": "2023-05-26T11:59:37Z"
         },
-        {
-
-        },
-        {
-
-        }
     ],
 
     bpLast5: [],
