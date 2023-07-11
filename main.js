@@ -398,6 +398,7 @@ app.post('/panel_E', async (req, res) => {
             card_A1: card_a1,
             label_data: label_data,
             score_stats: score_stats,
+            score_miss: score.statistics.count_miss, //这里传个miss把
             attr: pp.attr,
         }
         const png = await panel_E(data);

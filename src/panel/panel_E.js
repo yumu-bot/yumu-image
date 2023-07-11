@@ -18,7 +18,7 @@ import {
     PuHuiTi,
     readTemplate,
     replaceText,
-    torus,
+    torus, getV3Score,
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -108,6 +108,8 @@ export async function panel_E(data = {
             },
         ],
     },
+
+    score_miss: 3,
 
     // 谱面密度
     map_density_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
@@ -376,7 +378,8 @@ export async function panel_E(data = {
         parseInt(data.label_data.combo.data_b),
         parseInt(data.label_data.combo.remark.slice(0,-1)),
         data.mods_arr,
-        data.game_mode);
+        data.game_mode,
+        data.score_miss);
 
      */
     let main_score = torus.get2SizeTextPath(getRoundedNumberLargerStr(data.score, -1), getRoundedNumberSmallerStr(data.score, -1), 84, 60, 1215, 409.43, 'left baseline', '#FFF');

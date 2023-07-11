@@ -360,7 +360,7 @@ export async function panel_J(data = {
     const index_top5bp = 'Top 5 BPs';
     const index_last5bp = 'Top 5 BPs';
 
-    const index_mods = 'Mods'
+    const index_mods = 'Mods';
 
     const index_powered_path = torus.getTextPath(index_powered,
         10, 26.84, 24, "left baseline", "#fff");
