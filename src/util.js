@@ -30,9 +30,9 @@ export function initPath() {
         const {config, response} = error;
 
         config.__errTime = config.__errTime || 0;
-        config.__retryCount = config.__retryCount || 0;
+        config.__retryCount = config.__retryCount || 1;
 
-        if (response.status === 426) {
+        if (response?.status === 429) {
             let backoff = new Promise(function (resolve) {
                 setTimeout(function () {
                     resolve();
@@ -41,8 +41,7 @@ export function initPath() {
             return backoff.then(function () {
                 return axios(config);
             })
-        }
-        if (error.code === 'ECONNABORTED' && config.__errTime <= config.retry) {
+        } else if (error.code === 'ECONNABORTED' && config.__errTime <= config.retry) {
             console.log(`${config.method} ${config.url} timeout, re send: ${config.__errTime}`);
             config.__errTime += 1;
             let backoff = new Promise(function (resolve) {
@@ -50,8 +49,8 @@ export function initPath() {
                     resolve();
                 }, config.retryDelay || 1);
             });
-            if (config.__errTime >= 3) {
-                config.timeout += 2000;
+            if (config.__errTime >= 2) {
+                config.timeout += config.__errTime * 2000;
             }
             return backoff.then(function () {
                 return axios(config);
