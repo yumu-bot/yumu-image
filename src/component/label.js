@@ -440,6 +440,7 @@ export async function label_J1(data = {
         30, 18,
         210, 54.795,
         'right baseline', '#fff');
+
     let mod_color = getModColor(mod);
 
     //插入文本
@@ -460,21 +461,6 @@ export async function label_J2(data = {
     count: 88,
     pp: 1611,
 }, reuse = false) {
-    let svg = `  <defs>
-    <clipPath id="clippath-LJ2">
-      <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: none;"/>
-    </clipPath>
-  </defs>
-  <g id="Head">
-    <circle cx="14" cy="14" r="14" style="fill: ${index_color}）;"/>
-    <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: #46393f;"/>
-    <g style="clip-path: url(#clippath-LJ2);">
-    </g>
-  </g>
-  <g id="Index">
-  </g>
-  <g id="Text">
-  </g>`;
 
     //正则
     let reg_text = /(?<=<g id="Text">)/;
@@ -485,16 +471,31 @@ export async function label_J2(data = {
     //定义文本
     let index = torus.getTextPath(data.index.toString(), 14,  21.836, 24, 'center baseline', '#fff');
     let name = torus.getTextPath(data.name,87.867, 21.836, 24,  'left baseline', '#fff');
-    let count = torus.getTextPath(data.count.toString(),87.867, 49.836, 24,  'left baseline', '#aaa');
+    let count = torus.get2SizeTextPath(data.count.toString(), 'x',24, 18, 87.867, 49.836, 'left baseline', '#aaa');
     let pp = torus.get2SizeTextPath(data.pp.toString() || '0', 'PP', 30, 18, 248, 76.795, 'right baseline', '#fff')
-    let index_color = getUserRankColor(index);
+    let index_color = getUserRankColor(data.index);
+
+    let svg = `  <defs>
+    <clipPath id="clippath-LJ2">
+      <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Head">
+    <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: #46393f;"/>
+    <g style="clip-path: url(#clippath-LJ2);">
+    </g>
+    <circle cx="14" cy="14" r="14" style="fill: ${index_color};"/>
+  </g>
+  <g id="Index">
+  </g>
+  <g id="Text">
+  </g>`;
 
     //插入文本
     svg = replaceText(svg, index, reg_index);
     svg = replaceText(svg, name, reg_text);
     svg = replaceText(svg, count, reg_text);
     svg = replaceText(svg, pp, reg_text);
-    svg = replaceText(svg, index_color, reg_index_color);
 
     //插入图片
     svg = implantImage(svg, 70, 70, 8, 8, 1,

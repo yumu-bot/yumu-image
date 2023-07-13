@@ -72,9 +72,12 @@ export async function card_L(data = {
     switch (card_name) {
         case 'Length': {
             for (const v of index_arr) {
-                const time = moment().second(v);
-                index_b_arr.push(time.format("mm[:]").toString());
-                index_m_arr.push(time.format("ss").toString());
+                const minute = Math.floor(v / 60);
+                let second = v - minute * 60;
+                if (second < 10) second = '0' + second;
+
+                index_b_arr.push(minute + ':');
+                index_m_arr.push(second.toString());
             }
             card_icon = getExportFileV3Path('object-score-length.png');
         } break;
@@ -135,7 +138,7 @@ export async function card_L(data = {
 
     for (let i = 0; i < 30; i++) {
         let rrect_width = 30 - i; // rrect_arr[i] / rrect_max * 30
-        rrect_svg += `<rect x="${10 + 30 - rrect_width}" y="${60 + i * 3}" width="${rrect_width}" height="2" style="fill: #ffcc22;"/>\n`
+        rrect_svg += `<rect x="${10 + 30 - rrect_width}" y="${60 + i * 3}" width="${rrect_width}" height="2" style="fill: #fff550;"/>\n`
     }
 
     svg = implantSvgBody(svg, 0, 0, rrect_svg, reg_rrect);

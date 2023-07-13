@@ -1,10 +1,10 @@
 import {
-    exportPng,
+    exportPng, getExportFileV3Path,
     getNowTimeStamp,
     getRandomBannerPath,
     implantImage,
     implantSvgBody,
-    PanelGenerate,
+    PanelGenerate, readNetImage,
     readTemplate,
     replaceText,
     torus
@@ -12,6 +12,7 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {card_J} from "../card/card_J.js";
 import {card_L} from "../card/card_L.js";
+import {label_J2} from "../component/label.js";
 
 export async function router(req, res) {
     try {
@@ -270,7 +271,7 @@ export async function panel_J(data = {
 
     bpLength: [ //第一个是最大值，第二个是中值（不是平均值），第三个是最小值。如果bp不足2个，中值和最小值留null，如果bp不足3个，中值留null
         {
-            "index": 154, //这个得自己算，和对应的数据有关系。length给秒数（整数），combo给连击（整数），star rating给星数（小数）
+            "index": 719, //这个得自己算，和对应的数据有关系。length给秒数（整数），combo给连击（整数），star rating给星数（小数）
             "ranking": 1, //排名，得自己计数，bp是bp几
             "list@2x": "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
             "difficulty_rating": 6.38, //bp.beatmap.difficulty_rating
@@ -364,6 +365,7 @@ export async function panel_J(data = {
     let reg_topbp = /(?<=<g id="TopBP">)/;
     let reg_lastbp = /(?<=<g id="LastBP">)/;
     let reg_card_l = /(?<=<g id="Card_L">)/;
+    let reg_label_j2 = /(?<=<g id="Label_J2">)/;
     let reg_maincard = /(?<=<g id="MainCard">)/;
 
     // 面板文字
@@ -421,6 +423,21 @@ export async function panel_J(data = {
 
     cardLs.push(L1, L2, L3);
 
+    // 谱师标签 J2 构建
+
+    let labelJ2s = [];
+
+    for (const i in data.favorite_mappers) {
+        const h = await label_J2 ({
+            index: parseInt(i) + 1,
+            avatar: readNetImage(data.favorite_mappers[i].avatar_url, getExportFileV3Path('avatar-guest.png')),
+            name: data.favorite_mappers[i].username,
+            count: data.favorite_mappers[i].map_count,
+            pp: data.favorite_mappers[i].pp_count,
+        }, true)
+
+        labelJ2s.push(h);
+    }
 
     // 插入图片和部件（新方法
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_maincard);
@@ -435,6 +452,12 @@ export async function panel_J(data = {
 
     for (const i in cardLs) {
         svg = implantSvgBody(svg, 50 + i * 305, 880, cardLs[i], reg_card_l);
+    }
+
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 3; j++) {
+            svg = implantSvgBody(svg, 992 + 260 * i, 742 + 95 * j, labelJ2s[i * 3 + j], reg_label_j2);
+        }
     }
 
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);

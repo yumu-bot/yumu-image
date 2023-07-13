@@ -3,7 +3,7 @@ import formidable from "express-formidable";
 import {CACHE_PATH, initPath, readImage} from "./src/util.js";
 import {router as PanelCRouter} from "./src/panel/panel_C.js";
 import {router as PanelERouter} from "./src/panel/panel_E.js";
-import {router as PanelJRouter} from "./src/panel/panel_J.js";
+import {panel_J, router as PanelJRouter} from "./src/panel/panel_J.js";
 import {router as MarkdownRouter} from "./src/markdown.js";
 import {router as PanelBRouter} from "./src/panel/panel_B.js";
 import {router as PanelDRouter} from "./src/panel/panel_D.js";
@@ -11,8 +11,14 @@ import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as DrawLineRouter} from "./src/panel/panel_Alpha.js";
 import {router as GetMapAttrRouter} from "./src/mapAttributes.js";
 
+import fs from "fs";
+
 initPath();
 //这里放测试代码
+
+console.time('J')
+fs.writeFileSync("image/out/panel_J.png", await panel_J());
+console.timeEnd('J')
 
 const app = express();
 
