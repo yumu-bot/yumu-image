@@ -274,36 +274,34 @@ export async function panel_J(data = {
 
     bpLength: [ //第一个是最大值，第二个是中值（不是平均值），第三个是最小值。如果bp不足2个，中值和最小值留null，如果bp不足3个，中值留null
         {
-            "index": 719, //这个得自己算，和对应的数据有关系。length给秒数（整数），combo给连击（整数），star rating给星数（小数）
-            "ranking": 1, //排名，得自己计数，bp是bp几
-            "list@2x": "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
-            "difficulty_rating": 6.38, //bp.beatmap.difficulty_rating
-            "rank": "A", //bp.rank
+            length: 719, //length给秒数（整数）
+            combo: 719, //combo给连击（整数）
+            index: 1, //排名，得自己计数，bp是bp几
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            star: 6.38, // 实际star
+            rank: "A", // bp.rank
+            mods: ['HR']
         },
     ],
 
-    bpCombo: [
+    bpBpm: [
         {
-            "index": 998,
-            "ranking": 2,
-            "list@2x": "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843",
-            "difficulty_rating": 4.42,
-            "rank": "A",
+            length: 719, //length给秒数（整数）
+            combo: 719, //combo给连击（整数）
+            index: 1, //排名，得自己计数，bp是bp几
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            star: 6.38, // 实际star
+            rank: "A", // bp.rank
+            mods: ['HR']
         },
-    ], //数据格式同上
+    ],
 
-    bpSR: [
-        {
-            "index": 5.42,
-            "ranking": 9,
-            "list@2x": "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843",
-            "difficulty_rating": 5.42,
-            "rank": "A",
-        },
-    ], //数据格式同上
+    bpCombo: [], //数据格式同上
+
+    bpSR: [], //数据格式同上
 
     // 最喜爱谱师，只需要给6个
-    favorite_mappers:[
+    favorite_mappers: [
         {
             "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
             "username": "-Spring Night-",
@@ -332,10 +330,7 @@ export async function panel_J(data = {
 
     // 右上角的 BP 分布，给数组
     pp_raw_arr: [240, 239, 238, 236, 234, 240, 221, 204, 200, 190, 190, 189, 187, 174, 166, 164], //给加权前的 pp
-    /*************************************这里改了*****************/
-    rank_arr: [{rank: 'A', count: 0}, {rank: 'SS', count: 0}, {rank: 'B', count: 0}], //给评级的统计数据。我会以 count 降序排序
-    /*************************************这里改了*****************/
-
+    rank_arr: ['A', 'S'],
     pp_length_arr: [24, 59, 81, 75], //bp长度的统计数据
 
     mods_attr: [
@@ -352,12 +347,6 @@ export async function panel_J(data = {
     ],
 
     rank_attr: [ //第一个给Perfect数量（真FC），第二个给FC数量（包括真假FC），第三个之后到第八个都给评级数量。越牛逼的越靠上
-        {
-            "index": "PF",
-            "map_count": 50,
-            "pp_count": 16247,
-            "percent": 0.94, //这里是pp_count 除以 (总PP - 奖励PP) 得到的值，0-1
-        },
         {
             "index": "FC",
             "map_count": 50,
@@ -426,12 +415,12 @@ export async function panel_J(data = {
     let cardJs_last = [];
 
     for (const i in data.bpTop5) {
-        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpTop5[i]),true);
+        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpTop5[i]), true);
         cardJs_top.push(h);
     }
 
     for (const i in data.bpLast5) {
-        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpLast5[i]),true);
+        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpLast5[i]), true);
         cardJs_last.push(h);
     }
 
@@ -449,7 +438,7 @@ export async function panel_J(data = {
     let labelJ1s = [];
 
     for (const v of data.mods_attr) {
-        const h = await label_J1 ({
+        const h = await label_J1({
             mod: v.index || 'None',
             count: v.map_count,
             pp: v.pp_count,
@@ -463,7 +452,7 @@ export async function panel_J(data = {
     let labelJ2s = [];
 
     for (const i in data.favorite_mappers) {
-        const h = await label_J2 ({
+        const h = await label_J2({
             index: parseInt(i) + 1 || 0,
             avatar: await readNetImage(data.favorite_mappers[i].avatar_url, getExportFileV3Path('avatar-guest.png')),
             name: data.favorite_mappers[i].username || 'Unknown',
@@ -492,7 +481,7 @@ export async function panel_J(data = {
 
 
     // 绘制bp的pp曲线
-    let pp_raw_arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false) ;
+    let pp_raw_arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false);
     let pp_arr = [];
 
     //获取真实pp，一般来说，这个总是比bp的pp曲线低
@@ -554,7 +543,7 @@ export async function panel_J(data = {
         }
     }
 
-    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
 
     return await exportPng(svg);
