@@ -311,7 +311,7 @@ async function panel_D(data = {
     let reg_progressR = /(?<=<g id="ProgressRRect">)/;
     let reg_grade_text = /(?<=<g id="GradeText">)/;
     let reg_grade_image = /(?<=<g id="GradeImage">)/;
-    let reg_ranking_graph = /(?<=<g id="RankingGraph">)/;
+    let reg_ranking_graph = /(?<=<g id="BPRankGraph">)/;
     let reg_ranking_text = /(?<=<g id="RankingText">)/;
     let reg_bp_activity_graph = /(?<=<g id="BPActivityR">)/;
     let reg_user_data_text = /(?<=<g id="UserDataText">)/;
@@ -476,7 +476,7 @@ async function panel_D(data = {
     svg = replaceText(svg, rank_axis, reg_ranking_text)
 
     // 绘制PC
-    let pc_arr = modifyArrayToFixedLength(data.user_pc_arr, 43)
+    let pc_arr = modifyArrayToFixedLength(data.user_pc_arr, 43, true)
 
     let user_pc_activity_max = Math.max.apply(Math, pc_arr);
     let user_pc_activity_max_fixed = Math.max(user_pc_activity_max, 5); //保底机制

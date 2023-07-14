@@ -1,9 +1,9 @@
 import {
     exportPng, getExportFileV3Path,
     getNowTimeStamp,
-    getRandomBannerPath,
+    getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, modifyArrayToFixedLength,
     PanelGenerate, readNetImage,
     readTemplate,
     replaceText,
@@ -12,7 +12,7 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {card_J} from "../card/card_J.js";
 import {card_L} from "../card/card_L.js";
-import {label_J2} from "../component/label.js";
+import {label_J1, label_J2, label_J3, RANK_OPTION} from "../component/label.js";
 
 export async function router(req, res) {
     try {
@@ -313,12 +313,24 @@ export async function panel_J(data = {
             "map_count": 50,
             "pp_count": 16247,
         },
+        {
+            "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
+            "username": "-Spring Night-",
+            "map_count": 50,
+            "pp_count": 16247,
+        },
+        {
+            "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
+            "username": "-Spring Night-",
+            "map_count": 50,
+            "pp_count": 16247,
+        },
     ],
 
     // 右上角的 BP 分布，给数组
-    pp_arr: [114, 514, 1919, 810], //给pp
-    rank_arr: ['A','SS','B'], //给评级的统计数据。
-    rank_count_arr: [0,0,0,0,0,0,0], //给评级的统计数据。依次为：SSH、SS、SH、S、A、B、C、D的数量
+    pp_raw_arr: [240, 239, 238, 236, 234, 240, 221, 204], //给加权前的 pp
+    rank_arr: ['A','SS','B','SS','A','SSH'], //给评级的统计数据。
+    pp_length_arr: [24,59,81,75], //bp长度的统计数据
 
     mods_attr:[
         {
@@ -365,8 +377,11 @@ export async function panel_J(data = {
     let reg_topbp = /(?<=<g id="TopBP">)/;
     let reg_lastbp = /(?<=<g id="LastBP">)/;
     let reg_card_l = /(?<=<g id="Card_L">)/;
+    let reg_label_j1 = /(?<=<g id="Label_J1">)/;
     let reg_label_j2 = /(?<=<g id="Label_J2">)/;
+    let reg_label_j3 = /(?<=<g id="Label_J3">)/;
     let reg_maincard = /(?<=<g id="MainCard">)/;
+    let reg_pp_graph = /(?<=<g id="BPRankGraph">)/;
 
     // 面板文字
     const index_powered = 'powered by Yumubot v0.3.0 EA // BP Analysis (!ymba)';
@@ -423,21 +438,82 @@ export async function panel_J(data = {
 
     cardLs.push(L1, L2, L3);
 
+    // Mod 标签 J1 构建
+
+    let labelJ1s = [];
+
+    for (const v of data.mods_attr) {
+        const h = await label_J1 ({
+            mod: v.index || 'None',
+            count: v.map_count,
+            pp: v.pp_count,
+        }, true);
+
+        labelJ1s.push(h);
+    }
+
     // 谱师标签 J2 构建
 
     let labelJ2s = [];
 
     for (const i in data.favorite_mappers) {
         const h = await label_J2 ({
-            index: parseInt(i) + 1,
-            avatar: readNetImage(data.favorite_mappers[i].avatar_url, getExportFileV3Path('avatar-guest.png')),
-            name: data.favorite_mappers[i].username,
-            count: data.favorite_mappers[i].map_count,
-            pp: data.favorite_mappers[i].pp_count,
-        }, true)
+            index: parseInt(i) + 1 || 0,
+            avatar: await readNetImage(data.favorite_mappers[i].avatar_url, getExportFileV3Path('avatar-guest.png')),
+            name: data.favorite_mappers[i].username || 'Unknown',
+            count: data.favorite_mappers[i].map_count || 0,
+            pp: data.favorite_mappers[i].pp_count || 0,
+        }, true);
 
         labelJ2s.push(h);
     }
+
+    // 模组标签 J3 构建
+
+    let labelJ3s = [];
+
+    for (const v of data.rank_attr) {
+        const h = await label_J3({
+
+            ...RANK_OPTION[v.index],
+            mod_count: 100,
+            pp_percentage: 0.667, //占raw pp的比
+            pp_count: 12345,
+        }, true);
+
+        labelJ3s.push(h);
+    }
+
+
+    // 绘制bp的pp曲线
+    let pp_raw_arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false) ;
+    let pp_arr = [];
+
+    //获取真实pp，一般来说，这个总是比bp的pp曲线低
+    pp_raw_arr.forEach(
+        (v, i) => {
+            pp_arr.push(Math.round(v * Math.pow(0.95, i)));
+        }
+    )
+
+    let pp_max = Math.max.apply(Math, pp_raw_arr);
+    let pp_min = Math.min.apply(Math, pp_arr);
+    let pp_mid = (pp_max + pp_min) / 2;
+
+    RFPPChart(pp_raw_arr, '#FFCC22', pp_max, pp_min);
+    RFPPChart(pp_arr, '#aaa', pp_max, pp_min);
+
+    // 绘制纵坐标，注意max在下面
+    let rank_axis_y_max = Math.round(pp_max);
+    let rank_axis_y_mid = Math.round(pp_mid);
+    let rank_axis_y_min = Math.round(pp_min);
+
+    let rank_axis =
+        torus.getTextPath(rank_axis_y_max.toString(), 1010, 402.836, 24, 'center baseline', '#fc2') +
+        torus.getTextPath(rank_axis_y_mid.toString(), 1010, 509.836, 24, 'center baseline', '#fc2') +
+        torus.getTextPath(rank_axis_y_min.toString(), 1010, 616.836, 24, 'center baseline', '#fc2');
+
+    svg = replaceText(svg, rank_axis, reg_pp_graph);
 
     // 插入图片和部件（新方法
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_maincard);
@@ -454,9 +530,21 @@ export async function panel_J(data = {
         svg = implantSvgBody(svg, 50 + i * 305, 880, cardLs[i], reg_card_l);
     }
 
+    for (let i = 0; i < 4; i++) {
+        svg = implantSvgBody(svg, 740, 570 + 70 * i, labelJ1s[i], reg_label_j1);
+    }
+
     for (let i = 0; i < 2; i++) {
         for (let j = 0; j < 3; j++) {
             svg = implantSvgBody(svg, 992 + 260 * i, 742 + 95 * j, labelJ2s[i * 3 + j], reg_label_j2);
+        }
+    }
+
+    for (let i = 0; i < 6; i++) {
+        if (i < 2) {
+            svg = implantSvgBody(svg, 1555, 902 + 66 * i, labelJ3s[i], reg_label_j3);
+        } else {
+            svg = implantSvgBody(svg, 1715, 702 + 66 * (i - 2), labelJ3s[i], reg_label_j3);
         }
     }
 
@@ -464,4 +552,24 @@ export async function panel_J(data = {
 
 
     return await exportPng(svg);
+
+
+    function RFPPChart(arr, color, max, min) {
+        const step = 780 / arr.length
+        const start_x = 1042; //往右挪了2px
+        const start_y = 610 - 230;
+        const delta = max - min;
+
+        // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
+        let path_svg = `<svg> <path d="M ${start_x} ${start_y + ((max - arr.shift()) / delta * 230)} S `;
+
+        arr.forEach((item, i) => {
+            let lineto_x = start_x + step * (i + 1);
+            let lineto_y = start_y + ((max - item) / delta * 230);
+
+            path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 8} ${lineto_y} ` // 第一个xy是点位置，第二个是控制点位置
+        })
+        path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 4px;"/> </svg>`
+        svg = replaceText(svg, path_svg, reg_pp_graph);
+    }
 }

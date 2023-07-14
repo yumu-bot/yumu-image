@@ -1677,16 +1677,18 @@ export function getRandomMascotBGPath() {
  * @return {Number[]} 返回裁剪好的数组
  * @param arr 需要裁剪的数组
  * @param target_length 需要的数组长度
+ * @param direction 如果是真，则在前面补，如果是假，则在后面补
  */
-export function modifyArrayToFixedLength(arr = [0], target_length = 0) {
+export function modifyArrayToFixedLength(arr = [0], target_length = 0, direction = true) {
     if (arr.length < target_length) {
         for (let i = (target_length - arr.length); i > 0; i--) {
-            arr.unshift(0);
+            direction ? arr.unshift(0) : arr.push(0);
         }
         return arr;
 
     } else {
-        return arr.slice(arr.length - target_length);
+        const out = direction ? arr.slice(arr.length - target_length) : arr.slice(0 - (arr.length - target_length));
+        return out;
     }
 }
 
