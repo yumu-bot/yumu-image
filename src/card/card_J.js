@@ -77,13 +77,13 @@ export async function card_J(data = {
     let map_artist =
         torus.getTextPath(text_map_artist, 130, 32.571, 14, "left baseline", "#a1a1a1");
 
-    let map_line_3_right_text = (data.accuracy || data.combo) ? data.accuracy + '% ' + data.combo + 'x' : '0% 0x';
+    let map_line_3_right_text = (data.accuracy && data.combo) ?  data.combo + 'x ' + data.accuracy + '%': '0x 0%';
     let map_line_3_right =
         torus.getTextPath(map_line_3_right_text, 300, 47.571, 14, "right baseline", "#fff");
 
     let text_map_difficulty_name = torus.cutStringTail(data.map_difficulty_name || '',
         14,
-        170 - 10 - torus.getTextWidth(map_line_3_right_text, 14));
+        170 - 5 - torus.getTextWidth(map_line_3_right_text, 14));
 
     let map_difficulty_name =
         torus.getTextPath(text_map_difficulty_name, 130, 47.571, 14, "left baseline", "#fff");
