@@ -1682,13 +1682,14 @@ export function getRandomMascotBGPath() {
 export function modifyArrayToFixedLength(arr = [0], target_length = 0, direction = true) {
     if (arr.length < target_length) {
         for (let i = (target_length - arr.length); i > 0; i--) {
-            direction ? arr.unshift(0) : arr.push(0);
+            if (direction) arr.unshift(0);
+            else arr.push(0);
         }
         return arr;
 
     } else {
-        const out = direction ? arr.slice(arr.length - target_length) : arr.slice(0 - (arr.length - target_length));
-        return out;
+        if (direction) return arr.slice(arr.length - target_length);
+        else return arr.slice( - target_length);
     }
 }
 

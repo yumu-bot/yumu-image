@@ -179,7 +179,7 @@ export async function router(req, res) {
     res.end();
 }
 
-async function panel_D(data = {
+export async function panel_D(data = {
     // A1卡
     card_A1: {
         background: getExportFileV3Path('card-default.png'),
@@ -311,7 +311,7 @@ async function panel_D(data = {
     let reg_progressR = /(?<=<g id="ProgressRRect">)/;
     let reg_grade_text = /(?<=<g id="GradeText">)/;
     let reg_grade_image = /(?<=<g id="GradeImage">)/;
-    let reg_ranking_graph = /(?<=<g id="BPRankGraph">)/;
+    let reg_ranking_graph = /(?<=<g id="RankingGraph">)/;
     let reg_ranking_text = /(?<=<g id="RankingText">)/;
     let reg_bp_activity_graph = /(?<=<g id="BPActivityR">)/;
     let reg_user_data_text = /(?<=<g id="UserDataText">)/;
