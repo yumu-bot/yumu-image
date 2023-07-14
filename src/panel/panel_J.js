@@ -310,28 +310,28 @@ export async function panel_J(data = {
     // 最喜爱谱师，只需要给6个
     favorite_mappers: [
         {
-            "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
-            "username": "-Spring Night-",
-            "map_count": 50,
-            "pp_count": 16247,
+            avatar_url: "https://a.ppy.sh/17064371?1675693670.jpeg",
+            username: "-Spring Night-",
+            map_count: 50,
+            pp_count: 16247,
         },
         {
-            "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
-            "username": "-Spring Night-",
-            "map_count": 50,
-            "pp_count": 16247,
+            avatar_url: "https://a.ppy.sh/17064371?1675693670.jpeg",
+            username: "-Spring Night-",
+            map_count: 50,
+            pp_count: 16247,
         },
         {
-            "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
-            "username": "-Spring Night-",
-            "map_count": 50,
-            "pp_count": 16247,
+            avatar_url: "https://a.ppy.sh/17064371?1675693670.jpeg",
+            username: "-Spring Night-",
+            map_count: 50,
+            pp_count: 16247,
         },
         {
-            "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
-            "username": "-Spring Night-",
-            "map_count": 50,
-            "pp_count": 16247,
+            avatar_url: "https://a.ppy.sh/17064371?1675693670.jpeg",
+            username: "-Spring Night-",
+            map_count: 50,
+            pp_count: 16247,
         },
     ],
 
@@ -343,29 +343,29 @@ export async function panel_J(data = {
 
     mods_attr: [
         {
-            "index": "HD",
-            "map_count": 50,
-            "pp_count": 4396,
+            index: "HD",
+            map_count: 50,
+            pp_count: 4396,
         },
         {
-            "index": "DT",
-            "map_count": 12,
-            "pp_count": 17,
+            index: "DT",
+            map_count: 12,
+            pp_count: 17,
         }
     ],
 
     rank_attr: [ //第一个给Perfect数量（真FC），第二个给FC数量（包括真假FC），第三个之后到第八个都给评级数量。越牛逼的越靠上
         {
-            "index": "FC",
-            "map_count": 50,
-            "pp_count": 16247,
-            "percent": 0.94,
+            index: "FC",
+            map_count: 50,
+            pp_count: 16247,
+            percent: 0.94,
         },
         {
-            "index": "SS",
-            "map_count": 50,
-            "pp_count": 16247,
-            "percent": 0.94,
+            index: "SS",
+            map_count: 50,
+            pp_count: 16247,
+            percent: 0.94,
         },
     ]
 
@@ -446,6 +446,7 @@ export async function panel_J(data = {
 
     let labelJ1s = [];
 
+    /*
     for (const v of data.mods_attr) {
         const h = await label_J1({
             mod: v.index || 'None',
@@ -455,6 +456,8 @@ export async function panel_J(data = {
 
         labelJ1s.push(h);
     }
+
+     */
 
     // 谱师标签 J2 构建
 
@@ -476,6 +479,8 @@ export async function panel_J(data = {
 
     let labelJ3s = [];
 
+    /*
+
     for (const v of data.rank_attr) {
         const h = await label_J3({
 
@@ -487,6 +492,8 @@ export async function panel_J(data = {
 
         labelJ3s.push(h);
     }
+
+     */
 
 
     // 绘制bp的pp曲线
