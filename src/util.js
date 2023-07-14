@@ -1694,15 +1694,16 @@ export function modifyArrayToFixedLength(arr = [0], target_length = 0, direction
 }
 
 /**
- * @function 取最大值数组，太短则在前面补0，太长则取最大值，继承于DataUtil: get group 26方法
+ * @function 取最大值数组，太短则在前面 (false是后面) 补0，太长则取最大值，继承于DataUtil: get group 26方法
  * @return {Number[]} 返回处理好的数组
  * @param arr 需要处理的数组
  * @param target_length 需要的数组长度
+ * @param direction 方向，如果是真截断前面的
  */
-export function maximumArrayToFixedLength(arr = [0], target_length = 0) {
+export function maximumArrayToFixedLength(arr = [0], target_length = 0, direction = true) {
     if (arr.length < target_length) {
-        for (let i = arr.length; i > 0; i--) {
-            arr.unshift(0);
+        for (let i = target_length - arr.length; i > 0; i--) {
+            direction ? arr.unshift(0) : arr.push(0);
         }
         return arr;
 

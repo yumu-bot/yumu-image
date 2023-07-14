@@ -1,13 +1,10 @@
 import {
-    exportPng,
-    getExportFileV3Path,
+    exportPng, getExportFileV3Path,
     getNowTimeStamp,
-    getRandomBannerPath,
+    getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     implantImage,
-    implantSvgBody,
-    modifyArrayToFixedLength,
-    PanelGenerate,
-    readNetImage,
+    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength,
+    PanelGenerate, readNetImage,
     readTemplate,
     replaceText,
     torus
@@ -276,7 +273,7 @@ export async function panel_J(data = {
         {
             length: 719, //length给秒数（整数）
             combo: 719, //combo给连击（整数）
-            index: 1, //排名，得自己计数，bp是bp几
+            ranking: 1, //排名，得自己计数，bp是bp几
             cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
             star: 6.38, // 实际star
             rank: "A", // bp.rank
@@ -284,11 +281,11 @@ export async function panel_J(data = {
         },
     ],
 
-    bpBpm: [
+    bpSR: [
         {
             length: 719, //length给秒数（整数）
             combo: 719, //combo给连击（整数）
-            index: 1, //排名，得自己计数，bp是bp几
+            ranking: 1, //排名，得自己计数，bp是bp几
             cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
             star: 6.38, // 实际star
             rank: "A", // bp.rank
@@ -296,9 +293,19 @@ export async function panel_J(data = {
         },
     ],
 
-    bpCombo: [], //数据格式同上
+    bpCombo: [
+        {
+            length: 719, //length给秒数（整数）
+            combo: 719, //combo给连击（整数）
+            ranking: 1, //排名，得自己计数，bp是bp几
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            star: 6.38, // 实际star
+            rank: "A", // bp.rank
+            mods: ['HR']
+        },
+    ], //数据格式同上
 
-    bpSR: [], //数据格式同上
+    bpBPM: [], //这个有意义吗？
 
     // 最喜爱谱师，只需要给6个
     favorite_mappers: [
@@ -330,8 +337,9 @@ export async function panel_J(data = {
 
     // 右上角的 BP 分布，给数组
     pp_raw_arr: [240, 239, 238, 236, 234, 240, 221, 204, 200, 190, 190, 189, 187, 174, 166, 164], //给加权前的 pp
-    rank_arr: ['A', 'S'],
-    pp_length_arr: [24, 59, 81, 75], //bp长度的统计数据
+    rank_arr: ['A', 'SS', 'SS', 'B'], //给评级的统计数据。
+
+    bp_length_arr: [24, 59, 81, 75], //bp长度的统计数据
 
     mods_attr: [
         {
@@ -377,9 +385,10 @@ export async function panel_J(data = {
     let reg_label_j3 = /(?<=<g id="Label_J3">)/;
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_pp_graph = /(?<=<g id="BPRankGraph">)/;
+    let reg_rrect = /(?<=<g id="BPRanksR">)/;
 
     // 面板文字
-    const index_powered = 'powered by Yumubot v0.3.0 EA // BP Analysis (!ymba)';
+    const index_powered = 'powered by Yumubot v0.3.1 EA // BP Analysis (!ymba)';
     const index_request_time = 'request time: ' + getNowTimeStamp();
     const index_panel_name = 'BPA';
 
@@ -484,7 +493,7 @@ export async function panel_J(data = {
     let pp_raw_arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false);
     let pp_arr = [];
 
-    //获取真实pp，一般来说，这个总是比bp的pp曲线低
+    //获取真实pp，一般来说，这总是比加权后的pp要高
     pp_raw_arr.forEach(
         (v, i) => {
             pp_arr.push(Math.round(v * Math.pow(0.95, i)));
@@ -510,6 +519,24 @@ export async function panel_J(data = {
 
     svg = replaceText(svg, rank_axis, reg_pp_graph);
 
+    // 绘制bp长度矩形
+
+    let bp_length_arr = maximumArrayToFixedLength(data.bp_length_arr, 39, false);
+
+    let bp_length_max = Math.max.apply(Math, bp_length_arr);
+    let bp_length_min = Math.min.apply(Math, bp_length_arr);
+    let bp_length_delta = Math.max((bp_length_max - bp_length_min), 0.1);
+    let start_y = 610;
+
+    let svg_rrect = '';
+
+    bp_length_arr.forEach((v, i) => {
+        let height = Math.max((v / bp_length_delta * bp_length_max), 16);
+
+        svg_rrect += `<rect x="${1042 + 20 * i}" y="${start_y - height}" width="16" height="${height}" rx="8" ry="8" style="fill: #a1a1a1;"/>`;
+    });
+
+    svg = implantSvgBody(svg, 0, 0, svg_rrect, reg_rrect)
     // 插入图片和部件（新方法
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_maincard);
 

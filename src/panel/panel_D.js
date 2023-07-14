@@ -430,7 +430,7 @@ export async function panel_D(data = {
 
     // 绘制 BP活动 直方图
 
-    let bp_arr = maximumArrayToFixedLength(data.user_bp_arr, 39)
+    let bp_arr = maximumArrayToFixedLength(data.user_bp_arr, 39);
 
     let user_bp_activity_max = Math.max.apply(Math, bp_arr);
     let user_bp_activity_max_fixed = Math.max(user_bp_activity_max, 5); //保底机制

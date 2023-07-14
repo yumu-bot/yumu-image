@@ -44,9 +44,6 @@
   <g id="BPDCard">
     <rect x="980" y="330" width="900" height="335" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="BPRanksR">
-      <rect x="1042" y="525" width="16" height="85" rx="8" ry="8" style="fill: #a1a1a1;"/>
-      <rect x="1062" y="588" width="16" height="22" rx="8" ry="8" style="fill: #a1a1a1;"/>
-      <rect x="1082" y="588" width="16" height="22" rx="8" ry="8" style="fill: #a1a1a1;"/>
     </g>
     <g id="BPRankGraph">
     </g>

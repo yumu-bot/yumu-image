@@ -13,14 +13,14 @@ export async function card_L(data = {
     name: 'Length', //Length, Combo, SR
     card_K: [ //第一个是最大值，第二个是中值（不是平均值），第三个是最小值。如果bp不足2个，中值和最小值留null，如果bp不足3个，中值留null
         {
-            "index": 985, //这个得自己算，和对应的数据有关系。length给秒数（整数），combo给连击（整数），star rating给星数（小数）
-            "ranking": 1, //排名，得自己计数，bp是bp几
-            "list@2x": "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
-            "difficulty_rating": 6.38, //bp.beatmap.difficulty_rating
-            "rank": "A", //bp.rank
-        }, {
-
-        }
+            length: 719, //length给秒数（整数）
+            combo: 719, //combo给连击（整数）
+            ranking: 1, //排名，得自己计数，bp是bp几
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            star: 6.38, // 实际star
+            rank: "A", // bp.rank
+            mods: ['HR']
+        },
     ],
 
 }, reuse = false) {
@@ -65,12 +65,14 @@ export async function card_L(data = {
     let index_b_arr = [];
     let index_m_arr = [];
 
-    for (const i in data.card_K) {
-        index_arr.push(data.card_K[i]['index']);
-    }
+
 
     switch (card_name) {
         case 'Length': {
+            for (const i in data.card_K) {
+                index_arr.push(data.card_K[i].length);
+            }
+
             for (const v of index_arr) {
                 const minute = Math.floor(v / 60);
                 let second = v - minute * 60;
@@ -83,6 +85,10 @@ export async function card_L(data = {
         } break;
 
         case 'Combo': {
+            for (const i in data.card_K) {
+                index_arr.push(data.card_K[i].combo);
+            }
+
             for (const v of index_arr) {
                 index_b_arr.push(v.toString());
                 index_m_arr.push('x');
@@ -91,6 +97,10 @@ export async function card_L(data = {
         } break;
 
         case 'SR': {
+            for (const i in data.card_K) {
+                index_arr.push(data.card_K[i].star);
+            }
+
             for (const v of index_arr) {
                 index_b_arr.push(getStarRatingObject(v, 2).toString());
                 index_m_arr.push(getStarRatingObject(v, 3).toString());
@@ -117,8 +127,8 @@ export async function card_L(data = {
 
     for (const v of data.card_K) {
         const h = await card_K({
-            map_background: v["list@2x"],
-            star_rating: v.difficulty_rating,
+            map_background: v.cover,
+            star_rating: v.star,
             score_rank: v.rank,
             bp_pp: ('bp ' + v.ranking.toString()), //把这个位置用来做ranking的显示了
             bp_remark: '',// PP
