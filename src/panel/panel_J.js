@@ -367,7 +367,13 @@ export async function panel_J(data = {
             pp_count: 16247,
             percent: 0.94,
         },
-    ]
+    ],
+
+    pp_raw: 10985,
+    pp: 13340,
+
+    game_mode: 'osu',
+
 
     //
 
@@ -498,21 +504,24 @@ export async function panel_J(data = {
 
     // 绘制bp的pp曲线
     let pp_raw_arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false);
-    let pp_arr = [];
+    // let pp_arr = [];
 
-    //获取真实pp，一般来说，这总是比加权后的pp要高
+    //获取加权pp，一般来说，这总是比真实的pp要低很多
+    /*
     pp_raw_arr.forEach(
         (v, i) => {
             pp_arr.push(Math.round(v * Math.pow(0.95, i)));
         }
     )
 
+     */
+
     let pp_max = Math.max.apply(Math, pp_raw_arr);
-    let pp_min = Math.min.apply(Math, pp_arr);
+    let pp_min = Math.min.apply(Math, pp_raw_arr);
     let pp_mid = (pp_max + pp_min) / 2;
 
     RFPPChart(pp_raw_arr, '#FFCC22', pp_max, pp_min);
-    RFPPChart(pp_arr, '#aaa', pp_max, pp_min);
+    // RFPPChart(pp_arr, '#aaa', pp_max, pp_min);
 
     // 绘制纵坐标，注意max在下面
     let rank_axis_y_max = Math.round(pp_max);

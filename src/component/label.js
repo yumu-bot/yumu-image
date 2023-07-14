@@ -486,7 +486,7 @@ export async function label_J1(data = {
     let mod_fullname = torus.getTextPath(getModFullName(mod), 75 ,12.877, 18, 'left baseline', '#fff');
     let mod_count = torus.getTextPath(data.count + 'x', 75 ,28.877, 18, 'left baseline', '#aaa');
     let pp = torus.get2SizeTextPath(
-        data.pp.toString() || '0', 'PP',
+        Math.round(data.pp).toString() || '0', 'PP',
         30, 18,
         210, 54.795,
         'right baseline', '#fff');
@@ -522,9 +522,18 @@ export async function label_J2(data = {
 
     //定义文本
     let index = torus.getTextPath(data.index.toString(), 14,  21.836, 24, 'center baseline', '#fff');
-    let name = torus.getTextPath(data.name,87.867, 21.836, 24,  'left baseline', '#fff');
+    let name = torus.getTextPath(
+        torus.cutStringTail(data.name, 24, 160, true),
+        87.867, 21.836, 24,  'left baseline', '#fff');
     let count = torus.get2SizeTextPath(data.count.toString(), 'x',24, 18, 87.867, 49.836, 'left baseline', '#aaa');
-    let pp = torus.get2SizeTextPath(data.pp.toString() || '0', 'PP', 30, 18, 248, 76.795, 'right baseline', '#fff')
+    let pp = torus.get2SizeTextPath(Math.round(data.pp).toString() || '0',
+        'PP',
+        30,
+        18,
+        248,
+        76.795,
+        'right baseline',
+        '#fff')
     let index_color = getUserRankColor(data.index);
 
     let svg = `  <defs>
