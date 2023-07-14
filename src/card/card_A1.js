@@ -60,11 +60,22 @@ export async function card_A1(data = {
     //pp位置计算
     let pp = Math.round(data.pp) || 0;
 
+    let text_pp = torus.get2SizeTextPath(pp.toString(),
+        'PP',
+        48,
+        36,
+        420,
+        191.59,
+        'right baseline',
+        '#fff'
+        );
+    /*
     let text_pp = torus.getTextPath(pp.toString(),
             420 - torus.getTextWidth('PP', 48),
             191.59, 60, "right baseline", "#fff")
         + torus.getTextPath('PP',
             420, 191.59, 48, "right baseline", "#fff");
+     */
 
     // 替换模板内容,replaceText(模板, 内容, 正则)
     svg = replaceText(svg, data.color_base, reg_color_base);
