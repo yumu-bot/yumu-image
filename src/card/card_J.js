@@ -89,7 +89,7 @@ export async function card_J(data = {
         torus.getTextPath(text_map_difficulty_name, 130, 47.571, 14, "left baseline", "#fff");
 
     let pp = data.pp ?
-        torus.get2SizeTextPath(text_pp.toString(), 'PP', 30, 18, 300, 73.795, 'right baseline', '#fff')
+        torus.get2SizeTextPath(text_pp.toString(), 'PP', 30, 20, 300, 73.795, 'right baseline', '#fff')
         :
         torus.getTextPath('-', 300, 73.795, 30, 'right baseline', '#fff');
 
