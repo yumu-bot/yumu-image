@@ -179,7 +179,7 @@ export async function router(req, res) {
     res.end();
 }
 
-async function panel_D(data = {
+export async function panel_D(data = {
     // A1卡
     card_A1: {
         background: getExportFileV3Path('card-default.png'),
@@ -412,11 +412,11 @@ async function panel_D(data = {
         const delta = max - min;
 
         // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
-        let path_svg = `<svg> <path d="M ${start_x} ${start_y - ((max - arr.shift()) / delta * 230)} S `;
+        let path_svg = `<svg> <path d="M ${start_x} ${start_y - ((max - arr.shift()) / delta * 215)} S `;
 
         arr.forEach((item, i) => {
             let lineto_x = start_x + step * (i + 1)
-            let lineto_y = start_y - ((max - item) / delta * 230);
+            let lineto_y = start_y - ((max - item) / delta * 215);
 
             if (item === 0) lineto_y = start_y; //处理 rank 为 0 的情况
 
@@ -476,7 +476,7 @@ async function panel_D(data = {
     svg = replaceText(svg, rank_axis, reg_ranking_text)
 
     // 绘制PC
-    let pc_arr = modifyArrayToFixedLength(data.user_pc_arr, 43)
+    let pc_arr = modifyArrayToFixedLength(data.user_pc_arr, 43, true)
 
     let user_pc_activity_max = Math.max.apply(Math, pc_arr);
     let user_pc_activity_max_fixed = Math.max(user_pc_activity_max, 5); //保底机制

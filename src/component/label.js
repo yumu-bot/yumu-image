@@ -194,7 +194,59 @@ export const PPM_OPTION = {
         color_remark: '#aaa',
         title_font: PuHuiTi,
     },
-}
+};
+
+export const RANK_OPTION = {
+    PF: {
+        icon: getExportFileV3Path('object-score-PF-small.png'),
+        icon_title: 'Perfect FC',
+    },
+
+    FC: {
+        icon: getExportFileV3Path('object-score-FC-small.png'),
+        icon_title: 'Full Combo',
+    },
+
+    XH: {
+        icon: getExportFileV3Path('object-score-XH-small.png'),
+        icon_title: 'SSH',
+    },
+
+    X: {
+        icon: getExportFileV3Path('object-score-X-small.png'),
+        icon_title: 'SS',
+    },
+
+    SH: {
+        icon: getExportFileV3Path('object-score-SH-small.png'),
+        icon_title: 'SH',
+    },
+
+    S: {
+        icon: getExportFileV3Path('object-score-S-small.png'),
+        icon_title: 'S',
+    },
+
+    A: {
+        icon: getExportFileV3Path('object-score-A-small.png'),
+        icon_title: 'A',
+    },
+
+    B: {
+        icon: getExportFileV3Path('object-score-B-small.png'),
+        icon_title: 'B',
+    },
+
+    C: {
+        icon: getExportFileV3Path('object-score-C-small.png'),
+        icon_title: 'C',
+    },
+
+    D: {
+        icon: getExportFileV3Path('object-score-D-small.png'),
+        icon_title: 'D',
+    },
+};
 
 //label_B、label_D 与 label_E 一样
 
@@ -422,12 +474,10 @@ export async function label_J1(data = {
     count: 88,
     pp: 1611,
 }, reuse = false) {
-    let svg = `<g id="Mod">\n <path d="m56.357,4.496l11.865,18c2.201,3.339,2.201,7.668,0,11.007l-11.865,18c-1.85,2.807-4.987,4.496-8.349,4.496h-26.142c-3.362,0-6.499-1.689-8.349-4.496L1.651,33.504c-2.201-3.339-2.201-7.668,0-11.007L13.516,4.496C15.366,1.689,18.503,0,21.865,0h26.142c3.362,0,6.499,1.689,8.349,4.496Z" style="fill: ${modcolor};"/>\n </g>\n <g id="Text">\n </g>`;
 
     //正则
     let reg_text = /(?<=<g id="Text">)/;
-    let reg_mod = /(?<=<g id="Mod">)/;
-    let reg_modcolor = '${modcolor}';
+    let reg_modcolor = '${mod_color}';
 
     //定义文本
     let mod = data.mod || '';
@@ -440,10 +490,13 @@ export async function label_J1(data = {
         30, 18,
         210, 54.795,
         'right baseline', '#fff');
+
     let mod_color = getModColor(mod);
 
+    let svg = `<g id="Mod">\n <path d="m56.357,4.496l11.865,18c2.201,3.339,2.201,7.668,0,11.007l-11.865,18c-1.85,2.807-4.987,4.496-8.349,4.496h-26.142c-3.362,0-6.499-1.689-8.349-4.496L1.651,33.504c-2.201-3.339-2.201-7.668,0-11.007L13.516,4.496C15.366,1.689,18.503,0,21.865,0h26.142c3.362,0,6.499,1.689,8.349,4.496Z" style="fill: ${mod_color};"/>\n </g>\n <g id="Text">\n </g>`;
+
     //插入文本
-    svg = replaceText(svg, mod_abbr, reg_mod);
+    svg = replaceText(svg, mod_abbr, reg_text);
     svg = replaceText(svg, mod_fullname, reg_text);
     svg = replaceText(svg, mod_count, reg_text);
     svg = replaceText(svg, pp, reg_text);
@@ -460,21 +513,6 @@ export async function label_J2(data = {
     count: 88,
     pp: 1611,
 }, reuse = false) {
-    let svg = `  <defs>
-    <clipPath id="clippath-LJ2">
-      <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: none;"/>
-    </clipPath>
-  </defs>
-  <g id="Head">
-    <circle cx="14" cy="14" r="14" style="fill: ${index_color}）;"/>
-    <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: #46393f;"/>
-    <g style="clip-path: url(#clippath-LJ2);">
-    </g>
-  </g>
-  <g id="Index">
-  </g>
-  <g id="Text">
-  </g>`;
 
     //正则
     let reg_text = /(?<=<g id="Text">)/;
@@ -485,20 +523,98 @@ export async function label_J2(data = {
     //定义文本
     let index = torus.getTextPath(data.index.toString(), 14,  21.836, 24, 'center baseline', '#fff');
     let name = torus.getTextPath(data.name,87.867, 21.836, 24,  'left baseline', '#fff');
-    let count = torus.getTextPath(data.count.toString(),87.867, 49.836, 24,  'left baseline', '#aaa');
+    let count = torus.get2SizeTextPath(data.count.toString(), 'x',24, 18, 87.867, 49.836, 'left baseline', '#aaa');
     let pp = torus.get2SizeTextPath(data.pp.toString() || '0', 'PP', 30, 18, 248, 76.795, 'right baseline', '#fff')
-    let index_color = getUserRankColor(index);
+    let index_color = getUserRankColor(data.index);
+
+    let svg = `  <defs>
+    <clipPath id="clippath-LJ2">
+      <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Head">
+    <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: #46393f;"/>
+    <g style="clip-path: url(#clippath-LJ2);">
+    </g>
+    <circle cx="14" cy="14" r="14" style="fill: ${index_color};"/>
+  </g>
+  <g id="Index">
+  </g>
+  <g id="Text">
+  </g>`;
 
     //插入文本
     svg = replaceText(svg, index, reg_index);
     svg = replaceText(svg, name, reg_text);
     svg = replaceText(svg, count, reg_text);
     svg = replaceText(svg, pp, reg_text);
-    svg = replaceText(svg, index_color, reg_index_color);
 
     //插入图片
     svg = implantImage(svg, 70, 70, 8, 8, 1,
         data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+
+    return svg.toString();
+}
+
+
+//BPA-J3-评级标签
+export async function label_J3(data = {
+    icon: getExportFileV3Path('object-score-XH-small.png'),
+    mod_count: 100,
+    pp_percentage: 0.667, //占raw pp的比
+    pp_count: 12345,
+}, reuse = false) {
+    let svg = `  
+  <g id="Icon">
+  </g>
+  <g id="Text">
+  </g>`;
+
+    //正则
+    let reg_text = /(?<=<g id="Text">)/;
+    let reg_icon = /(?<=<g id="Icon">)/;
+
+    //定义文本
+    let mod_count = torus.get2SizeTextPath(
+        data.mod_count.toString() || '0',
+        'x',
+        36,
+        24,
+        150,
+        26,
+        'right baseline',
+        '#fff'
+    );
+
+    let pp_percentage = torus.getTextPath(
+        (data.pp_percentage * 100).toFixed(1).toString() + '%' || '0%',
+        0,
+        52,
+        18,
+        'left baseline',
+        '#aaa'
+    );
+
+    let pp_count = torus.get2SizeTextPath(
+        Math.round(data.pp_count).toString() || '0',
+        'PP',
+        24,
+        18,
+        150,
+        52,
+        'right baseline',
+        '#aaa'
+    );
+
+
+    //插入文本
+    svg = replaceText(svg, mod_count, reg_text);
+    svg = replaceText(svg, pp_percentage, reg_text);
+    svg = replaceText(svg, pp_count, reg_text);
+
+    //插入图片
+    svg = implantImage(svg, 40, 40, 0, 0, 1,
+        data.icon || getExportFileV3Path('object-score-XH-small.png'), reg_icon);
 
     return svg.toString();
 }
