@@ -62,8 +62,8 @@ export async function card_A1(data = {
 
     let text_pp = torus.get2SizeTextPath(pp.toString(),
         'PP',
+        60,
         48,
-        36,
         420,
         191.59,
         'right baseline',
