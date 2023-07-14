@@ -1,10 +1,13 @@
 import {
-    exportPng, getExportFileV3Path,
+    exportPng,
+    getExportFileV3Path,
     getNowTimeStamp,
-    getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getRandomBannerPath,
     implantImage,
-    implantSvgBody, modifyArrayToFixedLength,
-    PanelGenerate, readNetImage,
+    implantSvgBody,
+    modifyArrayToFixedLength,
+    PanelGenerate,
+    readNetImage,
     readTemplate,
     replaceText,
     torus
@@ -329,10 +332,13 @@ export async function panel_J(data = {
 
     // 右上角的 BP 分布，给数组
     pp_raw_arr: [240, 239, 238, 236, 234, 240, 221, 204, 200, 190, 190, 189, 187, 174, 166, 164], //给加权前的 pp
-    rank_arr: ['A','SS','B','SS','A','SSH'], //给评级的统计数据。
-    pp_length_arr: [24,59,81,75], //bp长度的统计数据
+    /*************************************这里改了*****************/
+    rank_arr: [{rank: 'A', count: 0}, {rank: 'SS', count: 0}, {rank: 'B', count: 0}], //给评级的统计数据。我会以 count 降序排序
+    /*************************************这里改了*****************/
 
-    mods_attr:[
+    pp_length_arr: [24, 59, 81, 75], //bp长度的统计数据
+
+    mods_attr: [
         {
             "index": "HD",
             "map_count": 50,
