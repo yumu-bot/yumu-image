@@ -328,7 +328,7 @@ export async function panel_J(data = {
     ],
 
     // 右上角的 BP 分布，给数组
-    pp_raw_arr: [240, 239, 238, 236, 234, 240, 221, 204], //给加权前的 pp
+    pp_raw_arr: [240, 239, 238, 236, 234, 240, 221, 204, 200, 190, 190, 189, 187, 174, 166, 164], //给加权前的 pp
     rank_arr: ['A','SS','B','SS','A','SSH'], //给评级的统计数据。
     pp_length_arr: [24,59,81,75], //bp长度的统计数据
 
@@ -557,15 +557,15 @@ export async function panel_J(data = {
     function RFPPChart(arr, color, max, min) {
         const step = 780 / arr.length
         const start_x = 1042; //往右挪了2px
-        const start_y = 610 - 230;
+        const start_y = 610 - 215;
         const delta = max - min;
 
         // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
-        let path_svg = `<svg> <path d="M ${start_x} ${start_y + ((max - arr.shift()) / delta * 230)} S `;
+        let path_svg = `<svg> <path d="M ${start_x} ${start_y + ((max - arr.shift()) / delta * 215)} S `;
 
         arr.forEach((item, i) => {
             let lineto_x = start_x + step * (i + 1);
-            let lineto_y = start_y + ((max - item) / delta * 230);
+            let lineto_y = start_y + ((max - item) / delta * 215);
 
             path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 8} ${lineto_y} ` // 第一个xy是点位置，第二个是控制点位置
         })

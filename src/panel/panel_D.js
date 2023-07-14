@@ -412,11 +412,11 @@ async function panel_D(data = {
         const delta = max - min;
 
         // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
-        let path_svg = `<svg> <path d="M ${start_x} ${start_y - ((max - arr.shift()) / delta * 230)} S `;
+        let path_svg = `<svg> <path d="M ${start_x} ${start_y - ((max - arr.shift()) / delta * 215)} S `;
 
         arr.forEach((item, i) => {
             let lineto_x = start_x + step * (i + 1)
-            let lineto_y = start_y - ((max - item) / delta * 230);
+            let lineto_y = start_y - ((max - item) / delta * 215);
 
             if (item === 0) lineto_y = start_y; //处理 rank 为 0 的情况
 
