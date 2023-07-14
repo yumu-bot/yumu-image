@@ -299,10 +299,11 @@ export async function panel_J(data = {
 
     // 右上角的 BP 分布，给数组
     pp_arr: [114, 514, 1919, 810], //给pp
-    rank_arr: ['A','SS','B'], //给评级的统计数据。
-    rank_count_arr: [0,0,0,0,0,0,0], //给评级的统计数据。依次为：SSH、SS、SH、S、A、B、C、D的数量
+    /*************************************这里改了*****************/
+    rank_arr: [{rank: 'A', count: 0}, {rank: 'SS', count: 0}, {rank: 'B', count: 0}], //给评级的统计数据。我会以 count 降序排序
+    /*************************************这里改了*****************/
 
-    mods_attr:[
+    mods_attr: [
         {
             "index": "HD",
             "map_count": 50,
