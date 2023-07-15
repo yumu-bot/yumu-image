@@ -79,7 +79,7 @@ const mascot_pic_sum_arr = [39, 14, 3, 2, 6, 1, 1, 2, 2, 3]; //吉祥物的对�
 const bannerTotal = 110;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
-const svgToPng = async (svg) => await exports.convert(svg, {quality: 80});
+const svgToPng = async (svg) => await exports.convert(svg, {quality: 100});
 
 const UTF8Encoder = new TextEncoder('utf8');
 
@@ -2703,7 +2703,7 @@ export const PanelGenerate = {
             name: user['username'],
             rank_global: user['globalRank'],
             rank_country: user['countryRank'],
-            country: user?.country['countryCode'],
+            country: user?.country['countryCode'] || 'CN',
             acc: Math.round(user['accuracy'] * 100) / 100,
             level: user['levelCurrent'],
             progress: Math.floor(user['levelProgress']),
