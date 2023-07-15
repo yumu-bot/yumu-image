@@ -1,6 +1,7 @@
 import express from "express";
 import formidable from "express-formidable";
 import {CACHE_PATH, initPath, readImage} from "./src/util.js";
+import {router as PanelA1Router} from "./src/panel/panel_A1.js";
 import {router as PanelCRouter} from "./src/panel/panel_C.js";
 import {router as PanelERouter} from "./src/panel/panel_E.js";
 import {router as PanelJRouter} from "./src/panel/panel_J.js";
@@ -32,6 +33,7 @@ app.post('*', (req, res, next) => {
 
 //**************************************************** panel ****************************
 
+app.post('/panel_A1', PanelA1Router)
 app.post('/panel_C', PanelCRouter)
 app.post('/panel_D', PanelDRouter)
 app.post('/panel_E', PanelERouter)
