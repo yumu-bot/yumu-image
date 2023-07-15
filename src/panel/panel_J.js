@@ -380,6 +380,9 @@ export async function panel_J(data = {
 }) {
     let svg = readTemplate('template/Panel_J.svg');
 
+    console.log(data.mods_attr);
+    console.log(data.rank_attr);
+
     // 路径定义
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PJ-1\);">)/;
