@@ -51,8 +51,6 @@
       <text id="Day3" transform="translate(1745.025 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">BP 100</tspan></text>
       <text id="Day2" transform="translate(1397.881 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">BP 50</tspan></text>
       <text id="Day1" transform="translate(1040 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">BP 1</tspan></text>
-      <text id="MaxBP" transform="translate(1744.97 401.836)" style="fill: #a1a1a1; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">osu!mania</tspan></text>
-      <text transform="translate(1611.938 374.754)" style="font-family: Torus-SemiBold, Torus; font-weight: 600;"><tspan x="0" y="0" style="fill: #f2f2f2; font-size: 36px;">4072 </tspan><tspan x="90.936" y="0" style="fill: #f2f2f2; font-size: 24px;">PP</tspan><tspan x="118.823" y="0" xml:space="preserve" style="fill: #a1a1a1; font-size: 24px;"> (3678+394)</tspan></text>
       <text transform="translate(1000 370.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">BP Distribution</tspan></text>
     </g>
   </g>

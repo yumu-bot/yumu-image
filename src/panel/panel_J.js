@@ -1,5 +1,5 @@
 import {
-    exportPng, getExportFileV3Path,
+    exportPng, getExportFileV3Path, getGameMode,
     getNowTimeStamp,
     getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     implantImage,
@@ -415,12 +415,38 @@ export async function panel_J(data = {
     const index_last5bp_path = torus.getTextPath(index_last5bp,
         380, 365.795, 30, "left baseline", "#fff");
 
+    const pp = data.pp.toFixed(0) || 0;
+    const pp_raw = data.pp_raw.toFixed(0) || 0;
+    const pp_bonus = Math.max(pp - pp_raw, 0).toFixed(0);
+    const game_mode = getGameMode(data.game_mode, 2);
+
+    const pp_full_path = torus.get2SizeTextPath(
+        pp.toString(),
+        ' PP (' + pp_raw + '+' + pp_bonus + ')',
+        36,
+        24,
+        1860,
+        374.754,
+        'right baseline',
+        '#fff'
+    );
+    const pp_mini_path = torus.getTextPath('('+ pp_raw + '+' + pp_bonus + ')', 1860,
+        374.754,
+        24,
+        'right baseline',
+        '#aaa');
+    const game_mode_path = torus.getTextPath(game_mode, 1860, 401.836, 24, 'right baseline', '#fff');
+
+
     // 插入文字
     svg = replaceText(svg, index_powered_path, reg_index);
     svg = replaceText(svg, index_request_time_path, reg_index);
     svg = replaceText(svg, index_panel_name_path, reg_index);
     svg = replaceText(svg, index_top5bp_path, reg_index);
     svg = replaceText(svg, index_last5bp_path, reg_index);
+    svg = replaceText(svg, pp_mini_path, reg_index);
+    svg = replaceText(svg, pp_full_path, reg_index);
+    svg = replaceText(svg, game_mode_path, reg_index);
 
     // A1卡构建
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
@@ -452,7 +478,6 @@ export async function panel_J(data = {
 
     let labelJ1s = [];
 
-    /*
     for (const v of data.mods_attr) {
         const h = await label_J1({
             mod: v.index || 'None',
@@ -462,8 +487,6 @@ export async function panel_J(data = {
 
         labelJ1s.push(h);
     }
-
-     */
 
     // 谱师标签 J2 构建
 
@@ -485,8 +508,6 @@ export async function panel_J(data = {
 
     let labelJ3s = [];
 
-    /*
-
     for (const v of data.rank_attr) {
         const h = await label_J3({
 
@@ -498,9 +519,6 @@ export async function panel_J(data = {
 
         labelJ3s.push(h);
     }
-
-     */
-
 
     // 绘制bp的pp曲线
     let pp_raw_arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false);
