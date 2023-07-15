@@ -339,7 +339,7 @@ export async function panel_J(data = {
     pp_raw_arr: [240, 239, 238, 236, 234, 240, 221, 204, 200, 190, 190, 189, 187, 174, 166, 164], //给加权前的 pp
     rank_arr: ['A', 'SS', 'SS', 'B'], //给评级的统计数据。
 
-    bp_length_arr: [24, 59, 81, 75], //bp长度的统计数据
+    pp_length_arr: [24, 59, 81, 75], //bp长度的统计数据，bp_length_arr
 
     mods_attr: [
         {
@@ -563,19 +563,19 @@ export async function panel_J(data = {
 
     svg = replaceText(svg, rank_axis, reg_pp_graph);
 
-    // 绘制bp长度矩形
+    // 绘制bp长度矩形，并且获取长度的优先值
 
-    let bp_length_arr = maximumArrayToFixedLength(data.bp_length_arr, 39, false);
+    let bp_length_arr = maximumArrayToFixedLength(data.pp_length_arr, 39, false);
+    let rank_arr = maximumArrayToFixedLength(data.rank_arr, 39, false);
 
     let bp_length_max = Math.max.apply(Math, bp_length_arr);
     let bp_length_min = Math.min.apply(Math, bp_length_arr);
-    let bp_length_delta = Math.max((bp_length_max - bp_length_min), 0.1);
     let start_y = 610;
 
     let svg_rrect = '';
 
     bp_length_arr.forEach((v, i) => {
-        let height = Math.max((v / bp_length_delta * bp_length_max), 16);
+        let height = Math.max(((v - bp_length_min) / bp_length_max * 90), 16);
 
         svg_rrect += `<rect x="${1042 + 20 * i}" y="${start_y - height}" width="16" height="${height}" rx="8" ry="8" style="fill: #a1a1a1;"/>`;
     });
@@ -627,6 +627,15 @@ export async function panel_J(data = {
 
     return await exportPng(svg);
 
+    /**
+     * @function 根据对应mod的数量来返回一个加权的数组
+     * @return {string[]} 返回一个加权的数组，越靠前，权利越大。
+     * @param arr 数据数组
+     */
+    function getElectionRank(arr = ['']) {
+        return [''];
+    }
+    
     /**
      * @function 绘制右上角的曲线
      * @return {String} 曲线的 svg
