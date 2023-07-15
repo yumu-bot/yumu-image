@@ -394,7 +394,7 @@ export async function panel_J(data = {
     let reg_rrect = /(?<=<g id="BPRanksR">)/;
 
     // 面板文字
-    const index_powered = 'powered by Yumubot v0.3.1 EA // BP Analysis (!ymba)';
+    const index_powered = 'powered by Yumubot v0.3.1 EA // BP Analysis v2 (!ymba)';
     const index_request_time = 'request time: ' + getNowTimeStamp();
     const index_panel_name = 'BPA';
 
@@ -418,7 +418,7 @@ export async function panel_J(data = {
     const pp = data.pp.toFixed(0) || 0;
     const pp_raw = data.pp_raw.toFixed(0) || 0;
     const pp_bonus = Math.max(pp - pp_raw, 0).toFixed(0);
-    const game_mode = data.game_mode; //getGameMode(data.game_mode, 2);
+    const game_mode = getGameMode(data.game_mode, 2);
 
     const pp_full_path = torus.get2SizeTextPath(
         pp.toString(),
@@ -512,9 +512,9 @@ export async function panel_J(data = {
         const h = await label_J3({
 
             ...RANK_OPTION[v.index],
-            mod_count: 100,
-            pp_percentage: 0.667, //占raw pp的比
-            pp_count: 12345,
+            map_count: v.map_count,
+            pp_percentage: v.percent, //占raw pp的比
+            pp_count: v.pp_count,
         }, true);
 
         labelJ3s.push(h);
