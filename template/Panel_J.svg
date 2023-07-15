@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080">
   <defs>
-    <clipPath id="#clippath-PJ-1">
+    <clipPath id="clippath-PJ-1">
       <rect width="1920" height="320" rx="20" ry="20" style="fill: none;"/>
     </clipPath>
-    <clipPath id="#clippath-PJ-2">
+    <clipPath id="clippath-PJ-2">
       <circle cx="842" cy="470" r="70" style="fill: none;"/>
     </clipPath>
-    <clipPath id="#clippath-PJ-3">
+    <clipPath id="clippath-PJ-3">
       <circle cx="1630" cy="815" r="70" style="fill: none;"/>
     </clipPath>
   </defs>
@@ -35,7 +35,7 @@
     <g id="ModsPan">
       <circle cx="842" cy="470" r="70" style="fill: #46393f;"/>
       <g style="clip-path: url(#clippath-PJ-2);">
-        <polygon points="804 368 842 470 893.067 368 804 368" style="fill: #ff0;"/>
+
       </g>
       <circle cx="842" cy="470" r="4" style="fill: #382e32;"/>
     </g>
@@ -74,7 +74,7 @@
     <g id="RanksPan">
       <circle cx="1630" cy="815" r="70" style="fill: #46393f;"/>
       <g style="clip-path: url(#clippath-PJ-3);">
-        <polygon points="1592 713 1630 815 1681.067 713 1592 713" style="fill: #ff0;"/>
+
       </g>
       <circle cx="1630" cy="815" r="4" style="fill: #382e32;"/>
     </g>
