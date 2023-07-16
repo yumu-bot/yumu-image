@@ -338,8 +338,9 @@ export async function panel_J(data = {
     // 右上角的 BP 分布，给数组
     pp_raw_arr: [240, 239, 238, 236, 234, 240, 221, 204, 200, 190, 190, 189, 187, 174, 166, 164], //给加权前的 pp
     rank_arr: ['A', 'SS', 'SS', 'B'], //给评级的统计数据。
+    rank_elect_arr: ['SS', 'A', 'B'], //给根据数量排名的评级，越靠前数量越多
 
-    pp_length_arr: [24, 59, 81, 75], //bp长度的统计数据，bp_length_arr
+    bp_length_arr: [24, 59, 81, 75], //bp长度的统计数据
 
     mods_attr: [
         {
@@ -563,11 +564,24 @@ export async function panel_J(data = {
 
     svg = replaceText(svg, rank_axis, reg_pp_graph);
 
-    // 绘制bp长度矩形，并且获取长度的优先值
+    // 绘制bp长度矩形，并且获取长度的优先值。需要给这些bp扩充到100，不然比例会有问题
 
-    let bp_length_arr = maximumArrayToFixedLength(data.pp_length_arr, 39, false);
-    let rank_arr = maximumArrayToFixedLength(data.rank_arr, 39, false);
+    // 导入数据
+    let bp_length_100_arr = data.bp_length_arr;
+    let rank_100_arr = data.rank_arr;
 
+    for (let i = data.bp_length_arr.length; i < 100; i++) {
+        bp_length_100_arr.push(0);
+        rank_100_arr.push('F');
+    }
+
+    const bp_length_arr = maximumArrayToFixedLength(bp_length_100_arr, 39, false);
+
+    //根据优先值获取颜色数组
+    const rank_elect_arr = data.rank_elect_arr;
+    let color_elect_arr = getBarChartColorArray(rank_100_arr, rank_elect_arr, 39, '#fff');
+
+    //矩形绘制
     let bp_length_max = Math.max.apply(Math, bp_length_arr);
     let bp_length_min = Math.min.apply(Math, bp_length_arr);
     let start_y = 610;
@@ -577,7 +591,7 @@ export async function panel_J(data = {
     bp_length_arr.forEach((v, i) => {
         let height = Math.max(((v - bp_length_min) / bp_length_max * 90), 16);
 
-        svg_rrect += `<rect x="${1042 + 20 * i}" y="${start_y - height}" width="16" height="${height}" rx="8" ry="8" style="fill: #a1a1a1;"/>`;
+        svg_rrect += `<rect x="${1042 + 20 * i}" y="${start_y - height}" width="16" height="${height}" rx="8" ry="8" style="fill: ${color_elect_arr[i]};"/>`;
     });
 
     svg = implantSvgBody(svg, 0, 0, svg_rrect, reg_rrect);
@@ -615,10 +629,10 @@ export async function panel_J(data = {
     }
 
     for (let i = 0; i < 6; i++) {
-        if (i < 2) {
+        if (i < 1) { //本来是i < 2，但是没有pf评级了
             svg = implantSvgBody(svg, 1555, 902 + 66 * i, labelJ3s[i], reg_label_j3);
         } else {
-            svg = implantSvgBody(svg, 1715, 702 + 66 * (i - 2), labelJ3s[i], reg_label_j3);
+            svg = implantSvgBody(svg, 1715, 702 + 66 * (i - 1), labelJ3s[i], reg_label_j3);
         }
     }
 
@@ -628,14 +642,36 @@ export async function panel_J(data = {
     return await exportPng(svg);
 
     /**
-     * @function 根据对应mod的数量来返回一个加权的数组
-     * @return {string[]} 返回一个加权的数组，越靠前，权利越大。
-     * @param arr 数据数组
+     * @function 根据选举的优先级来给条形图返回上色用的颜色数组
+     * @return {string[]} 曲线的 svg
+     * @param dataArr 条形图的数据数组，包含了选举信息
+     * @param electArr 选举出的数组，越靠前越高级，但是需要放在下层
+     * @param length 返回的数组长度，一般来说这肯定小于等于 dataArr。
+     * @param defaultValue 填充的默认值
      */
-    function getElectionRank(arr = ['']) {
-        return [''];
+    function getBarChartColorArray (dataArr = [''], electArr = [''], length = 0, defaultValue) {
+        let arr = new Array(length).fill(defaultValue);
+
+        for (const v of electArr) {
+            let steps = (dataArr.length - 1) / (length - 1);
+            let stepSum = steps;
+            let stepCount = 0;
+            let color = getRankColor(v);
+
+            dataArr.forEach((v0, i) => {
+                if (i < stepSum) {
+                    if (v0.toUpperCase() === v.toUpperCase()) arr.splice(stepCount, 1, color);
+                } else {
+                    stepSum += steps;
+                    stepCount ++;
+                }
+            })
+        }
+
+        return arr;
     }
-    
+
+
     /**
      * @function 绘制右上角的曲线
      * @return {String} 曲线的 svg

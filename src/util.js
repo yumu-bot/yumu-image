@@ -1306,11 +1306,19 @@ export function getModColor(Mod = '') {
         case "PF":
             color = '#FFF100';
             break;
-        case "XK":
+        case "4K":
+        case "5K":
+        case "6K":
+        case "7K":
+        case "8K":
+        case "9K":
             color = '#616161';
             break;
         case "RD":
             color = '#009944';
+            break;
+        case "MR":
+            color = '#007130';
             break;
         case "TD":
             color = '#7ECEF4';
@@ -1322,8 +1330,11 @@ export function getModColor(Mod = '') {
         case "FM":
             color = '#00A0E9';
             break;
-        case "EX":
+        case "EX": //没错，以下这两个都是表示难一点的图
             color = '#FF9800';
+            break;
+        case "DF":
+            color = '#FF6100';
             break;
         case "TB":
             color = '#000';
@@ -1361,7 +1372,7 @@ export function getModColor(Mod = '') {
  */
 export function getRankColor(Rank = 'F') {
     let color;
-    switch (Rank) {
+    switch (Rank.toUpperCase()) {
         case "XH":
         case "SSH":
         case "X+":
