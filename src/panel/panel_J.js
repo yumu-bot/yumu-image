@@ -748,7 +748,7 @@ export async function panel_J(data = {
             let assist = getAssistPoint(radMin, radMax, cx, cy);
             let color;
 
-            if (arr[i].index === "FC" || arr[i].index === "PF") continue; //放弃这两个上色
+            if (arr[i].index === "FC") continue; //放弃这两个上色  || arr[i].index === "PF" PF好像和perfect重叠了
 
             if (func) {
                 color = getModColor(arr[i].index);
