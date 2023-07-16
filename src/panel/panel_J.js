@@ -579,7 +579,7 @@ export async function panel_J(data = {
 
     //根据优先值获取颜色数组
     const rank_elect_arr = data.rank_elect_arr;
-    let color_elect_arr = getBarChartColorArray(rank_100_arr, rank_elect_arr, 39, '#fff');
+    let color_elect_arr = getBarChartColorArray(rank_100_arr, rank_elect_arr, 39, '#2A2226');
 
     //矩形绘制
     let bp_length_max = Math.max.apply(Math, bp_length_arr);
@@ -651,6 +651,7 @@ export async function panel_J(data = {
      */
     function getBarChartColorArray (dataArr = [''], electArr = [''], length = 0, defaultValue) {
         let arr = new Array(length).fill(defaultValue);
+        let arr_last_value;
 
         for (const v of electArr) {
             let steps = (dataArr.length - 1) / (length - 1);
@@ -667,6 +668,10 @@ export async function panel_J(data = {
                 }
             })
         }
+
+        //有时候取不到最后一位，所以需要补足
+        arr_last_value = dataArr[dataArr.length - 1];
+        if (arr[length - 1] === defaultValue) arr.splice(length - 1, 1, getRankColor(arr_last_value));
 
         return arr;
     }
