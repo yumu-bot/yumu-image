@@ -366,7 +366,7 @@ export async function panel_J(data = {
             percent: 0.5,
         },
         {
-            index: "X",
+            index: "SS",
             map_count: 50,
             pp_count: 16247,
             percent: 0.4,

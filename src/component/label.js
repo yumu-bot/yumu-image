@@ -207,12 +207,22 @@ export const RANK_OPTION = {
         icon_title: 'Full Combo',
     },
 
+    SSH: {
+        icon: getExportFileV3Path('object-score-XH-small.png'),
+        icon_title: 'SSH',
+    },
+
     XH: {
         icon: getExportFileV3Path('object-score-XH-small.png'),
         icon_title: 'SSH',
     },
 
     X: {
+        icon: getExportFileV3Path('object-score-X-small.png'),
+        icon_title: 'SS',
+    },
+
+    SS: {
         icon: getExportFileV3Path('object-score-X-small.png'),
         icon_title: 'SS',
     },
