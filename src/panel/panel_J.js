@@ -307,6 +307,7 @@ export async function panel_J(data = {
 
     bpBPM: [], //这个有意义吗？
 
+    favorite_mappers_count: 34,
     // 最喜爱谱师，只需要给6个
     favorite_mappers: [
         {
@@ -409,22 +410,12 @@ export async function panel_J(data = {
     const index_request_time = 'request time: ' + getNowTimeStamp();
     const index_panel_name = 'BPA';
 
-    const index_top5bp = 'Top 5 BPs';
-    const index_last5bp = 'Last 5 BPs';
-
-    const index_mods = 'Mods';
-
     const index_powered_path = torus.getTextPath(index_powered,
         10, 26.84, 24, "left baseline", "#fff");
     const index_request_time_path = torus.getTextPath(index_request_time,
         1910, 26.84, 24, "right baseline", "#fff");
     const index_panel_name_path = torus.getTextPath(index_panel_name,
         607.5, 83.67, 48, "center baseline", "#fff");
-
-    const index_top5bp_path = torus.getTextPath(index_top5bp,
-        55, 365.795, 30, "left baseline", "#fff");
-    const index_last5bp_path = torus.getTextPath(index_last5bp,
-        380, 365.795, 30, "left baseline", "#fff");
 
     const pp = data.pp.toFixed(0) || 0;
     const pp_raw = data.pp_raw.toFixed(0) || 0;
@@ -448,16 +439,25 @@ export async function panel_J(data = {
         '#aaa');
     const game_mode_path = torus.getTextPath(game_mode, 1860, 401.836, 24, 'right baseline', '#fff');
 
+    const mappers_count_path = torus.get2SizeTextPath(
+        data.favorite_mappers_count.toString(),
+        ' mappers',
+        36,
+        24,
+        1500,
+        724.754,
+        'right baseline',
+        '#aaa'
+    )
 
     // 插入文字
     svg = replaceText(svg, index_powered_path, reg_index);
     svg = replaceText(svg, index_request_time_path, reg_index);
     svg = replaceText(svg, index_panel_name_path, reg_index);
-    svg = replaceText(svg, index_top5bp_path, reg_index);
-    svg = replaceText(svg, index_last5bp_path, reg_index);
     svg = replaceText(svg, pp_mini_path, reg_index);
     svg = replaceText(svg, pp_full_path, reg_index);
     svg = replaceText(svg, game_mode_path, reg_index);
+    svg = replaceText(svg, mappers_count_path, reg_index);
 
     // A1卡构建
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
@@ -579,7 +579,7 @@ export async function panel_J(data = {
 
     //根据优先值获取颜色数组
     const rank_elect_arr = data.rank_elect_arr;
-    let color_elect_arr = getBarChartColorArray(rank_100_arr, rank_elect_arr, 39, '#2A2226');
+    let color_elect_arr = getBarChartColorArray(rank_100_arr, rank_elect_arr, 39, '#616161'); //这是F的颜色
 
     //矩形绘制
     let bp_length_max = Math.max.apply(Math, bp_length_arr);
@@ -595,6 +595,19 @@ export async function panel_J(data = {
     });
 
     svg = implantSvgBody(svg, 0, 0, svg_rrect, reg_rrect);
+
+    //矩形上面的字绘制
+    const bp_length_max_b = Math.floor(bp_length_max / 60).toString();
+    const bp_length_max_m = (bp_length_max % 60) < 10 ? '0' + (bp_length_max % 60) : (bp_length_max % 60).toString();
+
+    const bp_length_text = torus.getTextPath(`${bp_length_max_b}:${bp_length_max_m}`,
+        1050 + bp_length_arr.findIndex((v) => v === bp_length_max) * 20,
+        515 + 75 * (5 - Math.min(bp_length_max, 5)) / 5, //本来是90，缩减一点
+        16,
+        'center baseline',
+        '#aaa');
+
+    svg = replaceText(svg, bp_length_text, reg_rrect);
 
     // 插入两个饼图
     const mod_svg = drawPieChart(data.mods_attr, true, 772, 400);
