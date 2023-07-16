@@ -584,12 +584,13 @@ export async function panel_J(data = {
     //矩形绘制
     let bp_length_max = Math.max.apply(Math, bp_length_arr);
     let bp_length_min = Math.min.apply(Math, bp_length_arr);
+    let bp_length_delta = Math.max(Math.abs(bp_length_max - bp_length_min), 0.1);
     let start_y = 610;
 
     let svg_rrect = '';
 
     bp_length_arr.forEach((v, i) => {
-        let height = Math.max(((v - bp_length_min) / bp_length_max * 90), 16);
+        let height = Math.max(((v - bp_length_min) / bp_length_delta * 90), 16);
 
         svg_rrect += `<rect x="${1042 + 20 * i}" y="${start_y - height}" width="16" height="${height}" rx="8" ry="8" style="fill: ${color_elect_arr[i]};"/>`;
     });
