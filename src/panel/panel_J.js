@@ -420,7 +420,7 @@ export async function panel_J(data = {
     const pp = data.pp.toFixed(0) || 0;
     const pp_raw = data.pp_raw.toFixed(0) || 0;
     const pp_bonus = Math.max(pp - pp_raw, 0).toFixed(0);
-    const game_mode = data.card_A1.playmode.toString();//getGameMode(data.card_A1.playmode,2); //getGameMode(data.game_mode, 2); 这个数据传递不准确
+    const game_mode = data.game_mode.toString();//getGameMode(data.card_A1.playmode,2); //getGameMode(data.game_mode, 2); 这个数据传递不准确
 
     const pp_full_path = torus.get2SizeTextPath(
         pp.toString(),
