@@ -2,7 +2,7 @@ import fs from "fs";
 import readline from "readline";
 import axios from "axios";
 import {Beatmap, Calculator} from "rosu-pp";
-import {getModInt, OSU_BUFFER_PATH} from "./util.js";
+import {getGameMode, getModInt, OSU_BUFFER_PATH} from "./util.js";
 
 const statistics = {
     count_50: 0,
@@ -17,7 +17,7 @@ const statistics = {
 }
 
 export async function getMapAttributes(bid, mods, mode_int = 0) {
-    const osuFilePath = await getOsuFilePath(bid, mode_int, false);
+    const osuFilePath = await getOsuFilePath(bid, getGameMode(mode_int), false);
     const beatMap = new Beatmap({
         path: osuFilePath,
     });
