@@ -569,7 +569,7 @@ export async function label_J2(data = {
 //BPA-J3-评级标签
 export async function label_J3(data = {
     icon: getExportFileV3Path('object-score-XH-small.png'),
-    mod_count: 100,
+    map_count: 100,
     pp_percentage: 0.667, //占raw pp的比
     pp_count: 12345,
 }, reuse = false) {
@@ -584,8 +584,8 @@ export async function label_J3(data = {
     let reg_icon = /(?<=<g id="Icon">)/;
 
     //定义文本
-    let mod_count = torus.get2SizeTextPath(
-        data.mod_count.toString() || '0',
+    let map_count = torus.get2SizeTextPath(
+        data.map_count.toString() || '0',
         'x',
         36,
         24,
@@ -597,9 +597,9 @@ export async function label_J3(data = {
 
     let pp_percentage = torus.getTextPath(
         (data.pp_percentage * 100).toFixed(1).toString() + '%' || '0%',
-        0,
+        2, //0
         52,
-        18,
+        16, //18
         'left baseline',
         '#aaa'
     );
@@ -617,7 +617,7 @@ export async function label_J3(data = {
 
 
     //插入文本
-    svg = replaceText(svg, mod_count, reg_text);
+    svg = replaceText(svg, map_count, reg_text);
     svg = replaceText(svg, pp_percentage, reg_text);
     svg = replaceText(svg, pp_count, reg_text);
 

@@ -1,7 +1,7 @@
 import {
-    exportPng, getExportFileV3Path,
+    exportPng, getExportFileV3Path, getGameMode, getModColor,
     getNowTimeStamp,
-    getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getRandomBannerPath, getRankColor, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     implantImage,
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength,
     PanelGenerate, readNetImage,
@@ -339,18 +339,20 @@ export async function panel_J(data = {
     pp_raw_arr: [240, 239, 238, 236, 234, 240, 221, 204, 200, 190, 190, 189, 187, 174, 166, 164], //给加权前的 pp
     rank_arr: ['A', 'SS', 'SS', 'B'], //给评级的统计数据。
 
-    bp_length_arr: [24, 59, 81, 75], //bp长度的统计数据
+    pp_length_arr: [24, 59, 81, 75], //bp长度的统计数据，bp_length_arr
 
     mods_attr: [
         {
             index: "HD",
             map_count: 50,
             pp_count: 4396,
+            percent: 0.26,
         },
         {
             index: "DT",
             map_count: 12,
             pp_count: 17,
+            percent: 0.74,
         }
     ],
 
@@ -359,13 +361,19 @@ export async function panel_J(data = {
             index: "FC",
             map_count: 50,
             pp_count: 16247,
-            percent: 0.94,
+            percent: 0.5,
         },
         {
-            index: "SS",
+            index: "X",
             map_count: 50,
             pp_count: 16247,
-            percent: 0.94,
+            percent: 0.4,
+        },
+        {
+            index: "SH",
+            map_count: 50,
+            pp_count: 16247,
+            percent: 0.1,
         },
     ],
 
@@ -383,6 +391,8 @@ export async function panel_J(data = {
     // 路径定义
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PJ-1\);">)/;
+    let reg_pan_mod = /(?<=<g style="clip-path: url\(#clippath-PJ-2\);">)/;
+    let reg_pan_rank = /(?<=<g style="clip-path: url\(#clippath-PJ-3\);">)/;
     let reg_topbp = /(?<=<g id="TopBP">)/;
     let reg_lastbp = /(?<=<g id="LastBP">)/;
     let reg_card_l = /(?<=<g id="Card_L">)/;
@@ -394,7 +404,7 @@ export async function panel_J(data = {
     let reg_rrect = /(?<=<g id="BPRanksR">)/;
 
     // 面板文字
-    const index_powered = 'powered by Yumubot v0.3.1 EA // BP Analysis (!ymba)';
+    const index_powered = 'powered by Yumubot v0.3.1 EA // BP Analysis v2 (!ymba)';
     const index_request_time = 'request time: ' + getNowTimeStamp();
     const index_panel_name = 'BPA';
 
@@ -415,12 +425,38 @@ export async function panel_J(data = {
     const index_last5bp_path = torus.getTextPath(index_last5bp,
         380, 365.795, 30, "left baseline", "#fff");
 
+    const pp = data.pp.toFixed(0) || 0;
+    const pp_raw = data.pp_raw.toFixed(0) || 0;
+    const pp_bonus = Math.max(pp - pp_raw, 0).toFixed(0);
+    const game_mode = getGameMode(data.game_mode, 2);
+
+    const pp_full_path = torus.get2SizeTextPath(
+        pp.toString(),
+        ' PP (' + pp_raw + '+' + pp_bonus + ')',
+        36,
+        24,
+        1860,
+        374.754,
+        'right baseline',
+        '#fff'
+    );
+    const pp_mini_path = torus.getTextPath('('+ pp_raw + '+' + pp_bonus + ')', 1860,
+        374.754,
+        24,
+        'right baseline',
+        '#aaa');
+    const game_mode_path = torus.getTextPath(game_mode, 1860, 401.836, 24, 'right baseline', '#fff');
+
+
     // 插入文字
     svg = replaceText(svg, index_powered_path, reg_index);
     svg = replaceText(svg, index_request_time_path, reg_index);
     svg = replaceText(svg, index_panel_name_path, reg_index);
     svg = replaceText(svg, index_top5bp_path, reg_index);
     svg = replaceText(svg, index_last5bp_path, reg_index);
+    svg = replaceText(svg, pp_mini_path, reg_index);
+    svg = replaceText(svg, pp_full_path, reg_index);
+    svg = replaceText(svg, game_mode_path, reg_index);
 
     // A1卡构建
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
@@ -452,7 +488,6 @@ export async function panel_J(data = {
 
     let labelJ1s = [];
 
-    /*
     for (const v of data.mods_attr) {
         const h = await label_J1({
             mod: v.index || 'None',
@@ -462,8 +497,6 @@ export async function panel_J(data = {
 
         labelJ1s.push(h);
     }
-
-     */
 
     // 谱师标签 J2 构建
 
@@ -485,22 +518,17 @@ export async function panel_J(data = {
 
     let labelJ3s = [];
 
-    /*
-
     for (const v of data.rank_attr) {
         const h = await label_J3({
 
             ...RANK_OPTION[v.index],
-            mod_count: 100,
-            pp_percentage: 0.667, //占raw pp的比
-            pp_count: 12345,
+            map_count: v.map_count,
+            pp_percentage: v.percent, //占raw pp的比
+            pp_count: v.pp_count,
         }, true);
 
         labelJ3s.push(h);
     }
-
-     */
-
 
     // 绘制bp的pp曲线
     let pp_raw_arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false);
@@ -535,24 +563,32 @@ export async function panel_J(data = {
 
     svg = replaceText(svg, rank_axis, reg_pp_graph);
 
-    // 绘制bp长度矩形
+    // 绘制bp长度矩形，并且获取长度的优先值
 
-    let bp_length_arr = maximumArrayToFixedLength(data.bp_length_arr, 39, false);
+    let bp_length_arr = maximumArrayToFixedLength(data.pp_length_arr, 39, false);
+    let rank_arr = maximumArrayToFixedLength(data.rank_arr, 39, false);
 
     let bp_length_max = Math.max.apply(Math, bp_length_arr);
     let bp_length_min = Math.min.apply(Math, bp_length_arr);
-    let bp_length_delta = Math.max((bp_length_max - bp_length_min), 0.1);
     let start_y = 610;
 
     let svg_rrect = '';
 
     bp_length_arr.forEach((v, i) => {
-        let height = Math.max((v / bp_length_delta * bp_length_max), 16);
+        let height = Math.max(((v - bp_length_min) / bp_length_max * 90), 16);
 
         svg_rrect += `<rect x="${1042 + 20 * i}" y="${start_y - height}" width="16" height="${height}" rx="8" ry="8" style="fill: #a1a1a1;"/>`;
     });
 
-    svg = implantSvgBody(svg, 0, 0, svg_rrect, reg_rrect)
+    svg = implantSvgBody(svg, 0, 0, svg_rrect, reg_rrect);
+
+    // 插入两个饼图
+    const mod_svg = drawPieChart(data.mods_attr, true, 772, 400);
+    const rank_svg = drawPieChart(data.rank_attr, false, 1560, 745);
+
+    svg = replaceText(svg, mod_svg, reg_pan_mod);
+    svg = replaceText(svg, rank_svg, reg_pan_rank);
+
     // 插入图片和部件（新方法
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_maincard);
 
@@ -591,7 +627,23 @@ export async function panel_J(data = {
 
     return await exportPng(svg);
 
-
+    /**
+     * @function 根据对应mod的数量来返回一个加权的数组
+     * @return {string[]} 返回一个加权的数组，越靠前，权利越大。
+     * @param arr 数据数组
+     */
+    function getElectionRank(arr = ['']) {
+        return [''];
+    }
+    
+    /**
+     * @function 绘制右上角的曲线
+     * @return {String} 曲线的 svg
+     * @param arr 数据数组
+     * @param color 曲线的颜色
+     * @param max 数组最大值
+     * @param min 数组最小值
+     */
     function RFPPChart(arr, color, max, min) {
         const step = 780 / arr.length
         const start_x = 1042; //往右挪了2px
@@ -610,4 +662,104 @@ export async function panel_J(data = {
         path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 4px;"/> </svg>`
         svg = replaceText(svg, path_svg, reg_pp_graph);
     }
+
+
+    /**
+     * @function 绘制圆饼
+     * @return {String} 圆饼的 svg
+     * @param arr 数据数组
+     * @param func 功能，true = Mod / false = Rank
+     * @param x 左上角横坐标
+     * @param y 左上角纵坐标
+     */
+    function drawPieChart(arr = [{
+        index: "HD",
+        map_count: 50,
+        pp_count: 4396,
+        percent: 0.26,
+    },], func = true, x = 0, y = 0) {
+        let pie_svg = '';
+        const pi = Math.PI;
+        const r = 100;
+        const cx = x + 70;
+        const cy = y + 70;
+
+        let rad = 0; //用于记录rad变换
+
+        for (const i in arr) {
+            let radMin = rad;
+            let radDelta = arr[i].percent * 2 * pi;
+            let radMax = rad + radDelta;
+            let assist = getAssistPoint(radMin, radMax, cx, cy);
+            let color;
+
+            if (arr[i].index === "FC" || arr[i].index === "PF") continue; //放弃这两个上色
+
+            if (func) {
+                color = getModColor(arr[i].index);
+            }
+            else {
+                color = getRankColor(arr[i].index);
+            }
+
+            let xMin = cx + r * Math.sin(radMin);
+            let yMin = cy - r * Math.cos(radMin);
+            let xMax = cx + r * Math.sin(radMax);
+            let yMax = cy - r * Math.cos(radMax);
+
+            pie_svg += `<polygon id="Polygon_${arr[i].index}_${i}" points="${cx} ${cy} ${xMin} ${yMin} ${assist}${xMax} ${yMax} ${cx} ${cy}" style="fill: ${color};"/>`; //这里assist后面的空格是故意删去的
+
+            rad += radDelta;
+        }
+
+        const image = getExportFileV3Path('object-piechart-overlay2.png');
+        const opacity = 1;
+
+        pie_svg += `<image width="140" height="140" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
+
+        return pie_svg;
+
+        //获取中继点，这个点可以让区域控制点完美处于圆的外围
+        function getAssistPoint(radMin = 0, radMax = 0, cx = 0, cy = 0) {
+            const pi = Math.PI;
+            const r = 100; //给控制点的圆的半径，比内部圆大很多
+            if (radMax < radMin) return '';
+
+            let out;
+            let assist_arr = [];
+
+            assist_arr.push('',
+                (cx + r) + ' ' + (cy - r) + ' ',
+                (cx + r) + ' ' + (cy + r) + ' ',
+                (cx - r) + ' ' + (cy + r) + ' ',
+                (cx - r) + ' ' + (cy - r) + ' ');
+
+            if (radMin < pi / 4) {
+                if (radMax < pi / 4) out = ' ';
+                else if (radMax < 3 * pi / 4) out = (assist_arr[1]);
+                else if (radMax < 5 * pi / 4) out = (assist_arr[1] + assist_arr[2]);
+                else if (radMax < 7 * pi / 4) out = (assist_arr[1] + assist_arr[2] + assist_arr[3]);
+                else out = (assist_arr[1] + assist_arr[2] + assist_arr[3] + assist_arr[4]);
+            } else if (radMin < 3 * pi / 4) {
+                if (radMax < 3 * pi / 4) out = ' ';
+                else if (radMax < 5 * pi / 4) out = (assist_arr[2]);
+                else if (radMax < 7 * pi / 4) out = (assist_arr[2] + assist_arr[3]);
+                else out = (assist_arr[2] + assist_arr[3] + assist_arr[4]);
+            } else if (radMin < 5 * pi / 4) {
+                if (radMax < 5 * pi / 4) out = ' ';
+                else if (radMax < 7 * pi / 4) out = (assist_arr[3]);
+                else out = (assist_arr[3] + assist_arr[4]);
+            } else if (radMin < 7 * pi / 4) {
+                if (radMax < 7 * pi / 4) out = ' ';
+                else out = (assist_arr[4]);
+            } else {
+                out = '';
+            }
+
+            return out;
+        }
+
+
+    }
+
 }
