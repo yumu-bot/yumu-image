@@ -1747,7 +1747,7 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
  * @param level 等级，0为不变，2为全写 osu!standard，-1为获取他们的unicode字符 \uE801，1为简写 o t m c
  */
 export function getGameMode(gamemode = 'osu', level = 0) {
-    const mode = gamemode.toString().toLowerCase();
+    let mode = gamemode.toString().toLowerCase();
 
     //如果是输入数字，则修改
     switch (mode) {
