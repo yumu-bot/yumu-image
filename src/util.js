@@ -2255,9 +2255,9 @@ export function getAccIndexDeluxe(score) {
             case 'A' : {
                 if (hasMiss) {
                     if (nNotMiss === n300) {
-                        return '-miss SS';
+                        return '-x SS';
                     } else if (0.9 * nNotMiss <= n300) {
-                        return '-miss S';
+                        return '-x S';
                     } else {
                         return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
                     }
@@ -2277,11 +2277,11 @@ export function getAccIndexDeluxe(score) {
             case 'B' :
                 if (hasMiss) {
                     if (nNotMiss === n300) {
-                        return '-miss SS';
+                        return '-x SS';
                     } else if (0.9 * nNotMiss <= n300) {
-                        return '-miss S';
+                        return '-x S';
                     } else if (0.8 * nNotMiss <= n300) {
-                        return '-miss A';
+                        return '-x A';
                     } else {
                         return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
                     }
@@ -2298,13 +2298,13 @@ export function getAccIndexDeluxe(score) {
             case 'C' :
                 if (hasMiss) {
                     if (nNotMiss === n300) {
-                        return '-miss SS';
+                        return '-x SS';
                     } else if (0.9 * nNotMiss <= n300) {
-                        return '-miss S';
+                        return '-x S';
                     } else if (0.8 * nNotMiss <= n300) {
-                        return '-miss A';
+                        return '-x A';
                     } else if (0.7 * nNotMiss <= n300) {
-                        return '-miss B';
+                        return '-x B';
                     } else {
                         return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
                     }
@@ -2323,7 +2323,7 @@ export function getAccIndexDeluxe(score) {
             case 'D' :
                 if (hasMiss) {
                     if (0.6 * nTotal <= n300) {
-                        return '-miss C';
+                        return '-x C';
                     } else {
                         return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
                     }
@@ -2347,9 +2347,9 @@ export function getAccIndexDeluxe(score) {
             case 'A' : {
                 if (hasMiss) {
                     if (nNotMiss === n300) {
-                        return '-miss SS';
+                        return '-x SS';
                     } else if (0.9 * nNotMiss <= n300) {
-                        return '-miss S';
+                        return '-x S';
                     }
                 } else {
                     if (0.9 * nTotal <= n300) {
@@ -2363,11 +2363,11 @@ export function getAccIndexDeluxe(score) {
             case 'B' :
                 if (hasMiss) {
                     if (nNotMiss === n300) {
-                        return '-miss SS';
+                        return '-x SS';
                     } else if (0.9 * nNotMiss <= n300) {
-                        return '-miss S';
+                        return '-x S';
                     } else if (0.8 * nNotMiss <= n300) {
-                        return '-miss A';
+                        return '-x A';
                     } else {
                         return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
                     }
@@ -2384,13 +2384,13 @@ export function getAccIndexDeluxe(score) {
             case 'C' :
                 if (hasMiss) {
                     if (nNotMiss = n300) {
-                        return '-miss SS';
+                        return '-x SS';
                     } else if (0.9 * nNotMiss <= n300) {
-                        return '-miss S';
+                        return '-x S';
                     } else if (0.8 * nNotMiss <= n300) {
-                        return '-miss A';
+                        return '-x A';
                     } else if (0.7 * nNotMiss <= n300) {
-                        return '-miss B';
+                        return '-x B';
                     } else {
                         return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
                     }
@@ -2409,7 +2409,7 @@ export function getAccIndexDeluxe(score) {
             case 'D' :
                 if (hasMiss) {
                     if (0.6 * nTotal <= n300) {
-                        return '-miss C';
+                        return '-x C';
                     } else {
                         return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
                     }
