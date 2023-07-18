@@ -3,7 +3,7 @@ import {
     cs2px,
     exportPng,
     extra,
-    getAccIndex,
+    getAccIndexDeluxe,
     getExportFileV3Path,
     getGameMode,
     getMapStatusV3Path,
@@ -64,7 +64,7 @@ export async function router(req, res) {
         let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
 
         const label_data = {
-            acc: newLabel(getAccIndex(score),
+            acc: newLabel(getAccIndexDeluxe(score),
                 Math.floor(roundacc) + (showPoint ? '' : '.'),
                 showPoint ? '%' : labelPoint.toFixed(2).substring(2) + '%'),
             combo: newLabel(`${score.beatmap.max_combo}x`,

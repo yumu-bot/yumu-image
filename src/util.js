@@ -2216,6 +2216,205 @@ const ModBonusMANIA = {
     "FI": 1,
 }
 
+//获取面板E里的ACC指示器
+export function getAccIndexDeluxe(score) {
+    const gamemode = getGameMode(score.mode, 1);
+    const nGeki = score.statistics.count_geki;
+    const n300 = score.statistics.count_300;
+    const n100 = score.statistics.count_100;
+    const n50 = score.statistics.count_50;
+    const n0 = score.statistics.count_miss;
+    let nTotal;
+
+    const hasMiss = (n0 === 0);
+    const has1p50 = (n50 / (n300 + n100 + n50 + n0) >= 0.01);
+
+    const rank = score.rank;
+
+    switch (gamemode) {
+        case 'o' : return getIndexStd();
+        case 't' : return getIndexTaiko();
+        case 'c' : return getIndexCatch();
+        case 'm' : return getIndexMania();
+        default: return '-';
+    }
+
+    function getIndexStd() {
+        nTotal = n300 + n100 + n50 + n0;
+
+        switch (rank) {
+            case 'XH' :
+            case 'X' : return 'AP';
+            case 'SH' :
+            case 'S' : return '^SS';
+            case 'A' : {
+                if (hasMiss) {
+                    return '-miss S';
+                } else {
+                    if (0.9 * nTotal <= n300) {
+                        // 如果没有不好的评级，甚至能到SS
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    } else {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    }
+                }
+            };
+            case 'B' :
+                if (hasMiss) {
+                    if (0.8 * nTotal <= n300) {
+                        return '?';
+                    } else {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    }
+                } else {
+                    // 如果没有不好的评级，甚至能到SS
+                    if (0.8 * nTotal > n300) {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    } else if (0.9 * nTotal > n300) {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    } else {
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    }
+                }
+            case 'C' :
+                if (hasMiss) {
+                    if (0.7 * nTotal <= n300) {
+                        return '?';
+                    } else {
+                        return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
+                    }
+                } else {
+                    // 如果没有不好的评级，甚至能到SS
+                    if (0.7 * nTotal > n300) {
+                        return '-' + Math.ceil(0.7 * nTotal - n300) + ' B';
+                    } else if (0.8 * nTotal > n300) {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    } else if (0.9 * nTotal > n300) {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    } else {
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    }
+                }
+            case 'D' :
+                if (hasMiss) {
+                    if (0.6 * nTotal <= n300) {
+                        return '?';
+                    } else {
+                        return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
+                    }
+                } else {
+                    return 'no miss?'
+                }
+            default :
+                return '~ ' + getApproximateRank(score);
+        }
+    }
+
+    function getIndexTaiko() {
+        nTotal = n300 + n100 + n0;
+
+        switch (rank) {
+            case 'XH' :
+            case 'X' : return 'AP';
+            case 'SH' :
+            case 'S' : return '^SS';
+            case 'A' : {
+                if (hasMiss) {
+                    return '-miss S';
+                } else {
+                    if (has1p50) {
+                        return '-[50]';
+                    } else {
+                        if (0.9 * nTotal <= n300) {
+                            // 如果没有不好的评级，甚至能到SS
+                            return '-' + Math.ceil(nTotal - n300) + ' SS';
+                        } else {
+                            return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                        }
+                    }
+                }
+            };
+            case 'B' :
+                if (hasMiss) {
+                    if (0.8 * nTotal <= n300) {
+                        return '?';
+                    } else {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    }
+                } else {
+                    // 如果没有不好的评级，甚至能到SS
+                    if (0.8 * nTotal > n300) {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    } else if (0.9 * nTotal > n300) {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    } else {
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    }
+                }
+            case 'C' :
+                if (hasMiss) {
+                    if (0.7 * nTotal <= n300) {
+                        return '?';
+                    } else {
+                        return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
+                    }
+                } else {
+                    // 如果没有不好的评级，甚至能到SS
+                    if (0.7 * nTotal > n300) {
+                        return '-' + Math.ceil(0.7 * nTotal - n300) + ' B';
+                    } else if (0.8 * nTotal > n300) {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    } else if (0.9 * nTotal > n300) {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    } else {
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    }
+                }
+            case 'D' :
+                if (hasMiss) {
+                    if (0.6 * nTotal <= n300) {
+                        return '?';
+                    } else {
+                        return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
+                    }
+                } else {
+                    return 'no miss?'
+                }
+            default : return '~ ' + getApproximateRank(score);
+        }
+    }
+
+    function getIndexCatch() {
+        switch (rank) {
+            case 'XH' :
+            case 'X' : return 'AP';
+            case 'SH' :
+            case 'S' : return '^SS';
+            case 'A' : return '^S';
+            case 'B' : return '^A';
+            case 'C' : return '^B';
+            case 'D' : return '^C';
+            default : return '~ ' + getApproximateRank(score);
+        }
+    }
+
+    function getIndexMania() {
+        switch (rank) {
+            case 'F' : return '~ ' + getApproximateRank(score);
+            default : {
+                if (nGeki >= n300) {
+                    return (nGeki / n300).toFixed(1) + '/1';
+                } else if (nGeki < n300)  {
+                    return '/1' + (n300 / nGeki).toFixed(1);
+                } else {
+                    return '???';
+                }
+            }
+        }
+    }
+}
+
+
 export function getAccIndex(score) {
     let accRemark;
     switch (getGameMode(score.mode, 1)) {
@@ -2428,9 +2627,9 @@ export function getAccIndex(score) {
                     break;
                 default : {
                     if (score.statistics.count_geki >= score.statistics.count_300) {
-                        accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
+                        accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + '/1';
                     } else {
-                        accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
+                        accRemark = '1/' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
                     }
                 }
                     break;
