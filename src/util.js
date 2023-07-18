@@ -2438,14 +2438,21 @@ export function getAccIndexDeluxe(score) {
         switch (rank) {
             case 'F' : return '~ ' + getApproximateRank(score);
             default : {
-                if (rank === 'SS' && n300 === 0) {
-                    return 'MAX';
-                }
 
                 if (nGeki >= n300) {
-                    return (nGeki / n300).toFixed(1) + '/1';
-                } else if (nGeki < n300)  {
-                    return '/1' + (n300 / nGeki).toFixed(1);
+                    if (n300 !== 0) {
+                        return (nGeki / n300).toFixed(1) + '/1';
+                    } else if (nGeki !== 0) {
+                        return 'MAX';
+                    } else {
+                        return '???';
+                    }
+                } else if (nGeki < n300) {
+                    if (nGeki !== 0) {
+                        return '1/' + (n300 / nGeki).toFixed(1);
+                    } else {
+                        return 'ALL300';
+                    }
                 } else {
                     return '???';
                 }
