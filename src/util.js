@@ -2325,22 +2325,18 @@ export function getAccIndexDeluxe(score) {
                 if (hasMiss) {
                     return '-miss S';
                 } else {
-                    if (has1p50) {
-                        return '-[50]';
+                    if (0.9 * nTotal <= n300) {
+                        // 如果没有不好的评级，甚至能到SS
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
                     } else {
-                        if (0.9 * nTotal <= n300) {
-                            // 如果没有不好的评级，甚至能到SS
-                            return '-' + Math.ceil(nTotal - n300) + ' SS';
-                        } else {
-                            return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
-                        }
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
                     }
                 }
             };
             case 'B' :
                 if (hasMiss) {
                     if (0.8 * nTotal <= n300) {
-                        return '?';
+                        return '-miss A';
                     } else {
                         return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
                     }
@@ -2357,7 +2353,7 @@ export function getAccIndexDeluxe(score) {
             case 'C' :
                 if (hasMiss) {
                     if (0.7 * nTotal <= n300) {
-                        return '?';
+                        return '-miss B';
                     } else {
                         return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
                     }
@@ -2376,7 +2372,7 @@ export function getAccIndexDeluxe(score) {
             case 'D' :
                 if (hasMiss) {
                     if (0.6 * nTotal <= n300) {
-                        return '?';
+                        return '-miss C';
                     } else {
                         return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
                     }
