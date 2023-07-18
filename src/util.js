@@ -2438,6 +2438,10 @@ export function getAccIndexDeluxe(score) {
         switch (rank) {
             case 'F' : return '~ ' + getApproximateRank(score);
             default : {
+                if (rank === 'SS' && n300 === 0) {
+                    return 'MAX';
+                }
+
                 if (nGeki >= n300) {
                     return (nGeki / n300).toFixed(1) + '/1';
                 } else if (nGeki < n300)  {
