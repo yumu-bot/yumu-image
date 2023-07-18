@@ -2265,7 +2265,7 @@ export function getAccIndexDeluxe(score) {
             case 'B' :
                 if (hasMiss) {
                     if (0.8 * nTotal <= n300) {
-                        return '?';
+                        return '-miss A';
                     } else {
                         return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
                     }
@@ -2282,7 +2282,7 @@ export function getAccIndexDeluxe(score) {
             case 'C' :
                 if (hasMiss) {
                     if (0.7 * nTotal <= n300) {
-                        return '?';
+                        return '-miss B';
                     } else {
                         return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
                     }
@@ -2301,7 +2301,7 @@ export function getAccIndexDeluxe(score) {
             case 'D' :
                 if (hasMiss) {
                     if (0.6 * nTotal <= n300) {
-                        return '?';
+                        return '-miss C';
                     } else {
                         return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
                     }
