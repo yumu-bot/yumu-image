@@ -130,7 +130,7 @@ export async function card_L(data = {
             map_background: v.cover,
             star_rating: v.star,
             score_rank: v.rank,
-            bp_pp: ('#' + (v.ranking + 1 || 0)), //把这个位置用来做ranking的显示了
+            bp_pp: ('#' + (v.ranking || 0)), //把这个位置用来做ranking的显示了
             bp_remark: '',// PP
         },true);
         cardKs.push(h);

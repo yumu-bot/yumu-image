@@ -481,7 +481,7 @@ export async function panel_J(data = {
 
     const L1 = await card_L({name: 'Length', card_K: data.bpLength}, true);
     const L2 = await card_L({name: 'Combo', card_K: data.bpCombo}, true);
-    const L3 = await card_L({name: 'SR', card_K: data.bpSR}, true);
+    const L3 = await card_L({name: 'Star Rating', card_K: data.bpSR}, true);
 
     cardLs.push(L1, L2, L3);
 
