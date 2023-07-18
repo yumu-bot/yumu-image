@@ -2226,8 +2226,11 @@ export function getAccIndexDeluxe(score) {
     const n0 = score.statistics.count_miss;
     let nTotal;
 
-    const hasMiss = (n0 === 0);
-    const has1p50 = (n50 / (n300 + n100 + n50 + n0) >= 0.01);
+    let hasMiss = false;
+    if (n0 === 0) hasMiss = true;
+
+    let has1p50 = false;
+    if ((n50 / (n300 + n100 + n50 + n0)) >= 0.01) has1p50 = true;
 
     const rank = score.rank;
 
