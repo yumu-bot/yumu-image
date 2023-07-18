@@ -2225,6 +2225,7 @@ export function getAccIndexDeluxe(score) {
     const n50 = score.statistics.count_50;
     const n0 = score.statistics.count_miss;
     let nTotal;
+    let nNotMiss;
 
     let hasMiss = false;
     if (n0 !== 0) hasMiss = true;
@@ -2243,7 +2244,8 @@ export function getAccIndexDeluxe(score) {
     }
 
     function getIndexStd() {
-        nTotal = n300 + n100 + n50 + n0;
+        nNotMiss = n300 + n100 + n50;
+        nTotal = nNotMiss + n0;
 
         switch (rank) {
             case 'XH' :
@@ -2252,19 +2254,33 @@ export function getAccIndexDeluxe(score) {
             case 'S' : return '^SS';
             case 'A' : {
                 if (hasMiss) {
-                    return '-miss S';
-                } else {
-                    if (0.9 * nTotal <= n300) {
-                        // 如果没有不好的评级，甚至能到SS
-                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    if (nNotMiss === n300) {
+                        return '-miss SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-miss S';
                     } else {
                         return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    }
+                } else {
+                    if (has1p50) {
+                        return '-[50] S'
+                    } else {
+                        if (0.9 * nTotal <= n300) {
+                            // 如果没有不好的评级，甚至能到SS
+                            return '-' + Math.ceil(nTotal - n300) + ' SS';
+                        } else {
+                            return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                        }
                     }
                 }
             };
             case 'B' :
                 if (hasMiss) {
-                    if (0.8 * nTotal <= n300) {
+                    if (nNotMiss === n300) {
+                        return '-miss SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-miss S';
+                    } else if (0.8 * nNotMiss <= n300) {
                         return '-miss A';
                     } else {
                         return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
@@ -2281,7 +2297,13 @@ export function getAccIndexDeluxe(score) {
                 }
             case 'C' :
                 if (hasMiss) {
-                    if (0.7 * nTotal <= n300) {
+                    if (nNotMiss === n300) {
+                        return '-miss SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-miss S';
+                    } else if (0.8 * nNotMiss <= n300) {
+                        return '-miss A';
+                    } else if (0.7 * nNotMiss <= n300) {
                         return '-miss B';
                     } else {
                         return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
@@ -2314,7 +2336,8 @@ export function getAccIndexDeluxe(score) {
     }
 
     function getIndexTaiko() {
-        nTotal = n300 + n100 + n0;
+        nNotMiss = n300 + n100;
+        nTotal = nNotMiss + n0;
 
         switch (rank) {
             case 'XH' :
@@ -2323,7 +2346,11 @@ export function getAccIndexDeluxe(score) {
             case 'S' : return '^SS';
             case 'A' : {
                 if (hasMiss) {
-                    return '-miss S';
+                    if (nNotMiss === n300) {
+                        return '-miss SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-miss S';
+                    }
                 } else {
                     if (0.9 * nTotal <= n300) {
                         // 如果没有不好的评级，甚至能到SS
@@ -2335,7 +2362,11 @@ export function getAccIndexDeluxe(score) {
             };
             case 'B' :
                 if (hasMiss) {
-                    if (0.8 * nTotal <= n300) {
+                    if (nNotMiss === n300) {
+                        return '-miss SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-miss S';
+                    } else if (0.8 * nNotMiss <= n300) {
                         return '-miss A';
                     } else {
                         return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
@@ -2352,7 +2383,13 @@ export function getAccIndexDeluxe(score) {
                 }
             case 'C' :
                 if (hasMiss) {
-                    if (0.7 * nTotal <= n300) {
+                    if (nNotMiss = n300) {
+                        return '-miss SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-miss S';
+                    } else if (0.8 * nNotMiss <= n300) {
+                        return '-miss A';
+                    } else if (0.7 * nNotMiss <= n300) {
                         return '-miss B';
                     } else {
                         return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
