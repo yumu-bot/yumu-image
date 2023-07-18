@@ -2227,7 +2227,7 @@ export function getAccIndexDeluxe(score) {
     let nTotal;
 
     let hasMiss = false;
-    if (n0 == 0) hasMiss = true;
+    if (n0 !== 0) hasMiss = true;
 
     let has1p50 = false;
     if ((n50 / (n300 + n100 + n50 + n0)) >= 0.01) has1p50 = true;
