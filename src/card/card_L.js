@@ -96,7 +96,7 @@ export async function card_L(data = {
             card_icon = getExportFileV3Path('object-score-combo.png');
         } break;
 
-        case 'SR': {
+        case 'Star Rating': {
             for (const i in data.card_K) {
                 index_arr.push(data.card_K[i].star);
             }
