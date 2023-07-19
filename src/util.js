@@ -1848,7 +1848,7 @@ export function getMapStatusV3Path(status = 0) {
             case 2: return 'object-beatmap-ranked.png'; //approved在这里
             case 3: return 'object-beatmap-qualified.png';
             case 4: return 'object-beatmap-loved.png';
-            default: return 'object-beatmap-unranked.png';
+            default: return '';
         }
     } else {
         switch (status.toLowerCase()) {
@@ -1859,6 +1859,8 @@ export function getMapStatusV3Path(status = 0) {
                 return getExportFileV3Path('object-beatmap-qualified.png');
             case "loved":
                 return getExportFileV3Path('object-beatmap-loved.png');
+            case "":
+                return '';
             default:
                 return getExportFileV3Path('object-beatmap-unranked.png');
         }
@@ -2764,7 +2766,7 @@ export const PanelGenerate = {
         const title3 = '';
         const title_font = torus;
         const left1 = '';
-        const left2 = moment(cursor.queued_at).format("MM-DD HH:mm:ss");
+        const left2 = moment(parseInt(cursor.queued_at)).format("MM-DD HH:mm:ss");
         const left3 = moment().format("MM-DD HH:mm:ss");
         const right1 = '';
         const right2 = 'total ' + total;
@@ -2811,7 +2813,8 @@ export const PanelGenerate = {
     searchMap2CardA2: async (beatmapsets, rank) => {
         const date = beatmapsets.ranked_date || '';
 
-        const background = await readNetImage(beatmapsets.covers["list@2x"], getExportFileV3Path('card-default.png'));
+        const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg',
+            getExportFileV3Path('card-default.png'));
         const map_status = getExportFileV3Path(getMapStatusV3Path(beatmapsets.ranked));
 
         const title1 = beatmapsets.title || 'Unknown Title';
@@ -2870,7 +2873,7 @@ export const PanelGenerate = {
 
         function getApproximateLeftRankedTime(date = '', whichData = 0) {
             const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days');
-            const remain = moment().subtract(dateP7);
+            const remain = moment(moment().diff(dateP7), "SSSS");
 
             switch (whichData) {
                 case 0: return remain.format("DD");

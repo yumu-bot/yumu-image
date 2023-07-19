@@ -7,6 +7,7 @@ import {
     torus
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
+import {card_M} from "../card/card_M.js";
 
 export async function panel_A2(data = {
     //现在的搜索规则是？返回 qualified, ranked, loved, pending, graveyard。当然这个面板应该是默认 qualified 吧。
@@ -269,8 +270,9 @@ export async function panel_A2(data = {
     let svg = readTemplate('template/Panel_A2.svg');
     // 路径定义
     let reg_index = /(?<=<g id="Index">)/;
-    let reg_search = /(?<=<g id="Search_Card_A2">)/;
-    let reg_map = /(?<=<g id="Map_Card_A2">)/;
+    let reg_search_a2 = /(?<=<g id="Search_Card_A2">)/;
+    let reg_card_m = /(?<=<g id="Map_Card_M">)/;
+    let reg_card_a2 = /(?<=<g id="Map_Card_A2">)/;
     let reg_diff = /(?<=<g id="Map_Card_M">)/;
     let reg_cardheight = '${cardheight}';
     let reg_panelheight = '${panelheight}';
@@ -294,7 +296,7 @@ export async function panel_A2(data = {
     svg = replaceText(svg, index_request_time_path, reg_index);
     svg = replaceText(svg, index_panel_name_path, reg_index);
 
-    // 导入A1卡
+    // 导入A2卡
 
     const search_result = await PanelGenerate.searchResult2CardA2(
         data.total,
@@ -317,32 +319,46 @@ export async function panel_A2(data = {
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
 
-    svg = implantSvgBody(svg, 40, 40, search_cardA2, reg_search);
+    svg = implantSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
+
 
     // 如果卡片超过12张，则使用紧促型面板，并且不渲染卡片 M
     let isNormalPanel = true;
     if (beatmap_cardA2s.length > 12) isNormalPanel = false;
 
     if (isNormalPanel) {
-        for (const i in data.beatmapsets) {
-            const beatmap = await PanelGenerate.searchMap2CardA2(data.beatmapsets[i], parseInt(i) + 1);
-            const f = await card_A2(beatmap, true);
-            beatmap_cardA2s.push(f);
+
+        for (const i in beatmap_cardA2s) {
+
+            svg = implantSvgBody(svg, 40, 330 + 250 * i, beatmap_cardA2s[i], reg_card_a2);
         }
-    }
 
-    for (const i in beatmap_cardA2s) {
-        let x = i % 4;
-        let y = Math.floor(i / 4);
+        for (const v of data.beatmapsets) {
+            const f = await card_M(v, true);
+            info_cardMs.push(f);
+        }
+        for (const i in info_cardMs) {
+            svg = implantSvgBody(svg, 510, 330 + 250 * i, info_cardMs[i], reg_card_m);
+        }
+    } else {
+        //紧凑型面板
+        for (const i in beatmap_cardA2s) {
+            const x = i % 4;
+            const y = Math.floor(i / 4);
 
-        svg = implantSvgBody(svg, 40 + 430 * x, 330 + 250 * y, beatmap_cardA2s[i], reg_friend_card_a1);
+            svg = implantSvgBody(svg, 40 + 430 * x, 330 + 250 * y, beatmap_cardA2s[i], reg_card_a2);
+        }
     }
 
     // 计算面板高度
     let rowTotal;
     let panelHeight, cardHeight;
 
-    rowTotal = Math.ceil(beatmap_cardA2s.length / 4);
+    if (isNormalPanel) {
+        rowTotal = beatmap_cardA2s.length;
+    } else {
+        rowTotal = Math.ceil(beatmap_cardA2s.length / 4);
+    }
 
     if (rowTotal >= 0) {
         panelHeight = 330 + 250 * rowTotal;

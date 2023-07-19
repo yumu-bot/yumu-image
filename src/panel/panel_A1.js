@@ -234,8 +234,8 @@ export async function panel_A1(data = {
     svg = implantSvgBody(svg, 40, 40, me_cardA1, reg_me_card_a1);
 
     for (const i in friend_cardA1s) {
-        let x = i % 4;
-        let y = Math.floor(i / 4);
+        const x = i % 4;
+        const y = Math.floor(i / 4);
 
         svg = implantSvgBody(svg, 40 + 430 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
     }
