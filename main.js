@@ -12,15 +12,8 @@ import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as DrawLineRouter} from "./src/panel/panel_Alpha.js";
 import {router as GetMapAttrRouter} from "./src/mapAttributes.js";
 
-import fs from "fs";
-import {panel_A2} from "./src/panel/panel_A2.js";
-
 initPath();
 //这里放测试代码
-
-console.time('A2')
-fs.writeFileSync("image/out/panel_A2.png", await panel_A2());
-console.timeEnd('A2')
 
 const app = express();
 
