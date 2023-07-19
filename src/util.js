@@ -1837,18 +1837,31 @@ export function getSVGBody(V3Path = '') {
 
 /**
  * @function 获取谱面状态的路径
+ * @param status 谱面状态，可以是数字可以是字符串
  */
-export function getMapStatusV3Path(status = 'notsubmitted') {
-    switch (status) {
-        case "ranked":
-        case "approved":
-            return getExportFileV3Path('object-beatmap-ranked.png');
-        case "qualified":
-            return getExportFileV3Path('object-beatmap-qualified.png');
-        case "loved":
-            return getExportFileV3Path('object-beatmap-loved.png');
-        default:
-            return getExportFileV3Path('object-beatmap-unranked.png');
+export function getMapStatusV3Path(status = 0) {
+    if (typeof status === 'number') {
+        switch (status) {
+            case -1: return 'object-beatmap-unranked.png'; //wip也在这里
+            case 0: return 'object-beatmap-unranked.png'; //pending在这里
+            case 1: return 'object-beatmap-ranked.png';
+            case 2: return 'object-beatmap-ranked.png'; //approved在这里
+            case 3: return 'object-beatmap-qualified.png';
+            case 4: return 'object-beatmap-loved.png';
+            default: return 'object-beatmap-unranked.png';
+        }
+    } else {
+        switch (status.toLowerCase()) {
+            case "ranked":
+            case "approved":
+                return getExportFileV3Path('object-beatmap-ranked.png');
+            case "qualified":
+                return getExportFileV3Path('object-beatmap-qualified.png');
+            case "loved":
+                return getExportFileV3Path('object-beatmap-loved.png');
+            default:
+                return getExportFileV3Path('object-beatmap-unranked.png');
+        }
     }
 }
 
@@ -2729,7 +2742,7 @@ export const PanelGenerate = {
         return {
             background,
             avatar,
-            sub_icon1: user['support_level'] > 0 || user.is_supporter ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
+            sub_icon1: user['support_level'] > 0 || user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '',
             sub_icon2: '',
             name: user['username'],
             rank_global: user['globalRank'],
@@ -2740,6 +2753,131 @@ export const PanelGenerate = {
             progress: Math.floor(user['levelProgress']),
             pp: Math.round(user['pp']),
         };
+    },
+
+    searchResult2CardA2: async (total, cursor, search, result_count, rule) => {
+        const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg',
+            getExportFileV3Path('card-default.png'));
+        const map_status = rule;
+        const title1 = 'Search:';
+        const title2 = 'Sort: ' + getSortName(search["sort"]);
+        const title3 = '';
+        const title_font = torus;
+        const left1 = '';
+        const left2 = moment(cursor.queued_at).format("MM-DD HH:mm:ss");
+        const left3 = moment().format("MM-DD HH:mm:ss");
+        const right1 = '';
+        const right2 = 'total ' + total;
+        const right3b = result_count || 0;
+        const right3m = 'results';
+
+        return {
+            background: background,
+            map_status: map_status,
+
+            title1: title1,
+            title2: title2,
+            title3: title3,
+            title_font: title_font,
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+
+        function getSortName (sort = 'ranked_asc') {
+            switch (sort.toLowerCase()) {
+                case 'title_asc': return 'Title ^';
+                case 'title_desc': return 'Title v';
+                case 'artist_asc': return 'Artist ^';
+                case 'artist_desc': return 'Artist v';
+                case 'difficulty_asc': return 'Star Rating ^';
+                case 'difficulty_desc': return 'Star Rating v';
+                case 'rating_asc': return 'Map Rating ^';
+                case 'rating_desc': return 'Map Rating v';
+                case 'plays_asc': return 'Play Count ^';
+                case 'plays_desc': return 'Play Count v';
+                case 'relevance_asc': return 'Relevance ^';
+                case 'ranked_desc': return 'Ranked Time v';
+                default: return 'Default (Rel v/RT ^)';
+            }
+        }
+
+    },
+
+    searchMap2CardA2: async (beatmapsets, rank) => {
+        const date = beatmapsets.ranked_date || '';
+
+        const background = await readNetImage(beatmapsets.covers["list@2x"], getExportFileV3Path('card-default.png'));
+        const map_status = getExportFileV3Path(getMapStatusV3Path(beatmapsets.ranked));
+
+        const title1 = beatmapsets.title || 'Unknown Title';
+        const title2 = beatmapsets.artist || 'Unknown Artist';
+        const title3 = beatmapsets.creator || 'Unknown Mapper';
+        const title_font = torus;
+        const left1 = '';
+        const left2 = '#' + rank || '#0';
+        const left3 = 's' + beatmapsets.id || 's0';
+        const right1 = '';
+        const right2 = getApproximateRankedTime(date);
+        let right3b;
+        let right3m;
+
+        const days = getApproximateLeftRankedTime(date,0);
+        const hours = getApproximateLeftRankedTime(date,1);
+        const minutes = getApproximateLeftRankedTime(date,2);
+
+        if (days > 0) {
+            right3b = days;
+            right3m = 'd' + hours + 'h' + minutes + 'm';
+        } else if (hours > 0) {
+            right3b = hours;
+            right3m = 'h' + minutes + 'm';
+        } else {
+            right3b = minutes;
+            right3m = 'm';
+        }
+
+        return {
+            background: background,
+            map_status: map_status,
+
+            title1: title1,
+            title2: title2,
+            title3: title3,
+            title_font: title_font,
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+
+        function getApproximateRankedTime(date = '') {
+            const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days');
+            const dateP7m20 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days').add(20, 'minutes');
+
+            return dateP7.format("YYYY-MM-DD HH:mm")
+                + '~'
+                + dateP7m20.format("HH:mm")
+                + ' +8'
+        }
+
+        function getApproximateLeftRankedTime(date = '', whichData = 0) {
+            const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days');
+            const remain = moment().subtract(dateP7);
+
+            switch (whichData) {
+                case 0: return remain.format("DD");
+                case 1: return remain.format("HH");
+                case 2: return remain.format("mm");
+            }
+        }
     },
 
     matchInfo2CardA2: async (matchInfo, sid, redWins, blueWins, isTeamVs) => {

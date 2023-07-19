@@ -192,10 +192,10 @@ export async function router(req, res) {
 export async function panel_E(data = {
     // A1卡
     card_A1: {
-        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-        avatar: getExportFileV3Path('PanelObject/A_CardA1_Avatar.png'),
-        sub_icon1: getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png'),
-        sub_icon2: getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png'),
+        background: getExportFileV3Path('card-default.png'),
+        avatar: getExportFileV3Path('avatar-guest.png'),
+        sub_icon1: getExportFileV3Path('object-card-supporter.png'),
+        sub_icon2: '',
         name: 'Muziyami',
         rank_global: 28075,
         rank_country: 577,
@@ -627,8 +627,8 @@ export async function panel_E(data = {
     function Star(data, sr_b, sr_m) {
         let sr_m_scale = Math.pow(sr_m, 0.8);
 
-        if (sr_b >= 10) {
-            sr_b = 10;
+        if (sr_b >= 20) {
+            sr_b = 20;
             sr_m_scale = 0
         }
 

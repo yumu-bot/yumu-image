@@ -9,7 +9,7 @@ import {
 } from "../util.js";
 
 export async function card_A2(data = {
-    background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
+    background: getExportFileV3Path('card-default.png'),
     map_status: '',
 
     title1: '',
