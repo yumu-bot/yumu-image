@@ -13,6 +13,8 @@ export async function panel_A2(data = {
     //现在的搜索规则是？返回 qualified, ranked, loved, pending, graveyard。当然这个面板应该是默认 qualified 吧。
     rule: 'qualified',
 
+    avatar: [{873961: 'https://a.ppy.sh/873961?1622015262.jpeg'},],
+
     // api 给的信息
     "total": 116,
     "search": {

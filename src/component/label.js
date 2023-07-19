@@ -1,12 +1,13 @@
 import {
-    getExportFileV3Path,
+    extra,
+    getExportFileV3Path, getGameMode,
     getModColor,
     getModFullName,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
+    getRoundedNumberSmallerStr, getStarRatingObject,
     getUserRankColor,
     implantImage,
-    PuHuiTi,
+    PuHuiTi, readNetImage,
     replaceText,
     torus
 } from "../util.js";
@@ -304,7 +305,7 @@ export async function label_E(data = {
 }
 
 export async function label_F1(data = {
-    avatar: 'PanelObject/F_LabelF1_Avatar.png',
+    avatar: '',
     name: 'Guozi on osu',
     mods_arr: [],
     score: 268397,
@@ -320,22 +321,22 @@ export async function label_F1(data = {
       <circle cx="50" cy="50" r="50" style="fill: none;"/>
     </clipPath>
   </defs>
-  <g id="Avatar">
+  <g id="Avatar_LF1">
     <circle cx="50" cy="50" r="50" style="fill: #46393f;"/>
     <g style="clip-path: url(#clippath-LF1-1);">
     </g>
   </g>
-  <g id="Mods">
+  <g id="Mods_LF1">
   </g>
-  <g id="Label">
+  <g id="Label_LF1">
   </g>
-  <g id="Text">
+  <g id="Text_LF1">
   </g>`
 
     //正则
-    let reg_text = /(?<=<g id="Text">)/;
-    let reg_mod = /(?<=<g id="Mods">)/;
-    let reg_label = /(?<=<g id="Label">)/;
+    let reg_text = /(?<=<g id="Text_LF1">)/;
+    let reg_mod = /(?<=<g id="Mods_LF1">)/;
+    let reg_label = /(?<=<g id="Label_LF1">)/;
     let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF1-1\);">)/;
 
     //插入模组
@@ -402,19 +403,19 @@ export async function label_F2(data = {
       <circle cx="15" cy="15" r="15" style="fill: none;"/>
     </clipPath>
   </defs>
-  <g id="Avatar">
+  <g id="Avatar_LF2">
     <circle cx="15" cy="15" r="15" style="fill: #46393f;"/>
     <g style="clip-path: url(#clippath-LF2-1);">
     </g>
   </g>
-  <g id="Label">
+  <g id="Label_LF2">
   </g>
-  <g id="Text">
+  <g id="Text_LF2">
   </g>`
 
     //正则
-    let reg_text = /(?<=<g id="Text">)/;
-    let reg_label = /(?<=<g id="Label">)/;
+    let reg_text = /(?<=<g id="Text_LF2">)/;
+    let reg_label = /(?<=<g id="Label_LF2">)/;
     let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF2-1\);">)/;
 
     //定义文本
@@ -459,7 +460,7 @@ export async function label_F3(data = {
       <circle cx="15" cy="15" r="15" style="fill: none;"/>
     </clipPath>
   </defs>
-  <g id="Avatar">
+  <g id="Avatar_LF3">
     <circle cx="15" cy="15" r="15" style="fill: #46393f;"/>
     <g style="clip-path: url(#clippath-LF3-1);">
     </g>
@@ -486,7 +487,7 @@ export async function label_J1(data = {
 }, reuse = false) {
 
     //正则
-    let reg_text = /(?<=<g id="Text">)/;
+    let reg_text = /(?<=<g id="Text_LJ1">)/;
     let reg_modcolor = '${mod_color}';
 
     //定义文本
@@ -503,7 +504,7 @@ export async function label_J1(data = {
 
     let mod_color = getModColor(mod);
 
-    let svg = `<g id="Mod">\n <path d="m56.357,4.496l11.865,18c2.201,3.339,2.201,7.668,0,11.007l-11.865,18c-1.85,2.807-4.987,4.496-8.349,4.496h-26.142c-3.362,0-6.499-1.689-8.349-4.496L1.651,33.504c-2.201-3.339-2.201-7.668,0-11.007L13.516,4.496C15.366,1.689,18.503,0,21.865,0h26.142c3.362,0,6.499,1.689,8.349,4.496Z" style="fill: ${mod_color};"/>\n </g>\n <g id="Text">\n </g>`;
+    let svg = `<g id="Mod">\n <path d="m56.357,4.496l11.865,18c2.201,3.339,2.201,7.668,0,11.007l-11.865,18c-1.85,2.807-4.987,4.496-8.349,4.496h-26.142c-3.362,0-6.499-1.689-8.349-4.496L1.651,33.504c-2.201-3.339-2.201-7.668,0-11.007L13.516,4.496C15.366,1.689,18.503,0,21.865,0h26.142c3.362,0,6.499,1.689,8.349,4.496Z" style="fill: ${mod_color};"/>\n </g>\n <g id="Text_LJ1">\n </g>`;
 
     //插入文本
     svg = replaceText(svg, mod_abbr, reg_text);
@@ -525,8 +526,8 @@ export async function label_J2(data = {
 }, reuse = false) {
 
     //正则
-    let reg_text = /(?<=<g id="Text">)/;
-    let reg_index = /(?<=<g id="Index">)/;
+    let reg_text = /(?<=<g id="Text_LJ2">)/;
+    let reg_index = /(?<=<g id="Index_LJ2">)/;
     let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LJ2\);">)/;
     let reg_index_color = '${index_color}';
 
@@ -551,15 +552,15 @@ export async function label_J2(data = {
       <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: none;"/>
     </clipPath>
   </defs>
-  <g id="Head">
+  <g id="Head_LJ2">
     <rect x="8" y="8" width="70" height="70" rx="10" ry="10" style="fill: #46393f;"/>
     <g style="clip-path: url(#clippath-LJ2);">
     </g>
     <circle cx="14" cy="14" r="14" style="fill: ${index_color};"/>
   </g>
-  <g id="Index">
+  <g id="Index_LJ2">
   </g>
-  <g id="Text">
+  <g id="Text_LJ2">
   </g>`;
 
     //插入文本
@@ -584,14 +585,14 @@ export async function label_J3(data = {
     pp_count: 12345,
 }, reuse = false) {
     let svg = `  
-  <g id="Icon">
+  <g id="Icon_LJ3">
   </g>
-  <g id="Text">
+  <g id="Text_LJ3_LJ3">
   </g>`;
 
     //正则
-    let reg_text = /(?<=<g id="Text">)/;
-    let reg_icon = /(?<=<g id="Icon">)/;
+    let reg_text = /(?<=<g id="Text_LJ3">)/;
+    let reg_icon = /(?<=<g id="Icon_LJ3">)/;
 
     //定义文本
     let map_count = torus.get2SizeTextPath(
@@ -625,7 +626,6 @@ export async function label_J3(data = {
         '#aaa'
     );
 
-
     //插入文本
     svg = replaceText(svg, map_count, reg_text);
     svg = replaceText(svg, pp_percentage, reg_text);
@@ -634,6 +634,145 @@ export async function label_J3(data = {
     //插入图片
     svg = implantImage(svg, 40, 40, 0, 0, 1,
         data.icon || getExportFileV3Path('object-score-XH-small.png'), reg_icon);
+
+    return svg.toString();
+}
+
+//Q-M1-难度标签
+export async function label_M1(data = {
+    mode: 'osu',
+    difficulty_name: 'Skystar\'s Tragic Love Extra',
+    star_rating: 5.46,
+    maxWidth: 0,
+    star2: getExportFileV3Path('object-beatmap-star2.png')
+}, reuse = false) {
+
+    let svg = `
+  <g id="RRect_LM1">
+  </g>
+  <g id="Icon_LM1">
+  </g>
+  <g id="Text_LM1">
+  </g>`;
+
+    //正则
+    const reg_text = /(?<=<g id="Text_LM1">)/;
+    const reg_icon = /(?<=<g id="Icon_LM1">)/;
+    const reg_rrect = /(?<=<g id="RRect_LM1">)/;
+
+    //定义文本
+    const diff_name_path = torus.getTextPath(data.difficulty_name, 50, 22, 18, 'left baseline', '#fff');
+    const star_rating_path = torus.get2SizeTextPath(
+        getStarRatingObject(data.star_rating, 2),
+        getStarRatingObject(data.star_rating, 3),
+        24,
+        18,
+        50,
+        44,
+        'left baseline',
+        '#fff'
+    );
+    const mode_icon_color = getModColor(data.star_rating);
+    const mode_icon_path = extra.getTextPath(
+        getGameMode(data.mode, -1),
+        8, 44, 38, 'left baseline', mode_icon_color);
+
+    //插入文本
+    svg = replaceText(svg, diff_name_path, reg_text);
+    svg = replaceText(svg, star_rating_path, reg_text);
+    svg = replaceText(svg, mode_icon_path, reg_text);
+
+    //星数
+    let sr_b = getStarRatingObject(data.star_rating, 0);
+    let sr_m = getStarRatingObject(data.star_rating, 1);
+    let sr_m_scale = Math.pow(sr_m, 0.8);
+
+    //超宽处理
+    const dot3 = torus.getTextPath('...',data.maxWidth - 18 ,44 ,18,'right baseline', '#BE2CFA');
+
+    if (sr_b >= 10) {
+        sr_b = 10;
+        sr_m_scale = 0;
+    }
+
+    if (data.maxWidth <= 262 && sr_b >= 7) {
+        sr_b = 7;
+        sr_m_scale = 0;
+        svg = replaceText(svg, dot3, reg_icon);
+    }
+
+
+    for (let i = 1; i <= sr_b; i++) {
+        let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
+            <image id="M1Label${i}Star" width="18" height="18" transform="translate(${18 * (i - 1) + 100} 29)" xlink:href="${data.star2}"/>
+        </g>`;
+        svg = replaceText(svg, sr_b_svg, reg_icon);
+    }
+
+    const sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
+        <image id="M1Label${sr_b + 1}Star" width="18" height="18" transform="translate(${18 * sr_b + 100} 29) translate(${9 * (1 - sr_m_scale)} ${9 * (1 - sr_m_scale)}) scale(${sr_m_scale})" xlink:href="${data.star2}"/>
+        </g>`;
+
+    svg = replaceText(svg, sr_m_svg, reg_icon);
+
+    //插入矩形
+
+    const rrect_sr_path = `<rect width="${data.maxWidth}" height="50" rx="25" ry="25" opacity="0.15" style="fill: ${mode_icon_color};"/>`;
+    const rrect_base_path = `<rect width="${data.maxWidth}" height="50" rx="25" ry="25" style="fill: #46393F;"/>`;
+
+    svg = replaceText(svg, rrect_sr_path, reg_rrect);
+    svg = replaceText(svg, rrect_base_path, reg_rrect);
+
+    return svg.toString();
+}
+
+//Q-M2-客串谱师标签
+export async function label_M2(data = {
+    host_name: 'Skystar',
+    name: 'Skystar',
+    avatar: 'https://a.ppy.sh/873961?1622015262.jpeg'
+}, reuse = false) {
+
+    //导入模板
+    let svg = `  <defs>
+    <clipPath id="clippath-LM2-1">
+      <circle cx="50" cy="50" r="50" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="RRect_LM2">
+  </g>
+  <g id="Avatar_LM2">
+    <circle cx="50" cy="50" r="50" style="fill: #46393f;"/>
+    <g style="clip-path: url(#clippath-LM2);">
+    </g>
+  </g>
+  <g id="Bid_LM2">
+  </g>
+  <g id="Label_LM2">
+  </g>
+  <g id="Text_LM2">
+  </g>`
+
+    //正则
+    const reg_text = /(?<=<g id="Text_LM2">)/;
+    const reg_label = /(?<=<g id="Label_LM2">)/;
+    const reg_rrect = /(?<=<g id="RRect_LM2">)/;
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LM2\);">)/;
+
+    //定义文本
+    const host_avatar = await readNetImage(data.avatar, getExportFileV3Path('avatar-guest.png'));
+    const isHost = (data.host_name === data.name && data.name !== '')
+
+    //插入文本
+    svg = replaceText(svg, host_avatar, reg_avatar);
+
+    //插入矩形
+
+    const rrect_sr_path = `<rect width="${data.maxWidth}" height="50" rx="25" ry="25" opacity="0.15" style="fill: ${mode_icon_color};"/>`;
+    const rrect_base_path = `<rect width="${data.maxWidth}" height="50" rx="25" ry="25" style="fill: #46393F;"/>`;
+
+    svg = replaceText(svg, rrect_sr_path, reg_rrect);
+    svg = replaceText(svg, rrect_base_path, reg_rrect);
 
     return svg.toString();
 }

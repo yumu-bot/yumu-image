@@ -1,12 +1,13 @@
 import {
     getExportFileV3Path,
     getMapStatusV3Path,
-    implantImage,
+    implantImage, implantSvgBody,
     PuHuiTi,
     readTemplate,
     replaceText,
     torus
 } from "../util.js";
+import {label_M1} from "../component/label";
 
 export async function card_M(data = {
     "artist": "HOYO-MiX",
@@ -244,7 +245,7 @@ export async function card_M(data = {
         }
     ],
     "pack_tags": []
-}, reuse = false) {
+}, avatar = [{873961: 'https://a.ppy.sh/873961?1622015262.jpeg'},], reuse = false) {
     // 读取模板
     let svg =`   <defs>
             <clipPath id="clippath-CM-1">
@@ -268,11 +269,72 @@ export async function card_M(data = {
 
     // 导入M1标签
     let labelM1s = [];
+    let labelM2s = [];
+    let labelM3s = [];
 
     // 如果难度超过6个，则使用紧促型面板，并且不渲染标签M2，M3
+    const label_count = data.beatmaps ? data.beatmaps.length : 0;
+    let label_width;
 
-    let isNormalCard = true;
-    if (labelM1s.length > 12) isNormalCard = false;
+    if (label_count > 6) {
+        //紧促面板
+        const label_6_line = (label_count <= 18) ? (Math.floor(label_count / 6)) : 3; //最大不超18个，超了不管了
+        const label_remain = (label_count <= 18) ? (label_count % 6) : 0; //最大不超18个，超了不管了
+        label_width = ((1360 / label_remain) - 10 ) || 0;
+
+        for (let i = 0; i < label_remain; i++) {
+            const f1 = await label_M1({
+                mode: data.beatmaps[i].mode,
+                difficulty_name: data.beatmaps[i].version,
+                star_rating: data.beatmaps[i].difficulty_rating,
+                maxWidth: label_width,
+                star2: getExportFileV3Path('object-beatmap-star2.png')
+            }, true);
+
+            labelM1s.push(f1);
+        }
+
+        for (let j = label_remain; j < label_count; j++) {
+            const f2 = await label_M1({
+                mode: data.beatmaps[j].mode,
+                difficulty_name: data.beatmaps[j].version,
+                star_rating: data.beatmaps[j].difficulty_rating,
+                maxWidth: 650 / 3,
+                star2: getExportFileV3Path('object-beatmap-star2.png')
+            }, true);
+
+            labelM2s.push(f2); //暂时用这个数组放东西，实际上还是M1的
+        }
+
+        // 导入
+
+
+
+    } else if (label_count > 0) {
+        //正常面板
+        label_width = (1360 / label_count) - 10;
+
+        for (const v of data.beatmaps) {
+            const f = await label_M1({
+                mode: v.mode,
+                difficulty_name: v.version,
+                star_rating: v.difficulty_rating,
+                maxWidth: label_width,
+                star2: getExportFileV3Path('object-beatmap-star2.png')
+            }, true);
+
+            labelM1s.push(f);
+        }
+
+        //导入
+        for (let i = 0; i < label_count; i++) {
+            svg = implantSvgBody(svg, 10 + label_width / 2 + (label_width + 10) * i, 200, labelM1s[i], reg_label);
+        }
+
+    }
+
+
+
 
     return svg.toString();
 }
