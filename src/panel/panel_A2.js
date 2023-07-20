@@ -3,17 +3,31 @@ import {
     getNowTimeStamp, getRandomBannerPath, implantImage, implantSvgBody,
     PanelGenerate,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_M} from "../card/card_M.js";
 
+export async function router(req, res) {
+    try {
+        const data = await panel_A2(req.fields || {});
+        res.set('Content-Type', 'image/jpeg');
+        res.send(data);
+    } catch (e) {
+        res.status(500).send(e.stack);
+    }
+}
+
 export async function panel_A2(data = {
     //现在的搜索规则是？返回 qualified, ranked, loved, pending, graveyard。当然这个面板应该是默认 qualified 吧。
     rule: 'qualified',
 
-    avatar: [{873961: 'https://a.ppy.sh/873961?1622015262.jpeg'},],
+    avatar: [{
+        873961: 'https://a.ppy.sh/873961?1622015262.jpeg'
+    },{
+
+    }],
 
     // api 给的信息
     "total": 116,
@@ -294,9 +308,7 @@ export async function panel_A2(data = {
         607.5, 83.67, 48, "center baseline", "#fff");
 
     // 插入文字
-    svg = replaceText(svg, index_powered_path, reg_index);
-    svg = replaceText(svg, index_request_time_path, reg_index);
-    svg = replaceText(svg, index_panel_name_path, reg_index);
+    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
 
     // 导入A2卡
 
@@ -325,10 +337,8 @@ export async function panel_A2(data = {
 
 
     // 如果卡片超过12张，则使用紧促型面板，并且不渲染卡片 M
-    let isNormalPanel = true;
-    if (beatmap_cardA2s.length > 12) isNormalPanel = false;
 
-    if (isNormalPanel) {
+    if (beatmap_cardA2s.length <= 12) {
 
         for (const i in beatmap_cardA2s) {
 
@@ -356,7 +366,7 @@ export async function panel_A2(data = {
     let rowTotal;
     let panelHeight, cardHeight;
 
-    if (isNormalPanel) {
+    if (beatmap_cardA2s.length <= 12) {
         rowTotal = beatmap_cardA2s.length;
     } else {
         rowTotal = Math.ceil(beatmap_cardA2s.length / 4);

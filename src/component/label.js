@@ -8,7 +8,7 @@ import {
     getUserRankColor,
     implantImage,
     PuHuiTi, readNetImage,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 
@@ -735,7 +735,7 @@ export async function label_M2(data = {
 
     //导入模板
     let svg = `  <defs>
-    <clipPath id="clippath-LM2-1">
+    <clipPath id="clippath-LM2">
       <circle cx="50" cy="50" r="50" style="fill: none;"/>
     </clipPath>
   </defs>
@@ -760,19 +760,99 @@ export async function label_M2(data = {
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LM2\);">)/;
 
     //定义文本
-    const host_avatar = await readNetImage(data.avatar, getExportFileV3Path('avatar-guest.png'));
+    const avatar = await readNetImage(data.avatar, getExportFileV3Path('avatar-guest.png'));
+
     const isHost = (data.host_name === data.name && data.name !== '')
+    let host = 'G';
+    let host_color = '#382E32'
+    let host_rrect_color = '#B8D3E0';
+
+    if (isHost) {
+        host = 'H';
+        host_color = '#B8D3E0';
+        host_rrect_color = '#382E32';
+    }
+
+    const host_text = torus.getTextPath(host, 15, 15.877, 18, 'center baseline', host_color);
+    const host_rrect = `<rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${host_rrect_color};"/>`;
+
+    const name_width = torus.getTextWidth(data.name, 18);
+    const name_text = torus.getTextPath(data.name, 50, 89.5, 18, 'center baseline', host_color);
+    const name_rrect = `<rect x="${100 - name_width / 2 - 5}" y="85" width="${name_width + 10}" height="20" rx="10" ry="10" style="fill: ${host_rrect_color};"/>`;
 
     //插入文本
-    svg = replaceText(svg, host_avatar, reg_avatar);
+    svg = replaceText(svg, avatar, reg_avatar);
+    svg = replaceText(svg, host_text, reg_label);
+    svg = replaceText(svg, host_rrect, reg_rrect);
+    svg = replaceText(svg, name_text, reg_label);
+    svg = replaceText(svg, name_rrect, reg_rrect);
 
-    //插入矩形
+    return svg.toString();
+}
 
-    const rrect_sr_path = `<rect width="${data.maxWidth}" height="50" rx="25" ry="25" opacity="0.15" style="fill: ${mode_icon_color};"/>`;
-    const rrect_base_path = `<rect width="${data.maxWidth}" height="50" rx="25" ry="25" style="fill: #46393F;"/>`;
+//Q-M3-四维标签
+export async function label_M3(data = {
+    label1: {
+        icon: getExportFileV3Path("object-score-approachrate.png"),
+        color_remark: '#fff',
+        data_b: '4.',
+        data_m: '2',
+    },
+    label2: {
+        icon: getExportFileV3Path("object-score-accpp.png"),
+        color_remark: '#fff',
+        data_b: '9',
+        data_m: '',
+    },
+    label3: {
+        icon: getExportFileV3Path("object-score-accpp.png"),
+        color_remark: '#fff',
+        data_b: '8',
+        data_m: '',
+    },
 
-    svg = replaceText(svg, rrect_sr_path, reg_rrect);
-    svg = replaceText(svg, rrect_base_path, reg_rrect);
+    maxWidth: 0,
+}, reuse = false) {
+
+    let svg = `
+  <g id="Icon_LM3">
+  </g>
+  <g id="Text_LM3">
+  </g>`;
+
+    //正则
+    const reg_text = /(?<=<g id="Text_LM3">)/;
+    const reg_icon = /(?<=<g id="Icon_LM3">)/;
+
+    //定义位置
+    const max_width = data.maxWidth;
+    let gap_width = 98;
+    const label_width = 66;
+
+    //如果是一排6个，那么需要缩减一下！
+    if (max_width < 650 / 3) {
+        gap_width = 28 / 3;
+    }
+
+    const label2_x = label_width + gap_width;
+    const label3_x = label2_x * 2;
+
+    //定义文本
+    const label1_text = torus.get2SizeTextPath(
+        data.label1.data_m, data.label1.data_b, 24, 18, 30, 20, 'left baseline', data.label1.color_remark
+    );
+    const label2_text = torus.get2SizeTextPath(
+        data.label2.data_m, data.label2.data_b, 24, 18, 30 + label2_x, 20, 'left baseline', data.label2.color_remark
+    );
+    const label3_text = torus.get2SizeTextPath(
+        data.label3.data_m, data.label3.data_b, 24, 18, 30 + label3_x, 20, 'left baseline', data.label3.color_remark
+    );
+
+    svg = replaceTexts(svg, [label1_text, label2_text, label3_text], reg_text);
+
+    svg = implantImage(svg, 25, 25, 0, 0, 1, data.label1.icon, reg_icon);
+    svg = implantImage(svg, 25, 25, label2_x, 0, 1, data.label2.icon, reg_icon);
+    svg = implantImage(svg, 25, 25, label3_x, 0, 1, data.label3.icon, reg_icon);
 
     return svg.toString();
 }

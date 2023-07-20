@@ -517,6 +517,13 @@ export function replaceText(base = '', replace = '', reg = /.*/) {
     return base.replace(reg, replace);
 }
 
+export function replaceTexts(base = '', replace = [''], reg = /.*/) {
+    for (const v of replace) {
+        base.replace(reg, v);
+    }
+    return base;
+}
+
 export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
     let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
     return base.replace(reg, replace);
