@@ -276,9 +276,7 @@ export async function panel_A2(data = {
             }
         ],
         "pack_tags": []
-    },{
-
-    }
+    },
     ]
 
 }, reuse = false) {
@@ -339,9 +337,7 @@ export async function panel_A2(data = {
     // 如果卡片超过12张，则使用紧促型面板，并且不渲染卡片 M
 
     if (beatmap_cardA2s.length <= 12) {
-
         for (const i in beatmap_cardA2s) {
-
             svg = implantSvgBody(svg, 40, 330 + 250 * i, beatmap_cardA2s[i], reg_card_a2);
         }
 
@@ -357,7 +353,6 @@ export async function panel_A2(data = {
         for (const i in beatmap_cardA2s) {
             const x = i % 4;
             const y = Math.floor(i / 4);
-
             svg = implantSvgBody(svg, 40 + 430 * x, 330 + 250 * y, beatmap_cardA2s[i], reg_card_a2);
         }
     }

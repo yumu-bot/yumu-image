@@ -1,13 +1,13 @@
 import {
-    getExportFileV3Path,
-    getMapStatusV3Path,
+    getExportFileV3Path, getGameMode,
+    getMapStatusV3Path, getStarRatingObject,
     implantImage, implantSvgBody,
     PuHuiTi,
     readTemplate,
     replaceText,
     torus
 } from "../util.js";
-import {label_M1} from "../component/label.js";
+import {label_M1, LABEL_OPTION} from "../component/label.js";
 
 export async function card_M(data = {
     "artist": "HOYO-MiX",
@@ -308,8 +308,6 @@ export async function card_M(data = {
 
         // 导入
 
-
-
     } else if (label_count > 0) {
         //正常面板
         label_width = (1360 / label_count) - 10;
@@ -326,9 +324,38 @@ export async function card_M(data = {
             labelM1s.push(f);
         }
 
+        for (const v of data.beatmaps) {
+            let construct;
+
+            switch (getGameMode(v.mode, 1)) {
+                case 'o': {
+                    construct = {
+                        label1: {...LABEL_OPTION.CS,
+                            data_b: getStarRatingObject(v.cs, 2),
+                            data_m: getStarRatingObject(v.cs, 3)
+                        },
+                        label2: {...LABEL_OPTION.AR,
+                            data_b: getStarRatingObject(v.ar, 2),
+                            data_m: getStarRatingObject(v.ar, 3)
+                        },
+                        label3: {...LABEL_OPTION.OD,
+                            data_b: getStarRatingObject(v.accuracy, 2),
+                            data_m: getStarRatingObject(v.accuracy, 3)
+                        },
+
+                        maxWidth: label_width
+                    };
+                } break;
+
+                case 't' : {
+
+                }
+            }
+        }
+
         //导入
         for (let i = 0; i < label_count; i++) {
-            svg = implantSvgBody(svg, 10 + label_width / 2 + (label_width + 10) * i, 200, labelM1s[i], reg_label);
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * i, 150, labelM1s[i], reg_label);
         }
 
     }

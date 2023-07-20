@@ -1,4 +1,13 @@
-import {getExportFileV3Path, implantImage, readTemplate, replaceText, torus, PuHuiTi, replaceTexts} from "../util.js";
+import {
+    getExportFileV3Path,
+    implantImage,
+    readTemplate,
+    replaceText,
+    torus,
+    PuHuiTi,
+    replaceTexts,
+    getModColor
+} from "../util.js";
 
 export async function card_H(data = {
     background: '',
@@ -43,7 +52,12 @@ export async function card_H(data = {
     let insertMod = (mod, i) => {
         let offset_x = 620 - i * 20;
         if (mod !== '') {
-            return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
+
+            // 模组 svg 化
+            const mod_abbr_path = torus.getTextPath(mod.toString(), (offset_x + 45), 42, 36, 'center baseline', '#fff');
+            return `<path transform="translate(${offset_x} 350)"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${getModColor(mod)};"/>\n${mod_abbr_path}\n`;
+
+            //return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
         } else return '';
     }
 

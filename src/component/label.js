@@ -4,7 +4,7 @@ import {
     getModColor,
     getModFullName,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getStarRatingObject,
+    getRoundedNumberSmallerStr, getStarRatingColor, getStarRatingObject,
     getUserRankColor,
     implantImage,
     PuHuiTi, readNetImage,
@@ -652,21 +652,21 @@ export async function label_M1(data = {
     const reg_rrect = /(?<=<g id="RRect_LM1">)/;
 
     //定义文本
-    const diff_name_path = torus.getTextPath(data.difficulty_name, 50, 22, 18, 'left baseline', '#fff');
+    const diff_name_path = torus.getTextPath(data.difficulty_name, 50, 20, 18, 'left baseline', '#fff');
     const star_rating_path = torus.get2SizeTextPath(
         getStarRatingObject(data.star_rating, 2),
         getStarRatingObject(data.star_rating, 3),
         24,
         18,
         50,
-        44,
+        42,
         'left baseline',
         '#fff'
     );
-    const mode_icon_color = getModColor(data.star_rating);
+    const mode_icon_color = getStarRatingColor(data.star_rating);
     const mode_icon_path = extra.getTextPath(
         getGameMode(data.mode, -1),
-        8, 44, 38, 'left baseline', mode_icon_color);
+        8, 38.5, 38, 'left baseline', mode_icon_color);
 
     //插入文本
     svg = replaceTexts(svg, [diff_name_path, star_rating_path, mode_icon_path], reg_text);
@@ -693,13 +693,13 @@ export async function label_M1(data = {
 
     for (let i = 1; i <= sr_b; i++) {
         let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
-            <image id="M1Label${i}Star" width="18" height="18" transform="translate(${18 * (i - 1) + 100} 29)" xlink:href="${data.star2}"/>
+            <image id="M1Label${i}Star" width="18" height="18" transform="translate(${15 * (i - 1) + 90} 26)" xlink:href="${data.star2}"/>
         </g>`;
         svg = replaceText(svg, sr_b_svg, reg_icon);
     }
 
     const sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
-        <image id="M1Label${sr_b + 1}Star" width="18" height="18" transform="translate(${18 * sr_b + 100} 29) translate(${9 * (1 - sr_m_scale)} ${9 * (1 - sr_m_scale)}) scale(${sr_m_scale})" xlink:href="${data.star2}"/>
+        <image id="M1Label${sr_b + 1}Star" width="18" height="18" transform="translate(${15 * sr_b + 90} 26) translate(${9 * (1 - sr_m_scale)} ${9 * (1 - sr_m_scale)}) scale(${sr_m_scale})" xlink:href="${data.star2}"/>
         </g>`;
 
     svg = replaceText(svg, sr_m_svg, reg_icon);
@@ -783,19 +783,16 @@ export async function label_M2(data = {
 export async function label_M3(data = {
     label1: {
         icon: getExportFileV3Path("object-score-approachrate.png"),
-        color_remark: '#fff',
         data_b: '4.',
         data_m: '2',
     },
     label2: {
         icon: getExportFileV3Path("object-score-accpp.png"),
-        color_remark: '#fff',
         data_b: '9',
         data_m: '',
     },
     label3: {
         icon: getExportFileV3Path("object-score-accpp.png"),
-        color_remark: '#fff',
         data_b: '8',
         data_m: '',
     },
@@ -828,14 +825,11 @@ export async function label_M3(data = {
 
     //定义文本
     const label1_text = torus.get2SizeTextPath(
-        data.label1.data_m, data.label1.data_b, 24, 18, 30, 20, 'left baseline', data.label1.color_remark
-    );
+        data.label1.data_m, data.label1.data_b, 24, 18, 30, 20, 'left baseline', '#fff');
     const label2_text = torus.get2SizeTextPath(
-        data.label2.data_m, data.label2.data_b, 24, 18, 30 + label2_x, 20, 'left baseline', data.label2.color_remark
-    );
+        data.label2.data_m, data.label2.data_b, 24, 18, 30 + label2_x, 20, 'left baseline', '#fff');
     const label3_text = torus.get2SizeTextPath(
-        data.label3.data_m, data.label3.data_b, 24, 18, 30 + label3_x, 20, 'left baseline', data.label3.color_remark
-    );
+        data.label3.data_m, data.label3.data_b, 24, 18, 30 + label3_x, 20, 'left baseline', '#fff');
 
     svg = replaceTexts(svg, [label1_text, label2_text, label3_text], reg_text);
 

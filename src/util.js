@@ -1331,6 +1331,70 @@ export function getModColor(Mod = '') {
             color = '#7ECEF4';
             break;
 
+            // Lazer 模组
+
+        case "DC":
+            color = '#DADADA';
+            break;
+        case "BL":
+            color = '#EB6100';
+            break;
+        case "ST":
+            color = '#D32F2F';
+            break;
+        case "AC":
+            color = '#9E040D';
+            break;
+
+        case "DA":
+            color = '#601986';
+            break;
+        case "CL":
+            color = '#920783';
+            break;
+        case "AL":
+            color = '#F16DAA';
+            break;
+        case "SG":
+            color = '#F59AC3';
+            break;
+        case "SW":
+            color = '#7B0046';
+            break;
+        case "DS":
+            color = '#9E005E';
+            break;
+        case "IV":
+            color = '#5F5BA8';
+            break;
+        case "CS":
+            color = '#A086BF';
+            break;
+        case "HO":
+            color = '#8781BE';
+            break;
+        case "TR":
+        case "WG":
+        case "SI":
+        case "GR":
+        case "DF":
+        case "WU":
+        case "WD":
+        case "TC":
+        case "BR":
+        case "AD":
+        case "MU":
+        case "NS":
+        case "MG":
+        case "RP":
+        case "AS":
+        case "FR":
+        case "FF":
+        case "BU":
+        case "SY":
+            color = '#EA68A2';
+            break;
+
         case "NM":
             color = '#22AC38';
             break;
@@ -2765,8 +2829,7 @@ export const PanelGenerate = {
     },
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule) => {
-        const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg',
-            getExportFileV3Path('card-default.png'));
+        const background = cursor.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg') : getExportFileV3Path('card-default.png');
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = 'Sort: ' + getSortName(search["sort"]);
@@ -2820,8 +2883,7 @@ export const PanelGenerate = {
     searchMap2CardA2: async (beatmapsets, rank) => {
         const date = beatmapsets.ranked_date || '';
 
-        const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg',
-            getExportFileV3Path('card-default.png'));
+        const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg') : getExportFileV3Path('card-default.png');
         const map_status = getExportFileV3Path(getMapStatusV3Path(beatmapsets.ranked));
 
         const title1 = beatmapsets.title || 'Unknown Title';
