@@ -2835,13 +2835,13 @@ export const PanelGenerate = {
         const title2 = 'Sort: ' + getSortName(search["sort"]);
         const title3 = '';
         const title_font = torus;
-        const left1 = '';
+        const left1 = 'time duration:';
         const left2 = moment(parseInt(cursor.queued_at)).format("MM-DD HH:mm:ss");
         const left3 = moment().format("MM-DD HH:mm:ss");
-        const right1 = '';
-        const right2 = 'total ' + total;
-        const right3b = result_count || 0;
-        const right3m = 'results';
+        const right1 = 'total ' + total;
+        const right2 = 'results:';
+        const right3b = result_count.toString() || '0';
+        const right3m = '';
 
         return {
             background: background,
@@ -2884,7 +2884,7 @@ export const PanelGenerate = {
         const date = beatmapsets.ranked_date || '';
 
         const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg') : getExportFileV3Path('card-default.png');
-        const map_status = getExportFileV3Path(getMapStatusV3Path(beatmapsets.ranked));
+        const map_status = beatmapsets.ranked;
 
         const title1 = beatmapsets.title || 'Unknown Title';
         const title2 = beatmapsets.artist || 'Unknown Artist';
@@ -2893,7 +2893,7 @@ export const PanelGenerate = {
         const left1 = '';
         const left2 = '#' + rank || '#0';
         const left3 = 's' + beatmapsets.id || 's0';
-        const right1 = '';
+        const right1 = 'Expected Rank Time:';
         const right2 = getApproximateRankedTime(date);
         let right3b;
         let right3m;
@@ -2903,14 +2903,17 @@ export const PanelGenerate = {
         const minutes = getApproximateLeftRankedTime(date,2);
 
         if (days > 0) {
-            right3b = days;
-            right3m = 'd' + hours + 'h' + minutes + 'm';
+            right3b = days.toString();
+            right3m = 'd' + hours + 'h';
         } else if (hours > 0) {
-            right3b = hours;
+            right3b = hours.toString();
             right3m = 'h' + minutes + 'm';
-        } else {
-            right3b = minutes;
+        } else if (minutes > 0) {
+            right3b = minutes.toString();
             right3m = 'm';
+        } else {
+            right3b = '';
+            right3m = 'Passed';
         }
 
         return {
@@ -2941,13 +2944,12 @@ export const PanelGenerate = {
         }
 
         function getApproximateLeftRankedTime(date = '', whichData = 0) {
-            const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days');
-            const remain = moment(moment().diff(dateP7), "SSSS");
+            const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ssZ').utcOffset(8).add(7, 'days');
 
             switch (whichData) {
-                case 0: return remain.format("DD");
-                case 1: return remain.format("HH");
-                case 2: return remain.format("mm");
+                case 0: return dateP7.diff(moment(), "days");
+                case 1: return dateP7.diff(moment(), "hours") % 24;
+                case 2: return dateP7.diff(moment(), "minutes") % 1440;
             }
         }
     },
@@ -3026,7 +3028,98 @@ export const PanelGenerate = {
             mods_arr: bp.mods || [],
             pp: Math.round(bp.pp) || 0 //pp
         }
-    }
+    },
 
+    searchDiff2LabelM3: async (beatmap, label_width) => {
+
+        switch (getGameMode(beatmap.mode, 1)) {
+            case 'o':
+            default:
+                return {
+                    label1: {
+                        icon: getExportFileV3Path("object-score-circlesize.png"),
+                        icon_title: 'CS',
+                        data_b: getStarRatingObject(beatmap.cs, 2),
+                        data_m: getStarRatingObject(beatmap.cs, 3)
+                    },
+                    label2: {
+                        icon: getExportFileV3Path("object-score-approachrate.png"),
+                        icon_title: 'AR',
+                        data_b: getStarRatingObject(beatmap.ar, 2),
+                        data_m: getStarRatingObject(beatmap.ar, 3)
+                    },
+                    label3: {
+                        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+                        icon_title: 'OD',
+                        data_b: getStarRatingObject(beatmap.accuracy, 2),
+                        data_m: getStarRatingObject(beatmap.accuracy, 3)
+                    },
+
+                    maxWidth: label_width,
+                };
+
+            case 't' : return {
+                label1: {
+                    icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+                    icon_title: 'OD',
+                    data_b: getStarRatingObject(beatmap.accuracy, 2),
+                    data_m: getStarRatingObject(beatmap.accuracy, 3)
+                },
+                label2: {},
+                label3: {
+                    icon: getExportFileV3Path("object-score-healthpoint.png"),
+                    icon_title: 'HP',
+                    data_b: getStarRatingObject(beatmap.drain, 2),
+                    data_m: getStarRatingObject(beatmap.drain, 3)
+                },
+
+                maxWidth: label_width,
+            };
+
+            case 'c': return {
+                label1: {
+                    icon: getExportFileV3Path("object-score-circlesize.png"),
+                    icon_title: 'CS',
+                    data_b: getStarRatingObject(beatmap.cs, 2),
+                    data_m: getStarRatingObject(beatmap.cs, 3)
+                },
+                label2: {
+                    icon: getExportFileV3Path("object-score-approachrate.png"),
+                    icon_title: 'AR',
+                    data_b: getStarRatingObject(beatmap.ar, 2),
+                    data_m: getStarRatingObject(beatmap.ar, 3)
+                },
+                label3: {
+                    icon: getExportFileV3Path("object-score-healthpoint.png"),
+                    icon_title: 'HP',
+                    data_b: getStarRatingObject(beatmap.drain, 2),
+                    data_m: getStarRatingObject(beatmap.drain, 3)
+                },
+
+                maxWidth: label_width,
+            };
+
+            case 'm' : return {
+                label1: {
+                    icon: getExportFileV3Path("object-score-circlesize.png"),
+                    icon_title: 'CS',
+                    data_b: getStarRatingObject(beatmap.cs, 2),
+                    data_m: getStarRatingObject(beatmap.cs, 3)
+                },
+                label2: {
+                    icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+                    icon_title: 'OD',
+                    data_b: getStarRatingObject(beatmap.accuracy, 2),
+                    data_m: getStarRatingObject(beatmap.accuracy, 3)
+                },
+                label3: {
+                    icon: getExportFileV3Path("object-score-healthpoint.png"),
+                    icon_title: 'HP',
+                    data_b: getStarRatingObject(beatmap.drain, 2),
+                    data_m: getStarRatingObject(beatmap.drain, 3)
+                },
+            };
+        }
+    }
 }
 

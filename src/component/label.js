@@ -717,9 +717,8 @@ export async function label_M1(data = {
 
 //Q-M2-客串谱师标签
 export async function label_M2(data = {
-    host_name: 'Skystar',
-    name: 'Skystar',
-    avatar: 'https://a.ppy.sh/873961?1622015262.jpeg'
+    host_uid: 873961,
+    uid: 873961,
 }, reuse = false) {
 
     //导入模板
@@ -743,20 +742,21 @@ export async function label_M2(data = {
   </g>`
 
     //正则
-    const reg_text = /(?<=<g id="Text_LM2">)/;
+    // const reg_text = /(?<=<g id="Text_LM2">)/;
     const reg_label = /(?<=<g id="Label_LM2">)/;
     const reg_rrect = /(?<=<g id="RRect_LM2">)/;
+    const reg_bid = /(?<=<g id="Bid_LM2">)/;
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LM2\);">)/;
 
     //定义文本
-    const avatar = await readNetImage(data.avatar, getExportFileV3Path('avatar-guest.png'));
+    const uid = data.uid || 0;
+    const avatar = await readNetImage('https://a.ppy.sh/' + uid, getExportFileV3Path('avatar-guest.png'));
 
-    const isHost = (data.host_name === data.name && data.name !== '')
     let host = 'G';
     let host_color = '#382E32'
     let host_rrect_color = '#B8D3E0';
 
-    if (isHost) {
+    if (data.host_uid === data.uid && data.uid > 0) {
         host = 'H';
         host_color = '#B8D3E0';
         host_rrect_color = '#382E32';
@@ -765,16 +765,16 @@ export async function label_M2(data = {
     const host_text = torus.getTextPath(host, 15, 15.877, 18, 'center baseline', host_color);
     const host_rrect = `<rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${host_rrect_color};"/>`;
 
-    const name_width = torus.getTextWidth(data.name, 18);
-    const name_text = torus.getTextPath(data.name, 50, 89.5, 18, 'center baseline', host_color);
-    const name_rrect = `<rect x="${100 - name_width / 2 - 5}" y="85" width="${name_width + 10}" height="20" rx="10" ry="10" style="fill: ${host_rrect_color};"/>`;
+    // const name_width = torus.getTextWidth(data.uid, 18);
+    // const name_text = torus.getTextPath(data.uid, 50, 89.5, 18, 'center baseline', host_color);
+    // const name_rrect = `<rect x="${100 - name_width / 2 - 5}" y="85" width="${name_width + 10}" height="20" rx="10" ry="10" style="fill: ${host_rrect_color};"/>`;
 
     //插入文本
-    svg = replaceText(svg, avatar, reg_avatar);
+    svg = implantImage(svg, 100, 100, 0, 0, 1, avatar, reg_avatar);
     svg = replaceText(svg, host_text, reg_label);
-    svg = replaceText(svg, host_rrect, reg_rrect);
-    svg = replaceText(svg, name_text, reg_label);
-    svg = replaceText(svg, name_rrect, reg_rrect);
+    svg = replaceText(svg, host_rrect, reg_bid);
+    // svg = replaceText(svg, name_text, reg_label);
+    // svg = replaceText(svg, name_rrect, reg_rrect);
 
     return svg.toString();
 }
@@ -816,20 +816,20 @@ export async function label_M3(data = {
     const label_width = 66;
 
     //如果是一排6个，那么需要缩减一下！
-    if (max_width < 650 / 3) {
-        gap_width = 28 / 3;
+    if (max_width <= 650 / 3) {
+        gap_width = 236 / 3;
     }
 
-    const label2_x = label_width + gap_width;
-    const label3_x = label2_x * 2;
+    const label2_x = gap_width;
+    const label3_x = gap_width * 2;
 
     //定义文本
     const label1_text = torus.get2SizeTextPath(
-        data.label1.data_m, data.label1.data_b, 24, 18, 30, 20, 'left baseline', '#fff');
+        data.label1.data_b, data.label1.data_m, 24, 18, 30, 20, 'left baseline', '#fff');
     const label2_text = torus.get2SizeTextPath(
-        data.label2.data_m, data.label2.data_b, 24, 18, 30 + label2_x, 20, 'left baseline', '#fff');
+        data.label2.data_b, data.label2.data_m, 24, 18, 30 + label2_x, 20, 'left baseline', '#fff');
     const label3_text = torus.get2SizeTextPath(
-        data.label3.data_m, data.label3.data_b, 24, 18, 30 + label3_x, 20, 'left baseline', '#fff');
+        data.label3.data_b, data.label3.data_m, 24, 18, 30 + label3_x, 20, 'left baseline', '#fff');
 
     svg = replaceTexts(svg, [label1_text, label2_text, label3_text], reg_text);
 

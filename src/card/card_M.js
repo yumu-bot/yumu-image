@@ -1,13 +1,13 @@
 import {
     getExportFileV3Path, getGameMode,
     getMapStatusV3Path, getStarRatingObject,
-    implantImage, implantSvgBody,
-    PuHuiTi,
+    implantImage, implantSvgBody, PanelGenerate,
+    PuHuiTi, readNetImage,
     readTemplate,
     replaceText,
     torus
 } from "../util.js";
-import {label_M1, LABEL_OPTION} from "../component/label.js";
+import {label_M1, label_M2, label_M3, LABEL_OPTION} from "../component/label.js";
 
 export async function card_M(data = {
     "artist": "HOYO-MiX",
@@ -251,10 +251,13 @@ export async function card_M(data = {
             <clipPath id="clippath-CM-1">
               <rect width="1370" height="210" rx="20" ry="20" style="fill: none;"/>
             </clipPath>
+            <filter id="blur-CM-1" height="110%" width="110%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
+                <feGaussianBlur in="userSpaceOnUse" stdDeviation="5" result="blur"/>
+            </filter>
           </defs>
           <g id="Background_CM">
-            <rect width="1370" height="210" rx="20" ry="20" style="fill: #1c1719;"/>
-            <g style="clip-path: url(#clippath-CM-1);">
+            <rect width="1370" height="210" rx="20" ry="20" style="fill: #382E32;"/>
+            <g style="clip-path: url(#clippath-CM-1);" filter="url(#blur-CM-1)">
             </g>
           </g>
           <g id="Label_CM">
@@ -264,7 +267,7 @@ export async function card_M(data = {
 
     // 路径定义
     const reg_text = /(?<=<g id="Text_CM">)/;
-    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CM-1\);">)/;
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CM-1\);" filter="url\(#blur-CM-1\)">)/;
     const reg_label = /(?<=<g id="Label_CM">)/;
 
     // 导入M1标签
@@ -313,54 +316,37 @@ export async function card_M(data = {
         label_width = (1360 / label_count) - 10;
 
         for (const v of data.beatmaps) {
-            const f = await label_M1({
+            const f1 = await label_M1({
                 mode: v.mode,
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
                 star2: getExportFileV3Path('object-beatmap-star2.png')
             }, true);
+            const f2 = await label_M2({
+                host_uid: data.user_id,
+                uid: v.user_id,
+            }, true);
+            const c3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
+            const f3 = await label_M3(c3, true);
 
-            labelM1s.push(f);
-        }
-
-        for (const v of data.beatmaps) {
-            let construct;
-
-            switch (getGameMode(v.mode, 1)) {
-                case 'o': {
-                    construct = {
-                        label1: {...LABEL_OPTION.CS,
-                            data_b: getStarRatingObject(v.cs, 2),
-                            data_m: getStarRatingObject(v.cs, 3)
-                        },
-                        label2: {...LABEL_OPTION.AR,
-                            data_b: getStarRatingObject(v.ar, 2),
-                            data_m: getStarRatingObject(v.ar, 3)
-                        },
-                        label3: {...LABEL_OPTION.OD,
-                            data_b: getStarRatingObject(v.accuracy, 2),
-                            data_m: getStarRatingObject(v.accuracy, 3)
-                        },
-
-                        maxWidth: label_width
-                    };
-                } break;
-
-                case 't' : {
-
-                }
-            }
+            labelM1s.push(f1);
+            labelM2s.push(f2);
+            labelM3s.push(f3);
         }
 
         //导入
         for (let i = 0; i < label_count; i++) {
             svg = implantSvgBody(svg, 10 + (label_width + 10) * i, 150, labelM1s[i], reg_label);
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 50, 10, labelM2s[i], reg_label);
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * i, 120, labelM3s[i], reg_label);
+
         }
 
     }
 
-
+    const background = data.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + data.id  + '/covers/cover.jpg') : getExportFileV3Path('card-default.png');
+    svg = implantImage(svg,1370,210,0,0,0.5, background, reg_background);
 
 
     return svg.toString();
