@@ -587,7 +587,7 @@ export async function label_J3(data = {
     let svg = `  
   <g id="Icon_LJ3">
   </g>
-  <g id="Text_LJ3_LJ3">
+  <g id="Text_LJ3">
   </g>`;
 
     //正则
@@ -633,7 +633,7 @@ export async function label_J3(data = {
 
     //插入图片
     svg = implantImage(svg, 40, 40, 0, 0, 1,
-        data.icon || getExportFileV3Path('object-score-XH-small.png'), reg_icon);
+        data.icon || getExportFileV3Path('object-score-F-small.png'), reg_icon);
 
     return svg.toString();
 }
