@@ -1,4 +1,4 @@
-import {getExportFileV3Path, implantImage, readTemplate, replaceText, torus, PuHuiTi} from "../util.js";
+import {getExportFileV3Path, implantImage, readTemplate, replaceText, torus, PuHuiTi, replaceTexts} from "../util.js";
 
 export async function card_H(data = {
     background: '',
@@ -89,14 +89,8 @@ export async function card_H(data = {
     svg = replaceText(svg, data.color_right || 'none', reg_color_right);
     svg = replaceText(svg, data.color_left || 'none', reg_color_left);
 
-    svg = replaceText(svg, label1, reg_label);
-    svg = replaceText(svg, label2, reg_label);
-    svg = replaceText(svg, label3, reg_label);
-    svg = replaceText(svg, label4, reg_label);
-    svg = replaceText(svg, rrect_label1, reg_label);
-    svg = replaceText(svg, rrect_label2, reg_label);
-    svg = replaceText(svg, rrect_label3, reg_label);
-    svg = replaceText(svg, rrect_label4, reg_label);
+
+    svg = replaceTexts(svg, [label1, label2, label3, label4, rrect_label1, rrect_label2, rrect_label3, rrect_label4,], reg_label);
     svg = replaceText(svg, index, reg_text);
 
     // 计算标题的长度
@@ -125,11 +119,9 @@ export async function card_H(data = {
     let left1 = torus.getTextPath(text_left1, 210, 66.836, 24, 'left baseline', '#fff');
     let left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', '#fff');
 
-
     // 插入文字
-    svg = replaceText(svg, title, reg_text)
-    svg = replaceText(svg, left1, reg_text)
-    svg = replaceText(svg, left2, reg_text)
+    svg = replaceTexts(svg, [title, left1, left2], reg_text);
+
     // 插入图片
     svg = data.cover ? implantImage(svg, 176,110,20,0,1, data.cover, reg_avatar) : svg;
     svg = data.background ? implantImage(svg,900,110,0,0,0.3, data.background, reg_background) : svg;

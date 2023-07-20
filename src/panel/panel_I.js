@@ -1,4 +1,4 @@
-import {getExportFileV3Path, InsertSvgBuilder, readTemplate, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, InsertSvgBuilder, readTemplate, replaceText, replaceTexts, torus} from "../util.js";
 import {card_H} from "../card/card_H.js";
 
 export async function panel_I(data = {
@@ -38,10 +38,7 @@ export async function panel_I(data = {
     let a3 = torus.getTextPath("12", 220, 97, 12, 'left center', "#fff");
     let svg = readTemplate("template/Panel_I.svg");
 
-    svg = replaceText(svg, a1, reg_text);
-    svg = replaceText(svg, a2, reg_text);
-    svg = replaceText(svg, a3, reg_text);
-
+    svg = replaceTexts(svg, [a1, a2, a3], reg_text);
 
     let out_svg = new InsertSvgBuilder(svg);
     await out_svg.insertSvg(bg1, 10, 100);

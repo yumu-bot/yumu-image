@@ -6,7 +6,7 @@ import {
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -171,11 +171,11 @@ export async function panel_H (data = {
 
 
     // 文字定义
-    let index_powered = torus.getTextPath(data.index_powered,
+    let index_powered_path = torus.getTextPath(data.index_powered,
         10, 26.84, 24, "left baseline", "#fff");
-    let index_request_time = torus.getTextPath(data.index_request_time,
+    let index_request_time_path = torus.getTextPath(data.index_request_time,
         1910, 26.84, 24, "right baseline", "#fff");
-    let index_panel_name = torus.getTextPath(data.index_panel_name,
+    let index_panel_name_path = torus.getTextPath(data.index_panel_name,
         607.5, 83.67, 48, "center baseline", "#fff");
 
     // 插入主体卡片
@@ -269,9 +269,7 @@ export async function panel_H (data = {
     svg = replaceText(svg, panelHeight, reg_height);
 
     // 插入文字
-    svg = replaceText(svg, index_powered, reg_index);
-    svg = replaceText(svg, index_request_time, reg_index);
-    svg = replaceText(svg, index_panel_name, reg_index);
+    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);

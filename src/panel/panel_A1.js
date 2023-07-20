@@ -5,7 +5,7 @@ import {
     implantImage, implantSvgBody,
     PanelGenerate,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -210,9 +210,7 @@ export async function panel_A1(data = {
         607.5, 83.67, 48, "center baseline", "#fff");
 
     // 插入文字
-    svg = replaceText(svg, index_powered_path, reg_index);
-    svg = replaceText(svg, index_request_time_path, reg_index);
-    svg = replaceText(svg, index_panel_name_path, reg_index);
+    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
 
     // 导入A1卡
 

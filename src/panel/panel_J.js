@@ -6,7 +6,7 @@ import {
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength,
     PanelGenerate, readNetImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -451,13 +451,8 @@ export async function panel_J(data = {
     )
 
     // 插入文字
-    svg = replaceText(svg, index_powered_path, reg_index);
-    svg = replaceText(svg, index_request_time_path, reg_index);
-    svg = replaceText(svg, index_panel_name_path, reg_index);
-    svg = replaceText(svg, pp_mini_path, reg_index);
-    svg = replaceText(svg, pp_full_path, reg_index);
-    svg = replaceText(svg, game_mode_path, reg_index);
-    svg = replaceText(svg, mappers_count_path, reg_index);
+
+    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path, pp_mini_path, pp_full_path, game_mode_path, mappers_count_path], reg_index);
 
     // A1卡构建
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);

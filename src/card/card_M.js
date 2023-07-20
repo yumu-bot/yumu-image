@@ -7,7 +7,7 @@ import {
     replaceText,
     torus
 } from "../util.js";
-import {label_M1} from "../component/label";
+import {label_M1} from "../component/label.js";
 
 export async function card_M(data = {
     "artist": "HOYO-MiX",

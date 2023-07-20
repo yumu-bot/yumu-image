@@ -4,7 +4,7 @@ import {
     getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     implantImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 
@@ -79,11 +79,8 @@ export async function card_A1(data = {
 
     // 替换模板内容,replaceText(模板, 内容, 正则)
     svg = replaceText(svg, data.color_base, reg_color_base);
-    svg = replaceText(svg, text_name, reg_text);
-    svg = replaceText(svg, text_info, reg_text);
-    svg = replaceText(svg, text_rank_country, reg_text);
-    svg = replaceText(svg, text_rank_global, reg_text);
-    svg = replaceText(svg, text_pp, reg_text);
+    svg = replaceTexts(svg, [text_name, text_info, text_rank_country, text_rank_global, text_pp], reg_text);
+
     let flagSvg = await getFlagPath(data.country, 130, 64);
     svg = replaceText(svg, flagSvg, reg_country_flag); //高44宽60吧
     // 替换图片

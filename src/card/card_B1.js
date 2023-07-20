@@ -3,7 +3,7 @@ import {
     getRankColor,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr, implantImage, implantSvgBody,
-    readTemplate, replaceText, torus
+    readTemplate, replaceText, replaceTexts, torus
 } from "../util.js";
 import {label_E, PPM_OPTION} from "../component/label.js";
 
@@ -50,8 +50,7 @@ export async function card_B1(data = {
     let rank_text = torus.getTextPath(rank, judge_x_center, 68, 60, 'center baseline', color);
     let number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 370 + card_x, 68, 'right baseline', '#fff');
 
-    svg = replaceText(svg, rank_text, reg_text);
-    svg = replaceText(svg, number_text, reg_text);
+    svg = replaceTexts(svg, [rank_text, number_text], reg_text);
 
     if (isReverse) {
         svg = implantImage(svg,390, 95, card_x, 0, 0.3, background, reg_bg2);

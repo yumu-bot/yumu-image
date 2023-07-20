@@ -3,7 +3,7 @@ import {
     getModColor,
     getStarRatingObject, implantImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 
@@ -139,21 +139,15 @@ export async function card_D(data = {
         'center baseline',
         '#fff')
 
-    svg = replaceText(svg, text_sd1, reg_sd_text);
-    svg = replaceText(svg, text_sd2, reg_sd_text);
-    svg = replaceText(svg, text_sd3, reg_sd_text);
+    svg = replaceTexts(svg, [text_sd1, text_sd2, text_sd3], reg_sd_text);
     svg = replaceText(svg, sd_circle1, reg_sd_circle1);
     svg = replaceText(svg, sd_circle2, reg_sd_circle2);
     svg = replaceText(svg, sd_circle3, reg_sd_circle3);
 
     // 替换文字
+    svg = replaceTexts(svg, [text_title, text_artist_and_mapper, text_info, text_mod, text_star], reg_text);
 
     svg = replaceText(svg, text_mod_color, reg_mod_color);
-    svg = replaceText(svg, text_title, reg_text);
-    svg = replaceText(svg, text_artist_and_mapper, reg_text);
-    svg = replaceText(svg, text_info, reg_text);
-    svg = replaceText(svg, text_mod, reg_text);
-    svg = replaceText(svg, text_star, reg_text);
 
     // 插入图片
     svg = implantImage(svg,560,110,0,0,0.5, data.background, reg_background)

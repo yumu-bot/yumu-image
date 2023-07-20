@@ -10,7 +10,7 @@ import {
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
@@ -198,9 +198,7 @@ export async function panel_F(data = {
     // 文字定义
 
     // 插入主面板的文字
-    svg = replaceText(svg, index_powered_path, reg_index);
-    svg = replaceText(svg, index_request_time_path, reg_index);
-    svg = replaceText(svg, index_panel_name_path, reg_index);
+    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);

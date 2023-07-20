@@ -4,7 +4,7 @@ import {
     implantSvgBody,
     readNetImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus,
     torusRegular
 } from "../util.js";
@@ -146,9 +146,7 @@ export async function card_C(data = {
         let blue_text = (blue_score !== 0) ? blue_font.getTextPath(blue_score.toString(), mid_x + 5, 196.836, 24, 'left baseline', '#fff') : '';
         let delta_text = (delta_score !== 0) ? torus.getTextPath(delta_score.toString(), mid_x, 132.877, 18, 'center baseline', '#fff') : '';
 
-        svg = replaceText(svg, red_text, reg_text);
-        svg = replaceText(svg, blue_text, reg_text);
-        svg = replaceText(svg, delta_text, reg_text);
+        svg = replaceTexts(svg, [red_text, blue_text, delta_text], reg_text);
 
     } else {
         //个人赛时

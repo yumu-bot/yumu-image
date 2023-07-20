@@ -4,7 +4,7 @@ import {
     getRankColor,
     getStarRatingColor,
     implantImage,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 
@@ -138,14 +138,8 @@ export async function card_J(data = {
     }
 
     // 替换模板
-
-    svg = replaceText(svg, map_title_romanized, reg_text);
     // svg = replaceText(svg, map_artist, reg_text);
-    svg = replaceText(svg, map_difficulty_name, reg_text);
-    svg = replaceText(svg, map_line_3_right, reg_text);
-    svg = replaceText(svg, pp, reg_text);
-    svg = replaceText(svg, rank, reg_text);
-    svg = replaceText(svg, star_rating, reg_text);
+    svg = replaceTexts(svg, [map_title_romanized, map_difficulty_name, map_line_3_right, pp, rank, star_rating], reg_text);
 
     svg = replaceText(svg, rank_color, reg_rank)
     svg = replaceText(svg, star_color, reg_overlay)

@@ -21,7 +21,7 @@ import {
     PuHuiTi,
     readNetImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus,
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -586,8 +586,7 @@ export async function panel_E(data = {
         let stat = torus.getTextPath(text_stat.toString(),
             font_stat_x, font_y, 30, "left baseline", data.stat_color);
 
-        svg = replaceText(svg, index, reg_index);
-        svg = replaceText(svg, stat, reg_index);
+        svg = replaceTexts(svg, [index, stat], reg_index);
 
         if (data.stat > 0) {
             let rect_width = 500 * data.stat / sum
@@ -788,22 +787,10 @@ export async function panel_E(data = {
     Ring(data.score_acc_progress);
 
     // 插入文字和颜色
-    svg = replaceText(svg, index_powered_path, reg_index);
-    svg = replaceText(svg, index_request_time_path, reg_index);
-    svg = replaceText(svg, index_panel_name_path, reg_index);
-    svg = replaceText(svg, star_rating, reg_index);
-    svg = replaceText(svg, game_mode, reg_index);
-    svg = replaceText(svg, map_status_fav, reg_index);
-    svg = replaceText(svg, map_status_pc, reg_index);
-    svg = replaceText(svg, map_title_romanized, reg_index);
-    svg = replaceText(svg, map_title_unicode, reg_index);
-    svg = replaceText(svg, map_difficulty, reg_index);
-    svg = replaceText(svg, map_artist_mapper_bid, reg_index);
-    svg = replaceText(svg, main_score, reg_index);
-    svg = replaceText(svg, title_density, reg_index);
-    svg = replaceText(svg, title_retryfail, reg_index);
-    svg = replaceText(svg, map_public_rating, reg_index);
-    svg = replaceText(svg, map_passretryfail_percent, reg_index);
+
+    svg = replaceTexts(svg, [
+        index_powered_path, index_request_time_path, index_panel_name_path, star_rating, game_mode, map_status_fav, map_status_pc, map_title_romanized, map_title_unicode, map_difficulty, map_artist_mapper_bid, main_score, title_density, title_retryfail, map_public_rating, map_passretryfail_percent
+    ],reg_index)
 
     // 插入模组，因为先插的在上面，所以从左边插
     let insertMod = (mod, i, offset_x) => {

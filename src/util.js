@@ -519,7 +519,7 @@ export function replaceText(base = '', replace = '', reg = /.*/) {
 
 export function replaceTexts(base = '', replace = [''], reg = /.*/) {
     for (const v of replace) {
-        base.replace(reg, v);
+        base = base.replace(reg, v);
     }
     return base;
 }

@@ -18,7 +18,7 @@ import {
     PanelGenerate,
     readNetImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 import {card_J} from "../card/card_J.js";
@@ -371,15 +371,15 @@ export async function panel_D(data = {
     }
 
     // 文字定义
-    let index_powered = torus.getTextPath(data.index_powered,
+    let index_powered_path = torus.getTextPath(data.index_powered,
         10, 26.84, 24, "left baseline", "#fff");
-    let index_request_time = torus.getTextPath(data.index_request_time,
+    let index_request_time_path = torus.getTextPath(data.index_request_time,
         1910, 26.84, 24, "right baseline", "#fff");
     let tm_ipn =
         torus.getTextMetrics(data.index_panel_name,
             0, 0, 48, "left baseline", "#fff");
     let ipn_x = 607.5 - tm_ipn.width / 2;
-    let index_panel_name = torus.getTextPath(data.index_panel_name,
+    let index_panel_name_path = torus.getTextPath(data.index_panel_name,
         ipn_x, 83.67, 48, "left baseline", "#fff");
 
     let rank_country_text = ' ' + (data.country || '') + '#' + (data.rank_country || '0');
@@ -561,9 +561,7 @@ export async function panel_D(data = {
         'right baseline',
         '#a1a1a1');
 
-    svg = replaceText(svg, user_pc_first_date, reg_user_data_text);
-    svg = replaceText(svg, user_pc_mid_date, reg_user_data_text);
-    svg = replaceText(svg, user_pc_last_date, reg_user_data_text);
+    svg = replaceTexts(svg, [user_pc_first_date, user_pc_mid_date, user_pc_last_date], reg_user_data_text);
 
     // 插入吉祥物
     let mascot_name_data = getMascotName(data.game_mode);
@@ -653,24 +651,14 @@ export async function panel_D(data = {
     let grade_XH = torus.getTextPath(`(+${data.grade_XH})`, 685, 1024.877, 18, 'center baseline', '#a1a1a1')
     let grade_SH = torus.getTextPath(`(+${data.grade_SH})`, 790, 1024.877, 18, 'center baseline', '#a1a1a1')
 
-    svg = replaceText(svg, grade_X, reg_grade_text);
-    svg = replaceText(svg, grade_S, reg_grade_text);
-    svg = replaceText(svg, grade_A, reg_grade_text);
-    svg = replaceText(svg, grade_XH, reg_grade_text);
-    svg = replaceText(svg, grade_SH, reg_grade_text);
+    svg = replaceTexts(svg, [grade_X, grade_S, grade_A, grade_XH, grade_SH, ], reg_grade_text);
 
     // 插入文字
-
-    svg = replaceText(svg, index_powered, reg_index);
-    svg = replaceText(svg, index_request_time, reg_index);
-    svg = replaceText(svg, index_panel_name, reg_index);
-    svg = replaceText(svg, mascot_mark1, reg_mascot_name);
-    svg = replaceText(svg, mascot_mark1_rrect, reg_mascot_name);
-    svg = replaceText(svg, mascot_mark2, reg_progress);
-    svg = replaceText(svg, mascot_mark2_rrect, reg_progress);
+    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
+    svg = replaceTexts(svg, [mascot_mark1, mascot_mark1_rrect], reg_mascot_name);
+    svg = replaceTexts(svg, [mascot_mark2, mascot_mark2_rrect], reg_progress);
+    svg = replaceTexts(svg, [rank_global, rank_country], reg_ranking_text);
     svg = replaceText(svg, progress_rrect, reg_progressR);
-    svg = replaceText(svg, rank_global, reg_ranking_text)
-    svg = replaceText(svg, rank_country, reg_ranking_text)
 
     // 插入图片和部件（新方法
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);

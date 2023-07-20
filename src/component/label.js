@@ -370,9 +370,7 @@ export async function label_F1(data = {
     <rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${getUserRankColor(data.rank) || '#46393f'};"/>`;
 
     //插入文本
-    svg = replaceText(svg, name, reg_text);
-    svg = replaceText(svg, score, reg_text);
-    svg = replaceText(svg, rank, reg_text);
+    svg = replaceTexts(svg, [name, score, rank], reg_text);
     svg = replaceText(svg, label_color, reg_label);
 
     //插入图片，如果输了就变灰
@@ -433,9 +431,7 @@ export async function label_F2(data = {
     <rect x="30" y="16" width="20" height="14" rx="7" ry="7" style="fill: ${getUserRankColor(data.rank) || '#46393f'};"/>`;
 
     //插入文本
-    svg = replaceText(svg, name, reg_text);
-    svg = replaceText(svg, score, reg_text);
-    svg = replaceText(svg, rank, reg_text);
+    svg = replaceTexts(svg, [name, score, rank], reg_text);
     svg = replaceText(svg, label_color, reg_label);
 
     //插入图片，如果输了就变灰
@@ -507,10 +503,7 @@ export async function label_J1(data = {
     let svg = `<g id="Mod">\n <path d="m56.357,4.496l11.865,18c2.201,3.339,2.201,7.668,0,11.007l-11.865,18c-1.85,2.807-4.987,4.496-8.349,4.496h-26.142c-3.362,0-6.499-1.689-8.349-4.496L1.651,33.504c-2.201-3.339-2.201-7.668,0-11.007L13.516,4.496C15.366,1.689,18.503,0,21.865,0h26.142c3.362,0,6.499,1.689,8.349,4.496Z" style="fill: ${mod_color};"/>\n </g>\n <g id="Text_LJ1">\n </g>`;
 
     //插入文本
-    svg = replaceText(svg, mod_abbr, reg_text);
-    svg = replaceText(svg, mod_fullname, reg_text);
-    svg = replaceText(svg, mod_count, reg_text);
-    svg = replaceText(svg, pp, reg_text);
+    svg = replaceTexts(svg, [mod_abbr, mod_fullname, mod_count, pp], reg_text);
     svg = replaceText(svg, mod_color, reg_modcolor);
 
     return svg.toString();
@@ -564,10 +557,8 @@ export async function label_J2(data = {
   </g>`;
 
     //插入文本
+    svg = replaceTexts(svg, [name, count, pp], reg_text);
     svg = replaceText(svg, index, reg_index);
-    svg = replaceText(svg, name, reg_text);
-    svg = replaceText(svg, count, reg_text);
-    svg = replaceText(svg, pp, reg_text);
 
     //插入图片
     svg = implantImage(svg, 70, 70, 8, 8, 1,
@@ -678,9 +669,7 @@ export async function label_M1(data = {
         8, 44, 38, 'left baseline', mode_icon_color);
 
     //插入文本
-    svg = replaceText(svg, diff_name_path, reg_text);
-    svg = replaceText(svg, star_rating_path, reg_text);
-    svg = replaceText(svg, mode_icon_path, reg_text);
+    svg = replaceTexts(svg, [diff_name_path, star_rating_path, mode_icon_path], reg_text);
 
     //星数
     let sr_b = getStarRatingObject(data.star_rating, 0);
