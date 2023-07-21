@@ -443,8 +443,12 @@ export async function panel_D(data = {
         let rect_svg = `<g>`
 
         arr.forEach((item, i) => {
-            let lineto_x = start_x + step * (i)
-            let lineto_y = start_y - Math.max(((item + 1) / (max + 1) * 90), 16); //+1 和 16 都是保底机制
+            const height = Math.max(((item + 1) / (max + 1) * 90), 16)//+1 和 16 都是保底机制
+            if (height === 16) color = '#a1a1a1'; //如果保底了，颜色取灰色
+
+            const lineto_x = start_x + step * (i);
+            const lineto_y = start_y - height;
+
             rect_svg += `<rect id="RFBPrect${i}" x="${lineto_x}" y="${lineto_y}" width="16" height="${start_y - lineto_y}" rx="8" ry="8" style="fill: ${color};"/>`
         })
         rect_svg += `</g>`
@@ -461,7 +465,7 @@ export async function panel_D(data = {
 
     svg = replaceText(svg, bp_activity_text, reg_ranking_text)
 
-    RFBPActivityChart(bp_arr, '#a1a1a1', user_bp_activity_max_fixed);
+    RFBPActivityChart(bp_arr, '#8DCFF4', user_bp_activity_max_fixed);
 
     // 绘制纵坐标，注意max在下面
     let rank_axis_y_min = getRoundedNumberLargerStr(user_ranking_min, 1) + getRoundedNumberSmallerStr(user_ranking_min, 1);
