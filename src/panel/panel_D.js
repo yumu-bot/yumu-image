@@ -444,7 +444,7 @@ export async function panel_D(data = {
 
         arr.forEach((item, i) => {
             const height = Math.max(((item + 1) / (max + 1) * 90), 16)//+1 和 16 都是保底机制
-            if (height === 16) color = '#a1a1a1'; //如果保底了，颜色取灰色
+            if (height <= 16) color = '#a1a1a1'; //如果保底了，颜色取灰色
 
             const lineto_x = start_x + step * (i);
             const lineto_y = start_y - height;
