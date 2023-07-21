@@ -444,12 +444,13 @@ export async function panel_D(data = {
 
         arr.forEach((item, i) => {
             const height = Math.max(((item + 1) / (max + 1) * 90), 16)//+1 和 16 都是保底机制
-            if (height <= 16) color = '#a1a1a1'; //如果保底了，颜色取灰色
+            let rrect_color = color;
+            if (height <= 16) rrect_color = '#a1a1a1'; //如果保底了，颜色取灰色
 
             const lineto_x = start_x + step * (i);
             const lineto_y = start_y - height;
 
-            rect_svg += `<rect id="RFBPrect${i}" x="${lineto_x}" y="${lineto_y}" width="16" height="${start_y - lineto_y}" rx="8" ry="8" style="fill: ${color};"/>`
+            rect_svg += `<rect id="RFBPrect${i}" x="${lineto_x}" y="${lineto_y}" width="16" height="${start_y - lineto_y}" rx="8" ry="8" style="fill: ${rrect_color};"/>`
         })
         rect_svg += `</g>`
 
