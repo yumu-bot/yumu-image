@@ -34,6 +34,8 @@ export async function panel_A2(data = {
         "id": "1954777" //目前结果的尾巴那张图的sid
     },
 
+    "beatmapsets": [],
+    /*
     "beatmapsets":[{
         "artist": "HOYO-MiX",
         "artist_unicode": "HOYO-MiX",
@@ -272,6 +274,8 @@ export async function panel_A2(data = {
         "pack_tags": []
     },
     ]
+
+     */
 
 }, reuse = false) {
     // 导入模板

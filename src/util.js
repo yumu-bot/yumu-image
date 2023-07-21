@@ -1911,15 +1911,17 @@ export function getSVGBody(V3Path = '') {
  * @param status 谱面状态，可以是数字可以是字符串
  */
 export function getMapStatusV3Path(status = 0) {
+
     if (typeof status === 'number') {
         switch (status) {
-            case -1: return 'object-beatmap-unranked.png'; //wip也在这里
-            case 0: return 'object-beatmap-unranked.png'; //pending在这里
-            case 1: return 'object-beatmap-ranked.png';
-            case 2: return 'object-beatmap-ranked.png'; //approved在这里
-            case 3: return 'object-beatmap-qualified.png';
-            case 4: return 'object-beatmap-loved.png';
-            default: return '';
+            case -2: return getExportFileV3Path('object-beatmap-unranked.png'); //graveyarded
+            case -1: return getExportFileV3Path('object-beatmap-unranked.png'); //wip也在这里
+            case 0: return getExportFileV3Path('object-beatmap-unranked.png'); //pending在这里
+            case 1: return getExportFileV3Path('object-beatmap-ranked.png');
+            case 2: return getExportFileV3Path('object-beatmap-ranked.png'); //approved在这里
+            case 3: return getExportFileV3Path('object-beatmap-qualified.png');
+            case 4: return getExportFileV3Path('object-beatmap-loved.png');
+            default: return getExportFileV3Path('error.png');
         }
     } else {
         switch (status.toLowerCase()) {
@@ -1931,7 +1933,7 @@ export function getMapStatusV3Path(status = 0) {
             case "loved":
                 return getExportFileV3Path('object-beatmap-loved.png');
             case "":
-                return '';
+                return getExportFileV3Path('error.png');
             default:
                 return getExportFileV3Path('object-beatmap-unranked.png');
         }
@@ -2841,7 +2843,7 @@ export const PanelGenerate = {
         const right1 = 'total ' + total;
         const right2 = 'results:';
         const right3b = result_count.toString() || '0';
-        const right3m = '';
+        const right3m = 'x';
 
         return {
             background: background,
@@ -2884,7 +2886,7 @@ export const PanelGenerate = {
         const date = beatmapsets.ranked_date || '';
 
         const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg') : getExportFileV3Path('card-default.png');
-        const map_status = beatmapsets.ranked;
+        const map_status = beatmapsets.ranked || -1;
 
         const title1 = beatmapsets.title || 'Unknown Title';
         const title2 = beatmapsets.artist || 'Unknown Artist';
@@ -2911,9 +2913,12 @@ export const PanelGenerate = {
         } else if (minutes > 0) {
             right3b = minutes.toString();
             right3m = 'm';
+        } else if (hours > -1){
+            right3b = '...';
+            right3m = '';
         } else {
-            right3b = '';
-            right3m = 'Passed';
+            right3b = '-';
+            right3m = '';
         }
 
         return {

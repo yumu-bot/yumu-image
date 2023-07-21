@@ -279,39 +279,8 @@ export async function card_M(data = {
     const label_count = data.beatmaps ? data.beatmaps.length : 0;
     let label_width;
 
-    if (label_count > 6) {
-        //紧促面板
-        const label_6_line = (label_count <= 18) ? (Math.floor(label_count / 6)) : 3; //最大不超18个，超了不管了
-        const label_remain = (label_count <= 18) ? (label_count % 6) : 0; //最大不超18个，超了不管了
-        label_width = ((1360 / label_remain) - 10 ) || 0;
-
-        for (let i = 0; i < label_remain; i++) {
-            const f1 = await label_M1({
-                mode: data.beatmaps[i].mode,
-                difficulty_name: data.beatmaps[i].version,
-                star_rating: data.beatmaps[i].difficulty_rating,
-                maxWidth: label_width,
-                star2: getExportFileV3Path('object-beatmap-star2.png')
-            }, true);
-
-            labelM1s.push(f1);
-        }
-
-        for (let j = label_remain; j < label_count; j++) {
-            const f2 = await label_M1({
-                mode: data.beatmaps[j].mode,
-                difficulty_name: data.beatmaps[j].version,
-                star_rating: data.beatmaps[j].difficulty_rating,
-                maxWidth: 650 / 3,
-                star2: getExportFileV3Path('object-beatmap-star2.png')
-            }, true);
-
-            labelM2s.push(f2); //暂时用这个数组放东西，实际上还是M1的
-        }
-
-        // 导入
-
-    } else if (label_count > 0) {
+    // 构建M卡
+    if (label_count <= 6) {
         //正常面板
         label_width = (1360 / label_count) - 10;
 
@@ -321,33 +290,169 @@ export async function card_M(data = {
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
-                star2: getExportFileV3Path('object-beatmap-star2.png')
+                star: getExportFileV3Path('object-beatmap-star.png'),
+                hasAvatar: false,
+                uid: v.user_id,
             }, true);
             const f2 = await label_M2({
                 host_uid: data.user_id,
                 uid: v.user_id,
             }, true);
-            const c3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
-            const f3 = await label_M3(c3, true);
+            const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
+            const f3 = await label_M3(g3, true);
 
             labelM1s.push(f1);
             labelM2s.push(f2);
             labelM3s.push(f3);
         }
 
-        //导入
+        //插入到svg中
         for (let i = 0; i < label_count; i++) {
             svg = implantSvgBody(svg, 10 + (label_width + 10) * i, 150, labelM1s[i], reg_label);
             svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 50, 10, labelM2s[i], reg_label);
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * i, 120, labelM3s[i], reg_label);
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 66, 120, labelM3s[i], reg_label);
 
         }
+    } else if (label_count <= 18) {
+        //紧促面板，最大不超18个，超了不管了 7 8 9 10 11 12
 
+        const label_compact_slot_count = Math.floor((label_count - 7) / 2) + 1; //需要压缩的空位数量  1 1 2 2 3 3
+        const label_normal_count = 6 - label_compact_slot_count; //剩下的正常卡数量，也是slot数量 5 5 4 4 3 3
+        const label_compact_count = label_count - label_normal_count; //需要压缩的卡数量 2 3 5 6 8 9
+
+        const label_compact_x = label_compact_slot_count; //1 1 2 2 3 3
+        const label_compact_y = Math.floor(label_compact_count / label_compact_x); //2 3 5 6 8 9 -> 2 3 2 3 2 3
+        const label_compact_remain = label_compact_count - (label_compact_x * label_compact_y);//这是在最紧密堆积 6x3 之后，还剩在堆积上面的数量，0 0 1 0 2 0
+
+        label_width = 650 / 3; // 6卡标准配置
+        const label_compact_remain_width = (label_compact_remain >= 0) ?
+            (label_compact_x * (label_width + 10) / label_compact_remain - 10)
+            : 0; //还剩在堆积上面的卡的宽度，要么是0要么是 x宽度 /剩下的
+
+        let labelM1c = [];
+        let labelM1r = [];
+
+        // 处理方法：先渲染能 compact 的，再渲染剩在堆积上的，再渲染正常卡
+        // 1. compact normal
+        for (let i = 0; i < (label_compact_count - label_compact_remain); i++) {
+            const v = data.beatmaps[i];
+            const f1c = await label_M1({
+                mode: v.mode,
+                difficulty_name: v.version,
+                star_rating: v.difficulty_rating,
+                maxWidth: label_width,
+                star: getExportFileV3Path('object-beatmap-star.png'),
+                hasAvatar: true,
+                uid: v.user_id,
+            }, true);
+
+            labelM1c.push(f1c);
+        }
+
+        // 2. compact remain
+        for (let j = (label_compact_count - label_compact_remain); j < label_compact_count; j++) {
+            const v = data.beatmaps[j];
+            const f1r = await label_M1({
+                mode: v.mode,
+                difficulty_name: v.version,
+                star_rating: v.difficulty_rating,
+                maxWidth: label_compact_remain_width,
+                star: getExportFileV3Path('object-beatmap-star.png'),
+                hasAvatar: true,
+                uid: v.user_id,
+            }, true);
+
+            labelM1r.push(f1r);
+        }
+
+        // 3. normal
+        for (let k = label_compact_count; k < label_count; k++) {
+            const v = data.beatmaps[k];
+            const f1 = await label_M1({
+                mode: v.mode,
+                difficulty_name: v.version,
+                star_rating: v.difficulty_rating,
+                maxWidth: label_width,
+                star: getExportFileV3Path('object-beatmap-star.png'),
+                hasAvatar: false,
+                uid: v.user_id,
+            }, true);
+            const f2 = await label_M2({
+                host_uid: data.user_id,
+                uid: v.user_id,
+            }, true);
+            const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
+            const f3 = await label_M3(g3, true);
+
+            labelM1s.push(f1);
+            labelM2s.push(f2);
+            labelM3s.push(f3);
+        }
+
+        //插入到svg中
+        // 1. compact normal
+        for (let ly = 0; ly < label_compact_y; ly++) {
+            for (let lx = 0; lx < label_compact_x; lx++) {
+                svg = implantSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[ly + lx * 3], reg_label);
+            }
+        }
+
+        // 2. compact remain
+        for (let mx = 0; mx < label_compact_remain; mx++) {
+            svg = implantSvgBody(svg, 10 + (label_compact_remain_width + 10) * mx, 150 - 60 * label_compact_y, labelM1r[mx], reg_label);
+        }
+
+        // 3. normal
+        for (let n = 0; n < label_normal_count; n++) {
+            const nx = n + label_compact_slot_count
+
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * nx, 150, labelM1s[n], reg_label);
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) - 50, 10, labelM2s[n], reg_label);
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) - 66, 120, labelM3s[n], reg_label);
+        }
+
+        //给个备注，说明这个地方有多少个diff
+        const diff_count = torus.getTextPath('Diffs: ' + label_count + 'x', 20, 20, 18, 'left baseline', '#fff')
+
+        svg = replaceText(svg, diff_count, reg_text);
+
+    } else {
+        //只压缩前 18 个。
+        const label_width = 650 / 3;
+        let labelM1c = [];
+
+        // 1. compact normal
+        for (let i = 0; i < 18; i++) {
+            const v = data.beatmaps[i];
+            const f1c = await label_M1({
+                mode: v.mode,
+                difficulty_name: v.version,
+                star_rating: v.difficulty_rating,
+                maxWidth: label_width,
+                star: getExportFileV3Path('object-beatmap-star.png'),
+                hasAvatar: true,
+                uid: v.user_id,
+            }, true);
+
+            labelM1c.push(f1c);
+        }
+
+        for (let ly = 0; ly < 3; ly++) {
+            for (let lx = 0; lx < 6; lx++) {
+                svg = implantSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * 3], reg_label);
+            }
+        }
+
+        //给个备注，说明这个地方有多少个diff
+        const diff_count = torus.getTextPath('Diffs: ' + label_count + 'x', 20, 20, 18, 'left baseline', '#fff')
+
+        svg = replaceText(svg, diff_count, reg_text);
     }
 
-    const background = data.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + data.id  + '/covers/cover.jpg') : getExportFileV3Path('card-default.png');
-    svg = implantImage(svg,1370,210,0,0,0.5, background, reg_background);
+    //导入背景
 
+    const background = data.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + data.id  + '/covers/cover@2x.jpg') : getExportFileV3Path('card-default.png');
+    svg = implantImage(svg,1370,210,0,0,0.5, background, reg_background);
 
     return svg.toString();
 }

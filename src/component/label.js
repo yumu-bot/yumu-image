@@ -635,13 +635,21 @@ export async function label_M1(data = {
     difficulty_name: 'Skystar\'s Tragic Love Extra',
     star_rating: 5.46,
     maxWidth: 0,
-    star2: getExportFileV3Path('object-beatmap-star2.png')
+    star: getExportFileV3Path('object-beatmap-star.png'),
+
+    hasAvatar: false,
+    uid: 7003013
 }, reuse = false) {
 
     let svg = `
+    <clipPath id="clippath-LM1">
+      <circle cx="26" cy="25" r="18" style="fill: none;"/>
+    </clipPath>
   <g id="RRect_LM1">
   </g>
   <g id="Icon_LM1">
+  </g>
+  <g id="Avatar_LM1" style="clip-path: url(#clippath-LM1);">
   </g>
   <g id="Text_LM1">
   </g>`;
@@ -650,9 +658,12 @@ export async function label_M1(data = {
     const reg_text = /(?<=<g id="Text_LM1">)/;
     const reg_icon = /(?<=<g id="Icon_LM1">)/;
     const reg_rrect = /(?<=<g id="RRect_LM1">)/;
+    const reg_avatar = /(?<=<g id="Avatar_LM1" style="clip-path: url\(#clippath-LM1\);">)/;
 
     //定义文本
-    const diff_name_path = torus.getTextPath(data.difficulty_name, 50, 20, 18, 'left baseline', '#fff');
+    const diff_name_path = torus.getTextPath(
+        torus.cutStringTail(data.difficulty_name, 18, data.maxWidth - 50 - 10, true),
+        50, 20, 18, 'left baseline', '#fff');
     const star_rating_path = torus.get2SizeTextPath(
         getStarRatingObject(data.star_rating, 2),
         getStarRatingObject(data.star_rating, 3),
@@ -664,9 +675,19 @@ export async function label_M1(data = {
         '#fff'
     );
     const mode_icon_color = getStarRatingColor(data.star_rating);
-    const mode_icon_path = extra.getTextPath(
+    let mode_icon_path = extra.getTextPath(
         getGameMode(data.mode, -1),
         8, 38.5, 38, 'left baseline', mode_icon_color);
+
+    //如果可以放头像，那么不需要SR，改为放头像
+    if (data.hasAvatar) {
+        mode_icon_path = '';
+
+        const uid = data.uid || 0;
+        const avatar = await readNetImage('https://a.ppy.sh/' + uid, getExportFileV3Path('avatar-guest.png'));
+
+        svg = implantImage(svg, 36, 36, 8, 7, 1, avatar, reg_avatar);
+    }
 
     //插入文本
     svg = replaceTexts(svg, [diff_name_path, star_rating_path, mode_icon_path], reg_text);
@@ -693,13 +714,13 @@ export async function label_M1(data = {
 
     for (let i = 1; i <= sr_b; i++) {
         let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
-            <image id="M1Label${i}Star" width="18" height="18" transform="translate(${15 * (i - 1) + 90} 26)" xlink:href="${data.star2}"/>
+            <image id="M1Label${i}Star" width="18" height="18" transform="translate(${15 * (i - 1) + 90} 26)" xlink:href="${data.star}"/>
         </g>`;
         svg = replaceText(svg, sr_b_svg, reg_icon);
     }
 
     const sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
-        <image id="M1Label${sr_b + 1}Star" width="18" height="18" transform="translate(${15 * sr_b + 90} 26) translate(${9 * (1 - sr_m_scale)} ${9 * (1 - sr_m_scale)}) scale(${sr_m_scale})" xlink:href="${data.star2}"/>
+        <image id="M1Label${sr_b + 1}Star" width="18" height="18" transform="translate(${15 * sr_b + 90} 26) translate(${9 * (1 - sr_m_scale)} ${9 * (1 - sr_m_scale)}) scale(${sr_m_scale})" xlink:href="${data.star}"/>
         </g>`;
 
     svg = replaceText(svg, sr_m_svg, reg_icon);
@@ -797,7 +818,7 @@ export async function label_M3(data = {
         data_m: '',
     },
 
-    maxWidth: 0,
+    maxWidth: 650 / 3,
 }, reuse = false) {
 
     let svg = `
@@ -812,20 +833,17 @@ export async function label_M3(data = {
 
     //定义位置
     const max_width = data.maxWidth;
-    let gap_width = 98;
+    //如果是一排6个，那么需要缩减一下！
+    const width_offset = (max_width > 650 / 3) ? 98 : 70;
     const label_width = 66;
 
-    //如果是一排6个，那么需要缩减一下！
-    if (max_width <= 650 / 3) {
-        gap_width = 236 / 3;
-    }
-
-    const label2_x = gap_width;
-    const label3_x = gap_width * 2;
+    const label1_x = (label_width / 2) - width_offset;
+    const label2_x = label_width / 2;
+    const label3_x = (label_width / 2) + width_offset;
 
     //定义文本
     const label1_text = torus.get2SizeTextPath(
-        data.label1.data_b, data.label1.data_m, 24, 18, 30, 20, 'left baseline', '#fff');
+        data.label1.data_b, data.label1.data_m, 24, 18, 30 + label1_x, 20, 'left baseline', '#fff');
     const label2_text = torus.get2SizeTextPath(
         data.label2.data_b, data.label2.data_m, 24, 18, 30 + label2_x, 20, 'left baseline', '#fff');
     const label3_text = torus.get2SizeTextPath(
@@ -833,7 +851,7 @@ export async function label_M3(data = {
 
     svg = replaceTexts(svg, [label1_text, label2_text, label3_text], reg_text);
 
-    svg = implantImage(svg, 25, 25, 0, 0, 1, data.label1.icon, reg_icon);
+    svg = implantImage(svg, 25, 25, label1_x, 0, 1, data.label1.icon, reg_icon);
     svg = implantImage(svg, 25, 25, label2_x, 0, 1, data.label2.icon, reg_icon);
     svg = implantImage(svg, 25, 25, label3_x, 0, 1, data.label3.icon, reg_icon);
 
