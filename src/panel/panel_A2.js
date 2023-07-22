@@ -307,7 +307,7 @@ export async function panel_A2(data = {
     svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
 
     // 导入A2卡
-    const result_count = (data.result_count + 1) || 0;
+    const result_count = data.result_count || 0;
 
     const search_result = await PanelGenerate.searchResult2CardA2(
         data.total,
