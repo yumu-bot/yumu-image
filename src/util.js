@@ -2834,13 +2834,13 @@ export const PanelGenerate = {
         const background = cursor.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg') : getExportFileV3Path('card-default.png');
         const map_status = rule;
         const title1 = 'Search:';
-        const title2 = search ? ('Sort: ' + getSortName(search["sort"])) : "ranked_asc";
+        const title2 = 'Sort: ' + getSortName(search.sort) || "Sort: Default";
         const title3 = '';
         const title_font = torus;
         const left1 = 'time duration:';
         const left2 = moment(parseInt(cursor.queued_at)).format("MM-DD HH:mm:ss");
         const left3 = moment().format("MM-DD HH:mm:ss");
-        const right1 = 'total ' + total || 'total 0';
+        const right1 = 'total ' + total + 'x' || 'total 0x';
         const right2 = 'results:';
         const right3b = result_count.toString() || '0';
         const right3m = 'x';
@@ -2883,7 +2883,7 @@ export const PanelGenerate = {
     },
 
     searchMap2CardA2: async (beatmapsets, rank) => {
-        const date = beatmapsets?.ranked_date || '';
+        const date = beatmapsets.ranked_date;
 
         const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg') : getExportFileV3Path('card-default.png');
         const map_status = beatmapsets.ranked || -1;

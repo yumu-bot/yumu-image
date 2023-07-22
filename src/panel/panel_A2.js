@@ -22,6 +22,7 @@ export async function router(req, res) {
 export async function panel_A2(data = {
     //现在的搜索规则是？返回 qualified, ranked, loved, pending, graveyard。当然这个面板应该是默认 qualified 吧。
     rule: 'qualified',
+    result_count: 12,
 
     // api 给的信息
     "total": 116,
@@ -285,7 +286,6 @@ export async function panel_A2(data = {
     let reg_search_a2 = /(?<=<g id="Search_Card_A2">)/;
     let reg_card_m = /(?<=<g id="Map_Card_M">)/;
     let reg_card_a2 = /(?<=<g id="Map_Card_A2">)/;
-    let reg_diff = /(?<=<g id="Map_Card_M">)/;
     let reg_cardheight = '${cardheight}';
     let reg_panelheight = '${panelheight}';
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA2-1\);">)/;
@@ -307,44 +307,41 @@ export async function panel_A2(data = {
     svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
 
     // 导入A2卡
+    const result_count = (data.result_count + 1) || 0;
 
     const search_result = await PanelGenerate.searchResult2CardA2(
         data.total,
         data.cursor,
         data.search,
-        data.beatmapsets ? data.beatmapsets.length : 0,
+        result_count,
         data.rule || 'Qualified',
     );
-    const search_cardA2 = await card_A2(search_result, true);
 
+    const search_cardA2 = await card_A2(search_result, true);
+    svg = implantSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
+
+    //导入其他卡
     let beatmap_cardA2s = [];
     let info_cardMs = [];
 
-    for (const i in data.beatmapsets) {
-        const beatmap = await PanelGenerate.searchMap2CardA2(data.beatmapsets[i], parseInt(i) + 1);
+    for (let i = 0; i < result_count; i++) {
+        const beatmap = await PanelGenerate.searchMap2CardA2(data.beatmapsets[i], i + 1);
         const f = await card_A2(beatmap, true);
         beatmap_cardA2s.push(f);
     }
 
-    // 插入图片和部件（新方法
-    svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
-
-    svg = implantSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
-
-
     // 如果卡片超过12张，则使用紧促型面板，并且不渲染卡片 M
-
-    if (beatmap_cardA2s.length <= 50) { // 12
-        for (const i in beatmap_cardA2s) {
-            svg = implantSvgBody(svg, 40, 330 + 250 * i, beatmap_cardA2s[i], reg_card_a2);
-        }
-
+    if (result_count <= 12) {
         for (const v of data.beatmapsets) {
             const f = await card_M(v, true);
             info_cardMs.push(f);
         }
         for (const i in info_cardMs) {
             svg = implantSvgBody(svg, 510, 330 + 250 * i, info_cardMs[i], reg_card_m);
+        }
+
+        for (const i in beatmap_cardA2s) {
+            svg = implantSvgBody(svg, 40, 330 + 250 * i, beatmap_cardA2s[i], reg_card_a2);
         }
     } else {
         //紧凑型面板
@@ -355,11 +352,14 @@ export async function panel_A2(data = {
         }
     }
 
+    // 插入图片和部件（新方法
+    svg = implantImage(svg,1920,320,0,0,0.8, getRandomBannerPath(), reg_banner);
+
     // 计算面板高度
     let rowTotal;
     let panelHeight, cardHeight;
 
-    if (beatmap_cardA2s.length <= 12) {
+    if (result_count <= 12) {
         rowTotal = beatmap_cardA2s.length;
     } else {
         rowTotal = Math.ceil(beatmap_cardA2s.length / 4);
