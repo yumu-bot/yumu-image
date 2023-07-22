@@ -2900,6 +2900,8 @@ export const PanelGenerate = {
         let right3b;
         let right3m;
 
+        console.log(beatmapsets?.ranked_date, beatmapsets?.submitted_date, beatmapsets?.title, beatmapsets.title, 'it')
+
         const days = getApproximateLeftRankedTime(date,0);
         const hours = getApproximateLeftRankedTime(date,1);
         const minutes = getApproximateLeftRankedTime(date,2);
