@@ -63,14 +63,23 @@ export async function router(req, res) {
         let labelPoint = (score.accuracy * 100) % 1;
         let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
 
+        const isDisplayPP = (pp.full_pp <= 100000);
+        const isFullCombo = (score.perfect || score.max_combo === score.beatmap.max_combo);
+
         const label_data = {
-            acc: newLabel(getAccIndexDeluxe(score),
+            acc: newLabel(
+                getAccIndexDeluxe(score),
                 Math.floor(roundacc) + (showPoint ? '' : '.'),
                 showPoint ? '%' : labelPoint.toFixed(2).substring(2) + '%'),
-            combo: newLabel(`${score.beatmap.max_combo}x`,
+            combo: newLabel(
+                isFullCombo ? score.beatmap.max_combo + 'x' : 'FC',
                 score.max_combo.toString(),
                 'x'),
-            pp: pp,
+            pp: newLabel(
+                isDisplayPP ? (isFullCombo ? Math.round(pp.full_pp) + 'PP' : 'Max') : 'Inf.PP',
+                isDisplayPP ? Math.round(pp.pp).toString() : 'Inf.',
+                'PP'
+            ),//pp,
             ar: score.beatmap.ar,
             od: score.beatmap.accuracy,
             cs: score.beatmap.cs,
@@ -219,12 +228,21 @@ export async function panel_E(data = {
             data_m: 'x',
         },
         pp: {
+            remark: '163PP',
+            data_b: '162',
+            data_m: 'PP',
+        },
+
+        /*
+        pp: {
             pp: 0,
             pp_all: 0,
             full_pp: 0,
             full_pp_all: 0,
             attr: {},
         },
+
+         */
         bpm: 175,
         length: 153, //总时长
         drain: 143, //掉血时长（物件时长
@@ -386,20 +404,12 @@ export async function panel_E(data = {
 
     //console.time("label");
 
-    let isDisplayPP = true;
-    if (data.label_data.pp.full_pp > 100000) isDisplayPP = false;
-
     let label_acc =
         await label_E({...LABEL_OPTION.ACC, ...data.label_data.acc}, true);
     let label_combo =
         await label_E({...LABEL_OPTION.COMBO, ...data.label_data.combo}, true);
     let label_pp =
-        await label_E({
-            ...LABEL_OPTION.PP,
-            remark: isDisplayPP ? Math.round(data.label_data.pp.full_pp).toString() + 'PP' : 'Inf.PP',
-            data_b: isDisplayPP ? Math.round(data.label_data.pp.pp).toString() : 'Inf.',
-            data_m: 'PP'
-        }, true);
+        await label_E({...LABEL_OPTION.PP, ...data.label_data.pp}, true);
     const labelChangedAROD = hasAnyMod(data.attr.mods_int, ["EZ", "HR", "DT", "HT"])
     const labelChangedCSHP = hasAnyMod(data.attr.mods_int, ["EZ", "HR"])
     let labelPoint = data.attr.bpm % 1;

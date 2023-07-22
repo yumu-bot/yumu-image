@@ -65,7 +65,7 @@ export async function router(req, res) {
 export async function panel_C(data = {
     // A2卡
     match: {
-        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'), //给我他们最后一局的谱面背景即可
+        background: getExportFileV3Path('card-default.png'), //给我他们最后一局的谱面背景即可
         match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)', //比赛标题
         match_round: 11,
         match_time: '20:25-22:03',//比赛开始到比赛结束。如果跨了一天，需要加24小时
