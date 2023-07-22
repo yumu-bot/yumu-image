@@ -74,11 +74,11 @@ export async function router(req, res) {
                 Math.floor(roundacc) + (showPoint ? '' : '.'),
                 showPoint ? '%' : labelPoint.toFixed(2).substring(2) + '%'),
             combo: newLabel(
-                isPerfect ? score.beatmap.max_combo + 'x' : 'FC',
+                isPerfect ? 'FC' : score.beatmap.max_combo + 'x',
                 score.max_combo.toString(),
                 'x'),
             pp: newLabel(
-                isDisplayPP ? (isPerfect ? Math.round(pp.full_pp) + 'PP' : 'Max') : 'Inf.PP',
+                isDisplayPP ? (isPerfect ? 'Max' : Math.round(pp.full_pp) + 'PP') : 'Inf.PP',
                 isDisplayPP ? Math.round(pp.pp).toString() : 'Inf.',
                 'PP'
             ),//pp,
