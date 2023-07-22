@@ -67,6 +67,7 @@ export async function router(req, res) {
 
         const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
         const isPerfect = score.perfect || isTaikoPerfect;
+        const isFullCombo = isPerfect || (score.beatmap.max_combo === score.max_combo);
 
         const label_data = {
             acc: newLabel(
@@ -74,7 +75,7 @@ export async function router(req, res) {
                 Math.floor(roundacc) + (showPoint ? '' : '.'),
                 showPoint ? '%' : labelPoint.toFixed(2).substring(2) + '%'),
             combo: newLabel(
-                isPerfect ? 'FC' : score.beatmap.max_combo + 'x',
+                isFullCombo ? 'FC' : score.beatmap.max_combo + 'x',
                 score.max_combo.toString(),
                 'x'),
             pp: newLabel(
