@@ -2900,11 +2900,11 @@ export const PanelGenerate = {
         const left2 = '#' + rank || '#0';
         const left3 = 's' + beatmapsets.id || 's0';
         const right1 = isQualified ? 'Expected:' :
-            (isRanked ? '' :
+            (isRanked ? 'Ranked:' :
                 'Submitted:');
         const right2 = isQualified ? getApproximateRankedTime(ranked_date) :
-            (isRanked ? moment(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960) :
-                moment(submitted_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960));
+            (isRanked ? moment(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm") :
+                moment(submitted_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm"));
         let right3b;
         let right3m;
 
@@ -2956,7 +2956,7 @@ export const PanelGenerate = {
             const dateP7m20 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days').add(20, 'minutes');
 
             return dateP7.format("YYYY-MM-DD HH:mm")
-                + '~'
+                + ' ~ '
                 + dateP7m20.format("HH:mm")
                 + ' +8'
         }
