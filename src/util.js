@@ -2526,21 +2526,19 @@ export function getAccIndexDeluxe(score) {
         switch (rank) {
             case 'F' : return '~ ' + getApproximateRank(score);
             default : {
-
+                const precision = (nGeki / n300).toFixed(1);
                 if (nGeki >= n300) {
                     if (n300 !== 0) {
-                        return (nGeki / n300).toFixed(1) + '/1';
+                        return precision + 'x';
                     } else if (nGeki !== 0) {
                         return 'MAX';
-                    } else {
-                        return '???';
-                    }
+                    } else return '???';
                 } else if (nGeki < n300) {
                     if (nGeki !== 0) {
-                        return '1/' + (n300 / nGeki).toFixed(1);
-                    } else {
-                        return 'ALL300';
-                    }
+                        return precision + 'x';
+                    } else if (n300 !== 0) {
+                        return 'MIN';
+                    } else return '???';
                 } else {
                     return '???';
                 }
