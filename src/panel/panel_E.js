@@ -64,7 +64,7 @@ export async function router(req, res) {
         let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
 
         const isDisplayPP = (pp.full_pp <= 100000);
-        const isFullCombo = (score.perfect || score.max_combo === score.beatmap.max_combo);
+        const isFullCombo = (score.perfect || (score.max_combo === score.beatmap.max_combo));
 
         const label_data = {
             acc: newLabel(
