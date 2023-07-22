@@ -2954,7 +2954,7 @@ export const PanelGenerate = {
             switch (whichData) {
                 case 0: return dateP7.diff(moment(), "days");
                 case 1: return dateP7.diff(moment(), "hours") % 24;
-                case 2: return (dateP7.diff(moment(), "minutes") / 24) % 60;
+                case 2: return dateP7.diff(moment(), "minutes") % 60;
             }
         }
     },
