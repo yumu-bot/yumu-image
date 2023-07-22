@@ -2886,7 +2886,7 @@ export const PanelGenerate = {
         const date = beatmapsets.ranked_date;
 
         const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg') : getExportFileV3Path('card-default.png');
-        const map_status = beatmapsets.ranked || -1;
+        const map_status = beatmapsets.status || -1;
 
         const title1 = beatmapsets.title || 'Unknown Title';
         const title2 = beatmapsets.artist || 'Unknown Artist';
