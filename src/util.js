@@ -2896,9 +2896,11 @@ export const PanelGenerate = {
         const left2 = '#' + rank || '#0';
         const left3 = 's' + beatmapsets.id || 's0';
         const right1 = 'Expected:';
-        const right2 = beatmapsets.ranked_date.toString() || 'date error!';//getApproximateRankedTime(date);
+        const right2 = getApproximateRankedTime(date);
         let right3b;
         let right3m;
+
+        console.log(beatmapsets.ranked_date, beatmapsets.submitted_date, 'it')
 
         const days = getApproximateLeftRankedTime(date,0);
         const hours = getApproximateLeftRankedTime(date,1);
