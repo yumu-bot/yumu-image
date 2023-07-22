@@ -79,7 +79,7 @@ export async function router(req, res) {
                 score.max_combo.toString(),
                 'x'),
             pp: newLabel(
-                isDisplayPP ? (isPerfect ? 'Max' : Math.round(pp.full_pp) + 'PP') : 'Inf.PP',
+                isDisplayPP ? (score.perfect ? 'Max' : Math.round(pp.full_pp) + 'PP') : 'Inf.PP', //这个不能把太鼓的特例考虑进去，可惜了
                 isDisplayPP ? Math.round(pp.pp).toString() : 'Inf.',
                 'PP'
             ),//pp,
