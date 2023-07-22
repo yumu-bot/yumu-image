@@ -2883,10 +2883,14 @@ export const PanelGenerate = {
     },
 
     searchMap2CardA2: async (beatmapsets, rank) => {
-        const date = beatmapsets.ranked_date;
+        const ranked_date = beatmapsets.ranked_date;
+        const submitted_date = beatmapsets.submitted_date;
 
         const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg', getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
-        const map_status = beatmapsets.status || -1;
+        const map_status = beatmapsets.status || 'graveyard';
+
+        const isRanked = (map_status === 'ranked' || map_status == 'loved' || map_status === 'approved');
+        const isQualified = (map_status === 'qualified');
 
         const title1 = beatmapsets.title || 'Unknown Title';
         const title2 = beatmapsets.artist || 'Unknown Artist';
@@ -2895,29 +2899,38 @@ export const PanelGenerate = {
         const left1 = '';
         const left2 = '#' + rank || '#0';
         const left3 = 's' + beatmapsets.id || 's0';
-        const right1 = 'Expected:';
-        const right2 = getApproximateRankedTime(date);
+        const right1 = isQualified ? 'Expected:' :
+            (isRanked ? '' :
+                'Submitted:');
+        const right2 = isQualified ? getApproximateRankedTime(ranked_date) :
+            (isRanked ? moment(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960) :
+                moment(submitted_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960));
         let right3b;
         let right3m;
 
-        const days = getApproximateLeftRankedTime(date,0);
-        const hours = getApproximateLeftRankedTime(date,1);
-        const minutes = getApproximateLeftRankedTime(date,2);
+        const days = getApproximateLeftRankedTime(ranked_date,0);
+        const hours = getApproximateLeftRankedTime(ranked_date,1);
+        const minutes = getApproximateLeftRankedTime(ranked_date,2);
 
-        if (days > 0) {
-            right3b = days.toString();
-            right3m = 'd' + hours + 'h';
-        } else if (hours > 0) {
-            right3b = hours.toString();
-            right3m = 'h' + minutes + 'm';
-        } else if (minutes > 0) {
-            right3b = minutes.toString();
-            right3m = 'm';
-        } else if (hours > -1){
-            right3b = '...';
-            right3m = '';
+        if (isQualified) {
+            if (days > 0) {
+                right3b = days.toString();
+                right3m = 'd' + hours + 'h';
+            } else if (hours > 0) {
+                right3b = hours.toString();
+                right3m = 'h' + minutes + 'm';
+            } else if (minutes > 0) {
+                right3b = minutes.toString();
+                right3m = 'm';
+            } else if (hours > -1){
+                right3b = '...';
+                right3m = '';
+            } else {
+                right3b = '-';
+                right3m = '';
+            }
         } else {
-            right3b = '-';
+            right3b = '-'
             right3m = '';
         }
 
