@@ -64,7 +64,9 @@ export async function router(req, res) {
         let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
 
         const isDisplayPP = (pp.full_pp <= 100000);
-        const isFullCombo = (score.perfect || (score.max_combo === score.beatmap.max_combo));
+
+        const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
+        const isPerfect = score.perfect || isTaikoPerfect;
 
         const label_data = {
             acc: newLabel(
@@ -72,11 +74,11 @@ export async function router(req, res) {
                 Math.floor(roundacc) + (showPoint ? '' : '.'),
                 showPoint ? '%' : labelPoint.toFixed(2).substring(2) + '%'),
             combo: newLabel(
-                isFullCombo ? score.beatmap.max_combo + 'x' : 'FC',
+                isPerfect ? score.beatmap.max_combo + 'x' : 'FC',
                 score.max_combo.toString(),
                 'x'),
             pp: newLabel(
-                isDisplayPP ? (isFullCombo ? Math.round(pp.full_pp) + 'PP' : 'Max') : 'Inf.PP',
+                isDisplayPP ? (isPerfect ? Math.round(pp.full_pp) + 'PP' : 'Max') : 'Inf.PP',
                 isDisplayPP ? Math.round(pp.pp).toString() : 'Inf.',
                 'PP'
             ),//pp,
@@ -114,12 +116,10 @@ export async function router(req, res) {
         const score_isbest = (score.best_id !== null);
 
         const score_time = score.created_at; //create_at_str 根本获取不到，我怀疑你bp只做了这个解析，pr或者recent没做，数据都获取不到
-
-        const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
         let score_categorize;
         if (score.mods.includes('NF')) {
             score_categorize = 'played';
-        } else if (score.perfect || isTaikoPerfect) {
+        } else if (isPerfect) {
             score_categorize = 'perfect';
         } else if (score.statistics.count_miss === 0) {
             score_categorize = 'nomiss';
