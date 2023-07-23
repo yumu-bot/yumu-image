@@ -2526,16 +2526,16 @@ export function getAccIndexDeluxe(score) {
         switch (rank) {
             case 'F' : return '~ ' + getApproximateRank(score);
             default : {
-                const precision = (nGeki / n300).toFixed(1);
+                const precision = nGeki / n300;
                 if (nGeki >= n300) {
                     if (n300 !== 0) {
-                        return precision + 'x';
+                        return precision.toFixed(1) + 'x';
                     } else if (nGeki !== 0) {
                         return 'MAX';
                     } else return '???';
                 } else if (nGeki < n300) {
                     if (nGeki !== 0) {
-                        return precision + 'x';
+                        return precision.toFixed(2) + 'x';
                     } else if (n300 !== 0) {
                         return 'MIN';
                     } else return '???';
