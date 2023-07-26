@@ -384,9 +384,7 @@ export async function panel_J(data = {
     game_mode: 'osu',
 
 
-    //
-
-}) {
+}, reuse = false) {
     let svg = readTemplate('template/Panel_J.svg');
 
     // 路径定义

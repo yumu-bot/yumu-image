@@ -2828,6 +2828,54 @@ export const PanelGenerate = {
         };
     },
 
+    beatmap2CardA2: async (beatmap) => {
+        const background = await readNetImage(beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
+        const map_status = beatmap.status;
+        const title1 = beatmap.beatmapset.title;
+        const title2 = beatmap.beatmapset.artist;
+        const title3 = beatmap.version;
+        const title_font = torus;
+        const left1 = '';
+        const left2 = beatmap.beatmapset.creator;
+        const left3 = beatmap.id ? 'b' + beatmap.id : 'b0';
+        const right1 = '';
+        const right2 = getBeatmapStats(beatmap);
+        const right3b = getStarRatingObject(beatmap.difficulty_rating,2);
+        const right3m = getStarRatingObject(beatmap.difficulty_rating,3) + '*';
+
+        function getBeatmapStats(beatmap) {
+            const cs = Math.round(beatmap.cs * 10) / 10;
+            const ar = Math.round(beatmap.ar * 10) / 10;
+            const od = Math.round(beatmap.accuracy * 10) / 10;
+            const hp = Math.round(beatmap.drain * 10) / 10;
+
+            switch (getGameMode(beatmap.mode, 1)) {
+                case 'o': return 'CS' + cs + ' AR' + ar + ' OD' + od;
+                case 't': return 'OD' + od + ' HP' + hp;
+                case 'c': return 'CS' + cs + ' AR' + ar + ' HP' + hp;
+                case 'm': return cs + 'Keys OD' + od + ' HP' + hp;
+            }
+        }
+
+        return {
+            background: background,
+            map_status: map_status,
+
+            title1: title1,
+            title2: title2,
+            title3: title3,
+            title_font: title_font,
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+    },
+
+
     searchResult2CardA2: async (total, cursor, search, result_count, rule) => {
         const background = cursor.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg',getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
         const map_status = rule;

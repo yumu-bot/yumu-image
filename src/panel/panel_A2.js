@@ -294,7 +294,7 @@ export async function panel_A2(data = {
     // 面板文字
     const index_powered = 'powered by Yumubot v0.3.1 EA // Qualified Map List (!ymq)';
     const index_request_time = 'request time: ' + getNowTimeStamp();
-    const index_panel_name = 'Q';
+    const index_panel_name = 'Qua';
 
     const index_powered_path = torus.getTextPath(index_powered,
         10, 26.84, 24, "left baseline", "#fff");
@@ -375,7 +375,6 @@ export async function panel_A2(data = {
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
-
 
     return await exportPng(svg);
 }

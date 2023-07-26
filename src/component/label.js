@@ -14,17 +14,17 @@ import {
 
 export const LABEL_OPTION = {
     ACC: {
-        icon: getExportFileV3Path("object-score-accuracy2.png"),
+        icon: getExportFileV3Path("object-score-accuracy.png"),
         icon_title: 'Accuracy',
         color_remark: '#fff',
     },
     COMBO: {
-        icon: getExportFileV3Path("object-score-combo2.png"),
+        icon: getExportFileV3Path("object-score-combo.png"),
         icon_title: 'Combo',
         color_remark: '#fff',
     },
     PP: {
-        icon: getExportFileV3Path("object-score-pp2.png"),
+        icon: getExportFileV3Path("object-score-pp.png"),
         icon_title: 'PP',
         color_remark: '#fff',
     },
