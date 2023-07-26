@@ -657,7 +657,6 @@ export async function panel_J(data = {
      */
     function getBarChartColorArray (dataArr = [''], electArr = [''], length = 0, defaultValue) {
         let arr = new Array(length).fill(defaultValue);
-        let arr_last_value;
 
         for (const v of electArr) {
             let steps = (dataArr.length - 1) / (length - 1);
@@ -676,7 +675,7 @@ export async function panel_J(data = {
         }
 
         //有时候取不到最后一位，所以需要补足
-        arr_last_value = dataArr[Math.max(length, dataArr.length) - 1];
+        const arr_last_value = dataArr[dataArr.length - 1];
         if (arr[length - 1] === defaultValue) arr.splice(length - 1, 1, getRankColor(arr_last_value));
 
         return arr;
