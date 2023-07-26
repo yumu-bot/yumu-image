@@ -245,7 +245,7 @@ export async function card_M(data = {
         }
     ],
     "pack_tags": []
-}, avatar = [{873961: 'https://a.ppy.sh/873961?1622015262.jpeg'},], reuse = false) {
+}, reuse = false) {
     // 读取模板
     let svg =`   <defs>
             <clipPath id="clippath-CM-1">
