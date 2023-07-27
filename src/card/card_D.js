@@ -1,7 +1,7 @@
 import {
     getColorInSpectrum,
     getModColor,
-    getStarRatingObject, implantImage,
+    getDecimals, implantImage,
     readTemplate,
     replaceText, replaceTexts,
     torus
@@ -64,8 +64,8 @@ export async function card_D(data = {
     let text_mod =
         torus.getTextPath(data.mod, 500, 30.754, 36, 'center baseline', "#fff");
 
-    let text_star_b = getStarRatingObject(data.star_rating,2);
-    let text_star_m = getStarRatingObject(data.star_rating,3) + '*';
+    let text_star_b = getDecimals(data.star_rating,2);
+    let text_star_m = getDecimals(data.star_rating,3) + '*';
     let star_m_width = torus.getTextWidth(text_star_m,36);
     let text_star =
         torus.getTextPath(text_star_b, 550 - star_m_width, 96.59, 60, "right baseline", "#fff") +

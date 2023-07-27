@@ -1,6 +1,6 @@
 import {
     getExportFileV3Path, getGameMode,
-    getMapStatusV3Path, getStarRatingObject,
+    getMapStatusV3Path, getDecimals,
     implantImage, implantSvgBody, PanelGenerate,
     PuHuiTi, readNetImage,
     readTemplate,

@@ -1554,15 +1554,15 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
 }
 
 /**
- * @function 预处理星数成想要的部分。
+ * @function 预处理星数（或其他小数）成想要的部分。
  * @return 返回 8, 0.34, 8., 34。前两个是数据，后两个是字符串
- * @param starRating 星数
+ * @param number 小数
  * @param whichData 要哪个数据？可输入0, 1, 2, 3, 4，分别是整数、小数、整数带小数点部分、纯小数部分（两位以下，纯小数部分（一位以下
  */
-export function getStarRatingObject(starRating = 0, whichData = 0) {
+export function getDecimals (number = 0, whichData = 0) {
 
     //去除小数，保留两位
-    let sr = (Math.round(starRating * 100) / 100) || 0;
+    let sr = (Math.round(number * 100) / 100) || 0;
 
     //避免浮点缺陷
     let sr_b = Math.floor(sr);
@@ -1585,12 +1585,6 @@ export function getStarRatingObject(starRating = 0, whichData = 0) {
     let text_sr_mm = sr_m.toString().slice(2, 3);
     if (text_sr_m.slice(1) === '0') {
         text_sr_m = text_sr_m.slice(0, 1);
-    }
-
-    if (sr_b >= 20) {
-        text_sr_b = '20';
-        text_sr_m = '+';
-        text_sr_mm = '+'
     }
 
     switch (whichData) {
@@ -2201,10 +2195,11 @@ export async function getFlagSvg(code = "cn") {
     return flag;
 }
 
-export async function getFlagPath(code = "cn", x, y) {
-    let svg = await getFlagSvg(code);
-    let len = svg.length;
-    return `<g transform="translate(${x} ${y}) scale(1.45)">` + svg.substring(60, len - 6) + '</g>';
+export async function getFlagPath(code = "cn", x, y, h = 30) {
+    const svg = await getFlagSvg(code);
+    const len = svg.length;
+    const scale = h / 30;
+    return `<g transform="translate(${x} ${y}) scale(${scale})">` + svg.substring(60, len - 6) + '</g>';
 }
 
 const ModInt = {
@@ -2840,8 +2835,8 @@ export const PanelGenerate = {
         const left3 = beatmap.id ? 'b' + beatmap.id : 'b0';
         const right1 = '';
         const right2 = getBeatmapStats(beatmap);
-        const right3b = getStarRatingObject(beatmap.difficulty_rating,2);
-        const right3m = getStarRatingObject(beatmap.difficulty_rating,3) + '*';
+        const right3b = getDecimals(beatmap.difficulty_rating,2);
+        const right3m = getDecimals(beatmap.difficulty_rating,3) + '*';
 
         function getBeatmapStats(beatmap) {
             const cs = Math.round(beatmap.cs * 10) / 10;
@@ -3103,20 +3098,20 @@ export const PanelGenerate = {
                     label1: {
                         icon: getExportFileV3Path("object-score-circlesize.png"),
                         icon_title: 'CS',
-                        data_b: getStarRatingObject(beatmap.cs, 2),
-                        data_m: getStarRatingObject(beatmap.cs, 3)
+                        data_b: getDecimals(beatmap.cs, 2),
+                        data_m: getDecimals(beatmap.cs, 3)
                     },
                     label2: {
                         icon: getExportFileV3Path("object-score-approachrate.png"),
                         icon_title: 'AR',
-                        data_b: getStarRatingObject(beatmap.ar, 2),
-                        data_m: getStarRatingObject(beatmap.ar, 3)
+                        data_b: getDecimals(beatmap.ar, 2),
+                        data_m: getDecimals(beatmap.ar, 3)
                     },
                     label3: {
                         icon: getExportFileV3Path("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
-                        data_b: getStarRatingObject(beatmap.accuracy, 2),
-                        data_m: getStarRatingObject(beatmap.accuracy, 3)
+                        data_b: getDecimals(beatmap.accuracy, 2),
+                        data_m: getDecimals(beatmap.accuracy, 3)
                     },
 
                     maxWidth: label_width,
@@ -3126,15 +3121,15 @@ export const PanelGenerate = {
                 label1: {
                     icon: getExportFileV3Path("object-score-overalldifficulty.png"),
                     icon_title: 'OD',
-                    data_b: getStarRatingObject(beatmap.accuracy, 2),
-                    data_m: getStarRatingObject(beatmap.accuracy, 3)
+                    data_b: getDecimals(beatmap.accuracy, 2),
+                    data_m: getDecimals(beatmap.accuracy, 3)
                 },
                 label2: {},
                 label3: {
                     icon: getExportFileV3Path("object-score-healthpoint.png"),
                     icon_title: 'HP',
-                    data_b: getStarRatingObject(beatmap.drain, 2),
-                    data_m: getStarRatingObject(beatmap.drain, 3)
+                    data_b: getDecimals(beatmap.drain, 2),
+                    data_m: getDecimals(beatmap.drain, 3)
                 },
 
                 maxWidth: label_width,
@@ -3144,20 +3139,20 @@ export const PanelGenerate = {
                 label1: {
                     icon: getExportFileV3Path("object-score-circlesize.png"),
                     icon_title: 'CS',
-                    data_b: getStarRatingObject(beatmap.cs, 2),
-                    data_m: getStarRatingObject(beatmap.cs, 3)
+                    data_b: getDecimals(beatmap.cs, 2),
+                    data_m: getDecimals(beatmap.cs, 3)
                 },
                 label2: {
                     icon: getExportFileV3Path("object-score-approachrate.png"),
                     icon_title: 'AR',
-                    data_b: getStarRatingObject(beatmap.ar, 2),
-                    data_m: getStarRatingObject(beatmap.ar, 3)
+                    data_b: getDecimals(beatmap.ar, 2),
+                    data_m: getDecimals(beatmap.ar, 3)
                 },
                 label3: {
                     icon: getExportFileV3Path("object-score-healthpoint.png"),
                     icon_title: 'HP',
-                    data_b: getStarRatingObject(beatmap.drain, 2),
-                    data_m: getStarRatingObject(beatmap.drain, 3)
+                    data_b: getDecimals(beatmap.drain, 2),
+                    data_m: getDecimals(beatmap.drain, 3)
                 },
 
                 maxWidth: label_width,
@@ -3167,20 +3162,20 @@ export const PanelGenerate = {
                 label1: {
                     icon: getExportFileV3Path("object-score-circlesize.png"),
                     icon_title: 'CS',
-                    data_b: getStarRatingObject(beatmap.cs, 2),
-                    data_m: getStarRatingObject(beatmap.cs, 3)
+                    data_b: getDecimals(beatmap.cs, 2),
+                    data_m: getDecimals(beatmap.cs, 3)
                 },
                 label2: {
                     icon: getExportFileV3Path("object-score-overalldifficulty.png"),
                     icon_title: 'OD',
-                    data_b: getStarRatingObject(beatmap.accuracy, 2),
-                    data_m: getStarRatingObject(beatmap.accuracy, 3)
+                    data_b: getDecimals(beatmap.accuracy, 2),
+                    data_m: getDecimals(beatmap.accuracy, 3)
                 },
                 label3: {
                     icon: getExportFileV3Path("object-score-healthpoint.png"),
                     icon_title: 'HP',
-                    data_b: getStarRatingObject(beatmap.drain, 2),
-                    data_m: getStarRatingObject(beatmap.drain, 3)
+                    data_b: getDecimals(beatmap.drain, 2),
+                    data_m: getDecimals(beatmap.drain, 3)
                 },
             };
         }

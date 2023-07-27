@@ -1,6 +1,6 @@
 import {
     getExportFileV3Path,
-    getStarRatingObject,
+    getDecimals,
     implantImage,
     implantSvgBody,
     replaceText,
@@ -102,8 +102,8 @@ export async function card_L(data = {
             }
 
             for (const v of index_arr) {
-                index_b_arr.push(getStarRatingObject(v, 2).toString());
-                index_m_arr.push(getStarRatingObject(v, 3).toString());
+                index_b_arr.push(getDecimals(v, 2).toString());
+                index_m_arr.push(getDecimals(v, 3).toString());
             }
             card_icon = getExportFileV3Path('object-score-beatsperminute.png');
         } break;

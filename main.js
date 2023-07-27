@@ -3,6 +3,7 @@ import formidable from "express-formidable";
 import {CACHE_PATH, initPath, readImage} from "./src/util.js";
 import {router as PanelA1Router} from "./src/panel/panel_A1.js";
 import {router as PanelA2Router} from "./src/panel/panel_A2.js";
+import {router as PanelA3Router} from "./src/panel/panel_A3.js";
 import {router as PanelBRouter} from "./src/panel/panel_B.js";
 import {router as PanelCRouter} from "./src/panel/panel_C.js";
 import {router as PanelDRouter} from "./src/panel/panel_D.js";
@@ -36,6 +37,7 @@ app.post('*', (req, res, next) => {
 
 app.post('/panel_A1', PanelA1Router);
 app.post('/panel_A2', PanelA2Router);
+app.post('/panel_A3', PanelA3Router);
 app.post('/panel_B', PanelBRouter);
 app.post('/panel_C', PanelCRouter);
 app.post('/panel_D', PanelDRouter);

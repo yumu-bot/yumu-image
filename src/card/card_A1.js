@@ -81,7 +81,7 @@ export async function card_A1(data = {
     svg = replaceText(svg, data.color_base, reg_color_base);
     svg = replaceTexts(svg, [text_name, text_info, text_rank_country, text_rank_global, text_pp], reg_text);
 
-    let flagSvg = await getFlagPath(data.country, 130, 64);
+    let flagSvg = await getFlagPath(data.country, 130, 64, 44);
     svg = replaceText(svg, flagSvg, reg_country_flag); //高44宽60吧
     // 替换图片
 

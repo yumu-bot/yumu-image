@@ -6,7 +6,7 @@ import {
     getRandomBannerPath,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
-    getStarRatingObject,
+    getDecimals,
     implantImage,
     implantSvgBody,
     readTemplate,
@@ -314,8 +314,8 @@ export async function panel_F(data = {
             ' AR' + (object.ar || 0) +
             ' OD' + (object.od || 0);
 
-        let right3b = getStarRatingObject(object.star_rating,2);
-        let right3m = getStarRatingObject(object.star_rating,3) + '*';
+        let right3b = getDecimals(object.star_rating,2);
+        let right3m = getDecimals(object.star_rating,3) + '*';
 
         let card_A2_beatmap_impl =
             await card_A2({

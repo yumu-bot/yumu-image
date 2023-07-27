@@ -11,7 +11,7 @@ import {
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getStarRatingColor,
-    getStarRatingObject,
+    getDecimals,
     hasAnyMod,
     hasMod,
     implantImage,
@@ -473,10 +473,17 @@ export async function panel_E(data = {
     //console.timeEnd("label");
     //console.time("txt");
 
-    let sr_b = getStarRatingObject(data.star_rating, 0);
-    let sr_m = getStarRatingObject(data.star_rating, 1);
-    let text_sr_b = getStarRatingObject(data.star_rating, 2);
-    let text_sr_m = getStarRatingObject(data.star_rating, 3);
+    let sr_b = getDecimals(data.star_rating, 0);
+    let sr_m = getDecimals(data.star_rating, 1);
+    let text_sr_b = getDecimals(data.star_rating, 2);
+    let text_sr_m = getDecimals(data.star_rating, 3);
+
+    if (data.star_rating >= 20) {
+        sr_b = 20;
+        sr_m = 0;
+        text_sr_b = '20';
+        text_sr_m = '+'
+    }
 
     // 文字定义
     let index_powered_path = torus.getTextPath(index_powered, 10, 26.84, 24, "left baseline", "#fff");
@@ -637,10 +644,12 @@ export async function panel_E(data = {
     function Star(data, sr_b, sr_m) {
         let sr_m_scale = Math.pow(sr_m, 0.8);
 
+        /*
         if (sr_b >= 20) {
             sr_b = 20;
             sr_m_scale = 0
         }
+         */
 
         for (let i = 1; i <= sr_b; i++) {
             let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">

@@ -4,7 +4,7 @@ import {
     getModColor,
     getModFullName,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getStarRatingColor, getStarRatingObject,
+    getRoundedNumberSmallerStr, getStarRatingColor, getDecimals,
     getUserRankColor,
     implantImage,
     PuHuiTi, readNetImage,
@@ -26,6 +26,26 @@ export const LABEL_OPTION = {
     PP: {
         icon: getExportFileV3Path("object-score-pp.png"),
         icon_title: 'PP',
+        color_remark: '#fff',
+    },
+    ACC2: {
+        icon: getExportFileV3Path("object-score-accuracy2.png"),
+        icon_title: 'Accuracy',
+        color_remark: '#fff',
+    },
+    COMBO2: {
+        icon: getExportFileV3Path("object-score-combo2.png"),
+        icon_title: 'Combo',
+        color_remark: '#fff',
+    },
+    PP2: {
+        icon: getExportFileV3Path("object-score-pp2.png"),
+        icon_title: 'PP',
+        color_remark: '#fff',
+    },
+    SCORE2: {
+        icon: getExportFileV3Path("object-score-score2.png"),
+        icon_title: 'Score',
         color_remark: '#fff',
     },
     BPM: {
@@ -111,7 +131,6 @@ export const LABEL_OPTION = {
         icon_title: 'Star Rating',
     },
 }
-
 
 export const PPM_OPTION = {
     ACC: {
@@ -665,8 +684,8 @@ export async function label_M1(data = {
         torus.cutStringTail(data.difficulty_name, 18, data.maxWidth - 50 - 10, true),
         50, 20, 18, 'left baseline', '#fff');
     const star_rating_path = torus.get2SizeTextPath(
-        getStarRatingObject(data.star_rating, 2),
-        getStarRatingObject(data.star_rating, 3),
+        getDecimals(data.star_rating, 2),
+        getDecimals(data.star_rating, 3),
         24,
         18,
         50,
@@ -693,8 +712,8 @@ export async function label_M1(data = {
     svg = replaceTexts(svg, [diff_name_path, star_rating_path, mode_icon_path], reg_text);
 
     //星数
-    let sr_b = getStarRatingObject(data.star_rating, 0);
-    let sr_m = getStarRatingObject(data.star_rating, 1);
+    let sr_b = getDecimals(data.star_rating, 0);
+    let sr_m = getDecimals(data.star_rating, 1);
     let sr_m_scale = Math.pow(sr_m, 0.8);
 
     //超宽处理
@@ -854,6 +873,34 @@ export async function label_M3(data = {
     svg = implantImage(svg, 25, 25, label1_x, 0, 1, data.label1.icon, reg_icon);
     svg = implantImage(svg, 25, 25, label2_x, 0, 1, data.label2.icon, reg_icon);
     svg = implantImage(svg, 25, 25, label3_x, 0, 1, data.label3.icon, reg_icon);
+
+    return svg.toString();
+}
+
+
+//MSL-N1-成绩标签
+export async function label_N1(data = {
+    icon: getExportFileV3Path("object-score-acc2.png"),
+    icon_title: 'ACC',
+    data_b: '98.',
+    data_m: '36%',
+}, reuse = false) {
+    let svg = `
+  <g id="Icon_LN1">
+  </g>
+  <g id="Text_LN1">
+  </g>`;
+
+    //正则
+    const reg_text = /(?<=<g id="Text_LN1">)/;
+    const reg_icon = /(?<=<g id="Icon_LN1">)/;
+
+    //定义文本
+    const label_text = torus.get2SizeTextPath(
+        data.data_b, data.data_m, 22, 18, 25, 17, 'left baseline', '#fff'); // lS 18/ sS 14/ y15
+
+    svg = replaceText(svg, label_text, reg_text);
+    svg = implantImage(svg, 20, 20, 0, 0, 1, data.icon, reg_icon)
 
     return svg.toString();
 }
