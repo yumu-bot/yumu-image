@@ -200,11 +200,11 @@ export async function card_N1(data = {
 
     if (mods_arr_length <= 4 && mods_arr_length > 0) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, 2 * i, 916 - mods_arr_length * 48), reg_mod);
+            svg = replaceText(svg, insertMod(val, 2 * i, 900 + 24 - mods_arr_length * 48), reg_mod);
         });
     } else if (mods_arr_length > 4) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, i, 916 - mods_arr_length * 48), reg_mod);
+            svg = replaceText(svg, insertMod(val, i, 900 + 24 - mods_arr_length * 48), reg_mod);
         });
     }
 
