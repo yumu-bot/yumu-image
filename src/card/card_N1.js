@@ -120,7 +120,7 @@ export async function card_N1(data = {
     const score_date = getScoreDate(data);
 
     const country_date_rank = torus.getTextPath(
-        data.score.user.country_code + ' #' + data.score_rank, + ' (' + score_date + ')',
+        data.score.user.country_code + ' #' + data.score_rank + ' (' + score_date + ')',
         162, 50, 18, 'left baseline', '#fff')
 
     // 导入N1标签
