@@ -112,17 +112,15 @@ export async function card_N1(data = {
     const rank = getExportFileV3Path('object-score-' + data.score.rank + '-small.png')
     const avatar = await readNetImage(data.score.user.avatar_url,  getExportFileV3Path('avatar-guest.png'));
     const background = await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));
-    const name = torus.get2SizeTextPath(
-        torus.cutStringTail(data.score.user.username, 26, 170, true), //最大宽度220px，给后面排名留了50px
-        ' // #' + data.score_rank,
-        26, 18, 130, 26, 'left baseline', '#fff'
-        ); //lS24 sS16 / y 24
+    const name = torus.getTextPath(
+        torus.cutStringTail(data.score.user.username, 26, 210, true), //最大宽度220px，给后面排名留了50px
+        130, 26, 26, 'left baseline', '#fff'); //lS24 sS16 / y 24
     const flagSvg = await getFlagPath(data.score.user.country_code, 130, 32, 20);
 
     const score_date = getScoreDate(data);
 
-    const country_date = torus.getTextPath(
-        data.score.user.country_code + ' (' + score_date + ')',
+    const country_date_rank = torus.getTextPath(
+        data.score.user.country_code + ' #' + data.score_rank, + ' (' + score_date + ')',
         162, 50, 18, 'left baseline', '#fff')
 
     // 导入N1标签
@@ -132,7 +130,7 @@ export async function card_N1(data = {
     const score = data.score.score;
 
     const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
-    const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 5, 34 + 17, 18, 'right baseline', '#aaa');
+    const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 10, 36 + 17, 18, 'right baseline', '#aaa');
 
     const n1_acc = await label_N1({
         ...LABEL_OPTION.ACC2,
@@ -216,11 +214,11 @@ export async function card_N1(data = {
     svg = implantImage(svg,915,62,0,0,0.3, background, reg_background);
     svg = replaceText(svg, name, reg_text);
     svg = replaceText(svg, flagSvg, reg_text);
-    svg = replaceText(svg, country_date, reg_text);
-    svg = implantSvgBody(svg, 350, 8, n1_acc, reg_label);
-    svg = implantSvgBody(svg, 460, 8, n1_combo, reg_label);
-    svg = implantSvgBody(svg, 570, 8, n1_pp, reg_label);
-    svg = implantSvgBody(svg, 350, 34, n1_score, reg_label);
+    svg = replaceText(svg, country_date_rank, reg_text);
+    svg = implantSvgBody(svg, 350, 6, n1_acc, reg_label);
+    svg = implantSvgBody(svg, 460, 6, n1_combo, reg_label);
+    svg = implantSvgBody(svg, 570, 6, n1_pp, reg_label);
+    svg = implantSvgBody(svg, 350, 36, n1_score, reg_label);
     svg = replaceText(svg, delta_score_text, reg_label);
 
     return svg.toString();
