@@ -161,6 +161,7 @@ export async function card_N1(data = {
     const stat_full_width = 325;
 
     const mode = getGameMode(data.score.mode_int, 1);
+    console.log(mode)
     const stat_arr = getStatArr(data, mode);
     const stat_width_arr = getStatWidthArr(data, mode, stat_min_width, stat_full_width, stat_interval);
     const stat_color_arr = getStatColorArr(mode);
