@@ -1,13 +1,10 @@
 import {
-    getExportFileV3Path, getGameMode,
-    getMapStatusV3Path, getDecimals,
-    implantImage, implantSvgBody, PanelGenerate,
-    PuHuiTi, readNetImage,
-    readTemplate,
+    getExportFileV3Path, implantImage, implantSvgBody, PanelGenerate,
+    readNetImage,
     replaceText,
     torus
 } from "../util.js";
-import {label_M1, label_M2, label_M3, LABEL_OPTION} from "../component/label.js";
+import {label_M1, label_M2, label_M3} from "../component/label.js";
 
 export async function card_M(data = {
     "artist": "HOYO-MiX",

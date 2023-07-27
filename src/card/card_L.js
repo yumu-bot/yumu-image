@@ -6,7 +6,6 @@ import {
     replaceText,
     torus
 } from "../util.js";
-import moment from "moment";
 import {card_K} from "./card_K.js";
 
 export async function card_L(data = {

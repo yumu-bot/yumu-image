@@ -540,7 +540,7 @@ export async function panel_E(data = {
         map_title_unicode =
             PuHuiTi.getTextPath(
                 PuHuiTi.cutStringTail(data.map_title_unicode, 36, 860),
-                440, 931.6, 36, "center baseline", "#fff");;
+                440, 931.6, 36, "center baseline", "#fff");
     }
 
 
