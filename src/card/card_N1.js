@@ -160,8 +160,7 @@ export async function card_N1(data = {
     const stat_min_width = 10;
     const stat_full_width = 325;
 
-    const mode = getGameMode(data.score.mode_int, 1);
-    console.log(data.score.mode_int)
+    const mode = getGameMode(data.score.mode, 1);
     const stat_arr = getStatArr(data, mode);
     const stat_width_arr = getStatWidthArr(data, mode, stat_min_width, stat_full_width, stat_interval);
     const stat_color_arr = getStatColorArr(mode);
@@ -201,11 +200,11 @@ export async function card_N1(data = {
 
     if (mods_arr_length <= 4 && mods_arr_length > 0) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, 2 * i, 900 + 10 - mods_arr_length * 48), reg_mod);
+            svg = replaceText(svg, insertMod(val, 2 * i, 900 + 16 - mods_arr_length * 48), reg_mod);
         });
     } else if (mods_arr_length > 4) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, i, 900 + 10 - mods_arr_length * 48), reg_mod);
+            svg = replaceText(svg, insertMod(val, i, 900 + 16 - mods_arr_length * 48), reg_mod);
         });
     }
 
