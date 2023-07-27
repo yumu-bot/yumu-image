@@ -111,18 +111,18 @@ export async function card_N1(data = {
 
     const rank = getExportFileV3Path('object-score-' + data.score.rank + '-small.png')
     const avatar = await readNetImage(data.score.user.avatar_url,  getExportFileV3Path('avatar-guest.png'));
-    const background = await readNetImage(data.score.user.cover.custom_url, getExportFileV3Path('avatar-guest.png'));
+    const background = await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));
     const name = torus.get2SizeTextPath(
-        torus.cutStringTail(data.score.user.username, 26, 180, true), //最大宽度220px，给后面排名留了40px
+        torus.cutStringTail(data.score.user.username, 26, 170, true), //最大宽度220px，给后面排名留了50px
         ' // #' + data.score_rank,
-        26, 20, 130, 26, 'left baseline', '#fff'
+        26, 18, 130, 26, 'left baseline', '#fff'
         ); //lS24 sS16 / y 24
-    const flagSvg = await getFlagPath(data.score.user.country.code, 130, 32, 20);
+    const flagSvg = await getFlagPath(data.score.user.country_code, 130, 32, 20);
 
     const score_date = getScoreDate(data);
 
     const country_date = torus.getTextPath(
-        data.score.user.country.code + ' (' + score_date + ')',
+        data.score.user.country_code + ' (' + score_date + ')',
         162, 50, 18, 'left baseline', '#fff')
 
     // 导入N1标签
@@ -130,7 +130,9 @@ export async function card_N1(data = {
     const combo = data.score.max_combo;
     const pp = Math.round(data.score.pp);
     const score = data.score.score;
+
     const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
+    const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 5, 34 + 17, 18, 'right baseline', '#aaa');
 
     const n1_acc = await label_N1({
         ...LABEL_OPTION.ACC2,
@@ -150,7 +152,7 @@ export async function card_N1(data = {
     const n1_score = await label_N1({
         ...LABEL_OPTION.COMBO2,
         data_b: getRoundedNumberLargerStr(score, -1),
-        data_m: getRoundedNumberSmallerStr(score, -1) + ' ' + delta_score,
+        data_m: getRoundedNumberSmallerStr(score, -1),
     }, true);
 
     // 导入评价，x和y是矩形的左上角
@@ -195,7 +197,7 @@ export async function card_N1(data = {
         return `<rect x="${x}" y="6" width="40" height="20" rx="10" ry="10" style="fill:${getModColor(mod)};"/>\n${mod_abbr_path}\n`;
     }
 
-    let mods_arr = data.score.mods || ['']
+    const mods_arr = data.score.mods || ['']
     const mods_arr_length = mods_arr.length;
 
     if (mods_arr_length <= 4 && mods_arr_length > 0) {
@@ -211,7 +213,7 @@ export async function card_N1(data = {
     // 插入图片和部件（新方法
     svg = implantImage(svg,40,40,15,10,1, rank, reg_label);
     svg = implantImage(svg,50,50,70,6,1, avatar, reg_avatar);
-    svg = implantImage(svg,915,62,0,0,0.5, background, reg_background);
+    svg = implantImage(svg,915,62,0,0,0.3, background, reg_background);
     svg = replaceText(svg, name, reg_text);
     svg = replaceText(svg, flagSvg, reg_text);
     svg = replaceText(svg, country_date, reg_text);
@@ -219,6 +221,7 @@ export async function card_N1(data = {
     svg = implantSvgBody(svg, 460, 8, n1_combo, reg_label);
     svg = implantSvgBody(svg, 570, 8, n1_pp, reg_label);
     svg = implantSvgBody(svg, 350, 34, n1_score, reg_label);
+    svg = replaceText(svg, delta_score_text, reg_label);
 
     return svg.toString();
 
@@ -288,7 +291,7 @@ export async function card_N1(data = {
 
             //筛选出太短的
             for (const v of stat_arr) {
-                if ((v / stat_sum) < (minWidth / remain_width)) {
+                if ((v / stat_sum) < (minWidth / remain_width) && v > 0) {
                     stat_sum_calc -= v;
                     remain_width_calc -= minWidth;
                 }
@@ -298,7 +301,7 @@ export async function card_N1(data = {
             for (const v of stat_arr) {
                 if (v === 0) {
                     stat_width_arr.push(0);
-                } else if ((v / stat_sum_calc) < (minWidth / remain_width_calc)) {
+                } else if ((v / stat_sum) < (minWidth / remain_width)) {
                     stat_width_arr.push(minWidth);
                 } else {
                     stat_width_arr.push(v / stat_sum_calc * remain_width_calc);
