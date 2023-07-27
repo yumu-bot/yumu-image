@@ -2872,7 +2872,7 @@ export const PanelGenerate = {
 
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule) => {
-        const background = cursor.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg',getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
+        const background = cursor ? await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg',getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default"; //getSortName(search.sort)
