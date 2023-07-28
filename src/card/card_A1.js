@@ -43,8 +43,8 @@ export async function card_A1(data = {
 
     // 文字的 <path>
     let text_name =
-        torus.getTextPath(torus.cutStringTail(data.name, 48, 290),
-            130, 53.672, 48, "left baseline", "#fff");
+        torus.getTextPath(torus.cutStringTail(data.name, 42, 290),
+            130, 53.672, 42, "left baseline", "#fff"); //48px
     let text_rank_global =
         torus.getTextPath('#' + rank_global, 20, 165.836, 24, "left baseline", "#fff");
     let text_rank_country =

@@ -2823,6 +2823,25 @@ export const PanelGenerate = {
         };
     },
 
+    microUser2CardA1: async (microUser) => {
+        const background = await readNetImage(microUser?.cover_url || microUser?.cover?.url, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(microUser?.avatar_url || microUser?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+        return {
+            background,
+            avatar,
+            sub_icon1: microUser.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '',
+            sub_icon2: '',
+            name: microUser.username,
+            rank_global: microUser.statistics.country_rank,
+            rank_country: microUser.statistics.global_rank,
+            country: microUser?.country_code || 'CN',
+            acc: Math.round(microUser.statistics.accuracy * 100) / 100,
+            level: microUser.statistics.levelCurrent,
+            progress: Math.floor(microUser.statistics.levelProgress),
+            pp: Math.round(microUser.statistics.pp),
+        };
+    },
+
     beatmap2CardA2: async (beatmap) => {
         const background = await readNetImage(beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
         const map_status = beatmap.status;

@@ -221,7 +221,7 @@ export async function panel_A1(data = {
 
 
     for (const i in data.friend_card_A1) {
-        const friend_user = await PanelGenerate.user2CardA1(data.friend_card_A1[i]);
+        const friend_user = await PanelGenerate.microUser2CardA1(data.friend_card_A1[i]);
         const f = await card_A1(friend_user, true);
         friend_cardA1s.push(f);
     }
@@ -235,7 +235,7 @@ export async function panel_A1(data = {
         const x = i % 4;
         const y = Math.floor(i / 4);
 
-        svg = implantSvgBody(svg, 40 + 430 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
+        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
     }
 
     // 计算面板高度
