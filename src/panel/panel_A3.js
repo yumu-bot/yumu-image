@@ -1,7 +1,6 @@
 import {
     exportPng, getExportFileV3Path,
     getNowTimeStamp,
-    getRandomBannerPath,
     implantImage,
     implantSvgBody,
     PanelGenerate, readNetImage,
@@ -276,7 +275,7 @@ export async function panel_A3(data = {
 
     // 插入图片和部件（新方法
     // svg = implantImage(svg,1920,320,0,0,0.8, getRandomBannerPath(), reg_banner);
-    svg = implantImage(svg,1920,320,0,0,0.6, await readNetImage(data.beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-DLfailBG.jpg')), reg_banner);
+    svg = implantImage(svg,1920,320,0,0,0.6, await readNetImage(data.beatmap.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')), reg_banner);
 
     // 计算面板高度
     const rowTotal = (cardN1s !== []) ? Math.ceil(cardN1s.length / 2) : 0;
