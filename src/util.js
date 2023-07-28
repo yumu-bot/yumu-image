@@ -2837,8 +2837,8 @@ export const PanelGenerate = {
             rank_country: microUser.statistics.country_rank,
             country: microUser?.country_code || 'CN',
             acc: Math.round(microUser.statistics.hit_accuracy * 100) / 100,
-            level: microUser.statistics.level.current,
-            progress: Math.floor(microUser.statistics.level.progress),
+            level: microUser.statistics.levelCurrent,
+            progress: Math.floor(microUser.statistics.levelProgress),
             pp: Math.round(microUser.statistics.pp),
             isBot: microUser.statistics.is_bot,
         };
