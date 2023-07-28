@@ -109,9 +109,11 @@ export async function card_N1(data = {
 
     //导入背景和头像
 
-    const rank = getExportFileV3Path('object-score-' + data.score.rank + '-small.png')
+    const rank = getExportFileV3Path('object-score-' + data.score.rank + '-small.png');
     const avatar = await readNetImage(data.score.user.avatar_url,  getExportFileV3Path('avatar-guest.png'));
-    const background = await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));
+    const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
+
+    //await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));
     const name = torus.getTextPath(
         torus.cutStringTail(data.score.user.username, 26, 210, true), //最大宽度220px，给后面排名留了50px
         130, 26, 26, 'left baseline', '#fff'); //lS24 sS16 / y 24
@@ -211,7 +213,7 @@ export async function card_N1(data = {
     // 插入图片和部件（新方法
     svg = implantImage(svg,40,40,15,10,1, rank, reg_label);
     svg = implantImage(svg,50,50,70,6,1, avatar, reg_avatar);
-    svg = implantImage(svg,915,62,0,0,0.3, background, reg_background);
+    svg = implantImage(svg,915,62,0,0,0.5, background, reg_background);
     svg = replaceText(svg, name, reg_text);
     svg = replaceText(svg, flagSvg, reg_text);
     svg = replaceText(svg, country_date_rank, reg_text);
