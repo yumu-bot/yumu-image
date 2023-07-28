@@ -235,13 +235,13 @@ export async function panel_A3(data = {
     const reg_index = /(?<=<g id="Index">)/;
     const reg_beatmap_a2 = /(?<=<g id="Beatmap_Card_A2">)/;
     const reg_list_n1 = /(?<=<g id="List_Card_N1">)/;
-    const reg_list_n2 = /(?<=<g id="List_Card_N2">)/;
+    // const reg_list_n2 = /(?<=<g id="List_Card_N2">)/;
     const reg_cardheight = '${cardheight}';
     const reg_panelheight = '${panelheight}';
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA3-1\);">)/;
 
     // 面板文字
-    const index_powered = 'powered by Yumubot v0.3.1 EA // Map Score List (!yml)';
+    const index_powered = 'powered by Yumubot v0.3.1 EA // Leader Board (!yml)';
     const index_request_time = 'request time: ' + getNowTimeStamp();
     const index_panel_name = 'List';
 
