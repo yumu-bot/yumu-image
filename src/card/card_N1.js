@@ -145,12 +145,12 @@ export async function card_N1(data = {
         data_m: 'x',
     }, true);
     const n1_pp = await label_N1({
-        ...LABEL_OPTION.COMBO2,
+        ...LABEL_OPTION.PP2,
         data_b: pp.toString(),
         data_m: 'PP',
     }, true);
     const n1_score = await label_N1({
-        ...LABEL_OPTION.COMBO2,
+        ...LABEL_OPTION.SCORE2,
         data_b: getRoundedNumberLargerStr(score, -1),
         data_m: getRoundedNumberSmallerStr(score, -1),
     }, true);
