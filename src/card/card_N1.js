@@ -80,7 +80,7 @@ export async function card_N1(data = {
               <circle cx="95" cy="31" r="25" style="fill: none;"/>
             </clipPath>
             <filter id="blur-CN-1" height="120%" width="120%" x="-10%" y="-10%" filterUnits="userSpaceOnUse">
-                <feGaussianBlur in="userSpaceOnUse" stdDeviation="3" result="blur"/>
+                <feGaussianBlur in="userSpaceOnUse" stdDeviation="5" result="blur"/>
             </filter>
           </defs>
           <g id="Background_CN_1">
@@ -114,16 +114,16 @@ export async function card_N1(data = {
     const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
 
     //await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));
-    const name = torus.getTextPath(
-        torus.cutStringTail(data.score.user.username, 26, 210, true), //最大宽度220px，给后面排名留了50px
-        130, 26, 26, 'left baseline', '#fff'); //lS24 sS16 / y 24
+    const name = torus.get2SizeTextPath(
+        torus.cutStringTail(data.score.user.username, 26, 180, true), //最大宽度220px，给后面排名留了50px
+        ' #' + data.score_rank, 26, 18, 130, 26, 'left baseline', '#fff'); //lS24 sS16 / y 24
     const flagSvg = await getFlagPath(data.score.user.country_code, 130, 32, 20);
 
     const score_date = getScoreDate(data);
 
-    const country_date_rank = torus.getTextPath(
-        data.score.user.country_code + ' #' + data.score_rank + ' (' + score_date + ')',
-        162, 50, 18, 'left baseline', '#fff')
+    const country_date = torus.get2SizeTextPath(
+        data.score.user.country_code, ' (' + score_date + ')',
+        18, 14, 162, 50, 'left baseline', '#fff');
 
     // 导入N1标签
     const acc = data.score.accuracy * 100;
@@ -216,7 +216,7 @@ export async function card_N1(data = {
     svg = implantImage(svg,915,62,0,0,0.5, background, reg_background);
     svg = replaceText(svg, name, reg_text);
     svg = replaceText(svg, flagSvg, reg_text);
-    svg = replaceText(svg, country_date_rank, reg_text);
+    svg = replaceText(svg, country_date, reg_text);
     svg = implantSvgBody(svg, 350, 6, n1_acc, reg_label);
     svg = implantSvgBody(svg, 460, 6, n1_combo, reg_label);
     svg = implantSvgBody(svg, 570, 6, n1_pp, reg_label);
