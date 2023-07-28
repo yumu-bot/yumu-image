@@ -21,6 +21,7 @@ export async function card_A1(data = {
     level: 100,
     progress: 32,
     pp: 4396,
+    isBot: false,
 
     color_base: '#2a2226',
 }, reuse = false) {
@@ -50,18 +51,17 @@ export async function card_A1(data = {
     let text_rank_country =
         torus.getTextPath(country + '#' + rank_country, 20, 191.836, 24, "left baseline", "#fff");
 
-    let level = data.level || 0;
-    let progress = data.progress || 0;
-    let acc = getRoundedNumberLargerStr(data.acc,3) + getRoundedNumberSmallerStr(data.acc,3) || 0
-    let info = acc + '% Lv.' + level + '(' + progress + '%)';
-    let text_info =
-        torus.getTextPath(info, 420, 141.836, 24, "right baseline", "#fff");
+    let level = data.isBot ? 0 : data.level;
+    let progress = data.isBot ? 0 : data.progress;
+    let acc = data.isBot ? 0 : getRoundedNumberLargerStr(data.acc,3) + getRoundedNumberSmallerStr(data.acc,3);
+    let info = data.isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
+    let text_info = torus.getTextPath(info, 420, 141.836, 24, "right baseline", "#fff");
 
     //pp位置计算
     let pp = Math.round(data.pp) || 0;
 
-    let text_pp = torus.get2SizeTextPath(pp.toString(),
-        'PP',
+    let text_pp = torus.get2SizeTextPath(data.isBot ? '' : pp.toString(),
+        data.isBot ? 'Bot' : 'PP',
         60,
         48,
         420,

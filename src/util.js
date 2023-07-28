@@ -2820,6 +2820,7 @@ export const PanelGenerate = {
             level: user['levelCurrent'],
             progress: Math.floor(user['levelProgress']),
             pp: Math.round(user['pp']),
+            isBot: user.is_bot,
         };
     },
 
@@ -2839,6 +2840,7 @@ export const PanelGenerate = {
             level: microUser.statistics.levelCurrent,
             progress: Math.floor(microUser.statistics.levelProgress),
             pp: Math.round(microUser.statistics.pp),
+            isBot: microUser.statistics.is_bot,
         };
     },
 
