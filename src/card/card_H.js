@@ -1,5 +1,4 @@
 import {
-    getExportFileV3Path,
     implantImage,
     readTemplate,
     replaceText,
@@ -119,6 +118,7 @@ export async function card_H(data = {
         case 3: mods_width = 140; break;
         case 4: mods_width = 160; break;
         case 5: mods_width = 180; break;
+        default: mods_width = 180;
     }
 
     title_max_width -= (Math.max(mods_width, label3_width)); //一般来说就第三个标签最长了

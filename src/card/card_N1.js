@@ -1,7 +1,7 @@
 import {
     getDecimals,
     getExportFileV3Path,
-    getFlagPath, getGameMode, getModColor, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getFlagPath, getGameMode, getModColor, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, getTimeDifference,
     implantImage, implantSvgBody,
     readNetImage,
     replaceText,
@@ -119,7 +119,7 @@ export async function card_N1(data = {
         ' #' + data.score_rank, 26, 18, 130, 26, 'left baseline', '#fff'); //lS24 sS16 / y 24
     const flagSvg = await getFlagPath(data.score.user.country_code, 130, 32, 20);
 
-    const score_date = getScoreDate(data);
+    const score_date = getTimeDifference(data.score.created_at);
 
     const country_date = torus.get2SizeTextPath(
         data.score.user.country_code, ' (' + score_date + ')',
@@ -224,30 +224,6 @@ export async function card_N1(data = {
     svg = replaceText(svg, delta_score_text, reg_label);
 
     return svg.toString();
-
-    function getScoreDate(data) {
-        const score_date = moment(data.score.created_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960);
-
-        const years = score_date.diff(moment(), "years");
-        const months = score_date.diff(moment(), "months");
-        const days = score_date.diff(moment(), "days");
-        const hours = score_date.diff(moment(), "hours");
-        const minutes = score_date.diff(moment(), "minutes");
-
-        if (years < 0) {
-            return years + 'y';
-        } else if (months < 0) {
-            return months + 'mo';
-        } else if (days < 0) {
-            return days + 'd';
-        } else if (hours < 0) {
-            return hours + 'h';
-        } else if (minutes < 0) {
-            return minutes + 'm';
-        } else {
-            return 'just now';
-        }
-    }
 
     function getStatWidthArr (data, mode = 'o', minWidth = 10, fullWidth = 325, interval = 5) {
         const c320 = data.score.statistics.count_geki;
