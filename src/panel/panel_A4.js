@@ -318,10 +318,17 @@ export async function panel_A4(data = {
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
 
+    //天选之子H卡提出来
+    const tianxuanzhizi = (cardHs.length % 2 === 1) ? cardHs.pop() : '';
+    svg = implantSvgBody(svg, 540, 330 + (rowTotal - 1) * 250, tianxuanzhizi, reg_bp_list);
+
     //插入H卡
     for (let i = 0; i < cardHs.length; i++) {
-        const x = (i < rowTotal) ? 40 : 980;
-        const y = (i < rowTotal) ? (330 + i * 250) : (330 + (i - rowTotal) * 250);
+        const ix = (i + 1) % 2;
+        const iy = Math.floor(i / 2);
+
+        const x = (ix === 0) ? 40 : 980;
+        const y = 330 + iy * 250;
 
         svg = implantSvgBody(svg, x, y, cardHs[i], reg_bp_list);
     }
