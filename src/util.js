@@ -73,7 +73,7 @@ export function initPath() {
     return path;
 }
 
-const mascot_pic_sum_arr = [39, 14, 3, 2, 6, 1, 1, 2, 2, 3]; //吉祥物的对应的照片数量，和随机banner一样的
+const mascot_pic_sum_arr = [50, 20, 4, 4, 7, 1, 2, 2, 3, 6]; //吉祥物的对应的照片数量，和随机banner一样的
 // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
 
 const bannerTotal = 110;//banner 数量
