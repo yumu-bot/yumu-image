@@ -257,7 +257,7 @@ export async function panel_A4(data = {
             "create_at_str" : "2023-06-17T11:24:22Z"
         }
     ],
-
+    "rank": [1,3,4,5,6],
 
 }, reuse = false) {
     // 导入模板
@@ -272,7 +272,7 @@ export async function panel_A4(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA4-1\);">)/;
 
     // 面板文字
-    const index_powered = 'powered by Yumubot v0.3.1 EA // Today BP / BP (!ymt/!ymb)';
+    const index_powered = 'powered by Yumubot v0.3.1 EA // Today BP / BP (!ymt / !ymb)';
     const index_request_time = 'request time: ' + getNowTimeStamp();
     const index_panel_name = 'BP';
 
@@ -293,12 +293,9 @@ export async function panel_A4(data = {
 
     // 导入H卡
     let cardHs = [];
-    for (const v of data.bps) {
-        const bp_generated = await PanelGenerate.bp2CardH(v)
-        const f = await card_H({
-            score: data.scores[i],
-            compare_score: data.scores[i0].score,
-        })
+    for (const i in data.bps) {
+        const bp_generated = await PanelGenerate.bp2CardH(data.bps[i], data.rank[i]);
+        const f = await card_H(bp_generated, true);
 
         cardHs.push(f);
     }
@@ -311,8 +308,8 @@ export async function panel_A4(data = {
     let panelHeight, cardHeight;
 
     if (rowTotal >= 0) {
-        panelHeight = 360 + 250 * rowTotal;
-        cardHeight = 70 + 250 * rowTotal;
+        panelHeight = 330 + 150 * rowTotal;
+        cardHeight = 40 + 150 * rowTotal;
     } else {
         panelHeight = 1080;
         cardHeight = 790;
@@ -321,7 +318,7 @@ export async function panel_A4(data = {
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
 
-    //插入N1卡
+    //插入H卡
     for (let i = 0; i < cardHs.length; i++) {
         const x = (i < rowTotal) ? 40 : 980;
         const y = (i < rowTotal) ? (330 + i * 250) : (330 + (i - rowTotal) * 250);

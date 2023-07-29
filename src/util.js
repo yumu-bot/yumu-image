@@ -2823,7 +2823,7 @@ export function getTimeDifference(compare = '', now = moment()) {
     } else if (Math.abs(minutes) > 0) {
         return minutes + 'm';
     } else {
-        return 'just now';
+        return '-';
     }
 }
 
@@ -3117,179 +3117,45 @@ export const PanelGenerate = {
         };
     },
 
-    bp2CardH: async (bp = {
-        "accuracy" : 0.9940625,
-        "mods" : [ ],
-        "passed" : true,
-        "perfect" : false,
-        "pp" : 373.032,
-        "rank" : "S",
-        "replay" : false,
-        "score" : 80666662,
-        "statistics" : {
-            "pp" : null,
-            "ss" : null,
-            "ssh" : null,
-            "s" : null,
-            "sh" : null,
-            "a" : null,
-            "ranked" : null,
-            "count_50" : 1,
-            "count_100" : 13,
-            "count_300" : 1586,
-            "count_geki" : 370,
-            "count_katu" : 12,
-            "count_miss" : 0,
-            "ranked_score" : null,
-            "total_score" : null,
-            "hit_accuracy" : null,
-            "play_count" : null,
-            "play_time" : null,
-            "total_hits" : null,
-            "maximum_combo" : null,
-            "is_ranked" : null,
-            "global_rank" : null,
-            "replays_watched_by_others" : null,
-            "country_rank" : null,
-            "level_current" : null,
-            "level_progress" : null,
-            "country_rank_7k" : null,
-            "country_rank_4k" : null,
-            "rank_7k" : null,
-            "rank_4k" : null,
-            "pp_7k" : null,
-            "pp_4k" : null
-        },
-        "user" : {
-            "id" : 17064371,
-            "cover" : null,
-            "avatar" : "https://a.ppy.sh/17064371?1675693670.jpeg",
-            "pmOnly" : false,
-            "avatar_url" : "https://a.ppy.sh/17064371?1675693670.jpeg",
-            "cover_url" : null,
-            "default_group" : "default",
-            "is_active" : true,
-            "is_bot" : false,
-            "is_deleted" : false,
-            "is_online" : false,
-            "is_supporter" : true,
-            "last_visit" : [ 2023, 7, 29, 13, 45, 43, 833335215 ],
-            "pm_friends_only" : false,
-            "username" : "-Spring Night-",
-            "country_code" : "TW",
-            "country" : null,
-            "statistics" : null
-        },
-        "weight" : {
-            "percentage" : 100.0,
-            "pp" : 373.032
-        },
-        "best_id" : 4457155373,
-        "max_combo" : 2077,
-        "user_id" : 17064371,
-        "created_at" : [ 2023, 6, 17, 11, 24, 22 ],
-        "id" : 4457155373,
-        "mode" : "OSU",
-        "mode_int" : 0,
-        "beatmap" : {
-            "id" : 2993974,
-            "mode" : "osu",
-            "status" : "ranked",
-            "version" : "Starlight",
-            "ar" : 9.4,
-            "cs" : 3.8,
-            "bpm" : 177.0,
-            "convert" : false,
-            "passcount" : 102749,
-            "playcount" : 1209979,
-            "ranked" : 1,
-            "url" : "https://osu.ppy.sh/beatmaps/2993974",
-            "beatMapRatingList" : null,
-            "beatMapRetryList" : null,
-            "beatMapFailedList" : null,
-            "beatMapRating" : 0.0,
-            "beatMapRetryCount" : 0,
-            "beatMapFailedCount" : 0,
-            "beatmapset_id" : 1456709,
-            "difficulty_rating" : 6.17,
-            "mode_int" : 0,
-            "total_length" : 332,
-            "hit_length" : 331,
-            "user_id" : 12308923,
-            "accuracy" : 9.0,
-            "drain" : 5.0,
-            "max_combo" : null,
-            "is_scoreable" : true,
-            "last_updated" : "2021-06-10T02:08:31Z",
-            "checksum" : "05176a860021955266cc9d3b20e26850",
-            "count_sliders" : 443,
-            "count_spinners" : 2,
-            "count_circles" : 1155,
-            "fail" : null,
-            "exit" : null,
-            "beatmapset" : null
-        },
-        "beatmapset" : {
-            "video" : false,
-            "availabilityDownloadDisable" : null,
-            "availabilityInformation" : null,
-            "fromDatabases" : false,
-            "id" : 1456709,
-            "user_id" : 12308923,
-            "bpm" : null,
-            "artist" : "Kano",
-            "artist_unicode" : "鹿乃",
-            "title" : "Stella-rium (Asterisk MAKINA Remix)",
-            "title_unicode" : "Stella-rium (Asterisk MAKINA Remix)",
-            "creator" : "Vaporfly",
-            "favourite_count" : 779,
-            "nsfw" : false,
-            "play_count" : 1209979,
-            "preview_url" : "//b.ppy.sh/preview/1456709.mp3",
-            "source" : "放課後のプレアデス",
-            "status" : "ranked",
-            "legacy_thread_url" : null,
-            "tags" : null,
-            "storyboard" : null,
-            "covers" : {
-                "cover" : "https://assets.ppy.sh/beatmaps/1456709/covers/cover.jpg?1623290934",
-                "cover@2x" : "https://assets.ppy.sh/beatmaps/1456709/covers/cover@2x.jpg?1623290934",
-                "card" : "https://assets.ppy.sh/beatmaps/1456709/covers/card.jpg?1623290934",
-                "card@2x" : "https://assets.ppy.sh/beatmaps/1456709/covers/card@2x.jpg?1623290934",
-                "list" : "https://assets.ppy.sh/beatmaps/1456709/covers/list.jpg?1623290934",
-                "list@2x" : "https://assets.ppy.sh/beatmaps/1456709/covers/list@2x.jpg?1623290934",
-                "slimcover" : "https://assets.ppy.sh/beatmaps/1456709/covers/slimcover.jpg?1623290934",
-                "slimcover@2x" : "https://assets.ppy.sh/beatmaps/1456709/covers/slimcover@2x.jpg?1623290934"
-            },
-            "ratings" : null,
-            "spotlight" : false,
-            "beatmaps" : null,
-            "ranked_date" : null
-        },
-        "create_at_str" : "2023-06-17T11:24:22Z"
-    }) => {
+    bp2CardH: async (bp, rank = 1) => {
         const cover = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
-        const background = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['silmcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+        const background = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+
+        const time_diff = getTimeDifference(bp.create_at_str);
+
+        let mods_width;
+        switch (bp.mods.length) {
+            case 0: mods_width = 0; break;
+            case 1: mods_width = 100; break;
+            case 2: mods_width = 140; break;
+            case 3: mods_width = 140; break;
+            case 4: mods_width = 160; break;
+            case 5: mods_width = 180; break;
+            default: mods_width = 180;
+        }
+        const difficulty_name = bp.beatmap.version ? torus.cutStringTail(bp.beatmap.version, 24,
+            500 - mods_width - torus.getTextWidth('[] - bp ()' + rank + time_diff, 24)) : '';
+        const color_index = (bp.rank === 'XH' || bp.rank === 'X') ? '#2A2226' : '#fff';
 
         return {
             background: background,
             cover: cover,
             title: bp.beatmapset.title || '',
-            left1: '',
-            left2: '',
-            index_b: '',
-            index_m: '',
+            left1: bp.beatmapset.artist + ' // ' + bp.beatmapset.creator,
+            left2: '[' + difficulty_name + '] - bp' + rank + ' (' + time_diff + ')',
+            index_b: Math.round(bp.pp).toString(),
+            index_m: 'PP',
             index_b_size: 48,
             index_m_size: 36,
             label1: '',
             label2: '',
             label3: '',
             label4: '',
-            mods_arr: [],
+            mods_arr: bp.mods || [],
 
-            color_right: '#fff',
-            color_left: '#fff',
-            color_index: '#fff',
+            color_right: getRankColor(bp.rank),
+            color_left: getStarRatingColor(bp.beatmap.difficulty_rating),
+            color_index: color_index,
             color_label1: '',
             color_label2: '',
             color_label3: '',
