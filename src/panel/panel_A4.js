@@ -326,7 +326,7 @@ export async function panel_A4(data = {
         const ix = (i + 1) % 2;
         const iy = Math.floor(i / 2);
 
-        const x = (ix === 0) ? 40 : 980;
+        const x = (ix === 1) ? 40 : 980;
         const y = 330 + iy * 150;
 
         svg = implantSvgBody(svg, x, y, cardHs[i], reg_bp_list);
