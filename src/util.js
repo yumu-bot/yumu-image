@@ -2677,9 +2677,13 @@ export function getModFullName(mod = 'NM') {
 }
 
 export function getModInt(mod = ['']) {
-    return mod.map(v => {
-        return ModInt[v] ? ModInt[v] : 0
-    }).reduce((sum, v) => sum | v);
+    if (Array.isArray(mod)) {
+        return mod.map(v => {
+            return ModInt[v] ? ModInt[v] : 0
+        }).reduce((sum, v) => sum | v);
+    } else if (typeof mod === 'number') {
+        return Math.round(mod);
+    }
 }
 
 export function addMod(modInt = 0, mod = '') {

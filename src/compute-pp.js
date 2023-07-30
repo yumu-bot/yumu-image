@@ -31,52 +31,54 @@ export async function getMapAttributes(bid, mods, mode_int = 0) {
 }
 
 export async function calcPerformancePoints(bid, score = statistics, mode, reload = false) {
-    let mode_int;
-    if (mode && typeof mode === 'string') {
-        mode = mode ? mode.toLowerCase() : 'osu';
-        switch (mode) {
-            case 'osu':
-                mode_int = 0;
-                break;
-            case 'taiko':
-                mode_int = 1;
-                break;
-            case 'fruits':
-            case 'catch':
-                mode_int = 2;
-                break;
-            case 'mania':
-                mode_int = 3;
-                break;
-        }
-    } else {
-        switch (mode) {
-            default:
-            case 0:
-                mode_int = 0;
-                mode = 'osu';
-                break;
-            case 1:
-                mode_int = 1;
-                mode = 'taiko';
-                break;
-            case 2:
-                mode_int = 2;
-                mode = 'fruits';
-                break;
-            case 3:
-                mode_int = 3;
-                mode = 'mania';
-                break;
+    let mode_int = score.mods_int;
+    if (!score.mods_int) {
+        if (mode && typeof mode === 'string') {
+            mode = mode ? mode.toLowerCase() : 'osu';
+            switch (mode) {
+                case 'osu':
+                    mode_int = 0;
+                    break;
+                case 'taiko':
+                    mode_int = 1;
+                    break;
+                case 'fruits':
+                case 'catch':
+                    mode_int = 2;
+                    break;
+                case 'mania':
+                    mode_int = 3;
+                    break;
+            }
+        } else {
+            switch (mode) {
+                default:
+                case 0:
+                    mode_int = 0;
+                    mode = 'osu';
+                    break;
+                case 1:
+                    mode_int = 1;
+                    mode = 'taiko';
+                    break;
+                case 2:
+                    mode_int = 2;
+                    mode = 'fruits';
+                    break;
+                case 3:
+                    mode_int = 3;
+                    mode = 'mania';
+                    break;
+            }
         }
     }
 
     const osuFilePath = await getOsuFilePath(bid, mode, reload);
-
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
-    const mods = (score.mods && score.mods.length !== 0) ? getModInt(score.mods) : 0;
+
+    const mods = (score.mods_int) ? score.mods_int : ((score.mods && score.mods.length !== 0) ? getModInt(score.mods) : 0);
     let calculator = new Calculator({
         mode: mode_int,
         mods: mods,
@@ -102,11 +104,23 @@ export async function calcPerformancePoints(bid, score = statistics, mode, reloa
     calculator.n300(score.count_300 + score.count_miss);
     calculator.nMisses(0);
     const full_pp = calculator.performance(beatMap);
+
+    calculator.combo(maxCombo);
+    calculator.acc(1);
+    calculator.n300(score.count_miss + score.count_50 + score.count_100 + score.count_300);
+    calculator.nKatu(0)
+    calculator.nGeki(0)
+    calculator.n100(0)
+    calculator.n50(0)
+    calculator.nMisses(0);
+    const perfect_pp = calculator.performance(beatMap);
     return {
         pp: now_pp.pp,
         pp_all: now_pp,
         full_pp: full_pp.pp,
         full_pp_all: full_pp,
+        perfect_pp: perfect_pp.pp,
+        perfect_pp_all: perfect_pp,
         attr: attr,
     };
 

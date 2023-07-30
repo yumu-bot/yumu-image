@@ -11,6 +11,7 @@ import {router as PanelDRouter} from "./src/panel/panel_D.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as DrawLineRouter} from "./src/panel/panel_Alpha.js";
 import {router as GetMapAttrRouter} from "./src/mapAttributes.js";
+import {router as AAARouter} from "./src/panel/panel_sp.js";
 
 initPath();
 //这里放测试代码
@@ -42,6 +43,7 @@ app.post('/md', MarkdownRouter);
 app.post('/attr', GetMapAttrRouter);
 app.post('/panel_F', PanelFRouter);
 app.post('/panel_B', PanelBRouter);
+app.post('/spinfo', AAARouter);
 
 app.post('/testApi', async (req, res) => {
     console.log(req.fields)
