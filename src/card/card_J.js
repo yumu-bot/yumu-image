@@ -4,7 +4,7 @@ import {
     getRankColor,
     getStarRatingColor,
     implantImage,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 
@@ -68,25 +68,34 @@ export async function card_J(data = {
 
     // 定义文字
     let text_map_title_romanized = torus.cutStringTail(data.map_title_romanized || '', 18, 170);
-    let text_map_artist = torus.cutStringTail(data.map_artist || '', 14, 170);
+    // let text_map_artist = torus.cutStringTail(data.map_artist || '', 14, 170);
     let text_pp = data.pp;
 
     // 替换文字
     let map_title_romanized =
         torus.getTextPath(text_map_title_romanized , 130, 17.877, 18, "left baseline", "#fff");
+    /*
     let map_artist =
         torus.getTextPath(text_map_artist, 130, 32.571, 14, "left baseline", "#a1a1a1");
+
+     */
 
     let map_line_3_right_text = (data.accuracy && data.combo) ?  data.combo + 'x ' + data.accuracy + '%': '0x 0%';
     let map_line_3_right =
         torus.getTextPath(map_line_3_right_text, 300, 47.571, 14, "right baseline", "#fff");
 
-    let text_map_difficulty_name = torus.cutStringTail(data.map_difficulty_name || '',
+    let text_map_difficulty_name = torus.cutStringTail('[' + data.map_difficulty_name + ']' || '',
+        14,
+        170);
+    /*
+        torus.cutStringTail(data.map_difficulty_name || '',
         14,
         170 - 5 - torus.getTextWidth(map_line_3_right_text, 14));
 
+     */
+
     let map_difficulty_name =
-        torus.getTextPath(text_map_difficulty_name, 130, 47.571, 14, "left baseline", "#fff");
+        torus.getTextPath(text_map_difficulty_name, 130, 32.571, 14, "left baseline", "#fff"); //y: 47.571
 
     let pp = data.pp ?
         torus.get2SizeTextPath(text_pp.toString(), 'PP', 30, 20, 300, 73.795, 'right baseline', '#fff')
@@ -129,14 +138,8 @@ export async function card_J(data = {
     }
 
     // 替换模板
-
-    svg = replaceText(svg, map_title_romanized, reg_text);
-    svg = replaceText(svg, map_artist, reg_text);
-    svg = replaceText(svg, map_difficulty_name, reg_text);
-    svg = replaceText(svg, map_line_3_right, reg_text);
-    svg = replaceText(svg, pp, reg_text);
-    svg = replaceText(svg, rank, reg_text);
-    svg = replaceText(svg, star_rating, reg_text);
+    // svg = replaceText(svg, map_artist, reg_text);
+    svg = replaceTexts(svg, [map_title_romanized, map_difficulty_name, map_line_3_right, pp, rank, star_rating], reg_text);
 
     svg = replaceText(svg, rank_color, reg_rank)
     svg = replaceText(svg, star_color, reg_overlay)

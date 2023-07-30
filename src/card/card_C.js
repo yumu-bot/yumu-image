@@ -4,7 +4,7 @@ import {
     implantSvgBody,
     readNetImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus,
     torusRegular
 } from "../util.js";
@@ -146,9 +146,7 @@ export async function card_C(data = {
         let blue_text = (blue_score !== 0) ? blue_font.getTextPath(blue_score.toString(), mid_x + 5, 196.836, 24, 'left baseline', '#fff') : '';
         let delta_text = (delta_score !== 0) ? torus.getTextPath(delta_score.toString(), mid_x, 132.877, 18, 'center baseline', '#fff') : '';
 
-        svg = replaceText(svg, red_text, reg_text);
-        svg = replaceText(svg, blue_text, reg_text);
-        svg = replaceText(svg, delta_text, reg_text);
+        svg = replaceTexts(svg, [red_text, blue_text, delta_text], reg_text);
 
     } else {
         //个人赛时
@@ -506,11 +504,11 @@ export async function card_C(data = {
     async function implantRoundLabelF1(object, x, y, isWin, scoreTextColor) {
         let label_F1_impl =
             await label_F1({
-                avatar: object.player_avatar || '',
-                name: object.player_name || '',
-                mods_arr: object.player_mods || '',
-                score: object.player_score || '',
-                rank: object.player_rank || '',
+                avatar: object ? object.player_avatar : '',
+                name: object ? object.player_name : 'Unknown',
+                mods_arr: object ? object.player_mods : '',
+                score: object ? object.player_score : '',
+                rank: object ? object.player_rank : '',
                 maxWidth: 100,
                 isWin: isWin,
                 scoreTextColor: scoreTextColor,
@@ -521,9 +519,9 @@ export async function card_C(data = {
     async function implantRoundLabelF2(object, x, y, isWin, scoreTextColor) {
         let label_F2_impl =
             await label_F2({
-                avatar: object.player_avatar || '',
-                name: object.player_name || '',
-                rank: object.player_rank || '',
+                avatar: object ? object.player_avatar : '',
+                name: object ? object.player_name : 'Unknown',
+                rank: object ? object.player_rank : '',
                 isWin: isWin,
                 scoreTextColor: scoreTextColor,
             })
@@ -534,7 +532,7 @@ export async function card_C(data = {
     async function implantRoundLabelF3(object, x, y, isWin) {
         let label_F3_impl =
             await label_F3({
-                avatar: object.player_avatar || '',
+                avatar: object ? object.player_avatar : '',
                 isWin: isWin,
             })
         svg = implantSvgBody(svg, x, y, label_F3_impl, reg_bodycard);

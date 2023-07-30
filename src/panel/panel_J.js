@@ -1,12 +1,11 @@
 import {
     exportPng, getExportFileV3Path, getGameMode, getModColor,
     getNowTimeStamp,
-    getRandomBannerPath, getRankColor, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
-    implantImage,
+    getRandomBannerPath, getRankColor, implantImage,
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength,
     PanelGenerate, readNetImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -385,9 +384,7 @@ export async function panel_J(data = {
     game_mode: 'osu',
 
 
-    //
-
-}) {
+}, reuse = false) {
     let svg = readTemplate('template/Panel_J.svg');
 
     // 路径定义
@@ -419,7 +416,7 @@ export async function panel_J(data = {
 
     const pp = data.pp.toFixed(0) || 0;
     const pp_raw = data.pp_raw.toFixed(0) || 0;
-    const pp_bonus = Math.max(pp - pp_raw, 0).toFixed(0);
+    const pp_bonus = 'nullified' //Math.max(pp - pp_raw, 0).toFixed(0);
     const game_mode = getGameMode(data.game_mode.toString(), 2);
 
     const pp_full_path = torus.get2SizeTextPath(
@@ -451,13 +448,8 @@ export async function panel_J(data = {
     )
 
     // 插入文字
-    svg = replaceText(svg, index_powered_path, reg_index);
-    svg = replaceText(svg, index_request_time_path, reg_index);
-    svg = replaceText(svg, index_panel_name_path, reg_index);
-    svg = replaceText(svg, pp_mini_path, reg_index);
-    svg = replaceText(svg, pp_full_path, reg_index);
-    svg = replaceText(svg, game_mode_path, reg_index);
-    svg = replaceText(svg, mappers_count_path, reg_index);
+
+    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path, pp_mini_path, pp_full_path, game_mode_path, mappers_count_path], reg_index);
 
     // A1卡构建
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
@@ -481,7 +473,7 @@ export async function panel_J(data = {
 
     const L1 = await card_L({name: 'Length', card_K: data.bpLength}, true);
     const L2 = await card_L({name: 'Combo', card_K: data.bpCombo}, true);
-    const L3 = await card_L({name: 'SR', card_K: data.bpSR}, true);
+    const L3 = await card_L({name: 'Star Rating', card_K: data.bpSR}, true);
 
     cardLs.push(L1, L2, L3);
 
@@ -665,7 +657,6 @@ export async function panel_J(data = {
      */
     function getBarChartColorArray (dataArr = [''], electArr = [''], length = 0, defaultValue) {
         let arr = new Array(length).fill(defaultValue);
-        let arr_last_value;
 
         for (const v of electArr) {
             let steps = (dataArr.length - 1) / (length - 1);
@@ -684,7 +675,7 @@ export async function panel_J(data = {
         }
 
         //有时候取不到最后一位，所以需要补足
-        arr_last_value = dataArr[dataArr.length - 1];
+        const arr_last_value = dataArr[dataArr.length - 1];
         if (arr[length - 1] === defaultValue) arr.splice(length - 1, 1, getRankColor(arr_last_value));
 
         return arr;

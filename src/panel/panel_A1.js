@@ -5,7 +5,7 @@ import {
     implantImage, implantSvgBody,
     PanelGenerate,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -210,9 +210,7 @@ export async function panel_A1(data = {
         607.5, 83.67, 48, "center baseline", "#fff");
 
     // 插入文字
-    svg = replaceText(svg, index_powered_path, reg_index);
-    svg = replaceText(svg, index_request_time_path, reg_index);
-    svg = replaceText(svg, index_panel_name_path, reg_index);
+    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
 
     // 导入A1卡
 
@@ -223,7 +221,7 @@ export async function panel_A1(data = {
 
 
     for (const i in data.friend_card_A1) {
-        const friend_user = await PanelGenerate.user2CardA1(data.friend_card_A1[i]);
+        const friend_user = await PanelGenerate.microUser2CardA1(data.friend_card_A1[i]);
         const f = await card_A1(friend_user, true);
         friend_cardA1s.push(f);
     }
@@ -234,10 +232,10 @@ export async function panel_A1(data = {
     svg = implantSvgBody(svg, 40, 40, me_cardA1, reg_me_card_a1);
 
     for (const i in friend_cardA1s) {
-        let x = i % 4;
-        let y = Math.floor(i / 4);
+        const x = i % 4;
+        const y = Math.floor(i / 4);
 
-        svg = implantSvgBody(svg, 40 + 430 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
+        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
     }
 
     // 计算面板高度

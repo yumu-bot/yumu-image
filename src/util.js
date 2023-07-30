@@ -73,7 +73,7 @@ export function initPath() {
     return path;
 }
 
-const mascot_pic_sum_arr = [39, 14, 3, 2, 6, 1, 1, 2, 2, 3]; //吉祥物的对应的照片数量，和随机banner一样的
+const mascot_pic_sum_arr = [50, 20, 4, 4, 7, 1, 2, 2, 3, 6]; //吉祥物的对应的照片数量，和随机banner一样的
 // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
 
 const bannerTotal = 110;//banner 数量
@@ -515,6 +515,13 @@ async function getTextMetrics_PuHuiTi(
 
 export function replaceText(base = '', replace = '', reg = /.*/) {
     return base.replace(reg, replace);
+}
+
+export function replaceTexts(base = '', replace = [''], reg = /.*/) {
+    for (const v of replace) {
+        base = base.replace(reg, v);
+    }
+    return base;
 }
 
 export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
@@ -1324,6 +1331,70 @@ export function getModColor(Mod = '') {
             color = '#7ECEF4';
             break;
 
+            // Lazer 模组
+
+        case "DC":
+            color = '#DADADA';
+            break;
+        case "BL":
+            color = '#EB6100';
+            break;
+        case "ST":
+            color = '#D32F2F';
+            break;
+        case "AC":
+            color = '#9E040D';
+            break;
+
+        case "DA":
+            color = '#601986';
+            break;
+        case "CL":
+            color = '#920783';
+            break;
+        case "AL":
+            color = '#F16DAA';
+            break;
+        case "SG":
+            color = '#F59AC3';
+            break;
+        case "SW":
+            color = '#7B0046';
+            break;
+        case "DS":
+            color = '#9E005E';
+            break;
+        case "IV":
+            color = '#5F5BA8';
+            break;
+        case "CS":
+            color = '#A086BF';
+            break;
+        case "HO":
+            color = '#8781BE';
+            break;
+        case "TR":
+        case "WG":
+        case "SI":
+        case "GR":
+        case "DF":
+        case "WU":
+        case "WD":
+        case "TC":
+        case "BR":
+        case "AD":
+        case "MU":
+        case "NS":
+        case "MG":
+        case "RP":
+        case "AS":
+        case "FR":
+        case "FF":
+        case "BU":
+        case "SY":
+            color = '#EA68A2';
+            break;
+
         case "NM":
             color = '#22AC38';
             break;
@@ -1483,15 +1554,15 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
 }
 
 /**
- * @function 预处理星数成想要的部分。
+ * @function 预处理星数（或其他小数）成想要的部分。
  * @return 返回 8, 0.34, 8., 34。前两个是数据，后两个是字符串
- * @param starRating 星数
+ * @param number 小数
  * @param whichData 要哪个数据？可输入0, 1, 2, 3, 4，分别是整数、小数、整数带小数点部分、纯小数部分（两位以下，纯小数部分（一位以下
  */
-export function getStarRatingObject(starRating = 0, whichData = 0) {
+export function getDecimals (number = 0, whichData = 0) {
 
     //去除小数，保留两位
-    let sr = (Math.round(starRating * 100) / 100) || 0;
+    let sr = (Math.round(number * 100) / 100) || 0;
 
     //避免浮点缺陷
     let sr_b = Math.floor(sr);
@@ -1514,12 +1585,6 @@ export function getStarRatingObject(starRating = 0, whichData = 0) {
     let text_sr_mm = sr_m.toString().slice(2, 3);
     if (text_sr_m.slice(1) === '0') {
         text_sr_m = text_sr_m.slice(0, 1);
-    }
-
-    if (sr_b >= 20) {
-        text_sr_b = '20';
-        text_sr_m = '+';
-        text_sr_mm = '+'
     }
 
     switch (whichData) {
@@ -1837,18 +1902,35 @@ export function getSVGBody(V3Path = '') {
 
 /**
  * @function 获取谱面状态的路径
+ * @param status 谱面状态，可以是数字可以是字符串
  */
-export function getMapStatusV3Path(status = 'notsubmitted') {
-    switch (status) {
-        case "ranked":
-        case "approved":
-            return getExportFileV3Path('object-beatmap-ranked.png');
-        case "qualified":
-            return getExportFileV3Path('object-beatmap-qualified.png');
-        case "loved":
-            return getExportFileV3Path('object-beatmap-loved.png');
-        default:
-            return getExportFileV3Path('object-beatmap-unranked.png');
+export function getMapStatusV3Path(status = 0) {
+
+    if (typeof status === 'number') {
+        switch (status) {
+            case -2: return getExportFileV3Path('object-beatmap-unranked.png'); //graveyarded
+            case -1: return getExportFileV3Path('object-beatmap-unranked.png'); //wip也在这里
+            case 0: return getExportFileV3Path('object-beatmap-unranked.png'); //pending在这里
+            case 1: return getExportFileV3Path('object-beatmap-ranked.png');
+            case 2: return getExportFileV3Path('object-beatmap-ranked.png'); //approved在这里
+            case 3: return getExportFileV3Path('object-beatmap-qualified.png');
+            case 4: return getExportFileV3Path('object-beatmap-loved.png');
+            default: return getExportFileV3Path('error.png');
+        }
+    } else {
+        switch (status.toLowerCase()) {
+            case "ranked":
+            case "approved":
+                return getExportFileV3Path('object-beatmap-ranked.png');
+            case "qualified":
+                return getExportFileV3Path('object-beatmap-qualified.png');
+            case "loved":
+                return getExportFileV3Path('object-beatmap-loved.png');
+            case "":
+                return getExportFileV3Path('error.png');
+            default:
+                return getExportFileV3Path('object-beatmap-unranked.png');
+        }
     }
 }
 
@@ -2113,10 +2195,11 @@ export async function getFlagSvg(code = "cn") {
     return flag;
 }
 
-export async function getFlagPath(code = "cn", x, y) {
-    let svg = await getFlagSvg(code);
-    let len = svg.length;
-    return `<g transform="translate(${x} ${y}) scale(1.45)">` + svg.substring(60, len - 6) + '</g>';
+export async function getFlagPath(code = "cn", x, y, h = 30) {
+    const svg = await getFlagSvg(code);
+    const len = svg.length;
+    const scale = h / 30;
+    return `<g transform="translate(${x} ${y}) scale(${scale})">` + svg.substring(60, len - 6) + '</g>';
 }
 
 const ModInt = {
@@ -2216,236 +2299,248 @@ const ModBonusMANIA = {
     "FI": 1,
 }
 
-export function getAccIndex(score) {
-    let accRemark;
-    switch (getGameMode(score.mode, 1)) {
+//获取面板E里的ACC指示器
+export function getAccIndexDeluxe(score) {
+    const gamemode = getGameMode(score.mode, 1);
+    const nGeki = score.statistics.count_geki;
+    const n300 = score.statistics.count_300;
+    const n100 = score.statistics.count_100;
+    const n50 = score.statistics.count_50;
+    const n0 = score.statistics.count_miss;
+    let nTotal;
+    let nNotMiss;
 
-        case 'o' : {
-            let aim300x = 100;
-            let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_50 + score.statistics.count_miss;
-            let n300 = score.statistics.count_300;
-            let n100 = score.statistics.count_100;
-            let n50 = score.statistics.count_50;
-            let aim50 = Math.ceil(nTotal / 100);
+    let hasMiss = false;
+    if (n0 !== 0) hasMiss = true;
 
-            let isMissed = false;
-            let is50over1p = false;
-            let perfectExceptMiss = false;
+    let has1p50 = false;
+    if ((n50 / (n300 + n100 + n50 + n0)) >= 0.01) has1p50 = true;
 
-            if (score.statistics.count_miss > 0) isMissed = true;
-            if (n50 * 100 > nTotal) is50over1p = true;
-            if (n50 + n100 === 0) perfectExceptMiss = true;
+    const rank = score.rank;
 
-            switch (score.rank) {
-                case 'XH' :
-                case 'X' :
-                case 'SH' :
-                case 'S' :
-                    aim300x = 100;
-                    break;
-                case 'A' :
-                    isMissed ? aim300x = 100 : aim300x = 90;
-                    break;
-                case 'B' :
-                    isMissed ? aim300x = 90 : aim300x = 80;
-                    break;
-                case 'C' :
-                    isMissed ? aim300x = 80 : aim300x = 70;
-                    break;
-                case 'D' :
-                    aim300x = 60;
-                    break;
-                default :
-                    aim300x = 100;
-                    break;
-            }
-
-            let aim300 = Math.ceil(nTotal * aim300x / 100);
-
-            if (aim300 < n300) {
-                accRemark = '-';
-                break; //跳出了
-            } else {
-                switch (score.rank) {
-                    case 'XH' :
-                        accRemark = 'AP';
-                        break;
-                    case 'X' :
-                        accRemark = 'AP';
-                        break;
-                    case 'SH' :
-                        accRemark = '>>XH!';
-                        break;
-                    case 'S' :
-                        accRemark = '>>SS!';
-                        break;
-                    case 'A' :
-                        isMissed ?
-                            (perfectExceptMiss ? accRemark = `-x SS` :  // 有miss，无不良判定
-                                accRemark = `-x S`) : // 有miss，有不良判定
-                            (is50over1p ?
-                                (accRemark = `-${aim50 - n50} bad`) :
-                                accRemark = `-${nTotal - n300} SS`);
-                        break;
-                    case 'B' :
-                        isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-`);
-                        break;
-                    case 'C' :
-                        isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-`);
-                        break;
-                    case 'D' :
-                        isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-`);
-                        break;
-                    default :
-                        accRemark = `~ ${getApproximateRank(score)}`;
-                        break;
-                }
-            }
-
-        }
-            break;
-
-        case 't' : {
-            let aim300x = 100;
-            let nTotal = score.statistics.count_300 + score.statistics.count_100 + score.statistics.count_miss;
-            let n300 = score.statistics.count_300;
-
-            let isMissed = false;
-            let perfectExceptMiss = false;
-
-            if (score.statistics.count_miss > 0) isMissed = true;
-            if (score.statistics.count_100 === 0) perfectExceptMiss = true;
-
-            switch (score.rank) {
-                case 'XH' :
-                case 'X' :
-                case 'SH' :
-                case 'S' :
-                    aim300x = 100;
-                    break;
-                case 'A' :
-                    isMissed ? aim300x = 100 : aim300x = 90;
-                    break;
-                case 'B' :
-                    isMissed ? aim300x = 90 : aim300x = 80;
-                    break;
-                case 'C' :
-                    isMissed ? aim300x = 80 : aim300x = 70;
-                    break;
-                case 'D' :
-                    aim300x = 60;
-                    break;
-                default :
-                    aim300x = 100;
-                    break;
-            }
-
-            let aim300 = Math.ceil(nTotal * aim300x / 100);
-
-            if (aim300 < n300) {
-                accRemark = '-';
-                break; //跳出了
-            } else {
-                switch (score.rank) {
-                    case 'XH' :
-                        accRemark = 'AP';
-                        break;
-                    case 'X' :
-                        accRemark = 'AP';
-                        break;
-                    case 'SH' :
-                        accRemark = '>>XH!';
-                        break;
-                    case 'S' :
-                        accRemark = '>>SS!';
-                        break;
-                    case 'A' :
-                        isMissed ?
-                            (perfectExceptMiss ?
-                                (accRemark = `-${aim300 - n300} SS`) : // 有miss，无不良判定
-                                (accRemark = `-x S`)) : // 有miss，有不良判定
-                            (accRemark = `-${aim300 - n300} SS`);
-                        break;
-                    case 'B' :
-                        isMissed ? (accRemark = `-${aim300 - n300} A`) : (accRemark = `-${nTotal - n300} SS`);
-                        break;
-                    case 'C' :
-                        isMissed ? (accRemark = `-${aim300 - n300} B`) : (accRemark = `-${nTotal - n300} SS`);
-                        break;
-                    case 'D' :
-                        isMissed ? (accRemark = `-${aim300 - n300} C`) : (accRemark = `-${nTotal - n300} SS`);
-                        break;
-                    default :
-                        accRemark = `~ ${getApproximateRank(score)}`;
-                        break;
-                }
-            }
-
-        }
-            break;
-
-        case 'c' : {
-
-            switch (score.rank) {
-                case 'XH' :
-                    accRemark = 'AP';
-                    break;
-                case 'X' :
-                    accRemark = 'AP';
-                    break;
-                case 'SH' :
-                    accRemark = `>>XH!`;
-                    break;
-                case 'S' :
-                    accRemark = `>>SS!`;
-                    break;
-                case 'A' :
-                    accRemark = `-${(98 - score.accuracy * 100).toFixed(2)}%`;
-                    break;
-                case 'B' :
-                    accRemark = `-${(94 - score.accuracy * 100).toFixed(2)}%`;
-                    break;
-                case 'C' :
-                    accRemark = `-${(90 - score.accuracy * 100).toFixed(2)}%`;
-                    break;
-                case 'D' :
-                    accRemark = `-${(85 - score.accuracy * 100).toFixed(2)}%`;
-                    break;
-                default :
-                    accRemark = `~ ${getApproximateRank(score)}`;
-                    break;
-            }
-
-        }
-            break;
-
-        case 'm' : {
-            switch (score.rank) {
-                case 'F' : {
-                    accRemark = `~ ${getApproximateRank(score)}`;
-                    break;
-                }
-                    break;
-                default : {
-                    if (score.statistics.count_geki >= score.statistics.count_300) {
-                        accRemark = (score.statistics.count_geki / score.statistics.count_300).toFixed(1) + ':1';
-                    } else {
-                        accRemark = '1:' + (score.statistics.count_300 / score.statistics.count_geki).toFixed(1);
-                    }
-                }
-                    break;
-            }
-        }
-            break;
-
-        default :
-            accRemark = 'fail..';
-            break;
+    switch (gamemode) {
+        case 'o' : return getIndexStd();
+        case 't' : return getIndexTaiko();
+        case 'c' : return getIndexCatch();
+        case 'm' : return getIndexMania();
+        default: return '-';
     }
 
-    return accRemark;
-}
+    function getIndexStd() {
+        nNotMiss = n300 + n100 + n50;
+        nTotal = nNotMiss + n0;
 
+        switch (rank) {
+            case 'XH' :
+            case 'X' : return 'AP';
+            case 'SH' :
+            case 'S' : return '^SS';
+            case 'A' : {
+                if (hasMiss) {
+                    if (nNotMiss === n300) {
+                        return '-x SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-x S';
+                    } else {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    }
+                } else {
+                    if (has1p50) {
+                        return '-[50] S'
+                    } else {
+                        if (0.9 * nTotal <= n300) {
+                            // 如果没有不好的评级，甚至能到SS
+                            return '-' + Math.ceil(nTotal - n300) + ' SS';
+                        } else {
+                            return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                        }
+                    }
+                }
+            };
+            case 'B' :
+                if (hasMiss) {
+                    if (nNotMiss === n300) {
+                        return '-x SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-x S';
+                    } else if (0.8 * nNotMiss <= n300) {
+                        return '-x A';
+                    } else {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    }
+                } else {
+                    // 如果没有不好的评级，甚至能到SS
+                    if (0.8 * nTotal > n300) {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    } else if (0.9 * nTotal > n300) {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    } else {
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    }
+                }
+            case 'C' :
+                if (hasMiss) {
+                    if (nNotMiss === n300) {
+                        return '-x SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-x S';
+                    } else if (0.8 * nNotMiss <= n300) {
+                        return '-x A';
+                    } else if (0.7 * nNotMiss <= n300) {
+                        return '-x B';
+                    } else {
+                        return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
+                    }
+                } else {
+                    // 如果没有不好的评级，甚至能到SS
+                    if (0.7 * nTotal > n300) {
+                        return '-' + Math.ceil(0.7 * nTotal - n300) + ' B';
+                    } else if (0.8 * nTotal > n300) {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    } else if (0.9 * nTotal > n300) {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    } else {
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    }
+                }
+            case 'D' :
+                if (hasMiss) {
+                    if (0.6 * nTotal <= n300) {
+                        return '-x C';
+                    } else {
+                        return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
+                    }
+                } else {
+                    return 'no miss?'
+                }
+            default :
+                return '~ ' + getApproximateRank(score);
+        }
+    }
+
+    function getIndexTaiko() {
+        nNotMiss = n300 + n100;
+        nTotal = nNotMiss + n0;
+
+        switch (rank) {
+            case 'XH' :
+            case 'X' : return 'AP';
+            case 'SH' :
+            case 'S' : return '^SS';
+            case 'A' : {
+                if (hasMiss) {
+                    if (nNotMiss === n300) {
+                        return '-x SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-x S';
+                    }
+                } else {
+                    if (0.9 * nTotal <= n300) {
+                        // 如果没有不好的评级，甚至能到SS
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    } else {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    }
+                }
+            };
+            case 'B' :
+                if (hasMiss) {
+                    if (nNotMiss === n300) {
+                        return '-x SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-x S';
+                    } else if (0.8 * nNotMiss <= n300) {
+                        return '-x A';
+                    } else {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    }
+                } else {
+                    // 如果没有不好的评级，甚至能到SS
+                    if (0.8 * nTotal > n300) {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    } else if (0.9 * nTotal > n300) {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    } else {
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    }
+                }
+            case 'C' :
+                if (hasMiss) {
+                    if (nNotMiss = n300) {
+                        return '-x SS';
+                    } else if (0.9 * nNotMiss <= n300) {
+                        return '-x S';
+                    } else if (0.8 * nNotMiss <= n300) {
+                        return '-x A';
+                    } else if (0.7 * nNotMiss <= n300) {
+                        return '-x B';
+                    } else {
+                        return '-' + Math.ceil(0.7 * nTotal - n300) + ' A';
+                    }
+                } else {
+                    // 如果没有不好的评级，甚至能到SS
+                    if (0.7 * nTotal > n300) {
+                        return '-' + Math.ceil(0.7 * nTotal - n300) + ' B';
+                    } else if (0.8 * nTotal > n300) {
+                        return '-' + Math.ceil(0.8 * nTotal - n300) + ' A';
+                    } else if (0.9 * nTotal > n300) {
+                        return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                    } else {
+                        return '-' + Math.ceil(nTotal - n300) + ' SS';
+                    }
+                }
+            case 'D' :
+                if (hasMiss) {
+                    if (0.6 * nTotal <= n300) {
+                        return '-x C';
+                    } else {
+                        return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
+                    }
+                } else {
+                    return 'no miss?'
+                }
+            default : return '~ ' + getApproximateRank(score);
+        }
+    }
+
+    function getIndexCatch() {
+        switch (rank) {
+            case 'XH' :
+            case 'X' : return 'AP';
+            case 'SH' :
+            case 'S' : return '^SS';
+            case 'A' : return '^S';
+            case 'B' : return '^A';
+            case 'C' : return '^B';
+            case 'D' : return '^C';
+            default : return '~ ' + getApproximateRank(score);
+        }
+    }
+
+    function getIndexMania() {
+        switch (rank) {
+            case 'F' : return '~ ' + getApproximateRank(score);
+            default : {
+                const precision = nGeki / n300;
+                if (nGeki >= n300) {
+                    if (n300 !== 0) {
+                        return precision.toFixed(1) + 'x';
+                    } else if (nGeki !== 0) {
+                        return 'MAX';
+                    } else return '???';
+                } else if (nGeki < n300) {
+                    if (nGeki !== 0) {
+                        return precision.toFixed(2) + 'x';
+                    } else if (n300 !== 0) {
+                        return 'MIN';
+                    } else return '???';
+                } else {
+                    return '???';
+                }
+            }
+        }
+    }
+}
 
 export function getApproximateRank(score) {
     let rank = 'F';
@@ -2711,6 +2806,31 @@ export function getRandom(range = 0) {
     else return parseInt(moment().format("SSS")) / 999;
 }
 
+//获取时间差
+export function getTimeDifference(compare = '', now = moment()) {
+    const compare_moment = moment(compare, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960);
+
+    const years = compare_moment.diff(now, "years");
+    const months = compare_moment.diff(now, "months");
+    const days = compare_moment.diff(now, "days");
+    const hours = compare_moment.diff(now, "hours");
+    const minutes = compare_moment.diff(now, "minutes");
+
+    if (Math.abs(years) > 0) {
+        return years + 'y';
+    } else if (Math.abs(months) > 0) {
+        return months + 'mo';
+    } else if (Math.abs(days) > 0) {
+        return days + 'd';
+    } else if (Math.abs(hours) > 0) {
+        return hours + 'h';
+    } else if (Math.abs(minutes) > 0) {
+        return minutes + 'm';
+    } else {
+        return '-';
+    }
+}
+
 //公用方法
 export const PanelGenerate = {
     user2CardA1: async (user) => {
@@ -2719,7 +2839,7 @@ export const PanelGenerate = {
         return {
             background,
             avatar,
-            sub_icon1: user['support_level'] > 0 || user.is_supporter ? getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png') : '',
+            sub_icon1: user['support_level'] > 0 || user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '',
             sub_icon2: '',
             name: user['username'],
             rank_global: user['globalRank'],
@@ -2729,7 +2849,218 @@ export const PanelGenerate = {
             level: user['levelCurrent'],
             progress: Math.floor(user['levelProgress']),
             pp: Math.round(user['pp']),
+            isBot: user.is_bot,
         };
+    },
+
+    microUser2CardA1: async (microUser) => {
+        const background = await readNetImage(microUser?.cover_url || microUser?.cover?.url, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(microUser?.avatar_url || microUser?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+        return {
+            background,
+            avatar,
+            sub_icon1: microUser.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '',
+            sub_icon2: '',
+            name: microUser.username,
+            rank_global: microUser.statistics.global_rank,
+            rank_country: microUser.statistics.country_rank,
+            country: microUser?.country_code || 'CN',
+            acc: Math.round(microUser.statistics.hit_accuracy * 100) / 100,
+            level: microUser.statistics.level_current,
+            progress: Math.floor(microUser.statistics.level_progress),
+            pp: Math.round(microUser.statistics.pp),
+            isBot: microUser.statistics.is_bot,
+        };
+    },
+
+    beatmap2CardA2: async (beatmap) => {
+        const background = await readNetImage(beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
+        const map_status = beatmap.status;
+        const title1 = beatmap.beatmapset.title;
+        const title2 = beatmap.beatmapset.artist;
+        const title3 = beatmap.version;
+        const title_font = torus;
+        const left1 = '';
+        const left2 = beatmap.beatmapset.creator;
+        const left3 = beatmap.id ? 'b' + beatmap.id : 'b0';
+        const right1 = '';
+        const right2 = getBeatmapStats(beatmap);
+        const right3b = getDecimals(beatmap.difficulty_rating,2);
+        const right3m = getDecimals(beatmap.difficulty_rating,3) + '*';
+
+        function getBeatmapStats(beatmap) {
+            const cs = Math.round(beatmap.cs * 10) / 10;
+            const ar = Math.round(beatmap.ar * 10) / 10;
+            const od = Math.round(beatmap.accuracy * 10) / 10;
+            const hp = Math.round(beatmap.drain * 10) / 10;
+
+            switch (getGameMode(beatmap.mode, 1)) {
+                case 'o': return 'CS' + cs + ' AR' + ar + ' OD' + od;
+                case 't': return 'OD' + od + ' HP' + hp;
+                case 'c': return 'CS' + cs + ' AR' + ar + ' HP' + hp;
+                case 'm': return cs + 'Keys OD' + od + ' HP' + hp;
+            }
+        }
+
+        return {
+            background: background,
+            map_status: map_status,
+
+            title1: title1,
+            title2: title2,
+            title3: title3,
+            title_font: title_font,
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+    },
+
+
+    searchResult2CardA2: async (total, cursor, search, result_count, rule) => {
+        const background = cursor ? await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg',getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
+        const map_status = rule;
+        const title1 = 'Search:';
+        const title2 = search ? 'Sort: ' + search.sort : "Sort: Default"; //getSortName(search.sort)
+        const title3 = '';
+        const title_font = torus;
+        const left1 = 'time duration:';
+        const left2 = cursor ? moment(parseInt(cursor.queued_at)).format("MM-DD HH:mm:ss") : 'null';
+        const left3 = moment().format("MM-DD HH:mm:ss");
+        const right1 = 'total ' + total + 'x' || 'total 0x';
+        const right2 = 'results:';
+        const right3b = result_count.toString() || '0';
+        const right3m = 'x';
+
+        return {
+            background: background,
+            map_status: map_status,
+
+            title1: title1,
+            title2: title2,
+            title3: title3,
+            title_font: title_font,
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+
+        function getSortName (sort = 'ranked_asc') {
+            switch (sort.toLowerCase()) {
+                case 'title_asc': return 'Title ^';
+                case 'title_desc': return 'Title v';
+                case 'artist_asc': return 'Artist ^';
+                case 'artist_desc': return 'Artist v';
+                case 'difficulty_asc': return 'Star Rating ^';
+                case 'difficulty_desc': return 'Star Rating v';
+                case 'rating_asc': return 'Map Rating ^';
+                case 'rating_desc': return 'Map Rating v';
+                case 'plays_asc': return 'Play Count ^';
+                case 'plays_desc': return 'Play Count v';
+                case 'relevance_asc': return 'Relevance ^';
+                case 'ranked_desc': return 'Ranked Time v';
+                default: return 'Default (Rel v/RT ^)';
+            }
+        }
+
+    },
+
+    searchMap2CardA2: async (beatmapsets, rank) => {
+        const ranked_date = beatmapsets.ranked_date;
+        const submitted_date = beatmapsets.submitted_date;
+
+        const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg', getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
+        const map_status = beatmapsets.status || 'graveyard';
+
+        const isRanked = (map_status === 'ranked' || map_status == 'loved' || map_status === 'approved');
+        const isQualified = (map_status === 'qualified');
+
+        const title1 = beatmapsets.title || 'Unknown Title';
+        const title2 = beatmapsets.artist || 'Unknown Artist';
+        const title3 = beatmapsets.creator || 'Unknown Mapper';
+        const title_font = torus;
+        const left1 = '';
+        const left2 = '#' + rank || '#0';
+        const left3 = 's' + beatmapsets.id || 's0';
+        const right1 = isQualified ? 'Expected:' :
+            (isRanked ? 'Ranked:' :
+                'Submitted:');
+        const right2 = isQualified ? getApproximateRankedTime(ranked_date) :
+            (isRanked ? moment(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm") :
+                moment(submitted_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm"));
+        let right3b;
+        let right3m;
+
+        const days = getApproximateLeftRankedTime(ranked_date,0);
+        const hours = getApproximateLeftRankedTime(ranked_date,1);
+        const minutes = getApproximateLeftRankedTime(ranked_date,2);
+
+        if (isQualified) {
+            if (days > 0) {
+                right3b = days.toString();
+                right3m = 'd' + hours + 'h';
+            } else if (hours > 0) {
+                right3b = hours.toString();
+                right3m = 'h' + minutes + 'm';
+            } else if (minutes > 0) {
+                right3b = minutes.toString();
+                right3m = 'm';
+            } else if (hours > -1){
+                right3b = '...';
+                right3m = '';
+            } else {
+                right3b = '-';
+                right3m = '';
+            }
+        } else {
+            right3b = '-'
+            right3m = '';
+        }
+
+        return {
+            background: background,
+            map_status: map_status,
+
+            title1: title1,
+            title2: title2,
+            title3: title3,
+            title_font: title_font,
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+
+        function getApproximateRankedTime(date = '') {
+            const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days');
+            const dateP7m20 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days').add(20, 'minutes');
+
+            return dateP7.format("YYYY-MM-DD HH:mm")
+                + ' ~ '
+                + dateP7m20.format("HH:mm")
+                + ' +8'
+        }
+
+        function getApproximateLeftRankedTime(date = '', whichData = 0) {
+            const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ssZ').utcOffset(8).add(7, 'days');
+
+            switch (whichData) {
+                case 0: return dateP7.diff(moment(), "days");
+                case 1: return dateP7.diff(moment(), "hours") % 24;
+                case 2: return dateP7.diff(moment(), "minutes") % 60;
+            }
+        }
     },
 
     matchInfo2CardA2: async (matchInfo, sid, redWins, blueWins, isTeamVs) => {
@@ -2790,6 +3121,54 @@ export const PanelGenerate = {
         };
     },
 
+    bp2CardH: async (bp, rank = 1) => {
+        const cover = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
+        const background = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+
+        const time_diff = getTimeDifference(bp.create_at_str);
+
+        let mods_width;
+        switch (bp.mods.length) {
+            case 0: mods_width = 0; break;
+            case 1: mods_width = 100; break;
+            case 2: mods_width = 140; break;
+            case 3: mods_width = 140; break;
+            case 4: mods_width = 160; break;
+            case 5: mods_width = 180; break;
+            default: mods_width = 180;
+        }
+        const difficulty_name = bp.beatmap.version ? torus.cutStringTail(bp.beatmap.version, 24,
+            500 - mods_width - torus.getTextWidth('[] - bp ()' + rank + time_diff, 24)) : '';
+        const color_index = (bp.rank === 'XH' || bp.rank === 'X') ? '#2A2226' : '#fff';
+
+        return {
+            background: background,
+            cover: cover,
+            title: bp.beatmapset.title || '',
+            left1: bp.beatmapset.artist + ' // ' + bp.beatmapset.creator,
+            left2: '[' + difficulty_name + '] - bp' + rank + ' (' + time_diff + ')',
+            index_b: Math.round(bp.pp).toString(),
+            index_m: 'PP',
+            index_b_size: 48,
+            index_m_size: 36,
+            label1: '',
+            label2: '',
+            label3: '',
+            label4: '',
+            mods_arr: bp.mods || [],
+
+            color_right: getRankColor(bp.rank),
+            color_left: getStarRatingColor(bp.beatmap.difficulty_rating),
+            color_index: color_index,
+            color_label1: '',
+            color_label2: '',
+            color_label3: '',
+            color_label4: '',
+
+            font_label4: 'torus',
+        }
+    },
+
     bp2CardJ: async (bp) => {
         const map_cover = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
 
@@ -2806,7 +3185,98 @@ export const PanelGenerate = {
             mods_arr: bp.mods || [],
             pp: Math.round(bp.pp) || 0 //pp
         }
-    }
+    },
 
+    searchDiff2LabelM3: async (beatmap, label_width) => {
+
+        switch (getGameMode(beatmap.mode, 1)) {
+            case 'o':
+            default:
+                return {
+                    label1: {
+                        icon: getExportFileV3Path("object-score-circlesize.png"),
+                        icon_title: 'CS',
+                        data_b: getDecimals(beatmap.cs, 2),
+                        data_m: getDecimals(beatmap.cs, 3)
+                    },
+                    label2: {
+                        icon: getExportFileV3Path("object-score-approachrate.png"),
+                        icon_title: 'AR',
+                        data_b: getDecimals(beatmap.ar, 2),
+                        data_m: getDecimals(beatmap.ar, 3)
+                    },
+                    label3: {
+                        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+                        icon_title: 'OD',
+                        data_b: getDecimals(beatmap.accuracy, 2),
+                        data_m: getDecimals(beatmap.accuracy, 3)
+                    },
+
+                    maxWidth: label_width,
+                };
+
+            case 't' : return {
+                label1: {
+                    icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+                    icon_title: 'OD',
+                    data_b: getDecimals(beatmap.accuracy, 2),
+                    data_m: getDecimals(beatmap.accuracy, 3)
+                },
+                label2: {},
+                label3: {
+                    icon: getExportFileV3Path("object-score-healthpoint.png"),
+                    icon_title: 'HP',
+                    data_b: getDecimals(beatmap.drain, 2),
+                    data_m: getDecimals(beatmap.drain, 3)
+                },
+
+                maxWidth: label_width,
+            };
+
+            case 'c': return {
+                label1: {
+                    icon: getExportFileV3Path("object-score-circlesize.png"),
+                    icon_title: 'CS',
+                    data_b: getDecimals(beatmap.cs, 2),
+                    data_m: getDecimals(beatmap.cs, 3)
+                },
+                label2: {
+                    icon: getExportFileV3Path("object-score-approachrate.png"),
+                    icon_title: 'AR',
+                    data_b: getDecimals(beatmap.ar, 2),
+                    data_m: getDecimals(beatmap.ar, 3)
+                },
+                label3: {
+                    icon: getExportFileV3Path("object-score-healthpoint.png"),
+                    icon_title: 'HP',
+                    data_b: getDecimals(beatmap.drain, 2),
+                    data_m: getDecimals(beatmap.drain, 3)
+                },
+
+                maxWidth: label_width,
+            };
+
+            case 'm' : return {
+                label1: {
+                    icon: getExportFileV3Path("object-score-circlesize.png"),
+                    icon_title: 'CS',
+                    data_b: getDecimals(beatmap.cs, 2),
+                    data_m: getDecimals(beatmap.cs, 3)
+                },
+                label2: {
+                    icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+                    icon_title: 'OD',
+                    data_b: getDecimals(beatmap.accuracy, 2),
+                    data_m: getDecimals(beatmap.accuracy, 3)
+                },
+                label3: {
+                    icon: getExportFileV3Path("object-score-healthpoint.png"),
+                    icon_title: 'HP',
+                    data_b: getDecimals(beatmap.drain, 2),
+                    data_m: getDecimals(beatmap.drain, 3)
+                },
+            };
+        }
+    }
 }
 

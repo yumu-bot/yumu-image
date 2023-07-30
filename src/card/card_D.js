@@ -1,9 +1,9 @@
 import {
     getColorInSpectrum,
     getModColor,
-    getStarRatingObject, implantImage,
+    getDecimals, implantImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 
@@ -64,8 +64,8 @@ export async function card_D(data = {
     let text_mod =
         torus.getTextPath(data.mod, 500, 30.754, 36, 'center baseline', "#fff");
 
-    let text_star_b = getStarRatingObject(data.star_rating,2);
-    let text_star_m = getStarRatingObject(data.star_rating,3) + '*';
+    let text_star_b = getDecimals(data.star_rating,2);
+    let text_star_m = getDecimals(data.star_rating,3) + '*';
     let star_m_width = torus.getTextWidth(text_star_m,36);
     let text_star =
         torus.getTextPath(text_star_b, 550 - star_m_width, 96.59, 60, "right baseline", "#fff") +
@@ -139,21 +139,15 @@ export async function card_D(data = {
         'center baseline',
         '#fff')
 
-    svg = replaceText(svg, text_sd1, reg_sd_text);
-    svg = replaceText(svg, text_sd2, reg_sd_text);
-    svg = replaceText(svg, text_sd3, reg_sd_text);
+    svg = replaceTexts(svg, [text_sd1, text_sd2, text_sd3], reg_sd_text);
     svg = replaceText(svg, sd_circle1, reg_sd_circle1);
     svg = replaceText(svg, sd_circle2, reg_sd_circle2);
     svg = replaceText(svg, sd_circle3, reg_sd_circle3);
 
     // 替换文字
+    svg = replaceTexts(svg, [text_title, text_artist_and_mapper, text_info, text_mod, text_star], reg_text);
 
     svg = replaceText(svg, text_mod_color, reg_mod_color);
-    svg = replaceText(svg, text_title, reg_text);
-    svg = replaceText(svg, text_artist_and_mapper, reg_text);
-    svg = replaceText(svg, text_info, reg_text);
-    svg = replaceText(svg, text_mod, reg_text);
-    svg = replaceText(svg, text_star, reg_text);
 
     // 插入图片
     svg = implantImage(svg,560,110,0,0,0.5, data.background, reg_background)

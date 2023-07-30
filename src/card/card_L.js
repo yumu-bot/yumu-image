@@ -1,12 +1,11 @@
 import {
     getExportFileV3Path,
-    getStarRatingObject,
+    getDecimals,
     implantImage,
     implantSvgBody,
     replaceText,
     torus
 } from "../util.js";
-import moment from "moment";
 import {card_K} from "./card_K.js";
 
 export async function card_L(data = {
@@ -96,14 +95,14 @@ export async function card_L(data = {
             card_icon = getExportFileV3Path('object-score-combo.png');
         } break;
 
-        case 'SR': {
+        case 'Star Rating': {
             for (const i in data.card_K) {
                 index_arr.push(data.card_K[i].star);
             }
 
             for (const v of index_arr) {
-                index_b_arr.push(getStarRatingObject(v, 2).toString());
-                index_m_arr.push(getStarRatingObject(v, 3).toString());
+                index_b_arr.push(getDecimals(v, 2).toString());
+                index_m_arr.push(getDecimals(v, 3).toString());
             }
             card_icon = getExportFileV3Path('object-score-beatsperminute.png');
         } break;
@@ -130,7 +129,7 @@ export async function card_L(data = {
             map_background: v.cover,
             star_rating: v.star,
             score_rank: v.rank,
-            bp_pp: ('#' + (v.ranking + 1 || 0)), //把这个位置用来做ranking的显示了
+            bp_pp: ('#' + (v.ranking || 0)), //把这个位置用来做ranking的显示了
             bp_remark: '',// PP
         },true);
         cardKs.push(h);

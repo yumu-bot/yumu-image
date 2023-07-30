@@ -3,15 +3,15 @@ import {
     cs2px,
     exportPng,
     extra,
-    getAccIndex,
+    getAccIndexDeluxe,
     getExportFileV3Path,
     getGameMode,
-    getMapStatusV3Path,
+    getMapStatusV3Path, getModColor,
     getNowTimeStamp,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getStarRatingColor,
-    getStarRatingObject,
+    getDecimals,
     hasAnyMod,
     hasMod,
     implantImage,
@@ -21,7 +21,7 @@ import {
     PuHuiTi,
     readNetImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus,
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -63,14 +63,26 @@ export async function router(req, res) {
         let labelPoint = (score.accuracy * 100) % 1;
         let showPoint = (labelPoint <= 0.01) || (labelPoint >= 0.99);
 
+        const isDisplayPP = (pp.full_pp <= 100000);
+
+        const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
+        const isPerfect = score.perfect || isTaikoPerfect;
+        const isFullCombo = isPerfect || (score.beatmap.max_combo === score.max_combo);
+
         const label_data = {
-            acc: newLabel(getAccIndex(score),
+            acc: newLabel(
+                getAccIndexDeluxe(score),
                 Math.floor(roundacc) + (showPoint ? '' : '.'),
                 showPoint ? '%' : labelPoint.toFixed(2).substring(2) + '%'),
-            combo: newLabel(`${score.beatmap.max_combo}x`,
+            combo: newLabel(
+                isFullCombo ? 'FC' : score.beatmap.max_combo + 'x',
                 score.max_combo.toString(),
                 'x'),
-            pp: pp,
+            pp: newLabel(
+                isDisplayPP ? (score.perfect ? 'Max' : Math.round(pp.full_pp) + 'PP') : 'Inf.PP', //这个不能把太鼓的特例考虑进去，可惜了
+                isDisplayPP ? Math.round(pp.pp).toString() : 'Inf.',
+                'PP'
+            ),//pp,
             ar: score.beatmap.ar,
             od: score.beatmap.accuracy,
             cs: score.beatmap.cs,
@@ -105,12 +117,10 @@ export async function router(req, res) {
         const score_isbest = (score.best_id !== null);
 
         const score_time = score.created_at; //create_at_str 根本获取不到，我怀疑你bp只做了这个解析，pr或者recent没做，数据都获取不到
-
-        const isTaikoPerfect = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
         let score_categorize;
         if (score.mods.includes('NF')) {
             score_categorize = 'played';
-        } else if (score.perfect || isTaikoPerfect) {
+        } else if (isPerfect) {
             score_categorize = 'perfect';
         } else if (score.statistics.count_miss === 0) {
             score_categorize = 'nomiss';
@@ -192,10 +202,10 @@ export async function router(req, res) {
 export async function panel_E(data = {
     // A1卡
     card_A1: {
-        background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
-        avatar: getExportFileV3Path('PanelObject/A_CardA1_Avatar.png'),
-        sub_icon1: getExportFileV3Path('PanelObject/A_CardA1_SubIcon1.png'),
-        sub_icon2: getExportFileV3Path('PanelObject/A_CardA1_SubIcon2.png'),
+        background: getExportFileV3Path('card-default.png'),
+        avatar: getExportFileV3Path('avatar-guest.png'),
+        sub_icon1: getExportFileV3Path('object-card-supporter.png'),
+        sub_icon2: '',
         name: 'Muziyami',
         rank_global: 28075,
         rank_country: 577,
@@ -219,12 +229,21 @@ export async function panel_E(data = {
             data_m: 'x',
         },
         pp: {
+            remark: '163PP',
+            data_b: '162',
+            data_m: 'PP',
+        },
+
+        /*
+        pp: {
             pp: 0,
             pp_all: 0,
             full_pp: 0,
             full_pp_all: 0,
             attr: {},
         },
+
+         */
         bpm: 175,
         length: 153, //总时长
         drain: 143, //掉血时长（物件时长
@@ -386,20 +405,12 @@ export async function panel_E(data = {
 
     //console.time("label");
 
-    let isDisplayPP = true;
-    if (data.label_data.pp.full_pp > 100000) isDisplayPP = false;
-
     let label_acc =
         await label_E({...LABEL_OPTION.ACC, ...data.label_data.acc}, true);
     let label_combo =
         await label_E({...LABEL_OPTION.COMBO, ...data.label_data.combo}, true);
     let label_pp =
-        await label_E({
-            ...LABEL_OPTION.PP,
-            remark: isDisplayPP ? Math.round(data.label_data.pp.full_pp).toString() + 'PP' : 'Inf.PP',
-            data_b: isDisplayPP ? Math.round(data.label_data.pp.pp).toString() : 'Inf.',
-            data_m: 'PP'
-        }, true);
+        await label_E({...LABEL_OPTION.PP, ...data.label_data.pp}, true);
     const labelChangedAROD = hasAnyMod(data.attr.mods_int, ["EZ", "HR", "DT", "HT"])
     const labelChangedCSHP = hasAnyMod(data.attr.mods_int, ["EZ", "HR"])
     let labelPoint = data.attr.bpm % 1;
@@ -408,7 +419,7 @@ export async function panel_E(data = {
         await label_E({
             ...LABEL_OPTION.BPM,
             remark: (data.attr.bpm > 0) ? (60000 / data.attr.bpm).toFixed(0) + 'ms' : '-',
-            data_b: Math.floor(data.attr.bpm) + (showPoint ? '' : '.'),
+            data_b: Math.round(data.attr.bpm) + (showPoint ? '' : '.'),
             data_m: showPoint ? '' : (data.attr.bpm % 1).toFixed(1).substring(2)
         }, true);
 
@@ -462,10 +473,17 @@ export async function panel_E(data = {
     //console.timeEnd("label");
     //console.time("txt");
 
-    let sr_b = getStarRatingObject(data.star_rating, 0);
-    let sr_m = getStarRatingObject(data.star_rating, 1);
-    let text_sr_b = getStarRatingObject(data.star_rating, 2);
-    let text_sr_m = getStarRatingObject(data.star_rating, 3);
+    let sr_b = getDecimals(data.star_rating, 0);
+    let sr_m = getDecimals(data.star_rating, 1);
+    let text_sr_b = getDecimals(data.star_rating, 2);
+    let text_sr_m = getDecimals(data.star_rating, 3);
+
+    if (data.star_rating >= 20) {
+        sr_b = 20;
+        sr_m = 0;
+        text_sr_b = '20';
+        text_sr_m = '+'
+    }
 
     // 文字定义
     let index_powered_path = torus.getTextPath(index_powered, 10, 26.84, 24, "left baseline", "#fff");
@@ -522,7 +540,7 @@ export async function panel_E(data = {
         map_title_unicode =
             PuHuiTi.getTextPath(
                 PuHuiTi.cutStringTail(data.map_title_unicode, 36, 860),
-                440, 931.6, 36, "center baseline", "#fff");;
+                440, 931.6, 36, "center baseline", "#fff");
     }
 
 
@@ -586,8 +604,7 @@ export async function panel_E(data = {
         let stat = torus.getTextPath(text_stat.toString(),
             font_stat_x, font_y, 30, "left baseline", data.stat_color);
 
-        svg = replaceText(svg, index, reg_index);
-        svg = replaceText(svg, stat, reg_index);
+        svg = replaceTexts(svg, [index, stat], reg_index);
 
         if (data.stat > 0) {
             let rect_width = 500 * data.stat / sum
@@ -627,10 +644,12 @@ export async function panel_E(data = {
     function Star(data, sr_b, sr_m) {
         let sr_m_scale = Math.pow(sr_m, 0.8);
 
-        if (sr_b >= 10) {
-            sr_b = 10;
+        /*
+        if (sr_b >= 20) {
+            sr_b = 20;
             sr_m_scale = 0
         }
+         */
 
         for (let i = 1; i <= sr_b; i++) {
             let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
@@ -788,28 +807,20 @@ export async function panel_E(data = {
     Ring(data.score_acc_progress);
 
     // 插入文字和颜色
-    svg = replaceText(svg, index_powered_path, reg_index);
-    svg = replaceText(svg, index_request_time_path, reg_index);
-    svg = replaceText(svg, index_panel_name_path, reg_index);
-    svg = replaceText(svg, star_rating, reg_index);
-    svg = replaceText(svg, game_mode, reg_index);
-    svg = replaceText(svg, map_status_fav, reg_index);
-    svg = replaceText(svg, map_status_pc, reg_index);
-    svg = replaceText(svg, map_title_romanized, reg_index);
-    svg = replaceText(svg, map_title_unicode, reg_index);
-    svg = replaceText(svg, map_difficulty, reg_index);
-    svg = replaceText(svg, map_artist_mapper_bid, reg_index);
-    svg = replaceText(svg, main_score, reg_index);
-    svg = replaceText(svg, title_density, reg_index);
-    svg = replaceText(svg, title_retryfail, reg_index);
-    svg = replaceText(svg, map_public_rating, reg_index);
-    svg = replaceText(svg, map_passretryfail_percent, reg_index);
+
+    svg = replaceTexts(svg, [
+        index_powered_path, index_request_time_path, index_panel_name_path, star_rating, game_mode, map_status_fav, map_status_pc, map_title_romanized, map_title_unicode, map_difficulty, map_artist_mapper_bid, main_score, title_density, title_retryfail, map_public_rating, map_passretryfail_percent
+    ],reg_index)
 
     // 插入模组，因为先插的在上面，所以从左边插
-    let insertMod = (mod, i, offset_x) => {
-        let x = offset_x + i * 50;
+    const insertMod = (mod, i, offset_x) => {
+        const x = offset_x + i * 50;
 
-        return `<image transform="translate(${x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
+        // 模组 svg 化
+        const mod_abbr_path = torus.getTextPath(mod.toString(), (x + 45), 350 + 42, 36, 'center baseline', '#fff');
+        return `<path transform="translate(${x} 350)"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${getModColor(mod)};"/>\n${mod_abbr_path}\n`;
+
+        //return `<image transform="translate(${x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
     }
 
     let mods_arr = data.mods_arr ? data.mods_arr : ['']

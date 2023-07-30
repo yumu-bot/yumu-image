@@ -7,7 +7,7 @@ import {
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -113,7 +113,7 @@ export async function panel_B(data = {
         }
     }
 
-    console.time("logTime-panelB")
+    //console.time("logTime-panelB")
 
     const index_powered_path = torus.getTextPath(index_powered,
         10, 26.84, 24, "left baseline", "#fff");
@@ -123,7 +123,7 @@ export async function panel_B(data = {
         607.5, 83.67, 48, "center baseline", "#fff");
     const game_mode_path = torus.getTextPath(game_mode, 960, 614, 60, 'center baseline', '#fff');
 
-    console.timeLog("logTime-panelB", "画标识")
+    //console.timeLog("logTime-panelB", "画标识")
     // 画六个标识
     svg = implantSvgBody(svg, 0, 0, drawHexIndex(game_mode), reg_hexagon);
 
@@ -131,11 +131,8 @@ export async function panel_B(data = {
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
     // 插入主面板的文字
-    svg = replaceText(svg, index_powered_path, reg_index);
-    svg = replaceText(svg, index_request_time_path, reg_index);
-    svg = replaceText(svg, index_panel_name_path, reg_index);
-    svg = replaceText(svg, game_mode_path, reg_index);
-    console.timeLog("logTime-panelB", "计算")
+    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path, game_mode_path], reg_index);
+    //console.timeLog("logTime-panelB", "计算")
     // 主计算
     svg = implantSvgBody(svg, 40, 40, await card_A1(data.card_A1[0], true), reg_card_a1);
 
@@ -159,7 +156,7 @@ export async function panel_B(data = {
         }
     }
 
-    console.timeLog("logTime-panelB", "两侧数据")
+    //console.timeLog("logTime-panelB", "两侧数据")
 
     // 获取卡片
     for (const name of VALUE_NAMES) {
@@ -201,9 +198,9 @@ export async function panel_B(data = {
 
     const hexagon = getExportFileV3Path('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
-    console.timeLog("logTime-panelB", "svg构造完成")
+    //console.timeLog("logTime-panelB", "svg构造完成")
     const d = await exportPng(svg);
-    console.timeEnd("logTime-panelB");
+    //console.timeEnd("logTime-panelB");
     return d;
 }
 

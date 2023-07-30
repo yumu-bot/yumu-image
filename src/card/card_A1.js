@@ -4,7 +4,7 @@ import {
     getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     implantImage,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 
@@ -21,6 +21,7 @@ export async function card_A1(data = {
     level: 100,
     progress: 32,
     pp: 4396,
+    isBot: false,
 
     color_base: '#2a2226',
 }, reuse = false) {
@@ -43,25 +44,24 @@ export async function card_A1(data = {
 
     // 文字的 <path>
     let text_name =
-        torus.getTextPath(torus.cutStringTail(data.name, 48, 290),
-            130, 53.672, 48, "left baseline", "#fff");
+        torus.getTextPath(torus.cutStringTail(data.name, 42, 290),
+            130, 53.672, 42, "left baseline", "#fff"); //48px
     let text_rank_global =
         torus.getTextPath('#' + rank_global, 20, 165.836, 24, "left baseline", "#fff");
     let text_rank_country =
         torus.getTextPath(country + '#' + rank_country, 20, 191.836, 24, "left baseline", "#fff");
 
-    let level = data.level || 0;
-    let progress = data.progress || 0;
-    let acc = getRoundedNumberLargerStr(data.acc,3) + getRoundedNumberSmallerStr(data.acc,3) || 0
-    let info = acc + '% Lv.' + level + '(' + progress + '%)';
-    let text_info =
-        torus.getTextPath(info, 420, 141.836, 24, "right baseline", "#fff");
+    let level = data.isBot ? 0 : data.level;
+    let progress = data.isBot ? 0 : data.progress;
+    let acc = data.isBot ? 0 : getRoundedNumberLargerStr(data.acc,3) + getRoundedNumberSmallerStr(data.acc,3);
+    let info = data.isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
+    let text_info = torus.getTextPath(info, 420, 141.836, 24, "right baseline", "#fff");
 
     //pp位置计算
     let pp = Math.round(data.pp) || 0;
 
-    let text_pp = torus.get2SizeTextPath(pp.toString(),
-        'PP',
+    let text_pp = torus.get2SizeTextPath(data.isBot ? '' : pp.toString(),
+        data.isBot ? 'Bot' : 'PP',
         60,
         48,
         420,
@@ -79,12 +79,9 @@ export async function card_A1(data = {
 
     // 替换模板内容,replaceText(模板, 内容, 正则)
     svg = replaceText(svg, data.color_base, reg_color_base);
-    svg = replaceText(svg, text_name, reg_text);
-    svg = replaceText(svg, text_info, reg_text);
-    svg = replaceText(svg, text_rank_country, reg_text);
-    svg = replaceText(svg, text_rank_global, reg_text);
-    svg = replaceText(svg, text_pp, reg_text);
-    let flagSvg = await getFlagPath(data.country, 130, 64);
+    svg = replaceTexts(svg, [text_name, text_info, text_rank_country, text_rank_global, text_pp], reg_text);
+
+    let flagSvg = await getFlagPath(data.country, 130, 64, 44);
     svg = replaceText(svg, flagSvg, reg_country_flag); //高44宽60吧
     // 替换图片
 

@@ -4,12 +4,12 @@ import {
     implantImage,
     PuHuiTi,
     readTemplate,
-    replaceText,
+    replaceText, replaceTexts,
     torus
 } from "../util.js";
 
 export async function card_A2(data = {
-    background: getExportFileV3Path('PanelObject/A_CardA1_BG.png'),
+    background: getExportFileV3Path('card-default.png'),
     map_status: '',
 
     title1: '',
@@ -86,15 +86,7 @@ export async function card_A2(data = {
     svg = implantImage(svg,430,210,0,0,0.5, background, reg_background);
     svg = data.map_status ? implantImage(svg,50,50,370,10,1, status, reg_top_icons) : svg;
 
-    svg = replaceText(svg, title1, reg_text);
-    svg = replaceText(svg, title2, reg_text);
-    svg = replaceText(svg, title3, reg_text);
-    svg = replaceText(svg, right1, reg_text);
-    svg = replaceText(svg, right2, reg_text);
-    svg = replaceText(svg, right3, reg_text);
-    svg = replaceText(svg, left1, reg_text);
-    svg = replaceText(svg, left2, reg_text);
-    svg = replaceText(svg, left3, reg_text);
+    svg = replaceTexts(svg, [title1, title2, title3, right1, right2, right3, left1, left2, left3], reg_text);
 
     return svg.toString();
 }
