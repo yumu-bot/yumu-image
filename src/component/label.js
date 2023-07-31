@@ -845,7 +845,7 @@ export async function label_M3(data = {
     const max_width = data.maxWidth;
     //如果是一排6个，那么需要缩减一下！
     //230731更新，这里不需要缩减了，长的太丑
-    const width_offset = 80; //(max_width > 650 / 3) ? 98 : 70;
+    const width_offset = 70; //(max_width > 650 / 3) ? 98 : 70;
     const label_width = 66;
 
     const hasLabel2 = (data.label2 != null)
