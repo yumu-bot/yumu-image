@@ -82,8 +82,11 @@ export async function panel_Gamma(data = {
     svg = replaceTexts(svg, [left1, left2, left3, down1, down2, center0, center1, center2, mode], reg_text);
 
     // 插入图片和部件（新方法
+    let background_opacity = 0.6;
+    if (data.panel === 'score') background_opacity = 1;
+
     svg = implantImage(svg, 148, 160, 366, 70, 1, data.avatar, reg_avatar);
-    svg = implantImage(svg, 400, 360, 240, 0, 0.6, data.background, reg_background);
+    svg = implantImage(svg, 400, 360, 240, 0, background_opacity, data.background, reg_background);
     svg = implantImage(svg, 148, 160, 366, 70, 1, hexagon, reg_map_hexagon);
 
     return await exportImage(svg);
