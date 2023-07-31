@@ -48,8 +48,8 @@ app.post('/panel_E', PanelERouter);
 app.post('/panel_F', PanelFRouter);
 app.post('/panel_J', PanelJRouter);
 
-app.post('/drawLine', panelAlphaRouter);
-app.post('/spinfo', panelBetaRouter);
+app.post('/panel_Alpha', panelAlphaRouter);
+app.post('/panel_Beta', panelBetaRouter);
 
 app.post('/md', MarkdownRouter);
 app.post('/attr', GetMapAttrRouter);
