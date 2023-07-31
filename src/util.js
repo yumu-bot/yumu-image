@@ -2826,7 +2826,7 @@ export function getTimeDifference(compare = '', now = moment()) {
     } else if (Math.abs(minutes) > 0) {
         return minutes + 'm';
     } else {
-        return '-';
+        return 'now';
     }
 }
 
