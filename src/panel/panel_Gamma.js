@@ -83,7 +83,7 @@ export async function panel_Gamma(data = {
 
     // 插入图片和部件（新方法
     svg = implantImage(svg, 148, 160, 366, 70, 1, data.avatar, reg_avatar);
-    svg = implantImage(svg, 400, 360, 240, 0, 0.4, data.background, reg_background);
+    svg = implantImage(svg, 400, 360, 240, 0, 0.6, data.background, reg_background);
     svg = implantImage(svg, 148, 160, 366, 70, 1, hexagon, reg_map_hexagon);
 
     return await exportImage(svg);
@@ -100,10 +100,10 @@ const PanelGamma = {
             mode: user.playmode,
             left1: '#' + user.globalRank,
             left2: user.country.countryCode + '#' + user.countryRank,
-            left3: user.playCount + 'PC',
-            down1: user.follower_count + 'Fans',
+            left3: user.playCount + ' PC',
+            down1: user.follower_count + ' Fans',
             down2: 'u ' + user.id,
-            center0b: Math.round(user.pp),
+            center0b: user.pp ? Math.round(user.pp).toString() : '0',
             center0m: 'PP',
             center1b: user.username,
             center1m: '',
@@ -125,15 +125,15 @@ const PanelGamma = {
             left1: score.beatmapset.title,
             left2: score.beatmapset.artist,
             left3: score.beatmap.version,
-            down1: score.score,
+            down1: score.score ? score.score.toString() : '0',
             down2: 'b ' + score.beatmap.id,
             center0b: getDecimals(score.beatmap.difficulty_rating, 2),
             center0m: getDecimals(score.beatmap.difficulty_rating, 3) + '*',
-            center1b: score.pp || '-',
+            center1b: score.pp ? Math.round(score.pp).toString() : '-',
             center1m: 'PP',
             center2: getDecimals(score.accuracy * 100, 2) +
                 getDecimals(score.accuracy * 100, 3)
-                + '% // ' + (score.max_combo || 0) + 'x',
+                + '% // ' + (score.max_combo || 0) + 'x // ' + score.rank,
 
             panel: 'score',
         };
