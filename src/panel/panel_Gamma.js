@@ -18,12 +18,12 @@ export async function router(req, res) {
         let routeData = {};
         const classification = req.fields?.panel;
 
-        console.log(req.fields)
 
         switch (classification) {
             case 'info': routeData = await PanelGamma.infoVersion(req.fields?.user); break;
             case 'score': routeData = await PanelGamma.scoreVersion(req.fields?.score); break;
         }
+        console.log(routeData)
 
         const data = await panel_Gamma(routeData);
         res.set('Content-Type', 'image/jpeg');
@@ -93,50 +93,50 @@ export async function panel_Gamma(data = {
 }
 
 const PanelGamma = {
-    infoVersion: async (data) => {
-        const background = await readNetImage(data?.cover_url || data?.cover?.url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(data?.avatar_url || data?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+    infoVersion: async (user) => {
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
 
         return {
             background: background,
             avatar: avatar,
-            mode: data.playmode,
-            left1: '#' + data.globalRank,
-            left2: data.country.countryCode + '#' + data.countryRank,
-            left3: data.playCount + 'PC',
-            down1: data.follower_count + 'Fans',
-            down2: 'u ' + data.id,
-            center0b: Math.round(data.pp),
+            mode: user.playmode,
+            left1: '#' + user.globalRank,
+            left2: user.country.countryCode + '#' + user.countryRank,
+            left3: user.playCount + 'PC',
+            down1: user.follower_count + 'Fans',
+            down2: 'u ' + user.id,
+            center0b: Math.round(user.pp),
             center0m: 'PP',
-            center1b: data.username,
+            center1b: user.username,
             center1m: '',
-            center2: getDecimals(data.accuracy, 2) + getDecimals(data.accuracy, 3)
-            + '% // Lv.' + data.levelCurrent,
+            center2: getDecimals(user.accuracy, 2) + getDecimals(user.accuracy, 3)
+            + '% // Lv.' + user.levelCurrent,
 
             panel: 'info',
         };
     },
 
-    scoreVersion: async (data) => {
-        const background = readImage(getExportFileV3Path('object-score-backimage-' + data.rank + '.jpg'));
-        const avatar = await readNetImage(data.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg'));
+    scoreVersion: async (score) => {
+        const background = readImage(getExportFileV3Path('object-score-backimage-' + score.rank + '.jpg'));
+        const avatar = await readNetImage(score.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg'));
 
         return {
             background: background,
             avatar: avatar,
-            mode: data.mode,
-            left1: data.beatmapset.title,
-            left2: data.beatmapset.artist,
-            left3: data.beatmap.version,
-            down1: data.score,
-            down2: 'b ' + data.beatmap.id,
-            center0b: getDecimals(data.beatmap.difficulty_rating, 2),
-            center0m: getDecimals(data.beatmap.difficulty_rating, 3) + '*',
-            center1b: data.pp || '-',
+            mode: score.mode,
+            left1: score.beatmapset.title,
+            left2: score.beatmapset.artist,
+            left3: score.beatmap.version,
+            down1: score.score,
+            down2: 'b ' + score.beatmap.id,
+            center0b: getDecimals(score.beatmap.difficulty_rating, 2),
+            center0m: getDecimals(score.beatmap.difficulty_rating, 3) + '*',
+            center1b: score.pp || '-',
             center1m: 'PP',
-            center2: getDecimals(data.accuracy * 100, 2) +
-                getDecimals(data.accuracy * 100, 3)
-                + '% // ' + (data.max_combo || 0) + 'x',
+            center2: getDecimals(score.accuracy * 100, 2) +
+                getDecimals(score.accuracy * 100, 3)
+                + '% // ' + (score.max_combo || 0) + 'x',
 
             panel: 'score',
         };
