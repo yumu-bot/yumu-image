@@ -85,7 +85,7 @@ export const exportImage = svg2JPEG;
 const UTF8Encoder = new TextEncoder('utf8');
 
 const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
-const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi-2-75-SemiBold.ttf"); //v1版本是 Alibaba-PuHuiTi-Medium.ttf
+const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi-3-75-SemiBold.ttf"); //v1版本是 Alibaba-PuHuiTi-Medium.ttf
 const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
 
