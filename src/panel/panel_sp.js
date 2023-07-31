@@ -1,5 +1,5 @@
 import {XMLParser, XMLBuilder} from "fast-xml-parser"
-import {exportPng, readTemplate} from "../util.js";
+import {exportImage, readTemplate} from "../util.js";
 import {calcPerformancePoints} from "../compute-pp.js";
 
 const opt = {
@@ -139,7 +139,7 @@ export async function spBuilder(score) {
 
     let svgStr = builder.build(template);
     console.error(svgStr);
-    return await exportPng(svgStr);
+    return await exportImage(svgStr);
 }
 
 function serchObject(obj, callback, index = 0) {

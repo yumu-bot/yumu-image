@@ -1,5 +1,5 @@
 import {
-    exportPng,
+    exportImage,
     getExportFileV3Path,
     getGameMode,
     getNowTimeStamp,
@@ -199,7 +199,7 @@ export async function panel_B(data = {
     const hexagon = getExportFileV3Path('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
     //console.timeLog("logTime-panelB", "svg构造完成")
-    const d = await exportPng(svg);
+    const d = await exportImage(svg);
     //console.timeEnd("logTime-panelB");
     return d;
 }

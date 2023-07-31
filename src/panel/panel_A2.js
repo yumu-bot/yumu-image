@@ -1,5 +1,5 @@
 import {
-    exportPng,
+    exportImage,
     getNowTimeStamp, getRandomBannerPath, implantImage, implantSvgBody,
     PanelGenerate,
     readTemplate,
@@ -376,5 +376,5 @@ export async function panel_A2(data = {
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
 
-    return await exportPng(svg);
+    return await exportImage(svg);
 }

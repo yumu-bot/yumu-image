@@ -1,7 +1,7 @@
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/card_A1.js";
 import {
-    exportPng,
+    exportImage,
     getExportFileV3Path,
     getGameMode,
     getMascotName,
@@ -691,5 +691,5 @@ export async function panel_D(data = {
     svg = implantSvgBody(svg, 1440, 835, label_fan, reg_label);
     svg = implantSvgBody(svg, 1660, 835, label_tth, reg_label);
 
-    return await exportPng(svg);
+    return await exportImage(svg);
 }

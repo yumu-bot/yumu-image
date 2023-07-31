@@ -79,7 +79,8 @@ const mascot_pic_sum_arr = [50, 20, 4, 4, 7, 1, 2, 2, 3, 6]; //吉祥物的对�
 const bannerTotal = 110;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
-const svgToPng = async (svg) => await exports.convert(svg, {quality: 100});
+const svg2JPEG = async (svg) => await exports.convert(svg, {quality: 100});
+export const exportImage = svg2JPEG;
 
 const UTF8Encoder = new TextEncoder('utf8');
 
@@ -134,8 +135,6 @@ export async function readNetImage(path = '', defaultImagePath) {
     fs.writeFileSync(bufferPath, data, 'binary');
     return bufferPath;
 }
-
-export const exportPng = svgToPng;
 
 export const torus = {};
 
@@ -2113,7 +2112,7 @@ export class InsertSvgBuilder {
 
     async insertSvgReg(svg, x, y, reg = /^/) {
         if (svg instanceof SVG) {
-            let path = this.f_util.save(await exportPng(svg.getSvgText()));
+            let path = this.f_util.save(await exportImage(svg.getSvgText()));
             svg.getTmpPath().forEach(dir => fs.rmSync(dir, {force: true, recursive: true}));
             let w = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
             let h = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
@@ -2157,7 +2156,7 @@ export class InsertSvgBuilder {
             out.setTmpPaths(this.f_other);
             out.setTmpPath(this.f_util.getDirPath());
         } else {
-            out = await exportPng(this.svg);
+            out = await exportImage(this.svg);
             this.f_util.remove();
         }
         return out;

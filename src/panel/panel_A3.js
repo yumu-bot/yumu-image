@@ -1,5 +1,5 @@
 import {
-    exportPng, getExportFileV3Path,
+    exportImage, getExportFileV3Path,
     getNowTimeStamp,
     implantImage,
     implantSvgBody,
@@ -300,5 +300,5 @@ export async function panel_A3(data = {
         svg = implantSvgBody(svg, x, y, cardN1s[i], reg_list_n1);
     }
 
-    return await exportPng(svg);
+    return await exportImage(svg);
 }

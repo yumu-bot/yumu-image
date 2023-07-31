@@ -1,5 +1,5 @@
 import {
-    exportPng,
+    exportImage,
     getExportFileV3Path,
     getNowTimeStamp,
     getRandomBannerPath,
@@ -275,5 +275,5 @@ export async function panel_H (data = {
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
     svg = implantSvgBody(svg,40,40,card_A1_impl,reg_maincard);
 
-    return exportPng(svg);
+    return exportImage(svg);
 }

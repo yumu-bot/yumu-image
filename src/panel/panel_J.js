@@ -1,5 +1,5 @@
 import {
-    exportPng, getExportFileV3Path, getGameMode, getModColor,
+    exportImage, getExportFileV3Path, getGameMode, getModColor,
     getNowTimeStamp,
     getRandomBannerPath, getRankColor, implantImage,
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength,
@@ -645,7 +645,7 @@ export async function panel_J(data = {
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
 
-    return await exportPng(svg);
+    return await exportImage(svg);
 
     /**
      * @function 根据选举的优先级来给条形图返回上色用的颜色数组

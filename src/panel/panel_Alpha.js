@@ -1,4 +1,4 @@
-import {exportPng, PuHuiTi} from "../util.js";
+import {exportImage, PuHuiTi} from "../util.js";
 
 export async function router(req, res) {
     try {
@@ -27,7 +27,7 @@ export async function panel_Alpha(strArray = ['']) {
     <rect width="100%" height="100%" fill="#2A2226" />
     ${textLine.join("\n")}
 </svg>`
-    return await exportPng(svg);
+    return await exportImage(svg);
 }
 
 // 这个版本的颜色组，是lazer中hover用户名时显示的颜色

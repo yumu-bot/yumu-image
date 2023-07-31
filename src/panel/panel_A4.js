@@ -1,5 +1,5 @@
 import {
-    exportPng, getNowTimeStamp, getRandomBannerPath,
+    exportImage, getNowTimeStamp, getRandomBannerPath,
     implantImage,
     implantSvgBody,
     PanelGenerate, readTemplate,
@@ -332,5 +332,5 @@ export async function panel_A4(data = {
         svg = implantSvgBody(svg, x, y, cardHs[i], reg_bp_list);
     }
 
-    return await exportPng(svg);
+    return await exportImage(svg);
 }

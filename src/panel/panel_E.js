@@ -1,7 +1,7 @@
 import {
     ar2ms,
     cs2px,
-    exportPng,
+    exportImage,
     extra,
     getAccIndexDeluxe,
     getExportFileV3Path,
@@ -917,7 +917,7 @@ export async function panel_E(data = {
     //svg = implantImage(svg, 18, 16, 746, 364, 1, data.map_playcount, reg_map_playcount);
     svg = implantImage(svg, 50, 50, 683, 334, 1, status, reg_map_status);
 
-    return await exportPng(svg);
+    return await exportImage(svg);
 }
 
 export const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {

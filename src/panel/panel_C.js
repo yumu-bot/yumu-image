@@ -1,5 +1,5 @@
 import {
-    exportPng,
+    exportImage,
     getExportFileV3Path,
     getMatchNameSplitted,
     getNowTimeStamp,
@@ -486,6 +486,6 @@ export async function panel_C(data = {
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
 
-    return await exportPng(svg);
+    return await exportImage(svg);
 }
 
