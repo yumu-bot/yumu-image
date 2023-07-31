@@ -5,7 +5,6 @@ import {
     getExportFileV3Path,
     getGameMode,
     implantImage,
-    readImage,
     readNetImage,
     readTemplate,
     replaceTexts,
@@ -18,12 +17,10 @@ export async function router(req, res) {
         let routeData = {};
         const classification = req.fields?.panel;
 
-
         switch (classification) {
             case 'info': routeData = await PanelGamma.infoVersion(req.fields?.user); break;
             case 'score': routeData = await PanelGamma.scoreVersion(req.fields?.score); break;
         }
-        console.log(routeData)
 
         const data = await panel_Gamma(routeData);
         res.set('Content-Type', 'image/jpeg');
@@ -118,7 +115,7 @@ const PanelGamma = {
     },
 
     scoreVersion: async (score) => {
-        const background = readImage(getExportFileV3Path('object-score-backimage-' + score.rank + '.jpg'));
+        const background = getExportFileV3Path('object-score-backimage-' + score.rank + '.jpg');
         const avatar = await readNetImage(score.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg'));
 
         return {
