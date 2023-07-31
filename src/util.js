@@ -2807,7 +2807,7 @@ export function getRandom(range = 0) {
 
 //获取时间差
 export function getTimeDifference(compare = '', now = moment()) {
-    const compare_moment = moment(compare, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960);
+    const compare_moment = moment(compare, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, "hours");
 
     const years = compare_moment.diff(now, "years");
     const months = compare_moment.diff(now, "months");
@@ -3124,7 +3124,7 @@ export const PanelGenerate = {
         const cover = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
         const background = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
 
-        const time_diff = getTimeDifference(bp.create_at_str, moment().utcOffset(-480));
+        const time_diff = getTimeDifference(bp.create_at_str);
 
         let mods_width;
         switch (bp.mods.length) {
