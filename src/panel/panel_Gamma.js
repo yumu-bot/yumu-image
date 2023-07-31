@@ -4,22 +4,14 @@ import {
     getDecimals,
     getExportFileV3Path,
     getGameMode,
-    getNowTimeStamp,
-    getRandomBannerPath,
-    getUserRankColor,
     implantImage,
-    implantSvgBody,
-    PanelGenerate,
     readImage,
     readNetImage,
     readTemplate,
-    replaceText,
     replaceTexts,
     torus,
     torusRegular
 } from "../util.js";
-import {card_H} from "../card/card_H.js";
-import {card_A1} from "../card/card_A1.js";
 
 export async function router(req, res) {
     try {
