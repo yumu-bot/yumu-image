@@ -105,14 +105,13 @@ export async function calcPerformancePoints(bid, score = statistics, mode, reloa
     calculator.nMisses(0);
     const full_pp = calculator.performance(beatMap);
 
-    calculator.combo(maxCombo);
-    calculator.acc(1);
-    calculator.n300(score.count_miss + score.count_50 + score.count_100 + score.count_300);
-    calculator.nKatu(0)
-    calculator.nGeki(0)
-    calculator.n100(0)
-    calculator.n50(0)
-    calculator.nMisses(0);
+    calculator = new Calculator({
+        mode: mode_int,
+        mods: mods,
+        combo: maxCombo,
+        n300: score.count_miss + score.count_50 + score.count_100 + score.count_300,
+        nGeki: score.count_miss + score.count_50 + score.count_100 + score.count_300 + score.count_geki + score.count_katu,
+    })
     const perfect_pp = calculator.performance(beatMap);
     return {
         pp: now_pp.pp,
