@@ -11,10 +11,12 @@ import {router as PanelDRouter} from "./src/panel/panel_D.js";
 import {router as PanelERouter} from "./src/panel/panel_E.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as PanelJRouter} from "./src/panel/panel_J.js";
+
+import {router as panelAlphaRouter} from "./src/panel/panel_Alpha.js"; //drawLine
+import {router as panelBetaRouter} from "./src/panel/panel_Beta.js"; //scoreSpecial
+
 import {router as MarkdownRouter} from "./src/markdown.js";
-import {router as DrawLineRouter} from "./src/panel/panel_Alpha.js";
 import {router as GetMapAttrRouter} from "./src/mapAttributes.js";
-import {router as AAARouter} from "./src/panel/panel_sp.js";
 
 initPath();
 //这里放测试代码
@@ -24,8 +26,6 @@ const app = express();
 app.use(formidable({
     encoding: 'utf-8', uploadDir: CACHE_PATH, autoClean: true, multiples: true,
 }));
-
-app.post('/drawLine', DrawLineRouter);
 
 app.post('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
@@ -48,9 +48,11 @@ app.post('/panel_E', PanelERouter);
 app.post('/panel_F', PanelFRouter);
 app.post('/panel_J', PanelJRouter);
 
+app.post('/drawLine', panelAlphaRouter);
+app.post('/spinfo', panelBetaRouter);
+
 app.post('/md', MarkdownRouter);
 app.post('/attr', GetMapAttrRouter);
-app.post('/spinfo', AAARouter);
 
 app.post('/testApi', async (req, res) => {
     console.log(req.fields)

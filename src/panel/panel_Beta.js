@@ -26,7 +26,7 @@ Object.prototype.setSvgText = function (str) {
 export async function router(req, res) {
     try {
         const data = req.fields;
-        const png = await spBuilder(data);
+        const png = await panel_Beta(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(png);
     } catch (e) {
@@ -36,7 +36,7 @@ export async function router(req, res) {
     res.end();
 }
 
-export async function spBuilder(score) {
+export async function panel_Beta(score) {
     const url_avatar = `https://a.ppy.sh/${score.user.id}`;
     const url_bg_list2x = `https://assets.ppy.sh/beatmaps/${score.beatmapset.id}/covers/list@2x.jpg`;
     const mode_int = score.mode_int;
