@@ -16,7 +16,8 @@ import {
 export async function router(req, res) {
     try {
         let routeData = {};
-        switch (req.fields.panel) {
+        const classification = req.fields?.panel;
+        switch (classification) {
             case 'info': routeData = await PanelGamma.infoVersion(req.fields); break;
             case 'score': routeData = await PanelGamma.scoreVersion(req.fields); break;
         }
