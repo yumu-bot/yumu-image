@@ -2806,8 +2806,8 @@ export function getRandom(range = 0) {
 }
 
 //获取时间差
-export function getTimeDifference(compare = '', now = moment()) {
-    const compare_moment = moment(compare, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960);
+export function getTimeDifference(compare = '', now = moment().utcOffset(-8 * 60)) {
+    const compare_moment = moment(compare, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(16 * 60);
 
     const years = compare_moment.diff(now, "years");
     const months = compare_moment.diff(now, "months");

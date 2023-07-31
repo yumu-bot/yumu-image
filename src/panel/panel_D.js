@@ -392,17 +392,17 @@ export async function panel_D(data = {
 
     // 绘制rank曲线。
     let ranking_arr = modifyArrayToFixedLength(data.user_ranking_arr, 90, true);
-    let ranking_nozero_arr = [];
+    let ranking_nonzero_arr = [];
 
     let user_ranking_max = Math.max.apply(Math, ranking_arr);
 
     //处理rank数组，如果有0，补最大值
     ranking_arr.forEach((v) => {
         if (v === 0) v = user_ranking_max;
-        ranking_nozero_arr.push(v);
+        ranking_nonzero_arr.push(v);
     });
 
-    let user_ranking_min = Math.min.apply(Math, ranking_nozero_arr);
+    let user_ranking_min = Math.min.apply(Math, ranking_nonzero_arr);
     let user_ranking_mid = (user_ranking_max + user_ranking_min) / 2;
 
     function RFRankChart(arr, color, max, min) {
@@ -426,7 +426,7 @@ export async function panel_D(data = {
         svg = replaceText(svg, path_svg, reg_ranking_graph);
     }
 
-    RFRankChart(ranking_nozero_arr, '#FFCC22', user_ranking_max, user_ranking_min);
+    RFRankChart(ranking_nonzero_arr, '#FFCC22', user_ranking_max, user_ranking_min);
 
     // 绘制 BP活动 直方图
 
