@@ -391,7 +391,7 @@ export async function panel_D(data = {
 
 
     // 绘制rank曲线。
-    let ranking_arr = data.user_ranking_arr;
+    let ranking_arr = modifyArrayToFixedLength(data.user_ranking_arr, 90, true);
     let ranking_nozero_arr = [];
 
     let user_ranking_max = Math.max.apply(Math, ranking_arr);

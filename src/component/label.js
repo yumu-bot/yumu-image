@@ -822,19 +822,10 @@ export async function label_M2(data = {
 //Q-M3-四维标签
 export async function label_M3(data = {
     label1: {
-        icon: getExportFileV3Path("object-score-approachrate.png"),
-        data_b: '4.',
-        data_m: '2',
     },
     label2: {
-        icon: getExportFileV3Path("object-score-accpp.png"),
-        data_b: '9',
-        data_m: '',
     },
     label3: {
-        icon: getExportFileV3Path("object-score-accpp.png"),
-        data_b: '8',
-        data_m: '',
     },
 
     maxWidth: 650 / 3,
@@ -853,12 +844,15 @@ export async function label_M3(data = {
     //定义位置
     const max_width = data.maxWidth;
     //如果是一排6个，那么需要缩减一下！
-    const width_offset = (max_width > 650 / 3) ? 98 : 70;
+    //230731更新，这里不需要缩减了，长的太丑
+    const width_offset = 70; //(max_width > 650 / 3) ? 98 : 70;
     const label_width = 66;
 
-    const label1_x = (label_width / 2) - width_offset;
+    const hasLabel2 = (data.label2 != null)
+
+    const label1_x = hasLabel2 ? (label_width / 2) - width_offset : (label_width / 2) - (width_offset / 2);
     const label2_x = label_width / 2;
-    const label3_x = (label_width / 2) + width_offset;
+    const label3_x = hasLabel2 ? (label_width / 2) + width_offset : (label_width / 2) + (width_offset / 2);
 
     //定义文本
     const label1_text = torus.get2SizeTextPath(
