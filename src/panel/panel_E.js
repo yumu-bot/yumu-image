@@ -484,6 +484,7 @@ export async function panel_E(data = {
         text_sr_b = '20';
         text_sr_m = '+'
     }
+    const star_rating_color = getStarRatingColor(data.star_rating);
 
     // 文字定义
     let index_powered_path = torus.getTextPath(index_powered, 10, 26.84, 24, "left baseline", "#fff");
@@ -503,7 +504,7 @@ export async function panel_E(data = {
 
     let game_mode_unicode = getGameMode(data.game_mode, -1);
 
-    let game_mode = extra.getTextPath(game_mode_unicode, 48, 376.24, 48, "left baseline", getStarRatingColor(data.star_rating));
+    let game_mode = extra.getTextPath(game_mode_unicode, 48, 376.24, 48, "left baseline", star_rating_color);
 
     //这里因为改了缩进方法所以 x 往右移动了 5px，原来是 840
     let map_fav = getRoundedNumberLargerStr((data.map_status_fav || 0), 2) + getRoundedNumberSmallerStr((data.map_status_fav || 0), 2);
@@ -656,7 +657,7 @@ export async function panel_E(data = {
 
     const density_arr_max = Math.max.apply(Math, data.map_density_arr) / density_scale;
 
-    RULineChart(data.map_density_arr, '#79C471', density_arr_max, /(?<=<g id="JudgeRRects">)/);
+    RULineChart(data.map_density_arr, star_rating_color, density_arr_max, /(?<=<g id="JudgeRRects">)/);
 
 
     /*
