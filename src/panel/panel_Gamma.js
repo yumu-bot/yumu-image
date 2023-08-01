@@ -121,6 +121,46 @@ const PanelGamma = {
         const background = getExportFileV3Path('object-score-backimage-' + score.rank + '.jpg');
         const avatar = await readNetImage(score.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg'));
 
+        const mod_arr = score.mods || [];
+        let mod_str = '';
+
+        if (mod_arr !== []) mod_str += '+';
+
+        for (const v of mod_arr) {
+            mod_str += (v.toString() + ',');
+        }
+
+        const statistics = (score) => {
+            switch (getGameMode(score.mode, 1)) {
+                case 'o': {
+                    return score.statistics.count_300 + ' // '
+                        + score.statistics.count_100 + ' // '
+                        + score.statistics.count_50 + ' // '
+                        + score.statistics.count_miss;
+                }
+                case 't': {
+                    return score.statistics.count_300 + ' // '
+                        + score.statistics.count_100 + ' // '
+                        + score.statistics.count_miss;
+                }
+                case 'c': {
+                    return score.statistics.count_300 + ' // '
+                        + score.statistics.count_100 + ' // '
+                        + score.statistics.count_50 + ' // '
+                        + score.statistics.count_miss + ' (-'
+                        + score.statistics.count_katu + ')';
+                }
+                case 'm': {
+                    return score.statistics.count_geki + ' (+'
+                        + score.statistics.count_300 + ') // '
+                        + score.statistics.count_katu + ' // '
+                        + score.statistics.count_100 + ' // '
+                        + score.statistics.count_50 + ' // '
+                        + score.statistics.count_miss;
+                }
+            }
+        }
+
         return {
             background: background,
             avatar: avatar,
@@ -128,7 +168,7 @@ const PanelGamma = {
             left1: score.beatmapset.title,
             left2: score.beatmapset.artist,
             left3: score.beatmap.version,
-            down1: score.score ? score.score.toString() : '0',
+            down1: statistics (score),
             down2: 'b ' + score.beatmap.id,
             center0b: getDecimals(score.beatmap.difficulty_rating, 2),
             center0m: getDecimals(score.beatmap.difficulty_rating, 3) + '*',
@@ -136,7 +176,7 @@ const PanelGamma = {
             center1m: 'PP',
             center2: getDecimals(score.accuracy * 100, 2) +
                 getDecimals(score.accuracy * 100, 3)
-                + '% // ' + (score.max_combo || 0) + 'x // ' + score.rank,
+                + '% // ' + (score.max_combo || 0) + 'x // ' + score.rank + mod_str,
 
             panel: 'score',
         };
