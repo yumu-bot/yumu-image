@@ -632,7 +632,7 @@ export async function panel_E(data = {
         const density_arr_max = Math.max.apply(Math, data.map_density_arr) / density_scale;
 
         data.map_density_arr.forEach((item, i) => {
-            let map_density_rrect_color = '#8DCFF4';
+            let map_density_rrect_color = '#aaa'; //#8DCFF4
             let rect_height = Math.max((85 * item / density_arr_max), 16);
             let svg_rect = `<rect id="D${i}RRect" x="${900 + i * 20}" y="${900 - rect_height}" width="16" height="${rect_height}" rx="10" ry="10" style="fill: ${map_density_rrect_color};"/>`;
             svg = replaceText(svg, svg_rect, /(?<=<g id="JudgeRRects">)/);
