@@ -72,8 +72,8 @@ export async function panel_Gamma(data = {
     const center0 = torus.get2SizeTextPath(data.center0b, data.center0m,
         24, 18, 440, 60, 'center baseline', '#fff');
     const center1 = torus.get2SizeTextPath(data.center1b, data.center1m,
-        36, 24, 440, 270, 'center baseline', '#fff');
-    const center2 = torus.getTextPath(data.center2, 440, 300, 18, 'center baseline', '#fff');
+        36, 24, 440, 280, 'center baseline', '#fff');
+    const center2 = torus.getTextPath(data.center2, 440, 310, 18, 'center baseline', '#fff');
 
     const mode = extra.getTextPath(getGameMode(data.mode, -1), 29, 220, 324, 'center baseline', '#3C3639');
     const hexagon = getExportFileV3Path('object-beatmap-hexagon2.png');
@@ -85,9 +85,9 @@ export async function panel_Gamma(data = {
     let background_opacity = 0.6;
     if (data.panel === 'score') background_opacity = 1;
 
-    svg = implantImage(svg, 148, 160, 366, 70, 1, data.avatar, reg_avatar);
+    svg = implantImage(svg, 148, 160, 366, 80, 1, data.avatar, reg_avatar);
     svg = implantImage(svg, 400, 360, 240, 0, background_opacity, data.background, reg_background);
-    svg = implantImage(svg, 148, 160, 366, 70, 1, hexagon, reg_map_hexagon);
+    svg = implantImage(svg, 148, 160, 366, 80, 1, hexagon, reg_map_hexagon);
 
     return await exportImage(svg);
 }
