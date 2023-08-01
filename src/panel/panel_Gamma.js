@@ -70,7 +70,7 @@ export async function panel_Gamma(data = {
 
 
     const center0 = torus.get2SizeTextPath(data.center0b, data.center0m,
-        24, 18, 440, 60, 'center baseline', '#fff');
+        24, 18, 440, 65, 'center baseline', '#fff');
     const center1 = torus.get2SizeTextPath(data.center1b, data.center1m,
         36, 24, 440, 280, 'center baseline', '#fff');
     const center2 = torus.getTextPath(data.center2, 440, 310, 18, 'center baseline', '#fff');
