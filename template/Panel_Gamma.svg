@@ -5,7 +5,7 @@
             <rect x="240" width="400" height="360" rx="0" ry="0" style="fill: none;"/>
         </clipPath>
         <clipPath id="clippath-PGamma-MC">
-            <polygon points="370 116 440 72 510 116 510 184 440 228 370 184 370 116" style="fill: none;"/>
+            <polygon points="370 126 440 82 510 126 510 194 440 238 370 194 370 126" style="fill: none;"/>
         </clipPath>
         <filter id="blur-PGamma-BG" height="110%" width="110%" x="-5%" y="-5%">
             <feGaussianBlur in="userSpaceOnUse" stdDeviation="5" result="blur"/>
