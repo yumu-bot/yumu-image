@@ -22,7 +22,7 @@ import {
     readNetImage,
     readTemplate,
     replaceText, replaceTexts,
-    torus,
+    torus, getRankColor,
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -485,6 +485,7 @@ export async function panel_E(data = {
         text_sr_m = '+'
     }
     const star_rating_color = getStarRatingColor(data.star_rating);
+    const rank_color = getRankColor(data.score_rank);
 
     // 文字定义
     let index_powered_path = torus.getTextPath(index_powered, 10, 26.84, 24, "left baseline", "#fff");
@@ -573,7 +574,7 @@ export async function panel_E(data = {
     let title_retryfail =
         torus.getTextPath("Retry // Fail", 900, 922.63, 18, "left baseline", "#a1a1a1");
     let map_public_rating =
-        torus.getTextPath("Rating " + data.map_public_rating,
+        torus.getTextPath("Players Feedback " + data.map_public_rating,
             1420, 802.88, 18, "right baseline", "#a1a1a1");
     let map_passretryfail_percent =
         torus.getTextPath( "P "
@@ -657,7 +658,7 @@ export async function panel_E(data = {
 
     const density_arr_max = Math.max.apply(Math, data.map_density_arr) / density_scale;
 
-    RULineChart(data.map_density_arr, star_rating_color, density_arr_max, /(?<=<g id="JudgeRRects">)/);
+    RULineChart(data.map_density_arr, rank_color, density_arr_max, /(?<=<g id="JudgeRRects">)/);
 
 
     /*
