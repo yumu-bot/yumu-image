@@ -619,6 +619,33 @@ export async function panel_E(data = {
         }
     }
 
+
+    // 评级或难度分布
+    // 230801 更新 这里用线段吧。
+    function RULineChart (arr, color, max, reg){
+        const width = 520;
+        const step = width / arr.length
+        const start_x = 900;
+        const start_y = 900; //如果在下面那个区域，是1020
+
+        // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
+        // 高度本来是90，但老是超高，缩短一点 0211更新，超高问题得到了解决
+        let path_svg = `<svg> <path d="M ${start_x} ${start_y - (arr.shift() / max * 90)} S `;
+        let area_svg = path_svg;
+
+        arr.forEach((v, i) => {
+            let lineto_x = start_x + step * (i + 1)
+            let lineto_y = start_y - (v / max * 90);
+            path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `; // 第一个xy是点位置，第二个是控制点位置
+            area_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `;
+        })
+
+        path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 3px;"/> </svg>`
+        area_svg += `L ${start_x + width - step / 2} ${start_y} L ${start_x} ${start_y} Z" style="fill: ${color}; stroke: none; fill-opacity: 0.4"/> </svg>`//这里要减去最后1步除以2，我也不知道为什么
+
+        svg = replaceTexts(svg, [path_svg, area_svg], reg);
+    }
+
     // 评级或难度分布矩形的缩放，SR1为0.1倍，SR7为1倍
     let density_scale = 1;
     if (data.star_rating <= 1) {
@@ -627,8 +654,21 @@ export async function panel_E(data = {
         density_scale = Math.sqrt(((data.star_rating - 1) / 6 * 0.9) + 0.1); //类似对数增长，比如4星高度就是原来的 0.707 倍
     }
 
-    // 评级或难度分布
-    if (data.map_density_arr) {
+    const density_arr_max = Math.max.apply(Math, data.map_density_arr) / density_scale;
+
+    RULineChart(data.map_density_arr, '#79C471', density_arr_max, /(?<=<g id="JudgeRRects">)/);
+
+
+    /*
+    function DensityRRect (data) {
+        // 评级或难度分布矩形的缩放，SR1为0.1倍，SR7为1倍
+        let density_scale = 1;
+        if (data.star_rating <= 1) {
+            density_scale = 0.1;
+        } else if (data.star_rating <= 7) {
+            density_scale = Math.sqrt(((data.star_rating - 1) / 6 * 0.9) + 0.1); //类似对数增长，比如4星高度就是原来的 0.707 倍
+        }
+
         const density_arr_max = Math.max.apply(Math, data.map_density_arr) / density_scale;
 
         data.map_density_arr.forEach((item, i) => {
@@ -638,6 +678,10 @@ export async function panel_E(data = {
             svg = replaceText(svg, svg_rect, /(?<=<g id="JudgeRRects">)/);
         })
     }
+
+    DensityRRect (data);
+
+     */
 
 
     // 星数
@@ -679,35 +723,13 @@ export async function panel_E(data = {
     RFrect(data);
 
     //中下的失败率重试率图像
-    let RFsum_arr = data.map_fail_arr.map(function (v, i) {
+    const RFsum_arr = data.map_fail_arr.map(function (v, i) {
         return v + data.map_retry_arr[i];
     });
-    let RFarr_max = Math.max.apply(Math, RFsum_arr);
+    const RFarr_max = Math.max.apply(Math, RFsum_arr);
 
-    /*
-    let RFdiff_arr = RFsum_arr.map(function(v) {return RFarr_max - v;});
-
-    function RFLineChart (arr, color, max){
-        const step = 520 / arr.length
-        const start_x = 900;
-        const start_y = 1020;
-
-        // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
-        // 高度本来是90，但老是超高，缩短一点 0211更新，超高问题得到了解决
-        let path_svg = `<svg> <path d="M ${start_x} ${start_y - (arr.shift() / max * 90)} S `;
-
-        arr.forEach((item,i) => {
-            let lineto_x = start_x + step * (i+1)
-            let lineto_y = start_y - (item / max * 90);
-            path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step/2} ${lineto_y} ` // 第一个xy是点位置，第二个是控制点位置
-        })
-        path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 3px;"/> </svg>`
-        svg = replaceText(svg, path_svg, /(?<=<g id="RetryFailGraphArea">)/);
-    }
-
-    RFLineChart(RFdiff_arr, '#a1a1a1', RFarr_max);
-
-     */
+    //let RFdiff_arr = RFsum_arr.map(function(v) {return RFarr_max - v;});
+    //function RFLineChart 代码搬到上面去了
 
     function RFBarChart(arr, color, max) {
         const step = 520 / arr.length //一步好像刚好5.2px
