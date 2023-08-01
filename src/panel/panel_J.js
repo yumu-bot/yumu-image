@@ -416,7 +416,7 @@ export async function panel_J(data = {
 
     const pp = data.pp.toFixed(0) || 0;
     const pp_raw = data.pp_raw.toFixed(0) || 0;
-    const pp_bonus = 'nullified' //Math.max(pp - pp_raw, 0).toFixed(0);
+    const pp_bonus = Math.max(pp - pp_raw, 0).toFixed(0);
     const game_mode = getGameMode(data.game_mode.toString(), 2);
 
     const pp_full_path = torus.get2SizeTextPath(

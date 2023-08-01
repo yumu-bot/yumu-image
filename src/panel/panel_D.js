@@ -628,7 +628,7 @@ export async function panel_D(data = {
 
     // 插入右下面板右上提示
     let game_mode = getGameMode(data.game_mode, 2);
-    let bonus_pp = 'nullified';// Math.round(data.bonus_pp) || 0;
+    let bonus_pp = Math.round(data.bonus_pp) || 0;
     let om4k_pp = Math.round(data.om4k_pp) || 0;
     let om7k_pp = Math.round(data.om7k_pp) || 0;
     let user_data_text;
