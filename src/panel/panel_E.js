@@ -370,7 +370,7 @@ export async function panel_E(data = {
     // 路径定义
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/;
-    let reg_judge_background = /(?<=<g style="clip-path: url\(#clippath-PE-BG\);">)/;
+    let reg_judge_background = /(?<=<g style="clip-path: url\(#clippath-PE-BG\);" filter="url\(#blur-PGamma-BG\)">)/;
     let reg_score_rank = /(?<=<g id="LURank">)/;
     let reg_mod = /(?<=<g id="RUMods">)/
     let reg_map_background = /(?<=<g style="clip-path: url\(#clippath-PE-MC\);">)/;
@@ -857,7 +857,7 @@ export async function panel_E(data = {
                 break;
         }
 
-        svg = implantImage(svg, 1920, 790, 0, 290, 0.8, getExportFileV3Path(`object-score-backimage-${rank}.jpg`), reg_judge_background);
+        svg = implantImage(svg, 1920, 790, 0, 290, 0.4, getExportFileV3Path(`object-score-backimage-${rank}.jpg`), reg_judge_background); //之前是0.8
         svg = implantImage(svg, 150 + w, 150, 980, 405, 1, getExportFileV3Path(`object-score-${rank}.png`), reg_score_rank); //微调了x，让它增加了5
     }
 

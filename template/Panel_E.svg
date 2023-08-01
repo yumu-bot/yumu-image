@@ -49,6 +49,9 @@
     <clipPath id="clippath-PE-R10">
       <rect x="40" y="711" width="39" height="39" style="fill: none;"/>
     </clipPath>
+    <filter id="blur-PE-BG" height="110%" width="110%" x="-5%" y="-5%">
+      <feGaussianBlur in="userSpaceOnUse" stdDeviation="5" result="blur"/>
+    </filter>
   </defs>
   <g id="BannerBase">
     <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719"/>
@@ -59,7 +62,7 @@
   </g>
   <g id="Background">
     <rect y="290" width="1920" height="790" rx="20" ry="20" style="fill: #2a2226;"/>
-    <g style="clip-path: url(#clippath-PE-BG);">
+    <g style="clip-path: url(#clippath-PE-BG);" filter="url(#blur-PGamma-BG)">
     </g>
   </g>
   <g id="RBJudge_MapStatic">
