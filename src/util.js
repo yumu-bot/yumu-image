@@ -2465,7 +2465,7 @@ export function getAccIndexDeluxe(score) {
                 }
             case 'C' :
                 if (hasMiss) {
-                    if (nNotMiss = n300) {
+                    if (nNotMiss === n300) {
                         return '-x SS';
                     } else if (0.9 * nNotMiss <= n300) {
                         return '-x S';
