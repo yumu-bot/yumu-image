@@ -652,8 +652,8 @@ export async function panel_E(data = {
     let density_scale = 1;
     if (data.star_rating <= 1) {
         density_scale = 0.1;
-    } else if (data.star_rating <= 7) {
-        density_scale = Math.sqrt(((data.star_rating - 1) / 6 * 0.9) + 0.1); //类似对数增长，比如4星高度就是原来的 0.707 倍
+    } else if (data.star_rating <= 8) {
+        density_scale = Math.sqrt(((data.star_rating - 1) / 7 * 0.9) + 0.1); //类似对数增长，比如4星高度就是原来的 0.707 倍
     }
 
     const density_arr_max = Math.max.apply(Math, data.map_density_arr) / density_scale;
