@@ -388,9 +388,9 @@ export async function card_M(data = {
 
         //插入到svg中
         // 1. compact normal
-        for (let lx = 0; lx < label_compact_x; lx++) {
-            for (let ly = 0; ly < label_compact_y; ly++) {
-                svg = implantSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[ly + lx * 3], reg_label);
+        for (let ly = 0; ly < label_compact_y; ly++) {
+            for (let lx = 0; lx < label_compact_x; lx++) {
+                svg = implantSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * label_compact_x], reg_label);
             }
         }
 
