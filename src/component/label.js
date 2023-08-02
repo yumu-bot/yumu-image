@@ -850,9 +850,10 @@ export async function label_M3(data = {
 
     const hasLabel2 = (data.label2 !== {})
 
-    const label1_x = hasLabel2 ? (label_width / 2) - width_offset : (label_width / 2) - (width_offset / 2);
+    //总觉得这里宽度写错了，但是先改小吧
+    const label1_x = hasLabel2 ? (label_width / 2) - width_offset : (label_width / 2) - (width_offset / 4);
     const label2_x = label_width / 2;
-    const label3_x = hasLabel2 ? (label_width / 2) + width_offset : (label_width / 2) + (width_offset / 2);
+    const label3_x = hasLabel2 ? (label_width / 2) + width_offset : (label_width / 2) + (width_offset / 4);
 
     //定义文本
     const label1_text = torus.get2SizeTextPath(
