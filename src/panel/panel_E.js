@@ -627,7 +627,7 @@ export async function panel_E(data = {
     function RULineChart (arr, color, max, reg){
         const width = 520;
         const step = width / arr.length
-        const start_x = 900;
+        const start_x = 902; //900
         const start_y = 900; //如果在下面那个区域，是1020
 
         // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
@@ -881,7 +881,7 @@ export async function panel_E(data = {
                 break;
         }
 
-        svg = implantImage(svg, 1920, 790, 0, 290, 0.4, getExportFileV3Path(`object-score-backimage-${rank}.jpg`), reg_judge_background); //之前是0.8
+        svg = implantImage(svg, 1920, 790, 0, 290, 0.6, getExportFileV3Path(`object-score-backimage-${rank}.jpg`), reg_judge_background); //之前是0.8 0.4太暗了，加到0.6
         svg = implantImage(svg, 150 + w, 150, 980, 405, 1, getExportFileV3Path(`object-score-${rank}.png`), reg_score_rank); //微调了x，让它增加了5
     }
 
@@ -944,7 +944,7 @@ export async function panel_E(data = {
     return await exportImage(svg);
 }
 
-export const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
+const newJudge = (n320, n300, n200, n100, n50, n0, gamemode) => {
     const judges = [];
     const mode = getGameMode(gamemode, 1);
 
