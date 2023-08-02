@@ -200,11 +200,11 @@ export async function card_N1(data = {
     const mods_arr = data.score.mods || ['']
     const mods_arr_length = mods_arr.length;
 
-    if (mods_arr_length <= 4 && mods_arr_length > 0) {
+    if (mods_arr_length <= 5 && mods_arr_length > 0) {
         mods_arr.forEach((val, i) => {
             svg = replaceText(svg, insertMod(val, 2 * i, 900 + 16 - mods_arr_length * 48), reg_mod);
         });
-    } else if (mods_arr_length > 4) {
+    } else if (mods_arr_length > 5) {
         mods_arr.forEach((val, i) => {
             svg = replaceText(svg, insertMod(val, i, 900 - 8 - mods_arr_length * 24), reg_mod);
         });
