@@ -2973,7 +2973,7 @@ export const PanelGenerate = {
     },
 
     searchMap2CardA2: async (beatmapsets, rank) => {
-        const ranked_date = beatmapsets.ranked_date || '';
+        const ranked_date =  beatmapsets.ranked_date || '';
         const submitted_date = beatmapsets.submitted_date || '';
 
         const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg', getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');

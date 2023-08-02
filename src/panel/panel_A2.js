@@ -22,7 +22,7 @@ export async function router(req, res) {
 export async function panel_A2(data = {
     //现在的搜索规则是？返回 qualified, ranked, loved, pending, graveyard。当然这个面板应该是默认 qualified 吧。
     rule: 'qualified',
-    result_count: 12,
+    result_count: 1,
 
     // api 给的信息
     "total": 116,
@@ -35,8 +35,9 @@ export async function panel_A2(data = {
         "id": "1954777" //目前结果的尾巴那张图的sid
     },
 
-    "beatmapsets": [],
     /*
+    "beatmapsets": [],
+    */
     "beatmapsets":[{
         "artist": "HOYO-MiX",
         "artist_unicode": "HOYO-MiX",
@@ -273,10 +274,9 @@ export async function panel_A2(data = {
             }
         ],
         "pack_tags": []
-    },
+    }
     ]
 
-     */
 
 }, reuse = false) {
     // 导入模板
@@ -307,7 +307,8 @@ export async function panel_A2(data = {
     svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
 
     // 导入A2卡
-    const result_count = data.result_count || 0;
+    const beatmap_count = (data.beatmapsets !== null) ? data.beatmapsets.length : 0;
+    const result_count = Math.min(data.result_count, beatmap_count);
 
     const search_result = await PanelGenerate.searchResult2CardA2(
         data.total,
@@ -325,6 +326,7 @@ export async function panel_A2(data = {
     let info_cardMs = [];
 
     for (let i = 0; i < result_count; i++) {
+        console.log(result_count)
         const beatmap = await PanelGenerate.searchMap2CardA2(data.beatmapsets[i], i + 1);
         const f = await card_A2(beatmap, true);
         beatmap_cardA2s.push(f);

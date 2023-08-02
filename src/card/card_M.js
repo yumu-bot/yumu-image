@@ -307,7 +307,7 @@ export async function card_M(data = {
         for (let i = 0; i < label_count; i++) {
             svg = implantSvgBody(svg, 10 + (label_width + 10) * i, 150, labelM1s[i], reg_label);
             svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 50, 10, labelM2s[i], reg_label);
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 66, 120, labelM3s[i], reg_label);
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2), + 5, 120, labelM3s[i], reg_label); //往右偏一点，好看，记得改相似的地方
 
         }
     } else if (label_count <= 18) {
@@ -405,7 +405,7 @@ export async function card_M(data = {
 
             svg = implantSvgBody(svg, 10 + (label_width + 10) * nx, 150, labelM1s[n], reg_label);
             svg = implantSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) - 50, 10, labelM2s[n], reg_label);
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) - 66, 120, labelM3s[n], reg_label);
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) + 5, 120, labelM3s[n], reg_label); //往右偏一点，好看，记得改相似的地方
         }
 
         //给个备注，说明这个地方有多少个diff
