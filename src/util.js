@@ -3224,7 +3224,6 @@ export const PanelGenerate = {
                     data_b: getDecimals(beatmap.accuracy, 2),
                     data_m: getDecimals(beatmap.accuracy, 3)
                 },
-                label2: {},
                 label3: {
                     icon: getExportFileV3Path("object-score-healthpoint.png"),
                     icon_title: 'HP',
