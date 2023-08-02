@@ -409,7 +409,7 @@ export async function card_M(data = {
         }
 
         //给个备注，说明这个地方有多少个diff
-        const diff_count = torus.getTextPath('Diffs: ' + label_count + 'x', 20, 20, 18, 'left baseline', '#fff')
+        const diff_count = torus.getTextPath('Total: ' + label_count + 'x', 20, 21, 18, 'left baseline', '#fff')
 
         svg = replaceText(svg, diff_count, reg_text);
 
