@@ -206,7 +206,7 @@ export async function card_N1(data = {
         });
     } else if (mods_arr_length > 4) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, i, 900 + 16 - mods_arr_length * 24), reg_mod);
+            svg = replaceText(svg, insertMod(val, i, 900 - 8 - mods_arr_length * 24), reg_mod);
         });
     }
 
