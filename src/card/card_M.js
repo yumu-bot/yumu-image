@@ -307,7 +307,7 @@ export async function card_M(data = {
         for (let i = 0; i < label_count; i++) {
             svg = implantSvgBody(svg, 10 + (label_width + 10) * i, 150, labelM1s[i], reg_label);
             svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 50, 10, labelM2s[i], reg_label);
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 33, 120, labelM3s[i], reg_label);
+            svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 66, 120, labelM3s[i], reg_label);
 
         }
     } else if (label_count <= 18) {
