@@ -49,8 +49,8 @@
     <clipPath id="clippath-PE-R10">
       <rect x="40" y="711" width="39" height="39" style="fill: none;"/>
     </clipPath>
-    <filter id="blur-PE-BG" height="110%" width="110%" x="-5%" y="-5%">
-      <feGaussianBlur in="userSpaceOnUse" stdDeviation="5" result="blur"/>
+    <filter id="blur-PE-BG" height="120%" width="120%" x="-10%" y="-10%" filterUnits="userSpaceOnUse">
+      <feGaussianBlur in="userSpaceOnUse" stdDeviation="10" result="blur"/>
     </filter>
   </defs>
   <g id="BannerBase">
