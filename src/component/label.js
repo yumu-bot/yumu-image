@@ -848,11 +848,11 @@ export async function label_M3(data = {
     const width_offset = 70; //(max_width > 650 / 3) ? 98 : 70;
     const label_width = 66;
 
-    const hasLabel2 = !!data.label2.data_b;
+    const hasLabel2 = !!data.label2;
 
-    const label1_x = hasLabel2 ? (label_width / 2) - width_offset : - width_offset / 2;
+    const label1_x = hasLabel2 ? ((label_width / 2) - width_offset) : (-width_offset / 2);
     const label2_x = label_width / 2;
-    const label3_x = hasLabel2 ? (label_width / 2) + width_offset : + width_offset / 2;
+    const label3_x = hasLabel2 ? ((label_width / 2) + width_offset) : (width_offset / 2);
 
     //定义文本
     const label1_text = torus.get2SizeTextPath(
