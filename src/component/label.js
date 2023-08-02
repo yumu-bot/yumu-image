@@ -845,14 +845,14 @@ export async function label_M3(data = {
     const max_width = data.maxWidth;
     //如果是一排6个，那么需要缩减一下！
     //230731更新，这里不需要缩减了，长的太丑
-    const width_offset = 70; //(max_width > 650 / 3) ? 98 : 70;
+    const interval = 4; //(max_width > 650 / 3) ? 98 : 70;
     const label_width = 66;
 
     const hasLabel2 = (data.label2.icon_title !== '');
 
-    const label1_x = hasLabel2 ? ( - width_offset - (label_width / 2)) : - (width_offset / 2) - (label_width * 3 / 2);
+    const label1_x = hasLabel2 ? (- interval - label_width * 3 / 2) : (- interval / 2 - label_width);
     const label2_x = - label_width / 2;
-    const label3_x = hasLabel2 ? (width_offset - (label_width / 2)) : (width_offset / 2) + (label_width * 3 / 2);
+    const label3_x = hasLabel2 ? (interval + label_width / 2) : (interval / 2);
 
     //定义文本
     const label1_text = torus.get2SizeTextPath(
