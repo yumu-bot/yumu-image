@@ -370,7 +370,7 @@ export async function panel_E(data = {
     // 路径定义
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/;
-    let reg_judge_background = /(?<=<g style="clip-path: url\(#clippath-PE-BG\);" filter="url\(#blur-PE-BG\)">)/;
+    let reg_judge_background = /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BG\);">)/;
     let reg_score_rank = /(?<=<g id="LURank">)/;
     let reg_mod = /(?<=<g id="RUMods">)/
     let reg_map_background = /(?<=<g style="clip-path: url\(#clippath-PE-MC\);">)/;
