@@ -2300,7 +2300,7 @@ const ModBonusMANIA = {
 
 //获取面板E里的ACC指示器
 export function getAccIndexDeluxe(score) {
-    const gamemode = getGameMode(score.mode, 1);
+    const mode = getGameMode(score.mode, 1);
     const nGeki = score.statistics.count_geki;
     const n300 = score.statistics.count_300;
     const n100 = score.statistics.count_100;
@@ -2317,7 +2317,7 @@ export function getAccIndexDeluxe(score) {
 
     const rank = score.rank;
 
-    switch (gamemode) {
+    switch (mode) {
         case 'o' : return getIndexStd();
         case 't' : return getIndexTaiko();
         case 'c' : return getIndexCatch();
@@ -2355,7 +2355,7 @@ export function getAccIndexDeluxe(score) {
                         }
                     }
                 }
-            };
+            }
             case 'B' :
                 if (hasMiss) {
                     if (nNotMiss === n300) {
@@ -2432,6 +2432,8 @@ export function getAccIndexDeluxe(score) {
                         return '-x SS';
                     } else if (0.9 * nNotMiss <= n300) {
                         return '-x S';
+                    } else {
+                        return '-';
                     }
                 } else {
                     if (0.9 * nTotal <= n300) {
@@ -2693,9 +2695,9 @@ export function hasMod(modInt = 0, mod = '') {
     return ModInt[mod] ? (modInt & ModInt[mod]) !== 0 : false;
 }
 
-export function hasAnyMod(modInt = 0, mod = ['']) {
-    if (!mod) return false;
-    for (const v of mod) {
+export function hasAnyMod(modInt = 0, mods = ['']) {
+    if (!mods) return false;
+    for (const v of mods) {
         if ((ModInt[v] & modInt) !== 0) {
             return true;
         }
