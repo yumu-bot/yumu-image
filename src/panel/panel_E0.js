@@ -4,20 +4,23 @@ import {
     getDecimals,
     getExportFileV3Path,
     getGameMode,
-    getNowTimeStamp, hasAnyMod,
+    getNowTimeStamp,
+    getPanelNameSVG,
+    hasAnyMod,
+    implantImage,
+    implantSvgBody,
     PanelGenerate,
     readNetImage,
-    readTemplate
+    readTemplate,
+    replaceText
 } from "../util.js";
-
+import {calcPerformancePoints, getDensityArray} from "../compute-pp.js";
+import moment from "moment";
+import {LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_E1} from "../card/card_E1.js";
 import {card_E2} from "../card/card_E2.js";
 import {card_E3} from "../card/card_E3.js";
-
-import moment from "moment";
-import {calcPerformancePoints, getDensityArray} from "../compute-pp";
-import {LABEL_OPTION} from "../component/label";
 
 export async function router(req, res) {
     try {
@@ -83,8 +86,8 @@ export async function panel_E0(data = {
             "sh": 62,
             "a": 1951,
             "ranked": true,
-            "pp7K": null,
-            "pp4K": null,
+            "pp_7K": null,
+            "pp_4K": null,
             "count_50": 210333,
             "count_100": 1884554,
             "count_300": 14980012,
@@ -114,7 +117,7 @@ export async function panel_E0(data = {
     },
 
     score: {
-        "accuracy" : 0.9940625,
+        "accuracy" : 0.9861,
         "mods" : [ ],
         "passed" : true,
         "perfect" : false,
@@ -270,31 +273,59 @@ export async function panel_E0(data = {
     let svg = readTemplate('template/Panel_E0.svg');
 
     // 路径定义
-    const reg_maincard = /(?<=<g id="MainCard">)/;
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/;
-    const reg_judge_background = /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BG\);">)/;
-    const reg_score_rank = /(?<=<g id="LURank">)/;
-    const reg_mod = /(?<=<g id="RUMods">)/
-    const reg_map_background = /(?<=<g style="clip-path: url\(#clippath-PE-MC\);">)/;
-    const reg_map_hexagon = /(?<=<g id="LUMapStatus">)/; // 移到上一层
-    const reg_map_favorite = /(?<=<g id="LUMapObject">)/;
-    const reg_map_playcount = /(?<=<g id="LUMapObject">)/;
-    const reg_map_status = /(?<=<g style="clip-path: url\(#clippath-PE-ST\);">)/;
+    const reg_background = /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BG\);">)/;
     const reg_index = /(?<=<g id="Index">)/;
+    const reg_card_a1 = /(?<=<g id="Card_A1">)/;
+    const reg_card_e1 = /(?<=<g id="Card_E1">)/;
+    const reg_card_e2 = /(?<=<g id="Card_E2">)/;
+    const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 面板文字
-    const score_time = moment(data.score_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm:ss[ +8]");
-    const index_powered = 'powered by Yumubot v0.3.2 EA // Score (!ymp / !ymr / !yms)';
-    const index_request_time = 'score time: ' + score_time + ' // request time: ' + getNowTimeStamp();
-    const index_panel_name = 'Score';
+    const score_time = moment(data.score.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours').format("YYYY-MM-DD HH:mm:ss[ +8]");
+    const request_time = 'score time: ' + score_time + ' // request time: ' + getNowTimeStamp();
 
-    //成绩重计算
+    // 导入文字
+    svg = replaceText(svg, getPanelNameSVG(
+        'Score (!ymp / !ymr / !yms)', 'Score', '0.3.2 FT', request_time
+    ), reg_index);
+
+    // 成绩重计算
     const score_statistics = {
         ...data.score.statistics,
         combo: data.score.max_combo,
         mods: data.score.mods,
     }
+
     const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, !(data.score.beatmap.ranked && data.score.beatmap.ranked === 1));
+    /*
+    const calcPP = {
+        pp: 10,
+        pp_all: 0,
+        full_pp: 20,
+        full_pp_all: 0,
+        perfect_pp: 40,
+        perfect_pp_all: 0,
+        attr: {
+            mode: 0,
+            version: 14,
+            nCircles: 1,
+            nSliders: 1,
+            nSpinners: 1,
+            ar: 9.7,
+            cs: 4,
+            hp: 5.6,
+            od: 9.3,
+            arHitWindow: 500,
+            odHitWindow: 23.733332951863606,
+            clockRate: 1.5,
+            bpm: 234.00023400023397,
+            stars: 10.6,
+            maxCombo: 457,
+        },
+    }
+
+     */
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
@@ -302,14 +333,28 @@ export async function panel_E0(data = {
     const cardE2 = await card_E2(await score2CardE2(data.score, calcPP), true);
     const cardE3 = await card_E3(await score2CardE3(data.score, calcPP), true);
 
+    // 导入卡片
+    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = implantSvgBody(svg, 0, 290, cardE1, reg_card_e1);
+    svg = implantSvgBody(svg, 880, 330, cardE2, reg_card_e2);
+    svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
+
+    // 图片定义
+    const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
+    const banner = await readNetImage(data.score.beatmapset.covers.slimcover, getExportFileV3Path('beatmap-DLfailBG.jpg'));
+
+    // 导入图片
+    svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);
+    svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     return await exportImage(svg);
 }
 
 async function score2CardE1(score, calcPP) {
     return {
+        mode: score.mode || 'OSU',
         star: calcPP.attr.stars || 0,
-        cover: await readNetImage(score.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg')),
+        cover: score.beatmapset.covers["list@2x"],
         title: score.beatmapset.title || '',
         title_unicode: score.beatmapset.title_unicode || '',
         version: score.beatmap.version || '',
@@ -332,10 +377,11 @@ async function score2CardE2(score, calcPP) {
         rank: score.rank || 'F',
         mods: score.mods || [],
         score: score.score || 0,
-        accuracy: score.accuracy * 100 || 0,
+        accuracy: score.accuracy || 0,
         combo: score.max_combo || 0,
         pp: calcPP.pp || 0,
         mode: score.mode || '',
+
 
         advanced_judge: score2AdvancedJudge(score), //进阶评级，也就是面板圆环下面那个玩意
         acc_index: score2AccIndex(score),
@@ -356,8 +402,8 @@ async function score2CardE3(score, calcPP) {
 
     return {
         density_arr: await getDensityArray(score.beatmap.id, score.mode),
-        retry_arr: score.beatmap.exit,
-        fail_arr: score.beatmap.fail,
+        retry_arr: score.beatmap.exit || [],
+        fail_arr: score.beatmap.fail || [],
 
         public_rating: score2PublicRating(score),
         pass_percent: pass_arr[0],
@@ -365,6 +411,8 @@ async function score2CardE3(score, calcPP) {
         fail_percent: pass_arr[2],
 
         labels: score2Labels(score, calcPP),
+        rank: score.rank,
+        star: calcPP.attr.stars,
     }
 }
 
@@ -802,15 +850,19 @@ const score2StatisticsMax = (score) => {
     }
 }
 
-//132行的方法
+//132行的方法，获取大众评分
 const score2PublicRating = (score) => {
-    const rating_sum = score.beatmapset.ratings.reduce((s, v) => s + v);
-    const rating_weight_val = score.beatmapset.ratings.reduce((s, v, i) => s + v * i);
-    return rating_weight_val ? Math.floor(rating_weight_val / rating_sum * 100) / 100 : 0;
+    const ratings = score.beatmapset.ratings;
+
+    const rating_sum = ratings ? ratings.reduce((s, v) => s + v) : 0;
+    const rating_weight_val = ratings ? ratings.reduce((s, v, i) => s + v * i) : 0;
+    return (rating_sum !== 0) ? Math.floor(rating_weight_val / rating_sum * 100) / 100 : 0;
 }
 
-//137行的方法
+//137行的方法，获取通过率等
 const score2PassPercents = (score) => {
+    let arr = [];
+
     const pc = score.beatmap.playcount || 0;
     const pass = score.beatmap.passcount || 0;
 
@@ -819,17 +871,17 @@ const score2PassPercents = (score) => {
     const not_pass_sum = fail_sum + retry_sum; //虚假的未通过人数
     const not_pass_real_percent = (pc === 0) ? ((pc - pass) / pc) : 0; //真实的未通过率
 
-    const fail_percent = (not_pass_sum !== 0) ?
-        (fail_sum / not_pass_sum * not_pass_real_percent * 100).toFixed(0) : 0;
-    const retry_percent = (not_pass_sum !== 0) ?
-        (retry_sum / not_pass_sum * not_pass_real_percent * 100).toFixed(0) : 0;
-    const pass_percent = (not_pass_sum !== 0) ?
-        (100 - fail_percent - retry_percent).toFixed(0) : 0;
+    const isNotDiv0 = (not_pass_sum !== 0);
 
-    return new Array(3).push(pass_percent, retry_percent, fail_percent);
+    const fail_percent = isNotDiv0 ? (fail_sum / not_pass_sum * not_pass_real_percent * 100).toFixed(0) : 0;
+    const retry_percent = isNotDiv0 ? (retry_sum / not_pass_sum * not_pass_real_percent * 100).toFixed(0) : 0;
+    const pass_percent = isNotDiv0 ? (100 - fail_percent - retry_percent).toFixed(0) : 0;
+
+    arr.push(pass_percent, retry_percent, fail_percent)
+    return arr;
 }
 
-//406-473行的方法 console.time("label");
+//406-473行的方法，打包成标签 console.time("label");
 const score2Labels = (score, calcPP) => {
     const mode = getGameMode(score.mode, 1);
     const bpm = calcPP.attr.bpm;
@@ -850,9 +902,9 @@ const score2Labels = (score, calcPP) => {
     const bpm_b = getDecimals(bpm, 2);
     const bpm_m = getDecimals(bpm, 3);
 
-    const length_r = Math.floor(drain / 60) + ':' + drain % 60;
+    const length_r = Math.floor(drain / 60) + ':' + (drain % 60).toFixed(0).padStart(2, '0');
     const length_b = Math.floor(length / 60) + ':';
-    const length_m = length % 60;
+    const length_m = (length % 60).toFixed(0).padStart(2, '0');
 
     let isDisplayCS = true;
     let isDisplayAR = true;
@@ -960,10 +1012,7 @@ const od2ms = (od, mode = 'o') => {
 }
 
 const stat2DataM = (hasChanged = false, after = 0, before = 0) => {
-    return getDecimals(after, 4) +
-    hasChanged ? (' (' + getDecimals(before, 2) + getDecimals(before, 4) + ')')
-        : '';
-
+    return getDecimals(after, 4) + (hasChanged ? (' (' + getDecimals(before, 2) + getDecimals(before, 4) + ')') : '');
 }
 
 const data2Label = (remark, data_b, data_m, isDisplay = true) => {

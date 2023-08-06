@@ -147,8 +147,8 @@ export async function router(req, res) {
             rank_global: user?.statistics?.global_rank,
             country: user?.country['countryCode'],
             bonus_pp: req.fields['bonus_pp'], // 416.6667
-            om4k_pp: user?.statistics?.pp4K,
-            om7k_pp: user?.statistics?.pp7K,
+            om4k_pp: user?.statistics?.pp_4K,
+            om7k_pp: user?.statistics?.pp_7K,
             game_mode: req.fields?.mode, // osu taiko catch mania
 
             grade_XH: user?.statistics?.ssh,

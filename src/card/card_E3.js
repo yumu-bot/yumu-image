@@ -1,3 +1,12 @@
+import {
+    getExportFileV3Path,
+    getRankColor,
+    implantSvgBody,
+    PanelDraw, replaceTexts,
+    torus
+} from "../util.js";
+import {label_E} from "../component/label.js";
+
 export async function card_E3(data = {
     density_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],
     retry_arr: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 18, 360, 396, 234, 45, 81, 54, 63, 90, 153, 135, 36, 9, 63, 54, 36, 144, 54, 9, 9, 36, 18, 45, 45, 36, 108, 63, 9, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 27, 0, 18, 0, 0, 0, 18, 18, 18, 0, 0, 0, 9, 18, 9, 0, 9, 9, 0, 9, 0, 9, 18, 9, 0, 0, 27, 0, 0, 0, 0, 27, 9, 9, 0, 9, 9, 0, 0, 0, 9, 0, 0, 9, 9, 0, 9],
@@ -9,50 +18,109 @@ export async function card_E3(data = {
     fail_percent: 2,
 
     labels: [{
+        icon: getExportFileV3Path("object-score-beatsperminute.png"),
+        icon_title: 'BPM',
+        color_remark: '#aaa',
         remark: '-1.64%',
         data_b: '98',
         data_m: '.36%',
     },{
+        icon: getExportFileV3Path("object-score-beatsperminute.png"),
+        icon_title: 'BPM',
+        color_remark: '#aaa',
         remark: '7:27',
         data_b: '7:',
         data_m: '27',
     }],
+    rank: 'F',
+    star: 9.99,
 }, reuse = false) {
     // 读取模板
-    let svg = `   <defs>
-            <clipPath id="clippath-CN-1">
-              <rect width="915" height="62" rx="20" ry="20" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-CN-2">
-              <circle cx="95" cy="31" r="25" style="fill: none;"/>
-            </clipPath>
-            <filter id="blur-CN-1" height="120%" width="120%" x="-10%" y="-10%" filterUnits="userSpaceOnUse">
-                <feGaussianBlur in="userSpaceOnUse" stdDeviation="5" result="blur"/>
-            </filter>
-          </defs>
-          <g id="Background_CN_1">
-            <rect width="915" height="62" rx="20" ry="20" style="fill: #382E32;"/>
-            <circle cx="145" cy="31" r="25" style="fill: #382E32;"/>
-            <g style="clip-path: url(#clippath-CN-1);" filter="url(#blur-CN-1)">
-            </g>
+    let svg = `
+          <g id="Base_CE3">
+            <rect id="RBCard" width="1000" height="270" rx="20" ry="20" style="fill: #382e32;"/>
           </g>
-          <g id="Avatar_CN_1">
-            <g style="clip-path: url(#clippath-CN-2);">
-            </g>
+          <g id="Graph_CE3">
           </g>
-          <g id="Text_CN_1">
+          <g id="Label_CE3">
           </g>
-          <g id="Mod_CN_1">
-          </g>
-          <g id="Label_CN_1">
+          <g id="Text_CE3">
           </g>`;
 
     // 路径定义
-    const reg_text = /(?<=<g id="Text_CN_1">)/;
-    const reg_avatar = /(?<= <g style="clip-path: url\(#clippath-CN-2\);">)/;
-    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CN-1\);" filter="url\(#blur-CN-1\)">)/;
-    const reg_label = /(?<=<g id="Label_CN_1">)/;
-    const reg_mod = /(?<=<g id="Mod_CN_1">)/;
+    const reg_label = /(?<=<g id="Label_CE3">)/;
+    const reg_graph = /(?<=<g id="Graph_CE3">)/;
+    const reg_text = /(?<=<g id="Text_CE3">)/;
+
+    // 预设值定义
+    const rank_color = getRankColor(data.rank);
+
+    // 文字定义
+    const density = torus.getTextPath("Density", 20, 32.88, 18, "left baseline", "#aaa");
+    const retry_fail = torus.getTextPath("Retry // Fail", 20, 152.63, 18, "left baseline", "#aaa");
+    const public_rating = torus.getTextPath("Players Feedback: " + data.public_rating,
+            540, 32.88, 18, "right baseline", "#aaa");
+    const percent = torus.getTextPath( "P "
+            + data.pass_percent
+            + "% // R "
+            + data.retry_percent
+            + "% // F "
+            + data.fail_percent
+            + "%",
+            540, 152.63, 18, "right baseline", "#aaa");
+
+    // 导入文字
+    svg = replaceTexts(svg, [density, retry_fail, public_rating, percent], reg_text);
+
+    // 部件定义
+    // 评级或难度分布矩形的缩放，SR1为0.1倍，SR7为1倍
+    let density_scale = 1;
+    if (data.star <= 1) {
+        density_scale = 0.1;
+    } else if (data.star <= 8) {
+        density_scale = Math.sqrt(((data.star - 1) / 7 * 0.9) + 0.1); //类似对数增长，比如4星高度就是原来的 0.707 倍
+    }
+    const density_arr_max = Math.max.apply(Math, data.density_arr) / density_scale;
+    const density_graph = await PanelDraw.LineChart(data.density_arr, density_arr_max, 20, 130, 520, 90, rank_color, 1, 0.4);
+
+    //中下的失败率重试率图像
+    const retry_fail_sum_arr = data.fail_arr ? data.fail_arr.map(function (v, i) {
+        return v + data.retry_arr[i];
+    }) : [];
+    const retry_fail_sum_arr_max = Math.max.apply(Math, retry_fail_sum_arr);
+    const retry_graph = await PanelDraw.BarChart(retry_fail_sum_arr, retry_fail_sum_arr_max,
+        20, 250, 520, 90, 0, '#f6d659', 1);
+    const fail_graph = await PanelDraw.BarChart(data.fail_arr, retry_fail_sum_arr_max,
+        20, 250, 520, 90, 0, '#ed6c9e', 1);
+
+    let labels = '';
+    for (const v of data.labels) {
+        const i = data.labels.indexOf(v);
+
+        const d = await label_E(v, true);
+        const x = (i % 2) * 210;
+        const y = Math.floor(i / 2) * 80;
+
+        labels += `<g transform="translate(${x} ${y})">` + d + '</g>';
+    }
+
+    const fail_rrect = getRRectSVG(560, 250, 4.2 * data.fail_percent, 4, 2, '#ed6c9e');
+    const retry_rrect = getRRectSVG(560, 250, 4.2 * (data.fail_percent + data.retry_percent), 4, 2, '#f6d659');
+    const base_rrect = getRRectSVG(560, 250, 420, 4, 2, '#aaa');
+
+    // 导入部件
+    svg = implantSvgBody(svg, 0, 0, density_graph, reg_graph);
+    svg = implantSvgBody(svg, 0, 0, retry_graph, reg_graph);
+    svg = implantSvgBody(svg, 0, 0, fail_graph, reg_graph);
+    svg = implantSvgBody(svg, 560, 20, labels, reg_label);
+
+    svg = implantSvgBody(svg, 0, 0, fail_rrect, reg_label);
+    svg = implantSvgBody(svg, 0, 0, retry_rrect, reg_label);
+    svg = implantSvgBody(svg, 0, 0, base_rrect, reg_label);
 
     return svg.toString();
+}
+
+function getRRectSVG(x, y, w, h, r, color) {
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: ${color};"/>`;
 }

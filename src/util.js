@@ -429,6 +429,7 @@ function cutStringTail_PuHuiTi(
     text = '',
     size = 36,
     maxWidth = 0,
+    isDot3Needed = true,
 ) {
     if (PuHuiTi.getTextWidth(text, size) <= maxWidth) {
         return text;
@@ -443,7 +444,7 @@ function cutStringTail_PuHuiTi(
         out_text += text.slice(i, i + 1);
     }
 
-    return out_text.slice(0, -1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
+    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
 }
 
 export const extra = {};
@@ -516,8 +517,8 @@ export function replaceText(base = '', replace = '', reg = /.*/) {
     return base.replace(reg, replace);
 }
 
-export function replaceTexts(base = '', replace = [''], reg = /.*/) {
-    for (const v of replace) {
+export function replaceTexts(base = '', replaces = [''], reg = /.*/) {
+    for (const v of replaces) {
         base = base.replace(reg, v);
     }
     return base;
@@ -528,8 +529,8 @@ export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /
     return base.replace(reg, replace);
 }
 
-export function implantSvgBody(base = '', x, y, replace = '', reg = /.*/) {
-    replace = `<g transform="translate(${x} ${y})">` + replace + '</g>'
+export function implantSvgBody(base = '', x= 0, y = 0, replace = '', reg = /.*/) {
+    if (x !== 0 || y !== 0) replace = `<g transform="translate(${x} ${y})">` + replace + '</g>'
     return base.replace(reg, replace);
 }
 
@@ -1553,10 +1554,10 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
 }
 
 /**
- * @function 预处理星数（或其他小数）成想要的部分。
+ * @function 预处理星数（或其他小数）成想要的部分。不止星数！
  * @return 返回 8, 0.34, 8., 34。前两个是数据，后两个是字符串
  * @param number 小数
- * @param whichData 要哪个数据？可输入0, 1, 2, 3, 4，分别是整数、小数、整数带小数点部分、纯小数部分（两位以下，纯小数部分（一位以下
+ * @param whichData 要哪个数据？可输入0-4，分别是0整数、1小数、2整数带小数点部分、3纯小数部分（两位以下，4纯小数部分（一位以下
  */
 export function getDecimals (number = 0, whichData = 0) {
 
@@ -2832,7 +2833,25 @@ export function getTimeDifference(compare = '', now = moment()) {
     }
 }
 
+//公用方法：给面板上名字
+export function getPanelNameSVG (name = '?? (!test)', index = '?', version = '0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
+
+    // powered by Yumubot v0.3.2 EA // Score (!ymp / !ymr / !yms)
+    const powered_text = torus.getTextPath(
+        'powered by ' + powered + ' ' + version + ' // ' + name,
+        10, 26.84, 24, "left baseline", "#fff");
+    const request_time_text = torus.getTextPath(request_time,
+        1910, 26.84, 24, "right baseline", "#fff");
+    const panel_name_text = torus.getTextPath(index,
+        607.5, 83.67, 48, "center baseline", "#fff");
+
+    //导入文字
+    const svg = (powered_text + request_time_text + panel_name_text);
+    return svg;
+}
+
 //公用方法
+//把参数变成面板能读懂的数据（router
 export const PanelGenerate = {
     user2CardA1: async (user) => {
         const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
@@ -3287,5 +3306,54 @@ export const PanelGenerate = {
             };
         }
     }
+}
+
+//把数组变成可视化的图表
+export const PanelDraw = {
+
+    //柱状图，Histogram，max 如果填 0，即用数组的最大值
+    BarChart: async (arr = [0], max = 0, x = 900, y = 1020, w = 520, h = 90, gap = 0, color, opacity = 1) => {
+        if (arr == null) return '';
+
+        const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
+        const step = w / arr.length; //如果是100个，一步好像刚好5.2px
+        const width = step - gap; //实际宽度
+        let rect_svg = '<g>';
+
+        arr.forEach((v, i) => {
+            const x0 = x + step * i;
+            const y0 = y - height;
+            const height = v / arr_max * h;
+
+            rect_svg += `<rect x="${x0}" y="${y0}" width="${width}" height="${height}" rx="2" ry="2" style="fill: ${color};"/>`
+        })
+
+        return (rect_svg + '</g>').toString();
+    },
+
+    //折线图，max 如果填 0，即用数组的最大值
+    LineChart: async (arr = [0], max = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0) => {
+        if (arr == null) return '';
+        const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
+        const step = w / arr.length;
+        const x0 = x + step / 4; //为了居中，这里要加上最后1步除以4的距离
+        const y0 = y;
+
+        let path_svg = `<svg> <path d="M ${x0} ${y0 - (arr.shift() / arr_max * h)} S `;
+        let area_svg = path_svg;
+
+        arr.forEach((v, i) => {
+            const lineto_x = x0 + step * (i + 1)
+            const lineto_y = y0 - (v / arr_max * h);
+
+            path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `; // 第一个xy是点位置，第二个是控制点位置
+            area_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `;
+        })
+
+        path_svg += `" style="fill: none; stroke: ${color}; opacity: ${path_opacity}; stroke-miterlimit: 10; stroke-width: 3px;"/> </svg>`
+        area_svg += `L ${x0 + w - step / 2} ${y0} L ${x0} ${y0} Z" style="fill: ${color}; stroke: none; fill-opacity: ${area_opacity};"/> </svg>`//这里要减去最后1步除以2，我也不知道为什么
+
+        return (path_svg + area_svg).toString();
+    },
 }
 

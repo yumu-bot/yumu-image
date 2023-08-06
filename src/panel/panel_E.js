@@ -865,24 +865,24 @@ export async function panel_E(data = {
     // 插入评级大照片和背景
 
     function scoreRankSVGShown(rank = 'D') {
-        let w = 0; //很奇怪，输出明明好好的，但是位置不对
+        let delta = 0; //很奇怪，输出明明好好的，但是位置不对
         switch (rank) {
             case 'B':
-                w = 5;
+                delta = 3;
                 break;
             case 'C':
-                w = -5;
+                delta = -3;
                 break;
             case 'D':
-                w = 10;
+                delta = 5;
                 break;
             case 'F':
-                w = 5;
+                delta = 3;
                 break;
         }
 
         svg = implantImage(svg, 1920, 790, 0, 290, 0.6, getExportFileV3Path(`object-score-backimage-${rank}.jpg`), reg_judge_background); //之前是0.8 0.4太暗了，加到0.6
-        svg = implantImage(svg, 150 + w, 150, 980, 405, 1, getExportFileV3Path(`object-score-${rank}.png`), reg_score_rank); //微调了x，让它增加了5
+        svg = implantImage(svg, 150, 150, 980 + delta, 405, 1, getExportFileV3Path(`object-score-${rank}.png`), reg_score_rank); //微调了x，让它增加了5
     }
 
     scoreRankSVGShown(data.score_rank);

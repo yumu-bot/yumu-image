@@ -67,8 +67,8 @@ export async function panel_Beta(score) {
         const full = ppData.full_pp / ppData.perfect_pp;
         if (pp < 1) pp = ppData.pp;
 
-        serchObject(ppShowLine, e => e.$mk === "pp-now").$height = Math.round(now * 1000);
-        serchObject(ppShowLine, e => e.$mk === "pp-fc").$height = Math.round(full * 1000);
+        searchObject(ppShowLine, e => e.$mk === "pp-now").$height = Math.round(now * 1000);
+        searchObject(ppShowLine, e => e.$mk === "pp-fc").$height = Math.round(full * 1000);
     }
 
     {// info 处理
@@ -95,12 +95,12 @@ export async function panel_Beta(score) {
         }
 
         let info = getSvgById(svg, "text-info");
-        setSvgText(serchObject(info, e => e.$mk === "title"), infoData.title);
-        setSvgText(serchObject(info, e => e.$mk === "time"), infoData.time);
-        setSvgText(serchObject(info, e => e.$mk === "star"), infoData.star);
-        setSvgText(serchObject(info, e => e.$mk === "acc"), infoData.acc);
-        setSvgText(serchObject(info, e => e.$mk === "pp"), infoData.pp);
-        setSvgText(serchObject(info, e => e.$mk === "combo"), infoData.combo);
+        setSvgText(searchObject(info, e => e.$mk === "title"), infoData.title);
+        setSvgText(searchObject(info, e => e.$mk === "time"), infoData.time);
+        setSvgText(searchObject(info, e => e.$mk === "star"), infoData.star);
+        setSvgText(searchObject(info, e => e.$mk === "acc"), infoData.acc);
+        setSvgText(searchObject(info, e => e.$mk === "pp"), infoData.pp);
+        setSvgText(searchObject(info, e => e.$mk === "combo"), infoData.combo);
     }
 
     {// rank
@@ -118,8 +118,8 @@ export async function panel_Beta(score) {
     }
 
     {// image
-        serchObject(getSvgById(svg, "avatar"), () => true).image["$xlink:href"] = url_avatar;
-        serchObject(getSvgById(svg, "bg"), () => true).image["$xlink:href"] = url_bg_list2x;
+        searchObject(getSvgById(svg, "avatar"), () => true).image["$xlink:href"] = url_avatar;
+        searchObject(getSvgById(svg, "bg"), () => true).image["$xlink:href"] = url_bg_list2x;
     }
 
     {// mods
@@ -142,7 +142,7 @@ export async function panel_Beta(score) {
     return await exportImage(svgStr);
 }
 
-function serchObject(obj, callback, index = 0) {
+function searchObject(obj, callback, index = 0) {
     let count = 0;
 
     function search(obj) {
@@ -175,7 +175,7 @@ function serchObject(obj, callback, index = 0) {
 
 function getSvgById(obj, str, index = 0) {
     if (str && typeof str === "string") {
-        return serchObject(obj, objn => objn.$id === str, index);
+        return searchObject(obj, objn => objn.$id === str, index);
     }
 }
 
