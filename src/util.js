@@ -3321,9 +3321,9 @@ export const PanelDraw = {
         let rect_svg = '<g>';
 
         arr.forEach((v, i) => {
+            const height = v / arr_max * h;
             const x0 = x + step * i;
             const y0 = y - height;
-            const height = v / arr_max * h;
 
             rect_svg += `<rect x="${x0}" y="${y0}" width="${width}" height="${height}" rx="2" ry="2" style="fill: ${color};"/>`
         })
