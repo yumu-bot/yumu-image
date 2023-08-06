@@ -368,7 +368,7 @@ async function score2CardE1(score, calcPP) {
 }
 
 async function score2CardE2(score, calcPP) {
-    const isFC = score.perfect || (score.beatmap.max_combo === score.max_combo) || score.statistics.count_miss === 0;
+    const isFC = score.perfect || (score.beatmap.max_combo === score.max_combo);
     const isPF = score.perfect || score.rank === 'XH' || score.rank === 'X';
     const isBest = !(score.best_id === null);
 
@@ -380,7 +380,6 @@ async function score2CardE2(score, calcPP) {
         combo: score.max_combo || 0,
         pp: calcPP.pp || 0,
         mode: score.mode || '',
-
 
         advanced_judge: score2AdvancedJudge(score), //进阶评级，也就是面板圆环下面那个玩意
         acc_index: score2AccIndex(score),
