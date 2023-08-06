@@ -76,6 +76,8 @@ export async function card_E2(data = {
 
     // 预设值定义
     const mode = getGameMode(data.mode, 1);
+    const isFC = (Math.round(data.pp) === Math.round(data.full_pp)) ? true : data.isFC;
+    const isPF = data.isPF;
 
     // 文字定义
     const score = torus.get2SizeTextPath(getRoundedNumberLargerStr(data.score, -1), getRoundedNumberSmallerStr(data.score, -1), 84, 60, 335, 79.43, 'left baseline', '#FFF');
@@ -100,12 +102,12 @@ export async function card_E2(data = {
         data_m: getDecimals(data.accuracy * 100, 3) + '%',
     }, true);
     const combo = await label_E({...LABEL_OPTION.COMBO,
-        remark: data.isFC ? 'FC' : (data.max_combo + 'x'),
+        remark: isFC ? 'FC' : (data.max_combo + 'x'),
         data_b: data.combo ? data.combo.toString() : '0',
         data_m: 'x',
     }, true);
     const pp = await label_E({...LABEL_OPTION.PP,
-        remark: data.isPF ? 'Max' : (data.isFC ? ('SS ' + Math.round(data.max_pp) + 'PP') : ('FC ' + Math.round(data.full_pp) + 'PP')),
+        remark: isPF ? 'Max' : (isFC ? ('SS ' + Math.round(data.max_pp) + 'PP') : ('FC ' + Math.round(data.full_pp) + 'PP')),
         data_b: data.pp ? Math.round(data.pp).toString() : '0',
         data_m: 'PP',
     }, true);
