@@ -5,14 +5,14 @@ import {
     getExportFileV3Path,
     getGameMode,
     getNowTimeStamp,
-    getPanelNameSVG, getTextPathMaxWidth,
+    getPanelNameSVG,
     hasAnyMod,
     implantImage,
     implantSvgBody,
     PanelGenerate,
     readNetImage,
     readTemplate,
-    replaceText, torus
+    replaceText
 } from "../util.js";
 import {calcPerformancePoints, getDensityArray} from "../compute-pp.js";
 import moment from "moment";
@@ -389,7 +389,6 @@ async function score2CardE2(score, calcPP) {
         max_pp: calcPP.perfect_pp || 0,
         statistics: score2Statistics(score),
         statistics_max: score2StatisticsMax(score),
-        statistics_max_width: score2StatisticsMaxWidth(score),
 
         isFC: isFC,
         isPF: isPF,
@@ -847,30 +846,6 @@ const score2StatisticsMax = (score) => {
             return Math.max(n320 + n300, n200, n100, n50, n0);
         default:
             return n320 + n300 + n200 + n100 + n50 + n0;
-    }
-}
-
-const score2StatisticsMaxWidth = (score) => {
-    const n320 = score.statistics.count_geki;
-    const n300 = score.statistics.count_300;
-    const n200 = score.statistics.count_katu;
-    const n100 = score.statistics.count_100;
-    const n50 = score.statistics.count_50;
-    const n0 = score.statistics.count_miss;
-
-    const mode = getGameMode(score.mode, 1);
-
-    switch (mode) {
-        case 'o':
-            return getTextPathMaxWidth([n300, n100, n50, n0], 30, torus);
-        case 't':
-            return getTextPathMaxWidth([n300, n100, n0], 30, torus);
-        case 'c':
-            return getTextPathMaxWidth([n300, n200, n100, n50, n0], 30, torus); //小果miss(katu)也要传过去的
-        case 'm':
-            return getTextPathMaxWidth([n320, n300, n200, n100, n50, n0], 30, torus);
-        default:
-            return getTextPathMaxWidth([n320, n300, n200, n100, n50, n0], 30, torus);
     }
 }
 
