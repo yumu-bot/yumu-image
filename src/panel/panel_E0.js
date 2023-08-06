@@ -869,7 +869,7 @@ const score2PassPercents = (score) => {
     const fail_sum = score.beatmap.fail ? score.beatmap.fail.reduce((s, v) => s + v) : 0;
     const retry_sum = score.beatmap.exit ? score.beatmap.exit.reduce((s, v) => s + v) : 0;
     const not_pass_sum = fail_sum + retry_sum; //虚假的未通过人数
-    const not_pass_real_percent = (pc === 0) ? ((pc - pass) / pc) : 0; //真实的未通过率
+    const not_pass_real_percent = (pc !== 0) ? ((pc - pass) / pc) : 0; //真实的未通过率
 
     const isNotDiv0 = (not_pass_sum !== 0);
 
@@ -930,11 +930,11 @@ const score2Labels = (score, calcPP) => {
 
     const od_r = od2ms(calcPP.attr.od, mode);
     const od_b = getDecimals(calcPP.attr.od, 2);
-    const od_m = stat2DataM(hasODChanged, calcPP.attr.od, score.beatmap.od);
+    const od_m = stat2DataM(hasODChanged, calcPP.attr.od, score.beatmap.accuracy);
 
     const hp_r = '-';
     const hp_b = getDecimals(calcPP.attr.hp, 2);
-    const hp_m = stat2DataM(hasHPChanged, calcPP.attr.hp, score.beatmap.hp);
+    const hp_m = stat2DataM(hasHPChanged, calcPP.attr.hp, score.beatmap.drain);
 
     return [{
         ...LABEL_OPTION.BPM,
