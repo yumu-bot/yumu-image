@@ -237,7 +237,7 @@ function getRankSVG(rank = 'XH', x, y) {
 
 function getModsSVG(mods = [""], x, y, mod_w, text_h, interval) {
     let svg = '';
-    const length = mods.length;
+    const length = mods ? mods.length : 0;
 
     if (length <= 2 && length > 0) {
         mods.forEach((v, i) => {
@@ -249,7 +249,7 @@ function getModsSVG(mods = [""], x, y, mod_w, text_h, interval) {
         });
     }
 
-    const insertMod = (mod, x, y, w, text_h) => {
+    function insertMod (mod, x, y, w, text_h){
         const color = getModColor(mod);
         const mod_abbr = torus.getTextPath(mod.toString(), x + (w / 2), y + text_h, 36, 'center baseline', '#fff');
 
