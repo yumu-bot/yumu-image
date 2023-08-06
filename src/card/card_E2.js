@@ -37,6 +37,7 @@ export async function card_E2(data = {
         rrect_color: '#79C471',
     }],
     statistics_max: 9999,
+    statistics_max_width: 54,
 
     isFC: true,
     isPF: true,
@@ -76,7 +77,8 @@ export async function card_E2(data = {
 
     // 预设值定义
     const mode = getGameMode(data.mode, 1);
-    const isFC = (Math.round(data.pp) === Math.round(data.full_pp)) ? true : data.isFC;
+    const statistics_max_width = Math.min(data.statistics_max_width, 88 - 20);
+    const isFC = data.isFC;
     const isPF = data.isPF;
 
     // 文字定义
@@ -94,7 +96,7 @@ export async function card_E2(data = {
 
     const advanced = getAdvancedJudgeSVG(data.advanced_judge, 20, 310)
     const best = getPersonalBestSVG(data.isBest, 20, 20);
-    const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 400, 60, 500, 22.79)
+    const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 400, 60, 500, 22.79, statistics_max_width)
 
     const acc = await label_E({...LABEL_OPTION.ACC,
         remark: data.acc_index,
@@ -261,13 +263,13 @@ function getModsSVG(mods = [""], x, y, mod_w, text_h, interval) {
     return svg;
 }
 
-function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, font_h) {
+function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, font_h, stat_offset = 68) {
     let svg = '';
 
     stat.forEach((v, i) => {
         const text_y = y + font_h + (i + 1) * 40;
         const index_text_x = x - 14;
-        const stat_text_x = x + w + 12;
+        const stat_text_x = x + w + 12 + stat_offset;
 
         const index = (v.index === 0) ? '0' : (v.index || '');
         const stat = (v.stat === 0) ? '0' : (v.stat || '');
@@ -277,7 +279,7 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, font_h) {
         let index_text = torus.getTextPath(index.toString(),
             index_text_x, text_y, 30, "right baseline", v.index_color);
         let stat_text = torus.getTextPath(stat.toString(),
-            stat_text_x, text_y, 30, "left baseline", v.stat_color);
+            stat_text_x, text_y, 30, "right baseline", v.stat_color);
 
         svg += (index_text + stat_text);
 

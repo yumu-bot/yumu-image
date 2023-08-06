@@ -2833,6 +2833,22 @@ export function getTimeDifference(compare = '', now = moment()) {
     }
 }
 
+//计算一串文本（path 的最大宽度
+export function getTextPathMaxWidth(texts, size = 0, font = torus) {
+    let max_width = 0;
+    if (texts == null) return 0;
+    if (texts instanceof Array) {
+        texts.forEach((v, i) => {
+            const width = font.getTextWidth(v, size);
+            if (width > max_width) max_width = width;
+        })
+    } else {
+        max_width = font.getTextWidth(texts.toString(), size);
+    }
+
+    return max_width;
+}
+
 //公用方法：给面板上名字
 export function getPanelNameSVG (name = '?? (!test)', index = '?', version = '0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
 
