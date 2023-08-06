@@ -8,7 +8,7 @@ import {router as PanelA4Router} from "./src/panel/panel_A4.js";
 import {router as PanelBRouter} from "./src/panel/panel_B.js";
 import {router as PanelCRouter} from "./src/panel/panel_C.js";
 import {router as PanelDRouter} from "./src/panel/panel_D.js";
-import {router as PanelERouter} from "./src/panel/panel_E.js";
+import {router as PanelERouter} from "./src/panel/panel_E0.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as PanelJRouter} from "./src/panel/panel_J.js";
 
