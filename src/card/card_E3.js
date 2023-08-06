@@ -105,7 +105,7 @@ export async function card_E3(data = {
     }
 
     const fail_rrect = getRRectSVG(560, 250, 4.2 * data.fail_percent, 4, 2, '#ed6c9e');
-    const retry_rrect = getRRectSVG(560, 250, 4.2 * (data.fail_percent + data.retry_percent), 4, 2, '#f6d659');
+    const retry_rrect = getRRectSVG(560, 250, (4.2 * (data.fail_percent + data.retry_percent)), 4, 2, '#f6d659');
     const base_rrect = getRRectSVG(560, 250, 420, 4, 2, '#aaa');
 
     // 导入部件
