@@ -6,7 +6,7 @@ import {
     getGameMode,
     getMascotName,
     getMascotPath,
-    getNowTimeStamp,
+    getNowTimeStamp, getPanelNameSVG,
     getRandomBannerPath,
     getRandomMascotBGPath,
     getRoundedNumberLargerStr,
@@ -292,11 +292,6 @@ export async function panel_D(data = {
 
 }, reuse = false) {
 
-    // 面板文字
-    data.index_powered = 'powered by Yumubot v0.3.0 EA // Information (!ymi)';
-    data.index_request_time = 'request time: ' + getNowTimeStamp();
-    data.index_panel_name = 'Info';
-
     // 导入模板
     let svg = readTemplate('template/Panel_D.svg');
 
@@ -370,17 +365,11 @@ export async function panel_D(data = {
         card_Ks.push(await card_K(data.bp_list[i], true))
     }
 
-    // 文字定义
-    let index_powered_path = torus.getTextPath(data.index_powered,
-        10, 26.84, 24, "left baseline", "#fff");
-    let index_request_time_path = torus.getTextPath(data.index_request_time,
-        1910, 26.84, 24, "right baseline", "#fff");
-    let tm_ipn =
-        torus.getTextMetrics(data.index_panel_name,
-            0, 0, 48, "left baseline", "#fff");
-    let ipn_x = 607.5 - tm_ipn.width / 2;
-    let index_panel_name_path = torus.getTextPath(data.index_panel_name,
-        ipn_x, 83.67, 48, "left baseline", "#fff");
+    // 面板文字
+    const panel_name = getPanelNameSVG('Information (!ymi)', 'Info', 'v0.3.0 EA');
+
+    // 插入文字
+    svg = replaceText(svg, panel_name, reg_index);
 
     let rank_country_text = ' ' + (data.country || '') + '#' + (data.rank_country || '0');
 
@@ -659,7 +648,6 @@ export async function panel_D(data = {
     svg = replaceTexts(svg, [grade_X, grade_S, grade_A, grade_XH, grade_SH, ], reg_grade_text);
 
     // 插入文字
-    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
     svg = replaceTexts(svg, [mascot_mark1, mascot_mark1_rrect], reg_mascot_name);
     svg = replaceTexts(svg, [mascot_mark2, mascot_mark2_rrect], reg_progress);
     svg = replaceTexts(svg, [rank_global, rank_country], reg_ranking_text);

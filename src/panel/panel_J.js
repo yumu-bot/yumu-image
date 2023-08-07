@@ -1,6 +1,6 @@
 import {
     exportImage, getExportFileV3Path, getGameMode, getModColor,
-    getNowTimeStamp,
+    getNowTimeStamp, getPanelNameSVG,
     getRandomBannerPath, getRankColor, implantImage,
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength,
     PanelGenerate, readNetImage,
@@ -403,16 +403,7 @@ export async function panel_J(data = {
     let reg_rrect = /(?<=<g id="BPRanksR">)/;
 
     // 面板文字
-    const index_powered = 'powered by Yumubot v0.3.1 EA // BP Analysis v2 (!ymba)';
-    const index_request_time = 'request time: ' + getNowTimeStamp();
-    const index_panel_name = 'BPA';
-
-    const index_powered_path = torus.getTextPath(index_powered,
-        10, 26.84, 24, "left baseline", "#fff");
-    const index_request_time_path = torus.getTextPath(index_request_time,
-        1910, 26.84, 24, "right baseline", "#fff");
-    const index_panel_name_path = torus.getTextPath(index_panel_name,
-        607.5, 83.67, 48, "center baseline", "#fff");
+    const panel_name = getPanelNameSVG('BP Analysis v2 (!ymba)', 'BPA', 'v0.3.1 EA');
 
     const pp = data.pp.toFixed(0) || 0;
     const pp_raw = data.pp_raw.toFixed(0) || 0;
@@ -448,8 +439,7 @@ export async function panel_J(data = {
     )
 
     // 插入文字
-
-    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path, pp_mini_path, pp_full_path, game_mode_path, mappers_count_path], reg_index);
+    svg = replaceTexts(svg, [panel_name, pp_mini_path, pp_full_path, game_mode_path, mappers_count_path], reg_index);
 
     // A1卡构建
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);

@@ -1,7 +1,7 @@
 import {
     exportImage,
     getExportFileV3Path,
-    getNowTimeStamp,
+    getNowTimeStamp, getPanelNameSVG,
     getRandomBannerPath,
     implantImage,
     implantSvgBody,
@@ -150,10 +150,6 @@ export async function panel_H (data = {
     },
 
 
-    // 面板文字
-    index_powered: 'powered by Yumubot v0.3.0 EA // Mappool (!ymmp)',
-    index_request_time: 'request time: ' + getNowTimeStamp(),
-    index_panel_name: 'MP v3.6',
 
 }, reuse = false) {
     // 导入模板
@@ -169,14 +165,11 @@ export async function panel_H (data = {
     // 卡片定义
     let card_A1_impl = await card_A1(data.card_A1, true);
 
+    // 面板文字
+    const panel_name = getPanelNameSVG('Mappool (!ymmp)', 'Pool', 'v0.3.2 FT');
 
-    // 文字定义
-    let index_powered_path = torus.getTextPath(data.index_powered,
-        10, 26.84, 24, "left baseline", "#fff");
-    let index_request_time_path = torus.getTextPath(data.index_request_time,
-        1910, 26.84, 24, "right baseline", "#fff");
-    let index_panel_name_path = torus.getTextPath(data.index_panel_name,
-        607.5, 83.67, 48, "center baseline", "#fff");
+    // 插入文字
+    svg = replaceText(svg, panel_name, reg_index);
 
     // 插入主体卡片
 
@@ -267,9 +260,6 @@ export async function panel_H (data = {
     }
 
     svg = replaceText(svg, panelHeight, reg_height);
-
-    // 插入文字
-    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);

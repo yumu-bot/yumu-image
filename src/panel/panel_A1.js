@@ -198,7 +198,6 @@ export async function panel_A1(data = {
 
 
     // 面板文字
-
     const panel_name = getPanelNameSVG('Friends (!ymf)', 'F', 'v0.3.1 EA');
 
     // 插入文字

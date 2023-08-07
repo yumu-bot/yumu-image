@@ -11,7 +11,7 @@ import {
     implantSvgBody,
     readTemplate,
     replaceText, replaceTexts,
-    torus, readNetImage
+    torus, readNetImage, getPanelNameSVG
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -184,21 +184,10 @@ export async function panel_F(data = {
     let reg_card_a2 = /(?<=<g id="CardA2">)/;
 
     // 面板文字
-    const index_powered = 'powered by Yumubot v0.3.0 EA // Match Monitor Now (!ymmn)';
-    const index_request_time = 'request time: ' + getNowTimeStamp();
-    const index_panel_name = 'M.Now';
+    const panel_name = getPanelNameSVG('Match Monitor Now (!ymmn)', 'Now', 'v0.3.0 EA');
 
-    const index_powered_path = torus.getTextPath(index_powered,
-        10, 26.84, 24, "left baseline", "#fff");
-    const index_request_time_path = torus.getTextPath(index_request_time,
-        1910, 26.84, 24, "right baseline", "#fff");
-    const index_panel_name_path = torus.getTextPath(index_panel_name,
-        607.5, 83.67, 48, "center baseline", "#fff");
-
-    // 文字定义
-
-    // 插入主面板的文字
-    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
+    // 插入文字
+    svg = replaceText(svg, panel_name, reg_index);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);

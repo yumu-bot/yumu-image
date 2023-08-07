@@ -1,4 +1,12 @@
-import {getExportFileV3Path, InsertSvgBuilder, readTemplate, replaceText, replaceTexts, torus} from "../util.js";
+import {
+    getExportFileV3Path,
+    getPanelNameSVG,
+    InsertSvgBuilder,
+    readTemplate,
+    replaceText,
+    replaceTexts,
+    torus
+} from "../util.js";
 import {card_H} from "../card/card_H.js";
 
 export async function panel_I(data = {
@@ -18,11 +26,21 @@ export async function panel_I(data = {
 
 
 }) {
+    let svg = readTemplate("template/Panel_I.svg");
+
     let reg_background = '${background}'
     //
     let reg_height = /(?<=id="Background">[\s\S]*height=")\d+/
     let reg_cards = /(?<=<g id="cardH">)/
     let reg_text = /(?<=<g id="Text">)/;
+    let reg_index = /(?<=<g id="Index">)/;
+
+
+    // 面板文字
+    const panel_name = getPanelNameSVG();
+
+    // 插入文字
+    svg = replaceText(svg, panel_name, reg_index);
 
     const get = (path, x, y) => {
         return `<image width="900" height="110" x="${x}" y="${y}" xlink:href="${path}" />`
@@ -36,7 +54,6 @@ export async function panel_I(data = {
     let a1 = torus.getTextPath("24", 20, 97, 24, 'left center', "#fff");
     let a2 = torus.getTextPath("16", 120, 97, 16, 'left center', "#fff");
     let a3 = torus.getTextPath("12", 220, 97, 12, 'left center', "#fff");
-    let svg = readTemplate("template/Panel_I.svg");
 
     svg = replaceTexts(svg, [a1, a2, a3], reg_text);
 
