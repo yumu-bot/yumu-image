@@ -131,8 +131,8 @@ export async function card_E2(data = {
 }
 
 //顺便把左上角的 personal best 加了
-function getPersonalBestSVG(isBest = false, x, y) {
-    const best_link = isBest ? '' : 'default';
+function getPersonalBestSVG(isBest, x, y) {
+    const best_link = (isBest) ? '' : 'default';
     const image = getExportFileV3Path(`object-score-personalbest${best_link}.png`);
 
     return `<image width="40" height="40" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
@@ -200,8 +200,6 @@ function getMaskSVG(percent = 0, mode = 'o', mx = 0, my = 0, r = 0) {
 }
 
 function getRingIndexSVG(mode, x, y, w, h) {
-    let svg = '';
-
     let ring_name;
     switch (mode) {
         case 'o': ring_name = 'osu'; break;
