@@ -369,8 +369,8 @@ async function score2CardE1(score, calcPP) {
 
 async function score2CardE2(score, calcPP) {
     const isFC = score.perfect || (score.beatmap.max_combo === score.max_combo);
-    const isPF = score.perfect || score.rank === 'XH' || score.rank === 'X';
-    const isBest = !(score.best_id === null);
+    const isPF = score.rank === 'XH' || score.rank === 'X';
+    const isBest = score.best_id !== null;
 
     return {
         rank: score.rank || 'F',
