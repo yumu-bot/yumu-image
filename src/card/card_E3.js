@@ -81,7 +81,7 @@ export async function card_E3(data = {
         density_scale = Math.sqrt(((data.star - 1) / 7 * 0.9) + 0.1); //类似对数增长，比如4星高度就是原来的 0.707 倍
     }
     const density_arr_max = Math.max.apply(Math, data.density_arr) / density_scale;
-    const density_graph = await PanelDraw.LineChart(data.density_arr, density_arr_max, 20, 130, 520, 90, rank_color, 1, 0.4);
+    const density_graph = await PanelDraw.LineChart(data.density_arr, density_arr_max, 20, 130, 520, 90, rank_color, 1, 0.4, 3);
 
     //中下的失败率重试率图像
     const retry_fail_sum_arr = data.fail_arr ? data.fail_arr.map(function (v, i) {
@@ -110,8 +110,8 @@ export async function card_E3(data = {
 
     // 导入部件
     svg = implantSvgBody(svg, 0, 0, density_graph, reg_graph);
-    svg = implantSvgBody(svg, 0, 0, retry_graph, reg_graph);
     svg = implantSvgBody(svg, 0, 0, fail_graph, reg_graph);
+    svg = implantSvgBody(svg, 0, 0, retry_graph, reg_graph);
     svg = implantSvgBody(svg, 560, 20, labels, reg_label);
 
     svg = implantSvgBody(svg, 0, 0, fail_rrect, reg_label);

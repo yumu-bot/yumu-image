@@ -16,10 +16,22 @@ import {card_B2} from "../card/card_B2.js";
 
 export async function router(req, res) {
     try {
-        const data = req.fields;
-        const png = await panel_B(data);
+        const data = req.fields || {};
+        const svg = await panel_B(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(png);
+        res.send(await exportImage(svg));
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = req.fields || {};
+        const svg = await panel_B(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
@@ -187,7 +199,7 @@ export async function panel_B(data = {
     const hexagon = getExportFileV3Path('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
 
-    return await exportImage(svg);
+    return svg.toString();
 }
 
 function drawHexIndex(gamemode = 'osu') {

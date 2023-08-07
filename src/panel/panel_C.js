@@ -17,48 +17,64 @@ import {card_A2} from "../card/card_A2.js";
 
 export async function router(req, res) {
     try {
-        const redUsers = req.fields?.redUsers;
-        const blueUsers = req.fields?.blueUsers;
-        const noneUsers = req.fields?.noneUsers;
-        const matchInfo = req.fields?.matchInfo;
-        const sid = req.fields?.sid;
-        const redWins = req.fields?.redWins;
-        const blueWins = req.fields?.blueWins;
-        const isTeamVS = req.fields?.isTeamVS;
-
-        const match = await PanelGenerate.matchInfo2CardA2(matchInfo, sid, redWins, blueWins, isTeamVS);
-
-        let redArr = [];
-        let blueArr = [];
-        let noneArr = [];
-
-        for (const i in redUsers) {
-            let h = await PanelGenerate.userMatchData2CardH(redUsers[i]);
-            redArr.push(h);
-        }
-
-        for (const i in blueUsers) {
-            let h = await PanelGenerate.userMatchData2CardH(blueUsers[i]);
-            blueArr.push(h);
-        }
-
-        for (const i in noneUsers) {
-            let h = await PanelGenerate.userMatchData2CardH(noneUsers[i]);
-            noneArr.push(h);
-        }
-
-        const player = {red: redArr, blue: blueArr, none: noneArr};
-
-        const c_data = {match: match, player: player}
-
-        const png = await panel_C(c_data);
+        const data = await routerC(req);
+        const svg = await panel_C(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(png);
+        res.send(await exportImage(svg));
     } catch (e) {
-        console.error("e", e);
+        console.error(e);
         res.status(500).send(e.stack);
     }
     res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = await routerC(req);
+        const svg = await panel_C(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
+
+//公用的路由
+async function routerC(req) {
+    const redUsers = req.fields?.redUsers;
+    const blueUsers = req.fields?.blueUsers;
+    const noneUsers = req.fields?.noneUsers;
+    const matchInfo = req.fields?.matchInfo;
+    const sid = req.fields?.sid;
+    const redWins = req.fields?.redWins;
+    const blueWins = req.fields?.blueWins;
+    const isTeamVS = req.fields?.isTeamVS;
+
+    const match = await PanelGenerate.matchInfo2CardA2(matchInfo, sid, redWins, blueWins, isTeamVS);
+
+    let redArr = [];
+    let blueArr = [];
+    let noneArr = [];
+
+    for (const i in redUsers) {
+        let h = await PanelGenerate.userMatchData2CardH(redUsers[i]);
+        redArr.push(h);
+    }
+
+    for (const i in blueUsers) {
+        let h = await PanelGenerate.userMatchData2CardH(blueUsers[i]);
+        blueArr.push(h);
+    }
+
+    for (const i in noneUsers) {
+        let h = await PanelGenerate.userMatchData2CardH(noneUsers[i]);
+        noneArr.push(h);
+    }
+
+    const player = {red: redArr, blue: blueArr, none: noneArr};
+
+    return {match: match, player: player};
 }
 
 export async function panel_C(data = {
@@ -475,6 +491,6 @@ export async function panel_C(data = {
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
 
-    return await exportImage(svg);
+    return svg.toString();
 }
 

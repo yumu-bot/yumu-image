@@ -2,7 +2,7 @@ import {
     exportImage, getExportFileV3Path, getGameMode, getModColor,
     getPanelNameSVG,
     getRandomBannerPath, getRankColor, implantImage,
-    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength,
+    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, PanelDraw,
     PanelGenerate, readNetImage,
     readTemplate,
     replaceText, replaceTexts,
@@ -15,12 +15,27 @@ import {label_J1, label_J2, label_J3, RANK_OPTION} from "../component/label.js";
 
 export async function router(req, res) {
     try {
-        const data = await panel_J(req.fields || {});
+        const data = req.fields || {};
+        const svg = await panel_J(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(data);
+        res.send(await exportImage(svg));
     } catch (e) {
+        console.error(e);
         res.status(500).send(e.stack);
     }
+    res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = req.fields || {};
+        const svg = await panel_J(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
 }
 
 export async function panel_J(data = {
@@ -531,8 +546,10 @@ export async function panel_J(data = {
     let pp_min = Math.min.apply(Math, pp_raw_arr);
     let pp_mid = (pp_max + pp_min) / 2;
 
-    RFPPChart(pp_raw_arr, '#FFCC22', pp_max, pp_min);
+     RFPPChart(pp_raw_arr, '#FFCC22', pp_max, pp_min);
     // RFPPChart(pp_arr, '#aaa', pp_max, pp_min);
+    const PPChart = await PanelDraw.LineChart(pp_raw_arr, pp_max, 1040, 610, 780, 215, '#FFCC22',1, 0, 4);
+    svg = replaceText(svg, PPChart, reg_pp_graph);
 
     // 绘制纵坐标，注意max在下面
     let rank_axis_y_max = Math.round(pp_max);
@@ -791,11 +808,7 @@ export async function panel_J(data = {
             } else {
                 out = '';
             }
-
             return out;
         }
-
-
     }
-
 }

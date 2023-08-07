@@ -2,15 +2,30 @@ import {exportImage, PuHuiTi} from "../util.js";
 
 export async function router(req, res) {
     try {
-        const data = await panel_Alpha(req.fields.strs || []);
+        const data = req.fields.strs || {};
+        const svg = await panel_Alpha(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(data);
+        res.send(await exportImage(svg));
     } catch (e) {
+        console.error(e);
         res.status(500).send(e.stack);
     }
+    res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = req.fields.strs || {};
+        const svg = await panel_Alpha(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
 }
 
-// 别他妈瞎几把乱起了看看隔壁的 Panel J 是干啥的行不
+// 你怎么不自己加router
 export async function panel_Alpha(strArray = ['']) {
     let maxWidth = 0;
     let befY = 10;
@@ -27,7 +42,7 @@ export async function panel_Alpha(strArray = ['']) {
     <rect width="100%" height="100%" fill="#2A2226" />
     ${textLine.join("\n")}
 </svg>`
-    return await exportImage(svg);
+    return svg.toString();
 }
 
 // 这个版本的颜色组，是lazer中hover用户名时显示的颜色

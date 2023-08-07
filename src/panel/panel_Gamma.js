@@ -1,5 +1,4 @@
 import {
-    exportImage,
     extra,
     getDecimals,
     getExportFileV3Path,
@@ -14,20 +13,39 @@ import {
 
 export async function router(req, res) {
     try {
-        let routeData = {};
+        let data = {};
         const classification = req.fields?.panel;
 
         switch (classification) {
-            case 'info': routeData = await PanelGamma.infoVersion(req.fields?.user); break;
-            case 'score': routeData = await PanelGamma.scoreVersion(req.fields?.score); break;
+            case 'info': data = await PanelGamma.infoVersion(req.fields?.user); break;
+            case 'score': data = await PanelGamma.scoreVersion(req.fields?.score); break;
         }
 
-        const data = await panel_Gamma(routeData);
+        const svg = await panel_Gamma(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(data);
+        res.send(svg);
     } catch (e) {
         res.status(500).send(e.stack);
     }
+}
+export async function router_svg(req, res) {
+    try {
+        let data = {};
+        const classification = req.fields?.panel;
+
+        switch (classification) {
+            case 'info': data = await PanelGamma.infoVersion(req.fields?.user); break;
+            case 'score': data = await PanelGamma.scoreVersion(req.fields?.score); break;
+        }
+
+        const svg = await panel_Gamma(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
 }
 
 export async function panel_Gamma(data = {
@@ -89,7 +107,7 @@ export async function panel_Gamma(data = {
     svg = implantImage(svg, 400, 360, 240, 0, background_opacity, data.background, reg_background);
     svg = implantImage(svg, 148, 160, 366, 80, 1, hexagon, reg_map_hexagon);
 
-    return await exportImage(svg);
+    return svg.toString();
 }
 
 const PanelGamma = {

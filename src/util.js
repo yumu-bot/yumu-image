@@ -2839,14 +2839,14 @@ export function getPanelNameSVG (name = '?? (!test)', index = '?', version = 'v0
     // powered by Yumubot v0.3.2 EA // Score (!ymp / !ymr / !yms)
     const powered_text = torus.getTextPath(
         'powered by ' + powered + ' ' + version + ' // ' + name,
-        10, 26.84, 24, "left baseline", "#fff");
+        20, 26.84, 24, "left baseline", "#fff");
     const request_time_text = torus.getTextPath(request_time,
-        1910, 26.84, 24, "right baseline", "#fff");
-    const panel_name_text = torus.getTextPath(index,
+        1900, 26.84, 24, "right baseline", "#fff");
+    const index_text = torus.getTextPath(index,
         607.5, 83.67, 48, "center baseline", "#fff");
 
     //导入文字
-    return (powered_text + request_time_text + panel_name_text);
+    return (powered_text + request_time_text + index_text);
 }
 
 //公用方法
@@ -3335,7 +3335,7 @@ export const PanelDraw = {
     },
 
     //折线图，max 如果填 0，即用数组的最大值
-    LineChart: async (arr = [0], max = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0) => {
+    LineChart: async (arr = [0], max = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3) => {
         if (arr == null) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
         const step = w / arr.length;
@@ -3353,7 +3353,7 @@ export const PanelDraw = {
             area_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `;
         })
 
-        path_svg += `" style="fill: none; stroke: ${color}; opacity: ${path_opacity}; stroke-miterlimit: 10; stroke-width: 3px;"/> </svg>`
+        path_svg += `" style="fill: none; stroke: ${color}; opacity: ${path_opacity}; stroke-miterlimit: 10; stroke-width: ${stroke_width}px;"/> </svg>`
         area_svg += `L ${x0 + w - step / 2} ${y0} L ${x0} ${y0} Z" style="fill: ${color}; stroke: none; fill-opacity: ${area_opacity};"/> </svg>`//这里要减去最后1步除以2，我也不知道为什么
 
         return (path_svg + area_svg).toString();

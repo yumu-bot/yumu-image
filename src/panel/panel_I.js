@@ -1,4 +1,5 @@
 import {
+    exportImage,
     getExportFileV3Path,
     getPanelNameSVG,
     InsertSvgBuilder,
@@ -8,6 +9,31 @@ import {
     torus
 } from "../util.js";
 import {card_H} from "../card/card_H.js";
+
+export async function router(req, res) {
+    try {
+        const data = req.fields || {};
+        const svg = await panel_I(data);
+        res.set('Content-Type', 'image/jpeg');
+        res.send(await exportImage(svg));
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = req.fields || {};
+        const svg = await panel_I(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
 
 export async function panel_I(data = {
     // A2卡
@@ -22,8 +48,6 @@ export async function panel_I(data = {
 
     },
     // H卡
-
-
 
 }) {
     let svg = readTemplate("template/Panel_I.svg");
@@ -62,6 +86,7 @@ export async function panel_I(data = {
     await out_svg.insertSvg(bg2, 10, 400);
     await out_svg.insertSvg(bg1, 300, 210);
     await out_svg.insertSvg(bg2, 300, 510);
-    return out_svg.export();
+
+    return out_svg.toString();
 }
 

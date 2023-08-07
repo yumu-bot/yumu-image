@@ -18,10 +18,22 @@ import moment from "moment";
 
 export async function router(req, res) {
     try {
-        const data = req.fields;
-        const png = await panel_F(data);
+        const data = req.fields || {};
+        const svg = await panel_F(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(png);
+        res.send(await exportImage(svg));
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = req.fields || {};
+        const svg = await panel_F(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
@@ -368,5 +380,5 @@ export async function panel_F(data = {
         },  true);
     svg = implantSvgBody(svg,40,40,card_A2_impl,reg_maincard);
 
-    return await exportImage(svg);
+    return svg.toString();
 }

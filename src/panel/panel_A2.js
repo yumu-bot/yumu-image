@@ -1,22 +1,36 @@
 import {
     exportImage,
-    getNowTimeStamp, getPanelNameSVG, getRandomBannerPath, implantImage, implantSvgBody,
+    getPanelNameSVG, getRandomBannerPath, implantImage, implantSvgBody,
     PanelGenerate,
     readTemplate,
-    replaceText, replaceTexts,
-    torus
+    replaceText
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_M} from "../card/card_M.js";
 
 export async function router(req, res) {
     try {
-        const data = await panel_A2(req.fields || {});
+        const data = req.fields || {};
+        const svg = await panel_A2(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(data);
+        res.send(await exportImage(svg));
     } catch (e) {
+        console.error(e);
         res.status(500).send(e.stack);
     }
+    res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = req.fields || {};
+        const svg = await panel_A2(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
 }
 
 export async function panel_A2(data = {
@@ -372,5 +386,5 @@ export async function panel_A2(data = {
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
 
-    return await exportImage(svg);
+    return svg.toString();
 }

@@ -24,12 +24,27 @@ import {card_E3} from "../card/card_E3.js";
 
 export async function router(req, res) {
     try {
-        const data = await panel_E(req.fields || {});
+        const data = req.fields || {};
+        const svg = await panel_E(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(data);
+        res.send(await exportImage(svg));
     } catch (e) {
+        console.error(e);
         res.status(500).send(e.stack);
     }
+    res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = req.fields || {};
+        const svg = await panel_E(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
 }
 
 // E面板重构计划
@@ -347,7 +362,7 @@ export async function panel_E(data = {
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
-    return await exportImage(svg);
+    return svg.toString();
 }
 
 async function score2CardE1(score, calcPP) {

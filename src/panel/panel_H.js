@@ -11,6 +11,31 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {card_D} from "../card/card_D.js";
 
+export async function router(req, res) {
+    try {
+        const data = req.fields || {};
+        const svg = await panel_H(data);
+        res.set('Content-Type', 'image/jpeg');
+        res.send(await exportImage(svg));
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = req.fields || {};
+        const svg = await panel_H(data);
+        res.set('Content-Type', 'image/svg+xml'); //svg+xml
+        res.send(svg);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
+
 export async function panel_H (data = {
     // A1卡 应该是A2，但是管他呢
     card_A1: {
@@ -264,5 +289,5 @@ export async function panel_H (data = {
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
     svg = implantSvgBody(svg,40,40,card_A1_impl,reg_maincard);
 
-    return exportImage(svg);
+    return svg.toString();
 }
