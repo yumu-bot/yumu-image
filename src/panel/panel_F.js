@@ -2,7 +2,6 @@ import {
     exportImage,
     getExportFileV3Path,
     getMatchNameSplitted,
-    getNowTimeStamp,
     getRandomBannerPath,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
@@ -10,8 +9,7 @@ import {
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, replaceTexts,
-    torus, readNetImage, getPanelNameSVG
+    replaceText, torus, readNetImage, getPanelNameSVG
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";

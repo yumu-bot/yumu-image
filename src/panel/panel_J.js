@@ -1,6 +1,6 @@
 import {
     exportImage, getExportFileV3Path, getGameMode, getModColor,
-    getNowTimeStamp, getPanelNameSVG,
+    getPanelNameSVG,
     getRandomBannerPath, getRankColor, implantImage,
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength,
     PanelGenerate, readNetImage,

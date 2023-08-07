@@ -6,7 +6,7 @@ import {
     getGameMode,
     getMascotName,
     getMascotPath,
-    getNowTimeStamp, getPanelNameSVG,
+    getPanelNameSVG,
     getRandomBannerPath,
     getRandomMascotBGPath,
     getRoundedNumberLargerStr,

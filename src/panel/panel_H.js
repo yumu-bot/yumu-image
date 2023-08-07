@@ -1,13 +1,12 @@
 import {
     exportImage,
     getExportFileV3Path,
-    getNowTimeStamp, getPanelNameSVG,
+    getPanelNameSVG,
     getRandomBannerPath,
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, replaceTexts,
-    torus
+    replaceText
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_D} from "../card/card_D.js";
