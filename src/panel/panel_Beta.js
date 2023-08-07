@@ -26,9 +26,25 @@ Object.prototype.setSvgText = function (str) {
 export async function router(req, res) {
     try {
         const data = req.fields;
-        const png = await panel_Beta(data);
+        // 让原来的函数返回值变成 svg 字符串
+        const svg = await panel_Beta(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(png);
+        // send 的时候再导出图片, 保持原来接口不变, 别忘记 exportImage 前 await
+        // 再在下面补充一个 router_svg 用于返回 svg 字符串
+        res.send(await exportImage(svg));
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e.stack);
+    }
+    res.end();
+}
+export async function router_svg(req, res) {
+    try {
+        const data = req.fields;
+        const svg = await panel_Beta(data);
+        // 记得修改返回格式 image/svg+xml
+        res.set('Content-Type', 'image/svg+xml');
+        res.send(svg);
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
@@ -138,8 +154,7 @@ export async function panel_Beta(score) {
     }
 
     let svgStr = builder.build(template);
-    console.error(svgStr);
-    return await exportImage(svgStr);
+    return svgStr;
 }
 
 function searchObject(obj, callback, index = 0) {
