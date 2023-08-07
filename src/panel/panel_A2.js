@@ -1,6 +1,6 @@
 import {
     exportImage,
-    getNowTimeStamp, getRandomBannerPath, implantImage, implantSvgBody,
+    getNowTimeStamp, getPanelNameSVG, getRandomBannerPath, implantImage, implantSvgBody,
     PanelGenerate,
     readTemplate,
     replaceText, replaceTexts,
@@ -292,19 +292,12 @@ export async function panel_A2(data = {
 
 
     // 面板文字
-    const index_powered = 'powered by Yumubot v0.3.1 EA // Qualified Map List (!ymq)';
-    const index_request_time = 'request time: ' + getNowTimeStamp();
-    const index_panel_name = 'Qua';
 
-    const index_powered_path = torus.getTextPath(index_powered,
-        10, 26.84, 24, "left baseline", "#fff");
-    const index_request_time_path = torus.getTextPath(index_request_time,
-        1910, 26.84, 24, "right baseline", "#fff");
-    const index_panel_name_path = torus.getTextPath(index_panel_name,
-        607.5, 83.67, 48, "center baseline", "#fff");
+    // 面板文字
+    const panel_name = getPanelNameSVG('Qualified Map List (!ymq)', 'Q', 'v0.3.1 EA');
 
     // 插入文字
-    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
+    svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
     const beatmap_count = (data.beatmapsets !== null) ? data.beatmapsets.length : 0;
@@ -316,6 +309,7 @@ export async function panel_A2(data = {
         data.search,
         result_count,
         data.rule || 'Qualified',
+        data.beatmapsets[0],
     );
 
     const search_cardA2 = await card_A2(search_result, true);

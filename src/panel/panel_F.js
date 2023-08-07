@@ -11,7 +11,7 @@ import {
     implantSvgBody,
     readTemplate,
     replaceText, replaceTexts,
-    torus
+    torus, readNetImage
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -348,14 +348,14 @@ export async function panel_F(data = {
     svg = replaceText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    let background = data.match.background;
+    let background = await readNetImage(data.match.background, getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
     let title = getMatchNameSplitted(data.match.match_title);
     let title1 = title[0];
     let title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
     let left1 = data.match.match_round + 'x Rounds';
-    let left2 = moment(data.match.match_time, 'HH:mm[-]').utcOffset(960).format('HH:mm') + '-' +
-        moment(data.match.match_time, '[-]HH:mm').utcOffset(960).format('HH:mm');
-    let left3 = moment(data.match.match_time_start, 'X').utcOffset(960).format('YYYY-MM-DD');
+    let left2 = moment(data.match.match_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '-' +
+        moment(data.match.match_time, '[-]HH:mm').add(8, 'hours').format('HH:mm');
+    let left3 = moment(data.match.match_time_start, 'X').add(8, 'hours').format('YYYY-MM-DD');
     const avg_star = beatmap_arr
         .filter(b => b.star_rating > 0)
         .map(b => b.star_rating);

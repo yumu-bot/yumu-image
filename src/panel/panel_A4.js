@@ -1,5 +1,5 @@
 import {
-    exportImage, getNowTimeStamp, getRandomBannerPath,
+    exportImage, getNowTimeStamp, getPanelNameSVG, getRandomBannerPath,
     implantImage,
     implantSvgBody,
     PanelGenerate, readTemplate,
@@ -271,19 +271,10 @@ export async function panel_A4(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA4-1\);">)/;
 
     // 面板文字
-    const index_powered = 'powered by Yumubot v0.3.1 EA // Today BP / BP (!ymt / !ymb)';
-    const index_request_time = 'request time: ' + getNowTimeStamp();
-    const index_panel_name = 'BP';
-
-    const index_powered_path = torus.getTextPath(index_powered,
-        10, 26.84, 24, "left baseline", "#fff");
-    const index_request_time_path = torus.getTextPath(index_request_time,
-        1910, 26.84, 24, "right baseline", "#fff");
-    const index_panel_name_path = torus.getTextPath(index_panel_name,
-        607.5, 83.67, 48, "center baseline", "#fff");
+    const panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'BP', 'v0.3.1 EA');
 
     // 插入文字
-    svg = replaceTexts(svg, [index_powered_path, index_request_time_path, index_panel_name_path], reg_index);
+    svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A1卡
     const me_generated = await PanelGenerate.user2CardA1(data.me);

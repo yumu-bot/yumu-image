@@ -2834,7 +2834,7 @@ export function getTimeDifference(compare = '', now = moment()) {
 }
 
 //公用方法：给面板上名字
-export function getPanelNameSVG (name = '?? (!test)', index = '?', version = '0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
+export function getPanelNameSVG (name = '?? (!test)', index = '?', version = 'v0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
 
     // powered by Yumubot v0.3.2 EA // Score (!ymp / !ymr / !yms)
     const powered_text = torus.getTextPath(
@@ -2846,8 +2846,7 @@ export function getPanelNameSVG (name = '?? (!test)', index = '?', version = '0.
         607.5, 83.67, 48, "center baseline", "#fff");
 
     //导入文字
-    const svg = (powered_text + request_time_text + panel_name_text);
-    return svg;
+    return (powered_text + request_time_text + panel_name_text);
 }
 
 //公用方法
@@ -2941,15 +2940,19 @@ export const PanelGenerate = {
     },
 
 
-    searchResult2CardA2: async (total, cursor, search, result_count, rule) => {
-        const background = cursor ? await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg',getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
+    searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
+        const background = cursor ?
+            await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg',getExportFileV3Path('card-default.png')) :
+            await readNetImage(first_beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default"; //getSortName(search.sort)
         const title3 = '';
         const title_font = torus;
         const left1 = 'time duration:';
-        const left2 = cursor ? moment(parseInt(cursor.queued_at)).format("MM-DD HH:mm:ss") : 'null';
+        const left2 = cursor ? moment(parseInt(cursor.queued_at)).format("MM-DD HH:mm:ss") :
+            (first_beatmapset.ranked_date ?
+                moment(first_beatmapset.ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours').format("MM-DD HH:mm:ss") : 'null');
         const left3 = moment().format("MM-DD HH:mm:ss");
         const right1 = 'total ' + total + 'x' || 'total 0x';
         const right2 = 'results:';
