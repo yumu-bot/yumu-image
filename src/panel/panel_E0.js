@@ -942,10 +942,10 @@ const score2Labels = (score, calcPP) => {
         ...data2Label(length_r, length_b, length_m, true),
     },{
         ...LABEL_OPTION.CS,
-        ...data2Label(cs_r, cs_b, cs_m, isDisplayAR),
+        ...data2Label(cs_r, cs_b, cs_m, isDisplayCS),
     },{
         ...LABEL_OPTION.AR,
-        ...data2Label(ar_r, ar_b, ar_m, isDisplayCS),
+        ...data2Label(ar_r, ar_b, ar_m, isDisplayAR),
     },{
         ...LABEL_OPTION.OD,
         ...data2Label(od_r, od_b, od_m, isDisplayOD),
