@@ -17,7 +17,8 @@ import {
     PanelGenerate,
     readNetImage,
     readTemplate,
-    replaceText, replaceTexts,
+    replaceText,
+    replaceTexts,
     torus
 } from "../util.js";
 import {card_J} from "../card/card_J.js";
@@ -191,7 +192,7 @@ async function routerD(req) {
     }
     return {
         ...op, card_A1: card_a1, label_data: label_data, recent_play: recent_play, bp_list: bp_list,
-    }
+    };
 }
 
 export async function panel_D(data = {
