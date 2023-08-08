@@ -3315,16 +3315,17 @@ export const PanelGenerate = {
 export const PanelDraw = {
 
     //柱状图，Histogram，max 如果填 0，即用数组的最大值
-    BarChart: async (arr = [0], max = 0, x = 900, y = 1020, w = 520, h = 90, gap = 0, color, opacity = 1) => {
+    BarChart: async (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, gap = 0, color, opacity = 1) => {
         if (arr == null) return '';
 
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
+        const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;
         const step = w / arr.length; //如果是100个，一步好像刚好5.2px
         const width = step - gap; //实际宽度
         let rect_svg = '<g>';
 
         arr.forEach((v, i) => {
-            const height = v / arr_max * h;
+            const height = (v - arr_min) / (arr_max - arr_min) * h;
             const x0 = x + step * i;
             const y0 = y - height;
 
@@ -3335,19 +3336,21 @@ export const PanelDraw = {
     },
 
     //折线图，max 如果填 0，即用数组的最大值
-    LineChart: async (arr = [0], max = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3) => {
+    LineChart: async (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3) => {
         if (arr == null) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
+        const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;
         const step = w / arr.length;
         const x0 = x + step / 4; //为了居中，这里要加上最后1步除以4的距离
         const y0 = y;
 
-        let path_svg = `<svg> <path d="M ${x0} ${y0 - (arr.shift() / arr_max * h)} S `;
+        let path_svg = `<svg> <path d="M ${x0} ${y0 - (arr.shift() - arr_min) / (arr_max - arr_min) * h} S `;
         let area_svg = path_svg;
 
         arr.forEach((v, i) => {
-            const lineto_x = x0 + step * (i + 1)
-            const lineto_y = y0 - (v / arr_max * h);
+            const height = (v - arr_min) / (arr_max - arr_min) * h;
+            const lineto_x = x0 + step * (i + 1);
+            const lineto_y = y0 - height;
 
             path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `; // 第一个xy是点位置，第二个是控制点位置
             area_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `;
