@@ -652,7 +652,9 @@ export async function panel_J(data = {
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
 
-    return await exportImage(svg);
+    return svg;
+    // 我怀疑你括号缩进乱了...
+
 
     /**
      * @function 根据选举的优先级来给条形图返回上色用的颜色数组
