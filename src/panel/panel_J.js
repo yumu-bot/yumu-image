@@ -546,9 +546,9 @@ export async function panel_J(data = {
     let pp_min = Math.min.apply(Math, pp_raw_arr);
     let pp_mid = (pp_max + pp_min) / 2;
 
-     RFPPChart(pp_raw_arr, '#FFCC22', pp_max, pp_min);
+    // RFPPChart(pp_raw_arr, '#FFCC22', pp_max, pp_min);
     // RFPPChart(pp_arr, '#aaa', pp_max, pp_min);
-    const PPChart = await PanelDraw.LineChart(pp_raw_arr, pp_max, 1040, 610, 780, 215, '#FFCC22',1, 0, 4);
+    const PPChart = await PanelDraw.LineChart(pp_raw_arr, pp_max, pp_min, 1040, 610, 780, 215, '#FFCC22',1, 0, 4);
     svg = replaceText(svg, PPChart, reg_pp_graph);
 
     // 绘制纵坐标，注意max在下面
