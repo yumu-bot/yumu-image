@@ -1,4 +1,5 @@
 import {
+    exportImage,
     extra,
     getDecimals,
     getExportFileV3Path,
@@ -23,7 +24,7 @@ export async function router(req, res) {
 
         const svg = await panel_Gamma(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(svg);
+        res.send(await exportImage(svg));
     } catch (e) {
         res.status(500).send(e.stack);
     }
