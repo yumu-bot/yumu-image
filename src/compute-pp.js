@@ -223,8 +223,8 @@ async function getHitObjectTimeList(bid, mode) {
                 // 接水果滑条要看成多个大果
                 const objectType = parseInt(l.split(',')[3]);
 
-                const isSlider = ((objectType & (1 << 2 - 1)) >> 1) !== 0;
-                const reverse = isSlider ? parseInt(l.split(',')[5]): 0; //滑动次数，没有折返就是1，有就是大于等于2
+                const isSlider = (((objectType & (1 << 1)) >> 1) === 1);
+                const reverse = isSlider ? parseInt(l.split(',')[5]) : 0; //滑动次数，没有折返就是1，有就是大于等于2
 
                 const times = new Array(reverse).fill(time);
                 timeList.push(time, ...times);
