@@ -148,14 +148,14 @@ async function getOsuFilePath(bid, mode, reload = false) {
     return filePath;
 }
 
-export async function getDensityArray(bid, mode) {
+async function getHitObjectTimeList(bid, mode) {
     const filePath = await getOsuFilePath(bid, mode);
     const input = fs.createReadStream(filePath);
     const rl = readline.createInterface({
         input: input,
         crlfDelay: Infinity,
     });
-    let record = false
+    let record = false;
     const timeList = [];
     for await (const l of rl) {
         if (l === '[HitObjects]') {
@@ -167,6 +167,12 @@ export async function getDensityArray(bid, mode) {
             timeList.push(time);
         }
     }
+    return timeList;
+}
+
+export async function getDensityArray(bid, mode) {
+    const timeList = await getHitObjectTimeList(bid, mode);
+
     const arrayLength = 26;
     const dataList = new Array(arrayLength).fill(0);
 
@@ -185,4 +191,13 @@ export async function getDensityArray(bid, mode) {
         dataList[item]++;
     }
     return dataList;
+}
+
+export async function getScoreProgress(bid, mode, total = 0) {
+    const timeList = await getHitObjectTimeList(bid, mode);
+    const length = timeList.length;
+
+    timeList.forEach((v, i) => {
+
+    })
 }
