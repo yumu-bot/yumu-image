@@ -34,6 +34,7 @@ export async function card_E3(data = {
     }],
     rank: 'F',
     star: 9.99,
+    score_progress: 0.98,
 }, reuse = false) {
     // 读取模板
     let svg = `
@@ -73,24 +74,25 @@ export async function card_E3(data = {
     svg = replaceTexts(svg, [density, retry_fail, public_rating, percent], reg_text);
 
     // 部件定义
-    // 评级或难度分布矩形的缩放，SR1为0.1倍，SR7为1倍
+    // 评级或难度分布矩形的缩放，SR1为0.1倍，SR8为1倍
     let density_scale = 1;
     if (data.star <= 1) {
         density_scale = 0.1;
     } else if (data.star <= 8) {
-        density_scale = Math.sqrt(((data.star - 1) / 7 * 0.9) + 0.1); //类似对数增长，比如4星高度就是原来的 0.707 倍
+        density_scale = Math.sqrt(((data.star - 1) / 7 * 0.9) + 0.1); //类似对数增长，比如4.5星高度就是原来的 0.707 倍
     }
     const density_arr_max = Math.max.apply(Math, data.density_arr) / density_scale;
-    const density_graph = await PanelDraw.LineChart(data.density_arr, density_arr_max, 0, 20, 130, 520, 90, rank_color, 1, 0.4, 3);
+    const density_graph = PanelDraw.LineChart(data.density_arr, density_arr_max, 0, 20, 130, 520, 90, rank_color, 1, 0.4, 3);
+    const fail_index_rrect = data.rank === 'F' ? PanelDraw.RRect(20 + (520 * data.score_progress) - 1.5, 40, 3, 90, 1.5, '#ed6c9e') : '';
 
     //中下的失败率重试率图像
     const retry_fail_sum_arr = data.fail_arr ? data.fail_arr.map(function (v, i) {
         return v + data.retry_arr[i];
     }) : [];
     const retry_fail_sum_arr_max = Math.max.apply(Math, retry_fail_sum_arr);
-    const retry_graph = await PanelDraw.BarChart(retry_fail_sum_arr, retry_fail_sum_arr_max, 0,
+    const retry_graph = PanelDraw.BarChart(retry_fail_sum_arr, retry_fail_sum_arr_max, 0,
         20, 250, 520, 90, 0, '#f6d659', 1);
-    const fail_graph = await PanelDraw.BarChart(data.fail_arr, retry_fail_sum_arr_max, 0,
+    const fail_graph = PanelDraw.BarChart(data.fail_arr, retry_fail_sum_arr_max, 0,
         20, 250, 520, 90, 0, '#ed6c9e', 1);
 
     let labels = '';
@@ -104,11 +106,12 @@ export async function card_E3(data = {
         labels += `<g transform="translate(${x} ${y})">` + d + '</g>';
     }
 
-    const fail_rrect = getRRectSVG(560, 250, 4.2 * data.fail_percent, 4, 2, '#ed6c9e');
-    const retry_rrect = getRRectSVG(560, 250, (4.2 * data.fail_percent + 4.2 * data.retry_percent), 4, 2, '#f6d659');
-    const base_rrect = getRRectSVG(560, 250, 420, 4, 2, '#aaa');
+    const fail_rrect = PanelDraw.RRect(560, 250, 4.2 * data.fail_percent, 4, 2, '#ed6c9e');
+    const retry_rrect = PanelDraw.RRect(560, 250, (4.2 * data.fail_percent + 4.2 * data.retry_percent), 4, 2, '#f6d659');
+    const base_rrect = PanelDraw.RRect(560, 250, 420, 4, 2, '#aaa');
 
     // 导入部件
+    svg = implantSvgBody(svg, 0, 0, fail_index_rrect, reg_label);
     svg = implantSvgBody(svg, 0, 0, density_graph, reg_graph);
     svg = implantSvgBody(svg, 0, 0, fail_graph, reg_graph);
     svg = implantSvgBody(svg, 0, 0, retry_graph, reg_graph);
@@ -119,8 +122,4 @@ export async function card_E3(data = {
     svg = implantSvgBody(svg, 0, 0, base_rrect, reg_label);
 
     return svg.toString();
-}
-
-function getRRectSVG(x, y, w, h, r, color) {
-    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: ${color};"/>`;
 }

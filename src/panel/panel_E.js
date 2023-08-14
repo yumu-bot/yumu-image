@@ -338,9 +338,11 @@ export async function panel_E(data = {
             stars: 10.6,
             maxCombo: 457,
         },
+        score_progress: 0
     }
 
      */
+
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
@@ -412,6 +414,7 @@ async function score2CardE2(score, calcPP) {
 
 async function score2CardE3(score, calcPP) {
     const pass_arr = score2PassPercents(score);
+    const score_progress = (score.rank === 'F') ? calcPP.score_progress : 1;
 
     return {
         density_arr: await getDensityArray(score.beatmap.id, score.mode),
@@ -426,6 +429,7 @@ async function score2CardE3(score, calcPP) {
         labels: score2Labels(score, calcPP),
         rank: score.rank,
         star: calcPP.attr.stars,
+        score_progress: score_progress,
     }
 }
 

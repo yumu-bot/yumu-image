@@ -1784,7 +1784,7 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
         return arr;
 
     } else {
-        let steps = (arr.length - 1) / (target_length - 1);
+        const steps = (arr.length - 1) / (target_length - 1) + 1;
         let out = [arr[0]];
         let stepSum = steps;
         let maxItem = 0;
@@ -3314,8 +3314,12 @@ export const PanelGenerate = {
 //把数组变成可视化的图表
 export const PanelDraw = {
 
+    RRect: (x, y, w, h, r, color) => {
+        return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: ${color};"/>`;
+    },
+
     //柱状图，Histogram，max 如果填 0，即用数组的最大值
-    BarChart: async (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, gap = 0, color, opacity = 1) => {
+    BarChart: (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, gap = 0, color, opacity = 1) => {
         if (arr == null) return '';
 
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
@@ -3336,7 +3340,7 @@ export const PanelDraw = {
     },
 
     //折线图，max 如果填 0，即用数组的最大值
-    LineChart: async (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3) => {
+    LineChart: (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3) => {
         if (arr == null) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
         const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;

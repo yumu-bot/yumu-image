@@ -105,6 +105,8 @@ export async function calcPerformancePoints(bid, score = statistics, mode, reloa
     calculator.nMisses(0);
     const full_pp = calculator.performance(beatMap);
 
+    const score_progress = await getScoreProgress(bid, score, mode);
+
     calculator = new Calculator({
         mode: mode_int,
         mods: mods,
@@ -113,6 +115,7 @@ export async function calcPerformancePoints(bid, score = statistics, mode, reloa
         nGeki: score.count_miss + score.count_50 + score.count_100 + score.count_300 + score.count_geki + score.count_katu,
     })
     const perfect_pp = calculator.performance(beatMap);
+
     return {
         pp: now_pp.pp,
         pp_all: now_pp,
@@ -121,6 +124,7 @@ export async function calcPerformancePoints(bid, score = statistics, mode, reloa
         perfect_pp: perfect_pp.pp,
         perfect_pp_all: perfect_pp,
         attr: attr,
+        score_progress: score_progress,
     };
 
 }
@@ -148,28 +152,6 @@ async function getOsuFilePath(bid, mode, reload = false) {
     return filePath;
 }
 
-async function getHitObjectTimeList(bid, mode) {
-    const filePath = await getOsuFilePath(bid, mode);
-    const input = fs.createReadStream(filePath);
-    const rl = readline.createInterface({
-        input: input,
-        crlfDelay: Infinity,
-    });
-    let record = false;
-    const timeList = [];
-    for await (const l of rl) {
-        if (l === '[HitObjects]') {
-            record = true;
-            continue;
-        }
-        if (record) {
-            let time = parseInt(l.split(',')[2]);
-            timeList.push(time);
-        }
-    }
-    return timeList;
-}
-
 export async function getDensityArray(bid, mode) {
     const timeList = await getHitObjectTimeList(bid, mode);
 
@@ -193,11 +175,85 @@ export async function getDensityArray(bid, mode) {
     return dataList;
 }
 
-export async function getScoreProgress(bid, mode, total = 0) {
+//根据分数返回玩家目前的进度
+export async function getScoreProgress(bid, statistics, mode) {
+
+    const statTotal = getStatisticsTotal(statistics, mode);
     const timeList = await getHitObjectTimeList(bid, mode);
     const length = timeList.length;
 
-    timeList.forEach((v, i) => {
+    const startTime = timeList[0] || 0;
+    const endTime = timeList[length - 1] || 0;
+    const duration = endTime - startTime;
 
-    })
+    let progress = 1; //返回的进度
+
+    for (const i in timeList) {
+        const v = timeList[i];
+
+        if (i >= statTotal - 1) {
+            progress = Math.min((v - startTime) / duration, 1)
+            break;
+        }
+    }
+
+    return progress;
+}
+
+async function getHitObjectTimeList(bid, mode) {
+    const filePath = await getOsuFilePath(bid, mode);
+    const input = fs.createReadStream(filePath);
+    const rl = readline.createInterface({
+        input: input,
+        crlfDelay: Infinity,
+    });
+    const isCatch = (mode === ('fruits' || 'catch'));
+
+    let record = false;
+    const timeList = [];
+    for await (const l of rl) {
+        if (l === '[HitObjects]') {
+            record = true;
+            continue;
+        }
+        if (record) {
+            const time = parseInt(l.split(',')[2]);
+
+            if (isCatch) {
+                // 接水果滑条要看成多个大果
+                const objectType = parseInt(l.split(',')[3]);
+
+                const isSlider = (objectType & 2) !== 0;
+                const reverse = isSlider ? parseInt(l.split(',')[5]): 0; //滑动次数，没有折返就是1，有就是大于等于2
+
+                const times = new Array(reverse).fill(time);
+                timeList.push(time, ...times);
+
+            } else {
+                timeList.push(time);
+            }
+        }
+    }
+    return timeList;
+}
+
+function getStatisticsTotal(statistics = {}, mode = 'osu') {
+    const n320 = statistics.count_geki || 0;
+    const n300 = statistics.count_300 || 0;
+    const n200 = statistics.count_katu || 0;
+    const n100 = statistics.count_100 || 0;
+    const n50 = statistics.count_50 || 0;
+    const n0 = statistics.count_miss || 0;
+
+    switch (mode) {
+        case 'osu':
+            return n300 + n100 + n50 + n0;
+        case 'taiko':
+            return n300 + n100 + n0;
+        case 'fruits':
+        case 'catch':
+            return n300 + n0; //目前问题是，这个玩意没去掉多余的miss中果，会偏大
+        case 'mania':
+            return n320 + n300 + n200 + n100 + n50 + n0;
+    }
 }

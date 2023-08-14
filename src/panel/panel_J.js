@@ -548,7 +548,7 @@ export async function panel_J(data = {
 
     // RFPPChart(pp_raw_arr, '#FFCC22', pp_max, pp_min);
     // RFPPChart(pp_arr, '#aaa', pp_max, pp_min);
-    const PPChart = await PanelDraw.LineChart(pp_raw_arr, pp_max, pp_min, 1040, 610, 780, 215, '#FFCC22',1, 0, 4);
+    const PPChart = PanelDraw.LineChart(pp_raw_arr, pp_max, pp_min, 1040, 610, 780, 215, '#FFCC22',1, 0, 4);
     svg = replaceText(svg, PPChart, reg_pp_graph);
 
     // 绘制纵坐标，注意max在下面
@@ -668,7 +668,7 @@ export async function panel_J(data = {
         let arr = new Array(length).fill(defaultValue);
 
         for (const v of electArr) {
-            let steps = (dataArr.length - 1) / (length - 1);
+            let steps = (dataArr.length - 1) / (length - 1) + 1;
             let stepSum = steps;
             let stepCount = 0;
             let color = getRankColor(v);
@@ -689,35 +689,6 @@ export async function panel_J(data = {
 
         return arr;
     }
-
-
-    /**
-     * @function 绘制右上角的曲线
-     * @return {String} 曲线的 svg
-     * @param arr 数据数组
-     * @param color 曲线的颜色
-     * @param max 数组最大值
-     * @param min 数组最小值
-     */
-    function RFPPChart(arr, color, max, min) {
-        const step = 780 / arr.length
-        const start_x = 1042; //往右挪了2px
-        const start_y = 610 - 215;
-        const delta = max - min;
-
-        // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
-        let path_svg = `<svg> <path d="M ${start_x} ${start_y + ((max - arr.shift()) / delta * 215)} S `;
-
-        arr.forEach((item, i) => {
-            let lineto_x = start_x + step * (i + 1);
-            let lineto_y = start_y + ((max - item) / delta * 215);
-
-            path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 8} ${lineto_y} ` // 第一个xy是点位置，第二个是控制点位置
-        })
-        path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 4px;"/> </svg>`
-        svg = replaceText(svg, path_svg, reg_pp_graph);
-    }
-
 
     /**
      * @function 绘制圆饼
