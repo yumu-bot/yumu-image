@@ -223,7 +223,7 @@ async function getHitObjectTimeList(bid, mode) {
                 // 接水果滑条要看成多个大果
                 const objectType = parseInt(l.split(',')[3]);
 
-                const isSlider = (objectType & 2) !== 0;
+                const isSlider = ((objectType & (1 << 2 - 1)) >> 1) !== 0;
                 const reverse = isSlider ? parseInt(l.split(',')[5]): 0; //滑动次数，没有折返就是1，有就是大于等于2
 
                 const times = new Array(reverse).fill(time);
@@ -252,7 +252,7 @@ function getStatisticsTotal(statistics = {}, mode = 'osu') {
             return n300 + n100 + n0;
         case 'fruits':
         case 'catch':
-            return Math.max(n300, n0); //目前问题是，这个玩意没加上miss大果，会偏小
+            return n300 + n0; //目前问题是，这个玩意没去掉miss中果，会偏大
         case 'mania':
             return n320 + n300 + n200 + n100 + n50 + n0;
     }
