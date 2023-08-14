@@ -668,7 +668,7 @@ export async function panel_J(data = {
         let arr = new Array(length).fill(defaultValue);
 
         for (const v of electArr) {
-            let steps = (dataArr.length - 1) / (length - 1) + 1;
+            let steps = (dataArr.length - 1) / (length - 1);
             let stepSum = steps;
             let stepCount = 0;
             let color = getRankColor(v);

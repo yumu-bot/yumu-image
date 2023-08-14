@@ -1784,7 +1784,7 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
         return arr;
 
     } else {
-        const steps = (arr.length - 1) / (target_length - 1) + 1;
+        const steps = (arr.length - 1) / (target_length - 1);
         let out = [arr[0]];
         let stepSum = steps;
         let maxItem = 0;
