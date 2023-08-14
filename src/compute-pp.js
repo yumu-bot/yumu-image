@@ -225,6 +225,7 @@ async function getHitObjectTimeList(bid, mode) {
 
                 const isSlider = (((objectType & (1 << 1)) >> 1) === 1);
                 const reverse = isSlider ? parseInt(l.split(',')[5]) : 0; //滑动次数，没有折返就是1，有就是大于等于2
+                console.log(isSlider, reverse)
 
                 const times = new Array(reverse).fill(time);
                 timeList.push(time, ...times);
