@@ -207,7 +207,7 @@ async function getHitObjectTimeList(bid, mode) {
         input: input,
         crlfDelay: Infinity,
     });
-    const isCatch = (mode === ('fruits' || 'catch'));
+    const isCatch = (mode === 'fruits' || mode === 'catch');
 
     let record = false;
     const timeList = [];
@@ -252,7 +252,7 @@ function getStatisticsTotal(statistics = {}, mode = 'osu') {
             return n300 + n100 + n0;
         case 'fruits':
         case 'catch':
-            return n300 + n0; //目前问题是，这个玩意没去掉多余的miss中果，会偏大
+            return Math.max(n300, n0); //目前问题是，这个玩意没加上miss大果，会偏小
         case 'mania':
             return n320 + n300 + n200 + n100 + n50 + n0;
     }

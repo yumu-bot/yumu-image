@@ -59,7 +59,7 @@ export async function card_E3(data = {
     // 文字定义
     const density = torus.getTextPath("Density", 20, 32.88, 18, "left baseline", "#aaa");
     const retry_fail = torus.getTextPath("Retry // Fail", 20, 152.63, 18, "left baseline", "#aaa");
-    const public_rating = torus.getTextPath("Players Feedback: " + data.public_rating,
+    const public_rating = torus.getTextPath("Players Feedback " + data.public_rating,
             540, 32.88, 18, "right baseline", "#aaa");
     const percent = torus.getTextPath( "P "
             + data.pass_percent
