@@ -14,7 +14,6 @@ import {
 } from "../util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
-import moment from "moment";
 
 export async function router(req, res) {
     try {
@@ -44,11 +43,11 @@ export async function router_svg(req, res) {
 //公用的路由
 async function routerC(req) {
 
-    const redUsers = req.fields?.redUsers;
-    const blueUsers = req.fields?.blueUsers;
-    const noneUsers = req.fields?.noneUsers;
+    const redUsers = req.fields.redUsers;
+    const blueUsers = req.fields.blueUsers;
+    const noneUsers = req.fields.noneUsers;
 
-    const match = await PanelGenerate.matchInfo2CardA2(req);
+    const match = await PanelGenerate.matchInfo2CardA2(req.fields);
 
     let redArr = [];
     let blueArr = [];
