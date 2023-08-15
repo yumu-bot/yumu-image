@@ -3141,6 +3141,7 @@ export const PanelGenerate = {
             right1: right1,
             right2: right2,
             right3b: right3b,
+            isTeamVS: isTeamVS,
         };
     },
 

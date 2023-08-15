@@ -89,6 +89,7 @@ export async function panel_C(data = {
         right2: '',
         right3b: '',
         right3m: '',
+        isTeamVS: true,
 
     },
     // H卡
@@ -247,6 +248,7 @@ export async function panel_C(data = {
     let rowTotal;
 
     async function BodyCard(data) {
+        const isTeamVS = data.match.isTeamVS;
         let arr2 = data.player;
         let rowSum = 0; //总共的行数
 
