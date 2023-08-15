@@ -3102,7 +3102,7 @@ export const PanelGenerate = {
         redWins: 6,
         blueUsers: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
     }) => {
-        const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/slimcover.jpg', getExportFileV3Path('card-default.png'));
+        const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + data.sid + '/covers/slimcover.jpg', getExportFileV3Path('card-default.png'));
 
         const isTeamVS = data.isTeamVs;
         const isContainVS = data.matchInfo.name.toLowerCase().match('vs');
@@ -3129,7 +3129,7 @@ export const PanelGenerate = {
         const right3b = isTeamVS ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
 
         return {
-            background: getExportFileV3Path('card-default.png'),
+            background: background,
             map_status: '',
 
             title1: title1,
