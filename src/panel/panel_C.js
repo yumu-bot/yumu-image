@@ -17,6 +17,8 @@ import {card_A2} from "../card/card_A2.js";
 
 export async function router(req, res) {
     try {
+
+        console.log(req)
         const data = await routerC(req);
         const svg = await panel_C(data);
         res.set('Content-Type', 'image/jpeg');
@@ -221,8 +223,6 @@ export async function panel_C(data = {
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');
-
-    console.log(data.match)
 
     // 路径定义
     let reg_cardheight = '${cardheight}'
