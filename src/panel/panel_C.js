@@ -14,11 +14,10 @@ import {
 } from "../util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
+import moment from "moment";
 
 export async function router(req, res) {
     try {
-
-        console.log(req)
         const data = await routerC(req);
         const svg = await panel_C(data);
         res.set('Content-Type', 'image/jpeg');
@@ -44,16 +43,12 @@ export async function router_svg(req, res) {
 
 //公用的路由
 async function routerC(req) {
+
     const redUsers = req.fields?.redUsers;
     const blueUsers = req.fields?.blueUsers;
     const noneUsers = req.fields?.noneUsers;
-    const matchInfo = req.fields?.matchInfo;
-    const sid = req.fields?.sid;
-    const redWins = req.fields?.redWins;
-    const blueWins = req.fields?.blueWins;
-    const isTeamVS = req.fields?.isTeamVS;
 
-    const match = await PanelGenerate.matchInfo2CardA2(matchInfo, sid, redWins, blueWins, isTeamVS);
+    const match = await PanelGenerate.matchInfo2CardA2(req);
 
     let redArr = [];
     let blueArr = [];
@@ -82,16 +77,21 @@ async function routerC(req) {
 export async function panel_C(data = {
     // A2卡
     match: {
-        background: getExportFileV3Path('card-default.png'), //给我他们最后一局的谱面背景即可
-        match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)', //比赛标题
-        match_round: 11,
-        match_time: '20:25-22:03',//比赛开始到比赛结束。如果跨了一天，需要加24小时
-        match_date: '2020-03-21',//比赛开始的日期
-        average_star_rating: 5.46,
-        mpid: 59438351,
-        wins_team_red: 5,
-        wins_team_blue: 6,
-        is_team_vs : true,
+        background: getExportFileV3Path('card-default.png'),
+        map_status: '',
+
+        title1: '',
+        title2: '',
+        title3: '',
+        title_font: '',
+        left1: '',
+        left2: '',
+        left3: '',
+        right1: '',
+        right2: '',
+        right3b: '',
+        right3m: '',
+
     },
     // H卡
     player: {
@@ -233,64 +233,19 @@ export async function panel_C(data = {
     let reg_bodycard = /(?<=<g id="BodyCard">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'MRA', 'v0.3.0 EA');
+    const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'MRA', 'v0.3.2 FT');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    let title, title1, title2;
-    let isTeamVS = true;
-    if (data.match.wins_team_red <= 0 && data.match.wins_team_blue <= 0) {
-        isTeamVS = false;
-    }
-
-    let isContainVS = data.match.match_title.toLowerCase().match('vs')
-
-    if (isContainVS){
-        title = getMatchNameSplitted(data.match.match_title);
-        title1 = title[0];
-        title2 = title[1] + ' vs ' + title[2];
-    } else {
-        title1 = data.match.match_title;
-        title2 = '';
-    }
-
-    let left1 = data.match.match_round ? 'Round ' + data.match.match_round : '-';
-    let left2 = data.match.match_time || 'time?';
-    let left3 = data.match.match_date || 'date?';
-    let right1 = 'AVG.SR ' + data.match.average_star_rating;
-    let right2 = 'mp' + data.match.mpid || 0;
-    let wins_team_red = data.match.wins_team_red || 0;
-    let wins_team_blue = data.match.wins_team_blue || 0;
-    let right3b;
-
-    if (isTeamVS) {
-        right3b = wins_team_red + ' : ' + wins_team_blue;
-    } else {
-        right3b = '-';
-    }
-
-
-    let card_A2_impl =
-        await card_A2({data,
-            title1: title1,
-            title2: title2,
-            title_font: 'PuHuiTi',
-            left1: left1,
-            left2: left2,
-            left3: left3,
-            right1: right1,
-            right2: right2,
-            right3b: right3b,
-        },  true);
+    const cardA2 = await card_A2(data.match, true);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
-    svg = implantSvgBody(svg,40,40,card_A2_impl,reg_maincard);
+    svg = implantSvgBody(svg,40,40, cardA2, reg_maincard);
 
     // 插入主体卡片
-
     let rowTotal;
 
     async function BodyCard(data) {

@@ -7,6 +7,7 @@ import exports from 'convert-svg-to-jpeg';
 import https from "https";
 import path from "path";
 import moment from "moment";
+import {card_A2} from "./card/card_A2";
 
 const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
@@ -3086,21 +3087,61 @@ export const PanelGenerate = {
         }
     },
 
-    matchInfo2CardA2: async (matchInfo, sid, redWins, blueWins, isTeamVs) => {
-        const match_round = redWins + blueWins;
-        const background_path = 'https://assets.ppy.sh/beatmaps/' + sid + '/covers/cover.jpg';
+    matchInfo2CardA2: async (data = {
+        noneUsers: [],
+        matchInfo: {
+            id: 59438351,
+            name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)',
+            start_time: 1584793502,
+            end_time: 1584799428
+        },
+        averageStar: 0,
+        redUsers: [ [Object], [Object], [Object], [Object], [Object] ],
+        isTeamVs: true,
+        sid: 1001507,
+        blueWins: 5,
+        redWins: 6,
+        blueUsers: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+    }) => {
+        const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/slimcover.jpg', getExportFileV3Path('card-default.png'));
+
+        const isTeamVS = data.isTeamVs;
+        const isContainVS = data.matchInfo.name.toLowerCase().match('vs');
+
+        let title, title1, title2;
+        if (isContainVS){
+            title = getMatchNameSplitted(data.matchInfo.name);
+            title1 = title[0];
+            title2 = title[1] + ' vs ' + title[2];
+        } else {
+            title1 = data.matchInfo.name;
+            title2 = '';
+        }
+
+        const left1 = (redWins + blueWins) + 'x Rounds';
+        const left2 = moment(data.matchInfo.start_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '-' +
+            moment(data.matchInfo.end_time, '[-]HH:mm').add(8, 'hours').format('HH:mm');
+        const left3 = moment(data.matchInfo.start_time, 'X').add(8, 'hours').format('YYYY-MM-DD');
+
+        const right1 = 'AVG.SR ' + data.averageStar || 0;
+        const right2 = 'mp' + data.matchInfo.id || 0;
+        const wins_team_red = data.redWins || 0;
+        const wins_team_blue = data.blueWins || 0;
+        const right3b = isTeamVS ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
 
         return {
-            background: await readNetImage(background_path, getExportFileV3Path('card-default.png')), //给我他们最后一局的谱面背景即可
-            match_title: matchInfo.name, //比赛标题
-            match_round: match_round,
-            match_time: matchInfo.startTime,//比赛开始到比赛结束。如果跨了一天，需要加24小时
-            match_date: matchInfo.endTime,//比赛开始的日期
-            average_star_rating: 0,
-            mpid: matchInfo.id,
-            wins_team_red: redWins,
-            wins_team_blue: blueWins,
-            is_team_vs: isTeamVs,
+            background: getExportFileV3Path('card-default.png'),
+            map_status: '',
+
+            title1: title1,
+            title2: title2,
+            title_font: 'PuHuiTi',
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
         };
     },
 
