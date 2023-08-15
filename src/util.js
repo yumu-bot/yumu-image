@@ -3121,10 +3121,11 @@ export const PanelGenerate = {
             title2 = '';
         }
 
+        //这里的时间戳不需要 .add(8, 'hours')
         const left1 = (data.rounds || 0) + 'x Rounds';
-        const left2 = moment(data.matchInfo.start_time, 'X').add(8, 'hours').format('HH:mm') + '-' +
-            moment(data.matchInfo.end_time, 'X').add(8, 'hours').format('HH:mm');
-        const left3 = moment(data.matchInfo.start_time, 'X').add(8, 'hours').format('YYYY-MM-DD');
+        const left2 = moment(data.matchInfo.start_time, 'X').format('HH:mm') + '-' +
+            moment(data.matchInfo.end_time, 'X').format('HH:mm');
+        const left3 = moment(data.matchInfo.start_time, 'X').format('YYYY-MM-DD');
 
         const right1 = 'AVG.SR ' + star;
         const right2 = 'mp' + data.matchInfo.id || 0;
