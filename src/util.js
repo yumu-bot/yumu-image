@@ -3095,6 +3095,7 @@ export const PanelGenerate = {
             end_time: 1584799428
         },
         averageStar: 0,
+        rounds: 1,
         redUsers: [ [Object], [Object], [Object], [Object], [Object] ],
         isTeamVs: true,
         sid: 1001507,
@@ -3106,6 +3107,7 @@ export const PanelGenerate = {
         const wins_team_blue = data.blueWins || 0;
         const isTeamVS = data.isTeamVs;
         const isContainVS = data.matchInfo.name.toLowerCase().match('vs');
+        const star = getDecimals(data.averageStar, 2) + getDecimals(data.averageStar, 3);
 
         const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + data.sid + '/covers/slimcover.jpg', getExportFileV3Path('card-default.png'));
 
@@ -3119,12 +3121,12 @@ export const PanelGenerate = {
             title2 = '';
         }
 
-        const left1 = (wins_team_red + wins_team_blue) + 'x Rounds';
-        const left2 = moment(data.matchInfo.start_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '-' +
-            moment(data.matchInfo.end_time, '[-]HH:mm').add(8, 'hours').format('HH:mm');
+        const left1 = (data.rounds || 0) + 'x Rounds';
+        const left2 = moment(data.matchInfo.start_time, 'X').add(8, 'hours').format('HH:mm') + '-' +
+            moment(data.matchInfo.end_time, 'X').add(8, 'hours').format('HH:mm');
         const left3 = moment(data.matchInfo.start_time, 'X').add(8, 'hours').format('YYYY-MM-DD');
 
-        const right1 = 'AVG.SR ' + data.averageStar || 0;
+        const right1 = 'AVG.SR ' + star;
         const right2 = 'mp' + data.matchInfo.id || 0;
         const right3b = isTeamVS ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
 
