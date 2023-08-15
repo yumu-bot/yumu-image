@@ -222,6 +222,8 @@ export async function panel_C(data = {
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');
 
+    console.log(data.match)
+
     // 路径定义
     let reg_cardheight = '${cardheight}'
     let reg_panelheight = '${panelheight}'
