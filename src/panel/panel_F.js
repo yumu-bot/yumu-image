@@ -184,6 +184,8 @@ export async function panel_F(data = {
     // 导入模板
     let svg = readTemplate('template/Panel_F.svg');
 
+    console.log(data.match);
+
     // 路径定义
     let reg_height = '${height}'
     let reg_panelheight = '${panelheight}'
