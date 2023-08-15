@@ -7,7 +7,6 @@ import exports from 'convert-svg-to-jpeg';
 import https from "https";
 import path from "path";
 import moment from "moment";
-import {card_A2} from "./card/card_A2";
 
 const path_util = path;
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");

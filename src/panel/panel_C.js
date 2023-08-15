@@ -1,7 +1,6 @@
 import {
     exportImage,
     getExportFileV3Path,
-    getMatchNameSplitted,
     getPanelNameSVG,
     getRandomBannerPath,
     getRoundedNumberLargerStr,
