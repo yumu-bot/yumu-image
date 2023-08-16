@@ -88,7 +88,7 @@ export async function card_E2(data = {
     // 部件定义
     const mods = getModsSVG(data.mods, 880, 20, 90, 42, 50);
     const rank = getRankSVG(data.rank, 100, 75);
-    const mask = getMaskSVG(data.accuracy, mode, 175, 155, 155); //105 * 2
+    const mask = getMaskSVG(data.accuracy, mode, 175, 155, 230); //105 * 2
     const ring = getRingSVG(40, 20, 270, 270);
     const ring_index = getRingIndexSVG(mode, 70, 50, 210, 210);
 
