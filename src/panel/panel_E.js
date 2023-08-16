@@ -935,7 +935,8 @@ const score2Labels = (score, calcPP) => {
     const hasCSChanged = ((mode === 'o' || mode === 'c') && hasAnyMod(mod_int, ["EZ", "HR"]));
     const hasARChanged = ((mode === 'o' || mode === 'c') && hasAnyMod(mod_int, ["EZ", "HR", "DT", "HT", "NC", "DC"]));
     const hasODChanged = ((mode === 'o' || mode === 't') && hasAnyMod(mod_int, ["EZ", "HR", "DT", "HT", "NC", "DC"]));
-    const hasHPChanged = ((mode !== 'm') && hasAnyMod(mod_int, ["EZ", "HR", "DT", "HT", "NC", "DC"]));
+    const hasHPChanged = (((mode === 'o' || mode === 'c') && hasAnyMod(mod_int, ["EZ", "HR", "DT", "HT", "NC", "DC"])) ||
+        ((mode === 't') && hasAnyMod(mod_int, ["EZ", "HR"])));
 
     const cs_r = cs2px(calcPP.attr.cs, mode);
     const cs_b = getDecimals(calcPP.attr.cs, 2);
