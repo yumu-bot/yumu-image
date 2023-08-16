@@ -1,7 +1,7 @@
 import {
     exportImage,
     getExportFileV3Path,
-    getGameMode,
+    getGameMode, getMascotName, getMascotPath,
     getPanelNameSVG,
     getRandomBannerPath,
     implantImage,
@@ -90,17 +90,18 @@ export async function panel_B(data = {
     let svg = readTemplate('template/Panel_B.svg');
 
     // 路径定义
-    let reg_index = /(?<=<g id="Index">)/;
-    let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PB-1\);">)/;
-    let reg_left = /(?<=<g id="Left">)/;
-    let reg_right = /(?<=<g id="Right">)/;
-    let reg_center = /(?<=<g id="Center">)/;
-    let reg_card_a1 = /(?<=<g id="CardA1">)/;
-    let reg_hexagon = /(?<=<g id="Hexagon">)/;
+    const reg_index = /(?<=<g id="Index">)/;
+    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PB-1\);">)/;
+    const reg_left = /(?<=<g id="Left">)/;
+    const reg_right = /(?<=<g id="Right">)/;
+    const reg_center = /(?<=<g id="Center">)/;
+    const reg_card_a1 = /(?<=<g id="CardA1">)/;
+    const reg_hexagon = /(?<=<g id="Hexagon">)/;
+    const reg_mascot = /(?<=<g style="clip-path: url\(#clippath-PB-2\);">)/;
 
     // 条件定义
     const isVS = data.statistics.isVS;
-    const game_mode = getGameMode(data.statistics.gameMode, 0);
+    const mode = getGameMode(data.statistics.gameMode, 0);
 
     // sub_icon1 传的 countryCode , sub_icon2 是 撒泼特等级,如果不是0就是撒泼特,这俩你自行判断一下
     if (data.card_A1[0].sub_icon2 > 0) {
@@ -120,17 +121,17 @@ export async function panel_B(data = {
         }
     }
 
-    const game_mode_path = torus.getTextPath(game_mode, 960, 614, 60, 'center baseline', '#fff');
+    const game_mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
 
     // 画六个标识
-    svg = implantSvgBody(svg, 0, 0, drawHexIndex(game_mode), reg_hexagon);
+    svg = implantSvgBody(svg, 0, 0, drawHexIndex(mode), reg_hexagon);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
 
     // 面板文字
-    const panel_name = getPanelNameSVG('PP Minus v2.4 (!ppm/!ppmvs)', 'PPM', 'v0.3.0 EA');
+    const panel_name = getPanelNameSVG('PP Minus v2.4 (!ppm/!ppmvs)', 'PPM', 'v0.3.2 FT');
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, game_mode_path], reg_index);
@@ -194,8 +195,16 @@ export async function panel_B(data = {
     svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
     svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
 
-    // 画六边形和其他
+    // 230817 插入吉祥物
+    const mascot_name_data = getMascotName(data.game_mode);
+    const mascot_link = getMascotPath(mascot_name_data);
 
+    //如果不是vs，则插入
+    if (!isVS) {
+        svg = implantImage(svg, 530, 710, 1350, 330, 1, mascot_link, reg_mascot);
+    }
+
+    // 画六边形和其他
     const hexagon = getExportFileV3Path('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
 

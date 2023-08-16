@@ -1808,29 +1808,49 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
 /**
  * @function 格式化游戏模式
  * @return {String} 游戏模式
- * @param gamemode 将被格式化的游戏模式，osu taiko catch mania
+ * @param mode 将被格式化的游戏模式，osu taiko catch mania
  * @param level 等级，0为不变，2为全写 osu!standard，-1为获取他们的unicode字符 \uE801，1为简写 o t m c
  */
-export function getGameMode(gamemode = 'osu', level = 0) {
-    let mode = gamemode.toString().toLowerCase();
+export function getGameMode(mode = 'osu', level = 0) {
 
     //如果是输入数字，则修改
-    switch (mode) {
-        case '0':
-            mode = 'osu';
-            break;
-        case '1':
-            mode = 'taiko';
-            break;
-        case '2':
-            mode = 'catch';
-            break;
-        case '3':
-            mode = 'mania';
-            break;
+    if (mode instanceof Number) {
+        switch (mode) {
+            case -1:
+                mode = 'default';
+                break;
+            case 0:
+                mode = 'osu';
+                break;
+            case 1:
+                mode = 'taiko';
+                break;
+            case 2:
+                mode = 'catch';
+                break;
+            case 3:
+                mode = 'mania';
+                break;
+        }
     }
 
     switch (level) {
+        case -1:
+            switch (mode) {
+                case 'osu':
+                    return '\uE800';
+                case 'taiko':
+                    return '\uE803';
+                case 'fruits':
+                    return '\uE801';
+                case 'catch':
+                    return '\uE801'; //我怀疑现在的接水果给的不是fruits
+                case 'mania':
+                    return '\uE802';
+                default:
+                    return '';
+            }
+            break;
         case 1:
             switch (mode) {
                 case 'osu':
@@ -1861,22 +1881,6 @@ export function getGameMode(gamemode = 'osu', level = 0) {
                     return 'osu!mania';
                 default:
                     return 'default';
-            }
-            break;
-        case -1:
-            switch (mode) {
-                case 'osu':
-                    return '\uE800';
-                case 'taiko':
-                    return '\uE803';
-                case 'fruits':
-                    return '\uE801';
-                case 'catch':
-                    return '\uE801'; //我怀疑现在的接水果给的不是fruits
-                case 'mania':
-                    return '\uE802';
-                default:
-                    return '';
             }
             break;
         default:
