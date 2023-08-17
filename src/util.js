@@ -1814,7 +1814,7 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
 export function getGameMode(mode = 'osu', level = 0) {
 
     //如果是输入数字，则修改
-    if (mode instanceof Number) {
+    if (typeof mode === Number) {
         switch (mode) {
             case -1:
                 mode = 'default';

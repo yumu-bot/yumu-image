@@ -1062,33 +1062,41 @@ const score2Labels = (score, calcPP) => {
 }
 
 const cs2px = (cs, mode = 'o') => {
-    if (mode === 'o') {
-        let osupixel = (54.4 - 4.48 * cs).toFixed(2);
-        if (osupixel.substr(-3) === '.00') return osupixel.slice(0, -3) + 'px';
-        if (osupixel.substr(-2) === '.0') return osupixel.slice(0, -2) + 'px';
-        return osupixel + 'px';
-    } else if (mode === 'm') {
-        return cs.toFixed(0) + ' Keys'
-    } else {
-        return '-';
+    switch (mode) {
+        case 'o': {
+            const osupixel = (54.4 - 4.48 * cs).toFixed(2);
+            if (osupixel.substr(-3) === '.00') return osupixel.slice(0, -3) + 'px';
+            if (osupixel.substr(-2) === '.0') return osupixel.slice(0, -2) + 'px';
+            else return osupixel + 'px';
+        }
+        case 'm': {
+            return cs.toFixed(0) + ' Keys'
+        }
+        default: {
+            return '-';
+        }
     }
 }
 
 const ar2ms = (ar, mode = 'o') => {
-    if (mode === 'o' || mode === 'c') {
-        if (ar > 5) {
-            if (ar > 11) return '300ms';
-            return Math.floor(1200 - (150 * (ar - 5))) + 'ms';
-        } else {
-            return Math.floor(1800 - (120 * ar)) + 'ms';
+    switch (mode) {
+        case 'o':
+        case 'c': {
+            if (ar > 5) {
+                if (ar > 11) return '300ms';
+                return Math.floor(1200 - (150 * (ar - 5))) + 'ms';
+            } else {
+                return Math.floor(1800 - (120 * ar)) + 'ms';
+            }
         }
-    } else {
-        return '-'
+        default: {
+            return '-'
+        }
     }
 }
 
 const od2ms = (od, mode = 'o') => {
-    let ms;
+    let ms = 0;
     switch (mode) {
         case 'o': {
             if (od > 11) return '14ms';
@@ -1112,7 +1120,7 @@ const od2ms = (od, mode = 'o') => {
     }
     if (ms.substr(-3) === '.00') return ms.slice(0, -3) + 'ms';
     if (ms.substr(-2) === '.0') return ms.slice(0, -2) + 'ms';
-    return ms + 'ms';
+    else return ms + 'ms';
 }
 
 const stat2DataM = (hasChanged = false, after = 0, before = 0) => {
