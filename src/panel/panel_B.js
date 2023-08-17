@@ -95,7 +95,7 @@ export async function panel_B(data = {
     const reg_left = /(?<=<g id="Left">)/;
     const reg_right = /(?<=<g id="Right">)/;
     const reg_center = /(?<=<g id="Center">)/;
-    const reg_card_a1 = /(?<=<g id="CardA1">)/;
+    const reg_maincard = /(?<=<g id="MainCard">)/;
     const reg_hexagon = /(?<=<g id="Hexagon">)/;
 
     // 条件定义
@@ -134,9 +134,9 @@ export async function panel_B(data = {
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, game_mode_path], reg_index);
+    svg = implantSvgBody(svg, 40, 40, await card_A1(data.card_A1[0], true), reg_maincard);
 
     // 主计算
-    svg = implantSvgBody(svg, 40, 40, await card_A1(data.card_A1[0], true), reg_card_a1);
 
     let card_B1_lefts = [];
     let card_B1_rights = [];
@@ -172,7 +172,7 @@ export async function panel_B(data = {
 
     // 如果是vs，渲染右边的人
     if (isVS) {
-        svg = implantSvgBody(svg, 1450, 40, await card_A1(data.card_A1[1], true), reg_card_a1);
+        svg = implantSvgBody(svg, 1450, 40, await card_A1(data.card_A1[1], true), reg_maincard);
 
         for (const name of VALUE_NAMES) {
             if (typeof data.card_b_2[name] !== 'number') continue;
