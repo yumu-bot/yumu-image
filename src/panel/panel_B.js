@@ -195,10 +195,13 @@ export async function panel_B(data = {
     svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
 
     //如果不是vs，则插入B3卡
+    /*
     if (!isVS) {
         const cardB3 = await card_B3({game_mode: mode}, true);
         svg = implantSvgBody(svg, 1350, 330, cardB3, reg_right);
     }
+
+     */
 
     // 画六边形和其他
     const hexagon = getExportFileV3Path('object-hexagon.png');
