@@ -1084,7 +1084,7 @@ const ar2ms = (ar, mode = 'o') => {
         case 'c': {
             if (ar > 5) {
                 if (ar > 11) return '300ms';
-                return Math.floor(1200 - (150 * (ar - 5))) + 'ms';
+                else return Math.floor(1200 - (150 * (ar - 5))) + 'ms';
             } else {
                 return Math.floor(1800 - (120 * ar)) + 'ms';
             }
@@ -1096,7 +1096,7 @@ const ar2ms = (ar, mode = 'o') => {
 }
 
 const od2ms = (od, mode = 'o') => {
-    let ms = 0;
+    let ms;
     switch (mode) {
         case 'o': {
             if (od > 11) return '14ms';
@@ -1116,6 +1116,9 @@ const od2ms = (od, mode = 'o') => {
             if (od < 0) return '64ms';
             ms = Math.floor(64 - (3 * od)).toString();
             break;
+        }
+        default: {
+            ms = '0';
         }
     }
     if (ms.substr(-3) === '.00') return ms.slice(0, -3) + 'ms';

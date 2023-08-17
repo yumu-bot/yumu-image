@@ -1811,32 +1811,41 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
  * @param mode 将被格式化的游戏模式，osu taiko catch mania
  * @param level 等级，0为不变，2为全写 osu!standard，-1为获取他们的unicode字符 \uE801，1为简写 o t m c
  */
-export function getGameMode(mode = 'osu', level = 0) {
+export function getGameMode(mode = '', level = 0) {
+    let modeStr = 'default';
 
     //如果是输入数字，则修改
     if (typeof mode === Number) {
         switch (mode) {
-            case -1:
-                mode = 'default';
+            case -1: {
+                modeStr = 'default';
                 break;
-            case 0:
-                mode = 'osu';
+            }
+            case 0: {
+                modeStr = 'osu';
                 break;
-            case 1:
-                mode = 'taiko';
+            }
+            case 1: {
+                modeStr = 'taiko';
                 break;
-            case 2:
-                mode = 'catch';
+            }
+            case 2: {
+                modeStr = 'catch';
                 break;
-            case 3:
-                mode = 'mania';
+            }
+            case 3: {
+                modeStr = 'mania';
                 break;
+            }
+            default: {
+                modeStr = mode + '';
+            }
         }
     }
 
     switch (level) {
         case -1:
-            switch (mode) {
+            switch (modeStr) {
                 case 'osu':
                     return '\uE800';
                 case 'taiko':
@@ -1852,7 +1861,7 @@ export function getGameMode(mode = 'osu', level = 0) {
             }
             break;
         case 1:
-            switch (mode) {
+            switch (modeStr) {
                 case 'osu':
                     return 'o';
                 case 'taiko':
@@ -1868,7 +1877,7 @@ export function getGameMode(mode = 'osu', level = 0) {
             }
             break;
         case 2:
-            switch (mode) {
+            switch (modeStr) {
                 case 'osu':
                     return 'osu!standard';
                 case 'taiko':
@@ -1884,7 +1893,7 @@ export function getGameMode(mode = 'osu', level = 0) {
             }
             break;
         default:
-            return mode;
+            return '';
     }
 }
 
