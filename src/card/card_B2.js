@@ -3,7 +3,7 @@ import {
     getRankColor,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr, implantImage, implantSvgBody,
-    readTemplate, replaceText, replaceTexts, torus
+    readTemplate, replaceTexts, torus
 } from "../util.js";
 import {label_E, PPM_OPTION} from "../component/label.js";
 

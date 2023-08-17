@@ -1,8 +1,7 @@
 import {
     exportImage,
     getExportFileV3Path,
-    getGameMode, getMascotName, getMascotPath,
-    getPanelNameSVG,
+    getGameMode, getPanelNameSVG,
     getRandomBannerPath,
     implantImage,
     implantSvgBody,
@@ -13,6 +12,7 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {card_B1} from "../card/card_B1.js";
 import {card_B2} from "../card/card_B2.js";
+import {card_B3} from "../card/card_B3.js";
 
 export async function router(req, res) {
     try {
@@ -97,7 +97,6 @@ export async function panel_B(data = {
     const reg_center = /(?<=<g id="Center">)/;
     const reg_card_a1 = /(?<=<g id="CardA1">)/;
     const reg_hexagon = /(?<=<g id="Hexagon">)/;
-    const reg_mascot = /(?<=<g style="clip-path: url\(#clippath-PB-2\);">)/;
 
     // 条件定义
     const isVS = data.statistics.isVS;
@@ -195,13 +194,10 @@ export async function panel_B(data = {
     svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
     svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
 
-    // 230817 插入吉祥物
-    const mascot_name_data = getMascotName(data.game_mode);
-    const mascot_link = getMascotPath(mascot_name_data);
-
-    //如果不是vs，则插入
+    //如果不是vs，则插入B3卡
     if (!isVS) {
-        svg = implantImage(svg, 530, 710, 1350, 330, 1, mascot_link, reg_mascot);
+        const cardB3 = await card_B3({game_mode: mode}, true);
+        svg = implantSvgBody(svg, 1350, 330, cardB3, reg_right);
     }
 
     // 画六边形和其他

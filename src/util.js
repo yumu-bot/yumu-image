@@ -543,6 +543,21 @@ ${svgBody}
 
 // 数字处理并显示
 
+/**
+ * @function 数字处理（去掉数字尾巴的0000
+ * @return {String} 返回处理好的字符串
+ * @param number 数字
+ */
+export function getRoundedTailNumber(number = 0) {
+    const numberStr = (number !== null) ? number.toString() : '';
+
+    for (let i = 0; i < numberStr.length; i++) {
+
+    }
+
+    if (numberStr.substr(-3) === '.00') return numberStr.slice(0, -3);
+    if (numberStr.substr(-2) === '.0') return numberStr.slice(0, -2);
+}
 
 /**
  * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
@@ -1815,7 +1830,7 @@ export function getGameMode(mode = '', level = 0) {
     let modeStr = 'default';
 
     //如果是输入数字，则修改
-    if (typeof mode === Number) {
+    if (mode >= -1) {
         switch (mode) {
             case -1: {
                 modeStr = 'default';
