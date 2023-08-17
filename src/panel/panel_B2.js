@@ -123,7 +123,12 @@ export async function panel_B2(data = {
     },
 
     mapMinus: {
-
+        rice: [],
+        longNote: [],
+        speedVariation: [],
+        stamina: [],
+        speed: [],
+        precision: [],
     }
 
 }, reuse = false) {
@@ -146,6 +151,27 @@ export async function panel_B2(data = {
 
     // 面板文字
     const panel_name = getPanelNameSVG('Map Minus v3.0.Alpha !ymmm', 'MM');
+
+    //梯形积分
+    const rc = data.mapMinus.rice.reduce(function (prev, curr){
+        return prev + curr;
+    });
+    const ln = data.mapMinus.longNote.reduce(function (prev, curr){
+        return prev + curr;
+    });
+    const sv = data.mapMinus.speedVariation.reduce(function (prev, curr){
+        return prev + curr;
+    });
+    const st = data.mapMinus.stamina.reduce(function (prev, curr){
+        return prev + curr;
+    });
+    const sp = data.mapMinus.speed.reduce(function (prev, curr){
+        return prev + curr;
+    });
+    const pr = data.mapMinus.precision.reduce(function (prev, curr){
+        return prev + curr;
+    });
+    console.log(rc, ln, sv, st, sp, pr);
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
