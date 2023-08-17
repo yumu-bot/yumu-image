@@ -199,7 +199,7 @@ function getMaskSVG(percent = 0, mode = 'o', mx = 0, my = 0, r = 0) {
     return `\n<polygon id="Mask" points="${mx} ${my} ${mx} ${my - r} ${assists}${control}${mx} ${my}" style="fill: none;"/>`;
 }
 
-function getRingIndexSVG(mode, x, y, w, h) {
+function getRingIndexSVG(mode = 'o', x, y, w, h) {
     let ring_name;
     switch (mode) {
         case 'o': ring_name = 'osu'; break;

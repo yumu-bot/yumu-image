@@ -1838,9 +1838,12 @@ export function getGameMode(mode = '', level = 0) {
                 break;
             }
             default: {
-                modeStr = mode + '';
+                modeStr = 'osu';
+                break;
             }
         }
+    } else {
+        modeStr = (mode + '').toLowerCase();
     }
 
     switch (level) {
@@ -1893,7 +1896,7 @@ export function getGameMode(mode = '', level = 0) {
             }
             break;
         default:
-            return '';
+            return modeStr;
     }
 }
 
