@@ -177,8 +177,8 @@ export async function panel_B2(data = {
     const sp = 0.3 * Math.pow(getValue(getSum(sp_arr), sp_arr) + Math.max.apply(Math, data.mapMinus.burst), 0.45);//burst应该这么给
     const pr = 0.43 * Math.pow(getValue(getSum(pr_arr), pr_arr), 0.48);
 
-    const rcd = getSum(rcd_arr);
-    const lnd = getSum(lnd_arr);
+    const rcd = 0.2 * Math.pow(getSum(rcd_arr), 0.58);
+    const lnd = 0.2 * Math.pow(getSum(lnd_arr), 0.58);
 
     const map_minus_mania = {
         RC: rc,
