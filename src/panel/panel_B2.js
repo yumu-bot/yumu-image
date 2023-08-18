@@ -161,14 +161,6 @@ export async function panel_B2(data = {
 
     // 计算数值
     const rc_arr = data.mapMinus.rice || [];
-    /*
-    let rc_arr = [];
-    data.mapMinus.rice.forEach((v, i) => {
-        let rc = data.mapMinus.stream[i] + data.mapMinus.jack[i] + data.mapMinus.bracket[i];
-        rc_arr.push(rc);
-    })
-
-     */
     const ln_arr = data.mapMinus.longNote || [];
     const sv_arr = data.mapMinus.speedVariation || [];
     const st_arr = data.mapMinus.stamina || [];
@@ -182,7 +174,7 @@ export async function panel_B2(data = {
     const ln = getSum(ln_arr);
     const sv = getSum(sv_arr);
     const st = getSum(st_arr);
-    const sp = getSum(sp_arr);
+    const sp = getSum(sp_arr) + Math.max.apply(Math, data.mapMinus.burst); //burst应该这么给
     const pr = getSum(pr_arr);
 
     const rcd = getSum(rcd_arr);
