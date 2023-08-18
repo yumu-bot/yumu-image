@@ -157,7 +157,7 @@ export async function panel_B2(data = {
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Map Minus v3.0.Alpha !ymmm', 'MM');
+    const panel_name = getPanelNameSVG('Map Minus v3.0 Beta (!ymmm)', 'MM');
 
     // 计算数值
     const rc_arr = data.mapMinus.rice || [];
@@ -170,12 +170,12 @@ export async function panel_B2(data = {
     const rcd_arr = data.mapMinus.riceDensity || [];
     const lnd_arr = data.mapMinus.longNoteDensity || [];
 
-    const rc = getValue(getSum(rc_arr), rc_arr);
-    const ln = getValue(getSum(ln_arr), ln_arr);
-    const sv = getValue(getSum(sv_arr), sv_arr);
-    const st = getValue(getSum(st_arr), st_arr);
-    const sp = getValue(getSum(sp_arr), sp_arr) + Math.max.apply(Math, data.mapMinus.burst);//burst应该这么给
-    const pr = getValue(getSum(pr_arr), pr_arr);
+    const rc = 0.47 * Math.pow(getValue(getSum(rc_arr), rc_arr), 0.39);
+    const ln = 0.04 * Math.pow(getValue(getSum(ln_arr), ln_arr), 0.82);
+    const sv = Math.pow(getValue(getSum(sv_arr), sv_arr), 1);
+    const st = 0.2 * Math.pow(getValue(getSum(st_arr), st_arr), 0.58);
+    const sp = 0.3 * Math.pow(getValue(getSum(sp_arr), sp_arr) + Math.max.apply(Math, data.mapMinus.burst), 0.45);//burst应该这么给
+    const pr = 0.43 * Math.pow(getValue(getSum(pr_arr), pr_arr), 0.48);
 
     const rcd = getSum(rcd_arr);
     const lnd = getSum(lnd_arr);
