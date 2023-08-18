@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path,
+    getExportFileV3Path, getRankColor,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr, getStarRatingColor, implantImage, implantSvgBody,
     readTemplate, replaceTexts, torus
@@ -28,7 +28,7 @@ export async function card_B5(data = {
 
     //添加评级和值和背景
     const rank = getMMRank(data.number);
-    const color = getMMColor(data.number);
+    const color = getRankColor(rank);
     const background = getMMBG(rank);
     const number_b = getRoundedNumberLargerStr(data.number,3);
     const number_m = getRoundedNumberSmallerStr(data.number,3);
@@ -72,12 +72,4 @@ function getMMRank (data = 0) {
     }
 
     return rank;
-}
-
-function getMMColor (star = 0) {
-    if (star <= 7) {
-        return getStarRatingColor(star);
-    } else {
-        return '#fff'
-    }
 }

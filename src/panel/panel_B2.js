@@ -207,7 +207,7 @@ export async function panel_B2(data = {
     for (const name of VALUE_NAMES) {
         if (typeof map_minus_mania[name] !== 'number') continue;
         cardB4s.push(await card_B4({parameter: name, number: map_minus_mania[name]}, true, false));
-        hexagons.push(map_minus_mania[name]);
+        hexagons.push(map_minus_mania[name] / 8); //8星以上是X
     }
 
     svg = implantSvgBody(svg, 0, 0, PanelDraw.Hexagon(hexagons, 960, 600, 230, '#00A8EC'), reg_hexagon);
