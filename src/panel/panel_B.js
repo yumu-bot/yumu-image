@@ -4,7 +4,7 @@ import {
     getGameMode, getPanelNameSVG,
     getRandomBannerPath,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, PanelDraw,
     readTemplate,
     replaceText, replaceTexts,
     torus
@@ -12,7 +12,6 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {card_B1} from "../card/card_B1.js";
 import {card_B2} from "../card/card_B2.js";
-import {card_B3} from "../card/card_B3.js";
 
 export async function router(req, res) {
     try {
@@ -128,7 +127,6 @@ export async function panel_B(data = {
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
-
     // 面板文字
     const panel_name = getPanelNameSVG('PP Minus v2.4 (!ppm/!ppmvs)', 'PPM', 'v0.3.2 FT');
 
@@ -162,9 +160,9 @@ export async function panel_B(data = {
     for (const name of VALUE_NAMES) {
         if (typeof data.card_b_1[name] !== 'number') continue;
         card_B1_lefts.push(await card_B1({parameter: name, number: data.card_b_1[name] * 100}, true, false));
-        number_left.push(data.card_b_1[name] * 100 * scale_left);
+        number_left.push(Math.min(Math.max((data.card_b_1[name] * scale_left - 0.6), 0.01) / 4 * 10, 1));
     }
-    svg = implantSvgBody(svg, 0, 0, drawHexagon(number_left, '#00A8EC'), reg_hexagon);
+    svg = implantSvgBody(svg, 0, 0, PanelDraw.Hexagon(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
         svg = implantSvgBody(svg, 40, 350 + j * 115, card_B1_lefts[j], reg_left);
@@ -177,10 +175,10 @@ export async function panel_B(data = {
         for (const name of VALUE_NAMES) {
             if (typeof data.card_b_2[name] !== 'number') continue;
             card_B1_rights.push(await card_B1({parameter: name, number: data.card_b_2[name] * 100}, true, true));
-            number_right.push(data.card_b_2[name] * 100 * scale_right);
+            number_right.push(Math.min(Math.max((data.card_b_2[name] * scale_right - 0.6), 0.01) / 4 * 10, 1));
         }
 
-        svg = implantSvgBody(svg, 0, 0, drawHexagon(number_right, '#FF0000'), reg_hexagon);
+        svg = implantSvgBody(svg, 0, 0, PanelDraw.Hexagon(number_right, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
         for (const j in card_B1_rights) {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
@@ -210,7 +208,7 @@ export async function panel_B(data = {
     return svg.toString();
 }
 
-function drawHexIndex(gamemode = 'osu') {
+function drawHexIndex(mode = 'osu') {
     let cx = 960;
     let cy = 600;
     let r = 230 + 30; // 中点到边点的距离
@@ -224,7 +222,7 @@ function drawHexIndex(gamemode = 'osu') {
 
     for (let i = 0; i < 6; i++){
         let param;
-        if (gamemode === 'mania') {
+        if (mode === 'mania') {
             param = VALUE_MANIA[i];
         } else {
             param = VALUE_NORMAL[i];
@@ -245,27 +243,3 @@ function drawHexIndex(gamemode = 'osu') {
     return svg;
 }
 
-function drawHexagon(data = [0,0,0,0,0,0], color = '#00A8EC') {
-    let cx = 960;
-    let cy = 600;
-    let r = 230 // 中点到边点的距离
-
-    let line = `<path d="M `;
-    let circle = '';
-
-    for (let i = 0; i < 6; i++){
-        let std_data = Math.min(Math.max((data[i] - 60), 0.1) / 4 * 10, 100);
-
-        let PI_3 = Math.PI / 3;
-        let x = cx - r * Math.cos(PI_3 * i) * std_data / 100;
-        let y = cy - r * Math.sin(PI_3 * i) * std_data / 100;
-        line += `${x} ${y} L `;
-        circle += `<circle cx="${x}" cy="${y}" r="10" style="fill: ${color};"/>`;
-    }
-
-    line = line.substr(0, line.length - 2);
-    let line1 = `Z" style="fill: none; stroke-width: 6; stroke: ${color}; opacity: 1;"/> `
-    let line2 = `Z" style="fill: ${color}; stroke-width: 6; stroke: none; opacity: 0.3;"/> `
-    line = line + line1 + line + line2 + circle;
-    return line;
-}

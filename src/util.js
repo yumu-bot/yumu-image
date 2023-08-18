@@ -3021,7 +3021,7 @@ export const PanelDraw = {
         return (rect_svg + '</g>').toString();
     },
 
-    //折线图，max 如果填 0，即用数组的最大值
+    //折线图，max/min 如果填 0，即用数组的最大值
     LineChart: (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3) => {
         if (arr == null) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
@@ -3047,5 +3047,27 @@ export const PanelDraw = {
 
         return (path_svg + area_svg).toString();
     },
+
+    //data是0-1
+    Hexagon: (data = [0,0,0,0,0,0], cx = 960, cy = 600, r = 230, color = '#fff') => {
+        let line = `<path d="M `;
+        let circle = '';
+
+        for (let i = 0; i < 6; i++){
+            let std_data = Math.min(Math.max(data[i], 0), 1);
+
+            let PI_3 = Math.PI / 3;
+            let x = cx - r * Math.cos(PI_3 * i) * std_data;
+            let y = cy - r * Math.sin(PI_3 * i) * std_data;
+            line += `${x} ${y} L `;
+            circle += `<circle cx="${x}" cy="${y}" r="10" style="fill: ${color};"/>`;
+        }
+
+        line = line.substr(0, line.length - 2);
+        const line1 = `Z" style="fill: none; stroke-width: 6; stroke: ${color}; opacity: 1;"/> `
+        const line2 = `Z" style="fill: ${color}; stroke-width: 6; stroke: none; opacity: 0.3;"/> `
+        line = line + line1 + line + line2 + circle;
+        return line;
+    }
 }
 
