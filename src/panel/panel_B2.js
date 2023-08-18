@@ -275,6 +275,22 @@ export async function panel_B2(data = {
     svg = implantSvgBody(svg, 0, 0, u_c, reg_right);
     svg = replaceText(svg, torus.getTextPath(Math.round(Math.max.apply(Math, u_arr)).toFixed(3), 75 + 1370 + 340, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
 
+    const g_arr = data.mapMinus.grace || [];
+    const g_c = PanelDraw.LineChart(g_arr, 0, 0, 1370, 580 + 460, 150, 95, '#FFF100', 1, 0.3, 3)
+    svg = implantSvgBody(svg, 0, 0, g_c, reg_right);
+    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, g_arr).toFixed(3), 75 + 1370, -50 + 580 + 460, 24, 'center baseline', '#fff'), reg_index);
+    const y_arr = data.mapMinus.delayedTail || [];
+    const y_c = PanelDraw.LineChart(y_arr, 0, 0, 1370 + 170, 580 + 460, 150, 95, '#C3DF9B', 1, 0.3, 3)
+    svg = implantSvgBody(svg, 0, 0, y_c, reg_right);
+    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, y_arr).toFixed(3), 75 + 1370 + 170, -50 + 580 + 460, 24, 'center baseline', '#fff'), reg_index);
+    const total_arr = data.mapMinus.rice.reduce((prev, curr, i) => {
+        return prev + curr + data.mapMinus.longNote[i] + data.mapMinus.speedVariation[i]
+        + data.mapMinus.stamina[i] + data.mapMinus.speed[i] + data.mapMinus.precision[i];
+    }, 0) || [];
+    const total_c = PanelDraw.LineChart(total_arr, 0, 0, 1370 + 340, 580 + 460, 150, 95, '#aaa', 1, 0.3, 3)
+    svg = implantSvgBody(svg, 0, 0, total_c, reg_right);
+    svg = replaceText(svg, torus.getTextPath(Math.round(Math.max.apply(Math, total_arr)).toFixed(3), 75 + 1370 + 340, -50 + 580 + 460, 24, 'center baseline', '#fff'), reg_index);
+
 
     // 画六边形和其他
     const hexagon = getExportFileV3Path('object-hexagon.png');
