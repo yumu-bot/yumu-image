@@ -174,7 +174,7 @@ export async function panel_B2(data = {
     const ln = getSum(ln_arr);
     const sv = getSum(sv_arr);
     const st = getSum(st_arr);
-    const sp = getSum(sp_arr) + Math.max.apply(Math, data.mapMinus.burst); //burst应该这么给
+    const sp = getSum(sp_arr);
     const pr = getSum(pr_arr);
 
     const rcd = getSum(rcd_arr);
@@ -185,7 +185,7 @@ export async function panel_B2(data = {
         LN: getValue(ln, ln_arr),
         SV: getValue(sv, sv_arr),
         ST: getValue(st, st_arr),
-        SP: getValue(sp, sp_arr),
+        SP: getValue(sp, sp_arr) + Math.max.apply(Math, data.mapMinus.burst), //burst应该这么给
         PR: getValue(pr, pr_arr),
     }
 
