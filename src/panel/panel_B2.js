@@ -189,7 +189,7 @@ export async function panel_B2(data = {
         PR: pr,
     }
 
-    const total = ((rc + ln + sv + st + sp + pr) / 6);
+    const total = ((rc + ln + st + sp + pr) / 5); //暂时不加sv
     const total_path = torus.get2SizeTextPath(getRoundedNumberLargerStr(total, 3), getRoundedNumberSmallerStr(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
     // 插入文字
