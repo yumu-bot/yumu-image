@@ -2,7 +2,7 @@ import {
     exportImage, getExportFileV3Path, getGameMode,
     getPanelNameSVG, getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, implantImage,
     implantSvgBody, PanelDraw,
-    PanelGenerate,
+    PanelGenerate, readNetImage,
     readTemplate,
     replaceText, replaceTexts, torus
 } from "../util.js";
@@ -153,7 +153,8 @@ export async function panel_B2(data = {
     svg = implantSvgBody(svg, 0, 0, drawHexIndex(getGameMode(data.beatMap.mode, 0)), reg_hexagon);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    const banner = await readNetImage(data.beatMap.beatmapset.covers.slimcover, getExportFileV3Path('beatmap-DLfailBG.jpg'));
+    svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     // 面板文字
     const panel_name = getPanelNameSVG('Map Minus v3.0.Alpha !ymmm', 'MM');
