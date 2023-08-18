@@ -177,8 +177,8 @@ export async function panel_B2(data = {
     const sp = 0.3 * Math.pow(getValue(getSum(sp_arr), sp_arr) + Math.max.apply(Math, data.mapMinus.burst), 0.45);//burst应该这么给
     const pr = 0.43 * Math.pow(getValue(getSum(pr_arr), pr_arr), 0.48);
 
-    const rcd = 0.2 * Math.pow(getSum(rcd_arr), 0.58);
-    const lnd = 0.2 * Math.pow(getSum(lnd_arr), 0.58);
+    const rcd = 0.43 * Math.pow(getSum(rcd_arr), 0.58);
+    const lnd = 0.43 * Math.pow(getSum(lnd_arr), 0.58);
 
     const map_minus_mania = {
         RC: rc,
@@ -189,7 +189,7 @@ export async function panel_B2(data = {
         PR: pr,
     }
 
-    const total = ((rc + ln + st + sp + pr) / 5); //暂时不加sv
+    const total = ((rc + 0.1 * ln + st + sp + pr) / 4); //暂时不加sv，ln占比减少
     const total_path = torus.get2SizeTextPath(getRoundedNumberLargerStr(total, 3), getRoundedNumberSmallerStr(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
     // 插入文字
