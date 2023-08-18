@@ -160,7 +160,13 @@ export async function panel_B2(data = {
     const panel_name = getPanelNameSVG('Map Minus v3.0.Alpha !ymmm', 'MM');
 
     // 计算数值
-    const rc_arr = data.mapMinus.rice || [];
+    //const rc_arr = data.mapMinus.rice || [];
+    //todo rc的主程序有问题，暂时改成这个样子
+    let rc_arr = [];
+    data.mapMinus.rice.forEach((v, i) => {
+        let rc = data.mapMinus.stream[i] + data.mapMinus.jack[i] + data.mapMinus.bracket[i];
+        rc_arr.push(rc);
+    })
     const ln_arr = data.mapMinus.longNote || [];
     const sv_arr = data.mapMinus.speedVariation || [];
     const st_arr = data.mapMinus.stamina || [];
