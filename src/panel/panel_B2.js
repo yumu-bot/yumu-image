@@ -1,6 +1,6 @@
 import {
     exportImage, getExportFileV3Path, getGameMode,
-    getPanelNameSVG, getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, implantImage,
+    getPanelNameSVG, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, implantImage,
     implantSvgBody, PanelDraw,
     PanelGenerate, readNetImage,
     readTemplate,
