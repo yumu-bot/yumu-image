@@ -230,7 +230,7 @@ export async function panel_B2(data = {
     const j_c = PanelDraw.LineChart(j_arr, 0, 0, 1370 + 170, 465, 150, 95, '#0071BC', 1, 0.3, 3)
     svg = implantSvgBody(svg, 0, 0, j_c, reg_right);
     const b_arr = data.mapMinus.bracket || [];
-    const b_c = PanelDraw.LineChart(b_arr, 0, 0, 1370 + 465, 350, 150, 95, '#0054A6', 1, 0.3, 3)
+    const b_c = PanelDraw.LineChart(b_arr, 0, 0, 1370 + 340, 465, 150, 95, '#0054A6', 1, 0.3, 3)
     svg = implantSvgBody(svg, 0, 0, b_c, reg_right);
 
     const h_arr = data.mapMinus.handLock || [];
