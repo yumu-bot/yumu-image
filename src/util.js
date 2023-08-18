@@ -3026,15 +3026,18 @@ export const PanelDraw = {
         if (arr == null) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
         const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;
+        const delta = arr_max - arr_min;
         const step = w / arr.length;
         const x0 = x + step / 4; //为了居中，这里要加上最后1步除以4的距离
         const y0 = y;
 
-        let path_svg = `<svg> <path d="M ${x0} ${y0 - (arr.shift() - arr_min) / (arr_max - arr_min) * h} S `;
+        const initial = (delta <= 0) ? ((arr.shift() - arr_min) / (arr_max - arr_min) * h) : 0;
+
+        let path_svg = `<svg> <path d="M ${x0} ${y0 - initial} S `;
         let area_svg = path_svg;
 
         arr.forEach((v, i) => {
-            const height = (v - arr_min) / (arr_max - arr_min) * h;
+            const height = (delta <= 0) ? ((v - arr_min) / (arr_max - arr_min) * h) : 0;
             const lineto_x = x0 + step * (i + 1);
             const lineto_y = y0 - height;
 
