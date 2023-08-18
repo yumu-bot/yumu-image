@@ -170,23 +170,23 @@ export async function panel_B2(data = {
     const rcd_arr = data.mapMinus.riceDensity || [];
     const lnd_arr = data.mapMinus.longNoteDensity || [];
 
-    const rc = getSum(rc_arr);
-    const ln = getSum(ln_arr);
-    const sv = getSum(sv_arr);
-    const st = getSum(st_arr);
-    const sp = getSum(sp_arr);
-    const pr = getSum(pr_arr);
+    const rc = getValue(getSum(rc_arr), rc_arr);
+    const ln = getValue(getSum(ln_arr), ln_arr);
+    const sv = getValue(getSum(sv_arr), sv_arr);
+    const st = getValue(getSum(st_arr), st_arr);
+    const sp = getValue(getSum(sp_arr), sp_arr) + Math.max.apply(Math, data.mapMinus.burst);//burst应该这么给
+    const pr = getValue(getSum(pr_arr), pr_arr);
 
     const rcd = getSum(rcd_arr);
     const lnd = getSum(lnd_arr);
 
     const map_minus_mania = {
-        RC: getValue(rc, rc_arr),
-        LN: getValue(ln, ln_arr),
-        SV: getValue(sv, sv_arr),
-        ST: getValue(st, st_arr),
-        SP: getValue(sp, sp_arr) + Math.max.apply(Math, data.mapMinus.burst), //burst应该这么给
-        PR: getValue(pr, pr_arr),
+        RC: rc,
+        LN: ln,
+        SV: sv,
+        ST: st,
+        SP: sp,
+        PR: pr,
     }
 
     const total = ((rc + ln + sv + st + sp + pr) / 6);
