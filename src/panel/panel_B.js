@@ -178,7 +178,7 @@ export async function panel_B(data = {
             number_right.push(Math.min(Math.max((data.card_b_2[name] * scale_right - 0.6), 0.01) / 4 * 10, 1));
         }
 
-        svg = implantSvgBody(svg, 0, 0, PanelDraw.Hexagon(number_right, 960, 600, 230, '#00A8EC'), reg_hexagon);
+        svg = implantSvgBody(svg, 0, 0, PanelDraw.Hexagon(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
 
         for (const j in card_B1_rights) {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
