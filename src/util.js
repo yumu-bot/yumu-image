@@ -3031,13 +3031,13 @@ export const PanelDraw = {
         const x0 = x + step / 4; //为了居中，这里要加上最后1步除以4的距离
         const y0 = y;
 
-        const initial = (delta <= 0) ? ((arr.shift() - arr_min) / (arr_max - arr_min) * h) : 0;
+        const initial = (delta > 0) ? ((arr.shift() - arr_min) / (arr_max - arr_min) * h) : 0;
 
         let path_svg = `<svg> <path d="M ${x0} ${y0 - initial} S `;
         let area_svg = path_svg;
 
         arr.forEach((v, i) => {
-            const height = (delta <= 0) ? ((v - arr_min) / (arr_max - arr_min) * h) : 0;
+            const height = (delta > 0) ? ((v - arr_min) / (arr_max - arr_min) * h) : 0;
             const lineto_x = x0 + step * (i + 1);
             const lineto_y = y0 - height;
 
