@@ -1,12 +1,12 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, initPath, readImage} from "./src/util.js";
+import {CACHE_PATH, exportImage, initPath, readImage} from "./src/util.js";
 import {router as PanelA1Router} from "./src/panel/panel_A1.js";
 import {router as PanelA2Router} from "./src/panel/panel_A2.js";
 import {router as PanelA3Router} from "./src/panel/panel_A3.js";
 import {router as PanelA4Router} from "./src/panel/panel_A4.js";
 import {router as PanelBRouter} from "./src/panel/panel_B.js";
-import {router as PanelB2Router} from "./src/panel/panel_B2.js";
+import {panel_B2, router as PanelB2Router} from "./src/panel/panel_B2.js";
 import {router as PanelCRouter} from "./src/panel/panel_C.js";
 import {router as PanelDRouter} from "./src/panel/panel_D.js";
 import {router as PanelERouter} from "./src/panel/panel_E.js";
@@ -20,9 +20,14 @@ import {router as panelGammaRouter} from "./src/panel/panel_Gamma.js"; //怎么�
 import {router as MarkdownRouter} from "./src/markdown.js";
 import {router as GetMapAttrRouter} from "./src/mapAttributes.js";
 
+import fs from "fs";
+
 initPath();
 //这里放测试代码
 
+console.time('B2')
+fs.writeFileSync("image/out/panel_B2.png", await exportImage(await panel_B2()));
+console.timeEnd('B2')
 const app = express();
 
 app.use(formidable({
