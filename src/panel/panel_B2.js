@@ -157,7 +157,7 @@ export async function panel_B2(data = {
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Map Minus v3.0 Beta (!ymmm)', 'MM');
+    const panel_name = getPanelNameSVG('Map Minus - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
 
     // 计算数值
     const rc_arr = data.mapMinus.rice || [];
@@ -177,8 +177,8 @@ export async function panel_B2(data = {
     const sp = 0.3 * Math.pow(getValue(getSum(sp_arr), sp_arr) + Math.max.apply(Math, data.mapMinus.burst), 0.45);//burst应该这么给
     const pr = 0.43 * Math.pow(getValue(getSum(pr_arr), pr_arr), 0.48);
 
-    const rcd = 0.43 * Math.pow(getSum(rcd_arr), 0.58);
-    const lnd = 0.43 * Math.pow(getSum(lnd_arr), 0.58);
+    const rcd = 0.4 * Math.pow(getSum(rcd_arr), 0.5);
+    const lnd = 0.4 * Math.pow(getSum(lnd_arr), 0.5);
 
     const map_minus_mania = {
         RC: rc,
