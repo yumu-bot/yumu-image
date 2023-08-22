@@ -387,7 +387,7 @@ export async function panel_F(data = {
     const avg_star = beatmap_arr
         .filter(b => b.star_rating > 0)
         .map(b => b.star_rating);
-    let right1 = 'AVG.SR ' + (avg_star.reduce((pv, cv) => pv + cv) / avg_star.length).toFixed(2);
+    let right1 = avg_star ? 'AVG.SR ' + (avg_star.reduce((pv, cv) => pv + cv) / avg_star.length).toFixed(2) : 0;
     let right2 = 'mp' + data.match.mpid;
     let wins_team_red = data.match.wins_team_red || 0;
     let wins_team_blue = data.match.wins_team_blue || 0;
