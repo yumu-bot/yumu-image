@@ -9,7 +9,7 @@ import {
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, torus, readNetImage, getPanelNameSVG
+    replaceText, torus, readNetImage, getPanelNameSVG, getGameMode
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -259,6 +259,8 @@ export async function panel_F(data = {
         if (mods.indexOf("DT") !== -1) mod_int = 64;
 
         if (d.delete) {
+            const bid = d.bid || 0;
+
             return {
                 background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
                 title: 'Deleted Map',
@@ -267,17 +269,19 @@ export async function panel_F(data = {
                 difficulty: '?',
                 status: '',
 
-                bid: 0,
+                bid: bid,
                 star_rating: 0,
                 cs: 0,
                 ar: 0,
                 od: 0,
+                mode: null,
             }
         }
         const attr = await getMapAttributes(d.bid, mod_int);
         const cs = getRoundedNumberLargerStr(attr.cs, 2) + getRoundedNumberSmallerStr(attr.cs, 2);
         const ar = getRoundedNumberLargerStr(attr.ar, 2) + getRoundedNumberSmallerStr(attr.ar, 2);
         const od = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
+        const mode = d.mode ? d.mode.toLowerCase() : 'osu';
 
         return {
             background: d.background,
@@ -292,6 +296,7 @@ export async function panel_F(data = {
             cs: cs,
             ar: ar,
             od: od,
+            mode: mode,
         }
     }));
 
@@ -300,23 +305,47 @@ export async function panel_F(data = {
     // 导入谱面卡(A2卡
     async function implantBeatMapCardA2(object, x, y) {
 
-        let background = object.background || getExportFileV3Path('beatmap-DLfailBG.jpg');
-        let title1 = object.title || 'Unknown Title';
-        let title2 = object.artist || 'Unknown Artist';
-        let title3 = object.mapper || 'God Made This';
-        let left2 = object.difficulty || 'Tragic Love Extra';
-        let left3 = 'b' + (object.bid || 0);
+        const background = object.background || getExportFileV3Path('beatmap-DLfailBG.jpg');
+        const title1 = object.title || 'Unknown Title';
+        const title2 = object.artist || 'Unknown Artist';
+        const title3 = object.mapper || 'God Made This';
+        const left2 = object.difficulty || 'Tragic Love Extra';
+        const left3 = 'b' + (object.bid || 0);
 
-        let status = object.status;
-        let right2 =
-            'CS' + (object.cs || 0) +
-            ' AR' + (object.ar || 0) +
-            ' OD' + (object.od || 0);
+        const status = object.status;
+        let right2;
 
-        let right3b = getDecimals(object.star_rating,2);
-        let right3m = getDecimals(object.star_rating,3) + '*';
+        switch (getGameMode(object.mode, 1)) {
+            case 'o': {
+                right2 = 'CS' + (object.cs || 0) +
+                    ' AR' + (object.ar || 0) +
+                    ' OD' + (object.od || 0);
+                break;
+            }
+            case 't': {
+                right2 = 'OD' + (object.od || 0);
+                break;
+            }
+            case 'c': {
+                right2 = 'CS' + (object.cs || 0) +
+                    ' AR' + (object.ar || 0);
+                break;
+            }
+            case 'm': {
+                right2 = (object.cs || 0) + 'Key' +
+                    ' AR' + (object.ar || 0) +
+                    ' OD' + (object.od || 0);
+                break;
+            }
+            default: {
+                right2 = '-';
+            }
+        }
 
-        let card_A2_beatmap_impl =
+        const right3b = getDecimals(object.star_rating,2);
+        const right3m = getDecimals(object.star_rating,3) + '*';
+
+        const card_A2_beatmap_impl =
             await card_A2({
                 data,
                 background: background,
