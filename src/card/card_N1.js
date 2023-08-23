@@ -1,13 +1,18 @@
 import {
     getDecimals,
     getExportFileV3Path,
-    getFlagPath, getGameMode, getModColor, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, getTimeDifference,
-    implantImage, implantSvgBody,
+    getFlagPath,
+    getGameMode,
+    getModColor,
+    getRoundedNumberLargerStr,
+    getRoundedNumberSmallerStr,
+    getTimeDifference,
+    implantImage,
+    implantSvgBody,
     readNetImage,
     replaceText,
     torus
 } from "../util.js";
-import moment from "moment";
 import {label_N1, LABEL_OPTION} from "../component/label.js";
 
 export async function card_N1(data = {
@@ -72,7 +77,7 @@ export async function card_N1(data = {
     compare_score: 15905693,
 }, reuse = false) {
     // 读取模板
-    let svg =`   <defs>
+    let svg = `   <defs>
             <clipPath id="clippath-CN-1">
               <rect width="915" height="62" rx="20" ry="20" style="fill: none;"/>
             </clipPath>
@@ -110,7 +115,7 @@ export async function card_N1(data = {
     //导入背景和头像
 
     const rank = getExportFileV3Path('object-score-' + data.score.rank + '-small.png');
-    const avatar = await readNetImage(data.score.user.avatar_url,  getExportFileV3Path('avatar-guest.png'));
+    const avatar = await readNetImage(data.score.user.avatar_url, getExportFileV3Path('avatar-guest.png'));
     const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
 
     //await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));
@@ -120,6 +125,7 @@ export async function card_N1(data = {
     const flagSvg = await getFlagPath(data.score.user.country_code, 130, 32, 20);
 
     const score_date = getTimeDifference(data.score.created_at);
+    const background_opacity = getBGOpacity(score_date);
 
     const country_date = torus.get2SizeTextPath(
         data.score.user.country_code, ' (' + score_date + ')',
@@ -211,9 +217,9 @@ export async function card_N1(data = {
     }
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,40,40,15,10,1, rank, reg_label);
-    svg = implantImage(svg,50,50,70,6,1, avatar, reg_avatar);
-    svg = implantImage(svg,915,62,0,0,0.5, background, reg_background);
+    svg = implantImage(svg, 40, 40, 15, 10, 1, rank, reg_label);
+    svg = implantImage(svg, 50, 50, 70, 6, 1, avatar, reg_avatar);
+    svg = implantImage(svg, 915, 62, 0, 0, background_opacity, background, reg_background);
     svg = replaceText(svg, name, reg_text);
     svg = replaceText(svg, flagSvg, reg_text);
     svg = replaceText(svg, country_date, reg_text);
@@ -224,112 +230,124 @@ export async function card_N1(data = {
     svg = replaceText(svg, delta_score_text, reg_label);
 
     return svg.toString();
+}
+function getStatWidthArr (data, mode = 'o', minWidth = 10, fullWidth = 325, interval = 5) {
+    const c320 = data.score.statistics.count_geki;
+    const c300 = data.score.statistics.count_300;
+    const c200 = data.score.statistics.count_katu;
+    const c100 = data.score.statistics.count_100;
+    const c50 = data.score.statistics.count_50;
+    const c0 = data.score.statistics.count_miss;
 
-    function getStatWidthArr (data, mode = 'o', minWidth = 10, fullWidth = 325, interval = 5) {
-        const c320 = data.score.statistics.count_geki;
-        const c300 = data.score.statistics.count_300;
-        const c200 = data.score.statistics.count_katu;
-        const c100 = data.score.statistics.count_100;
-        const c50 = data.score.statistics.count_50;
-        const c0 = data.score.statistics.count_miss;
-
-        // 分配应该统计的参数
-        let stat_arr = getStatArr(data, mode);
-        let stat_sum = 0;
-        switch (mode) {
-            case 'o': {
-                stat_sum = c300 + c100 + c50 + c0;
-            } break;
-            case 't': {
-                stat_sum = c300 + c100 + c0;
-            } break;
-            case 'c': {
-                stat_sum = c300 + c100 + c50 + c0;
-            } break;
-            case 'm': {
-                stat_sum = c320 + c300 + c200 + c100 + c50 + c0;
-            } break;
-        }
-
-        let stat_width_arr = [];
-        let remain_width = fullWidth;
-        let remain_width_calc;
-        let stat_sum_calc = stat_sum;
-
-        if (stat_sum > 0) {
-
-            //先减去间距，如果是0就不用考虑这个间距
-            remain_width -= (interval * (stat_arr.length - 1));
-            for (const v of stat_arr) {
-                if (v === 0) remain_width += interval;
-            }
-            remain_width_calc = remain_width;
-
-            //筛选出太短的
-            for (const v of stat_arr) {
-                if ((v / stat_sum) < (minWidth / remain_width) && v > 0) {
-                    stat_sum_calc -= v;
-                    remain_width_calc -= minWidth;
-                }
-            }
-
-            //赋值
-            for (const v of stat_arr) {
-                if (v === 0) {
-                    stat_width_arr.push(0);
-                } else if ((v / stat_sum) < (minWidth / remain_width)) {
-                    stat_width_arr.push(minWidth);
-                } else {
-                    stat_width_arr.push(v / stat_sum_calc * remain_width_calc);
-                }
-            }
-        }
-
-        return stat_width_arr;
+    // 分配应该统计的参数
+    let stat_arr = getStatArr(data, mode);
+    let stat_sum = 0;
+    switch (mode) {
+        case 'o': {
+            stat_sum = c300 + c100 + c50 + c0;
+        } break;
+        case 't': {
+            stat_sum = c300 + c100 + c0;
+        } break;
+        case 'c': {
+            stat_sum = c300 + c100 + c50 + c0;
+        } break;
+        case 'm': {
+            stat_sum = c320 + c300 + c200 + c100 + c50 + c0;
+        } break;
     }
 
-    function getStatArr(data, mode = 'o') {
-        const c320 = data.score.statistics.count_geki;
-        const c300 = data.score.statistics.count_300;
-        const c200 = data.score.statistics.count_katu;
-        const c100 = data.score.statistics.count_100;
-        const c50 = data.score.statistics.count_50;
-        const c0 = data.score.statistics.count_miss;
+    let stat_width_arr = [];
+    let remain_width = fullWidth;
+    let remain_width_calc;
+    let stat_sum_calc = stat_sum;
 
-        let stat_arr = [];
-        switch (mode) {
-            case 'o': {
-                stat_arr.push(c300, c100, c50, c0);
-            } break;
-            case 't': {
-                stat_arr.push(c300, c100, c0);
-            } break;
-            case 'c': {
-                stat_arr.push(c300, c100, c50, c0);
-            } break;
-            case 'm': {
-                stat_arr.push(c320, c300, c200, c100, c50, c0);
-            } break;
+    if (stat_sum > 0) {
+
+        //先减去间距，如果是0就不用考虑这个间距
+        remain_width -= (interval * (stat_arr.length - 1));
+        for (const v of stat_arr) {
+            if (v === 0) remain_width += interval;
         }
-        return stat_arr;
+        remain_width_calc = remain_width;
+
+        //筛选出太短的
+        for (const v of stat_arr) {
+            if ((v / stat_sum) < (minWidth / remain_width) && v > 0) {
+                stat_sum_calc -= v;
+                remain_width_calc -= minWidth;
+            }
+        }
+
+        //赋值
+        for (const v of stat_arr) {
+            if (v === 0) {
+                stat_width_arr.push(0);
+            } else if ((v / stat_sum) < (minWidth / remain_width)) {
+                stat_width_arr.push(minWidth);
+            } else {
+                stat_width_arr.push(v / stat_sum_calc * remain_width_calc);
+            }
+        }
     }
 
-    function getStatColorArr(mode = 'o') {
-        let stat_color_arr = [];
+    return stat_width_arr;
+}
 
-        switch (mode) {
-            case 'o':
-            case 'c':
-                stat_color_arr = ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E'];
-                break;
-            case 't':
-                stat_color_arr = ['#8DCEF4', '#79C471', '#ED6C9E'];
-                break;
-            case 'm':
-                stat_color_arr = ['#8DCEF4', '#FEF668', '#79C471', '#5E8AC6',
-                    '#A1A1A1', '#ED6C9E'];
-                break;
-        }
-        return stat_color_arr;
+function getStatArr(data, mode = 'o') {
+    const c320 = data.score.statistics.count_geki;
+    const c300 = data.score.statistics.count_300;
+    const c200 = data.score.statistics.count_katu;
+    const c100 = data.score.statistics.count_100;
+    const c50 = data.score.statistics.count_50;
+    const c0 = data.score.statistics.count_miss;
+
+    let stat_arr = [];
+    switch (mode) {
+        case 'o': {
+            stat_arr.push(c300, c100, c50, c0);
+        } break;
+        case 't': {
+            stat_arr.push(c300, c100, c0);
+        } break;
+        case 'c': {
+            stat_arr.push(c300, c100, c50, c0);
+        } break;
+        case 'm': {
+            stat_arr.push(c320, c300, c200, c100, c50, c0);
+        } break;
+    }
+    return stat_arr;
+}
+
+function getStatColorArr(mode = 'o') {
+    let stat_color_arr = [];
+
+    switch (mode) {
+        case 'o':
+        case 'c':
+            stat_color_arr = ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E'];
+            break;
+        case 't':
+            stat_color_arr = ['#8DCEF4', '#79C471', '#ED6C9E'];
+            break;
+        case 'm':
+            stat_color_arr = ['#8DCEF4', '#FEF668', '#79C471', '#5E8AC6',
+                '#A1A1A1', '#ED6C9E'];
+            break;
+    }
+    return stat_color_arr;
+}
+
+function getBGOpacity(timeDifference = '-1d') {
+    const unit = timeDifference ? timeDifference.toString().substring(-1) : '-';
+    switch (unit) {
+        case 'y': return 0.2;
+        case 'mo': return 0.3;
+        case 'd': return 0.4;
+        case 'h': return 0.5;
+        case 'm': return 0.6;
+        case 'w': return 0.7; //now
+        default : return 0.5;
     }
 }
