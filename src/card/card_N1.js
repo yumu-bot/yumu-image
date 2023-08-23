@@ -342,9 +342,9 @@ function getStatColorArr(mode = 'o') {
 function getBGOpacity(timeDifference = '-1d') {
     const unit = timeDifference ? timeDifference.toString().slice(-1) : '-';
     switch (unit) {
-        case 'y': return 0.35;
-        case 'mo': return 0.4;
-        case 'd': return 0.45;
+        case 'y': return 0.25;
+        case 'mo': return 0.3;
+        case 'd': return 0.4;
         case 'h': return 0.5;
         case 'm': return 0.6;
         case 'w': return 0.7; //now
