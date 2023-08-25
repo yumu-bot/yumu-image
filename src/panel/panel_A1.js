@@ -240,10 +240,10 @@ export async function panel_A1(data = {
         const y = Math.floor(i / 4);
         //230825 加上PP附带的背景（maimai限定DX Rating的底色
 
-        const pp = data.friend_card_A1[i].pp || 0;
-        const glow = getDXRatingBG(pp);
+        const pp = data.friend_card_A1[i].pp;
+        const glow = getDXRatingBGPath(pp);
 
-        svg = implantImage(svg, 510, 290, 470 * x, 290 + 250 * y, 1, glow, reg_me_card_a1); //放下面一层
+        svg = implantImage(svg, 510, 290, 470 * x, 290 + 250 * y, 1, glow, reg_friend_card_a1); //放一层试试
         svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
     }
 
@@ -268,8 +268,10 @@ export async function panel_A1(data = {
 
 }
 
-function getDXRatingBG(pp = 0) {
+function getDXRatingBGPath(pp = 0) {
     let path;
+
+    if (typeof pp !== 'number') pp = 0;
 
     if (pp >= 15000) path = 'backlight-rainbow.png';
     else if (pp >= 14500) path = 'backlight-platinum.png';
