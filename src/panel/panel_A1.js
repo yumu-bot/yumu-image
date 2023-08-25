@@ -1,6 +1,5 @@
 import {
-    exportImage, getExportFileV3Path,
-    getPanelNameSVG,
+    exportImage, getPanelNameSVG,
     getRandomBannerPath,
     implantImage, implantSvgBody,
     PanelGenerate,
@@ -240,11 +239,11 @@ export async function panel_A1(data = {
         const y = Math.floor(i / 4);
         //230825 加上PP附带的背景（maimai限定DX Rating的底色
 
-        const pp = data.friend_card_A1[i].statistics.pp;
-        const glow = getDXRatingBGPath(pp);
+        //const pp = data.friend_card_A1[i].statistics.pp;
+        //const glow = getDXRatingBGPath(pp);
 
         svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
-        svg = implantImage(svg, 510, 290, 470 * x, 290 + 250 * y, 0.4, glow, reg_friend_card_a1); //放一层试试
+        //svg = implantImage(svg, 510, 290, 470 * x, 290 + 250 * y, 0.4, glow, reg_friend_card_a1); //放一层试试
     }
 
     // 计算面板高度
@@ -267,7 +266,7 @@ export async function panel_A1(data = {
     return svg.toString();
 
 }
-
+/*
 function getDXRatingBGPath(pp = 0) {
     let path = '';
     if (typeof pp !== 'number') pp = 0;
@@ -286,3 +285,5 @@ function getDXRatingBGPath(pp = 0) {
 
     return getExportFileV3Path(path);
 }
+
+ */
