@@ -190,8 +190,89 @@ export async function panel_M(data = {
 
     most_popular_beatmap:[
         {
-
-    },{
+            "artist": "Dark PHOENiX",
+            "artist_unicode": "Dark PHOENiX",
+            "covers": {
+                "cover": "https://assets.ppy.sh/beatmaps/2022219/covers/cover.jpg?1691586075",
+                "cover@2x": "https://assets.ppy.sh/beatmaps/2022219/covers/cover@2x.jpg?1691586075",
+                "card": "https://assets.ppy.sh/beatmaps/2022219/covers/card.jpg?1691586075",
+                "card@2x": "https://assets.ppy.sh/beatmaps/2022219/covers/card@2x.jpg?1691586075",
+                "list": "https://assets.ppy.sh/beatmaps/2022219/covers/list.jpg?1691586075",
+                "list@2x": "https://assets.ppy.sh/beatmaps/2022219/covers/list@2x.jpg?1691586075",
+                "slimcover": "https://assets.ppy.sh/beatmaps/2022219/covers/slimcover.jpg?1691586075",
+                "slimcover@2x": "https://assets.ppy.sh/beatmaps/2022219/covers/slimcover@2x.jpg?1691586075"
+            },
+            "creator": "Muziyami",
+            "favourite_count": 1,
+            "hype": null,
+            "id": 2022219,
+            "nsfw": false,
+            "offset": 0,
+            "play_count": 136,
+            "preview_url": "//b.ppy.sh/preview/2022219.mp3",
+            "source": "東方妖々夢　～ Perfect Cherry Blossom.",
+            "spotlight": false,
+            "status": "graveyard",
+            "title": "Yuuga ni Sakase, Sumizome no Sakura",
+            "title_unicode": "幽雅に咲かせ、墨染の桜",
+            "track_id": null,
+            "user_id": 7003013,
+            "video": false,
+            "bpm": 144,
+            "can_be_hyped": false,
+            "deleted_at": null,
+            "discussion_enabled": true,
+            "discussion_locked": false,
+            "is_scoreable": false,
+            "last_updated": "2023-07-12T12:42:37Z",
+            "legacy_thread_url": "https://osu.ppy.sh/community/forums/topics/1789565",
+            "nominations_summary": {
+                "current": 0,
+                "required": 2
+            },
+            "ranked": -2,
+            "ranked_date": null,
+            "storyboard": true,
+            "submitted_date": "2023-07-07T12:31:36Z",
+            "tags": "東方project 優雅に咲かせ、墨染の桜 ～ border of life touhou zun 西行寺 幽々子 幽幽子 saigyouji yuyuko bloom nobly cherry blossoms of sumizome video game electronic metal arrow realize c77 comic market 2009 instrumental arrangement 稲井ゆう inai yuu yu- 玉井祐也 yuya tamai utopialyric 姫川紫音 himekawa shion yhc hidden cup season 3 s3 tiebreaker tb",
+            "availability": {
+                "download_disabled": false,
+                "more_information": null
+            },
+            "beatmaps": [
+                {
+                    "beatmapset_id": 2022219,
+                    "difficulty_rating": 5.67,
+                    "id": 4211648,
+                    "mode": "osu",
+                    "status": "graveyard",
+                    "total_length": 248,
+                    "user_id": 7003013,
+                    "version": "Untouchable Hidden Border",
+                    "accuracy": 8,
+                    "ar": 9.3,
+                    "bpm": 180,
+                    "convert": false,
+                    "count_circles": 808,
+                    "count_sliders": 537,
+                    "count_spinners": 3,
+                    "cs": 4,
+                    "deleted_at": null,
+                    "drain": 5,
+                    "hit_length": 246,
+                    "is_scoreable": false,
+                    "last_updated": "2023-07-12T12:42:38Z",
+                    "mode_int": 0,
+                    "passcount": 59,
+                    "playcount": 113,
+                    "ranked": -2,
+                    "url": "https://osu.ppy.sh/beatmaps/4211648",
+                    "checksum": "089e72fb69b912ca1d050a0b3366add1",
+                    "max_combo": 1973
+                }
+            ],
+            "pack_tags": []
+        },{
 
     }
     ],//根据游玩数量排序，走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，给6张即可。

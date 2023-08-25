@@ -323,7 +323,7 @@ export async function panel_A4(data = {
 
     //天选之子H卡提出来
     const tianxuanzhizi = (cardHs.length % 2 === 1) ? cardHs.pop() : '';
-    svg = implantSvgBody(svg, 540, 330 + (rowTotal - 1) * 150, tianxuanzhizi, reg_bp_list);
+    svg = implantSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, tianxuanzhizi, reg_bp_list);
 
     //插入H卡
     for (let i = 0; i < cardHs.length; i++) {
