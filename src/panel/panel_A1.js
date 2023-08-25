@@ -243,7 +243,7 @@ export async function panel_A1(data = {
         const pp = data.friend_card_A1[i].pp || 0;
         const glow = getDXRatingBG(pp);
 
-        svg = implantSvgBody(svg, 470 * x, 290 + 250 * y, glow, reg_me_card_a1); //放下面一层
+        svg = implantImage(svg, 510, 290, 470 * x, 290 + 250 * y, 1, glow, reg_me_card_a1); //放下面一层
         svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
     }
 
