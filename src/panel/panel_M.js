@@ -12,6 +12,7 @@ export async function router(req, res) {
     }
     res.end();
 }
+
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
@@ -188,99 +189,141 @@ export async function panel_M(data = {
         "unranked_beatmapset_count": 2
     }, //getUser
 
-    most_popular_beatmap:[
+    most_popular_beatmap: [
         {
-            "artist": "Dark PHOENiX",
-            "artist_unicode": "Dark PHOENiX",
-            "covers": {
-                "cover": "https://assets.ppy.sh/beatmaps/2022219/covers/cover.jpg?1691586075",
-                "cover@2x": "https://assets.ppy.sh/beatmaps/2022219/covers/cover@2x.jpg?1691586075",
-                "card": "https://assets.ppy.sh/beatmaps/2022219/covers/card.jpg?1691586075",
-                "card@2x": "https://assets.ppy.sh/beatmaps/2022219/covers/card@2x.jpg?1691586075",
-                "list": "https://assets.ppy.sh/beatmaps/2022219/covers/list.jpg?1691586075",
-                "list@2x": "https://assets.ppy.sh/beatmaps/2022219/covers/list@2x.jpg?1691586075",
-                "slimcover": "https://assets.ppy.sh/beatmaps/2022219/covers/slimcover.jpg?1691586075",
-                "slimcover@2x": "https://assets.ppy.sh/beatmaps/2022219/covers/slimcover@2x.jpg?1691586075"
-            },
-            "creator": "Muziyami",
-            "favourite_count": 1,
-            "hype": null,
-            "id": 2022219,
-            "nsfw": false,
-            "offset": 0,
-            "play_count": 136,
-            "preview_url": "//b.ppy.sh/preview/2022219.mp3",
-            "source": "東方妖々夢　～ Perfect Cherry Blossom.",
-            "spotlight": false,
-            "status": "graveyard",
-            "title": "Yuuga ni Sakase, Sumizome no Sakura",
-            "title_unicode": "幽雅に咲かせ、墨染の桜",
-            "track_id": null,
-            "user_id": 7003013,
             "video": false,
-            "bpm": 144,
-            "can_be_hyped": false,
-            "deleted_at": null,
-            "discussion_enabled": true,
-            "discussion_locked": false,
-            "is_scoreable": false,
-            "last_updated": "2023-07-12T12:42:37Z",
-            "legacy_thread_url": "https://osu.ppy.sh/community/forums/topics/1789565",
-            "nominations_summary": {
-                "current": 0,
-                "required": 2
+            "availabilityDownloadDisable": false,
+            "fromDatabases": false,
+            "id": 1972258,
+            "user_id": 17064371,
+            "bpm": 168.0,
+            "artist": "Anisphia (CV: Senbongi Sayaka), Euphyllia (CV: Iwami Manaka)",
+            "artist_unicode": "アニスフィア (CV: 千本木彩花), ユフィリア (CV: 石見舞菜香)",
+            "title": "Only for you",
+            "title_unicode": "Only for you",
+            "creator": "-Spring Night-",
+            "favourite_count": 3,
+            "nsfw": false,
+            "play_count": 273,
+            "preview_url": "//b.ppy.sh/preview/1972258.mp3",
+            "source": "転生王女と天才令嬢の魔法革命",
+            "status": "pending",
+            "legacy_thread_url": "https://osu.ppy.sh/community/forums/topics/1748003",
+            "tags": "tensei oujo to tensai reijou no mahou kakumei the magical revolution of the reincarnated princess and the genius young lady tv anime ed ending japanese pop jpop j-pop yuri gay lesbian erisu",
+            "storyboard": false,
+            "covers": {
+                "cover": "https://assets.ppy.sh/beatmaps/1972258/covers/cover.jpg?1691157563",
+                "cover@2x": "https://assets.ppy.sh/beatmaps/1972258/covers/cover@2x.jpg?1691157563",
+                "card": "https://assets.ppy.sh/beatmaps/1972258/covers/card.jpg?1691157563",
+                "card@2x": "https://assets.ppy.sh/beatmaps/1972258/covers/card@2x.jpg?1691157563",
+                "list": "https://assets.ppy.sh/beatmaps/1972258/covers/list.jpg?1691157563",
+                "list@2x": "https://assets.ppy.sh/beatmaps/1972258/covers/list@2x.jpg?1691157563",
+                "slimcover": "https://assets.ppy.sh/beatmaps/1972258/covers/slimcover.jpg?1691157563",
+                "slimcover@2x": "https://assets.ppy.sh/beatmaps/1972258/covers/slimcover@2x.jpg?1691157563"
             },
-            "ranked": -2,
-            "ranked_date": null,
-            "storyboard": true,
-            "submitted_date": "2023-07-07T12:31:36Z",
-            "tags": "東方project 優雅に咲かせ、墨染の桜 ～ border of life touhou zun 西行寺 幽々子 幽幽子 saigyouji yuyuko bloom nobly cherry blossoms of sumizome video game electronic metal arrow realize c77 comic market 2009 instrumental arrangement 稲井ゆう inai yuu yu- 玉井祐也 yuya tamai utopialyric 姫川紫音 himekawa shion yhc hidden cup season 3 s3 tiebreaker tb",
-            "availability": {
-                "download_disabled": false,
-                "more_information": null
-            },
-            "beatmaps": [
-                {
-                    "beatmapset_id": 2022219,
-                    "difficulty_rating": 5.67,
-                    "id": 4211648,
-                    "mode": "osu",
-                    "status": "graveyard",
-                    "total_length": 248,
-                    "user_id": 7003013,
-                    "version": "Untouchable Hidden Border",
-                    "accuracy": 8,
-                    "ar": 9.3,
-                    "bpm": 180,
-                    "convert": false,
-                    "count_circles": 808,
-                    "count_sliders": 537,
-                    "count_spinners": 3,
-                    "cs": 4,
-                    "deleted_at": null,
-                    "drain": 5,
-                    "hit_length": 246,
-                    "is_scoreable": false,
-                    "last_updated": "2023-07-12T12:42:38Z",
-                    "mode_int": 0,
-                    "passcount": 59,
-                    "playcount": 113,
-                    "ranked": -2,
-                    "url": "https://osu.ppy.sh/beatmaps/4211648",
-                    "checksum": "089e72fb69b912ca1d050a0b3366add1",
-                    "max_combo": 1973
-                }
-            ],
-            "pack_tags": []
-        },{
-
-    }
+            "spotlight": false,
+            "beatmaps": [{
+                "id": 4092433,
+                "mode": "osu",
+                "status": "pending",
+                "version": "Anisphia",
+                "ar": 9.0,
+                "cs": 4.5,
+                "bpm": 168.0,
+                "convert": false,
+                "passcount": 4,
+                "playcount": 13,
+                "ranked": 0,
+                "url": "https://osu.ppy.sh/beatmaps/4092433",
+                "beatMapRating": 0.0,
+                "beatMapRetryCount": 0,
+                "beatMapFailedCount": 0,
+                "beatmapset_id": 1972258,
+                "difficulty_rating": 5.61,
+                "mode_int": 0,
+                "total_length": 236,
+                "hit_length": 235,
+                "user_id": 17064371,
+                "accuracy": 8.5,
+                "drain": 5.0,
+                "max_combo": 1300,
+                "is_scoreable": false,
+                "last_updated": "2023-08-04T13:58:57Z",
+                "checksum": "5fbb06a39a4f2145bb8bed8e5d8ca51a",
+                "count_sliders": 321,
+                "count_spinners": 4,
+                "count_circles": 624
+            }, {
+                "id": 4092434,
+                "mode": "osu",
+                "status": "pending",
+                "version": "Euphyllia",
+                "ar": 8.0,
+                "cs": 4.0,
+                "bpm": 168.0,
+                "convert": false,
+                "passcount": 0,
+                "playcount": 1,
+                "ranked": 0,
+                "url": "https://osu.ppy.sh/beatmaps/4092434",
+                "beatMapRating": 0.0,
+                "beatMapRetryCount": 0,
+                "beatMapFailedCount": 0,
+                "beatmapset_id": 1972258,
+                "difficulty_rating": 4.05,
+                "mode_int": 0,
+                "total_length": 235,
+                "hit_length": 89,
+                "user_id": 17064371,
+                "accuracy": 7.0,
+                "drain": 5.0,
+                "max_combo": 381,
+                "is_scoreable": false,
+                "last_updated": "2023-08-04T13:58:58Z",
+                "checksum": "839abf5a5984f2b5e779c6bbbf4e4050",
+                "count_sliders": 102,
+                "count_spinners": 2,
+                "count_circles": 156
+            }, {
+                "id": 4102609,
+                "mode": "osu",
+                "status": "pending",
+                "version": "Sun_Smile's Expert",
+                "ar": 9.3,
+                "cs": 3.6,
+                "bpm": 168.0,
+                "convert": false,
+                "passcount": 6,
+                "playcount": 41,
+                "ranked": 0,
+                "url": "https://osu.ppy.sh/beatmaps/4102609",
+                "beatMapRating": 0.0,
+                "beatMapRetryCount": 0,
+                "beatMapFailedCount": 0,
+                "beatmapset_id": 1972258,
+                "difficulty_rating": 5.94,
+                "mode_int": 0,
+                "total_length": 237,
+                "hit_length": 237,
+                "user_id": 8664140,
+                "accuracy": 8.4,
+                "drain": 5.0,
+                "max_combo": 1310,
+                "is_scoreable": false,
+                "last_updated": "2023-08-04T13:58:58Z",
+                "checksum": "d39c20132a417a4d68c9181c291c9235",
+                "count_sliders": 288,
+                "count_spinners": 4,
+                "count_circles": 712
+            }]
+        }, {}
     ],//根据游玩数量排序，走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，给6张即可。
 
     most_recent_ranked_beatmap: {},//需要判断，如果玩家的ranked_and_approved_beatmapset_count不为0，则走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，筛选出ranked/qualified中。上传时间最靠前，但是谱面主（host）是uid所指的人的那张谱面即可。如果没有结果返回空
     most_recent_ranked_guest_diff: {}, //需要判断，如果玩家的guest_beatmapset_count不为0，则走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，筛选出ranked/qualified中。上传时间最靠前，但是谱面主（host）不是uid所指的人的那张谱面即可。如果没有结果返回空
 
-    genre: [0,0,0,1,0,1,0], //unspecified, video game, anime, rock, pop, other, novelty, hip hop, electronic, metal, classical, folk, jazz
+    // 这是啥
+    genre: [0, 0, 0, 1, 0, 1, 0], //unspecified, video game, anime, rock, pop, other, novelty, hip hop, electronic, metal, classical, folk, jazz
     //搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any
 
     difficulty_arr: [], //星数数组。0-2 2-2.8 2.8-4 4-5.3 5.3-6.5 6.5-8 8-10 10-无穷，包括前面不包括后面
