@@ -244,7 +244,7 @@ export async function panel_A1(data = {
         const glow = getDXRatingBGPath(pp);
 
         svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
-        svg = implantImage(svg, 510, 290, 470 * x, 290 + 250 * y, 1, glow, reg_friend_card_a1); //放一层试试
+        svg = implantImage(svg, 510, 290, 470 * x, 290 + 250 * y, 0.4, glow, reg_friend_card_a1); //放一层试试
     }
 
     // 计算面板高度
