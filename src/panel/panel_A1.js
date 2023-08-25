@@ -1,5 +1,5 @@
 import {
-    exportImage,
+    exportImage, getExportFileV3Path,
     getPanelNameSVG,
     getRandomBannerPath,
     implantImage, implantSvgBody,
@@ -224,7 +224,6 @@ export async function panel_A1(data = {
 
     let friend_cardA1s = [];
 
-
     for (const i in data.friend_card_A1) {
         const friend_user = await PanelGenerate.microUser2CardA1(data.friend_card_A1[i]);
         const f = await card_A1(friend_user, true);
@@ -239,7 +238,12 @@ export async function panel_A1(data = {
     for (const i in friend_cardA1s) {
         const x = i % 4;
         const y = Math.floor(i / 4);
+        //230825 加上PP附带的背景（maimai限定DX Rating的底色
 
+        const pp = data.friend_card_A1[i].pp || 0;
+        const glow = getDXRatingBG(pp);
+
+        svg = implantSvgBody(svg, 470 * x, 290 + 250 * y, glow, reg_me_card_a1); //放下面一层
         svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
     }
 
@@ -262,4 +266,22 @@ export async function panel_A1(data = {
 
     return svg.toString();
 
+}
+
+function getDXRatingBG(pp = 0) {
+    let path;
+
+    if (pp >= 15000) path = 'backlight-rainbow.png';
+    else if (pp >= 14500) path = 'backlight-platinum.png';
+    else if (pp >= 14000) path = 'backlight-golden.png';
+    else if (pp >= 13000) path = 'backlight-silver.png';
+    else if (pp >= 12000) path = 'backlight-bronze.png';
+    else if (pp >= 10000) path = 'backlight-purple.png';
+    else if (pp >= 7000) path = 'backlight-red.png';
+    else if (pp >= 4000) path = 'backlight-yellow.png';
+    else if (pp >= 2000) path = 'backlight-green.png';
+    else if (pp >= 1000) path = 'backlight-blue.png';
+    else return '';
+
+    return getExportFileV3Path(path);
 }
