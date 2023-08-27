@@ -188,16 +188,20 @@ function getTextWidth_torus(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusSB.getMetrics(text, {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "Torus",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
+    if (text !== null || text !== undefined) {
+        return textToSVGTorusSB.getMetrics(text.toString(), {
+            x: 0,
+            y: 0,
+            fontSize: size,
+            anchor: 'center baseline',
+            fontFamily: "Torus",
+            attributes: {
+                fill: '#fff'
+            }
+        }).width
+    } else {
+        return 0;
+    }
 }
 
 function cutStringTail_torus(
@@ -311,16 +315,20 @@ function getTextWidth_torusRegular(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusRegular.getMetrics(text, {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "TorusRegular",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
+    if (text !== null || text !== undefined) {
+        return textToSVGTorusRegular.getMetrics(text.toString(), {
+            x: 0,
+            y: 0,
+            fontSize: size,
+            anchor: 'center baseline',
+            fontFamily: "TorusRegular",
+            attributes: {
+                fill: '#fff'
+            }
+        }).width
+    } else {
+        return 0;
+    }
 }
 
 function cutStringTail_torusRegular(
@@ -413,16 +421,20 @@ function getTextWidth_PuHuiTi(
     text = '',
     size = 0,
 ) {
-    return textToSVGPuHuiTi.getMetrics(text, {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "PuHuiTi",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
+    if (text !== null || text !== undefined) {
+        return textToSVGPuHuiTi.getMetrics(text.toString(), {
+            x: 0,
+            y: 0,
+            fontSize: size,
+            anchor: 'center baseline',
+            fontFamily: "PuHuiTi",
+            attributes: {
+                fill: '#fff'
+            }
+        }).width
+    } else {
+        return 0;
+    }
 }
 
 function cutStringTail_PuHuiTi(

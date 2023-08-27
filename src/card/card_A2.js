@@ -43,10 +43,9 @@ export async function card_A2(data = {
 
     // 宽度限制
     const title1_maxWidth = data.map_status ? 350 : 390;
-
     const title_maxWidth = 390;
 
-    const right3_width = torus.getTextWidth(data.right3b + '', 60) + torus.getTextWidth(data.right3m + '', 48);
+    const right3_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
     const left_maxWidth = 390 - right3_width;
 
     // 文字定义
