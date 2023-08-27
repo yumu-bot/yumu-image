@@ -355,6 +355,7 @@ export async function card_C(data = {
                         data[`${team}`][j],
                         calculateX + (width * direction / 2 - 50),
                         startY - 130,
+                        width,
                         isWin,
                         scoreTextColor);
                 }
@@ -403,6 +404,7 @@ export async function card_C(data = {
                         data[`${team}`][j],
                         calculateX + (width * direction / 2 - 50),
                         startY - 130,
+                        width,
                         isWin,
                         scoreTextColor);
                 }
@@ -501,7 +503,7 @@ export async function card_C(data = {
 
     // 插入F1 - F3标签的功能函数
 
-    async function implantRoundLabelF1(object, x, y, isWin, scoreTextColor) {
+    async function implantRoundLabelF1(object, x, y, maxWidth, isWin, scoreTextColor) {
         let label_F1_impl =
             await label_F1({
                 avatar: object ? object.player_avatar : '',
@@ -509,7 +511,7 @@ export async function card_C(data = {
                 mods_arr: object ? object.player_mods : '',
                 score: object ? object.player_score : '',
                 rank: object ? object.player_rank : '',
-                maxWidth: 100,
+                maxWidth: Math.max(100, maxWidth),
                 isWin: isWin,
                 scoreTextColor: scoreTextColor,
             })
