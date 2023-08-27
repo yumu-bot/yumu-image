@@ -380,7 +380,7 @@ export async function panel_F(data = {
     const title1 = title[0];
     const title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
     const left1 = data.match.match_round + 'x Rounds';
-    let left2 = moment(data.match.match_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '-';
+    let left2 = moment(data.match.match_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '~';
 
     if (data.match.match_time.slice(-1) === '-') {
         left2 += 'Continuing';
