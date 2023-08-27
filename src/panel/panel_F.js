@@ -375,24 +375,30 @@ export async function panel_F(data = {
     svg = replaceText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    let background = await readNetImage(data.match.background, getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
-    let title = getMatchNameSplitted(data.match.match_title);
-    let title1 = title[0];
-    let title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
-    let left1 = data.match.match_round + 'x Rounds';
-    let left2 = moment(data.match.match_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '-' +
-        moment(data.match.match_time, '[-]HH:mm').add(8, 'hours').format('HH:mm');
-    let left3 = moment(data.match.match_time_start, 'X').add(8, 'hours').format('YYYY-MM-DD');
+    const background = await readNetImage(data.match.background, getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
+    const title = getMatchNameSplitted(data.match.match_title);
+    const title1 = title[0];
+    const title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
+    const left1 = data.match.match_round + 'x Rounds';
+    let left2 = moment(data.match.match_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '-';
+
+    if (data.match.match_time.slice(-1) === '-') {
+        left2 += 'Continuing';
+    } else {
+        left2 += moment(data.match.match_time, '[-]HH:mm').add(8, 'hours').format('HH:mm');
+    }
+
+    const left3 = moment(data.match.match_time_start, 'X').add(8, 'hours').format('YYYY-MM-DD');
     const avg_star = beatmap_arr
         .filter(b => b.star_rating > 0)
         .map(b => b.star_rating);
-    let right1 = avg_star ? 'AVG.SR ' + (avg_star.reduce((pv, cv) => {return pv + cv}, 0) / avg_star.length).toFixed(2) : 0;
-    let right2 = 'mp' + data.match.mpid;
-    let wins_team_red = data.match.wins_team_red || 0;
-    let wins_team_blue = data.match.wins_team_blue || 0;
-    let right3b = data.match.is_team_vs ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
+    const right1 = avg_star ? 'AVG.SR ' + (avg_star.reduce((pv, cv) => {return pv + cv}, 0) / avg_star.length).toFixed(2) : 0;
+    const right2 = 'mp' + data.match.mpid;
+    const wins_team_red = data.match.wins_team_red || 0;
+    const wins_team_blue = data.match.wins_team_blue || 0;
+    const right3b = data.match.is_team_vs ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
 
-    let card_A2_impl =
+    const card_A2_impl =
         await card_A2({
             data,
             background: background,
