@@ -4,7 +4,7 @@ import {
     getExportFileV3Path,
     getGameMode,
     getNowTimeStamp,
-    getPanelNameSVG,
+    getPanelNameSVG, getTimeDifference,
     hasAnyMod,
     implantImage,
     implantSvgBody,
@@ -297,7 +297,9 @@ export async function panel_E(data = {
 
     // 面板文字
     const score_time = moment(data.score.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours').format("YYYY-MM-DD HH:mm:ss[ +8]");
-    const request_time = 'score time: ' + score_time + ' // request time: ' + getNowTimeStamp();
+    const delta_time = getTimeDifference(data.score.create_at_str);
+
+    const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
     // 导入文字
     svg = replaceText(svg, getPanelNameSVG(
