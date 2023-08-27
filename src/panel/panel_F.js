@@ -332,9 +332,8 @@ export async function panel_F(data = {
                 break;
             }
             case 'm': {
-                right2 = (object.cs || 0) + 'Key' +
-                    ' AR' + (object.ar || 0) +
-                    ' OD' + (object.od || 0);
+                right2 = (object.cs || 0) +
+                    'Key OD' + (object.od || 0);
                 break;
             }
             default: {

@@ -4,7 +4,7 @@ import {
     implantImage,
     PuHuiTi,
     readTemplate,
-    replaceText, replaceTexts,
+    replaceTexts,
     torus
 } from "../util.js";
 
@@ -42,13 +42,12 @@ export async function card_A2(data = {
     }
 
     // 宽度限制
-    let title1_maxWidth = 390;
-    if (data.map_status) title1_maxWidth = 350;
+    const title1_maxWidth = data.map_status ? 350 : 390;
 
-    let title_maxWidth = 390;
+    const title_maxWidth = 390;
 
-    let right3_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
-    let left_maxWidth = 390 - right3_width;
+    const right3_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
+    const left_maxWidth = 390 - 10 - right3_width;
 
     // 文字定义
 
@@ -63,21 +62,25 @@ export async function card_A2(data = {
         20, 107.4, 24, 'left baseline', '#fff');
 
     let left1 = torus.getTextPath(
-        torus.cutStringTail(data.left1, 20, left_maxWidth),
+        torus.cutStringTail(data.left1, 20, left_maxWidth, true),
         20, 140.836, 24, 'left baseline', '#fff');
     let left2 = torus.getTextPath(
-        torus.cutStringTail(data.left2, 20, left_maxWidth),
+        torus.cutStringTail(data.left2, 20, left_maxWidth, true),
         20, 165.836, 24, 'left baseline', '#fff');
     let left3 = torus.getTextPath(
-        torus.cutStringTail(data.left3, 20, left_maxWidth),
+        torus.cutStringTail(data.left3, 20, left_maxWidth, true),
         20, 191.836, 24, 'left baseline', '#fff');
 
     let right1 = torus.getTextPath(data.right1, 420, 114.836, 24, 'right baseline', '#fff');
     let right2 = torus.getTextPath(data.right2, 420, 141.836, 24, 'right baseline', '#fff');
-    let right3 = torus.getTextPath(data.right3b,
+    let right3 = torus.get2SizeTextPath(data.right3b, data.right3m,60, 48, 420, 191.59, 'right baseline', '#fff');
+        /*
+        torus.getTextPath(data.right3b,
             420 - torus.getTextWidth(data.right3m, 48),
             191.59, 60, 'right baseline', '#fff') +
         torus.getTextPath(data.right3m, 420, 191.59, 48, 'right baseline', '#fff');
+
+         */
 
     // 插入谱面状态
     let status = getMapStatusV3Path(data.map_status || '');
