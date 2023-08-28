@@ -4,7 +4,7 @@ import {
     replaceText,
     torus
 } from "../util.js";
-import {label_M1, label_M2, label_M3} from "../component/label.js";
+import {label_A1, label_A2, label_A3} from "../component/label.js";
 
 export async function card_M(data = {
     "artist": "HOYO-MiX",
@@ -282,7 +282,7 @@ export async function card_M(data = {
         label_width = (1360 / label_count) - 10;
 
         for (const v of data.beatmaps) {
-            const f1 = await label_M1({
+            const f1 = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
@@ -291,12 +291,12 @@ export async function card_M(data = {
                 hasAvatar: false,
                 uid: v.user_id,
             }, true);
-            const f2 = await label_M2({
+            const f2 = await label_A2({
                 host_uid: data.user_id,
                 uid: v.user_id,
             }, true);
             const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
-            const f3 = await label_M3(g3, true);
+            const f3 = await label_A3(g3, true);
 
             labelM1s.push(f1);
             labelM2s.push(f2);
@@ -333,7 +333,7 @@ export async function card_M(data = {
         // 1. compact normal
         for (let i = 0; i < (label_compact_count - label_compact_remain); i++) {
             const v = data.beatmaps[i];
-            const f1c = await label_M1({
+            const f1c = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
@@ -349,7 +349,7 @@ export async function card_M(data = {
         // 2. compact remain
         for (let j = (label_compact_count - label_compact_remain); j < label_compact_count; j++) {
             const v = data.beatmaps[j];
-            const f1r = await label_M1({
+            const f1r = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
@@ -365,7 +365,7 @@ export async function card_M(data = {
         // 3. normal
         for (let k = label_compact_count; k < label_count; k++) {
             const v = data.beatmaps[k];
-            const f1 = await label_M1({
+            const f1 = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
@@ -374,12 +374,12 @@ export async function card_M(data = {
                 hasAvatar: false,
                 uid: v.user_id,
             }, true);
-            const f2 = await label_M2({
+            const f2 = await label_A2({
                 host_uid: data.user_id,
                 uid: v.user_id,
             }, true);
             const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
-            const f3 = await label_M3(g3, true);
+            const f3 = await label_A3(g3, true);
 
             labelM1s.push(f1);
             labelM2s.push(f2);
@@ -421,7 +421,7 @@ export async function card_M(data = {
         // 1. compact normal
         for (let i = 0; i < 18; i++) {
             const v = data.beatmaps[i];
-            const f1c = await label_M1({
+            const f1c = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,

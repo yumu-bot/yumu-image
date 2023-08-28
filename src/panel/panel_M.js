@@ -8,6 +8,7 @@ import {
     replaceText
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
+import {card_O1} from "../card/card_O1.js";
 
 export async function router(req, res) {
     try {
@@ -316,9 +317,13 @@ export async function panel_M(data = {
     // 导入A1
     const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user), true);
 
+    // 导入O1
+    const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data.user), true);
+
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_me_A1);
+    svg = implantSvgBody(svg, 60, 350, cardO1, reg_me);
 
     return svg.toString();
 }

@@ -13,7 +13,7 @@ import {
     replaceText,
     torus
 } from "../util.js";
-import {label_N1, LABEL_OPTION} from "../component/label.js";
+import {label_A4, LABEL_OPTION} from "../component/label.js";
 
 export async function card_N1(data = {
     score: {
@@ -140,22 +140,22 @@ export async function card_N1(data = {
     const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
     const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 10, 36 + 17, 18, 'right baseline', '#aaa');
 
-    const n1_acc = await label_N1({
+    const n1_acc = await label_A4({
         ...LABEL_OPTION.ACC2,
         data_b: getDecimals(acc, 2),
         data_m: getDecimals(acc, 3) + '%',
     }, true);
-    const n1_combo = await label_N1({
+    const n1_combo = await label_A4({
         ...LABEL_OPTION.COMBO2,
         data_b: combo.toString(),
         data_m: 'x',
     }, true);
-    const n1_pp = await label_N1({
+    const n1_pp = await label_A4({
         ...LABEL_OPTION.PP2,
         data_b: pp.toString(),
         data_m: 'PP',
     }, true);
-    const n1_score = await label_N1({
+    const n1_score = await label_A4({
         ...LABEL_OPTION.SCORE2,
         data_b: getRoundedNumberLargerStr(score, -1),
         data_m: getRoundedNumberSmallerStr(score, -1),

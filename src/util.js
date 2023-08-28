@@ -2510,7 +2510,7 @@ export const PanelGenerate = {
         const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
         const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
 
-        const sub_icon1 = user.support_level > 0 || user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
+        const sub_icon1 = user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
         const country = user?.country.countryCode || 'CN';
 
         const left1 = user.globalRank ? '#' + user.globalRank : '#0';
@@ -2546,7 +2546,7 @@ export const PanelGenerate = {
         const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
         const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
 
-        const sub_icon1 = user.support_level > 0 || user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
+        const sub_icon1 = user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
         const country = user?.country.countryCode || 'CN';
 
         const left2 = 'U' + user.id;
@@ -3069,7 +3069,20 @@ export const PanelGenerate = {
                 },
             };
         }
-    }
+    },
+
+    user2CardO1: async (user) => {
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+
+        return {
+            background,
+            avatar,
+
+            name: user.username,
+            groups: user.groups || [],
+        };
+    },
 }
 
 //把数组变成可视化的图表

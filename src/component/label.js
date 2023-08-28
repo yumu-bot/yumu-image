@@ -723,7 +723,7 @@ export async function label_J3(data = {
 }
 
 //Q-M1-难度标签
-export async function label_M1(data = {
+export async function label_A1(data = {
     mode: 'osu',
     difficulty_name: 'Skystar\'s Tragic Love Extra',
     star_rating: 5.46,
@@ -830,7 +830,7 @@ export async function label_M1(data = {
 }
 
 //Q-M2-客串谱师标签
-export async function label_M2(data = {
+export async function label_A2(data = {
     host_uid: 873961,
     uid: 873961,
 }, reuse = false) {
@@ -894,7 +894,7 @@ export async function label_M2(data = {
 }
 
 //Q-M3-四维标签
-export async function label_M3(data = {
+export async function label_A3(data = {
     label1: {
     },
     label2: {
@@ -947,7 +947,7 @@ export async function label_M3(data = {
 
 
 //MSL-N1-成绩标签
-export async function label_N1(data = {
+export async function label_A4(data = {
     icon: getExportFileV3Path("object-score-acc2.png"),
     icon_title: 'ACC',
     data_b: '98.',
@@ -969,6 +969,37 @@ export async function label_N1(data = {
 
     svg = replaceText(svg, label_text, reg_text);
     svg = implantImage(svg, 20, 20, 0, 0, 1, data.icon, reg_icon)
+
+    return svg.toString();
+}
+
+//IM-M1-玩家牌（getUser - groups）
+export async function label_M1(data = {
+    "colour": "#A347EB",
+    "id": 28,
+    "identifier": "bng",
+    "name": "Beatmap Nominators",
+    "short_name": "BN",
+}, reuse = false) {
+
+    //导入模板
+    let svg = `  
+  <g id="RRect_LM1">
+  </g>
+  <g id="Text_LM1">
+  </g>`
+
+    //正则
+    const reg_text = /(?<=<g id="Text_LM1">)/;
+    const reg_rrect = /(?<=<g id="RRect_LM1">)/;
+
+    //定义文本
+    const text = torus.getTextPath(data.short_name, 40, 22, 24, 'center baseline', '#fff');
+    const base_rrect = `<rect width="80" height="28" rx="14" ry="14" style="fill: ${data.colour};"/>`;
+
+    //插入文本
+    svg = replaceText(svg, text, reg_text);
+    svg = replaceText(svg, base_rrect, reg_rrect);
 
     return svg.toString();
 }
