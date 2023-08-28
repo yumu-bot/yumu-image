@@ -290,8 +290,7 @@ export async function panel_A4(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const me_generated = await PanelGenerate.user2CardA1(data.me);
-    const me_card_a1 = await card_A1(me_generated, true);
+    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.me), true);
     svg = implantSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入H卡

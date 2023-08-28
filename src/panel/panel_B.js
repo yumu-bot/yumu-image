@@ -4,7 +4,7 @@ import {
     getGameMode, getPanelNameSVG,
     getRandomBannerPath,
     implantImage,
-    implantSvgBody, PanelDraw,
+    implantSvgBody, PanelDraw, PanelGenerate,
     readTemplate,
     replaceText, replaceTexts,
     torus
@@ -101,24 +101,6 @@ export async function panel_B(data = {
     const isVS = data.statistics.isVS;
     const mode = getGameMode(data.statistics.gameMode, 0);
 
-    // sub_icon1 传的 countryCode , sub_icon2 是 撒泼特等级,如果不是0就是撒泼特,这俩你自行判断一下
-    if (data.card_A1[0].sub_icon2 > 0) {
-        data.card_A1[0].sub_icon1 = getExportFileV3Path('object-card-supporter.png');
-        data.card_A1[0].sub_icon2 = null;
-    } else {
-        data.card_A1[0].sub_icon1 = null;
-        data.card_A1[0].sub_icon2 = null;
-    }
-    if (data.card_A1[1]) {
-        if (data.card_A1[1].sub_icon2 > 0) {
-            data.card_A1[1].sub_icon1 = getExportFileV3Path('object-card-supporter.png');
-            data.card_A1[1].sub_icon2 = null;
-        } else {
-            data.card_A1[1].sub_icon1 = null;
-            data.card_A1[1].sub_icon2 = null;
-        }
-    }
-
     const game_mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
 
     // 画六个标识
@@ -132,10 +114,8 @@ export async function panel_B(data = {
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, game_mode_path], reg_index);
-    svg = implantSvgBody(svg, 40, 40, await card_A1(data.card_A1[0], true), reg_maincard);
 
     // 主计算
-
     let card_B1_lefts = [];
     let card_B1_rights = [];
     let card_B2_centers = [];
@@ -168,9 +148,14 @@ export async function panel_B(data = {
         svg = implantSvgBody(svg, 40, 350 + j * 115, card_B1_lefts[j], reg_left);
     }
 
+    // 我自己的卡片
+    const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[0]), true);
+    svg = implantSvgBody(svg, 40, 40, cardA1m, reg_maincard);
+
     // 如果是vs，渲染右边的人
     if (isVS) {
-        svg = implantSvgBody(svg, 1450, 40, await card_A1(data.card_A1[1], true), reg_maincard);
+        const cardA1y = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[1]), true);
+        svg = implantSvgBody(svg, 1450, 40, cardA1y, reg_maincard);
 
         for (const name of VALUE_NAMES) {
             if (typeof data.card_b_2[name] !== 'number') continue;

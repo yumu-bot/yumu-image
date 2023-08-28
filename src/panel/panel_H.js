@@ -4,7 +4,7 @@ import {
     getPanelNameSVG,
     getRandomBannerPath,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, PanelGenerate,
     readTemplate,
     replaceText
 } from "../util.js";
@@ -187,7 +187,7 @@ export async function panel_H (data = {
     let reg_bodycard = /(?<=<g id="BodyCard">)/;
 
     // 卡片定义
-    let card_A1_impl = await card_A1(data.card_A1, true);
+    let card_A1_impl = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
 
     // 面板文字
     const panel_name = getPanelNameSVG('Mappool (!ymmp)', 'Pool', 'v0.3.2 FT');

@@ -1,4 +1,13 @@
-import {exportImage, getPanelNameSVG, readTemplate, replaceText} from "../util.js";
+import {
+    exportImage,
+    getPanelNameSVG,
+    getRandomBannerPath,
+    implantImage, implantSvgBody,
+    PanelGenerate,
+    readTemplate,
+    replaceText
+} from "../util.js";
+import {card_A1} from "../card/card_A1.js";
 
 export async function router(req, res) {
     try {
@@ -28,165 +37,85 @@ export async function router_svg(req, res) {
 
 export async function panel_M(data = {
     user: {
-        "avatar_url": "https://a.ppy.sh/5645691?1691564120.jpeg",
-        "country_code": "CN",
-        "default_group": "bng_limited",
-        "id": 5645691,
+        "id": 17064371,
+        "pp": 6279.61,
+        "username": "-Spring Night-",
+        "occupation": null,
+        "discord": null,
+        "interests": null,
+        "playCount": 36485,
+        "globalRank": 30495,
+        "countryRank": 529,
+        "accuracy": 98.3481,
+        "levelCurrent": 101,
+        "levelProgress": 15,
+        "bot": false,
+        "maxCombo": 3430,
+        "playTime": 4617717,
+        "totalHits": 17074899,
+        "deleted": false,
+        "online": false,
+        "supporter": true,
+        "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
+        "cover_url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
+        "default_group": "default",
         "is_active": true,
         "is_bot": false,
         "is_deleted": false,
         "is_online": false,
         "is_supporter": true,
-        "last_visit": "2023-08-22T11:49:45+00:00",
+        "last_visit": null,
         "pm_friends_only": false,
-        "profile_colour": "#6B3FA0",
-        "username": "MeAqua tete",
-        "cover_url": "https://assets.ppy.sh/user-profile-covers/5645691/ad8c427134b573afd0b4d10cfdd645ab0e333acdef6df4f22e77ce80401dc67e.jpeg",
-        "discord": "TamagoKun233",
+        "playmode": "OSU",
+        "unranked_beatmapset_count": 1,
+        "ranked_beatmapset_count": 0,
+        "ranked_and_approved_beatmapset_count": 0,
+        "beatmap_playcounts_count": 6765,
+        "mapping_follower_count": 5,
         "has_supported": true,
-        "interests": "Everything except mapping",
-        "join_date": "2015-01-17T03:12:16+00:00",
-        "kudosu": {
-            "total": 1506,
-            "available": 1501
-        },
-        "location": "Shanghai, China",
-        "max_blocks": 200,
-        "max_friends": 1000,
-        "occupation": "Contact me in QQ: 576719320",
-        "playmode": "osu",
-        "playstyle": [
-            "mouse",
-            "keyboard",
-            "tablet"
-        ],
-        "post_count": 310,
-        "profile_order": [
-            "me",
-            "beatmaps",
-            "recent_activity",
-            "top_ranks",
-            "kudosu",
-            "medals",
-            "historical"
-        ],
-        "title": "Trial Nominator",
-        "title_url": null,
-        "twitter": "lide0315",
-        "website": null,
-        "country": {
-            "code": "CN",
-            "name": "China"
+        "join_date": "2020-05-15T14:10:44+00:00",
+        "max_friends": 500,
+        "comments_count": 11,
+        "support_level": 2,
+        "post_count": 2,
+        "follower_count": 308,
+        "raw": null,
+        "statistics": {
+            "pp": 6279.61,
+            "ss": 37,
+            "ssh": 10,
+            "s": 1122,
+            "sh": 62,
+            "a": 1951,
+            "ranked": true,
+            "pp_7K": null,
+            "pp_4K": null,
+            "count_50": 210333,
+            "count_100": 1884554,
+            "count_300": 14980012,
+            "count_geki": null,
+            "count_katu": null,
+            "count_miss": 493039,
+            "ranked_score": 40881075082,
+            "total_score": 142776445598,
+            "hit_accuracy": 98.3481,
+            "play_count": 36485,
+            "play_time": 4617717,
+            "total_hits": 17074899,
+            "maximum_combo": 3430,
+            "is_ranked": true,
+            "global_rank": 30495,
+            "replays_watched_by_others": 25,
+            "country_rank": 529
         },
         "cover": {
-            "custom_url": "https://assets.ppy.sh/user-profile-covers/5645691/ad8c427134b573afd0b4d10cfdd645ab0e333acdef6df4f22e77ce80401dc67e.jpeg",
-            "url": "https://assets.ppy.sh/user-profile-covers/5645691/ad8c427134b573afd0b4d10cfdd645ab0e333acdef6df4f22e77ce80401dc67e.jpeg",
-            "id": null
+            "url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
+            "custom_url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg"
         },
-        "account_history": [],
-        "active_tournament_banner": null,
-        "badges": [],
-        "beatmap_playcounts_count": 3527,
-        "comments_count": 284,
-        "favourite_beatmapset_count": 92,
-        "follower_count": 578,
-        "graveyard_beatmapset_count": 34,
-        "groups": [
-            {
-                "colour": "#A347EB",
-                "has_listing": true,
-                "has_playmodes": true,
-                "id": 32,
-                "identifier": "bng_limited",
-                "is_probationary": true,
-                "name": "Beatmap Nominators (Probationary)",
-                "short_name": "BN",
-                "playmodes": [
-                    "osu"
-                ]
-            }
-        ],
-        "guest_beatmapset_count": 16,
-        "loved_beatmapset_count": 0,
-        "mapping_follower_count": 535,
-        "monthly_playcounts": [
-            {
-                "start_date": "2023-08-01",
-                "count": 67
-            }
-        ],
-        "nominated_beatmapset_count": 44,
-        "page": {
-            "html": ""
+        "country": {
+            "countryCode": "TW",
+            "countryName": "Taiwan"
         },
-        "pending_beatmapset_count": 2,
-        "previous_usernames": [
-            "576719320",
-            "My Angel Yuki",
-            "AngelSnow",
-            "Present"
-        ],
-        "rank_highest": {
-            "rank": 25138,
-            "updated_at": "2019-02-22T08:58:46Z"
-        },
-        "ranked_beatmapset_count": 28,
-        "replays_watched_counts": [
-            {
-                "start_date": "2023-05-01",
-                "count": 1
-            }
-        ],
-        "scores_best_count": 100,
-        "scores_first_count": 0,
-        "scores_pinned_count": 2,
-        "scores_recent_count": 2,
-        "statistics": {
-            "count_100": 772289,
-            "count_300": 7860498,
-            "count_50": 86631,
-            "count_miss": 335994,
-            "level": {
-                "current": 100,
-                "progress": 18
-            },
-            "global_rank": 49323,
-            "global_rank_exp": null,
-            "pp": 5573.24,
-            "pp_exp": 0,
-            "ranked_score": 9594733086,
-            "hit_accuracy": 98.4671,
-            "play_count": 47696,
-            "play_time": 2244568,
-            "total_score": 45602477761,
-            "total_hits": 8719418,
-            "maximum_combo": 2353,
-            "replays_watched_by_others": 48,
-            "is_ranked": true,
-            "grade_counts": {
-                "ss": 11,
-                "ssh": 31,
-                "s": 66,
-                "sh": 439,
-                "a": 874
-            },
-            "country_rank": 942,
-            "rank": {
-                "country": 942
-            }
-        },
-        "support_level": 1,
-        "user_achievements": [],
-        "rank_history": {
-            "mode": "osu",
-            "data": []
-        },
-        "rankHistory": {
-            "mode": "osu",
-            "data": []
-        },
-        "ranked_and_approved_beatmapset_count": 28,
-        "unranked_beatmapset_count": 2
     }, //getUser
 
     most_popular_beatmap: [
@@ -367,13 +296,15 @@ export async function panel_M(data = {
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
-    const reg_me = /(?<=<g id="Me_Card_A1">)/;
-    const reg_me_O1 = /(?<=<g id="Me_Card_O1">)/;
+    const reg_me_A1 = /(?<=<g id="Me_Card_A1">)/;
+
+    const reg_me = /(?<=<g id="Me">)/;
     const reg_popular = /(?<=<g id="Popular">)/;
     const reg_difficulty = /(?<=<g id="Difficulty">)/;
     const reg_activity = /(?<=<g id="Activity">)/;
     const reg_recent = /(?<=<g id="Recent">)/;
     const reg_feedback = /(?<=<g id="Feedback">)/;
+
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PM1-1\);">)/;
 
     // 面板文字
@@ -382,7 +313,12 @@ export async function panel_M(data = {
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
 
+    // 导入A1
+    const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user), true);
 
+    // 插入图片和部件（新方法
+    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = implantSvgBody(svg, 40, 40, cardA1, reg_me_A1);
 
     return svg.toString();
 }

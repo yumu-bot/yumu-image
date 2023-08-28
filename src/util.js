@@ -538,7 +538,11 @@ export function replaceTexts(base = '', replaces = [''], reg = /.*/) {
 
 export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
     let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
-    return base.replace(reg, replace);
+    if (image != null) {
+        return base.replace(reg, replace);
+    } else {
+        return base;
+    }
 }
 
 export function implantSvgBody(base = '', x= 0, y = 0, replace = '', reg = /.*/) {
@@ -2505,40 +2509,101 @@ export const PanelGenerate = {
     user2CardA1: async (user) => {
         const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
         const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+
+        const sub_icon1 = user.support_level > 0 || user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
+        const country = user?.country.countryCode || 'CN';
+
+        const left1 = user.globalRank ? '#' + user.globalRank : '#0';
+        const left2 = country + (user.countryRank ? '#' + user.countryRank : '#0');
+
+        const isBot = user.is_bot || !(user.is_bot == null);
+        const level = user.levelCurrent || 0;
+        const progress = user.levelProgress || 0;
+        const acc = getRoundedNumberLargerStr(user.accuracy,3) + getRoundedNumberSmallerStr(user.accuracy,3) || 0;
+        const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
+        const right3b = user.pp ? Math.round(user.pp).toString() : '-';
+
         return {
             background,
             avatar,
-            sub_icon1: user['support_level'] > 0 || user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '',
+            sub_icon1: sub_icon1,
             sub_icon2: '',
-            name: user['username'],
-            rank_global: user['globalRank'],
-            rank_country: user['countryRank'],
-            country: user?.country['countryCode'] || 'CN',
-            acc: Math.round(user['accuracy'] * 100) / 100,
-            level: user['levelCurrent'],
-            progress: Math.floor(user['levelProgress']),
-            pp: Math.round(user['pp']),
-            isBot: user.is_bot,
+            country: country,
+
+            top1: user.username,
+            left1: left1,
+            left2: left2,
+            right1: '',
+            right2: right2,
+            right3b: right3b,
+            right3m: 'PP',
+        };
+    },
+
+
+    mapper2CardA1: async (user) => {
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+
+        const sub_icon1 = user.support_level > 0 || user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
+        const country = user?.country.countryCode || 'CN';
+
+        const left2 = 'u ' + user.id;
+
+        const right2 = 'Mapping Follower';
+        const right3b = user.mapping_follower_count ? user.mapping_follower_count.toString() : '-';
+
+        return {
+            background,
+            avatar,
+            sub_icon1: sub_icon1,
+            sub_icon2: '',
+            country: country,
+
+            top1: user.username,
+            left1: country,
+            left2: left2,
+            right1: '',
+            right2: right2,
+            right3b: right3b,
+            right3m: 'x',
         };
     },
 
     microUser2CardA1: async (microUser) => {
         const background = await readNetImage(microUser?.cover_url || microUser?.cover?.url, getExportFileV3Path('card-default.png'));
         const avatar = await readNetImage(microUser?.avatar_url || microUser?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+        const sub_icon1 = microUser.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
+
+        const country = microUser?.country_code || 'CN';
+
+        const left1 = microUser.statistics.global_rank ? '#' + microUser.statistics.global_rank : '#0';
+        const left2 = country + (microUser.statistics.country_rank ? '#' + microUser.statistics.country_rank : '#0');
+
+        const isBot = microUser.bot || !(microUser.bot == null);
+        const level = microUser.statistics.level_current || 0;
+        const progress = microUser.statistics.level_progress || 0;
+        const acc = getRoundedNumberLargerStr(microUser.statistics.hit_accuracy,3) + getRoundedNumberSmallerStr(microUser.statistics.hit_accuracy,3) || 0;
+        const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
+        const right3b = microUser.statistics.pp ? Math.round(microUser.statistics.pp).toString() : '-';
+
+
         return {
             background,
             avatar,
-            sub_icon1: microUser.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '',
+            sub_icon1: sub_icon1,
             sub_icon2: '',
-            name: microUser.username,
-            rank_global: microUser.statistics.global_rank,
-            rank_country: microUser.statistics.country_rank,
-            country: microUser?.country_code || 'CN',
-            acc: Math.round(microUser.statistics.hit_accuracy * 100) / 100,
-            level: microUser.statistics.level_current,
-            progress: Math.floor(microUser.statistics.level_progress),
-            pp: Math.round(microUser.statistics.pp),
-            isBot: microUser.statistics.is_bot,
+
+
+            country: country,
+
+            top1: microUser.username,
+            left1: country,
+            left2: left2,
+            right1: '',
+            right2: right2,
+            right3b: right3b,
+            right3m: 'PP',
         };
     },
 

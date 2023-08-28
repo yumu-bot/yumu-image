@@ -218,14 +218,12 @@ export async function panel_A1(data = {
 
     // 导入A1卡
 
-    const me_user = await PanelGenerate.user2CardA1(data.me_card_A1);
-    const me_cardA1 = await card_A1(me_user, true);
+    const me_cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.me_card_A1), true);
 
     let friend_cardA1s = [];
 
     for (const i in data.friend_card_A1) {
-        const friend_user = await PanelGenerate.microUser2CardA1(data.friend_card_A1[i]);
-        const f = await card_A1(friend_user, true);
+        const f = await card_A1(await PanelGenerate.microUser2CardA1(data.friend_card_A1[i]), true);
         friend_cardA1s.push(f);
     }
 
