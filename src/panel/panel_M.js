@@ -5,10 +5,11 @@ import {
     implantImage, implantSvgBody,
     PanelGenerate,
     readTemplate,
-    replaceText
+    replaceText, replaceTexts, torus
 } from "../util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_O1} from "../card/card_O1.js";
+import {card_O2} from "../card/card_O2.js";
 
 export async function router(req, res) {
     try {
@@ -68,13 +69,21 @@ export async function panel_M(data = {
         "last_visit": null,
         "pm_friends_only": false,
         "playmode": "OSU",
-        "unranked_beatmapset_count": 1,
-        "ranked_beatmapset_count": 0,
-        "ranked_and_approved_beatmapset_count": 0,
-        "beatmap_playcounts_count": 6765,
-        "mapping_follower_count": 5,
+        "nominated_beatmapset_count": null,
+        "beatmap_playcounts_count": 6766,
+        "unranked_beatmapset_count": 2,
+        "favourite_beatmapset_count": 84,
+        "graveyard_beatmapset_count": 112,
+        "groups": [],
+        "guest_beatmapset_count": 23,
+        "loved_beatmapset_count": 0,
+        "mapping_follower_count": 56,
         "has_supported": true,
         "join_date": "2020-05-15T14:10:44+00:00",
+        "kudosu": {
+            "total": 391,
+            "available": 391
+        },
         "max_friends": 500,
         "comments_count": 11,
         "support_level": 2,
@@ -296,20 +305,20 @@ export async function panel_M(data = {
     let svg = readTemplate('template/Panel_M.svg');
 
     // 路径定义
-    const reg_index = /(?<=<g id="Index">)/;
+    const reg_index = /(?<=<g id="Index_PM">)/;
     const reg_me_A1 = /(?<=<g id="Me_Card_A1">)/;
 
-    const reg_me = /(?<=<g id="Me">)/;
-    const reg_popular = /(?<=<g id="Popular">)/;
-    const reg_difficulty = /(?<=<g id="Difficulty">)/;
-    const reg_activity = /(?<=<g id="Activity">)/;
-    const reg_recent = /(?<=<g id="Recent">)/;
-    const reg_feedback = /(?<=<g id="Feedback">)/;
+    const reg_me = /(?<=<g id="Me_PM">)/;
+    const reg_popular = /(?<=<g id="Popular_PM">)/;
+    const reg_difficulty = /(?<=<g id="Difficulty_PM">)/;
+    const reg_activity = /(?<=<g id="Activity_PM">)/;
+    const reg_recent = /(?<=<g id="Recent_PM">)/;
+    const reg_feedback = /(?<=<g id="Feedback_PM">)/;
 
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PM1-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('I\'m Mapper (!ymim)', 'IM', 'v0.3.2 FT');
+    const panel_name = getPanelNameSVG('I\'m Mapper', 'IM', 'v0.3.2 FT');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
@@ -320,10 +329,72 @@ export async function panel_M(data = {
     // 导入O1
     const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data.user), true);
 
+    // 导入O2
+    for (let i = 0; i < 6; i++) {
+        const x = 510 + (i % 3) * 305;
+        const y = 380 + Math.floor(i / 3) * 145;
+
+        const cardO2 = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_popular_beatmap[i]), true);
+        //svg = implantSvgBody(svg, 290, 130, x, y, '', reg_popular);
+    }
+
+
+    // 插入1号卡标签
+    const rank_str = data.user.ranked_and_approved_beatmapset_count ? data.user.ranked_and_approved_beatmapset_count.toString() : '0';
+    const pending_str = data.user.unranked_beatmapset_count ? data.user.unranked_beatmapset_count.toString() : '0'
+    const pending_slot_str = getPendingSlot(data.user.is_supporter, data.user.ranked_and_approved_beatmapset_count).toString();
+    const guest_str = data.user.guest_beatmapset_count ? data.user.guest_beatmapset_count.toString() : '0';
+
+    const rank = torus.getTextPath(rank_str, 120, 616, 42, 'center baseline', '#fff');
+    const pending = torus.get2SizeTextPath(pending_str, '/' + pending_slot_str, 42, 30, 255, 616, 'center baseline', '#fff');
+    const guest = torus.getTextPath(guest_str, 390, 616, 42, 'center baseline', '#fff');
+
+    const rank_index = torus.getTextPath('Ranked', 120, 648, 24, 'center baseline', '#aaa');
+    const pending_index = torus.getTextPath('Pending', 255, 648, 24, 'center baseline', '#aaa');
+    const guest_index = torus.getTextPath('Guest', 390, 648, 24, 'center baseline', '#aaa');
+
+    svg = replaceTexts(svg, [rank, pending, guest], reg_difficulty);
+    svg = replaceTexts(svg, [rank_index, pending_index, guest_index], reg_recent);
+
+    // 插入8号卡标签
+    const favorite_str = data.user.favourite_beatmapset_count ? data.user.favourite_beatmapset_count.toString() : '0';
+    const kudosu_str = data.user.kudosu.total ? data.user.kudosu.total.toString() : '0'
+    const comment_str = data.user.comments_count ? data.user.comments_count.toString() : '0';
+    const nominated_str = data.user.nominated_beatmapset_count ? data.user.nominated_beatmapset_count.toString() : '0';
+    const loved_str = data.user.loved_beatmapset_count ? data.user.loved_beatmapset_count.toString() : '0'
+    const graveyard_str = data.user.graveyard_beatmapset_count ? data.user.graveyard_beatmapset_count.toString() : '0';
+
+    const favorite = torus.getTextPath(favorite_str, 1530, 882, 42, 'center baseline', '#fff');
+    const kudosu = torus.getTextPath(kudosu_str, 1665, 882, 42, 'center baseline', '#fff');
+    const comment = torus.getTextPath(comment_str, 1800, 882, 42, 'center baseline', '#fff');
+    const nominated = torus.getTextPath(nominated_str, 1530, 978, 42, 'center baseline', '#fff');
+    const loved = torus.getTextPath(loved_str, 1665, 978, 42, 'center baseline', '#fff');
+    const graveyard = torus.getTextPath(graveyard_str, 1800, 978, 42, 'center baseline', '#fff');
+
+    const favorite_index = torus.getTextPath('Favorite', 1530, 916, 24, 'center baseline', '#aaa');
+    const kudosu_index = torus.getTextPath('Kudosu', 1665, 916, 24, 'center baseline', '#aaa');
+    const comment_index = torus.getTextPath('Comment', 1800, 916, 24, 'center baseline', '#aaa');
+    const nominated_index = torus.getTextPath('Nominated', 1530, 1012, 24, 'center baseline', '#aaa');
+    const loved_index = torus.getTextPath('Loved', 1665, 1012, 24, 'center baseline', '#aaa');
+    const graveyard_index = torus.getTextPath('Graveyard', 1800, 1012, 24, 'center baseline', '#aaa');
+
+    svg = replaceTexts(svg, [favorite, kudosu, comment, nominated, loved, graveyard], reg_activity);
+    svg = replaceTexts(svg, [favorite_index, kudosu_index, comment_index, nominated_index, loved_index, graveyard_index], reg_feedback);
+
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_me_A1);
     svg = implantSvgBody(svg, 60, 350, cardO1, reg_me);
 
     return svg.toString();
+}
+
+function getPendingSlot(isSupporter = false, ranked = 0) {
+    let slot;
+    if (isSupporter) {
+        slot = 8 + Math.min(ranked, 12);
+    } else {
+        slot = 4 + Math.min(ranked, 4);
+    }
+    return slot;
 }

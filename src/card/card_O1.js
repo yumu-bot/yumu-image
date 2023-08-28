@@ -10,22 +10,22 @@ export async function card_O1(data = {
 }, reuse = false) {
     // 读取模板
     let svg =`   <defs>
-            <clipPath id="clippath-CO-1">
+            <clipPath id="clippath-CO1-1">
               <rect width="390" height="210" rx="20" ry="20" style="fill: none;"/>
             </clipPath>
-            <clipPath id="clippath-CO-2">
+            <clipPath id="clippath-CO1-2">
               <rect x="145" y="15" width="100" height="100" rx="10" ry="10" style="fill: none;"/>
             </clipPath>
           </defs>
           <g id="Background_CO1">
             <rect width="100" height="100" rx="20" ry="20" style="fill: #382E32;"/>
-            <g style="clip-path: url(#clippath-CO-1);">
+            <g style="clip-path: url(#clippath-CO1-1);">
             </g>
           </g>
           <g id="Label_CO1">
           </g>
           <g id="Avatar_CO1">
-            <g style="clip-path: url(#clippath-CO-2);">
+            <g style="clip-path: url(#clippath-CO1-2);">
             </g>
           </g>
           <g id="Text_CO1">
@@ -34,8 +34,8 @@ export async function card_O1(data = {
     // 路径定义
     const reg_text = /(?<=<g id="Text_CO1">)/;
     const reg_label = /(?<=<g id="Label_CO1">)/;
-    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CO-1\);">)/;
-    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CO-2\);">)/;
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CO1-1\);">)/;
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CO1-2\);">)/;
 
     // 插入文本
     const title = torus.getTextPath(data.name, 195, 155, 36, 'center baseline', '#fff');
@@ -46,9 +46,9 @@ export async function card_O1(data = {
     const groups = (data.groups.length >= 1) ? data.groups : [{
         "colour": "#382E32",
         "id": -1,
-        "identifier": "usr",
+        "identifier": "user",
         "name": "Normal User",
-        "short_name": "USR",
+        "short_name": "USER",
     }];
     const group_count = Math.min(groups.length, 4);
 

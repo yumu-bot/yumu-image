@@ -2492,15 +2492,15 @@ export function getPanelNameSVG (name = '?? (!test)', index = '?', version = 'v0
 
     // powered by Yumubot v0.3.2 EA // Score (!ymp / !ymr / !yms)
     const powered_text = torus.getTextPath(
-        'powered by ' + powered + ' ' + version + ' // ' + name,
+        "powered by " + powered.toString() + " " + version.toString() + " \/\/ " + name.toString(),
         20, 26.84, 24, "left baseline", "#fff");
-    const request_time_text = torus.getTextPath(request_time,
+    const request_time_text = torus.getTextPath(request_time.toString(),
         1900, 26.84, 24, "right baseline", "#fff");
-    const index_text = torus.getTextPath(index,
+    const index_text = torus.getTextPath(index.toString(),
         607.5, 83.67, 48, "center baseline", "#fff");
 
     //导入文字
-    return (powered_text + request_time_text + index_text);
+    return (powered_text + '\n' + request_time_text + '\n' + index_text);
 }
 
 //公用方法
@@ -3081,6 +3081,34 @@ export const PanelGenerate = {
 
             name: user.username,
             groups: user.groups || [],
+        };
+    },
+    beatmap2CardO2: async (beatmapset) => {
+        const background = await readNetImage(beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
+        const map_status = beatmapset.status;
+        const title1 = beatmapset.title;
+        const title2 = beatmapset.artist;
+        const title_font = torus;
+        const left1 = '';
+        const left2 = '<3 ' + beatmapset.favourite_count;
+        const left3 = beatmapset.id ? 'S' + beatmapset.id : 'S0';
+        const right1 = 'Play Counts';
+        const right2b = getRoundedNumberLargerStr(beatmapset.play_count,2);
+        const right2m = getRoundedNumberSmallerStr(beatmapset.play_count,2);
+
+        return {
+            background: background,
+            map_status: map_status,
+
+            title1: title1,
+            title2: title2,
+            title_font: title_font,
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2b: right2b,
+            right2m: right2m,
         };
     },
 }
