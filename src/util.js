@@ -2521,8 +2521,8 @@ export const PanelGenerate = {
         const progress = user.levelProgress || 0;
         const acc = getRoundedNumberLargerStr(user.accuracy,3) + getRoundedNumberSmallerStr(user.accuracy,3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
-        const right3b = isBot ? 'Bot' : (user.pp ? Math.round(user.pp).toString() : '');
-        const right3m = isBot ? '' : (user.pp ? 'PP' : 'AFK');
+        const right3b = isBot ? '' : (user.pp ? Math.round(user.pp).toString() : '');
+        const right3m = isBot ? 'Bot' : (user.pp ? 'PP' : 'AFK');
 
         return {
             background,
@@ -2587,8 +2587,8 @@ export const PanelGenerate = {
         const progress = microUser.statistics.level_progress || 0;
         const acc = getRoundedNumberLargerStr(microUser.statistics.hit_accuracy,3) + getRoundedNumberSmallerStr(microUser.statistics.hit_accuracy,3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
-        const right3b = isBot ? 'Bot' : (microUser.statistics.pp ? Math.round(microUser.statistics.pp).toString() : '');
-        const right3m = isBot ? '' : (microUser.statistics.pp ? 'PP' : 'AFK');
+        const right3b = isBot ? '' : (microUser.statistics.pp ? Math.round(microUser.statistics.pp).toString() : '');
+        const right3m = isBot ? 'Bot' : (microUser.statistics.pp ? 'PP' : 'AFK');
 
         return {
             background,
