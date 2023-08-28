@@ -2549,7 +2549,7 @@ export const PanelGenerate = {
         const sub_icon1 = user.support_level > 0 || user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
         const country = user?.country.countryCode || 'CN';
 
-        const left2 = 'u ' + user.id;
+        const left2 = 'U' + user.id;
 
         const right2 = 'Mapping Follower';
         const right3b = user.mapping_follower_count ? user.mapping_follower_count.toString() : '-';
@@ -2618,7 +2618,7 @@ export const PanelGenerate = {
         const title_font = torus;
         const left1 = '';
         const left2 = beatmap.beatmapset.creator;
-        const left3 = beatmap.id ? 'b' + beatmap.id : 'b0';
+        const left3 = beatmap.id ? 'B' + beatmap.id : 'B0';
         const right1 = '';
         const right2 = getBeatmapStats(beatmap);
         const right3b = getDecimals(beatmap.difficulty_rating,2);
@@ -2845,7 +2845,7 @@ export const PanelGenerate = {
         const left3 = moment(data.matchInfo.start_time, 'X').format('YYYY-MM-DD');
 
         const right1 = 'AVG.SR ' + star;
-        const right2 = 'mp' + data.matchInfo.id || 0;
+        const right2 = 'MP' + data.matchInfo.id || 0;
         const right3b = isTeamVS ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
 
         return {

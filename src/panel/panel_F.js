@@ -393,7 +393,7 @@ export async function panel_F(data = {
         .filter(b => b.star_rating > 0)
         .map(b => b.star_rating);
     const right1 = avg_star ? 'AVG.SR ' + (avg_star.reduce((pv, cv) => {return pv + cv}, 0) / avg_star.length).toFixed(2) : 0;
-    const right2 = 'mp' + data.match.mpid;
+    const right2 = 'MP' + data.match.mpid;
     const wins_team_red = data.match.wins_team_red || 0;
     const wins_team_blue = data.match.wins_team_blue || 0;
     const right3b = data.match.is_team_vs ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
