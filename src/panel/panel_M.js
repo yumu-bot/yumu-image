@@ -1,4 +1,4 @@
-import {exportImage} from "../util.js";
+import {exportImage, getPanelNameSVG, readTemplate, replaceText} from "../util.js";
 
 export async function router(req, res) {
     try {
@@ -362,7 +362,27 @@ export async function panel_M(data = {
         },
     ]
 }, reuse = false) {
-    let svg = '';
+    // 导入模板
+    let svg = readTemplate('template/Panel_M.svg');
+
+    // 路径定义
+    const reg_index = /(?<=<g id="Index">)/;
+    const reg_me = /(?<=<g id="Me_Card_A1">)/;
+    const reg_me_O1 = /(?<=<g id="Me_Card_O1">)/;
+    const reg_popular = /(?<=<g id="Popular">)/;
+    const reg_difficulty = /(?<=<g id="Difficulty">)/;
+    const reg_activity = /(?<=<g id="Activity">)/;
+    const reg_recent = /(?<=<g id="Recent">)/;
+    const reg_feedback = /(?<=<g id="Feedback">)/;
+    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PM1-1\);">)/;
+
+    // 面板文字
+    const panel_name = getPanelNameSVG('I\'m Mapper (!ymim)', 'IM', 'v0.3.2 FT');
+
+    // 插入文字
+    svg = replaceText(svg, panel_name, reg_index);
+
+
 
     return svg.toString();
 }
