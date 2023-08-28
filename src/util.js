@@ -2516,13 +2516,13 @@ export const PanelGenerate = {
         const left1 = user.globalRank ? '#' + user.globalRank : '#0';
         const left2 = country + (user.countryRank ? '#' + user.countryRank : '#0');
 
-        const isBot = user.bot;
+        const isBot = user.is_bot;
         const level = user.levelCurrent || 0;
         const progress = user.levelProgress || 0;
         const acc = getRoundedNumberLargerStr(user.accuracy,3) + getRoundedNumberSmallerStr(user.accuracy,3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
-        const right3b = isBot ? 'Bot' : (user.pp ? Math.round(user.pp).toString() : 'afk');
-        const right3m = isBot ? '' : (user.pp ? 'PP' : '');
+        const right3b = isBot ? '' : (user.pp ? Math.round(user.pp).toString() : '');
+        const right3m = isBot ? 'Bot' : (user.pp ? 'PP' : 'AFK');
 
         return {
             background,
@@ -2582,13 +2582,13 @@ export const PanelGenerate = {
         const left1 = microUser.statistics.global_rank ? '#' + microUser.statistics.global_rank : '#0';
         const left2 = country + (microUser.statistics.country_rank ? '#' + microUser.statistics.country_rank : '#0');
 
-        const isBot = microUser.bot;
+        const isBot = microUser.is_bot;
         const level = microUser.statistics.level_current || 0;
         const progress = microUser.statistics.level_progress || 0;
         const acc = getRoundedNumberLargerStr(microUser.statistics.hit_accuracy,3) + getRoundedNumberSmallerStr(microUser.statistics.hit_accuracy,3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
-        const right3b = isBot ? 'Bot' : (microUser.statistics.pp ? Math.round(microUser.statistics.pp).toString() : 'afk');
-        const right3m = isBot ? '' : (microUser.statistics.pp ? 'PP' : '');
+        const right3b = isBot ? '' : (microUser.statistics.pp ? Math.round(microUser.statistics.pp).toString() : '');
+        const right3m = isBot ? 'Bot' : (microUser.statistics.pp ? 'PP' : 'AFK');
 
         return {
             background,
