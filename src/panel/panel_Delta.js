@@ -131,6 +131,8 @@ export async function panel_Delta(data = {
 }, reuse = false) {
     // 导入模板
     let svg = readTemplate('template/Panel_Delta.svg');
+    console.log(data.beatMap)
+    console.log(data.beatmap)
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
@@ -156,7 +158,10 @@ export async function panel_Delta(data = {
 
     let mod_int = 0;
     if (mod_str.indexOf("DT") !== -1) mod_int = 64;
-    const attr = await getMapAttributes(data.beatMap.id, mod_int);
+
+    const id = data.beatMap.id || 0;
+    const attr = await getMapAttributes(id, mod_int);
+
 
     const length_num = (mod_str === 'DT') ? (data.beatMap.total_length / 1.5) : data.beatMap.total_length;
 
