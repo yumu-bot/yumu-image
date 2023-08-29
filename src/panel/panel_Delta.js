@@ -178,13 +178,13 @@ export async function panel_Delta(data = {
 
     // 定义文字
     const title = poppinsBold.getTextPath(
-        poppinsBold.cutStringTail(data.beatMap.beatmapset.title, 106, 920 - 20, true)
+        poppinsBold.cutStringTail(data.beatMap.beatmapset.title, 106, 880, true)
         , 1450, 318, 106, 'center baseline', '#fff');
     const artist = poppinsBold.getTextPath(
-        poppinsBold.cutStringTail(data.beatMap.beatmapset.artist, 68, 920 - 20, true)
+        poppinsBold.cutStringTail(data.beatMap.beatmapset.artist, 68, 880, true)
         , 1450, 414, 68, 'center baseline', '#fff');
     const difficulty = poppinsBold.getTextPath(
-        '[' + poppinsBold.cutStringTail(data.beatMap.version, 64, 920 - 20, true) + ']'
+        '[' + poppinsBold.cutStringTail(data.beatMap.version, 64, 880, true) + ']'
         , 1450, 500, 64, 'center baseline', '#F9D4BA');
 
     const bid = poppinsBold.getTextPath('BID: ' + data.beatMap.id, 1450, 566, 42, 'center baseline', '#F9D4BA');
