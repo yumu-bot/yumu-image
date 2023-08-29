@@ -15,6 +15,7 @@ import {
 import {getMapAttributes} from "../compute-pp.js";
 
 export async function router(req, res) {
+    console.log(req)
     try {
         const svg = await panel_Delta(req);
         res.set('Content-Type', 'image/jpeg');
@@ -131,7 +132,6 @@ export async function panel_Delta(data = {
     // 导入模板
     let svg = readTemplate('template/Panel_Delta.svg');
 
-    console.log(data.beatMap)
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
     const reg_text = /(?<=<g id="Text">)/;
