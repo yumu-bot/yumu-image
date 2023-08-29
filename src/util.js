@@ -81,7 +81,7 @@ const bannerTotal = 130;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
 const svg2JPEG = async (svg) => await exportsJPEG.convert(svg, {quality: 100});
-const svg2PNG = async (svg) => await exportsPNG.convert(svg);
+const svg2PNG = async (svg) => await exportsPNG.convert(svg, {quality: 100});
 export const exportImage = svg2JPEG;
 export const exportLossLessImage = svg2PNG;
 

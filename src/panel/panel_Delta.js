@@ -168,7 +168,7 @@ export async function panel_Delta(data = {
     const length_minute_str = Math.floor(length_num / 60).toString();
     const length_second_str = Math.floor(length_num % 60).toString().padStart(2, '0');
     const bpm_str = Math.round(attr.bpm).toString();
-    const star_str = getRoundedNumberLargerStr(attr.stars, 2) + getRoundedNumberSmallerStr(attr.stars, 2);
+    const star_str = getRoundedNumberLargerStr(attr.stars, 3) + getRoundedNumberSmallerStr(attr.stars, 3);
     const cs_str = getRoundedNumberLargerStr(attr.cs, 2) + getRoundedNumberSmallerStr(attr.cs, 2);
     const ar_str = getRoundedNumberLargerStr(attr.ar, 2) + getRoundedNumberSmallerStr(attr.ar, 2);
     const od_str = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
@@ -178,13 +178,13 @@ export async function panel_Delta(data = {
 
     // 定义文字
     const title = poppinsBold.getTextPath(
-        poppinsBold.cutStringTail(data.beatMap.beatmapset.title, 106, 920, true)
+        poppinsBold.cutStringTail(data.beatMap.beatmapset.title, 106, 920 - 20, true)
         , 1450, 318, 106, 'center baseline', '#fff');
     const artist = poppinsBold.getTextPath(
-        poppinsBold.cutStringTail(data.beatMap.beatmapset.artist, 68, 920, true)
+        poppinsBold.cutStringTail(data.beatMap.beatmapset.artist, 68, 920 - 20, true)
         , 1450, 414, 68, 'center baseline', '#fff');
     const difficulty = poppinsBold.getTextPath(
-        '[' + poppinsBold.cutStringTail(data.beatMap.version, 64, 920, true) + ']'
+        '[' + poppinsBold.cutStringTail(data.beatMap.version, 64, 920 - 20, true) + ']'
         , 1450, 500, 64, 'center baseline', '#F9D4BA');
 
     const bid = poppinsBold.getTextPath('BID: ' + data.beatMap.id, 1450, 566, 42, 'center baseline', '#F9D4BA');
