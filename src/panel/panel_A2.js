@@ -334,7 +334,6 @@ export async function panel_A2(data = {
     let info_cardMs = [];
 
     for (let i = 0; i < result_count; i++) {
-        console.log(result_count)
         const beatmap = await PanelGenerate.searchMap2CardA2(data.beatmapsets[i], i + 1);
         const f = await card_A2(beatmap, true);
         beatmap_cardA2s.push(f);

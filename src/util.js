@@ -2719,7 +2719,6 @@ export const PanelGenerate = {
 
         const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg', getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
         const map_status = beatmapsets.status || 'graveyard';
-        console.log(beatmapsets.status)
 
         const isRanked = (map_status === 'ranked' || map_status == 'loved' || map_status === 'approved');
         const isQualified = (map_status === 'qualified');
@@ -2784,6 +2783,7 @@ export const PanelGenerate = {
         };
 
         function getApproximateRankedTime(date = '') {
+            console.log(date)
             const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days');
             const dateP7m20 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days').add(20, 'minutes');
 
