@@ -25,6 +25,7 @@
 - Alpha 文字面板
 - Beta 某人特意做的查成绩面板 P
 - Gamma 成绩和信息简版 X/Y
+- Delta XinRan 比赛面板 K
 
 ## 卡片
 

@@ -17,6 +17,7 @@ import {router as PanelMRouter} from "./src/panel/panel_M.js";
 import {router as panelAlphaRouter} from "./src/panel/panel_Alpha.js"; //drawLine
 import {router as panelBetaRouter} from "./src/panel/panel_Beta.js"; //scoreSpecial
 import {router as panelGammaRouter} from "./src/panel/panel_Gamma.js"; //怎么，看不过去密集的设计？
+import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js"; //XinRan panel
 
 import {router as MarkdownRouter} from "./src/markdown.js";
 import {router as GetMapAttrRouter} from "./src/mapAttributes.js";
@@ -56,6 +57,7 @@ app.post('/panel_M', PanelMRouter);
 app.post('/panel_Alpha', panelAlphaRouter);
 app.post('/panel_Beta', panelBetaRouter);
 app.post('/panel_Gamma', panelGammaRouter);
+app.post('/panel_Delta', panelDeltaRouter);
 
 app.post('/md', MarkdownRouter);
 app.post('/attr', GetMapAttrRouter);

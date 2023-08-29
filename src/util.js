@@ -3,7 +3,8 @@ import os from "os";
 import crypto from 'crypto';
 import TextToSVG from 'text-to-svg';
 import axios from "axios";
-import exports from 'convert-svg-to-jpeg';
+import exportsJPEG from 'convert-svg-to-jpeg';
+import exportsPNG from 'convert-svg-to-png';
 import https from "https";
 import path from "path";
 import moment from "moment";
@@ -79,8 +80,10 @@ const mascot_pic_sum_arr = [50, 20, 4, 4, 7, 1, 2, 2, 3, 6]; //吉祥物的对�
 const bannerTotal = 130;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
-const svg2JPEG = async (svg) => await exports.convert(svg, {quality: 100});
+const svg2JPEG = async (svg) => await exportsJPEG.convert(svg, {quality: 100});
+const svg2PNG = async (svg) => await exportsPNG.convert(svg);
 export const exportImage = svg2JPEG;
+export const exportLossLessImage = svg2PNG;
 
 const UTF8Encoder = new TextEncoder('utf8');
 
@@ -88,6 +91,8 @@ const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
 const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.1.ttf"); //v1版本是 Alibaba-PuHuiTi-Medium.ttf
 const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
+const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold.ttf");
+const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
 
 
 export function readTemplate(path = '') {
@@ -134,6 +139,260 @@ export async function readNetImage(path = '', defaultImagePath) {
     }
     fs.writeFileSync(bufferPath, data, 'binary');
     return bufferPath;
+}
+
+export const poppinsBold = {};
+
+poppinsBold.getTextPath = getTextPath_poppinsBold;
+poppinsBold.get2SizeTextPath = get2SizeTextPath_poppinsBold;
+poppinsBold.getTextMetrics = getTextMetrics_poppinsBold;
+poppinsBold.getTextWidth = getTextWidth_poppinsBold;
+poppinsBold.cutStringTail = cutStringTail_poppinsBold;
+
+function getTextPath_poppinsBold(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGpoppinsBold.getPath(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "poppinsBold",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextMetrics_poppinsBold(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGpoppinsBold.getMetrics(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "poppinsBold",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextWidth_poppinsBold(
+    text = '',
+    size = 0,
+) {
+    if (text !== null || text !== undefined) {
+        return textToSVGpoppinsBold.getMetrics(text.toString(), {
+            x: 0,
+            y: 0,
+            fontSize: size,
+            anchor: 'center baseline',
+            fontFamily: "poppinsBold",
+            attributes: {
+                fill: '#fff'
+            }
+        }).width
+    } else {
+        return 0;
+    }
+}
+
+function cutStringTail_poppinsBold(
+    text = '',
+    size = 36,
+    maxWidth = 0,
+    isDot3Needed = true,
+) {
+    if (poppinsBold.getTextWidth(text, size) <= maxWidth) {
+        return text;
+    }
+
+    let dot3 = '...';
+    let dot3_width = isDot3Needed ? poppinsBold.getTextWidth(dot3, size) : 0;
+    let out_text = '';
+    maxWidth -= dot3_width;
+
+    for (let i = 0; poppinsBold.getTextWidth(out_text, size) < maxWidth; i++) {
+        out_text += text.slice(i, i + 1);
+    }
+
+    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
+}
+
+
+/**
+ * @function 获取大小文本的 poppinsBold 字体 SVG 路径
+ * @return {String}
+ * @param largerText {String} 较大的文本
+ * @param smallerText {String} 较小的文本
+ * @param largeSize {Number} 大文本尺寸
+ * @param smallSize {Number} 小文本尺寸
+ * @param x {Number} 锚点横坐标
+ * @param y {Number} 锚点横坐标
+ * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
+ * @param color {String} 十六进制颜色，#FFF
+ */
+
+function get2SizeTextPath_poppinsBold(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+    let width_b = poppinsBold.getTextWidth(largerText, largeSize);
+    let width_m = poppinsBold.getTextWidth(smallerText, smallSize);
+    let width_a = (width_b + width_m) / 2; // 全长的一半长
+
+    let out;
+
+    if (anchor === "left baseline") {
+        out = poppinsBold.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            poppinsBold.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+
+    } else if (anchor === "right baseline") {
+        out = poppinsBold.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            poppinsBold.getTextPath(smallerText, x, y, smallSize, anchor, color);
+
+    } else if (anchor === "center baseline") {
+        out = poppinsBold.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            poppinsBold.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+    }
+
+    return out;
+}
+
+export const lineSeedSans = {};
+
+lineSeedSans.getTextPath = getTextPath_lineSeedSans;
+lineSeedSans.get2SizeTextPath = get2SizeTextPath_lineSeedSans;
+lineSeedSans.getTextMetrics = getTextMetrics_lineSeedSans;
+lineSeedSans.getTextWidth = getTextWidth_lineSeedSans;
+lineSeedSans.cutStringTail = cutStringTail_lineSeedSans;
+
+function getTextPath_lineSeedSans(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGlineSeedSansBold.getPath(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "lineSeedSans",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextMetrics_lineSeedSans(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGlineSeedSansBold.getMetrics(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "lineSeedSans",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextWidth_lineSeedSans(
+    text = '',
+    size = 0,
+) {
+    if (text !== null || text !== undefined) {
+        return textToSVGlineSeedSansBold.getMetrics(text.toString(), {
+            x: 0,
+            y: 0,
+            fontSize: size,
+            anchor: 'center baseline',
+            fontFamily: "lineSeedSans",
+            attributes: {
+                fill: '#fff'
+            }
+        }).width
+    } else {
+        return 0;
+    }
+}
+
+function cutStringTail_lineSeedSans(
+    text = '',
+    size = 36,
+    maxWidth = 0,
+    isDot3Needed = true,
+) {
+    if (lineSeedSans.getTextWidth(text, size) <= maxWidth) {
+        return text;
+    }
+
+    let dot3 = '...';
+    let dot3_width = isDot3Needed ? lineSeedSans.getTextWidth(dot3, size) : 0;
+    let out_text = '';
+    maxWidth -= dot3_width;
+
+    for (let i = 0; lineSeedSans.getTextWidth(out_text, size) < maxWidth; i++) {
+        out_text += text.slice(i, i + 1);
+    }
+
+    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
+}
+
+
+/**
+ * @function 获取大小文本的 lineSeedSans 字体 SVG 路径
+ * @return {String}
+ * @param largerText {String} 较大的文本
+ * @param smallerText {String} 较小的文本
+ * @param largeSize {Number} 大文本尺寸
+ * @param smallSize {Number} 小文本尺寸
+ * @param x {Number} 锚点横坐标
+ * @param y {Number} 锚点横坐标
+ * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
+ * @param color {String} 十六进制颜色，#FFF
+ */
+
+function get2SizeTextPath_lineSeedSans(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+    let width_b = lineSeedSans.getTextWidth(largerText, largeSize);
+    let width_m = lineSeedSans.getTextWidth(smallerText, smallSize);
+    let width_a = (width_b + width_m) / 2; // 全长的一半长
+
+    let out;
+
+    if (anchor === "left baseline") {
+        out = lineSeedSans.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            lineSeedSans.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+
+    } else if (anchor === "right baseline") {
+        out = lineSeedSans.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            lineSeedSans.getTextPath(smallerText, x, y, smallSize, anchor, color);
+
+    } else if (anchor === "center baseline") {
+        out = lineSeedSans.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            lineSeedSans.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+    }
+
+    return out;
 }
 
 export const torus = {};
