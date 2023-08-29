@@ -131,6 +131,7 @@ export async function panel_Delta(data = {
     // 导入模板
     let svg = readTemplate('template/Panel_Delta.svg');
 
+    console.log(data.beatMap)
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
     const reg_text = /(?<=<g id="Text">)/;
