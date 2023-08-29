@@ -2733,9 +2733,10 @@ export const PanelGenerate = {
         const right1 = isQualified ? 'Expected:' :
             (isRanked ? 'Ranked:' :
                 'Submitted:');
-        const right2 = isQualified ? getApproximateRankedTime(ranked_date) :
-            (isRanked ? moment(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm") :
-                moment(submitted_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm"));
+        console.log(submitted_date)
+        const right2 = isQualified ? getApproximateRankedTime(ranked_date, 'X') :
+            (isRanked ? moment(ranked_date, 'X').utcOffset(960).format("YYYY-MM-DD HH:mm") :
+                moment(submitted_date, 'X').utcOffset(960).format("YYYY-MM-DD HH:mm"));
         let right3b;
         let right3m;
 
@@ -2782,10 +2783,10 @@ export const PanelGenerate = {
             right3m: right3m,
         };
 
-        function getApproximateRankedTime(date = '') {
-            console.log(date)
-            const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days');
-            const dateP7m20 = moment(date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).add(7, 'days').add(20, 'minutes');
+        function getApproximateRankedTime(date = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]') {
+
+            const dateP7 = moment(date, format).utcOffset(960).add(7, 'days');
+            const dateP7m20 = moment(date, format).utcOffset(960).add(7, 'days').add(20, 'minutes');
 
             return dateP7.format("YYYY-MM-DD HH:mm")
                 + ' ~ '
