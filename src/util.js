@@ -2719,6 +2719,7 @@ export const PanelGenerate = {
 
         const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg', getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
         const map_status = beatmapsets.status || 'graveyard';
+        console.log(beatmapsets.status)
 
         const isRanked = (map_status === 'ranked' || map_status == 'loved' || map_status === 'approved');
         const isQualified = (map_status === 'qualified');
