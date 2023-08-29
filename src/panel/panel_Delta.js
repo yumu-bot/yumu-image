@@ -15,19 +15,21 @@ import {
 import {getMapAttributes} from "../compute-pp.js";
 
 export async function router(req, res) {
-    console.log(req)
     try {
-        const svg = await panel_Delta(req);
+        const data = req.fields || {};
+        const svg = await panel_Delta(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportLossLessImage(svg));
     } catch (e) {
+        console.error(e);
         res.status(500).send(e.stack);
     }
+    res.end();
 }
-
 export async function router_svg(req, res) {
     try {
-        const svg = await panel_Delta(req);
+        const data = req.fields || {};
+        const svg = await panel_Delta(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -131,8 +133,6 @@ export async function panel_Delta(data = {
 }, reuse = false) {
     // 导入模板
     let svg = readTemplate('template/Panel_Delta.svg');
-    console.log(data.beatMap)
-    console.log(data.beatmap)
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
