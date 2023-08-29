@@ -153,7 +153,8 @@ export async function panel_Delta(data = {
     const position_str = data.position ? data.position.toString() : '';
     const mod_color = getModColor(mod_str);
 
-    const mod_int = (mod_str === 'DT') ? 64 : 0;
+    let mod_int = 0;
+    if (mod_str.indexOf("DT") !== -1) mod_int = 64;
     const attr = await getMapAttributes(data.beatMap.id, mod_int);
 
     const length_num = (mod_str === 'DT') ? (data.beatMap.total_length / 1.5) : data.beatMap.total_length;
