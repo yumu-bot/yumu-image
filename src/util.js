@@ -2795,7 +2795,7 @@ export const PanelGenerate = {
         }
 
         function getApproximateLeftRankedTime(date = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', whichData = 0) {
-            const dateP7 = moment(date, 'YYYY-MM-DD[T]HH:mm:ssZ').utcOffset(8).add(7, 'days');
+            const dateP7 = moment(date, format).utcOffset(8).add(7, 'days');
 
             switch (whichData) {
                 case 0: return dateP7.diff(moment(), "days");
