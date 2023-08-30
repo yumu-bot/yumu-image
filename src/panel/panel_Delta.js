@@ -1,7 +1,7 @@
 import {
     exportLossLessImage,
     getExportFileV3Path,
-    getModColor,
+    getModColor, getModInt,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     implantImage,
@@ -152,16 +152,14 @@ export async function panel_Delta(data = {
     const nijika_color = '#FBCF5B';
 
     // 谱面重计算
-    const mod_str = data.mod ? data.mod.toString() : 'NM';
+    const mod_str = data.mod ? data.mod.toString().toUpperCase() : 'NM';
     const position_str = data.position ? data.position.toString() : '';
     const mod_color = getModColor(mod_str);
 
-    let mod_int = 0;
-    if (mod_str.indexOf("DT") !== -1) mod_int = 64;
+    let mod_int = getModInt([mod_str]);
 
     const id = data.beatMap.id || 0;
     const attr = await getMapAttributes(id, mod_int);
-
 
     const length_num = (mod_str === 'DT') ? (data.beatMap.total_length / 1.5) : data.beatMap.total_length;
 
