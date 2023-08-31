@@ -218,7 +218,7 @@ export async function panel_Delta(data = {
 
     const image = await readNetImage(data.beatMap.beatmapset.covers["list@2x"], 'beatmap-DLfailBG.jpg')
 
-    svg = hasBG ? implantImage(svg, 1080, 1080, -30, 0, 1, image, reg_background) : svg;
+    svg = (data.hasBG === false) ? svg : implantImage(svg, 1080, 1080, -30, 0, 1, image, reg_background);
     svg = implantImage(svg, 1920, 1080, 0, 0, 1, getExportFileV3Path('panel-kita.png'), reg_base);
     svg = implantImage(svg, 153, 153, 1586, 721, 1, getExportFileV3Path('panel-kita-center.png'), reg_index);
 
