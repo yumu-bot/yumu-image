@@ -15,7 +15,7 @@ export const EXPORT_FILE_V3 = process.env.EXPORT_FILE
 
 const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
 const FLAG_PATH = process.env.FLAG_PATH || CACHE_PATH + "/flag"
-export const OSU_BUFFER_PATH = IMG_BUFFER_PATH + "/osu";
+export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufile";
 const MD5 = crypto.createHash("md5");
 
 export function initPath() {
@@ -1306,7 +1306,7 @@ export function getV3Score (v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mod
         } else if (n >= 1) {
             // 10以下斯特林公式不太精确
             let pow = 2;
-            for (i = 2; i <= n; i++) {
+            for (let i = 2; i <= n; i++) {
                 pow *= i;
             }
             return log4(pow);
