@@ -3045,8 +3045,8 @@ export const PanelGenerate = {
 
         function getApproximateRankedTime(date = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]') {
 
-            const dateP7 = moment(date, format).utcOffset(960).add(7, 'days');
-            const dateP7m20 = moment(date, format).utcOffset(960).add(7, 'days').add(20, 'minutes');
+            const dateP7 = moment(date, format).add(8, 'hours').add(7, 'days');
+            const dateP7m20 = moment(date, format).add(8, 'hours').add(7, 'days').add(20, 'minutes');
 
             return dateP7.format("YYYY-MM-DD HH:mm")
                 + ' ~ '
@@ -3055,7 +3055,7 @@ export const PanelGenerate = {
         }
 
         function getApproximateLeftRankedTime(date = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', whichData = 0) {
-            const dateP7 = moment(date, format).utcOffset(8).add(7, 'days');
+            const dateP7 = moment(date, format).add(8, 'hours').add(7, 'days');
 
             switch (whichData) {
                 case 0: return dateP7.diff(moment(), "days");
