@@ -131,7 +131,7 @@ export async function calcPerformancePoints(bid, score = statistics, mode, reloa
 
 async function getOsuFilePath(bid, mode, reload = false) {
     mode = mode ? mode.toLowerCase() : 'osu';
-    const filePath = `${OSU_BUFFER_PATH}/${bid}-${mode}.osu`;
+    const filePath = `${OSU_BUFFER_PATH}/${bid}.osu`;
 
     try {
         if (!reload) {
