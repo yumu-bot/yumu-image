@@ -3464,9 +3464,8 @@ export const PanelDraw = {
      * @param r 半径
      * @param start 起始位置，0-1（已经除以过 2π
      * @param color 颜色
-     * @param cr 控制点的半径，一般是r的2倍
      */
-    PieChart: (num = 1.0, cx = 0, cy = 0, r = 100, cr = 200, start = 0, color = '#fff') => {
+    PieChart: (num = 1.0, cx = 0, cy = 0, r = 100, start = 0, color = '#fff') => {
         const pi = Math.PI;
         let radEnd = 2 * pi * num;
         let radStart = 2 * pi * start;
@@ -3479,7 +3478,7 @@ export const PanelDraw = {
         }
 
         //获取中继点，这个点可以让区域控制点完美处于圆的外围
-        const assist = getAssistPoint(radStart, radEnd, cx, cy, cr);
+        const assist = getAssistPoint(radStart, radEnd, cx, cy, r);
 
         const xMin = cx + r * Math.sin(radStart);
         const yMin = cy - r * Math.cos(radStart);

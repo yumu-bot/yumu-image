@@ -614,7 +614,7 @@ export async function panel_J(data = {
     data.mods_attr.reduce((prev, curr) => {
         const curr_percent = prev + curr.percent;
         const color = getModColor(curr.index);
-        mod_svg += PanelDraw.PieChart(curr_percent, 842, 470, 100, 100, prev, color);
+        mod_svg += PanelDraw.PieChart(curr_percent, 842, 470, 100, prev, color);
         return curr_percent;
     }, 0);
 
@@ -624,7 +624,7 @@ export async function panel_J(data = {
     data.rank_attr.reduce((prev, curr) => {
         const curr_percent = prev + curr.percent;
         const color = getRankColor(curr.index);
-        rank_svg += PanelDraw.PieChart(curr_percent, 1630, 815, 100, 100, prev, color);
+        rank_svg += PanelDraw.PieChart(curr_percent, 1630, 815, 100, prev, color);
         return curr_percent;
     }, 0);
 
