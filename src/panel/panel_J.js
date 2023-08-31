@@ -435,7 +435,7 @@ export async function panel_J(data = {
         'right baseline',
         '#fff'
     );
-    const pp_mini_path = torus.getTextPath('('+ pp_raw + '+' + pp_bonus + ')', 1860,
+    const pp_mini_path = torus.getTextPath('(' + pp_raw + '+' + pp_bonus + ')', 1860,
         374.754,
         24,
         'right baseline',
@@ -548,7 +548,7 @@ export async function panel_J(data = {
 
     // RFPPChart(pp_raw_arr, '#FFCC22', pp_max, pp_min);
     // RFPPChart(pp_arr, '#aaa', pp_max, pp_min);
-    const PPChart = PanelDraw.LineChart(pp_raw_arr, pp_max, pp_min, 1040, 610, 780, 215, '#FFCC22',1, 0, 4);
+    const PPChart = PanelDraw.LineChart(pp_raw_arr, pp_max, pp_min, 1040, 610, 780, 215, '#FFCC22', 1, 0, 4);
     svg = replaceText(svg, PPChart, reg_pp_graph);
 
     // 绘制纵坐标，注意max在下面
@@ -610,8 +610,25 @@ export async function panel_J(data = {
     svg = replaceText(svg, bp_length_text, reg_rrect);
 
     // 插入两个饼图
-    const mod_svg = drawPieChart(data.mods_attr, true, 772, 400);
-    const rank_svg = drawPieChart(data.rank_attr, false, 1560, 745);
+    let mod_svg = '';
+    data.mods_attr.reduce((prev, curr) => {
+        const curr_percent = prev + curr.percent;
+        const color = getModColor(curr.index);
+        mod_svg += PanelDraw.PieChart(curr_percent, 842, 470, 100, 100, prev, color);
+        return curr_percent;
+    }, 0);
+
+    mod_svg += `<image width="140" height="140" transform="translate(${842 - 70} ${470 - 70})" xlink:href="${getExportFileV3Path('object-piechart-overlay2.png')}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`;
+
+    let rank_svg = '';
+    data.rank_attr.reduce((prev, curr) => {
+        const curr_percent = prev + curr.percent;
+        const color = getRankColor(curr.index);
+        rank_svg += PanelDraw.PieChart(curr_percent, 1630, 815, 100, 100, prev, color);
+        return curr_percent;
+    }, 0);
+
+    rank_svg += `<image width="140" height="140" transform="translate(${1630 - 70} ${815 - 70})" xlink:href="${getExportFileV3Path('object-piechart-overlay2.png')}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`;
 
     svg = replaceText(svg, mod_svg, reg_pan_mod);
     svg = replaceText(svg, rank_svg, reg_pan_rank);
@@ -653,135 +670,38 @@ export async function panel_J(data = {
 
 
     return svg;
-    // 我怀疑你括号缩进乱了...
+}
 
+/**
+ * @function 根据选举的优先级来给条形图返回上色用的颜色数组
+ * @return {string[]} 曲线的 svg
+ * @param dataArr 条形图的数据数组，包含了选举信息
+ * @param electArr 选举出的数组，越靠前越高级，但是需要放在下层
+ * @param length 返回的数组长度，一般来说这肯定小于等于 dataArr。
+ * @param defaultValue 填充的默认值
+ */
+function getBarChartColorArray (dataArr = [''], electArr = [''], length = 0, defaultValue) {
+    let arr = new Array(length).fill(defaultValue);
 
-    /**
-     * @function 根据选举的优先级来给条形图返回上色用的颜色数组
-     * @return {string[]} 曲线的 svg
-     * @param dataArr 条形图的数据数组，包含了选举信息
-     * @param electArr 选举出的数组，越靠前越高级，但是需要放在下层
-     * @param length 返回的数组长度，一般来说这肯定小于等于 dataArr。
-     * @param defaultValue 填充的默认值
-     */
-    function getBarChartColorArray (dataArr = [''], electArr = [''], length = 0, defaultValue) {
-        let arr = new Array(length).fill(defaultValue);
+    for (const v of electArr) {
+        let steps = (dataArr.length - 1) / (length - 1);
+        let stepSum = steps;
+        let stepCount = 0;
+        let color = getRankColor(v);
 
-        for (const v of electArr) {
-            let steps = (dataArr.length - 1) / (length - 1);
-            let stepSum = steps;
-            let stepCount = 0;
-            let color = getRankColor(v);
-
-            dataArr.forEach((v0, i) => {
-                if (i < stepSum) {
-                    if (v0.toUpperCase() === v.toUpperCase()) arr.splice(stepCount, 1, color);
-                } else {
-                    stepSum += steps;
-                    stepCount ++;
-                }
-            })
-        }
-
-        //有时候取不到最后一位，所以需要补足
-        const arr_last_value = dataArr[dataArr.length - 1];
-        if (arr[length - 1] === defaultValue) arr.splice(length - 1, 1, getRankColor(arr_last_value));
-
-        return arr;
-    }
-
-    /**
-     * @function 绘制圆饼
-     * @return {String} 圆饼的 svg
-     * @param arr 数据数组
-     * @param func 功能，true = Mod / false = Rank
-     * @param x 左上角横坐标
-     * @param y 左上角纵坐标
-     */
-    function drawPieChart(arr = [{
-        index: "HD",
-        map_count: 50,
-        pp_count: 4396,
-        percent: 0.26,
-    },], func = true, x = 0, y = 0) {
-        let pie_svg = '';
-        const pi = Math.PI;
-        const r = 100;
-        const cx = x + 70;
-        const cy = y + 70;
-
-        let rad = 0; //用于记录rad变换
-
-        for (const i in arr) {
-            let radMin = rad;
-            let radDelta = arr[i].percent * 2 * pi;
-            let radMax = rad + radDelta;
-            let assist = getAssistPoint(radMin, radMax, cx, cy);
-            let color;
-
-            if (arr[i].index === "FC") continue; //放弃这两个上色  || arr[i].index === "PF" PF好像和perfect重叠了
-
-            if (func) {
-                color = getModColor(arr[i].index);
-            }
-            else {
-                color = getRankColor(arr[i].index);
-            }
-
-            let xMin = cx + r * Math.sin(radMin);
-            let yMin = cy - r * Math.cos(radMin);
-            let xMax = cx + r * Math.sin(radMax);
-            let yMax = cy - r * Math.cos(radMax);
-
-            pie_svg += `<polygon id="Polygon_${arr[i].index}_${i}" points="${cx} ${cy} ${xMin} ${yMin} ${assist}${xMax} ${yMax} ${cx} ${cy}" style="fill: ${color};"/>`; //这里assist后面的空格是故意删去的
-
-            rad += radDelta;
-        }
-
-        const image = getExportFileV3Path('object-piechart-overlay2.png');
-        const opacity = 1;
-
-        pie_svg += `<image width="140" height="140" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
-
-        return pie_svg;
-
-        //获取中继点，这个点可以让区域控制点完美处于圆的外围
-        function getAssistPoint(radMin = 0, radMax = 0, cx = 0, cy = 0) {
-            const pi = Math.PI;
-            const r = 100; //给控制点的圆的半径，比内部圆大很多
-            if (radMax < radMin) return '';
-
-            let out;
-            let assist_arr = [];
-
-            assist_arr.push('',
-                (cx + r) + ' ' + (cy - r) + ' ',
-                (cx + r) + ' ' + (cy + r) + ' ',
-                (cx - r) + ' ' + (cy + r) + ' ',
-                (cx - r) + ' ' + (cy - r) + ' ');
-
-            if (radMin < pi / 4) {
-                if (radMax < pi / 4) out = ' ';
-                else if (radMax < 3 * pi / 4) out = (assist_arr[1]);
-                else if (radMax < 5 * pi / 4) out = (assist_arr[1] + assist_arr[2]);
-                else if (radMax < 7 * pi / 4) out = (assist_arr[1] + assist_arr[2] + assist_arr[3]);
-                else out = (assist_arr[1] + assist_arr[2] + assist_arr[3] + assist_arr[4]);
-            } else if (radMin < 3 * pi / 4) {
-                if (radMax < 3 * pi / 4) out = ' ';
-                else if (radMax < 5 * pi / 4) out = (assist_arr[2]);
-                else if (radMax < 7 * pi / 4) out = (assist_arr[2] + assist_arr[3]);
-                else out = (assist_arr[2] + assist_arr[3] + assist_arr[4]);
-            } else if (radMin < 5 * pi / 4) {
-                if (radMax < 5 * pi / 4) out = ' ';
-                else if (radMax < 7 * pi / 4) out = (assist_arr[3]);
-                else out = (assist_arr[3] + assist_arr[4]);
-            } else if (radMin < 7 * pi / 4) {
-                if (radMax < 7 * pi / 4) out = ' ';
-                else out = (assist_arr[4]);
+        dataArr.forEach((v0, i) => {
+            if (i < stepSum) {
+                if (v0.toUpperCase() === v.toUpperCase()) arr.splice(stepCount, 1, color);
             } else {
-                out = '';
+                stepSum += steps;
+                stepCount ++;
             }
-            return out;
-        }
+        })
     }
+
+    //有时候取不到最后一位，所以需要补足
+    const arr_last_value = dataArr[dataArr.length - 1];
+    if (arr[length - 1] === defaultValue) arr.splice(length - 1, 1, getRankColor(arr_last_value));
+
+    return arr;
 }

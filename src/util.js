@@ -804,6 +804,7 @@ export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /
     }
 }
 
+//如果不需要修改位置，用replaceText就行
 export function implantSvgBody(base = '', x= 0, y = 0, replace = '', reg = /.*/) {
     if (x !== 0 || y !== 0) replace = `<g transform="translate(${x} ${y})">` + replace + '</g>'
     return base.replace(reg, replace);
@@ -3432,7 +3433,7 @@ export const PanelDraw = {
         return (path_svg + area_svg).toString();
     },
 
-    //data是0-1
+    //六边形图，data是0-1
     Hexagon: (data = [0,0,0,0,0,0], cx = 960, cy = 600, r = 230, color = '#fff') => {
         let line = `<path d="M `;
         let circle = '';
@@ -3452,6 +3453,77 @@ export const PanelDraw = {
         const line2 = `Z" style="fill: ${color}; stroke-width: 6; stroke: none; opacity: 0.3;"/> `
         line = line + line1 + line + line2 + circle;
         return line;
+    },
+
+    /**
+     * @function 绘制饼图，需要搭配一个圆当 Mask
+     * @return {String} 圆饼图的 svg
+     * @param num 数据，0-1
+     * @param cx 中心横坐标
+     * @param cy 中心纵坐标
+     * @param r 半径
+     * @param start 起始位置，0-1（已经除以过 2π
+     * @param color 颜色
+     * @param cr 控制点的半径，一般是r的2倍
+     */
+    PieChart: (num = 1.0, cx = 0, cy = 0, r = 100, cr = 200, start = 0, color = '#fff') => {
+        const pi = Math.PI;
+        let radEnd = 2 * pi * num;
+        let radStart = 2 * pi * start;
+
+        //如果小于start，则变换位置
+        if (radEnd < radStart) {
+            radStart = radStart + radEnd;
+            radEnd = radStart - radEnd;
+            radStart = radStart - radEnd;
+        }
+
+        //获取中继点，这个点可以让区域控制点完美处于圆的外围
+        const assist = getAssistPoint(radStart, radEnd, cx, cy, cr);
+
+        const xMin = cx + r * Math.sin(radStart);
+        const yMin = cy - r * Math.cos(radStart);
+        const xMax = cx + r * Math.sin(radEnd);
+        const yMax = cy - r * Math.cos(radEnd);
+
+        return `<polygon points="${cx} ${cy} ${xMin} ${yMin} ${assist}${xMax} ${yMax} ${cx} ${cy}" style="fill: ${color};"/>`; //这里assist后面的空格是故意删去的
+
+        //获取中继点
+        function getAssistPoint(radMin = 0, radMax = 0, cx = 0, cy = 0, r = 100) {
+            //r给控制点的圆的半径，比内部圆大很多
+            const pi = Math.PI;
+            if (radMax < radMin) return '';
+
+            let assist;
+            const assist_arr = ['',
+                (cx + r) + ' ' + (cy - r) + ' ',
+                (cx + r) + ' ' + (cy + r) + ' ',
+                (cx - r) + ' ' + (cy + r) + ' ',
+                (cx - r) + ' ' + (cy - r) + ' '];
+
+            if (radMin < pi / 4) {
+                if (radMax < pi / 4) assist = ' ';
+                else if (radMax < 3 * pi / 4) assist = (assist_arr[1]);
+                else if (radMax < 5 * pi / 4) assist = (assist_arr[1] + assist_arr[2]);
+                else if (radMax < 7 * pi / 4) assist = (assist_arr[1] + assist_arr[2] + assist_arr[3]);
+                else assist = (assist_arr[1] + assist_arr[2] + assist_arr[3] + assist_arr[4]);
+            } else if (radMin < 3 * pi / 4) {
+                if (radMax < 3 * pi / 4) assist = ' ';
+                else if (radMax < 5 * pi / 4) assist = (assist_arr[2]);
+                else if (radMax < 7 * pi / 4) assist = (assist_arr[2] + assist_arr[3]);
+                else assist = (assist_arr[2] + assist_arr[3] + assist_arr[4]);
+            } else if (radMin < 5 * pi / 4) {
+                if (radMax < 5 * pi / 4) assist = ' ';
+                else if (radMax < 7 * pi / 4) assist = (assist_arr[3]);
+                else assist = (assist_arr[3] + assist_arr[4]);
+            } else if (radMin < 7 * pi / 4) {
+                if (radMax < 7 * pi / 4) assist = ' ';
+                else assist = (assist_arr[4]);
+            } else {
+                assist = '';
+            }
+            return assist;
+        }
     }
 }
 
