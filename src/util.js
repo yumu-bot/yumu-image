@@ -1084,6 +1084,7 @@ export function getModColor(Mod = '') {
  * @param {String} 输入评级
  */
 export function getRankColor(Rank = 'F') {
+    if (typeof Rank !== 'string') return 'none';
     let color;
     switch (Rank.toUpperCase()) {
         case "XH":
@@ -1121,7 +1122,7 @@ export function getRankColor(Rank = 'F') {
             color = '#616161';
             break;
         default:
-            color = '#fff';
+            color = 'none';
             break;
     }
 
@@ -2496,8 +2497,6 @@ export const PanelGenerate = {
                 break;
         }
 
-        let rws = user.rws * 100;
-
         return {
             team: user.team.toLowerCase(),
             team_color: team_color,
@@ -2510,7 +2509,7 @@ export const PanelGenerate = {
             player_win: user.wins,
             player_lose: user.lost,
             player_rank: user.index || 0,
-            player_rws: rws, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
+            player_rws: (user.rws * 100) || 0, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
             player_mra: user.mra, // 木斗力
             player_Label_V1: user.playerLabelV1,
             player_Label_V2: user.playerLabelV2,
@@ -2732,12 +2731,20 @@ export const PanelGenerate = {
 //把数组变成可视化的图表
 export const PanelDraw = {
 
-    RRect: (x, y, w, h, r, color) => {
-        return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: ${color};"/>`;
+    Rect: (x = 0, y = 0, w = 0, h = 0, r = 0, color = '#fff', opacity = 1) => {
+        return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" opacity="${opacity}" style="fill: ${color};"/>`;
+    },
+
+    Circle: (cx = 0, cy = 0, r = 0, color = '#fff') => {
+        return `<circle cx="${cx}" cy="${cx}" r="${r}" style="fill: ${color};"/>`;
+    },
+
+    Polygon: (x = 0, y = 0, controls = '', ex = 0, ey = 0, color = '#fff') => {
+        return `<polygon points="${x} ${y} ${controls} ${ex} ${ey}" style="fill: ${color};"/>`
     },
 
     //柱状图，Histogram，max 如果填 0，即用数组的最大值
-    BarChart: (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, gap = 0, color, opacity = 1) => {
+    BarChart: (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff', floor = 0, floorColor = '#aaa', opacity = 1) => {
         if (arr == null) return '';
 
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
@@ -2747,22 +2754,24 @@ export const PanelDraw = {
         let rect_svg = '<g>';
 
         arr.forEach((v, i) => {
-            const height = (v - arr_min) / (arr_max - arr_min) * h;
+            const isFloor = (v - arr_min) / (arr_max - arr_min) * h <= floor;
+            const height = isFloor ? floor : (v - arr_min) / (arr_max - arr_min) * h;
+            const rectColor = isFloor ? floorColor : color;
             const x0 = x + step * i;
             const y0 = y - height;
 
-            rect_svg += `<rect x="${x0}" y="${y0}" width="${width}" height="${height}" rx="2" ry="2" style="fill: ${color};"/>`
+            rect_svg += PanelDraw.Rect(x0, y0, width, height, r, rectColor);
         })
 
         return (rect_svg + '</g>').toString();
     },
 
     //折线图，max/min 如果填 0，即用数组的最大值
-    LineChart: (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3) => {
+    LineChart: (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3, is0toMin = false) => {
         if (arr == null) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
         const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;
-        const delta = arr_max - arr_min;
+        const delta = Math.abs(arr_max - arr_min);
         const step = w / arr.length;
         const x0 = x + step / 4; //为了居中，这里要加上最后1步除以4的距离
         const y0 = y;
@@ -2777,6 +2786,8 @@ export const PanelDraw = {
             const lineto_x = x0 + step * (i + 1);
             const lineto_y = y0 - height;
 
+            if (v === 0 && is0toMin) lineto_y = start_y; //如果数值为 0，则画在最小值的地方
+
             path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `; // 第一个xy是点位置，第二个是控制点位置
             area_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `;
         })
@@ -2788,7 +2799,7 @@ export const PanelDraw = {
     },
 
     //六边形图，data是0-1
-    Hexagon: (data = [0,0,0,0,0,0], cx = 960, cy = 600, r = 230, color = '#fff') => {
+    HexagonChart: (data = [0,0,0,0,0,0], cx = 960, cy = 600, r = 230, color = '#fff') => {
         let line = `<path d="M `;
         let circle = '';
 
@@ -2799,7 +2810,7 @@ export const PanelDraw = {
             let x = cx - r * Math.cos(PI_3 * i) * std_data;
             let y = cy - r * Math.sin(PI_3 * i) * std_data;
             line += `${x} ${y} L `;
-            circle += `<circle cx="${x}" cy="${y}" r="10" style="fill: ${color};"/>`;
+            circle += PanelDraw.Circle(x, y, 10, color);
         }
 
         line = line.substr(0, line.length - 2);
@@ -2839,7 +2850,8 @@ export const PanelDraw = {
         const xMax = cx + r * Math.sin(radEnd);
         const yMax = cy - r * Math.cos(radEnd);
 
-        return `<polygon points="${cx} ${cy} ${xMin} ${yMin} ${assist}${xMax} ${yMax} ${cx} ${cy}" style="fill: ${color};"/>`; //这里assist后面的空格是故意删去的
+        const controls = `${xMin} ${yMin} ${assist}${xMax} ${yMax}`; //这里assist后面的空格是故意删去的
+        return PanelDraw.Polygon(cx, cy, controls, cx, cy, color);
 
         //获取中继点
         function getAssistPoint(radMin = 0, radMax = 0, cx = 0, cy = 0, r = 100) {

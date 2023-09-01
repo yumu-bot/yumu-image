@@ -14,7 +14,7 @@ import {
     implantImage,
     implantSvgBody,
     maximumArrayToFixedLength,
-    modifyArrayToFixedLength,
+    modifyArrayToFixedLength, PanelDraw,
     PanelGenerate,
     readNetImage,
     readTemplate,
@@ -203,14 +203,15 @@ export async function panel_D(data = {
         avatar: getExportFileV3Path('avatar-guest.png'),
         sub_icon1: getExportFileV3Path('object-card-supporter.png'),
         sub_icon2: '',
-        name: 'Muziyami',
-        rank_global: 28075,
-        rank_country: 577,
         country: 'CN',
-        acc: 95.27,
-        level: 100,
-        progress: 32,
-        pp: 4396,
+
+        top1: 'Muziyami',
+        left1: '#28075',
+        left2: 'CN#1611',
+        right1: '',
+        right2: '98.7% Lv.93(24%)',
+        right3b: '4396',
+        right3m: 'PP',
     },
 
     // D标签
@@ -313,62 +314,62 @@ export async function panel_D(data = {
     let svg = readTemplate('template/Panel_D.svg');
 
     // 路径定义
-    let reg_maincard = /(?<=<g id="MainCard">)/;
-    let reg_cardj = /(?<=<g id="CardJ">)/;
-    let reg_cardk = /(?<=<g id="CardK">)/;
-    let reg_label = /(?<=<g id="LabelDR">)/;
-    let reg_index = /(?<=<g id="Index">)/;
-    let reg_mascot_name = /(?<=<g id="MascotName">)/;
-    let reg_progress = /(?<=<g id="Progress">)/;
-    let reg_progressR = /(?<=<g id="ProgressRRect">)/;
-    let reg_grade_text = /(?<=<g id="GradeText">)/;
-    let reg_grade_image = /(?<=<g id="GradeImage">)/;
-    let reg_ranking_graph = /(?<=<g id="RankingGraph">)/;
-    let reg_ranking_text = /(?<=<g id="RankingText">)/;
-    let reg_bp_activity_graph = /(?<=<g id="BPActivityR">)/;
-    let reg_user_data_text = /(?<=<g id="UserDataText">)/;
-    let reg_pc_activity_graph = /(?<=<g id="UserActivityR">)/;
+    const reg_maincard = /(?<=<g id="MainCard">)/;
+    const reg_cardj = /(?<=<g id="CardJ">)/;
+    const reg_cardk = /(?<=<g id="CardK">)/;
+    const reg_label = /(?<=<g id="LabelDR">)/;
+    const reg_index = /(?<=<g id="Index">)/;
+    const reg_mascot_name = /(?<=<g id="MascotName">)/;
+    const reg_progress = /(?<=<g id="Progress">)/;
+    const reg_progressR = /(?<=<g id="ProgressRRect">)/;
+    const reg_grade_text = /(?<=<g id="GradeText">)/;
+    const reg_grade_image = /(?<=<g id="GradeImage">)/;
+    const reg_ranking_graph = /(?<=<g id="RankingGraph">)/;
+    const reg_ranking_text = /(?<=<g id="RankingText">)/;
+    const reg_bp_activity_graph = /(?<=<g id="BPActivityR">)/;
+    const reg_user_data_text = /(?<=<g id="UserDataText">)/;
+    const reg_pc_activity_graph = /(?<=<g id="UserActivityR">)/;
 
-    let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PD-1\);">)/;
-    let reg_mascot_bg = /(?<=<g style="clip-path: url\(#clippath-PD-2\);">)/;
-    let reg_mascot = /(?<=filter="url\(#inset-shadow-PD-4\)">)/;
+    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PD-1\);">)/;
+    const reg_mascot_bg = /(?<=<g style="clip-path: url\(#clippath-PD-2\);">)/;
+    const reg_mascot = /(?<=filter="url\(#inset-shadow-PD-4\)">)/;
 
 
     // 卡片定义
-    let rks_b = getRoundedNumberLargerStr(data.label_data.rks.data, 4);
-    let rks_m = getRoundedNumberSmallerStr(data.label_data.rks.data, 4);
-    let tts_b = getRoundedNumberLargerStr(data.label_data.tts.data, 4);
-    let tts_m = getRoundedNumberSmallerStr(data.label_data.tts.data, 4);
-    let pc_b = getRoundedNumberLargerStr(data.label_data.pc.data, 0);
-    let pc_m = getRoundedNumberSmallerStr(data.label_data.pc.data, 0);
-    let mpl_b = getRoundedNumberLargerStr(data.label_data.mpl.data, 0);
-    let mpl_m = getRoundedNumberSmallerStr(data.label_data.mpl.data, 0);
-    let rep_b = getRoundedNumberLargerStr(data.label_data.rep.data, 0);
-    let rep_m = getRoundedNumberSmallerStr(data.label_data.rep.data, 0);
-    let fan_b = getRoundedNumberLargerStr(data.label_data.fan.data, 0);
-    let fan_m = getRoundedNumberSmallerStr(data.label_data.fan.data, 0);
-    let tth_b = getRoundedNumberLargerStr(data.label_data.tth.data, 4);
-    let tth_m = getRoundedNumberSmallerStr(data.label_data.tth.data, 4);
+    const rks_b = getRoundedNumberLargerStr(data.label_data.rks.data, 4);
+    const rks_m = getRoundedNumberSmallerStr(data.label_data.rks.data, 4);
+    const tts_b = getRoundedNumberLargerStr(data.label_data.tts.data, 4);
+    const tts_m = getRoundedNumberSmallerStr(data.label_data.tts.data, 4);
+    const pc_b = getRoundedNumberLargerStr(data.label_data.pc.data, 0);
+    const pc_m = getRoundedNumberSmallerStr(data.label_data.pc.data, 0);
+    const mpl_b = getRoundedNumberLargerStr(data.label_data.mpl.data, 0);
+    const mpl_m = getRoundedNumberSmallerStr(data.label_data.mpl.data, 0);
+    const rep_b = getRoundedNumberLargerStr(data.label_data.rep.data, 0);
+    const rep_m = getRoundedNumberSmallerStr(data.label_data.rep.data, 0);
+    const fan_b = getRoundedNumberLargerStr(data.label_data.fan.data, 0);
+    const fan_m = getRoundedNumberSmallerStr(data.label_data.fan.data, 0);
+    const tth_b = getRoundedNumberLargerStr(data.label_data.tth.data, 4);
+    const tth_m = getRoundedNumberSmallerStr(data.label_data.tth.data, 4);
 
-    let label_rks =
+    const label_rks =
         await label_E({...LABEL_OPTION.RKS, data_b: rks_b, data_m: rks_m}, true);
-    let label_tts =
+    const label_tts =
         await label_E({...LABEL_OPTION.TTS, data_b: tts_b, data_m: tts_m}, true);
-    let label_pc =
+    const label_pc =
         await label_E({...LABEL_OPTION.PC, data_b: pc_b, data_m: pc_m}, true);
-    let label_pt =
+    const label_pt =
         await label_E({...LABEL_OPTION.PT, ...data.label_data.pt}, true);
 
-    let label_mpl =
+    const label_mpl =
         await label_E({...LABEL_OPTION.MPL, data_b: mpl_b, data_m: mpl_m}, true);
-    let label_rep =
+    const label_rep =
         await label_E({...LABEL_OPTION.REP, data_b: rep_b, data_m: rep_m}, true);
-    let label_fan =
+    const label_fan =
         await label_E({...LABEL_OPTION.FAN, data_b: fan_b, data_m: fan_m}, true);
-    let label_tth =
+    const label_tth =
         await label_E({...LABEL_OPTION.TTH, data_b: tth_b, data_m: tth_m}, true);
 
-    let card_A1_impl =
+    const card_A1_impl =
         await card_A1(data.card_A1, true);
 
     let card_Js = [];
@@ -388,19 +389,19 @@ export async function panel_D(data = {
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
 
-    let rank_country_text = ' ' + (data.country || '') + '#' + (data.rank_country || '0');
+    const rank_country_text = ' ' + (data.country || '') + '#' + (data.rank_country || '0');
 
-    let rank_global = torus.getTextPath('#' + data.rank_global || '0',
+    const rank_global = torus.getTextPath('#' + data.rank_global || '0',
         1860 - torus.getTextWidth(rank_country_text, 24),
         374.754, 36, "right baseline", "#fff");
-    let rank_country = torus.getTextPath(rank_country_text, 1860, 374.754, 24, "right baseline", "#a1a1a1");
+    const rank_country = torus.getTextPath(rank_country_text, 1860, 374.754, 24, "right baseline", "#a1a1a1");
 
 
     // 绘制rank曲线。
-    let ranking_arr = modifyArrayToFixedLength(data.user_ranking_arr, 90, true);
+    const ranking_arr = modifyArrayToFixedLength(data.user_ranking_arr, 90, true);
     let ranking_nonzero_arr = [];
 
-    let user_ranking_max = Math.max.apply(Math, ranking_arr);
+    const user_ranking_max = Math.max.apply(Math, ranking_arr);
 
     //处理rank数组，如果有0，补最大值
     ranking_arr.forEach((v) => {
@@ -408,38 +409,19 @@ export async function panel_D(data = {
         ranking_nonzero_arr.push(v);
     });
 
-    let user_ranking_min = Math.min.apply(Math, ranking_nonzero_arr);
-    let user_ranking_mid = (user_ranking_max + user_ranking_min) / 2;
-
-    function RFRankChart(arr, color, max, min) {
-        const step = 780 / arr.length
-        const start_x = 1042; //往右挪了2px
-        const start_y = 610;
-        const delta = max - min;
-
-        // M S 大写是绝对坐标 S 是 smooth cubic Bezier curve (平滑三次贝塞尔?)
-        let path_svg = `<svg> <path d="M ${start_x} ${start_y - ((max - arr.shift()) / delta * 215)} S `;
-
-        arr.forEach((item, i) => {
-            let lineto_x = start_x + step * (i + 1)
-            let lineto_y = start_y - ((max - item) / delta * 215);
-
-            if (item === 0) lineto_y = start_y; //处理 rank 为 0 的情况
-
-            path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 8} ${lineto_y} ` // 第一个xy是点位置，第二个是控制点位置
-        })
-        path_svg += `" style="fill: none; stroke: ${color}; stroke-miterlimit: 10; stroke-width: 4px;"/> </svg>`
-        svg = replaceText(svg, path_svg, reg_ranking_graph);
-    }
-
-    RFRankChart(ranking_nonzero_arr, '#FFCC22', user_ranking_max, user_ranking_min);
+    const user_ranking_min = Math.min.apply(Math, ranking_nonzero_arr);
+    const user_ranking_mid = (user_ranking_max + user_ranking_min) / 2;
+    
+    svg = replaceText(svg,
+        PanelDraw.LineChart(ranking_nonzero_arr, user_ranking_min, user_ranking_max,1040, 610, 780, 215, '#FFCC22', 1, 0, 4, true) //这里min和max换位置
+        , reg_ranking_graph);
 
     // 绘制 BP活动 直方图
 
-    let bp_arr = maximumArrayToFixedLength(data.user_bp_arr, 39);
+    const bp_arr = maximumArrayToFixedLength(data.user_bp_arr, 39);
 
-    let user_bp_activity_max = Math.max.apply(Math, bp_arr);
-    let user_bp_activity_max_fixed = Math.max(user_bp_activity_max, 5); //保底机制
+    const user_bp_activity_max = Math.max.apply(Math, bp_arr);
+    const user_bp_activity_max_fixed = Math.max(user_bp_activity_max, 5); //保底机制
 
     function RFBPActivityChart(arr, color, max) {
         const step = 20
@@ -450,13 +432,12 @@ export async function panel_D(data = {
 
         arr.forEach((item, i) => {
             const height = Math.max(((item + 1) / (max + 1) * 90), 16)//+1 和 16 都是保底机制
-            let rrect_color = color;
-            if (height <= 16) rrect_color = '#a1a1a1'; //如果保底了，颜色取灰色
+            let rrect_color = (height > 16) ? color : '#a1a1a1'; //如果保底了，颜色取灰色
 
             const lineto_x = start_x + step * (i);
             const lineto_y = start_y - height;
 
-            rect_svg += `<rect id="RFBPrect${i}" x="${lineto_x}" y="${lineto_y}" width="16" height="${start_y - lineto_y}" rx="8" ry="8" style="fill: ${rrect_color};"/>`
+            rect_svg += PanelDraw.Rect(lineto_x, lineto_y, 16, start_y - lineto_y, 8, rrect_color);
         })
         rect_svg += `</g>`
 
@@ -487,35 +468,16 @@ export async function panel_D(data = {
     svg = replaceText(svg, rank_axis, reg_ranking_text)
 
     // 绘制PC
-    let pc_arr = modifyArrayToFixedLength(data.user_pc_arr, 43, true)
+    const pc_arr = modifyArrayToFixedLength(data.user_pc_arr, 43, true)
 
-    let user_pc_activity_max = Math.max.apply(Math, pc_arr);
-    let user_pc_activity_max_fixed = Math.max(user_pc_activity_max, 5); //保底机制
+    const user_pc_activity_max = Math.max.apply(Math, pc_arr);
+    const user_pc_activity_max_fixed = Math.max(user_pc_activity_max, 5); //保底机制
 
-    function RBPCChart(arr, color, max) {
-        const step = 20
-        const start_x = 1002;
-        const start_y = 1000;
+    svg = replaceText(svg,
+        PanelDraw.BarChart(pc_arr, user_pc_activity_max_fixed, 0, 1002, 1000, 860, 90, 8, 4, '#8dcff4', 16, '#aaa')
+        , reg_pc_activity_graph);
 
-        let rect_svg = `<g>`
-
-        arr.forEach((item, i) => {
-            let lineto_x = start_x + step * (i)
-            let lineto_y = start_y - Math.max(((item + 1) / (max + 1) * 90), 16); //+1 和 16 都是保底机制
-            if (item !== 0) {
-                rect_svg += `<rect id="RFBPrect${i}" x="${lineto_x}" y="${lineto_y}" width="16" height="${start_y - lineto_y}" rx="8" ry="8" style="fill: ${color};"/>`
-            } else {
-                rect_svg += `<rect id="RFBPrect${i}" x="${lineto_x}" y="${lineto_y}" width="16" height="${start_y - lineto_y}" rx="8" ry="8" style="fill: #a1a1a1;"/>`
-            }
-        })
-        rect_svg += `</g>`
-
-        svg = replaceText(svg, rect_svg, reg_pc_activity_graph);
-    }
-
-    RBPCChart(pc_arr, '#8dcff4', user_pc_activity_max_fixed)
-
-    let pc_activity_text = torus.getTextPath(`${user_pc_activity_max}PC`,
+    const pc_activity_text = torus.getTextPath(`${user_pc_activity_max}PC`,
         1010 + pc_arr.findIndex((item) => item === user_pc_activity_max) * 20,
         905 + 75 * (5 - Math.min(user_pc_activity_max, 5)) / 5, //本来是90，缩减一点
         16,
@@ -525,8 +487,8 @@ export async function panel_D(data = {
     svg = replaceText(svg, pc_activity_text, reg_user_data_text)
 
     // 绘制月份
-    let last_year = data.user_pc_last_date.slice(0, 4);
-    let last_month = data.user_pc_last_date.slice(5, 7);
+    const last_year = data.user_pc_last_date.slice(0, 4);
+    const last_month = data.user_pc_last_date.slice(5, 7);
     let first_year;
     let first_month;
     let mid_year;
@@ -550,21 +512,21 @@ export async function panel_D(data = {
         mid_month = (parseInt(last_month) - 9).toString().padStart(2, '0');
     }
 
-    let user_pc_first_date = torus.getTextPath(
+    const user_pc_first_date = torus.getTextPath(
         first_year + '-' + first_month,
         995,
         1024.836,
         24,
         'left baseline',
         '#a1a1a1');
-    let user_pc_mid_date = torus.getTextPath(
+    const user_pc_mid_date = torus.getTextPath(
         mid_year + '-' + mid_month,
         1430,
         1024.836,
         24,
         'center baseline',
         '#a1a1a1');
-    let user_pc_last_date = torus.getTextPath(
+    const user_pc_last_date = torus.getTextPath(
         data.user_pc_last_date.slice(0, 7),
         1865,
         1024.836,
@@ -575,26 +537,26 @@ export async function panel_D(data = {
     svg = replaceTexts(svg, [user_pc_first_date, user_pc_mid_date, user_pc_last_date], reg_user_data_text);
 
     // 插入吉祥物
-    let mascot_name_data = getMascotName(data.game_mode);
-    let mascot_link = getMascotPath(mascot_name_data);
+    const mascot_name_data = getMascotName(data.game_mode);
+    const mascot_link = getMascotPath(mascot_name_data);
 
     svg = implantImage(svg, 560, 710, 40, 330, 1, mascot_link, reg_mascot);
 
     // 插入进度
-    let mascot_name_width = torus.getTextWidth((mascot_name_data || 'pippi'), 36)
-    let user_lv_text_width = torus.getTextWidth(' Lv.', 24);
-    let user_lv_width = torus.getTextWidth((data.user_lv.toString() || '0'), 36);
-    let user_progress_width =
+    const mascot_name_width = torus.getTextWidth((mascot_name_data || 'pippi'), 36)
+    const user_lv_text_width = torus.getTextWidth(' Lv.', 24);
+    const user_lv_width = torus.getTextWidth((data.user_lv.toString() || '0'), 36);
+    const user_progress_width =
         torus.getTextWidth((data.user_progress.toString() || '0'), 36) +
         torus.getTextWidth('%', 24);
 
-    let mascot_mark1_rrect_width =
+    const mascot_mark1_rrect_width =
         mascot_name_width +
         user_lv_width +
         user_lv_text_width + 30;
-    let mascot_mark2_rrect_width = user_progress_width + 30;
+    const mascot_mark2_rrect_width = user_progress_width + 30;
 
-    let mascot_mark1 =
+    const mascot_mark1 =
         torus.getTextPath((mascot_name_data || 'pippi'),
             75,
             380.754,
@@ -614,7 +576,7 @@ export async function panel_D(data = {
             "left baseline",
             "#fff");
 
-    let mascot_mark2 = torus.getTextPath((data.user_progress.toString() || '0'),
+    const mascot_mark2 = torus.getTextPath((data.user_progress.toString() || '0'),
             565 - torus.getTextWidth('%', 24),
             380.754,
             36,
@@ -627,16 +589,16 @@ export async function panel_D(data = {
             "right baseline",
             "#fff");
 
-    let mascot_mark1_rrect = `<rect x="60" y="350" width="${mascot_mark1_rrect_width}" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>`
-    let mascot_mark2_rrect = `<rect x="${580 - mascot_mark2_rrect_width}" y="350" width="${mascot_mark2_rrect_width}" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>`
+    const mascot_mark1_rrect = `<rect x="60" y="350" width="${mascot_mark1_rrect_width}" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>`
+    const mascot_mark2_rrect = `<rect x="${580 - mascot_mark2_rrect_width}" y="350" width="${mascot_mark2_rrect_width}" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>`
 
-    let progress_rrect = `<rect id="ProgressR" x="60" y="1016" width="${520 * (data.user_progress || 0) / 100}" height="4" rx="2" ry="2" style="fill: #fc2;"/>`
+    const progress_rrect = `<rect id="ProgressR" x="60" y="1016" width="${520 * (data.user_progress || 0) / 100}" height="4" rx="2" ry="2" style="fill: #fc2;"/>`
 
     // 插入右下面板右上提示
-    let game_mode = getGameMode(data.game_mode, 2);
-    let bonus_pp = Math.round(data.bonus_pp) || 0;
-    let om4k_pp = Math.round(data.om4k_pp) || 0;
-    let om7k_pp = Math.round(data.om7k_pp) || 0;
+    const game_mode = getGameMode(data.game_mode, 2);
+    const bonus_pp = Math.round(data.bonus_pp) || 0;
+    const om4k_pp = Math.round(data.om4k_pp) || 0;
+    const om7k_pp = Math.round(data.om7k_pp) || 0;
     let user_data_text;
 
     if (game_mode !== 'osu!mania') {
@@ -645,7 +607,7 @@ export async function panel_D(data = {
         user_data_text = game_mode + ' (bonus: ' + bonus_pp + ' PP // 4K: ' + om4k_pp + ' PP // 7K: ' + om7k_pp + ' PP)';
     }
 
-    let user_data = torus.getTextPath(
+    const user_data = torus.getTextPath(
         user_data_text,
         1860,
         725.836,
@@ -656,11 +618,11 @@ export async function panel_D(data = {
     svg = replaceText(svg, user_data, reg_user_data_text);
 
     // 评级数量
-    let grade_X = torus.getTextPath((data.grade_X + data.grade_XH).toString(), 685, 998.795, 30, 'center baseline', '#fff')
-    let grade_S = torus.getTextPath((data.grade_S + data.grade_SH).toString(), 790, 998.795, 30, 'center baseline', '#fff')
-    let grade_A = torus.getTextPath(data.grade_A.toString(), 895, 998.795, 30, 'center baseline', '#fff')
-    let grade_XH = torus.getTextPath(`(+${data.grade_XH})`, 685, 1024.877, 18, 'center baseline', '#a1a1a1')
-    let grade_SH = torus.getTextPath(`(+${data.grade_SH})`, 790, 1024.877, 18, 'center baseline', '#a1a1a1')
+    const grade_X = torus.getTextPath((data.grade_X + data.grade_XH).toString(), 685, 998.795, 30, 'center baseline', '#fff')
+    const grade_S = torus.getTextPath((data.grade_S + data.grade_SH).toString(), 790, 998.795, 30, 'center baseline', '#fff')
+    const grade_A = torus.getTextPath(data.grade_A.toString(), 895, 998.795, 30, 'center baseline', '#fff')
+    const grade_XH = torus.getTextPath(`(+${data.grade_XH})`, 685, 1024.877, 18, 'center baseline', '#a1a1a1')
+    const grade_SH = torus.getTextPath(`(+${data.grade_SH})`, 790, 1024.877, 18, 'center baseline', '#a1a1a1')
 
     svg = replaceTexts(svg, [grade_X, grade_S, grade_A, grade_XH, grade_SH, ], reg_grade_text);
 

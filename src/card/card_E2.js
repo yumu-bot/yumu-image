@@ -4,7 +4,7 @@ import {
     getGameMode,
     getModColor,
     getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
-    implantSvgBody, replaceTexts,
+    implantSvgBody, PanelDraw, replaceTexts,
 } from "../util.js";
 import {torus} from "../font.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
@@ -281,8 +281,7 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, font_h) {
 
         if (v.stat > 0) {
             const rect_width = w * v.stat / stat_max;
-            const svg_rect = `<rect id="L${i}RRect" x="${x}" y="${y + 40 * (i + 1)}" width="${Math.max(rect_width, 20)}" height="28" rx="10" ry="10" style="fill: ${color};"/>`;
-            svg += svg_rect;
+            svg += PanelDraw.Rect(x, y + 40 * (i + 1), Math.max(rect_width, 20), 28, 10, color);
         }
     });
 

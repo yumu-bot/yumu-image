@@ -1,7 +1,7 @@
 import {
     getExportFileV3Path,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, PanelDraw,
     readNetImage,
     readTemplate,
     replaceText, replaceTexts,
@@ -374,11 +374,9 @@ export async function card_C(data = {
                 rectSum += width;
                 rectColor = colorList[j];
                 if (data[`${team}`]) {
-                    await implantScoreBar(rectColor,
-                        (!isReverse ? startX : (calculateX - width)), //反转的使用位置
-                        startY,
-                        rectSum,
-                        30);
+                    svg = replaceText(svg,
+                        PanelDraw.Rect((!isReverse ? startX : (calculateX - width)), startY, rectSum, 30, 15, rectColor),
+                        reg_scorebar);
                 }
 
                 //结算
@@ -412,11 +410,9 @@ export async function card_C(data = {
                 rectSum += width;
                 rectColor = colorList[j];
                 if (data[`${team}`]) {
-                    await implantScoreBar(rectColor,
-                        (!isReverse ? startX : (calculateX - width)), //反转的使用位置
-                        startY,
-                        rectSum,
-                        30);
+                    svg = replaceText(svg,
+                        PanelDraw.Rect((!isReverse ? startX : (calculateX - width)), startY, rectSum, 30, 15, rectColor),
+                        reg_scorebar);
                 }
 
                 //结算
@@ -517,6 +513,7 @@ export async function card_C(data = {
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
     }
 
+    /*
     async function implantRoundLabelF2(object, x, y, isWin, scoreTextColor) {
         let label_F2_impl =
             await label_F2({
@@ -529,6 +526,8 @@ export async function card_C(data = {
         svg = implantSvgBody(svg, x, y, label_F2_impl, reg_bodycard);
     }
 
+     */
+
 
     async function implantRoundLabelF3(object, x, y, isWin) {
         let label_F3_impl =
@@ -537,11 +536,6 @@ export async function card_C(data = {
                 isWin: isWin,
             })
         svg = implantSvgBody(svg, x, y, label_F3_impl, reg_bodycard);
-    }
-
-    function implantScoreBar(color = '#D7D7D7', x, y, w, h) {
-        let RRect = `<rect width="${w}" height="${h}" rx="15" ry="15" style="fill: ${color};"/>`
-        svg = implantSvgBody(svg, x, y, RRect, reg_scorebar)
     }
 
     return svg.toString();

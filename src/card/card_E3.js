@@ -1,8 +1,7 @@
 import {
     getExportFileV3Path,
     getRankColor,
-    implantSvgBody,
-    PanelDraw, replaceTexts,
+    PanelDraw, replaceText, replaceTexts,
 } from "../util.js";
 import {torus} from "../font.js";
 import {label_E} from "../component/label.js";
@@ -83,7 +82,7 @@ export async function card_E3(data = {
     }
     const density_arr_max = Math.max.apply(Math, data.density_arr) / density_scale;
     const density_graph = PanelDraw.LineChart(data.density_arr, density_arr_max, 0, 20, 130, 520, 90, rank_color, 1, 0.4, 3);
-    const fail_index_rrect = data.rank === 'F' ? PanelDraw.RRect(20 + (520 * data.score_progress) - 1.5, 40, 3, 90, 1.5, '#ed6c9e') : '';
+    const fail_index_rrect = data.rank === 'F' ? PanelDraw.Rect(20 + (517 * data.score_progress) + 1.5, 40, 3, 90, 1.5, '#ed6c9e') : '';
 
     //中下的失败率重试率图像
     const retry_fail_sum_arr = data.fail_arr ? data.fail_arr.map(function (v, i) {
@@ -91,35 +90,31 @@ export async function card_E3(data = {
     }) : [];
     const retry_fail_sum_arr_max = Math.max.apply(Math, retry_fail_sum_arr);
     const retry_graph = PanelDraw.BarChart(retry_fail_sum_arr, retry_fail_sum_arr_max, 0,
-        20, 250, 520, 90, 0, '#f6d659', 1);
+        20, 250, 520, 90, 2, 0, '#f6d659');
     const fail_graph = PanelDraw.BarChart(data.fail_arr, retry_fail_sum_arr_max, 0,
-        20, 250, 520, 90, 0, '#ed6c9e', 1);
+        20, 250, 520, 90, 2, 0, '#ed6c9e');
 
     let labels = '';
     for (const v of data.labels) {
         const i = data.labels.indexOf(v);
 
         const d = await label_E(v, true);
-        const x = (i % 2) * 210;
-        const y = Math.floor(i / 2) * 80;
+        const x = 560 + (i % 2) * 210;
+        const y = 20 + Math.floor(i / 2) * 80;
 
         labels += `<g transform="translate(${x} ${y})">` + d + '</g>';
     }
 
-    const fail_rrect = PanelDraw.RRect(560, 250, 4.2 * data.fail_percent, 4, 2, '#ed6c9e');
-    const retry_rrect = PanelDraw.RRect(560, 250, (4.2 * data.fail_percent + 4.2 * data.retry_percent), 4, 2, '#f6d659');
-    const base_rrect = PanelDraw.RRect(560, 250, 420, 4, 2, '#aaa');
+    const fail_rrect = PanelDraw.Rect(560, 250, 4.2 * data.fail_percent, 4, 2, '#ed6c9e');
+    const retry_rrect = PanelDraw.Rect(560, 250, (4.2 * data.fail_percent + 4.2 * data.retry_percent), 4, 2, '#f6d659');
+    const base_rrect = PanelDraw.Rect(560, 250, 420, 4, 2, '#aaa');
 
     // 导入部件
-    svg = implantSvgBody(svg, 0, 0, fail_index_rrect, reg_label);
-    svg = implantSvgBody(svg, 0, 0, density_graph, reg_graph);
-    svg = implantSvgBody(svg, 0, 0, fail_graph, reg_graph);
-    svg = implantSvgBody(svg, 0, 0, retry_graph, reg_graph);
-    svg = implantSvgBody(svg, 560, 20, labels, reg_label);
+    svg = replaceText(svg, fail_index_rrect, reg_label);
+    svg = replaceTexts(svg, [density_graph, fail_graph, retry_graph], reg_graph);
+    svg = replaceText(svg, labels, reg_label);
 
-    svg = implantSvgBody(svg, 0, 0, fail_rrect, reg_label);
-    svg = implantSvgBody(svg, 0, 0, retry_rrect, reg_label);
-    svg = implantSvgBody(svg, 0, 0, base_rrect, reg_label);
+    svg = replaceTexts(svg, [fail_rrect, retry_rrect, base_rrect], reg_label);
 
     return svg.toString();
 }

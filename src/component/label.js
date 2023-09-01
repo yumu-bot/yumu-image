@@ -6,7 +6,7 @@ import {
     getRoundedNumberSmallerStr, getStarRatingColor, getDecimals,
     getUserRankColor,
     implantImage, readNetImage,
-    replaceText, replaceTexts,
+    replaceText, replaceTexts, PanelDraw,
 } from "../util.js";
 import {extra, torus, PuHuiTi} from "../font.js";
 
@@ -436,7 +436,7 @@ export async function label_F1(data = {
         let mod_color = getModColor(mod);
 
         if (mod === 'NF') return ''; //不画NF的图标，因为没必要
-        return `<circle id="Mod${i}" cx="${x}" cy="90" r="10" style="fill: ${mod_color};"/>`;
+        return PanelDraw.Circle(x, 90, 10, mod_color);
     }
 
     let mods_arr = data.mods_arr || ['']
@@ -613,7 +613,6 @@ export async function label_J2(data = {
     let reg_text = /(?<=<g id="Text_LJ2">)/;
     let reg_index = /(?<=<g id="Index_LJ2">)/;
     let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LJ2\);">)/;
-    let reg_index_color = '${index_color}';
 
     //定义文本
     let index = torus.getTextPath(data.index.toString(), 14,  21.836, 24, 'center baseline', '#fff');
@@ -818,8 +817,8 @@ export async function label_A1(data = {
 
     //插入矩形
 
-    const rrect_sr_path = `<rect width="${data.maxWidth}" height="50" rx="25" ry="25" opacity="0.15" style="fill: ${mode_icon_color};"/>`;
-    const rrect_base_path = `<rect width="${data.maxWidth}" height="50" rx="25" ry="25" style="fill: #46393F;"/>`;
+    const rrect_sr_path = PanelDraw.Rect(0, 0, data.maxWidth, 50, 25, mode_icon_color, 0.15);
+    const rrect_base_path = PanelDraw.Rect(0, 0, data.maxWidth, 50, 25, '#46393F');
 
     svg = replaceText(svg, rrect_sr_path, reg_rrect);
     svg = replaceText(svg, rrect_base_path, reg_rrect);
@@ -856,7 +855,7 @@ export async function label_A2(data = {
     //正则
     // const reg_text = /(?<=<g id="Text_LM2">)/;
     const reg_label = /(?<=<g id="Label_LM2">)/;
-    const reg_rrect = /(?<=<g id="RRect_LM2">)/;
+    //const reg_rrect = /(?<=<g id="RRect_LM2">)/;
     const reg_bid = /(?<=<g id="Bid_LM2">)/;
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LM2\);">)/;
 
@@ -875,11 +874,11 @@ export async function label_A2(data = {
     }
 
     const host_text = torus.getTextPath(host, 15, 15.877, 18, 'center baseline', host_color);
-    const host_rrect = `<rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${host_rrect_color};"/>`;
+    const host_rrect = PanelDraw.Rect(0, 0, 30, 20, 10, host_rrect_color);
 
     // const name_width = torus.getTextWidth(data.uid, 18);
     // const name_text = torus.getTextPath(data.uid, 50, 89.5, 18, 'center baseline', host_color);
-    // const name_rrect = `<rect x="${100 - name_width / 2 - 5}" y="85" width="${name_width + 10}" height="20" rx="10" ry="10" style="fill: ${host_rrect_color};"/>`;
+    // const name_rrect = PanelDraw.Rect(100 - name_width / 2 - 5, 85, name_width + 10, 20, 10, host_rrect_color);
 
     //插入文本
     svg = implantImage(svg, 100, 100, 0, 0, 1, avatar, reg_avatar);
@@ -993,7 +992,7 @@ export async function label_M1(data = {
 
     //定义文本
     const text = torus.getTextPath(data.short_name, 40, 22, 24, 'center baseline', '#fff');
-    const base_rrect = `<rect width="80" height="28" rx="14" ry="14" style="fill: ${data.colour};"/>`;
+    const base_rrect = PanelDraw.Rect(0, 0, 80, 28, 14, data.colour);
 
     //插入文本
     svg = replaceText(svg, text, reg_text);

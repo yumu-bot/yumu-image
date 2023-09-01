@@ -95,7 +95,7 @@ export async function panel_B1(data = {
     const reg_right = /(?<=<g id="Right">)/;
     const reg_center = /(?<=<g id="Center">)/;
     const reg_maincard = /(?<=<g id="MainCard">)/;
-    const reg_hexagon = /(?<=<g id="Hexagon">)/;
+    const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 条件定义
     const isVS = data.statistics.isVS;
@@ -142,7 +142,7 @@ export async function panel_B1(data = {
         card_B1_lefts.push(await card_B1({parameter: name, number: data.card_b_1[name] * 100}, true, false));
         number_left.push(Math.min(Math.max((data.card_b_1[name] * scale_left - 0.6), 0.01) / 4 * 10, 1));
     }
-    svg = implantSvgBody(svg, 0, 0, PanelDraw.Hexagon(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
+    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
         svg = implantSvgBody(svg, 40, 350 + j * 115, card_B1_lefts[j], reg_left);
@@ -163,7 +163,7 @@ export async function panel_B1(data = {
             number_right.push(Math.min(Math.max((data.card_b_2[name] * scale_right - 0.6), 0.01) / 4 * 10, 1));
         }
 
-        svg = implantSvgBody(svg, 0, 0, PanelDraw.Hexagon(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
+        svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
 
         for (const j in card_B1_rights) {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
@@ -194,35 +194,29 @@ export async function panel_B1(data = {
 }
 
 function drawHexIndex(mode = 'osu') {
-    let cx = 960;
-    let cy = 600;
-    let r = 230 + 30; // 中点到边点的距离
+    const cx = 960;
+    const cy = 600;
+    const r = 230 + 30; // 中点到边点的距离
 
-    let svg = '<g id="RRect"></g><g id="IndexText"></g>';
-    let reg_rrect = /(?<=<g id="RRect">)/;
-    let reg_text = /(?<=<g id="IndexText">)/;
+    let svg = '<g id="Rect"></g><g id="IndexText"></g>';
+    const reg_rrect = /(?<=<g id="Rect">)/;
+    const reg_text = /(?<=<g id="IndexText">)/;
 
     const VALUE_NORMAL = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH'];
     const VALUE_MANIA = ['ACC', 'PTT', 'STA', 'PRE', 'EFT', 'STH'];
 
     for (let i = 0; i < 6; i++){
-        let param;
-        if (mode === 'mania') {
-            param = VALUE_MANIA[i];
-        } else {
-            param = VALUE_NORMAL[i];
-        }
+        const param = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i];
+        const PI_3 = Math.PI / 3;
+        const x = cx - r * Math.cos(PI_3 * i);
+        const y = cy - r * Math.sin(PI_3 * i);
 
-        let PI_3 = Math.PI / 3;
-        let x = cx - r * Math.cos(PI_3 * i);
-        let y = cy - r * Math.sin(PI_3 * i);
-
-        let param_text = torus.getTextPath(param, x, y + 8, 24, 'center baseline', '#fff');
+        const param_text = torus.getTextPath(param, x, y + 8, 24, 'center baseline', '#fff');
         svg = replaceText(svg, param_text, reg_text)
 
-        let param_width = torus.getTextWidth(param, 24);
-        let rrect = `<rect width="${param_width + 40}" height="30" rx="15" ry="15" style="fill: #54454C;"/>`
-        svg = implantSvgBody(svg, x - param_width / 2 - 20, y - 15, rrect, reg_rrect);
+        const param_width = torus.getTextWidth(param, 24);
+        const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, '#54454C');
+        svg = replaceText(svg, rrect, reg_rrect);
 
     }
     return svg;

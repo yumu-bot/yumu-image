@@ -3,7 +3,7 @@ import {
     getModColor,
     getRankColor,
     getStarRatingColor,
-    implantImage,
+    implantImage, PanelDraw,
     replaceText, replaceTexts,
 } from "../util.js";
 import {torus} from "../font.js";
@@ -94,40 +94,38 @@ export async function card_J(data = {
 
      */
 
-    let map_difficulty_name =
+    const map_difficulty_name =
         torus.getTextPath(text_map_difficulty_name, 130, 32.571, 14, "left baseline", "#fff"); //y: 47.571
 
-    let pp = data.pp ?
+    const pp = data.pp ?
         torus.get2SizeTextPath(text_pp.toString(), 'PP', 30, 20, 300, 73.795, 'right baseline', '#fff')
         :
         torus.getTextPath('-', 300, 73.795, 30, 'right baseline', '#fff');
 
-    let rank_text_color = '#fff'; if (data.score_rank === 'X' || data.score_rank === 'XH') rank_text_color = '#000'
-    let rank =
-        torus.getTextPath(data.score_rank, 150, 69.877, 18, "center baseline", rank_text_color);
+    const rank_text_color = (data.score_rank === 'X' || data.score_rank === 'XH') ? '#000' : '#fff';
+    const rank = torus.getTextPath(data.score_rank, 150, 69.877, 18, "center baseline", rank_text_color);
 
-    let sr = data.star_rating ? (Math.floor(data.star_rating * 10) / 10).toString() : '';
-    let star_rating =
+    const sr = data.star_rating ? (Math.floor(data.star_rating * 10) / 10).toString() : '';
+    const star_rating =
         torus.getTextPath(sr, 25, 20.877, 18, "center baseline", '#fff');
 
     // 定义颜色
-    let rank_color = data.score_rank ?
-        `<rect x="130" y="54" width="40" height="20" rx="10" ry="10" style="fill: ${getRankColor(data.score_rank)};"/>`
-        : '';
-    let star_color = data.star_rating ?
-        `<rect x="5" y="5" width="40" height="20" rx="10" ry="10" style="fill: ${getStarRatingColor(data.star_rating)};"/>`
-        : '';
+    const rank_rrect = data.score_rank ?
+        PanelDraw.Rect(130, 54, 40, 20, 10, getRankColor(data.score_rank)) : '';
+
+    const star_rrect = data.star_rating ?
+        PanelDraw.Rect(5, 5, 40, 20, 10, getStarRatingColor(data.score_rank)) : '';
 
     // 替换模组
 
-    let insertMod = (mod, i, j) => {
+    const insertMod = (mod, i, j) => {
         let offset_x = 179 + i * 14;
         let offset_y = 69 - j * 12; //原来是 14，后面做了调整
 
-        return `<circle id="Mod${i}${j}" cx="${offset_x}" cy="${offset_y}" r="5" style="fill: ${getModColor(mod)};"/>`
+        return PanelDraw.Circle(offset_x, offset_y, 5, getModColor(mod));
     }
 
-    let length = data.mods_arr ? data.mods_arr.length : 0;
+    const length = data.mods_arr ? data.mods_arr.length : 0;
 
     for (let i = 0; i < length; ++i) {
         if (i < 3){
@@ -141,8 +139,8 @@ export async function card_J(data = {
     // svg = replaceText(svg, map_artist, reg_text);
     svg = replaceTexts(svg, [map_title_romanized, map_difficulty_name, map_line_3_right, pp, rank, star_rating], reg_text);
 
-    svg = replaceText(svg, rank_color, reg_rank)
-    svg = replaceText(svg, star_color, reg_overlay)
+    svg = replaceText(svg, rank_rrect, reg_rank)
+    svg = replaceText(svg, star_rrect, reg_overlay)
 
     // 替换图片
 

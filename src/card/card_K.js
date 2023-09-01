@@ -1,4 +1,4 @@
-import {getExportFileV3Path, getRankColor, getStarRatingColor, implantImage, replaceText} from "../util.js";
+import {getExportFileV3Path, getRankColor, getStarRatingColor, implantImage, PanelDraw, replaceText} from "../util.js";
 import {torus} from "../font.js";
 
 export async function card_K(data = {
@@ -50,10 +50,10 @@ export async function card_K(data = {
     }
 
     // 定义圆圈
-    let circle_sr = data.star_rating ?
-        `<circle cx="10" cy="10" r="5" style="fill: ${getStarRatingColor(data.star_rating)};"/>` : '';
-    let circle_rank = data.score_rank ?
-        `<circle cx="60" cy="10" r="5" style="fill: ${getRankColor(data.score_rank)};"/>` : '';
+    const circle_sr = data.star_rating ?
+        PanelDraw.Circle(10, 10, 5, getStarRatingColor(data.star_rating)) : '';
+    const circle_rank = data.score_rank ?
+        PanelDraw.Circle(60, 10, 5, getRankColor(data.star_rating)) : '';
 
     // 替换模板
 

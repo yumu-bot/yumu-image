@@ -8,7 +8,7 @@ import {
     getRoundedNumberSmallerStr,
     getTimeDifference,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, PanelDraw,
     readNetImage,
     replaceText,
 } from "../util.js";
@@ -183,7 +183,7 @@ export async function card_N(data = {
             const stat_text = torus.getTextPath(stat.toString(),
                 stat_x + width_sum + width / 2,
                 stat_y - 5, 14, 'center baseline', '#fff');
-            const svg_rect = `<rect id="L${i}RRect" x="${stat_x + width_sum}" y="${stat_y}" width="${width}" height="10" rx="5" ry="5" style="fill: ${color};"/>`;
+            const svg_rect = PanelDraw.Rect(stat_x + width_sum, stat_y, width, 10, 5, color);
 
             svg = replaceText(svg, stat_text, reg_label);
             svg = replaceText(svg, svg_rect, reg_label);
@@ -200,7 +200,7 @@ export async function card_N(data = {
 
         // 模组 svg 化
         const mod_abbr_path = torus.getTextPath(mod.toString(), (x + 20), 21, 16, 'center baseline', '#fff');
-        return `<rect x="${x}" y="6" width="40" height="20" rx="10" ry="10" style="fill:${getModColor(mod)};"/>\n${mod_abbr_path}\n`;
+        return PanelDraw.Rect(x, 6, 40, 20, 10, getModColor(mod)) + '\n' + mod_abbr_path + '\n';
     }
 
     const mods_arr = data.score.mods || ['']

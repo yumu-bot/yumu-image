@@ -3,7 +3,7 @@ import {
     getDecimals,
     implantImage,
     implantSvgBody,
-    replaceText,
+    replaceText, PanelDraw,
 } from "../util.js";
 import {torus} from "../font.js";
 import {card_K} from "./card_K.js";
@@ -142,12 +142,17 @@ export async function card_L(data = {
     // 导入不明所以的矩形
 
     let rrect_svg = '';
-    const rrect_arr = [];
-    const rrect_max = 30;
 
     for (let i = 0; i < 30; i++) {
-        let rrect_width = 30 - i; // rrect_arr[i] / rrect_max * 30
-        rrect_svg += `<rect x="${10 + 30 - rrect_width}" y="${60 + i * 3}" width="${rrect_width}" height="2" style="fill: #fff550;"/>\n`
+        let rrect_width = 30 - i;
+        rrect_svg += PanelDraw.Rect(
+            10 + 30 - rrect_width,
+            60 + i * 3,
+            rrect_width,
+            2,
+            0,
+            '#fff550'
+        );
     }
 
     svg = implantSvgBody(svg, 0, 0, rrect_svg, reg_rrect);

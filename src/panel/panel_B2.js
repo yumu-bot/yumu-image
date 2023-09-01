@@ -148,7 +148,7 @@ export async function panel_B2(data = {
     const reg_right = /(?<=<g id="Right">)/;
     const reg_center = /(?<=<g id="Center">)/;
     const reg_maincard = /(?<=<g id="MainCard">)/;
-    const reg_hexagon = /(?<=<g id="Hexagon">)/;
+    const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 画六个标识
     svg = implantSvgBody(svg, 0, 0, drawHexIndex(getGameMode(data.beatMap.mode, 0)), reg_hexagon);
@@ -211,7 +211,7 @@ export async function panel_B2(data = {
         hexagons.push(map_minus_mania[name] / 8); //8星以上是X
     }
 
-    svg = implantSvgBody(svg, 0, 0, PanelDraw.Hexagon(hexagons, 960, 600, 230, '#00A8EC'), reg_hexagon);
+    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
         svg = implantSvgBody(svg, 40, 350 + j * 115, cardB4s[j], reg_left);
@@ -322,13 +322,13 @@ function getValue(sum, arr = []) {
 }
 
 function drawHexIndex(mode = 'osu') {
-    let cx = 960;
-    let cy = 600;
-    let r = 230 + 30; // 中点到边点的距离
+    const cx = 960;
+    const cy = 600;
+    const r = 230 + 30; // 中点到边点的距离
 
-    let svg = '<g id="RRect"></g><g id="IndexText"></g>';
-    let reg_rrect = /(?<=<g id="RRect">)/;
-    let reg_text = /(?<=<g id="IndexText">)/;
+    let svg = '<g id="Rect"></g><g id="IndexText"></g>';
+    const reg_rrect = /(?<=<g id="Rect">)/;
+    const reg_text = /(?<=<g id="IndexText">)/;
 
     const VALUE_NORMAL = ['RC', 'LN', 'SV', 'ST', 'SP', 'PR'];
     const VALUE_MANIA = ['RC', 'LN', 'SV', 'ST', 'SP', 'PR'];
@@ -341,16 +341,16 @@ function drawHexIndex(mode = 'osu') {
             param = VALUE_NORMAL[i];
         }
 
-        let PI_3 = Math.PI / 3;
-        let x = cx - r * Math.cos(PI_3 * i);
-        let y = cy - r * Math.sin(PI_3 * i);
+        const PI_3 = Math.PI / 3;
+        const x = cx - r * Math.cos(PI_3 * i);
+        const y = cy - r * Math.sin(PI_3 * i);
 
-        let param_text = torus.getTextPath(param, x, y + 8, 24, 'center baseline', '#fff');
+        const param_text = torus.getTextPath(param, x, y + 8, 24, 'center baseline', '#fff');
         svg = replaceText(svg, param_text, reg_text)
 
-        let param_width = torus.getTextWidth(param, 24);
-        let rrect = `<rect width="${param_width + 40}" height="30" rx="15" ry="15" style="fill: #54454C;"/>`
-        svg = implantSvgBody(svg, x - param_width / 2 - 20, y - 15, rrect, reg_rrect);
+        const param_width = torus.getTextWidth(param, 24);
+        const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, '#54454C');
+        svg = replaceText(svg, rrect, reg_rrect);
 
     }
     return svg;

@@ -71,7 +71,7 @@ export async function panel_Gamma(data = {
     const reg_text = /(?<=<g id="Text">)/;
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-PGamma-BG\);" filter="url\(#blur-PGamma-BG\)">)/;
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-PGamma-MC\);">)/;
-    const reg_map_hexagon = /(?<=<g id="Hexagon">)/; // 移到上一层
+    const reg_map_hexagon = /(?<=<g id="HexagonChart">)/; // 移到上一层
 
     // 定义文字
     const left1 = torusRegular.getTextPath(torusRegular.cutStringTail(data.left1, 16, 190, true),
