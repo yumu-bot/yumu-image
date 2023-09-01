@@ -30,6 +30,7 @@ export async function card_H(data = {
     color_label2: '',
     color_label3: '',
     color_label4: '',
+    color_left12: '#fff',
 
     font_label4: 'torus',
 
@@ -123,13 +124,15 @@ export async function card_H(data = {
     left_max_width -= mods_width;
 
     // 文字定义
-    const text_title = torus.cutStringTail(data.title || '', 36, title_max_width)
-    const text_left1 = torus.cutStringTail(data.left1 || '', 24, left_max_width)
-    const text_left2 = torus.cutStringTail(data.left2 || '', 24, left_max_width)
+    const color_left12 = data.color_left12 || '#fff';
+
+    const text_title = torus.cutStringTail(data.title || '', 36, title_max_width);
+    const text_left1 = torus.cutStringTail(data.left1 || '', 24, left_max_width);
+    const text_left2 = torus.cutStringTail(data.left2 || '', 24, left_max_width);
 
     const title = torus.getTextPath(text_title, 210, 34.754, 36, 'left baseline', '#fff');
-    const left1 = torus.getTextPath(text_left1, 210, 66.836, 24, 'left baseline', '#fff');
-    const left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', '#fff');
+    const left1 = torus.getTextPath(text_left1, 210, 66.836, 24, 'left baseline', color_left12);
+    const left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', color_left12);
 
     // 插入文字
     svg = replaceTexts(svg, [title, left1, left2], reg_text);

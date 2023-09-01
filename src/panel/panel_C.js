@@ -354,6 +354,7 @@ export async function panel_C(data = {
                 color_left: object.team_color,
                 color_right: mra_color,
                 color_index: class_color,
+                color_left12: '#aaa',
 
                 font_label4: 'PuHuiTi',
 

@@ -5,7 +5,7 @@ import {
     readTemplate,
     replaceTexts,
 } from "../util.js";
-import {torus} from "../font.js";
+import {torus, PuHuiTi} from "../font.js";
 
 export async function card_A2(data = {
     background: getExportFileV3Path('card-default.png'),
