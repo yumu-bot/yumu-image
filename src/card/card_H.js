@@ -96,7 +96,7 @@ export async function card_H(data = {
     const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 5, 40, 20, 10, color_label1) : '';
     const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 5, 40, 20, 10, color_label2) : '';
     const rrect_label3 = data.label3 ? PanelDraw.Rect(710 - label3_width, 10, label3_width, 34, 17, color_label3) : '';
-    const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label3_width, 34, 17, color_label4) : '';
+    const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label4_width, 34, 17, color_label4) : '';
 
     svg = replaceText(svg, data.color_right || 'none', reg_color_right);
     svg = replaceText(svg, data.color_left || 'none', reg_color_left);
