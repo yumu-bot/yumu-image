@@ -104,7 +104,7 @@ export async function panel_B1(data = {
     const game_mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
 
     // 画六个标识
-    svg = implantSvgBody(svg, 0, 0, drawHexIndex(mode), reg_hexagon);
+    svg = replaceText(svg, drawHexIndex(mode), reg_hexagon);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
@@ -142,7 +142,7 @@ export async function panel_B1(data = {
         card_B1_lefts.push(await card_B1({parameter: name, number: data.card_b_1[name] * 100}, true, false));
         number_left.push(Math.min(Math.max((data.card_b_1[name] * scale_left - 0.6), 0.01) / 4 * 10, 1));
     }
-    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
+    svg = replaceText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
         svg = implantSvgBody(svg, 40, 350 + j * 115, card_B1_lefts[j], reg_left);
@@ -163,7 +163,7 @@ export async function panel_B1(data = {
             number_right.push(Math.min(Math.max((data.card_b_2[name] * scale_right - 0.6), 0.01) / 4 * 10, 1));
         }
 
-        svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
+        svg = replaceText(svg, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
 
         for (const j in card_B1_rights) {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)

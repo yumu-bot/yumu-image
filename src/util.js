@@ -2736,7 +2736,7 @@ export const PanelDraw = {
     },
 
     Circle: (cx = 0, cy = 0, r = 0, color = '#fff') => {
-        return `<circle cx="${cx}" cy="${cx}" r="${r}" style="fill: ${color};"/>`;
+        return `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill: ${color};"/>`;
     },
 
     Polygon: (x = 0, y = 0, controls = '', ex = 0, ey = 0, color = '#fff') => {
@@ -2800,15 +2800,15 @@ export const PanelDraw = {
 
     //六边形图，data是0-1
     HexagonChart: (data = [0,0,0,0,0,0], cx = 960, cy = 600, r = 230, color = '#fff') => {
+        const PI_3 = Math.PI / 3;
         let line = `<path d="M `;
         let circle = '';
 
         for (let i = 0; i < 6; i++){
-            let std_data = Math.min(Math.max(data[i], 0), 1);
+            const std_data = Math.min(Math.max(data[i], 0), 1);
 
-            let PI_3 = Math.PI / 3;
-            let x = cx - r * Math.cos(PI_3 * i) * std_data;
-            let y = cy - r * Math.sin(PI_3 * i) * std_data;
+            const x = cx - r * Math.cos(PI_3 * i) * std_data;
+            const y = cy - r * Math.sin(PI_3 * i) * std_data;
             line += `${x} ${y} L `;
             circle += PanelDraw.Circle(x, y, 10, color);
         }
@@ -2816,8 +2816,7 @@ export const PanelDraw = {
         line = line.substr(0, line.length - 2);
         const line1 = `Z" style="fill: none; stroke-width: 6; stroke: ${color}; opacity: 1;"/> `
         const line2 = `Z" style="fill: ${color}; stroke-width: 6; stroke: none; opacity: 0.3;"/> `
-        line = line + line1 + line + line2 + circle;
-        return line;
+        return line + line1 + line + line2 + circle;
     },
 
     /**
