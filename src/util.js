@@ -2566,7 +2566,7 @@ export const PanelGenerate = {
             color_label2: '',
             color_label3: '',
             color_label4: '',
-            color_left12: '#aaa',
+            color_left12: '#bbb',
 
             font_label4: 'torus',
         }
