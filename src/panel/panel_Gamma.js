@@ -1,6 +1,5 @@
 import {
     exportImage,
-    extra,
     getDecimals,
     getExportFileV3Path,
     getGameMode,
@@ -8,9 +7,8 @@ import {
     readNetImage,
     readTemplate,
     replaceTexts,
-    torus,
-    torusRegular
 } from "../util.js";
+import {extra, torus, torusRegular} from "../font.js";
 
 export async function router(req, res) {
     try {

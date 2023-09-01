@@ -8,7 +8,7 @@ import {
     replaceText
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
-import {card_N1} from "../card/card_N1.js";
+import {card_N} from "../card/card_N.js";
 
 export async function router(req, res) {
     try {
@@ -268,7 +268,7 @@ export async function panel_A3(data = {
     let cardN1s = [];
     for (const i in data.scores) {
         const i0 = Math.max((parseInt(i) - 1), 0)
-        const f = await card_N1({
+        const f = await card_N({
             score: data.scores[i],
             score_rank: parseInt(i) + 1 || 0,
             compare_score: data.scores[i0].score,

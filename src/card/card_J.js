@@ -5,8 +5,8 @@ import {
     getStarRatingColor,
     implantImage,
     replaceText, replaceTexts,
-    torus
 } from "../util.js";
+import {torus} from "../font.js";
 
 export async function card_J(data = {
     map_cover: getExportFileV3Path('beatmap-defaultBG.jpg'),

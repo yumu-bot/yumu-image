@@ -2,11 +2,10 @@ import {
     getExportFileV3Path,
     getMapStatusV3Path,
     implantImage,
-    PuHuiTi,
     readTemplate,
     replaceTexts,
-    torus
 } from "../util.js";
+import {torus} from "../font.js";
 
 export async function card_A2(data = {
     background: getExportFileV3Path('card-default.png'),

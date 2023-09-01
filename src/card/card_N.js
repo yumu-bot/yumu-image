@@ -11,11 +11,11 @@ import {
     implantSvgBody,
     readNetImage,
     replaceText,
-    torus
 } from "../util.js";
+import {torus} from "../font.js";
 import {label_A4, LABEL_OPTION} from "../component/label.js";
 
-export async function card_N1(data = {
+export async function card_N(data = {
     score: {
         "accuracy": 0.9882943143812709,
         "best_id": 4399593261,

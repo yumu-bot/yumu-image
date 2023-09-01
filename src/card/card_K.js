@@ -1,4 +1,5 @@
-import {getExportFileV3Path, getRankColor, getStarRatingColor, implantImage, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, getRankColor, getStarRatingColor, implantImage, replaceText} from "../util.js";
+import {torus} from "../font.js";
 
 export async function card_K(data = {
     map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),

@@ -20,8 +20,8 @@ import {
     readTemplate,
     replaceText,
     replaceTexts,
-    torus
 } from "../util.js";
+import {torus} from "../font.js";
 import {card_J} from "../card/card_J.js";
 import {card_K} from "../card/card_K.js";
 

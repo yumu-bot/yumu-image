@@ -5,8 +5,9 @@ import {
     implantImage, implantSvgBody,
     PanelGenerate,
     readTemplate,
-    replaceText, replaceTexts, torus
+    replaceText, replaceTexts
 } from "../util.js";
+import {torus} from "../font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_O1} from "../card/card_O1.js";
 import {card_O2} from "../card/card_O2.js";
@@ -255,8 +256,7 @@ export async function panel_M(data = {
                 "count_spinners": 4,
                 "count_circles": 712
             }]
-        }, {}
-    ],//根据游玩数量排序，走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，给6张即可。
+        }],//根据游玩数量排序，走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，给6张即可。
 
     most_recent_ranked_beatmap: {},//需要判断，如果玩家的ranked_and_approved_beatmapset_count不为0，则走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，筛选出ranked/qualified中。上传时间最靠前，但是谱面主（host）是uid所指的人的那张谱面即可。如果没有结果返回空
     most_recent_ranked_guest_diff: {}, //需要判断，如果玩家的guest_beatmapset_count不为0，则走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，筛选出ranked/qualified中。上传时间最靠前，但是谱面主（host）不是uid所指的人的那张谱面即可。如果没有结果返回空
@@ -318,7 +318,7 @@ export async function panel_M(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PM1-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('I\'m Mapper', 'IM', 'v0.3.2 FT');
+    const panel_name = getPanelNameSVG('I\'m Mapper (!ymim)', 'IM', 'v0.3.2 FT');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
@@ -330,11 +330,12 @@ export async function panel_M(data = {
     const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data.user), true);
 
     // 导入O2
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < Math.min(data.most_popular_beatmap.length, 6); i++) {
         const x = 510 + (i % 3) * 305;
         const y = 380 + Math.floor(i / 3) * 145;
+        const o2 = data.most_popular_beatmap[i];
 
-        const cardO2 = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_popular_beatmap[i]), true);
+        //const cardO2 = await card_O2(await PanelGenerate.beatmap2CardO2(o2), true);
         //svg = implantSvgBody(svg, 290, 130, x, y, '', reg_popular);
     }
 

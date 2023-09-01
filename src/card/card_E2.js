@@ -5,8 +5,8 @@ import {
     getModColor,
     getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
     implantSvgBody, replaceTexts,
-    torus
 } from "../util.js";
+import {torus} from "../font.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
 
 export async function card_E2(data = {

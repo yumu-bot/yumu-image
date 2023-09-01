@@ -3,9 +3,9 @@ import {
     getModColor,
     getDecimals, implantImage,
     readTemplate,
-    replaceText, replaceTexts,
-    torus
+    replaceText, replaceTexts
 } from "../util.js";
+import {torus} from "../font.js";
 
 export async function card_D(data = {
     background: 'PanelObject/H_CardD_BG.png',

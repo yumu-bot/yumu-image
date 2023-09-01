@@ -6,12 +6,12 @@ import {
     getRoundedNumberSmallerStr,
     implantImage,
     implantSvgBody,
-    lineSeedSans, PanelDraw,
-    poppinsBold,
+    PanelDraw,
     readNetImage,
     readTemplate,
     replaceTexts
 } from "../util.js";
+import {lineSeedSans, poppinsBold} from "../font.js";
 import {getMapAttributes} from "../compute-pp.js";
 
 export async function router(req, res) {

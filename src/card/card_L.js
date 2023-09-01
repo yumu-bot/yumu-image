@@ -4,8 +4,8 @@ import {
     implantImage,
     implantSvgBody,
     replaceText,
-    torus
 } from "../util.js";
+import {torus} from "../font.js";
 import {card_K} from "./card_K.js";
 
 export async function card_L(data = {

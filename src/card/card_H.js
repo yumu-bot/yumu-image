@@ -2,11 +2,10 @@ import {
     implantImage,
     readTemplate,
     replaceText,
-    torus,
-    PuHuiTi,
     replaceTexts,
     getModColor
 } from "../util.js";
+import {torus, PuHuiTi} from "../font.js";
 
 export async function card_H(data = {
     background: '',

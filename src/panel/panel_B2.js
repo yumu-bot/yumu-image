@@ -4,8 +4,9 @@ import {
     implantSvgBody, PanelDraw,
     PanelGenerate, readNetImage,
     readTemplate,
-    replaceText, replaceTexts, torus
+    replaceText, replaceTexts
 } from "../util.js";
+import {torus} from "../font.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_B4} from "../card/card_B4.js";
 import {card_B5} from "../card/card_B5.js";

@@ -1,9 +1,10 @@
 import {
     getExportFileV3Path, getRankColor,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getStarRatingColor, implantImage, implantSvgBody,
-    readTemplate, replaceTexts, torus
+    getRoundedNumberSmallerStr, implantImage, implantSvgBody,
+    readTemplate, replaceTexts
 } from "../util.js";
+import {torus} from "../font.js";
 import {label_E, PPM_OPTION} from "../component/label.js";
 
 export async function card_B5(data = {

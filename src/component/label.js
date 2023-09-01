@@ -1,16 +1,14 @@
 import {
-    extra,
     getExportFileV3Path, getGameMode,
     getModColor,
     getModFullName,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr, getStarRatingColor, getDecimals,
     getUserRankColor,
-    implantImage,
-    PuHuiTi, readNetImage,
+    implantImage, readNetImage,
     replaceText, replaceTexts,
-    torus
 } from "../util.js";
+import {extra, torus, PuHuiTi} from "../font.js";
 
 export const LABEL_OPTION = {
     ACC: {

@@ -2,8 +2,8 @@ import {
     getExportFileV3Path, implantImage, implantSvgBody, PanelGenerate,
     readNetImage,
     replaceText,
-    torus
 } from "../util.js";
+import {torus} from "../font.js";
 import {label_A1, label_A2, label_A3} from "../component/label.js";
 
 export async function card_M(data = {

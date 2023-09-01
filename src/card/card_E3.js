@@ -3,8 +3,8 @@ import {
     getRankColor,
     implantSvgBody,
     PanelDraw, replaceTexts,
-    torus
 } from "../util.js";
+import {torus} from "../font.js";
 import {label_E} from "../component/label.js";
 
 export async function card_E3(data = {

@@ -3,8 +3,9 @@ import {
     getRankColor,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr, implantImage, implantSvgBody,
-    readTemplate, replaceText, replaceTexts, torus
+    readTemplate, replaceText, replaceTexts
 } from "../util.js";
+import {torus} from "../font.js";
 import {label_E, PPM_OPTION} from "../component/label.js";
 
 export async function card_B1(data = {

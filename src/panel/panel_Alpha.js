@@ -1,4 +1,5 @@
-import {exportImage, PuHuiTi} from "../util.js";
+import {exportImage} from "../util.js";
+import {PuHuiTi} from "../font.js";
 
 export async function router(req, res) {
     try {

@@ -1,4 +1,5 @@
-import {getExportFileV3Path, implantImage, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, implantImage, replaceText} from "../util.js";
+import {torus} from "../font.js";
 
 export async function card_O2(data = {
     background: getExportFileV3Path('card-default.png'),

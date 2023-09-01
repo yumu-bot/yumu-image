@@ -6,9 +6,9 @@ import {
     implantImage,
     implantSvgBody, PanelDraw, PanelGenerate,
     readTemplate,
-    replaceText, replaceTexts,
-    torus
+    replaceText, replaceTexts
 } from "../util.js";
+import {torus} from "../font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_B1} from "../card/card_B1.js";
 import {card_B2} from "../card/card_B2.js";
@@ -16,7 +16,7 @@ import {card_B2} from "../card/card_B2.js";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_B(data);
+        const svg = await panel_B1(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportImage(svg));
     } catch (e) {
@@ -28,7 +28,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_B(data);
+        const svg = await panel_B1(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -41,7 +41,7 @@ export async function router_svg(req, res) {
 const VALUE_NAMES = ['ACC', 'PTT', 'STA', 'STB', 'PRE', 'EFT', 'STH'] // OVA 跟 SAN 单独处理
 
 // ppm 面板
-export async function panel_B(data = {
+export async function panel_B1(data = {
     // A1卡
     card_A1: [{
         background: getExportFileV3Path('card-default.png'),

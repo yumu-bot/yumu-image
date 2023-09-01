@@ -1,4 +1,5 @@
-import {getExportFileV3Path, implantImage, implantSvgBody, replaceText, torus} from "../util.js";
+import {getExportFileV3Path, implantImage, implantSvgBody, replaceText} from "../util.js";
+import {torus} from "../font.js";
 import {label_M1} from "../component/label.js";
 
 export async function card_O1(data = {

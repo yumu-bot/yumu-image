@@ -1,11 +1,10 @@
 import {
-    extra,
     getDecimals,
     getExportFileV3Path,
     getGameMode, getMapStatusV3Path, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
-    getStarRatingColor, implantImage, implantSvgBody, PuHuiTi, readNetImage, replaceTexts,
-    torus
+    getStarRatingColor, implantImage, implantSvgBody, readNetImage, replaceTexts,
 } from "../util.js";
+import {torus, extra, PuHuiTi} from "../font.js";
 
 export async function card_E1(data = {
     mode: 'OSU',

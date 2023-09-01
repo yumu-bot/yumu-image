@@ -9,7 +9,7 @@ import {
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, torus, readNetImage, getPanelNameSVG, getGameMode
+    replaceText, readNetImage, getPanelNameSVG, getGameMode
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";

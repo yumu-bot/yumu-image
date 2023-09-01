@@ -5,9 +5,9 @@ import {
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, PanelDraw,
     PanelGenerate, readNetImage,
     readTemplate,
-    replaceText, replaceTexts,
-    torus
+    replaceText, replaceTexts
 } from "../util.js";
+import {torus} from "../font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_J} from "../card/card_J.js";
 import {card_L} from "../card/card_L.js";
