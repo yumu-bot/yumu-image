@@ -578,23 +578,23 @@ export async function panel_J(data = {
 
     //根据优先值获取颜色数组
     const rank_elect_arr = data.rank_elect_arr;
-    let color_elect_arr = getBarChartColorArray(rank_100_arr, rank_elect_arr, 39, '#616161'); //这是F的颜色
+    const color_elect_arr = getBarChartColorArray(rank_100_arr, rank_elect_arr, 39, '#616161'); //这是F的颜色
 
     //矩形绘制
-    let bp_length_max = Math.max.apply(Math, bp_length_arr);
-    let bp_length_min = Math.min.apply(Math, bp_length_arr);
-    let bp_length_delta = Math.max(Math.abs(bp_length_max - bp_length_min), 0.1);
-    let start_y = 610;
+    const bp_length_max = Math.max.apply(Math, bp_length_arr);
+    const bp_length_min = Math.min.apply(Math, bp_length_arr);
+    const bp_length_delta = Math.max(Math.abs(bp_length_max - bp_length_min), 0.1);
+    const start_y = 610;
 
     let svg_rrect = '';
 
     bp_length_arr.forEach((v, i) => {
-        let height = Math.max(((v - bp_length_min) / bp_length_delta * 90), 16);
+        const height = Math.max(((v - bp_length_min) / bp_length_delta * 90), 16);
 
-        svg_rrect += `<rect x="${1042 + 20 * i}" y="${start_y - height}" width="16" height="${height}" rx="8" ry="8" style="fill: ${color_elect_arr[i]};"/>`;
+        svg_rrect += PanelDraw.Rect(1042 + 20 * i, start_y - height, 16, height, 8, color_elect_arr[i]);
     });
 
-    svg = implantSvgBody(svg, 0, 0, svg_rrect, reg_rrect);
+    svg = replaceText(svg, svg_rrect, reg_rrect);
 
     //矩形上面的字绘制
     const bp_length_max_b = Math.floor(bp_length_max / 60).toString();

@@ -201,11 +201,11 @@ export async function panel_Delta(data = {
     svg = replaceTexts(svg, [round, title, artist, difficulty, bid, bpm, mod, star, cs, ar, od, length], reg_text);
 
     // 插入图片和部件（新方法
-    const mod_rrect = `<rect x="1360" y="100" width="186" height="82" rx="0" ry="0" style="fill: ${mod_color};"/>`
-    const sr_rrect = `<rect x="1010" y="674" width="${336 * Math.max(Math.min(attr.stars, 11), 0) / 11}" height="8" rx="4" ry="4" style="fill: ${nijika_color};"/>`
-    const cs_rrect = `<rect x="1010" y="766" width="${336 * Math.max(Math.min(attr.cs, 11), 0) / 11}" height="8" rx="4" ry="4" style="fill: ${kita_color};"/>`
-    const ar_rrect = `<rect x="1010" y="858" width="${336 * Math.max(Math.min(attr.ar, 11), 0) / 11}" height="8" rx="4" ry="4" style="fill: ${ryou_color};"/>`
-    const od_rrect = `<rect x="1010" y="950" width="${336 * Math.max(Math.min(attr.od, 11), 0) / 11}" height="8" rx="4" ry="4" style="fill: ${hitori_color};"/>`
+    const mod_rrect = PanelDraw.Rect(1360, 100, 186, 82, 0, mod_color);
+    const sr_rrect = PanelDraw.Rect(1010, 674, 336 * Math.max(Math.min(attr.stars, 11), 0) / 11, 8, 4, nijika_color);
+    const cs_rrect = PanelDraw.Rect(1010, 766, 336 * Math.max(Math.min(attr.cs, 11), 0) / 11, 8, 4, kita_color);
+    const ar_rrect = PanelDraw.Rect(1010, 858, 336 * Math.max(Math.min(attr.ar, 11), 0) / 11, 8, 4, ryou_color);
+    const od_rrect = PanelDraw.Rect(1010, 950, 336 * Math.max(Math.min(attr.od, 11), 0) / 11, 8, 4, hitori_color);
 
     const length_pie = PanelDraw.PieChart(
         Math.min(length_num / 600, 1), 1662.5, 797.5, 200, 0, mod_color);

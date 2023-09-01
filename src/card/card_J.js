@@ -25,13 +25,13 @@ export async function card_J(data = {
 
     // 正则
 
-    let reg_text = /(?<=<g id="Text_CJ">)/;
-    let reg_overlay = /(?<=<g id="Overlay_CJ">)/;
-    let reg_mod = /(?<=<g id="Mod_CJ">)/;
-    let reg_rank = /(?<=<g id="Rank_CJ">)/;
+    const reg_text = /(?<=<g id="Text_CJ">)/;
+    const reg_overlay = /(?<=<g id="Overlay_CJ">)/;
+    const reg_mod = /(?<=<g id="Mod_CJ">)/;
+    const reg_rank = /(?<=<g id="Rank_CJ">)/;
 
-    let reg_background = /(?<=<g style="clip-path: url\(#clippath-CJ-1\);">)/
-    let reg_cover = /(?<=<g style="clip-path: url\(#clippath-CJ-2\);">)/
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CJ-1\);">)/
+    const reg_cover = /(?<=<g style="clip-path: url\(#clippath-CJ-2\);">)/
 
 
     // 读取模板
@@ -67,12 +67,12 @@ export async function card_J(data = {
     </g>`;
 
     // 定义文字
-    let text_map_title_romanized = torus.cutStringTail(data.map_title_romanized || '', 18, 170);
+    const text_map_title_romanized = torus.cutStringTail(data.map_title_romanized || '', 18, 170);
     // let text_map_artist = torus.cutStringTail(data.map_artist || '', 14, 170);
-    let text_pp = data.pp;
+    const text_pp = data.pp;
 
     // 替换文字
-    let map_title_romanized =
+    const map_title_romanized =
         torus.getTextPath(text_map_title_romanized , 130, 17.877, 18, "left baseline", "#fff");
     /*
     let map_artist =
@@ -80,11 +80,11 @@ export async function card_J(data = {
 
      */
 
-    let map_line_3_right_text = (data.accuracy && data.combo) ?  data.combo + 'x ' + data.accuracy + '%': '0x 0%';
-    let map_line_3_right =
+    const map_line_3_right_text = (data.accuracy && data.combo) ?  data.combo + 'x ' + data.accuracy + '%': '0x 0%';
+    const map_line_3_right =
         torus.getTextPath(map_line_3_right_text, 300, 47.571, 14, "right baseline", "#fff");
 
-    let text_map_difficulty_name = torus.cutStringTail('[' + data.map_difficulty_name + ']' || '',
+    const text_map_difficulty_name = torus.cutStringTail('[' + data.map_difficulty_name + ']' || '',
         14,
         170);
     /*
@@ -114,7 +114,7 @@ export async function card_J(data = {
         PanelDraw.Rect(130, 54, 40, 20, 10, getRankColor(data.score_rank)) : '';
 
     const star_rrect = data.star_rating ?
-        PanelDraw.Rect(5, 5, 40, 20, 10, getStarRatingColor(data.score_rank)) : '';
+        PanelDraw.Rect(5, 5, 40, 20, 10, getStarRatingColor(data.star_rating)) : '';
 
     // 替换模组
 

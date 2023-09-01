@@ -589,10 +589,10 @@ export async function panel_D(data = {
             "right baseline",
             "#fff");
 
-    const mascot_mark1_rrect = `<rect x="60" y="350" width="${mascot_mark1_rrect_width}" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>`
-    const mascot_mark2_rrect = `<rect x="${580 - mascot_mark2_rrect_width}" y="350" width="${mascot_mark2_rrect_width}" height="40" rx="12" ry="12" style="fill: #54454c; opacity: .7;"/>`
+    const mascot_mark1_rrect = PanelDraw.Rect(60, 350, mascot_mark1_rrect_width, 40, 12, '#54454c', 0.7);
+    const mascot_mark2_rrect = PanelDraw.Rect(580 - mascot_mark2_rrect_width, 350, mascot_mark2_rrect_width, 40, 12, '#54454c', 0.7);
 
-    const progress_rrect = `<rect id="ProgressR" x="60" y="1016" width="${520 * (data.user_progress || 0) / 100}" height="4" rx="2" ry="2" style="fill: #fc2;"/>`
+    const progress_rrect = PanelDraw.Rect(60, 1016, 520 * (data.user_progress || 0) / 100, 4, 2, '#FFCC22');
 
     // 插入右下面板右上提示
     const game_mode = getGameMode(data.game_mode, 2);
