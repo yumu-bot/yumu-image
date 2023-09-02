@@ -1,14 +1,13 @@
 import fs from 'fs';
 import os from "os";
 import crypto from 'crypto';
-import TextToSVG from 'text-to-svg';
 import axios from "axios";
 import exportsJPEG from 'convert-svg-to-jpeg';
 import exportsPNG from 'convert-svg-to-png';
 import https from "https";
 import path from "path";
 import moment from "moment";
-import {torus, torusRegular} from "./font.js";
+import {torus} from "./font.js";
 
 const path_util = path;
 const MD5 = crypto.createHash("md5");
@@ -104,6 +103,10 @@ export function readExportFileV3(path = '') {
 
 export function getExportFileV3Path(path = '') {
     return path_util.join(EXPORT_FILE_V3, path);
+}
+
+export async function getDiffBG(bid) {
+    return await readNetImage(`http://localhost:8388/pub/background/${bid}`);
 }
 
 export async function readNetImage(path = '', defaultImagePath) {
