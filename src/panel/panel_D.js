@@ -1,7 +1,7 @@
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/card_A1.js";
 import {
-    exportImage,
+    exportJPEG,
     getExportFileV3Path,
     getGameMode,
     getMascotName,
@@ -30,7 +30,7 @@ export async function router(req, res) {
         const data = await routerD(req);
         const svg = await panel_D(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(await exportImage(svg));
+        res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

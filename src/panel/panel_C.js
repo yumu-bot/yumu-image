@@ -1,5 +1,5 @@
 import {
-    exportImage,
+    exportJPEG,
     getExportFileV3Path,
     getPanelNameSVG,
     getRandomBannerPath,
@@ -19,7 +19,7 @@ export async function router(req, res) {
         const data = await routerC(req);
         const svg = await panel_C(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(await exportImage(svg));
+        res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

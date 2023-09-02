@@ -1,5 +1,5 @@
 import {
-    exportImage, getExportFileV3Path, getGameMode,
+    exportJPEG, getExportFileV3Path, getGameMode,
     getPanelNameSVG, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, implantImage,
     implantSvgBody, PanelDraw,
     PanelGenerate, readNetImage,
@@ -16,7 +16,7 @@ export async function router(req, res) {
         const data = req.fields || {};
         const svg = await panel_B2(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(await exportImage(svg));
+        res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

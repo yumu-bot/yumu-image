@@ -1,5 +1,5 @@
-import {XMLParser, XMLBuilder} from "fast-xml-parser"
-import {exportImage, readTemplate} from "../util.js";
+import {XMLBuilder, XMLParser} from "fast-xml-parser"
+import {exportJPEG, readTemplate} from "../util.js";
 import {calcPerformancePoints} from "../compute-pp.js";
 
 const opt = {
@@ -31,7 +31,7 @@ export async function router(req, res) {
         res.set('Content-Type', 'image/jpeg');
         // send 的时候再导出图片, 保持原来接口不变, 别忘记 exportImage 前 await
         // 再在下面补充一个 router_svg 用于返回 svg 字符串
-        res.send(await exportImage(svg));
+        res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
@@ -153,8 +153,7 @@ export async function panel_Beta(score) {
         })
     }
 
-    let svgStr = builder.build(template);
-    return svgStr;
+    return builder.build(template);
 }
 
 function searchObject(obj, callback, index = 0) {

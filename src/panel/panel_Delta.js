@@ -1,5 +1,5 @@
 import {
-    exportLossLessImage,
+    exportPNG,
     getExportFileV3Path,
     getModColor, getModInt,
     getRoundedNumberLargerStr,
@@ -19,7 +19,7 @@ export async function router(req, res) {
         const data = req.fields || {};
         const svg = await panel_Delta(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(await exportLossLessImage(svg));
+        res.send(await exportPNG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

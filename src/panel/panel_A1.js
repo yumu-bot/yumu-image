@@ -1,5 +1,5 @@
 import {
-    exportImage, getPanelNameSVG,
+    exportJPEG, getPanelNameSVG,
     getRandomBannerPath,
     implantImage, implantSvgBody,
     PanelGenerate,
@@ -13,7 +13,7 @@ export async function router(req, res) {
         const data = req.fields || {};
         const svg = await panel_A1(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(await exportImage(svg));
+        res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

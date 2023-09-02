@@ -1,5 +1,5 @@
 import {
-    exportImage, getExportFileV3Path, getGameMode, getModColor,
+    exportJPEG, getExportFileV3Path, getGameMode, getModColor,
     getPanelNameSVG,
     getRandomBannerPath, getRankColor, implantImage,
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, PanelDraw,
@@ -18,7 +18,7 @@ export async function router(req, res) {
         const data = req.fields || {};
         const svg = await panel_J(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(await exportImage(svg));
+        res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

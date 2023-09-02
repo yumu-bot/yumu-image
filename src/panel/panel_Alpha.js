@@ -1,4 +1,4 @@
-import {exportImage} from "../util.js";
+import {exportJPEG} from "../util.js";
 import {PuHuiTi} from "../font.js";
 
 export async function router(req, res) {
@@ -6,7 +6,7 @@ export async function router(req, res) {
         const data = req.fields.strs || {};
         const svg = await panel_Alpha(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(await exportImage(svg));
+        res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

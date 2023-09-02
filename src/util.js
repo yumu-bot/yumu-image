@@ -11,13 +11,13 @@ import moment from "moment";
 import {torus, torusRegular} from "./font.js";
 
 const path_util = path;
+const MD5 = crypto.createHash("md5");
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE
+export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufile";
 
 const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
 const FLAG_PATH = process.env.FLAG_PATH || CACHE_PATH + "/flag"
-export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufile";
-const MD5 = crypto.createHash("md5");
 
 export function initPath() {
     axios.defaults.timeout = 2000;
@@ -81,10 +81,8 @@ const mascot_pic_sum_arr = [50, 20, 4, 4, 7, 1, 2, 2, 3, 6]; //吉祥物的对�
 const bannerTotal = 130;//banner 数量
 const mascotBGTotal = 13;//吉祥物 BG 数量
 
-const svg2JPEG = async (svg) => await exportsJPEG.convert(svg, {quality: 100});
-const svg2PNG = async (svg) => await exportsPNG.convert(svg, {quality: 100});
-export const exportImage = svg2JPEG;
-export const exportLossLessImage = svg2PNG;
+export const exportJPEG = async (svg) => await exportsJPEG.convert(svg, {quality: 100});
+export const exportPNG = async (svg) => await exportsPNG.convert(svg);
 
 const UTF8Encoder = new TextEncoder('utf8');
 
@@ -1775,7 +1773,7 @@ export class InsertSvgBuilder {
 
     async insertSvgReg(svg, x, y, reg = /^/) {
         if (svg instanceof SVG) {
-            let path = this.f_util.save(await exportImage(svg.getSvgText()));
+            let path = this.f_util.save(await exportJPEG(svg.getSvgText()));
             svg.getTmpPath().forEach(dir => fs.rmSync(dir, {force: true, recursive: true}));
             let w = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
             let h = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
@@ -1819,7 +1817,7 @@ export class InsertSvgBuilder {
             out.setTmpPaths(this.f_other);
             out.setTmpPath(this.f_util.getDirPath());
         } else {
-            out = await exportImage(this.svg);
+            out = await exportJPEG(this.svg);
             this.f_util.remove();
         }
         return out;
