@@ -10,7 +10,7 @@ import {
     implantImage,
     implantSvgBody, PanelDraw,
     readNetImage,
-    replaceText,
+    replaceText, replaceTexts,
 } from "../util.js";
 import {torus} from "../font.js";
 import {label_A4, LABEL_OPTION} from "../component/label.js";
@@ -220,14 +220,11 @@ export async function card_N(data = {
     svg = implantImage(svg, 40, 40, 15, 10, 1, rank, reg_label);
     svg = implantImage(svg, 50, 50, 70, 6, 1, avatar, reg_avatar);
     svg = implantImage(svg, 915, 62, 0, 0, background_opacity, background, reg_background);
-    svg = replaceText(svg, name, reg_text);
-    svg = replaceText(svg, flagSvg, reg_text);
-    svg = replaceText(svg, country_date, reg_text);
+    svg = replaceTexts(svg, [name, country_date, delta_score_text, flagSvg], reg_text);
     svg = implantSvgBody(svg, 350, 6, n1_acc, reg_label);
     svg = implantSvgBody(svg, 460, 6, n1_combo, reg_label);
     svg = implantSvgBody(svg, 570, 6, n1_pp, reg_label);
     svg = implantSvgBody(svg, 350, 36, n1_score, reg_label);
-    svg = replaceText(svg, delta_score_text, reg_label);
 
     return svg.toString();
 }

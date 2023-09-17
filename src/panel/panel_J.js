@@ -424,22 +424,15 @@ export async function panel_J(data = {
     const pp_raw = data.pp_raw.toFixed(0) || 0;
     const pp_bonus = Math.max(pp - pp_raw, 0).toFixed(0);
     const game_mode = getGameMode(data.game_mode.toString(), 2);
-
-    const pp_full_path = torus.get2SizeTextPath(
-        pp.toString(),
+    const pp_path = torus.get2SizeTextPath(pp.toString(),
         ' PP (' + pp_raw + '+' + pp_bonus + ')',
         36,
         24,
         1860,
         374.754,
         'right baseline',
-        '#fff'
-    );
-    const pp_mini_path = torus.getTextPath('(' + pp_raw + '+' + pp_bonus + ')', 1860,
-        374.754,
-        24,
-        'right baseline',
-        '#aaa');
+        '#fff');
+
     const game_mode_path = torus.getTextPath(game_mode, 1860, 401.836, 24, 'right baseline', '#fff');
 
     const mappers_count_path = torus.get2SizeTextPath(
@@ -454,7 +447,7 @@ export async function panel_J(data = {
     )
 
     // 插入文字
-    svg = replaceTexts(svg, [panel_name, pp_mini_path, pp_full_path, game_mode_path, mappers_count_path], reg_index);
+    svg = replaceTexts(svg, [panel_name, pp_path, game_mode_path, mappers_count_path], reg_index);
 
     // A1卡构建
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
@@ -530,24 +523,11 @@ export async function panel_J(data = {
 
     // 绘制bp的pp曲线
     let pp_raw_arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false);
-    // let pp_arr = [];
-
-    //获取加权pp，一般来说，这总是比真实的pp要低很多
-    /*
-    pp_raw_arr.forEach(
-        (v, i) => {
-            pp_arr.push(Math.round(v * Math.pow(0.95, i)));
-        }
-    )
-
-     */
 
     let pp_max = Math.max.apply(Math, pp_raw_arr);
     let pp_min = Math.min.apply(Math, pp_raw_arr);
     let pp_mid = (pp_max + pp_min) / 2;
 
-    // RFPPChart(pp_raw_arr, '#FFCC22', pp_max, pp_min);
-    // RFPPChart(pp_arr, '#aaa', pp_max, pp_min);
     const PPChart = PanelDraw.LineChart(pp_raw_arr, pp_max, pp_min, 1040, 610, 780, 215, '#FFCC22', 1, 0, 4);
     svg = replaceText(svg, PPChart, reg_pp_graph);
 
@@ -618,17 +598,18 @@ export async function panel_J(data = {
         return curr_percent;
     }, 0);
 
-    mod_svg += `<image width="140" height="140" transform="translate(${842 - 70} ${470 - 70})" xlink:href="${getExportFileV3Path('object-piechart-overlay2.png')}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`;
+    mod_svg += PanelDraw.Image(842 - 70, 470 - 70, 140, 140, getExportFileV3Path('object-piechart-overlay2.png'), 1);
 
     let rank_svg = '';
     data.rank_attr.reduce((prev, curr) => {
+        if (curr.index === 'FC') return 0; //排去FC
         const curr_percent = prev + curr.percent;
         const color = getRankColor(curr.index);
         rank_svg += PanelDraw.PieChart(curr_percent, 1630, 815, 100, prev, color);
         return curr_percent;
     }, 0);
 
-    rank_svg += `<image width="140" height="140" transform="translate(${1630 - 70} ${815 - 70})" xlink:href="${getExportFileV3Path('object-piechart-overlay2.png')}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`;
+    rank_svg += PanelDraw.Image(1630 - 70, 815 - 70, 140, 140, getExportFileV3Path('object-piechart-overlay2.png'), 1);
 
     svg = replaceText(svg, mod_svg, reg_pan_mod);
     svg = replaceText(svg, rank_svg, reg_pan_rank);

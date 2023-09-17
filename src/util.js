@@ -16,12 +16,12 @@ export const EXPORT_FILE_V3 = process.env.EXPORT_FILE
 export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufile";
 
 const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
-const FLAG_PATH = process.env.FLAG_PATH || CACHE_PATH + "/flag"
+const FLAG_PATH = process.env.FLAG_PATH || EXPORT_FILE_V3 + "Flags" //CACHE_PATH + "/flag";
 
 export function initPath() {
-    axios.defaults.timeout = 2000;
+    axios.defaults.timeout = 4000;// 2000
     axios.defaults.retry = 5;
-    axios.defaults.retryDelay = 1000;
+    axios.defaults.retryDelay = 2000;// 1000
     axios.defaults.proxy = {
         host: '127.0.0.1',
         port: 7890,
@@ -148,9 +148,14 @@ export function replaceTexts(base = '', replaces = [''], reg = /.*/) {
 }
 
 export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
-    let replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
     if (image != null) {
-        return base.replace(reg, replace);
+        if (x === 0 && y === 0) {
+            const replace = `<image width="${w}" height="${h}" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
+            return base.replace(reg, replace);
+        } else {
+            const replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
+            return base.replace(reg, replace);
+        }
     } else {
         return base;
     }
@@ -158,7 +163,7 @@ export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /
 
 //如果不需要修改位置，用replaceText就行
 export function implantSvgBody(base = '', x= 0, y = 0, replace = '', reg = /.*/) {
-    if (x !== 0 || y !== 0) replace = `<g transform="translate(${x} ${y})">` + replace + '</g>'
+    if (x !== 0 || y !== 0) replace = `<g transform="translate(${x} ${y})">` + replace + '</g>';
     return base.replace(reg, replace);
 }
 
@@ -2079,8 +2084,10 @@ export function getRandom(range = 0) {
 }
 
 //获取时间差
-export function getTimeDifference(compare = '', now = moment()) {
-    const compare_moment = moment(compare, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, "hours");
+export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment()) {
+    const compare_moment = moment(compare, format).add(8, "hours");
+
+    if (!compare_moment) return '-';
 
     const years = compare_moment.diff(now, "years");
     const months = compare_moment.diff(now, "months");
@@ -2538,7 +2545,7 @@ export const PanelGenerate = {
             default: mods_width = 180;
         }
         const difficulty_name = bp.beatmap.version ? torus.cutStringTail(bp.beatmap.version, 24,
-            500 - mods_width - torus.getTextWidth('[] - bp ()' + rank + time_diff, 24), true) : '';
+            500 - mods_width - torus.getTextWidth('[] - BP ()' + rank + time_diff, 24), true) : '';
         const color_index = (bp.rank === 'XH' || bp.rank === 'X') ? '#2A2226' : '#fff';
 
         const artist = torus.cutStringTail(bp.beatmapset.artist, 24,
@@ -2549,7 +2556,7 @@ export const PanelGenerate = {
             cover: cover,
             title: bp.beatmapset.title || '',
             left1: artist + ' // ' + bp.beatmapset.creator,
-            left2: '[' + difficulty_name + '] - bp' + rank + ' (' + time_diff + ')',
+            left2: '[' + difficulty_name + '] - BP' + rank + ' (' + time_diff + ')',
             index_b: Math.round(bp.pp).toString(),
             index_m: 'PP',
             index_b_size: 48,
@@ -2700,18 +2707,21 @@ export const PanelGenerate = {
             groups: user.groups || [],
         };
     },
+
     beatmap2CardO2: async (beatmapset) => {
-        const background = await readNetImage(beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
+        if (!beatmapset) return '';
+
+        const background = beatmapset ? await readNetImage(beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
         const map_status = beatmapset.status;
         const title1 = beatmapset.title;
         const title2 = beatmapset.artist;
         const title_font = torus;
         const left1 = '';
-        const left2 = '<3 ' + beatmapset.favourite_count;
-        const left3 = beatmapset.id ? 'S' + beatmapset.id : 'S0';
+        const left2 = '^' + beatmapset.favourite_count;
+        const left3 = beatmapset.id ? 'S' + beatmapset.id : '0';
         const right1 = 'Play Counts';
-        const right2b = getRoundedNumberLargerStr(beatmapset.play_count,2);
-        const right2m = getRoundedNumberSmallerStr(beatmapset.play_count,2);
+        const right2b = getRoundedNumberLargerStr(beatmapset.play_count, 2);
+        const right2m = getRoundedNumberSmallerStr(beatmapset.play_count, 2);
 
         return {
             background: background,
@@ -2732,6 +2742,9 @@ export const PanelGenerate = {
 
 //把数组变成可视化的图表
 export const PanelDraw = {
+    Image: (x = 0, y = 0, w = 100, h = 100, link = '', opacity = 1) => {
+        return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${link}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`;
+    },
 
     Rect: (x = 0, y = 0, w = 0, h = 0, r = 0, color = '#fff', opacity = 1) => {
         return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" opacity="${opacity}" style="fill: ${color};"/>`;
@@ -2745,12 +2758,14 @@ export const PanelDraw = {
         return `<polygon points="${x} ${y} ${controls} ${ex} ${ey}" style="fill: ${color};"/>`
     },
 
-    //柱状图，Histogram，max 如果填 0，即用数组的最大值
-    BarChart: (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff', floor = 0, floorColor = '#aaa', opacity = 1) => {
+    //柱状图，Histogram，max 如果填 null，即用数组的最大值。max_undertake是数组的最大值小于这个值时的 保底机制
+    BarChart: (arr = [0], max = null, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff', max_undertake = 0, floor = 0, floorColor = '#aaa', opacity = 1) => {
         if (arr == null) return '';
 
-        const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
-        const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;
+        const arr_max = (typeof max === 'number') ?
+            ((typeof max_undertake === 'number') ? Math.max(Math.max.apply(Math, arr), max_undertake) : Math.max.apply(Math, arr)) :
+            max;
+        const arr_min = (typeof min === 'number') ? min : Math.min.apply(Math, arr);
         const step = w / arr.length; //如果是100个，一步好像刚好5.2px
         const width = step - gap; //实际宽度
         let rect_svg = '<g>';
@@ -2824,32 +2839,32 @@ export const PanelDraw = {
     /**
      * @function 绘制饼图，需要搭配一个圆当 Mask
      * @return {String} 圆饼图的 svg
-     * @param num 数据，0-1
+     * @param curr 数据，0-1
      * @param cx 中心横坐标
      * @param cy 中心纵坐标
      * @param r 半径
-     * @param start 起始位置，0-1（已经除以过 2π
+     * @param prev 起始位置，0-1（已经除以过 2π
      * @param color 颜色
      */
-    PieChart: (num = 1.0, cx = 0, cy = 0, r = 100, start = 0, color = '#fff') => {
+    PieChart: (curr = 1.0, cx = 0, cy = 0, r = 100, prev = 0, color = '#fff') => {
         const pi = Math.PI;
-        let radEnd = 2 * pi * num;
-        let radStart = 2 * pi * start;
+        let radCurr = 2 * pi * curr;
+        let radPrev = 2 * pi * prev;
 
         //如果小于start，则变换位置
-        if (radEnd < radStart) {
-            radStart = radStart + radEnd;
-            radEnd = radStart - radEnd;
-            radStart = radStart - radEnd;
+        if (radCurr < radPrev) {
+            radPrev = radPrev + radCurr;
+            radCurr = radPrev - radCurr;
+            radPrev = radPrev - radCurr;
         }
 
         //获取中继点，这个点可以让区域控制点完美处于圆的外围
-        const assist = getAssistPoint(radStart, radEnd, cx, cy, r);
+        const assist = getAssistPoint(radPrev, radCurr, cx, cy, r);
 
-        const xMin = cx + r * Math.sin(radStart);
-        const yMin = cy - r * Math.cos(radStart);
-        const xMax = cx + r * Math.sin(radEnd);
-        const yMax = cy - r * Math.cos(radEnd);
+        const xMin = cx + r * Math.sin(radPrev);
+        const yMin = cy - r * Math.cos(radPrev);
+        const xMax = cx + r * Math.sin(radCurr);
+        const yMax = cy - r * Math.cos(radCurr);
 
         const controls = `${xMin} ${yMin} ${assist}${xMax} ${yMax}`; //这里assist后面的空格是故意删去的
         return PanelDraw.Polygon(cx, cy, controls, cx, cy, color);
@@ -2868,27 +2883,27 @@ export const PanelDraw = {
                 (cx - r) + ' ' + (cy - r) + ' '];
 
             if (radMin < pi / 4) {
-                if (radMax < pi / 4) assist = ' ';
+                if (radMax < pi / 4) assist = '';
                 else if (radMax < 3 * pi / 4) assist = (assist_arr[1]);
                 else if (radMax < 5 * pi / 4) assist = (assist_arr[1] + assist_arr[2]);
                 else if (radMax < 7 * pi / 4) assist = (assist_arr[1] + assist_arr[2] + assist_arr[3]);
                 else assist = (assist_arr[1] + assist_arr[2] + assist_arr[3] + assist_arr[4]);
             } else if (radMin < 3 * pi / 4) {
-                if (radMax < 3 * pi / 4) assist = ' ';
+                if (radMax < 3 * pi / 4) assist = '';
                 else if (radMax < 5 * pi / 4) assist = (assist_arr[2]);
                 else if (radMax < 7 * pi / 4) assist = (assist_arr[2] + assist_arr[3]);
                 else assist = (assist_arr[2] + assist_arr[3] + assist_arr[4]);
             } else if (radMin < 5 * pi / 4) {
-                if (radMax < 5 * pi / 4) assist = ' ';
+                if (radMax < 5 * pi / 4) assist = '';
                 else if (radMax < 7 * pi / 4) assist = (assist_arr[3]);
                 else assist = (assist_arr[3] + assist_arr[4]);
             } else if (radMin < 7 * pi / 4) {
-                if (radMax < 7 * pi / 4) assist = ' ';
+                if (radMax < 7 * pi / 4) assist = '';
                 else assist = (assist_arr[4]);
             } else {
                 assist = '';
             }
-            return assist;
+            return assist.toString();
         }
     }
 }

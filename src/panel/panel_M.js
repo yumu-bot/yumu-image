@@ -1,8 +1,7 @@
 import {
-    exportJPEG,
-    getPanelNameSVG,
-    getRandomBannerPath,
-    implantImage, implantSvgBody,
+    exportJPEG, getExportFileV3Path, getPanelNameSVG,
+    getRandomBannerPath, getTimeDifference,
+    implantImage, implantSvgBody, PanelDraw,
     PanelGenerate,
     readTemplate,
     replaceText, replaceTexts
@@ -11,6 +10,8 @@ import {torus} from "../font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_O1} from "../card/card_O1.js";
 import {card_O2} from "../card/card_O2.js";
+import {card_O3} from "../card/card_O3.js";
+import {card_O4} from "../card/card_O4.js";
 
 export async function router(req, res) {
     try {
@@ -263,7 +264,7 @@ export async function panel_M(data = {
 
 
     difficulty_arr: [], //星数数组。0-2 2-2.8 2.8-4 4-5.3 5.3-6.5 6.5-8 8-10 10-无穷，包括前面不包括后面
-    player_feedback_arr: [], //0到10，给上面搜过的谱面里这个数据的总和即可："ratings": [];
+    length_arr: [], //0到10，给上面搜过的谱面里这个数据的总和即可："ratings": [];
 
     // 这是啥
     genre: [0, 0, 0, 1, 0, 1, 0], //unspecified, video game, anime, rock, pop, other, novelty, hip hop, electronic, metal, classical, folk, jazz
@@ -272,17 +273,13 @@ export async function panel_M(data = {
     //Get User Recent Activity，需要筛选出"type": "beatmapsetUpdate", "type": "beatmapsetRanked",类似的种类，获取100条（两页
     recent_activity: [
         {
-            "created_at": "2023-08-14T04:12:51+00:00",
-            "createdAt": "2023-08-14T04:12:51+00:00",
-            "id": 804554294,
-            "type": "beatmapsetUpdate",
+            "created_at": "2023-08-26T10:10:40+00:00",
+            "createdAt": "2023-08-26T10:10:40+00:00",
+            "id": 806548619,
+            "type": "beatmapsetDelete",
             "beatmapset": {
-                "title": "beemyu - Shopping ChipTune",
-                "url": "/s/1953400"
-            },
-            "user": {
-                "username": "Muziyami",
-                "url": "/u/7003013"
+                "title": "Suzumisiro - Candy Melody",
+                "url": "/beatmapsets/1576867"
             }
         },
         {
@@ -299,6 +296,21 @@ export async function panel_M(data = {
                 "url": "/u/7003013"
             }
         },
+        {
+            "created_at": "2023-08-19T09:02:58+00:00",
+            "createdAt": "2023-08-19T09:02:58+00:00",
+            "id": 805399429,
+            "type": "beatmapsetApprove",
+            "approval": "ranked",
+            "beatmapset": {
+                "title": "Mitsukiyo - Midsummer cat",
+                "url": "/beatmapsets/2021170"
+            },
+            "user": {
+                "username": "Setu",
+                "url": "/users/12190421"
+            }
+        }
     ]
 }, reuse = false) {
     // 导入模板
@@ -313,9 +325,11 @@ export async function panel_M(data = {
     const reg_difficulty = /(?<=<g id="Difficulty_PM">)/;
     const reg_activity = /(?<=<g id="Activity_PM">)/;
     const reg_recent = /(?<=<g id="Recent_PM">)/;
-    const reg_feedback = /(?<=<g id="Feedback_PM">)/;
+    const reg_length = /(?<=<g id="Length_PM">)/;
+    const reg_genre = /(?<=<g id="Genre_PM">)/;
 
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PM1-1\);">)/;
+    const reg_genre_pie = /(?<=<g style="clip-path: url\(#clippath-PM1-2\);">)/;
 
     // 面板文字
     const panel_name = getPanelNameSVG('I\'m Mapper (!ymim)', 'IM', 'v0.3.2 FT');
@@ -333,11 +347,114 @@ export async function panel_M(data = {
     for (let i = 0; i < Math.min(data.most_popular_beatmap.length, 6); i++) {
         const x = 510 + (i % 3) * 305;
         const y = 380 + Math.floor(i / 3) * 145;
-        const o2 = data.most_popular_beatmap[i];
 
-        //const cardO2 = await card_O2(await PanelGenerate.beatmap2CardO2(o2), true);
-        //svg = implantSvgBody(svg, 290, 130, x, y, '', reg_popular);
+        const cardO2 = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_popular_beatmap[i]), true);
+        svg = implantSvgBody(svg, x, y, cardO2, reg_popular);
     }
+
+    // 导入一些标签
+    const popular_title = torus.getTextPath('Most Popular Beatmap', 510, 365, 30, 'left baseline', '#fff');
+    const difficulty_title = torus.getTextPath('Difficulty', 1470, 365, 30, 'left baseline', '#fff');
+    const length_title = torus.getTextPath('Length', 1470, 615, 30, 'left baseline', '#fff');
+    const genre_title = torus.getTextPath('Genre', 60, 730, 30, 'left baseline', '#fff');
+    const activity_title = torus.getTextPath('Recent Activity', 510, 730, 30, 'left baseline', '#fff');
+    const recent_title = torus.getTextPath('Recent Host/Guest', 1120, 730, 30, 'left baseline', '#fff');
+
+    const diff_index = torus.getTextPath('  0       2       2.8      4       5.3      6.5       8       10      ...',
+        1450, 550, 18, 'left baseline', '#fff');
+    const length_index = torus.getTextPath('  0   1:00   1:30   2:00   2:30   3:00   3:30   4:00    ...',
+        1450, 800, 18, 'left baseline', '#fff');
+    svg = replaceTexts(svg, [diff_index, length_index, popular_title, difficulty_title, length_title, genre_title, activity_title, recent_title], reg_index);
+
+    // 导入难度
+    const diff_rrect = PanelDraw.BarChart(data.difficulty_arr, null, 0, 1460, 380 + 145, 410, 145, 4, 4, '#E6AD59', 5, 2)
+    svg = replaceText(svg, diff_rrect, reg_difficulty);
+
+    // 导入评价
+    const length_rrect = PanelDraw.BarChart(data.length_arr, null, 0, 1460, 380 + 145 + 250, 410, 145, 4, 4, '#88BD6F', 5, 2)
+    svg = replaceText(svg, length_rrect, reg_length);
+
+    // 导入风格饼图
+    const genre_arr = data.genre || [];
+    const genre_color = ['#AAA',
+        '#D56E4B', '#DD8D52', '#E6AD59', '#FFF767',
+        '#ADCE6D', '#88BD6F', '#62AE70', '#5EB0AB',
+        '#55B1EF', '#587EC2', '#5867AF', '#75569E'
+    ]
+    const genre_name = ['unspecified', 'video game', 'anime', 'rock', 'pop', 'other', 'novelty', 'hip hop', 'electronic', 'metal', 'classical', 'folk', 'jazz'];
+    const genre_sum = genre_arr.reduce((prev, curr) => {return prev + curr}, 0);
+
+    let genre_svg = '';
+    genre_arr.reduce((prev, curr, i) => {
+        const curr_percent = prev + curr / genre_sum;
+        const color = genre_color[i];
+        genre_svg += PanelDraw.PieChart(curr_percent, 150, 825, 100, prev, color);
+        return curr_percent;
+    }, 0);
+
+    genre_svg += PanelDraw.Image(150 - 70, 825 - 70, 140, 140, getExportFileV3Path('object-piechart-overlay2.png'), 1);
+    svg = replaceText(svg, genre_svg, reg_genre_pie);
+
+    // 导入曲风饼图的排序
+    let sortMap = new Map();
+    let sortKey = [];
+    let sortValue = [];
+
+    genre_color.forEach((v, i) => {
+        sortMap.set(i, genre_arr[i])
+    })
+    const arrayObj = Array.from(sortMap);
+    arrayObj.sort(function (prev,curr) {
+        return curr[1] - prev[1];
+    })
+    for (const [key, value] of arrayObj) {
+        sortKey.push(key);
+        sortValue.push(value);
+    }
+
+    let cardO3s = [];
+    cardO3s.push(await card_O3({title: 'Total', number: genre_sum, color: '#AAA'}, true));
+    for (let i = 0; i < 10; i++) {
+        cardO3s.push(await card_O3({
+            title: genre_name[sortKey[i]], number: sortValue[i], color: genre_color[sortKey[i]]
+        }, true));
+    }
+
+    svg = implantSvgBody(svg, 60, 910, cardO3s.shift(), reg_genre);
+    for (let i = 0; i < 10; i++) {
+        if (i < 8) {
+            svg = implantSvgBody(svg, 260, 710 + 40 * i, cardO3s[i], reg_genre);
+        } else {
+            svg = implantSvgBody(svg, 60, 950 + 40 * (i - 8), cardO3s[i], reg_genre);
+        }
+    }
+
+    // 导入最近活动卡
+    let cardO4s = [];
+    const recent_activity = data.recent_activity || [];
+
+    for (let i = 0; i < Math.min(recent_activity.length, 7); i++) {
+        const v = recent_activity[i];
+        const delta_time = getTimeDifference(v.created_at, 'X');
+
+        cardO4s.push(await card_O4({
+            type: v.type, approval: v.approval, title: v.beatmapset.title, time: delta_time,
+        }, true));
+    }
+
+    for (let i = 0; i < Math.min(recent_activity.length, 7); i++) {
+        svg = implantSvgBody(svg, 510, 750 + 40 * i, cardO4s[i], reg_activity);
+    }
+
+    // 导入最近卡
+    const O2g = await PanelGenerate.beatmap2CardO2(data.most_recent_ranked_guest_diff);
+    const O2g_title2 = data.most_recent_ranked_guest_diff ? data.most_recent_ranked_guest_diff.creator + ' (' + data.most_recent_ranked_guest_diff.artist  + ')' : '';
+
+    const cardO2h = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_recent_ranked_beatmap), true);
+    const cardO2g = await card_O2({...O2g, title2: O2g_title2}, true);
+
+    svg = implantSvgBody(svg, 1120, 745, cardO2h, reg_recent);
+    svg = implantSvgBody(svg, 1120, 890, cardO2g, reg_recent);
 
 
     // 插入1号卡标签
@@ -380,7 +497,7 @@ export async function panel_M(data = {
     const graveyard_index = torus.getTextPath('Graveyard', 1800, 1012, 24, 'center baseline', '#aaa');
 
     svg = replaceTexts(svg, [favorite, kudosu, comment, nominated, loved, graveyard], reg_activity);
-    svg = replaceTexts(svg, [favorite_index, kudosu_index, comment_index, nominated_index, loved_index, graveyard_index], reg_feedback);
+    svg = replaceTexts(svg, [favorite_index, kudosu_index, comment_index, nominated_index, loved_index, graveyard_index], reg_length);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);

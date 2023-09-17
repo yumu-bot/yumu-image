@@ -7,8 +7,11 @@ export async function router(req, res) {
         const out = await getAttr(data);
         res.send(out);
     } catch (e) {
-        res.status(500);
-        res.render('error', {error: e});
+        res.status(500).send(e.stack);
+        //res.json({ error: e }) 这个或许有用？
+
+        //res.status(500);
+        //res.render('error', {error: e});
     }
 }
 

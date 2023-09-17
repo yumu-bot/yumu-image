@@ -351,9 +351,10 @@ function cutStringTail_torus(
  * @param y {Number} 锚点横坐标
  * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
  * @param color {String} 十六进制颜色，#FFF
+ * @param color2 {String} 十六进制颜色，#FFF，可不输入
  */
 
-function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x, y, anchor, color, color2 = color) {
     let width_b = torus.getTextWidth(largerText, largeSize);
     let width_m = torus.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -362,15 +363,15 @@ function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x
 
     if (anchor === "left baseline") {
         out = torus.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            torus.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+            torus.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color2);
 
     } else if (anchor === "right baseline") {
         out = torus.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            torus.getTextPath(smallerText, x, y, smallSize, anchor, color);
+            torus.getTextPath(smallerText, x, y, smallSize, anchor, color2);
 
     } else if (anchor === "center baseline") {
         out = torus.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            torus.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+            torus.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color2);
     }
 
     return out;

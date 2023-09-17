@@ -105,7 +105,7 @@ async function routerD(req) {
             accuracy: Math.round(re.accuracy * 10000) / 100, //这玩意传进来就是零点几？  是
             combo: re.max_combo, //x
             mods_arr: re.mods,
-            pp: Math.round(re.pp) //pp
+            pp: re.pp ? Math.round(re.pp) : 0 //pp
         }
         recent_play.push(d);
     }
@@ -167,14 +167,17 @@ async function routerD(req) {
         fd = `${thisYear}-${thisMonth.toString().padStart(2, '0')}-01`;
     }
 
-
     const op = {
         rank_country: user?.statistics?.country_rank,
         rank_global: user?.statistics?.global_rank,
         country: user?.country['countryCode'],
         bonus_pp: req.fields['bonus_pp'], // 416.6667
-        om4k_pp: user?.statistics?.pp_4K,
-        om7k_pp: user?.statistics?.pp_7K,
+        om4k_pp: user.statistics.pp_4k,
+        om7k_pp: user.statistics.pp_7k,
+        om4k_rank_country: user.statistics.country_rank_4k,
+        om4k_rank_global: user.statistics.rank_4k,
+        om7k_rank_country: user.statistics.country_rank_7k,
+        om7k_rank_global: user.statistics.rank_7k,
         game_mode: req.fields?.mode, // osu taiko catch mania
 
         grade_XH: user?.statistics?.ssh,
@@ -285,6 +288,10 @@ export async function panel_D(data = {
     bonus_pp: 471,
     om4k_pp: 2754,
     om7k_pp: 1045,
+    om4k_rank_country: 581,
+    om4k_rank_global: 114514,
+    om7k_rank_country: 581,
+    om7k_rank_global: 114514,
     game_mode: 'osu', // osu taiko catch(fruits) mania
 
     grade_XH: 65472,
@@ -369,8 +376,15 @@ export async function panel_D(data = {
     const label_tth =
         await label_E({...LABEL_OPTION.TTH, data_b: tth_b, data_m: tth_m}, true);
 
+    const right1 = (data.game_mode === 'mania') ?
+        data.card_A1.right2
+        : '';
+    const right2 = (data.game_mode === 'mania') ?
+        '4K: ' + (Math.round(data.om4k_pp) || 0) + 'PP // 7K: ' + (Math.round(data.om7k_pp) || 0) + 'PP'
+        : data.card_A1.right2;
+
     const card_A1_impl =
-        await card_A1(data.card_A1, true);
+        await card_A1({...data.card_A1, right1: right1, right2: right2}, true);
 
     let card_Js = [];
     for (const j of data.recent_play) {
@@ -389,13 +403,11 @@ export async function panel_D(data = {
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
 
-    const rank_country_text = ' ' + (data.country || '') + '#' + (data.rank_country || '0');
+    const rank_text = torus.get2SizeTextPath(
+        '#' + (data.rank_global || '0'), ' ' + (data.country || '') + '#' + (data.rank_country || '0'),
+        36, 24, 1860, 374.754, 'right baseline', '#fff', '#aaa');
 
-    const rank_global = torus.getTextPath('#' + data.rank_global || '0',
-        1860 - torus.getTextWidth(rank_country_text, 24),
-        374.754, 36, "right baseline", "#fff");
-    const rank_country = torus.getTextPath(rank_country_text, 1860, 374.754, 24, "right baseline", "#a1a1a1");
-
+    const variant_text = drawManiaVariantRank(data.game_mode, data.country, data.om4k_rank_global, data.om7k_rank_global, data.om4k_rank_country, data.om7k_rank_country)
 
     // 绘制rank曲线。
     const ranking_arr = modifyArrayToFixedLength(data.user_ranking_arr, 90, true);
@@ -421,39 +433,17 @@ export async function panel_D(data = {
     const bp_arr = maximumArrayToFixedLength(data.user_bp_arr, 39);
 
     const user_bp_activity_max = Math.max.apply(Math, bp_arr);
-    const user_bp_activity_max_fixed = Math.max(user_bp_activity_max, 5); //保底机制
-
-    function RFBPActivityChart(arr, color, max) {
-        const step = 20
-        const start_x = 1042;
-        const start_y = 610;
-
-        let rect_svg = `<g>`
-
-        arr.forEach((item, i) => {
-            const height = Math.max(((item + 1) / (max + 1) * 90), 16)//+1 和 16 都是保底机制
-            let rrect_color = (height > 16) ? color : '#a1a1a1'; //如果保底了，颜色取灰色
-
-            const lineto_x = start_x + step * (i);
-            const lineto_y = start_y - height;
-
-            rect_svg += PanelDraw.Rect(lineto_x, lineto_y, 16, start_y - lineto_y, 8, rrect_color);
-        })
-        rect_svg += `</g>`
-
-        svg = replaceText(svg, rect_svg, reg_bp_activity_graph);
-    }
 
     let bp_activity_text = torus.getTextPath(`BP+${user_bp_activity_max}`,
         1050 + bp_arr.findIndex((item) => item === user_bp_activity_max) * 20,
-        515 + 75 * (5 - Math.min(user_bp_activity_max, 5)) / 5, //本来是90，缩减一点
+        520 - 5 + 75 - (user_bp_activity_max / Math.max(5, user_bp_activity_max)) * 75,
         16,
         'center baseline',
         '#a1a1a1');
 
     svg = replaceText(svg, bp_activity_text, reg_ranking_text)
 
-    RFBPActivityChart(bp_arr, '#8DCFF4', user_bp_activity_max_fixed);
+    svg = replaceText(svg, PanelDraw.BarChart(bp_arr, user_bp_activity_max, 0, 1042, 610, 780, 90, 8, 4, '#8DCFF4', 5, 16), reg_bp_activity_graph)
 
     // 绘制纵坐标，注意max在下面
     let rank_axis_y_min = getRoundedNumberLargerStr(user_ranking_min, 1) + getRoundedNumberSmallerStr(user_ranking_min, 1);
@@ -471,20 +461,17 @@ export async function panel_D(data = {
     const pc_arr = modifyArrayToFixedLength(data.user_pc_arr, 43, true)
 
     const user_pc_activity_max = Math.max.apply(Math, pc_arr);
-    const user_pc_activity_max_fixed = Math.max(user_pc_activity_max, 5); //保底机制
-
-    svg = replaceText(svg,
-        PanelDraw.BarChart(pc_arr, user_pc_activity_max_fixed, 0, 1002, 1000, 860, 90, 8, 4, '#8dcff4', 16, '#aaa')
-        , reg_pc_activity_graph);
 
     const pc_activity_text = torus.getTextPath(`${user_pc_activity_max}PC`,
         1010 + pc_arr.findIndex((item) => item === user_pc_activity_max) * 20,
-        905 + 75 * (5 - Math.min(user_pc_activity_max, 5)) / 5, //本来是90，缩减一点
+        910 - 5 + 75 - (user_pc_activity_max / Math.max(1000, user_pc_activity_max)) * 75,
         16,
         'center baseline',
         '#a1a1a1');
 
-    svg = replaceText(svg, pc_activity_text, reg_user_data_text)
+    svg = replaceText(svg, pc_activity_text, reg_user_data_text);
+
+    svg = replaceText(svg, PanelDraw.BarChart(pc_arr, user_pc_activity_max, 0, 1002, 1000, 860, 90, 8, 4, '#8dcff4', 1000, 16, '#aaa'), reg_pc_activity_graph);
 
     // 绘制月份
     const last_year = data.user_pc_last_date.slice(0, 4);
@@ -595,17 +582,8 @@ export async function panel_D(data = {
     const progress_rrect = PanelDraw.Rect(60, 1016, 520 * (data.user_progress || 0) / 100, 4, 2, '#FFCC22');
 
     // 插入右下面板右上提示
-    const game_mode = getGameMode(data.game_mode, 2);
-    const bonus_pp = Math.round(data.bonus_pp) || 0;
-    const om4k_pp = Math.round(data.om4k_pp) || 0;
-    const om7k_pp = Math.round(data.om7k_pp) || 0;
-    let user_data_text;
-
-    if (game_mode !== 'osu!mania') {
-        user_data_text = game_mode + ' (bonus: ' + bonus_pp + ' PP)';
-    } else {
-        user_data_text = game_mode + ' (bonus: ' + bonus_pp + ' PP // 4K: ' + om4k_pp + ' PP // 7K: ' + om7k_pp + ' PP)';
-    }
+    const bonus_pp = Math.round(Math.max(data.bonus_pp, 0)) || 0;
+    const user_data_text = getGameMode(data.game_mode, 2) + ' (bonus: ' + bonus_pp + ' PP)';
 
     const user_data = torus.getTextPath(
         user_data_text,
@@ -629,7 +607,7 @@ export async function panel_D(data = {
     // 插入文字
     svg = replaceTexts(svg, [mascot_mark1, mascot_mark1_rrect], reg_mascot_name);
     svg = replaceTexts(svg, [mascot_mark2, mascot_mark2_rrect], reg_progress);
-    svg = replaceTexts(svg, [rank_global, rank_country], reg_ranking_text);
+    svg = replaceTexts(svg, [rank_text, variant_text], reg_ranking_text);
     svg = replaceText(svg, progress_rrect, reg_progressR);
 
     // 插入图片和部件（新方法
@@ -659,4 +637,17 @@ export async function panel_D(data = {
     svg = implantSvgBody(svg, 1660, 835, label_tth, reg_label);
 
     return svg.toString();
+}
+
+//cr country rank, gr global rank
+function drawManiaVariantRank(mode = 'osu', country = 'CN', gr4k = 0, gr7k = 0, cr4k = 0, cr7k = 0) {
+    if (mode === 'mania') {
+        const key4 = torus.get2SizeTextPath('4K: #' + (gr4k || 0), ' #'  + (cr4k || 0),
+            24, 24, 1860, 404, 'right baseline', '#fff', '#aaa');
+
+        const key7 = torus.get2SizeTextPath('7K: #' + (gr7k || 0), ' #'  + (cr7k || 0),
+            24, 24, 1860, 430, 'right baseline', '#fff', '#aaa');
+
+        return key4 + key7;
+    } else return '';
 }
