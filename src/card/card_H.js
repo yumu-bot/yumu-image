@@ -11,6 +11,7 @@ export async function card_H(data = {
     background: '',
     cover: '',
     title: '',
+    title2: '',
     left1: '',
     left2: '',
     index_b: '',
@@ -23,6 +24,7 @@ export async function card_H(data = {
     label4: '',
     mods_arr: [],
 
+    color_title2: '#aaa',
     color_right: '#fff',
     color_left: '#fff',
     color_index: '#fff',
@@ -32,6 +34,7 @@ export async function card_H(data = {
     color_label4: '',
     color_left12: '#fff',
 
+    font_title2: 'torus',
     font_label4: 'torus',
 
 }, reuse = false) {
@@ -74,12 +77,14 @@ export async function card_H(data = {
     }
 
     // 插入四个小标签
+    const color_title2 = data.color_title2 || 'none';
     const color_label1 = data.color_label1 || 'none';
     const color_label2 = data.color_label2 || 'none';
     const color_label3 = data.color_label3 || 'none';
     const color_label4 = data.color_label4 || 'none';
 
     const font_l4 = (data.font_label4 === 'PuHuiTi') ? PuHuiTi : torus;
+    const font_t2 = (data.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
 
     const label3_width = torus.getTextWidth(data.label3 || '', 24) + 30;
     const label4_width = font_l4.getTextWidth(data.label4 || '', 24) + 30;
@@ -123,6 +128,9 @@ export async function card_H(data = {
     title_max_width -= (Math.max(mods_width, label3_width)); //一般来说就第三个标签最长了
     left_max_width -= mods_width;
 
+    const title_width = torus.getTextWidth(data.title || '', 36);
+    const title2_width = Math.max(title_max_width - title_width - 20, 0);
+
     // 文字定义
     const color_left12 = data.color_left12 || '#fff';
 
@@ -130,12 +138,17 @@ export async function card_H(data = {
     const text_left1 = torus.cutStringTail(data.left1 || '', 24, left_max_width);
     const text_left2 = torus.cutStringTail(data.left2 || '', 24, left_max_width);
 
+    const text_title2 = (data.title2 && (data.title !== data.title2))
+        ? font_t2.cutStringTail(data.title2 || '', 18, title2_width, true) : '';
+
     const title = torus.getTextPath(text_title, 210, 34.754, 36, 'left baseline', '#fff');
+    const title2 = font_t2.getTextPath(text_title2, 210 + 6 + title_width,
+        (data.font_title2 === 'PuHuiTi') ? 33 : 34.754, 18, 'left baseline', color_title2);
     const left1 = torus.getTextPath(text_left1, 210, 66.836, 24, 'left baseline', color_left12);
     const left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', color_left12);
 
     // 插入文字
-    svg = replaceTexts(svg, [title, left1, left2], reg_text);
+    svg = replaceTexts(svg, [title, title2, left1, left2], reg_text);
 
     // 插入图片
     svg = data.cover ? implantImage(svg, 176,110,20,0,1, data.cover, reg_avatar) : svg;

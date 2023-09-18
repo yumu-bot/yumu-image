@@ -2544,17 +2544,21 @@ export const PanelGenerate = {
             case 5: mods_width = 180; break;
             default: mods_width = 180;
         }
+
         const difficulty_name = bp.beatmap.version ? torus.cutStringTail(bp.beatmap.version, 24,
-            500 - mods_width - torus.getTextWidth('[] - BP ()' + rank + time_diff, 24), true) : '';
+            500 - 20 - mods_width - torus.getTextWidth('[] - BP ()' + rank + time_diff, 24), true) : '';
         const color_index = (bp.rank === 'XH' || bp.rank === 'X') ? '#2A2226' : '#fff';
 
         const artist = torus.cutStringTail(bp.beatmapset.artist, 24,
-            500 - mods_width - torus.getTextWidth(' // ' + bp.beatmapset.creator, 24), true);
+            500 - 20 - mods_width - torus.getTextWidth(' // ' + bp.beatmapset.creator, 24), true);
+
+        const title2 = (bp.beatmapset.title === bp.beatmapset.title_unicode) ? null : bp.beatmapset.title_unicode;
 
         return {
             background: background,
             cover: cover,
             title: bp.beatmapset.title || '',
+            title2: title2,
             left1: artist + ' // ' + bp.beatmapset.creator,
             left2: '[' + difficulty_name + '] - BP' + rank + ' (' + time_diff + ')',
             index_b: Math.round(bp.pp).toString(),
@@ -2567,6 +2571,7 @@ export const PanelGenerate = {
             label4: '',
             mods_arr: bp.mods || [],
 
+            color_title2: '#bbb',
             color_right: getRankColor(bp.rank),
             color_left: getStarRatingColor(bp.beatmap.difficulty_rating),
             color_index: color_index,
@@ -2576,6 +2581,7 @@ export const PanelGenerate = {
             color_label4: '',
             color_left12: '#bbb',
 
+            font_title2: 'PuHuiTi',
             font_label4: 'torus',
         }
     },
