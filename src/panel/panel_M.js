@@ -382,18 +382,22 @@ export async function panel_M(data = {
         '#55B1EF', '#587EC2', '#5867AF', '#75569E'
     ]
     const genre_name = ['unspecified', 'video game', 'anime', 'rock', 'pop', 'other', 'novelty', 'hip hop', 'electronic', 'metal', 'classical', 'folk', 'jazz'];
-    const genre_sum = genre_arr.reduce((prev, curr) => {return prev + curr}, 0);
+    const genre_sum = genre_arr.reduce((prev, curr) => {return prev + curr}, 0) || 0;
 
     let genre_svg = '';
-    genre_arr.reduce((prev, curr, i) => {
-        const curr_percent = prev + curr / genre_sum;
-        const color = genre_color[i];
-        genre_svg += PanelDraw.PieChart(curr_percent, 150, 825, 100, prev, color);
-        return curr_percent;
-    }, 0);
 
-    genre_svg += PanelDraw.Image(150 - 70, 825 - 70, 140, 140, getExportFileV3Path('object-piechart-overlay2.png'), 1);
-    svg = replaceText(svg, genre_svg, reg_genre_pie);
+    if (genre_sum > 0) {
+        genre_arr.reduce((prev, curr, i) => {
+            const curr_percent = prev + curr / genre_sum;
+            const color = genre_color[i];
+            genre_svg += PanelDraw.PieChart(curr_percent, 150, 825, 100, prev, color);
+            return curr_percent;
+        }, 0);
+
+        genre_svg += PanelDraw.Image(150 - 70, 825 - 70, 140, 140, getExportFileV3Path('object-piechart-overlay2.png'), 1);
+
+        svg = replaceText(svg, genre_svg, reg_genre_pie);
+    }
 
     // 导入曲风饼图的排序
     let sortMap = new Map();
