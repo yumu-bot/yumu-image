@@ -443,7 +443,7 @@ export async function panel_D(data = {
 
     svg = replaceText(svg, bp_activity_text, reg_ranking_text)
 
-    svg = replaceText(svg, PanelDraw.BarChart(bp_arr, user_bp_activity_max, 0, 1042, 610, 780, 90, 8, 4, '#8DCFF4', 5, 16), reg_bp_activity_graph)
+    svg = replaceText(svg, PanelDraw.BarChart(bp_arr, null, 0, 1042, 610, 780, 90, 8, 4, '#8DCFF4', 5, 16), reg_bp_activity_graph)
 
     // 绘制纵坐标，注意max在下面
     let rank_axis_y_min = getRoundedNumberLargerStr(user_ranking_min, 1) + getRoundedNumberSmallerStr(user_ranking_min, 1);
@@ -471,7 +471,7 @@ export async function panel_D(data = {
 
     svg = replaceText(svg, pc_activity_text, reg_user_data_text);
 
-    svg = replaceText(svg, PanelDraw.BarChart(pc_arr, user_pc_activity_max, 0, 1002, 1000, 860, 90, 8, 4, '#8dcff4', 1000, 16, '#aaa'), reg_pc_activity_graph);
+    svg = replaceText(svg, PanelDraw.BarChart(pc_arr, null, 0, 1002, 1000, 860, 90, 8, 4, '#8dcff4', 1000, 16, '#aaa'), reg_pc_activity_graph);
 
     // 绘制月份
     const last_year = data.user_pc_last_date.slice(0, 4);

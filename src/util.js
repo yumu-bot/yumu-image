@@ -2717,7 +2717,7 @@ export const PanelGenerate = {
     beatmap2CardO2: async (beatmapset) => {
         if (!beatmapset) return '';
 
-        const background = beatmapset ? await readNetImage(beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
+        const background = beatmapset ? await readNetImage(beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png')) : '';
         const map_status = beatmapset.status;
         const title1 = beatmapset.title;
         const title2 = beatmapset.artist;
@@ -2768,9 +2768,8 @@ export const PanelDraw = {
     BarChart: (arr = [0], max = null, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff', max_undertake = 0, floor = 0, floorColor = '#aaa', opacity = 1) => {
         if (arr == null) return '';
 
-        const arr_max = (typeof max === 'number') ?
-            ((typeof max_undertake === 'number') ? Math.max(Math.max.apply(Math, arr), max_undertake) : Math.max.apply(Math, arr)) :
-            max;
+        const arr_max = (typeof max === 'number') ? max :
+            ((typeof max_undertake === 'number') ? Math.max(Math.max.apply(Math, arr), max_undertake) : Math.max.apply(Math, arr));
         const arr_min = (typeof min === 'number') ? min : Math.min.apply(Math, arr);
         const step = w / arr.length; //如果是100个，一步好像刚好5.2px
         const width = step - gap; //实际宽度

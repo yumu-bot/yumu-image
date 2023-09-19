@@ -367,11 +367,11 @@ export async function panel_M(data = {
     svg = replaceTexts(svg, [diff_index, length_index, popular_title, difficulty_title, length_title, genre_title, activity_title, recent_title], reg_index);
 
     // 导入难度
-    const diff_rrect = PanelDraw.BarChart(data.difficulty_arr, null, 0, 1460, 380 + 145, 410, 145, 4, 4, '#E6AD59', 5, 2)
+    const diff_rrect = PanelDraw.BarChart(data.difficulty_arr, null, 0, 1460, 380 + 145, 410, 145, 4, 4, '#E6AD59', null, 2)
     svg = replaceText(svg, diff_rrect, reg_difficulty);
 
     // 导入评价
-    const length_rrect = PanelDraw.BarChart(data.length_arr, null, 0, 1460, 380 + 145 + 250, 410, 145, 4, 4, '#88BD6F', 5, 2)
+    const length_rrect = PanelDraw.BarChart(data.length_arr, null, 0, 1460, 380 + 145 + 250, 410, 145, 4, 4, '#88BD6F', null, 2)
     svg = replaceText(svg, length_rrect, reg_length);
 
     // 导入风格饼图

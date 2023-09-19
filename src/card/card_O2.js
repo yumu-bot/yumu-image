@@ -65,7 +65,7 @@ export async function card_O2(data = {
 
     // 插入背景
     const status = getMapStatusV3Path(data.map_status || '');
-    const background = data.background || getExportFileV3Path('beatmap-DLfailBG.jpg');
+    const background = data.background || '';
     svg = data.map_status ? implantImage(svg,40, 40, 240, 8, 1, status, reg_top_icons) : svg;
     svg = implantImage(svg, 290, 130, 0, 0, 0.6, background, reg_background);
 
