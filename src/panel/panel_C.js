@@ -4,7 +4,7 @@ import {
     getPanelNameSVG,
     getRandomBannerPath,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
+    getRoundedNumberSmallerStr, getRoundedNumberStr,
     implantImage,
     implantSvgBody,
     PanelGenerate,
@@ -306,8 +306,7 @@ export async function panel_C(data = {
         let left1;
 
         if (isVS) {
-            left1 = getRoundedNumberLargerStr(object.player_score, 3) +
-                getRoundedNumberSmallerStr(object.player_score, 3) +
+            left1 = getRoundedNumberStr(object.player_score, 3) +
                 ' // ' +
                 object.player_win +
                 'W-' + object.player_lose +
@@ -315,8 +314,7 @@ export async function panel_C(data = {
                 Math.round((object.player_win / (object.player_win + object.player_lose)) * 100) +
                 '%)';
         } else {
-            left1 = getRoundedNumberLargerStr(object.player_score, 3) +
-                getRoundedNumberSmallerStr(object.player_score, 3) +
+            left1 = getRoundedNumberStr(object.player_score, 3) +
                 ' // ' +
                 object.player_win +
                 'x Round(s)';

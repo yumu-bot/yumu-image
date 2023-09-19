@@ -10,7 +10,7 @@ import {
     getRandomBannerPath,
     getRandomMascotBGPath,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
+    getRoundedNumberSmallerStr, getRoundedNumberStr,
     implantImage,
     implantSvgBody,
     maximumArrayToFixedLength,
@@ -446,9 +446,9 @@ export async function panel_D(data = {
     svg = replaceText(svg, PanelDraw.BarChart(bp_arr, null, 0, 1042, 610, 780, 90, 8, 4, '#8DCFF4', 5, 16), reg_bp_activity_graph)
 
     // 绘制纵坐标，注意max在下面
-    let rank_axis_y_min = getRoundedNumberLargerStr(user_ranking_min, 1) + getRoundedNumberSmallerStr(user_ranking_min, 1);
-    let rank_axis_y_mid = getRoundedNumberLargerStr(user_ranking_mid, 1) + getRoundedNumberSmallerStr(user_ranking_mid, 1);
-    let rank_axis_y_max = getRoundedNumberLargerStr(user_ranking_max, 1) + getRoundedNumberSmallerStr(user_ranking_max, 1);
+    let rank_axis_y_min = getRoundedNumberStr(user_ranking_min, 1);
+    let rank_axis_y_mid = getRoundedNumberStr(user_ranking_mid, 1);
+    let rank_axis_y_max = getRoundedNumberStr(user_ranking_max, 1);
 
     let rank_axis =
         torus.getTextPath(rank_axis_y_min, 1010, 402.836, 24, 'center baseline', '#fc2') +

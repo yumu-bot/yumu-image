@@ -192,9 +192,10 @@ export function getRoundedTailNumber(number = 0) {
     if (numberStr.substr(-2) === '.0') return numberStr.slice(0, -2);
 }
 
+
 /**
  * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
- * @return {String} 返回大数字的字符串
+ * @return {String} 返回小数字的字符串
  * @param number 数字
  * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
  * lv5是保留两位数，但是是为了比赛特殊设置的，进位使用了万-亿的设置
@@ -204,6 +205,17 @@ export function getRoundedTailNumber(number = 0) {
  * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
  * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
+ */
+export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
+    if (typeof number === 'number') return getRoundedNumberLargerStr(number, level) + getRoundedNumberSmallerStr(number, level2);
+    else return '0';
+}
+
+/**
+ * @function 数字处理（大数字）（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
+ * @return {String} 返回大数字的字符串
+ * @param number 数字
+ * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
  */
 export function getRoundedNumberLargerStr(number = 0, level = 0) {
 
@@ -345,7 +357,7 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
 }
 
 /**
- * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
+ * @function 数字处理（小数字）（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
  * @return {String} 返回小数字的字符串
  * @param number 数字
  * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4, 5 注意配套使用
@@ -2142,7 +2154,7 @@ export const PanelGenerate = {
         const isBot = user.is_bot;
         const level = user.levelCurrent || 0;
         const progress = user.levelProgress || 0;
-        const acc = getRoundedNumberLargerStr(user.accuracy,3) + getRoundedNumberSmallerStr(user.accuracy,3) || 0;
+        const acc = getRoundedNumberStr(user.accuracy,3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
         const right3b = isBot ? '' : (user.pp ? Math.round(user.pp).toString() : '');
         const right3m = isBot ? 'Bot' : (user.pp ? 'PP' : 'AFK');
@@ -2208,7 +2220,7 @@ export const PanelGenerate = {
         const isBot = microUser.is_bot;
         const level = microUser.statistics.level_current || 0;
         const progress = microUser.statistics.level_progress || 0;
-        const acc = getRoundedNumberLargerStr(microUser.statistics.hit_accuracy,3) + getRoundedNumberSmallerStr(microUser.statistics.hit_accuracy,3) || 0;
+        const acc = getRoundedNumberStr(microUser.statistics.hit_accuracy,3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
         const right3b = isBot ? '' : (microUser.statistics.pp ? Math.round(microUser.statistics.pp).toString() : '');
         const right3m = isBot ? 'Bot' : (microUser.statistics.pp ? 'PP' : 'AFK');
@@ -2723,7 +2735,7 @@ export const PanelGenerate = {
         const title2 = beatmapset.artist;
         const title_font = torus;
         const left1 = '';
-        const left2 = '^' + beatmapset.favourite_count;
+        const left2 = '*' + beatmapset.favourite_count;
         const left3 = beatmapset.id ? 'S' + beatmapset.id : '0';
         const right1 = 'Play Counts';
         const right2b = getRoundedNumberLargerStr(beatmapset.play_count, 2);

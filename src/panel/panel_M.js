@@ -1,6 +1,6 @@
 import {
     exportJPEG, getExportFileV3Path, getPanelNameSVG,
-    getRandomBannerPath, getTimeDifference,
+    getRandomBannerPath, getRoundedNumberSmallerStr, getRoundedNumberStr, getTimeDifference,
     implantImage, implantSvgBody, PanelDraw,
     PanelGenerate,
     readTemplate,
@@ -311,7 +311,9 @@ export async function panel_M(data = {
                 "url": "/users/12190421"
             }
         }
-    ]
+    ],
+    playcount: 0,
+    favorite: 0,
 }, reuse = false) {
     // 导入模板
     let svg = readTemplate('template/Panel_M.svg');
@@ -364,7 +366,12 @@ export async function panel_M(data = {
         1450, 550, 18, 'left baseline', '#fff');
     const length_index = torus.getTextPath('  0   1:00   1:30   2:00   2:30   3:00   3:30   4:00    ...',
         1450, 800, 18, 'left baseline', '#fff');
-    svg = replaceTexts(svg, [diff_index, length_index, popular_title, difficulty_title, length_title, genre_title, activity_title, recent_title], reg_index);
+
+    // 导入2卡右侧的pc和fav
+    const kudosu = getRoundedNumberStr(data.user.kudosu.total || 0, 3) + ' kds';
+    const kudosu_index = torus.getTextPath(kudosu, 1410, 365 - 3, 24, 'right baseline', '#aaa');
+
+    svg = replaceTexts(svg, [diff_index, length_index, popular_title, difficulty_title, length_title, genre_title, activity_title, recent_title, kudosu_index], reg_index);
 
     // 导入难度
     const diff_rrect = PanelDraw.BarChart(data.difficulty_arr, null, 0, 1460, 380 + 145, 410, 145, 4, 4, '#E6AD59', null, 2)
@@ -460,7 +467,6 @@ export async function panel_M(data = {
     svg = implantSvgBody(svg, 1120, 745, cardO2h, reg_recent);
     svg = implantSvgBody(svg, 1120, 890, cardO2g, reg_recent);
 
-
     // 插入1号卡标签
     const rank_str = data.user.ranked_and_approved_beatmapset_count ? data.user.ranked_and_approved_beatmapset_count.toString() : '0';
     const pending_str = data.user.unranked_beatmapset_count ? data.user.unranked_beatmapset_count.toString() : '0'
@@ -479,29 +485,29 @@ export async function panel_M(data = {
     svg = replaceTexts(svg, [rank_index, pending_index, guest_index], reg_recent);
 
     // 插入8号卡标签
-    const favorite_str = data.user.favourite_beatmapset_count ? data.user.favourite_beatmapset_count.toString() : '0';
-    const kudosu_str = data.user.kudosu.total ? data.user.kudosu.total.toString() : '0'
-    const comment_str = data.user.comments_count ? data.user.comments_count.toString() : '0';
-    const nominated_str = data.user.nominated_beatmapset_count ? data.user.nominated_beatmapset_count.toString() : '0';
-    const loved_str = data.user.loved_beatmapset_count ? data.user.loved_beatmapset_count.toString() : '0'
-    const graveyard_str = data.user.graveyard_beatmapset_count ? data.user.graveyard_beatmapset_count.toString() : '0';
+    const favorite_str = getRoundedNumberStr(data.favorite, 3);
+    const playcount_str = getRoundedNumberStr(data.playcount, 2);
+    const comment_str = getRoundedNumberStr(data.user.comments_count, 3);
+    const nominated_str = getRoundedNumberStr(data.user.nominated_beatmapset_count, 3);
+    const loved_str = getRoundedNumberStr(data.user.loved_beatmapset_count, 3);
+    const graveyard_str = getRoundedNumberStr(data.user.graveyard_beatmapset_count, 3);
 
     const favorite = torus.getTextPath(favorite_str, 1530, 882, 42, 'center baseline', '#fff');
-    const kudosu = torus.getTextPath(kudosu_str, 1665, 882, 42, 'center baseline', '#fff');
+    const playcount = torus.getTextPath(playcount_str, 1665, 882, 42, 'center baseline', '#fff');
     const comment = torus.getTextPath(comment_str, 1800, 882, 42, 'center baseline', '#fff');
     const nominated = torus.getTextPath(nominated_str, 1530, 978, 42, 'center baseline', '#fff');
     const loved = torus.getTextPath(loved_str, 1665, 978, 42, 'center baseline', '#fff');
     const graveyard = torus.getTextPath(graveyard_str, 1800, 978, 42, 'center baseline', '#fff');
 
     const favorite_index = torus.getTextPath('Favorite', 1530, 916, 24, 'center baseline', '#aaa');
-    const kudosu_index = torus.getTextPath('Kudosu', 1665, 916, 24, 'center baseline', '#aaa');
+    const playcount_index = torus.getTextPath('Play Count', 1665, 916, 24, 'center baseline', '#aaa');
     const comment_index = torus.getTextPath('Comment', 1800, 916, 24, 'center baseline', '#aaa');
     const nominated_index = torus.getTextPath('Nominated', 1530, 1012, 24, 'center baseline', '#aaa');
     const loved_index = torus.getTextPath('Loved', 1665, 1012, 24, 'center baseline', '#aaa');
     const graveyard_index = torus.getTextPath('Graveyard', 1800, 1012, 24, 'center baseline', '#aaa');
 
-    svg = replaceTexts(svg, [favorite, kudosu, comment, nominated, loved, graveyard], reg_activity);
-    svg = replaceTexts(svg, [favorite_index, kudosu_index, comment_index, nominated_index, loved_index, graveyard_index], reg_length);
+    svg = replaceTexts(svg, [favorite, playcount, comment, nominated, loved, graveyard], reg_activity);
+    svg = replaceTexts(svg, [favorite_index, playcount_index, comment_index, nominated_index, loved_index, graveyard_index], reg_length);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);

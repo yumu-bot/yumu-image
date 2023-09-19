@@ -3,7 +3,7 @@ import {
     getExportFileV3Path,
     getModColor, getModInt,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
+    getRoundedNumberSmallerStr, getRoundedNumberStr,
     implantImage,
     implantSvgBody,
     PanelDraw,
@@ -167,10 +167,10 @@ export async function panel_Delta(data = {
     const length_minute_str = Math.floor(length_num / 60).toString();
     const length_second_str = Math.floor(length_num % 60).toString().padStart(2, '0');
     const bpm_str = Math.round(attr.bpm).toString();
-    const star_str = getRoundedNumberLargerStr(attr.stars, 3) + getRoundedNumberSmallerStr(attr.stars, 3);
-    const cs_str = getRoundedNumberLargerStr(attr.cs, 2) + getRoundedNumberSmallerStr(attr.cs, 2);
-    const ar_str = getRoundedNumberLargerStr(attr.ar, 2) + getRoundedNumberSmallerStr(attr.ar, 2);
-    const od_str = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
+    const star_str = getRoundedNumberStr(attr.stars, 3);
+    const cs_str = getRoundedNumberStr(attr.cs, 2);
+    const ar_str = getRoundedNumberStr(attr.ar, 2);
+    const od_str = getRoundedNumberStr(attr.od, 2);
     const round = lineSeedSans.getTextPath(
         lineSeedSans.cutStringTail(data.round || 'Unknown', 42, 783 - 20, true)
         , 391.5, 538, 42, 'center baseline', '#282425');

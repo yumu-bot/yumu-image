@@ -3,13 +3,11 @@ import {
     getExportFileV3Path,
     getMatchNameSplitted,
     getRandomBannerPath,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
     getDecimals,
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, readNetImage, getPanelNameSVG, getGameMode
+    replaceText, readNetImage, getPanelNameSVG, getGameMode, getRoundedNumberStr
 } from "../util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -278,9 +276,9 @@ export async function panel_F(data = {
             }
         }
         const attr = await getMapAttributes(d.bid, mod_int);
-        const cs = getRoundedNumberLargerStr(attr.cs, 2) + getRoundedNumberSmallerStr(attr.cs, 2);
-        const ar = getRoundedNumberLargerStr(attr.ar, 2) + getRoundedNumberSmallerStr(attr.ar, 2);
-        const od = getRoundedNumberLargerStr(attr.od, 2) + getRoundedNumberSmallerStr(attr.od, 2);
+        const cs = getRoundedNumberStr(attr.cs, 2);
+        const ar = getRoundedNumberStr(attr.ar, 2);
+        const od = getRoundedNumberStr(attr.od, 2);
         const mode = d.mode ? d.mode.toLowerCase() : 'osu';
 
         return {

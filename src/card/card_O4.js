@@ -26,10 +26,10 @@ export async function card_O4(data = {
 
     const type = getActivityTypeV3Path(data.type, data.approval);
     const color = getActivityTypeColor(data.type, data.approval);
-    const name = getActivityTypeName(data.type, data.approval);
+    const operate = getActivityTypeOperate(data.type, data.approval);
     const time = data.time;
 
-    const title_str = torus.cutStringTail('(' + time + ') ' + name + ' ' + data.title, 18, 490, true);
+    const title_str = torus.cutStringTail('(' + time + ') ' + operate + ' \"' + data.title, 18, 490 - 5, true) + '\"'; //这里 5 是给引号的
 
     const title = torus.getTextPath(title_str, 40, 20, 18, 'left baseline', color);
 
@@ -74,7 +74,7 @@ function getActivityTypeColor(type = '', approval = '') {
     }
 }
 
-function getActivityTypeName(type = '', approval = '') {
+function getActivityTypeOperate(type = '', approval = '') {
 
     switch (type) {
         case 'beatmapsetApprove': {

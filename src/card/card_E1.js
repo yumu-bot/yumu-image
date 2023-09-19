@@ -1,7 +1,7 @@
 import {
     getDecimals,
     getExportFileV3Path,
-    getGameMode, getMapStatusV3Path, getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getGameMode, getMapStatusV3Path, getRoundedNumberStr,
     getStarRatingColor, implantImage, implantSvgBody, readNetImage, replaceTexts,
 } from "../util.js";
 import {torus, extra, PuHuiTi} from "../font.js";
@@ -72,10 +72,10 @@ export async function card_E1(data = {
         48, 36, 160, 83.67, 'center baseline', '#fff');
     const mode_text = extra.getTextPath(getGameMode(data.mode, -1), 48, 86.24, 48, "left baseline", sr_color);
     const favorite_count_text = torus.getTextPath(
-        getRoundedNumberLargerStr((data.favourite_count), 2) + getRoundedNumberSmallerStr((data.favourite_count), 2)
+        getRoundedNumberStr((data.favourite_count), 2)
         , 845, 63.84, 24, "right baseline", "#fff");
     const play_count_text = torus.getTextPath(
-        getRoundedNumberLargerStr((data.play_count), 2) + getRoundedNumberSmallerStr((data.play_count), 2)
+        getRoundedNumberStr((data.play_count), 2)
         , 845, 90.84, 24, "right baseline", "#fff");
 
     let title_text;
