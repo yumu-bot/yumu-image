@@ -1,6 +1,6 @@
 import {
     exportJPEG, getExportFileV3Path, getPanelNameSVG,
-    getRandomBannerPath, getRoundedNumberSmallerStr, getRoundedNumberStr, getTimeDifference,
+    getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, getRoundedNumberStr, getTimeDifference,
     implantImage, implantSvgBody, PanelDraw,
     PanelGenerate,
     readTemplate,
@@ -485,15 +485,17 @@ export async function panel_M(data = {
     svg = replaceTexts(svg, [rank_index, pending_index, guest_index], reg_recent);
 
     // 插入8号卡标签
-    const favorite_str = getRoundedNumberStr(data.favorite, 3);
-    const playcount_str = getRoundedNumberStr(data.playcount, 2);
-    const comment_str = getRoundedNumberStr(data.user.comments_count, 3);
-    const nominated_str = getRoundedNumberStr(data.user.nominated_beatmapset_count, 3);
-    const loved_str = getRoundedNumberStr(data.user.loved_beatmapset_count, 3);
-    const graveyard_str = getRoundedNumberStr(data.user.graveyard_beatmapset_count, 3);
+    const favorite_b_str = getRoundedNumberLargerStr(data.favorite, 3);
+    const favorite_m_str = getRoundedNumberSmallerStr(data.favorite, 3);
+    const playcount_b_str = getRoundedNumberLargerStr(data.playcount, 2);
+    const playcount_m_str = getRoundedNumberSmallerStr(data.playcount, 2);
+    const comment_str = getRoundedNumberStr(data.user.comments_count, 0);
+    const nominated_str = getRoundedNumberStr(data.user.nominated_beatmapset_count, 0);
+    const loved_str = getRoundedNumberStr(data.user.loved_beatmapset_count, 0);
+    const graveyard_str = getRoundedNumberStr(data.user.graveyard_beatmapset_count, 0);
 
-    const favorite = torus.getTextPath(favorite_str, 1530, 882, 42, 'center baseline', '#fff');
-    const playcount = torus.getTextPath(playcount_str, 1665, 882, 42, 'center baseline', '#fff');
+    const favorite = torus.get2SizeTextPath(favorite_b_str, favorite_m_str, 42, 30, 1530, 882, 'center baseline', '#fff');
+    const playcount = torus.get2SizeTextPath(playcount_b_str, playcount_m_str, 42, 30, 1665, 882, 'center baseline', '#fff');
     const comment = torus.getTextPath(comment_str, 1800, 882, 42, 'center baseline', '#fff');
     const nominated = torus.getTextPath(nominated_str, 1530, 978, 42, 'center baseline', '#fff');
     const loved = torus.getTextPath(loved_str, 1665, 978, 42, 'center baseline', '#fff');
