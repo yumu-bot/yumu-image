@@ -354,6 +354,10 @@ export async function panel_M(data = {
         svg = implantSvgBody(svg, x, y, cardO2, reg_popular);
     }
 
+    if (data.most_popular_beatmap.length < 1) { //摆烂机制
+        svg = implantImage(svg, 185, 185, 867.5, 410, 1, getExportFileV3Path('sticker_qiqi_oh.png'), reg_popular);
+    }
+
     // 导入一些标签
     const popular_title = torus.getTextPath('Most Popular Beatmap', 510, 365, 30, 'left baseline', '#fff');
     const difficulty_title = torus.getTextPath('Difficulty', 1470, 365, 30, 'left baseline', '#fff');
