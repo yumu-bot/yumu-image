@@ -457,6 +457,10 @@ export async function panel_M(data = {
         svg = implantSvgBody(svg, 510, 750 + 40 * i, cardO4s[i], reg_activity);
     }
 
+    if (recent_activity.length < 1) { //摆烂机制
+        svg = implantImage(svg, 185, 185, 692.5, 770, 1, getExportFileV3Path('sticker_qiqi_fallen.png'), reg_activity);
+    }
+
     // 导入最近卡
     const O2g = await PanelGenerate.beatmap2CardO2(data.most_recent_ranked_guest_diff);
     const O2g_title2 = data.most_recent_ranked_guest_diff ? data.most_recent_ranked_guest_diff.creator + ' (' + data.most_recent_ranked_guest_diff.artist  + ')' : '';

@@ -489,6 +489,10 @@ export async function panel_J(data = {
         labelJ1s.push(h);
     }
 
+    if (labelJ1s < 1) { //摆烂机制
+        svg = implantImage(svg, 185, 185, 750, 600, 1, getExportFileV3Path('sticker_qiqi_secretly_observing.png'), reg_label_j1);
+    }
+
     // 谱师标签 J2 构建
 
     let labelJ2s = [];

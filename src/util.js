@@ -2186,9 +2186,9 @@ export const PanelGenerate = {
 
         const left2 = 'U' + user.id;
 
-        const right2 = 'Mapping Follower';
+        const right2 = 'Mapping Followers';
         const right3b = user.mapping_follower_count ? user.mapping_follower_count.toString() : '0';
-        const right3m = user.mapping_follower_count ? 'x' : '';
+        const right3m = 'x';
 
         return {
             background,
