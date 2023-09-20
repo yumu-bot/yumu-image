@@ -190,7 +190,7 @@ async function routerD(req) {
         user_progress: Math.floor(user['levelProgress']), //%
 
         user_bp_arr: req.fields['bp-time'],
-        user_ranking_arr: user?.rank_history.history,
+        user_ranking_arr: user.rank_history ? user.rank_history.history : [],
         user_pc_arr: dataArr,
         user_pc_last_date: fd
     }
@@ -389,6 +389,10 @@ export async function panel_D(data = {
     let card_Js = [];
     for (const j of data.recent_play) {
         card_Js.push(await card_J(j, true));
+    }
+
+    if (card_Js < 1) { //摆烂机制，下面的y是680，但是图片太大了
+        svg = implantImage(svg, 185, 185, 697.5, 405, 1, getExportFileV3Path('sticker_qiqi_fallen.png'), reg_cardj);
     }
 
     let card_Ks = [];

@@ -69,11 +69,6 @@
   </g>
   <g id="RecentCard">
     <rect x="620" y="330" width="340" height="335" rx="20" ry="20" style="fill: #382e32;"/>
-    <g id="CardJBase">
-      <rect x="635" y="570" width="310" height="80" rx="10" ry="10" style="fill: #54454c;"/>
-      <rect x="635" y="475" width="310" height="80" rx="10" ry="10" style="fill: #54454c;"/>
-      <rect x="635" y="380" width="310" height="80" rx="10" ry="10" style="fill: #54454c;"/>
-    </g>
     <g id="CardJ">
     </g>
   </g>

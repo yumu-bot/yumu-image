@@ -2157,7 +2157,7 @@ export const PanelGenerate = {
         const acc = getRoundedNumberStr(user.accuracy,3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
         const right3b = isBot ? '' : (user.pp ? Math.round(user.pp).toString() : '');
-        const right3m = isBot ? 'Bot' : (user.pp ? 'PP' : 'AFK');
+        const right3m = isBot ? 'Bot' : (user.pp ? 'PP' : (user.levelCurrent === 1 && user.levelProgress === 0 ? 'NOT PLAYED' : 'AFK'));
 
         return {
             background,
@@ -2818,9 +2818,7 @@ export const PanelDraw = {
         arr.forEach((v, i) => {
             const height = (delta > 0) ? ((v - arr_min) / (arr_max - arr_min) * h) : 0;
             const lineto_x = x0 + step * (i + 1);
-            const lineto_y = y0 - height;
-
-            if (v === 0 && is0toMin) lineto_y = start_y; //如果数值为 0，则画在最小值的地方
+            const lineto_y = (v === 0 && is0toMin) ? y0 : y0 - height; //如果数值为 0，则画在最小值的地方
 
             path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `; // 第一个xy是点位置，第二个是控制点位置
             area_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `;
