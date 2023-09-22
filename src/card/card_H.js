@@ -142,7 +142,7 @@ export async function card_H(data = {
         ? font_t2.cutStringTail(data.title2 || '', 18, title2_width, true) : '';
 
     const title = torus.getTextPath(text_title, 210, 34.754, 36, 'left baseline', '#fff');
-    const title2 = font_t2.getTextPath(text_title2, 210 + 6 + title_width,
+    const title2 = font_t2.getTextPath(text_title2, 210 + 10 + title_width,
         (data.font_title2 === 'PuHuiTi') ? 33 : 34.754, 18, 'left baseline', color_title2);
     const left1 = torus.getTextPath(text_left1, 210, 66.836, 24, 'left baseline', color_left12);
     const left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', color_left12);

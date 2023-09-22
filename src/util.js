@@ -2539,6 +2539,63 @@ export const PanelGenerate = {
             //label_mvp: (user.index === 1) ? 'MVP' : '',
         };
     },
+    beatmap2CardH: async (beatmap, calcPP, rank = 1) => {
+        const cover = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
+        const background = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+
+        const time_diff = getTimeDifference(beatmap.create_at_str);
+
+        let mods_width;
+        switch (beatmap.mods.length) {
+            case 0: mods_width = 0; break;
+            case 1: mods_width = 100; break;
+            case 2: mods_width = 140; break;
+            case 3: mods_width = 140; break;
+            case 4: mods_width = 160; break;
+            case 5: mods_width = 180; break;
+            default: mods_width = 180;
+        }
+
+        const difficulty_name = beatmap.beatmap.version ? torus.cutStringTail(beatmap.beatmap.version, 24,
+            500 - 20 - mods_width - torus.getTextWidth('[] - # ()' + rank + time_diff, 24), true) : '';
+        const color_index = (beatmap.rank === 'XH' || beatmap.rank === 'X') ? '#2A2226' : '#fff';
+
+        const artist = torus.cutStringTail(beatmap.beatmapset.artist, 24,
+            500 - 20 - mods_width - torus.getTextWidth(' // ' + beatmap.beatmapset.creator, 24), true);
+
+        const title2 = (beatmap.beatmapset.title === beatmap.beatmapset.title_unicode) ? null : beatmap.beatmapset.title_unicode;
+
+        return {
+            background: background,
+            cover: cover,
+            title: beatmap.beatmapset.title || '',
+            title2: title2,
+            left1: artist + ' // ' + beatmap.beatmapset.creator,
+            left2: '[' + difficulty_name + '] - #' + rank + ' (' + time_diff + ')',
+            index_b: Math.round(calcPP.pp).toString(),
+            index_m: 'PP',
+            index_b_size: 48,
+            index_m_size: 36,
+            label1: '',
+            label2: '',
+            label3: '',
+            label4: '',
+            mods_arr: beatmap.mods || [],
+
+            color_title2: '#bbb',
+            color_right: getRankColor(beatmap.rank),
+            color_left: getStarRatingColor(calcPP.attr.stars),
+            color_index: color_index,
+            color_label1: '',
+            color_label2: '',
+            color_label3: '',
+            color_label4: '',
+            color_left12: '#bbb',
+
+            font_title2: 'PuHuiTi',
+            font_label4: 'torus',
+        }
+    },
 
     bp2CardH: async (bp, rank = 1) => {
         const cover = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
