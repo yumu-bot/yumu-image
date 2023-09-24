@@ -28,12 +28,18 @@ export async function card_O4(data = {
     const type = getActivityTypeV3Path(data.type, data.approval);
     const color = getActivityTypeColor(data.type, data.approval);
     const operate = getActivityTypeOperate(data.type, data.approval);
-    const time = data.time || '-';
-    const sid = data.sid || 0;
+    const time = data.time;
+    const sid = data.sid;
+    const title_song_title = data.title.substring(data.title.indexOf(' - ') + 3) || data.title;
 
-    const title_str = torus.cutStringTail(data.title, 18, 490 - torus.getTextWidth('() \"\" (S)' + time + operate + sid), true);
+    const title_other_str = sid ? '() \"\" (S)' + time + operate + sid : '() \"\"' + time + operate
+    const title_max_width = 490 - torus.getTextWidth(title_other_str, 18);
+    const title_cut_str = torus.cutStringTail(title_song_title, 18, title_max_width, true);
+    const title_str = sid ?
+        '(' + time + ') ' + operate + ' \"'  + title_cut_str + '\" (S' + sid + ')'
+        : '(' + time + ') ' + operate + ' \"'  + title_cut_str + '\"';
 
-    const title = torus.getTextPath('(' + time + ') ' + operate + ' \"' + title_str + '\" (S' + sid + ')', 40, 20, 18, 'left baseline', color);
+    const title = torus.getTextPath(title_str, 40, 20, 18, 'left baseline', color);
 
     svg = implantImage(svg, 30, 30, 5, 0, 1, type, reg_image);
     svg = replaceText(svg, title, reg_text);
