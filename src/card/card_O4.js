@@ -5,7 +5,8 @@ export async function card_O4(data = {
     type: '',
     approval: '',
     title: '',
-    time: 'now'
+    time: 'now',
+    sid: 0
 }, reuse = false) {
     // 读取模板
     let svg =`
@@ -27,11 +28,12 @@ export async function card_O4(data = {
     const type = getActivityTypeV3Path(data.type, data.approval);
     const color = getActivityTypeColor(data.type, data.approval);
     const operate = getActivityTypeOperate(data.type, data.approval);
-    const time = data.time;
+    const time = data.time || '-';
+    const sid = data.sid || 0;
 
-    const title_str = torus.cutStringTail('(' + time + ') ' + operate + ' \"' + data.title, 18, 490 - 5, true) + '\"'; //这里 5 是给引号的
+    const title_str = torus.cutStringTail(data.title, 18, 490 - torus.getTextWidth('() \"\" (S)' + time + operate + sid), true);
 
-    const title = torus.getTextPath(title_str, 40, 20, 18, 'left baseline', color);
+    const title = torus.getTextPath('(' + time + ') ' + operate + ' \"' + title_str + '\" (S' + sid + ')', 40, 20, 18, 'left baseline', color);
 
     svg = implantImage(svg, 30, 30, 5, 0, 1, type, reg_image);
     svg = replaceText(svg, title, reg_text);
@@ -78,14 +80,14 @@ function getActivityTypeOperate(type = '', approval = '') {
 
     switch (type) {
         case 'beatmapsetApprove': {
-            if (approval === 'ranked') return 'Ranked';
-            else if (approval === 'qualified') return 'Qualified';
+            if (approval === 'ranked') return 'Rank';
+            else if (approval === 'qualified') return 'Qua';
             else return '';
         }
-        case 'beatmapsetDelete': return 'Deleted';
-        case 'beatmapsetRevive': return 'Revived';
-        case 'beatmapsetUpdate': return 'Updated';
-        case 'beatmapsetUpload': return 'Upload';
+        case 'beatmapsetDelete': return 'Del';
+        case 'beatmapsetRevive': return 'Rev';
+        case 'beatmapsetUpdate': return 'Upd';
+        case 'beatmapsetUpload': return 'Upl';
         default : return '';
     }
 }

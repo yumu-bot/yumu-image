@@ -2539,6 +2539,7 @@ export const PanelGenerate = {
             //label_mvp: (user.index === 1) ? 'MVP' : '',
         };
     },
+
     beatmap2CardH: async (beatmap, calcPP, rank = 1) => {
         const cover = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
         const background = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
@@ -2564,6 +2565,7 @@ export const PanelGenerate = {
             500 - 20 - mods_width - torus.getTextWidth(' // ' + beatmap.beatmapset.creator, 24), true);
 
         const title2 = (beatmap.beatmapset.title === beatmap.beatmapset.title_unicode) ? null : beatmap.beatmapset.title_unicode;
+        const index_b = (calcPP.pp < 2000) ? Math.round(calcPP.pp).toString() : 'Inf.';
 
         return {
             background: background,
@@ -2572,7 +2574,7 @@ export const PanelGenerate = {
             title2: title2,
             left1: artist + ' // ' + beatmap.beatmapset.creator,
             left2: '[' + difficulty_name + '] - #' + rank + ' (' + time_diff + ')',
-            index_b: Math.round(calcPP.pp).toString(),
+            index_b: index_b,
             index_m: 'PP',
             index_b_size: 48,
             index_m_size: 36,
