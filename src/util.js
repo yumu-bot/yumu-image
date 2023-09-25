@@ -105,11 +105,15 @@ export function getExportFileV3Path(path = '') {
     return path_util.join(EXPORT_FILE_V3, path);
 }
 
-export async function getDiffBG(bid) {
-    return await readNetImage(`http://localhost:8388/pub/background/${bid}`);
+export async function getDiffBG(bid, defaultImagePath = getExportFileV3Path('card-default.png')) {
+    return await readNetImage(`http://localhost:8388/pub/background/${bid}`, defaultImagePath);
 }
 
-export async function readNetImage(path = '', defaultImagePath) {
+export async function getMapBG(sid = 0, cover = 'cover@2x', defaultImagePath = getExportFileV3Path('card-default.png')) {
+    return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', defaultImagePath);
+}
+
+export async function readNetImage(path = '', defaultImagePath = getExportFileV3Path('beatmap-DLfailBG.jpg')) {
     if (!path || !path.startsWith("http")) {
         return readImage(path);
     }
@@ -2293,9 +2297,7 @@ export const PanelGenerate = {
 
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
-        const background = cursor ?
-            await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor.id + '/covers/list@2x.jpg',getExportFileV3Path('card-default.png')) :
-            await readNetImage(first_beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
+        const background = cursor ? await getMapBG(cursor.id) : await readNetImage(first_beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default"; //getSortName(search.sort)
@@ -2352,7 +2354,7 @@ export const PanelGenerate = {
         const ranked_date =  beatmapsets.ranked_date || '';
         const submitted_date = beatmapsets.submitted_date || '';
 
-        const background = beatmapsets.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + beatmapsets.id + '/covers/list@2x.jpg', getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
+        const background = await getMapBG(beatmapsets.id, 'list@2x');
         const map_status = beatmapsets.status || 'graveyard';
 
         const isRanked = (map_status === 'ranked' || map_status == 'loved' || map_status === 'approved');
@@ -2463,7 +2465,7 @@ export const PanelGenerate = {
         const isContainVS = data.matchInfo.name.toLowerCase().match('vs');
         const star = getDecimals(data.averageStar, 2) + getDecimals(data.averageStar, 3);
 
-        const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + data.sid + '/covers/slimcover.jpg', getExportFileV3Path('card-default.png'));
+        const background = await getMapBG(data.sid, 'list@2x');
 
         let title, title1, title2;
         if (isContainVS){
@@ -2601,7 +2603,7 @@ export const PanelGenerate = {
 
     bp2CardH: async (bp, rank = 1) => {
         const cover = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
-        const background = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+        const background = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['cover@2x'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
 
         const time_diff = getTimeDifference(bp.create_at_str);
 

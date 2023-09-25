@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path, implantImage, implantSvgBody, PanelGenerate,
+    getExportFileV3Path, getMapBG, implantImage, implantSvgBody, PanelGenerate,
     readNetImage,
     replaceText,
 } from "../util.js";
@@ -448,7 +448,7 @@ export async function card_M(data = {
 
     //导入背景
 
-    const background = data.id ? await readNetImage('https://assets.ppy.sh/beatmaps/' + data.id  + '/covers/cover@2x.jpg') : getExportFileV3Path('card-default.png');
+    const background = await getMapBG(data.id, 'list@2x');
     svg = implantImage(svg,1370,210,0,0,0.5, background, reg_background);
 
     return svg.toString();

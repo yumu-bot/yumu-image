@@ -12,6 +12,7 @@ import {router as PanelCRouter} from "./src/panel/panel_C.js";
 import {router as PanelDRouter} from "./src/panel/panel_D.js";
 import {router as PanelERouter} from "./src/panel/panel_E.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
+import {router as PanelHRouter} from "./src/panel/panel_H.js";
 import {router as PanelJRouter} from "./src/panel/panel_J.js";
 import {router as PanelMRouter} from "./src/panel/panel_M.js";
 
@@ -53,6 +54,7 @@ app.post('/panel_C', PanelCRouter);
 app.post('/panel_D', PanelDRouter);
 app.post('/panel_E', PanelERouter);
 app.post('/panel_F', PanelFRouter);
+app.post('/panel_H', PanelHRouter);
 app.post('/panel_J', PanelJRouter);
 app.post('/panel_M', PanelMRouter);
 
