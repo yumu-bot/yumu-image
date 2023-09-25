@@ -1,14 +1,13 @@
 import {
-    exportJPEG, getDiffBG, getModInt,
+    exportJPEG, getMapBG, getModInt,
     getPanelNameSVG,
     getRandomBannerPath, implantImage,
-    implantSvgBody,
-    PanelGenerate, readTemplate,
+    implantSvgBody, readTemplate,
     replaceText
 } from "../util.js";
-import {card_A1} from "../card/card_A1.js";
 import {card_D} from "../card/card_D.js";
 import {getMapAttributes} from "../compute-pp.js";
+import {card_A2} from "../card/card_A2.js";
 
 export async function router(req, res) {
     try {
@@ -40,7 +39,7 @@ export async function panel_H (
         "id" : 4,
         "info" : "info",
         "name" : "name",
-        "banner" : "banner-uuid",
+        "banner" : null,
         "status" : "SHOW",
         "categoryList" : [{
             "name" : "NM",
@@ -163,7 +162,7 @@ export async function panel_H (
     let reg_bodycard = /(?<=<g id="BodyCard">)/;
 
     // 卡片定义
-    let card_A1_impl = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
+    const cardA2 = await card_A2(await pool2cardA2(data), true);
 
     // 面板文字
     const panel_name = getPanelNameSVG('Mappool (!ymmp)', 'Pool', 'v0.3.2 FT');
@@ -185,8 +184,8 @@ export async function panel_H (
     svg = replaceText(svg, panelHeight, reg_height);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
-    svg = implantSvgBody(svg,40,40,card_A1_impl,reg_maincard);
+    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = implantSvgBody(svg,40, 40, cardA2, reg_maincard);
 
     return svg.toString();
 }
@@ -226,15 +225,15 @@ async function BodyCard(maps = [], lists = []) {
         for (let j = 0; j < row3Num; j++) {
             for (let k = 0; k < 3; k++) {
                 const l = 3 * j + k //第二个下标 行数 * 3 + 列数
-                const mapinfo = maps[bids.indexOf(category[l])];
-                svg = await implantCardD(mapinfo, mod.toUpperCase(), j + 1 + rowSum, k + 1, 3)
+                const mapinfo = maps[bids.indexOf(category[l].bid)];
+                svg += await implantCardD(mapinfo, mod.toUpperCase(), j + 1 + rowSum, k + 1, 3)
             }
         }
 
         for (let m = 0; m < remainder; m++) {
             const o = 3 * row3Num + m//第二个下标 行数 * 3 + 列数
-            const mapinfo = maps[bids.indexOf(category[o])];
-            svg = await implantCardD(mapinfo, mod.toUpperCase(), rowNum + rowSum, m + 1, remainder)
+            const mapinfo = maps[bids.indexOf(category[o].bid)];
+            svg += await implantCardD(mapinfo, mod.toUpperCase(), rowNum + rowSum, m + 1, remainder)
         }
         rowSum += rowNum;
     }
@@ -249,10 +248,38 @@ async function implantCardD(data, mod = 'NM', row = 1, column = 1, maxColumn = 3
     const x = ((3 - maxColumn) * 300 + 80) + 600 * (column - 1);
     const y = 330 + 150 * (row - 1);
 
-    return implantSvgBody(svg, x, y, await card_D(await mappool2cardD(data, mod), true), reg);
+    return implantSvgBody(svg, x, y, await card_D(await beatmap2CardD(data, mod), true), reg);
 }
 
-async function mappool2cardD (data, mod) {
+async function pool2cardA2(data) {
+    const background = data.banner || getRandomBannerPath();
+
+    const title1 = data.name || '';
+    const title3 = data.categoryList ? data.categoryList[0].category ? 'creator: ' + data.categoryList[0].category[0].creater : 'creator?' : 'creator?';
+
+    const left2 = data.info ? data.info.toString() : '';
+    const left3 = data.status ? data.status.toString() : '';
+    const right3b = data.id ? data.id.toString() : '0';
+
+    return {
+        background: background,
+        map_status: null,
+
+        title1: title1,
+        title2: '',
+        title3: title3,
+        title_font: 'PuHuiTi',
+        left1: '',
+        left2: left2,
+        left3: left3,
+        right1: '',
+        right2: 'Pool ID:',
+        right3b: right3b,
+        right3m: '',
+    };
+}
+
+async function beatmap2CardD(data, mod) {
     let cs = data.cs, ar = data.ar, od = data.od, hp = data.hp;
 
     //修改四维
@@ -282,17 +309,23 @@ async function mappool2cardD (data, mod) {
         hp /= 2;
     }
 
-    const star = (mod === 'DT' || mod === 'NC' || mod === 'HT' || mod === 'DC' || mod === 'HR' || mod === 'EZ' || mod === 'FL') ?
-        await getStar(data.difficulty_rating, data.id, getModInt([mod]), data.mode_int)
-    : data.difficulty_rating;
+    const star = await getStar(data.difficulty_rating, data.id, getModInt([mod]), data.mode_int);
 
-    async function getStar(star, bid, mods, mode_int) {
-        const attr = await getMapAttributes(bid, mods, mode_int);
-        return attr.stars || star;
+    async function getStar(rawStar = 0, bid = 0, mods, modeInt = 0) {
+        if (mod === 'DT' || mod === 'NC' || mod === 'HT' || mod === 'DC' || mod === 'HR' || mod === 'EZ' || mod === 'FL') {
+            try {
+                const attr = await getMapAttributes(bid, mods, modeInt)
+                return attr.stars;
+            } catch (e) {
+                return rawStar;
+            }
+        } else {
+            return rawStar;
+        }
     }
 
     return {
-        background: await getDiffBG(data.id),
+        background: await getMapBG(data.beatmapset_id, 'slimcover@2x'),
         title: data.beatmapset.title || '',
         artist: data.beatmapset.artist || '',
         mapper: data.beatmapset.creator || '',
@@ -317,9 +350,9 @@ function getRowTotal(lists = []) {
         const rowr = c - (row3 - 1) * 3; // 余数
 
         if (rowr === 0) {
-            row = row3;
+            row += row3;
         } else {
-            row = row3 + 1
+            row += row3 + 1;
         }
     }
 

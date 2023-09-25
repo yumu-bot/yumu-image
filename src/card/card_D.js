@@ -49,7 +49,7 @@ export async function card_D(data = {
         360 - torus.getTextWidth(' // ' + mapper, 24))
 
     let text_artist_and_mapper =
-        torus.getTextPath(artist + ' // ' + mapper,20, 65.836, 24, 'left baseline', "#fff");
+        torus.getTextPath(artist + ' // ' + mapper,20, 65.836, 24, 'left baseline', "#bbb");
 
     let bid = data.bid || 0;
     let difficulty_name =
@@ -59,7 +59,7 @@ export async function card_D(data = {
 
     let info = '[' + difficulty_name + '] - b' + bid;
     let text_info =
-        torus.getTextPath(info, 20, 96.836, 24, 'left baseline', "#fff");
+        torus.getTextPath(info, 20, 96.836, 24, 'left baseline', "#bbb");
 
     let text_mod =
         torus.getTextPath(data.mod, 500, 30.754, 36, 'center baseline', "#fff");
@@ -120,20 +120,21 @@ export async function card_D(data = {
         } break;
     }
 
+    //这里所有物件均向左平移 5px了
     let text_sd1 = torus.getTextPath(sd_name1,
-        390.5,
+        385.5,
         77.571,
         14,
         'center baseline',
         '#fff')
     let text_sd2 = torus.getTextPath(sd_name2,
-        411.5,
+        406.5,
         77.571,
         14,
         'center baseline',
         '#fff')
     let text_sd3 = torus.getTextPath(sd_name3,
-        432.5,
+        427.5,
         77.571,
         14,
         'center baseline',
@@ -146,16 +147,10 @@ export async function card_D(data = {
 
     // 替换文字
     svg = replaceTexts(svg, [text_title, text_artist_and_mapper, text_info, text_mod, text_star], reg_text);
-
     svg = replaceText(svg, text_mod_color, reg_mod_color);
 
     // 插入图片
-    svg = implantImage(svg,560,110,0,0,0.5, data.background, reg_background)
-    /*
-    let out_svg = new InsertSvgBuilder(svg).insertImage(data.background, reg_background);
+    svg = implantImage(svg,560,110,0,0,0.5, data.background, reg_background);
 
-    return out_svg.export(reuse);
-
-     */
     return svg.toString();
 }

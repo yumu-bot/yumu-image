@@ -20,9 +20,9 @@
     <g id="SDText">
     </g>
     <g id="SDCircle">
-      <circle id="SDCircle3" cx="432.5" cy="89.5" r="7.5" style="fill: ${sd_circle3};"/>
-      <circle id="SDCircle2" cx="411.5" cy="89.5" r="7.5" style="fill: ${sd_circle2};"/>
-      <circle id="SDCircle1" cx="390.5" cy="89.5" r="7.5" style="fill: ${sd_circle1};"/>
+      <circle id="SDCircle3" cx="427.5" cy="89.5" r="7.5" style="fill: ${sd_circle3};"/>
+      <circle id="SDCircle2" cx="406.5" cy="89.5" r="7.5" style="fill: ${sd_circle2};"/>
+      <circle id="SDCircle1" cx="385.5" cy="89.5" r="7.5" style="fill: ${sd_circle1};"/>
     </g>
   </g>
   <g id="Text">
