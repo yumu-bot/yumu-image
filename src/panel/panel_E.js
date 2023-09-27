@@ -2,14 +2,13 @@ import {
     exportJPEG,
     getDecimals,
     getExportFileV3Path,
-    getGameMode,
+    getGameMode, getMapBG,
     getNowTimeStamp,
     getPanelNameSVG, getTimeDifference,
     hasAnyMod,
     implantImage,
     implantSvgBody,
     PanelGenerate,
-    readNetImage,
     readTemplate,
     replaceText
 } from "../util.js";
@@ -359,7 +358,7 @@ export async function panel_E(data = {
 
     // 图片定义
     const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
-    const banner = await readNetImage(data.score.beatmapset.covers.slimcover, getExportFileV3Path('beatmap-DLfailBG.jpg'));
+    const banner = await getMapBG(data.score.beatmapset.id, 'slimcover');
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);

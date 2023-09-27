@@ -325,7 +325,7 @@ async function beatmap2CardD(data, mod) {
     }
 
     return {
-        background: await getMapBG(data.beatmapset_id, 'slimcover@2x'),
+        background: await getMapBG(data.beatmapset_id, 'slimcover'),
         title: data.beatmapset.title || '',
         artist: data.beatmapset.artist || '',
         mapper: data.beatmapset.creator || '',
