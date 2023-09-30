@@ -569,7 +569,7 @@ export async function panel_J(data = {
     const bp_length_min = Math.min.apply(Math, bp_length_arr);
     const bp_length_delta = Math.min(Math.max(bp_length_max - bp_length_min, 0.1), 360); //最大六分钟
     const start_y = 610;
-    
+
     let svg_rrect = '';
 
     bp_length_arr.forEach((v, i) => {
