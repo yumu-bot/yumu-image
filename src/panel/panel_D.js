@@ -376,15 +376,8 @@ export async function panel_D(data = {
     const label_tth =
         await label_E({...LABEL_OPTION.TTH, data_b: tth_b, data_m: tth_m}, true);
 
-    const right1 = (data.game_mode === 'mania') ?
-        data.card_A1.right2
-        : '';
-    const right2 = (data.game_mode === 'mania') ?
-        '4K: ' + (Math.round(data.om4k_pp) || 0) + 'PP // 7K: ' + (Math.round(data.om7k_pp) || 0) + 'PP'
-        : data.card_A1.right2;
-
     const card_A1_impl =
-        await card_A1({...data.card_A1, right1: right1, right2: right2}, true);
+        await card_A1({...data.card_A1}, true);
 
     let card_Js = [];
     for (const j of data.recent_play) {
@@ -402,7 +395,7 @@ export async function panel_D(data = {
     }
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Information (!ymi)', 'Info', 'v0.3.0 EA');
+    const panel_name = getPanelNameSVG('Information (!ymi)', 'Info', 'v0.3.2 FT');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
@@ -411,7 +404,10 @@ export async function panel_D(data = {
         '#' + (data.rank_global || '0'), ' ' + (data.country || '') + '#' + (data.rank_country || '0'),
         36, 24, 1860, 374.754, 'right baseline', '#fff', '#aaa');
 
-    const variant_text = drawManiaVariantRank(data.game_mode, data.country, data.om4k_rank_global, data.om7k_rank_global, data.om4k_rank_country, data.om7k_rank_country)
+    const variant_rank = data.game_mode === 'mania' ? drawManiaVariantRank(data.game_mode, data.country,
+        Math.round(data.om4k_pp) || 0, Math.round(data.om7k_pp) || 0,
+        data.om4k_rank_global, data.om7k_rank_global,
+        data.om4k_rank_country, data.om7k_rank_country) : '';
 
     // 绘制rank曲线。
     const ranking_arr = modifyArrayToFixedLength(data.user_ranking_arr, 90, true);
@@ -611,7 +607,7 @@ export async function panel_D(data = {
     // 插入文字
     svg = replaceTexts(svg, [mascot_mark1, mascot_mark1_rrect], reg_mascot_name);
     svg = replaceTexts(svg, [mascot_mark2, mascot_mark2_rrect], reg_progress);
-    svg = replaceTexts(svg, [rank_text, variant_text], reg_ranking_text);
+    svg = replaceTexts(svg, [rank_text, variant_rank], reg_ranking_text);
     svg = replaceText(svg, progress_rrect, reg_progressR);
 
     // 插入图片和部件（新方法
@@ -644,14 +640,18 @@ export async function panel_D(data = {
 }
 
 //cr country rank, gr global rank
-function drawManiaVariantRank(mode = 'osu', country = 'CN', gr4k = 0, gr7k = 0, cr4k = 0, cr7k = 0) {
+function drawManiaVariantRank(mode = 'osu', country = 'CN', pp4k = 0, pp7k = 0, gr4k = 0, gr7k = 0, cr4k = 0, cr7k = 0) {
     if (mode === 'mania') {
-        const key4 = torus.get2SizeTextPath('4K: #' + (gr4k || 0), ' #'  + (cr4k || 0),
-            24, 24, 1860, 404, 'right baseline', '#fff', '#aaa');
 
-        const key7 = torus.get2SizeTextPath('7K: #' + (gr7k || 0), ' #'  + (cr7k || 0),
-            24, 24, 1860, 430, 'right baseline', '#fff', '#aaa');
+        //4K: 4396PP // #114514 CN#1919
+        const key4 = '4K: ' + pp4k + 'PP // #' + gr4k + ' ' + country + '#'  + cr4k;
+        const key7 = '7K: ' + pp7k + 'PP // #' + gr7k + ' ' + country + '#'  + cr7k;
 
-        return key4 + key7;
+        const maxWidth = Math.max(torus.getTextWidth(key4, 24), torus.getTextWidth(key7, 24));
+        const rrect = PanelDraw.Rect(1880 - 40 - maxWidth, 200, maxWidth + 40, 70, 20, '#382E32', 1);
+
+        return rrect +
+            torus.getTextPath(key4, 1860, 228, 24, 'right baseline', '#fff') +
+            torus.getTextPath(key7, 1860, 254, 24, 'right baseline', '#fff');
     } else return '';
 }

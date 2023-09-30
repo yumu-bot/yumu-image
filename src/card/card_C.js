@@ -93,12 +93,15 @@ export async function card_C(data = {
         '#fff', '#aaa', '#ccc', '#888',
         '#eee', '#999', '#bbb', '#777']
 
+    const isTeamVs = data.statistics.is_team_vs; //none特供
+    const red_score = data.statistics.score_team_red || 0;
+    const blue_score = data.statistics.score_team_blue || 0;
+    const total_score = data.statistics.score_total;
+    const delta_score = isTeamVs ? Math.abs(red_score - blue_score) : 0;
+
     // 渲染文字和底板
-    //组队赛时
-    if (data.statistics.is_team_vs) {
-        let red_score = data.statistics.score_team_red || 0;
-        let blue_score = data.statistics.score_team_blue || 0;
-        let total_score = data.statistics.score_total;
+    // 组队赛时
+    if (isTeamVs) {
 
         //上左右得点
 
@@ -116,9 +119,7 @@ export async function card_C(data = {
         }
 
         // 上左右分数
-        let isTeamVs = data.statistics.is_team_vs; //none特供
-        let mid_x = isTeamVs ? Math.min(Math.max((red_score / total_score * 1330), 400), 930) + 20 + 5 : 0;
-        let delta_score = isTeamVs ? Math.abs(red_score - blue_score) : 0;
+        const mid_x = isTeamVs ? Math.min(Math.max((red_score / total_score * 1330), 400), 930) + 20 + 5 : 0;
         let red_font;
         let blue_font;
 
@@ -141,9 +142,9 @@ export async function card_C(data = {
             svg = replaceText(svg, '#382e32', reg_backcolor);
         }
 
-        let red_text = (red_score !== 0) ? red_font.getTextPath(red_score.toString(), mid_x - 5, 196.836, 24, 'right baseline', '#fff') : '';
-        let blue_text = (blue_score !== 0) ? blue_font.getTextPath(blue_score.toString(), mid_x + 5, 196.836, 24, 'left baseline', '#fff') : '';
-        let delta_text = (delta_score !== 0) ? torus.getTextPath(delta_score.toString(), mid_x, 132.877, 18, 'center baseline', '#fff') : '';
+        const red_text = (red_score !== 0) ? red_font.getTextPath(red_score.toString(), mid_x - 5, 196.836, 24, 'right baseline', '#fff') : '';
+        const blue_text = (blue_score !== 0) ? blue_font.getTextPath(blue_score.toString(), mid_x + 5, 196.836, 24, 'left baseline', '#fff') : '';
+        const delta_text = (delta_score !== 0) ? torus.getTextPath(delta_score.toString(), mid_x, 132.877, 18, 'center baseline', '#fff') : '';
 
         svg = replaceTexts(svg, [red_text, blue_text, delta_text], reg_text);
 
@@ -153,7 +154,7 @@ export async function card_C(data = {
         //个人赛取最大值，因为此时第一号并不一定是第一名
         let first_index = 0;
         let first_score = 0;
-        let none_arr = data.none || [{player_score: 0}];
+        const none_arr = data.none || [{player_score: 0}];
 
         none_arr.forEach((v, i) => {
             if (v.player_score >= first_score) {
@@ -163,8 +164,7 @@ export async function card_C(data = {
         })
 
         //个人赛主计算
-        let total_score = data.statistics.score_total;
-        let none_text = (total_score !== 0) ? torus.getTextPath(total_score.toString(), 670, 196.836, 24, 'center baseline', '#fff') : '';
+        const none_text = (total_score !== 0) ? torus.getTextPath(total_score.toString(), 670, 196.836, 24, 'center baseline', '#fff') : '';
 
         svg = replaceText(svg, '#382e32', reg_backcolor);
         svg = replaceText(svg, none_text, reg_text);
@@ -202,45 +202,44 @@ export async function card_C(data = {
     const red_length = data.red ? data.red.length : 0;
     const blue_length = data.blue ? data.blue.length : 0;
     const none_length = data.none ? data.none.length : 0;
-    const is_team_vs = data.statistics.is_team_vs;
 
-    if ((is_team_vs && (red_length + blue_length) <= 8) || (!is_team_vs && none_length <= 8)) { //data.statistics
-        if (is_team_vs) {
+    if ((isTeamVs && (red_length + blue_length) <= 8) || (!isTeamVs && none_length <= 8)) { //data.statistics
+        if (isTeamVs) {
             red_width_arr = getTeamVsWidthArray(data, 'red', true);
             blue_width_arr = getTeamVsWidthArray(data, 'blue', true);
             if (red_width_arr !== []) {
-                await implantCardC(data, 'red', red_score_arr, red_width_arr, true);
+                await implantCardC(data, 'red', delta_score, red_score_arr, red_width_arr, true);
             }
             if (blue_width_arr !== []) {
-                await implantCardC(data, 'blue', blue_score_arr, blue_width_arr, true);
+                await implantCardC(data, 'blue', delta_score, blue_score_arr, blue_width_arr, true);
             }
         } else {
             none_width_arr = getTeamVsWidthArray(data, 'none', true);
             if (none_width_arr !== []) {
-                await implantCardC(data, 'none', none_score_arr, none_width_arr, true);
+                await implantCardC(data, 'none', 0, none_score_arr, none_width_arr, true);
             }
         }
     } else {
         //特殊分支，比较麻烦，还需要针对超短的数据
-        if (is_team_vs) {
+        if (isTeamVs) {
             red_width_arr = getTeamVsWidthArray(data, 'red', false);
             blue_width_arr = getTeamVsWidthArray(data, 'blue', false);
             if (red_width_arr !== []) {
-                await implantCardC(data, 'red', red_score_arr, red_width_arr, false);
+                await implantCardC(data, 'red', delta_score, red_score_arr, red_width_arr, false);
             }
             if (blue_width_arr !== []) {
-                await implantCardC(data, 'blue', blue_score_arr, blue_width_arr, false);
+                await implantCardC(data, 'blue', delta_score, blue_score_arr, blue_width_arr, false);
             }
         } else {
             none_width_arr = getTeamVsWidthArray(data, 'none', false);
             if (none_width_arr !== []) {
-                await implantCardC(data, 'none', none_score_arr, none_width_arr, false);
+                await implantCardC(data, 'none', 0, none_score_arr, none_width_arr, false);
             }
         }
     }
 
     // 导入卡片的主函数
-    async function implantCardC(data, team = 'none', teamScoreArr = [0], teamWidthArr = [0], isLess4 = true) {
+    async function implantCardC(data, team = 'none', delta_score = 0, teamScoreArr = [0], teamWidthArr = [0], isLess4 = true) {
 
         let startX;
         let startY = 140; //分数条上沿
@@ -278,14 +277,14 @@ export async function card_C(data = {
                 break;
         }
 
-        let less = countLessMinWidth(teamWidthArr, 100);
+        const less = countLessMinWidth(teamWidthArr, 100);
 
         if (isLess4) {
             //主调用
-            await implantMain ();
+            await implantMain (delta_score);
 
         } else if (less === 0) {
-            await implantMain ();
+            await implantMain (delta_score);
 
         } else if (less <= 12) {
             //特殊调用：需要使用 label F2 / F3
@@ -346,15 +345,15 @@ export async function card_C(data = {
 
             //画分数高于最低值的选手
             for (let i = 0; i < (teamWidthArr.length - less); i++) {
-                let j = teamScoreArr.length - less - 1 - i; //取反，实际上是从小到大用
-                let width = teamWidthArr[j];
+                const j = teamScoreArr.length - less - 1 - i; //取反，实际上是从小到大用
+                const width = teamWidthArr[j];
 
                 if (data[`${team}`]) {
                     await implantRoundLabelF1(
                         data[`${team}`][j],
                         calculateX + (width * direction / 2 - 50),
                         startY - 130,
-                        width,
+                        Math.max(100, width),
                         isWin,
                         scoreTextColor);
                 }
@@ -385,15 +384,17 @@ export async function card_C(data = {
         }
 
         //主调用，也是一般的调用方法
-        async function implantMain () {
-
+        async function implantMain (delta_score = 0) {
             let calculateX = startX;
             let rectSum = 0;
             let rectColor = '';
 
             for (let i = 0; i < teamWidthArr.length; i++) {
-                let j = teamScoreArr.length - 1 - i; //以前叫startAssign + push * i
-                let width = teamWidthArr[j];
+                const j = teamScoreArr.length - 1 - i; //以前叫startAssign + push * i
+                const width = teamWidthArr[j];
+
+                // 这是防止差值分数左右两边的名字挡住，+10是留的缝隙，只对分数最高（数组最前）的有效
+                const delta_score_width = (j.valueOf() === 0 && data.statistics.is_team_vs) ? (torus.getTextWidth(delta_score.toString(), 18) - 10 + 10) : 0;
 
                 // 画F标签
                 if (data[`${team}`]) {
@@ -401,7 +402,7 @@ export async function card_C(data = {
                         data[`${team}`][j],
                         calculateX + (width * direction / 2 - 50),
                         startY - 130,
-                        width,
+                        Math.max(100, width - delta_score_width),
                         isWin,
                         scoreTextColor);
                 }
@@ -436,14 +437,15 @@ export async function card_C(data = {
 
     //计算每个队内选手应该获得的宽度
     function getTeamVsWidthArray(data, team = 'none', isLess4 = true) {
-        let isTeamVs = data.statistics.is_team_vs;
+        const isTeamVs = data.statistics.is_team_vs;
+        const total_score = data.statistics.score_total;
+
         let teamMinWidth;
         let playerMinWidth;
 
         if (!data[team]) return [];
 
         let team_width_arr = [];
-        let total_score = data.statistics.score_total;
         let team_score;
 
         //team vs以及1v1的最窄间距限制
@@ -495,27 +497,26 @@ export async function card_C(data = {
     }
 
 
-
     // 插入F1 - F3标签的功能函数
 
-    async function implantRoundLabelF1(object, x, y, maxWidth, isWin, scoreTextColor) {
-        let label_F1_impl =
+    async function implantRoundLabelF1(data, x, y, maxWidth, isWin, scoreTextColor) {
+        const label_F1_impl = data ?
             await label_F1({
-                avatar: object ? object.player_avatar : '',
-                name: object ? object.player_name : 'Unknown',
-                mods_arr: object ? object.player_mods : '',
-                score: object ? object.player_score : '',
-                rank: object ? object.player_rank : '',
-                maxWidth: Math.max(100, maxWidth),
+                avatar: data.player_avatar || '',
+                name: data.player_name || 'Unknown',
+                mods_arr: data.player_mods || '',
+                score: data.player_score || '',
+                rank: data.player_rank || '',
+                maxWidth: maxWidth,
                 isWin: isWin,
                 scoreTextColor: scoreTextColor,
-            })
+            }) : '';
         svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
     }
 
     /*
     async function implantRoundLabelF2(object, x, y, isWin, scoreTextColor) {
-        let label_F2_impl =
+        const label_F2_impl =
             await label_F2({
                 avatar: object ? object.player_avatar : '',
                 name: object ? object.player_name : 'Unknown',
@@ -529,10 +530,10 @@ export async function card_C(data = {
      */
 
 
-    async function implantRoundLabelF3(object, x, y, isWin) {
+    async function implantRoundLabelF3(data, x, y, isWin) {
         let label_F3_impl =
             await label_F3({
-                avatar: object ? object.player_avatar : '',
+                avatar: data ? data.player_avatar : '',
                 isWin: isWin,
             })
         svg = implantSvgBody(svg, x, y, label_F3_impl, reg_bodycard);

@@ -567,14 +567,13 @@ export async function panel_J(data = {
     //矩形绘制
     const bp_length_max = Math.max.apply(Math, bp_length_arr);
     const bp_length_min = Math.min.apply(Math, bp_length_arr);
-    const bp_length_delta = Math.max(Math.abs(bp_length_max - bp_length_min), 0.1);
+    const bp_length_delta = Math.min(Math.max(bp_length_max - bp_length_min, 0.1), 360); //最大六分钟
     const start_y = 610;
-
+    
     let svg_rrect = '';
 
     bp_length_arr.forEach((v, i) => {
-        const height = Math.max(((v - bp_length_min) / bp_length_delta * 90), 16);
-
+        const height = Math.max(Math.min((v - bp_length_min) / bp_length_delta * 90, 90), 16);
         svg_rrect += PanelDraw.Rect(1042 + 20 * i, start_y - height, 16, height, 8, color_elect_arr[i]);
     });
 

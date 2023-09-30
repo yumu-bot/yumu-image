@@ -2850,7 +2850,7 @@ export const PanelDraw = {
 
         arr.forEach((v, i) => {
             const isFloor = (v - arr_min) / (arr_max - arr_min) * h <= floor;
-            const height = isFloor ? floor : (v - arr_min) / (arr_max - arr_min) * h;
+            const height = isFloor ? floor : Math.min((v - arr_min) / (arr_max - arr_min), 1) * h;
             const rectColor = isFloor ? floorColor : color;
             const x0 = x + step * i;
             const y0 = y - height;
