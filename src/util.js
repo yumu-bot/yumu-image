@@ -2064,13 +2064,15 @@ export function getModFullName(mod = 'NM') {
     }
 }
 
-export function getModInt(mod = ['']) {
-    if (Array.isArray(mod)) {
-        return mod.map(v => {
+export function getModInt(mods = ['']) {
+    if (Array.isArray(mods) && mods.length > 0) {
+        return mods.map(v => {
             return ModInt[v] ? ModInt[v] : 0
         }).reduce((sum, v) => sum | v);
-    } else if (typeof mod === 'number') {
-        return Math.round(mod);
+    } else if (typeof mods === 'number') {
+        return Math.round(mods);
+    } else {
+        return 0;
     }
 }
 

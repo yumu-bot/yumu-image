@@ -5,12 +5,12 @@ import {
     getExportFileV3Path,
     getGameMode,
     getMascotName,
-    getMascotPath,
+    getMascotPath, getModInt,
     getPanelNameSVG,
     getRandomBannerPath,
     getRandomMascotBGPath,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getRoundedNumberStr,
+    getRoundedNumberSmallerStr, getRoundedNumberStr, hasMod,
     implantImage,
     implantSvgBody,
     maximumArrayToFixedLength,
@@ -24,6 +24,7 @@ import {
 import {torus} from "../font.js";
 import {card_J} from "../card/card_J.js";
 import {card_K} from "../card/card_K.js";
+import {getMapAttributes} from "../compute-pp.js";
 
 export async function router(req, res) {
     try {
@@ -94,29 +95,47 @@ async function routerD(req) {
     const recent_play = [];
     for (const re of reList) {
         const covers_card = await readNetImage(re.beatmapset.covers.card, getExportFileV3Path('beatmap-defaultBG.jpg')); //card获取快
-        let d = {
+
+        const mod_int = getModInt(re.mods);
+        const attr = await getMapAttributes(re.beatmap.id, mod_int, re.mode_int || 0);
+
+        const data = {
             map_cover: covers_card,
             map_background: covers_card,
             map_title_romanized: re.beatmapset.title,
             map_artist: re.beatmapset.artist,
             map_difficulty_name: re.beatmap.version,
-            star_rating: Math.round(re.beatmap.difficulty_rating * 100) / 100,
+            star_rating: getRoundedNumberStr(attr.stars, 3), //Math.round(re.beatmap.difficulty_rating * 100) / 100,
             score_rank: re.rank,
-            accuracy: Math.round(re.accuracy * 10000) / 100, //这玩意传进来就是零点几？  是
+            accuracy: getRoundedNumberStr(re.accuracy * 100, 3), // Math.round(re.accuracy * 10000) / 100, //这玩意传进来就是零点几？  是
             combo: re.max_combo, //x
             mods_arr: re.mods,
             pp: re.pp ? Math.round(re.pp) : 0 //pp
         }
-        recent_play.push(d);
+        recent_play.push(data);
     }
 
     let bpList = req.fields['bp-list'];
     const bp_list = [];
 
     for (const bp of bpList) {
-        let d = {
+
+        //随便搞个颜色得了
+        const mod_int = getModInt(bp.mods);
+        let star_rating = bp.beatmap.difficulty_rating || 0;
+        if (hasMod(mod_int, 'DT') || hasMod(mod_int, 'NC')) {
+            star_rating *= 1.4;
+        } else if (hasMod(mod_int, 'HR')) {
+            star_rating *= 1.078;
+        } else if (hasMod(mod_int, 'EZ')) {
+            star_rating *= 0.9;
+        } else if (hasMod(mod_int, 'FL')) {
+            star_rating *= 1.3;
+        }
+
+        const d = {
             map_background: await readNetImage(bp.beatmapset.covers.list, getExportFileV3Path('beatmap-defaultBG.jpg')),
-            star_rating: bp.beatmap.difficulty_rating,
+            star_rating: star_rating,
             score_rank: bp.rank,
             bp_pp: bp.pp,
         }
