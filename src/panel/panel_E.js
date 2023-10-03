@@ -283,7 +283,7 @@ export async function panel_E(data = {
 
 }, reuse = false) {
     // 导入模板
-    let svg = readTemplate('template/Panel_E0.svg');
+    let svg = readTemplate('template/Panel_E.svg');
 
     // 路径定义
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/;
@@ -312,7 +312,8 @@ export async function panel_E(data = {
         mods: data.score.mods,
     }
 
-    const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, !(data.score.beatmap.ranked && data.score.beatmap.ranked === 1));
+    const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode,
+        !(data.score.beatmap.ranked && (data.score.beatmap.ranked === 1 || data.score.beatmap.ranked === 2 || data.score.beatmap.ranked === 4))); //ranked, approved, loved
     /*
     const calcPP = {
         pp: 10,
@@ -417,7 +418,8 @@ async function score2CardE3(score, calcPP) {
     const score_progress = (score.rank === 'F') ? calcPP.score_progress : 1;
 
     return {
-        density_arr: await getDensityArray(score.beatmap.id, score.mode),
+        density_arr: await getDensityArray(score.beatmap.id, score.mode,
+            !(score.beatmap.ranked && (score.beatmap.ranked === 1 || score.beatmap.ranked === 2 || score.beatmap.ranked === 4))),
         retry_arr: score.beatmap.exit || [],
         fail_arr: score.beatmap.fail || [],
 
@@ -471,7 +473,7 @@ const getApproximateRank = (score) => {
             if (n300 === nTotal) {
                 rank = 'SS';
             } else if (n300 / nTotal >= 0.9) {
-                rank = hasMiss ? 'A' : is50over1p ? 'S' : 'A';
+                rank = hasMiss ? 'A' : (is50over1p ? 'A' : 'S');
             } else if (n300 / nTotal >= 0.8) {
                 rank = hasMiss ? 'B' : 'A';
             } else if (n300 / nTotal >= 0.7) {
@@ -1062,7 +1064,7 @@ const score2Labels = (score, calcPP) => {
     }];
 }
 
-const cs2px = (cs, mode = 'o') => {
+export const cs2px = (cs, mode = 'o') => {
     switch (mode) {
         case 'o': {
             const osupixel = (54.4 - 4.48 * cs).toFixed(2);
@@ -1079,7 +1081,7 @@ const cs2px = (cs, mode = 'o') => {
     }
 }
 
-const ar2ms = (ar, mode = 'o') => {
+export const ar2ms = (ar, mode = 'o') => {
     switch (mode) {
         case 'o':
         case 'c': {
@@ -1096,7 +1098,7 @@ const ar2ms = (ar, mode = 'o') => {
     }
 }
 
-const od2ms = (od, mode = 'o') => {
+export const od2ms = (od, mode = 'o') => {
     let ms;
     switch (mode) {
         case 'o': {
@@ -1127,11 +1129,11 @@ const od2ms = (od, mode = 'o') => {
     else return ms + 'ms';
 }
 
-const stat2DataM = (hasChanged = false, after = 0, before = 0) => {
+export const stat2DataM = (hasChanged = false, after = 0, before = 0) => {
     return getDecimals(after, 4) + (hasChanged ? (' (' + getDecimals(before, 2) + getDecimals(before, 4) + ')') : '');
 }
 
-const data2Label = (remark, data_b, data_m, isDisplay = true) => {
+export const data2Label = (remark, data_b, data_m, isDisplay = true) => {
 
     if (isDisplay) return {
         remark: remark,
