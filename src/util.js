@@ -19,9 +19,9 @@ const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
 const FLAG_PATH = process.env.FLAG_PATH || EXPORT_FILE_V3 + "Flags" //CACHE_PATH + "/flag";
 
 export function initPath() {
-    axios.defaults.timeout = 4000;// 2000
-    axios.defaults.retry = 5;
-    axios.defaults.retryDelay = 2000;// 1000
+    axios.defaults.timeout = 60000;// 2000
+    axios.defaults.retry = 10;
+    axios.defaults.retryDelay = 20000;// 1000
     axios.defaults.proxy = {
         host: '127.0.0.1',
         port: 7890,
