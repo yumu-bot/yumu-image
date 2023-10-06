@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getPanelNameSVG, getRandomBannerPath,
+    exportJPEG, getModInt, getPanelNameSVG, getRandomBannerPath, hasMod,
     implantImage,
     implantSvgBody,
     PanelGenerate, readTemplate,

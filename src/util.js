@@ -2645,6 +2645,20 @@ export const PanelGenerate = {
 
         const title2 = (bp.beatmapset.title === bp.beatmapset.title_unicode) ? null : bp.beatmapset.title_unicode;
 
+        const mod = bp.mods || [];
+        //随便搞个颜色得了
+        const mod_int = getModInt(mod);
+        let star_rating = bp.beatmap.difficulty_rating || 0;
+        if (hasMod(mod_int, 'DT') || hasMod(mod_int, 'NC')) {
+            star_rating *= 1.4;
+        } else if (hasMod(mod_int, 'HR')) {
+            star_rating *= 1.078;
+        } else if (hasMod(mod_int, 'EZ')) {
+            star_rating *= 0.9;
+        } else if (hasMod(mod_int, 'FL')) {
+            star_rating *= 1.3;
+        }
+
         return {
             background: background,
             cover: cover,
@@ -2664,7 +2678,7 @@ export const PanelGenerate = {
 
             color_title2: '#bbb',
             color_right: getRankColor(bp.rank),
-            color_left: getStarRatingColor(bp.beatmap.difficulty_rating),
+            color_left: getStarRatingColor(star_rating),
             color_index: color_index,
             color_label1: '',
             color_label2: '',
