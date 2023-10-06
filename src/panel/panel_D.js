@@ -125,6 +125,8 @@ async function routerD(req) {
         let star_rating = bp.beatmap.difficulty_rating || 0;
         if (hasMod(mod_int, 'DT') || hasMod(mod_int, 'NC')) {
             star_rating *= 1.4;
+        } else if (hasMod(mod_int, 'HT')) {
+            star_rating *= 0.75;
         } else if (hasMod(mod_int, 'HR')) {
             star_rating *= 1.078;
         } else if (hasMod(mod_int, 'EZ')) {

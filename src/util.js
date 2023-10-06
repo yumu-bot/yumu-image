@@ -2653,6 +2653,8 @@ export const PanelGenerate = {
             star_rating *= 1.4;
         } else if (hasMod(mod_int, 'HR')) {
             star_rating *= 1.078;
+        } else if (hasMod(mod_int, 'HT')) {
+            star_rating *= 0.75;
         } else if (hasMod(mod_int, 'EZ')) {
             star_rating *= 0.9;
         } else if (hasMod(mod_int, 'FL')) {
