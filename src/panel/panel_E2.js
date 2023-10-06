@@ -13,6 +13,7 @@ import {calcMap, getDensityArray} from "../compute-pp.js";
 import {ar2ms, cs2px, data2Label, od2ms, stat2DataM} from "./panel_E.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_E1} from "../card/card_E1.js";
+import {card_E2} from "../card/card_E2.js";
 import {card_E3} from "../card/card_E3.js";
 import {LABEL_OPTION} from "../component/label.js";
 
@@ -267,18 +268,26 @@ export async function panel_E2(data = {
 
     const calcTotal = await calcMap(bid, stat, mode, reload);
     const calcPP = calcTotal[0];
+    let calcNC = [];
+    let calcFC = [];
+
+    for (let i = 1; i < 12; i++) {
+        calcNC.push(calcTotal[i] || 0);
+        calcFC.push(calcTotal[i + 11] || 0);
+    }
 
     const rank = getApproximateRankFromAcc(data.expected.accuracy, data.beatmap.mode);
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, calcPP), true);
+    const cardE2 = await card_E2(await expect2CardE2(data.expected, rank, calcPP, calcNC, calcFC), true);
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP), true);
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
     svg = implantSvgBody(svg, 0, 290, cardE1, reg_card_e1);
-    //svg = implantSvgBody(svg, 880, 330, cardE2, reg_card_e2);
+    svg = implantSvgBody(svg, 880, 330, cardE2, reg_card_e2);
     svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
 
     // 图片定义
@@ -309,14 +318,21 @@ async function beatmap2CardE1(beatmap, calcPP) {
     }
 }
 
-async function expect2CardE2(expect, pp, rank, calcPP) {
-    const isFC = score.perfect || (score.beatmap.max_combo === score.max_combo);
-    const isPF = score.rank === 'XH' || score.rank === 'X';
-    const isBest = (score.best_id > 0);
+async function expect2CardE2(expect, rank = 'F', calcPP, calcNC = [0], calcFC = [0]) {
+    const isFC = expect.max_combo >= calcPP.attr.maxCombo;
+    const isPF = rank === 'XH' || rank === 'X';
+    const isBest = false;
+
+    const labels = (mode = 'osu', calcPP = calcPP) => {
+
+    }
 
     return {
-
-
+        rank: rank || 'F',
+        mods: expect.mods || [],
+        accuracy: expect.accuracy || 0,
+        combo: expect.max_combo || 0,
+        pp: calcPP.pp.pp || 0,
 
     }
 }
