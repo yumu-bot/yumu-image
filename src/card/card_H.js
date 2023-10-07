@@ -125,7 +125,7 @@ export async function card_H(data = {
         default: mods_width = 180;
     }
 
-    title_max_width -= (Math.max(mods_width, label3_width)); //一般来说就第三个标签最长了
+    title_max_width -= (Math.max(mods_width, label3_width - 10)); //一般来说就第三个标签最长了
     left_max_width -= mods_width;
 
     const title_width = torus.getTextWidth(data.title || '', 36);
