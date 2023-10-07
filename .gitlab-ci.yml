@@ -1,0 +1,15 @@
+default:
+  tags:
+    - master
+  
+variables:
+    GIT_STRATEGY: none
+
+stages:
+  - update
+  # - restart
+
+job-update:
+  stage: update
+  script:
+    - ~/sh/update_node_object.sh
