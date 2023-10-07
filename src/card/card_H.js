@@ -129,7 +129,7 @@ export async function card_H(data = {
     left_max_width -= mods_width;
 
     const title_width = torus.getTextWidth(data.title || '', 36);
-    const title2_width = Math.max(title_max_width - title_width - 20, 0);
+    const title2_width = title_max_width - title_width - 10;
 
     // 文字定义
     const color_left12 = data.color_left12 || '#fff';
@@ -138,7 +138,7 @@ export async function card_H(data = {
     const text_left1 = torus.cutStringTail(data.left1 || '', 24, left_max_width);
     const text_left2 = torus.cutStringTail(data.left2 || '', 24, left_max_width);
 
-    const text_title2 = (data.title2 && (data.title !== data.title2))
+    const text_title2 = (data.title2 && (data.title !== data.title2) && title2_width > 0)
         ? font_t2.cutStringTail(data.title2 || '', 18, title2_width, true) : '';
 
     const title = torus.getTextPath(text_title, 210, 34.754, 36, 'left baseline', '#fff');
