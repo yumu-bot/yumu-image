@@ -62,9 +62,9 @@ export async function card_F6(data = {
     }
 
     // 导入文本
-    const user_data_title = torus.getTextPath('User Data', 15, 35.795, 30, 'left baseline', '#fff');
+    const user_data_title = torus.getTextPath('User Data', 15, 40.795, 30, 'left baseline', '#fff');
 
-    const user_data_text = torus.get2SizeTextPath(data.mode, ' (' + data.bonus_pp + ')' , 30, 30, 970, 725.836, 'right baseline', '#fff', '#aaa');
+    const user_data_text = torus.get2SizeTextPath(data.mode, ' (bonus: ' + data.bonus_pp + 'PP)' , 30, 24, 880, 40.836, 'right baseline', '#fff', '#aaa');
 
     const first_date = torus.getTextPath(
         data.first_year + '-' + data.first_month,

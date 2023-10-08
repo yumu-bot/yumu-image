@@ -128,11 +128,11 @@ export async function card_F3(data = {
     }
 
     for (const i in card_Ks) {
-        svg = implantSvgBody(svg, 15 + (i % 4 * 80), (i < 4 ? 45 : 105), card_Ks[i], reg_card_k);
+        svg = implantSvgBody(svg, 15 + (i % 4 * 80), (i < 4 ? 50 : 110), card_Ks[i], reg_card_k);
     }
 
     // 导入文本
-    const bp_title = torus.getTextPath('BPs', 15, 30.795, 30, 'left baseline', '#fff');
+    const bp_title = torus.getTextPath('BPs', 15, 35.795, 30, 'left baseline', '#fff');
 
     svg = replaceText(svg, bp_title, reg_text);
 

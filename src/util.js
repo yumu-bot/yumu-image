@@ -1507,7 +1507,7 @@ export function getGameMode(mode = '', level = 0) {
                 break;
             }
         }
-    } else {
+    } else if (mode !== '') {
         modeStr = (mode + '').toLowerCase();
     }
 

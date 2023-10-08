@@ -18,9 +18,9 @@ export async function card_F5(data = {
     let svg = `
           <g id="Base_CF5">
           </g>
-          <g id="Ranking_CF5">
-          </g>
           <g id="BP_CF5">
+          </g>
+          <g id="Ranking_CF5">
           </g>
           <g id="Text_CF5">
           </g>`;
@@ -38,7 +38,7 @@ export async function card_F5(data = {
     svg = replaceText(svg, getRankingChart(data.ranking_arr), reg_ranking);
 
     // 导入文本
-    const ranking_title = torus.getTextPath('Ranking', 15, 30.795, 30, 'left baseline', '#fff');
+    const ranking_title = torus.getTextPath('Ranking', 15, 35.795, 30, 'left baseline', '#fff');
 
     const ranking_text = torus.get2SizeTextPath(
         '#' + (data.global_rank || 0), ' ' + (data.country || '') + ' #' + (data.country_rank || 0),

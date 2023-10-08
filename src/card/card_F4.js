@@ -42,7 +42,7 @@ export async function card_F4(data = {
 
     // 导入文本
 
-    const grade_title = torus.getTextPath('Grades', 15, 30.795, 30, 'left baseline', '#fff');
+    const grade_title = torus.getTextPath('Grades', 15, 35.795, 30, 'left baseline', '#fff');
 
     svg = replaceText(svg, grade_title, reg_text);
 

@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getExportFileV3Path,
+    exportJPEG, getExportFileV3Path, getGameMode,
     getPanelNameSVG,
     getRandomBannerPath, implantImage,
     implantSvgBody,
@@ -434,6 +434,8 @@ export async function panel_D(data = {
     //user_bp_arr
     "bp-time": [],
 
+    ranked_map_play_count: 1564,
+    bonus_pp: 0,
     }, reuse = false) {
 
     // 导入模板
@@ -453,15 +455,17 @@ export async function panel_D(data = {
     const reg_card_f7 = /(?<=<g id="Card_F7">)/;
 
     // 卡片定义
+    const mode = getGameMode(data.mode, 0);
+
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
 
-    const cardF1 = await card_F1(user2CardF1(data.user, data.mode), true);
+    const cardF1 = await card_F1(user2CardF1(data.user, mode), true);
     const cardF2 = await card_F2({recent: data["re-list"]}, true);
     const cardF3 = await card_F3({bp: data["bp-list"]}, true);
     const cardF4 = await card_F4(user2CardF4(data.user), true);
-    const cardF5 = await card_F5(user2CardF5(data.user, data.mode, data["bp-time"]), true);
-    const cardF6 = await card_F6(user2CardF6(data.user, data.mode), true);
-    const cardF7 = await card_F7(user2CardF7(data.user, data.mode), true);
+    const cardF5 = await card_F5(user2CardF5(data.user, mode, data["bp-time"]), true);
+    const cardF6 = await card_F6(user2CardF6(data.user, mode, data.bonus_pp, data.ranked_map_play_count), true);
+    const cardF7 = await card_F7(user2CardF7(data.user, mode), true);
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -536,7 +540,7 @@ function user2CardF5(user, mode = 'osu', bp_arr = []) {
     };
 }
 
-function user2CardF6(user, mode= 'osu', bonus_pp = 0) {
+function user2CardF6(user, mode = 'osu', bonus_pp = 0, ranked_map_play_count = 0) {
     const arr = user.monthlyPlaycounts || [{startDate: 0}];
     let fd = arr[0]?.startDate;
 
@@ -613,12 +617,12 @@ function user2CardF6(user, mode= 'osu', bonus_pp = 0) {
         total_score: user.statistics.total_score || 0,
         play_count: user.statistics.play_count || 0,
         play_time: user.statistics.play_time || 0,
-        played_map: user.beatmap_playcounts_count || 0,
+        played_map: ranked_map_play_count || user.beatmap_playcounts_count,
         rep_watched: user.statistics.replays_watched_by_others || 0,
         follower: user.follower_count || 0,
         total_hits: user.totalHits || 0,
 
-        bonus_pp: bonus_pp || 0,
+        bonus_pp: Math.round(bonus_pp) || 0,
 
         pc_arr: pc_arr,
 

@@ -102,7 +102,7 @@ export const LABEL_OPTION = {
     },
     MPL: {
         icon: getExportFileV3Path("object-score-approachrate.png"),
-        icon_title: 'Map Played',
+        icon_title: 'Ranked Map PC',
         remark: '',
         color_remark: '#aaa',
     },
