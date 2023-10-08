@@ -2694,14 +2694,14 @@ export const PanelGenerate = {
     },
 
     bp2CardJ: async (bp) => {
-        const map_cover = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
+        const background = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
 
         return {
-            map_cover: map_cover,
-            map_background: map_cover,
-            map_title_romanized: bp.beatmapset ? bp.beatmapset.title : 'Unknown Title',
-            map_artist: bp.beatmapset ? bp.beatmapset.artist : 'Unknown Artist',
-            map_difficulty_name: bp.beatmap ? bp.beatmap.version : '-',
+            cover: background,
+            background: background,
+            title: bp.beatmapset ? bp.beatmapset.title : 'Unknown Title',
+            artist: bp.beatmapset ? bp.beatmapset.artist : 'Unknown Artist',
+            difficulty_name: bp.beatmap ? bp.beatmap.version : '-',
             star_rating: bp.beatmap ? bp.beatmap.difficulty_rating : 0,
             score_rank: bp.rank || 'F',
             accuracy: Math.round(bp.accuracy * 10000) / 100 || 0, //%
