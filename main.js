@@ -1,6 +1,6 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, initPath, readImage} from "./src/util.js";
+import {CACHE_PATH, exportJPEG, initPath, readImage} from "./src/util.js";
 import {router as PanelA1Router} from "./src/panel/panel_A1.js";
 import {router as PanelA2Router} from "./src/panel/panel_A2.js";
 import {router as PanelA3Router} from "./src/panel/panel_A3.js";
@@ -10,7 +10,7 @@ import {router as PanelB1Router} from "./src/panel/panel_B1.js";
 import {router as PanelB2Router} from "./src/panel/panel_B2.js";
 import {router as PanelCRouter} from "./src/panel/panel_C.js";
 import {router as PanelDRouter} from "./src/panel/panel_D.js";
-import {router as PanelERouter} from "./src/panel/panel_E.js";
+import {panel_E, router as PanelERouter} from "./src/panel/panel_E.js";
 import {router as PanelE2Router} from "./src/panel/panel_E2.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as PanelHRouter} from "./src/panel/panel_H.js";
@@ -24,9 +24,14 @@ import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js"; //XinRan 
 
 import {router as MarkdownRouter} from "./src/markdown.js";
 import {router as GetMapAttrRouter} from "./src/mapAttributes.js";
+import fs from "fs";
 
 initPath();
 //这里放测试代码
+
+console.time('E')
+fs.writeFileSync("image/out/panel_E.png", await exportJPEG(await panel_E()));
+console.timeEnd('E')
 
 const app = express();
 

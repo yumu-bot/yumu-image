@@ -194,7 +194,7 @@ export async function getDensityArray(bid, mode, reload) {
 
 //根据分数返回玩家目前的进度
 export async function getScoreProgress(bid, statistics, mode, reload) {
-
+    mode = getGameMode(mode, 0);
     const statTotal = await getStatisticsTotal(bid, statistics, mode, reload);
     const timeList = await getHitObjectTimeList(bid, mode, reload);
     const length = timeList.length;
@@ -206,9 +206,9 @@ export async function getScoreProgress(bid, statistics, mode, reload) {
     let progress = 1; //返回的进度
 
     for (const i in timeList) {
-        const v = timeList[i];
-
         if (i >= statTotal - 1) {
+            const v = timeList[i];
+
             progress = Math.min((v - startTime) / duration, 1)
             break;
         }
@@ -269,8 +269,8 @@ async function getStatisticsTotal(bid, statistics = {}, mode = 'osu', reload = f
             return n300 + n100 + n0;
         case 'fruits':
         case 'catch': {
-            const attr = await getMapAttributes(bid, 0, getGameMode(mode, -2), reload);
-            return attr.nFruits || 0; //已经解决？ //n300 + n0; //目前问题是，这个玩意没去掉miss中果，会偏大
+            const attr = await getMapAttributes(bid, 0, 2, reload);
+            return attr.nFruits || n300 + n0; //已经解决？ //n300 + n0; //目前问题是，这个玩意没去掉miss中果，会偏大
         }
         case 'mania':
             return n320 + n300 + n200 + n100 + n50 + n0;
