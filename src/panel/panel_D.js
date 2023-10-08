@@ -1,34 +1,24 @@
-import {label_E, LABEL_OPTION} from "../component/label.js";
-import {card_A1} from "../card/card_A1.js";
 import {
-    exportJPEG,
-    getExportFileV3Path,
-    getGameMode,
-    getMascotName,
-    getMascotPath, getModInt,
+    exportJPEG, getExportFileV3Path,
     getPanelNameSVG,
-    getRandomBannerPath,
-    getRandomMascotBGPath,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getRoundedNumberStr, hasMod,
-    implantImage,
+    getRandomBannerPath, implantImage,
     implantSvgBody,
-    maximumArrayToFixedLength,
-    modifyArrayToFixedLength, PanelDraw,
     PanelGenerate,
-    readNetImage,
     readTemplate,
     replaceText,
-    replaceTexts,
 } from "../util.js";
-import {torus} from "../font.js";
-import {card_J} from "../card/card_J.js";
-import {card_K} from "../card/card_K.js";
-import {getMapAttributes} from "../compute-pp.js";
+import {card_A1} from "../card/card_A1.js";
+import {card_F1} from "../card/card_F1.js";
+import {card_F2} from "../card/card_F2.js";
+import {card_F3} from "../card/card_F3.js";
+import {card_F4} from "../card/card_F4.js";
+import {card_F5} from "../card/card_F5.js";
+import {card_F6} from "../card/card_F6.js";
+import {card_F7} from "../card/card_F7.js";
 
 export async function router(req, res) {
     try {
-        const data = await routerD(req);
+        const data = req.fields || {};
         const svg = await panel_D(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
@@ -40,7 +30,7 @@ export async function router(req, res) {
 }
 export async function router_svg(req, res) {
     try {
-        const data = await routerD(req);
+        const data = req.fields || {};
         const svg = await panel_D(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
@@ -51,104 +41,508 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-async function routerD(req) {
-
-    let user = req.fields?.user;
-    const card_a1 = await PanelGenerate.user2CardA1(user);
-
-    const label_data = {
-        rks: {
-            data: user?.statistics?.ranked_score,
+export async function panel_D(data = {
+    //A1
+    user: {
+        id: 9794030,
+        pp: 5158.54,
+        username: 'SIyuyuko',
+        occupation: "YHC(Yuyuko's Hidden Cup) Host",
+        interests: 'Alone sometimes/Music & Muzi',
+        monthlyPlaycounts: [
+            { startDate: '2017-02-01', count: 93 },
+            { startDate: '2017-03-01', count: 21 },
+            { startDate: '2017-05-01', count: 14 },
+            { startDate: '2017-07-01', count: 23 },
+            { startDate: '2017-09-01', count: 1 },
+            { startDate: '2017-10-01', count: 28 },
+            { startDate: '2017-12-01', count: 79 },
+            { startDate: '2018-02-01', count: 30 },
+            { startDate: '2018-03-01', count: 20 },
+            { startDate: '2018-04-01', count: 78 },
+            { startDate: '2018-05-01', count: 21 },
+            { startDate: '2018-06-01', count: 340 },
+            { startDate: '2018-07-01', count: 35 },
+            { startDate: '2018-08-01', count: 1478 },
+            { startDate: '2018-09-01', count: 159 },
+            { startDate: '2018-10-01', count: 200 },
+            { startDate: '2018-11-01', count: 80 },
+            { startDate: '2019-01-01', count: 85 },
+            { startDate: '2019-02-01', count: 72 },
+            { startDate: '2019-06-01', count: 1428 },
+            { startDate: '2019-07-01', count: 658 },
+            { startDate: '2019-08-01', count: 101 },
+            { startDate: '2019-09-01', count: 1013 },
+            { startDate: '2019-10-01', count: 976 },
+            { startDate: '2019-11-01', count: 984 },
+            { startDate: '2019-12-01', count: 1169 },
+            { startDate: '2020-01-01', count: 934 },
+            { startDate: '2020-02-01', count: 858 },
+            { startDate: '2020-03-01', count: 634 },
+            { startDate: '2020-04-01', count: 179 },
+            { startDate: '2020-05-01', count: 396 },
+            { startDate: '2020-06-01', count: 923 },
+            { startDate: '2020-07-01', count: 553 },
+            { startDate: '2020-08-01', count: 445 },
+            { startDate: '2020-09-01', count: 742 },
+            { startDate: '2020-10-01', count: 453 },
+            { startDate: '2020-11-01', count: 511 },
+            { startDate: '2020-12-01', count: 768 },
+            { startDate: '2021-01-01', count: 486 },
+            { startDate: '2021-02-01', count: 144 },
+            { startDate: '2021-03-01', count: 147 },
+            { startDate: '2021-04-01', count: 453 },
+            { startDate: '2021-05-01', count: 688 },
+            { startDate: '2021-06-01', count: 383 },
+            { startDate: '2021-07-01', count: 714 },
+            { startDate: '2021-08-01', count: 2287 },
+            { startDate: '2021-09-01', count: 208 },
+            { startDate: '2021-10-01', count: 1449 },
+            { startDate: '2021-11-01', count: 917 },
+            { startDate: '2021-12-01', count: 1611 },
+            { startDate: '2022-01-01', count: 2148 },
+            { startDate: '2022-02-01', count: 1537 },
+            { startDate: '2022-03-01', count: 1998 },
+            { startDate: '2022-04-01', count: 1708 },
+            { startDate: '2022-05-01', count: 2578 },
+            { startDate: '2022-06-01', count: 2100 },
+            { startDate: '2022-07-01', count: 2035 },
+            { startDate: '2022-08-01', count: 1501 },
+            { startDate: '2022-09-01', count: 1301 },
+            { startDate: '2022-10-01', count: 819 },
+            { startDate: '2022-11-01', count: 575 },
+            { startDate: '2022-12-01', count: 882 },
+            { startDate: '2023-01-01', count: 608 },
+            { startDate: '2023-02-01', count: 703 },
+            { startDate: '2023-03-01', count: 643 },
+            { startDate: '2023-04-01', count: 747 },
+            { startDate: '2023-05-01', count: 764 },
+            { startDate: '2023-06-01', count: 518 },
+            { startDate: '2023-07-01', count: 310 },
+            { startDate: '2023-08-01', count: 100 },
+            { startDate: '2023-09-01', count: 322 },
+            { startDate: '2023-10-01', count: 208 }
+        ],
+        uid: 9794030,
+        playTime: 3847295,
+        totalHits: 13526703,
+        countryRank: 1222,
+        bot: false,
+        playCount: 47738,
+        levelCurrent: 100,
+        globalRank: 64971,
+        levelProgress: 59,
+        maxCombo: 2276,
+        accuracy: 98.5673,
+        supporter: false,
+        online: false,
+        deleted: false,
+        avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
+        cover_url: 'https://assets.ppy.sh/user-profile-covers/9794030/b2335bdc1b2baf3c6db911170992a5973aaf4ad1df645e9aeb3af1b93ce32d97.jpeg',
+        default_group: 'default',
+        is_active: true,
+        is_bot: false,
+        is_deleted: false,
+        is_online: false,
+        is_supporter: false,
+        pm_friends_only: false,
+        playmode: 'OSU',
+        nominated_beatmapset_count: 0,
+        favourite_beatmapset_count: 84,
+        graveyard_beatmapset_count: 3,
+        unranked_beatmapset_count: 1,
+        ranked_beatmapset_count: 0,
+        ranked_and_approved_beatmapset_count: 0,
+        guest_beatmapset_count: 0,
+        loved_beatmapset_count: 0,
+        groups: [],
+        beatmap_playcounts_count: 8582,
+        mapping_follower_count: 0,
+        has_supported: true,
+        profile_order: [
+            'me',
+            'top_ranks',
+            'recent_activity',
+            'historical',
+            'beatmaps',
+            'medals',
+            'kudosu'
+        ],
+        previous_usernames: [ 'Fruitser' ],
+        join_date: '2017-02-24T13:23:17+00:00',
+        max_friends: 500,
+        comments_count: 4,
+        support_level: 0,
+        post_count: 6,
+        follower_count: 194,
+        statistics: {
+            pp: 5158.54,
+            ss: 3,
+            a: 3091,
+            ssh: 17,
+            s: 117,
+            sh: 926,
+            ranked: true,
+            count_50: 91635,
+            count_100: 1138026,
+            count_300: 12297042,
+            count_miss: 351866,
+            ranked_score: 31891556724,
+            total_score: 86806039063,
+            hit_accuracy: 98.5673,
+            play_count: 47738,
+            play_time: 3847295,
+            total_hits: 13526703,
+            maximum_combo: 2276,
+            is_ranked: true,
+            global_rank: 64971,
+            replays_watched_by_others: 21,
+            country_rank: 1222,
+            level_current: 100,
+            level_progress: 59
         },
-        tts: {
-            data: user?.statistics?.total_score,
+        cover: {
+            url: 'https://assets.ppy.sh/user-profile-covers/9794030/b2335bdc1b2baf3c6db911170992a5973aaf4ad1df645e9aeb3af1b93ce32d97.jpeg',
+            custom_url: 'https://assets.ppy.sh/user-profile-covers/9794030/b2335bdc1b2baf3c6db911170992a5973aaf4ad1df645e9aeb3af1b93ce32d97.jpeg'
         },
-        pc: {
-            data: user?.statistics?.play_count,
-        },
-        pt: {
-            data_b: '0.',
-            data_m: '0d',
-        },
-        mpl: {
-            data: user?.beatmap_playcounts_count,
-        },
-        rep: {
-            data: user?.statistics?.replays_watched_by_others,
-        },
-        fan: {
-            data: user?.follower_count,
-        },
-        tth: {
-            data: user?.totalHits,
-        },
-    }
-
-    if (user?.statistics?.total_score) {
-        let d = Math.floor(user?.statistics?.play_time / 86400);
-        let d_f = Math.floor(user?.statistics?.play_time % 86400 / 864).toString().padStart(2, '0')
-        label_data.pt.data_b = `${d}.`;
-        label_data.pt.data_m = `${d_f}d`;
-    }
-
-    let reList = req.fields['re-list'];
-    const recent_play = [];
-    for (const re of reList) {
-        const covers_card = await readNetImage(re.beatmapset.covers.card, getExportFileV3Path('beatmap-defaultBG.jpg')); //card获取快
-
-        const mod_int = getModInt(re.mods);
-        const attr = await getMapAttributes(re.beatmap.id, mod_int, re.mode_int || 0);
-
-        const data = {
-            map_cover: covers_card,
-            map_background: covers_card,
-            map_title_romanized: re.beatmapset.title,
-            map_artist: re.beatmapset.artist,
-            map_difficulty_name: re.beatmap.version,
-            star_rating: getRoundedNumberStr(attr.stars, 3), //Math.round(re.beatmap.difficulty_rating * 100) / 100,
-            score_rank: re.rank,
-            accuracy: getRoundedNumberStr(re.accuracy * 100, 3), // Math.round(re.accuracy * 10000) / 100, //这玩意传进来就是零点几？  是
-            combo: re.max_combo, //x
-            mods_arr: re.mods,
-            pp: re.pp ? Math.round(re.pp) : 0 //pp
+        country: { countryCode: 'CN', countryName: 'China' },
+        kudosu: { total: 0, available: 0 },
+        rank_history: {
+            mode: 'OSU',
+            history: [
+                62449, 62484, 62506, 62540, 62557, 62577, 62612, 62650,
+                62682, 62707, 62751, 62787, 62818, 62842, 62881, 62910,
+                62939, 62970, 63002, 63029, 63049, 63069, 63110, 63141,
+                63171, 63198, 63233, 63260, 63294, 63323, 63359, 63394,
+                63430, 63470, 63506, 63548, 63586, 63619, 63653, 63683,
+                63709, 63739, 63774, 63796, 63824, 63844, 63881, 63902,
+                63930, 63938, 63969, 63996, 64010, 64042, 64079, 64107,
+                64139, 64179, 64204, 64232, 64254, 64291, 64322, 64352,
+                64379, 64399, 64426, 64450, 64469, 64496, 64514, 64546,
+                64563, 64595, 64629, 64659, 64671, 64701, 64720, 64749,
+                64775, 64805, 64837, 64852, 64869, 64900, 64917, 64936,
+                64968, 64971
+            ]
         }
-        recent_play.push(data);
     }
+    ,
 
-    let bpList = req.fields['bp-list'];
-    const bp_list = [];
+    //recent
+    "re-list": [
+        {
+            accuracy: 0.9242601246105919,
+            mods: [ 'HD' ],
+            passed: true,
+            perfect: false,
+            pp: 15.7001,
+            rank: 'B',
+            replay: true,
+            score: 2647816,
+            statistics: {
+                count_50: 5,
+                count_100: 70,
+                count_300: 767,
+                count_geki: 149,
+                count_katu: 49,
+                count_miss: 14
+            },
+            user: {
+                id: 9794030,
+                avatar: 'https://a.ppy.sh/9794030?1689442698.jpeg',
+                pmOnly: false,
+                avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
+                default_group: 'default',
+                is_active: true,
+                is_bot: false,
+                is_deleted: false,
+                is_online: false,
+                is_supporter: false,
+                last_visit: [Array],
+                pm_friends_only: false,
+                username: 'SIyuyuko',
+                country_code: 'CN'
+            },
+            best_id: 4518169991,
+            max_combo: 207,
+            user_id: 9794030,
+            created_at: [ 2023, 10, 8, 13, 11, 20 ],
+            id: 23509231244,
+            mode: 'OSU',
+            mode_int: 0,
+            beatmap: {
+                id: 4044160,
+                mode: 'osu',
+                status: 'ranked',
+                version: "Calvaria's Another",
+                ar: 9,
+                cs: 5,
+                bpm: 110,
+                convert: false,
+                passcount: 160,
+                playcount: 1306,
+                ranked: 1,
+                url: 'https://osu.ppy.sh/beatmaps/4044160',
+                beatMapFailedCount: 0,
+                beatMapRetryCount: 0,
+                beatMapRating: 0,
+                beatmapset_id: 1751172,
+                difficulty_rating: 5.1,
+                mode_int: 0,
+                total_length: 229,
+                hit_length: 203,
+                user_id: 12381096,
+                accuracy: 8,
+                drain: 5,
+                is_scoreable: true,
+                last_updated: '2023-09-15T03:11:55Z',
+                checksum: '6eb6623607646fd874f63ffe1bbe0329',
+                count_sliders: 429,
+                count_spinners: 0,
+                count_circles: 427
+            },
+            beatmapset: {
+                video: false,
+                fromDatabases: false,
+                mapperUID: 11839745,
+                sid: 1751172,
+                mapperName: 'VoiceCore',
+                ranked: true,
+                rating: 0,
+                id: 1751172,
+                user_id: 11839745,
+                artist: "Snail's House",
+                artist_unicode: "Snail's House",
+                title: 'Biscuit Funk',
+                title_unicode: 'Biscuit Funk',
+                creator: 'VoiceCore',
+                favourite_count: 60,
+                nsfw: false,
+                play_count: 12245,
+                preview_url: '//b.ppy.sh/preview/1751172.mp3',
+                source: '',
+                status: 'ranked',
+                covers: [Object],
+                spotlight: false
+            },
+            create_at_str: '2023-10-08T13:11:20Z'
+        },
+    ],
 
-    for (const bp of bpList) {
+    //bp
+    "bp-list": [{
+        accuracy: 0.9983416252072969,
+        mods: [ 'HD' ],
+        passed: true,
+        perfect: true,
+        pp: 245.363,
+        rank: 'SH',
+        replay: true,
+        score: 7625753,
+        statistics: {
+            count_50: 0,
+            count_100: 1,
+            count_300: 401,
+            count_geki: 114,
+            count_katu: 1,
+            count_miss: 0
+        },
+        user: {
+            id: 9794030,
+            avatar: 'https://a.ppy.sh/9794030?1689442698.jpeg',
+            pmOnly: false,
+            avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
+            default_group: 'default',
+            is_active: true,
+            is_bot: false,
+            is_deleted: false,
+            is_online: false,
+            is_supporter: false,
+            last_visit: [Array],
+            pm_friends_only: false,
+            username: 'SIyuyuko',
+            country_code: 'CN'
+        },
+        weight: { percentage: 69.83373, pp: 171.34613 },
+        best_id: 4280526255,
+        max_combo: 600,
+        user_id: 9794030,
+        created_at: [ 2022, 9, 27, 12, 1, 36 ],
+        id: 4280526255,
+        mode: 'OSU',
+        mode_int: 0,
+        beatmap: {
+            id: 1982050,
+            mode: 'osu',
+            status: 'ranked',
+            version: "Kaguya_Sama's Extra",
+            ar: 9.5,
+            cs: 4,
+            bpm: 108,
+            convert: false,
+            passcount: 12285,
+            playcount: 59715,
+            ranked: 1,
+            url: 'https://osu.ppy.sh/beatmaps/1982050',
+            beatMapFailedCount: 0,
+            beatMapRetryCount: 0,
+            beatMapRating: 0,
+            beatmapset_id: 318425,
+            difficulty_rating: 5.55,
+            mode_int: 0,
+            total_length: 102,
+            hit_length: 102,
+            user_id: 9326064,
+            accuracy: 8.8,
+            drain: 5.5,
+            is_scoreable: true,
+            last_updated: '2019-04-06T18:48:01Z',
+            checksum: '546572114dec84e7dbbdddda45a03fa9',
+            count_sliders: 183,
+            count_spinners: 0,
+            count_circles: 219
+        },
+        beatmapset: {
+            video: true,
+            fromDatabases: false,
+            mapperUID: 2732340,
+            sid: 318425,
+            mapperName: 'Taeyang',
+            ranked: true,
+            rating: 0,
+            id: 318425,
+            user_id: 2732340,
+            artist: 'Forte Escape',
+            artist_unicode: 'Forte Escape',
+            title: 'Ask to Wind',
+            title_unicode: '바람에게 부탁해',
+            creator: 'Taeyang',
+            favourite_count: 144,
+            nsfw: false,
+            play_count: 314154,
+            preview_url: '//b.ppy.sh/preview/318425.mp3',
+            source: 'DJMAX',
+            status: 'ranked',
+            covers: [Object],
+            spotlight: false
+        },
+        create_at_str: '2022-09-27T12:01:36Z'
+    }],
 
-        //随便搞个颜色得了
-        const mod_int = getModInt(bp.mods);
-        let star_rating = bp.beatmap.difficulty_rating || 0;
-        if (hasMod(mod_int, 'DT') || hasMod(mod_int, 'NC')) {
-            star_rating *= 1.4;
-        } else if (hasMod(mod_int, 'HT')) {
-            star_rating *= 0.75;
-        } else if (hasMod(mod_int, 'HR')) {
-            star_rating *= 1.078;
-        } else if (hasMod(mod_int, 'EZ')) {
-            star_rating *= 0.9;
-        } else if (hasMod(mod_int, 'FL')) {
-            star_rating *= 1.3;
-        }
+    // osu taiko catch mania
+    mode: "osu",
 
-        const d = {
-            map_background: await readNetImage(bp.beatmapset.covers.list, getExportFileV3Path('beatmap-defaultBG.jpg')),
-            star_rating: star_rating,
-            score_rank: bp.rank,
-            bp_pp: bp.pp,
-        }
-        bp_list.push(d);
+    //user_bp_arr
+    "bp-time": [],
+
+    }, reuse = false) {
+
+    // 导入模板
+    let svg = readTemplate('template/Panel_D1.svg');
+
+    // 路径定义
+    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PD-BR\);">)/;
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-PD-BG\);">)/;
+    const reg_index = /(?<=<g id="Index">)/;
+    const reg_card_a1 = /(?<=<g id="Card_A1">)/;
+    const reg_card_f1 = /(?<=<g id="Card_F1">)/;
+    const reg_card_f2 = /(?<=<g id="Card_F2">)/;
+    const reg_card_f3 = /(?<=<g id="Card_F3">)/;
+    const reg_card_f4 = /(?<=<g id="Card_F4">)/;
+    const reg_card_f5 = /(?<=<g id="Card_F5">)/;
+    const reg_card_f6 = /(?<=<g id="Card_F6">)/;
+    const reg_card_f7 = /(?<=<g id="Card_F7">)/;
+
+    // 卡片定义
+    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
+
+    const cardF1 = await card_F1(user2CardF1(data.user, data.mode), true);
+    const cardF2 = await card_F2({recent: data["re-list"]}, true);
+    const cardF3 = await card_F3({bp: data["bp-list"]}, true);
+    const cardF4 = await card_F4(user2CardF4(data.user), true);
+    const cardF5 = await card_F5(user2CardF5(data.user, data.mode, data["bp-time"]), true);
+    const cardF6 = await card_F6(user2CardF6(data.user, data.mode), true);
+    const cardF7 = await card_F7(user2CardF7(data.user, data.mode), true);
+
+    // 导入卡片
+    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+
+    svg = implantSvgBody(svg, 40, 330, cardF1, reg_card_f1);
+    svg = implantSvgBody(svg, 620, 330, cardF2, reg_card_f2);
+    svg = implantSvgBody(svg, 620, 690, cardF3, reg_card_f3);
+    svg = implantSvgBody(svg, 620, 880, cardF4, reg_card_f4);
+    svg = implantSvgBody(svg, 980, 330, cardF5, reg_card_f5);
+    svg = implantSvgBody(svg, 980, 690, cardF6, reg_card_f6);
+
+    //F7是不需要平移的，位置由卡片决定
+    svg = implantSvgBody(svg, 0, 0, cardF7, reg_card_f7);
+
+    // 面板文字
+    const panel_name = getPanelNameSVG('Information (!ymi)', 'Info', 'v0.3.2 FT');
+
+    // 导入文字
+    svg = replaceText(svg, panel_name, reg_index);
+
+    // 插入图片和部件
+    const background = pp2UserBG(data.user.pp);
+    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = implantImage(svg, 1920, 1080, 0, 280, 0.6, background, reg_background);
+
+    return svg.toString();
+}
+
+//通过 PP 获取玩家颜色（的背景图！
+function pp2UserBG(pp = 0) {
+    let rank;
+
+    if (pp >= 10000) rank = 'X';
+    else if (pp >= 8000) rank = 'XH';
+    else if (pp >= 6000) rank = 'S';
+    else if (pp >= 4000) rank = 'A';
+    else if (pp >= 3000) rank = 'B';
+    else if (pp >= 2000) rank = 'C';
+    else if (pp >= 1000) rank = 'D';
+    else rank = 'F';
+
+    return getExportFileV3Path('object-score-backimage-' + rank + '.jpg');
+}
+
+function user2CardF1(user, mode = 'osu') {
+    return {
+        mode: mode,
+        level_current: user.levelCurrent,
+        level_progress: Math.floor(user.levelProgress),
     }
+}
 
-    const mpc = user.monthlyPlaycounts;
-    let fd = mpc?.[0]?.startDate;
-    const dataArr = [];
+function user2CardF4(user) {
+    return {
+        grade_XH: user.statistics.ssh,
+        grade_X: user.statistics.ss,
+        grade_SH: user.statistics.sh,
+        grade_S: user.statistics.s,
+        grade_A: user.statistics.a,
+    };
+}
+
+function user2CardF5(user, mode = 'osu', bp_arr = []) {
+    return {
+        mode: mode,
+        country: user.country ? user.country.countryName : 'China',
+        country_rank: user.statistics.country_rank,
+        global_rank: user.statistics.global_rank,
+
+        ranking_arr: user.rank_history ? user.rank_history.history : [],
+        bp_arr: bp_arr,
+    };
+}
+
+function user2CardF6(user, mode= 'osu', bonus_pp = 0) {
+    const arr = user.monthlyPlaycounts || [{startDate: 0}];
+    let fd = arr[0]?.startDate;
+
+    const pc_arr = [];
     if (fd) {
-        const mpcObj = mpc.reduce((obj, {startDate, count}) => {
+        const mpc = arr.reduce((obj, {startDate, count}) => {
             obj[startDate] = count;
             return obj;
         }, {});
@@ -167,10 +561,10 @@ async function routerD(req) {
 
             const key = [year, month, day].map(i => i.toString().padStart(2, '0')).join('-');
 
-            if (key in mpcObj) {
-                dataArr.push(mpcObj[key]);
+            if (key in mpc) {
+                pc_arr.push(mpc[key]);
             } else {
-                dataArr.push(0);
+                pc_arr.push(0);
             }
 
             if (month < 12) {
@@ -188,315 +582,9 @@ async function routerD(req) {
         fd = `${thisYear}-${thisMonth.toString().padStart(2, '0')}-01`;
     }
 
-    const op = {
-        rank_country: user?.statistics?.country_rank,
-        rank_global: user?.statistics?.global_rank,
-        country: user?.country['countryCode'],
-        bonus_pp: req.fields['bonus_pp'], // 416.6667
-        om4k_pp: user.statistics.pp_4k,
-        om7k_pp: user.statistics.pp_7k,
-        om4k_rank_country: user.statistics.country_rank_4k,
-        om4k_rank_global: user.statistics.rank_4k,
-        om7k_rank_country: user.statistics.country_rank_7k,
-        om7k_rank_global: user.statistics.rank_7k,
-        game_mode: req.fields?.mode, // osu taiko catch mania
-
-        grade_XH: user?.statistics?.ssh,
-        grade_X: user?.statistics?.ss,
-        grade_SH: user?.statistics?.sh,
-        grade_S: user?.statistics?.s,
-        grade_A: user?.statistics?.a,
-
-        user_lv: user['levelCurrent'],
-        user_progress: Math.floor(user['levelProgress']), //%
-
-        user_bp_arr: req.fields['bp-time'],
-        user_ranking_arr: user.rank_history ? user.rank_history.history : [],
-        user_pc_arr: dataArr,
-        user_pc_last_date: fd
-    }
-    return {
-        ...op, card_A1: card_a1, label_data: label_data, recent_play: recent_play, bp_list: bp_list,
-    };
-}
-
-export async function panel_D(data = {
-    // A1卡
-    card_A1: {
-        background: getExportFileV3Path('card-default.png'),
-        avatar: getExportFileV3Path('avatar-guest.png'),
-        sub_icon1: getExportFileV3Path('object-card-supporter.png'),
-        sub_icon2: '',
-        country: 'CN',
-
-        top1: 'Muziyami',
-        left1: '#28075',
-        left2: 'CN#1611',
-        right1: '',
-        right2: '98.7% Lv.93(24%)',
-        right3b: '4396',
-        right3m: 'PP',
-    },
-
-    // D标签
-    label_data: {
-        rks: {
-            data: 2147483647,
-        },
-        tts: {
-            data: 1919810114,
-        },
-        pc: {
-            data: 192048,
-        },
-        pt: {
-            data_b: '210.',
-            data_m: '1d',
-        },
-        mpl: {
-            data: '17748',
-        },
-        rep: {
-            data: '4396',
-        },
-        fan: {
-            data: '1076',
-        },
-        tth: {
-            data: '298074',
-        },
-    },
-
-    // J卡 max: 3
-    recent_play: [
-        {
-            map_cover: getExportFileV3Path('beatmap-defaultBG.jpg'),
-            map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
-            map_title_romanized: 'Fia is a Cheater',
-            map_artist: 'Fushimi',
-            map_difficulty_name: 'Xin mei sang zui jiu',
-            star_rating: '4.86',
-            score_rank: 'XH',
-            accuracy: '100', //%
-            combo: '536', //x
-            mods_arr: ['HD', 'HR', 'DT', 'NF', 'FL'],
-            pp: '736' //pp
-        },
-    ],
-
-    // K卡 max: 8
-    bp_list: [
-        {
-            map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
-            star_rating: 2.7,
-            score_rank: 'X',
-            bp_ranking: 1,
-            bp_pp: '369PP'
-        }, {
-            map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
-            star_rating: 2.7,
-            score_rank: 'X',
-            bp_ranking: 2,
-            bp_pp: '369PP'
-        }
-    ],
-
-
-    // 用户数据
-    rank_country: 581,
-    rank_global: 114514,
-    country: 'CN',
-    bonus_pp: 471,
-    om4k_pp: 2754,
-    om7k_pp: 1045,
-    om4k_rank_country: 581,
-    om4k_rank_global: 114514,
-    om7k_rank_country: 581,
-    om7k_rank_global: 114514,
-    game_mode: 'osu', // osu taiko catch(fruits) mania
-
-    grade_XH: 65472,
-    grade_X: 75038,
-    grade_SH: 9961,
-    grade_S: 9527,
-    grade_A: 1435,
-
-    // ranking固定？90个值，bp固定39个值，pc固定43个值。可以传原数组，其他的交给面板完成
-    user_ranking_arr: [24954, 24973, 24997, 25020, 25044, 25069, 25092, 25108, 25138, 25158, 25177, 25198, 25221, 25249, 25273, 25306, 25326, 25340, 25368, 25393, 25419, 25403, 25430, 25465, 25346, 25370, 25403, 25433, 25461, 25486, 25501, 25533, 25560, 25592, 25615, 25636, 25664, 25666, 25687, 25715, 25741, 25759, 25792, 25824, 25849, 25879, 25898, 25928, 25956, 25989, 26024, 26055, 26082, 26105, 26133, 26139, 26171, 26203, 26239, 26262, 26294, 26323, 26351, 26383, 26411, 26443, 26285, 26305, 26326, 26338, 26367, 26404, 26434, 26442, 26457, 26487, 26519, 26533, 26563, 26602, 26621, 26645, 26663, 26687, 26704, 26736, 26762, 26779, 26793, 26774],
-
-    //过去90天内的bp新增数量，可以提供90个值。有算法
-    user_bp_arr: [1, 2, 4, 5, 2, 7, 1, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 1, 0, 5, 0, 2, 0, 0, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 4, 2, 5, 8, 5, 4, 2, 5, 13, 2, 6, 4, 7, 5, 6, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7],
-
-    user_pc_arr: [41, 56, 468, 256, 278, 430, 478, 277, 260, 183, 458, 395, 531, 236, 462, 280, 450, 375, 316, 192, 202, 129, 177, 139, 465, 89, 80, 111, 273, 370, 226, 28, 71, 61, 126, 510, 418, 715, 552, 245, 183, 144, 122, 247, 170, 212, 693, 770, 346, 474, 830, 724, 806, 870, 950, 752, 999, 837, 574, 766, 1091, 752, 423, 454, 586, 366, 459, 316, 127, 216, 418, 467, 292, 190, 292, 384, 249],
-
-    //返回上面数组最后一个元素对应的年月日
-    user_pc_last_date: '2022-05-01',
-
-    user_lv: 24, //和A卡一致
-    user_progress: 98, //和A卡一致
-
-
-}, reuse = false) {
-
-    // 导入模板
-    let svg = readTemplate('template/Panel_D.svg');
-
-    // 路径定义
-    const reg_maincard = /(?<=<g id="MainCard">)/;
-    const reg_cardj = /(?<=<g id="CardJ">)/;
-    const reg_cardk = /(?<=<g id="CardK">)/;
-    const reg_label = /(?<=<g id="LabelDR">)/;
-    const reg_index = /(?<=<g id="Index">)/;
-    const reg_mascot_name = /(?<=<g id="MascotName">)/;
-    const reg_progress = /(?<=<g id="Progress">)/;
-    const reg_progressR = /(?<=<g id="ProgressRRect">)/;
-    const reg_grade_text = /(?<=<g id="GradeText">)/;
-    const reg_grade_image = /(?<=<g id="GradeImage">)/;
-    const reg_ranking_graph = /(?<=<g id="RankingGraph">)/;
-    const reg_ranking_text = /(?<=<g id="RankingText">)/;
-    const reg_bp_activity_graph = /(?<=<g id="BPActivityR">)/;
-    const reg_user_data_text = /(?<=<g id="UserDataText">)/;
-    const reg_pc_activity_graph = /(?<=<g id="UserActivityR">)/;
-
-    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PD-1\);">)/;
-    const reg_mascot_bg = /(?<=<g style="clip-path: url\(#clippath-PD-2\);">)/;
-    const reg_mascot = /(?<=filter="url\(#inset-shadow-PD-4\)">)/;
-
-
-    // 卡片定义
-    const rks_b = getRoundedNumberLargerStr(data.label_data.rks.data, 4);
-    const rks_m = getRoundedNumberSmallerStr(data.label_data.rks.data, 4);
-    const tts_b = getRoundedNumberLargerStr(data.label_data.tts.data, 4);
-    const tts_m = getRoundedNumberSmallerStr(data.label_data.tts.data, 4);
-    const pc_b = getRoundedNumberLargerStr(data.label_data.pc.data, 0);
-    const pc_m = getRoundedNumberSmallerStr(data.label_data.pc.data, 0);
-    const mpl_b = getRoundedNumberLargerStr(data.label_data.mpl.data, 0);
-    const mpl_m = getRoundedNumberSmallerStr(data.label_data.mpl.data, 0);
-    const rep_b = getRoundedNumberLargerStr(data.label_data.rep.data, 0);
-    const rep_m = getRoundedNumberSmallerStr(data.label_data.rep.data, 0);
-    const fan_b = getRoundedNumberLargerStr(data.label_data.fan.data, 0);
-    const fan_m = getRoundedNumberSmallerStr(data.label_data.fan.data, 0);
-    const tth_b = getRoundedNumberLargerStr(data.label_data.tth.data, 4);
-    const tth_m = getRoundedNumberSmallerStr(data.label_data.tth.data, 4);
-
-    const label_rks =
-        await label_E({...LABEL_OPTION.RKS, data_b: rks_b, data_m: rks_m}, true);
-    const label_tts =
-        await label_E({...LABEL_OPTION.TTS, data_b: tts_b, data_m: tts_m}, true);
-    const label_pc =
-        await label_E({...LABEL_OPTION.PC, data_b: pc_b, data_m: pc_m}, true);
-    const label_pt =
-        await label_E({...LABEL_OPTION.PT, ...data.label_data.pt}, true);
-
-    const label_mpl =
-        await label_E({...LABEL_OPTION.MPL, data_b: mpl_b, data_m: mpl_m}, true);
-    const label_rep =
-        await label_E({...LABEL_OPTION.REP, data_b: rep_b, data_m: rep_m}, true);
-    const label_fan =
-        await label_E({...LABEL_OPTION.FAN, data_b: fan_b, data_m: fan_m}, true);
-    const label_tth =
-        await label_E({...LABEL_OPTION.TTH, data_b: tth_b, data_m: tth_m}, true);
-
-    const card_A1_impl =
-        await card_A1({...data.card_A1}, true);
-
-    let card_Js = [];
-    for (const j of data.recent_play) {
-        card_Js.push(await card_J(j, true));
-    }
-
-    if (card_Js < 1) { //摆烂机制，下面的y是680，但是图片太大了
-        svg = implantImage(svg, 185, 185, 697.5, 405, 1, getExportFileV3Path('sticker_qiqi_fallen.png'), reg_cardj);
-    }
-
-    let card_Ks = [];
-    for (const i in data.bp_list) {
-        data.bp_list[i].bp_ranking = 1 + parseInt(i);
-        card_Ks.push(await card_K(data.bp_list[i], true))
-    }
-
-    // 面板文字
-    const panel_name = getPanelNameSVG('Information (!ymi)', 'Info', 'v0.3.2 FT');
-
-    // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
-
-    const rank_text = torus.get2SizeTextPath(
-        '#' + (data.rank_global || '0'), ' ' + (data.country || '') + '#' + (data.rank_country || '0'),
-        36, 24, 1860, 374.754, 'right baseline', '#fff', '#aaa');
-
-    const variant_rank = data.game_mode === 'mania' ? drawManiaVariantRank(data.game_mode, data.country,
-        Math.round(data.om4k_pp) || 0, Math.round(data.om7k_pp) || 0,
-        data.om4k_rank_global, data.om7k_rank_global,
-        data.om4k_rank_country, data.om7k_rank_country) : '';
-
-    // 绘制rank曲线。
-    const ranking_arr = modifyArrayToFixedLength(data.user_ranking_arr, 90, true);
-    let ranking_nonzero_arr = [];
-
-    const user_ranking_max = Math.max.apply(Math, ranking_arr);
-
-    //处理rank数组，如果有0，补最大值
-    ranking_arr.forEach((v) => {
-        if (v === 0) v = user_ranking_max;
-        ranking_nonzero_arr.push(v);
-    });
-
-    const user_ranking_min = Math.min.apply(Math, ranking_nonzero_arr);
-    const user_ranking_mid = (user_ranking_max + user_ranking_min) / 2;
-    
-    svg = replaceText(svg,
-        PanelDraw.LineChart(ranking_nonzero_arr, user_ranking_min, user_ranking_max,1040, 610, 780, 215, '#FFCC22', 1, 0, 4, true) //这里min和max换位置
-        , reg_ranking_graph);
-
-    // 绘制 BP活动 直方图
-
-    const bp_arr = maximumArrayToFixedLength(data.user_bp_arr, 39);
-
-    const user_bp_activity_max = Math.max.apply(Math, bp_arr);
-
-    let bp_activity_text = torus.getTextPath(`BP+${user_bp_activity_max}`,
-        1050 + bp_arr.findIndex((item) => item === user_bp_activity_max) * 20,
-        520 - 5 + 75 - (user_bp_activity_max / Math.max(5, user_bp_activity_max)) * 75,
-        16,
-        'center baseline',
-        '#a1a1a1');
-
-    svg = replaceText(svg, bp_activity_text, reg_ranking_text)
-
-    svg = replaceText(svg, PanelDraw.BarChart(bp_arr, null, 0, 1042, 610, 780, 90, 8, 4, '#8DCFF4', 5, 16), reg_bp_activity_graph)
-
-    // 绘制纵坐标，注意max在下面
-    let rank_axis_y_min = getRoundedNumberStr(user_ranking_min, 1);
-    let rank_axis_y_mid = getRoundedNumberStr(user_ranking_mid, 1);
-    let rank_axis_y_max = getRoundedNumberStr(user_ranking_max, 1);
-
-    let rank_axis =
-        torus.getTextPath(rank_axis_y_min, 1010, 402.836, 24, 'center baseline', '#fc2') +
-        torus.getTextPath(rank_axis_y_mid, 1010, 509.836, 24, 'center baseline', '#fc2') +
-        torus.getTextPath(rank_axis_y_max, 1010, 616.836, 24, 'center baseline', '#fc2');
-
-    svg = replaceText(svg, rank_axis, reg_ranking_text)
-
-    // 绘制PC
-    const pc_arr = modifyArrayToFixedLength(data.user_pc_arr, 43, true)
-
-    const user_pc_activity_max = Math.max.apply(Math, pc_arr);
-
-    const pc_activity_text = torus.getTextPath(`${user_pc_activity_max}PC`,
-        1010 + pc_arr.findIndex((item) => item === user_pc_activity_max) * 20,
-        910 - 5 + 75 - (user_pc_activity_max / Math.max(1000, user_pc_activity_max)) * 75,
-        16,
-        'center baseline',
-        '#a1a1a1');
-
-    svg = replaceText(svg, pc_activity_text, reg_user_data_text);
-
-    svg = replaceText(svg, PanelDraw.BarChart(pc_arr, null, 0, 1002, 1000, 860, 90, 8, 4, '#8dcff4', 1000, 16, '#aaa'), reg_pc_activity_graph);
-
     // 绘制月份
-    const last_year = data.user_pc_last_date.slice(0, 4);
-    const last_month = data.user_pc_last_date.slice(5, 7);
+    const last_year = fd.slice(0, 4);
+    const last_month = fd.slice(5, 7);
     let first_year;
     let first_month;
     let mid_year;
@@ -520,159 +608,41 @@ export async function panel_D(data = {
         mid_month = (parseInt(last_month) - 9).toString().padStart(2, '0');
     }
 
-    const user_pc_first_date = torus.getTextPath(
-        first_year + '-' + first_month,
-        995,
-        1024.836,
-        24,
-        'left baseline',
-        '#a1a1a1');
-    const user_pc_mid_date = torus.getTextPath(
-        mid_year + '-' + mid_month,
-        1430,
-        1024.836,
-        24,
-        'center baseline',
-        '#a1a1a1');
-    const user_pc_last_date = torus.getTextPath(
-        data.user_pc_last_date.slice(0, 7),
-        1865,
-        1024.836,
-        24,
-        'right baseline',
-        '#a1a1a1');
+    return {
+        ranked_score: user.statistics.ranked_score || 0,
+        total_score: user.statistics.total_score || 0,
+        play_count: user.statistics.play_count || 0,
+        play_time: user.statistics.play_time || 0,
+        played_map: user.beatmap_playcounts_count || 0,
+        rep_watched: user.statistics.replays_watched_by_others || 0,
+        follower: user.follower_count || 0,
+        total_hits: user.totalHits || 0,
 
-    svg = replaceTexts(svg, [user_pc_first_date, user_pc_mid_date, user_pc_last_date], reg_user_data_text);
+        bonus_pp: bonus_pp || 0,
 
-    // 插入吉祥物
-    const mascot_name_data = getMascotName(data.game_mode);
-    const mascot_link = getMascotPath(mascot_name_data);
+        pc_arr: pc_arr,
 
-    svg = implantImage(svg, 560, 710, 40, 330, 1, mascot_link, reg_mascot);
+        last_year: last_year,
+        last_month: last_month,
+        first_year: first_year,
+        first_month: first_month,
+        mid_year: mid_year,
+        mid_month: mid_month,
 
-    // 插入进度
-    const mascot_name_width = torus.getTextWidth((mascot_name_data || 'pippi'), 36)
-    const user_lv_text_width = torus.getTextWidth(' Lv.', 24);
-    const user_lv_width = torus.getTextWidth((data.user_lv.toString() || '0'), 36);
-    const user_progress_width =
-        torus.getTextWidth((data.user_progress.toString() || '0'), 36) +
-        torus.getTextWidth('%', 24);
-
-    const mascot_mark1_rrect_width =
-        mascot_name_width +
-        user_lv_width +
-        user_lv_text_width + 30;
-    const mascot_mark2_rrect_width = user_progress_width + 30;
-
-    const mascot_mark1 =
-        torus.getTextPath((mascot_name_data || 'pippi'),
-            75,
-            380.754,
-            36,
-            "left baseline",
-            "#fff") +
-        torus.getTextPath(' Lv.',
-            75 + mascot_name_width,
-            380.754,
-            24,
-            "left baseline",
-            "#fff") +
-        torus.getTextPath((data.user_lv.toString() || '0'),
-            75 + mascot_name_width + user_lv_text_width,
-            380.754,
-            36,
-            "left baseline",
-            "#fff");
-
-    const mascot_mark2 = torus.getTextPath((data.user_progress.toString() || '0'),
-            565 - torus.getTextWidth('%', 24),
-            380.754,
-            36,
-            "right baseline",
-            "#fff") +
-        torus.getTextPath('%',
-            565,
-            380.754,
-            24,
-            "right baseline",
-            "#fff");
-
-    const mascot_mark1_rrect = PanelDraw.Rect(60, 350, mascot_mark1_rrect_width, 40, 12, '#54454c', 0.7);
-    const mascot_mark2_rrect = PanelDraw.Rect(580 - mascot_mark2_rrect_width, 350, mascot_mark2_rrect_width, 40, 12, '#54454c', 0.7);
-
-    const progress_rrect = PanelDraw.Rect(60, 1016, 520 * (data.user_progress || 0) / 100, 4, 2, '#FFCC22');
-
-    // 插入右下面板右上提示
-    const bonus_pp = Math.round(Math.max(data.bonus_pp, 0)) || 0;
-    const user_data_text = getGameMode(data.game_mode, 2) + ' (bonus: ' + bonus_pp + ' PP)';
-
-    const user_data = torus.getTextPath(
-        user_data_text,
-        1860,
-        725.836,
-        24,
-        'right baseline',
-        '#a1a1a1');
-
-    svg = replaceText(svg, user_data, reg_user_data_text);
-
-    // 评级数量
-    const grade_X = torus.getTextPath((data.grade_X + data.grade_XH).toString(), 685, 998.795, 30, 'center baseline', '#fff')
-    const grade_S = torus.getTextPath((data.grade_S + data.grade_SH).toString(), 790, 998.795, 30, 'center baseline', '#fff')
-    const grade_A = torus.getTextPath(data.grade_A.toString(), 895, 998.795, 30, 'center baseline', '#fff')
-    const grade_XH = torus.getTextPath(`(+${data.grade_XH})`, 685, 1024.877, 18, 'center baseline', '#a1a1a1')
-    const grade_SH = torus.getTextPath(`(+${data.grade_SH})`, 790, 1024.877, 18, 'center baseline', '#a1a1a1')
-
-    svg = replaceTexts(svg, [grade_X, grade_S, grade_A, grade_XH, grade_SH, ], reg_grade_text);
-
-    // 插入文字
-    svg = replaceTexts(svg, [mascot_mark1, mascot_mark1_rrect], reg_mascot_name);
-    svg = replaceTexts(svg, [mascot_mark2, mascot_mark2_rrect], reg_progress);
-    svg = replaceTexts(svg, [rank_text, variant_rank], reg_ranking_text);
-    svg = replaceText(svg, progress_rrect, reg_progressR);
-
-    // 插入图片和部件（新方法
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
-    svg = implantImage(svg, 1920, 1080, 0, 280, 0.5, getRandomMascotBGPath(), reg_mascot_bg);
-    svg = implantImage(svg, 31, 39, 669, 930, 1, getExportFileV3Path('object-score-X-small.png'), reg_grade_image);
-    svg = implantImage(svg, 25, 35, 777, 932, 1, getExportFileV3Path('object-score-S-small.png'), reg_grade_image);
-    svg = implantImage(svg, 30, 34, 880, 933, 1, getExportFileV3Path('object-score-A-small.png'), reg_grade_image);
-
-    svg = implantSvgBody(svg, 40, 40, card_A1_impl, reg_maincard);
-
-    for (const i in card_Js) {
-        svg = implantSvgBody(svg, 635, 380 + i * 95, card_Js[i], reg_cardj)
-    }
-
-    for (const i in card_Ks) {
-        svg = implantSvgBody(svg, 635 + (i % 4 * 80), (i < 4 ? 735 : 795), card_Ks[i], reg_cardk)
-    }
-
-    svg = implantSvgBody(svg, 1000, 755, label_rks, reg_label);
-    svg = implantSvgBody(svg, 1220, 755, label_tts, reg_label);
-    svg = implantSvgBody(svg, 1440, 755, label_pc, reg_label);
-    svg = implantSvgBody(svg, 1660, 755, label_pt, reg_label);
-    svg = implantSvgBody(svg, 1000, 835, label_mpl, reg_label);
-    svg = implantSvgBody(svg, 1220, 835, label_rep, reg_label);
-    svg = implantSvgBody(svg, 1440, 835, label_fan, reg_label);
-    svg = implantSvgBody(svg, 1660, 835, label_tth, reg_label);
-
-    return svg.toString();
+        mode: mode,
+    };
 }
 
-//cr country rank, gr global rank
-function drawManiaVariantRank(mode = 'osu', country = 'CN', pp4k = 0, pp7k = 0, gr4k = 0, gr7k = 0, cr4k = 0, cr7k = 0) {
-    if (mode === 'mania') {
-
-        //4K: 4396PP // #114514 CN#1919
-        const key4 = '4K: ' + pp4k + 'PP // #' + gr4k + ' ' + country + '#'  + cr4k;
-        const key7 = '7K: ' + pp7k + 'PP // #' + gr7k + ' ' + country + '#'  + cr7k;
-
-        const maxWidth = Math.max(torus.getTextWidth(key4, 24), torus.getTextWidth(key7, 24));
-        const rrect = PanelDraw.Rect(1880 - 40 - maxWidth, 200, maxWidth + 40, 70, 20, '#382E32', 1);
-
-        return rrect +
-            torus.getTextPath(key4, 1860, 228, 24, 'right baseline', '#fff') +
-            torus.getTextPath(key7, 1860, 254, 24, 'right baseline', '#fff');
-    } else return '';
+function user2CardF7(user, mode) {
+    return {
+        mode: mode,
+        country: user.country.countryCode || 'UN',
+        pp4k: Math.round(user.statistics.pp_4k || 0),
+        pp7k: Math.round(user.statistics.pp_7k || 0),
+        cr4k: user.statistics.country_rank_4k || 0,
+        gr4k: user.statistics.rank_4k || 0,
+        cr7k: user.statistics.country_rank_7k || 0,
+        gr7k: user.statistics.rank_7k || 0,
+    }
 }
+

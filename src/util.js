@@ -1270,10 +1270,10 @@ export function getDecimals (number = 0, whichData = 0) {
 /**
  * @function 随机提供游戏模式对应的吉祥物名字
  * @return {String} 返回吉祥物名字
- * @param gamemode 游戏模式，'osu' 'taiko' 等
+ * @param mode 游戏模式，'osu' 'taiko' 等
  */
-export function getMascotName(gamemode = 'osu') {
-    gamemode = gamemode.toLowerCase();
+export function getMascotName(mode = 'osu') {
+    mode = mode.toLowerCase();
 
     // pippi, Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
     const arr = mascot_pic_sum_arr;
@@ -1311,7 +1311,7 @@ export function getMascotName(gamemode = 'osu') {
 
     sum = 0;
 
-    switch (gamemode) {
+    switch (mode) {
         case 'osu':
             return 'pippi';
         case 'taiko': {

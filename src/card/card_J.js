@@ -9,11 +9,11 @@ import {
 import {torus} from "../font.js";
 
 export async function card_J(data = {
-    map_cover: getExportFileV3Path('beatmap-defaultBG.jpg'),
-    map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
-    map_title_romanized: '',
-    map_artist: '',
-    map_difficulty_name: '',
+    cover: getExportFileV3Path('beatmap-defaultBG.jpg'),
+    background: getExportFileV3Path('beatmap-defaultBG.jpg'),
+    title: '',
+    artist: '',
+    difficulty_name: '',
     star_rating: 0,
     score_rank: 'F',
     accuracy: 0, //%
@@ -67,24 +67,24 @@ export async function card_J(data = {
     </g>`;
 
     // 定义文字
-    const text_map_title_romanized = torus.cutStringTail(data.map_title_romanized || '', 18, 170);
+    const text_title = torus.cutStringTail(data.title || '', 18, 170);
     // let text_map_artist = torus.cutStringTail(data.map_artist || '', 14, 170);
     const text_pp = data.pp;
 
     // 替换文字
-    const map_title_romanized =
-        torus.getTextPath(text_map_title_romanized , 130, 17.877, 18, "left baseline", "#fff");
+    const title =
+        torus.getTextPath(text_title , 130, 17.877, 18, "left baseline", "#fff");
     /*
     let map_artist =
         torus.getTextPath(text_map_artist, 130, 32.571, 14, "left baseline", "#a1a1a1");
 
      */
 
-    const map_line_3_right_text = (data.accuracy && data.combo) ?  data.combo + 'x ' + data.accuracy + '%': '0x 0%';
-    const map_line_3_right =
-        torus.getTextPath(map_line_3_right_text, 300, 47.571, 14, "right baseline", "#fff");
+    const line_3_right_text = (data.accuracy && data.combo) ?  data.combo + 'x ' + data.accuracy + '%': '0x 0%';
+    const line_3_right =
+        torus.getTextPath(line_3_right_text, 300, 47.571, 14, "right baseline", "#fff");
 
-    const text_map_difficulty_name = torus.cutStringTail('[' + data.map_difficulty_name + ']' || '',
+    const text_difficulty_name = torus.cutStringTail('[' + data.difficulty_name + ']' || '',
         14,
         170);
     /*
@@ -94,8 +94,8 @@ export async function card_J(data = {
 
      */
 
-    const map_difficulty_name =
-        torus.getTextPath(text_map_difficulty_name, 130, 32.571, 14, "left baseline", "#fff"); //y: 47.571
+    const difficulty_name =
+        torus.getTextPath(text_difficulty_name, 130, 32.571, 14, "left baseline", "#fff"); //y: 47.571
 
     const pp = data.pp ?
         torus.get2SizeTextPath(text_pp.toString(), 'PP', 30, 20, 300, 73.795, 'right baseline', '#fff')
@@ -136,16 +136,15 @@ export async function card_J(data = {
     }
 
     // 替换模板
-    // svg = replaceText(svg, map_artist, reg_text);
-    svg = replaceTexts(svg, [map_title_romanized, map_difficulty_name, map_line_3_right, pp, rank, star_rating], reg_text);
+    svg = replaceTexts(svg, [title, difficulty_name, line_3_right, pp, rank, star_rating], reg_text);
 
     svg = replaceText(svg, rank_rrect, reg_rank)
     svg = replaceText(svg, star_rrect, reg_overlay)
 
     // 替换图片
 
-    svg = data.map_background ? implantImage(svg, 310, 80, 0, 0, 0.2, data.map_background, reg_background) : svg;
-    svg = data.map_cover ? implantImage(svg, 120, 80, 0, 0, 1, data.map_cover, reg_cover) : svg;
+    svg = data.background ? implantImage(svg, 310, 80, 0, 0, 0.2, data.background, reg_background) : svg;
+    svg = data.cover ? implantImage(svg, 120, 80, 0, 0, 1, data.cover, reg_cover) : svg;
 
     return svg.toString();
 

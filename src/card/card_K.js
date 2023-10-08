@@ -53,7 +53,7 @@ export async function card_K(data = {
     const circle_sr = data.star_rating ?
         PanelDraw.Circle(10, 10, 5, getStarRatingColor(data.star_rating)) : '';
     const circle_rank = data.score_rank ?
-        PanelDraw.Circle(60, 10, 5, getRankColor(data.star_rating)) : '';
+        PanelDraw.Circle(60, 10, 5, getRankColor(data.score_rank)) : '';
 
     // 替换模板
 
