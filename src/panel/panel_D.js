@@ -437,7 +437,7 @@ export async function panel_D(data = {
     }, reuse = false) {
 
     // 导入模板
-    let svg = readTemplate('template/Panel_D1.svg');
+    let svg = readTemplate('template/Panel_D.svg');
 
     // 路径定义
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PD-BR\);">)/;
