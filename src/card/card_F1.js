@@ -48,15 +48,10 @@ export async function card_F1(data = {
     const mascot_name_width = torus.getTextWidth(mascot_name_data, 36);
 
     const user_lv_text_width = torus.getTextWidth(' Lv.', 24);
-    const user_lv_width = torus.getTextWidth((data.level_current.toString() || '0'), 36);
-    const user_progress_width =
-        torus.getTextWidth((data.level_progress.toString() || '0'), 36) +
-        torus.getTextWidth('%', 24);
+    const user_lv_width = torus.getTextWidth(data.level_current.toString(), 36);
+    const user_progress_width = torus.getTextWidth(data.level_progress.toString(), 36) + torus.getTextWidth('%', 24);
 
-    const mascot_mark1_rrect_width =
-        mascot_name_width +
-        user_lv_width +
-        user_lv_text_width + 30;
+    const mascot_mark1_rrect_width = mascot_name_width + user_lv_width + user_lv_text_width + 30;
     const mascot_mark2_rrect_width = user_progress_width + 30;
 
     const mascot_mark1 =
