@@ -1,4 +1,12 @@
-import {getMascotName, getMascotPath, implantImage, PanelDraw, replaceText, replaceTexts} from "../util.js";
+import {
+    getGameMode,
+    getMascotName,
+    getMascotPath,
+    implantImage,
+    PanelDraw,
+    replaceText,
+    replaceTexts
+} from "../util.js";
 import {torus} from "../font.js";
 
 
@@ -39,7 +47,7 @@ export async function card_F1(data = {
     const reg_text = /(?<=<g id="Text_CF1">)/;
 
     // 获取吉祥物
-    const mascot_name_data = getMascotName(data.mode || 'osu');
+    const mascot_name_data = getMascotName(getGameMode(data.mode, 0)) || 'pippi';
     const mascot_link = getMascotPath(mascot_name_data);
 
     svg = implantImage(svg, 560, 710, 0, 0, 1, mascot_link, reg_mascot);
@@ -55,7 +63,7 @@ export async function card_F1(data = {
     const mascot_mark2_rrect_width = user_progress_width + 30;
 
     const mascot_mark1 =
-        torus.getTextPath((mascot_name_data || 'pippi'),
+        torus.getTextPath(mascot_name_data,
             35,
             50.754,
             36,
