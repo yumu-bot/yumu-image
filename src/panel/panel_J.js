@@ -585,7 +585,7 @@ export async function panel_J(data = {
 
     const bp_length_text = torus.getTextPath(`${bp_length_max_b}:${bp_length_max_m}`,
         1050 + bp_length_arr.findIndex((v) => v === bp_length_max) * 20,
-        500 + 90 * (5 - Math.min(bp_length_max, 5)) / 5, //本来是90，缩减一点
+        500 + 90 - Math.min(bp_length_max, 5) / 5 * 90, //本来是90，缩减一点
         16,
         'center baseline',
         '#aaa');

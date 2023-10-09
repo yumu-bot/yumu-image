@@ -105,7 +105,7 @@ function getPlayCountChart(pc_arr = []) {
 
     const pc_activity_text = torus.getTextPath(`${user_pc_activity_max}PC`,
         30 + arr.findIndex((item) => item === user_pc_activity_max) * 20,
-        200 + 90 - (user_pc_activity_max / Math.max(1000, user_pc_activity_max)) * 75,
+        200 + 90 - (user_pc_activity_max / Math.max(1000, user_pc_activity_max)) * 90,
         16,
         'center baseline',
         '#a1a1a1');
