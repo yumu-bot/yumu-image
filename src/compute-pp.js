@@ -269,8 +269,9 @@ async function getStatisticsTotal(bid, statistics = {}, mode = 'osu', reload = f
             return n300 + n100 + n0;
         case 'fruits':
         case 'catch': {
-            const attr = await getMapAttributes(bid, 0, 2, reload);
-            return attr.nFruits || n300 + n0; //已经解决？ //n300 + n0; //目前问题是，这个玩意没去掉miss中果，会偏大
+            return n300 + n0; //目前问题是，这个玩意没去掉miss中果，会偏大
+            //const attr = await getMapAttributes(bid, 0, 2, reload);
+            //return attr.nFruits || n300 + n0; //已经解决？ //n300 + n0; //目前问题是，这个玩意没去掉miss中果，会偏大
         }
         case 'mania':
             return n320 + n300 + n200 + n100 + n50 + n0;
