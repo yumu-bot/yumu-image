@@ -60,7 +60,7 @@ function getBPActivityChart(bp_arr = []) {
 
     const bp_activity_text = torus.getTextPath(`BP+${user_bp_activity_max}`,
         70 + arr.findIndex((item) => item === user_bp_activity_max) * 20,
-        170 + 90 - (user_bp_activity_max / Math.max(5, user_bp_activity_max)) * 90,
+        185 + 90 - (user_bp_activity_max / Math.max(5, user_bp_activity_max)) * 90,
         16,
         'center baseline',
         '#aaa');
