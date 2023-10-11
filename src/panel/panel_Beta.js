@@ -38,6 +38,13 @@ export async function router(req, res) {
     }
     res.end();
 }
+export function test(){
+    let templateStr = readTemplate('template/sp.svg');
+    const template = parser.parse(templateStr)
+    const svg = template.svg;
+    const modsBox = getSvgById(svg, "mods");
+    console.log(modsBox.$id);
+}
 export async function router_svg(req, res) {
     try {
         const data = req.fields;
@@ -158,40 +165,38 @@ export async function panel_Beta(score) {
     return builder.build(template);
 }
 
+
 function searchObject(obj, callback, index = 0) {
     let count = 0;
+    const objList = [obj];
 
-    function search(obj) {
-        if (Array.isArray(obj)) {
-            for (let i = 0; i < obj.length; i++) {
-                const result = search(obj[i]);
-                if (result) {
-                    return result;
-                }
+    function search() {
+        const temp = objList.shift()
+        if (Array.isArray(temp)) {
+            for (let i = 0; i < temp.length; i++) {
+                objList.push(temp[i]);
             }
-        } else if (typeof obj === 'object' && obj !== null) {
-            if (callback(obj)) {
-                count++;
+        } else {
+            if (callback(temp)) {
                 if (count >= index) {
-                    return obj;
-                }
+                    return temp;
+                } else count++;
             }
-            for (const key in obj) {
-                const result = search(obj[key]);
-                if (result) {
-                    return result;
-                }
+            for (const key in temp) {
+                if (typeof temp[key] === 'object') objList.push(temp[key]);
             }
+        }
+        if (objList.length > 0){
+            return search();
         }
         return null;
     }
 
-    return search(obj);
+    return search();
 }
 
 function getSvgById(obj, str, index = 0) {
     if (str && typeof str === "string") {
-        console.log(str);
         return searchObject(obj, objn => objn.$id === str, index);
     }
 }
