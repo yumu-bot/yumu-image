@@ -1,5 +1,5 @@
 import {XMLBuilder, XMLParser} from "fast-xml-parser"
-import {exportJPEG, readTemplate} from "../util.js";
+import {exportJPEG, getDiffBG, readNetImage, readTemplate} from "../util.js";
 import {calcPerformancePoints} from "../compute-pp.js";
 
 const opt = {
@@ -53,8 +53,8 @@ export async function router_svg(req, res) {
 }
 
 export async function panel_Beta(score) {
-    const url_avatar = `https://a.ppy.sh/${score.user.id}`;
-    const url_bg_list2x = `https://assets.ppy.sh/beatmaps/${score.beatmapset.id}/covers/list@2x.jpg`;
+    const url_avatar = await readNetImage(`https://a.ppy.sh/${score.user.id}`);
+    const url_bg = await getDiffBG(score.beatmap.id); //`https://assets.ppy.sh/beatmaps/${score.beatmapset.id}/covers/list@2x.jpg`
     const mode_int = score.mode_int;
     const mods = score.mods;
     const rankStr = score.rank;
@@ -135,7 +135,7 @@ export async function panel_Beta(score) {
 
     {// image
         searchObject(getSvgById(svg, "avatar"), () => true).image["$xlink:href"] = url_avatar;
-        searchObject(getSvgById(svg, "bg"), () => true).image["$xlink:href"] = url_bg_list2x;
+        searchObject(getSvgById(svg, "bg"), () => true).image["$xlink:href"] = url_bg;
     }
 
     {// mods
