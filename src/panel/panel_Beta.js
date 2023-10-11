@@ -147,7 +147,7 @@ export async function panel_Beta(score) {
         searchObject(getSvgById(svg, "bg"), () => true).image["$xlink:href"] = url_bg;
     }
 
-    {// mods
+    if (false) {// mods
         const modsBox = getSvgById(svg, "mods");
         modsBox.svg = [];
         mods.filter((_, i) => i < 7)
