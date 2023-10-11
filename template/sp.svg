@@ -50,7 +50,7 @@
     <rect width="100%" height="100%" fill="#000" opacity="0.4"/>
     <rect x="30" y="30" width="300" height="300" fill="url(#avatar)"/>
     <text id="text-info" x="0" y="480"
-          font-family="Poppins"
+          font-family="JetBrains Mono ExtraBold"
           font-weight="900"
           font-size="100"
 
