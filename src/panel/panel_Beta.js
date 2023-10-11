@@ -55,13 +55,16 @@ export async function router_svg(req, res) {
 export async function panel_Beta(score) {
     const url_avatar = await readNetImage(`https://a.ppy.sh/${score.user.id}`);
     const url_bg = await getDiffBG(score.beatmap.id); //`https://assets.ppy.sh/beatmaps/${score.beatmapset.id}/covers/list@2x.jpg`
+
+    console.log(url_avatar);
+    console.log(url_bg);
     const mode_int = score.mode_int;
     const mods = score.mods;
     const rankStr = score.rank;
     const statistics = score.statistics;
     const bid = score.beatmap.id;
     const title = score?.beatmapset?.title || ("BID" + bid);
-    const star = score.beatmap.difficulty_rating;
+    let star;
     const time = score.beatmap.total_length;
     const acc = score.accuracy;
     let pp = score.pp || 0;
@@ -85,6 +88,7 @@ export async function panel_Beta(score) {
 
         searchObject(ppShowLine, e => e.$mk === "pp-now").$height = Math.round(now * 1000);
         searchObject(ppShowLine, e => e.$mk === "pp-fc").$height = Math.round(full * 1000);
+        star = ppData.attr.stars;
     }
 
     {// info 处理
