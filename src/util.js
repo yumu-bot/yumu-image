@@ -12,7 +12,7 @@ import {torus} from "./font.js";
 const path_util = path;
 const MD5 = crypto.createHash("md5");
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
-export const EXPORT_FILE_V3 = process.env.EXPORT_FILE
+export const EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
 export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufile";
 
 const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
@@ -106,7 +106,7 @@ export function getExportFileV3Path(path = '') {
 }
 
 export async function getDiffBG(bid, defaultImagePath = getExportFileV3Path('card-default.png')) {
-    return axios.get(`http://localhost:8388/pub/background/${bid}`) || defaultImagePath;
+    return (await axios.get(`http://localhost:8388/pub/l/background/${bid}`)).data || defaultImagePath;
     // return await readNetImage(`http://localhost:8388/pub/background/${bid}`, defaultImagePath);
 }
 
