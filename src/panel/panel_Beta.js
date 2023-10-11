@@ -91,8 +91,8 @@ export async function panel_Beta(score) {
         const full = ppData.full_pp / ppData.perfect_pp;
         if (pp < 1) pp = ppData.pp;
 
-        searchObject(ppShowLine, e => e.$mk === "pp-now").$height = Math.round(now * 1000);
-        searchObject(ppShowLine, e => e.$mk === "pp-fc").$height = Math.round(full * 1000);
+        getSvgById(ppShowLine, "pp-now").$height = Math.round(now * 1000);
+        getSvgById(ppShowLine, "pp-fc").$height = Math.round(full * 1000);
         star = ppData.attr.stars;
     }
 
@@ -119,13 +119,14 @@ export async function panel_Beta(score) {
             infoData.title = title;
         }
 
+        setSvgText(getSvgById(svg, "text-bid"), `BID ${bid}`);
         let info = getSvgById(svg, "text-info");
-        setSvgText(searchObject(info, e => e.$mk === "title"), infoData.title);
-        setSvgText(searchObject(info, e => e.$mk === "time"), infoData.time);
-        setSvgText(searchObject(info, e => e.$mk === "star"), infoData.star);
-        setSvgText(searchObject(info, e => e.$mk === "acc"), infoData.acc);
-        setSvgText(searchObject(info, e => e.$mk === "pp"), infoData.pp);
-        setSvgText(searchObject(info, e => e.$mk === "combo"), infoData.combo);
+        setSvgText(getSvgById(info, "title"), infoData.title);
+        setSvgText(getSvgById(info, "time"), infoData.time);
+        setSvgText(getSvgById(info, "star"), infoData.star);
+        setSvgText(getSvgById(info, "acc"), infoData.acc);
+        setSvgText(getSvgById(info, "pp"), infoData.pp);
+        setSvgText(getSvgById(info, "combo"), infoData.combo);
     }
 
     {// rank
