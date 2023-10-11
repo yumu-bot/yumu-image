@@ -38,6 +38,13 @@ export async function router(req, res) {
     }
     res.end();
 }
+export function test(){
+    let templateStr = readTemplate('template/sp.svg');
+    const template = parser.parse(templateStr)
+    const svg = template.svg;
+    const modsBox = getSvgById(svg, "mods");
+    console.log(modsBox.$id);
+}
 export async function router_svg(req, res) {
     try {
         const data = req.fields;
@@ -55,13 +62,14 @@ export async function router_svg(req, res) {
 export async function panel_Beta(score) {
     const url_avatar = await readNetImage(`https://a.ppy.sh/${score.user.id}`);
     const url_bg = await getDiffBG(score.beatmap.id); //`https://assets.ppy.sh/beatmaps/${score.beatmapset.id}/covers/list@2x.jpg`
+
     const mode_int = score.mode_int;
     const mods = score.mods;
     const rankStr = score.rank;
     const statistics = score.statistics;
     const bid = score.beatmap.id;
     const title = score?.beatmapset?.title || ("BID" + bid);
-    const star = score.beatmap.difficulty_rating;
+    let star;
     const time = score.beatmap.total_length;
     const acc = score.accuracy;
     let pp = score.pp || 0;
@@ -85,6 +93,7 @@ export async function panel_Beta(score) {
 
         searchObject(ppShowLine, e => e.$mk === "pp-now").$height = Math.round(now * 1000);
         searchObject(ppShowLine, e => e.$mk === "pp-fc").$height = Math.round(full * 1000);
+        star = ppData.attr.stars;
     }
 
     {// info 处理
@@ -156,35 +165,34 @@ export async function panel_Beta(score) {
     return builder.build(template);
 }
 
+
 function searchObject(obj, callback, index = 0) {
     let count = 0;
+    const objList = [obj];
 
-    function search(obj) {
-        if (Array.isArray(obj)) {
-            for (let i = 0; i < obj.length; i++) {
-                const result = search(obj[i]);
-                if (result) {
-                    return result;
-                }
+    function search() {
+        const temp = objList.shift()
+        if (Array.isArray(temp)) {
+            for (let i = 0; i < temp.length; i++) {
+                objList.push(temp[i]);
             }
-        } else if (typeof obj === 'object' && obj !== null) {
-            if (callback(obj)) {
-                count++;
+        } else {
+            if (callback(temp)) {
                 if (count >= index) {
-                    return obj;
-                }
+                    return temp;
+                } else count++;
             }
-            for (const key in obj) {
-                const result = search(obj[key]);
-                if (result) {
-                    return result;
-                }
+            for (const key in temp) {
+                if (typeof temp[key] === 'object') objList.push(temp[key]);
             }
+        }
+        if (objList.length > 0){
+            return search();
         }
         return null;
     }
 
-    return search(obj);
+    return search();
 }
 
 function getSvgById(obj, str, index = 0) {

@@ -106,7 +106,7 @@ export function getExportFileV3Path(path = '') {
 }
 
 export async function getDiffBG(bid, defaultImagePath = getExportFileV3Path('card-default.png')) {
-    return axios.get(`http://localhost:8388/pub/background/${bid}`).data || defaultImagePath;
+    return axios.get(`http://localhost:8388/pub/background/${bid}`) || defaultImagePath;
     // return await readNetImage(`http://localhost:8388/pub/background/${bid}`, defaultImagePath);
 }
 
