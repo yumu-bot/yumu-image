@@ -62,6 +62,8 @@ export async function router_svg(req, res) {
 export async function panel_Beta(score) {
     const url_avatar = await readNetImage(`https://a.ppy.sh/${score.user.id}`);
     const url_bg = await getDiffBG(score.beatmap.id); //`https://assets.ppy.sh/beatmaps/${score.beatmapset.id}/covers/list@2x.jpg`
+    console.log(url_avatar)
+    console.log(url_bg)
 
     const mode_int = score.mode_int;
     const mods = score.mods;
