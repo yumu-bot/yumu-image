@@ -197,7 +197,6 @@ function searchObject(obj, callback, index = 0) {
 
 function getSvgById(obj, str, index = 0) {
     if (str && typeof str === "string") {
-        console.log(str);
         return searchObject(obj, objn => objn.$id === str, index);
     }
 }
