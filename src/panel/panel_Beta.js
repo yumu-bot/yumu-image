@@ -142,12 +142,12 @@ export async function panel_Beta(score) {
         }
     }
 
-    {// image
+    if (false) {// image
         searchObject(getSvgById(svg, "avatar"), () => true).image["$xlink:href"] = url_avatar;
         searchObject(getSvgById(svg, "bg"), () => true).image["$xlink:href"] = url_bg;
     }
 
-    if (false) {// mods
+    {// mods
         const modsBox = getSvgById(svg, "mods");
         modsBox.svg = [];
         mods.filter((_, i) => i < 7)
