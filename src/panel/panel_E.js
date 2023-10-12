@@ -1,10 +1,12 @@
 import {
     exportJPEG,
     getDecimals,
+    getDiffBG,
     getExportFileV3Path,
-    getGameMode, getMapBG,
+    getGameMode,
     getNowTimeStamp,
-    getPanelNameSVG, getTimeDifference,
+    getPanelNameSVG,
+    getTimeDifference,
     hasAnyMod,
     implantImage,
     implantSvgBody,
@@ -359,7 +361,7 @@ export async function panel_E(data = {
 
     // 图片定义
     const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
-    const banner = await getMapBG(data.score.beatmapset.id, 'slimcover');
+    const banner = await getDiffBG(data.score.beatmap.id, getExportFileV3Path('card-default.png'));
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);
