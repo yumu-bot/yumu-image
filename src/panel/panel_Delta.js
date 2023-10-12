@@ -1,13 +1,13 @@
 import {
     exportPNG,
+    getDiffBG,
     getExportFileV3Path,
-    getModColor, getModInt,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getRoundedNumberStr,
+    getModColor,
+    getModInt,
+    getRoundedNumberStr,
     implantImage,
     implantSvgBody,
     PanelDraw,
-    readNetImage,
     readTemplate,
     replaceTexts
 } from "../util.js";
@@ -217,7 +217,7 @@ export async function panel_Delta(data = {
     svg = implantSvgBody(svg, 0, 0, od_rrect, reg_od);
     svg = implantSvgBody(svg, 0, 0, length_pie, reg_length);
 
-    const image = await readNetImage(data.beatMap.beatmapset.covers["list@2x"], 'beatmap-DLfailBG.jpg')
+    const image = await getDiffBG(data.beatMap.id, getExportFileV3Path('beatmap-DLfailBG.jpg'));
 
     svg = (data.hasBG === false) ? svg : implantImage(svg, 1080, 1080, -30, 0, 1, image, reg_background);
     svg = implantImage(svg, 1920, 1080, 0, 0, 1, getExportFileV3Path('panel-kita.png'), reg_base);
