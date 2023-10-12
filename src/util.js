@@ -106,7 +106,13 @@ export function getExportFileV3Path(path = '') {
 }
 
 export async function getDiffBG(bid, defaultImagePath = getExportFileV3Path('card-default.png')) {
-    return (await axios.get(`http://localhost:8388/pub/l/background/${bid}`)).data || defaultImagePath;
+    try {
+        const url = (await axios.get(`http://localhost:8388/pub/l/background/${bid}`)).data
+        if (url) return url;
+    } catch (e) {
+        return defaultImagePath;
+    }
+    return defaultImagePath;
     // return await readNetImage(`http://localhost:8388/pub/background/${bid}`, defaultImagePath);
 }
 
@@ -2563,7 +2569,8 @@ export const PanelGenerate = {
 
     beatmap2CardH: async (beatmap, calcPP, rank = 1) => {
         const cover = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
-        const background = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+        // const background = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+        const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
 
         const time_diff = getTimeDifference(beatmap.create_at_str);
 

@@ -1,6 +1,6 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, initPath, readImage} from "./src/util.js";
+import {CACHE_PATH, readImage} from "./src/util.js";
 import {router as PanelA1Router} from "./src/panel/panel_A1.js";
 import {router as PanelA2Router} from "./src/panel/panel_A2.js";
 import {router as PanelA3Router} from "./src/panel/panel_A3.js";
@@ -18,14 +18,15 @@ import {router as PanelJRouter} from "./src/panel/panel_J.js";
 import {router as PanelMRouter} from "./src/panel/panel_M.js";
 
 import {router as panelAlphaRouter} from "./src/panel/panel_Alpha.js"; //drawLine
-import {router as panelBetaRouter} from "./src/panel/panel_Beta.js"; //scoreSpecial
+import {router as panelBetaRouter, test} from "./src/panel/panel_Beta.js"; //scoreSpecial
 import {router as panelGammaRouter} from "./src/panel/panel_Gamma.js"; //怎么，看不过去密集的设计？
 import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js"; //XinRan panel
-
 import {router as MarkdownRouter} from "./src/markdown.js";
 import {router as GetMapAttrRouter} from "./src/mapAttributes.js";
 
-initPath();
+test()
+
+// initPath();
 //这里放测试代码
 
 const app = express();

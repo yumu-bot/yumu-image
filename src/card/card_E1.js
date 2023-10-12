@@ -1,10 +1,16 @@
 import {
     getDecimals,
+    getDiffBG,
     getExportFileV3Path,
-    getGameMode, getMapStatusV3Path, getRoundedNumberStr,
-    getStarRatingColor, implantImage, implantSvgBody, readNetImage, replaceTexts,
+    getGameMode,
+    getMapStatusV3Path,
+    getRoundedNumberStr,
+    getStarRatingColor,
+    implantImage,
+    implantSvgBody,
+    replaceTexts,
 } from "../util.js";
-import {torus, extra, PuHuiTi} from "../font.js";
+import {extra, PuHuiTi, torus} from "../font.js";
 
 export async function card_E1(data = {
     mode: 'OSU',
@@ -53,7 +59,8 @@ export async function card_E1(data = {
 
     // 图片定义
     const hexagon = getExportFileV3Path('object-beatmap-hexagon.png');
-    const cover = await readNetImage(data.cover, getExportFileV3Path('beatmap-defaultBG.jpg'));
+    // const cover = await readNetImage(data.cover, getExportFileV3Path('beatmap-defaultBG.jpg'));
+    const cover = await getDiffBG(data.id, getExportFileV3Path('beatmap-defaultBG.jpg'));
     const status = getMapStatusV3Path(data.status);
 
     const favorite_count_icon = '<path d="m13,1c3,0,5,2,5,5s-5,7-6,8l-3,3-3-3C5,13,0,9,0,6,0,3.906,2,1,5,1s4,3,4,3c0,0,1-3,4-3Z" style="fill: #fff;"/>';
