@@ -1,4 +1,11 @@
-import {exportJPEG, getAvatar, getExportFileV3Path, readNetImage, readTemplate} from "../util.js";
+import {
+    exportJPEG,
+    getAvatar,
+    getExportFileV3Path,
+    implantImage, readTemplate,
+    replaceText
+} from "../util.js";
+import {VeranaSansMR} from "../font.js";
 
 export async function router(req, res) {
     try {
@@ -26,7 +33,6 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-
 export async function panel_Epsilon(data = {
     username: "SIyuyuko",
     uid: 7000123,
@@ -35,9 +41,19 @@ export async function panel_Epsilon(data = {
     let svg = readTemplate('template/Panel_Epsilon.svg');
 
     // 路径定义
-    const reg_text = /(?<=<g id="Text">)/;
+    const reg_base = /(?<=<g id="Base">)/;
     const reg_avatar = /(?<=<g id="Avatar">)/;
+    const reg_text = /(?<=<g id="Text">)/;
 
     const image = await getAvatar(data.uid || 0);
+    const name = VeranaSansMR.getTextPath(
+        VeranaSansMR.cutStringTail(data.username || 'Unknown', 60, 460, true),
+        230, 435, 60, 'center baseline', '#000'
+    );
 
+    svg = implantImage(svg, 460, 460, 0, 0, 1, getExportFileV3Path('panel-oldavatar.png'), reg_base);
+    svg = implantImage(svg, 320, 320, 70, 40, 1, image, reg_avatar);
+    svg = replaceText(svg, name, reg_text);
+
+    return svg.toString();
 }

@@ -5,10 +5,7 @@
             <rect x="240" width="400" height="360" rx="0" ry="0" style="fill: none;"/>
         </clipPath>
     </defs>
-    <g id="Banner">
-        <rect width="640" height="360" rx="0" ry="0" style="fill: #1c1719;"/>
-        <g style="clip-path: url(#clippath-PGamma-BG);" filter="url(#blur-PGamma-BG)">
-        </g>
+    <g id="Base">
     </g>
     <g id="Avatar">
     </g>
