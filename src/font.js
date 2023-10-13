@@ -6,6 +6,131 @@ const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
 const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold.ttf");
 const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
+const textToSVGVeranaSansMediumRegular = TextToSVG.loadSync("font/VeranaSansMedium-Regular.otf");
+
+
+export const VeranaSansMR = {};
+
+VeranaSansMR.getTextPath = getTextPath_VeranaSansMediumRegular;
+VeranaSansMR.get2SizeTextPath = get2SizeTextPath_VeranaSansMediumRegular;
+VeranaSansMR.getTextMetrics = getTextMetrics_VeranaSansMediumRegular;
+VeranaSansMR.getTextWidth = getTextWidth_VeranaSansMediumRegular;
+VeranaSansMR.cutStringTail = cutStringTail_VeranaSansMediumRegular;
+
+function getTextPath_VeranaSansMediumRegular(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGVeranaSansMediumRegular.getPath(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "VeranaSansMediumRegular",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextMetrics_VeranaSansMediumRegular(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGVeranaSansMediumRegular.getMetrics(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "VeranaSansMediumRegular",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextWidth_VeranaSansMediumRegular(
+    text = '',
+    size = 0,
+) {
+    return textToSVGVeranaSansMediumRegular.getMetrics(text.toString(), {
+        x: 0,
+        y: 0,
+        fontSize: size,
+        anchor: 'center baseline',
+        fontFamily: "VeranaSansMediumRegular",
+        attributes: {
+            fill: '#fff'
+        }
+    }).width
+}
+
+function cutStringTail_VeranaSansMediumRegular(
+    text = '',
+    size = 36,
+    maxWidth = 0,
+    isDot3Needed = true,
+) {
+    if (VeranaSansMR.getTextWidth(text, size) <= maxWidth) {
+        return text;
+    }
+
+    let dot3 = '...';
+    let dot3_width = isDot3Needed ? VeranaSansMR.getTextWidth(dot3, size) : 0;
+    let out_text = '';
+    maxWidth -= dot3_width;
+
+    for (let i = 0; VeranaSansMR.getTextWidth(out_text, size) < maxWidth; i++) {
+        out_text += text.slice(i, i + 1);
+    }
+
+    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
+}
+
+
+/**
+ * @function 获取大小文本的 VeranaSansMediumRegular 字体 SVG 路径
+ * @return {String}
+ * @param largerText {String} 较大的文本
+ * @param smallerText {String} 较小的文本
+ * @param largeSize {Number} 大文本尺寸
+ * @param smallSize {Number} 小文本尺寸
+ * @param x {Number} 锚点横坐标
+ * @param y {Number} 锚点横坐标
+ * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
+ * @param color {String} 十六进制颜色，#FFF
+ */
+
+function get2SizeTextPath_VeranaSansMediumRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+    let width_b = VeranaSansMR.getTextWidth(largerText, largeSize);
+    let width_m = VeranaSansMR.getTextWidth(smallerText, smallSize);
+    let width_a = (width_b + width_m) / 2; // 全长的一半长
+
+    let out;
+
+    if (anchor === "left baseline") {
+        out = VeranaSansMR.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            VeranaSansMR.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+
+    } else if (anchor === "right baseline") {
+        out = VeranaSansMR.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            VeranaSansMR.getTextPath(smallerText, x, y, smallSize, anchor, color);
+
+    } else if (anchor === "center baseline") {
+        out = VeranaSansMR.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            VeranaSansMR.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+    }
+
+    return out;
+}
 
 export const poppinsBold = {};
 

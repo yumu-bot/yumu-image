@@ -113,11 +113,14 @@ export async function getDiffBG(bid, defaultImagePath = getExportFileV3Path('car
         return defaultImagePath;
     }
     return defaultImagePath;
-    // return await readNetImage(`http://localhost:8388/pub/background/${bid}`, defaultImagePath);
 }
 
 export async function getMapBG(sid = 0, cover = 'cover@2x', defaultImagePath = getExportFileV3Path('card-default.png')) {
     return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', defaultImagePath);
+}
+
+export async function getAvatar(uid = 0, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
+    return await readNetImage('https://a.ppy.sh/' + uid, defaultImagePath);
 }
 
 export async function readNetImage(path = '', defaultImagePath = getExportFileV3Path('beatmap-DLfailBG.jpg')) {
@@ -2569,8 +2572,9 @@ export const PanelGenerate = {
 
     beatmap2CardH: async (beatmap, calcPP, rank = 1) => {
         const cover = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
-        // const background = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
-        const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+        const background = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+        // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+        // 这个不要下载，请求量太大
 
         const time_diff = getTimeDifference(beatmap.create_at_str);
 
