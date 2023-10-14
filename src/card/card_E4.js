@@ -88,17 +88,17 @@ export function card_E4(data = {
     const maxWidth = Math.max(wt1 + wb1 + wm1, wt2 + wb2 + wm2, wt3 + wb3 + wm3);
     const rrect = row > 0 ? PanelDraw.Rect(1880 - 40 - maxWidth, 270 - row * 35, maxWidth + 40, row * 35, 20, '#382E32', 1) : '';
 
-    const line1 = torus.getTextPath(t1, 1860 - wb1 - wm1, 198, 24, 'right baseline', '#fff') +
+    const line1 = torus.getTextPath(t1, 1860 - wb1 - wm1, 198, 24, 'right baseline', '#aaa') +
         torus.getTextPath(b1, 1860 - wm1, 198, 32, 'right baseline', '#fff') +
-        torus.getTextPath(m1, 1860, 198, 24, 'right baseline', '#fff');
+        torus.getTextPath(m1, 1860, 198, 24, 'right baseline', '#aaa');
 
-    const line2 = torus.getTextPath(t2, 1860 - wb2 - wm2, 228, 24, 'right baseline', '#fff') +
+    const line2 = torus.getTextPath(t2, 1860 - wb2 - wm2, 228, 24, 'right baseline', '#aaa') +
         torus.getTextPath(b2, 1860 - wm2, 198, 32, 'right baseline', '#fff') +
-        torus.getTextPath(m2, 1860, 198, 24, 'right baseline', '#fff');
+        torus.getTextPath(m2, 1860, 198, 24, 'right baseline', '#aaa');
 
-    const line3 = torus.getTextPath(t3, 1860 - wb3 - wm3, 258, 24, 'right baseline', '#fff') +
+    const line3 = torus.getTextPath(t3, 1860 - wb3 - wm3, 258, 24, 'right baseline', '#aaa') +
         torus.getTextPath(b3, 1860 - wm3, 198, 32, 'right baseline', '#fff') +
-        torus.getTextPath(m3, 1860, 198, 24, 'right baseline', '#fff');
+        torus.getTextPath(m3, 1860, 198, 24, 'right baseline', '#aaa');
 
     return rrect + line1 + line2 + line3;
 }
