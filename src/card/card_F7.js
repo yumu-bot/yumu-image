@@ -16,6 +16,6 @@ export function card_F7(data = {
 
         return rrect +
             torus.getTextPath(key4, 1860, 228, 24, 'right baseline', '#fff') +
-            torus.getTextPath(key7, 1860, 254, 24, 'right baseline', '#fff');
+            torus.getTextPath(key7, 1860, 258, 24, 'right baseline', '#fff');
     } else return '';
 }

@@ -5,7 +5,7 @@ import {
     getExportFileV3Path,
     getGameMode,
     getNowTimeStamp,
-    getPanelNameSVG,
+    getPanelNameSVG, getRoundedNumberStr,
     getTimeDifference,
     hasAnyMod,
     implantImage,
@@ -21,6 +21,7 @@ import {card_A1} from "../card/card_A1.js";
 import {card_E1} from "../card/card_E1.js";
 import {card_E2} from "../card/card_E2.js";
 import {card_E3} from "../card/card_E3.js";
+import {card_E4} from "../card/card_E4.js";
 
 export async function router(req, res) {
     try {
@@ -295,6 +296,7 @@ export async function panel_E(data = {
     const reg_card_e1 = /(?<=<g id="Card_E1">)/;
     const reg_card_e2 = /(?<=<g id="Card_E2">)/;
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
+    const reg_card_e4 = /(?<=<g id="Card_E4">)/;
 
     // 面板文字
     const score_time = moment(data.score.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours').format("YYYY-MM-DD HH:mm:ss[ +8]");
@@ -352,12 +354,14 @@ export async function panel_E(data = {
     const cardE1 = await card_E1(await score2CardE1(data.score, calcPP), true);
     const cardE2 = await card_E2(await score2CardE2(data.score, calcPP), true);
     const cardE3 = await card_E3(await score2CardE3(data.score, calcPP), true);
+    const cardE4 = await card_E4(score2CardE4(data.score.mode, calcPP), true);
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
     svg = implantSvgBody(svg, 0, 290, cardE1, reg_card_e1);
     svg = implantSvgBody(svg, 880, 330, cardE2, reg_card_e2);
     svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
+    svg = implantSvgBody(svg, 0, 0, cardE4, reg_card_e4);
 
     // 图片定义
     const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
@@ -434,6 +438,13 @@ async function score2CardE3(score, calcPP) {
         rank: score.rank,
         star: calcPP.attr.stars,
         score_progress: score_progress,
+    }
+}
+
+function score2CardE4(mode, calcPP) {
+    return {
+        mode: mode,
+        calcPP: calcPP,
     }
 }
 
@@ -547,6 +558,7 @@ const getApproximateRank = (score) => {
 const score2AccIndex = (score) => {
     const mode = getGameMode(score.mode, 1);
     const nGeki = score.statistics.count_geki;
+    const nKatu = score.statistics.count_katu;
     const n300 = score.statistics.count_300;
     const n100 = score.statistics.count_100;
     const n50 = score.statistics.count_50;
@@ -655,7 +667,7 @@ const score2AccIndex = (score) => {
                         return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
                     }
                 } else {
-                    return 'no miss?'
+                    return 'miss?'
                 }
             default :
                 return '~ ' + getApproximateRank(score);
@@ -743,22 +755,24 @@ const score2AccIndex = (score) => {
                         return '-' + Math.ceil(0.6 * nTotal - n300) + ' C';
                     }
                 } else {
-                    return 'no miss?'
+                    return 'miss?'
                 }
             default : return '~ ' + getApproximateRank(score);
         }
     }
 
     function getIndexCatch() {
+        nNotMiss = n300 + n100 + n50;
+        nTotal = nNotMiss + n0 + nKatu;
         switch (rank) {
             case 'XH' :
             case 'X' : return 'AP';
             case 'SH' :
-            case 'S' : return '^SS';
-            case 'A' : return '^S';
-            case 'B' : return '^A';
-            case 'C' : return '^B';
-            case 'D' : return '^C';
+            case 'S' : return '-' + getRoundedNumberStr(Math.ceil(nTotal - n300), 1) + ' SS';
+            case 'A' : return '-' + getRoundedNumberStr(Math.ceil(0.9801 * nTotal - n300), 1) + ' S';
+            case 'B' : return '-' + getRoundedNumberStr(Math.ceil(0.9401 * nTotal - n300), 1) + ' A';
+            case 'C' : return '-' + getRoundedNumberStr(Math.ceil(0.9001 * nTotal - n300), 1) + ' B';
+            case 'D' : return '-' + getRoundedNumberStr(Math.ceil(0.8501 * nTotal - n300), 1) + ' C';
             default : return '~ ' + getApproximateRank(score);
         }
     }
