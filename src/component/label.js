@@ -5,8 +5,7 @@ import {
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr, getStarRatingColor, getDecimals,
     getUserRankColor,
-    implantImage, readNetImage,
-    replaceText, replaceTexts, PanelDraw, getAvatar,
+    implantImage, replaceText, replaceTexts, PanelDraw, getAvatar,
 } from "../util.js";
 import {extra, torus, PuHuiTi} from "../font.js";
 

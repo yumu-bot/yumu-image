@@ -37,10 +37,10 @@ export async function card_E4(data = {
 
     const rrect = column > 0 ? PanelDraw.Rect(1880 - 40 - column * 210, 200, 40 + column * 210, 70, 20, '#382E32', 1) : '';
 
-    svg = replaceText(svg, rrect, reg);
     svg = implantSvgBody(svg, 1230, 210, label1, reg);
     svg = implantSvgBody(svg, 1440, 210, label2, reg);
     svg = implantSvgBody(svg, 1650, 210, label3, reg);
+    svg = replaceText(svg, rrect, reg);
 
     return svg;
 
