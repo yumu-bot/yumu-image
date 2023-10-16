@@ -26,6 +26,26 @@ export const LABEL_OPTION = {
         icon_title: 'PP',
         color_remark: '#fff',
     },
+    AIMPP: {
+        icon: getExportFileV3Path("object-score-aimpp.png"),
+        icon_title: 'AimPP',
+        color_remark: '#aaa',
+    },
+    SPDPP: {
+        icon: getExportFileV3Path("object-score-spdpp.png"),
+        icon_title: 'SpeedPP',
+        color_remark: '#aaa',
+    },
+    ACCPP: {
+        icon: getExportFileV3Path("object-score-accpp.png"),
+        icon_title: 'AccPP',
+        color_remark: '#aaa',
+    },
+    DIFFPP: {
+        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon_title: 'DiffPP',
+        color_remark: '#aaa',
+    },
     ACC2: {
         icon: getExportFileV3Path("object-score-accuracy2.png"),
         icon_title: 'Accuracy',
