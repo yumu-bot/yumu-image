@@ -376,7 +376,7 @@ export async function panel_E(data = {
 
 async function score2CardE1(score, calcPP) {
     return {
-        mode: score.mode || 'OSU',
+        mode: score.mode || 'osu',
         star: calcPP.attr.stars || 0,
         cover: score.beatmapset.covers["list@2x"],
         title: score.beatmapset.title || '',
