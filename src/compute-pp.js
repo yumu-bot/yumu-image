@@ -116,22 +116,41 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
         maxCombo: difficulty.maxCombo,
         mods_int: mod_int,
     };
+
+    //fc
     const maxCombo = difficulty.maxCombo;
     calculator.combo(maxCombo);
     calculator.n300(statistics.count_300 + statistics.count_miss);
     calculator.nMisses(0);
     const full_pp = calculator.performance(beatMap);
 
-    const score_progress = await getScoreProgress(bid, statistics, mode, reload);
-
+    //pf
     calculator = new Calculator({
         mode: mode_int,
         mods: mod_int,
         combo: maxCombo,
-        n300: statistics.count_miss + statistics.count_50 + statistics.count_100 + statistics.count_300,
-        nGeki: statistics.count_miss + statistics.count_50 + statistics.count_100 + statistics.count_300 + statistics.count_geki + statistics.count_katu,
+        acc: 1,
+        nGeki: statistics.count_geki,
+        nKatu: statistics.count_katu,
+        n300: maxCombo,
+        n100: 0,
+        n50: 0,
+        nMisses: 0,
     })
+
+    switch (mode_int) {
+        case 2: {
+            calculator.nKatu(0);
+        } break;
+        case 3: {
+            calculator.n300(0);
+            calculator.nGeki(maxCombo);
+        } break;
+    }
+
     const perfect_pp = calculator.performance(beatMap);
+
+    const score_progress = await getScoreProgress(bid, statistics, mode, reload);
 
     return {
         pp: now_pp.pp,
