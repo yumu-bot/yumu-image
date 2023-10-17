@@ -1,5 +1,5 @@
 import {XMLBuilder, XMLParser} from "fast-xml-parser"
-import {exportJPEG, getAvatar, getDiffBG, readNetImage, readTemplate} from "../util.js";
+import {exportJPEG, getAvatar, getDiffBG, readTemplate} from "../util.js";
 import {calcPerformancePoints} from "../compute-pp.js";
 
 const opt = {
@@ -61,7 +61,7 @@ export async function router_svg(req, res) {
 
 export async function panel_Beta(score) {
     const url_avatar = await getAvatar(score.user.id);
-    const url_bg = await getDiffBG(score.beatmap.id);
+    const url_bg = await getDiffBG(score.beatmap.id, score.beatmapset.id);
 
     const mode_int = score.mode_int;
     const mods = score.mods;

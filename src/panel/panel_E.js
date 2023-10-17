@@ -365,7 +365,7 @@ export async function panel_E(data = {
 
     // 图片定义
     const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
-    const banner = await getDiffBG(data.score.beatmap.id, getExportFileV3Path('card-default.png'));
+    const banner = await getDiffBG(data.score.beatmap.id, data.score.beatmapset.id);
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);
@@ -384,7 +384,8 @@ async function score2CardE1(score, calcPP) {
         version: score.beatmap.version || '',
         artist: score.beatmapset.artist || '',
         creator: score.beatmapset.creator || '',
-        id: score.beatmap.id || 0,
+        bid: score.beatmap.id || 0,
+        sid: score.beatmapset.id || 0,
         status: score.beatmapset.status || 'unranked',
         favourite_count: score.beatmapset.favourite_count || 0,
         play_count: score.beatmapset.play_count || 0,

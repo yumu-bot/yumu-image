@@ -21,7 +21,8 @@ export async function card_E1(data = {
     version: '',
     artist: '',
     creator: '',
-    id: '',
+    bid: 0,
+    sid: 0,
     status: '',
     favourite_count: 0,
     play_count: 0,
@@ -60,7 +61,7 @@ export async function card_E1(data = {
     // 图片定义
     const hexagon = getExportFileV3Path('object-beatmap-hexagon.png');
     // const cover = await readNetImage(data.cover, getExportFileV3Path('beatmap-defaultBG.jpg'));
-    const cover = await getDiffBG(data.id, getExportFileV3Path('beatmap-defaultBG.jpg'));
+    const cover = await getDiffBG(data.bid, data.sid);
     const status = getMapStatusV3Path(data.status);
 
     const favorite_count_icon = '<path d="m13,1c3,0,5,2,5,5s-5,7-6,8l-3,3-3-3C5,13,0,9,0,6,0,3.906,2,1,5,1s4,3,4,3c0,0,1-3,4-3Z" style="fill: #fff;"/>';
@@ -116,7 +117,7 @@ export async function card_E1(data = {
             torus.cutStringTail(data.version, 36, 860),
             440, 714.75, 36, "center baseline", "#fff");
 
-    const mapper_and_bid = ' // ' + (data.creator || '?') + ' // b' + (data.id || 0)
+    const mapper_and_bid = ' // ' + (data.creator || '?') + ' // b' + (data.bid || 0)
     const artist = torus.cutStringTail(data.artist || '', 24,
         860 - torus.getTextWidth(mapper_and_bid, 24), true);
     const artist_etc_text = torus.getTextPath(artist + mapper_and_bid, 440, 746.84, 24, "center baseline", "#fff");
