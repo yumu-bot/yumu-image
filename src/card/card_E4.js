@@ -74,8 +74,8 @@ async function ppVariants2LabelE(calcPP, verPP = '') {
     const nowPP = calcPP.pp_all[`${version}`] || 0;
     const fcPP = calcPP.perfect_pp_all[`${version}`] || 0;
 
-    const isDisplayFC = (fcPP >= nowPP && fcPP > 0);
-    const isDisplayPP = (fcPP <= 1000 && isDisplayFC);
+    const isDisplayFC = fcPP >= nowPP;
+    const isDisplayPP = (nowPP <= 1000 && isDisplayFC);
 
     const percent = isDisplayFC ? (Math.round(nowPP / fcPP * 100).toString() + '%') : '-%';
 
