@@ -132,19 +132,25 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
         acc: 1,
         nGeki: statistics.count_geki,
         nKatu: statistics.count_katu,
-        n300: maxCombo,
         n100: 0,
         n50: 0,
         nMisses: 0,
     })
 
     switch (mode_int) {
+        case 0: {
+            calculator.n300(difficulty.nCircles + difficulty.nSliders);
+        } break;
+        case 1: {
+            calculator.n300(attr.nCircles);
+        } break;
         case 2: {
+            calculator.n300(difficulty.nFruits);
             calculator.nKatu(0);
         } break;
         case 3: {
             calculator.n300(0);
-            calculator.nGeki(maxCombo);
+            calculator.nGeki(attr.nCircles + attr.nSliders);
         } break;
     }
 
