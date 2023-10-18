@@ -29,7 +29,7 @@ export async function card_E4(data = {
             label2 = await label_E(await ppVariants2LabelE(data.calcPP, 'diff'), true);
             label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'acc'), true);
         } break;
-        case 2: {
+        case 3: {
             column = 1;
             label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'diff'), true);
         } break;
