@@ -1559,6 +1559,12 @@ export function getGameMode(mode = '', level = 0) {
                     return '';
             }
             break;
+        case 0:
+            switch (modeStr) {
+                case 'fruits':
+                    return 'catch';
+            }
+            break;
         case 1:
             switch (modeStr) {
                 case 'osu':
