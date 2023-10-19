@@ -106,17 +106,17 @@ export function getExportFileV3Path(path = '') {
 }
 
 export async function getDiffBG(bid, sid = 0, cover = 'cover@2x', defaultImagePath = getExportFileV3Path('card-default.png')) {
-    try {
-        const url = (await axios.get(`http://localhost:8388/pub/l/background/${bid}`)).data
-        if (url) return url;
-    } catch (e) {
+    //try {
+        //const url = (await axios.get(`http://localhost:8388/pub/l/background/${bid}`)).data
+        //if (url) return url;
+    //} catch (e) {
         try {
             const url2 = await getMapBG(sid, cover, defaultImagePath);
             if (url2) return url2;
         } catch (e1) {
             return defaultImagePath;
         }
-    }
+    //}
     return defaultImagePath;
 }
 
@@ -1557,12 +1557,6 @@ export function getGameMode(mode = '', level = 0) {
                     return '\uE802';
                 default:
                     return '';
-            }
-            break;
-        case 0:
-            switch (modeStr) {
-                case 'fruits':
-                    return 'catch';
             }
             break;
         case 1:
