@@ -5,12 +5,12 @@ import {
     getGameMode,
     getMapStatusV3Path,
     getRoundedNumberStr,
-    getStarRatingColor,
     implantImage,
     implantSvgBody,
     replaceTexts,
-} from "../util.js";
-import {extra, PuHuiTi, torus} from "../font.js";
+} from "../util/util.js";
+import {extra, PuHuiTi, torus} from "../util/font.js";
+import {getStarRatingColor} from "../util/color.js";
 
 export async function card_E1(data = {
     mode: 'OSU',

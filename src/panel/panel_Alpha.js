@@ -1,5 +1,5 @@
-import {exportJPEG} from "../util.js";
-import {PuHuiTi} from "../font.js";
+import {exportJPEG} from "../util/util.js";
+import {PuHuiTi} from "../util/font.js";
 
 export async function router(req, res) {
     try {

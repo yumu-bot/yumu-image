@@ -1,13 +1,13 @@
 import {
     getExportFileV3Path, getGameMode,
-    getModColor,
-    getModFullName,
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getStarRatingColor, getDecimals,
-    getUserRankColor,
-    implantImage, replaceText, replaceTexts, PanelDraw, getAvatar,
-} from "../util.js";
-import {extra, torus, PuHuiTi} from "../font.js";
+    getRoundedNumberSmallerStr, getDecimals,
+    implantImage, replaceText, replaceTexts, getAvatar,
+} from "../util/util.js";
+import {extra, torus, PuHuiTi} from "../util/font.js";
+import {getModColor, getStarRatingColor, getUserRankColor} from "../util/color.js";
+import {PanelDraw} from "../util/panelDraw.js";
+import {getModFullName} from "../util/mod.js";
 
 export const LABEL_OPTION = {
     ACC: {

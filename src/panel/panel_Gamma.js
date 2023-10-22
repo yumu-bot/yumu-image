@@ -7,8 +7,8 @@ import {
     readNetImage,
     readTemplate,
     replaceTexts,
-} from "../util.js";
-import {extra, torus, torusRegular} from "../font.js";
+} from "../util/util.js";
+import {extra, torus, torusRegular} from "../util/font.js";
 
 export async function router(req, res) {
     try {

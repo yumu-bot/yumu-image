@@ -6,9 +6,9 @@ import {
     readTemplate,
     replaceText,
     replaceTexts,
-} from "../util.js";
+} from "../util/util.js";
 import {card_H} from "../card/card_H.js";
-import {torus} from "../font.js";
+import {torus} from "../util/font.js";
 
 export async function router(req, res) {
     try {

@@ -4,8 +4,8 @@ import {
     implantImage,
     readTemplate,
     replaceText, replaceTexts,
-} from "../util.js";
-import {torus} from "../font.js";
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 
 
 export async function card_A1(data = {

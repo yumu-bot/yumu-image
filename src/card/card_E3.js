@@ -1,10 +1,11 @@
 import {
     getExportFileV3Path,
-    getRankColor,
-    PanelDraw, replaceText, replaceTexts,
-} from "../util.js";
-import {torus} from "../font.js";
+    replaceText, replaceTexts,
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {label_E} from "../component/label.js";
+import {getRankColor} from "../util/color.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_E3(data = {
     density_arr: [1, 2, 4, 5, 2, 7, 2, 2, 6, 4, 5, 2, 2, 5, 8, 5, 4, 2, 5, 4, 2, 6, 4, 7, 5, 6],

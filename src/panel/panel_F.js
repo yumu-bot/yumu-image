@@ -2,17 +2,17 @@ import {
     exportJPEG,
     getExportFileV3Path,
     getMatchNameSplitted,
-    getRandomBannerPath,
     getDecimals,
     implantImage,
     implantSvgBody,
     readTemplate,
     replaceText, readNetImage, getPanelNameSVG, getGameMode, getRoundedNumberStr
-} from "../util.js";
+} from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
-import {getMapAttributes} from "../compute-pp.js";
+import {getMapAttributes} from "../util/compute-pp.js";
 import moment from "moment";
+import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {

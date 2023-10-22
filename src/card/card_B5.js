@@ -1,11 +1,11 @@
 import {
-    getExportFileV3Path, getRankColor,
-    getRoundedNumberLargerStr,
+    getExportFileV3Path, getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr, implantImage, implantSvgBody,
     readTemplate, replaceTexts
-} from "../util.js";
-import {torus} from "../font.js";
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {label_E, PPM_OPTION} from "../component/label.js";
+import {getRankColor} from "../util/color.js";
 
 export async function card_B5(data = {
     parameter: 'RC',

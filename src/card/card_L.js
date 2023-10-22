@@ -3,10 +3,11 @@ import {
     getDecimals,
     implantImage,
     implantSvgBody,
-    replaceText, PanelDraw,
-} from "../util.js";
-import {torus} from "../font.js";
+    replaceText,
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {card_K} from "./card_K.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_L(data = {
     name: 'Length', //Length, Combo, SR

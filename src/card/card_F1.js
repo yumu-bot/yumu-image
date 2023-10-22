@@ -1,13 +1,12 @@
 import {
     getGameMode,
-    getMascotName,
-    getMascotPath,
     implantImage,
-    PanelDraw,
     replaceText,
     replaceTexts
-} from "../util.js";
-import {torus} from "../font.js";
+} from "../util/util.js";
+import {torus} from "../util/font.js";
+import {PanelDraw} from "../util/panelDraw.js";
+import {getMascotName, getMascotPath} from "../util/mascotBanner.js";
 
 
 export async function card_F1(data = {

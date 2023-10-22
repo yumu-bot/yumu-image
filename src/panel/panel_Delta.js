@@ -2,17 +2,17 @@ import {
     exportPNG,
     getDiffBG,
     getExportFileV3Path,
-    getModColor,
-    getModInt,
     getRoundedNumberStr,
     implantImage,
     implantSvgBody,
-    PanelDraw,
     readTemplate,
     replaceTexts
-} from "../util.js";
-import {lineSeedSans, poppinsBold} from "../font.js";
-import {getMapAttributes} from "../compute-pp.js";
+} from "../util/util.js";
+import {lineSeedSans, poppinsBold} from "../util/font.js";
+import {getMapAttributes} from "../util/compute-pp.js";
+import {getModColor} from "../util/color.js";
+import {PanelDraw} from "../util/panelDraw.js";
+import {getModInt} from "../util/mod.js";
 
 export async function router(req, res) {
     try {

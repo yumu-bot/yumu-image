@@ -1,17 +1,18 @@
 import {
     exportJPEG, getExportFileV3Path, getPanelNameSVG,
-    getRandomBannerPath, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, getRoundedNumberStr, getTimeDifference,
-    implantImage, implantSvgBody, PanelDraw,
-    PanelGenerate,
-    readTemplate,
+    getRoundedNumberLargerStr, getRoundedNumberSmallerStr, getRoundedNumberStr, getTimeDifference,
+    implantImage, implantSvgBody, readTemplate,
     replaceText, replaceTexts
-} from "../util.js";
-import {torus} from "../font.js";
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_O1} from "../card/card_O1.js";
 import {card_O2} from "../card/card_O2.js";
 import {card_O3} from "../card/card_O3.js";
 import {card_O4} from "../card/card_O4.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
+import {PanelDraw} from "../util/panelDraw.js";
+import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {

@@ -3,12 +3,13 @@ import {
     getPanelNameSVG,
     implantImage,
     implantSvgBody,
-    PanelGenerate, readNetImage,
+    readNetImage,
     readTemplate,
     replaceText
-} from "../util.js";
+} from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_N} from "../card/card_N.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
 
 export async function router(req, res) {
     try {

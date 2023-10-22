@@ -1,13 +1,14 @@
 import {
-    exportJPEG, getMapBG, getModInt,
-    getPanelNameSVG,
-    getRandomBannerPath, implantImage,
+    exportJPEG, getMapBG, getPanelNameSVG,
+    implantImage,
     implantSvgBody, readTemplate,
     replaceText
-} from "../util.js";
+} from "../util/util.js";
 import {card_D} from "../card/card_D.js";
-import {getMapAttributes} from "../compute-pp.js";
+import {getMapAttributes} from "../util/compute-pp.js";
 import {card_A2} from "../card/card_A2.js";
+import {getModInt} from "../util/mod.js";
+import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {

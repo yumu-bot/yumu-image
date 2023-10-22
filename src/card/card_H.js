@@ -2,10 +2,11 @@ import {
     implantImage,
     readTemplate,
     replaceText,
-    replaceTexts,
-    getModColor, PanelDraw
-} from "../util.js";
-import {torus, PuHuiTi} from "../font.js";
+    replaceTexts
+} from "../util/util.js";
+import {torus, PuHuiTi} from "../util/font.js";
+import {getModColor} from "../util/color.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_H(data = {
     background: '',

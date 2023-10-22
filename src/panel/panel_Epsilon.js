@@ -4,8 +4,8 @@ import {
     getExportFileV3Path,
     implantImage, readTemplate,
     replaceText
-} from "../util.js";
-import {VeranaSansMR} from "../font.js";
+} from "../util/util.js";
+import {VeranaSansMR} from "../util/font.js";
 
 export async function router(req, res) {
     try {

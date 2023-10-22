@@ -1,12 +1,10 @@
 import {
     getExportFileV3Path,
-    getModColor,
-    getRankColor,
-    getStarRatingColor,
-    implantImage, PanelDraw,
-    replaceText, replaceTexts,
-} from "../util.js";
-import {torus} from "../font.js";
+    implantImage, replaceText, replaceTexts,
+} from "../util/util.js";
+import {torus} from "../util/font.js";
+import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_J(data = {
     cover: getExportFileV3Path('beatmap-defaultBG.jpg'),

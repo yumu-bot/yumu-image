@@ -1,9 +1,10 @@
 import {
     getExportFileV3Path,
     implantImage,
-    PanelDraw, replaceText, replaceTexts
-} from "../util.js";
-import {torus} from "../font.js";
+    replaceText, replaceTexts
+} from "../util/util.js";
+import {torus} from "../util/font.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_F4(data = {
     grade_XH: 0,

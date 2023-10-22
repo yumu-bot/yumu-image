@@ -1,5 +1,5 @@
-import {getExportFileV3Path, implantImage, PanelDraw, replaceText, replaceTexts} from "../util.js";
-import {torus} from "../font.js";
+import {getExportFileV3Path, implantImage, replaceText} from "../util/util.js";
+import {torus} from "../util/font.js";
 
 export async function card_O4(data = {
     type: '',

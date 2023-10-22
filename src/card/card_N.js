@@ -3,17 +3,17 @@ import {
     getExportFileV3Path,
     getFlagPath,
     getGameMode,
-    getModColor,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getTimeDifference,
     implantImage,
-    implantSvgBody, PanelDraw,
-    readNetImage,
+    implantSvgBody, readNetImage,
     replaceText, replaceTexts,
-} from "../util.js";
-import {torus} from "../font.js";
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {label_A4, LABEL_OPTION} from "../component/label.js";
+import {getModColor} from "../util/color.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_N(data = {
     score: {

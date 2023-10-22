@@ -1,4 +1,5 @@
-import {getMascotName, getMascotPath, implantImage} from "../util.js";
+import {implantImage} from "../util/util.js";
+import {getMascotName, getMascotPath} from "../util/mascotBanner.js";
 
 export async function card_B3(data = {
     game_mode: 'osu'

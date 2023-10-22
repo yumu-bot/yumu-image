@@ -1,13 +1,13 @@
 import {
     getExportFileV3Path,
     implantImage,
-    implantSvgBody, PanelDraw,
-    readNetImage,
+    implantSvgBody, readNetImage,
     readTemplate,
     replaceText, replaceTexts,
-} from "../util.js";
-import {torus, torusRegular} from "../font.js";
+} from "../util/util.js";
+import {torus, torusRegular} from "../util/font.js";
 import {label_F1, label_F2, label_F3} from "../component/label.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_C(data = {
     statistics: {

@@ -3,19 +3,19 @@ import {
     getExportFileV3Path,
     getGameMode,
     getMapBG, getPanelNameSVG,
-    hasAnyMod,
     implantImage,
     implantSvgBody,
-    PanelGenerate,
     readTemplate, replaceText,
-} from "../util.js";
-import {calcMap, getDensityArray} from "../compute-pp.js";
+} from "../util/util.js";
+import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {ar2ms, cs2px, data2Label, od2ms, stat2DataM} from "./panel_E.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_E1} from "../card/card_E1.js";
 import {card_E2} from "../card/card_E2.js";
 import {card_E3} from "../card/card_E3.js";
 import {LABEL_OPTION} from "../component/label.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
+import {hasAnyMod} from "../util/mod.js";
 
 export async function router(req, res) {
     try {

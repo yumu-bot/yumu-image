@@ -7,14 +7,12 @@ import {
     getNowTimeStamp,
     getPanelNameSVG, getRoundedNumberStr,
     getTimeDifference,
-    hasAnyMod,
     implantImage,
     implantSvgBody,
-    PanelGenerate,
     readTemplate,
     replaceText
-} from "../util.js";
-import {calcPerformancePoints, getDensityArray} from "../compute-pp.js";
+} from "../util/util.js";
+import {calcPerformancePoints, getDensityArray} from "../util/compute-pp.js";
 import moment from "moment";
 import {LABEL_OPTION} from "../component/label.js";
 import {card_A1} from "../card/card_A1.js";
@@ -22,6 +20,8 @@ import {card_E1} from "../card/card_E1.js";
 import {card_E2} from "../card/card_E2.js";
 import {card_E3} from "../card/card_E3.js";
 import {card_E4} from "../card/card_E4.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
+import {hasAnyMod} from "../util/mod.js";
 
 export async function router(req, res) {
     try {

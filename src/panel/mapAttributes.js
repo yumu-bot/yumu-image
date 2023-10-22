@@ -1,4 +1,4 @@
-import {getMapAttributes} from "./compute-pp.js";
+import {getMapAttributes} from "../util/compute-pp.js";
 
 export async function router(req, res) {
     const data = req.fields;

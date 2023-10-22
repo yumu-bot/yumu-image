@@ -1,12 +1,14 @@
 import {
-    getExportFileV3Path, getGameMode, getMapBG, getModInt, getRoundedNumberStr,
+    getExportFileV3Path, getGameMode, getMapBG, getRoundedNumberStr,
     implantImage,
     implantSvgBody,
-    PanelDraw, replaceText
-} from "../util.js";
-import {torus} from "../font.js";
+    replaceText
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {card_J} from "./card_J.js";
-import {calcPerformancePoints} from "../compute-pp.js";
+import {calcPerformancePoints} from "../util/compute-pp.js";
+import {PanelDraw} from "../util/panelDraw.js";
+import {getModInt} from "../util/mod.js";
 
 export async function card_F2(data = {
     recent: [

@@ -1,12 +1,11 @@
 import {
     exportJPEG, getExportFileV3Path, getGameMode,
     getPanelNameSVG,
-    getRandomBannerPath, implantImage,
+    implantImage,
     implantSvgBody,
-    PanelGenerate,
     readTemplate,
     replaceText,
-} from "../util.js";
+} from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_F1} from "../card/card_F1.js";
 import {card_F2} from "../card/card_F2.js";
@@ -15,6 +14,8 @@ import {card_F4} from "../card/card_F4.js";
 import {card_F5} from "../card/card_F5.js";
 import {card_F6} from "../card/card_F6.js";
 import {card_F7} from "../card/card_F7.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
+import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {

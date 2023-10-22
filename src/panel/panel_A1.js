@@ -1,12 +1,12 @@
 import {
     exportJPEG, getPanelNameSVG,
-    getRandomBannerPath,
     implantImage, implantSvgBody,
-    PanelGenerate,
     readTemplate,
     replaceText
-} from "../util.js";
+} from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
+import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {

@@ -2,16 +2,17 @@ import {
     exportJPEG,
     getExportFileV3Path,
     getGameMode, getPanelNameSVG,
-    getRandomBannerPath,
     implantImage,
-    implantSvgBody, PanelDraw, PanelGenerate,
-    readTemplate,
+    implantSvgBody, readTemplate,
     replaceText, replaceTexts
-} from "../util.js";
-import {torus} from "../font.js";
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_B1} from "../card/card_B1.js";
 import {card_B2} from "../card/card_B2.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
+import {PanelDraw} from "../util/panelDraw.js";
+import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {

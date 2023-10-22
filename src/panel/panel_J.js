@@ -1,17 +1,19 @@
 import {
-    exportJPEG, getExportFileV3Path, getGameMode, getModColor,
-    getPanelNameSVG,
-    getRandomBannerPath, getRankColor, implantImage,
-    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, PanelDraw,
-    PanelGenerate, readNetImage,
+    exportJPEG, getExportFileV3Path, getGameMode, getPanelNameSVG,
+    implantImage,
+    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readNetImage,
     readTemplate,
     replaceText, replaceTexts
-} from "../util.js";
-import {torus} from "../font.js";
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_J} from "../card/card_J.js";
 import {card_L} from "../card/card_L.js";
 import {label_J1, label_J2, label_J3, RANK_OPTION} from "../component/label.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
+import {getModColor, getRankColor} from "../util/color.js";
+import {PanelDraw} from "../util/panelDraw.js";
+import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {

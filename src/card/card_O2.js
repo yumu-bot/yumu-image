@@ -1,5 +1,5 @@
-import {getExportFileV3Path, getMapStatusV3Path, implantImage, replaceTexts} from "../util.js";
-import {torus} from "../font.js";
+import {getMapStatusV3Path, implantImage, replaceTexts} from "../util/util.js";
+import {torus} from "../util/font.js";
 
 export async function card_O2(data = {
     background: '',

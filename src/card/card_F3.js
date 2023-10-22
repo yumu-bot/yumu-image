@@ -1,10 +1,11 @@
 import {
-    getMapBG, getModInt, hasMod,
-    implantSvgBody,
-    PanelDraw, replaceText
-} from "../util.js";
-import {torus} from "../font.js";
+    getMapBG, implantSvgBody,
+    replaceText
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {card_K} from "./card_K.js";
+import {PanelDraw} from "../util/panelDraw.js";
+import {getModInt, hasMod} from "../util/mod.js";
 
 export async function card_F3(data = {
     bp: [{

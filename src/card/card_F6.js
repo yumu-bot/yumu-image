@@ -3,12 +3,12 @@ import {
     getRoundedNumberSmallerStr,
     implantSvgBody,
     modifyArrayToFixedLength,
-    PanelDraw,
     replaceText,
     replaceTexts
-} from "../util.js";
-import {torus} from "../font.js";
+} from "../util/util.js";
+import {torus} from "../util/font.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_F6(data = {
     ranked_score: 0,

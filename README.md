@@ -8,6 +8,7 @@
   - A3：榜单 L
   - A4：最好成绩（包括今日）T/B
   - A5：成绩（多张）P/R，和 A4 很像
+  - A6：单次对局 MO
 - B：PPM 评分系统 PM
 - C：MRA 斗力系统 RA
 - D：个人信息 I
@@ -27,6 +28,7 @@
 - Beta 某人特意做的查成绩面板 P
 - Gamma 成绩和信息简版 X/Y
 - Delta XinRan 比赛面板 K
+- Epsilon 截图用头像 OA
 
 ## 卡片
 

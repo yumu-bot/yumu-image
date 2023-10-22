@@ -1,5 +1,5 @@
-import {torus} from "../font.js";
-import {PanelDraw} from "../util.js";
+import {torus} from "../util/font.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 //drawManiaVariantRank, cr country rank, gr global rank
 export function card_F7(data = {

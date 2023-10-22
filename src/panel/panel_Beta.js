@@ -1,6 +1,6 @@
 import {XMLBuilder, XMLParser} from "fast-xml-parser"
-import {exportJPEG, getAvatar, getDiffBG, readTemplate} from "../util.js";
-import {calcPerformancePoints} from "../compute-pp.js";
+import {exportJPEG, getAvatar, getDiffBG, readTemplate} from "../util/util.js";
+import {calcPerformancePoints} from "../util/compute-pp.js";
 
 const opt = {
     preserveOrder: false,

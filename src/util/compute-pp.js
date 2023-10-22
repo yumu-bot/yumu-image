@@ -2,7 +2,8 @@ import fs from "fs";
 import readline from "readline";
 import axios from "axios";
 import {Beatmap, Calculator} from "rosu-pp";
-import {getGameMode, getModInt, OSU_BUFFER_PATH} from "./util.js";
+import {getGameMode, OSU_BUFFER_PATH} from "./util.js";
+import {getModInt} from "./mod.js";
 
 const stat = {
     count_50: 0,

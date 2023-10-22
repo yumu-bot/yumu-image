@@ -1,11 +1,10 @@
 import {
-    getColorInSpectrum,
-    getModColor,
     getDecimals, implantImage,
     readTemplate,
     replaceText, replaceTexts
-} from "../util.js";
-import {torus} from "../font.js";
+} from "../util/util.js";
+import {torus} from "../util/font.js";
+import {getColorInSpectrum, getModColor} from "../util/color.js";
 
 export async function card_D(data = {
     background: 'PanelObject/H_CardD_BG.png',
