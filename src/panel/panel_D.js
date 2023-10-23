@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getExportFileV3Path, getGameMode,
+    exportJPEG, getGameMode,
     getPanelNameSVG,
     implantImage,
     implantSvgBody,
