@@ -489,7 +489,7 @@ export async function panel_D(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 插入图片和部件
-    const background = pp2UserBG(data.user.pp);
+    const background = pp2UserBG(data.user.pp || 0);
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     svg = implantImage(svg, 1920, 1080, 0, 280, 0.6, background, reg_background);
 
