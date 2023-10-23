@@ -13,7 +13,7 @@ import {label_J1, label_J2, label_J3, RANK_OPTION} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModColor, getRankColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getRandomBannerPath} from "../util/mascotBanner.js";
+import {getRandomBannerPath, pp2UserBG} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {
@@ -418,6 +418,7 @@ export async function panel_J(data = {
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_pp_graph = /(?<=<g id="BPRankGraph">)/;
     let reg_rrect = /(?<=<g id="BPRanksR">)/;
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-PJ-BG\);">)/;
 
     // 面板文字
     const panel_name = getPanelNameSVG('BP Analysis v2 (!ymba)', 'BPA', 'v0.3.1 EA');
@@ -652,8 +653,9 @@ export async function panel_J(data = {
         }
     }
 
+    const background = pp2UserBG(data.user.pp);
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
-
+    svg = implantImage(svg, 1920, 1080, 0, 280, 0.6, background, reg_background);
 
     return svg;
 }

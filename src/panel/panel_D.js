@@ -15,7 +15,7 @@ import {card_F5} from "../card/card_F5.js";
 import {card_F6} from "../card/card_F6.js";
 import {card_F7} from "../card/card_F7.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getRandomBannerPath} from "../util/mascotBanner.js";
+import {getRandomBannerPath, pp2UserBG} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {
@@ -494,22 +494,6 @@ export async function panel_D(data = {
     svg = implantImage(svg, 1920, 1080, 0, 280, 0.6, background, reg_background);
 
     return svg.toString();
-}
-
-//通过 PP 获取玩家颜色（的背景图！
-function pp2UserBG(pp = 0) {
-    let rank;
-
-    if (pp >= 10000) rank = 'X';
-    else if (pp >= 8000) rank = 'XH';
-    else if (pp >= 6000) rank = 'S';
-    else if (pp >= 4000) rank = 'A';
-    else if (pp >= 3000) rank = 'B';
-    else if (pp >= 2000) rank = 'C';
-    else if (pp >= 1000) rank = 'D';
-    else rank = 'F';
-
-    return getExportFileV3Path('object-score-backimage-' + rank + '.jpg');
 }
 
 function user2CardF1(user, mode = 'osu') {

@@ -53,7 +53,6 @@ export const PanelGenerate = {
         };
     },
 
-
     mapper2CardA1: async (user) => {
         const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
         const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
@@ -172,6 +171,60 @@ export const PanelGenerate = {
         };
     },
 
+    matchBeatmap2CardA2: async (beatmap) => {
+        const background = beatmap.background || getExportFileV3Path('beatmap-DLfailBG.jpg');
+        const title1 = beatmap.title || 'Unknown Title';
+        const title2 = beatmap.artist || 'Unknown Artist';
+        const title3 = beatmap.mapper || 'God Made This';
+        const left2 = beatmap.difficulty || 'Tragic Love Extra';
+        const left3 = 'b' + (beatmap.bid || 0);
+
+        const status = beatmap.status;
+        let right2;
+
+        switch (getGameMode(beatmap.mode, 1)) {
+            case 'o': {
+                right2 = 'CS' + (beatmap.cs || 0) +
+                    ' AR' + (beatmap.ar || 0) +
+                    ' OD' + (beatmap.od || 0);
+                break;
+            }
+            case 't': {
+                right2 = 'OD' + (beatmap.od || 0);
+                break;
+            }
+            case 'c': {
+                right2 = 'CS' + (beatmap.cs || 0) +
+                    ' AR' + (beatmap.ar || 0);
+                break;
+            }
+            case 'm': {
+                right2 = (beatmap.cs || 0) +
+                    'Key OD' + (beatmap.od || 0);
+                break;
+            }
+            default: {
+                right2 = '-';
+            }
+        }
+
+        const right3b = getDecimals(beatmap.star_rating,2);
+        const right3m = getDecimals(beatmap.star_rating,3) + '*';
+
+        return {
+            background: background,
+            title1: title1,
+            title2: title2,
+            title3: title3,
+            title_font: 'torus',
+            left2: left2,
+            left3: left3,
+            map_status: status,
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+    },
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
         const background = cursor ? await getMapBG(cursor.id) : await readNetImage(first_beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
@@ -247,7 +300,7 @@ export const PanelGenerate = {
         const background = await getMapBG(beatmapsets.id, 'list@2x');
         const map_status = beatmapsets.status || 'graveyard';
 
-        const isRanked = (map_status === 'ranked' || map_status == 'loved' || map_status === 'approved');
+        const isRanked = (map_status === 'ranked' || map_status === 'loved' || map_status === 'approved');
         const isQualified = (map_status === 'qualified');
 
         const title1 = beatmapsets.title || 'Unknown Title';
@@ -335,6 +388,46 @@ export const PanelGenerate = {
         }
     },
 
+    //给F面板的
+    match2CardA2: async (match, beatmap_arr = []) => {
+        const background = await readNetImage(match.background, getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
+        const title = getMatchNameSplitted(match.match_title);
+        const title1 = title[0];
+        const title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
+        const left1 = match.match_round + 'x Rounds';
+        let left2 = moment(match.match_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '~';
+
+        if (match.match_time.slice(-1) === '-') {
+            left2 += 'Continuing';
+        } else {
+            left2 += moment(match.match_time, '[-]HH:mm').add(8, 'hours').format('HH:mm');
+        }
+
+        const left3 = moment(match.match_time_start, 'X').add(8, 'hours').format('YYYY-MM-DD');
+        const avg_star = beatmap_arr ? beatmap_arr
+            .filter(b => b.star_rating > 0)
+            .map(b => b.star_rating) : 0;
+        const right1 = avg_star ? 'AVG.SR ' + (avg_star.reduce((pv, cv) => {return pv + cv}, 0) / avg_star.length).toFixed(2) : 0;
+        const right2 = 'MP' + match.mpid;
+        const wins_team_red = match.wins_team_red || 0;
+        const wins_team_blue = match.wins_team_blue || 0;
+        const right3b = match.is_team_vs ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
+
+        return {
+            background: background,
+            title1: title1,
+            title2: title2,
+            title_font: 'PuHuiTi',
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+        }
+    },
+
+    //给panel_C用的，期待可以和上面合并
     matchInfo2CardA2: async (data = {
         noneUsers: [],
         matchInfo: {

@@ -10,6 +10,9 @@
     <clipPath id="clippath-PJ-3">
       <circle cx="1630" cy="815" r="70" style="fill: none;"/>
     </clipPath>
+    <clipPath id="clippath-PJ-BG">
+      <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: none;"/>
+    </clipPath>
   </defs>
   <g id="Banner">
     <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719;"/>
@@ -18,6 +21,8 @@
   </g>
   <g id="Background">
     <rect y="290" width="1920" height="790" rx="20" ry="20" style="fill: #2a2226;"/>
+    <g style="clip-path: url(#clippath-PJ-BG);">
+    </g>
   </g>
   <g id="MainCard">
   </g>

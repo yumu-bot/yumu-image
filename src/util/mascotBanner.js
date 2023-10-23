@@ -1,9 +1,10 @@
 import moment from "moment";
 import {getExportFileV3Path} from "./util.js";
 
-const mascot_pic_sum_arr = [50, 20, 4, 4, 7, 1, 2, 2, 3, 6]; //吉祥物的对应的照片数量，和随机banner一样的
+const mascot_pic_sum_arr = [66, 27, 6, 5, 10, 1, 3, 5, 4, 7]; //吉祥物的对应的照片数量，和随机banner一样的
 const bannerTotal = 150; //banner 数量
 const mascotBGTotal = 13; //吉祥物 BG 数量
+
 /**
  * @function 随机提供游戏模式对应的吉祥物名字
  * @return {String} 返回吉祥物名字
@@ -46,8 +47,6 @@ export function getMascotName(mode = 'osu') {
         }
     }
 
-    sum = 0;
-
     switch (mode) {
         case 'osu':
             return 'pippi';
@@ -65,15 +64,13 @@ export function getMascotName(mode = 'osu') {
                     return 'Tama';
                 case 6 :
                     return 'Taikonator';
+                default :
+                    return 'Mocha';
             }
         }
-            break;
         case 'fruits':
-            return 'Yuzu';
-            break;
         case 'catch':
             return 'Yuzu';
-            break;
         case 'mania': {
             switch (m) {
                 case 8 :
@@ -82,7 +79,6 @@ export function getMascotName(mode = 'osu') {
                     return 'Mari';
             }
         }
-            break;
     }
 }
 
@@ -137,7 +133,7 @@ export function getMascotPath(mascotname = 'pippi') {
  * @return {String} 返回头图路径
  */
 export function getRandomBannerPath() {
-    let i = getRandom(bannerTotal)
+    const i = getRandom(bannerTotal)
     return getExportFileV3Path(`Banner/b${i}.png`);
 }
 
@@ -146,13 +142,33 @@ export function getRandomBannerPath() {
  * @return {String} 返回吉祥物背景路径
  */
 export function getRandomMascotBGPath() {
-    let i = getRandom(mascotBGTotal)
+    const i = getRandom(mascotBGTotal)
     return getExportFileV3Path(`Background/${i}.png`);
+}
+
+//通过 PP 获取玩家颜色（的背景图！
+export function pp2UserBG(pp = 0) {
+    let rank;
+
+    if (pp >= 10000) rank = 'X';
+    else if (pp >= 8000) rank = 'XH';
+    else if (pp >= 6000) rank = 'S';
+    else if (pp >= 4000) rank = 'A';
+    else if (pp >= 3000) rank = 'B';
+    else if (pp >= 2000) rank = 'C';
+    else if (pp >= 1000) rank = 'D';
+    else rank = 'F';
+
+    return getExportFileV3Path('object-score-backimage-' + rank + '.jpg');
 }
 
 //获取一个1到目标数的随机整数。如果range小于1，则返回0-1的随机小数。
 export function getRandom(range = 0) {
-    if (range > 1) return Math.round(parseInt(moment().format("SSS")) / 999 * (range - 1)) + 1;
-    else if (range = 1) return 1;
-    else return parseInt(moment().format("SSS")) / 999;
+    if (range > 1) {
+        return Math.round(parseInt(moment().format("SSS")) / 999 * (range - 1)) + 1;
+    } else if (range === 1) {
+        return 1;
+    } else {
+        return parseInt(moment().format("SSS")) / 999;
+    }
 }

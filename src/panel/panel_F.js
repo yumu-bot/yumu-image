@@ -1,18 +1,16 @@
 import {
     exportJPEG,
     getExportFileV3Path,
-    getMatchNameSplitted,
-    getDecimals,
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, readNetImage, getPanelNameSVG, getGameMode, getRoundedNumberStr
+    replaceText, getPanelNameSVG, getRoundedNumberStr
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
 import {getMapAttributes} from "../util/compute-pp.js";
-import moment from "moment";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
 
 export async function router(req, res) {
     try {
@@ -297,75 +295,14 @@ export async function panel_F(data = {
             mode: mode,
         }
     }));
-
-
-
-    // 导入谱面卡(A2卡
-    async function implantBeatMapCardA2(object, x, y) {
-
-        const background = object.background || getExportFileV3Path('beatmap-DLfailBG.jpg');
-        const title1 = object.title || 'Unknown Title';
-        const title2 = object.artist || 'Unknown Artist';
-        const title3 = object.mapper || 'God Made This';
-        const left2 = object.difficulty || 'Tragic Love Extra';
-        const left3 = 'b' + (object.bid || 0);
-
-        const status = object.status;
-        let right2;
-
-        switch (getGameMode(object.mode, 1)) {
-            case 'o': {
-                right2 = 'CS' + (object.cs || 0) +
-                    ' AR' + (object.ar || 0) +
-                    ' OD' + (object.od || 0);
-                break;
-            }
-            case 't': {
-                right2 = 'OD' + (object.od || 0);
-                break;
-            }
-            case 'c': {
-                right2 = 'CS' + (object.cs || 0) +
-                    ' AR' + (object.ar || 0);
-                break;
-            }
-            case 'm': {
-                right2 = (object.cs || 0) +
-                    'Key OD' + (object.od || 0);
-                break;
-            }
-            default: {
-                right2 = '-';
-            }
-        }
-
-        const right3b = getDecimals(object.star_rating,2);
-        const right3m = getDecimals(object.star_rating,3) + '*';
-
-        const card_A2_beatmap_impl =
-            await card_A2({
-                data,
-                background: background,
-                title1: title1,
-                title2: title2,
-                title3: title3,
-                title_font: 'torus',
-                left2: left2,
-                left3: left3,
-                map_status: status,
-                right2: right2,
-                right3b: right3b,
-                right3m: right3m,
-            }, true);
-
-        svg = implantSvgBody(svg, x, y, card_A2_beatmap_impl, reg_card_a2);
-    }
-
-    //导入谱面卡的同时计算面板高度和背景高度
+    
+    //导入谱面卡(A2卡 的同时计算面板高度和背景高度
     let panel_height = 330;
     let background_height = 40;
     for (const index in beatmap_arr) {
-        await implantBeatMapCardA2(beatmap_arr[index], 40, 330 + index * 250);
+        const b = await PanelGenerate.matchBeatmap2CardA2(beatmap_arr[index]);
+        svg = implantSvgBody(svg, 40, 330 + index * 250, b, reg_card_a2);
+        
         panel_height += 250;
         background_height += 250;
     }
@@ -373,44 +310,10 @@ export async function panel_F(data = {
     svg = replaceText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    const background = await readNetImage(data.match.background, getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
-    const title = getMatchNameSplitted(data.match.match_title);
-    const title1 = title[0];
-    const title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
-    const left1 = data.match.match_round + 'x Rounds';
-    let left2 = moment(data.match.match_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '~';
 
-    if (data.match.match_time.slice(-1) === '-') {
-        left2 += 'Continuing';
-    } else {
-        left2 += moment(data.match.match_time, '[-]HH:mm').add(8, 'hours').format('HH:mm');
-    }
-
-    const left3 = moment(data.match.match_time_start, 'X').add(8, 'hours').format('YYYY-MM-DD');
-    const avg_star = beatmap_arr
-        .filter(b => b.star_rating > 0)
-        .map(b => b.star_rating);
-    const right1 = avg_star ? 'AVG.SR ' + (avg_star.reduce((pv, cv) => {return pv + cv}, 0) / avg_star.length).toFixed(2) : 0;
-    const right2 = 'MP' + data.match.mpid;
-    const wins_team_red = data.match.wins_team_red || 0;
-    const wins_team_blue = data.match.wins_team_blue || 0;
-    const right3b = data.match.is_team_vs ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
-
-    const card_A2_impl =
-        await card_A2({
-            data,
-            background: background,
-            title1: title1,
-            title2: title2,
-            title_font: 'PuHuiTi',
-            left1: left1,
-            left2: left2,
-            left3: left3,
-            right1: right1,
-            right2: right2,
-            right3b: right3b,
-        },  true);
-    svg = implantSvgBody(svg,40,40,card_A2_impl,reg_maincard);
+    const m = await PanelGenerate.match2CardA2(data.match, beatmap_arr);
+    const card_A2_impl = await card_A2(m, true);
+    svg = implantSvgBody(svg,40,40, card_A2_impl, reg_maincard);
 
     return svg.toString();
 }
