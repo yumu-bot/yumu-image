@@ -560,11 +560,8 @@ const score2AccIndex = (score) => {
     let nTotal;
     let nNotMiss;
 
-    let hasMiss = false;
-    if (n0 !== 0) hasMiss = true;
-
-    let has1p50 = false;
-    if ((n50 / (n300 + n100 + n50 + n0)) >= 0.01) has1p50 = true;
+    const hasMiss = (n0 !== 0);
+    const has1p50 = ((n50 / (n300 + n100 + n50 + n0)) >= 0.01);
 
     const rank = score.rank;
 
@@ -758,16 +755,31 @@ const score2AccIndex = (score) => {
     function getIndexCatch() {
         nNotMiss = n300 + n100 + n50;
         nTotal = nNotMiss + n0 + nKatu;
-        switch (rank) {
-            case 'XH' :
-            case 'X' : return 'AP';
-            case 'SH' :
-            case 'S' : return '-' + getRoundedNumberStr(Math.ceil(nTotal - n300), 1) + ' SS';
-            case 'A' : return '-' + getRoundedNumberStr(Math.ceil(0.9801 * nTotal - n300), 1) + ' S';
-            case 'B' : return '-' + getRoundedNumberStr(Math.ceil(0.9401 * nTotal - n300), 1) + ' A';
-            case 'C' : return '-' + getRoundedNumberStr(Math.ceil(0.9001 * nTotal - n300), 1) + ' B';
-            case 'D' : return '-' + getRoundedNumberStr(Math.ceil(0.8501 * nTotal - n300), 1) + ' C';
-            default : return '~ ' + getApproximateRank(score);
+        if (hasMiss) {
+            switch (rank) {
+                case 'XH' :
+                case 'X' :
+                    return 'AP';
+                case 'SH' :
+                case 'S' :
+                    return '-' + getRoundedNumberStr(Math.ceil(nTotal - nNotMiss), 1) + ' SS';
+                case 'A' :
+                    return '-' + getRoundedNumberStr(Math.ceil(0.9801 * nTotal - nNotMiss), 1) + ' S';
+                case 'B' :
+                    return '-' + getRoundedNumberStr(Math.ceil(0.9401 * nTotal - nNotMiss), 1) + ' A';
+                case 'C' :
+                    return '-' + getRoundedNumberStr(Math.ceil(0.9001 * nTotal - nNotMiss), 1) + ' B';
+                case 'D' :
+                    return '-' + getRoundedNumberStr(Math.ceil(0.8501 * nTotal - nNotMiss), 1) + ' C';
+                default :
+                    return '~ ' + getApproximateRank(score);
+            }
+        } else {
+            if (rank !== 'F') {
+                return '-MD SS';
+            } else {
+                return '~ ' + getApproximateRank(score);
+            }
         }
     }
 
