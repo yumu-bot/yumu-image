@@ -347,7 +347,7 @@ function getRowTotal(lists = []) {
 
     for (const v of lists) {
         const c = lists.category ? lists.category.length : 0;
-        const row3 = Math.floor(c / 3) + 1 //一个模组池子需要多少行
+        const row3 = Math.ceil(c / 3); //一个模组池子需要多少行
         const rowr = c - (row3 - 1) * 3; // 余数
 
         if (rowr === 0) {

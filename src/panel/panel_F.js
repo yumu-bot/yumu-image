@@ -151,26 +151,25 @@ export async function panel_F(data = {
                 player_mods: [],
                 player_rank: 6,
             }],
-            blue: [
-                {
-                    player_name: 'Greystrip_VoV',
-                    player_avatar: getExportFileV3Path('avatar-guest.png'),
-                    player_score: 403437,
-                    player_mods: ['HD'],
-                    player_rank: 3,
-                }, {
-                    player_name: 'Mars New',
-                    player_avatar: getExportFileV3Path('avatar-guest.png'),
-                    player_score: 371937,
-                    player_mods: [],
-                    player_rank: 4,
-                }, {
-                    player_name: 'No Rank',
-                    player_avatar: getExportFileV3Path('avatar-guest.png'),
-                    player_score: 371007,
-                    player_mods: [],
-                    player_rank: 5,
-                }],
+            blue: [{
+                player_name: 'Greystrip_VoV',
+                player_avatar: getExportFileV3Path('avatar-guest.png'),
+                player_score: 403437,
+                player_mods: ['HD'],
+                player_rank: 3,
+            }, {
+                player_name: 'Mars New',
+                player_avatar: getExportFileV3Path('avatar-guest.png'),
+                player_score: 371937,
+                player_mods: [],
+                player_rank: 4,
+            }, {
+                player_name: 'No Rank',
+                player_avatar: getExportFileV3Path('avatar-guest.png'),
+                player_score: 371007,
+                player_mods: [],
+                player_rank: 5,
+            }],
             none: [{
 
             }]

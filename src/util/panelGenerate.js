@@ -10,10 +10,10 @@ import {
     getRoundedNumberSmallerStr,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage
+    readNetImage, SpecialRoundedLargeNum, SpecialRoundedSmallNum
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
-import {getModInt, hasMod} from "./mod.js";
+import {getAllMod, getModInt, hasMod} from "./mod.js";
 
 //公用方法
 //把参数变成面板能读懂的数据（router
@@ -107,7 +107,6 @@ export const PanelGenerate = {
             sub_icon1: sub_icon1,
             sub_icon2: '',
 
-
             country: country,
 
             top1: microUser.username,
@@ -118,6 +117,59 @@ export const PanelGenerate = {
             right3b: right3b,
             right3m: right3m,
         };
+    },
+
+
+    //panel F2 用的转换
+    matchUser2CardA1: async (user = {
+        name: 'na-gi', //妈的 为什么get match不给用户名啊
+        country: 'CN',
+        avatar: '',
+        cover: '',
+        score: 464277,
+        accuracy: 0.965414652,
+        combo: 1475,
+        rating: 0.9641876243,
+        mods: [],
+        grade: 'A',
+        rank: 1, //一局比赛里的分数排名，1v1或者team都一样
+
+        team: 'red', //red, blue, none
+    }) => {
+        if (!user) return '';
+
+        const mod_str = (user.mods !== null && user.mods.length > 1) ? ' +' + getAllMod(getModInt(user.mods)) : '';
+        const team_str = (user.team === 'red') ? 'teamred' : ((user.team === 'blue') ? 'teamblue' : 'headtohead');
+
+        const background = await readNetImage(user.cover, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user.avatar, getExportFileV3Path('avatar-guest.png'));
+
+        const country = user.country || 'CN';
+
+        const top1 = user.player_name || 'Unknown';
+        const left2 = '#' + user.rank;
+        const sub_icon1 = getExportFileV3Path('object-card-' + team_str + '.png')
+        const right2 = (Math.round(user.accuracy * 10000) / 100) + '% '
+            + user.grade + mod_str + ' ' + user.combo + 'x';
+        const right3b = SpecialRoundedLargeNum(user.player_score);
+        const right3m = SpecialRoundedSmallNum(user.player_score);
+
+        return {
+            background,
+            avatar,
+            sub_icon1: sub_icon1,
+            sub_icon2: '',
+            country: country,
+
+            top1: top1,
+            left1: country,
+            left2: left2,
+            right1: '',
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+
     },
 
     beatmap2CardA2: async (beatmap) => {

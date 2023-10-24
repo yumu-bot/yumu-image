@@ -344,31 +344,30 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
         }
         return o;
     }
+}
 
-    function SpecialRoundedLargeNum(number) {
-        let p = 0;
+export function SpecialRoundedLargeNum(number) {
+    let p = 0;
 
-        if (number <= Math.pow(10, 8)) {
-            p = 4; //5671 1234 -> 5671
+    if (number <= Math.pow(10, 8)) {
+        p = 4; //5671 1234 -> 5671
 
-        } else if (number <= Math.pow(10, 12)) {
-            p = 8; //794 5671 1234 -> 794
+    } else if (number <= Math.pow(10, 12)) {
+        p = 8; //794 5671 1234 -> 794
 
-        } else if (number <= Math.pow(10, 16)) {
-            p = 12; //794 5671 1234 0000 -> 794
+    } else if (number <= Math.pow(10, 16)) {
+        p = 12; //794 5671 1234 0000 -> 794
 
-        } else {
-            return '';
-        }
-        let re = Math.floor(number / Math.pow(10, p));
-
-        if (re === 0) {
-            return ''
-        } else {
-            return re.toString()
-        }
+    } else {
+        return '';
     }
+    let re = Math.floor(number / Math.pow(10, p));
 
+    if (re === 0) {
+        return ''
+    } else {
+        return re.toString()
+    }
 }
 
 /**
@@ -506,27 +505,27 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
 
         return o + unit;
     }
+}
 
-    function SpecialRoundedSmallNum(number) {
-        let s = 0;
-        let o;
+export function SpecialRoundedSmallNum(number) {
+    let s = 0;
+    let o;
 
-        if (number < Math.pow(10, 8)) {
-            s = -4; //5671 1234 -> 1234
+    if (number < Math.pow(10, 8)) {
+        s = -4; //5671 1234 -> 1234
 
-        } else if (number < Math.pow(10, 12)) {
-            s = -8; //794 5671 1234 -> 5671 1234
+    } else if (number < Math.pow(10, 12)) {
+        s = -8; //794 5671 1234 -> 5671 1234
 
-        } else if (number < Math.pow(10, 16)) {
-            s = -12; //794 5671 1234 0000 -> 5671 1234 0000
+    } else if (number < Math.pow(10, 16)) {
+        s = -12; //794 5671 1234 0000 -> 5671 1234 0000
 
-        } else if (number < Math.pow(10, 20)) {
-            s = -16;
+    } else if (number < Math.pow(10, 20)) {
+        s = -16;
 
-        }
-        o = number.toString().slice(s);
-        return o;
     }
+    o = number.toString().slice(s);
+    return o;
 }
 
 //只给 level 1, 2, 3, 4 提供单位
