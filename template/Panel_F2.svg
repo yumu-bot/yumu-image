@@ -14,8 +14,6 @@
     <rect y="290" width="1920" height="${height}" rx="20" ry="20" style="fill: #2a2226;"/>
   </g>
   <g id="BodyCard">
-    <g id="CardA1">
-    </g>
   </g>
   <g id="MainCard">
   </g>

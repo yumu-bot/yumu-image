@@ -10,7 +10,7 @@ import {
     getRoundedNumberSmallerStr,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage, SpecialRoundedLargeNum, SpecialRoundedSmallNum
+    readNetImage,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getAllMod, getModInt, hasMod} from "./mod.js";
@@ -124,8 +124,8 @@ export const PanelGenerate = {
     matchUser2CardA1: async (user = {
         name: 'na-gi', //妈的 为什么get match不给用户名啊
         country: 'CN',
-        avatar: '',
-        cover: '',
+        avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
+        cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
         score: 464277,
         accuracy: 0.965414652,
         combo: 1475,
@@ -134,11 +134,11 @@ export const PanelGenerate = {
         grade: 'A',
         rank: 1, //一局比赛里的分数排名，1v1或者team都一样
 
-        team: 'red', //red, blue, none
+        team: 'headtohead', //red, blue, none
     }) => {
         if (!user) return '';
 
-        const mod_str = (user.mods !== null && user.mods.length > 1) ? ' +' + getAllMod(getModInt(user.mods)) : '';
+        const mod_str = (user.mods !== null && user.mods.length > 0) ? ' +' + getAllMod(getModInt(user.mods)) : '';
         const team_str = (user.team === 'red') ? 'teamred' : ((user.team === 'blue') ? 'teamblue' : 'headtohead');
 
         const background = await readNetImage(user.cover, getExportFileV3Path('card-default.png'));
@@ -146,13 +146,13 @@ export const PanelGenerate = {
 
         const country = user.country || 'CN';
 
-        const top1 = user.player_name || 'Unknown';
-        const left2 = '#' + user.rank;
+        const top1 = user.name || 'Unknown';
+        const left2 = '#' + user.rank + ' *' + (Math.round(user.rating * 100) / 100);
         const sub_icon1 = getExportFileV3Path('object-card-' + team_str + '.png')
         const right2 = (Math.round(user.accuracy * 10000) / 100) + '% '
             + user.grade + mod_str + ' ' + user.combo + 'x';
-        const right3b = SpecialRoundedLargeNum(user.player_score);
-        const right3m = SpecialRoundedSmallNum(user.player_score);
+        const right3b = getRoundedNumberLargerStr(user.score, 0);
+        const right3m = getRoundedNumberSmallerStr(user.score, 0);
 
         return {
             background,
