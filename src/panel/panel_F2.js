@@ -352,13 +352,11 @@ function implantCardA1(svg, replace, reg, row = 1, column = 1, maxColumn = 1, te
     return svg;
 }
 
-async function getBeatmapAttr (beatmapLite = {
+async function getBeatmapAttr(beatmapLite = {
     // 谱面部分参数
     mode: 'osu',
     status: 'ranked',
     version: "Ayyri's Hard",
-    sid: 1006608,
-    bid: 2127734,
     id: 2127734,
     beatmapset_id: 1006608,
     difficulty_rating: 3.8,
@@ -408,7 +406,7 @@ async function getBeatmapAttr (beatmapLite = {
         }
     }
 
-    const attr = await getMapAttributes(beatmapLite.bid, getModInt(mods));
+    const attr = await getMapAttributes(beatmapLite.id, getModInt(mods));
 
     const cs = getRoundedNumberStr(attr.cs, 2);
     const ar = getRoundedNumberStr(attr.ar, 2);
