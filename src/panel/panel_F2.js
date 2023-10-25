@@ -4,17 +4,19 @@ import {
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, getPanelNameSVG, getRoundedNumberStr,
+    replaceText, getPanelNameSVG, getRoundedNumberStr, getMapBG,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getMapAttributes} from "../util/compute-pp.js";
+import {getModInt} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
         const data = req.fields || {};
+        console.log(data)
         const svg = await panel_F2(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
@@ -38,108 +40,131 @@ export async function router_svg(req, res) {
 }
 
 export async function panel_F2(data = {
-    // A2卡
-    match: {
-        matchInfo: {
-            id: 59438351,
-            name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)',
-            start_time: 1584793502,
-            end_time: 1584799428
-        },
-        averageStar: 0,
-        rounds: 1,
-        isTeamVs: true,
-        sid: 1001507,
-        blueWins: 5,
-        redWins: 6,
-        noneUsers: [],
-        redUsers: [{
-            name: 'na-gi', //妈的 为什么get match不给用户名啊
-            country: 'CN',
-            avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
-            cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-            score: 464277,
-            accuracy: 0.965414652,
-            combo: 1475,
-            rating: 0.9641876243,
-            mods: [],
-            grade: 'A',
-            rank: 1, //一局比赛里的分数排名，1v1或者team都一样
-        }, {
-            name: '- Rainbow -',
-            country: 'CN',
-            avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
-            cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-            score: 412096,
-            accuracy: 0.965414652,
-            combo: 1475,
-            rating: 0.9641876243,
-            mods: [],
-            grade: 'A',
-            rank: 2
-        }, {
-            name: 'Guozi on osu',
-            country: 'CN',
-            avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
-            cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-            score: 268397,
-            accuracy: 0.965414652,
-            combo: 1475,
-            rating: 0.9641876243,
-            mods: [],
-            grade: 'A',
-            rank: 6,
-        }],
-        blueUsers: [{
-            name: 'Greystrip_VoV',
-            country: 'CN',
-            avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
-            cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-            score: 403437,
-            accuracy: 0.965414652,
-            combo: 1475,
-            rating: 1.0245644,
-            mods: ['HD'],
-            grade: 'B',
-            rank: 3,
-        }, {
-            name: 'Mars New',
-            country: 'CN',
-            avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
-            cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-            score: 371937,
-            accuracy: 0.965414652,
-            combo: 1475,
-            rating: 0.9641876243,
-            mods: [],
-            grade: 'A',
-            rank: 4,
-        }, {
-            name: 'No Rank',
-            country: 'CN',
-            avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
-            cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-            score: 371007,
-            accuracy: 0.965414652,
-            combo: 1475,
-            rating: 0.9641876243,
-            mods: [],
-            grade: 'A',
-            rank: 5,
-        }],
+    matchInfo: {
+        id: 59438351,
+        name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)',
+        start_time: 1584793502,
+        end_time: 1584799428
     },
+    averageStar: 0,
+    rounds: 1,
+    isTeamVs: true,
+    sid: 1001507,
+    blueWins: 5,
+    redWins: 6,
+    noneUsers: [],
+    redUsers: [{
+        name: 'na-gi', //妈的 为什么get match不给用户名啊
+        country: 'CN',
+        avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
+        cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
+        score: 464277,
+        accuracy: 0.965414652,
+        combo: 1475,
+        rating: 0.9641876243,
+        mods: [],
+        grade: 'A',
+        rank: 1, //一局比赛里的分数排名，1v1或者team都一样
+    }, {
+        name: '- Rainbow -',
+        country: 'CN',
+        avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
+        cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
+        score: 412096,
+        accuracy: 0.965414652,
+        combo: 1475,
+        rating: 0.9641876243,
+        mods: [],
+        grade: 'A',
+        rank: 2
+    }, {
+        name: 'Guozi on osu',
+        country: 'CN',
+        avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
+        cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
+        score: 268397,
+        accuracy: 0.965414652,
+        combo: 1475,
+        rating: 0.9641876243,
+        mods: [],
+        grade: 'A',
+        rank: 6,
+    }],
+    blueUsers: [{
+        name: 'Greystrip_VoV',
+        country: 'CN',
+        avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
+        cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
+        score: 403437,
+        accuracy: 0.965414652,
+        combo: 1475,
+        rating: 1.0245644,
+        mods: ['HD'],
+        grade: 'B',
+        rank: 3,
+    }, {
+        name: 'Mars New',
+        country: 'CN',
+        avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
+        cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
+        score: 371937,
+        accuracy: 0.965414652,
+        combo: 1475,
+        rating: 0.9641876243,
+        mods: [],
+        grade: 'A',
+        rank: 4,
+    }, {
+        name: 'No Rank',
+        country: 'CN',
+        avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
+        cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
+        score: 371007,
+        accuracy: 0.965414652,
+        combo: 1475,
+        rating: 0.9641876243,
+        mods: [],
+        grade: 'A',
+        rank: 5,
+    }],
 
     beatmap: {
-        // 谱面部分参数
-        background: 'https://assets.ppy.sh/beatmaps/1087774/covers/cover@2x.jpg',
-        title: 'Back to Marie',
-        artist: 'Kumagai Eri(cv.Seto Asami)',
-        mapper: 'Yunomi', //creator
-        difficulty: 'Catharsis',
+        mode: 'osu',
         status: 'ranked',
-        bid: 1000684,
-        delete: false,
+        version: "Ayyri's Hard",
+        sid: 1006608,
+        bid: 2127734,
+        id: 2127734,
+        beatmapset_id: 1006608,
+        difficulty_rating: 3.8,
+        total_length: 214,
+        user_id: 3388410,
+        beatmapset: {
+            video: false,
+            fromDatabases: false,
+            sid: 1006608,
+            mapperName: 'Mordred',
+            mapperUID: 7265097,
+            ranked: true,
+            rating: 0,
+            id: 1006608,
+            user_id: 7265097,
+            artist: 'Iguchi Yuka',
+            artist_unicode: '井口裕香',
+            title: 'HELLO to DREAM',
+            title_unicode: 'HELLO to DREAM',
+            creator: 'Mordred',
+            favourite_count: 154,
+            nsfw: false,
+            play_count: 235125,
+            preview_url: '//b.ppy.sh/preview/1006608.mp3',
+            source: 'ダンジョンに出会いを求めるのは間違っているだろうかⅡ',
+            status: 'ranked',
+            covers: [Object],
+            spotlight: false
+        },
     },
+
 }, reuse = false) {
     // 导入模板
     let svg = readTemplate('template/Panel_F2.svg');
@@ -165,13 +190,13 @@ export async function panel_F2(data = {
     let panel_height = 330;
     let background_height = 40;
 
-    const isTeamVS = data.match.isTeamVs;
-    const isRedWin = data.match.redWins;
-    const isBlueWin = data.match.blueWins;
+    const isTeamVS = data.isTeamVs;
+    const isRedWin = data.redWins;
+    const isBlueWin = data.blueWins;
 
-    const redData = data.match.redUsers || [];
-    const blueData = data.match.blueUsers || [];
-    const noneData = data.match.noneUsers || [];
+    const redData = data.redUsers || [];
+    const blueData = data.blueUsers || [];
+    const noneData = data.noneUsers || [];
 
     if (isTeamVS) {
         let redArr = [];
@@ -259,15 +284,17 @@ export async function panel_F2(data = {
     svg = replaceText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    const f = await card_A2(await PanelGenerate.matchInfo2CardA2(data.match), true);
+    const f = await card_A2(await PanelGenerate.matchInfo2CardA2({
+        ...data, background: data.beatmap.background
+    }), true);
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
 
     const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(
         await getBeatmapAttr(data.beatmap, isTeamVS ?
-            (isRedWin ? data.match.redUsers[0].mods :
-                (isBlueWin ? data.match.blueUsers[0].mods : [])) : data.match.noneUsers[0].mods)
+            (isRedWin ? data.redUsers[0].mods :
+                (isBlueWin ? data.blueUsers[0].mods : [])) : data.noneUsers[0].mods)
         /*
         {
             background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
@@ -325,24 +352,45 @@ function implantCardA1(svg, replace, reg, row = 1, column = 1, maxColumn = 1, te
     return svg;
 }
 
-async function getBeatmapAttr (stat = {
+async function getBeatmapAttr (beatmapLite = {
     // 谱面部分参数
-    background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
-    title: 'Back to Marie',
-    artist: 'Kumagai Eri(cv.Seto Asami)',
-    mapper: 'Yunomi', //creator
-    difficulty: 'Catharsis',
+    mode: 'osu',
     status: 'ranked',
-    bid: 1000684,
-    delete: false,
+    version: "Ayyri's Hard",
+    sid: 1006608,
+    bid: 2127734,
+    id: 2127734,
+    beatmapset_id: 1006608,
+    difficulty_rating: 3.8,
+    total_length: 214,
+    user_id: 3388410,
+    beatmapset: {
+        video: false,
+        fromDatabases: false,
+        sid: 1006608,
+        mapperName: 'Mordred',
+        mapperUID: 7265097,
+        ranked: true,
+        rating: 0,
+        id: 1006608,
+        user_id: 7265097,
+        artist: 'Iguchi Yuka',
+        artist_unicode: '井口裕香',
+        title: 'HELLO to DREAM',
+        title_unicode: 'HELLO to DREAM',
+        creator: 'Mordred',
+        favourite_count: 154,
+        nsfw: false,
+        play_count: 235125,
+        preview_url: '//b.ppy.sh/preview/1006608.mp3',
+        source: 'ダンジョンに出会いを求めるのは間違っているだろうかⅡ',
+        status: 'ranked',
+        covers: [Object],
+        spotlight: false
+    },
 }, mods = []) {
 
-    let mod_int = 0;
-    if (mods.indexOf("DT") !== -1) mod_int = 64;
-
-    if (stat.delete) {
-        const bid = stat.bid || 0;
-
+    if (!beatmapLite) {
         return {
             background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
             title: 'Deleted Map',
@@ -351,7 +399,7 @@ async function getBeatmapAttr (stat = {
             difficulty: '?',
             status: '',
 
-            bid: bid,
+            bid: 0,
             star_rating: 0,
             cs: 0,
             ar: 0,
@@ -360,22 +408,22 @@ async function getBeatmapAttr (stat = {
         }
     }
 
-    const attr = await getMapAttributes(stat.bid, mod_int);
+    const attr = await getMapAttributes(beatmapLite.bid, getModInt(mods));
 
     const cs = getRoundedNumberStr(attr.cs, 2);
     const ar = getRoundedNumberStr(attr.ar, 2);
     const od = getRoundedNumberStr(attr.od, 2);
-    const mode = stat.mode ? stat.mode.toLowerCase() : 'osu';
+    const mode = beatmapLite.mode ? beatmapLite.mode.toLowerCase() : 'osu';
 
     return {
-        background: stat.background,
-        title: stat.title,
-        artist: stat.artist,
-        mapper: stat.mapper, //creator
-        difficulty: stat.difficulty,
-        status: stat.status,
+        background: await getMapBG(beatmapLite.beatmapset.sid, 'list@2x'),
+        title: beatmapLite.beatmapset.title,
+        artist: beatmapLite.beatmapset.artist,
+        mapper: beatmapLite.beatmapset.creator, //creator
+        difficulty: beatmapLite.version,
+        status: beatmapLite.status,
 
-        bid: stat.bid,
+        bid: beatmapLite.bid,
         star_rating: attr.stars,
         cs: cs,
         ar: ar,

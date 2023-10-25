@@ -13,7 +13,7 @@ export async function card_A1(data = {
     avatar: getExportFileV3Path('avatar-guest.png'),
     sub_icon1: getExportFileV3Path('object-card-supporter.png'),
     sub_icon2: '',
-    country: 'CN',
+    country: null,
 
     top1: 'Muziyami',
     left1: '#28075',

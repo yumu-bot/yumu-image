@@ -13,7 +13,7 @@ import {
     readNetImage,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
-import {getAllMod, getModInt, hasMod} from "./mod.js";
+import {getModInt, hasMod} from "./mod.js";
 
 //公用方法
 //把参数变成面板能读懂的数据（router
@@ -122,6 +122,7 @@ export const PanelGenerate = {
 
     //panel F2 用的转换
     matchUser2CardA1: async (user = {
+        /*
         name: 'na-gi', //妈的 为什么get match不给用户名啊
         country: 'CN',
         avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
@@ -134,11 +135,79 @@ export const PanelGenerate = {
         grade: 'A',
         rank: 1, //一局比赛里的分数排名，1v1或者team都一样
 
-        team: 'headtohead', //red, blue, none
+         */
+        team: 'red',
+        username: 'No rank',
+        scores: [ 1035176 ],
+        wins: 0,
+        lost: 1,
+        userData: {
+            id: 11355787,
+            username: 'na-gi',
+            uid: 11355787,
+            avatar_url: 'https://a.ppy.sh/11355787?1590115432.jpeg',
+            playmode: 'DEFAULT',
+            support_level: 0,
+            cover: {
+                url: 'https://assets.ppy.sh/user-profile-covers/11355787/fbab99aa8812f95f53fa8534cda1aec9f9edde6a8608dd052dc93caa0b64315c.jpeg',
+                custom_url:
+                    'https://assets.ppy.sh/user-profile-covers/11355787/fbab99aa8812f95f53fa8534cda1aec9f9edde6a8608dd052dc93caa0b64315c.jpeg'
+            }
+        },
+        index: 0,
+        coverUrl: null,
+        playerLabelV1: 'BC',
+        headerUrl: 'https://a.ppy.sh/10436444',
+        totalScore: 0.969193,
+        uid: 10436444,
+        mra: 1.673093182996036,
+        rwss: [],
+        era: 1.835657975290755,
+        rras: [Array],
+        rws: 0,
+        dra: 1.293775334308359,
+        playerLabelV2: 'SMA',
+        mq: 1.6819079346008665,
+        tmg: 2.8031798910014443,
+        amg: 2.8031798910014443,
+
     }) => {
         if (!user) return '';
 
-        const mod_str = (user.mods !== null && user.mods.length > 0) ? ' +' + getAllMod(getModInt(user.mods)) : '';
+        const score = user.scores ? user.scores[0] : 0;
+        const team_str = (user.team === 'red') ? 'teamred' : ((user.team === 'blue') ? 'teamblue' : 'headtohead');
+
+        const background = await readNetImage(user.userData.cover.url, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user.headerUrl, getExportFileV3Path('avatar-guest.png'));
+
+        const top1 = user.username || 'Unknown';
+
+        const left1 = (user.wins === 1) ? ((user.lost === 1) ? 'Win' : 'Lose') : '-';
+        const left2 = '#' + (user.index + 1);
+        const sub_icon1 = getExportFileV3Path('object-card-' + team_str + '.png')
+        const right2 = 'Rating ' + (Math.round((user.rras ? user.rras[user.rras.length - 1] : 0) * 100) / 100);
+        const right3b = getRoundedNumberLargerStr(score, 0);
+        const right3m = getRoundedNumberSmallerStr(score, 0);
+
+        return {
+            background,
+            avatar,
+            sub_icon1: sub_icon1,
+            sub_icon2: '',
+            country: null,
+
+            top1: top1,
+            left1: left1,
+            left2: left2,
+            right1: '',
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+
+        /*
+
+        const mod_str = (user.mods != null && user.mods.length > 0) ? ' +' + getAllMod(getModInt(user.mods)) : '';
         const team_str = (user.team === 'red') ? 'teamred' : ((user.team === 'blue') ? 'teamblue' : 'headtohead');
 
         const background = await readNetImage(user.cover, getExportFileV3Path('card-default.png'));
@@ -169,6 +238,8 @@ export const PanelGenerate = {
             right3b: right3b,
             right3m: right3m,
         };
+
+         */
 
     },
 
@@ -442,7 +513,7 @@ export const PanelGenerate = {
 
     //给F面板的
     match2CardA2: async (match, beatmap_arr = []) => {
-        const background = await readNetImage(match.background, getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
+        const background = await readNetImage(beatmap_arr ? beatmap_arr[0].background : '', getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
         const title = getMatchNameSplitted(match.match_title);
         const title1 = title[0];
         const title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
@@ -492,10 +563,12 @@ export const PanelGenerate = {
         rounds: 1,
         redUsers: [[Object], [Object], [Object], [Object], [Object]],
         isTeamVs: true,
-        sid: 1001507,
         blueWins: 5,
         redWins: 6,
-        blueUsers: [[Object], [Object], [Object], [Object], [Object], [Object]]
+        blueUsers: [[Object], [Object], [Object], [Object], [Object], [Object]],
+
+        sid: 1001507,
+        background: '',
     }) => {
         const wins_team_red = data.redWins || 0;
         const wins_team_blue = data.blueWins || 0;
@@ -503,7 +576,7 @@ export const PanelGenerate = {
         const isContainVS = data.matchInfo.name.toLowerCase().match('vs');
         const star = getDecimals(data.averageStar, 2) + getDecimals(data.averageStar, 3);
 
-        const background = await getMapBG(data.sid, 'list@2x');
+        const background = data.sid ? await getMapBG(data.sid, 'list@2x') : await readNetImage(data.background, getExportFileV3Path('beatmap-DLfailBG.jpg'));
 
         let title, title1, title2;
         if (isContainVS) {

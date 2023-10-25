@@ -1208,6 +1208,8 @@ export async function getFlagSvg(code = "cn") {
 }
 
 export async function getFlagPath(code = "cn", x, y, h = 30) {
+    if (typeof code != 'string') return '';
+
     const svg = await getFlagSvg(code);
     const len = svg.length;
     const scale = h / 30;

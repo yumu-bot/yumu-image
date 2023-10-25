@@ -76,7 +76,7 @@ app.post('/testApi', async (req, res) => {
 })
 
 app.listen(process.env.PORT, () => {
-    console.log(`== Done. ==\n listen on: http://localhost:${process.env.PORT}\n cache path: ${CACHE_PATH}`);
+    console.log(`== Done. ==\nlisten on: http://localhost:${process.env.PORT}\ncache path: ${CACHE_PATH}`);
 })
 
 // form: data:text ... img:file
