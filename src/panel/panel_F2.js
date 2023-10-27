@@ -1,10 +1,13 @@
 import {
     exportJPEG,
     getExportFileV3Path,
+    getMapBG,
+    getPanelNameSVG,
+    getRoundedNumberStr,
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, getPanelNameSVG, getRoundedNumberStr, getMapBG,
+    replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_A2} from "../card/card_A2.js";
@@ -16,7 +19,6 @@ import {getModInt} from "../util/mod.js";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        console.log(data)
         const svg = await panel_F2(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
@@ -48,10 +50,6 @@ export async function panel_F2(data = {
     },
     averageStar: 0,
     rounds: 1,
-    isTeamVs: true,
-    sid: 1001507,
-    blueWins: 5,
-    redWins: 6,
     noneUsers: [],
     redUsers: [{
         name: 'na-gi', //妈的 为什么get match不给用户名啊
@@ -132,8 +130,6 @@ export async function panel_F2(data = {
         mode: 'osu',
         status: 'ranked',
         version: "Ayyri's Hard",
-        sid: 1006608,
-        bid: 2127734,
         id: 2127734,
         beatmapset_id: 1006608,
         difficulty_rating: 3.8,
@@ -190,13 +186,18 @@ export async function panel_F2(data = {
     let panel_height = 330;
     let background_height = 40;
 
-    const isTeamVS = data.isTeamVs;
-    const isRedWin = data.redWins;
-    const isBlueWin = data.blueWins;
-
     const redData = data.redUsers || [];
     const blueData = data.blueUsers || [];
     const noneData = data.noneUsers || [];
+
+    const isTeamVS = (data.noneUsers != null);
+    const redTeamScore = isTeamVS ? getTotalScore(redData) : 0;
+    const blueTeamScore = isTeamVS ? getTotalScore(blueData) : 0;
+    const totalScore = isTeamVS ? redTeamScore + blueTeamScore : getTotalScore(noneData);
+    const totalPlayer = isTeamVS ? redData.length + blueData.length : noneData.length;
+
+    const isRedWin = (redTeamScore > blueTeamScore);
+    const isBlueWin = (redTeamScore < blueTeamScore);
 
     if (isTeamVS) {
         let redArr = [];
@@ -204,12 +205,16 @@ export async function panel_F2(data = {
 
         for (const v of redData) {
             v.team = 'red';
+            v.total_score = totalScore;
+            v.total_player = totalPlayer;
             const f = await card_A1(await PanelGenerate.matchUser2CardA1(v), true);
             redArr.push(f);
         }
 
         for (const v of blueData) {
             v.team = 'blue';
+            v.total_score = totalScore;
+            v.total_player = totalPlayer;
             const f = await card_A1(await PanelGenerate.matchUser2CardA1(v), true);
             blueArr.push(f);
         }
@@ -224,28 +229,30 @@ export async function panel_F2(data = {
         const rr = h * 2 - redArr.length;
         const rb = h * 2 - blueArr.length;
 
+        const hasRemain = (rr > 0 || rb > 0);
+
+        //天选之子 好像只有 0 1 两种可能
+        if (rr === 1) {
+            svg = implantCardA1(svg, redArr[0], reg_bodycard, 1, 1, 1, 'red');
+        }
+
+        //天选之子 好像只有 0 1 两种可能
+        if (rb === 1) {
+            svg = implantCardA1(svg, blueArr[0], reg_bodycard, 1, 1, 1, 'blue');
+        }
+
         for (let i = 0; i < hr - 1; i++) {
             for (let j = 0; j < 2; j++) {
-                const index = i * 2 + j;
-                svg = implantCardA1(svg, redArr[index], reg_bodycard, i + 1, j + 1, 2, 'red');
+                const index = i * 2 + j + rr;
+                svg = implantCardA1(svg, redArr[index], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, 2, 'red');
             }
         }
 
         for (let i = 0; i < hb - 1; i++) {
             for (let j = 0; j < 2; j++) {
-                const index = i * 2 + j;
-                svg = implantCardA1(svg, blueArr[index], reg_bodycard, i + 1, j + 1, 2, 'blue');
+                const index = i * 2 + j + rb;
+                svg = implantCardA1(svg, blueArr[index], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, 2, 'blue');
             }
-        }
-
-        //天选之子 好像只有 0 1 两种可能
-        if (rr === 1) {
-            svg = implantCardA1(svg, redArr[redArr.length - 1], reg_bodycard, hr, 1, 1, 'red');
-        }
-
-        //天选之子 好像只有 0 1 两种可能
-        if (rb === 1) {
-            svg = implantCardA1(svg, blueArr[blueArr.length - 1], reg_bodycard, hb, 1, 1, 'blue');
         }
 
     } else {
@@ -253,6 +260,8 @@ export async function panel_F2(data = {
 
         for (const v of noneData) {
             v.team = 'none';
+            v.total_score = totalScore;
+            v.total_player = totalPlayer;
             const f = await card_A1(await PanelGenerate.matchUser2CardA1(v), true);
             noneArr.push(f);
         }
@@ -260,22 +269,22 @@ export async function panel_F2(data = {
         //计算高度
         const h = Math.ceil(noneArr.length / 4);
         const r = h * 4 - noneArr.length;
+        const hasRemain = (r > 0);
 
         panel_height += h * 250;
         background_height += h * 250;
 
-        for (let i = 0; i < h - 1; i++) {
-            for (let j = 0; j < 4; j++) {
-                const index = i * 4 + j;
-                svg = implantCardA1(svg, noneArr[index], reg_bodycard, i + 1, j + 1, 4, 'none');
-            }
-        }
-
         //天选之子 有 1,2,3
         if (r > 0) {
             for (let m = 0; m < r; m++) {
-                const index = (h - 1) * 4 + m;
-                svg = implantCardA1(svg, noneArr[index], reg_bodycard, h,m + 1,  r, 'none');
+                svg = implantCardA1(svg, noneArr[m], reg_bodycard, 1,m + 1,  r, 'none');
+            }
+        }
+
+        for (let i = 0; i < h - 1; i++) {
+            for (let j = 0; j < 4; j++) {
+                const index = i * 4 + j;
+                svg = implantCardA1(svg, noneArr[index + r], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, 4, 'none');
             }
         }
     }
@@ -285,16 +294,21 @@ export async function panel_F2(data = {
 
     // 导入比赛简介卡（A2卡
     const f = await card_A2(await PanelGenerate.matchInfo2CardA2({
-        ...data, background: data.beatmap.background
+        ...data,
+        background: await getMapBG(data.beatmap.beatmapset_id, 'cover@2x'),
+        isTeamVs: isTeamVS,
+        blueWins: (isBlueWin ? 1 : 0),
+        redWins: (isRedWin ? 1 : 0),
     }), true);
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
-
     const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(
-        await getBeatmapAttr(data.beatmap, isTeamVS ?
-            (isRedWin ? data.redUsers[0].mods :
-                (isBlueWin ? data.blueUsers[0].mods : [])) : data.noneUsers[0].mods)
+        await getBeatmapAttr(data.beatmap,
+            isTeamVS ?
+                (isRedWin ? (data.redUsers[0].mods || []) :
+                (isBlueWin ? (data.blueUsers[0].mods || []) : []))
+            : (data.noneUsers[0].mods || [])),
         /*
         {
             background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
@@ -421,11 +435,19 @@ async function getBeatmapAttr(beatmapLite = {
         difficulty: beatmapLite.version,
         status: beatmapLite.status,
 
-        bid: beatmapLite.bid,
+        bid: beatmapLite.id,
         star_rating: attr.stars,
         cs: cs,
         ar: ar,
         od: od,
         mode: mode,
     }
+}
+
+function getTotalScore(arr = []) {
+    let r = 0;
+    for (const v of arr) {
+        r += (v?.score || 0);
+    }
+    return r;
 }

@@ -1259,3 +1259,104 @@ export function getPanelNameSVG (name = '?? (!test)', index = '?', version = 'v0
     return (powered_text + '\n' + request_time_text + '\n' + index_text);
 }
 
+export const getApproximateRank = (score = {
+    statistics: {
+        count_50: 0,
+        count_100: 0,
+        count_300: 0,
+        count_geki: 0,
+        count_katu: 0,
+        count_miss: 0
+    },
+    mode: 'osu',
+}) => {
+    let rank = 'F';
+    let nTotal;
+
+    const n300 = score.statistics.count_300;
+    const n100 = score.statistics.count_100;
+    const n50 = score.statistics.count_50;
+    const n0 = score.statistics.count_miss;
+    const acc = score.accuracy;
+    const hasMiss = (n0 > 0);
+
+    switch (getGameMode(score.mode, 1)) {
+        case 'o' : {
+            nTotal = n300 + n100 + n50 + n0;
+
+            const is50over1p = (n50 / nTotal > 0.01);
+
+            if (n300 === nTotal) {
+                rank = 'SS';
+            } else if (n300 / nTotal >= 0.9) {
+                rank = hasMiss ? 'A' : (is50over1p ? 'A' : 'S');
+            } else if (n300 / nTotal >= 0.8) {
+                rank = hasMiss ? 'B' : 'A';
+            } else if (n300 / nTotal >= 0.7) {
+                rank = hasMiss ? 'C' : 'B';
+            } else if (n300 / nTotal >= 0.6) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+
+        case 't' : {
+            nTotal = n300 + n100 + n0;
+
+            if (n300 === nTotal) {
+                rank = 'SS';
+            } else if (n300 / nTotal >= 0.9) {
+                rank = hasMiss ? 'A' : 'S';
+            } else if (n300 / nTotal >= 0.8) {
+                rank = hasMiss ? 'B' : 'A';
+            } else if (n300 / nTotal >= 0.7) {
+                rank = hasMiss ? 'C' : 'B';
+            } else if (n300 / nTotal >= 0.6) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+
+        case 'c' : {
+
+            if (acc === 1) {
+                rank = 'SS';
+            } else if (acc > 0.98) {
+                rank = 'S';
+            } else if (acc > 0.94) {
+                rank = 'A';
+            } else if (acc > 0.90) {
+                rank = 'B';
+            } else if (acc > 0.85) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+
+        case 'm' : {
+
+            if (acc === 1) {
+                rank = 'SS';
+            } else if (acc >= 0.95) {
+                rank = 'S';
+            } else if (acc >= 0.90) {
+                rank = 'A';
+            } else if (acc >= 0.80) {
+                rank = 'B';
+            } else if (acc >= 0.70) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+    }
+
+    return rank;
+}

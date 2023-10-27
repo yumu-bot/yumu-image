@@ -1,6 +1,7 @@
 import {torus} from "./font.js";
 import moment from "moment";
 import {
+    getApproximateRank,
     getDecimals,
     getExportFileV3Path,
     getGameMode,
@@ -122,26 +123,26 @@ export const PanelGenerate = {
 
     //panel F2 用的转换
     matchUser2CardA1: async (user = {
-        /*
-        name: 'na-gi', //妈的 为什么get match不给用户名啊
-        country: 'CN',
-        avatar: "https://a.ppy.sh/17064371?1675693670.jpeg",
-        cover: "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-        score: 464277,
-        accuracy: 0.965414652,
-        combo: 1475,
-        rating: 0.9641876243,
-        mods: [],
-        grade: 'A',
-        rank: 1, //一局比赛里的分数排名，1v1或者team都一样
-
-         */
-        team: 'red',
-        username: 'No rank',
-        scores: [ 1035176 ],
-        wins: 0,
-        lost: 1,
-        userData: {
+        id: null,
+        userName: null,
+        accuracy: 0.8590575010808473,
+        mods: [ 'NF', 'HD' ],
+        score: 185232,
+        mode: 'OSU',
+        passed: true,
+        perfect: 0,
+        statistics: {
+            count_50: 14,
+            count_100: 141,
+            count_300: 613,
+            count_geki: 49,
+            count_katu: 72,
+            count_miss: 3
+        },
+        rank: 'F',
+        pp: null,
+        match: { slot: 3, team: 'red', pass: true },
+        osuUser: {
             id: 11355787,
             username: 'na-gi',
             uid: 11355787,
@@ -150,42 +151,51 @@ export const PanelGenerate = {
             support_level: 0,
             cover: {
                 url: 'https://assets.ppy.sh/user-profile-covers/11355787/fbab99aa8812f95f53fa8534cda1aec9f9edde6a8608dd052dc93caa0b64315c.jpeg',
-                custom_url:
-                    'https://assets.ppy.sh/user-profile-covers/11355787/fbab99aa8812f95f53fa8534cda1aec9f9edde6a8608dd052dc93caa0b64315c.jpeg'
-            }
+                custom_url: 'https://assets.ppy.sh/user-profile-covers/11355787/fbab99aa8812f95f53fa8534cda1aec9f9edde6a8608dd052dc93caa0b64315c.jpeg'
+            },
+            country: { countryCode: 'CN', countryName: 'China' }
         },
-        index: 0,
-        coverUrl: null,
-        playerLabelV1: 'BC',
-        headerUrl: 'https://a.ppy.sh/10436444',
-        totalScore: 0.969193,
-        uid: 10436444,
-        mra: 1.673093182996036,
-        rwss: [],
-        era: 1.835657975290755,
-        rras: [Array],
-        rws: 0,
-        dra: 1.293775334308359,
-        playerLabelV2: 'SMA',
-        mq: 1.6819079346008665,
-        tmg: 2.8031798910014443,
-        amg: 2.8031798910014443,
+        uid: 8926316,
+        user_id: 8926316,
+        max_combo: 231,
+        mode_int: 0,
+        created_at: 1584794973,
+        best_id: null,
 
+        team: null,
+        total_score: 0,
+        total_player: 0,
     }) => {
         if (!user) return '';
 
-        const score = user.scores ? user.scores[0] : 0;
-        const team_str = (user.team === 'red') ? 'teamred' : ((user.team === 'blue') ? 'teamblue' : 'headtohead');
+        const score = user.score || 0;
+        const total_score = user.total_score || 0;
+        const total_player = user.total_player || 0;
+        const rating = total_score !== 0 ? Math.round(score * total_player / total_score * 100) / 100 : 0;
+        const team_str = (user.match.team === 'red') ? 'teamred' : ((user.match.team === 'blue') ? 'teamblue' : 'headtohead');
+        const pp_str = (user.pp != null) ? ' (' + Math.round(user.pp) + 'PP) ' : '';
+        const mods_arr = user.mods || [];
+        const rank = user.match.pass === false ? 'F' : getApproximateRank({statistics: user.statistics, mode: user.mode});
 
-        const background = await readNetImage(user.userData.cover.url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user.headerUrl, getExportFileV3Path('avatar-guest.png'));
+        let mods = '';
+        if (mods_arr.length > 0) {
+            mods = '+';
+            for (const v of mods_arr) {
+                mods += v;
+            }
+        }
 
-        const top1 = user.username || 'Unknown';
+        const background = await readNetImage(user.osuUser.cover.url || user.osuUser.custom_url, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user.osuUser.avatar_url, getExportFileV3Path('avatar-guest.png'));
+        const country = user.osuUser?.country?.countryCode || 'UN';
 
-        const left1 = (user.wins === 1) ? ((user.lost === 1) ? 'Win' : 'Lose') : '-';
-        const left2 = '#' + (user.index + 1);
+        const top1 = user.osuUser.username || 'Unknown';
+        
+        const left1 = user.osuUser?.country?.countryName || 'Unknown';
+        const left2 = 'P' + (user.match.slot + 1) + ' r' + rating + ' ' + pp_str;
         const sub_icon1 = getExportFileV3Path('object-card-' + team_str + '.png')
-        const right2 = 'Rating ' + (Math.round((user.rras ? user.rras[user.rras.length - 1] : 0) * 100) / 100);
+        const right2 = (Math.round((user.accuracy || 0) * 10000) / 100) + '%' + ' '
+            + rank + ' ' + mods + ' ' + (user.max_combo || 0) + 'x';
         const right3b = getRoundedNumberLargerStr(score, 0);
         const right3m = getRoundedNumberSmallerStr(score, 0);
 
@@ -194,7 +204,7 @@ export const PanelGenerate = {
             avatar,
             sub_icon1: sub_icon1,
             sub_icon2: '',
-            country: null,
+            country: country,
 
             top1: top1,
             left1: left1,
@@ -552,6 +562,7 @@ export const PanelGenerate = {
 
     //给panel_C用的，期待可以和上面合并
     matchInfo2CardA2: async (data = {
+        /*
         noneUsers: [],
         matchInfo: {
             id: 59438351,
@@ -569,6 +580,8 @@ export const PanelGenerate = {
 
         sid: 1001507,
         background: '',
+
+         */
     }) => {
         const wins_team_red = data.redWins || 0;
         const wins_team_blue = data.blueWins || 0;
@@ -576,7 +589,7 @@ export const PanelGenerate = {
         const isContainVS = data.matchInfo.name.toLowerCase().match('vs');
         const star = getDecimals(data.averageStar, 2) + getDecimals(data.averageStar, 3);
 
-        const background = data.sid ? await getMapBG(data.sid, 'list@2x') : await readNetImage(data.background, getExportFileV3Path('beatmap-DLfailBG.jpg'));
+        const background = data.sid ? await getMapBG(data.sid, 'list@2x') : data.background;
 
         let title, title1, title2;
         if (isContainVS) {
