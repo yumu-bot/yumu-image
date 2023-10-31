@@ -73,6 +73,11 @@ app.post('/attr', GetMapAttrRouter);
 
 app.post('/testApi', async (req, res) => {
     console.log(req.fields)
+    res.set('Content-Type', 'application/json');
+    res.status(200);
+    res.send({
+        status: "ok",
+    });
 })
 
 app.listen(process.env.PORT, () => {
