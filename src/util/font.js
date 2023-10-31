@@ -6,18 +6,18 @@ const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
 const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold.ttf");
 const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
-const textToSVGft71 = TextToSVG.loadSync("font/ft71.ttf");
+const textToSVGTahomaRegular = TextToSVG.loadSync("font/ft71.ttf");
 
 
-export const ft71 = {};
+export const TahomaRegular = {};
 
-ft71.getTextPath = getTextPath_ft71;
-ft71.get2SizeTextPath = get2SizeTextPath_ft71;
-ft71.getTextMetrics = getTextMetrics_ft71;
-ft71.getTextWidth = getTextWidth_ft71;
-ft71.cutStringTail = cutStringTail_ft71;
+TahomaRegular.getTextPath = getTextPath_TahomaRegular;
+TahomaRegular.get2SizeTextPath = get2SizeTextPath_TahomaRegular;
+TahomaRegular.getTextMetrics = getTextMetrics_TahomaRegular;
+TahomaRegular.getTextWidth = getTextWidth_TahomaRegular;
+TahomaRegular.cutStringTail = cutStringTail_TahomaRegular;
 
-function getTextPath_ft71(
+function getTextPath_TahomaRegular(
     text = '',
     x = 0,
     y = 0,
@@ -25,19 +25,19 @@ function getTextPath_ft71(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGft71.getPath(text, {
+    return textToSVGTahomaRegular.getPath(text, {
         x: x,
         y: y,
         fontSize: size,
         anchor: anchor,
-        fontFamily: "ft71",
+        fontFamily: "TahomaRegular",
         attributes: {
             fill: fill
         }
     })
 }
 
-function getTextMetrics_ft71(
+function getTextMetrics_TahomaRegular(
     text = '',
     x = 0,
     y = 0,
@@ -45,50 +45,50 @@ function getTextMetrics_ft71(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGft71.getMetrics(text, {
+    return textToSVGTahomaRegular.getMetrics(text, {
         x: x,
         y: y,
         fontSize: size,
         anchor: anchor,
-        fontFamily: "ft71",
+        fontFamily: "TahomaRegular",
         attributes: {
             fill: fill
         }
     })
 }
 
-function getTextWidth_ft71(
+function getTextWidth_TahomaRegular(
     text = '',
     size = 0,
 ) {
-    return textToSVGft71.getMetrics(text.toString(), {
+    return textToSVGTahomaRegular.getMetrics(text.toString(), {
         x: 0,
         y: 0,
         fontSize: size,
         anchor: 'center baseline',
-        fontFamily: "ft71",
+        fontFamily: "TahomaRegular",
         attributes: {
             fill: '#fff'
         }
     }).width
 }
 
-function cutStringTail_ft71(
+function cutStringTail_TahomaRegular(
     text = '',
     size = 36,
     maxWidth = 0,
     isDot3Needed = true,
 ) {
-    if (ft71.getTextWidth(text, size) <= maxWidth) {
+    if (TahomaRegular.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
 
     let dot3 = '...';
-    let dot3_width = isDot3Needed ? ft71.getTextWidth(dot3, size) : 0;
+    let dot3_width = isDot3Needed ? TahomaRegular.getTextWidth(dot3, size) : 0;
     let out_text = '';
     maxWidth -= dot3_width;
 
-    for (let i = 0; ft71.getTextWidth(out_text, size) < maxWidth; i++) {
+    for (let i = 0; TahomaRegular.getTextWidth(out_text, size) < maxWidth; i++) {
         out_text += text.slice(i, i + 1);
     }
 
@@ -97,7 +97,7 @@ function cutStringTail_ft71(
 
 
 /**
- * @function 获取大小文本的 ft71 字体 SVG 路径
+ * @function 获取大小文本的 TahomaRegular 字体 SVG 路径
  * @return {String}
  * @param largerText {String} 较大的文本
  * @param smallerText {String} 较小的文本
@@ -109,24 +109,24 @@ function cutStringTail_ft71(
  * @param color {String} 十六进制颜色，#FFF
  */
 
-function get2SizeTextPath_ft71(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
-    let width_b = ft71.getTextWidth(largerText, largeSize);
-    let width_m = ft71.getTextWidth(smallerText, smallSize);
+function get2SizeTextPath_TahomaRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+    let width_b = TahomaRegular.getTextWidth(largerText, largeSize);
+    let width_m = TahomaRegular.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
 
     let out;
 
     if (anchor === "left baseline") {
-        out = ft71.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            ft71.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+        out = TahomaRegular.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            TahomaRegular.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
 
     } else if (anchor === "right baseline") {
-        out = ft71.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            ft71.getTextPath(smallerText, x, y, smallSize, anchor, color);
+        out = TahomaRegular.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            TahomaRegular.getTextPath(smallerText, x, y, smallSize, anchor, color);
 
     } else if (anchor === "center baseline") {
-        out = ft71.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            ft71.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+        out = TahomaRegular.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            TahomaRegular.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
     }
 
     return out;

@@ -5,7 +5,7 @@ import {
     implantImage, readTemplate,
     replaceText
 } from "../util/util.js";
-import {ft71} from "../util/font.js";
+import {TahomaRegular} from "../util/font.js";
 
 export async function router(req, res) {
     try {
@@ -46,8 +46,8 @@ export async function panel_Epsilon(data = {
     const reg_text = /(?<=<g id="Text">)/;
 
     const image = await getAvatar(data.uid || 0);
-    const name = ft71.getTextPath(
-        ft71.cutStringTail(data.username || 'Unknown', 60, 460, true),
+    const name = TahomaRegular.getTextPath(
+        TahomaRegular.cutStringTail(data.username || 'Unknown', 60, 460, true),
         230, 435, 60, 'center baseline', '#000'
     );
 
