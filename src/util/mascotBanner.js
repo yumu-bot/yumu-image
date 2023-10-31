@@ -146,11 +146,12 @@ export function getRandomMascotBGPath() {
     return getExportFileV3Path(`Background/${i}.png`);
 }
 
-//通过 PP 获取玩家颜色（的背景图！
+//通过 PP 获取玩家颜色（的背景图！pp2Rank
 export function pp2UserBG(pp = 0) {
     let rank;
 
-    if (pp >= 10000) rank = 'X';
+    if (pp >= 15000) rank = 'PF';
+    else if (pp >= 10000) rank = 'X';
     else if (pp >= 8000) rank = 'XH';
     else if (pp >= 6000) rank = 'S';
     else if (pp >= 4000) rank = 'A';
