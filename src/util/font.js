@@ -6,18 +6,18 @@ const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
 const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold.ttf");
 const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
-const textToSVGVeranaSansMediumRegular = TextToSVG.loadSync("font/VeranaSansMedium-Regular.otf");
+const textToSVGft71 = TextToSVG.loadSync("font/ft71.ttf");
 
 
-export const VeranaSansMR = {};
+export const ft71 = {};
 
-VeranaSansMR.getTextPath = getTextPath_VeranaSansMediumRegular;
-VeranaSansMR.get2SizeTextPath = get2SizeTextPath_VeranaSansMediumRegular;
-VeranaSansMR.getTextMetrics = getTextMetrics_VeranaSansMediumRegular;
-VeranaSansMR.getTextWidth = getTextWidth_VeranaSansMediumRegular;
-VeranaSansMR.cutStringTail = cutStringTail_VeranaSansMediumRegular;
+ft71.getTextPath = getTextPath_ft71;
+ft71.get2SizeTextPath = get2SizeTextPath_ft71;
+ft71.getTextMetrics = getTextMetrics_ft71;
+ft71.getTextWidth = getTextWidth_ft71;
+ft71.cutStringTail = cutStringTail_ft71;
 
-function getTextPath_VeranaSansMediumRegular(
+function getTextPath_ft71(
     text = '',
     x = 0,
     y = 0,
@@ -25,19 +25,19 @@ function getTextPath_VeranaSansMediumRegular(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGVeranaSansMediumRegular.getPath(text, {
+    return textToSVGft71.getPath(text, {
         x: x,
         y: y,
         fontSize: size,
         anchor: anchor,
-        fontFamily: "VeranaSansMediumRegular",
+        fontFamily: "ft71",
         attributes: {
             fill: fill
         }
     })
 }
 
-function getTextMetrics_VeranaSansMediumRegular(
+function getTextMetrics_ft71(
     text = '',
     x = 0,
     y = 0,
@@ -45,50 +45,50 @@ function getTextMetrics_VeranaSansMediumRegular(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGVeranaSansMediumRegular.getMetrics(text, {
+    return textToSVGft71.getMetrics(text, {
         x: x,
         y: y,
         fontSize: size,
         anchor: anchor,
-        fontFamily: "VeranaSansMediumRegular",
+        fontFamily: "ft71",
         attributes: {
             fill: fill
         }
     })
 }
 
-function getTextWidth_VeranaSansMediumRegular(
+function getTextWidth_ft71(
     text = '',
     size = 0,
 ) {
-    return textToSVGVeranaSansMediumRegular.getMetrics(text.toString(), {
+    return textToSVGft71.getMetrics(text.toString(), {
         x: 0,
         y: 0,
         fontSize: size,
         anchor: 'center baseline',
-        fontFamily: "VeranaSansMediumRegular",
+        fontFamily: "ft71",
         attributes: {
             fill: '#fff'
         }
     }).width
 }
 
-function cutStringTail_VeranaSansMediumRegular(
+function cutStringTail_ft71(
     text = '',
     size = 36,
     maxWidth = 0,
     isDot3Needed = true,
 ) {
-    if (VeranaSansMR.getTextWidth(text, size) <= maxWidth) {
+    if (ft71.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
 
     let dot3 = '...';
-    let dot3_width = isDot3Needed ? VeranaSansMR.getTextWidth(dot3, size) : 0;
+    let dot3_width = isDot3Needed ? ft71.getTextWidth(dot3, size) : 0;
     let out_text = '';
     maxWidth -= dot3_width;
 
-    for (let i = 0; VeranaSansMR.getTextWidth(out_text, size) < maxWidth; i++) {
+    for (let i = 0; ft71.getTextWidth(out_text, size) < maxWidth; i++) {
         out_text += text.slice(i, i + 1);
     }
 
@@ -97,7 +97,7 @@ function cutStringTail_VeranaSansMediumRegular(
 
 
 /**
- * @function 获取大小文本的 VeranaSansMediumRegular 字体 SVG 路径
+ * @function 获取大小文本的 ft71 字体 SVG 路径
  * @return {String}
  * @param largerText {String} 较大的文本
  * @param smallerText {String} 较小的文本
@@ -109,24 +109,24 @@ function cutStringTail_VeranaSansMediumRegular(
  * @param color {String} 十六进制颜色，#FFF
  */
 
-function get2SizeTextPath_VeranaSansMediumRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
-    let width_b = VeranaSansMR.getTextWidth(largerText, largeSize);
-    let width_m = VeranaSansMR.getTextWidth(smallerText, smallSize);
+function get2SizeTextPath_ft71(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+    let width_b = ft71.getTextWidth(largerText, largeSize);
+    let width_m = ft71.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
 
     let out;
 
     if (anchor === "left baseline") {
-        out = VeranaSansMR.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            VeranaSansMR.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+        out = ft71.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            ft71.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
 
     } else if (anchor === "right baseline") {
-        out = VeranaSansMR.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            VeranaSansMR.getTextPath(smallerText, x, y, smallSize, anchor, color);
+        out = ft71.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            ft71.getTextPath(smallerText, x, y, smallSize, anchor, color);
 
     } else if (anchor === "center baseline") {
-        out = VeranaSansMR.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            VeranaSansMR.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+        out = ft71.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            ft71.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
     }
 
     return out;

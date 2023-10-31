@@ -5,7 +5,7 @@ import {
     implantImage, readTemplate,
     replaceText
 } from "../util/util.js";
-import {VeranaSansMR} from "../util/font.js";
+import {ft71} from "../util/font.js";
 
 export async function router(req, res) {
     try {
@@ -46,8 +46,8 @@ export async function panel_Epsilon(data = {
     const reg_text = /(?<=<g id="Text">)/;
 
     const image = await getAvatar(data.uid || 0);
-    const name = VeranaSansMR.getTextPath(
-        VeranaSansMR.cutStringTail(data.username || 'Unknown', 60, 460, true),
+    const name = ft71.getTextPath(
+        ft71.cutStringTail(data.username || 'Unknown', 60, 460, true),
         230, 435, 60, 'center baseline', '#000'
     );
 
