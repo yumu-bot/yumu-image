@@ -113,6 +113,7 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', defaultImagePath =
         if (Math.random() < 0.3) {
             // 暂时不请求, 留作以后使用
             const result = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
+                proxy: {},
                 headers: {
                     "SET_ID": sid,
                     "AuthorizationX": SUPER_KEY,
@@ -128,6 +129,7 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', defaultImagePath =
     } finally {
         // 向服务器提交异步任务
         await axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
+            proxy: {},
             headers: {
                 "SET_ID": sid,
                 "AuthorizationX": SUPER_KEY,
