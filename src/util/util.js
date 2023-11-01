@@ -128,12 +128,12 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', defaultImagePath =
         ;
     } finally {
         // 向服务器提交异步任务
-        await axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
-            headers: {
-                "SET_ID": sid,
-                "AuthorizationX": SUPER_KEY,
-            }
-        })
+        // await axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
+        //     headers: {
+        //         "SET_ID": sid,
+        //         "AuthorizationX": SUPER_KEY,
+        //     }
+        // })
     }
 }
 
