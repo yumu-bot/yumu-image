@@ -225,8 +225,8 @@ export async function panel_F2(data = {
         panel_height += h * 250;
         background_height += h * 250;
 
-        const rr = redArr.length - (h - 1) * 2;
-        const rb = blueArr.length - (h - 1) * 2;
+        const rr = h * 2 - redArr.length;
+        const rb = h * 2 - blueArr.length;
 
         const hasRemain = (rr > 0 || rb > 0);
 
@@ -267,7 +267,7 @@ export async function panel_F2(data = {
         
         //计算高度
         const h = Math.ceil(noneArr.length / 4);
-        const r = noneArr.length - (h - 1) * 4;
+        const r = h * 4 - noneArr.length;
         const hasRemain = (r > 0);
 
         panel_height += h * 250;
