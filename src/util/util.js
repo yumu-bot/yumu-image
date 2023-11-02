@@ -166,16 +166,18 @@ export async function readNetImage(path = '', reload = true, defaultImagePath = 
     }
 
     if (reload) {
+        let req;
         let data;
 
         try {
-            data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
+            req = await axios.get(path, {responseType: 'arraybuffer'});
+            data = req.data;
         } catch (e) {
             console.error("download error", e);
             return defaultImagePath || getExportFileV3Path('error.png');
         }
 
-        if (data.status === 200) {
+        if (req.status === 200) {
             fs.writeFileSync(bufferPath, data, 'binary');
             return bufferPath;
         } else {
