@@ -240,14 +240,14 @@ export async function panel_F2(data = {
             svg = implantCardA1(svg, blueArr[0], reg_bodycard, 1, 1, 1, 'blue');
         }
 
-        for (let i = 0; i < hr - 1; i++) {
+        for (let i = 0; i < (rr > 0 ? (hr - 1) : hr); i++) {
             for (let j = 0; j < 2; j++) {
                 const index = i * 2 + j + rr;
                 svg = implantCardA1(svg, redArr[index], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, 2, 'red');
             }
         }
 
-        for (let i = 0; i < hb - 1; i++) {
+        for (let i = 0; i < (rb > 0 ? (hb - 1) : hb); i++) {
             for (let j = 0; j < 2; j++) {
                 const index = i * 2 + j + rb;
                 svg = implantCardA1(svg, blueArr[index], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, 2, 'blue');
@@ -280,7 +280,7 @@ export async function panel_F2(data = {
             }
         }
 
-        for (let i = 0; i < h - 1; i++) {
+        for (let i = 0; i < (hasRemain ? (h - 1) : h); i++) {
             for (let j = 0; j < 4; j++) {
                 const index = i * 4 + j;
                 svg = implantCardA1(svg, noneArr[index + r], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, 4, 'none');
