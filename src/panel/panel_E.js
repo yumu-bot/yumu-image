@@ -689,10 +689,19 @@ const score2AccIndex = (score) => {
                     return '~ ' + getApproximateRank(score);
             }
         } else {
-            if (rank !== 'F') {
-                return '-MD SS';
-            } else {
-                return '~ ' + getApproximateRank(score);
+            switch (rank) {
+                case 'XH' :
+                case 'X' :
+                    return 'AP';
+                case 'SH' :
+                case 'S' :
+                case 'A' :
+                case 'B' :
+                case 'C' :
+                case 'D' :
+                    return "-MD SS";
+                default :
+                    return '~ ' + getApproximateRank(score);
             }
         }
     }
