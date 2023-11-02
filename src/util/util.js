@@ -13,6 +13,7 @@ const path_util = path;
 const MD5 = crypto.createHash("md5");
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
+export const SUPER_KEY = process.env.SUPER_KEY || "";
 export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufile";
 
 const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
@@ -101,19 +102,40 @@ export function getExportFileV3Path(path = '') {
     return path_util.join(EXPORT_FILE_V3, path);
 }
 
-export async function getDiffBG(bid, sid = 0, cover = 'cover@2x', defaultImagePath = getExportFileV3Path('card-default.png')) {
-    //try {
-    //const url = (await axios.get(`http://localhost:8388/pub/l/background/${bid}`)).data
-    //if (url) return url;
-    //} catch (e) {
+/**
+ * @function 获得难度背景
+ * @param {number} bid bid
+ * @param {number} sid sid
+ */
+export async function getDiffBG(bid, sid, cover = 'cover@2x', defaultImagePath = getExportFileV3Path('card-default.png')) {
     try {
-        const url2 = await getMapBG(sid, cover, defaultImagePath);
-        if (url2) return url2;
-    } catch (e1) {
-        return defaultImagePath;
+        let url;
+        if (Math.random() < 0.3) {
+            // 暂时不请求, 留作以后使用
+            const result = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
+                proxy: {},
+                headers: {
+                    "SET_ID": sid,
+                    "AuthorizationX": SUPER_KEY,
+                }
+            });
+            url = result.data
+        } else {
+            url = await getMapBG(sid, cover, defaultImagePath);
+        }
+        if (url) return url;
+    } catch (e) {
+        return await getMapBG(sid, cover, defaultImagePath);
+    } finally {
+        // 向服务器提交异步任务
+        await axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
+            proxy: {},
+            headers: {
+                "SET_ID": sid,
+                "AuthorizationX": SUPER_KEY,
+            }
+        })
     }
-    //}
-    return defaultImagePath;
 }
 
 export async function getMapBG(sid = 0, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
@@ -189,7 +211,7 @@ export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /
 }
 
 //如果不需要修改位置，用replaceText就行
-export function implantSvgBody(base = '', x= 0, y = 0, replace = '', reg = /.*/) {
+export function implantSvgBody(base = '', x = 0, y = 0, replace = '', reg = /.*/) {
     if (x !== 0 || y !== 0) replace = `<g transform="translate(${x} ${y})">` + replace + '</g>';
     return base.replace(reg, replace);
 }
@@ -514,7 +536,7 @@ export function getRoundedNumberSmallerStr(number = 0, level = 0) {
         }
 
         if (o === '00') o = '';
-        if (o.substring(1) === '0') o = o.slice(0,1);
+        if (o.substring(1) === '0') o = o.slice(0, 1);
 
         return o + unit;
     }
@@ -694,7 +716,7 @@ export function getV3Score(v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods
  * @param number 小数
  * @param whichData 要哪个数据？可输入0-4，分别是0整数、1小数、2整数带小数点部分、3纯小数部分（两位以下，4纯小数部分（一位以下
  */
-export function getDecimals (number = 0, whichData = 0) {
+export function getDecimals(number = 0, whichData = 0) {
 
     //去除小数，保留两位
     let sr = (Math.round(number * 100) / 100) || 0;
@@ -754,7 +776,7 @@ export function modifyArrayToFixedLength(arr = [0], target_length = 0, direction
 
     } else {
         if (direction) return arr.slice(arr.length - target_length);
-        else return arr.slice( - target_length);
+        else return arr.slice(-target_length);
     }
 }
 
@@ -923,35 +945,56 @@ export function getSVGBody(V3Path = '') {
 
 /**
  * @function 获取谱面状态的路径
- * @param status 谱面状态，可以是数字可以是字符串
+ * @param {number} status 谱面状态，可以是数字可以是字符串
  */
 export function getMapStatusV3Path(status = 0) {
     let path = '';
 
     if (typeof status === 'number') {
         switch (status) {
-            case -2: path = 'object-beatmap-unranked.png'; break; //graveyarded
-            case -1: path = 'object-beatmap-unranked.png'; break; //wip也在这里
-            case 0: path = 'object-beatmap-unranked.png'; break; //pending在这里
-            case 1: path = 'object-beatmap-ranked.png'; break;
-            case 2: path = 'object-beatmap-ranked.png'; break; //approved在这里
-            case 3: path = 'object-beatmap-qualified.png'; break;
-            case 4: path = 'object-beatmap-loved.png'; break;
-            default: path = 'error.png'; break;
+            case -2:
+                path = 'object-beatmap-unranked.png';
+                break; //graveyarded
+            case -1:
+                path = 'object-beatmap-unranked.png';
+                break; //wip也在这里
+            case 0:
+                path = 'object-beatmap-unranked.png';
+                break; //pending在这里
+            case 1:
+                path = 'object-beatmap-ranked.png';
+                break;
+            case 2:
+                path = 'object-beatmap-ranked.png';
+                break; //approved在这里
+            case 3:
+                path = 'object-beatmap-qualified.png';
+                break;
+            case 4:
+                path = 'object-beatmap-loved.png';
+                break;
+            default:
+                path = 'error.png';
+                break;
         }
     } else {
         switch (status.toLowerCase()) {
             case "ranked":
             case "approved":
-                path = 'object-beatmap-ranked.png'; break;
+                path = 'object-beatmap-ranked.png';
+                break;
             case "qualified":
-                path = 'object-beatmap-qualified.png'; break;
+                path = 'object-beatmap-qualified.png';
+                break;
             case "loved":
-                path = 'object-beatmap-loved.png'; break;
+                path = 'object-beatmap-loved.png';
+                break;
             case "":
-                path = 'error.png'; break;
+                path = 'error.png';
+                break;
             default:
-                path = 'object-beatmap-unranked.png'; break;
+                path = 'object-beatmap-unranked.png';
+                break;
         }
     }
 
@@ -1256,7 +1299,7 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
 }
 
 //公用方法：给面板上名字
-export function getPanelNameSVG (name = '?? (!test)', index = '?', version = 'v0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
+export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
 
     // powered by Yumubot v0.3.2 EA // Score (!ymp / !ymr / !yms)
     const powered_text = torus.getTextPath(
