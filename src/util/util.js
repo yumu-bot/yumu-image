@@ -116,38 +116,50 @@ export async function getDiffBG(bid, sid = 0, cover = 'cover@2x', defaultImagePa
     return defaultImagePath;
 }
 
-export async function getMapBG(sid = 0, cover = 'cover@2x', defaultImagePath = getExportFileV3Path('card-default.png')) {
-    return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', defaultImagePath);
+export async function getMapBG(sid = 0, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
+    return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', reload, defaultImagePath);
 }
 
-export async function getAvatar(uid = 0, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
-    return await readNetImage('https://a.ppy.sh/' + uid, defaultImagePath);
+export async function getAvatar(uid = 0, reload = true, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
+    return await readNetImage('https://a.ppy.sh/' + uid, reload, defaultImagePath);
 }
 
-export async function readNetImage(path = '', defaultImagePath = getExportFileV3Path('beatmap-DLfailBG.jpg')) {
+export async function readNetImage(path = '', reload = true, defaultImagePath = getExportFileV3Path('beatmap-DLfailBG.jpg')) {
     if (!path || !path.startsWith("http")) {
         return readImage(path);
     }
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
+
     try {
-        fs.accessSync(bufferPath, fs.constants.F_OK);
-        if (fs.statSync(bufferPath).size <= 4 * 1024) {
-            throw Error("size err");
+        if (!reload) {
+            fs.accessSync(bufferPath, fs.constants.F_OK);
+            if (fs.statSync(bufferPath).size <= 4 * 1024) {
+                throw Error("size err");
+            }
+            return bufferPath;
         }
-        return bufferPath;
     } catch (e) {
-        //no file
+        reload = true;
     }
-    let data;
-    try {
-        data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
-    } catch (e) {
-        console.error("download error", e);
-        return defaultImagePath || getExportFileV3Path('error.png');
+
+    if (reload) {
+        let data = await axios.get(`https://osu.ppy.sh/osu/${bid}`);
+
+        try {
+            data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
+        } catch (e) {
+            console.error("download error", e);
+            return defaultImagePath || getExportFileV3Path('error.png');
+        }
+
+        if (data.status === 200) {
+            fs.writeFileSync(bufferPath, data, 'binary');
+            return bufferPath;
+        } else {
+            return defaultImagePath || getExportFileV3Path('error.png');
+        }
     }
-    fs.writeFileSync(bufferPath, data, 'binary');
-    return bufferPath;
 }
 
 
@@ -1359,4 +1371,11 @@ export const getApproximateRank = (score = {
     }
 
     return rank;
+}
+
+//根据谱面的上架状态决定谱面文件和背景是否需要缓存
+export const isReload = (ranked = 0) => {
+    return !(ranked && (ranked === 1 || ranked === 2 || ranked === 4
+        || ranked === 'ranked' || ranked === 'approved' || ranked === 'loved'
+    )); //ranked, approved, loved
 }

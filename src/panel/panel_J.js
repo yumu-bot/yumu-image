@@ -503,7 +503,7 @@ export async function panel_J(data = {
     for (const i in data.favorite_mappers) {
         const h = await label_J2({
             index: parseInt(i) + 1 || 0,
-            avatar: await readNetImage(data.favorite_mappers[i].avatar_url, getExportFileV3Path('avatar-guest.png')),
+            avatar: await readNetImage(data.favorite_mappers[i].avatar_url, false, getExportFileV3Path('avatar-guest.png')),
             name: data.favorite_mappers[i].username || 'Unknown',
             count: data.favorite_mappers[i].map_count || 0,
             pp: data.favorite_mappers[i].pp_count || 0,

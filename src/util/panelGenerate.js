@@ -10,7 +10,7 @@ import {
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getRoundedNumberStr,
-    getTimeDifference,
+    getTimeDifference, isReload,
     readNetImage,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
@@ -20,8 +20,8 @@ import {getModInt, hasMod} from "./mod.js";
 //把参数变成面板能读懂的数据（router
 export const PanelGenerate = {
     user2CardA1: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
 
         const sub_icon1 = user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
         const country = user?.country.countryCode || 'CN';
@@ -55,8 +55,8 @@ export const PanelGenerate = {
     },
 
     mapper2CardA1: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
 
         const sub_icon1 = user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
         const country = user?.country.countryCode || 'CN';
@@ -85,8 +85,8 @@ export const PanelGenerate = {
     },
 
     microUser2CardA1: async (microUser) => {
-        const background = await readNetImage(microUser?.cover_url || microUser?.cover?.url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(microUser?.avatar_url || microUser?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+        const background = await readNetImage(microUser?.cover_url || microUser?.cover?.url, false, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(microUser?.avatar_url || microUser?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
         const sub_icon1 = microUser.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
 
         const country = microUser?.country_code || 'CN';
@@ -185,8 +185,8 @@ export const PanelGenerate = {
             }
         }
 
-        const background = await readNetImage(user.osuUser.cover.url || user.osuUser.custom_url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user.osuUser.avatar_url, getExportFileV3Path('avatar-guest.png'));
+        const background = await readNetImage(user.osuUser.cover.url || user.osuUser.custom_url, false, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user.osuUser.avatar_url, false, getExportFileV3Path('avatar-guest.png'));
         const country = user.osuUser?.country?.countryCode || 'UN';
 
         const top1 = user.osuUser.username || 'Unknown';
@@ -254,7 +254,7 @@ export const PanelGenerate = {
     },
 
     beatmap2CardA2: async (beatmap) => {
-        const background = await readNetImage(beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
+        const background = await getMapBG(beatmap.beatmapset.id, 'list@2x', isReload(beatmap.ranked));
         const map_status = beatmap.status;
         const title1 = beatmap.beatmapset.title;
         const title2 = beatmap.beatmapset.artist;
@@ -360,7 +360,7 @@ export const PanelGenerate = {
     },
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
-        const background = cursor ? await getMapBG(cursor.id) : await readNetImage(first_beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png'));
+        const background = cursor ? await getMapBG(cursor.id, 'list@2x', false) : await readNetImage(first_beatmapset.covers['list@2x'], false, getExportFileV3Path('card-default.png'));
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default"; //getSortName(search.sort)
@@ -430,7 +430,7 @@ export const PanelGenerate = {
         const ranked_date = beatmapsets.ranked_date || '';
         const submitted_date = beatmapsets.submitted_date || '';
 
-        const background = await getMapBG(beatmapsets.id, 'list@2x');
+        const background = await getMapBG(beatmapsets.id, 'list@2x', beatmapsets.ranked);
         const map_status = beatmapsets.status || 'graveyard';
 
         const isRanked = (map_status === 'ranked' || map_status === 'loved' || map_status === 'approved');
@@ -523,7 +523,7 @@ export const PanelGenerate = {
 
     //给F面板的
     match2CardA2: async (match, beatmap_arr = []) => {
-        const background = await readNetImage(beatmap_arr ? beatmap_arr[0].background : '', getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
+        const background = await readNetImage(beatmap_arr ? beatmap_arr[0].background : '', false, getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
         const title = getMatchNameSplitted(match.match_title);
         const title1 = title[0];
         const title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
@@ -589,7 +589,7 @@ export const PanelGenerate = {
         const isContainVS = data.matchInfo.name.toLowerCase().match('vs');
         const star = getDecimals(data.averageStar, 2) + getDecimals(data.averageStar, 3);
 
-        const background = data.sid ? await getMapBG(data.sid, 'list@2x') : data.background;
+        const background = data.sid ? await getMapBG(data.sid, 'list@2x', false) : data.background;
 
         let title, title1, title2;
         if (isContainVS) {
@@ -647,8 +647,8 @@ export const PanelGenerate = {
             team: user.team.toLowerCase(),
             team_color: team_color,
             player_name: user.username,
-            player_avatar: await readNetImage(user.userData?.avatar_url, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
-            player_banner: await readNetImage(user.userData?.cover?.url, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
+            player_avatar: await readNetImage(user.userData?.avatar_url, false, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
+            player_banner: await readNetImage(user.userData?.cover?.url, false, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
             player_score: user.scores.reduce(function (prev, curr) {
                 return prev + curr;
             }),
@@ -667,8 +667,8 @@ export const PanelGenerate = {
     },
 
     beatmap2CardH: async (beatmap, calcPP, rank = 1) => {
-        const cover = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
-        const background = beatmap.beatmapset ? await readNetImage(beatmap.beatmapset.covers['slimcover'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+        const cover = await getMapBG(beatmap.beatmapset.id, 'list@2x', isReload(beatmap.ranked));
+        const background = await getMapBG(beatmap.beatmapset.id, 'slimcover', isReload(beatmap.ranked));
         // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
         // 这个不要下载，请求量太大
 
@@ -741,8 +741,8 @@ export const PanelGenerate = {
     },
 
     bp2CardH: async (bp, rank = 1) => {
-        const cover = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
-        const background = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['cover@2x'], getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
+        const cover = await getMapBG(bp.beatmapset.id, 'list@2x', isReload(bp.beatmap.ranked));
+        const background = await getMapBG(bp.beatmapset.id, 'cover@2x', isReload(bp.beatmap.ranked));
 
         const time_diff = getTimeDifference(bp.create_at_str);
 
@@ -828,7 +828,7 @@ export const PanelGenerate = {
     },
 
     bp2CardJ: async (bp) => {
-        const background = bp.beatmapset ? await readNetImage(bp.beatmapset.covers['list@2x'], getExportFileV3Path('beatmap-defaultBG.jpg')) : '';
+        const background = await getMapBG(bp.beatmapset.id, 'list@2x', isReload(bp.beatmap.ranked));
 
         return {
             cover: background,
@@ -946,8 +946,8 @@ export const PanelGenerate = {
     },
 
     user2CardO1: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
 
         return {
             background,
@@ -961,7 +961,7 @@ export const PanelGenerate = {
     beatmap2CardO2: async (beatmapset) => {
         if (!beatmapset) return '';
 
-        const background = beatmapset ? await readNetImage(beatmapset.covers['list@2x'], getExportFileV3Path('card-default.png')) : '';
+        const background = await getMapBG(beatmapset.id, 'list@2x', isReload(beatmapset.status));
         const map_status = beatmapset.status;
         const title1 = beatmapset.title;
         const title2 = beatmapset.artist;

@@ -5,8 +5,7 @@ import {
     getPanelNameSVG,
     getRoundedNumberStr,
     implantImage,
-    implantSvgBody,
-    readTemplate,
+    implantSvgBody, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -295,7 +294,7 @@ export async function panel_F2(data = {
     // 导入比赛简介卡（A2卡
     const f = await card_A2(await PanelGenerate.matchInfo2CardA2({
         ...data,
-        background: await getMapBG(data.beatmap.beatmapset_id, 'cover@2x'),
+        background: await getMapBG(data.beatmap.beatmapset_id, 'cover@2x', !data.beatmap.beatmapset.ranked),
         isTeamVs: isTeamVS,
         blueWins: (isBlueWin ? 1 : 0),
         redWins: (isRedWin ? 1 : 0),
@@ -428,7 +427,7 @@ async function getBeatmapAttr(beatmapLite = {
     const mode = beatmapLite.mode ? beatmapLite.mode.toLowerCase() : 'osu';
 
     return {
-        background: await getMapBG(beatmapLite.beatmapset.sid, 'list@2x'),
+        background: await getMapBG(beatmapLite.beatmapset.sid, 'list@2x', !beatmapLite.beatmapset.ranked),
         title: beatmapLite.beatmapset.title,
         artist: beatmapLite.beatmapset.artist,
         mapper: beatmapLite.beatmapset.creator, //creator

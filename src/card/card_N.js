@@ -115,7 +115,7 @@ export async function card_N(data = {
     //导入背景和头像
 
     const rank = getExportFileV3Path('object-score-' + data.score.rank + '-small.png');
-    const avatar = await readNetImage(data.score.user.avatar_url, getExportFileV3Path('avatar-guest.png'));
+    const avatar = await readNetImage(data.score.user.avatar_url, false, getExportFileV3Path('avatar-guest.png'));
     const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
 
     //await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));

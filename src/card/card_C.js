@@ -168,7 +168,8 @@ export async function card_C(data = {
 
         svg = replaceText(svg, '#382e32', reg_backcolor);
         svg = replaceText(svg, none_text, reg_text);
-        svg = implantImage(svg, 1380, 210, 0, 0, 0.3, await readNetImage(data.none[first_index].player_avatar, getExportFileV3Path('avatar-guest.png')), reg_h2hfirstavatar);
+        svg = implantImage(svg, 1380, 210, 0, 0, 0.3,
+            await readNetImage(data.none[first_index].player_avatar, false, getExportFileV3Path('avatar-guest.png')), reg_h2hfirstavatar);
     }
 
     // 导入成绩

@@ -1,6 +1,6 @@
 import {
     exportJPEG, getPanelNameSVG, implantImage,
-    implantSvgBody,
+    implantSvgBody, isReload,
     readTemplate,
     replaceText,
 } from "../util/util.js";
@@ -305,8 +305,7 @@ export async function panel_A5(data = {
             combo: v.max_combo,
             mods: v.mods,
         }
-        const calcPP = await calcPerformancePoints(v.beatmap.id, score_statistics, v.mode,
-            !(v.beatmap.ranked && (v.beatmap.ranked === 1 || v.beatmap.ranked === 2 || v.beatmap.ranked === 4))); //ranked, approved, loved
+        const calcPP = await calcPerformancePoints(v.beatmap.id, score_statistics, v.mode, isReload(v.beatmap.ranked)); //ranked, approved, loved
 
         const f = await card_H(await PanelGenerate.beatmap2CardH(v, calcPP, parseInt(i) + 1), true);
         cardHs.push(f);

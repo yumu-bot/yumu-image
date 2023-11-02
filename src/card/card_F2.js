@@ -1,7 +1,7 @@
 import {
     getExportFileV3Path, getGameMode, getMapBG, getRoundedNumberStr,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, isReload,
     replaceText
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -163,7 +163,7 @@ export async function card_F2(data = {
 }
 
 const score2CardJ = async (score, calcPP) => {
-    const background = await getMapBG(score.beatmapset.id, 'cover@2x');
+    const background = await getMapBG(score.beatmapset.id, 'cover@2x', isReload(score.beatmap.ranked));
 
     return {
         cover: background,

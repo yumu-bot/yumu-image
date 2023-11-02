@@ -4,7 +4,7 @@ import {
     getGameMode,
     getMapBG, getPanelNameSVG,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, isReload,
     readTemplate, replaceText,
 } from "../util/util.js";
 import {calcMap, getDensityArray} from "../util/compute-pp.js";
@@ -264,9 +264,8 @@ export async function panel_E2(data = {
         mods: data.expected.mods || [],
     }
     const mode = data.beatmap.mode || 'osu';
-    const reload = !(data.beatmap.ranked && (data.beatmap.ranked === 1 || data.beatmap.ranked === 2 || data.beatmap.ranked === 4)); //ranked, approved, loved
 
-    const calcTotal = await calcMap(bid, stat, mode, reload);
+    const calcTotal = await calcMap(bid, stat, mode, isReload(data.beatmap.ranked));
     const calcPP = calcTotal[0];
     let calcNC = [];
     let calcFC = [];
@@ -292,7 +291,7 @@ export async function panel_E2(data = {
 
     // 图片定义
     const background = getExportFileV3Path('object-score-backimage-' + rank + '.jpg');
-    const banner = await getMapBG(data.beatmap.beatmapset.id, 'slimcover');
+    const banner = await getMapBG(data.beatmap.beatmapset.id, 'slimcover', isReload(data.beatmap.ranked));
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);

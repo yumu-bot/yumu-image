@@ -1,7 +1,7 @@
 import {
     exportJPEG, getMapBG, getPanelNameSVG,
     implantImage,
-    implantSvgBody, readTemplate,
+    implantSvgBody, isReload, readTemplate,
     replaceText
 } from "../util/util.js";
 import {card_D} from "../card/card_D.js";
@@ -326,7 +326,7 @@ async function beatmap2CardD(data, mod) {
     }
 
     return {
-        background: await getMapBG(data.beatmapset_id, 'slimcover'),
+        background: await getMapBG(data.beatmapset_id, 'slimcover', isReload(data.ranked)),
         title: data.beatmapset.title || '',
         artist: data.beatmapset.artist || '',
         mapper: data.beatmapset.creator || '',

@@ -1,7 +1,7 @@
 import {
     exportJPEG, getExportFileV3Path, getGameMode, getMapBG,
     getPanelNameSVG, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, implantImage,
-    implantSvgBody, readTemplate,
+    implantSvgBody, isReload, readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -154,7 +154,7 @@ export async function panel_B2(data = {
     svg = implantSvgBody(svg, 0, 0, drawHexIndex(getGameMode(data.beatMap.mode, 0)), reg_hexagon);
 
     // 插入图片和部件（新方法
-    const banner = await getMapBG(data.beatMap.beatmapset.id, 'slimcover');
+    const banner = await getMapBG(data.beatMap.beatmapset.id, 'slimcover', isReload(data.beatMap.ranked));
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     // 面板文字

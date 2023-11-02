@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path, getMapBG, implantImage, implantSvgBody, replaceText,
+    getExportFileV3Path, getMapBG, implantImage, implantSvgBody, isReload, replaceText,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_A1, label_A2, label_A3} from "../component/label.js";
@@ -447,7 +447,7 @@ export async function card_M(data = {
 
     //导入背景
 
-    const background = await getMapBG(data.id, 'list@2x');
+    const background = await getMapBG(data.id, 'list@2x', isReload(data.ranked));
     svg = implantImage(svg,1370,210,0,0,0.5, background, reg_background);
 
     return svg.toString();

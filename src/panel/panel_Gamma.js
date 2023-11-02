@@ -2,7 +2,7 @@ import {
     exportJPEG,
     getDecimals,
     getExportFileV3Path,
-    getGameMode,
+    getGameMode, getMapBG,
     implantImage,
     readNetImage,
     readTemplate,
@@ -111,8 +111,8 @@ export async function panel_Gamma(data = {
 
 const PanelGamma = {
     infoVersion: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, getExportFileV3Path('avatar-guest.png'));
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
 
         return {
             background: background,
@@ -136,7 +136,7 @@ const PanelGamma = {
 
     scoreVersion: async (score) => {
         const background = getExportFileV3Path('object-score-backimage-' + score.rank + '.jpg');
-        const avatar = await readNetImage(score.beatmapset.covers["list@2x"], getExportFileV3Path('beatmap-defaultBG.jpg'));
+        const avatar = await getMapBG(score.beatmapset.id, "list@2x", false);
 
         const mod_arr = score.mods || [];
         let mod_str = '';
