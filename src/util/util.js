@@ -166,7 +166,7 @@ export async function readNetImage(path = '', reload = true, defaultImagePath = 
     }
 
     if (reload) {
-        let data = await axios.get(`https://osu.ppy.sh/osu/${bid}`);
+        let data;
 
         try {
             data = (await axios.get(path, {responseType: 'arraybuffer'})).data;
