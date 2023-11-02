@@ -109,23 +109,23 @@ export function getExportFileV3Path(path = '') {
  */
 export async function getDiffBG(bid, sid, cover = 'cover@2x', defaultImagePath = getExportFileV3Path('card-default.png')) {
     try {
-        let url;
+        let uri;
         if (Math.random() < 0.3) {
             // 暂时不请求, 留作以后使用
-            const result = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
+            const res = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
                 proxy: {},
                 headers: {
                     "SET_ID": sid,
                     "AuthorizationX": SUPER_KEY,
                 }
             });
-            url = result.data
+            uri = res.data
         } else {
-            url = await getMapBG(sid, cover, defaultImagePath);
+            uri = await getMapBG(sid, cover, true, defaultImagePath);
         }
-        if (url) return url;
+        if (uri) return uri;
     } catch (e) {
-        return await getMapBG(sid, cover, defaultImagePath);
+        return await getMapBG(sid, cover, true, defaultImagePath);
     } finally {
         // 向服务器提交异步任务
         await axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
