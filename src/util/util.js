@@ -119,11 +119,15 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', defaultImagePath =
                     "AuthorizationX": SUPER_KEY,
                 }
             });
-            uri = res.data
+            uri = res.data;
         } else {
             uri = await getMapBG(sid, cover, true, defaultImagePath);
         }
-        if (uri) return uri;
+        if (uri) {
+            return uri;
+        } else {
+            return defaultImagePath;
+        }
     } catch (e) {
         return await getMapBG(sid, cover, true, defaultImagePath);
     } finally {
