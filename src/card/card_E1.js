@@ -1,12 +1,11 @@
 import {
     getDecimals,
-    getDiffBG,
     getExportFileV3Path,
     getGameMode,
     getMapStatusV3Path,
     getRoundedNumberStr,
     implantImage,
-    implantSvgBody, isReload, readNetImage,
+    implantSvgBody, readNetImage,
     replaceTexts,
 } from "../util/util.js";
 import {extra, PuHuiTi, torus} from "../util/font.js";
