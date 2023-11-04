@@ -128,13 +128,17 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, def
         return await getMapBG(sid, cover, reload, defaultImagePath);
     } finally {
         // 向服务器提交异步任务
-        await axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
-            proxy: {},
-            headers: {
-                "SET_ID": sid,
-                "AuthorizationX": SUPER_KEY,
-            }
-        })
+        try {
+            await axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
+                proxy: {},
+                headers: {
+                    "SET_ID": sid,
+                    "AuthorizationX": SUPER_KEY,
+                }
+            })
+        } catch (e) {
+            console.error("async mission error from getDiffBG", e);
+        }
     }
 }
 
