@@ -107,9 +107,9 @@ export function getExportFileV3Path(path = '') {
  * @param {number} bid bid
  * @param {number} sid sid
  */
-export async function getDiffBG(bid, sid, cover = 'cover@2x', defaultImagePath = getExportFileV3Path('card-default.png')) {
+export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
     try {
-        let uri;
+        let data;
         if (Math.random() < 0.3) {
             // 暂时不请求, 留作以后使用
             const res = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
@@ -119,17 +119,13 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', defaultImagePath =
                     "AuthorizationX": SUPER_KEY,
                 }
             });
-            uri = res.data;
+            data = res.data;
         } else {
-            uri = await getMapBG(sid, cover, true, defaultImagePath);
+            data = await getMapBG(sid, cover, reload, defaultImagePath);
         }
-        if (uri) {
-            return uri;
-        } else {
-            return defaultImagePath;
-        }
+        if (data) return data;
     } catch (e) {
-        return await getMapBG(sid, cover, true, defaultImagePath);
+        return await getMapBG(sid, cover, reload, defaultImagePath);
     } finally {
         // 向服务器提交异步任务
         await axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
@@ -151,6 +147,8 @@ export async function getAvatar(uid = 0, reload = true, defaultImagePath = getEx
 }
 
 export async function readNetImage(path = '', reload = true, defaultImagePath = getExportFileV3Path('beatmap-DLfailBG.jpg')) {
+    const error = getExportFileV3Path('error.png');
+
     if (!path || !path.startsWith("http")) {
         return readImage(path);
     }
@@ -168,25 +166,24 @@ export async function readNetImage(path = '', reload = true, defaultImagePath = 
     } catch (e) {
         reload = true;
     }
+    let req;
+    let data;
 
     if (reload) {
-        let req;
-        let data;
-
         try {
             req = await axios.get(path, {responseType: 'arraybuffer'});
             data = req.data;
         } catch (e) {
             console.error("download error", e);
-            return defaultImagePath || getExportFileV3Path('error.png');
+            return defaultImagePath || error;
         }
+    }
 
-        if (req.status === 200) {
-            fs.writeFileSync(bufferPath, data, 'binary');
-            return bufferPath;
-        } else {
-            return defaultImagePath || getExportFileV3Path('error.png');
-        }
+    if (req && req.status === 200) {
+        fs.writeFileSync(bufferPath, data, 'binary');
+        return bufferPath;
+    } else {
+        return defaultImagePath || error;
     }
 }
 
