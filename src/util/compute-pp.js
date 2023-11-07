@@ -128,25 +128,20 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
         calculator.nMisses(0);
         full_pp = calculator.performance(beatMap);
     } else {
-        const aimingAcc = getManiaAimingAccuracy100((statistics.accuracy || 1) * 100) / 100;
-
-        const total = attr.nCircles + attr.nSliders;
-        const ratio = (statistics.count_geki + statistics.count_300 === 0) ?
-            (statistics.count_geki / (statistics.count_geki + statistics.count_300)) : 0;
-
-
-        const aimingMisses = Math.round(((1 - aimingAcc) * total) || 0);
-        const aimingGeki = Math.round((total - aimingMisses) * ratio);
-        const aiming300 = Math.max(total - aimingMisses - aimingGeki, 0);
+        const aimingAcc = getManiaAimingAccuracy(statistics.accuracy);
+        const aimingStats = ManiaAimingAccuracy2Stats(aimingAcc, statistics, 0); //total 0，让他自己算 difficulty.nCircles + difficulty.nSliders
 
         calculator = new Calculator({
-            mode: mode_int,
-            mods: mod_int,
+            nMisses: aimingStats.count_miss,
+            n50: aimingStats.count_50,
+            n100: aimingStats.count_100,
+            n300: aimingStats.count_300,
+            nGeki: aimingStats.count_geki,
+            nKatu: aimingStats.count_katu,
             combo: maxCombo,
             acc: aimingAcc,
-            n300: aiming300,
-            nGeki: aimingGeki,
-            nMisses: aimingMisses,
+            mode: mode_int,
+            mods: mod_int,
         })
         full_pp = calculator.performance(beatMap);
     }
@@ -334,16 +329,112 @@ async function getStatisticsTotal(bid, statistics = {}, mode = 'osu', reload = f
 }
 
 //获取 Mania 的目标 Acc，用于计算目标 PP
-export function getManiaAimingAccuracy100(acc = 100) {
-    const accArr = [100, 99.8, 99.5, 99, 98, 97, 96, 95, 90, 80, 70, 60, 0]
+export function getManiaAimingAccuracy(acc = 1) {
+    const accArr = [1, 0.998, 0.995, 0.99, 0.98, 0.97, 0.96, 0.95, 0.9, 0.8, 0.7, 0.6, 0]
 
     for (const i in accArr) {
         const v = accArr[i];
 
-        if (v <= acc && v !== 100) {
+        if (v <= acc && v !== 1) {
             return accArr[i - 1];
         }
     }
 
     return 1;
+}
+
+//根据准确率构建一个合适的目标判定组合
+export function ManiaAimingAccuracy2Stats(aimingAcc = 1, stat = {
+    count_50: 0,
+    count_100: 0,
+    count_300: 0,
+    count_geki: 0,
+    count_katu: 0,
+    count_miss: 0,
+}, total = 0){
+
+    let n50 = stat.count_50;
+    let n100 = stat.count_100;
+    let n300 = stat.count_300;
+    let nGeki = stat.count_geki;
+    let nKatu = stat.count_katu;
+    let nMisses = stat.count_miss;
+
+    const countTotal = (total > 0) ? total : (n50 + n100 + n300 + nGeki + nKatu + nMisses);
+
+    //一个物件所占的 Acc 权重
+    if (countTotal <= 0) return stat;
+    const weight = 1 / countTotal;
+    //彩黄比
+    const pgRatio = (n300 + nGeki === 0) ? 0 : nGeki / (n300 + nGeki);
+
+    let currentAcc = getAcc(nGeki, n300, nKatu, n100, n50, nMisses, countTotal);
+    if (currentAcc >= aimingAcc) return stat;
+
+    //交换评级
+    if (nMisses > 0 && currentAcc < aimingAcc) {
+        const ex = exchangeJudge(n300, nMisses, 1, 0, currentAcc, aimingAcc, weight);
+        n300 = ex.nGreat;
+        nMisses = ex.nBad;
+        currentAcc = ex.currentAcc;
+    }
+
+    if (n50 > 0 && currentAcc < aimingAcc) {
+        const ex = exchangeJudge(n300, n50, 1, 1/6, currentAcc, aimingAcc, weight);
+        n300 = ex.nGreat;
+        n50 = ex.nBad;
+        currentAcc = ex.currentAcc;
+    }
+
+    if (n100 > 0 && currentAcc < aimingAcc) {
+        const ex = exchangeJudge(n300, n100, 1, 1/3, currentAcc, aimingAcc, weight);
+        n300 = ex.nGreat;
+        n100 = ex.nBad;
+        currentAcc = ex.currentAcc;
+    }
+
+    if (nKatu > 0 && currentAcc < aimingAcc) {
+        const ex = exchangeJudge(n300, nKatu, 1, 2/3, currentAcc, aimingAcc, weight);
+        n300 = ex.nGreat;
+        nKatu = ex.nBad;
+        //currentAcc = ex.currentAcc;
+    }
+
+    const nGreat = n300 + nGeki;
+    nGeki = Math.floor(nGreat * pgRatio);
+    n300 = Math.max((nGreat - nGeki), 0);
+
+    return {
+        count_50: n50,
+        count_100: n100,
+        count_300: n300,
+        count_geki: nGeki,
+        count_katu: nKatu,
+        count_miss: nMisses,
+    }
+
+    //交换评级
+    function exchangeJudge(nGreat, nBad, wGreat = 1, wBad = 0, currentAcc, aimingAcc, weight) {
+        for (let i = 0; i < nBad; i++) {
+            const gainAcc = weight * (wGreat - wBad);
+
+            nGreat ++;
+            nBad --;
+            currentAcc += gainAcc;
+
+            if (currentAcc >= aimingAcc) break;
+        }
+
+        return {
+            nGreat: nGreat,
+            nBad: nBad,
+            currentAcc: currentAcc
+        }
+    }
+
+
+    function getAcc(nGeki, n300, nKatu, n100, n50, nMisses, total) {
+        return (n50 / 6 + n100 / 3 + n300 + nGeki + nKatu * 2 / 3) / total;
+    }
+
 }
