@@ -118,12 +118,25 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
         mods_int: mod_int,
     };
 
-    //fc
+    //fc 或者 mania Aiming PP
     const maxCombo = difficulty.maxCombo;
     calculator.combo(maxCombo);
-    calculator.n300(statistics.count_300 + statistics.count_miss);
-    calculator.nMisses(0);
-    const full_pp = calculator.performance(beatMap);
+
+    let full_pp;
+    if (mode_int !== 3) {
+        calculator.n300(statistics.count_300 + statistics.count_miss);
+        calculator.nMisses(0);
+        full_pp = calculator.performance(beatMap);
+    } else {
+        const aimingAcc = getManiaAimingAccuracy100(statistics.hit_accuracy || 100)
+        calculator = new Calculator({
+            mode: 3,
+            mods: mod_int,
+            combo: maxCombo,
+            acc: aimingAcc,
+        })
+        full_pp = calculator.performance(beatMap);
+    }
 
     //pf
     calculator = new Calculator({
@@ -146,11 +159,11 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
             calculator.n300(attr.nCircles);
         } break;
         case 2: {
-            calculator.n300(difficulty.nFruits);
+            calculator.n300(difficulty.nFruits).n100(difficulty.nDroplets).n50(difficulty.nTinyDroplets);
             calculator.nKatu(0);
         } break;
         case 3: {
-            calculator.n300(0);
+            calculator.n300(0).nKatu(0);
             calculator.nGeki(attr.nCircles + attr.nSliders);
         } break;
     }
@@ -302,4 +315,19 @@ async function getStatisticsTotal(bid, statistics = {}, mode = 'osu', reload = f
         case 'mania':
             return n320 + n300 + n200 + n100 + n50 + n0;
     }
+}
+
+//获取 Mania 的目标 Acc，用于计算目标 PP
+export function getManiaAimingAccuracy100(acc = 100) {
+    const accArr = [100, 99.8, 99.5, 99, 98, 97, 96, 95, 90, 80, 70, 60, 0]
+
+    for (const i in accArr) {
+        const v = accArr[i];
+
+        if (v <= acc && v !== 100) {
+            return accArr[i - 1];
+        }
+    }
+
+    return 1;
 }

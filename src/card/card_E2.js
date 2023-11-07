@@ -9,6 +9,7 @@ import {torus} from "../util/font.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {getManiaAimingAccuracy100} from "../util/compute-pp";
 
 export async function card_E2(data = {
     rank: 'SS',
@@ -107,11 +108,21 @@ export async function card_E2(data = {
         data_b: data.combo ? data.combo.toString() : '0',
         data_m: 'x',
     }, true);
-    const pp = await label_E({...LABEL_OPTION.PP,
-        remark: isPF ? 'Max' : (isFC ? ('SS ' + Math.round(data.max_pp) + 'PP') : ('FC ' + Math.round(data.full_pp) + 'PP')),
-        data_b: data.pp ? Math.round(data.pp).toString() : '0',
-        data_m: 'PP',
-    }, true);
+    const pp = (mode === 'm') ? (
+        await label_E({
+            ...LABEL_OPTION.PP,
+            remark: isPF ? 'Max' : (isFC ? ('SS ' + Math.round(data.max_pp) + 'PP') :
+                (getManiaAimingAccuracy100(data.accuracy * 100) + ' ' + Math.round(data.full_pp) + 'PP')),
+            data_b: data.pp ? Math.round(data.pp).toString() : '0',
+            data_m: 'PP',
+        }, true)
+    ) : (
+        await label_E({...LABEL_OPTION.PP,
+            remark: isPF ? 'Max' : (isFC ? ('SS ' + Math.round(data.max_pp) + 'PP') : ('FC ' + Math.round(data.full_pp) + 'PP')),
+            data_b: data.pp ? Math.round(data.pp).toString() : '0',
+            data_m: 'PP',
+        }, true)
+    );
 
     // 导入部件
     svg = implantSvgBody(svg, 0, 0, mods, reg_mods);
