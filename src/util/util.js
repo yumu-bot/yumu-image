@@ -119,7 +119,7 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, def
         // data 为背景文件在文件系统中的绝对路径 字符串
         // 不是文件本身
         const data = res.data;
-        if (data) return readImage(data);
+        if (data) return data;
     } catch (e) {
         return await getMapBG(sid, cover, reload, defaultImagePath);
     } finally {
