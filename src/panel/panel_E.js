@@ -475,7 +475,7 @@ const score2AccIndex = (score) => {
     let nTotal;
     let nNotMiss;
 
-    const hasMiss = (n0 !== 0);
+    const hasMiss = (n0 > 0);
     const has1p50 = ((n50 / (n300 + n100 + n50 + n0)) >= 0.01);
 
     const rank = score.rank;
@@ -510,11 +510,11 @@ const score2AccIndex = (score) => {
                     if (has1p50) {
                         return '-[50] S';
                     } else {
-                        if (0.9 * nTotal <= n300) {
+                        if (0.9 * nTotal > n300) {
+                            return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
+                        } else {
                             // 如果没有不好的评级，甚至能到SS
                             return '-' + Math.ceil(nTotal - n300) + ' SS';
-                        } else {
-                            return '-' + Math.ceil(0.9 * nTotal - n300) + ' S';
                         }
                     }
                 }

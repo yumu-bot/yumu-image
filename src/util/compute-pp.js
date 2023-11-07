@@ -129,7 +129,7 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
         full_pp = calculator.performance(beatMap);
     } else {
         const aimingAcc = getManiaAimingAccuracy(statistics.accuracy);
-        const aimingStats = ManiaAimingAccuracy2Stats(aimingAcc, statistics, 0); //total 0，让他自己算 difficulty.nCircles + difficulty.nSliders
+        const aimingStats = ManiaAimingAccuracy2Stats(aimingAcc, statistics); //让他自己算sum difficulty.nCircles + difficulty.nSliders
 
         calculator = new Calculator({
             nMisses: aimingStats.count_miss,
@@ -351,7 +351,7 @@ export function ManiaAimingAccuracy2Stats(aimingAcc = 1, stat = {
     count_geki: 0,
     count_katu: 0,
     count_miss: 0,
-}, total = 0){
+}){
 
     let n50 = stat.count_50;
     let n100 = stat.count_100;
@@ -360,7 +360,7 @@ export function ManiaAimingAccuracy2Stats(aimingAcc = 1, stat = {
     let nKatu = stat.count_katu;
     let nMisses = stat.count_miss;
 
-    const countTotal = (total > 0) ? total : (n50 + n100 + n300 + nGeki + nKatu + nMisses);
+    const countTotal = (n50 + n100 + n300 + nGeki + nKatu + nMisses);
 
     //一个物件所占的 Acc 权重
     if (countTotal <= 0) return stat;
