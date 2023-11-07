@@ -109,36 +109,27 @@ export function getExportFileV3Path(path = '') {
  */
 export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
     try {
-        let data;
-        if (Math.random() < 0.3) {
-            // 暂时不请求, 留作以后使用
-            const res = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
-                proxy: {},
-                headers: {
-                    "SET_ID": sid,
-                    "AuthorizationX": SUPER_KEY,
-                }
-            });
-            data = res.data;
-        } else {
-            data = await getMapBG(sid, cover, reload, defaultImagePath);
-        }
+        const res = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
+            proxy: {},
+            headers: {
+                "SET_ID": sid,
+                "AuthorizationX": SUPER_KEY,
+            }
+        });
+        const data = res.data;
         if (data) return data;
     } catch (e) {
         return await getMapBG(sid, cover, reload, defaultImagePath);
     } finally {
         // 向服务器提交异步任务
-        try {
-            await axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
-                proxy: {},
-                headers: {
-                    "SET_ID": sid,
-                    "AuthorizationX": SUPER_KEY,
-                }
-            })
-        } catch (e) {
-            console.error("async mission error from getDiffBG", e);
-        }
+        axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
+            proxy: {},
+            headers: {
+                "SET_ID": sid,
+                "AuthorizationX": SUPER_KEY,
+            }
+        }).catch(_ => {
+        })
     }
 }
 
