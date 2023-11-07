@@ -128,9 +128,9 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
         calculator.nMisses(0);
         full_pp = calculator.performance(beatMap);
     } else {
-        const aimingAcc = getManiaAimingAccuracy100(statistics.hit_accuracy || 100)
-        calculator = new Calculator({
-            mode: 3,
+        const aimingAcc = getManiaAimingAccuracy100(statistics.hit_accuracy || 100) / 100;
+        calculator = new Calculator({...stat,
+            mode: mode_int,
             mods: mod_int,
             combo: maxCombo,
             acc: aimingAcc,
@@ -159,11 +159,14 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
             calculator.n300(attr.nCircles);
         } break;
         case 2: {
-            calculator.n300(difficulty.nFruits).n100(difficulty.nDroplets).n50(difficulty.nTinyDroplets);
+            calculator.n300(difficulty.nFruits);
+            calculator.n100(difficulty.nDroplets);
+            calculator.n50(difficulty.nTinyDroplets);
             calculator.nKatu(0);
         } break;
         case 3: {
-            calculator.n300(0).nKatu(0);
+            calculator.n300(0);
+            calculator.nKatu(0);
             calculator.nGeki(attr.nCircles + attr.nSliders);
         } break;
     }

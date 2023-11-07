@@ -9,7 +9,7 @@ import {torus} from "../util/font.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getManiaAimingAccuracy100} from "../util/compute-pp";
+import {getManiaAimingAccuracy100} from "../util/compute-pp.js";
 
 export async function card_E2(data = {
     rank: 'SS',
