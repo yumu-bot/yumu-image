@@ -668,7 +668,7 @@ export const PanelGenerate = {
 
     beatmap2CardH: async (beatmap, calcPP, rank = 1) => {
         const cover = await getMapBG(beatmap.beatmapset.id, 'list@2x', isReload(beatmap.ranked));
-        const background = await getMapBG(beatmap.beatmapset.id, 'slimcover', isReload(beatmap.ranked));
+        const background = await getMapBG(beatmap.beatmapset.id, 'cover@2x', isReload(beatmap.ranked));
         // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
         // 这个不要下载，请求量太大
 
