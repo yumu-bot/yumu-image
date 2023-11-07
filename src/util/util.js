@@ -135,6 +135,13 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, def
     }
 }
 
+/**
+ * @param {number} sid
+ * @param {string} cover
+ * @param {boolean} reload 是否强制更新
+ * @param {string} defaultImagePath 出现错误时返回的失败图
+ * @return {Promise<string>} 返回位于文件系统的绝对路径
+ */
 export async function getMapBG(sid = 0, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
     return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', reload, defaultImagePath);
 }
@@ -143,6 +150,10 @@ export async function getAvatar(uid = 0, reload = true, defaultImagePath = getEx
     return await readNetImage('https://a.ppy.sh/' + uid, reload, defaultImagePath);
 }
 
+/**
+ * 下载文件, 并且位于文件系统的绝对路径
+ * @return {Promise<string>} 位于文件系统的绝对路径
+ */
 export async function readNetImage(path = '', reload = true, defaultImagePath = getExportFileV3Path('beatmap-DLfailBG.jpg')) {
     const error = getExportFileV3Path('error.png');
 
