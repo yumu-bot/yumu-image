@@ -112,7 +112,7 @@ export async function card_E2(data = {
         await label_E({
             ...LABEL_OPTION.PP,
             remark: isPF ? 'Max' : (isFC ? ('SS ' + Math.round(data.max_pp) + 'PP') :
-                (getManiaAimingAccuracy100(data.accuracy * 100) + ' ' + Math.round(data.full_pp) + 'PP')),
+                (getManiaAimingAccuracy100(data.accuracy * 100) + '% ' + Math.round(data.full_pp) + 'PP')),
             data_b: data.pp ? Math.round(data.pp).toString() : '0',
             data_m: 'PP',
         }, true)

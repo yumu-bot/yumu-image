@@ -316,6 +316,7 @@ export async function panel_E(data = {
         ...data.score.statistics,
         combo: data.score.max_combo,
         mods: data.score.mods,
+        accuracy: data.score.accuracy,
     }
 
     const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode,

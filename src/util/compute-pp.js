@@ -128,12 +128,18 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
         calculator.nMisses(0);
         full_pp = calculator.performance(beatMap);
     } else {
-        const aimingAcc = getManiaAimingAccuracy100(statistics.hit_accuracy || 100) / 100;
-        calculator = new Calculator({...stat,
+        const aimingAcc = getManiaAimingAccuracy100((statistics.accuracy || 1) * 100) / 100;
+        const total = attr.nCircles + attr.nSliders;
+        const aimingMisses = Math.round(((1 - aimingAcc) * total) || 0);
+        const aimingGeki = total - aimingMisses;
+
+        calculator = new Calculator({
             mode: mode_int,
             mods: mod_int,
             combo: maxCombo,
             acc: aimingAcc,
+            nGeki: aimingGeki,
+            nMisses: aimingMisses,
         })
         full_pp = calculator.performance(beatMap);
     }
