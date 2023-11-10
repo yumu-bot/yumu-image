@@ -319,8 +319,7 @@ export async function panel_E(data = {
         accuracy: data.score.accuracy,
     }
 
-    const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode,
-        !(data.score.beatmap.ranked && (data.score.beatmap.ranked === 1 || data.score.beatmap.ranked === 2 || data.score.beatmap.ranked === 4))); //ranked, approved, loved
+    const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, isReload(data.score.beatmap.ranked));
     /*
     const calcPP = {
         pp: 10,

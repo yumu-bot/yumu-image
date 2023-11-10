@@ -3,12 +3,13 @@ import {
     getDecimals,
     getExportFileV3Path,
     getGameMode, getMapBG,
-    implantImage,
+    implantImage, isReload,
     readNetImage,
     readTemplate,
     replaceTexts,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
+import {calcPerformancePoints} from "../util/compute-pp";
 
 export async function router(req, res) {
     try {
@@ -122,7 +123,7 @@ const PanelGamma = {
             left2: user.country.countryCode + '#' + user.countryRank,
             left3: user.playCount + ' PC',
             down1: user.follower_count + ' Fans',
-            down2: 'u ' + user.id,
+            down2: 'u' + user.id,
             center0b: user.pp ? Math.round(user.pp).toString() : '0',
             center0m: 'PP',
             center1b: user.username,
@@ -137,17 +138,22 @@ const PanelGamma = {
     scoreVersion: async (score) => {
         const background = getExportFileV3Path('object-score-backimage-' + score.rank + '.jpg');
         const avatar = await getMapBG(score.beatmapset.id, "list@2x", false);
-
+        const calcPP = await calcPerformancePoints(score.beatmap.id, score.statistics, score.mode, isReload(score.beatmap.ranked));
+        
         const mod_arr = score.mods || [];
         let mod_str = '';
 
-        if (mod_arr !== []) mod_str += '+';
-
-        for (const v of mod_arr) {
-            mod_str += (v.toString() + ',');
+        if (mod_arr !== []) {
+            mod_str += ' +';
+            
+            for (const v of mod_arr) {
+                mod_str += (v.toString() + ', ');
+            }
+            
+            mod_str = mod_str.slice(0, -2);
         }
-
-        const statistics = (score) => {
+        
+        const getStatistics = (score) => {
             switch (getGameMode(score.mode, 1)) {
                 case 'o': {
                     return score.statistics.count_300 + ' // '
@@ -185,11 +191,11 @@ const PanelGamma = {
             left1: score.beatmapset.title,
             left2: score.beatmapset.artist,
             left3: score.beatmap.version,
-            down1: statistics (score),
-            down2: 'b ' + score.beatmap.id,
-            center0b: getDecimals(score.beatmap.difficulty_rating, 2),
-            center0m: getDecimals(score.beatmap.difficulty_rating, 3) + '*',
-            center1b: score.pp ? Math.round(score.pp).toString() : '-',
+            down1: getStatistics (score),
+            down2: 'b' + score.beatmap.id,
+            center0b: getDecimals(calcPP.attr.stars, 2),
+            center0m: getDecimals(calcPP.attr.stars, 3) + '*',
+            center1b: Math.round(calcPP.pp),
             center1m: 'PP',
             center2: getDecimals(score.accuracy * 100, 2) +
                 getDecimals(score.accuracy * 100, 3)
