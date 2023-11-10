@@ -191,11 +191,11 @@ const PanelGamma = {
             left1: score.beatmapset.title,
             left2: score.beatmapset.artist,
             left3: score.beatmap.version,
-            down1: getStatistics (score),
+            down1: getStatistics(score),
             down2: 'b' + score.beatmap.id,
             center0b: getDecimals(calcPP.attr.stars, 2),
             center0m: getDecimals(calcPP.attr.stars, 3) + '*',
-            center1b: Math.round(calcPP.pp),
+            center1b: Math.round(calcPP.pp).toString(),
             center1m: 'PP',
             center2: getDecimals(score.accuracy * 100, 2) +
                 getDecimals(score.accuracy * 100, 3)
