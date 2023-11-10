@@ -138,7 +138,15 @@ const PanelGamma = {
     scoreVersion: async (score) => {
         const background = getExportFileV3Path('object-score-backimage-' + score.rank + '.jpg');
         const avatar = await getMapBG(score.beatmapset.id, "list@2x", false);
-        const calcPP = await calcPerformancePoints(score.beatmap.id, score.statistics, score.mode, isReload(score.beatmap.ranked));
+
+        // 成绩重计算
+        const score_statistics = {
+            ...score.statistics,
+            combo: score.max_combo,
+            mods: score.mods,
+            accuracy: score.accuracy,
+        }
+        const calcPP = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode, isReload(score.beatmap.ranked));
         
         const mod_arr = score.mods || [];
         let mod_str = '';
@@ -156,29 +164,29 @@ const PanelGamma = {
         const getStatistics = (score) => {
             switch (getGameMode(score.mode, 1)) {
                 case 'o': {
-                    return score.statistics.count_300 + ' // '
-                        + score.statistics.count_100 + ' // '
-                        + score.statistics.count_50 + ' // '
+                    return score.statistics.count_300 + ' / '
+                        + score.statistics.count_100 + ' / '
+                        + score.statistics.count_50 + ' / '
                         + score.statistics.count_miss;
                 }
                 case 't': {
-                    return score.statistics.count_300 + ' // '
-                        + score.statistics.count_100 + ' // '
+                    return score.statistics.count_300 + ' / '
+                        + score.statistics.count_100 + ' / '
                         + score.statistics.count_miss;
                 }
                 case 'c': {
-                    return score.statistics.count_300 + ' // '
-                        + score.statistics.count_100 + ' // '
-                        + score.statistics.count_50 + ' // '
+                    return score.statistics.count_300 + ' / '
+                        + score.statistics.count_100 + ' / '
+                        + score.statistics.count_50 + ' / '
                         + score.statistics.count_miss + ' (-'
                         + score.statistics.count_katu + ')';
                 }
                 case 'm': {
                     return score.statistics.count_geki + ' (+'
-                        + score.statistics.count_300 + ') // '
-                        + score.statistics.count_katu + ' // '
-                        + score.statistics.count_100 + ' // '
-                        + score.statistics.count_50 + ' // '
+                        + score.statistics.count_300 + ') / '
+                        + score.statistics.count_katu + ' / '
+                        + score.statistics.count_100 + ' / '
+                        + score.statistics.count_50 + ' / '
                         + score.statistics.count_miss;
                 }
             }
