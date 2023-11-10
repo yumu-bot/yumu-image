@@ -9,7 +9,7 @@ import {
     replaceTexts,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
-import {calcPerformancePoints} from "../util/compute-pp";
+import {calcPerformancePoints} from "../util/compute-pp.js";
 
 export async function router(req, res) {
     try {
