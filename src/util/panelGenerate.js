@@ -2,7 +2,7 @@ import {torus} from "./font.js";
 import moment from "moment";
 import {
     getApproximateRank,
-    getDecimals,
+    getDecimals, getDiffBG,
     getExportFileV3Path,
     getGameMode,
     getMapBG,
@@ -560,29 +560,63 @@ export const PanelGenerate = {
         }
     },
 
+    matchData2CardA2: async (data) => {
+        const redWins = data.teamPoint.red || 0;
+        const blueWins = data.teamPoint.blue || 0;
+
+        const isTeamVS = data.teamVS;
+        const isContainVS = data.matchStat.name.toLowerCase().match('vs');
+        const star = getRoundedNumberStr(data.averageStar || 0, 3);
+
+        const background = await getMapBG(data.firstMapSID, 'list@2x', false);
+
+        let title, title1, title2;
+        if (isContainVS) {
+            title = getMatchNameSplitted(data.matchStat.name);
+            title1 = title[0];
+            title2 = title[1] + ' vs ' + title[2];
+        } else {
+            title1 = data.matchStat.name;
+            title2 = '';
+        }
+
+        //这里的时间戳不需要 .add(8, 'hours')
+        const left1 = 'R' + data.roundCount + ' P' + data.playerCount + ' S' + data.scoreCount;
+        let left2;
+
+        if (data.matchEnd) {
+            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + ' ~ ' + moment(data.matchStat.end_time, 'X').format('HH:mm');
+        } else if (data.hasCurrentGame) {
+            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + ' ~ playing';
+        } else {
+            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + ' ~ continuing';
+        }
+
+        const left3 = moment(data.matchStat.start_time, 'X').format('YYYY-MM-DD');
+
+        const right1 = 'SR ' + star + '*';
+        const right2 = 'mp' + data.matchStat.id || 0;
+        const right3b = isTeamVS ? (redWins + ' : ' + blueWins) : data.roundCount + 'x';
+
+        return {
+            background: background,
+            map_status: '',
+
+            title1: title1,
+            title2: title2,
+            title_font: 'PuHuiTi',
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+            isTeamVS: isTeamVS,
+        };
+
+    },
     //给panel_C用的，期待可以和上面合并
-    matchInfo2CardA2: async (data = {
-        /*
-        noneUsers: [],
-        matchInfo: {
-            id: 59438351,
-            name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)',
-            start_time: 1584793502,
-            end_time: 1584799428
-        },
-        averageStar: 0,
-        rounds: 1,
-        redUsers: [[Object], [Object], [Object], [Object], [Object]],
-        isTeamVs: true,
-        blueWins: 5,
-        redWins: 6,
-        blueUsers: [[Object], [Object], [Object], [Object], [Object], [Object]],
-
-        sid: 1001507,
-        background: '',
-
-         */
-    }) => {
+    matchInfo2CardA2: async (data = {}) => {
         const wins_team_red = data.redWins || 0;
         const wins_team_blue = data.blueWins || 0;
         const isTeamVS = data.isTeamVs;
@@ -625,44 +659,6 @@ export const PanelGenerate = {
             right2: right2,
             right3b: right3b,
             isTeamVS: isTeamVS,
-        };
-    },
-
-    userMatchData2CardH: async (user) => {
-
-        let team_color;
-        switch (user.team.toLowerCase()) {
-            case 'red':
-                team_color = '#D32F2F';
-                break;
-            case 'blue':
-                team_color = '#00A0E9';
-                break;
-            default:
-                team_color = '#aaa';
-                break;
-        }
-
-        return {
-            team: user.team.toLowerCase(),
-            team_color: team_color,
-            player_name: user.username,
-            player_avatar: await readNetImage(user.userData?.avatar_url, false, getExportFileV3Path('PanelObject/I_CardH_Avatar.png')),
-            player_banner: await readNetImage(user.userData?.cover?.url, false, getExportFileV3Path('PanelObject/I_CardH_BG.png')),
-            player_score: user.scores.reduce(function (prev, curr) {
-                return prev + curr;
-            }),
-            player_win: user.wins,
-            player_lose: user.lost,
-            player_rank: user.index || 0,
-            player_rws: (user.rws * 100) || 0, // 场均胜利分配，是个 0-100 之间的值 MRA v3.2 功能
-            player_mra: user.mra, // 木斗力
-            player_Label_V1: user.playerLabelV1,
-            player_Label_V2: user.playerLabelV2,
-            //mra_color: '#F09450', // 玩家分类颜色 MRA v1.2 功能
-            //label_class: 'Ever-Victorious Main Force', //玩家分类PRO MRA v3.4 功能
-            //class_color: '#fff', //部分字体需要显示为黑色
-            //label_mvp: (user.index === 1) ? 'MVP' : '',
         };
     },
 

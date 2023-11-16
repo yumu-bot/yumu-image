@@ -227,6 +227,12 @@ export function implantSvgBody(base = '', x = 0, y = 0, replace = '', reg = /.*/
     return base.replace(reg, replace);
 }
 
+//如果不需要修改位置，用replaceText就行
+export function transformSvgBody(x = 0, y = 0, body = '') {
+    if (x !== 0 || y !== 0) return `<g transform="translate(${x} ${y})">` + body + '</g>';
+    return body;
+}
+
 export function makeSvgBodyToSvg(svgBody = '', w, h) {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${w} ${h}">
