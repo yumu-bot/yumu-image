@@ -1,9 +1,8 @@
 import {torus} from "./font.js";
 import moment from "moment";
 import {
-    getApproximateRank,
-    getDecimals, getDiffBG,
-    getExportFileV3Path,
+    getApproximateRank, getAvatar,
+    getDecimals, getExportFileV3Path,
     getGameMode,
     getMapBG,
     getMatchNameSplitted,
@@ -122,60 +121,68 @@ export const PanelGenerate = {
 
 
     //panel F2 用的转换
-    matchUser2CardA1: async (user = {
-        id: null,
-        userName: null,
-        accuracy: 0.8590575010808473,
-        mods: [ 'NF', 'HD' ],
-        score: 185232,
+    score2CardA1: async (score = {
+        accuracy: 0.9329874621703416,
+        timestamp: null,
         mode: 'OSU',
+        mods: [ 'NF', 'HD' ],
         passed: true,
-        perfect: 0,
-        statistics: {
-            count_50: 14,
-            count_100: 141,
-            count_300: 613,
-            count_geki: 49,
-            count_katu: 72,
-            count_miss: 3
-        },
-        rank: 'F',
+        perfect: false,
         pp: null,
-        match: { slot: 3, team: 'red', pass: true },
-        osuUser: {
-            id: 11355787,
-            username: 'na-gi',
-            uid: 11355787,
-            avatar_url: 'https://a.ppy.sh/11355787?1590115432.jpeg',
-            playmode: 'DEFAULT',
-            support_level: 0,
-            cover: {
-                url: 'https://assets.ppy.sh/user-profile-covers/11355787/fbab99aa8812f95f53fa8534cda1aec9f9edde6a8608dd052dc93caa0b64315c.jpeg',
-                custom_url: 'https://assets.ppy.sh/user-profile-covers/11355787/fbab99aa8812f95f53fa8534cda1aec9f9edde6a8608dd052dc93caa0b64315c.jpeg'
-            },
-            country: { countryCode: 'CN', countryName: 'China' }
+        rank: 'F',
+        replay: false,
+        score: 363522,
+        user: {
+            id: 10436444,
+            pmOnly: false,
+            avatar_url: 'https://a.ppy.sh/10436444?1675267430.jpeg',
+            default_group: 'default',
+            is_active: true,
+            is_bot: false,
+            is_deleted: false,
+            is_online: false,
+            is_supporter: true,
+            last_visit: [Array],
+            pm_friends_only: false,
+            username: 'No rank',
+            country_code: 'CN',
+            country: [Object]
         },
-        uid: 8926316,
-        user_id: 8926316,
-        max_combo: 231,
-        mode_int: 0,
-        created_at: 1584794973,
+
+        statistics: {
+            count_50: 10,
+            count_100: 53,
+            count_300: 700,
+            count_geki: 92,
+            count_katu: 37,
+            count_miss: 8
+        },
+        type: 'legacy_match_score',
         best_id: null,
+        id: null,
+        max_combo: 452,
+        mode_int: 0,
+        user_id: 10436444,
+        match: { slot: 5, team: 'red', pass: true },
+        user_name: 'No rank',
 
-        team: null,
-        total_score: 0,
-        total_player: 0,
+        total_score : 4,
+        total_player : 12,
     }) => {
-        if (!user) return '';
+        if (!score) return '';
 
-        const score = user.score || 0;
-        const total_score = user.total_score || 0;
-        const total_player = user.total_player || 0;
+        const player_score = score.score || 0;
+        const total_score = score.total_score || 0;
+        const total_player = score.total_player || 0;
         const rating = total_score !== 0 ? Math.round(score * total_player / total_score * 100) / 100 : 0;
-        const team_str = (user.match.team === 'red') ? 'teamred' : ((user.match.team === 'blue') ? 'teamblue' : 'headtohead');
-        const pp_str = (user.pp != null) ? ' (' + Math.round(user.pp) + 'PP) ' : '';
-        const mods_arr = user.mods || [];
-        const rank = user.match.pass === false ? 'F' : getApproximateRank({statistics: user.statistics, mode: user.mode});
+        const team_str = (!score.match.team || score.match.team === 'none') ? 'gray' : score.match.team;
+        const pp_str = (score.pp != null) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
+        const mods_arr = score.mods || [];
+        const rank = score.match.pass === false ? 'F' :
+            getApproximateRank({
+                statistics: score.statistics,
+                mode: score.mode ? score.mode.toLowerCase() : 'osu'
+            });
 
         let mods = '';
         if (mods_arr.length > 0) {
@@ -185,24 +192,23 @@ export const PanelGenerate = {
             }
         }
 
-        const background = await readNetImage(user.osuUser.cover.url || user.osuUser.custom_url, false, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user.osuUser.avatar_url, false, getExportFileV3Path('avatar-guest.png'));
-        const country = user.osuUser?.country?.countryCode || 'UN';
+        const background = getExportFileV3Path('card-' + team_str + '.png');
+        const avatar = await getAvatar(score.user_id, false, getExportFileV3Path('avatar-guest.png'));
+        const country = score.user.country.countryCode || score.user.country_code || 'UN';
 
-        const top1 = user.osuUser.username || 'Unknown';
+        const top1 = score.user.username || score.user_name || 'Unknown';
         
-        const left1 = user.osuUser?.country?.countryName || 'Unknown';
-        const left2 = 'P' + (user.match.slot + 1) + ' r' + rating + ' ' + pp_str;
-        const sub_icon1 = getExportFileV3Path('object-card-' + team_str + '.png')
-        const right2 = (Math.round((user.accuracy || 0) * 10000) / 100) + '%' + ' '
-            + rank + ' ' + mods + ' ' + (user.max_combo || 0) + 'x';
-        const right3b = getRoundedNumberLargerStr(score, 0);
-        const right3m = getRoundedNumberSmallerStr(score, 0);
+        const left1 = score.user.country.countryName || 'Unknown';
+        const left2 = 'P' + (score.match.slot + 1) + ' R' + rating + ' ' + pp_str;
+        const right2 = (Math.round((score.accuracy || 0) * 10000) / 100) + '%' + ' '
+            + rank + ' ' + mods + ' ' + (score.max_combo || 0) + 'x';
+        const right3b = getRoundedNumberLargerStr(player_score, 0);
+        const right3m = getRoundedNumberSmallerStr(player_score, 0);
 
         return {
             background,
             avatar,
-            sub_icon1: sub_icon1,
+            sub_icon1: '',
             sub_icon2: '',
             country: country,
 
@@ -559,109 +565,7 @@ export const PanelGenerate = {
             right3b: right3b,
         }
     },
-
-    matchData2CardA2: async (data) => {
-        const redWins = data.teamPoint.red || 0;
-        const blueWins = data.teamPoint.blue || 0;
-
-        const isTeamVS = data.teamVS;
-        const isContainVS = data.matchStat.name.toLowerCase().match('vs');
-        const star = getRoundedNumberStr(data.averageStar || 0, 3);
-
-        const background = await getMapBG(data.firstMapSID, 'list@2x', false);
-
-        let title, title1, title2;
-        if (isContainVS) {
-            title = getMatchNameSplitted(data.matchStat.name);
-            title1 = title[0];
-            title2 = title[1] + ' vs ' + title[2];
-        } else {
-            title1 = data.matchStat.name;
-            title2 = '';
-        }
-
-        //这里的时间戳不需要 .add(8, 'hours')
-        const left1 = 'R' + data.roundCount + ' P' + data.playerCount + ' S' + data.scoreCount;
-        let left2;
-
-        if (data.matchEnd) {
-            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + ' ~ ' + moment(data.matchStat.end_time, 'X').format('HH:mm');
-        } else if (data.hasCurrentGame) {
-            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + ' ~ playing';
-        } else {
-            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + ' ~ continuing';
-        }
-
-        const left3 = moment(data.matchStat.start_time, 'X').format('YYYY-MM-DD');
-
-        const right1 = 'SR ' + star + '*';
-        const right2 = 'mp' + data.matchStat.id || 0;
-        const right3b = isTeamVS ? (redWins + ' : ' + blueWins) : data.roundCount + 'x';
-
-        return {
-            background: background,
-            map_status: '',
-
-            title1: title1,
-            title2: title2,
-            title_font: 'PuHuiTi',
-            left1: left1,
-            left2: left2,
-            left3: left3,
-            right1: right1,
-            right2: right2,
-            right3b: right3b,
-            isTeamVS: isTeamVS,
-        };
-
-    },
-    //给panel_C用的，期待可以和上面合并
-    matchInfo2CardA2: async (data = {}) => {
-        const wins_team_red = data.redWins || 0;
-        const wins_team_blue = data.blueWins || 0;
-        const isTeamVS = data.isTeamVs;
-        const isContainVS = data.matchInfo.name.toLowerCase().match('vs');
-        const star = getDecimals(data.averageStar, 2) + getDecimals(data.averageStar, 3);
-
-        const background = data.sid ? await getMapBG(data.sid, 'list@2x', false) : data.background;
-
-        let title, title1, title2;
-        if (isContainVS) {
-            title = getMatchNameSplitted(data.matchInfo.name);
-            title1 = title[0];
-            title2 = title[1] + ' vs ' + title[2];
-        } else {
-            title1 = data.matchInfo.name;
-            title2 = '';
-        }
-
-        //这里的时间戳不需要 .add(8, 'hours')
-        const left1 = (data.rounds || 0) + 'x Rounds';
-        const left2 = (data.matchInfo.end_time) ? moment(data.matchInfo.start_time, 'X').format('HH:mm') + '~' + moment(data.matchInfo.end_time, 'X').format('HH:mm') :
-            moment(data.matchInfo.start_time, 'X').format('HH:mm') + '~' + 'Continuing';
-        const left3 = moment(data.matchInfo.start_time, 'X').format('YYYY-MM-DD');
-
-        const right1 = 'AVG.SR ' + star;
-        const right2 = 'MP' + data.matchInfo.id || 0;
-        const right3b = isTeamVS ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
-
-        return {
-            background: background,
-            map_status: '',
-
-            title1: title1,
-            title2: title2,
-            title_font: 'PuHuiTi',
-            left1: left1,
-            left2: left2,
-            left3: left3,
-            right1: right1,
-            right2: right2,
-            right3b: right3b,
-            isTeamVS: isTeamVS,
-        };
-    },
-
+//给panel_C用的，期待可以和上面合并
     beatmap2CardH: async (beatmap, calcPP, rank = 1) => {
         const cover = await getMapBG(beatmap.beatmapset.id, 'list@2x', isReload(beatmap.ranked));
         const background = await getMapBG(beatmap.beatmapset.id, 'cover@2x', isReload(beatmap.ranked));

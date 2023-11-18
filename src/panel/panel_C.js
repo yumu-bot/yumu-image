@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getExportFileV3Path,
+    exportJPEG, getExportFileV3Path, getMapBG, getMatchNameSplitted,
     getPanelNameSVG,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
@@ -12,7 +12,7 @@ import {
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {PanelGenerate} from "../util/panelGenerate.js";
+import moment from "moment";
 
 export async function router(req, res) {
     try {
@@ -703,7 +703,6 @@ export async function panel_C(
     let reg_maincard = /(?<=<g id="MainCard">)/;
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PC-1\);">)/;
-    let reg_bodycard = /(?<=<g id="BodyCard">)/;
 
     // 面板文字
     const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'MRA', 'v0.3.2 FT');
@@ -712,7 +711,7 @@ export async function panel_C(
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    const cardA2 = await card_A2(await PanelGenerate.matchData2CardA2(data), true);
+    const cardA2 = await card_A2(await matchData2CardA2(data), true);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
@@ -898,6 +897,61 @@ async function playerData2CardH(p = {
 
         font_title2: 'torus',
         font_label4: 'PuHuiTi',
+    };
+}
+
+async function matchData2CardA2(data){
+    const redWins = data.teamPoint.red || 0;
+    const blueWins = data.teamPoint.blue || 0;
+
+    const isTeamVS = data.teamVS;
+    const star = getRoundedNumberStr(data.averageStar || 0, 3);
+
+    const background = await getMapBG(data.firstMapSID, 'list@2x', false);
+
+    const isContainVS = data.matchStat.name.toLowerCase().match('vs');
+    let title, title1, title2;
+    if (isContainVS) {
+        title = getMatchNameSplitted(data.matchStat.name);
+        title1 = title[0];
+        title2 = title[1] + ' vs ' + title[2];
+    } else {
+        title1 = data.matchStat.name;
+        title2 = '';
+    }
+
+    //这里的时间戳不需要 .add(8, 'hours')
+    const left1 = 'R' + data.roundCount + ' P' + data.playerCount + ' S' + data.scoreCount;
+    let left2;
+
+    if (data.matchEnd) {
+        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-' + moment(data.matchStat.end_time, 'X').format('HH:mm');
+    } else if (data.hasCurrentGame) {
+        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-playing';
+    } else {
+        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-continuing';
+    }
+
+    const left3 = moment(data.matchStat.start_time, 'X').format('YYYY/MM/DD');
+
+    const right1 = 'SR ' + star + '*';
+    const right2 = 'mp' + data.matchStat.id || 0;
+    const right3b = isTeamVS ? (redWins + ' : ' + blueWins) : data.roundCount + 'x';
+
+    return {
+        background: background,
+        map_status: '',
+
+        title1: title1,
+        title2: title2,
+        title_font: 'PuHuiTi',
+        left1: left1,
+        left2: left2,
+        left3: left3,
+        right1: right1,
+        right2: right2,
+        right3b: right3b,
+        isTeamVS: isTeamVS,
     };
 }
 
