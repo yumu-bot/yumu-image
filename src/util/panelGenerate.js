@@ -174,7 +174,7 @@ export const PanelGenerate = {
         const player_score = score.score || 0;
         const total_score = score.total_score || 0;
         const total_player = score.total_player || 0;
-        const rating = total_score !== 0 ? Math.round(score * total_player / total_score * 100) / 100 : 0;
+        const rating = (total_score > 0) ? Math.round(player_score * total_player / total_score * 100) / 100 : 0;
         const team_str = (!score.match.team || score.match.team === 'none') ? 'gray' : score.match.team;
         const pp_str = (score.pp != null) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
         const mods_arr = score.mods || [];
