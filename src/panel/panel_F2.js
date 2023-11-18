@@ -18,7 +18,6 @@ import moment from "moment";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        console.log(data)
         const svg = await panel_F2(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
@@ -42,213 +41,7 @@ export async function router_svg(req, res) {
 }
 
 export async function panel_F2(
-    data = {
-        index: 3,
-        MatchStat: {
-            id: 59438351,
-            name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)',
-            start_time: 1584793502,
-            end_time: 1584799428
-        },
-        MatchRound: {
-            id: 310431873,
-            mode: 'osu',
-            mods: ['NF', 'HD'],
-            beatmap: {
-                id: 907200,
-                mode: 'osu',
-                status: 'ranked',
-                version: 'Moroi',
-                beatMapRetryCount: 0,
-                beatMapFailedCount: 0,
-                beatMapRating: 0,
-                beatmapset_id: 419189,
-                difficulty_rating: 4.67,
-                total_length: 209,
-                user_id: 134572,
-                beatmapset: [Object]
-            },
-            winningTeamScore: 1018967,
-            winningTeam: 'red',
-            beatmap_id: 907200,
-            start_time: 1584794973,
-            end_time: 1584795193,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            scores: [
-                {
-                    accuracy: 0.9076956333765672,
-                    timestamp: null,
-                    mode: 'OSU',
-                    mods: [ 'NF', 'HD' ],
-                    passed: true,
-                    perfect: false,
-                    pp: null,
-                    rank: 'F',
-                    replay: false,
-                    score: 295886,
-                    statistics: {
-                        count_50: 1,
-                        count_100: 89,
-                        count_300: 670,
-                        count_geki: 76,
-                        count_katu: 54,
-                        count_miss: 11
-                    },
-                    type: 'legacy_match_score',
-                    best_id: null,
-                    id: null,
-                    max_combo: 401,
-                    mode_int: 0,
-                    user_id: 6073139,
-                    match: { slot: 0, team: 'blue', pass: true },
-                    user_name: 'CamelliNya'
-                },
-                {
-                    accuracy: 0.9327712926934717,
-                    timestamp: null,
-                    mode: 'OSU',
-                    mods: [ 'NF', 'HD' ],
-                    passed: true,
-                    perfect: false,
-                    pp: null,
-                    rank: 'F',
-                    replay: false,
-                    score: 389974,
-                    statistics: {
-                        count_50: 1,
-                        count_100: 72,
-                        count_300: 695,
-                        count_geki: 86,
-                        count_katu: 47,
-                        count_miss: 3
-                    },
-                    type: 'legacy_match_score',
-                    best_id: null,
-                    id: null,
-                    max_combo: 414,
-                    mode_int: 0,
-                    user_id: 11355787,
-                    match: { slot: 1, team: 'blue', pass: true },
-                    user_name: 'na-gi'
-                },
-                {
-                    accuracy: 0.909641158668396,
-                    timestamp: null,
-                    mode: 'OSU',
-                    mods: [ 'NF', 'HD' ],
-                    passed: true,
-                    perfect: false,
-                    pp: null,
-                    rank: 'F',
-                    replay: false,
-                    score: 204872,
-                    statistics: {
-                        count_50: 12,
-                        count_100: 70,
-                        count_300: 676,
-                        count_geki: 82,
-                        count_katu: 36,
-                        count_miss: 13
-                    },
-                    type: 'legacy_match_score',
-                    best_id: null,
-                    id: null,
-                    max_combo: 185,
-                    mode_int: 0,
-                    user_id: 8742486,
-                    match: { slot: 2, team: 'blue', pass: true },
-                    user_name: '- Rainbow -'
-                },
-                {
-                    accuracy: 0.8590575010808473,
-                    timestamp: null,
-                    mode: 'OSU',
-                    mods: [ 'NF', 'HD' ],
-                    passed: true,
-                    perfect: false,
-                    pp: null,
-                    rank: 'F',
-                    replay: false,
-                    score: 185232,
-                    statistics: {
-                        count_50: 14,
-                        count_100: 141,
-                        count_300: 613,
-                        count_geki: 49,
-                        count_katu: 72,
-                        count_miss: 3
-                    },
-                    type: 'legacy_match_score',
-                    best_id: null,
-                    id: null,
-                    max_combo: 231,
-                    mode_int: 0,
-                    user_id: 8926316,
-                    match: { slot: 3, team: 'red', pass: true },
-                    user_name: 'Mars New'
-                },
-                {
-                    accuracy: 0.817769130998703,
-                    timestamp: null,
-                    mode: 'OSU',
-                    mods: [ 'NF', 'HD' ],
-                    passed: true,
-                    perfect: false,
-                    pp: null,
-                    rank: 'F',
-                    replay: false,
-                    score: 470213,
-                    statistics: {
-                        count_50: 3,
-                        count_100: 207,
-                        count_300: 561,
-                        count_geki: 45,
-                        count_katu: 89,
-                        count_miss: 0
-                    },
-                    type: 'legacy_match_score',
-                    best_id: null,
-                    id: null,
-                    max_combo: 851,
-                    mode_int: 0,
-                    user_id: 714369,
-                    match: { slot: 4, team: 'red', pass: true },
-                    user_name: 'GreySTrip_VoV'
-                },
-                {
-                    accuracy: 0.9329874621703416,
-                    timestamp: null,
-                    mode: 'OSU',
-                    mods: [ 'NF', 'HD' ],
-                    passed: true,
-                    perfect: false,
-                    pp: null,
-                    rank: 'F',
-                    replay: false,
-                    score: 363522,
-                    statistics: {
-                        count_50: 10,
-                        count_100: 53,
-                        count_300: 700,
-                        count_geki: 92,
-                        count_katu: 37,
-                        count_miss: 8
-                    },
-                    type: 'legacy_match_score',
-                    best_id: null,
-                    id: null,
-                    max_combo: 452,
-                    mode_int: 0,
-                    user_id: 10436444,
-                    match: { slot: 5, team: 'red', pass: true },
-                    user_name: 'No rank'
-                }
-            ]
-        }
-    }
-    , reuse = false) {
+    data = {}) {
     // 导入模板
     let svg = readTemplate('template/Panel_F2.svg');
 
@@ -286,11 +79,11 @@ export async function panel_F2(
         }
     )
 
-    const isTeamVS = (data.MatchRound.team_type === "team-vs");
+    const isTeamVS = (data?.MatchRound?.team_type === "team-vs");
 
-    const redTeamScore = isTeamVS ? getTotalScore(redArr) : 0;
-    const blueTeamScore = isTeamVS ? getTotalScore(blueArr) : 0;
-    const totalScore = isTeamVS ? redTeamScore + blueTeamScore : getTotalScore(noneArr);
+    const redTeamScore = data?.MatchRound?.redTeamScore || 0;
+    const blueTeamScore = data?.MatchRound?.blueTeamScore || 0;
+    const totalScore = data?.MatchRound?.totalTeamScore || 0;//isTeamVS ? redTeamScore + blueTeamScore : getTotalScore(noneArr);
     const playerCount = scoreArr.length;
 
     if (isTeamVS) {
@@ -567,12 +360,4 @@ async function roundInfo2CardA2(stat = {
         right3m: right3m,
         isTeamVS: isTeamVS,
     };
-}
-
-function getTotalScore(arr = []) {
-    let r = 0;
-    for (const v of arr) {
-        r += (v?.score || 0);
-    }
-    return r;
 }

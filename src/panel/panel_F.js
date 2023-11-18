@@ -1,16 +1,16 @@
 import {
     exportJPEG,
-    getExportFileV3Path,
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, getPanelNameSVG, getRoundedNumberStr
+    replaceText, getPanelNameSVG, getRoundedNumberStr, getAvatar, getMapBG, getMatchNameSplitted
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
 import {getMapAttributes} from "../util/compute-pp.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
+import moment from "moment";
 
 export async function router(req, res) {
     try {
@@ -37,145 +37,7 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-export async function panel_F(data = {
-    // A2卡
-    match: {
-        background: "https://assets.ppy.sh/beatmaps/113458/covers/cover.jpg?1650639448", //给我他们最后一局的谱面背景即可
-        match_title: 'MP5 S11: (肉蛋葱鸡) vs (超级聊天)', //match name
-        match_round: 11,
-        match_time: '20:25-22:03',//比赛开始到比赛结束。如果跨了一天，需要加24小时 match start_time
-        match_time_start: 0, //本来要的是比赛开始的日期 match start_time '2020-03-21'
-        match_time_end: 0,
-        mpid: 59438351,
-        wins_team_red: 5,
-        wins_team_blue: 6,
-        wins_team_none: 0,//如果不是team vs，总共的局数
-
-        is_team_vs: true,// 比赛有哪怕一局不是team vs，都是false
-    },
-
-    // C卡 events
-    scores: [
-        {
-            statistics: {
-                // 谱面部分参数
-                background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
-                title: 'Back to Marie',
-                artist: 'Kumagai Eri(cv.Seto Asami)',
-                mapper: 'Yunomi', //creator
-                difficulty: 'Catharsis',
-                status: 'ranked',
-                bid: 1000684,
-                delete: false,
-                // 星级,四维在这里算(考虑到dt的影响
-
-                is_team_vs: true, // TFF表示平局，当然，这个很少见
-                is_team_red_win: false, //如果不是team vs，这个值默认false
-                is_team_blue_win: true, //如果不是team vs，这个值默认false
-                score_team_red: 1144770,
-                score_team_blue: 1146381,
-                score_total: 2291151,
-                wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
-                wins_team_blue_before: 4,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
-            },
-            red: [
-                {
-                    player_name: 'na-gi', //妈的 为什么get match不给用户名啊
-                    player_avatar: getExportFileV3Path('avatar-guest.png'),
-                    player_score: 464277,
-                    player_mods: [],
-                    player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
-                }, {
-                    player_name: '- Rainbow -',
-                    player_avatar: getExportFileV3Path('avatar-guest.png'),
-                    player_score: 412096,
-                    player_mods: [],
-                    player_rank: 2
-                }, {
-                    player_name: 'Guozi on osu',
-                    player_avatar: getExportFileV3Path('avatar-guest.png'),
-                    player_score: 268397,
-                    player_mods: [],
-                    player_rank: 6,
-                }],
-            blue: [
-                {
-                    player_name: 'Greystrip_VoV',
-                    player_avatar: getExportFileV3Path('avatar-guest.png'),
-                    player_score: 403437,
-                    player_mods: ['HD'],
-                    player_rank: 3,
-                }, {
-                    player_name: 'Mars New',
-                    player_avatar: getExportFileV3Path('avatar-guest.png'),
-                    player_score: 371937,
-                    player_mods: [],
-                    player_rank: 4,
-                }, {
-                    player_name: 'No Rank',
-                    player_avatar: getExportFileV3Path('avatar-guest.png'),
-                    player_score: 371007,
-                    player_mods: [],
-                    player_rank: 5,
-                }],
-            none: [{
-
-            }]
-        },{
-            statistics: {
-                is_team_vs: true, // TFF表示平局，当然，这个很少见
-                is_team_red_win: false, //如果不是team vs，这个值默认false
-                is_team_blue_win: false, //如果不是team vs，这个值默认false
-                score_team_red: 1144770,
-                score_team_blue: 1146381,
-                score_total: 2291151,
-                wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
-                wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
-            },
-            red: [{
-                player_name: 'na-gi', //妈的 为什么get match不给用户名啊
-                player_avatar: getExportFileV3Path('avatar-guest.png'),
-                player_score: 464277,
-                player_mods: [],
-                player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
-            }, {
-                player_name: '- Rainbow -',
-                player_avatar: getExportFileV3Path('avatar-guest.png'),
-                player_score: 412096,
-                player_mods: [],
-                player_rank: 2
-            }, {
-                player_name: 'Guozi on osu',
-                player_avatar: getExportFileV3Path('avatar-guest.png'),
-                player_score: 268397,
-                player_mods: [],
-                player_rank: 6,
-            }],
-            blue: [{
-                player_name: 'Greystrip_VoV',
-                player_avatar: getExportFileV3Path('avatar-guest.png'),
-                player_score: 403437,
-                player_mods: ['HD'],
-                player_rank: 3,
-            }, {
-                player_name: 'Mars New',
-                player_avatar: getExportFileV3Path('avatar-guest.png'),
-                player_score: 371937,
-                player_mods: [],
-                player_rank: 4,
-            }, {
-                player_name: 'No Rank',
-                player_avatar: getExportFileV3Path('avatar-guest.png'),
-                player_score: 371007,
-                player_mods: [],
-                player_rank: 5,
-            }],
-            none: [{
-
-            }]
-        }],
-
-}, reuse = false) {
+export async function panel_F(data = {}) {
     // 导入模板
     let svg = readTemplate('template/Panel_F.svg');
 
@@ -200,9 +62,18 @@ export async function panel_F(data = {
     // 导入成绩卡（C卡
 
     let card_Cs = [];
-    for (const i of data.scores) {
-        card_Cs.push(await card_C(i, true));
+    let redWins = 0;
+    let blueWins = 0;
+    let starSum = 0;
+    let roundCount = 0;
+    for (const v of data.rounds) {
+        starSum += v.beatmap?.difficulty_rating || 0;
+        roundCount ++;
+        card_Cs.push(await card_C(await round2CardC(v, redWins, blueWins), true));
+        if (v.winningTeam === 'red') redWins ++;
+        else if (v.winningTeam === 'blue') blueWins ++;
     }
+    const averageStar = roundCount === 0 ? 0 : starSum / roundCount;
 
     for (const i in card_Cs) {
         svg = implantSvgBody(svg, 510, 330 + i * 250, card_Cs[i], reg_card_c)
@@ -241,21 +112,18 @@ export async function panel_F(data = {
     }];
      */
 
-    let beatmap_arr = await Promise.all(data.scores.map(async (e) => {
-        const d = e.statistics;
+    let beatmap_arr = await Promise.all(data.rounds.map(async (e) => {
+        const beatmap = e.beatmap;
+        const mods = e.mods;
 
-        let mods;
-        if (data.match.is_team_vs) {
-            mods = e.red[0].player_mods;
-        } else {
-            mods = e.none[0].player_mods || '';
-        }
         let mod_int = 0;
         if (mods.indexOf("DT") !== -1) mod_int = 64;
 
-        if (d.delete) {
-            const bid = d.bid || 0;
-
+        /*
+        let attr;
+        try {
+            attr = await getMapAttributes(beatmap.bid, mod_int);
+        } catch (e) {
             return {
                 background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
                 title: 'Deleted Map',
@@ -264,7 +132,7 @@ export async function panel_F(data = {
                 difficulty: '?',
                 status: '',
 
-                bid: bid,
+                bid: 0,
                 star_rating: 0,
                 cs: 0,
                 ar: 0,
@@ -272,22 +140,24 @@ export async function panel_F(data = {
                 mode: null,
             }
         }
-        const attr = await getMapAttributes(d.bid, mod_int);
+
+         */
+        const attr = await getMapAttributes(beatmap.id, mod_int);
         const cs = getRoundedNumberStr(attr.cs, 2);
         const ar = getRoundedNumberStr(attr.ar, 2);
         const od = getRoundedNumberStr(attr.od, 2);
-        const mode = d.mode ? d.mode.toLowerCase() : 'osu';
+        const mode = beatmap.mode ? beatmap.mode.toLowerCase() : 'osu';
 
         return {
-            background: d.background,
-            title: d.title,
-            artist: d.artist,
-            mapper: d.mapper, //creator
-            difficulty: d.difficulty,
-            status: d.status,
+            background: await getMapBG(beatmap.beatmapset.id),
+            title: beatmap.beatmapset.title,
+            artist: beatmap.beatmapset.artist,
+            mapper: beatmap.beatmapset.creator, //creator
+            difficulty: beatmap.version,
+            status: beatmap.status,
 
-            bid: d.bid,
-            star_rating: attr.stars,
+            bid: beatmap.id,
+            star_rating: attr?.stars || beatmap?.difficulty_rating,
             cs: cs,
             ar: ar,
             od: od,
@@ -310,8 +180,100 @@ export async function panel_F(data = {
 
     // 导入比赛简介卡（A2卡
 
-    const m = await card_A2(await PanelGenerate.match2CardA2(data.match, beatmap_arr), true);
+    const m = await card_A2(await matchData2CardA2(data, averageStar, redWins, blueWins), true);
     svg = implantSvgBody(svg,40,40, m, reg_maincard);
 
     return svg.toString();
+}
+
+async function round2CardC(round = {}, red_before = 0, blue_before = 0) {
+
+    const scoreArr = round?.scores || [];
+    let redArr = [], blueArr = [], noneArr = [];
+
+    for (const v of scoreArr) {
+        const f = await score2LabelF2(v);
+        switch (v.match.team) {
+            case 'red': redArr.push(f); break;
+            case 'blue': blueArr.push(f); break;
+            default : noneArr.push(f); break;
+        }
+    }
+
+    async function score2LabelF2(score = {}) {
+        return {
+            player_name: score?.user_name, //妈的 为什么get match不给用户名啊
+            player_avatar: await getAvatar(score.user_id),
+            player_score: score.score,
+            player_mods: score.mods,
+            player_rank: score.ranking, //一局比赛里的分数排名，1v1或者team都一样
+        }
+    }
+
+
+    return {
+        statistics: {
+            is_team_vs: round.team_type === 'team-vs', // TFF表示平局，当然，这个很少见
+            is_team_red_win: round.winningTeam === 'red', //如果不是team vs，这个值默认false
+            is_team_blue_win: round.winningTeam === 'blue', //如果不是team vs，这个值默认false
+            score_team_red: round.redTeamScore,
+            score_team_blue: round.blueTeamScore,
+            score_total: round.totalTeamScore,
+            wins_team_red_before: red_before, //这局之前红赢了几局？从0开始，不是 team vs 默认0
+            wins_team_blue_before: blue_before,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
+        },
+        red: redArr,
+        blue: blueArr,
+        none: noneArr,
+    }
+}
+
+async function matchData2CardA2(data = {}, averageStar, redWins, blueWins){
+
+    const isTeamVS = data.rounds[0].team_type === 'team-vs';
+    const star = getRoundedNumberStr(averageStar || 0, 3);
+
+    const background = await getMapBG(data.rounds[0]?.beatmap?.beatmapset?.id, 'list@2x', false);
+
+    const isContainVS = data.matchStat.name.toLowerCase().match('vs');
+    let title, title1, title2;
+    if (isContainVS) {
+        title = getMatchNameSplitted(data.matchStat.name);
+        title1 = title[0];
+        title2 = title[1] + ' vs ' + title[2];
+    } else {
+        title1 = data.matchStat.name;
+        title2 = '';
+    }
+
+    //这里的时间戳不需要 .add(8, 'hours')
+    let left2;
+
+    if (data.matchStat.end_time) {
+        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-' + moment(data.matchStat.end_time, 'X').format('HH:mm');
+    } else {
+        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-continuing';
+    }
+
+    const left3 = moment(data.matchStat.start_time, 'X').format('YYYY/MM/DD');
+
+    const right1 = 'SR ' + star + '*';
+    const right2 = 'mp' + data.matchStat.id || 0;
+    const right3b = isTeamVS ? (redWins + ' : ' + blueWins) : data.roundCount + 'x';
+
+    return {
+        background: background,
+        map_status: '',
+
+        title1: title1,
+        title2: title2,
+        title_font: 'PuHuiTi',
+        left1: '',
+        left2: left2,
+        left3: left3,
+        right1: right1,
+        right2: right2,
+        right3b: right3b,
+        isTeamVS: isTeamVS,
+    };
 }

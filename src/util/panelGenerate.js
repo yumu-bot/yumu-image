@@ -5,7 +5,6 @@ import {
     getDecimals, getExportFileV3Path,
     getGameMode,
     getMapBG,
-    getMatchNameSplitted,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getRoundedNumberStr,
@@ -527,44 +526,6 @@ export const PanelGenerate = {
         }
     },
 
-    //给F面板的
-    match2CardA2: async (match, beatmap_arr = []) => {
-        const background = await readNetImage(beatmap_arr ? beatmap_arr[0].background : '', false, getExportFileV3Path('beatmap-DLfailBG.jpg')) ;
-        const title = getMatchNameSplitted(match.match_title);
-        const title1 = title[0];
-        const title2 = (title[1] && title[2]) ? (title[1] + ' vs ' + title[2]) : '';
-        const left1 = match.match_round + 'x Rounds';
-        let left2 = moment(match.match_time, 'HH:mm[-]').add(8, 'hours').format('HH:mm') + '~';
-
-        if (match.match_time.slice(-1) === '-') {
-            left2 += 'Continuing';
-        } else {
-            left2 += moment(match.match_time, '[-]HH:mm').add(8, 'hours').format('HH:mm');
-        }
-
-        const left3 = moment(match.match_time_start, 'X').add(8, 'hours').format('YYYY-MM-DD');
-        const avg_star = beatmap_arr ? beatmap_arr
-            .filter(b => b.star_rating > 0)
-            .map(b => b.star_rating) : 0;
-        const right1 = avg_star ? 'AVG.SR ' + (avg_star.reduce((pv, cv) => {return pv + cv}, 0) / avg_star.length).toFixed(2) : 0;
-        const right2 = 'MP' + match.mpid;
-        const wins_team_red = match.wins_team_red || 0;
-        const wins_team_blue = match.wins_team_blue || 0;
-        const right3b = match.is_team_vs ? (wins_team_red + ' : ' + wins_team_blue) : 'h2h';
-
-        return {
-            background: background,
-            title1: title1,
-            title2: title2,
-            title_font: 'PuHuiTi',
-            left1: left1,
-            left2: left2,
-            left3: left3,
-            right1: right1,
-            right2: right2,
-            right3b: right3b,
-        }
-    },
 //给panel_C用的，期待可以和上面合并
     beatmap2CardH: async (beatmap, calcPP, rank = 1) => {
         const cover = await getMapBG(beatmap.beatmapset.id, 'list@2x', isReload(beatmap.ranked));
