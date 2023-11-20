@@ -137,9 +137,9 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, def
 
 /**
  * @param {number} sid
- * @param {string} cover
- * @param {boolean} reload 是否强制更新
- * @param {string} defaultImagePath 出现错误时返回的失败图
+ * @param {string} [cover]
+ * @param {boolean} [reload] 是否强制更新
+ * @param {string} [defaultImagePath] 出现错误时返回的失败图
  * @return {Promise<string>} 返回位于文件系统的绝对路径
  */
 export async function getMapBG(sid = 0, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
@@ -843,7 +843,8 @@ export function getGameMode(mode = '', level = 0) {
     let modeStr = 'default';
 
     //如果是输入数字，则修改
-    if (typeof mode === "number" && mode >= -2) {
+    if (typeof mode === "number") {
+        if (level === -2) return mode;
         switch (mode) {
             case -1: {
                 modeStr = 'default';

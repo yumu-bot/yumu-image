@@ -86,8 +86,12 @@ export async function calcMap(bid, statistics = stat, mode, reload = false) {
 }
 
 export async function calcPerformancePoints(bid, statistics = stat, mode, reload = false) {
-    const mode_int = statistics.mode_int ? getGameMode(statistics.mode_int, -2) :
-        (mode ? getGameMode(mode, -2) : 1);
+    let mode_int;
+    if (statistics.mode_int === void 0) {
+        mode_int = getGameMode(mode, -2);
+    } else {
+        mode_int = getGameMode(statistics.mode_int, -2)
+    }
     const mode_name = mode ? getGameMode(mode, 0) :
         (statistics.mode_int ? getGameMode(statistics.mode_int, 0) : 'osu');
 
