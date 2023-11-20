@@ -26,11 +26,8 @@ Object.prototype.setSvgText = function (str) {
 export async function router(req, res) {
     try {
         const data = req.fields;
-        // 让原来的函数返回值变成 svg 字符串
         const svg = await panel_Beta(data);
         res.set('Content-Type', 'image/jpeg');
-        // send 的时候再导出图片, 保持原来接口不变, 别忘记 exportImage 前 await
-        // 再在下面补充一个 router_svg 用于返回 svg 字符串
         res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
@@ -85,8 +82,7 @@ export async function panel_Beta(score) {
             ...statistics,
             combo,
             mods,
-            mode_int
-        });
+        }, mode_int);
         const now = ppData.pp / ppData.perfect_pp;
         const full = ppData.full_pp / ppData.perfect_pp;
         if (pp < 1) pp = ppData.pp;

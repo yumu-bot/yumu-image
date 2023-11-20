@@ -26,7 +26,6 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-// 你怎么不自己加router
 export async function panel_Alpha(strArray = ['']) {
     let maxWidth = 0;
     let befY = 10;
@@ -47,10 +46,12 @@ export async function panel_Alpha(strArray = ['']) {
 }
 
 // 这个版本的颜色组，是lazer中hover用户名时显示的颜色
-const colorLazerGroup = ["#F5409B", "#E04D4D", "#B2FFF8", "#CBAAFF",
+const colorLazerGroup = [
+    "#F5409B", "#E04D4D", "#B2FFF8", "#CBAAFF",
     "#85FFFF", "#FFFF93", "#FFE5DD", "#FFE8FF",
     "#FFFFED", "#FFA6FF", "#FA7C7C", "#62EDFF",
-    "#FFFFB6", "#8DE0CA", "#C8FFFF", "#A5C6A3"];
+    "#FFFFB6", "#8DE0CA", "#C8FFFF", "#A5C6A3"
+];
     /*
     ["#4e54c8", "#8f94fb", "#11998e", "#11998e",
     "#FC5C7D", "#FC5C7D", "#74ebd5", "#ACB6E5",
