@@ -195,9 +195,9 @@ async function matchData2CardA2(data){
     const left3 = moment(data?.series?.seriesStat?.end_time, 'X').format('YYYY/MM/DD HH:mm');
 
     const right1 = 'SR ' + star + '*';
-    const right2 = 'Rounds/Player'; // + data.matchStat.id || 0;
-    const right3b = data.roundCount > 0 ? getRoundedNumberLargerStr(data.playerCount / data.roundCount, 3) : "0";
-    const right3m = data.roundCount > 0 ? getRoundedNumberSmallerStr(data.playerCount / data.roundCount, 3) : "";
+    const right2 = 'Scores/Player'; // + data.matchStat.id || 0;
+    const right3b = data.playerCount > 0 ? getRoundedNumberLargerStr(data.scoreCount / data.playerCount, 3) : "0";
+    const right3m = data.playerCount > 0 ? getRoundedNumberSmallerStr(data.scoreCount / data.playerCount, 3) : "";
 
     return {
         background: background,
