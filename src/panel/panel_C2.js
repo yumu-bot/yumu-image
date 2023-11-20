@@ -195,8 +195,9 @@ async function matchData2CardA2(data){
     const left3 = moment(data?.series?.seriesStat?.end_time, 'X').format('YYYY/MM/DD HH:mm');
 
     const right1 = 'SR ' + star + '*';
-    const right2 = 'series'; // + data.matchStat.id || 0;
-    const right3b = data.roundCount.toString();
+    const right2 = 'Rounds/Player'; // + data.matchStat.id || 0;
+    const right3b = data.roundCount > 0 ? getRoundedNumberLargerStr(data.playerCount / data.roundCount, 3) : "0";
+    const right3m = data.roundCount > 0 ? getRoundedNumberSmallerStr(data.playerCount / data.roundCount, 3) : "";
 
     return {
         background: background,
@@ -211,7 +212,7 @@ async function matchData2CardA2(data){
         right1: right1,
         right2: right2,
         right3b: right3b,
-        right3m: 'x',
+        right3m: right3m,
         isTeamVS: false,
     };
 }
