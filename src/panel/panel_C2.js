@@ -1,6 +1,5 @@
 import {
-    exportJPEG, getExportFileV3Path, getMapBG, getMatchNameSplitted,
-    getPanelNameSVG,
+    exportJPEG, getExportFileV3Path, getMapBG, getPanelNameSVG,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getRoundedNumberStr,
@@ -13,11 +12,12 @@ import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import moment from "moment";
+import {PuHuiTi, torus} from "../util/font.js";
 
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_C(data);
+        const svg = await panel_C2(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -29,7 +29,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_C(data);
+        const svg = await panel_C2(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -39,7 +39,7 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-export async function panel_C(data = {}) {
+export async function panel_C2(data = {}) {
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');
 
@@ -51,7 +51,7 @@ export async function panel_C(data = {}) {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PC-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'MRA', 'v0.3.2 FT');
+    const panel_name = getPanelNameSVG('Yumu Series Rating v3.5 (!ymsa)', 'SRA', 'v0.4.0 UU');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
@@ -65,55 +65,32 @@ export async function panel_C(data = {}) {
 
     // 导入H卡
     let cardHs = [];
-    const isTeamVS = data.teamVS;
-    const playerDataList = data.playerDataList || [];
+    const playerDataList = data?.series?.playerDataList || [];
 
-    let redArr = [];
-    let blueArr = [];
-    let noneArr = [];
+    let dataArr = [];
 
     for (const v of playerDataList) {
-        const team = v.team;
-        switch (team) {
-            case "red": redArr.push(v); break;
-            case "blue": blueArr.push(v); break;
-            default : noneArr.push(v); break;
+        dataArr.push(v);
+    }
+    //渲染不在队伍（无队伍）
+    const rowFull = Math.floor(dataArr.length / 2) + 1;
+    const luckyDog = (dataArr.length % 2 === 1) ? dataArr.pop() : null;
+
+    for (let i = 0; i < dataArr.length; i += 2) {
+        for (let j = 0; j < 2; j++) {
+            cardHs.push(
+                await drawCardH(await playerData2CardH(dataArr[i + j]), i / 2 + 1, j + 1, 2));
         }
     }
 
-    const rowVS = Math.max(redArr.length, blueArr.length) || 0;
-    if (isTeamVS) {
-        //渲染红队
-        for (let i = 0; i < redArr.length; i++) {
-            cardHs.push(
-                await drawCardH(await playerData2CardH(redArr[i]), i + 1 ,1, 2));
-        }
-        //渲染蓝队
-        for (let i = 0; i < blueArr.length; i++) {
-            cardHs.push(
-                await drawCardH(await playerData2CardH(blueArr[i]), i + 1 ,2, 2));
-        }
-    } else {
-        //渲染不在队伍（无队伍）
-        const rowFull = Math.floor(noneArr.length / 2) + 1;
-        const luckyDog = (noneArr.length % 2 === 1) ? noneArr.pop() : null;
-
-        for (let i = 0; i < noneArr.length; i += 2) {
-            for (let j = 0; j < 2; j++) {
-                cardHs.push(
-                    await drawCardH(await playerData2CardH(noneArr[i + j]), rowVS + i / 2 + 1, j + 1, 2));
-            }
-        }
-
-        if (luckyDog != null) {
-            cardHs.push(
-                await drawCardH(await playerData2CardH(luckyDog), rowVS + rowFull, 1, 1));
-        }
+    if (luckyDog != null) {
+        cardHs.push(
+            await drawCardH(await playerData2CardH(luckyDog), rowFull, 1, 1));
     }
 
     svg = replaceText(svg, cardHs, reg_maincard);
 
-    const rowTotal = rowVS + Math.floor(noneArr.length / 2);
+    const rowTotal = Math.floor(dataArr.length / 2);
 
     // 计算面板高度
     let panelHeight, cardHeight;
@@ -134,49 +111,37 @@ export async function panel_C(data = {}) {
 
 async function playerData2CardH(p = {}) {
 
-    let team_color;
-    let player_background;
-    let isTeamVS;
-
-    switch (p.team) {
-        case 'red':
-            team_color = '#D32F2F';
-            player_background = getExportFileV3Path('card-red.png');
-            isTeamVS = true;
-            break;
-        case 'blue':
-            team_color = '#00A0E9';
-            player_background = getExportFileV3Path('card-blue.png');
-            isTeamVS = true;
-            break;
-        default:
-            team_color = '#aaa';
-            player_background = getExportFileV3Path('card-gray.png');
-            isTeamVS = false;
-            break;
-    }
-
     const rws = Math.round(p.rws * 10000) / 100;
 
-    let left1;
-    if (isTeamVS) {
-        left1 = getRoundedNumberStr(p.tts, 3) +
+    const left1 = getRoundedNumberStr(p.tts, 3) +
             ' // ' + p.win + 'W-' + p.lose + 'L (' +
             Math.round((p.win / (p.win + p.lose)) * 100) + '%)';
-    } else {
-        left1 = getRoundedNumberStr(p.tts, 3) +
-            ' // ' +
-            p.win +
-            'x Round(s)';
-    }
+
 
     const left2 = '#' + (p.ranking || 0) + ' (' + rws + ')';
 
     const pClass = p.playerClass;
+    const pClass_color = '#' + ((pClass.color << 8) >>> 8).toString(16).padStart(6, "0");
     const color_index = (pClass.name === "Strongest Marshal" || pClass.name === "Competent Marshal" || pClass.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
 
+    let pubg;
+    switch (pClass_color.toUpperCase()) {
+        case "#FFF100": pubg = 'object-score-backimage-X.jpg'; break;
+        case "#FF9800": pubg = 'object-score-backimage-S.jpg'; break;
+        case "#22AC38": pubg = 'object-score-backimage-A.jpg'; break;
+        case "#B3D465": pubg = 'object-score-backimage-A.jpg'; break;
+        case "#0068B7": pubg = 'object-score-backimage-B.jpg'; break;
+        case "#BDBDBD": pubg = 'object-score-backimage-XH.jpg'; break;
+        case "#00A0E9": pubg = 'object-score-backimage-B.jpg'; break;
+        case "#9922EE": pubg = 'object-score-backimage-C.jpg'; break;
+        case "#E4007F": pubg = 'object-score-backimage-D.jpg'; break;
+        case "#EB6877": pubg = 'object-score-backimage-D.jpg'; break;
+        case "#D32F2F": pubg = 'object-score-backimage-D.jpg'; break;
+        default: pubg = 'object-score-backimage-F.jpg'; break;
+    }
+
     return {
-        background: player_background,
+        background: getExportFileV3Path(pubg),
         cover: await readNetImage(p.player.avatar_url, false),
         title: p.player.username || 'UID:' + p.player.id,
         title2: p.player.country.countryCode || '',
@@ -193,8 +158,8 @@ async function playerData2CardH(p = {}) {
         mods_arr: [],
 
         color_title2: '#aaa',
-        color_right: '#' + ((pClass.color << 8) >>> 8).toString(16).padStart(6, "0"),
-        color_left: team_color,
+        color_right: pClass_color,
+        color_left: pClass_color,
         color_index: color_index,
         color_label1: '',
         color_label2: '',
@@ -208,43 +173,30 @@ async function playerData2CardH(p = {}) {
 }
 
 async function matchData2CardA2(data){
-    const redWins = data.teamPoint.red || 0;
-    const blueWins = data.teamPoint.blue || 0;
+    const star = getRoundedNumberStr(data?.averageStar || 0, 3);
 
-    const isTeamVS = data.teamVS;
-    const star = getRoundedNumberStr(data.averageStar || 0, 3);
+    const background = await getMapBG(data?.series?.firstMapSIDs[0], 'list@2x', false);
 
-    const background = await getMapBG(data.firstMapSID, 'list@2x', false);
-
-    const isContainVS = data.matchStat.name.toLowerCase().match('vs');
-    let title, title1, title2;
-    if (isContainVS) {
-        title = getMatchNameSplitted(data.matchStat.name);
-        title1 = title[0];
-        title2 = title[1] + ' vs ' + title[2];
-    } else {
-        title1 = data.matchStat.name;
+    const title = data?.series?.seriesStat?.name || "";
+    let title1, title2;
+    const title_cut = PuHuiTi.cutStringTail(title, 36, 390,false);
+    if (title_cut.length === title.toString().length) {
+        title1 = title;
         title2 = '';
+    } else {
+        title1 = title_cut;
+        title2 = title.toString().substring(title_cut.length);
     }
 
     //这里的时间戳不需要 .add(8, 'hours')
-    const left1 = 'R' + data.roundCount + ' P' + data.playerCount + ' S' + data.scoreCount;
-    let left2;
+    const left1 = 'M' + data.matchCount + ' R' + data.roundCount + ' P' + data.playerCount + ' S' + data.scoreCount;
 
-    if (data.matchEnd) {
-        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-' + moment(data.matchStat.end_time, 'X').format('HH:mm');
-    } else if (data.hasCurrentGame) {
-        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-playing';
-    } else {
-        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-continuing';
-    }
-
-    const left3 = moment(data.matchStat.start_time, 'X').format('YYYY/MM/DD');
+    const left2 = moment(data?.series?.seriesStat?.start_time, 'X').format('YYYY/MM/DD HH:mm')
+    const left3 = moment(data?.series?.seriesStat?.end_time, 'X').format('YYYY/MM/DD HH:mm');
 
     const right1 = 'SR ' + star + '*';
-    const right2 = 'mp' + data.matchStat.id || 0;
-    const right3b = isTeamVS ? (redWins + ' : ' + blueWins) : data.roundCount.toString();
-    const right3m = isTeamVS ? '' : 'x';
+    const right2 = 'series'; // + data.matchStat.id || 0;
+    const right3b = data.roundCount.toString();
 
     return {
         background: background,
@@ -259,8 +211,8 @@ async function matchData2CardA2(data){
         right1: right1,
         right2: right2,
         right3b: right3b,
-        right3m: right3m,
-        isTeamVS: isTeamVS,
+        right3m: 'x',
+        isTeamVS: false,
     };
 }
 

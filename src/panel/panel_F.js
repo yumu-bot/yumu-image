@@ -3,7 +3,13 @@ import {
     implantImage,
     implantSvgBody,
     readTemplate,
-    replaceText, getPanelNameSVG, getRoundedNumberStr, getAvatar, getMapBG, getMatchNameSplitted
+    replaceText,
+    getPanelNameSVG,
+    getRoundedNumberStr,
+    getMapBG,
+    getMatchNameSplitted,
+    readNetImage,
+    getExportFileV3Path
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -203,7 +209,7 @@ async function round2CardC(round = {}, red_before = 0, blue_before = 0) {
     async function score2LabelF2(score = {}) {
         return {
             player_name: score?.user_name, //妈的 为什么get match不给用户名啊
-            player_avatar: await getAvatar(score.user_id),
+            player_avatar: await readNetImage(score?.user?.avatar_url, false, getExportFileV3Path('avatar-guest.png')),//await getAvatar(score.user_id),
             player_score: score.score,
             player_mods: score.mods,
             player_rank: score.ranking, //一局比赛里的分数排名，1v1或者team都一样

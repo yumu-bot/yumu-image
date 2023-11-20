@@ -10,6 +10,7 @@
   - A5：成绩（多张）P/R，和 A4 很像
 - B：PPM 评分系统 PM
 - C：MRA 斗力系统 RA
+  - C2：SRA 斗力系统 SA
 - D：个人信息 I
 - E：成绩 P/R/S
 - F：比赛监控 MN
