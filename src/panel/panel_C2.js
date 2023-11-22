@@ -121,11 +121,10 @@ async function playerData2CardH(p = {}) {
     const left2 = '#' + (p.ranking || 0) + ' (' + rws + ')';
 
     const pClass = p.playerClass;
-    const pClass_color = '#' + ((pClass.color << 8) >>> 8).toString(16).padStart(6, "0");
     const color_index = (pClass.name === "Strongest Marshal" || pClass.name === "Competent Marshal" || pClass.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
 
     let pubg;
-    switch (pClass_color.toUpperCase()) {
+    switch (pClass.color) {
         case "#FFF100": pubg = 'object-score-backimage-X.jpg'; break;
         case "#FF9800": pubg = 'object-score-backimage-S.jpg'; break;
         case "#22AC38": pubg = 'object-score-backimage-A.jpg'; break;
@@ -158,8 +157,8 @@ async function playerData2CardH(p = {}) {
         mods_arr: [],
 
         color_title2: '#aaa',
-        color_right: pClass_color,
-        color_left: pClass_color,
+        color_right: pClass.color,
+        color_left: pClass.color,
         color_index: color_index,
         color_label1: '',
         color_label2: '',
