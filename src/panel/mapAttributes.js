@@ -19,18 +19,18 @@ const dataTemp = {
     modeInt: 0,
     maps: [
         {
-            bid: 0, mods: 0,
+            id: 0, bid: 0, mods: 0,
         },
     ]
 };
 
 async function getAttr(data = dataTemp) {
 
-    let tasks = data.maps.map(async ({bid, mods}) => {
+    let tasks = data.maps.map(async ({id, bid, mods}) => {
         let r =
             await getMapAttributes(bid, mods, data.modeInt);
         return {
-            bid, mods,
+            id, bid, mods,
 
             ar: r.ar.fixed(),
             od: r.od.fixed(),
