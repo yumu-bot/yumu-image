@@ -193,7 +193,7 @@ async function playerData2CardH(p = {}) {
         mods_arr: [],
 
         color_title2: '#aaa',
-        color_right: '#' + ((pClass.color << 8) >>> 8).toString(16).padStart(6, "0"),
+        color_right: pClass.color,
         color_left: team_color,
         color_index: color_index,
         color_label1: '',
