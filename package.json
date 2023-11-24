@@ -15,7 +15,7 @@
     "express-formidable": "^1.2.0",
     "fast-xml-parser": "^4.3.2",
     "moment": "^2.29.4",
-    "puppeteer": "^20.2.0",
+    "puppeteer": "^20.9.0",
     "rosu-pp": "^0.9.4",
     "text-to-svg": "^3.1.5"
   }
