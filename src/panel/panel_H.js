@@ -2,7 +2,7 @@ import {
     exportJPEG, getMapBG, getPanelNameSVG,
     implantImage,
     implantSvgBody, isReload, readTemplate,
-    replaceText
+    replaceText, transformSvgBody
 } from "../util/util.js";
 import {card_D} from "../card/card_D.js";
 import {getMapAttributes} from "../util/compute-pp.js";
@@ -37,152 +37,57 @@ export async function router_svg(req, res) {
 
 export async function panel_H (
     data = {
-        "id" : 4,
-        "info" : "info",
-        "name" : "name",
-        "banner" : null,
-        "status" : "SHOW",
-        "categoryList" : [{
-            "name" : "NM",
-            "info" : "这是NM",
-            "color" : -3080247,
-            "category" : [{
-                "name" : "NM2",
-                "bid" : 1219094,
-                "creater" : 17064371
-            }, {
-                "name" : "NM1",
-                "bid" : 2993974,
-                "creater" : 17064371
-            }]
-        }, {
-            "name" : "HD",
-            "info" : "这是HD",
-            "color" : -282,
-            "category" : [{
-                "name" : "HD1",
-                "bid" : 1001682,
-                "creater" : 17064371
-            }]
-        }],
-        "mapinfo" : [{
-            "id" : 1219094,
-            "beatmapset_id" : 503213,
-            "user_id" : 899031,
-            "version" : "Promise",
-            "ranked" : 1,
-            "status" : "ranked",
-            "difficulty_rating" : 6.28,
-            "mode_int" : 0,
-            "ar" : 9.5,
-            "cs" : 4.0,
-            "od" : 9.0,
-            "hp" : 6.0,
-            "hit_length" : 297,
-            "total_length" : 297,
-            "count_circles" : 928,
-            "count_sliders" : 423,
-            "count_spinners" : 1,
-            "beatmapset" : {
-                "id" : 503213,
-                "user_id" : 899031,
-                "creator" : "Lami",
-                "artist" : "Inori Minase",
-                "artist_unicode" : "水瀬いのり",
-                "title" : "Yume no Tsubomi",
-                "title_unicode" : "夢のつぼみ"
-            },
-            "mode" : "osu"
-        }, {
-            "id" : 2993974,
-            "beatmapset_id" : 1456709,
-            "user_id" : 12308923,
-            "version" : "Starlight",
-            "ranked" : 1,
-            "status" : "ranked",
-            "difficulty_rating" : 6.17,
-            "mode_int" : 0,
-            "ar" : 9.4,
-            "cs" : 3.8,
-            "od" : 9.0,
-            "hp" : 5.0,
-            "hit_length" : 331,
-            "total_length" : 332,
-            "count_circles" : 1155,
-            "count_sliders" : 443,
-            "count_spinners" : 2,
-            "beatmapset" : {
-                "id" : 1456709,
-                "user_id" : 12308923,
-                "creator" : "Vaporfly",
-                "artist" : "Kano",
-                "artist_unicode" : "鹿乃",
-                "title" : "Stella-rium (Asterisk MAKINA Remix)",
-                "title_unicode" : "Stella-rium (Asterisk MAKINA Remix)"
-            },
-            "mode" : "osu"
-        }, {
-            "id" : 1001682,
-            "beatmapset_id" : 382400,
-            "user_id" : 4610047,
-            "version" : "Myth",
-            "ranked" : 1,
-            "status" : "ranked",
-            "difficulty_rating" : 6.38,
-            "mode_int" : 0,
-            "ar" : 9.5,
-            "cs" : 4.0,
-            "od" : 9.0,
-            "hp" : 6.2,
-            "hit_length" : 398,
-            "total_length" : 441,
-            "count_circles" : 1534,
-            "count_sliders" : 587,
-            "count_spinners" : 5,
-            "beatmapset" : {
-                "id" : 382400,
-                "user_id" : 4610047,
-                "creator" : "Ponoyoshi",
-                "artist" : "DragonForce",
-                "artist_unicode" : "DragonForce",
-                "title" : "Through the Fire and Flames",
-                "title_unicode" : "Through the Fire and Flames"
-            },
-            "mode" : "osu"
-        }]
-    }
-    , reuse = false) {
+        name: 'MapPool',
+        firstMapSID: 667290,
+        modPools: [
+            {
+                mod: 'Hidden',
+                modStr: 'HD',
+                beatMaps: []
+            }
+        ]
+    }) {
     // 导入模板
     let svg = readTemplate("template/Panel_H.svg");
 
     // 路径定义
-    let reg_height = '${height}'
-    let reg_maincard = /(?<=<g id="MainCard">)/;
-    let reg_index = /(?<=<g id="Index">)/;
-    let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PH-1\);">)/;
-    let reg_bodycard = /(?<=<g id="BodyCard">)/;
+    const reg_panelheight = '${panelheight}'
+    const reg_cardheight = '${cardheight}'
+    const reg_maincard = /(?<=<g id="MainCard">)/;
+    const reg_index = /(?<=<g id="Index">)/;
+    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PH-1\);">)/;
+    const reg_bodycard = /(?<=<g id="BodyCard">)/;
 
     // 卡片定义
     const cardA2 = await card_A2(await pool2cardA2(data), true);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Mappool (!ymmp)', 'Pool', 'v0.3.2 FT');
+    const panel_name = getPanelNameSVG('Mappool (!ymmp)', 'Pool', 'v0.4.0 UU');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
 
     // 插入主体卡片
-    const maps = data.mapinfo || [];
-    const lists = data.categoryList || [];
+    const pools = data.modPools || [];
+    let cards = [];
+    let row = 1;
+
+    for (const p of pools) {
+        cards.push(await drawModPool(p, row));
+        row += getRowCount(p?.beatMaps?.length);
+    }
 
     //执行上面的代码
-    svg = replaceText(svg, await BodyCard(maps, lists), reg_bodycard);
+    for (const v of cards) {
+        svg = replaceText(svg, v, reg_bodycard);
+    }
 
     //设置面板高度
-    const rowTotal = getRowTotal(lists);
-    const panelHeight = rowTotal ? 330 + 150 * rowTotal : 1080;
+    const panelHeight = 330 + 150 * (row - 1);
+    const cardHeight = 40 + 150 * (row - 1);
 
-    svg = replaceText(svg, panelHeight, reg_height);
+    svg = replaceText(svg, panelHeight, reg_panelheight);
+    svg = replaceText(svg, cardHeight, reg_cardheight);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
@@ -191,69 +96,61 @@ export async function panel_H (
     return svg.toString();
 }
 
-async function BodyCard(maps = [], lists = []) {
-    let svg = '';
-    let bids = [];
-    let mods = [];
+async function drawModPool(pool = {
+    mod: 'Hidden',
+    modStr: 'HD',
+    beatMaps: []
+}, rowStart = 1) {
+    let data = [];
+    const count = pool?.beatMaps?.length || 0;
 
-    for (const v of maps) {
-        bids.push(v.id);
+    for (let j = 0; j < getFullRowCount(count); j++) {
+        for (let k = 0; k < 3; k++) {
+            data.push(
+                await drawCardD(pool.beatMaps[j * 3 + k], pool.modStr, rowStart - 1 + j + 1, k + 1, 3)
+            );
+        }
     }
 
-    for (const v of lists) {
-        mods.push(v.name)
+    if (hasRemain(count)) {
+        for (let o = 0; o < getRemain(count); o++) {
+            data.push(
+                await drawCardD(pool.beatMaps[getFullRowCount(count) * 3 + o], pool.modStr, rowStart - 1 + getFullRowCount(count) + 1, o + 1, getRemain(count))
+            );
+        }
     }
 
-    let rowSum = 0; //总共的行数
-
-    for (let i = 0; i < mods.length; i++) {
-        const mod = mods[i]; //模组名称
-        const category = lists[i].category || [];//一个模组池子
-        const mapNum = category.length //一个模组池子里有多少图
-
-        const rowNum = Math.floor(mapNum / 3) + 1 //一个模组池子需要多少行
-        const remainder = mapNum - (rowNum - 1) * 3; // 余数
-        let row3Num = 0;
-
-        // 获取一个模组池子里有三列的行的数量
-        if (remainder === 0) {
-            row3Num = rowNum;
-        } else {
-            row3Num = rowNum - 1
-        }
-
-        //渲染
-        for (let j = 0; j < row3Num; j++) {
-            for (let k = 0; k < 3; k++) {
-                const l = 3 * j + k //第二个下标 行数 * 3 + 列数
-                const mapinfo = maps[bids.indexOf(category[l].bid)];
-                svg += await implantCardD(mapinfo, mod.toUpperCase(), j + 1 + rowSum, k + 1, 3)
-            }
-        }
-
-        for (let m = 0; m < remainder; m++) {
-            const o = 3 * row3Num + m//第二个下标 行数 * 3 + 列数
-            const mapinfo = maps[bids.indexOf(category[o].bid)];
-            svg += await implantCardD(mapinfo, mod.toUpperCase(), rowNum + rowSum, m + 1, remainder)
-        }
-        rowSum += rowNum;
-    }
-    return svg;
+    return data;
 }
-
 //渲染单张卡片
-async function implantCardD(data, mod = 'NM', row = 1, column = 1, maxColumn = 3) {
-    let svg = '<g id="BodyCard"></g>'
-    const reg = /(?<=<g id="BodyCard">)/;
-
+async function drawCardD(b, mod = 'NM', row = 1, column = 1, maxColumn = 3) {
     const x = ((3 - maxColumn) * 300 + 80) + 600 * (column - 1);
     const y = 330 + 150 * (row - 1);
 
-    return implantSvgBody(svg, x, y, await card_D(await beatmap2CardD(data, mod), true), reg);
+    return transformSvgBody(x, y, await card_D(await beatmap2CardD(b, mod)));
+}
+
+function getRowCount(i = 0) {
+    if (typeof i !== "number") return 0;
+    let v = getFullRowCount(i)
+    if (hasRemain(i)) v++;
+    return v;
+}
+
+function getFullRowCount(i = 0) {
+    return Math.floor(i / 3);
+}
+
+function getRemain(i = 0) {
+    return i % 3;
+}
+
+function hasRemain(i = 0) {
+    return (getRemain(i) !== 0);
 }
 
 async function pool2cardA2(data) {
-    const background = data.banner || getRandomBannerPath();
+    const background = await getMapBG(data.firstMapSID, 'cover@2x', false) || getRandomBannerPath();
 
     const title1 = data.name || '';
     const title3 = data.categoryList ? data.categoryList[0].category ? 'creator: ' + data.categoryList[0].category[0].creater : 'creator?' : 'creator?';
@@ -280,22 +177,22 @@ async function pool2cardA2(data) {
     };
 }
 
-async function beatmap2CardD(data, mod) {
-    let cs = data.cs, ar = data.ar, od = data.od, hp = data.hp;
+async function beatmap2CardD(b, mod) {
+    let cs = b.cs, ar = b.ar, od = b.accuracy, hp = b.drain;
 
     //修改四维
     if (mod === 'DT' || mod === 'NC') {
         ar = (ar > 5) ? ((1200 - 750 * (ar - 5) / 5) * 2 / 3 - 1200) / 750 * 5 + 5
             : - ((1200 - 600 * (5 - ar) / 5) * 2 / 3 - 1200) / 600 * 5 + 5 ;
-        od = (data.mode_int === 1) ? ( - (50 - (3 * od)) * 2 / 3 + 50) / 3
-            : (data.mode_int === 3) ? ( - (64 - (3 * od)) * 2 / 3 + 64) / 3
+        od = (b.mode_int === 1) ? ( - (50 - (3 * od)) * 2 / 3 + 50) / 3
+            : (b.mode_int === 3) ? ( - (64 - (3 * od)) * 2 / 3 + 64) / 3
                 : ( - (80 - (6 * od)) * 2 / 3 + 80) / 3;
         hp *= 3 / 4;
     } else if (mod === 'HT' || mod === 'DC') {
         ar = (ar > 5) ? ((1200 - 750 * (ar - 5) / 5) * 3 / 2 - 1200) / 750 * 5 + 5
             : - ((1200 - 600 * (5 - ar) / 5) * 3 / 2 - 1200) / 600 * 5 + 5 ;
-        od = (data.mode_int === 1) ? ( - (50 - (3 * od)) * 3 / 2 + 50) / 2
-            : (data.mode_int === 3) ? ( - (64 - (3 * od)) * 3 / 2 + 64) / 2
+        od = (b.mode_int === 1) ? ( - (50 - (3 * od)) * 3 / 2 + 50) / 2
+            : (b.mode_int === 3) ? ( - (64 - (3 * od)) * 3 / 2 + 64) / 2
                 : ( - (80 - (6 * od)) * 3 / 2 + 80) / 2;
         hp *= 3 / 2;
     } else if (mod === 'HR') {
@@ -310,7 +207,7 @@ async function beatmap2CardD(data, mod) {
         hp /= 2;
     }
 
-    const star = await getStar(data.difficulty_rating, data.id, getModInt([mod]), data.mode_int);
+    const star = await getStar(b.difficulty_rating, b.id, getModInt([mod]), b.mode_int);
 
     async function getStar(rawStar = 0, bid = 0, mods, modeInt = 0) {
         if (mod === 'DT' || mod === 'NC' || mod === 'HT' || mod === 'DC' || mod === 'HR' || mod === 'EZ' || mod === 'FL') {
@@ -326,36 +223,21 @@ async function beatmap2CardD(data, mod) {
     }
 
     return {
-        background: await getMapBG(data.beatmapset_id, 'cover@2x', isReload(data.ranked)),
-        title: data.beatmapset.title || '',
-        artist: data.beatmapset.artist || '',
-        mapper: data.beatmapset.creator || '',
-        difficulty: data.version || '',
-        bid: data.id || 0,
+        background: await getMapBG(b.beatmapset.id, 'cover@2x', isReload(b.ranked)),
+        title: b.beatmapset.title || '',
+        title_unicode: b.beatmapset.title_unicode || '',
+        artist: b.beatmapset.artist || '',
+        mapper: b.beatmapset.creator || '',
+        difficulty: b.version || '',
+        bid: b.id || 0,
         mod: mod,
         cs: cs,
         ar: ar,
         od: od,
         hp: hp,
         star_rating: star,
-        game_mode: data.mode,
+        game_mode: b.mode,
+
+        font_title2: 'PuHuiTi',
     }
-}
-
-function getRowTotal(lists = []) {
-    let row = 0;
-
-    for (const v of lists) {
-        const c = lists.category ? lists.category.length : 0;
-        const row3 = Math.ceil(c / 3); //一个模组池子需要多少行
-        const rowr = c - (row3 - 1) * 3; // 余数
-
-        if (rowr === 0) {
-            row += row3;
-        } else {
-            row += row3 + 1;
-        }
-    }
-
-    return row;
 }

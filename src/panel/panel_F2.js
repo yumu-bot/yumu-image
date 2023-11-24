@@ -177,7 +177,7 @@ export async function panel_F2(
     svg = replaceText(svg, background_height, reg_height);
 
     // 这里是渲染真实的谱面
-    const beatmap = await getBeatmapAttr(data.MatchRound.beatmap, getRoundMods(data.MatchRound?.mods, data.MatchRound?.scores[0]?.mods))
+    //const beatmap = await getBeatmapAttr(data.MatchRound.beatmap, getRoundMods(data.MatchRound?.mods, data.MatchRound?.scores[0]?.mods))
 
     // 导入比赛简介卡（A2卡
     const f = await card_A2(await roundInfo2CardA2(data.MatchStat, data.MatchRound,
@@ -185,7 +185,7 @@ export async function panel_F2(
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
-    const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap), true);
+    const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(data.MatchRound.beatmap), true);
     svg = implantSvgBody(svg, 1450, 40, b, reg_maincard);
 
     return svg.toString();

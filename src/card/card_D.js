@@ -3,12 +3,13 @@ import {
     readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
-import {torus} from "../util/font.js";
+import {PuHuiTi, torus} from "../util/font.js";
 import {getColorInSpectrum, getModColor} from "../util/color.js";
 
 export async function card_D(data = {
-    background: 'PanelObject/H_CardD_BG.png',
+    background: '',
     title: 'Xin Mei Sang Zui Jiu',
+    title_unicode: '新妹桑醉酒',
     artist: 'Fushimi Rio',
     mapper: 'Fia',
     difficulty: 'OWC HD2',
@@ -19,7 +20,9 @@ export async function card_D(data = {
     od: 11,
     hp: 6,
     star_rating: 8.88,
-    game_mode: 'osu'
+    game_mode: 'osu',
+
+    font_title2: 'PuHuiTi'
 
 }, reuse = false) {
     //读取面板
@@ -36,10 +39,22 @@ export async function card_D(data = {
     let reg_sd_circle3 = '${sd_circle3}';
 
     // 文字定义
-    let text_title =
+
+    const title_width = torus.getTextWidth(data.title || '', 36);
+    const title2_width = 415 - title_width - 10;
+
+    const font_t2 = (data.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
+
+    const text_title2 = (data.title_unicode && (data.title !== data.title_unicode) && title2_width > 0)
+        ? font_t2.cutStringTail(data.title_unicode || '', 18, title2_width, true) : '';
+
+    const title =
         torus.getTextPath(
             torus.cutStringTail(data.title,36,420),
             20, 33.754, 36, 'left baseline', "#fff");
+    const title2 =
+        font_t2.getTextPath(text_title2, 20 + 10 + title_width,
+        (data.font_title2 === 'PuHuiTi') ? 32 : 33.754, 18, 'left baseline', "#bbb");
 
     let mapper = data.mapper;
     let artist = torus.cutStringTail(
@@ -145,11 +160,11 @@ export async function card_D(data = {
     svg = replaceText(svg, sd_circle3, reg_sd_circle3);
 
     // 替换文字
-    svg = replaceTexts(svg, [text_title, text_artist_and_mapper, text_info, text_mod, text_star], reg_text);
+    svg = replaceTexts(svg, [title, title2, text_artist_and_mapper, text_info, text_mod, text_star], reg_text);
     svg = replaceText(svg, text_mod_color, reg_mod_color);
 
     // 插入图片
-    svg = implantImage(svg,560,110,0,0,0.5, data.background, reg_background);
+    svg = implantImage(svg, 560 ,110 ,0 ,0 , 0.4, data.background, reg_background);
 
     return svg.toString();
 }

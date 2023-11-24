@@ -274,12 +274,12 @@ export function getModColor(Mod = '') {
             color = '#22AC38';
             break;
         case "FM":
-            color = '#00A0E9';
+            color = '#9922EE';
             break;
         case "EX": //没错，以下这两个都是表示难一点的图
             color = '#FF9800';
             break;
-        case "DF":
+        case "DI":
             color = '#FF6100';
             break;
         case "TB":
@@ -296,7 +296,7 @@ export function getModColor(Mod = '') {
             color = '#FF9800';
             break;
         case "SV":
-            color = '#920783';
+            color = '#9922EE';
             break;
 
         case "SP":
@@ -314,7 +314,7 @@ export function getModColor(Mod = '') {
 /**
  * @function 获取评级颜色
  * @return {String} 返回色彩
- * @param {String} 输入评级
+ * @param Rank 输入评级
  */
 export function getRankColor(Rank = 'F') {
     if (typeof Rank !== 'string') return 'none';

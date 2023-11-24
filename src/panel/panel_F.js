@@ -13,7 +13,6 @@ import {
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
-import {getMapAttributes} from "../util/compute-pp.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import moment from "moment";
@@ -72,7 +71,7 @@ export async function panel_F(data = {}) {
     let blueWins = 0;
     let starSum = 0;
     let roundCount = 0;
-    for (const v of data.rounds) {
+    for (const v of data?.rounds) {
         starSum += v.beatmap?.difficulty_rating || 0;
         roundCount ++;
         card_Cs.push(await card_C(await round2CardC(v, redWins, blueWins), true));
@@ -116,7 +115,6 @@ export async function panel_F(data = {}) {
         ar: 0,
         od: 0,
     }];
-     */
 
     let beatmap_arr = await Promise.all(data.rounds.map(async (e) => {
         const beatmap = e.beatmap;
@@ -125,29 +123,6 @@ export async function panel_F(data = {}) {
         let mod_int = 0;
         if (mods.indexOf("DT") !== -1) mod_int = 64;
 
-        /*
-        let attr;
-        try {
-            attr = await getMapAttributes(beatmap.bid, mod_int);
-        } catch (e) {
-            return {
-                background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
-                title: 'Deleted Map',
-                artist: '?',
-                mapper: '?', //creator
-                difficulty: '?',
-                status: '',
-
-                bid: 0,
-                star_rating: 0,
-                cs: 0,
-                ar: 0,
-                od: 0,
-                mode: null,
-            }
-        }
-
-         */
         const attr = await getMapAttributes(beatmap.id, mod_int);
         const cs = getRoundedNumberStr(attr.cs, 2);
         const ar = getRoundedNumberStr(attr.ar, 2);
@@ -170,13 +145,23 @@ export async function panel_F(data = {}) {
             mode: mode,
         }
     }));
+
+         */
+    const rounds = data?.rounds || [];
+    let beatmap_arr = [];
+    rounds.forEach(
+        v => {
+            beatmap_arr.push(v.beatmap);
+        }
+    );
+    console.log(beatmap_arr)
     
     //导入谱面卡(A2卡 的同时计算面板高度和背景高度
     let panel_height = 330;
     let background_height = 40;
-    for (const index in beatmap_arr) {
-        const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap_arr[index]), true);
-        svg = implantSvgBody(svg, 40, 330 + index * 250, b, reg_card_a2);
+    for (const i in beatmap_arr) {
+        const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap_arr[i]), true);
+        svg = implantSvgBody(svg, 40, 330 + i * 250, b, reg_card_a2);
         
         panel_height += 250;
         background_height += 250;

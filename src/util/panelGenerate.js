@@ -309,13 +309,49 @@ export const PanelGenerate = {
         };
     },
 
-    matchBeatmap2CardA2: async (beatmap) => {
-        const background = beatmap.background || getExportFileV3Path('beatmap-DLfailBG.jpg');
-        const title1 = beatmap.title || 'Unknown Title';
-        const title2 = beatmap.artist || 'Unknown Artist';
-        const title3 = beatmap.mapper || 'God Made This';
-        const left2 = beatmap.difficulty || 'Tragic Love Extra';
-        const left3 = 'b' + (beatmap.bid || 0);
+    matchBeatmap2CardA2: async (beatmap = {
+        id: 1674896,
+        mode: 'osu',
+        status: 'ranked',
+        version: "Down's Insane",
+        beatMapFailedCount: 0,
+        beatMapRetryCount: 0,
+        beatMapRating: 0,
+        beatmapset_id: 797393,
+        difficulty_rating: 5.03,
+        total_length: 122,
+        user_id: 4694602,
+        beatmapset: {
+            video: false,
+            fromDatabases: false,
+            sid: 797393,
+            ranked: true,
+            rating: 0,
+            mapperName: 'Beomsan',
+            mapperUID: 3626063,
+            id: 797393,
+            user_id: 3626063,
+            artist: 'P4koo',
+            artist_unicode: 'P4koo',
+            title: 'Crystal Illusion',
+            title_unicode: 'Crystal Illusion',
+            creator: 'Beomsan',
+            favourite_count: 93,
+            nsfw: false,
+            play_count: 281583,
+            preview_url: '//b.ppy.sh/preview/797393.mp3',
+            source: '',
+            status: 'ranked',
+            covers: [Object],
+            spotlight: false
+        }
+    }) => {
+        const background = await readNetImage(beatmap.beatmapset.covers['cover@2x'], false);
+        const title1 = beatmap.beatmapset.title || 'Unknown Title';
+        const title2 = beatmap.beatmapset.artist || 'Unknown Artist';
+        const title3 = beatmap.beatmapset.mapperName || 'God Made This';
+        const left2 = beatmap.version || 'Tragic Love Extra';
+        const left3 = 'b' + (beatmap.id || 0);
 
         const status = beatmap.status;
         let right2;
