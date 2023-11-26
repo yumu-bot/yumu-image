@@ -423,14 +423,15 @@ async function score2CardE2(score, calcPP) {
 }
 
 async function score2CardE3(score, calcPP) {
+    console.log(score)
     const pass_arr = score2PassPercents(score);
     const score_progress = (score.rank === 'F') ? calcPP.score_progress : 1;
 
     return {
         density_arr: await getDensityArray(score.beatmap.id, score.mode,
             !(score.beatmap.ranked && (score.beatmap.ranked === 1 || score.beatmap.ranked === 2 || score.beatmap.ranked === 4))),
-        retry_arr: score.beatmap.exit || [],
-        fail_arr: score.beatmap.fail || [],
+        retry_arr: score.beatmap.beatMapRetryList || [],
+        fail_arr: score.beatmap.beatMapFailedList || [],
 
         public_rating: score2PublicRating(score),
         pass_percent: pass_arr[0],
