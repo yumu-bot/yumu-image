@@ -16,6 +16,7 @@ import {card_C} from "../card/card_C.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import moment from "moment";
+import {getMapAttributes} from "../util/compute-pp.js";
 
 export async function router(req, res) {
     try {
@@ -116,7 +117,10 @@ export async function panel_F(data = {}) {
         od: 0,
     }];
 
-    let beatmap_arr = await Promise.all(data.rounds.map(async (e) => {
+         */
+    const rounds = data?.rounds || [];
+
+    const beatmap_arr = await Promise.all(rounds.map(async (e) => {
         const beatmap = e.beatmap;
         const mods = e.mods;
 
@@ -130,31 +134,15 @@ export async function panel_F(data = {}) {
         const mode = beatmap.mode ? beatmap.mode.toLowerCase() : 'osu';
 
         return {
-            background: await getMapBG(beatmap.beatmapset.id),
-            title: beatmap.beatmapset.title,
-            artist: beatmap.beatmapset.artist,
-            mapper: beatmap.beatmapset.creator, //creator
-            difficulty: beatmap.version,
-            status: beatmap.status,
+            ...beatmap,
 
-            bid: beatmap.id,
-            star_rating: attr?.stars || beatmap?.difficulty_rating,
+            difficulty_rating: attr?.stars || beatmap?.difficulty_rating,
             cs: cs,
             ar: ar,
             od: od,
             mode: mode,
         }
     }));
-
-         */
-    const rounds = data?.rounds || [];
-    let beatmap_arr = [];
-    rounds.forEach(
-        v => {
-            beatmap_arr.push(v.beatmap);
-        }
-    );
-    console.log(beatmap_arr)
     
     //导入谱面卡(A2卡 的同时计算面板高度和背景高度
     let panel_height = 330;

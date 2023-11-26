@@ -382,8 +382,8 @@ export const PanelGenerate = {
             }
         }
 
-        const right3b = getDecimals(beatmap.star_rating,2);
-        const right3m = getDecimals(beatmap.star_rating,3) + '*';
+        const right3b = getDecimals(beatmap.difficulty_rating,2);
+        const right3m = getDecimals(beatmap.difficulty_rating,3) + '*';
 
         return {
             background: background,
