@@ -286,7 +286,7 @@ export async function panel_E(data = {
         "create_at_str" : "2023-06-17T11:24:22Z"
     },
 
-}, reuse = false) {
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_E.svg');
 
