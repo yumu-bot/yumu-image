@@ -25,6 +25,11 @@ export const LABEL_OPTION = {
         icon_title: 'PP',
         color_remark: '#fff',
     },
+    SSPP: {
+        icon: getExportFileV3Path("object-score-pp.png"),
+        icon_title: 'SS PP',
+        color_remark: '#fff',
+    },
     AIMPP: {
         icon: getExportFileV3Path("object-score-aimpp.png"),
         icon_title: 'AimPP',

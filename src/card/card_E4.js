@@ -30,13 +30,10 @@ export async function card_E4(data = {
             label2 = await label_E(await ppVariants2LabelE(data.calcPP, 'diff'), true);
             label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'acc'), true);
         } break;
-        /*
         case 3: {
             column = 1;
-            label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'diff'), true);
+            label3 = await label_E(await ppPF2LabelE(data.calcPP), true);
         } break;
-
-         */
     }
 
     const rrect = column > 0 ? PanelDraw.Rect(1880 - 40 - column * 210, 200, 40 + column * 210, 70, 20, '#382E32', 1) : '';
@@ -47,6 +44,25 @@ export async function card_E4(data = {
     svg = replaceText(svg, rrect, reg);
 
     return svg;
+}
+
+async function ppPF2LabelE(calcPP) {
+
+    const nowPP = calcPP.pp || 0;
+    const pfPP = calcPP.perfect_pp || 0;
+
+    const isDisplayPF = pfPP >= nowPP;
+    const isDisplayPP = (nowPP <= 1000 && isDisplayPF);
+
+    const percent = isDisplayPF ? (Math.round(nowPP / pfPP * 100).toString() + '%') : '-%';
+
+    return {
+        ...LABEL_OPTION.SSPP,
+        remark: percent,
+        data_b: Math.round(nowPP).toString(),
+        data_m: isDisplayPP ? ('/' + Math.round(pfPP).toString() + ' PP') : '/' + Math.round(pfPP).toString(),
+        title_font: torus,
+    };
 }
 
 async function ppVariants2LabelE(calcPP, verPP = '') {
