@@ -356,7 +356,7 @@ export async function panel_E(data = {
     const cardE1 = await card_E1(await score2CardE1(data.score, calcPP), true);
     const cardE2 = await card_E2(await score2CardE2(data.score, calcPP), true);
     const cardE3 = await card_E3(await score2CardE3(data.score, calcPP), true);
-    const cardE4 = await card_E4({calcPP}, true);
+    const cardE4 = await card_E4({calcPP, score_statistics}, true);
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);

@@ -25,9 +25,9 @@ export const LABEL_OPTION = {
         icon_title: 'PP',
         color_remark: '#fff',
     },
-    SSPP: {
+    PPACC: {
         icon: getExportFileV3Path("object-score-pp.png"),
-        icon_title: 'SS PP',
+        icon_title: 'PP ACC',
         color_remark: '#fff',
     },
     AIMPP: {

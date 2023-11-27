@@ -1,12 +1,20 @@
 import {torus} from "../util/font.js";
 import {label_E, LABEL_OPTION} from "../component/label.js";
-import {implantSvgBody, replaceText} from "../util/util.js";
+import {getRoundedNumberLargerStr, getRoundedNumberSmallerStr, implantSvgBody, replaceText} from "../util/util.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_E4(data = {
     calcPP: {
 
     },
+    statistics: {
+        "count_50" : 1,
+        "count_100" : 13,
+        "count_300" : 1586,
+        "count_geki" : 370,
+        "count_katu" : 12,
+        "count_miss" : 0,
+    }
 }, reuse = false) {
     let svg = '<g id="Card_E4"></g>';
 
@@ -32,7 +40,7 @@ export async function card_E4(data = {
         } break;
         case 3: {
             column = 1;
-            label3 = await label_E(await ppPF2LabelE(data.calcPP), true);
+            label3 = await label_E(await statistics2LabelE(data.statistics, data.calcPP.perfect_pp), true);
         } break;
     }
 
@@ -46,21 +54,16 @@ export async function card_E4(data = {
     return svg;
 }
 
-async function ppPF2LabelE(calcPP) {
+async function statistics2LabelE(stat, perfect_pp = 0) {
 
-    const nowPP = calcPP.pp || 0;
-    const pfPP = calcPP.perfect_pp || 0;
-
-    const isDisplayPF = pfPP >= nowPP;
-    const isDisplayPP = (nowPP <= 1000 && isDisplayPF);
-
-    const percent = isDisplayPF ? (Math.round(nowPP / pfPP * 100).toString() + '%') : '-%';
+    const sum = stat.count_geki + stat.count_300 + stat.count_katu + stat.count_100 + stat.count_50 + stat.count_miss;
+    const pp_acc = (sum !== 0) ? (stat.count_geki * 320 + stat.count_300 * 300 + stat.count_katu * 200 + stat.count_100 * 100 + stat.count_50 * 50) / (sum * 320) : 0
 
     return {
-        ...LABEL_OPTION.SSPP,
-        remark: percent,
-        data_b: Math.round(nowPP).toString(),
-        data_m: isDisplayPP ? ('/' + Math.round(pfPP).toString() + ' PP') : '/' + Math.round(pfPP).toString(),
+        ...LABEL_OPTION.PPACC,
+        remark: perfect_pp ? (perfect_pp <= 10000 ? 'SS ' + Math.round(perfect_pp) + 'PP' : 'SS Inf.PP') : '-',
+        data_b: getRoundedNumberLargerStr(pp_acc * 100, 3),
+        data_m: getRoundedNumberSmallerStr(pp_acc * 100, 3) + '%',
         title_font: torus,
     };
 }
