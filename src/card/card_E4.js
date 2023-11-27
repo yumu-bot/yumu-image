@@ -30,10 +30,13 @@ export async function card_E4(data = {
             label2 = await label_E(await ppVariants2LabelE(data.calcPP, 'diff'), true);
             label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'acc'), true);
         } break;
+        /*
         case 3: {
             column = 1;
             label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'diff'), true);
         } break;
+
+         */
     }
 
     const rrect = column > 0 ? PanelDraw.Rect(1880 - 40 - column * 210, 200, 40 + column * 210, 70, 20, '#382E32', 1) : '';
