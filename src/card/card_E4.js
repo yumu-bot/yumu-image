@@ -40,7 +40,7 @@ export async function card_E4(data = {
         } break;
         case 3: {
             column = 1;
-            label3 = await label_E(await statistics2LabelE(data.statistics, data.calcPP.perfect_pp), true);
+            label3 = await label_E(await statistics2LabelE(data.calcPP, data.statistics), true);
         } break;
     }
 
@@ -54,14 +54,14 @@ export async function card_E4(data = {
     return svg;
 }
 
-async function statistics2LabelE(stat, perfect_pp = 0) {
+async function statistics2LabelE(calcPP, stat) {
 
     const sum = stat.count_geki + stat.count_300 + stat.count_katu + stat.count_100 + stat.count_50 + stat.count_miss;
     const pp_acc = (sum !== 0) ? (stat.count_geki * 320 + stat.count_300 * 300 + stat.count_katu * 200 + stat.count_100 * 100 + stat.count_50 * 50) / (sum * 320) : 0
 
     return {
         ...LABEL_OPTION.PPACC,
-        remark: perfect_pp ? (perfect_pp <= 10000 ? 'SS ' + Math.round(perfect_pp) + 'PP' : 'SS Inf.PP') : '-',
+        remark: calcPP.perfect_pp ? Math.round(calcPP.pp / calcPP.perfect_pp * 100) + '% PP' : '-',
         data_b: getRoundedNumberLargerStr(pp_acc * 100, 3),
         data_m: getRoundedNumberSmallerStr(pp_acc * 100, 3) + '%',
         title_font: torus,
