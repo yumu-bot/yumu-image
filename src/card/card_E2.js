@@ -285,9 +285,13 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, font_h) {
 
         const color = v.rrect_color;
 
-        let index_text = torus.getTextPath(index.toString(),
+        /*
+        const index_text = torus.getTextPath(index.toString(),
             index_text_x, text_y, 30, "right baseline", v.index_color);
-        let stat_text = torus.getTextPath(stat.toString(),
+
+         */
+        const index_text = pad0Start4Stat(index, stat_max, index_text_x, text_y, '#fff', '#aaa');
+        const stat_text = torus.getTextPath(stat.toString(),
             stat_text_x, text_y, 30, "left baseline", v.stat_color);
 
         svg += (index_text + stat_text);
@@ -299,4 +303,19 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, font_h) {
     });
 
     return svg;
+}
+
+function pad0Start4Stat(index = 0, stat_max = 0, index_text_x, text_y, index_color = '#fff', pad_color = '#aaa') {
+    const max_length = stat_max ? stat_max.toString().length : 0;
+    const index_length = index ? index.toString().length : 0;
+
+    if (index_length > max_length || stat_max >= 10000) return torus.getTextPath(index.toString(),
+        index_text_x, text_y, 30, "right baseline", index_color);
+
+    let pad0 = '';
+    for (let i = 0; i < max_length - index_length; i++) {
+        pad0 += '0';
+    }
+
+    return torus.get2SizeTextPath(pad0, index.toString(), 30, 30, index_text_x, text_y, "left baseline", pad_color, index_color);
 }
