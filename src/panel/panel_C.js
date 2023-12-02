@@ -165,9 +165,7 @@ async function playerData2CardH(p = {}) {
             Math.round((p.win / (p.win + p.lose)) * 100) + '%)';
     } else {
         left1 = getRoundedNumberStr(p.tts, 3) +
-            ' // ' +
-            p.win +
-            'x Round(s)';
+            ' // ' + p.win + 'W-' + (p.win + p.lose) + 'P';
     }
 
     const left2 = '#' + (p.ranking || 0) + ' (' + rws + ')';
