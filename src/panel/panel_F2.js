@@ -177,7 +177,7 @@ export async function panel_F2(
     svg = replaceText(svg, background_height, reg_height);
 
     // 这里是渲染真实的谱面
-    //const beatmap = await getBeatmapAttr(data.MatchRound.beatmap, getRoundMods(data.MatchRound?.mods, data.MatchRound?.scores[0]?.mods))
+    const beatmap = await getBeatmapAttr(data.MatchRound.beatmap, getRoundMods(data.MatchRound?.mods, data.MatchRound?.scores[0]?.mods))
 
     // 导入比赛简介卡（A2卡
     const f = await card_A2(await roundInfo2CardA2(data.MatchStat, data.MatchRound,
