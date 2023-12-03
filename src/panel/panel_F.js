@@ -17,7 +17,7 @@ import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import moment from "moment";
 import {getMapAttributes} from "../util/compute-pp.js";
-import {getModInt} from "../util/mod";
+import {getModInt} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
