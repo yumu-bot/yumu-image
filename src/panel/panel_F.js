@@ -17,6 +17,7 @@ import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import moment from "moment";
 import {getMapAttributes} from "../util/compute-pp.js";
+import {getModInt} from "../util/mod";
 
 export async function router(req, res) {
     try {
@@ -124,8 +125,7 @@ export async function panel_F(data = {}) {
         const beatmap = e.beatmap;
         const mods = e.mods;
 
-        let mod_int = 0;
-        if (mods.indexOf("DT") !== -1) mod_int = 64;
+        const mod_int = getModInt(mods);
 
         const attr = await getMapAttributes(beatmap.id, mod_int);
         const cs = getRoundedNumberStr(attr.cs, 2);

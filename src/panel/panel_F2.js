@@ -185,7 +185,7 @@ export async function panel_F2(
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
-    const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(data.MatchRound.beatmap), true);
+    const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap), true);
     svg = implantSvgBody(svg, 1450, 40, b, reg_maincard);
 
     return svg.toString();
@@ -226,12 +226,22 @@ function implantCardA1(svg, replace, reg, row = 1, column = 1, maxColumn = 1, te
 }
 
 function getRoundMods(beatmapMods, scoreMods) {
+    const b = beatmapMods || [];
+    const arr = b.concat(scoreMods).sort();
 
+    let out = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] !== out[out.length - 1]) {
+            out.push(arr[i]);
+        }
+    }
+    return out;
 }
 
 async function getBeatmapAttr(beatmapLite = {}, mods = []) {
-    if (!beatmapLite) {
+    if (beatmapLite == null) {
         return {
+            ...beatmapLite,
             background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
             title: 'Deleted Map',
             artist: '?',
