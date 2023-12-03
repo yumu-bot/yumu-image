@@ -175,8 +175,8 @@ export const PanelGenerate = {
         const total_player = score.total_player || 0;
         const rating = (total_score > 0) ? Math.round(player_score * total_player / total_score * 100) / 100 : 0;
         const team_str = (!score.match.team || score.match.team === 'none') ? 'gray' : score.match.team;
-        const pp_str = (score.pp != null) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
-        const mods_arr = score.mods || [];
+        const pp_str = (score?.pp > 0) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
+        const mods_arr = score?.mods || [];
         const rank = score.match.pass === false ? 'F' :
             getApproximateRank({
                 statistics: score.statistics,
@@ -198,7 +198,7 @@ export const PanelGenerate = {
         const top1 = score.user.username || score.user_name || 'Unknown';
         
         const left1 = score.user.country.countryName || 'Unknown';
-        const left2 = 'P' + (score.match.slot + 1) + ' R' + rating + ' ' + pp_str;
+        const left2 = '#' + (score.match.slot + 1) + ' *' + rating + ' ' + pp_str;
         const right2 = (Math.round((score.accuracy || 0) * 10000) / 100) + '%' + ' '
             + rank + ' ' + mods + ' ' + (score.max_combo || 0) + 'x';
         const right3b = getRoundedNumberLargerStr(player_score, 0);
