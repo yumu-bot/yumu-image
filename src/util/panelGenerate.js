@@ -346,35 +346,35 @@ export const PanelGenerate = {
             spotlight: false
         }
     }) => {
-        const background = await readNetImage(beatmap.beatmapset.covers['cover@2x'], false);
-        const title1 = beatmap.beatmapset.title || 'Unknown Title';
-        const title2 = beatmap.beatmapset.artist || 'Unknown Artist';
-        const title3 = beatmap.beatmapset.mapperName || 'God Made This';
-        const left2 = beatmap.version || 'Tragic Love Extra';
-        const left3 = 'b' + (beatmap.id || 0);
+        const background = await readNetImage(beatmap?.beatmapset?.covers['cover@2x'], false);
+        const title1 = beatmap?.beatmapset?.title || 'Unknown Title';
+        const title2 = beatmap?.beatmapset?.artist || 'Unknown Artist';
+        const title3 = beatmap?.beatmapset?.mapperName || 'God Made This';
+        const left2 = beatmap?.version || 'Tragic Love Extra';
+        const left3 = 'b' + (beatmap?.id || 0);
 
-        const status = beatmap.status;
+        const status = beatmap?.status;
         let right2;
 
-        switch (getGameMode(beatmap.mode, 1)) {
+        switch (getGameMode(beatmap?.mode, 1)) {
             case 'o': {
-                right2 = 'CS' + (beatmap.cs || 0) +
-                    ' AR' + (beatmap.ar || 0) +
-                    ' OD' + (beatmap.od || 0);
+                right2 = 'CS' + (beatmap?.cs || 0) +
+                    ' AR' + (beatmap?.ar || 0) +
+                    ' OD' + (beatmap?.od || 0);
                 break;
             }
             case 't': {
-                right2 = 'OD' + (beatmap.od || 0);
+                right2 = 'OD' + (beatmap?.od || 0);
                 break;
             }
             case 'c': {
-                right2 = 'CS' + (beatmap.cs || 0) +
-                    ' AR' + (beatmap.ar || 0);
+                right2 = 'CS' + (beatmap?.cs || 0) +
+                    ' AR' + (beatmap?.ar || 0);
                 break;
             }
             case 'm': {
-                right2 = (beatmap.cs || 0) +
-                    'Key OD' + (beatmap.od || 0);
+                right2 = (beatmap?.cs || 0) +
+                    'Key OD' + (beatmap?.od || 0);
                 break;
             }
             default: {
@@ -382,8 +382,8 @@ export const PanelGenerate = {
             }
         }
 
-        const right3b = getDecimals(beatmap.difficulty_rating,2);
-        const right3m = getDecimals(beatmap.difficulty_rating,3) + '*';
+        const right3b = getDecimals(beatmap?.difficulty_rating,2);
+        const right3m = getDecimals(beatmap?.difficulty_rating,3) + '*';
 
         return {
             background: background,
@@ -404,7 +404,7 @@ export const PanelGenerate = {
         const background = cursor ? await getMapBG(cursor.id, 'list@2x', false) : await readNetImage(first_beatmapset.covers['list@2x'], false, getExportFileV3Path('card-default.png'));
         const map_status = rule;
         const title1 = 'Search:';
-        const title2 = search ? 'Sort: ' + search.sort : "Sort: Default"; //getSortName(search.sort)
+        const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
         const title3 = '';
         const title_font = torus;
         const left1 = 'time duration:';
@@ -433,38 +433,6 @@ export const PanelGenerate = {
             right3b: right3b,
             right3m: right3m,
         };
-
-        function getSortName(sort = 'ranked_asc') {
-            switch (sort.toLowerCase()) {
-                case 'title_asc':
-                    return 'Title ^';
-                case 'title_desc':
-                    return 'Title v';
-                case 'artist_asc':
-                    return 'Artist ^';
-                case 'artist_desc':
-                    return 'Artist v';
-                case 'difficulty_asc':
-                    return 'Star Rating ^';
-                case 'difficulty_desc':
-                    return 'Star Rating v';
-                case 'rating_asc':
-                    return 'Map Rating ^';
-                case 'rating_desc':
-                    return 'Map Rating v';
-                case 'plays_asc':
-                    return 'Play Count ^';
-                case 'plays_desc':
-                    return 'Play Count v';
-                case 'relevance_asc':
-                    return 'Relevance ^';
-                case 'ranked_desc':
-                    return 'Ranked Time v';
-                default:
-                    return 'Default (Rel v/RT ^)';
-            }
-        }
-
     },
 
     searchMap2CardA2: async (beatmapsets, rank) => {

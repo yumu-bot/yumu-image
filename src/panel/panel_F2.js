@@ -239,9 +239,8 @@ function getRoundMods(beatmapMods, scoreMods) {
 }
 
 async function getBeatmapAttr(beatmapLite = {}, mods = []) {
-    if (beatmapLite == null) {
+    if (!beatmapLite) {
         return {
-            ...beatmapLite,
             background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
             title: 'Deleted Map',
             artist: '?',
@@ -266,6 +265,7 @@ async function getBeatmapAttr(beatmapLite = {}, mods = []) {
     const mode = beatmapLite.mode ? beatmapLite.mode.toLowerCase() : 'osu';
 
     return {
+        ...beatmapLite,
         background: await getMapBG(beatmapLite.beatmapset.sid, 'list@2x', !beatmapLite.beatmapset.ranked),
         title: beatmapLite.beatmapset.title,
         artist: beatmapLite.beatmapset.artist,
