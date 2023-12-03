@@ -339,7 +339,13 @@ async function roundInfo2CardA2(stat = {
 
     if (round.winningTeam != null) {
         if (isTeamVS) {
-            right1 = 'Difference ' + Math.abs(redTeamScore - blueTeamScore);
+            if (redTeamScore > blueTeamScore) {
+                right1 = ' << ' + (redTeamScore - blueTeamScore) + ' << ';
+            } else if (redTeamScore < blueTeamScore) {
+                right1 = ' >> ' + (redTeamScore - blueTeamScore) + ' >> ';
+            } else {
+                right1 = ' << 0 >> '
+            }
             right2 = redTeamScore + ' - ' + blueTeamScore;
             right3m = round.winningTeam + ' win';
         } else {
