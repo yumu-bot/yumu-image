@@ -35,10 +35,12 @@ export async function card_A1(data = {
     const reg_sub_icon2 = /(?<=<g style="clip-path: url\(#clippath-CA1-5\);">)/;
 
     // 文字的 <path>
+    const right_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
+
     const top1 = torus.getTextPath(torus.cutStringTail(data.top1, 42, 290),
         130, 53.672, 42, "left baseline", "#fff"); //48px
-    const left1 = torus.getTextPath(data.left1, 20, 165.836, 24, "left baseline", "#fff");
-    const left2 = torus.getTextPath(data.left2, 20, 191.836, 24, "left baseline", "#fff");
+    const left1 = torus.getTextPath(torus.cutStringTail(data.left1, 24, 290 - right_width), 20, 165.836, 24, "left baseline", "#fff");
+    const left2 = torus.getTextPath(torus.cutStringTail(data.left2, 24, 290 - right_width), 20, 191.836, 24, "left baseline", "#fff");
 
     const right1 = torus.getTextPath(data.right1, 420, 114.836, 24, 'right baseline', '#fff');
     const right2 = torus.getTextPath(data.right2, 420, 141.836, 24, "right baseline", "#fff");
