@@ -168,7 +168,7 @@ export async function panel_F2(
         for (let i = 0; i < (hasRemain ? (h - 1) : h); i++) {
             for (let j = 0; j < 4; j++) {
                 const index = i * 4 + j;
-                svg = implantCardA1(svg, noneA1[index + r], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, Math.min(noneA1.length, 4), 'none');
+                svg = implantCardA1(svg, noneA1[index + r], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, 4, 'none');
             }
         }
     }
@@ -210,7 +210,7 @@ function implantCardA1(svg, replace, reg, row = 1, column = 1, maxColumn = 1, te
         } break;
         case "none": {
             switch (maxColumn) {
-                case 1: startX = 715; break;
+                case 1: startX = 745; break;
                 case 2: startX = 510; break;
                 case 3: startX = 275; break;
                 case 4: startX = 40; break;
