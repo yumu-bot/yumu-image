@@ -219,43 +219,6 @@ export const PanelGenerate = {
             right3b: right3b,
             right3m: right3m,
         };
-
-        /*
-
-        const mod_str = (user.mods != null && user.mods.length > 0) ? ' +' + getAllMod(getModInt(user.mods)) : '';
-        const team_str = (user.team === 'red') ? 'teamred' : ((user.team === 'blue') ? 'teamblue' : 'headtohead');
-
-        const background = await readNetImage(user.cover, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user.avatar, getExportFileV3Path('avatar-guest.png'));
-
-        const country = user.country || 'CN';
-
-        const top1 = user.name || 'Unknown';
-        const left2 = '#' + user.rank + ' *' + (Math.round(user.rating * 100) / 100);
-        const sub_icon1 = getExportFileV3Path('object-card-' + team_str + '.png')
-        const right2 = (Math.round(user.accuracy * 10000) / 100) + '% '
-            + user.grade + mod_str + ' ' + user.combo + 'x';
-        const right3b = getRoundedNumberLargerStr(user.score, 0);
-        const right3m = getRoundedNumberSmallerStr(user.score, 0);
-
-        return {
-            background,
-            avatar,
-            sub_icon1: sub_icon1,
-            sub_icon2: '',
-            country: country,
-
-            top1: top1,
-            left1: country,
-            left2: left2,
-            right1: '',
-            right2: right2,
-            right3b: right3b,
-            right3m: right3m,
-        };
-
-         */
-
     },
 
     beatmap2CardA2: async (beatmap) => {

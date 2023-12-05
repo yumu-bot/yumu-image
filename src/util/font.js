@@ -1,7 +1,7 @@
 import TextToSVG from "text-to-svg";
 
 const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
-const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.1.ttf"); //v1版本是 Alibaba-PuHuiTi-Medium.ttf
+const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.2.ttf");
 const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
 const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold.ttf");
