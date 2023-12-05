@@ -453,7 +453,7 @@ export async function panel_M(data = {
         const v = recent_activity[i];
         const delta_time = getTimeDifference(v.created_at, 'X');
         // /beatmapsets/1576867
-        const sid = v.beatmapset.url ? v.beatmapset.url.toString().substring(3) : 0;
+        const sid = v.beatmapset.url ? v.beatmapset.url.toString().match("-?\\d+.?\\d*$") : 0;
 
         cardO4s.push(await card_O4({
             type: v.type, approval: v.approval, title: v.beatmapset.title, time: delta_time, sid: sid || 0,
