@@ -873,7 +873,6 @@ export function getGameMode(mode = '', level = 0) {
         }
     } else if (mode !== '') {
         modeStr = (mode + '').toLowerCase();
-        console.log(modeStr)
     }
 
     switch (level) {
