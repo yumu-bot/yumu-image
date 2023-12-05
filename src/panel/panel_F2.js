@@ -168,7 +168,7 @@ export async function panel_F2(
         for (let i = 0; i < (hasRemain ? (h - 1) : h); i++) {
             for (let j = 0; j < 4; j++) {
                 const index = i * 4 + j;
-                svg = implantCardA1(svg, noneA1[index + r], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, 4, 'none');
+                svg = implantCardA1(svg, noneA1[index + r], reg_bodycard, hasRemain ? i + 2 : i + 1, j + 1, Math.min(noneA1.length, 4), 'none');
             }
         }
     }
