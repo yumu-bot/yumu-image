@@ -180,12 +180,12 @@ export const PanelGenerate = {
         const rank = score.match.pass === false ? 'F' :
             getApproximateRank({
                 statistics: score.statistics,
-                mode: score.mode ? score.mode.toLowerCase() : 'osu'
+                mode: (score.mode != null) ? score.mode.toLowerCase() : 'osu'
             });
 
         let mods = '';
         if (mods_arr.length > 0) {
-            mods = '+';
+            mods = ' +';
             for (const v of mods_arr) {
                 mods += v;
             }
@@ -200,7 +200,7 @@ export const PanelGenerate = {
         const left1 = score.user.country.countryName || 'Unknown';
         const left2 = '#' + (score.match.slot + 1) + ' *' + rating + ' ' + pp_str;
         const right2 = (Math.round((score.accuracy || 0) * 10000) / 100) + '%' + ' '
-            + rank + ' ' + mods + ' ' + (score.max_combo || 0) + 'x';
+            + rank + mods + ' ' + (score.max_combo || 0) + 'x';
         const right3b = getRoundedNumberLargerStr(player_score, 0);
         const right3m = getRoundedNumberSmallerStr(player_score, 0);
 
