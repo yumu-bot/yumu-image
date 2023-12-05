@@ -177,10 +177,10 @@ export const PanelGenerate = {
         const team_str = (!score.match.team || score.match.team === 'none') ? 'gray' : score.match.team;
         const pp_str = (score?.pp > 0) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
         const mods_arr = score?.mods || [];
-        const rank = score.match.pass === false ? 'F' :
+        const rank = !(score.match.pass) ? 'F' :
             getApproximateRank({
                 statistics: score.statistics,
-                mode: (score.mode != null) ? score.mode.toLowerCase() : 'osu'
+                mode: score.mode ? score.mode.toLowerCase() : 'osu'
             });
 
         let mods = '';

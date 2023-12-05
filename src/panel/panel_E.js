@@ -423,7 +423,6 @@ async function score2CardE2(score, calcPP) {
 }
 
 async function score2CardE3(score, calcPP) {
-    console.log(score)
     const pass_arr = score2PassPercents(score);
     const score_progress = (score.rank === 'F') ? calcPP.score_progress : 1;
 

@@ -1350,6 +1350,8 @@ export const getApproximateRank = (score = {
     const n100 = score.statistics.count_100;
     const n50 = score.statistics.count_50;
     const n0 = score.statistics.count_miss;
+    const nG = score.statistics.count_geki;
+    const nK = score.statistics.count_katu;
     const acc = score.accuracy;
     const hasMiss = (n0 > 0);
 
@@ -1395,16 +1397,17 @@ export const getApproximateRank = (score = {
             break;
 
         case 'c' : {
+            const alt_acc = acc || (n300 + n100 + n50) / (n300 + n100 + n50 + nK + n0);
 
             if (acc === 1) {
                 rank = 'SS';
-            } else if (acc > 0.98) {
+            } else if (alt_acc > 0.98) {
                 rank = 'S';
-            } else if (acc > 0.94) {
+            } else if (alt_acc > 0.94) {
                 rank = 'A';
-            } else if (acc > 0.90) {
+            } else if (alt_acc > 0.90) {
                 rank = 'B';
-            } else if (acc > 0.85) {
+            } else if (alt_acc > 0.85) {
                 rank = 'C';
             } else {
                 rank = 'D';
@@ -1413,8 +1416,9 @@ export const getApproximateRank = (score = {
             break;
 
         case 'm' : {
+            const alt_acc = acc || (nG + n300 + nK * 2/3 + n100 * 1/3 + n50 * 1/6) / (nG + n300 + n100 + n50 + nK + n0);
 
-            if (acc === 1) {
+            if (alt_acc === 1) {
                 rank = 'SS';
             } else if (acc >= 0.95) {
                 rank = 'S';
