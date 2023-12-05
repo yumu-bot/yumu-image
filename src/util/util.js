@@ -1420,13 +1420,13 @@ export const getApproximateRank = (score = {
 
             if (alt_acc === 1) {
                 rank = 'SS';
-            } else if (acc >= 0.95) {
+            } else if (alt_acc >= 0.95) {
                 rank = 'S';
-            } else if (acc >= 0.90) {
+            } else if (alt_acc >= 0.90) {
                 rank = 'A';
-            } else if (acc >= 0.80) {
+            } else if (alt_acc >= 0.80) {
                 rank = 'B';
-            } else if (acc >= 0.70) {
+            } else if (alt_acc >= 0.70) {
                 rank = 'C';
             } else {
                 rank = 'D';
