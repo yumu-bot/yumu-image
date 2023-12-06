@@ -710,22 +710,9 @@ const score2AccIndex = (score) => {
         switch (rank) {
             case 'F' : return '~ ' + getApproximateRank(score);
             default : {
-                const precision = nGeki / n300;
-                if (nGeki >= n300) {
-                    if (n300 !== 0) {
-                        return precision.toFixed(1) + 'x';
-                    } else if (nGeki !== 0) {
-                        return 'MAX';
-                    } else return '???';
-                } else if (nGeki < n300) {
-                    if (nGeki !== 0) {
-                        return precision.toFixed(2) + 'x';
-                    } else if (n300 !== 0) {
-                        return 'MIN';
-                    } else return '???';
-                } else {
-                    return '???';
-                }
+                const pp_acc = (nGeki * 320 + n300 * 300 + nKatu * 200 + n100 * 100 + n50 * 50) / ((nGeki + n300 + nKatu + n100 + n50 + n0) * 320);
+
+                return getRoundedNumberStr(pp_acc * 100, 3);
             }
         }
     }

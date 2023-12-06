@@ -25,11 +25,6 @@ export const LABEL_OPTION = {
         icon_title: 'PP',
         color_remark: '#fff',
     },
-    PPACC: {
-        icon: getExportFileV3Path("object-score-pp.png"),
-        icon_title: 'PP ACC',
-        color_remark: '#fff',
-    },
     AIMPP: {
         icon: getExportFileV3Path("object-score-aimpp.png"),
         icon_title: 'AimPP',
@@ -44,6 +39,11 @@ export const LABEL_OPTION = {
         icon: getExportFileV3Path("object-score-accpp.png"),
         icon_title: 'AccPP',
         color_remark: '#aaa',
+    },
+    RATIO: {
+        icon: getExportFileV3Path("object-score-longnote.png"),
+        icon_title: 'P/G Ratio',
+        color_remark: '#fff',
     },
     DIFFPP: {
         icon: getExportFileV3Path("object-score-overalldifficulty.png"),
