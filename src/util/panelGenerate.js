@@ -209,7 +209,7 @@ export const PanelGenerate = {
         return {
             background,
             avatar,
-            sub_icon1: icon_str,
+            sub_icon1: getExportFileV3Path(icon_str) ,
             sub_icon2: '',
             country: country,
 
