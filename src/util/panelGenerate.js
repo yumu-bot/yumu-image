@@ -174,14 +174,16 @@ export const PanelGenerate = {
         const total_score = score.total_score || 0;
         const total_player = score.total_player || 0;
         const rating = (total_score > 0) ? Math.round(player_score * total_player / total_score * 100) / 100 : 0;
-        const team_str = (!score.match.team || score.match.team === 'none') ? 'gray' : score.match.team;
         const pp_str = (score?.pp > 0) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
         const mods_arr = score?.mods || [];
-        const rank = !(score.match.pass) ? 'F' :
+        const rank = !(score?.match?.pass) ? 'F' :
             getApproximateRank({
                 statistics: score.statistics,
                 mode: score.mode ? score.mode.toLowerCase() : 'osu'
             });
+        const bg_str = 'object-score-backimage-' + rank + '.jpg';
+        const icon_str = (!score.match.team || score.match.team === 'none') ? 'object-card-headtohead.png'
+            : 'object-card-team' + score.match.team + '.png';
 
         let mods = '';
         if (mods_arr.length > 0) {
@@ -191,23 +193,23 @@ export const PanelGenerate = {
             }
         }
 
-        const background = getExportFileV3Path('card-' + team_str + '.png');
-        const avatar = await getAvatar(score.user_id, false, getExportFileV3Path('avatar-guest.png'));
-        const country = score.user.country.countryCode || score.user.country_code || 'UN';
+        const background = getExportFileV3Path(bg_str);
+        const avatar = await getAvatar(score?.user_id, false, getExportFileV3Path('avatar-guest.png'));
+        const country = score?.user?.country?.countryCode || score?.user?.country_code || 'UN';
 
-        const top1 = score.user.username || score.user_name || 'Unknown';
+        const top1 = score?.user?.username || score?.user_name || 'Unknown';
         
-        const left1 = score.user.country.countryName || 'Unknown';
-        const left2 = 'P' + (score.match.slot + 1) + ' *' + rating + ' ' + pp_str;
-        const right2 = (Math.round((score.accuracy || 0) * 10000) / 100) + '%' + ' '
-            + rank + mods + ' ' + (score.max_combo || 0) + 'x';
+        const left1 = score?.user?.country?.countryName || 'Unknown';
+        const left2 = 'P' + (score?.match?.slot + 1) + ' *' + rating + ' ' + pp_str;
+        const right2 = (Math.round((score?.accuracy || 0) * 10000) / 100) + '%' + ' '
+            + rank + mods + ' ' + (score?.max_combo || 0) + 'x';
         const right3b = getRoundedNumberLargerStr(player_score, 0);
         const right3m = getRoundedNumberSmallerStr(player_score, 0);
 
         return {
             background,
             avatar,
-            sub_icon1: '',
+            sub_icon1: icon_str,
             sub_icon2: '',
             country: country,
 
