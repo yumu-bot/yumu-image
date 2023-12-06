@@ -23,7 +23,7 @@ import {card_E2} from "../card/card_E2.js";
 import {card_E3} from "../card/card_E3.js";
 import {card_E4} from "../card/card_E4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {hasAnyMod} from "../util/mod.js";
+import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -449,11 +449,11 @@ const score2AdvancedJudge = (score) => {
     const isTaikoPF = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
     const isPF = score.perfect || isTaikoPF;
 
-    if (score.mods.includes('NF')) {
+    if (hasMod(getModInt(score.mods), 'NF')) {
         return 'played';
     } else if (isPF) {
         return 'perfect';
-    } else if (score.statistics.count_miss === 0) {
+    } else if (score.statistics.count_miss === 0 && score.rank !== 'F') {
         return 'nomiss';
     } else if (score.rank !== 'F') {
         return 'clear';
