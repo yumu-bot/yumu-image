@@ -6,16 +6,13 @@ import {
     replaceText,
     getPanelNameSVG,
     getRoundedNumberStr,
-    getMapBG,
-    getMatchNameSplitted,
     readNetImage,
-    getExportFileV3Path
+    getExportFileV3Path, getAvatar
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import moment from "moment";
 import {getMapAttributes} from "../util/compute-pp.js";
 import {getModInt} from "../util/mod.js";
 
@@ -64,23 +61,19 @@ export async function panel_F(data = {}) {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
+    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
     // 导入成绩卡（C卡
 
     let card_Cs = [];
     let redWins = 0;
     let blueWins = 0;
-    let starSum = 0;
-    let roundCount = 0;
-    for (const v of data?.rounds) {
-        starSum += v.beatmap?.difficulty_rating || 0;
-        roundCount ++;
+
+    for (const v of data?.roundList) {
         card_Cs.push(await card_C(await round2CardC(v, redWins, blueWins), true));
         if (v.winningTeam === 'red') redWins ++;
         else if (v.winningTeam === 'blue') blueWins ++;
     }
-    const averageStar = roundCount === 0 ? 0 : starSum / roundCount;
 
     for (const i in card_Cs) {
         svg = implantSvgBody(svg, 510, 330 + i * 250, card_Cs[i], reg_card_c)
@@ -119,7 +112,7 @@ export async function panel_F(data = {}) {
     }];
 
          */
-    const rounds = data?.rounds || [];
+    const rounds = data?.roundList || [];
 
     const beatmap_arr = await Promise.all(rounds.map(async (e) => {
         const beatmap = e.beatmap;
@@ -143,24 +136,42 @@ export async function panel_F(data = {}) {
             mode: mode,
         }
     }));
-    
+
     //导入谱面卡(A2卡 的同时计算面板高度和背景高度
     let panel_height = 330;
     let background_height = 40;
+    let avg_sr_arr = [];
     for (const i in beatmap_arr) {
         const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap_arr[i]), true);
         svg = implantSvgBody(svg, 40, 330 + i * 250, b, reg_card_a2);
-        
+
+        avg_sr_arr.push(beatmap_arr[i].difficulty_rating || 0);
+
         panel_height += 250;
         background_height += 250;
     }
     svg = replaceText(svg, panel_height, reg_panelheight);
     svg = replaceText(svg, background_height, reg_height);
 
-    // 导入比赛简介卡（A2卡
+    let averageStar = 0;
+    let starSize = 0;
 
-    const m = await card_A2(await matchData2CardA2(data, averageStar, redWins, blueWins), true);
-    svg = implantSvgBody(svg,40,40, m, reg_maincard);
+    avg_sr_arr.forEach(v => {
+        if (v > 0) {
+            averageStar += v;
+            starSize++;
+        }
+    })
+
+    if (starSize > 0) {
+        averageStar /= starSize;
+    } else {
+        averageStar = 0;
+    }
+
+    // 导入比赛简介卡（A2卡
+    const matchInfo = await card_A2(await PanelGenerate.matchData2CardA2(data, averageStar), true);
+    svg = implantSvgBody(svg,40,40, matchInfo, reg_maincard);
 
     return svg.toString();
 }
@@ -172,23 +183,23 @@ async function round2CardC(round = {}, red_before = 0, blue_before = 0) {
 
     for (const v of scoreArr) {
         const f = await score2LabelF2(v);
-        switch (v.match.team) {
+        switch (v?.match?.team) {
             case 'red': redArr.push(f); break;
             case 'blue': blueArr.push(f); break;
             default : noneArr.push(f); break;
         }
     }
 
-    async function score2LabelF2(score = {}) {
+    async function score2LabelF2(score = {}
+    ) {
         return {
             player_name: score?.user_name, //妈的 为什么get match不给用户名啊
-            player_avatar: await readNetImage(score?.user?.avatar_url, false, getExportFileV3Path('avatar-guest.png')),//await getAvatar(score.user_id),
+            player_avatar: score.user ? await readNetImage(score?.user?.avatar_url, false, getExportFileV3Path('avatar-guest.png')): await getAvatar(score.user_id),
             player_score: score.score,
             player_mods: score.mods,
             player_rank: score.ranking, //一局比赛里的分数排名，1v1或者team都一样
         }
     }
-
 
     return {
         statistics: {
@@ -205,54 +216,4 @@ async function round2CardC(round = {}, red_before = 0, blue_before = 0) {
         blue: blueArr,
         none: noneArr,
     }
-}
-
-async function matchData2CardA2(data = {}, averageStar, redWins, blueWins){
-
-    const isTeamVS = data.rounds[0].team_type === 'team-vs';
-    const star = getRoundedNumberStr(averageStar || 0, 3);
-
-    const background = await getMapBG(data.rounds[0]?.beatmap?.beatmapset?.id, 'list@2x', false);
-
-    const isContainVS = data.matchStat.name.toLowerCase().match('vs');
-    let title, title1, title2;
-    if (isContainVS) {
-        title = getMatchNameSplitted(data.matchStat.name);
-        title1 = title[0];
-        title2 = title[1] + ' vs ' + title[2];
-    } else {
-        title1 = data.matchStat.name;
-        title2 = '';
-    }
-
-    //这里的时间戳不需要 .add(8, 'hours')
-    let left2;
-
-    if (data.matchStat.end_time) {
-        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-' + moment(data.matchStat.end_time, 'X').format('HH:mm');
-    } else {
-        left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-continuing';
-    }
-
-    const left3 = moment(data.matchStat.start_time, 'X').format('YYYY/MM/DD');
-
-    const right1 = 'SR ' + star + '*';
-    const right2 = 'mp' + data.matchStat.id || 0;
-    const right3b = isTeamVS ? (redWins + ' : ' + blueWins) : data.roundCount + 'x';
-
-    return {
-        background: background,
-        map_status: '',
-
-        title1: title1,
-        title2: title2,
-        title_font: 'PuHuiTi',
-        left1: '',
-        left2: left2,
-        left3: left3,
-        right1: right1,
-        right2: right2,
-        right3b: right3b,
-        isTeamVS: isTeamVS,
-    };
 }

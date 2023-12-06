@@ -4,7 +4,7 @@ import {
     getApproximateRank, getAvatar,
     getDecimals, getExportFileV3Path,
     getGameMode,
-    getMapBG,
+    getMapBG, getMatchNameSplitted,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getRoundedNumberStr,
@@ -220,6 +220,64 @@ export const PanelGenerate = {
             right2: right2,
             right3b: right3b,
             right3m: right3m,
+        };
+    },
+
+    //主程序给的avgStar不靠谱，不如自己算
+    matchData2CardA2: async (data, averageStar = 0) => {
+        const redWins = data.teamPoint.red || 0;
+        const blueWins = data.teamPoint.blue || 0;
+
+        const isTeamVS = data.teamVS;
+        const star = getRoundedNumberStr(averageStar || data.averageStar || 0, 3);
+
+        const background = await getMapBG(data.firstMapSID, 'list@2x', false);
+
+        const isContainVS = data.matchStat.name.toLowerCase().match('vs');
+        let title, title1, title2;
+        if (isContainVS) {
+            title = getMatchNameSplitted(data.matchStat.name);
+            title1 = title[0];
+            title2 = title[1] + ' vs ' + title[2];
+        } else {
+            title1 = data.matchStat.name;
+            title2 = '';
+        }
+
+        //这里的时间戳不需要 .add(8, 'hours')
+        const left1 = 'R' + data.roundCount + ' P' + data.playerCount + ' S' + data.scoreCount;
+        let left2;
+
+        if (data.matchEnd) {
+            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-' + moment(data.matchStat.end_time, 'X').format('HH:mm');
+        } else if (data.hasCurrentGame) {
+            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-playing';
+        } else {
+            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-continuing';
+        }
+
+        const left3 = moment(data.matchStat.start_time, 'X').format('YYYY/MM/DD');
+
+        const right1 = (averageStar > 0) ? 'SR ' + star + '*' : 'SR ~' + star + '*';
+        const right2 = 'mp' + data.matchStat.id || 0;
+        const right3b = isTeamVS ? (redWins + ' : ' + blueWins) : data.roundCount.toString();
+        const right3m = isTeamVS ? '' : 'x';
+
+        return {
+            background: background,
+            map_status: '',
+
+            title1: title1,
+            title2: title2,
+            title_font: 'PuHuiTi',
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+            isTeamVS: isTeamVS,
         };
     },
 

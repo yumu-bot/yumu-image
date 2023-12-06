@@ -1,12 +1,11 @@
 import {
     getExportFileV3Path,
     implantImage,
-    implantSvgBody, readNetImage,
-    readTemplate,
+    implantSvgBody, readTemplate,
     replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus, torusRegular} from "../util/font.js";
-import {label_F1, label_F2, label_F3} from "../component/label.js";
+import {label_F1, label_F3} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_C(data = {
@@ -168,8 +167,7 @@ export async function card_C(data = {
 
         svg = replaceText(svg, '#382e32', reg_backcolor);
         svg = replaceText(svg, none_text, reg_text);
-        svg = implantImage(svg, 1380, 210, 0, 0, 0.3,
-            await readNetImage(data.none[first_index].player_avatar, false, getExportFileV3Path('avatar-guest.png')), reg_h2hfirstavatar);
+        svg = implantImage(svg, 1380, 210, 0, 0, 0.3, data.none[first_index].player_avatar, reg_h2hfirstavatar);
     }
 
     // 导入成绩
@@ -426,7 +424,7 @@ export async function card_C(data = {
         function countLessMinWidth(teamWidthArr = [0], minWidth = 0) {
             let count = 0;
 
-            teamWidthArr.forEach((v,i) => {
+            teamWidthArr.forEach(v => {
                 if (v < minWidth) {
                     count ++;
                 }
