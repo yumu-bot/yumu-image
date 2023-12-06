@@ -449,11 +449,11 @@ const score2AdvancedJudge = (score) => {
     const isTaikoPF = getGameMode(score.mode, 1) === 't' && (score.rank === 'XH' || score.rank === 'X');
     const isPF = score.perfect || isTaikoPF;
 
-    if (hasMod(getModInt(score.mods), 'NF')) {
+    if (hasMod(getModInt(score.mods), 'NF') || score.rank === 'F') {
         return 'played';
     } else if (isPF) {
         return 'perfect';
-    } else if (score.statistics.count_miss === 0 && score.rank !== 'F') {
+    } else if (score.statistics.count_miss === 0) {
         return 'nomiss';
     } else if (score.rank !== 'F') {
         return 'clear';
