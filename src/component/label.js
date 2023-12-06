@@ -937,7 +937,7 @@ export async function label_A3(data = {
     const reg_icon = /(?<=<g id="Icon_LM3">)/;
 
     //定义位置
-    const max_width = data.maxWidth;
+    //const max_width = data.maxWidth;
     //如果是一排6个，那么需要缩减一下！
     //230731更新，这里不需要缩减了，长的太丑
     const interval = 4; //(max_width > 650 / 3) ? 98 : 70;
