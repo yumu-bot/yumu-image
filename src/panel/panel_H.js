@@ -69,9 +69,12 @@ export async function panel_H (
     let cards = [];
     let row = 1;
 
+    let map_count = 0;
+
     for (const p of pools) {
         cards.push(await drawModPool(p, row));
         row += getRowCount(p?.beatMaps?.length);
+        map_count += p?.beatMaps?.length;
     }
 
     //执行上面的代码
@@ -80,7 +83,6 @@ export async function panel_H (
     }
 
     // 卡片定义
-    const map_count = cards.length || 0;
     const mod_count = pools.length || 0;
     const poolInfo = await card_A2(await pool2cardA2(data, map_count, mod_count), true);
 
