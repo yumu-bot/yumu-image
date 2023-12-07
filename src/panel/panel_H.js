@@ -58,9 +58,6 @@ export async function panel_H (
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PH-1\);">)/;
     const reg_bodycard = /(?<=<g id="BodyCard">)/;
 
-    // 卡片定义
-    const cardA2 = await card_A2(await pool2cardA2(data), true);
-
     // 面板文字
     const panel_name = getPanelNameSVG('Mappool (!ymmp)', 'Pool', 'v0.4.0 UU');
 
@@ -82,6 +79,11 @@ export async function panel_H (
         svg = replaceText(svg, v, reg_bodycard);
     }
 
+    // 卡片定义
+    const map_count = cards.length || 0;
+    const mod_count = pools.length || 0;
+    const poolInfo = await card_A2(await pool2cardA2(data, map_count, mod_count), true);
+
     //设置面板高度
     const panelHeight = 330 + 150 * (row - 1);
     const cardHeight = 40 + 150 * (row - 1);
@@ -91,7 +93,7 @@ export async function panel_H (
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
-    svg = implantSvgBody(svg,40, 40, cardA2, reg_maincard);
+    svg = implantSvgBody(svg,40, 40, poolInfo, reg_maincard);
 
     return svg.toString();
 }
@@ -149,14 +151,14 @@ function hasRemain(i = 0) {
     return (getRemain(i) !== 0);
 }
 
-async function pool2cardA2(data) {
+async function pool2cardA2(data, map_count = 0, mod_count = 0) {
     const background = await getMapBG(data.firstMapSID, 'cover@2x', false) || getRandomBannerPath();
 
     const title1 = data.name || '';
-    const title3 = data.categoryList ? data.categoryList[0].category ? 'creator: ' + data.categoryList[0].category[0].creater : 'creator?' : 'creator?';
+    const title3 = data.categoryList ? data.categoryList[0].category ? 'creator: ' + data.categoryList[0].category[0].creater : 'creator?' : '';
 
     const left2 = data.info ? data.info.toString() : '';
-    const left3 = data.status ? data.status.toString() : '';
+    const left3 = (map_count && mod_count) ? 'P' + mod_count + ' M' + map_count : '';
     const right3b = data.id ? data.id.toString() : '0';
 
     return {
