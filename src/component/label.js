@@ -42,7 +42,7 @@ export const LABEL_OPTION = {
     },
     RATIO: {
         icon: getExportFileV3Path("object-score-longnote.png"),
-        icon_title: 'P/G Ratio',
+        icon_title: 'P/G Rate',
         color_remark: '#fff',
     },
     DIFFPP: {
