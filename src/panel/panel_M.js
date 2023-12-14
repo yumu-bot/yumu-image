@@ -13,6 +13,7 @@ import {card_O4} from "../card/card_O4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
+import moment from "moment";
 
 export async function router(req, res) {
     try {
@@ -369,7 +370,7 @@ export async function panel_M(data = {
 
     const diff_index = torus.getTextPath('  0       2       2.8      4       5.3      6.5       8       10      ...',
         1450, 550, 18, 'left baseline', '#fff');
-    const length_index = torus.getTextPath('  0   1:00   1:30   2:00   2:30   3:00   3:30   4:00    ...',
+    const length_index = torus.getTextPath('  0    1:00   1:30   2:00   2:30   3:00   3:30   4:00    ...',
         1450, 800, 18, 'left baseline', '#fff');
 
     // 导入2卡右侧的pc和fav
@@ -451,7 +452,7 @@ export async function panel_M(data = {
 
     for (let i = 0; i < Math.min(recent_activity.length, 7); i++) {
         const v = recent_activity[i];
-        const delta_time = getTimeDifference(v.created_at, 'X');
+        const delta_time = getTimeDifference(v.created_at, 'X', moment().add(8, "hours"));
         // /beatmapsets/1576867
         const sid = v.beatmapset.url ? v.beatmapset.url.toString().match("-?\\d+.?\\d*$") : 0;
 
