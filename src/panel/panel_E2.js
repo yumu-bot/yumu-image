@@ -266,7 +266,7 @@ export async function panel_E2(data = {
 
     const bid = data.beatmap.id;
     const stat = {
-        acc: data.expected.accuracy || 1,
+        acc: data.expected.accuracy * 100 || 100,
         combo: data.expected.combo || data.beatmap.max_combo,
         mods: data.expected.mods || [],
     }
@@ -275,6 +275,7 @@ export async function panel_E2(data = {
     const calcTotal = await calcMap(bid, stat, mode, isReload(data.beatmap.ranked));
 
     const calcPP = calcTotal[0];
+    console.log(calcPP)
     let calcNC = [];
     let calcFC = [];
 
