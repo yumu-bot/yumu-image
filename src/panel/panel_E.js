@@ -727,7 +727,7 @@ const score2Statistics = (score) => {
     const n50 = score.statistics.count_50;
     const n0 = score.statistics.count_miss;
 
-    const statistics = [];
+    let statistics = [];
     const mode = getGameMode(score.mode, 1);
 
     switch (mode) {

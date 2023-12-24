@@ -8,8 +8,7 @@ import {
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getRoundedNumberStr,
-    getTimeDifference, isReload,
-    readNetImage,
+    getTimeDifference, isReload, readNetImage,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getModInt, hasMod} from "./mod.js";
@@ -18,22 +17,22 @@ import {getModInt, hasMod} from "./mod.js";
 //把参数变成面板能读懂的数据（router
 export const PanelGenerate = {
     user2CardA1: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
+        const background = user?.username !== 'YumuBot' ? await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
+        const avatar = user?.username !== 'YumuBot' ? await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png')) : getExportFileV3Path('sticker_qiqi_secretly_observing.png');
 
-        const sub_icon1 = user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
-        const country = user?.country.countryCode || 'CN';
+        const sub_icon1 = user?.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
+        const country = user?.country?.countryCode || 'CN';
 
-        const left1 = user.globalRank ? '#' + user.globalRank : '#0';
-        const left2 = country + (user.countryRank ? '#' + user.countryRank : '#0');
+        const left1 = user?.globalRank ? '#' + user?.globalRank : '#0';
+        const left2 = country + (user.countryRank ? '#' + user?.countryRank : '#0');
 
         const isBot = user.is_bot;
-        const level = user.levelCurrent || 0;
-        const progress = user.levelProgress || 0;
-        const acc = getRoundedNumberStr(user.accuracy, 3) || 0;
+        const level = user?.levelCurrent || 0;
+        const progress = user?.levelProgress || 0;
+        const acc = getRoundedNumberStr(user?.accuracy, 3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
-        const right3b = isBot ? '' : (user.pp ? Math.round(user.pp).toString() : '');
-        const right3m = isBot ? 'Bot' : (user.pp ? 'PP' : (user.levelCurrent === 1 && user.levelProgress === 0 ? 'NOT PLAYED' : 'AFK'));
+        const right3b = isBot ? '' : (user?.pp ? Math.round(user?.pp).toString() : '');
+        const right3m = isBot ? 'Bot' : (user?.pp ? 'PP' : (user?.levelCurrent === 1 && user?.levelProgress === 0 ? 'NOT PLAYED' : 'AFK'));
 
         return {
             background,
@@ -42,7 +41,7 @@ export const PanelGenerate = {
             sub_icon2: '',
             country: country,
 
-            top1: user.username,
+            top1: user?.username,
             left1: left1,
             left2: left2,
             right1: '',

@@ -11,8 +11,8 @@ import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {ar2ms, cs2px, data2Label, od2ms, stat2DataM} from "./panel_E.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_E1} from "../card/card_E1.js";
-import {card_E2} from "../card/card_E2.js";
 import {card_E3} from "../card/card_E3.js";
+import {card_E5} from "../card/card_E5.js";
 import {LABEL_OPTION} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {hasAnyMod} from "../util/mod.js";
@@ -44,201 +44,208 @@ export async function router_svg(req, res) {
 
 // E面板重构计划
 export async function panel_E2(data = {
+    expected: { accuracy: 1, combo: 1262, mod: [ 'HD' ] },
     user: {
-        "id": 17064371,
-        "pp": 6279.61,
-        "username": "-Spring Night-",
-        "occupation": null,
-        "discord": null,
-        "interests": null,
-        "playCount": 36485,
-        "globalRank": 30495,
-        "countryRank": 529,
-        "accuracy": 98.3481,
-        "levelCurrent": 101,
-        "levelProgress": 15,
-        "bot": false,
-        "maxCombo": 3430,
-        "playTime": 4617717,
-        "totalHits": 17074899,
-        "deleted": false,
-        "online": false,
-        "supporter": true,
-        "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
-        "cover_url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-        "default_group": "default",
-        "is_active": true,
-        "is_bot": false,
-        "is_deleted": false,
-        "is_online": false,
-        "is_supporter": true,
-        "last_visit": null,
-        "pm_friends_only": false,
-        "playmode": "OSU",
-        "unranked_beatmapset_count": 1,
-        "ranked_beatmapset_count": 0,
-        "ranked_and_approved_beatmapset_count": 0,
-        "beatmap_playcounts_count": 6765,
-        "mapping_follower_count": 5,
-        "has_supported": true,
-        "join_date": "2020-05-15T14:10:44+00:00",
-        "max_friends": 500,
-        "comments_count": 11,
-        "support_level": 2,
-        "post_count": 2,
-        "follower_count": 308,
-        "raw": null,
-        "statistics": {
-            "pp": 6279.61,
-            "ss": 37,
-            "ssh": 10,
-            "s": 1122,
-            "sh": 62,
-            "a": 1951,
-            "ranked": true,
-            "pp_7K": null,
-            "pp_4K": null,
-            "count_50": 210333,
-            "count_100": 1884554,
-            "count_300": 14980012,
-            "count_geki": null,
-            "count_katu": null,
-            "count_miss": 493039,
-            "ranked_score": 40881075082,
-            "total_score": 142776445598,
-            "hit_accuracy": 98.3481,
-            "play_count": 36485,
-            "play_time": 4617717,
-            "total_hits": 17074899,
-            "maximum_combo": 3430,
-            "is_ranked": true,
-            "global_rank": 30495,
-            "replays_watched_by_others": 25,
-            "country_rank": 529
+        id: 7003013,
+        pp: 6196.46,
+        username: 'Muziyami',
+        occupation: 'Elite Graveyarded Mapper',
+        discord: 'YumeMuzi#5619',
+        interests: 'yuyuko❤',
+        monthlyPlaycounts: [
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object], [Object], [Object]
+        ],
+        supporter: false,
+        uid: 7003013,
+        bot: false,
+        online: true,
+        deleted: false,
+        totalHits: 8881602,
+        playCount: 23796,
+        countryRank: 666,
+        levelCurrent: 100,
+        accuracy: 99.0353,
+        levelProgress: 48,
+        globalRank: 35559,
+        playTime: 2344876,
+        maxCombo: 2801,
+        avatar_url: 'https://a.ppy.sh/7003013?1689405046.jpeg',
+        cover_url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg',
+        default_group: 'default',
+        is_active: true,
+        is_bot: false,
+        is_deleted: false,
+        is_online: true,
+        is_supporter: false,
+        last_visit: '2023-12-24T16:18:11+00:00',
+        pm_friends_only: false,
+        playmode: 'OSU',
+        nominated_beatmapset_count: 0,
+        favourite_beatmapset_count: 85,
+        graveyard_beatmapset_count: 116,
+        unranked_beatmapset_count: 0,
+        ranked_beatmapset_count: 4,
+        ranked_and_approved_beatmapset_count: 4,
+        guest_beatmapset_count: 26,
+        loved_beatmapset_count: 0,
+        groups: [],
+        beatmap_playcounts_count: 6873,
+        mapping_follower_count: 62,
+        has_supported: true,
+        profile_order: [
+            'me',
+            'recent_activity',
+            'top_ranks',
+            'beatmaps',
+            'historical',
+            'medals',
+            'kudosu'
+        ],
+        previous_usernames: [ 'lp_Blue' ],
+        join_date: '2015-08-28T12:42:47+00:00',
+        max_friends: 500,
+        comments_count: 674,
+        support_level: 0,
+        post_count: 244,
+        follower_count: 495,
+        statistics: {
+            pp: 6196.46,
+            ss: 32,
+            ssh: 120,
+            sh: 977,
+            s: 177,
+            a: 1341,
+            ranked: true,
+            count_50: 84547,
+            count_100: 733056,
+            count_300: 8063999,
+            count_miss: 286537,
+            ranked_score: 29744806255,
+            total_score: 75196638028,
+            hit_accuracy: 99.0353,
+            play_count: 23796,
+            play_time: 2344876,
+            total_hits: 8881602,
+            maximum_combo: 2801,
+            is_ranked: true,
+            global_rank: 35559,
+            replays_watched_by_others: 251,
+            country_rank: 666,
+            level_current: 100,
+            level_progress: 48
         },
-        "cover": {
-            "url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-            "custom_url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg"
+        cover: {
+            url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg',
+            custom_url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg'
         },
-        "country": {
-            "countryCode": "TW",
-            "countryName": "Taiwan"
-        },
+        country: { countryCode: 'CN', countryName: 'China' },
+        kudosu: { total: 391, available: 391 },
+        rank_history: { mode: 'OSU', history: [Array] }
     },
     beatmap: {
-        "beatmapset_id": 13019,
-        "difficulty_rating": 4.76,
-        "id": 48416,
-        "mode": "osu",
-        "status": "approved",
-        "total_length": 202,
-        "user_id": 231631,
-        "version": "BASARA",
-        "accuracy": 7,
-        "ar": 9,
-        "bpm": 130,
-        "convert": false,
-        "count_circles": 789,
-        "count_sliders": 80,
-        "count_spinners": 1,
-        "cs": 4,
-        "deleted_at": null,
-        "drain": 8,
-        "hit_length": 185,
-        "is_scoreable": true,
-        "last_updated": "2014-05-18T17:22:13Z",
-        "mode_int": 0,
-        "passcount": 139943,
-        "playcount": 1871185,
-        "ranked": 2,
-        "url": "https://osu.ppy.sh/beatmaps/48416",
-        "checksum": "bcfbb61d5a6156fa9fb0708432c79d88",
-        "beatmapset": {
-            "artist": "Daisuke Achiwa",
-            "artist_unicode": "Daisuke Achiwa",
-            "covers": {
-                "cover": "https://assets.ppy.sh/beatmaps/13019/covers/cover.jpg?1622032274",
-                "cover@2x": "https://assets.ppy.sh/beatmaps/13019/covers/cover@2x.jpg?1622032274",
-                "card": "https://assets.ppy.sh/beatmaps/13019/covers/card.jpg?1622032274",
-                "card@2x": "https://assets.ppy.sh/beatmaps/13019/covers/card@2x.jpg?1622032274",
-                "list": "https://assets.ppy.sh/beatmaps/13019/covers/list.jpg?1622032274",
-                "list@2x": "https://assets.ppy.sh/beatmaps/13019/covers/list@2x.jpg?1622032274",
-                "slimcover": "https://assets.ppy.sh/beatmaps/13019/covers/slimcover.jpg?1622032274",
-                "slimcover@2x": "https://assets.ppy.sh/beatmaps/13019/covers/slimcover@2x.jpg?1622032274"
-            },
-            "creator": "100pa-",
-            "favourite_count": 1593,
-            "hype": null,
-            "id": 13019,
-            "nsfw": false,
-            "offset": 0,
-            "play_count": 2862911,
-            "preview_url": "//b.ppy.sh/preview/13019.mp3",
-            "source": "Ar tonelico II",
-            "spotlight": false,
-            "status": "approved",
-            "title": "BASARA",
-            "title_unicode": "BASARA",
-            "track_id": null,
-            "user_id": 231631,
-            "video": false,
-            "bpm": 130,
-            "can_be_hyped": false,
-            "deleted_at": null,
-            "discussion_enabled": true,
-            "discussion_locked": false,
-            "is_scoreable": true,
-            "last_updated": "2010-09-08T10:10:59Z",
-            "legacy_thread_url": "https://osu.ppy.sh/community/forums/topics/24360",
-            "nominations_summary": {
-                "current": 0,
-                "required": 2
-            },
-            "ranked": 2,
-            "ranked_date": "2010-12-28T22:17:38Z",
-            "storyboard": false,
-            "submitted_date": "2010-02-12T10:17:22Z",
-            "tags": "ar tonelico ii 2",
-            "availability": {
-                "download_disabled": false,
-                "more_information": null
-            },
-            "ratings": [0, 0, 0, 0, 0]
-        },
-        "failtimes": {
-            "fail": [],
-            "exit": []
-        },
-        "max_combo": 987
-    },
+        id: 2274671,
+        mode: 'osu',
+        status: 'ranked',
+        version: 'Brilliant Dreamland',
+        ar: 9.3,
+        cs: 4,
+        bpm: 160,
+        convert: false,
+        passcount: 5485,
+        playcount: 36298,
+        ranked: 1,
+        url: 'https://osu.ppy.sh/beatmaps/2274671',
+        beatMapFailedList: [
+            0,  54,  63, 720, 3110, 1317, 697, 1443, 920, 396, 495, 297,
+            752, 415, 246, 684,  315,  234, 182,  234, 270, 361,  81, 117,
+            54,  27,  63,  90,  315,  137, 261,  298, 153, 200, 153, 136,
+            118, 117,  72, 119,  369,  243,  63,  100, 117,  72, 262, 181,
+            117,  36,  18,   9,   64,   45,  72,   72,  45,  18,  18,  72,
+            37,   9,  45,   0,    1,   18,   9,   27,  55,  18,  27,  46,
+            18,  54,  45,  18,   18,   45,  81,   63,   9,  18,  27,  36,
+            46,  19,   9,  45,   36,    9,  90,   27,   0,  27,   0,  18,
+            81,  54,  72,  18
+        ],
+        beatMapRetryCount: 11059,
+        beatMapFailedCount: 18984,
+        beatMapRetryList: [
+            0,   0,   0, 972, 1503, 712, 342, 297,  27, 234, 261, 441,
+            424, 279, 497, 297,  342, 180, 171,  90, 171, 162,  18,  99,
+            27,  90,  54, 317,  126,  73, 108,  99,  90, 190,  91,  81,
+            54,  37,  27,  99,  171, 108,  27,  72,  29,   9,  23,  27,
+            9,   0,   9,   9,    0,  19,  18,  27,   9,  36,  45,  18,
+            18,  18,   9,   0,   36,  55,  72,  19,  18,  36,  45,  20,
+            9,  72,  27,  18,   63, 109,  18,   9,   9,   9,   0,  72,
+            27,  19,   0,  18,   27,  73,  45,  45,   0,  36,  36,  36,
+            81,  72,  27,   9
+        ],
+        beatMapRating: 0,
+        beatmapset_id: 1087774,
+        difficulty_rating: 5.41,
+        mode_int: 0,
+        total_length: 192,
+        hit_length: 189,
+        user_id: 7003013,
+        accuracy: 8,
+        drain: 6,
+        max_combo: 1262,
+        is_scoreable: true,
+        last_updated: '2022-03-05T07:06:51Z',
+        checksum: '7d479062a03c7cde63513138c622d5c1',
+        count_sliders: 405,
+        count_spinners: 1,
+        count_circles: 432,
+        beatmapset: {
+            video: false,
+            availabilityDownloadDisable: false,
+            fromDatabases: false,
+            ratingList: [Array],
+            ranked: true,
+            rating: 0.9447129909365559,
+            sid: 1087774,
+            mapperUID: 7003013,
+            mapperName: 'Muziyami',
+            id: 1087774,
+            user_id: 7003013,
+            bpm: 162,
+            artist: 'Wang Rui',
+            artist_unicode: '汪睿',
+            title: 'Tao Hua Xiao',
+            title_unicode: '桃花笑',
+            creator: 'Muziyami',
+            favourite_count: 401,
+            nsfw: false,
+            play_count: 196607,
+            preview_url: '//b.ppy.sh/preview/1087774.mp3',
+            source: '小女花不弃',
+            status: 'ranked',
+            legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1005413',
+            tags: 'peach blossom cpop c-pop pop chinese 古风 oriental bilibili cover rearrangement 纳兰寻风 na lan xun feng 西门振 xi men zhen 青萝子 qing luo zi op opening xiao nv hua bu qi i will never let you go houshou hari dacaigou kisaki dahkjdas -ovo-',
+            storyboard: true,
+            covers: [Object],
+            ratings: [Array],
+            spotlight: false,
+            last_updated: 1646464010,
+            ranked_date: 1647193324
+        }
+    }
 
-    expected: {
-        "accuracy" : 0.9861,
-        "mods" : [ ],
-        "score" : 80666662, //这个是mania里用到的
-        "max_combo" : 2077,
-        "user" : {
-            "id" : 17064371,
-            "cover" : null,
-            "avatar" : "https://a.ppy.sh/17064371?1675693670.jpeg",
-            "pmOnly" : false,
-            "avatar_url" : "https://a.ppy.sh/17064371?1675693670.jpeg",
-            "cover_url" : null,
-            "default_group" : "default",
-            "is_active" : true,
-            "is_bot" : false,
-            "is_deleted" : false,
-            "is_online" : false,
-            "is_supporter" : true,
-            "last_visit" : [ 2023, 7, 29, 13, 45, 43, 833335215 ],
-            "pm_friends_only" : false,
-            "username" : "-Spring Night-",
-            "country_code" : "TW",
-            "country" : null,
-            "statistics" : null
-        },
-    },
-}, reuse = false){
+}){
     // 导入模板
     let svg = readTemplate('template/Panel_E.svg');
 
@@ -253,19 +260,20 @@ export async function panel_E2(data = {
 
     // 导入文字
     svg = replaceText(svg, getPanelNameSVG(
-        'Map Statistics (!ymm)', 'Map', 'v0.3.2 FT'), reg_index);
+        'Map Statistics (!ymm)', 'M', 'v0.4.0 UU'), reg_index);
 
     // 构建成绩
 
     const bid = data.beatmap.id;
     const stat = {
         acc: data.expected.accuracy || 1,
-        combo: data.expected.max_combo || data.beatmap.max_combo,
+        combo: data.expected.combo || data.beatmap.max_combo,
         mods: data.expected.mods || [],
     }
     const mode = data.beatmap.mode || 'osu';
 
     const calcTotal = await calcMap(bid, stat, mode, isReload(data.beatmap.ranked));
+
     const calcPP = calcTotal[0];
     let calcNC = [];
     let calcFC = [];
@@ -275,18 +283,17 @@ export async function panel_E2(data = {
         calcFC.push(calcTotal[i + 11] || 0);
     }
 
-    const rank = getApproximateRankFromAcc(data.expected.accuracy, data.beatmap.mode);
-
+    const rank = rank2rank(getApproximateRankFromAcc(data.expected.accuracy, data.beatmap.mode));
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, calcPP), true);
-    const cardE2 = await card_E2(await expect2CardE2(data.expected, rank, calcPP, calcNC, calcFC), true);
+    const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, calcPP, calcNC, calcFC));
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP), true);
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
     svg = implantSvgBody(svg, 0, 290, cardE1, reg_card_e1);
-    svg = implantSvgBody(svg, 880, 330, cardE2, reg_card_e2);
+    svg = implantSvgBody(svg, 880, 330, cardE5, reg_card_e2);
     svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
 
     // 图片定义
@@ -310,30 +317,138 @@ async function beatmap2CardE1(beatmap, calcPP) {
         version: beatmap.version || '',
         artist: beatmap.beatmapset.artist || '',
         creator: beatmap.beatmapset.creator || '',
-        id: beatmap.id || 0,
+        sid: beatmap.beatmapset.id || 0,
+        bid: beatmap.id || 0,
         status: beatmap.beatmapset.status || 'unranked',
         favourite_count: beatmap.beatmapset.favourite_count || 0,
         play_count: beatmap.beatmapset.play_count || 0,
     }
 }
 
-async function expect2CardE2(expect, rank = 'F', calcPP, calcNC = [0], calcFC = [0]) {
-    const isFC = expect.max_combo >= calcPP.attr.maxCombo;
+async function expect2CardE5(expected, rank = 'F', mode = 'osu', calcPP, calcNC = [0], calcFC = [0]) {
+    const isFC = expected.max_combo >= calcPP.attr.maxCombo;
     const isPF = rank === 'XH' || rank === 'X';
-    const isBest = false;
-
-    const labels = (mode = 'osu', calcPP = calcPP) => {
-
-    }
 
     return {
         rank: rank || 'F',
-        mods: expect.mods || [],
-        accuracy: expect.accuracy || 0,
-        combo: expect.max_combo || 0,
+        mode: mode,
+        mods: expected.mods || [],
+        accuracy: expected.accuracy || 0,
+        combo: expected.combo || 0,
         pp: calcPP.pp.pp || 0,
 
+        ncStats: expectedNC2Statistics(calcNC),
+        fcStats: expectedFC2Statistics(calcFC),
+        statistics_max: getStatMax(calcNC, calcFC),
+
+        max_combo: calcPP.attr.maxCombo || 0,
+        full_pp: calcNC?.[10]?.pp || 0,
+        max_pp: calcFC?.[10]?.pp || 0,
+
+        isFC: isFC,
+        isPF: isPF,
     }
+}
+
+const getStatMax = (calcNC, calcFC) => {
+    let pps = []
+    let max = 0;
+
+    for (const n of calcNC) {
+        pps.push(n.pp)
+    }
+    for (const n of calcFC) {
+        pps.push(n.pp)
+    }
+    for (const p of pps) {
+        max = Math.max(max, p);
+    }
+    return max;
+}
+
+
+const expectedFC2Statistics = (calcFC) => {
+    let statistics = [];
+    statistics.push({
+        index: '100',
+        stat: Math.round(calcFC[10].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#b7ddf3',
+    }, {
+        index: '99',
+        stat: Math.round(calcFC[9].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#fdf9ad',
+    }, {
+        index: '98',
+        stat: Math.round(calcFC[8].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#9ac496',
+    }, {
+        index: '96',
+        stat: Math.round(calcFC[6].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#87a1c5',
+    }, {
+        index: '94',
+        stat: Math.round(calcFC[4].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#bbbbbb',
+    }, {
+        index: '92',
+        stat: Math.round(calcFC[2].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#eda3bf',
+    });
+    return statistics;
+}
+
+const expectedNC2Statistics = (calcNC) => {
+    let statistics = [];
+    statistics.push({
+        index: '100',
+        stat: Math.round(calcNC[10].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#8DCFF4',
+    }, {
+        index: '99',
+        stat: Math.round(calcNC[9].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#FEF668',
+    }, {
+        index: '98',
+        stat: Math.round(calcNC[8].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#79C471',
+    }, {
+        index: '96',
+        stat: Math.round(calcNC[6].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#5E8AC6',
+    }, {
+        index: '94',
+        stat: Math.round(calcNC[4].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#A1A1A1',
+    }, {
+        index: '92',
+        stat: Math.round(calcNC[2].pp),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#ED6C9E',
+    });
+    return statistics;
 }
 
 async function beatmap2CardE3(beatmap, rank, calcPP) {
@@ -342,8 +457,8 @@ async function beatmap2CardE3(beatmap, rank, calcPP) {
     return {
         density_arr: await getDensityArray(beatmap.id, beatmap.mode,
             !(beatmap.ranked && (beatmap.ranked === 1 || beatmap.ranked === 2 || beatmap.ranked === 4))),
-        retry_arr: beatmap.exit || [],
-        fail_arr: beatmap.fail || [],
+        retry_arr: beatmap.beatMapRetryList || [],
+        fail_arr: beatmap.beatMapFailedList || [],
 
         public_rating: beatmap2PublicRating(beatmap),
         pass_percent: pass_arr[0],
@@ -354,6 +469,15 @@ async function beatmap2CardE3(beatmap, rank, calcPP) {
         rank: rank,
         star: calcPP.attr.stars,
         score_progress: 1,
+    }
+}
+
+//SS和X的转换
+const rank2rank = (rank = 'SS') => {
+    switch (rank) {
+        case "SS": return 'X';
+        case "SSH": return 'XH';
+        default: return rank;
     }
 }
 
@@ -449,8 +573,8 @@ const beatmap2PassPercents = (beatmap) => {
     const pc = beatmap.playcount || 0;
     const pass = beatmap.passcount || 0;
 
-    const fail_sum = beatmap.fail ? beatmap.fail.reduce((s, v) => s + v) : 0;
-    const retry_sum = beatmap.exit ? beatmap.exit.reduce((s, v) => s + v) : 0;
+    const fail_sum = beatmap.beatMapFailedList ? beatmap.beatMapFailedList.reduce((s, v) => s + v) : 0;
+    const retry_sum = beatmap.beatMapRetryList ? beatmap.beatMapRetryList.reduce((s, v) => s + v) : 0;
     const not_pass_sum = fail_sum + retry_sum; //虚假的未通过人数
     const not_pass_real_percent = (pc !== 0) ? ((pc - pass) / pc) : 0; //真实的未通过率
 

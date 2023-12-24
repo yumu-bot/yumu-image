@@ -56,6 +56,7 @@ export async function calcMap(bid, statistics = stat, mode, reload = false) {
     }
 
     let arr = [];
+    let nc_arr = [];
     let fc_arr = [];
     let calc_N = new Calculator({...calcBase});
     const difficulty = calc_N.difficulty(beatMap);
@@ -67,20 +68,20 @@ export async function calcMap(bid, statistics = stat, mode, reload = false) {
         maxCombo: difficulty.maxCombo,
         mods_int: mod_int,
     };
-    //把原成绩放在第0位
-    arr.push({acc: statistics.acc, pp: calc_N.performance(beatMap), attr: attr})
 
     for (let i = 0; i <= 10; i++) {
         //acc 重新赋值
-        const a = 0.9 + 0.01 * i;
-        calc_N.acc(a);
-        calc_F.acc(a);
+        const a = 90 + i;
+        calc_N = new Calculator({...calcBase, acc: a});
+        calc_F = new Calculator({...calcBase, combo: difficulty.maxCombo, acc: a});
 
-        arr.push(calc_N.performance(beatMap));
+        nc_arr.push(calc_N.performance(beatMap));
         fc_arr.push(calc_F.performance(beatMap));
     }
 
-    arr.push(fc_arr); //这个放在 12 - 23位
+    //把原成绩放在第0位
+    arr.push({acc: statistics.acc, pp: calc_N.performance(beatMap), attr: attr});
+    arr = arr.concat(nc_arr, fc_arr); //这个放在 12 - 23位
 
     return arr;
 }
