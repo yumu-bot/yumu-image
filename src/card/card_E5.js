@@ -1,8 +1,7 @@
 import {
     getDecimals, getExportFileV3Path,
     getGameMode,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, implantSvgBody,
+    implantSvgBody,
     replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -72,8 +71,8 @@ export async function card_E5(data = {
 
     // 文字定义
     const ppLarge = torus.get2SizeTextPath(
-        getRoundedNumberLargerStr(data.pp, 3),
-        getRoundedNumberSmallerStr(data.pp, 3) + 'PP',
+        getDecimals(data.pp, 2),
+        getDecimals(data.pp, 3) + 'PP',
         84, 60, 335, 79.43, 'left baseline', '#FFF');
 
     // 导入文字
