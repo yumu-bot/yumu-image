@@ -20,6 +20,8 @@ export async function card_E5(data = {
     max_pp: 0,
     mode: 'osu',
 
+    advanced_judge: 'played',
+
     ncStats: [{
         index: '100',
         stat: 1054.6,

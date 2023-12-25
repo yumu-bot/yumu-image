@@ -15,7 +15,7 @@ import {card_E3} from "../card/card_E3.js";
 import {card_E5} from "../card/card_E5.js";
 import {LABEL_OPTION} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {hasAnyMod} from "../util/mod.js";
+import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -338,6 +338,8 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', calcPP, calcNC 
         combo: expected.combo || 0,
         pp: calcPP.pp.pp || 0,
 
+        advanced_judge: expected2AdvancedJudge(rank, expected.mods),
+
         ncStats: expectedNC2Statistics(calcNC),
         fcStats: expectedFC2Statistics(calcFC),
         statistics_max: getStatMax(calcNC, calcFC),
@@ -348,6 +350,22 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', calcPP, calcNC 
 
         isFC: isFC,
         isPF: isPF,
+    }
+}
+
+const expected2AdvancedJudge = (rank = 'F', mods = ['NF']) => {
+    const isPF = rank === 'XH' || rank === 'X' || rank === 'SSH' || rank === 'SS';
+
+    if (hasMod(getModInt(mods), 'NF') || rank === 'F') {
+        return 'played';
+    } else if (isPF) {
+        return 'perfect';
+    } else if (rank === 'S' || rank === 'SH') {
+        return 'nomiss';
+    } else if (rank !== 'F') {
+        return 'clear';
+    } else {
+        return 'played';
     }
 }
 
@@ -375,37 +393,37 @@ const expectedFC2Statistics = (calcFC) => {
         stat: Math.round(calcFC[10].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#b7ddf3',
+        rrect_color: '#88C5F3',
     }, {
         index: '99',
         stat: Math.round(calcFC[9].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#fdf9ad',
+        rrect_color: '#8CC4C1',
     }, {
         index: '98',
         stat: Math.round(calcFC[8].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#9ac496',
+        rrect_color: '#8FC295',
     }, {
         index: '96',
         stat: Math.round(calcFC[6].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#87a1c5',
+        rrect_color: '#A7CE95',
     }, {
         index: '94',
         stat: Math.round(calcFC[4].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#bbbbbb',
+        rrect_color: '#C4DB95',
     }, {
         index: '92',
         stat: Math.round(calcFC[2].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#eda3bf',
+        rrect_color: '#FFF995',
     });
     return statistics;
 }
@@ -417,37 +435,37 @@ const expectedNC2Statistics = (calcNC) => {
         stat: Math.round(calcNC[10].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#8DCFF4',
+        rrect_color: '#55B1EF',
     }, {
         index: '99',
         stat: Math.round(calcNC[9].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#FEF668',
+        rrect_color: '#5EB0AB',
     }, {
         index: '98',
         stat: Math.round(calcNC[8].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#79C471',
+        rrect_color: '#62AE70',
     }, {
         index: '96',
         stat: Math.round(calcNC[6].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#5E8AC6',
+        rrect_color: '#88BD6F',
     }, {
         index: '94',
         stat: Math.round(calcNC[4].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#A1A1A1',
+        rrect_color: '#ADCE6D',
     }, {
         index: '92',
         stat: Math.round(calcNC[2].pp),
         index_color: '#fff',
         stat_color: '#fff',
-        rrect_color: '#ED6C9E',
+        rrect_color: '#FFF767',
     });
     return statistics;
 }
