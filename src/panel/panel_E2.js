@@ -339,7 +339,7 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', calcPP, calcNC 
         pp: calcPP.pp.pp || 0,
         miss: expected.miss || 0,
 
-        advanced_judge: expected2AdvancedJudge(rank, expected.mods),
+        advanced_judge: expected2AdvancedJudge(rank, expected.miss, expected.mods),
 
         ncStats: expectedNC2Statistics(calcNC),
         fcStats: expectedFC2Statistics(calcFC),
@@ -354,14 +354,14 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', calcPP, calcNC 
     }
 }
 
-const expected2AdvancedJudge = (rank = 'F', mods = ['NF']) => {
+const expected2AdvancedJudge = (rank = 'F', miss = 0, mods = ['NF']) => {
     const isPF = rank === 'XH' || rank === 'X' || rank === 'SSH' || rank === 'SS';
 
     if (hasMod(getModInt(mods), 'NF') || rank === 'F') {
         return 'played';
     } else if (isPF) {
         return 'perfect';
-    } else if (rank === 'S' || rank === 'SH') {
+    } else if (miss === 0) {
         return 'nomiss';
     } else if (rank !== 'F') {
         return 'clear';
