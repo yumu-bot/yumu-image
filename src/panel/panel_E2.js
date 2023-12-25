@@ -44,7 +44,7 @@ export async function router_svg(req, res) {
 
 // E面板重构计划
 export async function panel_E2(data = {
-    expected: { accuracy: 1, combo: 1262, mod: [ 'HD' ] },
+    expected: { accuracy: 1, combo: 1262, mod: [ 'HD' ], miss: 0 },
     user: {
         id: 7003013,
         pp: 6196.46,
@@ -269,13 +269,13 @@ export async function panel_E2(data = {
         acc: data.expected.accuracy * 100 || 100,
         combo: data.expected.combo || data.beatmap.max_combo,
         mods: data.expected.mods || [],
+        nMisses: data.expected.miss || 0,
     }
     const mode = data.beatmap.mode || 'osu';
 
     const calcTotal = await calcMap(bid, stat, mode, isReload(data.beatmap.ranked));
-
     const calcPP = calcTotal[0];
-    console.log(calcPP)
+
     let calcNC = [];
     let calcFC = [];
 
@@ -284,7 +284,7 @@ export async function panel_E2(data = {
         calcFC.push(calcTotal[i + 11] || 0);
     }
 
-    const rank = rank2rank(getApproximateRankFromAcc(data.expected.accuracy, data.beatmap.mode));
+    const rank = rank2rank(getApproximateRankFromAccAndMisses(data.expected.accuracy, data.expected.miss, data.beatmap.mode));
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, calcPP), true);
@@ -327,7 +327,7 @@ async function beatmap2CardE1(beatmap, calcPP) {
 }
 
 async function expect2CardE5(expected, rank = 'F', mode = 'osu', calcPP, calcNC = [0], calcFC = [0]) {
-    const isFC = expected.max_combo >= calcPP.attr.maxCombo;
+    const isFC = expected.combo >= calcPP.attr.maxCombo && expected.miss <= 0;
     const isPF = rank === 'XH' || rank === 'X';
 
     return {
@@ -337,6 +337,7 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', calcPP, calcNC 
         accuracy: expected.accuracy || 0,
         combo: expected.combo || 0,
         pp: calcPP.pp.pp || 0,
+        miss: expected.miss || 0,
 
         advanced_judge: expected2AdvancedJudge(rank, expected.mods),
 
@@ -500,8 +501,9 @@ const rank2rank = (rank = 'SS') => {
     }
 }
 
-const getApproximateRankFromAcc = (acc = 1, mode = 'osu') => {
+const getApproximateRankFromAccAndMisses = (acc = 1, miss = 0, mode = 'osu') => {
     let rank = 'F';
+    const hasMiss = miss > 0;
 
     switch (getGameMode(mode, 1)) {
         case 'o' : {
@@ -509,11 +511,23 @@ const getApproximateRankFromAcc = (acc = 1, mode = 'osu') => {
             if (acc === 1) {
                 rank = 'SS';
             } else if (acc >= 0.9317) {
-                rank = 'S';
+                if (hasMiss) {
+                    rank = 'A';
+                } else {
+                    rank = 'S';
+                }
             } else if (acc >= 0.8333) {
-                rank = 'A';
+                if (hasMiss) {
+                    rank = 'B';
+                } else {
+                    rank = 'A';
+                }
             } else if (acc >= 0.75) {
-                rank = 'B';
+                if (hasMiss) {
+                    rank = 'C';
+                } else {
+                    rank = 'B';
+                }
             } else if (acc >= 0.6) {
                 rank = 'C';
             } else {
@@ -526,11 +540,23 @@ const getApproximateRankFromAcc = (acc = 1, mode = 'osu') => {
             if (acc === 1) {
                 rank = 'SS';
             } else if (acc >= 0.95) {
-                rank = 'S';
+                if (hasMiss) {
+                    rank = 'A';
+                } else {
+                    rank = 'S';
+                }
             } else if (acc >= 0.9) {
-                rank = 'A';
+                if (hasMiss) {
+                    rank = 'B';
+                } else {
+                    rank = 'A';
+                }
             } else if (acc >= 0.8) {
-                rank = 'B';
+                if (hasMiss) {
+                    rank = 'C';
+                } else {
+                    rank = 'B';
+                }
             } else if (acc >= 0.6) {
                 rank = 'C';
             } else {

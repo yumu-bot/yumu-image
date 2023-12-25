@@ -47,12 +47,14 @@ export async function calcMap(bid, statistics = stat, mode, reload = false) {
 
     const combo = statistics.combo || 0;
     const acc = statistics.acc || 1;
+    const nMisses = statistics.nMisses || 0;
 
     const calcBase = {
         mode: mode_int,
         mods: mod_int,
         combo: combo,
         acc: acc,
+        nMisses: nMisses,
     }
 
     let arr = [];
@@ -60,7 +62,7 @@ export async function calcMap(bid, statistics = stat, mode, reload = false) {
     let fc_arr = [];
     let calc_N = new Calculator({...calcBase});
     const difficulty = calc_N.difficulty(beatMap);
-    let calc_F = new Calculator({...calcBase, combo: difficulty.maxCombo});
+    let calc_F = new Calculator({...calcBase, nMisses: 0, combo: difficulty.maxCombo});
 
     const attr = {
         ...calc_N.mapAttributes(beatMap),
@@ -75,7 +77,7 @@ export async function calcMap(bid, statistics = stat, mode, reload = false) {
         //acc 重新赋值
         const a = 90 + i;
         calc_N = new Calculator({...calcBase, acc: a});
-        calc_F = new Calculator({...calcBase, combo: difficulty.maxCombo, acc: a});
+        calc_F = new Calculator({...calcBase, nMisses: 0, combo: difficulty.maxCombo, acc: a});
 
         nc_arr.push(calc_N.performance(beatMap));
         fc_arr.push(calc_F.performance(beatMap));

@@ -18,6 +18,7 @@ export async function card_E5(data = {
     full_pp: 0,
     max_pp: 0,
     mode: 'osu',
+    miss: 0,
 
     advanced_judge: 'played',
 
@@ -91,7 +92,7 @@ export async function card_E5(data = {
     const statisticsFC = getStatisticsSVG(data.fcStats, data.statistics_max, 400, 60, 500, 22.79)
 
     const acc = await label_E({...LABEL_OPTION.ACC,
-        remark: '-',
+        remark: (data.miss > 0) ? 'x ' + data.miss : '-',
         data_b: getDecimals(data.accuracy * 100, 2),
         data_m: getDecimals(data.accuracy * 100, 3) + '%',
     }, true);
