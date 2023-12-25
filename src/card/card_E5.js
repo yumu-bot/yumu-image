@@ -91,7 +91,7 @@ export async function card_E5(data = {
     const statisticsNC = getStatisticsRRect(data.ncStats, data.statistics_max, 400, 60, 500, 22.79)
     const statisticsFC = getStatisticsSVG(data.fcStats, data.statistics_max, 400, 60, 500, 22.79)
 
-    const acc = await label_E({...LABEL_OPTION.ACC,
+    const acc = await label_E({...((mode === 'm') ? LABEL_OPTION.PPACC : LABEL_OPTION.ACC),
         remark: (data.miss > 0) ? '-' + data.miss : '-',
         data_b: getDecimals(data.accuracy * 100, 2),
         data_m: getDecimals(data.accuracy * 100, 3) + '%',

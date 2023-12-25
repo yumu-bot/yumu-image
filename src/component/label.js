@@ -30,6 +30,11 @@ export const LABEL_OPTION = {
         icon_title: 'DeltaPP',
         color_remark: '#fff',
     },
+    PPACC: {
+        icon: getExportFileV3Path("object-score-pp.png"),
+        icon_title: 'PPAcc',
+        color_remark: '#fff',
+    },
     AIMPP: {
         icon: getExportFileV3Path("object-score-aimpp.png"),
         icon_title: 'AimPP',
