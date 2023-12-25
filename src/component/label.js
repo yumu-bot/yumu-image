@@ -31,7 +31,7 @@ export const LABEL_OPTION = {
         color_remark: '#fff',
     },
     PPACC: {
-        icon: getExportFileV3Path("object-score-pp.png"),
+        icon: getExportFileV3Path("object-score-accuracy.png"),
         icon_title: 'PP Acc',
         color_remark: '#fff',
     },
