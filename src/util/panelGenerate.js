@@ -17,8 +17,25 @@ import {getModInt, hasMod} from "./mod.js";
 //把参数变成面板能读懂的数据（router
 export const PanelGenerate = {
     user2CardA1: async (user) => {
-        const background = user?.username !== 'YumuBot' ? await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png')) : getExportFileV3Path('card-default.png');
-        const avatar = user?.username !== 'YumuBot' ? await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png')) : getExportFileV3Path('sticker_qiqi_secretly_observing.png');
+        if (user == null) return {
+            background: getExportFileV3Path('card-default.png'),
+            avatar: getExportFileV3Path('sticker_qiqi_secretly_observing.png'),
+            sub_icon1: '',
+            sub_icon2: '',
+            country: 'CN',
+
+            top1: 'YumuBot',
+            left1: '#0',
+            left2: 'CN#0',
+            right1: '',
+            right2: '',
+            right3b: 'Bot',
+            right3m: '',
+        }
+
+
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
 
         const sub_icon1 = user?.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
         const country = user?.country?.countryCode || 'CN';
@@ -31,8 +48,8 @@ export const PanelGenerate = {
         const progress = user?.levelProgress || 0;
         const acc = getRoundedNumberStr(user?.accuracy, 3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
-        const right3b = isBot ? '' : (user?.pp ? Math.round(user?.pp).toString() : '');
-        const right3m = isBot ? 'Bot' : (user?.pp ? 'PP' : (user?.levelCurrent === 1 && user?.levelProgress === 0 ? 'NOT PLAYED' : 'AFK'));
+        const right3b = isBot ? 'Bot' : (user?.pp ? Math.round(user?.pp).toString() : '');
+        const right3m = isBot ? '' : (user?.pp ? 'PP' : (user?.levelCurrent === 1 && user?.levelProgress === 0 ? 'NOT PLAYED' : 'AFK'));
 
         return {
             background,

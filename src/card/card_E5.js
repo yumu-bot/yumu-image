@@ -92,7 +92,7 @@ export async function card_E5(data = {
     const statisticsFC = getStatisticsSVG(data.fcStats, data.statistics_max, 400, 60, 500, 22.79)
 
     const acc = await label_E({...LABEL_OPTION.ACC,
-        remark: (data.miss > 0) ? 'x ' + data.miss : '-',
+        remark: (data.miss > 0) ? '-' + data.miss : '-',
         data_b: getDecimals(data.accuracy * 100, 2),
         data_m: getDecimals(data.accuracy * 100, 3) + '%',
     }, true);
