@@ -32,7 +32,7 @@ export const LABEL_OPTION = {
     },
     PPACC: {
         icon: getExportFileV3Path("object-score-pp.png"),
-        icon_title: 'PPAcc',
+        icon_title: 'PP Acc',
         color_remark: '#fff',
     },
     AIMPP: {
