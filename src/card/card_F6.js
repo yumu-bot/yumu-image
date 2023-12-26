@@ -1,6 +1,6 @@
 import {
     getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
+    getRoundedNumberSmallerStr, getRoundedNumberStr,
     implantSvgBody,
     modifyArrayToFixedLength,
     replaceText,
@@ -11,14 +11,21 @@ import {label_E, LABEL_OPTION} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_F6(data = {
-    ranked_score: 0,
-    total_score: 0,
-    play_count: 0,
-    play_time: 0,
-    played_map: 0,
-    rep_watched: 0,
-    follower: 0,
-    total_hits: 0,
+    user: {
+        ranked_score: 0,
+        total_score: 0,
+        play_count: 0,
+        play_time: 0,
+        played_map: 0,
+        rep_watched: 0,
+        follower: 0,
+        total_hits: 0,
+    },
+
+    delta: {
+        play_count: 0,
+        play_time: 0,
+    },
 
     pc_arr: [],
     bonus_pp: 0,
@@ -54,11 +61,18 @@ export async function card_F6(data = {
 
     // 绘制标签
     const labels = await userData2Labels(data);
+    const deltas = userDelta2Labels(data);
 
     for (const i in labels) {
         svg = implantSvgBody(svg,
             20 + (i % 4) * 220,
             (i < 4) ? 65 : 145, labels[i], reg_label);
+    }
+
+    for (const i in deltas) {
+        svg = implantSvgBody(svg,
+        80 - 2 + (i % 4) * 220,
+            (i < 4) ? 130 : 210, deltas[i], reg_label); //我也不知道为什么这里要 -2
     }
 
     // 导入文本
@@ -120,28 +134,28 @@ async function userData2Labels(data) {
     let pt_b = '';
     let pt_m = '';
 
-    if (data.play_time) {
-        const d = Math.floor(data.play_time / 86400);
-        const d_f = Math.floor(data.play_time % 86400 / 864).toString().padStart(2, '0')
+    if (data?.user?.play_time) {
+        const d = Math.floor(data.user.play_time / 86400);
+        const d_f = Math.floor(data.user.play_time % 86400 / 864).toString().padStart(2, '0')
         pt_b = d + '.';
         pt_m = d_f + 'd';
     }
 
     // 卡片定义
-    const rks_b = getRoundedNumberLargerStr(data.ranked_score, 4);
-    const rks_m = getRoundedNumberSmallerStr(data.ranked_score, 4);
-    const tts_b = getRoundedNumberLargerStr(data.total_score, 4);
-    const tts_m = getRoundedNumberSmallerStr(data.total_score, 4);
-    const pc_b = getRoundedNumberLargerStr(data.play_count, 0);
-    const pc_m = getRoundedNumberSmallerStr(data.play_count, 0);
-    const mpl_b = getRoundedNumberLargerStr(data.played_map, 0);
-    const mpl_m = getRoundedNumberSmallerStr(data.played_map, 0);
-    const rep_b = getRoundedNumberLargerStr(data.rep_watched, 0);
-    const rep_m = getRoundedNumberSmallerStr(data.rep_watched, 0);
-    const fan_b = getRoundedNumberLargerStr(data.follower, 0);
-    const fan_m = getRoundedNumberSmallerStr(data.follower, 0);
-    const tth_b = getRoundedNumberLargerStr(data.total_hits, 4);
-    const tth_m = getRoundedNumberSmallerStr(data.total_hits, 4);
+    const rks_b = getRoundedNumberLargerStr(data.user.ranked_score, 4);
+    const rks_m = getRoundedNumberSmallerStr(data.user.ranked_score, 4);
+    const tts_b = getRoundedNumberLargerStr(data.user.total_score, 4);
+    const tts_m = getRoundedNumberSmallerStr(data.user.total_score, 4);
+    const pc_b = getRoundedNumberLargerStr(data.user.play_count, 0);
+    const pc_m = getRoundedNumberSmallerStr(data.user.play_count, 0);
+    const mpl_b = getRoundedNumberLargerStr(data.user.played_map, 0);
+    const mpl_m = getRoundedNumberSmallerStr(data.user.played_map, 0);
+    const rep_b = getRoundedNumberLargerStr(data.user.rep_watched, 0);
+    const rep_m = getRoundedNumberSmallerStr(data.user.rep_watched, 0);
+    const fan_b = getRoundedNumberLargerStr(data.user.follower, 0);
+    const fan_m = getRoundedNumberSmallerStr(data.user.follower, 0);
+    const tth_b = getRoundedNumberLargerStr(data.user.total_hits, 4);
+    const tth_m = getRoundedNumberSmallerStr(data.user.total_hits, 4);
 
     const label_rks =
         await label_E({...LABEL_OPTION.RKS, data_b: rks_b, data_m: rks_m}, true);
@@ -164,5 +178,31 @@ async function userData2Labels(data) {
     let arr = [];
     arr.push(label_rks, label_tts, label_pc, label_pt,label_mpl, label_rep, label_fan, label_tth);
 
+    return arr;
+}
+
+function userDelta2Labels(data) {
+    let pc_h = getRoundedNumberStr(data?.delta?.play_count || 0, 0);
+    let pt_h = '';
+
+    if (data?.delta?.play_time) {
+        const d = Math.floor(data.delta.play_time / 86400);
+        const d_f = Math.floor(Math.abs(data.delta.play_time) % 86400 / 864).toString().padStart(2, '0')
+        pt_h = d + '.'+ d_f + 'd';
+    }
+
+    const increase = '#93D02E';
+    const decrease = '#DE6055';
+    const none = '#CBAA2C';
+
+    const pc_color = (data?.delta?.play_count > 0) ? increase : ((data?.delta?.play_count < 0) ? decrease : none)
+    const pt_color = (data?.delta?.play_time > 0) ? increase : ((data?.delta?.play_time < 0) ? decrease : none)
+
+    const label_pc = torus.getTextPath(pc_h, 0, 0, 18, 'left baseline', pc_color);
+    const label_pt = torus.getTextPath(pt_h, 0, 0, 18, 'left baseline', pt_color);
+    const n = ""; //没法做的差值
+
+    let arr = [];
+    arr.push(n, n, label_pc, label_pt)
     return arr;
 }

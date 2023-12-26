@@ -16,7 +16,7 @@ import {getModInt, hasMod} from "./mod.js";
 //公用方法
 //把参数变成面板能读懂的数据（router
 export const PanelGenerate = {
-    user2CardA1: async (user) => {
+    user2CardA1: async (user, historyUser) => {
         if (user == null) return {
             background: getExportFileV3Path('card-default.png'),
             avatar: getExportFileV3Path('sticker_qiqi_secretly_observing.png'),
@@ -43,13 +43,17 @@ export const PanelGenerate = {
         const left1 = user?.globalRank ? '#' + user?.globalRank : '#0';
         const left2 = country + (user.countryRank ? '#' + user?.countryRank : '#0');
 
-        const isBot = user.is_bot;
+        const isBot = user?.is_bot;
         const level = user?.levelCurrent || 0;
         const progress = user?.levelProgress || 0;
         const acc = getRoundedNumberStr(user?.accuracy, 3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
         const right3b = isBot ? 'Bot' : (user?.pp ? Math.round(user?.pp).toString() : '');
         const right3m = isBot ? '' : (user?.pp ? 'PP' : (user?.levelCurrent === 1 && user?.levelProgress === 0 ? 'NOT PLAYED' : 'AFK'));
+
+        //历史记录功能！
+        const pp_d = historyUser ? (user.pp - historyUser.pp) : 0
+        const right1 = (pp_d > 0) ? '+' + pp_d + 'PP' : ((pp_d < 0) ? pp_d + 'PP' : '');
 
         return {
             background,
@@ -61,7 +65,7 @@ export const PanelGenerate = {
             top1: user?.username,
             left1: left1,
             left2: left2,
-            right1: '',
+            right1: right1,
             right2: right2,
             right3b: right3b,
             right3m: right3m,

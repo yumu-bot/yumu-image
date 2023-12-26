@@ -225,8 +225,31 @@ export async function panel_D(data = {
                 64968, 64971
             ]
         }
-    }
-    ,
+    },
+
+    historyUser: {
+        id: 7003013,
+        pp: 6196.46,
+        playCount: 23796,
+        levelProgress: 48,
+        playTime: 2344876,
+        accuracy: 99.0353,
+        maxCombo: 2801,
+        levelCurrent: 100,
+        uid: 7003013,
+        playmode: 'OSU',
+        support_level: 0,
+        statistics: {
+            pp: 6196.46,
+            hit_accuracy: 99.0353,
+            play_count: 23796,
+            play_time: 2344876,
+            maximum_combo: 2801,
+            level_current: 100,
+            level_progress: 48
+        }
+    },
+
 
     //recent
     "re-list": [
@@ -459,14 +482,14 @@ export async function panel_D(data = {
     const mode = data.mode ? getGameMode(data.mode.toLowerCase(), 0) :
         (data.user.playmode ? getGameMode(data.user.playmode.toLowerCase(), 0) : 'default');
 
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
+    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser), true);
 
     const cardF1 = await card_F1(user2CardF1(data.user, mode), true);
     const cardF2 = await card_F2({recent: data["re-list"]}, true);
     const cardF3 = await card_F3({bp: data["bp-list"]}, true);
     const cardF4 = await card_F4(user2CardF4(data.user), true);
     const cardF5 = await card_F5(user2CardF5(data.user, mode, data["bp-time"]), true);
-    const cardF6 = await card_F6(user2CardF6(data.user, mode, data.bonus_pp, data.ranked_map_play_count), true);
+    const cardF6 = await card_F6(user2CardF6(data.user, data.historyUser, mode, data.bonus_pp, data.ranked_map_play_count), true);
     const cardF7 = await card_F7(user2CardF7(data.user, mode), true);
 
     // 导入卡片
@@ -526,7 +549,28 @@ function user2CardF5(user, mode = 'osu', bp_arr = []) {
     };
 }
 
-function user2CardF6(user, mode = 'osu', bonus_pp = 0, ranked_map_play_count = 0) {
+function user2CardF6(user, historyUser = {
+    id: 7003013,
+    pp: 6196.46,
+    playCount: 23796,
+    levelProgress: 48,
+    playTime: 2344876,
+    accuracy: 99.0353,
+    maxCombo: 2801,
+    levelCurrent: 100,
+    uid: 7003013,
+    playmode: 'OSU',
+    support_level: 0,
+    statistics: {
+        pp: 6196.46,
+        hit_accuracy: 99.0353,
+        play_count: 23796,
+        play_time: 2344876,
+        maximum_combo: 2801,
+        level_current: 100,
+        level_progress: 48
+    }
+}, mode = 'osu', bonus_pp = 0, ranked_map_play_count = 0) {
     const arr = user.monthlyPlaycounts || [{startDate: 0}];
     let fd = arr[0]?.startDate;
 
@@ -599,14 +643,27 @@ function user2CardF6(user, mode = 'osu', bonus_pp = 0, ranked_map_play_count = 0
     }
 
     return {
-        ranked_score: user.statistics.ranked_score || 0,
-        total_score: user.statistics.total_score || 0,
-        play_count: user.statistics.play_count || 0,
-        play_time: user.statistics.play_time || 0,
-        played_map: ranked_map_play_count || user.beatmap_playcounts_count,
-        rep_watched: user.statistics.replays_watched_by_others || 0,
-        follower: user.follower_count || 0,
-        total_hits: user.totalHits || 0,
+        user: {
+            ranked_score: user.statistics.ranked_score || 0,
+            total_score: user.statistics.total_score || 0,
+            play_count: user.statistics.play_count || 0,
+            play_time: user.statistics.play_time || 0,
+            played_map: ranked_map_play_count || user.beatmap_playcounts_count,
+            rep_watched: user.statistics.replays_watched_by_others || 0,
+            follower: user.follower_count || 0,
+            total_hits: user.totalHits || 0,
+        },
+
+        delta: {
+            ranked_score: 0,
+            total_score: 0,
+            play_count: (user?.statistics?.play_count - historyUser?.statistics?.play_count) || 0,
+            play_time: (user?.statistics?.play_time - historyUser?.statistics?.play_time) || 0,
+            played_map: 0,
+            rep_watched: 0,
+            follower: 0,
+            total_hits: 0,
+        },
 
         bonus_pp: Math.round(bonus_pp) || 0,
 
