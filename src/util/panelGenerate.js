@@ -52,7 +52,7 @@ export const PanelGenerate = {
         const right3m = isBot ? '' : (user?.pp ? 'PP' : (user?.levelCurrent === 1 && user?.levelProgress === 0 ? 'NOT PLAYED' : 'AFK'));
 
         //历史记录功能！
-        const pp_d = historyUser ? (user.pp - historyUser.pp) : 0
+        const pp_d = historyUser ? Math.round(user.pp - historyUser.pp * 100) / 100 : 0
         const right1 = (pp_d > 0) ? '+' + pp_d + 'PP' : ((pp_d < 0) ? pp_d + 'PP' : '');
 
         return {
