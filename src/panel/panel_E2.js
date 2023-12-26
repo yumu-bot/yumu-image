@@ -44,7 +44,7 @@ export async function router_svg(req, res) {
 
 // E面板重构计划
 export async function panel_E2(data = {
-    expected: { accuracy: 1, combo: 1262, mod: [ 'HD' ], miss: 0 },
+    expected: { accuracy: 1, combo: 1262, mod: [ 'HD' ], miss: 0, mode: 'osu'},
     user: {
         id: 7003013,
         pp: 6196.46,
@@ -271,7 +271,7 @@ export async function panel_E2(data = {
         mods: data.expected.mods || [],
         nMisses: data.expected.miss || 0,
     }
-    const mode = data.beatmap.mode || 'osu';
+    const mode = data.expected.mode || data.beatmap.mode || 'osu';
 
     const calcTotal = await calcMap(bid, stat, mode, isReload(data.beatmap.ranked));
     const calcPP = calcTotal[0];
@@ -287,7 +287,7 @@ export async function panel_E2(data = {
     const rank = rank2rank(getApproximateRankFromAccAndMisses(data.expected.accuracy, data.expected.miss, data.beatmap.mode));
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
-    const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, calcPP), true);
+    const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP), true);
     const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, calcPP, calcNC, calcFC));
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP), true);
 
@@ -308,9 +308,9 @@ export async function panel_E2(data = {
     return svg.toString();
 }
 
-async function beatmap2CardE1(beatmap, calcPP) {
+async function beatmap2CardE1(beatmap, mode, calcPP) {
     return {
-        mode: beatmap.mode || 'osu',
+        mode: mode || 'osu',
         star: calcPP.attr.stars || 0,
         cover: beatmap.beatmapset.covers["list@2x"],
         title: beatmap.beatmapset.title || '',
