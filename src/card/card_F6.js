@@ -185,10 +185,10 @@ function userDelta2Labels(data) {
     let pc_h = getRoundedNumberStr(data?.delta?.play_count || 0, 0);
     let pt_h = '';
 
-    if (data?.delta?.play_time) {
+    if (data?.delta?.play_time || data?.delta?.play_time === 0) {
         const d = Math.floor(data.delta.play_time / 86400);
         const d_f = Math.floor(Math.abs(data.delta.play_time) % 86400 / 864).toString().padStart(2, '0')
-        pt_h = d + '.'+ d_f + 'd';
+        pt_h = (d_f === '00') ? d + 'd' : d + '.' + d_f + 'd';
     }
 
     const increase = '#93D02E';
