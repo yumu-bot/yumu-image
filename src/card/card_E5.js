@@ -101,7 +101,7 @@ export async function card_E5(data = {
         data_b: data.combo ? data.combo.toString() : '0',
         data_m: 'x',
     }, true);
-    const deltapp = await label_E({...LABEL_OPTION.DELTAPP,
+    const losspp = await label_E({...LABEL_OPTION.LOSSPP,
             remark: (data.max_pp > 0) ? Math.round(data.pp / data.max_pp * 100) + '%' : '-%',
             data_b: Math.round(data.pp - data.max_pp).toString(),
             data_m: 'PP',
@@ -121,7 +121,7 @@ export async function card_E5(data = {
 
     svg = implantSvgBody(svg, 350, 350, acc, reg_label);
     svg = implantSvgBody(svg, 560, 350, combo, reg_label);
-    svg = implantSvgBody(svg, 770, 350, deltapp, reg_label);
+    svg = implantSvgBody(svg, 770, 350, losspp, reg_label);
 
     return svg.toString();
 }

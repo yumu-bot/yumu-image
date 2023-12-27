@@ -25,9 +25,9 @@ export const LABEL_OPTION = {
         icon_title: 'PP',
         color_remark: '#fff',
     },
-    DELTAPP: {
+    LOSSPP: {
         icon: getExportFileV3Path("object-score-pp.png"),
-        icon_title: 'Delta PP',
+        icon_title: 'Loss PP',
         color_remark: '#fff',
     },
     PPACC: {
