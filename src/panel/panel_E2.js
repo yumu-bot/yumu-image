@@ -44,7 +44,7 @@ export async function router_svg(req, res) {
 
 // E面板重构计划
 export async function panel_E2(data = {
-    expected: { accuracy: 1, combo: 1262, mod: [ 'HD' ], miss: 0, mode: 'osu'},
+    expected: { accuracy: 1, combo: 1262, mods: [ 'HD' ], miss: 0, mode: 'osu'},
     user: {
         id: 7003013,
         pp: 6196.46,
@@ -272,6 +272,7 @@ export async function panel_E2(data = {
         nMisses: data.expected.miss || 0,
     }
     const mode = data.expected.mode || data.beatmap.mode || 'osu';
+    console.log(mode)
 
     const calcTotal = await calcMap(bid, stat, mode, isReload(data.beatmap.ranked));
     const calcPP = calcTotal[0];
@@ -284,7 +285,7 @@ export async function panel_E2(data = {
         calcFC.push(calcTotal[i + 11] || 0);
     }
 
-    const rank = rank2rank(getApproximateRankFromAccAndMisses(data.expected.accuracy, data.expected.miss, data.beatmap.mode));
+    const rank = rank2rank(getApproximateRankSP(data.expected.accuracy, data.expected.miss, data.beatmap.mode, data.expected.mods));
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP), true);
@@ -501,7 +502,7 @@ const rank2rank = (rank = 'SS') => {
     }
 }
 
-const getApproximateRankFromAccAndMisses = (acc = 1, miss = 0, mode = 'osu') => {
+const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = ['']) => {
     let rank = 'F';
     const hasMiss = miss > 0;
 
@@ -598,6 +599,9 @@ const getApproximateRankFromAccAndMisses = (acc = 1, miss = 0, mode = 'osu') => 
             }
         } break;
     }
+
+    const isSilver = hasMod(getModInt(mods), 'HD') || hasMod(getModInt(mods), 'FL');
+    if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
 
     return rank;
 }
