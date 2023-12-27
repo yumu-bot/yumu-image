@@ -102,7 +102,7 @@ export async function card_E5(data = {
         data_m: 'x',
     }, true);
     const losspp = await label_E({...LABEL_OPTION.LOSSPP,
-            remark: (data.max_pp > 0) ? Math.round(data.pp / data.max_pp * 100) + '%' : '-%',
+            remark: (data.max_pp > 0) ? (Math.round(data.pp / data.max_pp * 100) - 100) + '%' : '-%',
             data_b: Math.round(data.pp - data.max_pp).toString(),
             data_m: 'PP',
         }, true);
