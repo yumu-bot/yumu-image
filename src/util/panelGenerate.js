@@ -649,8 +649,8 @@ export const PanelGenerate = {
     },
 
     bp2CardH: async (bp, rank = 1) => {
-        const cover = await getMapBG(bp.beatmapset.id, 'list@2x', isReload(bp.beatmap.ranked));
-        const background = await getMapBG(bp.beatmapset.id, 'cover@2x', isReload(bp.beatmap.ranked));
+        const cover = await getMapBG(bp.beatmapset.id, 'list@2x', false);
+        const background = await getMapBG(bp.beatmapset.id, 'cover@2x', false);
 
         const time_diff = getTimeDifference(bp.create_at_str);
 
