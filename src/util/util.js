@@ -1075,9 +1075,9 @@ export function getMatchNameSplitted(text = '') {
     return out;
 }
 
-export function getBase64Text(buffer) {
+export function base64Text2PngStr(buffer) {
     let data = Buffer.from(buffer, 'binary').toString('base64');
-    return 'data:image/jpeg;base64,' + data;
+    return 'data:image/png;base64,' + data;
 }
 
 export function randomString(e) {

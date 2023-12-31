@@ -267,7 +267,7 @@ export async function panel_E2(data = {
     const bid = data.beatmap.id;
     const stat = {
         acc: data.expected.accuracy * 100 || 100,
-        combo: data.expected.combo || data.beatmap.max_combo,
+        combo: data.expected.combo !== 0 ? data.expected.combo : data.beatmap.max_combo,
         mods: data.expected.mods || [],
         nMisses: data.expected.miss || 0,
     }
@@ -289,7 +289,7 @@ export async function panel_E2(data = {
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP), true);
-    const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, calcPP, calcNC, calcFC));
+    const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP), true);
 
     // 导入卡片
@@ -327,7 +327,7 @@ async function beatmap2CardE1(beatmap, mode, calcPP) {
     }
 }
 
-async function expect2CardE5(expected, rank = 'F', mode = 'osu', calcPP, calcNC = [0], calcFC = [0]) {
+async function expect2CardE5(expected, rank = 'F', mode = 'osu', max_combo = 0, calcPP, calcNC = [0], calcFC = [0]) {
     const isFC = expected.combo >= calcPP.attr.maxCombo && expected.miss <= 0;
     const isPF = rank === 'XH' || rank === 'X';
 
@@ -336,7 +336,7 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', calcPP, calcNC 
         mode: mode,
         mods: expected.mods || [],
         accuracy: expected.accuracy || 0,
-        combo: expected.combo || 0,
+        combo: max_combo || expected.combo,
         pp: calcPP.pp.pp || 0,
         miss: expected.miss || 0,
 
