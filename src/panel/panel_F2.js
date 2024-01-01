@@ -623,7 +623,7 @@ export async function panel_F2(
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PF-2\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Match Rounds (!ymmr) / Match Listener (!ymml)', 'MR/ML', 'v0.4.0 UU', 'roundID: ' + data?.MatchRound?.id + ' // request time: ' + getNowTimeStamp());
+    const panel_name = getPanelNameSVG('Match Rounds (!ymmr)', 'MR', 'v0.4.0 UU', 'roundID: ' + data?.MatchRound?.id + ' // request time: ' + getNowTimeStamp());
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
