@@ -272,7 +272,6 @@ export async function panel_E2(data = {
         nMisses: data.expected.miss || 0,
     }
     const mode = data.expected.mode || data.beatmap.mode || 'osu';
-    console.log(mode)
 
     const calcTotal = await calcMap(bid, stat, mode, isReload(data.beatmap.ranked));
     const calcPP = calcTotal[0];

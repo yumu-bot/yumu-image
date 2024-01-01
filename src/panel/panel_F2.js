@@ -9,7 +9,6 @@ import {
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_A2} from "../card/card_A2.js";
-import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getMapAttributes} from "../util/compute-pp.js";
 import {getModInt} from "../util/mod.js";
@@ -628,9 +627,6 @@ export async function panel_F2(
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
 
-    // 插入图片和部件（新方法
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
-
     // 导入玩家卡（A1 的同时计算面板高度和背景高度
     let panel_height = 330;
     let background_height = 40;
@@ -757,6 +753,10 @@ export async function panel_F2(
     // 导入谱面（A2卡
     const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap), true);
     svg = implantSvgBody(svg, 1450, 40, b, reg_maincard);
+
+
+    // 插入图片和部件（新方法
+    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, await getMapBG(beatmap.beatmapset.sid, 'list@2x', !beatmap.beatmapset.ranked), reg_banner);
 
     return svg.toString();
 }

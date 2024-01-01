@@ -8,6 +8,7 @@ import https from "https";
 import path from "path";
 import moment from "moment";
 import {torus} from "./font.js";
+import {getModInt, hasMod} from "./mod.js";
 
 const path_util = path;
 const MD5 = crypto.createHash("md5");
@@ -1332,6 +1333,15 @@ export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.
     return (powered_text + '\n' + request_time_text + '\n' + index_text);
 }
 
+//SS和X的转换
+export const rankSS2X = (rank = 'SS') => {
+    switch (rank) {
+        case "SS": return 'X';
+        case "SSH": return 'XH';
+        default: return rank;
+    }
+}
+
 export const getApproximateRank = (score = {
     statistics: {
         count_50: 0,
@@ -1342,7 +1352,10 @@ export const getApproximateRank = (score = {
         count_miss: 0
     },
     mode: 'osu',
+    mods: ['']
 }) => {
+    if (score.rank === 'F') return 'F';
+
     let rank = 'F';
     let nTotal;
 
@@ -1434,6 +1447,9 @@ export const getApproximateRank = (score = {
         }
             break;
     }
+
+    const isSilver = hasMod(getModInt(score.mods), 'HD') || hasMod(getModInt(score.mods), 'FL');
+    if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
 
     return rank;
 }

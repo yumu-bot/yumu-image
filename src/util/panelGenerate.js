@@ -8,7 +8,7 @@ import {
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getRoundedNumberStr,
-    getTimeDifference, isReload, readNetImage,
+    getTimeDifference, isReload, rankSS2X, readNetImage,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getModInt, hasMod} from "./mod.js";
@@ -197,10 +197,7 @@ export const PanelGenerate = {
         const pp_str = (score?.pp > 0) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
         const mods_arr = score?.mods || [];
         const rank = !(score?.match?.pass) ? 'F' :
-            getApproximateRank({
-                statistics: score.statistics,
-                mode: score.mode ? score.mode.toLowerCase() : 'osu'
-            });
+            rankSS2X(getApproximateRank(score));
         const bg_str = 'object-score-backimage-' + rank + '.jpg';
         const icon_str = (!score.match.team || score.match.team === 'none') ? 'object-card-headtohead.png'
             : 'object-card-team' + score.match.team + '.png';

@@ -4,12 +4,12 @@ import {
     getGameMode,
     getMapBG, getPanelNameSVG,
     implantImage,
-    implantSvgBody, isReload,
+    implantSvgBody, isReload, rankSS2X,
     readTemplate, replaceText,
 } from "../util/util.js";
 import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {ar2ms, cs2px, data2Label, od2ms, stat2DataM} from "./panel_E.js";
-import {card_A1} from "../card/card_A1.js";
+import {card_A2} from "../card/card_A2.js";
 import {card_E1} from "../card/card_E1.js";
 import {card_E3} from "../card/card_E3.js";
 import {card_E5} from "../card/card_E5.js";
@@ -149,7 +149,7 @@ export async function panel_E3(data = {
 
     // 导入文字
     svg = replaceText(svg, getPanelNameSVG(
-        'Match Listener - Match Map (!ymml)', 'ML', 'v0.4.0 UU'), reg_index);
+        'Match Listener - Match Start! (!ymml)', 'ST', 'v0.4.0 UU'), reg_index);
 
     // 构建成绩
 
@@ -161,7 +161,6 @@ export async function panel_E3(data = {
         nMisses: data.expected.miss || 0,
     }
     const mode = data.expected.mode || data.beatmap.mode || 'osu';
-    console.log(mode)
 
     const calcTotal = await calcMap(bid, stat, mode, isReload(data.beatmap.ranked));
     const calcPP = calcTotal[0];
@@ -174,15 +173,15 @@ export async function panel_E3(data = {
         calcFC.push(calcTotal[i + 11] || 0);
     }
 
-    const rank = rank2rank(getApproximateRankSP(data.expected.accuracy, data.expected.miss, data.beatmap.mode, data.expected.mods));
+    const rank = rankSS2X(getApproximateRankSP(data.expected.accuracy, data.expected.miss, data.beatmap.mode, data.expected.mods));
     // 卡片定义
-    const cardA1 = await card_A1(await PanelGenerate.matchData2CardA2(data.matchData), true);
+    const cardA2 = await card_A2(await PanelGenerate.matchData2CardA2(data.matchData), true);
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP), true);
     const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP), true);
 
     // 导入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = implantSvgBody(svg, 40, 40, cardA2, reg_card_a1);
     svg = implantSvgBody(svg, 0, 290, cardE1, reg_card_e1);
     svg = implantSvgBody(svg, 880, 330, cardE5, reg_card_e2);
     svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
@@ -379,15 +378,6 @@ async function beatmap2CardE3(beatmap, rank, calcPP) {
         rank: rank,
         star: calcPP.attr.stars,
         score_progress: 1,
-    }
-}
-
-//SS和X的转换
-const rank2rank = (rank = 'SS') => {
-    switch (rank) {
-        case "SS": return 'X';
-        case "SSH": return 'XH';
-        default: return rank;
     }
 }
 
