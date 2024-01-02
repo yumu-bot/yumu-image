@@ -7,7 +7,6 @@ import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {getCardAlpha} from "../card/card_Alpha.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import fs from "fs";
 
 export async function router(req, res) {
     try {
@@ -86,7 +85,6 @@ export async function panel_P(data = {
 
     const height = 0;
 
-    console.log(height)
     let panelHeight, cardHeight;
 
     if (height > 0) {

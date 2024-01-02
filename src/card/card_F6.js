@@ -135,10 +135,28 @@ async function userData2Labels(data) {
     let pt_m = '';
 
     if (data?.user?.play_time) {
-        const d = Math.floor(data.user.play_time / 86400);
-        const d_f = Math.floor(data.user.play_time % 86400 / 864).toString().padStart(2, '0')
-        pt_b = d + '.';
-        pt_m = d_f + 'd';
+        const t = data.user.play_time;
+
+        const days = Math.floor(t / 86400);
+        const hours = Math.floor((t - 86400 * days) / 3600);
+        const minutes = Math.floor((t - 86400 * days - 3600 * hours) / 60);
+
+        if (days > 0) {
+            pt_b = days.toString();
+            pt_m = 'd' + hours + 'h' + minutes + 'm';
+        } else if (hours > 0) {
+            pt_b = hours.toString();
+            pt_m = 'h' + minutes + 'm';
+        } else if (minutes > 0) {
+            pt_b = minutes.toString();
+            pt_m = 'm';
+        } else if (hours > -1) {
+            pt_b = '0';
+            pt_m = 'm';
+        } else {
+            pt_b = '-';
+            pt_m = '';
+        }
     }
 
     // 卡片定义
@@ -182,24 +200,58 @@ async function userData2Labels(data) {
 }
 
 function userDelta2Labels(data) {
-    let pc_h = getRoundedNumberStr(data?.delta?.play_count || 0, 0);
-    let pt_h = '';
-
-    if (data?.delta?.play_time || data?.delta?.play_time === 0) {
-        const d = Math.floor(data.delta.play_time / 86400);
-        const d_f = Math.floor(Math.abs(data.delta.play_time) % 86400 / 864).toString().padStart(2, '0')
-        pt_h = (d_f === '00') ? d + 'd' : d + '.' + d_f + 'd';
+    
+    const getSign = (T) => {
+        if (typeof T === 'number') {
+            return (T > 0) ? '+' : ((T < 0) ? '-': '');
+        } else return '';
+    }
+    
+    const getColor = (T) => {
+        const increase = '#93D02E';
+        const decrease = '#DE6055';
+        const none = '#CBAA2C';
+        
+        if (typeof T === 'number') {
+            return (T > 0) ? increase : ((T < 0) ? decrease: none);
+        } else return '';
     }
 
-    const increase = '#93D02E';
-    const decrease = '#DE6055';
-    const none = '#CBAA2C';
+    const pc = data?.delta?.play_count || 0;
+    const pt = data.delta.play_time || 0;
 
-    const pc_color = (data?.delta?.play_count > 0) ? increase : ((data?.delta?.play_count < 0) ? decrease : none)
-    const pt_color = (data?.delta?.play_time > 0) ? increase : ((data?.delta?.play_time < 0) ? decrease : none)
+    const pc_h = getSign(pc) + getRoundedNumberStr(pc, 0);
 
-    const label_pc = torus.getTextPath(pc_h, 0, 0, 18, 'left baseline', pc_color);
-    const label_pt = torus.getTextPath(pt_h, 0, 0, 18, 'left baseline', pt_color);
+    let pt_h = '';
+    if (data?.delta?.play_time || data?.delta?.play_time === 0) {
+        let pt_b = getSign(pt);
+        let pt_m;
+
+        const days = Math.floor(pt / 86400);
+        const hours = Math.floor((pt - 86400 * days) / 3600);
+        const minutes = Math.floor((pt - 86400 * days - 3600 * hours) / 60);
+
+        if (days > 0) {
+            pt_b += days.toString();
+            pt_m = 'd' + hours + 'h' + minutes + 'm';
+        } else if (hours > 0) {
+            pt_b += hours.toString();
+            pt_m = 'h' + minutes + 'm';
+        } else if (minutes > 0) {
+            pt_b += minutes.toString();
+            pt_m = 'm';
+        } else if (hours > -1) {
+            pt_b += '0';
+            pt_m = 'm';
+        } else {
+            pt_b = '-';
+            pt_m = '';
+        }
+        pt_h = pt_b + pt_m;
+    }
+
+    const label_pc = torus.getTextPath(pc_h, 0, 0, 18, 'left baseline', getColor(pc));
+    const label_pt = torus.getTextPath(pt_h, 0, 0, 18, 'left baseline', getColor(pt));
     const n = ""; //没法做的差值
 
     let arr = [];

@@ -142,7 +142,7 @@ export const LABEL_OPTION = {
     },
     REP: {
         icon: getExportFileV3Path("object-score-circlesize.png"),
-        icon_title: 'Rep be Watched',
+        icon_title: 'Replay PC (O)',
         remark: '',
         color_remark: '#aaa',
     },
