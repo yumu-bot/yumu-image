@@ -220,16 +220,16 @@ function userDelta2Labels(data) {
     const pc = data?.delta?.play_count || 0;
     const pt = data.delta.play_time || 0;
 
-    const pc_h = getSign(pc) + getRoundedNumberStr(pc, 0);
+    const pc_h = getSign(pc) + getRoundedNumberStr(Math.abs(pc), 0);
 
     let pt_h = '';
     if (data?.delta?.play_time || data?.delta?.play_time === 0) {
         let pt_b = getSign(pt);
         let pt_m;
 
-        const days = Math.floor(pt / 86400);
-        const hours = Math.floor((pt - 86400 * days) / 3600);
-        const minutes = Math.floor((pt - 86400 * days - 3600 * hours) / 60);
+        const days = Math.floor(Math.abs(pt) / 86400);
+        const hours = Math.floor((Math.abs(pt) - 86400 * days) / 3600);
+        const minutes = Math.floor((Math.abs(pt) - 86400 * days - 3600 * hours) / 60);
 
         if (days > 0) {
             pt_b += days.toString();
