@@ -38,7 +38,7 @@ export async function card_F6(data = {
     mid_month: '04',
 
     mode: 'osu',
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = `
           <g id="Base_CF6">

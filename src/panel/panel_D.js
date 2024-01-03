@@ -415,7 +415,7 @@ export async function panel_D(data = {
     const cardF3 = await card_F3({bp: data["bp-list"]}, true);
     const cardF4 = await card_F4(user2CardF4(data.user), true);
     const cardF5 = await card_F5(user2CardF5(data.user, mode, data["bp-time"]), true);
-    const cardF6 = await card_F6(user2CardF6(data.user, data.historyUser, mode, data.bonus_pp, data.ranked_map_play_count), true);
+    const cardF6 = await card_F6(user2CardF6(data.user, data.historyUser, mode, data.bonus_pp, data.ranked_map_play_count));
     const cardF7 = await card_F7(user2CardF7(data.user, mode), true);
 
     // 导入卡片
