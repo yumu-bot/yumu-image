@@ -387,7 +387,7 @@ export async function panel_D(data = {
 
     ranked_map_play_count: 1564,
     bonus_pp: 0,
-    }) {
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_D.svg');
 
@@ -466,11 +466,11 @@ function user2CardF4(user) {
 function user2CardF5(user, mode = 'osu', bp_arr = []) {
     return {
         mode: mode,
-        country: user.country ? user.country.countryName : 'China',
-        country_rank: user.statistics.country_rank,
-        global_rank: user.statistics.global_rank,
+        country: user?.country?.name || 'China',
+        country_rank: user?.statistics?.country_rank,
+        global_rank: user?.statistics?.global_rank,
 
-        ranking_arr: user.rank_history ? user.rank_history.history : [],
+        ranking_arr: user?.rank_history?.data || [],
         bp_arr: bp_arr,
     };
 }
@@ -497,13 +497,13 @@ function user2CardF6(user, historyUser = {
         level_progress: 48
     }
 }, mode = 'osu', bonus_pp = 0, ranked_map_play_count = 0) {
-    const arr = user.monthlyPlaycounts || [{startDate: 0}];
-    let fd = arr[0]?.startDate;
+    const arr = user.monthlyPlaycounts || [{start_date: 0}];
+    let fd = arr[0]?.start_date;
 
     const pc_arr = [];
     if (fd) {
-        const mpc = arr.reduce((obj, {startDate, count}) => {
-            obj[startDate] = count;
+        const mpc = arr.reduce((obj, {start_date: date, count: count}) => {
+            obj[date] = count;
             return obj;
         }, {});
         let [year, month, day] = fd.split('-').map(Number);
