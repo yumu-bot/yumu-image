@@ -5,7 +5,7 @@ import {torus} from "../util/font.js";
 import {label_A1, label_A2, label_A3} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 
-export async function card_M(data = {
+export async function card_M(s = {
     "artist": "HOYO-MiX",
     "artist_unicode": "HOYO-MiX",
     "covers": {
@@ -272,7 +272,7 @@ export async function card_M(data = {
     let labelM3s = [];
 
     // 如果难度超过6个，则使用紧促型面板，并且不渲染标签M2，M3
-    const label_count = data.beatmaps ? data.beatmaps.length : 0;
+    const label_count = s?.beatmaps?.length || 0;
     let label_width;
 
     // 构建M卡
@@ -280,7 +280,7 @@ export async function card_M(data = {
         //正常面板
         label_width = (1360 / label_count) - 10;
 
-        for (const v of data.beatmaps) {
+        for (const v of s.beatmaps) {
             const f1 = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
@@ -291,7 +291,7 @@ export async function card_M(data = {
                 uid: v.user_id,
             }, true);
             const f2 = await label_A2({
-                host_uid: data.user_id,
+                host_uid: s.user_id,
                 uid: v.user_id,
             }, true);
             const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
@@ -331,7 +331,7 @@ export async function card_M(data = {
         // 处理方法：先渲染能 compact 的，再渲染剩在堆积上的，再渲染正常卡
         // 1. compact normal
         for (let i = 0; i < (label_compact_count - label_compact_remain); i++) {
-            const v = data.beatmaps[i];
+            const v = s.beatmaps[i];
             const f1c = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
@@ -347,7 +347,7 @@ export async function card_M(data = {
 
         // 2. compact remain
         for (let j = (label_compact_count - label_compact_remain); j < label_compact_count; j++) {
-            const v = data.beatmaps[j];
+            const v = s.beatmaps[j];
             const f1r = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
@@ -363,7 +363,7 @@ export async function card_M(data = {
 
         // 3. normal
         for (let k = label_compact_count; k < label_count; k++) {
-            const v = data.beatmaps[k];
+            const v = s.beatmaps[k];
             const f1 = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
@@ -374,7 +374,7 @@ export async function card_M(data = {
                 uid: v.user_id,
             }, true);
             const f2 = await label_A2({
-                host_uid: data.user_id,
+                host_uid: s.user_id,
                 uid: v.user_id,
             }, true);
             const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
@@ -419,7 +419,7 @@ export async function card_M(data = {
 
         // 1. compact normal
         for (let i = 0; i < 18; i++) {
-            const v = data.beatmaps[i];
+            const v = s.beatmaps[i];
             const f1c = await label_A1({
                 mode: v.mode,
                 difficulty_name: v.version,
@@ -447,7 +447,7 @@ export async function card_M(data = {
 
     //导入背景
 
-    const background = await getMapBG(data.id, 'list@2x', isReload(data.ranked));
+    const background = await getMapBG(s.id, 'list@2x', isReload(s.ranked));
     svg = implantImage(svg,1370,210,0,0,0.5, background, reg_background);
 
     return svg.toString();
