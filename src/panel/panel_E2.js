@@ -480,7 +480,7 @@ async function beatmap2CardE3(beatmap, rank, calcPP) {
         retry_arr: beatmap.retryList || [],
         fail_arr: beatmap.failList || [],
 
-        public_rating: beatmap2PublicRating(beatmap),
+        public_rating: beatmap?.beatmapset?.publicRating, //beatmap2PublicRating(beatmap),
         pass_percent: pass_arr[0],
         retry_percent: pass_arr[1],
         fail_percent: pass_arr[2],
@@ -603,15 +603,6 @@ const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = ['']) => {
     if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
 
     return rank;
-}
-
-//132行的方法，获取大众评分
-const beatmap2PublicRating = (beatmap) => {
-    const ratings = beatmap.beatmapset.ratings;
-
-    const rating_sum = ratings ? ratings.reduce((s, v) => s + v) : 0;
-    const rating_weight_val = ratings ? ratings.reduce((s, v, i) => s + v * i) : 0;
-    return (rating_sum !== 0) ? Math.floor(rating_weight_val / rating_sum * 100) / 100 : 0;
 }
 
 //137行的方法，获取通过率等

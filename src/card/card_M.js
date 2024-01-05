@@ -241,7 +241,7 @@ export async function card_M(s = {
         }
     ],
     "pack_tags": []
-}, reuse = false) {
+}) {
     // 读取模板
     let svg =`   <defs>
             <clipPath id="clippath-CM-1">

@@ -340,7 +340,7 @@ export async function panel_A2(data = {
     // 如果卡片超过12张，则使用紧促型面板，并且不渲染卡片 M
     if (result_count <= 12) {
         for (const v of data.beatmapsets) {
-            const f = await card_M(v, true);
+            const f = await card_M(v);
             info_cardMs.push(f);
         }
         for (const i in info_cardMs) {
