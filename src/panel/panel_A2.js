@@ -293,7 +293,7 @@ export async function panel_A2(data = {
     ]
 
 
-}, reuse = false) {
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_A2.svg');
     // 路径定义
@@ -304,9 +304,6 @@ export async function panel_A2(data = {
     let reg_cardheight = '${cardheight}';
     let reg_panelheight = '${panelheight}';
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA2-1\);">)/;
-
-
-    // 面板文字
 
     // 面板文字
     const panel_name = getPanelNameSVG('Qualified Map List (!ymq)', 'Q', 'v0.3.1 EA');

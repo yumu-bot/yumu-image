@@ -33,23 +33,23 @@ export const PanelGenerate = {
             right3m: '',
         }
 
-
         const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
         const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
 
         const sub_icon1 = user?.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
-        const country = user?.country?.countryCode || 'CN';
+        const country = user?.country?.code || 'CN';
 
-        const left1 = user?.globalRank ? '#' + user?.globalRank : '#0';
-        const left2 = country + (user.countryRank ? '#' + user?.countryRank : '#0');
+        const left1 = '#' + (user?.statistics?.global_rank || '0');
+        const left2 = country + '#' + (user?.statistics?.country_rank || '0');
 
         const isBot = user?.is_bot;
-        const level = user?.levelCurrent || 0;
-        const progress = user?.levelProgress || 0;
-        const acc = getRoundedNumberStr(user?.accuracy, 3) || 0;
+        const level = user?.statistics?.level_current || 0;
+        const progress = user?.statistics?.level_progress || 0;
+        const acc = getRoundedNumberStr(user?.statistics?.hit_accuracy, 3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
         const right3b = isBot ? 'Bot' : (user?.pp ? Math.round(user?.pp).toString() : '');
-        const right3m = isBot ? '' : (user?.pp ? 'PP' : (user?.levelCurrent === 1 && user?.levelProgress === 0 ? 'NOT PLAYED' : 'AFK'));
+        const right3m = isBot ? '' : (user?.pp ? 'PP' :
+            (user?.statistics?.level_current === 1 && user?.statistics?.level_progress === 0 ? 'NOT PLAYED' : 'AFK'));
 
         //历史记录功能！
         const pp_d = historyUser ? Math.round((user.pp - historyUser.pp) * 100) / 100 : 0
@@ -77,7 +77,7 @@ export const PanelGenerate = {
         const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
 
         const sub_icon1 = user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
-        const country = user?.country.countryCode || 'CN';
+        const country = user?.country?.code || 'CN';
 
         const left2 = 'U' + user.id;
 
@@ -92,7 +92,7 @@ export const PanelGenerate = {
             sub_icon2: '',
             country: country,
 
-            top1: user.username,
+            top1: user?.username,
             left1: country,
             left2: left2,
             right1: '',
@@ -113,12 +113,12 @@ export const PanelGenerate = {
         const left2 = country + (microUser.statistics.country_rank ? '#' + microUser.statistics.country_rank : '#-'); //microUser 没有country rank
 
         const isBot = microUser.is_bot;
-        const level = microUser.statistics.level_current || 0;
-        const progress = microUser.statistics.level_progress || 0;
-        const acc = getRoundedNumberStr(microUser.statistics.hit_accuracy, 3) || 0;
+        const level = microUser?.statistics?.level_current || 0;
+        const progress = microUser?.statistics?.level_progress || 0;
+        const acc = getRoundedNumberStr(microUser?.statistics?.hit_accuracy, 3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
-        const right3b = isBot ? '' : (microUser.statistics.pp ? Math.round(microUser.statistics.pp).toString() : '');
-        const right3m = isBot ? 'Bot' : (microUser.statistics.pp ? 'PP' : 'AFK');
+        const right3b = isBot ? '' : (microUser?.statistics?.pp ? Math.round(microUser.statistics.pp).toString() : '');
+        const right3m = isBot ? 'Bot' : (microUser?.statistics?.pp ? 'PP' : 'AFK');
 
         return {
             background,
@@ -128,7 +128,7 @@ export const PanelGenerate = {
 
             country: country,
 
-            top1: microUser.username,
+            top1: microUser?.username,
             left1: left1,
             left2: left2,
             right1: '',
@@ -212,11 +212,11 @@ export const PanelGenerate = {
 
         const background = getExportFileV3Path(bg_str);
         const avatar = await getAvatar(score?.user_id, false, getExportFileV3Path('avatar-guest.png'));
-        const country = score?.user?.country?.countryCode || score?.user?.country_code || 'UN';
+        const country = score?.user?.country?.code || 'CN';
 
         const top1 = score?.user?.username || score?.user_name || 'Unknown';
         
-        const left1 = score?.user?.country?.countryName || 'Unknown';
+        const left1 = score?.user?.country?.name || 'Unknown';
         const left2 = 'P' + (score?.match?.slot + 1) + ' *' + rating + ' ' + pp_str;
         const right2 = (Math.round((score?.accuracy || 0) * 10000) / 100) + '%' + ' '
             + rank + mods + ' ' + (score?.max_combo || 0) + 'x';
@@ -479,8 +479,8 @@ export const PanelGenerate = {
         const ranked_date = beatmapsets.ranked_date || '';
         const submitted_date = beatmapsets.submitted_date || '';
 
-        const background = await getMapBG(beatmapsets.id, 'list@2x', beatmapsets.ranked);
-        const map_status = beatmapsets.status || 'graveyard';
+        const background = await getMapBG(beatmapsets.id, 'list@2x', isReload(beatmapsets.ranked));
+        const map_status = beatmapsets?.status || 'graveyard';
 
         const isRanked = (map_status === 'ranked' || map_status === 'loved' || map_status === 'approved');
         const isQualified = (map_status === 'qualified');

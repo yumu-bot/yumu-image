@@ -4,7 +4,7 @@ import {
     getMapBG, getMatchNameSplitted, getNowTimeStamp,
     getPanelNameSVG, getRoundedNumberStr,
     implantImage,
-    implantSvgBody, readTemplate,
+    implantSvgBody, isReload, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -836,7 +836,7 @@ async function getBeatmapAttr(beatmapLite = {}, mods = []) {
 
     return {
         ...beatmapLite,
-        background: await getMapBG(beatmapLite.beatmapset.sid, 'list@2x', !beatmapLite.beatmapset.ranked),
+        background: await getMapBG(beatmapLite.beatmapset.sid, 'list@2x', isReload(beatmapLite.beatmapset.ranked)),
         title: beatmapLite.beatmapset.title,
         artist: beatmapLite.beatmapset.artist,
         mapper: beatmapLite.beatmapset.creator, //creator
