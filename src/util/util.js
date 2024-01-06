@@ -1353,8 +1353,8 @@ export const getApproximateRank = (score = {
     },
     mode: 'osu',
     mods: ['']
-}) => {
-    if (score.rank === 'F') return 'F';
+}, showF = true) => {
+    if (score.rank === 'F' && showF) return 'F';
 
     let rank = 'F';
     let nTotal;
