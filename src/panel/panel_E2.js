@@ -289,7 +289,7 @@ export async function panel_E2(data = {
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user), true);
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP), true);
     const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
-    const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP), true);
+    const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);

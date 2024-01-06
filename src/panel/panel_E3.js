@@ -178,7 +178,7 @@ export async function panel_E3(data = {
     const cardA2 = await card_A2(await PanelGenerate.matchData2CardA2(data.matchData), true);
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP), true);
     const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
-    const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP), true);
+    const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_card_a1);
@@ -492,8 +492,8 @@ const beatmap2PassPercents = (beatmap) => {
     const pc = beatmap.playcount || 0;
     const pass = beatmap.passcount || 0;
 
-    const fail_sum = beatmap.beatMapFailedList ? beatmap.beatMapFailedList.reduce((s, v) => s + v) : 0;
-    const retry_sum = beatmap.beatMapRetryList ? beatmap.beatMapRetryList.reduce((s, v) => s + v) : 0;
+    const fail_sum = beatmap.failList ? beatmap.failList.reduce((s, v) => s + v) : 0;
+    const retry_sum = beatmap.retryList ? beatmap.retryList.reduce((s, v) => s + v) : 0;
     const not_pass_sum = fail_sum + retry_sum; //虚假的未通过人数
     const not_pass_real_percent = (pc !== 0) ? ((pc - pass) / pc) : 0; //真实的未通过率
 
