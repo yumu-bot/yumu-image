@@ -197,7 +197,7 @@ export const PanelGenerate = {
         const pp_str = (score?.pp > 0) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
         const mods_arr = score?.mods || [];
         const rank = !(score?.match?.pass) ? 'F' :
-            rankSS2X(getApproximateRank(score, false));
+            rankSS2X(getApproximateRank(score, true));
         const bg_str = 'object-score-backimage-' + rank + '.jpg';
         const icon_str = (!score.match.team || score.match.team === 'none') ? 'object-card-headtohead.png'
             : 'object-card-team' + score.match.team + '.png';
