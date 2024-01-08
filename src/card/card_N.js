@@ -75,7 +75,7 @@ export async function card_N(data = {
 
     score_rank: 1,
     compare_score: 15905693,
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = `   <defs>
             <clipPath id="clippath-CN-1">
@@ -144,22 +144,22 @@ export async function card_N(data = {
         ...LABEL_OPTION.ACC2,
         data_b: getDecimals(acc, 2),
         data_m: getDecimals(acc, 3) + '%',
-    }, true);
+    });
     const n1_combo = await label_A4({
         ...LABEL_OPTION.COMBO2,
         data_b: combo.toString(),
         data_m: 'x',
-    }, true);
+    });
     const n1_pp = await label_A4({
         ...LABEL_OPTION.PP2,
         data_b: pp.toString(),
         data_m: 'PP',
-    }, true);
+    });
     const n1_score = await label_A4({
         ...LABEL_OPTION.SCORE2,
         data_b: getRoundedNumberLargerStr(score, -1),
         data_m: getRoundedNumberSmallerStr(score, -1),
-    }, true);
+    });
 
     // 导入评价，x和y是矩形的左上角
     const stat_interval = 5;

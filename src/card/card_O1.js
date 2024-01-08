@@ -8,7 +8,7 @@ export async function card_O1(data = {
 
     name: 'Who',
     groups: []
-}, reuse = false) {
+}) {
     // 读取模板
     let svg =`   <defs>
             <clipPath id="clippath-CO1-1">
@@ -60,7 +60,7 @@ export async function card_O1(data = {
         const x = sx + i * 90;
         const y = 170;
 
-        const labelM1 = await label_M1(v, true);
+        const labelM1 = await label_M1(v);
         svg = implantSvgBody(svg, x, y, labelM1, reg_label);
     }
     // 插入头像

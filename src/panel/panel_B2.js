@@ -138,7 +138,7 @@ export async function panel_B2(data = {
         longNoteDensity: [0],
     }
 
-}, reuse = false) {
+}) {
     let svg = readTemplate('template/Panel_B.svg');
 
     // 路径定义
@@ -217,8 +217,8 @@ export async function panel_B2(data = {
         svg = implantSvgBody(svg, 40, 350 + j * 115, cardB4s[j], reg_left);
     }
 
-    cardB5s.push(await card_B5({parameter: "RCD", number: getValue(rcd, rcd_arr)}, true));
-    cardB5s.push(await card_B5({parameter: "LND", number: getValue(lnd, lnd_arr)}, true));
+    cardB5s.push(await card_B5({parameter: "RCD", number: getValue(rcd, rcd_arr)}));
+    cardB5s.push(await card_B5({parameter: "LND", number: getValue(lnd, lnd_arr)}));
 
     svg = implantSvgBody(svg, 630, 860, cardB5s[0], reg_center);
     svg = implantSvgBody(svg, 970, 860, cardB5s[1], reg_center);

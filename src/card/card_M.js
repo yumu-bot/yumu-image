@@ -289,13 +289,13 @@ export async function card_M(s = {
                 star: getExportFileV3Path('object-beatmap-star.png'),
                 hasAvatar: false,
                 uid: v.user_id,
-            }, true);
+            });
             const f2 = await label_A2({
                 host_uid: s.user_id,
                 uid: v.user_id,
-            }, true);
+            });
             const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
-            const f3 = await label_A3(g3, true);
+            const f3 = await label_A3(g3);
 
             labelM1s.push(f1);
             labelM2s.push(f2);
@@ -340,7 +340,7 @@ export async function card_M(s = {
                 star: getExportFileV3Path('object-beatmap-star.png'),
                 hasAvatar: true,
                 uid: v.user_id,
-            }, true);
+            });
 
             labelM1c.push(f1c);
         }
@@ -356,7 +356,7 @@ export async function card_M(s = {
                 star: getExportFileV3Path('object-beatmap-star.png'),
                 hasAvatar: true,
                 uid: v.user_id,
-            }, true);
+            });
 
             labelM1r.push(f1r);
         }
@@ -372,13 +372,13 @@ export async function card_M(s = {
                 star: getExportFileV3Path('object-beatmap-star.png'),
                 hasAvatar: false,
                 uid: v.user_id,
-            }, true);
+            });
             const f2 = await label_A2({
                 host_uid: s.user_id,
                 uid: v.user_id,
-            }, true);
+            });
             const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
-            const f3 = await label_A3(g3, true);
+            const f3 = await label_A3(g3);
 
             labelM1s.push(f1);
             labelM2s.push(f2);
@@ -428,7 +428,7 @@ export async function card_M(s = {
                 star: getExportFileV3Path('object-beatmap-star.png'),
                 hasAvatar: true,
                 uid: v.user_id,
-            }, true);
+            });
 
             labelM1c.push(f1c);
         }

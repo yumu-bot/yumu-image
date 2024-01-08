@@ -1,14 +1,20 @@
 import {torus} from "./font.js";
 import moment from "moment";
 import {
-    getApproximateRank, getAvatar,
-    getDecimals, getExportFileV3Path,
+    getApproximateRank,
+    getAvatar,
+    getDecimals,
+    getExportFileV3Path,
     getGameMode,
-    getMapBG, getMatchNameSplitted,
+    getMapBG,
+    getMatchNameSplitted,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
     getRoundedNumberStr,
-    getTimeDifference, isReload, rankSS2X, readNetImage,
+    getTimeDifference,
+    isReload,
+    rankSS2X,
+    readNetImage,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getModInt, hasMod} from "./mod.js";
@@ -52,7 +58,7 @@ export const PanelGenerate = {
             (user?.statistics?.level_current === 1 && user?.statistics?.level_progress === 0 ? 'NOT PLAYED' : 'AFK'));
 
         //历史记录功能！
-        const pp_d = historyUser ? Math.round((user.pp - historyUser.pp) * 100) / 100 : 0
+        const pp_d = historyUser ? Math.round((user.pp - historyUser?.statistics?.pp) * 100) / 100 : 0
         const right1 = (pp_d > 0) ? '+' + pp_d + 'PP' : ((pp_d < 0) ? pp_d + 'PP' : '');
 
         return {
@@ -215,7 +221,7 @@ export const PanelGenerate = {
         const country = score?.user?.country?.code || 'CN';
 
         const top1 = score?.user?.username || score?.user_name || 'Unknown';
-        
+
         const left1 = score?.user?.country?.name || 'Unknown';
         const left2 = 'P' + (score?.match?.slot + 1) + ' *' + rating + ' ' + pp_str;
         const right2 = (Math.round((score?.accuracy || 0) * 10000) / 100) + '%' + ' '
@@ -349,72 +355,37 @@ export const PanelGenerate = {
         };
     },
 
-    matchBeatmap2CardA2: async (beatmap = {
-        id: 1674896,
-        mode: 'osu',
-        status: 'ranked',
-        version: "Down's Insane",
-        beatMapFailedCount: 0,
-        beatMapRetryCount: 0,
-        beatMapRating: 0,
-        beatmapset_id: 797393,
-        difficulty_rating: 5.03,
-        total_length: 122,
-        user_id: 4694602,
-        beatmapset: {
-            video: false,
-            fromDatabases: false,
-            sid: 797393,
-            ranked: true,
-            rating: 0,
-            mapperName: 'Beomsan',
-            mapperUID: 3626063,
-            id: 797393,
-            user_id: 3626063,
-            artist: 'P4koo',
-            artist_unicode: 'P4koo',
-            title: 'Crystal Illusion',
-            title_unicode: 'Crystal Illusion',
-            creator: 'Beomsan',
-            favourite_count: 93,
-            nsfw: false,
-            play_count: 281583,
-            preview_url: '//b.ppy.sh/preview/797393.mp3',
-            source: '',
-            status: 'ranked',
-            covers: [Object],
-            spotlight: false
-        }
-    }) => {
-        const background = await readNetImage(beatmap?.beatmapset?.covers['cover@2x'], false);
-        const title1 = beatmap?.beatmapset?.title || 'Unknown Title';
-        const title2 = beatmap?.beatmapset?.artist || 'Unknown Artist';
-        const title3 = beatmap?.beatmapset?.mapperName || 'God Made This';
-        const left2 = beatmap?.version || 'Tragic Love Extra';
-        const left3 = 'b' + (beatmap?.id || 0);
+    matchBeatmap2CardA2: async (b) => {
 
-        const status = beatmap?.status;
+        const background = await readNetImage(b?.beatmapset?.covers['cover@2x'], false);
+        const title1 = b?.beatmapset?.title || 'Unknown Title';
+        const title2 = b?.beatmapset?.artist || 'Unknown Artist';
+        const title3 = b?.beatmapset?.creator || 'God Made This';
+        const left2 = b?.version || 'Tragic Love Extra';
+        const left3 = 'b' + (b?.id || 0);
+
+        const status = b?.status;
         let right2;
 
-        switch (getGameMode(beatmap?.mode, 1)) {
+        switch (getGameMode(b?.mode, 1)) {
             case 'o': {
-                right2 = 'CS' + (beatmap?.cs || 0) +
-                    ' AR' + (beatmap?.ar || 0) +
-                    ' OD' + (beatmap?.od || 0);
+                right2 = 'CS' + (b?.cs || 0) +
+                    ' AR' + (b?.ar || 0) +
+                    ' OD' + (b?.od || 0);
                 break;
             }
             case 't': {
-                right2 = 'OD' + (beatmap?.od || 0);
+                right2 = 'OD' + (b?.od || 0);
                 break;
             }
             case 'c': {
-                right2 = 'CS' + (beatmap?.cs || 0) +
-                    ' AR' + (beatmap?.ar || 0);
+                right2 = 'CS' + (b?.cs || 0) +
+                    ' AR' + (b?.ar || 0);
                 break;
             }
             case 'm': {
-                right2 = (beatmap?.cs || 0) +
-                    'Key OD' + (beatmap?.od || 0);
+                right2 = (b?.cs || 0) +
+                    'Key OD' + (b?.od || 0);
                 break;
             }
             default: {
@@ -422,8 +393,8 @@ export const PanelGenerate = {
             }
         }
 
-        const right3b = getDecimals(beatmap?.difficulty_rating,2);
-        const right3m = getDecimals(beatmap?.difficulty_rating,3) + '*';
+        const right3b = getDecimals(b?.difficulty_rating,2);
+        const right3m = getDecimals(b?.difficulty_rating,3) + '*';
 
         return {
             background: background,
@@ -475,23 +446,23 @@ export const PanelGenerate = {
         };
     },
 
-    searchMap2CardA2: async (beatmapsets, rank) => {
-        const ranked_date = beatmapsets.ranked_date || '';
-        const submitted_date = beatmapsets.submitted_date || '';
+    searchMap2CardA2: async (s, rank) => {
+        const ranked_date = s.ranked_date || '';
+        const submitted_date = s.submitted_date || '';
 
-        const background = await getMapBG(beatmapsets.id, 'list@2x', isReload(beatmapsets.ranked));
-        const map_status = beatmapsets?.status || 'graveyard';
+        const background = await getMapBG(s.id, 'list@2x', isReload(s.ranked));
+        const map_status = s?.status || 'graveyard';
 
         const isRanked = (map_status === 'ranked' || map_status === 'loved' || map_status === 'approved');
         const isQualified = (map_status === 'qualified');
 
-        const title1 = beatmapsets.title || 'Unknown Title';
-        const title2 = beatmapsets.artist || 'Unknown Artist';
-        const title3 = beatmapsets.creator || 'Unknown Mapper';
+        const title1 = s.title || 'Unknown Title';
+        const title2 = s.artist || 'Unknown Artist';
+        const title3 = s.creator || 'Unknown Mapper';
         const title_font = torus;
         const left1 = '';
         const left2 = '#' + rank || '#0';
-        const left3 = 's' + beatmapsets.id || 's0';
+        const left3 = 's' + s.id || 's0';
         const right1 = isQualified ? 'Expected:' :
             (isRanked ? 'Ranked:' :
                 'Submitted:');
@@ -570,17 +541,18 @@ export const PanelGenerate = {
         }
     },
 
-//给panel_C用的，期待可以和上面合并
-    beatmap2CardH: async (beatmap, calcPP, rank = 1) => {
-        const cover = await getMapBG(beatmap.beatmapset.id, 'list@2x', isReload(beatmap.ranked));
-        const background = await getMapBG(beatmap.beatmapset.id, 'cover@2x', isReload(beatmap.ranked));
+//给panel_A5用的，期待可以和上面合并
+    beatmap2CardH: async (b, calcPP, rank = 1) => {
+        console.log(b)
+        const cover = await getMapBG(b.beatmapset.id, 'list@2x', isReload(b.ranked));
+        const background = await getMapBG(b.beatmapset.id, 'cover@2x', isReload(b.ranked));
         // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
         // 这个不要下载，请求量太大
 
-        const time_diff = getTimeDifference(beatmap.create_at_str);
+        const time_diff = getTimeDifference(b.create_at_str);
 
         let mods_width;
-        switch (beatmap.mods.length) {
+        switch (b.mods.length) {
             case 0:
                 mods_width = 0;
                 break;
@@ -603,22 +575,22 @@ export const PanelGenerate = {
                 mods_width = 180;
         }
 
-        const difficulty_name = beatmap.beatmap.version ? torus.cutStringTail(beatmap.beatmap.version, 24,
+        const difficulty_name = b.beatmap.version ? torus.cutStringTail(b.beatmap.version, 24,
             500 - 20 - mods_width - torus.getTextWidth('[] - # ()' + rank + time_diff, 24), true) : '';
-        const color_index = (beatmap.rank === 'XH' || beatmap.rank === 'X') ? '#2A2226' : '#fff';
+        const color_index = (b.rank === 'XH' || b.rank === 'X') ? '#2A2226' : '#fff';
 
-        const artist = torus.cutStringTail(beatmap.beatmapset.artist, 24,
-            500 - 20 - mods_width - torus.getTextWidth(' // ' + beatmap.beatmapset.creator, 24), true);
+        const artist = torus.cutStringTail(b.beatmapset.artist, 24,
+            500 - 20 - mods_width - torus.getTextWidth(' // ' + b.beatmapset.creator, 24), true);
 
-        const title2 = (beatmap.beatmapset.title === beatmap.beatmapset.title_unicode) ? null : beatmap.beatmapset.title_unicode;
+        const title2 = (b.beatmapset.title === b.beatmapset.title_unicode) ? null : b.beatmapset.title_unicode;
         const index_b = (calcPP.pp < 2000) ? Math.round(calcPP.pp).toString() : 'Inf.';
 
         return {
             background: background,
             cover: cover,
-            title: beatmap.beatmapset.title || '',
+            title: b.beatmapset.title || '',
             title2: title2,
-            left1: artist + ' // ' + beatmap.beatmapset.creator,
+            left1: artist + ' // ' + b.beatmapset.creator,
             left2: '[' + difficulty_name + '] - #' + rank + ' (' + time_diff + ')',
             index_b: index_b,
             index_m: 'PP',
@@ -628,10 +600,10 @@ export const PanelGenerate = {
             label2: '',
             label3: '',
             label4: '',
-            mods_arr: beatmap.mods || [],
+            mods_arr: b.mods || [],
 
             color_title2: '#bbb',
-            color_right: getRankColor(beatmap.rank),
+            color_right: getRankColor(b.rank),
             color_left: getStarRatingColor(calcPP.attr.stars),
             color_index: color_index,
             color_label1: '',

@@ -14,7 +14,7 @@ export async function card_F5(data = {
 
     ranking_arr: [],
     bp_arr: [],
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = `
           <g id="Base_CF5">

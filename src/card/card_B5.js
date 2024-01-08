@@ -10,7 +10,7 @@ import {getRankColor} from "../util/color.js";
 export async function card_B5(data = {
     parameter: 'RC',
     number: 11.45141919810
-}, reuse = false) {
+}) {
     //这个是基于B2卡片改过来的
     //读取面板
     let svg = readTemplate("template/Card_B2.svg");
@@ -23,7 +23,7 @@ export async function card_B5(data = {
     //导入标签
     let parameter = data.parameter.toUpperCase();
 
-    let label = await label_E({...PPM_OPTION[parameter]}, true);
+    let label = await label_E({...PPM_OPTION[parameter]});
 
     svg = implantSvgBody(svg, 20, 15, label, reg_label);
 

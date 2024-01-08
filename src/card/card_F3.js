@@ -106,7 +106,7 @@ export async function card_F3(data = {
         },
         create_at_str: '2022-09-27T12:01:36Z'
     }]
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = `
           <g id="Base_CF3">
