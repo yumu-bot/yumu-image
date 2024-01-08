@@ -37,7 +37,7 @@ export async function Markdown(md = "", width = 600) {
     });
     const body = await page.$('body');
     const box = await body.boundingBox()
-    const buffer = await body.screenshot({omitBackground: true, encoding: 'binary'});
+    const buffer = await body.screenshot({omitBackground: false, encoding: 'binary'});
 
     await page.evaluate(() => {
         window.setStr(null);
