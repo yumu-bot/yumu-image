@@ -9,13 +9,19 @@ export async function router(req, res) {
     try {
         const data = await Markdown(req.fields.md || "# Error: no value", req.fields.width || 600);
         res.set('Content-Type', 'image/jpeg');
-        res.send(data);
+        res.send(data.image);
     } catch (e) {
         res.status(500).send(e.stack);
     }
 }
 
-async function Markdown(md = "", width = 600) {
+/**
+ *
+ * @param {string} md
+ * @param {number} [width]
+ * @return {Promise<{image: Buffer, width:number, height:number}>}
+ */
+export async function Markdown(md = "", width = 600) {
 
     await page.setViewport({
         width: width,
@@ -30,12 +36,17 @@ async function Markdown(md = "", width = 600) {
         timeout: 2000
     });
     const body = await page.$('body');
-    const buffer = await body.screenshot({omitBackground: false, encoding: 'binary'});
+    const box = await body.boundingBox()
+    const buffer = await body.screenshot({omitBackground: true, encoding: 'binary'});
 
     await page.evaluate(() => {
         window.setStr(null);
     });
 
-    return buffer;
+    return {
+        image: buffer,
+        width: box.width,
+        height: box.height,
+    };
 
 }

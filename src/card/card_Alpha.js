@@ -18,8 +18,8 @@ export async function router(req, res) {
 
 export async function getCardAlpha(markdown = "", width = 600) {
     try {
-        const buffer = await card_Alpha(markdown || "# Error: no value", width);
-        return base64Text2PngStr(buffer)
+        const data = await card_Alpha(markdown || "# Error: no value", width);
+        return base64Text2PngStr(data.image)
     } catch (e) {
 
     }
@@ -39,12 +39,17 @@ async function card_Alpha(md = "", width = 600) {
         timeout: 2000
     });
     const body = await page.$('body');
-    const buffer = await body.screenshot({omitBackground: false, encoding: 'binary'});
+    const box = await body.boundingBox()
+    const buffer = await body.screenshot({omitBackground: true, encoding: 'binary'});
 
     await page.evaluate(() => {
         window.setStr(null);
     });
 
-    return buffer;
+    return {
+        image: buffer,
+        width: box.width,
+        height: box.height,
+    };
 
 }
