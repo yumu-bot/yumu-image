@@ -2,13 +2,19 @@ import fs from 'fs';
 import os from "os";
 import crypto from 'crypto';
 import axios from "axios";
-import exportsJPEG from 'convert-svg-to-jpeg';
-import exportsPNG from 'convert-svg-to-png';
+// import exportsJPEG from 'convert-svg-to-jpeg';
+// import exportsPNG from 'convert-svg-to-png';
 import https from "https";
 import path from "path";
 import moment from "moment";
 import {torus} from "./font.js";
 import {getModInt, hasMod} from "./mod.js";
+import {API} from "../svg-to-image/API.js";
+import JPEGProvider from '../svg-to-image/JPEGProvider.js';
+import PNGProvider from '../svg-to-image/PNGProvider.js';
+
+const exportsJPEG = new API(new JPEGProvider());
+const exportsPNG = new API(new PNGProvider());
 
 const path_util = path;
 const MD5 = crypto.createHash("md5");
