@@ -150,12 +150,12 @@ export async function panel_B1(data = {
     }
 
     // 我自己的卡片
-    const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[0]), true);
+    const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[0]));
     svg = implantSvgBody(svg, 40, 40, cardA1m, reg_maincard);
 
     // 如果是vs，渲染右边的人
     if (isVS) {
-        const cardA1y = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[1]), true);
+        const cardA1y = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[1]));
         svg = implantSvgBody(svg, 1450, 40, cardA1y, reg_maincard);
 
         for (const name of VALUE_NAMES) {

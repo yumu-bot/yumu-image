@@ -4,7 +4,7 @@ import {
     replaceText,
 } from "../util/util.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {getCardAlpha} from "../card/card_Alpha.js";
+import {card_Alpha} from "../card/card_Alpha.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 
@@ -34,8 +34,10 @@ export async function router_svg(req, res) {
 }
 
 export async function panel_P(data = {
-    markdown: "can u hear me **hello**",
-    width: 1840
+    user: {},
+    markdown: null,
+    width: 1840,
+    name: ""
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_P.svg');
@@ -49,33 +51,15 @@ export async function panel_P(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PP-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Help', 'H', 'v0.4.0 UU');
+    const panel_name = getPanelName(data?.name);
 
     // 插入 Alpha 卡
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(null, null), false);
+    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, null));
 
     // 插入 Alpha 卡
-    const markdown = "# BBCode\n" +
-        "\n" +
-        "**BBCode** is a [markup language](https://en.wikipedia.org/wiki/Markup_language) that is used in the osu! forums and, to a larger extent, the vast majority of forums on the Internet. Used to enable rich text formatting, it is made up of tags that surround text to denote formatting, attributes, embedding, and more. It is used in various places across the osu! website, such as forum posts, signatures, user pages, and beatmap descriptions.\n" +
-        "\n" +
-        "![The forum post editor with its buttons](img/editor.jpg?1 \"The edit box in the forums\")\n" +
-        "\n" +
-        "## Behaviour\n" +
-        "\n" +
-        "Clicking a markup button without highlighting any text will create a set of open and closed tags around the text cursor in the post editor. Highlighting the text before clicking a markup button will surround said text with the tags. \n" +
-        "\n" +
-        "Users, who wish to combine formatting onto a single section of text, can do so by placing BBCode tags inside of one another. However, the order and nesting of these tags **must be respected** when combining. Failure to do so will break the formatting.\n" +
-        "\n" +
-        "A set of correct and incorrect usages of nested tags is described below:\n" +
-        "\n" +
-        "- `[centre][b]text[/b][/centre]` is correct\n" +
-        "- `[b][centre]text[/b][/centre]` is incorrect\n" +
-        "\n" +
-        "## Tags\n"
+    const markdown = data?.markdown || "# error: \n If you see this line of text, please afk as soon as possible. \n\n Azer isn't so great? Are you kidding me? When was the last time you saw a player with such aim ability and movement with a tablet? Alex puts the game in another level, and we will be blessed if we ever see a player with his skill and passion for the game again. Cookiezi breaks records. Rafis breaks records. Azer breaks the rules. You can keep your statistics. I prefer the magic.";
 
-
-    const alpha = await getCardAlpha(markdown, data.width);
+    const alpha = await card_Alpha(markdown, data.width);
 
 
     // 插入文字
@@ -83,20 +67,21 @@ export async function panel_P(data = {
 
     // 计算面板高度
 
-    const height = 0;
+    const height = alpha.height;
+    const width = alpha.width
 
     let panelHeight, cardHeight;
 
     if (height > 0) {
-        panelHeight = 330 + height;
-        cardHeight = 40 + height;
+        panelHeight = 330 + height + 40;
+        cardHeight = 40 + height + 40;
     } else {
         panelHeight = 1080;
         cardHeight = 790;
     }
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, 1840, 790, 40, 330, 1, alpha, reg_alpha);
+    svg = implantImage(svg, width, height, (1920 - width) / 2, 330, 1, alpha.image, reg_alpha);
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
     // 导入卡片
@@ -106,4 +91,11 @@ export async function panel_P(data = {
     svg = replaceText(svg, cardHeight, reg_cardheight);
 
     return svg.toString();
+}
+
+function getPanelName(name = ""){
+    switch (name) {
+        case "help": return getPanelNameSVG('Help', 'H', 'v0.4.0 UU');
+        default: return getPanelNameSVG('Markdown Messages', 'MD', 'v0.4.0 UU');
+    }
 }

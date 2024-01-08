@@ -56,7 +56,7 @@ export async function panel_C(data = {}) {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    const matchInfo = await card_A2(await PanelGenerate.matchData2CardA2(data), true);
+    const matchInfo = await card_A2(await PanelGenerate.matchData2CardA2(data));
 
     // 插入图片和部件（新方法
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);

@@ -239,7 +239,7 @@ export async function panel_A3(data = {
         },],
 
 
-}, reuse = false) {
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_A3.svg');
 
@@ -260,7 +260,7 @@ export async function panel_A3(data = {
 
     // 导入A2卡
     const beatmap_generated = await PanelGenerate.beatmap2CardA2(data.beatmap);
-    const beatmap_a2 = await card_A2(beatmap_generated, true);
+    const beatmap_a2 = await card_A2(beatmap_generated);
     svg = implantSvgBody(svg, 40, 40, beatmap_a2, reg_beatmap_a2);
 
 

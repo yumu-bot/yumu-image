@@ -342,7 +342,7 @@ export async function panel_M(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A1
-    const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user), true);
+    const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user));
 
     // 导入O1
     const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data.user));

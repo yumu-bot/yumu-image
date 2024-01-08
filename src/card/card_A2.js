@@ -23,7 +23,7 @@ export async function card_A2(data = {
     right3b: '',
     right3m: '',
 
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = readTemplate('template/Card_A2.svg');
 

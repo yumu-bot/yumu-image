@@ -164,14 +164,14 @@ export async function panel_F2(
         for (const v of redArr) {
             v.total_score = totalScore;
             v.total_player = playerCount;
-            const f = await card_A1(await PanelGenerate.score2CardA1(v), true);
+            const f = await card_A1(await PanelGenerate.score2CardA1(v));
             redA1.push(f);
         }
 
         for (const v of blueArr) {
             v.total_score = totalScore;
             v.total_player = playerCount;
-            const f = await card_A1(await PanelGenerate.score2CardA1(v), true);
+            const f = await card_A1(await PanelGenerate.score2CardA1(v));
             blueA1.push(f);
         }
 
@@ -218,7 +218,7 @@ export async function panel_F2(
         for (const v of noneArr) {
             v.total_score = totalScore;
             v.total_player = playerCount;
-            const f = await card_A1(await PanelGenerate.score2CardA1(v), true);
+            const f = await card_A1(await PanelGenerate.score2CardA1(v));
             noneA1.push(f);
         }
 
@@ -253,11 +253,11 @@ export async function panel_F2(
 
     // 导入比赛简介卡（A2卡
     const f = await card_A2(await roundInfo2CardA2(data.MatchStat, data.MatchRound,
-        redTeamScore, blueTeamScore, totalScore, data.index, beatmap.background), true);
+        redTeamScore, blueTeamScore, totalScore, data.index, beatmap.background));
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
-    const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap), true);
+    const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap));
     svg = implantSvgBody(svg, 1450, 40, b, reg_maincard);
 
 

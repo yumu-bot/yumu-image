@@ -324,7 +324,7 @@ export async function panel_A2(data = {
         data.beatmapsets[0],
     );
 
-    const search_cardA2 = await card_A2(search_result, true);
+    const search_cardA2 = await card_A2(search_result);
     svg = implantSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
 
     //导入其他卡
@@ -333,7 +333,7 @@ export async function panel_A2(data = {
 
     for (let i = 0; i < result_count; i++) {
         const beatmap = await PanelGenerate.searchMap2CardA2(data.beatmapsets[i], i + 1);
-        const f = await card_A2(beatmap, true);
+        const f = await card_A2(beatmap);
         beatmap_cardA2s.push(f);
     }
 

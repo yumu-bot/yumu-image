@@ -1,5 +1,4 @@
 import puppeteer from "puppeteer";
-import {base64Text2PngStr} from "../util/util.js";
 
 const browser = await puppeteer.launch({args: ["--disable-web-security", "--disable-features=IsolateOrigins", "--disable-site-isolation-trials"]});
 const page = await browser.newPage();
@@ -16,16 +15,7 @@ export async function router(req, res) {
     }
 }
 
-export async function getCardAlpha(markdown = "", width = 600) {
-    try {
-        const data = await card_Alpha(markdown || "# Error: no value", width);
-        return base64Text2PngStr(data.image)
-    } catch (e) {
-
-    }
-}
-
-async function card_Alpha(md = "", width = 600) {
+export async function card_Alpha(md = "", width = 600) {
     await page.setViewport({
         width: width,
         height: 1080,
@@ -40,14 +30,14 @@ async function card_Alpha(md = "", width = 600) {
     });
     const body = await page.$('body');
     const box = await body.boundingBox()
-    const buffer = await body.screenshot({omitBackground: false, encoding: 'binary'});
+    const buffer = await body.screenshot({type: "png", omitBackground: false, encoding: 'base64'});
 
     await page.evaluate(() => {
         window.setStr(null);
     });
 
     return {
-        image: buffer,
+        image: 'data:image/png;base64,' + buffer,
         width: box.width,
         height: box.height,
     };

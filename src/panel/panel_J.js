@@ -453,7 +453,7 @@ export async function panel_J(data = {
     svg = replaceTexts(svg, [panel_name, pp_path, game_mode_path, mappers_count_path], reg_index);
 
     // A1卡构建
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
+    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1));
 
     // J卡构建
     let cardJs_top = [];
