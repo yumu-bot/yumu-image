@@ -11,7 +11,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_P(data);
+        const svg = await panel_A6(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -23,7 +23,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_P(data);
+        const svg = await panel_A6(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -33,14 +33,14 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-export async function panel_P(data = {
+export async function panel_A6(data = {
     user: {},
     markdown: null,
     width: 1840,
     name: ""
 }) {
     // 导入模板
-    let svg = readTemplate('template/Panel_P.svg');
+    let svg = readTemplate('template/Panel_A6.svg');
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
@@ -94,8 +94,10 @@ export async function panel_P(data = {
 }
 
 function getPanelName(name = ""){
+    const version = 'v0.4.0 UU'
     switch (name) {
-        case "help": return getPanelNameSVG('Help', 'H', 'v0.4.0 UU');
-        default: return getPanelNameSVG('Markdown Messages', 'MD', 'v0.4.0 UU');
+        case "wiki": return getPanelNameSVG('Wiki Page', 'W', version);
+        case "help": return getPanelNameSVG('Help Page', 'H', version);
+        default: return getPanelNameSVG('Markdown Page', 'MD', version);
     }
 }

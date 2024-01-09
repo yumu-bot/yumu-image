@@ -8,6 +8,7 @@
   - A3：榜单 L
   - A4：最好成绩（包括今日）T/B
   - A5：成绩（多张）P/R，和 A4 很像
+  - A6：Markdown 页面，用于帮助和维基 MD/H/W
 - B：PPM 评分系统 PM
 - C：MRA 斗力系统 RA
   - C2：SRA 斗力系统 SA
