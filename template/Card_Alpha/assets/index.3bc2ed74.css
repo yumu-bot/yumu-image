@@ -101,7 +101,7 @@
     color: var(--color-fg-default);
     background-color: #2A2226;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-    font-size: 24px;
+    font-size: 30px;
     line-height: 1.5;
     word-wrap: break-word;
 
@@ -139,9 +139,9 @@
     --color-fg-default: #ffffff;
     --color-fg-muted: #8b949e;
     --color-fg-subtle: #6e7681;
-    --color-canvas-default: #0d1117;
-    --color-canvas-subtle: #161b22;
-    --color-border-default: #30363d;
+    --color-canvas-default: #2A2226;
+    --color-canvas-subtle: #382E32;
+    --color-border-default: #46393F;
     --color-border-muted: #21262d;
     --color-neutral-muted: rgba(110, 118, 129, .4);
     --color-accent-fg: #58a6ff;
@@ -1044,8 +1044,14 @@ font-size 原来是 16
     src: url(./font/Torus-SemiBold.ttf)
 }
 
+
+@font-face {
+    font-family: alibaba;
+    src: url(./font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.2.ttf)
+}
+
 * {
-    font-family: Torus, serif
+    font-family: Torus, alibaba, serif
 }
 
 body {
