@@ -242,6 +242,10 @@ function userDelta2Labels(data) {
     const pt = data?.delta?.play_time || 0;
     const tth = data?.delta?.total_hits || 0;
 
+    if (pt === 0) {
+        return new Array(8).fill("");
+    }
+
     let pt_h = '';
     if (data?.delta?.play_time || data?.delta?.play_time === 0) {
         let pt_b = getSign(pt);
