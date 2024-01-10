@@ -230,13 +230,14 @@ function userDelta2Labels(data) {
         } else return '';
     }
 
-    const getPath = (T) => {
-        let text;
-        if (isNaN(+T))
-            text = T
-        else
-            text = getSign(T) + getRoundedNumberStr(Math.abs(T), 3);
-        return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
+    const getPath = (T, n) => {
+        if (isNaN(+T)) {
+            return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
+        } else {
+            const text = getSign(T) + getRoundedNumberStr(Math.abs(T), 3);
+            return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
+        }
+
     }
 
 
@@ -281,7 +282,7 @@ function userDelta2Labels(data) {
     const n = ""; //没法做的差值
     let arr = [];
     for (const x of [rks, tts, pc, pt_h, 0, 0, 0, tth]) {
-        if (rks)
+        if (x)
             arr.push(getPath(x));
         else
             arr.push(n);
