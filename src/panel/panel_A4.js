@@ -7,7 +7,6 @@ import {
 import {card_H} from "../card/card_H.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getModInt, hasMod} from "../util/mod.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
@@ -273,7 +272,7 @@ export async function panel_A4(data = {
     ],
     "rank": [1,3,4,5,6],
 
-}, reuse = false) {
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_A4.svg');
 
@@ -292,7 +291,7 @@ export async function panel_A4(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.me), true);
+    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.me));
     svg = implantSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入H卡

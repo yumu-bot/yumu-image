@@ -22,7 +22,7 @@ export async function card_A1(data = {
     right2: '98.7% Lv.93(24%)',
     right3b: '4396',
     right3m: 'PP',
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = readTemplate('template/Card_A1.svg');
 

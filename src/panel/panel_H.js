@@ -84,7 +84,7 @@ export async function panel_H (
 
     // 卡片定义
     const mod_count = pools.length || 0;
-    const poolInfo = await card_A2(await pool2cardA2(data, map_count, mod_count), true);
+    const poolInfo = await card_A2(await pool2cardA2(data, map_count, mod_count));
 
     //设置面板高度
     const panelHeight = 330 + 150 * (row - 1);

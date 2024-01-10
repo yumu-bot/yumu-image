@@ -99,7 +99,7 @@ export async function card_E3(data = {
     for (const v of data.labels) {
         const i = data.labels.indexOf(v);
 
-        const d = await label_E(v, true);
+        const d = await label_E(v);
         const x = 560 + (i % 2) * 210;
         const y = 20 + Math.floor(i / 2) * 80;
 

@@ -15,7 +15,7 @@ export async function card_E4(data = {
         "count_katu" : 12,
         "count_miss" : 0,
     }
-}, reuse = false) {
+}) {
     let svg = '<g id="Card_E4"></g>';
 
     // 路径定义
@@ -29,18 +29,18 @@ export async function card_E4(data = {
     switch (mode_int) {
         case 0: {
             column = 3;
-            label1 = await label_E(await ppVariants2LabelE(data.calcPP, 'aim'), true);
-            label2 = await label_E(await ppVariants2LabelE(data.calcPP, 'spd'), true);
-            label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'acc'), true);
+            label1 = await label_E(await ppVariants2LabelE(data.calcPP, 'aim'));
+            label2 = await label_E(await ppVariants2LabelE(data.calcPP, 'spd'));
+            label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'acc'));
         } break;
         case 1: {
             column = 2;
-            label2 = await label_E(await ppVariants2LabelE(data.calcPP, 'diff'), true);
-            label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'acc'), true);
+            label2 = await label_E(await ppVariants2LabelE(data.calcPP, 'diff'));
+            label3 = await label_E(await ppVariants2LabelE(data.calcPP, 'acc'));
         } break;
         case 3: {
             column = 1;
-            label3 = await label_E(await statistics2PGRatio(data.calcPP, data.statistics), true);
+            label3 = await label_E(await statistics2PGRatio(data.calcPP, data.statistics));
         } break;
     }
 

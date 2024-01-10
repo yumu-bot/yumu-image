@@ -150,12 +150,12 @@ export async function panel_B1(data = {
     }
 
     // 我自己的卡片
-    const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[0]), true);
+    const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[0]));
     svg = implantSvgBody(svg, 40, 40, cardA1m, reg_maincard);
 
     // 如果是vs，渲染右边的人
     if (isVS) {
-        const cardA1y = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[1]), true);
+        const cardA1y = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[1]));
         svg = implantSvgBody(svg, 1450, 40, cardA1y, reg_maincard);
 
         for (const name of VALUE_NAMES) {
@@ -169,11 +169,11 @@ export async function panel_B1(data = {
         for (const j in card_B1_rights) {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
         }
-        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA}, true));
-        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_2.OVA}, true));
+        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA}));
+        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_2.OVA}));
     } else {
-        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA}, true));
-        card_B2_centers.push(await card_B2({parameter: "SAN", number: data.card_b_1.SAN}, true));
+        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA}));
+        card_B2_centers.push(await card_B2({parameter: "SAN", number: data.card_b_1.SAN}));
     }
     svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
     svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);

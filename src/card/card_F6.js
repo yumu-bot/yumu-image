@@ -17,14 +17,19 @@ export async function card_F6(data = {
         play_count: 0,
         play_time: 0,
         played_map: 0,
+        ranked_map: 0,
         rep_watched: 0,
         follower: 0,
         total_hits: 0,
     },
 
     delta: {
+        ranked_score: 0,
+        total_score: 0,
         play_count: 0,
         play_time: 0,
+
+        total_hits: 0,
     },
 
     pc_arr: [],
@@ -159,6 +164,8 @@ async function userData2Labels(data) {
         }
     }
 
+    const isRankedMapPCCalculated = data.user.ranked_map !== 0;
+
     // 卡片定义
     const rks_b = getRoundedNumberLargerStr(data.user.ranked_score, 4);
     const rks_m = getRoundedNumberSmallerStr(data.user.ranked_score, 4);
@@ -166,8 +173,12 @@ async function userData2Labels(data) {
     const tts_m = getRoundedNumberSmallerStr(data.user.total_score, 4);
     const pc_b = getRoundedNumberLargerStr(data.user.play_count, 0);
     const pc_m = getRoundedNumberSmallerStr(data.user.play_count, 0);
-    const mpl_b = getRoundedNumberLargerStr(data.user.played_map, 0);
-    const mpl_m = getRoundedNumberSmallerStr(data.user.played_map, 0);
+
+    const rmp_b = getRoundedNumberLargerStr(data.user.ranked_map, 0);
+    const rmp_m = getRoundedNumberSmallerStr(data.user.ranked_map, 0);
+    const mpc_b = getRoundedNumberLargerStr(data.user.played_map, 0);
+    const mpc_m = getRoundedNumberSmallerStr(data.user.played_map, 0);
+
     const rep_b = getRoundedNumberLargerStr(data.user.rep_watched, 0);
     const rep_m = getRoundedNumberSmallerStr(data.user.rep_watched, 0);
     const fan_b = getRoundedNumberLargerStr(data.user.follower, 0);
@@ -176,22 +187,24 @@ async function userData2Labels(data) {
     const tth_m = getRoundedNumberSmallerStr(data.user.total_hits, 4);
 
     const label_rks =
-        await label_E({...LABEL_OPTION.RKS, data_b: rks_b, data_m: rks_m}, true);
+        await label_E({...LABEL_OPTION.RKS, data_b: rks_b, data_m: rks_m});
     const label_tts =
-        await label_E({...LABEL_OPTION.TTS, data_b: tts_b, data_m: tts_m}, true);
+        await label_E({...LABEL_OPTION.TTS, data_b: tts_b, data_m: tts_m});
     const label_pc =
-        await label_E({...LABEL_OPTION.PC, data_b: pc_b, data_m: pc_m}, true);
+        await label_E({...LABEL_OPTION.PC, data_b: pc_b, data_m: pc_m});
     const label_pt =
-        await label_E({...LABEL_OPTION.PT, data_b: pt_b, data_m: pt_m}, true);
+        await label_E({...LABEL_OPTION.PT, data_b: pt_b, data_m: pt_m});
 
-    const label_mpl =
-        await label_E({...LABEL_OPTION.MPL, data_b: mpl_b, data_m: mpl_m}, true);
+    const label_mpl = isRankedMapPCCalculated ?
+        await label_E({...LABEL_OPTION.RMP, data_b: rmp_b, data_m: rmp_m}) :
+        await label_E({...LABEL_OPTION.MPC, data_b: mpc_b, data_m: mpc_m})
+    ;
     const label_rep =
-        await label_E({...LABEL_OPTION.REP, data_b: rep_b, data_m: rep_m}, true);
+        await label_E({...LABEL_OPTION.REP, data_b: rep_b, data_m: rep_m});
     const label_fan =
-        await label_E({...LABEL_OPTION.FAN, data_b: fan_b, data_m: fan_m}, true);
+        await label_E({...LABEL_OPTION.FAN, data_b: fan_b, data_m: fan_m});
     const label_tth =
-        await label_E({...LABEL_OPTION.TTH, data_b: tth_b, data_m: tth_m}, true);
+        await label_E({...LABEL_OPTION.TTH, data_b: tth_b, data_m: tth_m});
 
     let arr = [];
     arr.push(label_rks, label_tts, label_pc, label_pt,label_mpl, label_rep, label_fan, label_tth);
@@ -217,10 +230,17 @@ function userDelta2Labels(data) {
         } else return '';
     }
 
-    const pc = data?.delta?.play_count || 0;
-    const pt = data.delta.play_time || 0;
+    const getPath = (T) => {
+        const text = getSign(T) + getRoundedNumberStr(Math.abs(T), 3);
+        return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
+    }
 
-    const pc_h = getSign(pc) + getRoundedNumberStr(Math.abs(pc), 0);
+
+    const rks = data?.delta?.ranked_score || 0;
+    const tts = data?.delta?.total_score || 0;
+    const pc = data?.delta?.play_count || 0;
+    const pt = data?.delta?.play_time || 0;
+    const tth = data?.delta?.total_hits || 0;
 
     let pt_h = '';
     if (data?.delta?.play_time || data?.delta?.play_time === 0) {
@@ -250,11 +270,14 @@ function userDelta2Labels(data) {
         pt_h = pt_b + pt_m;
     }
 
-    const label_pc = torus.getTextPath(pc_h, 0, 0, 18, 'left baseline', getColor(pc));
+    const label_rks = getPath(rks);
+    const label_tts = getPath(tts);
+    const label_pc = getPath(pc);
     const label_pt = torus.getTextPath(pt_h, 0, 0, 18, 'left baseline', getColor(pt));
+    const label_tth = getPath(tth);
     const n = ""; //没法做的差值
 
     let arr = [];
-    arr.push(n, n, label_pc, label_pt)
+    arr.push(label_rks, label_tts, label_pc, label_pt, n, n, n, label_tth);
     return arr;
 }

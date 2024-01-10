@@ -401,7 +401,7 @@ export async function panel_J(data = {
     game_mode: 'osu',
 
 
-}, reuse = false) {
+}) {
     let svg = readTemplate('template/Panel_J.svg');
 
     // 路径定义
@@ -453,7 +453,7 @@ export async function panel_J(data = {
     svg = replaceTexts(svg, [panel_name, pp_path, game_mode_path, mappers_count_path], reg_index);
 
     // A1卡构建
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1), true);
+    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1));
 
     // J卡构建
     let cardJs_top = [];
@@ -487,7 +487,7 @@ export async function panel_J(data = {
             mod: v.index || 'None',
             count: v.map_count,
             pp: v.pp_count,
-        }, true);
+        });
 
         labelJ1s.push(h);
     }
@@ -507,7 +507,7 @@ export async function panel_J(data = {
             name: data.favorite_mappers[i].username || 'Unknown',
             count: data.favorite_mappers[i].map_count || 0,
             pp: data.favorite_mappers[i].pp_count || 0,
-        }, true);
+        });
 
         labelJ2s.push(h);
     }
@@ -523,7 +523,7 @@ export async function panel_J(data = {
             map_count: v.map_count,
             pp_percentage: v.percent, //占raw pp的比
             pp_count: v.pp_count,
-        }, true);
+        });
 
         labelJ3s.push(h);
     }

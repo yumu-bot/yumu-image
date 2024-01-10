@@ -316,7 +316,7 @@ export async function panel_M(data = {
     ],
     playcount: 0,
     favorite: 0,
-}, reuse = false) {
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_M.svg');
 
@@ -342,10 +342,10 @@ export async function panel_M(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A1
-    const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user), true);
+    const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user));
 
     // 导入O1
-    const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data.user), true);
+    const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data.user));
 
     // 导入O2
     for (let i = 0; i < Math.min(data.most_popular_beatmap.length, 6); i++) {

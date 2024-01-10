@@ -25,7 +25,7 @@ export async function card_B1(data = {
     //导入标签
     let parameter = data.parameter.toUpperCase();
 
-    let label = await label_E({...PPM_OPTION[parameter]}, true);
+    let label = await label_E({...PPM_OPTION[parameter]});
 
     //判断是左标签右评级还是左评级右标签。
     let card_x = 20;

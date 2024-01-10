@@ -6,6 +6,7 @@ import {router as PanelA2Router} from "./src/panel/panel_A2.js";
 import {router as PanelA3Router} from "./src/panel/panel_A3.js";
 import {router as PanelA4Router} from "./src/panel/panel_A4.js";
 import {router as PanelA5Router} from "./src/panel/panel_A5.js";
+import {router as PanelA6Router} from "./src/panel/panel_A6.js";
 import {router as PanelB1Router} from "./src/panel/panel_B1.js";
 import {router as PanelB2Router} from "./src/panel/panel_B2.js";
 import {router as PanelCRouter} from "./src/panel/panel_C.js";
@@ -19,7 +20,6 @@ import {router as PanelF2Router} from "./src/panel/panel_F2.js";
 import {router as PanelHRouter} from "./src/panel/panel_H.js";
 import {router as PanelJRouter} from "./src/panel/panel_J.js";
 import {router as PanelMRouter} from "./src/panel/panel_M.js";
-import {router as PanelPRouter} from "./src/panel/panel_P.js";
 
 import {router as panelAlphaRouter} from "./src/panel/panel_Alpha.js"; //drawLine
 import {router as panelBetaRouter} from "./src/panel/panel_Beta.js"; //scoreSpecial
@@ -53,6 +53,7 @@ app.post('/panel_A2', PanelA2Router);
 app.post('/panel_A3', PanelA3Router);
 app.post('/panel_A4', PanelA4Router);
 app.post('/panel_A5', PanelA5Router);
+app.post('/panel_A6', PanelA6Router);
 app.post('/panel_B1', PanelB1Router);
 app.post('/panel_B2', PanelB2Router);
 app.post('/panel_C', PanelCRouter);
@@ -66,7 +67,6 @@ app.post('/panel_F2', PanelF2Router);
 app.post('/panel_H', PanelHRouter);
 app.post('/panel_J', PanelJRouter);
 app.post('/panel_M', PanelMRouter);
-app.post('/panel_P', PanelPRouter);
 
 app.post('/panel_Alpha', panelAlphaRouter);
 app.post('/panel_Beta', panelBetaRouter);

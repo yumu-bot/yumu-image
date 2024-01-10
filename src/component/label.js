@@ -134,15 +134,21 @@ export const LABEL_OPTION = {
         remark: 'PT',
         color_remark: '#aaa',
     },
-    MPL: {
+    RMP: {
         icon: getExportFileV3Path("object-score-approachrate.png"),
         icon_title: 'Ranked Map PC',
         remark: '',
         color_remark: '#aaa',
     },
+    MPC: {
+        icon: getExportFileV3Path("object-score-approachrate.png"),
+        icon_title: 'Total Map PC',
+        remark: '',
+        color_remark: '#aaa',
+    },
     REP: {
         icon: getExportFileV3Path("object-score-circlesize.png"),
-        icon_title: 'Replay PC (O)',
+        icon_title: 'Rep being watched',
         remark: '',
         color_remark: '#aaa',
     },
@@ -393,7 +399,7 @@ export async function label_E(data = {
     data_m: '.36%',
     color_remark: '#aaa',
     title_font: torus,
-}, reuse = false) {
+}) {
     // 正则表达式
     let reg_text = /(?<=<g id="Text_LE">)/;
     let reg_icon = /(?<=<g id="Icon_LE">)/;
@@ -439,7 +445,7 @@ export async function label_F1(data = {
     isWin: true,
     scoreTextColor : '#fff',
 
-}, reuse = false) {
+}) {
     //导入模板
     let svg = `  <defs>
     <clipPath id="clippath-LF1-1">
@@ -518,7 +524,7 @@ export async function label_F2(data = {
     label_color: '#46393f',
     isWin: true,
 
-}, reuse = false) {
+}) {
 
     //导入模板
     let svg = `  <defs>
@@ -574,7 +580,7 @@ export async function label_F3(data = {
     avatar: 'avatar-guest.png',
     isWin: true,
 
-}, reuse = false) {
+}) {
     //导入模板
     let svg = `  <defs>
     <clipPath id="clippath-LF3-1">
@@ -605,7 +611,7 @@ export async function label_J1(data = {
     mod: 'DT',
     count: 88,
     pp: 1611,
-}, reuse = false) {
+}) {
 
     //正则
     let reg_text = /(?<=<g id="Text_LJ1">)/;
@@ -641,7 +647,7 @@ export async function label_J2(data = {
     name: 'Sotrash',
     count: 88,
     pp: 1611,
-}, reuse = false) {
+}) {
 
     //正则
     let reg_text = /(?<=<g id="Text_LJ2">)/;
@@ -698,7 +704,7 @@ export async function label_J3(data = {
     map_count: 100,
     pp_percentage: 0.667, //占raw pp的比
     pp_count: 12345,
-}, reuse = false) {
+}) {
     let svg = `  
   <g id="Icon_LJ3">
   </g>
@@ -763,7 +769,7 @@ export async function label_A1(data = {
 
     hasAvatar: false,
     uid: 7003013
-}, reuse = false) {
+}) {
 
     let svg = `
     <clipPath id="clippath-LM1">
@@ -864,7 +870,7 @@ export async function label_A1(data = {
 export async function label_A2(data = {
     host_uid: 873961,
     uid: 873961,
-}, reuse = false) {
+}) {
 
     //导入模板
     let svg = `  <defs>
@@ -934,7 +940,7 @@ export async function label_A3(data = {
     },
 
     maxWidth: 650 / 3,
-}, reuse = false) {
+}) {
 
     let svg = `
   <g id="Icon_LM3">
@@ -983,7 +989,7 @@ export async function label_A4(data = {
     icon_title: 'ACC',
     data_b: '98.',
     data_m: '36%',
-}, reuse = false) {
+}) {
     let svg = `
   <g id="Icon_LN1">
   </g>
@@ -1011,7 +1017,7 @@ export async function label_M1(data = {
     "identifier": "bng",
     "name": "Beatmap Nominators",
     "short_name": "BN",
-}, reuse = false) {
+}) {
 
     //导入模板
     let svg = `  

@@ -44,7 +44,7 @@ export async function card_E2(data = {
     isPF: true,
     isBest: true,
 
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = `   <defs>
             <clipPath id="clippath-CE2-1">
@@ -102,12 +102,12 @@ export async function card_E2(data = {
         remark: data.acc_index,
         data_b: getDecimals(data.accuracy * 100, 2),
         data_m: getDecimals(data.accuracy * 100, 3) + '%',
-    }, true);
+    });
     const combo = await label_E({...LABEL_OPTION.COMBO,
         remark: isFC ? 'FC' : (data.max_combo + 'x'),
         data_b: data.combo ? data.combo.toString() : '0',
         data_m: 'x',
-    }, true);
+    });
     const pp = (mode === 'm') ? (
         await label_E({
             ...LABEL_OPTION.PP,
@@ -116,13 +116,13 @@ export async function card_E2(data = {
             data_b: data.pp ?
                 (data.pp <= 100000 ? Math.round(data.pp).toString() : 'Inf.') : '0',
             data_m: 'PP',
-        }, true)
+        })
     ) : (
         await label_E({...LABEL_OPTION.PP,
             remark: isPF ? 'Max' : (isFC ? ('SS ' + Math.round(data.max_pp) + 'PP') : ('FC ' + Math.round(data.full_pp) + 'PP')),
             data_b: data.pp ? Math.round(data.pp).toString() : '0',
             data_m: 'PP',
-        }, true)
+        })
     );
 
     // 导入部件

@@ -197,7 +197,7 @@ export async function panel_A1(data = {
             "countryName": "Taiwan"
         },
     }]
-}, reuse = false) {
+}) {
     let svg = readTemplate('template/Panel_A1.svg');
 
 
@@ -218,12 +218,12 @@ export async function panel_A1(data = {
 
     // 导入A1卡
 
-    const me_cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.me_card_A1), true);
+    const me_cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.me_card_A1));
 
     let friend_cardA1s = [];
 
     for (const i in data.friend_card_A1) {
-        const f = await card_A1(await PanelGenerate.microUser2CardA1(data.friend_card_A1[i]), true);
+        const f = await card_A1(await PanelGenerate.microUser2CardA1(data.friend_card_A1[i]));
         friend_cardA1s.push(f);
     }
 

@@ -4,7 +4,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 //drawManiaVariantRank, cr country rank, gr global rank
 export function card_F7(data = {
    mode: 'osu', country: 'CN', pp4k: 0, pp7k: 0, gr4k: 0, gr7k: 0, cr4k: 0, cr7k: 0
-}, reuse = false) {
+}) {
     if (data.mode === 'mania') {
 
         //4K: 4396PP // #114514 CN#1919
