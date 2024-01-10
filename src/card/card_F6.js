@@ -223,16 +223,21 @@ function userDelta2Labels(data) {
     const getColor = (T) => {
         const increase = '#93D02E';
         const decrease = '#DE6055';
-        const none = '#CBAA2C';
+        const none = '#CBAA2C00';
         
         if (typeof T === 'number') {
             return (T > 0) ? increase : ((T < 0) ? decrease: none);
         } else return '';
     }
 
-    const getPath = (T) => {
-        const text = getSign(T) + getRoundedNumberStr(Math.abs(T), 3);
-        return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
+    const getPath = (T, n) => {
+        if (isNaN(+T)) {
+            return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
+        } else {
+            const text = getSign(T) + getRoundedNumberStr(Math.abs(T), 3);
+            return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
+        }
+
     }
 
 
@@ -241,6 +246,10 @@ function userDelta2Labels(data) {
     const pc = data?.delta?.play_count || 0;
     const pt = data?.delta?.play_time || 0;
     const tth = data?.delta?.total_hits || 0;
+
+    if (pt === 0) {
+        return new Array(8).fill("");
+    }
 
     let pt_h = '';
     if (data?.delta?.play_time || data?.delta?.play_time === 0) {
@@ -270,14 +279,13 @@ function userDelta2Labels(data) {
         pt_h = pt_b + pt_m;
     }
 
-    const label_rks = getPath(rks);
-    const label_tts = getPath(tts);
-    const label_pc = getPath(pc);
-    const label_pt = torus.getTextPath(pt_h, 0, 0, 18, 'left baseline', getColor(pt));
-    const label_tth = getPath(tth);
     const n = ""; //没法做的差值
-
     let arr = [];
-    arr.push(label_rks, label_tts, label_pc, label_pt, n, n, n, label_tth);
+    for (const x of [rks, tts, pc, pt_h, 0, 0, 0, tth]) {
+        if (x)
+            arr.push(getPath(x));
+        else
+            arr.push(n);
+    }
     return arr;
 }
