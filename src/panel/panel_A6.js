@@ -100,9 +100,9 @@ function reLocateExportFile(md = "") {
             environmentPath += '\\';
         }
 
-        console.log(md.replaceAll(defaultPath, environmentPath + "Help\\"))
-        console.log(process.env.EXPORT_FILE);
-        console.log(replaceSlash(md.replaceAll(defaultPath, environmentPath + "Help\\")))
+        //console.log(md.replaceAll(defaultPath, environmentPath + "Help\\"))
+        //console.log(process.env.EXPORT_FILE);
+        //console.log(replaceSlash(md.replaceAll(defaultPath, environmentPath + "Help\\")))
         return replaceSlash(md.replaceAll(defaultPath, environmentPath + "Help\\"));
     } else {
         return md;
