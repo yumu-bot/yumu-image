@@ -137,8 +137,8 @@
     --color-prettylights-syntax-sublimelinter-gutter-mark: #484f58;
     --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;
     --color-fg-default: #ffffff;
-    --color-fg-muted: #8b949e;
-    --color-fg-subtle: #6e7681;
+    --color-fg-muted: #eeeeee;
+    --color-fg-subtle: #dddddd;
     --color-canvas-default: #2A2226;
     --color-canvas-subtle: #382E32;
     --color-border-default: #46393F;
@@ -831,19 +831,19 @@ font-size 原来是 16
 }
 
 .markdown-body .footnotes {
-    font-size: 12px;
+    font-size: 24px;
     color: var(--color-fg-muted);
     border-top: 1px solid var(--color-border-default)
 }
 
 .markdown-body .footnotes ol {
-    padding-left: 16px
+    padding-left: 24px
 }
 
 .markdown-body .footnotes ol ul {
     display: inline-block;
-    padding-left: 16px;
-    margin-top: 16px
+    padding-left: 24px;
+    margin-top: 24px
 }
 
 .markdown-body .footnotes li {
