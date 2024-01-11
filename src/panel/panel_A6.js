@@ -93,9 +93,13 @@ export async function panel_A6(data = {
 function reLocateExportFile(md = "") {
     const defaultPath = "D:\\ExportFileV3\\Help\\";
     //const defaultPath = "G:\\";
-    const environmentPath = process.env.EXPORT_FILE;
+    let environmentPath = process.env.EXPORT_FILE;
 
     if (environmentPath != null && environmentPath !== "") {
+        if (environmentPath.slice(-1) !== '\\' || environmentPath.slice(-1) !== '/') {
+            environmentPath += '\\';
+        }
+
         console.log(md.replaceAll(defaultPath, environmentPath + "Help\\"))
         console.log(process.env.EXPORT_FILE);
         console.log(replaceSlash(md.replaceAll(defaultPath, environmentPath + "Help\\")))
