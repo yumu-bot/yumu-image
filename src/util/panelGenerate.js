@@ -543,7 +543,6 @@ export const PanelGenerate = {
 
 //给panel_A5用的，期待可以和上面合并
     beatmap2CardH: async (b, calcPP, rank = 1) => {
-        console.log(b)
         const cover = await getMapBG(b.beatmapset.id, 'list@2x', isReload(b.ranked));
         const background = await getMapBG(b.beatmapset.id, 'cover@2x', isReload(b.ranked));
         // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
