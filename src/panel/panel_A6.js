@@ -96,7 +96,7 @@ function reLocateExportFile(md = "") {
     let environmentPath = process.env.EXPORT_FILE;
 
     if (environmentPath != null && environmentPath !== "") {
-        if (environmentPath.slice(-1) !== '\\' || environmentPath.slice(-1) !== '/') {
+        if (environmentPath.slice(-1) !== '\\' && environmentPath.slice(-1) !== '/') {
             environmentPath += '\\';
         }
 
