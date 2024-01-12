@@ -208,8 +208,12 @@ export function replaceText(base = '', replace = '', reg = /.*/) {
 }
 
 export function replaceTexts(base = '', replaces = [''], reg = /.*/) {
-    for (const v of replaces) {
-        base = base.replace(reg, v);
+    if (Array.isArray(replaces)) {
+        for (const v of replaces) {
+            base = base.replace(reg, v);
+        }
+    } else if (typeof replaces == "string") {
+        base = base.replace(reg, replaces);
     }
     return base;
 }

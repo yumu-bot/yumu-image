@@ -380,7 +380,8 @@ export async function panel_M(data = {
     svg = replaceTexts(svg, [diff_index, length_index, popular_title, difficulty_title, length_title, genre_title, activity_title, recent_title, kudosu_index], reg_index);
 
     // 导入难度
-    const diff_rrect = PanelDraw.BarChart(data.difficulty_arr, null, 0, 1460, 380 + 145, 410, 145, 4, 4, '#E6AD59', null, 2)
+    const difficulty_arr = data?.difficulty_arr || [];
+    const diff_rrect = PanelDraw.BarChart(difficulty_arr, null, 0, 1460, 380 + 145, 410, 145, 4, 4, '#E6AD59', null, 2)
     svg = replaceText(svg, diff_rrect, reg_difficulty);
 
     // 导入评价
@@ -480,10 +481,10 @@ export async function panel_M(data = {
     svg = implantSvgBody(svg, 1120, 890, cardO2g, reg_recent);
 
     // 插入1号卡标签
-    const rank_str = data.user.ranked_and_approved_beatmapset_count ? data.user.ranked_and_approved_beatmapset_count.toString() : '0';
-    const pending_str = data.user.unranked_beatmapset_count ? data.user.unranked_beatmapset_count.toString() : '0'
-    const pending_slot_str = getPendingSlot(data.user.is_supporter, data.user.ranked_and_approved_beatmapset_count).toString();
-    const guest_str = data.user.guest_beatmapset_count ? data.user.guest_beatmapset_count.toString() : '0';
+    const rank_str = data?.user?.ranked_beatmapset_count.toString() || '0';
+    const pending_str = data?.user?.pending_beatmapset_count.toString() || '0';
+    const pending_slot_str = getPendingSlot(data.user.is_supporter, data?.user?.ranked_beatmapset_count).toString();
+    const guest_str = data?.user?.guest_beatmapset_count.toString() || '0';
 
     const rank = torus.getTextPath(rank_str, 120, 616, 42, 'center baseline', '#fff');
     const pending = torus.get2SizeTextPath(pending_str, '/' + pending_slot_str, 42, 30, 255, 616, 'center baseline', '#fff');
