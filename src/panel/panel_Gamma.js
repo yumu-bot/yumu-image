@@ -118,7 +118,7 @@ const PanelGamma = {
         return {
             background: background,
             avatar: avatar,
-            mode: user?.playmode,
+            mode: user?.rank_history?.mode,
             left1: '#' + user?.globalRank,
             left2: user?.country?.code + ' #' + user?.countryRank,
             left3: 'PC ' + user?.playCount,
