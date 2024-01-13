@@ -64,7 +64,7 @@ export async function panel_Gamma(data = {
     center2: '95.36% // 1337x',
 
     panel: 'score', //score, info
-}, reuse = false) {
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_Gamma.svg');
 
@@ -118,12 +118,12 @@ const PanelGamma = {
         return {
             background: background,
             avatar: avatar,
-            mode: user.playmode,
-            left1: '#' + user.globalRank,
-            left2: user.country.countryCode + '#' + user.countryRank,
-            left3: user.playCount + ' PC',
-            down1: user.follower_count + ' Fans',
-            down2: 'u' + user.id,
+            mode: user?.playmode,
+            left1: '#' + user?.globalRank,
+            left2: user?.country?.code + ' #' + user?.countryRank,
+            left3: 'PC ' + user?.playCount,
+            down1: 'Follower ' + user.follower_count,
+            down2: 'U ' + user.id,
             center0b: user.pp ? Math.round(user.pp).toString() : '0',
             center0m: 'PP',
             center1b: user.username,
