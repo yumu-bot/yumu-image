@@ -34,6 +34,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 查询谱面的面板
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_A2(data = {
     //现在的搜索规则是？返回 qualified, ranked, loved, pending, graveyard。当然这个面板应该是默认 qualified 吧。
     rule: 'qualified',

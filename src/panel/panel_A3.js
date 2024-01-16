@@ -35,6 +35,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * rank图 单图成绩排行
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_A3(data = {
     "beatmap": {
         "beatmapset_id": 13019,

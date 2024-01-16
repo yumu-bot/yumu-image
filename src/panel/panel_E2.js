@@ -42,6 +42,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 铺面完整的成绩信息, pp类的
+ * @param data
+ * @return {Promise<string>}
+ */
 // E面板重构计划
 export async function panel_E2(data = {
     expected: { accuracy: 1, combo: 1262, mods: [ 'HD' ], miss: 0, mode: 'osu'},

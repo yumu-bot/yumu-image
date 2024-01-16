@@ -8,6 +8,8 @@ const path = `${process.cwd()}/template/markDownTemplate/index.html`;
 export async function router(req, res) {
     try {
         const data = await Markdown(req.fields.md || "# Error: no value", req.fields.width || 600);
+        console.log(data.height)
+        console.log(data.width)
         res.set('Content-Type', 'image/jpeg');
         res.send(data.image);
     } catch (e) {
@@ -37,7 +39,7 @@ export async function Markdown(md = "", width = 600) {
     });
     const body = await page.$('body');
     const box = await body.boundingBox()
-    const buffer = await body.screenshot({omitBackground: false, encoding: 'binary'});
+    const buffer = await body.screenshot({type:"png", omitBackground: false, encoding: 'binary'});
 
     await page.evaluate(() => {
         window.setStr(null);

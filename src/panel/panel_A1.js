@@ -33,6 +33,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 好友列表
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_A1(data = {
     me_card_A1: {
         "id": 17064371,

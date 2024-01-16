@@ -40,6 +40,12 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 统计 bp 信息
+ * !ba
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_J(data = {
     card_A1: {
         "id": 17064371,

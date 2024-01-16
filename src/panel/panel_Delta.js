@@ -39,6 +39,12 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 某个比赛的信息展示
+ * @param data
+ * @param reuse
+ * @return {Promise<string>}
+ */
 export async function panel_Delta(data = {
     beatMap: {
         "beatmapset_id": 13019,

@@ -29,6 +29,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 帮助面板, 新版
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_A6(data = {
     user: null,
     markdown: null,

@@ -42,6 +42,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * user info 面板
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_D(data = {
     //A1
     user: {

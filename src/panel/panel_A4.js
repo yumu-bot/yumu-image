@@ -34,6 +34,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * bp/tbp 多成绩面板
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_A4(data = {
     "me": {
         "id": 17064371,

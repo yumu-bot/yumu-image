@@ -38,6 +38,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 比赛评分1号, 是木斗力的那个
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_C(data = {}) {
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');

@@ -41,6 +41,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 对局面板
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_F(data = {}) {
     // 导入模板
     let svg = readTemplate('template/Panel_F.svg');

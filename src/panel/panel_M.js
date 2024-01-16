@@ -41,6 +41,12 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 麻婆信息面板, 展示麻婆谱面的
+ * !im xxx
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_M(data = {
     user: {
         "id": 17064371,

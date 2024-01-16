@@ -35,6 +35,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 图池展示
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_H (
     data = {
         name: 'MapPool',
