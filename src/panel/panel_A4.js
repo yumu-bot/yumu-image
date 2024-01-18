@@ -1,7 +1,7 @@
 import {
     exportJPEG, getPanelNameSVG, implantImage,
     implantSvgBody,
-    readTemplate,
+    readTemplate, replaceBanner,
     replaceText,
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
@@ -309,7 +309,7 @@ export async function panel_A4(data = {
     }
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920,320,0,0,0.8, getRandomBannerPath(), reg_banner);
+    svg = replaceBanner(svg, reg_banner, data.me?.profile?.banner);
 
     // 计算面板高度
     const rowTotal = (cardHs !== []) ? Math.ceil(cardHs.length / 2) : 0;

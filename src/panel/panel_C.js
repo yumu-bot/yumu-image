@@ -5,7 +5,7 @@ import {
     getRoundedNumberStr,
     implantImage,
     implantSvgBody, readNetImage,
-    readTemplate,
+    readTemplate, replaceBanner,
     replaceText, transformSvgBody
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
@@ -64,7 +64,7 @@ export async function panel_C(data = {}) {
     const matchInfo = await card_A2(await PanelGenerate.matchData2CardA2(data));
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = replaceBanner(svg, reg_banner);
     svg = implantSvgBody(svg, 40, 40, matchInfo, reg_maincard);
 
     // 导入H卡

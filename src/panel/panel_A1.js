@@ -1,7 +1,7 @@
 import {
     exportJPEG, getPanelNameSVG,
     implantImage, implantSvgBody,
-    readTemplate,
+    readTemplate, replaceBanner,
     replaceText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -233,7 +233,7 @@ export async function panel_A1(data = {
     }
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920,320,0,0,0.8,getRandomBannerPath(),reg_banner);
+    svg = replaceBanner(svg, reg_banner, data.me_card_A1?.profile?.banner);
 
     svg = implantSvgBody(svg, 40, 40, me_cardA1, reg_me_card_a1);
 

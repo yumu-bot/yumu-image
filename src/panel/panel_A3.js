@@ -3,7 +3,7 @@ import {
     getPanelNameSVG,
     implantImage,
     implantSvgBody, isReload,
-    readTemplate,
+    readTemplate, replaceBanner,
     replaceText
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
@@ -284,9 +284,8 @@ export async function panel_A3(data = {
 
     // 插入图片和部件（新方法
     // svg = implantImage(svg,1920,320,0,0,0.8, getRandomBannerPath(), reg_banner);
-    svg = implantImage(svg,1920, 320, 0, 0, 0.6,
-        await getMapBG(data.beatmap.beatmapset.id, 'cover@2x', isReload(data.beatmap.ranked))
-        , reg_banner);
+    svg = replaceBanner(svg, reg_banner,
+        await getMapBG(data.beatmap.beatmapset.id, 'cover@2x', isReload(data.beatmap.ranked)));
 
     // 计算面板高度
     const rowTotal = (cardN1s !== []) ? Math.ceil(cardN1s.length / 2) : 0;
