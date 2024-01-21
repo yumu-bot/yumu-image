@@ -70,9 +70,15 @@ export async function panel_F(data = {}) {
     let blueWins = 0;
 
     for (const v of data?.roundList) {
+        if (v.winningTeam === 'red') {
+            redWins ++;
+        }
+
+        if (v.winningTeam === 'blue') {
+            blueWins ++;
+        }
+
         card_Cs.push(await card_C(await round2CardC(v, redWins, blueWins), true));
-        if (v.winningTeam === 'red') redWins ++;
-        else if (v.winningTeam === 'blue') blueWins ++;
     }
 
     for (const i in card_Cs) {
