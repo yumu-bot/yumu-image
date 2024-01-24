@@ -20,6 +20,7 @@ import {router as PanelF2Router} from "./src/panel/panel_F2.js";
 import {router as PanelHRouter} from "./src/panel/panel_H.js";
 import {router as PanelJRouter} from "./src/panel/panel_J.js";
 import {router as PanelMRouter} from "./src/panel/panel_M.js";
+import {router as PanelNRouter} from "./src/panel/panel_N.js";
 
 import {router as panelAlphaRouter} from "./src/panel/panel_Alpha.js"; //drawLine
 import {router as panelBetaRouter} from "./src/panel/panel_Beta.js"; //scoreSpecial
@@ -67,6 +68,7 @@ app.post('/panel_F2', PanelF2Router);
 app.post('/panel_H', PanelHRouter);
 app.post('/panel_J', PanelJRouter);
 app.post('/panel_M', PanelMRouter);
+app.post('/panel_N', PanelNRouter);
 
 app.post('/panel_Alpha', panelAlphaRouter);
 app.post('/panel_Beta', panelBetaRouter);
