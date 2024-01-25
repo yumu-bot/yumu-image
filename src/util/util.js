@@ -973,8 +973,35 @@ export function getSVGBody(V3Path = '') {
 }
 
 /**
+ * 获取谱面状态的英文
+ * @param ranked
+ * @param {number} ranked 谱面状态，是那个数字
+ */
+
+export function getMapStatus(ranked = 0) {
+    switch (ranked) {
+        case -2:
+            return 'Graveyard';
+        case -1:
+            return 'WIP';
+        case 0:
+            return 'Pending';
+        case 1:
+            return 'Ranked';
+        case 2:
+            return 'Approved';
+        case 3:
+            return 'Qualified';
+        case 4:
+            return 'Loved';
+        default:
+            return '';
+    }
+}
+
+/**
  * @function 获取谱面状态的路径
- * @param {number} status 谱面状态，可以是数字可以是字符串
+ * @param {number, String} status 谱面状态，可以是数字可以是字符串
  */
 export function getMapStatusV3Path(status = 0) {
     let path = '';
