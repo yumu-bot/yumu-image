@@ -1042,8 +1042,8 @@ export const PanelGenerate = {
             background,
             avatar,
 
-            name: user.username,
-            groups: user.groups || [],
+            name: user?.username || "",
+            groups: user?.groups || [],
         };
     },
 
