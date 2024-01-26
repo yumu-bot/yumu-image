@@ -17,8 +17,8 @@
         <rect x="40" y="875" width="430" height="165" rx="20" ry="20" style="fill: #382e32;"/>
         <rect x="490" y="330" width="1380" height="260" rx="20" ry="20" style="fill: #382e32;"/>
         <rect x="490" y="610" width="1100" height="430" rx="20" ry="20" style="fill: #382e32;"/>
-        <rect x="1610" y="610" width="270" height="250" rx="20" ry="20" style="fill: #382e32;"/>
-        <rect x="1610" y="880" width="270" height="160" rx="20" ry="20" style="fill: #382e32;"/>
+        <rect x="1610" y="610" width="270" height="260" rx="20" ry="20" style="fill: #382e32;"/>
+        <rect x="1610" y="890" width="270" height="150" rx="20" ry="20" style="fill: #382e32;"/>
     </g>
     <g id="Me_PN">
     </g>

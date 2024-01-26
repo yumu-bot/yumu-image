@@ -1,10 +1,13 @@
 import {
-    exportJPEG, getExportFileV3Path,
-    getPanelNameSVG, getRoundedNumberStr, implantImage,
+    exportJPEG,
+    getExportFileV3Path,
+    getPanelNameSVG,
+    getRoundedNumberStr,
+    implantImage,
     implantSvgBody, readNetImage,
     readTemplate,
     replaceText,
-    replaceTexts
+    replaceTexts, transformSvgBody
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -148,7 +151,47 @@ export async function panel_N(
                     }
                 ]
                 ,
-                nominators: [ [Object] ],
+                nominators: [{
+                    "avatar_url": "https://a.ppy.sh/3076909?1617850669.jpeg",
+                    "country_code": "CN",
+                    "default_group": "bng",
+                    "id": 3076909,
+                    "is_active": true,
+                    "is_bot": false,
+                    "is_deleted": false,
+                    "is_online": false,
+                    "is_supporter": true,
+                    "last_visit": "2024-01-24T18:32:08+00:00",
+                    "pm_friends_only": false,
+                    "profile_colour": "#A347EB",
+                    "username": "Mafumafu",
+                    "groups": [
+                        {
+                            "colour": "#A347EB",
+                            "has_listing": true,
+                            "has_playmodes": true,
+                            "id": 28,
+                            "identifier": "bng",
+                            "is_probationary": false,
+                            "name": "Beatmap Nominators",
+                            "short_name": "BN",
+                            "playmodes": [
+                                "osu"
+                            ]
+                        },
+                        {
+                            "colour": "#999999",
+                            "has_listing": true,
+                            "has_playmodes": false,
+                            "id": 16,
+                            "identifier": "alumni",
+                            "is_probationary": false,
+                            "name": "osu! Alumni",
+                            "short_name": "ALM",
+                            "playmodes": null
+                        }
+                    ]
+                }],
                 publicRating: 9.43620178041543,
                 bpm: 162,
                 sid: 1087774,
@@ -3127,8 +3170,6 @@ export async function panel_N(
             ]
         }
 
-
-
 ) {
     // 导入模板
     let svg = readTemplate('template/Panel_N.svg');
@@ -3165,7 +3206,7 @@ export async function panel_N(
     const progress_title = torus.getTextPath('Ranking Progress', 510, 365, 30, 'left baseline', '#fff');
     const discussion_title = torus.getTextPath('Modding Discussion', 510, 645, 30, 'left baseline', '#fff');
     const favorite_title = torus.getTextPath('Favorites', 1630, 645, 30, 'left baseline', '#fff');
-    const genre_title = torus.getTextPath('G/L', 1630, 915, 30, 'left baseline', '#fff');
+    const genre_title = torus.getTextPath('G/L', 1630, 925, 30, 'left baseline', '#fff');
 
     svg = replaceTexts(svg, [favorite_title, tag_title, progress_title, discussion_title, guest_title, genre_title], reg_index);
 
@@ -3180,7 +3221,7 @@ export async function panel_N(
     const length_str_m = (total_length % 60).toString().padStart(2, "0");
 
     const diff = torus.get2SizeTextPath(diff_str_b, '/' + diff_str_m, 42, 30, 120, 616, 'center baseline', '#fff');
-    const star = (star_str_b !== "") ? torus.get2SizeTextPath(star_str_b, '~' + star_str_m, 42, 30, 255, 616, 'center baseline', '#fff') :
+    const star = (data?.more?.minSR !== "") ? torus.get2SizeTextPath(star_str_b, '~' + star_str_m, 42, 30, 255, 616, 'center baseline', '#fff') :
         torus.getTextPath(star_str_m,255, 616, 42,'center baseline', '#fff')
     ;
     const length = torus.get2SizeTextPath(length_str_b, ':' + length_str_m, 42, 30, 390, 616, 'center baseline', '#fff');
@@ -3192,9 +3233,8 @@ export async function panel_N(
     svg = replaceTexts(svg, [diff, star, length], reg_index);
     svg = replaceTexts(svg, [diff_index, star_index, length_index], reg_index);
 
-
     // 插入8号卡标签
-    const pack_str = data?.beatmapset?.pack_tags ? data?.beatmapset?.pack_tags[0] : "null";
+    const pack_str = data?.beatmapset?.pack_tags[0] || "null";
 
     const stat_str = 'Not Solved ' + data?.more?.notSolvedCount
         + ' // Problem ' + data?.more?.problemCount
@@ -3212,8 +3252,16 @@ export async function panel_N(
     // 导入 Guest
     const guest = await getGuestPanel(data?.beatmapset?.mappers, 54, 745);
 
+    // 导入 Progress
+    const progress = await getRankingProgressPanel(data?.beatmapset, data?.hype, 490, 330)
+
+    // 导入 Favorite
+    const favorite = await getFavoritePanel(data?.beatmapset?.recent_favourites, 1620, 660);
+
     svg = replaceText(svg, tag, reg_tag);
     svg = replaceText(svg, guest, reg_guest);
+    svg = replaceText(svg, progress, reg_progress);
+    svg = replaceText(svg, favorite, reg_favorite);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, await readNetImage(data?.beatmapset?.covers?.["cover@2x"], false), reg_banner);
@@ -3280,13 +3328,13 @@ function getTagPanel(tags = [""], x, y, size = 18, color = '#3399CC', max_width 
     return out;
 }
 
-async function getRankingProgressPanel(bn = [], hype = [], s) {
-    let hype_length = 615 / 185; // 一般来说是 hype 相比于正常一格的长度比
+async function getRankingProgressPanel(s = {}, hype = [], x = 490, y = 330) {
     const hype_count = s?.hype ? s?.hype?.current : hype?.length;
+    let hype_slot = 615 / 185; // 一般来说是 hype 相比于正常一格的长度比
     const nom_count = s?.nominations_summary?.current;
     const nom_slot = s?.nominations_summary?.required;
     const qua_count = (nom_count === nom_slot && nom_count !== 0) ? 1 : 0
-    const rnk_count = (s?.ranked >= 1) ? 1 : 0
+    const rnk_count = (s?.ranked === 1) ? 1 : 0
 
     const isSpecialRanked = s?.ranked === 2 || s?.ranked === 4;
 
@@ -3294,57 +3342,188 @@ async function getRankingProgressPanel(bn = [], hype = [], s) {
     const total_length = 1350;
     const slot = (nom_slot + (isSpecialRanked ? 1 : 2)); //特殊上架，只需要一个槽位
 
-    let slot_length = total_length / (hype_length + slot);
+    //格子长度，包括一段空缺
+    let slot_length = total_length / (hype_slot + slot);
 
     //分配长度
-    if (slot_length - 5 <= 100) {
-        slot_length = 100;
+    if (slot_length <= 105) {
+        slot_length = 105;
     }
 
-    hype_length = total_length - slot_length * slot;
+    hype_slot = total_length - slot_length * slot;
 
-    const x_hype = 0;
-    const x_nom = hype_length + 5;
-    const x_qua = hype_length + 5 + 2 * slot_length; //特殊上架的位置
-    const x_rnk = hype_length + 5 + 3 * slot_length; //特殊上架不考虑
+    const x_hype = 20 + x;
+    const x_nom = hype_slot + 5 + 20 + x;
+    const x_qua = hype_slot + 5 + nom_slot * slot_length + 20 + x; //特殊上架的状态位置
+    const x_rnk = hype_slot + 5 + (nom_slot + 1) * slot_length + 20 + x; //特殊上架不考虑
+
+    const y_index = 67 + y;
+    const y_rrect = 78 + y;
+    const y_nominator = 110 + y;
+
+    //分支
+    let index = torus.getTextPath('Hype ' + hype_count + '/' + 5, x_hype, y_index, 24, 'left baseline')
+        + torus.getTextPath('Nomination ' + nom_count + '/' + nom_slot, x_nom, y_index, 24, 'left baseline');
+    let rrect = "";
+    let icon = "";
+
+    rrect += drawHype(x_hype, y_rrect, hype_slot * Math.min(1, hype_count / 5), hype_slot);
+    rrect += drawRRect(nom_count, nom_slot, x_nom, y_rrect, slot_length - 5, '#B3FD66');
+
+    const nominator = await drawNominators(x_nom, y_nominator, s?.nominators, slot_length)
 
     if (s?.ranked === 2) {
         //特殊上架 approved
-
+        index += torus.getTextPath('Approved', x_qua, y_index, 24, 'left baseline');
+        rrect += drawRRect(1, 1, x_qua, y_rrect, slot_length - 5, '#D7FEA6');
+        icon += drawIcons(true, x_qua + (slot_length - 5) / 2 - 25, y_nominator, 'object-beatmap-qualified.png')
     } else if (s?.ranked === 4) {
         //特殊上架 loved
+        index += torus.getTextPath('Loved', x_qua, y_index, 24, 'left baseline');
+        rrect += drawRRect(1, 1, x_qua, y_rrect, slot_length - 5, '#FF66AA');
+        icon += drawIcons(true, x_qua + (slot_length - 5) / 2 - 25, y_nominator, 'object-beatmap-loved.png')
 
     } else {
         //正常
+        index += (torus.getTextPath('Qualified', x_qua, y_index, 24, 'left baseline') +
+            torus.getTextPath('Ranked', x_rnk, y_index, 24, 'left baseline'));
+        rrect += drawRRect(qua_count, 1, x_qua, y_rrect, slot_length - 5, '#D7FEA6') +
+            drawRRect(rnk_count, 1, x_rnk, y_rrect, slot_length - 5, '#fff');
+        icon += drawIcons(qua_count >= 1, x_qua + (slot_length - 5) / 2 - 25, y_nominator, 'object-beatmap-qualified.png') +
+            drawIcons(rnk_count >= 1, x_rnk + (slot_length - 5) / 2 - 25, y_nominator, 'object-beatmap-ranked.png');
+    }
 
+    return (index + rrect + nominator + icon);
 
+    //细分方法
+
+    async function drawNominators(x, y, bn = [], slot_length) {
+        let out = "";
+        const half = (slot_length - 5) / 2;
+
+        for (const i in bn) {
+            const u = bn[i];
+            const dx = x + (i * slot_length) + half - 50;
+
+            out += await label_N1(dx, y, u, slot_length);
+        }
+
+        return out;
+    }
+
+    function drawIcons(isDraw = true, x, y, link) {
+        if (isDraw) {
+            return PanelDraw.Image(x, y, 50, 50, getExportFileV3Path(link));
+        } else {
+            return '';
+        }
     }
 
 
+    function drawHype(x, y, length, blank_length = length, color = '#82BA44', full_color = '#46393F') {
+        return PanelDraw.Rect(x, y, blank_length, 15, 7.5, full_color) + PanelDraw.Rect(x, y, length, 15, 7.5, color);
+    }
+
+
+    function drawRRect(count, slot, x, y, length, color = '#fff', full_color = '#46393F') {
+        let out = "";
+
+        for (let i = 0; i < slot; i++) {
+            out += PanelDraw.Rect(x + (length + 5) * i, y, length, 15, 7.5, full_color);
+        }
+
+        for (let j = 0; j < count; j++) {
+            out += PanelDraw.Rect(x + (length + 5) * j, y, length, 15, 7.5, color);
+        }
+        return out;
+    }
+
+}
+
+async function getFavoritePanel(fav = [], x = 1620, y = 660) {
+    let svg = "<g>";
+
+    for (const i in fav) {
+        if (i >= 20) break;
+
+        const u = fav[i];
+        const dx = (i % 5) * 51 + x;
+        const dy = Math.floor(i / 5) * 51 + y;
+
+        svg += (`<g transform="translate(${dx} ${dy})">` + await label_N3(u) + '</g>');
+    }
+
+    svg += '</g>';
+    return svg;
 }
 
 // label 内置比较好
 
-async function label_N3(u = {
-    id: 12208924,
-    username: '-OvO-',
-    active: true,
-    bot: false,
-    uid: 12208924,
-    osuMode: 'DEFAULT',
-    supporter: true,
-    online: false,
-    deleted: false,
-    avatar_url: 'https://a.ppy.sh/12208924?1697903109.jpeg',
-    country_code: 'CN',
-    default_group: 'default',
-    is_active: true,
-    is_bot: false,
-    is_deleted: false,
-    is_online: false,
-    is_supporter: true,
-    pm_friends_only: false
-}) {
+
+async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
+    //导入模板
+    let svg = `  <defs>
+    <clipPath id="clippath-LN1">
+      <circle cx="50" cy="50" r="50" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="RRect_LN1">
+  </g>
+  <g id="Avatar_LN1">
+    <circle cx="50" cy="50" r="50" style="fill: #46393f;"/>
+    <g style="clip-path: url(#clippath-LN1);">
+    </g>
+  </g>
+  <g id="Label_LN1">
+  </g>
+  <g id="Text_LN1">
+  </g>`
+    //正则
+    const reg_text = /(?<=<g id="Text_LN1">)/;
+    const reg_label = /(?<=<g id="Label_LN1">)/;
+    //const reg_rrect = /(?<=<g id="RRect_LN1">)/;
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LN1\);">)/;
+
+    //定义文本
+    const avatar = await readNetImage(u?.avatar_url, false, getExportFileV3Path('avatar-guest.png'));
+
+    //获取用户组或者玩家组简称
+    const abbr_text = (g = u?.default_group) => {
+        switch (g) {
+            case "bng": return 'B';
+            case "nat": return 'N';
+            case "gmt": return 'G';
+            case "alm": return 'A';
+            case "ppy": return 'Y';
+            case "bot": return 'T';
+            case "dev": return 'D';
+            case "spt": return 'S';
+            case "lvd": return 'L';
+            case "bsc": return 'C';
+            default: return '';
+        }
+    }
+    const abbr_color = u?.profile_colour || 'none';
+
+    const abbr = torus.getTextPath(abbr_text(u?.default_group), 15, 15.877, 18, 'center baseline', '#fff');
+    const abbr_rrect = PanelDraw.Rect(0, 0, 30, 20, 10, abbr_color);
+
+    const name = torus.getTextPath(
+        torus.cutStringTail(u?.username, 18, Math.max(max_width, 100), true)
+        , 50, 118, 18, 'center baseline', '#fff');
+    const uid = torus.getTextPath(u?.id.toString(), 50, 138, 16, 'center baseline', '#fff');
+
+    //插入文本
+    svg = implantImage(svg, 100, 100, 0, 0, 1, avatar, reg_avatar);
+    svg = replaceText(svg, abbr, reg_text);
+    svg = replaceText(svg, abbr_rrect, reg_label);
+    svg = replaceText(svg, name, reg_text);
+    svg = replaceText(svg, uid, reg_text);
+
+    return transformSvgBody(x, y, svg);
+}
+
+async function label_N3(u = {}) {
 
     //导入模板
     let svg = `  <defs>
@@ -3376,26 +3555,7 @@ async function label_N3(u = {
     return svg.toString();
 }
 
-async function label_N4(u = {
-    id: 12208924,
-    username: '-OvO-',
-    active: true,
-    bot: false,
-    uid: 12208924,
-    osuMode: 'DEFAULT',
-    supporter: true,
-    online: false,
-    deleted: false,
-    avatar_url: 'https://a.ppy.sh/12208924?1697903109.jpeg',
-    country_code: 'CN',
-    default_group: 'default',
-    is_active: true,
-    is_bot: false,
-    is_deleted: false,
-    is_online: false,
-    is_supporter: true,
-    pm_friends_only: false
-}) {
+async function label_N4(u = {}) {
 
     //导入模板
     let svg = `  <defs>

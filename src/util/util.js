@@ -167,6 +167,11 @@ export async function readNetImage(path = '', reload = true, defaultImagePath = 
     if (!path || !path.startsWith("http")) {
         return readImage(path);
     }
+
+    if (path == 'https://osu.ppy.sh/images/layout/avatar-guest.png') {
+        return getExportFileV3Path('avatar-guest.png');
+    }
+
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
