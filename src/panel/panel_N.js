@@ -107,13 +107,12 @@ export async function panel_N(
     svg = replaceTexts(svg, [diff_index, star_index, length_index], reg_index);
 
     // 插入8号卡标签
-    const pack_str = data?.beatmapset?.pack_tags[0] || "null";
 
-    const stat_str = 'Not Solved ' + data?.more?.notSolvedCount
-        + ' // Problem ' + data?.more?.problemCount
-        + ' // Suggestion ' + data?.more?.suggestCount
-        + ' // Praise ' + data?.more?.praiseCount
-        + ' // Pack ' + pack_str
+    const stat_str = '(?) Not Solved ' + (data?.more?.notSolvedCount || 0)
+        + ' // (!) Problem ' + (data?.more?.problemCount || 0)
+        + ' // ( ) Suggestion ' + (data?.more?.suggestCount || 0)
+        + ' // (*) Praise ' + (data?.more?.praiseCount || 0)
+        + ' // Pack ' + (data?.beatmapset?.pack_tags[0] || "null")
         + ' // Rate ' + getRoundedNumberStr(data?.beatmapset?.publicRating, 2);
 
     const stat = torus.getTextPath(stat_str, 1570, 645, 18, 'right baseline', '#aaa');
@@ -133,7 +132,7 @@ export async function panel_N(
     const favorite = await getFavoritePanel(data?.beatmapset?.recent_favourites, 1620, 660);
 
     // 导入 Discussion
-    const discussion = await getDisscussionPanel(data?.discussion, data?.users, 510, 660, 4, 345, 1060);
+    const discussion = await getDisscussionPanel(data?.discussion, data?.users, 510, 660);
 
     svg = replaceText(svg, tag, reg_tag);
     svg = replaceText(svg, guest, reg_guest);
@@ -147,32 +146,6 @@ export async function panel_N(
     svg = implantSvgBody(svg, 60, 350, cardO1, reg_me);
 
     return svg.toString();
-}
-
-async function getGuestPanel(guest = [], x = 54, y = 745) {
-    let svg = "<g>";
-
-    if (guest.length > 4) {
-        for (const i in guest) {
-            if (i >= 16) break;
-
-            const u = guest[i];
-            const dx = (i % 8) * 51 + x;
-            const dy = Math.floor(i / 8) * 51 + y;
-
-            svg += (`<g transform="translate(${dx} ${dy})">` + await label_N3(u) + '</g>');
-        }
-    } else {
-        for (const i in guest) {
-            const u = guest[i];
-            const dx = i * 102 + x;
-
-            svg += (`<g transform="translate(${dx} ${y})">` + await label_N4(u) + '</g>');
-        }
-    }
-
-    svg += '</g>';
-    return svg;
 }
 
 function getTagPanel(tags = [""], x, y, size = 18, color = '#3399CC', max_width = 390, max_row = 4) {
@@ -206,11 +179,35 @@ function getTagPanel(tags = [""], x, y, size = 18, color = '#3399CC', max_width 
     return out;
 }
 
+async function getGuestPanel(guest = [], x = 54, y = 745) {
+    let out = "";
+    if (guest.length > 4) {
+        for (const i in guest) {
+            if (i >= 16) break;
+
+            const u = guest[i];
+            const dx = (i % 8) * 51;
+            const dy = Math.floor(i / 8) * 51;
+
+            out += (`<g transform="translate(${dx} ${dy})">` + await label_N3(u) + '</g>');
+        }
+    } else {
+        for (const i in guest) {
+            const u = guest[i];
+            const dx = i * 102;
+
+            out += (`<g transform="translate(${dx} 0)">` + await label_N4(u) + '</g>');
+        }
+    }
+
+    return transformSvgBody(x, y, out);
+}
+
 async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 490, y = 330) {
-    const hype_count = s?.hype?.current || more?.hypeCount;
+    const hype_count = s?.hype?.current || more?.hypeCount || 0;
     let hype_slot = 615 / 185; // 一般来说是 hype 相比于正常一格的长度比
-    const nom_count = s?.nominations_summary?.current;
-    const nom_slot = s?.nominations_summary?.required;
+    const nom_count = s?.nominations_summary?.current || 0;
+    const nom_slot = s?.nominations_summary?.required || 2;
     const qua_count = (nom_count === nom_slot && nom_count !== 0) ? 1 : 0
     const rnk_count = (s?.ranked === 1) ? 1 : 0
 
@@ -277,8 +274,8 @@ async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 
 
 }
 
-async function getDisscussionPanel(discussion, user, x, y, max_row = 4, max_height = 345, max_width = 1060) {
-    return await renderDiscussion(discussion, user, x, y, max_row, max_height, max_width);
+async function getDisscussionPanel(discussion, user, x, y) {
+    return await renderDiscussion(discussion, user, x, y, 4, 360, 1060);
 }
 
 async function getFavoritePanel(fav = [], x = 1620, y = 660) {
@@ -298,9 +295,7 @@ async function getFavoritePanel(fav = [], x = 1620, y = 660) {
     return svg;
 }
 
-// label 内置比较好
-
-
+// label
 async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
     //导入模板
     let svg = `  <defs>
@@ -327,9 +322,10 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
 
     //定义文本
     const avatar = await readNetImage(u?.avatar_url, false, getExportFileV3Path('avatar-guest.png'));
+    const abbr_color = u?.profile_colour || 'none';
 
     //获取用户组或者玩家组简称
-    const abbr_text = (g = u?.default_group) => {
+    const group2AbbrText = (g = u?.default_group) => {
         switch (g) {
             case "bng": return 'B';
             case "nat": return 'N';
@@ -344,9 +340,8 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
             default: return '';
         }
     }
-    const abbr_color = u?.profile_colour || 'none';
 
-    const abbr = torus.getTextPath(abbr_text(u?.default_group), 15, 15.877, 18, 'center baseline', '#fff');
+    const abbr = torus.getTextPath(group2AbbrText(u?.default_group), 15, 15.877, 18, 'center baseline', '#fff');
     const abbr_rrect = PanelDraw.Rect(0, 0, 30, 20, 10, abbr_color);
 
     const name = torus.getTextPath(
@@ -387,19 +382,25 @@ async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row
     const reg_label = /(?<=<g id="Label_LN2">)/;
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LN2-1\);">)/;
 
-    //定义文本
+    //定义文本，限宽 40
 
-    const name_str = torus.cutStringTail(u?.username || '', 18, max_width - 15);
+    const name_str = torus.cutStringTail(u?.username || ('ID:' + (u?.id || 0)), 18, Math.max(max_width - 46 - 15, 40));
     const name_length = torus.getTextWidth(name_str, 18);
     const name = torus.getTextPath(name_str, 46, 14, 18, 'left baseline', '#fff');
 
-    const comment = renderMessage(46, 34, 18, lines, row); //这部分偏移是需要计算的
     const type = (p?.resolved && p?.can_be_resolved) ? 'resolved' : p?.message_type;
+    const comment_color = (type === 'resolved') ? '#888' : '#fff';
+    const comment = renderMessage(46, 34, 18, lines, row, comment_color); //这部分偏移是需要计算的
+
+    const diff_str = torus.cutStringTail((p?.can_be_resolved) ? (p?.difficulty || "General") : "",
+        18, Math.max(max_width - 46 - 30 - name_length, 0),true);
+    const diff = torus.getTextPath(diff_str, 46 + 30 + name_length, 14, 14, 'left baseline', '#fff');
 
     const label_type = PanelDraw.Image(46 + name_length + 5, -2, 20, 20, getExportFileV3Path('object-type-' + type +'.png'));
 
     //插入文本
     svg = replaceText(svg, name, reg_text);
+    svg = replaceText(svg, diff, reg_text);
     svg = replaceText(svg, comment, reg_text);
     svg = replaceText(svg, label_type, reg_label);
 
@@ -479,7 +480,6 @@ async function label_N4(u = {}) {
     return svg.toString();
 }
 
-
 /**
  * 分隔消息变成消息块
  * @param comment
@@ -491,7 +491,7 @@ async function label_N4(u = {}) {
 function splitMessage(comment = "", size = 18, max_width = 100, max_row = 4) {
     let lines = [];
     let row = 0;
-    const new_comment = comment.replaceAll(/[\n\r\v\f\u2028\u2029]+/g, " ");
+    const new_comment = comment.replaceAll(/[\n\r\v\f\u2028\u2029]+/g, ", ");
 
     //实际字体的最大宽度
     let font_width = 0;
@@ -507,7 +507,7 @@ function splitMessage(comment = "", size = 18, max_width = 100, max_row = 4) {
             row ++;
             if (row > max_row) {
                 const last = lines.pop();
-                lines.push(last.slice(0, -2) + '...');
+                lines.push(last.slice(0, -3) + '...');
                 row --;
                 break;
             }
@@ -526,12 +526,15 @@ function splitMessage(comment = "", size = 18, max_width = 100, max_row = 4) {
         lines.push(comment);
         row = 1;
         font_width = PuHuiTi.getTextWidth(comment, 18)
-    }
-
-    //还有剩下的字符串，不要算了
-    if (row < max_row && row >= 1 && line.length > 0) {
+    } else if (row < max_row && line.length > 0) {
+        //还有剩下的字符串
+        lines.push(line);
+        row ++;
+        font_width = Math.max(PuHuiTi.getTextWidth(line, 18), font_width);
+    } else if (row >= max_row && line.length > 0) {
+        //还有剩下的字符串，但是没地方放了！
         const last = lines.pop();
-        lines.push(last.slice(0, -2) + '...');
+        lines.push(last.slice(0, -3) + '...');
     }
 
     return {
@@ -548,26 +551,27 @@ function splitMessage(comment = "", size = 18, max_width = 100, max_row = 4) {
  * @param size
  * @param lines
  * @param row
+ * @param color 消息颜色
  * @return {string} SVG 体
  */
-function renderMessage(x = 0, y = 0, size = 18, lines = [""], row = 1) {
+function renderMessage(x = 0, y = 0, size = 18, lines = [""], row = 1, color = '#fff') {
     let out = "";
     for (let i = 0; i < row; i++) {
         const s = lines[i];
-        // x+2: 普惠体的偏移
-        out += PuHuiTi.getTextPath(s, x + 2, y + i * 20, size, 'left baseline', '#fff');
+        // y+2: 普惠体的偏移
+        out += PuHuiTi.getTextPath(s, x, y + 2 + i * 20, size, 'left baseline', color);
     }
     return out;
 }
 
 //N2+ hype maxrow 是 1， 145， 300
-async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_row = 4, max_height = 345, max_width = 1060) {
+async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_row = 4, max_height = 360, max_width = 1060) {
     let out = "";
     let sum_x = 0;
     let sum_y = 0;
     let column = 1;
 
-    let max_width_in_column = 0;
+    let label_max_width = 0;
 
     for (const d of discussion) {
         let u = null;
@@ -578,27 +582,49 @@ async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_ro
             }
         }
 
-        const split = splitMessage(d?.starting_post?.message, 18, Math.min((max_width / 2) - 25, max_width - sum_x - column * 25), max_row); //宽度实时变化，取最小值
-        //25是头像
-
-        const lines = split.lines;
-        const row = split.row;
-        max_width_in_column = Math.max(max_width_in_column, split.font_width);
-
-        //15是图片
-        out += await label_N2(u, d, sum_x, sum_y, max_width_in_column + 15 + 5, lines, row)
+        // 计算还剩多少位置
+        const remain_height = max_height - sum_y;
 
         // 分段函数，row 和 高度 对应关系：1-50,2-65,3-85,4-105
-        sum_y += (row <= 2) ? (35 + 15 * row) : (25 + 20 * row);
+        function height2Row(height = 0, max_row = 1) {
+            let row;
 
-        if (sum_y >= (max_height - 40)) { //不足以再填下一个标签
-            sum_x += (max_width_in_column + 46 + 15); //46是头像和空隙，15是label之间的空隙
-            sum_y = 0;
-            column ++;
-            max_width_in_column = 0;
+            if (height <= 65) {
+                row = 1;
+            } else if (height <= 85) {
+                row = 2;
+            } else if (height <= 105) {
+                row = 3;
+            } else {
+                row = 4;
+            }
+
+            return Math.min(row, max_row)
         }
 
-        if (sum_x >= max_width || max_width - sum_x <= 60) { //太窄
+        const remain_row = height2Row(remain_height, max_row);
+
+        const split = splitMessage(d?.starting_post?.message, 18, Math.min((max_width / 2) - 25, max_width - sum_x - column * 25), remain_row); //宽度实时变化，取最小值
+        //25是头像
+
+        const text_lines = split.lines;
+        const text_row = split.row;
+        label_max_width = Math.max(label_max_width, split.font_width + 46 + 15); //46是头像和空隙，15是label之间的空隙
+
+        //15是图片
+        out += await label_N2(u, d, sum_x, sum_y, label_max_width, text_lines, remain_row)
+
+        // 分段函数，row 和 高度 对应关系：1-50,2-65,3-85,4-105
+        sum_y += (text_row <= 2) ? (35 + 15 * text_row) : (25 + 20 * text_row);
+
+        if (sum_y >= (max_height - 40)) { //不足以再填下一个标签
+            sum_x += label_max_width;
+            sum_y = 0;
+            column ++;
+            label_max_width = 0;
+        }
+
+        if (sum_x >= max_width || max_width - sum_x <= 80) { //太窄
             break;
         }
     }
@@ -632,7 +658,6 @@ function drawIcons(isDraw = true, x, y, link) {
 function drawHype(x, y, length, blank_length = length, color = '#82BA44', full_color = '#46393F') {
     return PanelDraw.Rect(x, y, blank_length, 15, 7.5, full_color) + PanelDraw.Rect(x, y, length, 15, 7.5, color);
 }
-
 
 function drawRRect(count, slot, x, y, length, color = '#fff', full_color = '#46393F') {
     let out = "";

@@ -625,7 +625,7 @@ export const PanelGenerate = {
     },
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
-        const background = cursor ? await getMapBG(cursor.id, 'list@2x', false) : await readNetImage(first_beatmapset.covers['list@2x'], false, getExportFileV3Path('card-default.png'));
+        const background = cursor ? await getMapBG(cursor?.id, 'list@2x', false) : await readNetImage(first_beatmapset.covers['list@2x'], false, getExportFileV3Path('card-default.png'));
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
@@ -1042,25 +1042,25 @@ export const PanelGenerate = {
             background,
             avatar,
 
-            name: user?.username || "",
+            name: user?.username || (user?.id ? "ID: " + user?.id : "Unknown"),
             groups: user?.groups || [],
         };
     },
 
-    beatmap2CardO2: async (beatmapset) => {
-        if (!beatmapset) return '';
+    beatmap2CardO2: async (s) => {
+        if (!s) return '';
 
-        const background = await getMapBG(beatmapset.id, 'list@2x', isReload(beatmapset.status));
-        const map_status = beatmapset.status;
-        const title1 = beatmapset.title;
-        const title2 = beatmapset.artist;
+        const background = await getMapBG(s?.id, 'list@2x', isReload(s.status));
+        const map_status = s?.status;
+        const title1 = s?.title;
+        const title2 = s?.artist;
         const title_font = torus;
         const left1 = '';
-        const left2 = '*' + beatmapset.favourite_count;
-        const left3 = beatmapset.id ? 'S' + beatmapset.id : '0';
+        const left2 = '*' + s?.favourite_count;
+        const left3 = s?.id ? 'S' + s.id : '0';
         const right1 = 'Play Counts';
-        const right2b = getRoundedNumberLargerStr(beatmapset.play_count, 2);
-        const right2m = getRoundedNumberSmallerStr(beatmapset.play_count, 2);
+        const right2b = getRoundedNumberLargerStr(s?.play_count, 2);
+        const right2m = getRoundedNumberSmallerStr(s?.play_count, 2);
 
         return {
             background: background,

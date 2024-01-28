@@ -65,7 +65,8 @@ export function initPath() {
                 return axios(config);
             });
         }
-        console.error("request err", config);
+        //console.error("request err", config);
+        //这个 太吵了！
         return Promise.reject(error);
     })
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
