@@ -134,11 +134,15 @@ export async function panel_N(
     // 导入 Discussion
     const discussion = await getDisscussionPanel(data?.discussion, data?.users, 510, 660);
 
+    // 导入 Favorite
+    const genre = getGenrePanel(data?.beatmapset?.genre, data?.beatmapset?.language);
+
     svg = replaceText(svg, tag, reg_tag);
     svg = replaceText(svg, guest, reg_guest);
     svg = replaceText(svg, progress, reg_progress);
     svg = replaceText(svg, favorite, reg_favorite);
     svg = replaceText(svg, discussion, reg_discussion);
+    svg = replaceText(svg, genre, reg_genre);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, await readNetImage(data?.beatmapset?.covers?.["cover@2x"], false), reg_banner);
@@ -293,6 +297,12 @@ async function getFavoritePanel(fav = [], x = 1620, y = 660) {
 
     svg += '</g>';
     return svg;
+}
+
+function getGenrePanel(genre, language) {
+    const g = label_N6(1625, 940, 'genre', genre?.name);
+    const l = label_N6(1745, 940, 'language', language?.name);
+    return g + l;
 }
 
 // label
@@ -480,6 +490,33 @@ async function label_N4(u = {}) {
     return svg.toString();
 }
 
+function label_N6(x = 0, y = 0, type = 'genre', name = '') {
+    let svg = `
+  <g id="Label_LN6">
+  </g>
+  <g id="Text_LN6">
+  </g>`
+
+    //正则
+    const reg_text = /(?<=<g id="Text_LN6">)/;
+    const reg_label = /(?<=<g id="Label_LN6">)/;
+
+    const text = torus.getTextPath(name, 60, 84, 18, 'center baseline', '#fff'
+    );
+
+    const file = name.replaceAll(" ", "_").toLowerCase() || 'unspecified';
+    const label = getExportFileV3Path('object-' + type + '-' + file + '.png');
+
+
+    //插入文本
+    svg = replaceText(svg, text, reg_text);
+
+    //插入图片
+    svg = implantImage(svg, 64, 64, 28, 0, 1, label, reg_label);
+
+    return transformSvgBody(x, y, svg.toString());
+}
+
 /**
  * 分隔消息变成消息块
  * @param comment
@@ -604,7 +641,8 @@ async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_ro
 
         const remain_row = height2Row(remain_height, max_row);
 
-        const split = splitMessage(d?.starting_post?.message, 18, Math.min((max_width / 2) - 25, max_width - sum_x - column * 25), remain_row); //宽度实时变化，取最小值
+        const split = splitMessage(d?.starting_post?.message, 18,
+            Math.max(Math.min((max_width / 2) - 25, max_width - sum_x - column * 25), 0), remain_row); //宽度实时变化，取最小值
         //25是头像
 
         const text_lines = split.lines;
@@ -624,7 +662,7 @@ async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_ro
             label_max_width = 0;
         }
 
-        if (sum_x >= max_width || max_width - sum_x <= 80) { //太窄
+        if (max_width - sum_x <= 100) { //太窄
             break;
         }
     }
