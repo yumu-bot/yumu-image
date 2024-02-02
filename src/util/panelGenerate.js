@@ -1,4 +1,4 @@
-import {torus} from "./font.js";
+import {PuHuiTi, torus} from "./font.js";
 import moment from "moment";
 import {
     getApproximateRank,
@@ -6,7 +6,7 @@ import {
     getDecimals,
     getExportFileV3Path,
     getGameMode,
-    getMapBG,
+    getMapBG, getMapStatus,
     getMatchNameSplitted,
     getRoundedNumberLargerStr,
     getRoundedNumberSmallerStr,
@@ -208,8 +208,7 @@ export const PanelGenerate = {
         const rating = (total_score > 0) ? Math.round(player_score * total_player / total_score * 100) / 100 : 0;
         const pp_str = (score?.pp > 0) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
         const mods_arr = score?.mods || [];
-        const rank = !(score?.match?.pass) ? 'F' :
-            rankSS2X(getApproximateRank(score, true));
+        const rank = rankSS2X(getApproximateRank(score, true));
         const bg_str = 'object-score-backimage-' + rank + '.jpg';
         const icon_str = (!score.match.team || score.match.team === 'none') ? 'object-card-headtohead.png'
             : 'object-card-team' + score.match.team + '.png';
@@ -361,6 +360,220 @@ export const PanelGenerate = {
         };
     },
 
+
+
+    beatMapSet2CardA2: async (s = {
+        artist: 'Wang Rui',
+        covers: {
+            cover: 'https://assets.ppy.sh/beatmaps/1087774/covers/cover.jpg?1646464034',
+            'cover@2x': 'https://assets.ppy.sh/beatmaps/1087774/covers/cover@2x.jpg?1646464034',
+            card: 'https://assets.ppy.sh/beatmaps/1087774/covers/card.jpg?1646464034',
+            'card@2x': 'https://assets.ppy.sh/beatmaps/1087774/covers/card@2x.jpg?1646464034',
+            list: 'https://assets.ppy.sh/beatmaps/1087774/covers/list.jpg?1646464034',
+            'list@2x': 'https://assets.ppy.sh/beatmaps/1087774/covers/list@2x.jpg?1646464034',
+            slimcover: 'https://assets.ppy.sh/beatmaps/1087774/covers/slimcover.jpg?1646464034',
+            'slimcover@2x': 'https://assets.ppy.sh/beatmaps/1087774/covers/slimcover@2x.jpg?1646464034'
+        },
+        creator: 'Muziyami',
+        nsfw: false,
+        offset: 0,
+        source: '小女花不弃',
+        spotlight: false,
+        status: 'ranked',
+        title: 'Tao Hua Xiao',
+        video: false,
+        ranked: 1,
+        storyboard: true,
+        tags: 'peach blossom cpop c-pop pop chinese 古风 oriental bilibili cover rearrangement 纳兰寻风 na lan xun feng 西门振 xi men zhen 青萝子 qing luo zi op opening xiao nv hua bu qi i will never let you go houshou hari dacaigou kisaki dahkjdas -ovo-',
+        converts: [
+            [Object], [Object], [Object],
+            [Object], [Object], [Object],
+            [Object], [Object], [Object],
+            [Object], [Object], [Object],
+            [Object], [Object], [Object],
+            [Object], [Object], [Object],
+            [Object], [Object], [Object]
+        ],
+        description: {
+            description: ""
+        },
+        genre: { id: 5, name: 'Pop' },
+        language: { id: 4, name: 'Chinese' },
+        ratings: [
+            0, 7, 4, 0,  3,
+            1, 1, 7, 3, 41,
+            270
+        ],
+        mappers: [
+            [Object], [Object],
+            [Object], [Object],
+            [Object], [Object],
+            [Object]
+        ],
+        nominators: [ [Object] ],
+        publicRating: 9.43620178041543,
+        sid: 1087774,
+        bpm: 162,
+        artist_unicode: '汪睿',
+        favourite_count: 404,
+        id: 1087774,
+        play_count: 200243,
+        preview_url: '//b.ppy.sh/preview/1087774.mp3',
+        title_unicode: '桃花笑',
+        user_id: 7003013,
+        can_be_hyped: false,
+        discussion_locked: false,
+        is_scoreable: true,
+        last_updated: 1646464010,
+        legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1005413',
+        nominations_summary: { current: 4, required: 4 },
+        ranked_date: 1647193324,
+        submitted_date: 1577976073,
+        availability: { download_disabled: false, more_information: null },
+        beatmaps: [
+            [Object], [Object],
+            [Object], [Object],
+            [Object], [Object],
+            [Object], [Object],
+            [Object], [Object],
+            [Object]
+        ],
+        current_nominations: [ [Object], [Object], [Object], [Object] ],
+        pack_tags: [ 'S1152' ],
+        recent_favourites: [
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object], [Object], [Object],
+            [Object], [Object]
+        ],
+        related_users: [
+            [Object], [Object],
+            [Object], [Object],
+            [Object], [Object],
+            [Object], [Object]
+        ],
+        user: {
+            id: 7003013,
+            username: 'Muziyami',
+            discord: 'YumeMuzi#5619',
+            interests: 'yuyuko❤',
+            location: 'China',
+            occupation: 'Elite Graveyarded Mapper',
+            twitter: 'YumeMuzi',
+            website: 'https://github.com/YumeMuzi',
+            badges: [Array],
+            monthlyPlaycounts: [Array],
+            page: [Object],
+            replaysWatchedCounts: [Array],
+            PP: 6196.65,
+            active: true,
+            uid: 7003013,
+            bot: false,
+            osuMode: 'OSU',
+            pp: 6196.65,
+            playCount: 23831,
+            countryRank: 680,
+            levelProgress: 48,
+            levelCurrent: 100,
+            totalHits: 8890988,
+            playTime: 2347198,
+            accuracy: 99.0353,
+            globalRank: 36155,
+            maxCombo: 2801,
+            deleted: false,
+            online: false,
+            commentsCount: 682,
+            supporter: false,
+            avatar_url: 'https://a.ppy.sh/7003013?1704285435.jpeg',
+            country_code: 'CN',
+            default_group: 'default',
+            is_active: true,
+            is_bot: false,
+            is_deleted: false,
+            is_online: false,
+            is_supporter: false,
+            last_visit: 1706131787,
+            pm_friends_only: false,
+            cover_url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg',
+            has_supported: true,
+            join_date: 1440765767,
+            max_blocks: 100,
+            max_friends: 500,
+            playmode: 'osu',
+            playstyle: [Array],
+            post_count: 252,
+            profile_order: [Array],
+            country: [Object],
+            cover: [Object],
+            kudosu: [Object],
+            account_history: [],
+            active_tournament_banners: [],
+            beatmap_playcounts_count: 6892,
+            comments_count: 682,
+            favourite_beatmapset_count: 85,
+            follower_count: 505,
+            graveyard_beatmapset_count: 113,
+            groups: [],
+            guest_beatmapset_count: 26,
+            loved_beatmapset_count: 0,
+            mapping_follower_count: 61,
+            nominated_beatmapset_count: 0,
+            pending_beatmapset_count: 3,
+            previous_usernames: [Array],
+            rank_highest: [Object],
+            ranked_beatmapset_count: 4,
+            scores_best_count: 100,
+            scores_first_count: 0,
+            scores_pinned_count: 3,
+            scores_recent_count: 0,
+            statistics: [Object],
+            support_level: 0,
+            user_achievements: [Array],
+            rank_history: [Object]
+        }
+    }) => {
+        const background = await readNetImage(s?.covers["card@2x"], isReload(s?.ranked));
+        const map_status = s?.status;
+        const title1 = s?.title_unicode;
+        const title2 = s?.artist_unicode;
+        const title3 = s?.creator;
+        const title_font = (s?.title === s?.title_unicode && s?.artist === s?.artist_unicode) ? 'torus' : 'PuHuiTi';
+        const left1 = '';
+        const left2 = getMapStatus(s?.ranked);
+        const left3 = s?.id ? ('S' + s.id) : 'S0';
+        const right1 = 'Favorite ' + s?.favourite_count;
+        const right2 = 'Play Counts';
+        const right3b = getRoundedNumberLargerStr(s?.play_count, 3);
+        const right3m = getRoundedNumberSmallerStr(s?.play_count, 3);
+
+        return {
+            background: background,
+            map_status: map_status,
+
+            title1: title1,
+            title2: title2,
+            title3: title3,
+            title_font: title_font,
+            title3_font: 'torus',
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: right1,
+            right2: right2,
+            right3b: right3b,
+            right3m: right3m,
+        };
+    },
+
     matchBeatmap2CardA2: async (b) => {
 
         const background = await readNetImage(b?.beatmapset?.covers['cover@2x'], false);
@@ -418,7 +631,7 @@ export const PanelGenerate = {
     },
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
-        const background = cursor ? await getMapBG(cursor.id, 'list@2x', false) : await readNetImage(first_beatmapset.covers['list@2x'], false, getExportFileV3Path('card-default.png'));
+        const background = cursor ? await getMapBG(cursor?.id, 'list@2x', false) : await readNetImage(first_beatmapset.covers['list@2x'], false, getExportFileV3Path('card-default.png'));
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
@@ -835,25 +1048,25 @@ export const PanelGenerate = {
             background,
             avatar,
 
-            name: user.username,
-            groups: user.groups || [],
+            name: user?.username || (user?.id ? "ID: " + user?.id : "Unknown"),
+            groups: user?.groups || [],
         };
     },
 
-    beatmap2CardO2: async (beatmapset) => {
-        if (!beatmapset) return '';
+    beatmap2CardO2: async (s) => {
+        if (!s) return '';
 
-        const background = await getMapBG(beatmapset.id, 'list@2x', isReload(beatmapset.status));
-        const map_status = beatmapset.status;
-        const title1 = beatmapset.title;
-        const title2 = beatmapset.artist;
+        const background = await getMapBG(s?.id, 'list@2x', isReload(s.status));
+        const map_status = s?.status;
+        const title1 = s?.title;
+        const title2 = s?.artist;
         const title_font = torus;
         const left1 = '';
-        const left2 = '*' + beatmapset.favourite_count;
-        const left3 = beatmapset.id ? 'S' + beatmapset.id : '0';
+        const left2 = '*' + s?.favourite_count;
+        const left3 = s?.id ? 'S' + s.id : '0';
         const right1 = 'Play Counts';
-        const right2b = getRoundedNumberLargerStr(beatmapset.play_count, 2);
-        const right2m = getRoundedNumberSmallerStr(beatmapset.play_count, 2);
+        const right2b = getRoundedNumberLargerStr(s?.play_count, 2);
+        const right2m = getRoundedNumberSmallerStr(s?.play_count, 2);
 
         return {
             background: background,

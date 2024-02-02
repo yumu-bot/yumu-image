@@ -66,7 +66,8 @@ export function initPath() {
                 return axios(config);
             });
         }
-        console.error("request err", config);
+        //console.error("request err", config);
+        //这个 太吵了！
         return Promise.reject(error);
     })
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
@@ -168,6 +169,11 @@ export async function readNetImage(path = '', reload = true, defaultImagePath = 
     if (!path || !path.startsWith("http")) {
         return readImage(path);
     }
+
+    if (path == 'https://osu.ppy.sh/images/layout/avatar-guest.png') {
+        return getExportFileV3Path('avatar-guest.png');
+    }
+
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
@@ -974,8 +980,35 @@ export function getSVGBody(V3Path = '') {
 }
 
 /**
+ * 获取谱面状态的英文
+ * @param ranked
+ * @param {number} ranked 谱面状态，是那个数字
+ */
+
+export function getMapStatus(ranked = 0) {
+    switch (ranked) {
+        case -2:
+            return 'Graveyard';
+        case -1:
+            return 'WIP';
+        case 0:
+            return 'Pending';
+        case 1:
+            return 'Ranked';
+        case 2:
+            return 'Approved';
+        case 3:
+            return 'Qualified';
+        case 4:
+            return 'Loved';
+        default:
+            return '';
+    }
+}
+
+/**
  * @function 获取谱面状态的路径
- * @param {number} status 谱面状态，可以是数字可以是字符串
+ * @param {number, String} status 谱面状态，可以是数字可以是字符串
  */
 export function getMapStatusV3Path(status = 0) {
     let path = '';
@@ -1364,8 +1397,8 @@ export const getApproximateRank = (score = {
     },
     mode: 'osu',
     mods: ['']
-}, showF = false) => {
-    if (score.rank === 'F' && showF) return 'F';
+}, showFailed = false) => {
+    if (!score.passed && showFailed) return 'F';
 
     let rank = 'F';
     let nTotal;

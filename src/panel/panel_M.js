@@ -401,7 +401,10 @@ export async function panel_M(data = {
         '#ADCE6D', '#88BD6F', '#62AE70', '#5EB0AB',
         '#55B1EF', '#587EC2', '#5867AF', '#75569E'
     ]
-    const genre_name = ['unspecified', 'video game', 'anime', 'rock', 'pop', 'other', 'novelty', 'hip hop', 'electronic', 'metal', 'classical', 'folk', 'jazz'];
+    const genre_name = ['unspecified',
+        'video game', 'anime', 'rock', 'pop',
+        'other', 'novelty', 'hip hop', 'electronic',
+        'metal', 'classical', 'folk', 'jazz'];
     const genre_sum = genre_arr.reduce((prev, curr) => {return prev + curr}, 0) || 0;
 
     let genre_svg = '';

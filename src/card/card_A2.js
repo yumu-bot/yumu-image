@@ -15,6 +15,7 @@ export async function card_A2(data = {
     title2: '',
     title3: '',
     title_font: '',
+    title3_font: '',
     left1: '',
     left2: '',
     left3: '',
@@ -40,6 +41,13 @@ export async function card_A2(data = {
         title_font = torus;
     }
 
+    let title3_font = title_font;
+    if (data.title3_font === 'PuHuiTi') {
+        title3_font = PuHuiTi;
+    } else if (data.title3_font === 'torus') {
+        title3_font = torus;
+    }
+
     // 宽度限制
     const title1_maxWidth = data.map_status ? 350 : 390;
     const title_maxWidth = 390;
@@ -55,8 +63,8 @@ export async function card_A2(data = {
     const title2 = title_font.getTextPath(
         title_font.cutStringTail(data.title2, 24, title_maxWidth),
         20, 77.4, 24, 'left baseline', '#fff');
-    const title3 = title_font.getTextPath(
-        title_font.cutStringTail(data.title3, 24, title_maxWidth),
+    const title3 = title3_font.getTextPath(
+        title3_font.cutStringTail(data.title3, 24, title_maxWidth),
         20, 107.4, 24, 'left baseline', '#fff');
 
     const left1 = torus.getTextPath(
