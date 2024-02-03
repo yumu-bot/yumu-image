@@ -64,7 +64,7 @@ export async function card_C(data = {
         player_mods: [],
         player_rank: 1,
     }]
-}, reuse = false) {
+}) {
     //读取面板
     let svg = readTemplate("template/Card_C.svg");
 
@@ -153,11 +153,11 @@ export async function card_C(data = {
         //个人赛取最大值，因为此时第一号并不一定是第一名
         let first_index = 0;
         let first_score = 0;
-        const none_arr = data.none || [{player_score: 0}];
+        const none_arr = data?.none || [{player_score: 0}];
 
         none_arr.forEach((v, i) => {
-            if (v.player_score >= first_score) {
-                first_score = v.player_score ;
+            if (v?.player_score >= first_score) {
+                first_score = v?.player_score ;
                 first_index = i;
             }
         })
@@ -198,9 +198,9 @@ export async function card_C(data = {
     let none_width_arr;
 
     //主分支
-    const red_length = data.red ? data.red.length : 0;
-    const blue_length = data.blue ? data.blue.length : 0;
-    const none_length = data.none ? data.none.length : 0;
+    const red_length = data?.red?.length || 0;
+    const blue_length = data?.blue?.length || 0;
+    const none_length = data?.none?.length || 0;
 
     if ((isTeamVs && (red_length + blue_length) <= 8) || (!isTeamVs && none_length <= 8)) { //data.statistics
         if (isTeamVs) {
@@ -436,8 +436,8 @@ export async function card_C(data = {
 
     //计算每个队内选手应该获得的宽度
     function getTeamVsWidthArray(data, team = 'none', isLess4 = true) {
-        const isTeamVs = data.statistics.is_team_vs;
-        const total_score = data.statistics.score_total;
+        const isTeamVs = data?.statistics?.is_team_vs;
+        const total_score = data?.statistics?.score_total;
 
         let teamMinWidth;
         let playerMinWidth;
@@ -459,7 +459,7 @@ export async function card_C(data = {
                 playerMinWidth = 20;
             }
         } else {
-            if (isLess4) {
+            if (isLess4 && data[team]?.length > 2) {
                 team_score = total_score;
                 teamMinWidth = 0;
                 playerMinWidth = 100;
@@ -482,7 +482,7 @@ export async function card_C(data = {
 
         for (const i of team_score_arr) {
             let width = team_width_calc * i / team_score_calc
-            //常规的限宽分支
+            //常规的限宽分支。如果人数少于2那也不能进。
             if (width < playerMinWidth) { //原来是100
                 team_width_arr.unshift(playerMinWidth);
                 team_width_calc -= playerMinWidth;

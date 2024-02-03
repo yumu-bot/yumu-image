@@ -78,7 +78,7 @@ export async function panel_F(data = {}) {
             blueWins ++;
         }
 
-        card_Cs.push(await card_C(await round2CardC(v, redWins, blueWins), true));
+        card_Cs.push(await card_C(await round2CardC(v, redWins, blueWins)));
     }
 
     for (const i in card_Cs) {

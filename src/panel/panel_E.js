@@ -366,7 +366,7 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg, 0, 0, cardE4, reg_card_e4);
 
     // 图片定义
-    const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
+    const background = getExportFileV3Path('object-score-backimage-' + (data?.score?.rank || getApproximateRank(data?.score)) + '.jpg');
     const banner = await getDiffBG(data.score.beatmap.id, data.score.beatmapset.id, 'cover@2x', isReload(data.score.beatmap.ranked));
 
     // 导入图片

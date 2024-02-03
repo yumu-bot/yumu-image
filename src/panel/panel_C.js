@@ -81,6 +81,9 @@ export async function panel_C(data = {}) {
     }
 
     const rowVS = Math.max(redArr.length, blueArr.length) || 0;
+    //后面天选之子会修改 noneArr，所以在这里调出
+    const rowTotal = rowVS + Math.ceil(noneArr.length / 2);
+
     if (isTeamVS) {
         //渲染红队
         for (let i = 0; i < redArr.length; i++) {
@@ -111,8 +114,6 @@ export async function panel_C(data = {}) {
     }
 
     svg = replaceText(svg, cardHs, reg_maincard);
-
-    const rowTotal = rowVS + Math.floor(noneArr.length / 2);
 
     // 计算面板高度
     let panelHeight, cardHeight;
