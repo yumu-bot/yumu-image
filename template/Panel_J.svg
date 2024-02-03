@@ -29,10 +29,8 @@
   <g id="BPCard">
     <rect x="40" y="330" width="665" height="525" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="TopBP">
-      <text transform="translate(55 365.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Top 5 BPs</tspan></text>
     </g>
     <g id="LastBP">
-      <text transform="translate(380 365.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Last 5 BPs</tspan></text>
     </g>
   </g>
   <g id="ModCard">
@@ -46,19 +44,12 @@
       </g>
       <circle cx="842" cy="470" r="4" style="fill: #382e32;"/>
     </g>
-    <text transform="translate(740 365.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Mods</tspan></text>
   </g>
   <g id="BPDCard">
     <rect x="980" y="330" width="900" height="335" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="BPRanksR">
     </g>
     <g id="BPRankGraph">
-    </g>
-    <g id="BPDText">
-      <text id="Day3" transform="translate(1745.025 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">BP 100</tspan></text>
-      <text id="Day2" transform="translate(1397.881 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">BP 50</tspan></text>
-      <text id="Day1" transform="translate(1040 646.836)" style="fill: #fc2; font-family: Torus-SemiBold, Torus; font-size: 24px; font-weight: 600;"><tspan x="0" y="0">BP 1</tspan></text>
-      <text transform="translate(1000 370.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">BP Distribution</tspan></text>
     </g>
   </g>
   <g id="StatusCard">
@@ -69,9 +60,7 @@
   <g id="MapperCard">
     <rect x="980" y="685" width="540" height="355" rx="20" ry="20" style="fill: #382e32;"/>
     <g id="Label_J2">
-
     </g>
-    <text transform="translate(1000 725.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Favorite Mappers</tspan></text>
   </g>
   <g id="RankCard">
     <rect x="1540" y="685" width="340" height="355" rx="20" ry="20" style="fill: #382e32;"/>
@@ -84,7 +73,6 @@
       </g>
       <circle cx="1630" cy="815" r="4" style="fill: #382e32;"/>
     </g>
-    <text transform="translate(1560 725.795)" style="fill: #fff; font-family: Torus-SemiBold, Torus; font-size: 30px; font-weight: 600;"><tspan x="0" y="0">Ranks</tspan></text>
   </g>
   <g id="IndexBase">
     <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>

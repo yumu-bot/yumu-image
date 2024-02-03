@@ -421,7 +421,7 @@ export async function panel_J(data = {
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-PJ-BG\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('BP Analysis v2 (!ymba)', 'BPA', 'v0.3.1 EA');
+    const panel_name = getPanelNameSVG('BP Analysis v2 (!ymba)', 'BA', 'v0.3.1 EA');
 
     const pp = data.pp.toFixed(0) || 0;
     const pp_raw = data.pp_raw.toFixed(0) || 0;
@@ -652,6 +652,21 @@ export async function panel_J(data = {
             svg = implantSvgBody(svg, 1715, 702 + 66 * (i - 1), labelJ3s[i], reg_label_j3);
         }
     }
+
+    // 插入固定的字
+    const title_bpd =
+        torus.getTextPath("BP 100", 1745.025, 646.836, 24, 'left baseline', '#fc2') +
+        torus.getTextPath("BP 50", 1397.881, 646.836, 24, 'left baseline', '#fc2') +
+        torus.getTextPath("BP 1", 1040, 646.836, 24, 'left baseline', '#fc2') +
+        torus.getTextPath("BP Distribution", 1000, 370.795, 30, 'left baseline', '#fff');
+    const title_fm = torus.getTextPath("Favorite Mappers", 1000, 725.795, 30, 'left baseline', '#fff');
+    const title_rks = torus.getTextPath("Ranks", 1560, 725.795, 30, 'left baseline', '#fff');
+    const title_ms = torus.getTextPath("Mods", 740, 365.795, 30, 'left baseline', '#fff');
+    const title_l5 = torus.getTextPath("Last 5 BPs", 380, 365.795, 30, 'left baseline', '#fff');
+    const title_t5 = torus.getTextPath("Top 5 BPs", 55, 365.795, 30, 'left baseline', '#fff');
+
+
+    svg = replaceTexts(svg, [title_bpd, title_fm, title_rks, title_ms, title_l5, title_t5], reg_index)
 
     const background = pp2UserBG(data.pp || 0);
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
