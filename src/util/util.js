@@ -12,6 +12,7 @@ import {getModInt, hasMod} from "./mod.js";
 import {API} from "../svg-to-image/API.js";
 import JPEGProvider from '../svg-to-image/JPEGProvider.js';
 import PNGProvider from '../svg-to-image/PNGProvider.js';
+import {getRandomBannerPath} from "./mascotBanner.js";
 
 const exportsJPEG = new API(new JPEGProvider());
 const exportsPNG = new API(new PNGProvider());
@@ -1502,4 +1503,17 @@ export const isReload = (ranked = 0) => {
     return !(ranked && (ranked === 1 || ranked === 2 || ranked === 4
         || ranked === 'ranked' || ranked === 'approved' || ranked === 'loved'
     )); //ranked, approved, loved
+}
+
+/**
+ * @param svg
+ * @param reg_banner
+ * @param {string?}banner
+ */
+export function replaceBanner (svg, reg_banner, banner) {
+    if (banner) {
+        return implantImage(svg, 1920, 320, 0, 0, 1, banner, reg_banner);
+    } else {
+        return implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    }
 }

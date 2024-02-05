@@ -50,6 +50,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 成绩面板
+ * @param data
+ * @return {Promise<string>}
+ */
 // E面板重构计划
 export async function panel_E(data = {
     user: {

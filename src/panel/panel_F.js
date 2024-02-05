@@ -7,7 +7,7 @@ import {
     getPanelNameSVG,
     getRoundedNumberStr,
     readNetImage,
-    getExportFileV3Path, getAvatar
+    getExportFileV3Path, getAvatar, replaceBanner
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -41,6 +41,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 对局面板
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_F(data = {}) {
     // 导入模板
     let svg = readTemplate('template/Panel_F.svg');
@@ -61,7 +66,7 @@ export async function panel_F(data = {}) {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = replaceBanner(svg, reg_banner);
 
     // 导入成绩卡（C卡
 

@@ -35,6 +35,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 成绩pr面板
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_A5(data = {
     "user": {
         "id": 17064371,

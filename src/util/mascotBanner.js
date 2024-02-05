@@ -130,7 +130,7 @@ export function getMascotPath(mascotname = 'pippi') {
 
 /**
  * @function 获取随机的头图路径
- * @return {String} 返回头图路径
+ * @return {String} 返回横幅路径
  */
 export function getRandomBannerPath() {
     const i = getRandom(bannerTotal)

@@ -39,6 +39,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 每轮的比赛对局面板
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_F2(
     data = {
         MatchStat: {

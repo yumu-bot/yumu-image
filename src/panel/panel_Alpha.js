@@ -26,6 +26,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * markdown原始的面板, 应该是没啥用了, 过阵子连着html一起删了
+ * @param strArray
+ * @return {Promise<string>}
+ */
 export async function panel_Alpha(strArray = ['']) {
     let maxWidth = 0;
     let befY = 10;

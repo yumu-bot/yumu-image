@@ -39,7 +39,13 @@ export const PanelGenerate = {
             right3m: '',
         }
 
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
+
+        let background;
+        if (user?.profile?.card) {
+            background = user.profile.card;
+        } else {
+            background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'))
+        }
         const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
 
         const sub_icon1 = user?.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';

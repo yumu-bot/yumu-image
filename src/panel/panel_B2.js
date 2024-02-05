@@ -38,6 +38,11 @@ export async function router_svg(req, res) {
 
 const VALUE_NAMES = ['RC', 'LN', 'SV', 'ST', 'SP', 'PR']
 
+/**
+ * 骂娘谱面某种信息面板, 不玩骂娘看不懂
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_B2(data = {
     beatMap: {
         "beatmapset_id": 13019,

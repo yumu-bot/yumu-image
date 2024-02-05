@@ -56,6 +56,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 帅气逼人的面板, ~~薄纱其他面板~~
+ * @param score
+ * @return {Promise<any>}
+ */
 export async function panel_Beta(score) {
     const url_avatar = await getAvatar(score.user.id);
     const url_bg = await getDiffBG(score.beatmap.id, score.beatmapset.id, 'list@2x', isReload(score.beatmap.ranked));

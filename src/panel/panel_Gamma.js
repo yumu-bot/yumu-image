@@ -48,6 +48,12 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 简略信息面板, 似乎user info和score info集成在一起
+ * @param data
+ * @param reuse
+ * @return {Promise<string>}
+ */
 export async function panel_Gamma(data = {
     background: getExportFileV3Path('card-default.png'),
     avatar: getExportFileV3Path('avatar-guest.png'),

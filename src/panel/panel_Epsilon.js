@@ -33,6 +33,12 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 头像, 面积贴图专用
+ * @param data
+ * @param reuse
+ * @return {Promise<string>}
+ */
 export async function panel_Epsilon(data = {
     username: "SIyuyuko",
     uid: 7000123,

@@ -35,6 +35,11 @@ export async function router_svg(req, res) {
     res.end();
 }
 
+/**
+ * 这是什么, 没搜到
+ * @param data
+ * @return {Promise<string>}
+ */
 export async function panel_I(data = {
     // A2卡
     card_A2: {
