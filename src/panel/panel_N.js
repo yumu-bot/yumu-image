@@ -185,7 +185,13 @@ function getTagPanel(tags = [""], x, y, size = 18, color = '#3399CC', max_width 
 
 async function getGuestPanel(guest = [], x = 54, y = 745) {
     let out = "";
-    if (guest.length > 4) {
+
+    if (guest == null || guest.length <= 0) {
+        //摆烂机制
+        out += PanelDraw.Image(180, 45, 80, 80, getExportFileV3Path('sticker_qiqi_oh.png'))
+        out += torus.getTextPath('Solo Set!', 215, 135, 18, 'center baseline', '#fff')
+    } else if (guest.length > 4) {
+        //常规：N3
         for (const i in guest) {
             if (i >= 16) break;
 
@@ -196,6 +202,7 @@ async function getGuestPanel(guest = [], x = 54, y = 745) {
             out += (`<g transform="translate(${dx} ${dy})">` + await label_N3(u) + '</g>');
         }
     } else {
+        //小图：N4
         for (const i in guest) {
             const u = guest[i];
             const dx = i * 102;
@@ -656,7 +663,7 @@ async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_ro
         sum_y += (text_row <= 2) ? (35 + 15 * text_row) : (25 + 20 * text_row);
 
         if (sum_y >= (max_height - 40)) { //不足以再填下一个标签
-            sum_x += label_max_width;
+            sum_x += label_max_width + 10; //右侧的那个图片需要再多给点宽度
             sum_y = 0;
             column ++;
             label_max_width = 0;
