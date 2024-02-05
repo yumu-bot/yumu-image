@@ -189,7 +189,7 @@ async function getGuestPanel(guest = [], x = 54, y = 745) {
     if (guest == null || guest.length <= 0) {
         //摆烂机制
         out += PanelDraw.Image(180, 0, 80, 80, getExportFileV3Path('sticker_qiqi_oh.png'))
-        out += torus.getTextPath('Solo Set!', 170, 135, 18, 'center baseline', '#fff')
+        out += torus.getTextPath('Solo Set!', 170, 140, 18, 'center baseline', '#fff')
     } else if (guest.length > 4) {
         //常规：N3
         for (const i in guest) {
