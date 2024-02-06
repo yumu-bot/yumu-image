@@ -8,8 +8,6 @@ const path = `${process.cwd()}/template/markDownTemplate/index.html`;
 export async function router(req, res) {
     try {
         const data = await Markdown(req.fields.md || "# Error: no value", req.fields.width || 600);
-        console.log(data.height)
-        console.log(data.width)
         res.set('Content-Type', 'image/jpeg');
         res.send(data.image);
     } catch (e) {
