@@ -1,6 +1,5 @@
 import {
     exportJPEG,
-    implantImage,
     implantSvgBody,
     readTemplate,
     replaceText,
@@ -11,7 +10,6 @@ import {
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
-import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getMapAttributes} from "../util/compute-pp.js";
 import {getModInt} from "../util/mod.js";
@@ -128,6 +126,8 @@ export async function panel_F(data = {}) {
     const beatmap_arr = await Promise.all(rounds.map(async (e) => {
         const beatmap = e.beatmap;
         const mods = e.mods;
+
+        if (beatmap == null) return {}
 
         const mod_int = getModInt(mods);
 

@@ -577,10 +577,10 @@ export const PanelGenerate = {
     matchBeatmap2CardA2: async (b) => {
 
         const background = await readNetImage(b?.beatmapset?.covers['cover@2x'], false);
-        const title1 = b?.beatmapset?.title || 'Unknown Title';
-        const title2 = b?.beatmapset?.artist || 'Unknown Artist';
-        const title3 = b?.beatmapset?.creator || 'God Made This';
-        const left2 = b?.version || 'Tragic Love Extra';
+        const title1 = b?.beatmapset?.title || 'Deleted Beatmap';
+        const title2 = b?.beatmapset?.artist || '-';
+        const title3 = b?.beatmapset?.creator || '-';
+        const left2 = b?.version || '-';
         const left3 = 'b' + (b?.id || 0);
 
         const status = b?.status;

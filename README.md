@@ -33,7 +33,7 @@
 ## 额外面板
 
 - Alpha 文字面板
-- Beta 一个超帅的新面板~~但是没做完~~
+- Beta 一个超帅的新面板~~但是没做完~~你帅你牛魔呢
 - Gamma 成绩和信息简版 X/Y
 - Delta XinRan 比赛面板 K
 - Epsilon 截图用头像 OA
