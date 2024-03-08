@@ -116,7 +116,7 @@ export function getExportFileV3Path(path = '') {
  * @param {number} bid bid
  * @param {number} sid sid
  */
-export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
+export async function getDiffBG(bid, sid, cover = 'cover', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
     try {
         const res = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
             proxy: {},
@@ -151,7 +151,7 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, def
  * @param {string} [defaultImagePath] 出现错误时返回的失败图
  * @return {Promise<string>} 返回位于文件系统的绝对路径
  */
-export async function getMapBG(sid = 0, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
+export async function getMapBG(sid = 0, cover = 'cover', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
     return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', reload, defaultImagePath);
 }
 

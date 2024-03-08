@@ -506,7 +506,7 @@ export async function panel_D(data = {
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser));
 
     const cardF1 = await card_F1(user2CardF1(data.user, mode), true);
-    const cardF2 = await card_F2({recent: data["re-list"]}, true);
+    const cardF2 = await card_F2({recent: data["re-list"]});
     const cardF3 = await card_F3({bp: data["bp-list"]});
     const cardF4 = await card_F4(user2CardF4(data.user));
     const cardF5 = await card_F5(user2CardF5(data.user, mode, data["bp-time"]));

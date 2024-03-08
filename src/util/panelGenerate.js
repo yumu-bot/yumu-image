@@ -576,7 +576,7 @@ export const PanelGenerate = {
 
     matchBeatmap2CardA2: async (b) => {
 
-        const background = await readNetImage(b?.beatmapset?.covers['cover@2x'], false);
+        const background = await readNetImage(b?.beatmapset?.covers['cover'], false);
         const title1 = b?.beatmapset?.title || 'Deleted Beatmap';
         const title2 = b?.beatmapset?.artist || '-';
         const title3 = b?.beatmapset?.creator || '-';
@@ -763,7 +763,7 @@ export const PanelGenerate = {
 //给panel_A5用的，期待可以和上面合并
     beatmap2CardH: async (b, calcPP, rank = 1) => {
         const cover = await getMapBG(b.beatmapset.id, 'list@2x', isReload(b.ranked));
-        const background = await getMapBG(b.beatmapset.id, 'cover@2x', isReload(b.ranked));
+        const background = await getMapBG(b.beatmapset.id, 'cover', isReload(b.ranked));
         // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
         // 这个不要下载，请求量太大
 
@@ -837,7 +837,7 @@ export const PanelGenerate = {
 
     bp2CardH: async (bp, rank = 1) => {
         const cover = await getMapBG(bp.beatmapset.id, 'list@2x', false);
-        const background = await getMapBG(bp.beatmapset.id, 'cover@2x', false);
+        const background = await getMapBG(bp.beatmapset.id, 'cover', false);
 
         const time_diff = getTimeDifference(bp.create_at_str);
 

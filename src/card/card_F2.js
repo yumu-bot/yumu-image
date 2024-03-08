@@ -110,7 +110,7 @@ export async function card_F2(data = {
             create_at_str: '2023-10-08T13:11:20Z'
         },
     ],
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = `
           <g id="Base_CF2">
@@ -163,7 +163,7 @@ export async function card_F2(data = {
 }
 
 const score2CardJ = async (score, calcPP) => {
-    const background = await getMapBG(score.beatmapset.id, 'cover@2x', isReload(score.beatmap.ranked));
+    const background = await getMapBG(score.beatmapset.id, 'cover', isReload(score.beatmap.ranked));
 
     return {
         cover: background,
