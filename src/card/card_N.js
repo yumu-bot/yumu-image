@@ -3,15 +3,15 @@ import {
     getExportFileV3Path,
     getFlagPath,
     getGameMode,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
+    getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall,
     getTimeDifference,
     implantImage,
     implantSvgBody, readNetImage,
     replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_A4, LABEL_OPTION} from "../component/label.js";
+import {label_N, LABELS} from "../component/label.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
@@ -140,25 +140,25 @@ export async function card_N(data = {
     const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
     const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 10, 36 + 17, 18, 'right baseline', '#aaa');
 
-    const n1_acc = await label_A4({
-        ...LABEL_OPTION.ACC2,
+    const n1_acc = await label_N({
+        ...LABELS.ACC2,
         data_b: getDecimals(acc, 2),
         data_m: getDecimals(acc, 3) + '%',
     });
-    const n1_combo = await label_A4({
-        ...LABEL_OPTION.COMBO2,
+    const n1_combo = await label_N({
+        ...LABELS.COMBO2,
         data_b: combo.toString(),
         data_m: 'x',
     });
-    const n1_pp = await label_A4({
-        ...LABEL_OPTION.PP2,
+    const n1_pp = await label_N({
+        ...LABELS.PP2,
         data_b: pp.toString(),
         data_m: 'PP',
     });
-    const n1_score = await label_A4({
-        ...LABEL_OPTION.SCORE2,
-        data_b: getRoundedNumberLargerStr(score, -1),
-        data_m: getRoundedNumberSmallerStr(score, -1),
+    const n1_score = await label_N({
+        ...LABELS.SCORE2,
+        data_b: getRoundedNumberStrLarge(score, -1),
+        data_m: getRoundedNumberStrSmall(score, -1),
     });
 
     // 导入评价，x和y是矩形的左上角

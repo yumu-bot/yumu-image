@@ -13,7 +13,7 @@ export async function card_F1(data = {
     mode: 'osu',
     level_current: 90,
     level_progress: 24,
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = `   
    <defs>

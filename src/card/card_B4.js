@@ -1,10 +1,10 @@
 import {
-    getExportFileV3Path, getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, implantImage, implantSvgBody,
+    getExportFileV3Path, getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall, implantImage, implantSvgBody,
     readTemplate, replaceText, replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_E, PPM_OPTION} from "../component/label.js";
+import {label_E, LABEL_PPM} from "../component/label.js";
 import {getRankColor} from "../util/color.js";
 
 export async function card_B4(data = {
@@ -25,7 +25,7 @@ export async function card_B4(data = {
     //导入标签
     const parameter = data.parameter.toUpperCase();
 
-    const label = await label_E({...PPM_OPTION[parameter]});
+    const label = await label_E({...LABEL_PPM[parameter]});
 
     //判断是左标签右评级还是左评级右标签。
     let card_x = 20;
@@ -45,8 +45,8 @@ export async function card_B4(data = {
     const rank = getMMRank(data.number);
     const color = getRankColor(rank);
     const background = getMMBG(rank);
-    const number_b = getRoundedNumberLargerStr(data.number,3);
-    const number_m = getRoundedNumberSmallerStr(data.number,3);
+    const number_b = getRoundedNumberStrLarge(data.number,3);
+    const number_m = getRoundedNumberStrSmall(data.number,3);
 
     const rank_text = torus.getTextPath(rank, judge_x_center, 68, 60, 'center baseline', color);
     const number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 370 + card_x, 68, 'right baseline', '#fff');

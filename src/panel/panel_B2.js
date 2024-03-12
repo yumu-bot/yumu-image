@@ -1,6 +1,6 @@
 import {
     exportJPEG, getExportFileV3Path, getGameMode, getMapBG,
-    getPanelNameSVG, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, implantImage,
+    getPanelNameSVG, getRoundedNumberStrLarge, getRoundedNumberStrSmall, implantImage,
     implantSvgBody, isReload, readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
@@ -196,7 +196,7 @@ export async function panel_B2(data = {
     }
 
     const total = ((rc + 0.1 * ln + st + sp + pr) / 4); //暂时不加sv，ln占比减少
-    const total_path = torus.get2SizeTextPath(getRoundedNumberLargerStr(total, 3), getRoundedNumberSmallerStr(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
+    const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, total_path], reg_index);

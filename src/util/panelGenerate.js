@@ -8,8 +8,8 @@ import {
     getGameMode,
     getMapBG, getMapStatus,
     getMatchNameSplitted,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
+    getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
     isReload,
@@ -231,8 +231,8 @@ export const PanelGenerate = {
         const left2 = 'P' + (score?.match?.slot + 1) + ' *' + rating + ' ' + pp_str;
         const right2 = (Math.round((score?.accuracy || 0) * 10000) / 100) + '%' + ' '
             + rank + mods + ' ' + (score?.max_combo || 0) + 'x';
-        const right3b = getRoundedNumberLargerStr(player_score, 0);
-        const right3m = getRoundedNumberSmallerStr(player_score, 0);
+        const right3b = getRoundedNumberStrLarge(player_score, 0);
+        const right3m = getRoundedNumberStrSmall(player_score, 0);
 
         return {
             background,
@@ -552,8 +552,8 @@ export const PanelGenerate = {
         const left3 = s?.id ? ('S' + s.id) : 'S0';
         const right1 = 'Favorite ' + s?.favourite_count;
         const right2 = 'Play Counts';
-        const right3b = getRoundedNumberLargerStr(s?.play_count, 3);
-        const right3m = getRoundedNumberSmallerStr(s?.play_count, 3);
+        const right3b = getRoundedNumberStrLarge(s?.play_count, 3);
+        const right3m = getRoundedNumberStrSmall(s?.play_count, 3);
 
         return {
             background: background,
@@ -1065,8 +1065,8 @@ export const PanelGenerate = {
         const left2 = '*' + s?.favourite_count;
         const left3 = s?.id ? 'S' + s.id : '0';
         const right1 = 'Play Counts';
-        const right2b = getRoundedNumberLargerStr(s?.play_count, 2);
-        const right2m = getRoundedNumberSmallerStr(s?.play_count, 2);
+        const right2b = getRoundedNumberStrLarge(s?.play_count, 2);
+        const right2m = getRoundedNumberStrSmall(s?.play_count, 2);
 
         return {
             background: background,

@@ -1,6 +1,6 @@
 import {torus} from "../util/font.js";
-import {label_E, LABEL_OPTION} from "../component/label.js";
-import {getRoundedNumberLargerStr, getRoundedNumberSmallerStr, implantSvgBody, replaceText} from "../util/util.js";
+import {label_E, LABELS} from "../component/label.js";
+import {getRoundedNumberStrLarge, getRoundedNumberStrSmall, implantSvgBody, replaceText} from "../util/util.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_E4(data = {
@@ -64,15 +64,15 @@ async function statistics2PGRatio(calcPP, stat) {
     const ratio = nGeki / n300;
     if (nGeki >= n300) {
         if (n300 !== 0) {
-            ratio_b = getRoundedNumberLargerStr(ratio, 2);
-            ratio_m = getRoundedNumberSmallerStr(ratio, 2) + 'x';
+            ratio_b = getRoundedNumberStrLarge(ratio, 2);
+            ratio_m = getRoundedNumberStrSmall(ratio, 2) + 'x';
         } else if (nGeki !== 0) {
             ratio_b = 'Inf.';
         } else ratio_b = '???';
     } else if (nGeki < n300) {
         if (nGeki !== 0) {
-            ratio_b = getRoundedNumberLargerStr(ratio, 3);
-            ratio_m = getRoundedNumberSmallerStr(ratio, 3) + 'x';
+            ratio_b = getRoundedNumberStrLarge(ratio, 3);
+            ratio_m = getRoundedNumberStrSmall(ratio, 3) + 'x';
         } else if (n300 !== 0) {
             ratio_b = 'MIN';
         } else ratio_b = '???';
@@ -81,7 +81,7 @@ async function statistics2PGRatio(calcPP, stat) {
     }
 
     return {
-        ...LABEL_OPTION.RATIO,
+        ...LABELS.RATIO,
         remark: calcPP.perfect_pp ? Math.round(calcPP.pp / calcPP.perfect_pp * 100) + '% PP' : '-',
         data_b: ratio_b,
         data_m: ratio_m,
@@ -95,23 +95,23 @@ async function ppVariants2LabelE(calcPP, verPP = '') {
     switch (verPP) {
         case 'aim': {
             version = 'ppAim';
-            option = LABEL_OPTION.AIMPP;
+            option = LABELS.AIMPP;
         } break;
         case 'spd': {
             version = 'ppSpeed';
-            option = LABEL_OPTION.SPDPP;
+            option = LABELS.SPDPP;
         } break;
         case 'acc': {
             version = 'ppAcc';
-            option = LABEL_OPTION.ACCPP;
+            option = LABELS.ACCPP;
         } break;
         case 'diff' : {
             version = 'ppDifficulty';
-            option = LABEL_OPTION.DIFFPP;
+            option = LABELS.DIFFPP;
         } break;
         default: {
             version = 'pp';
-            option = LABEL_OPTION.PP;
+            option = LABELS.PP;
         }
     }
 

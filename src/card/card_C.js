@@ -5,7 +5,7 @@ import {
     replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus, torusRegular} from "../util/font.js";
-import {label_F1, label_F3} from "../component/label.js";
+import {label_C1, label_C3} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_C(data = {
@@ -500,7 +500,7 @@ export async function card_C(data = {
 
     async function implantRoundLabelF1(data, x, y, maxWidth, isWin, scoreTextColor) {
         const label_F1_impl = data ?
-            await label_F1({
+            await label_C1({
                 avatar: data.player_avatar || '',
                 name: data.player_name || 'Unknown',
                 mods_arr: data.player_mods || '',
@@ -531,7 +531,7 @@ export async function card_C(data = {
 
     async function implantRoundLabelF3(data, x, y, isWin) {
         let label_F3_impl =
-            await label_F3({
+            await label_C3({
                 avatar: data ? data.player_avatar : '',
                 isWin: isWin,
             })

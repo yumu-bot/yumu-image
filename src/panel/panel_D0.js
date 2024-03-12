@@ -6,10 +6,13 @@ import {
     readTemplate, replaceBanner,
     replaceText,
 } from "../util/util.js";
-import {card_F1N} from "../card/card_F1N.js";
 import {card_A1} from "../card/card_A1.js";
+import {card_F1} from "../card/card_F1.js";
+import {card_F2} from "../card/card_F2.js";
+import {card_F3} from "../card/card_F3.js";
+import {card_F4} from "../card/card_F4.js";
 import {card_F5} from "../card/card_F5.js";
-import {card_F6N} from "../card/card_F6N.js";
+import {card_F6} from "../card/card_F6.js";
 import {card_F7} from "../card/card_F7.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {pp2UserBG} from "../util/mascotBanner.js";
@@ -269,6 +272,108 @@ export async function panel_D(data = {
 
     historyUser: null,
 
+
+    //recent
+    "re-list": [
+        {
+            accuracy: 0.9242601246105919,
+            mods: [ 'HD' ],
+            passed: true,
+            perfect: false,
+            pp: 15.7001,
+            rank: 'B',
+            replay: true,
+            score: 2647816,
+            statistics: {
+                count_50: 5,
+                count_100: 70,
+                count_300: 767,
+                count_geki: 149,
+                count_katu: 49,
+                count_miss: 14
+            },
+            user: {
+                id: 9794030,
+                avatar: 'https://a.ppy.sh/9794030?1689442698.jpeg',
+                pmOnly: false,
+                avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
+                default_group: 'default',
+                is_active: true,
+                is_bot: false,
+                is_deleted: false,
+                is_online: false,
+                is_supporter: false,
+                last_visit: [Array],
+                pm_friends_only: false,
+                username: 'SIyuyuko',
+                country_code: 'CN'
+            },
+            best_id: 4518169991,
+            max_combo: 207,
+            user_id: 9794030,
+            created_at: [ 2023, 10, 8, 13, 11, 20 ],
+            id: 23509231244,
+            mode: 'OSU',
+            mode_int: 0,
+            beatmap: {
+                id: 4044160,
+                mode: 'osu',
+                status: 'ranked',
+                version: "Calvaria's Another",
+                ar: 9,
+                cs: 5,
+                bpm: 110,
+                convert: false,
+                passcount: 160,
+                playcount: 1306,
+                ranked: 1,
+                url: 'https://osu.ppy.sh/beatmaps/4044160',
+                beatMapFailedCount: 0,
+                beatMapRetryCount: 0,
+                beatMapRating: 0,
+                beatmapset_id: 1751172,
+                difficulty_rating: 5.1,
+                mode_int: 0,
+                total_length: 229,
+                hit_length: 203,
+                user_id: 12381096,
+                accuracy: 8,
+                drain: 5,
+                is_scoreable: true,
+                last_updated: '2023-09-15T03:11:55Z',
+                checksum: '6eb6623607646fd874f63ffe1bbe0329',
+                count_sliders: 429,
+                count_spinners: 0,
+                count_circles: 427
+            },
+            beatmapset: {
+                video: false,
+                fromDatabases: false,
+                mapperUID: 11839745,
+                sid: 1751172,
+                mapperName: 'VoiceCore',
+                ranked: true,
+                rating: 0,
+                id: 1751172,
+                user_id: 11839745,
+                artist: "Snail's House",
+                artist_unicode: "Snail's House",
+                title: 'Biscuit Funk',
+                title_unicode: 'Biscuit Funk',
+                creator: 'VoiceCore',
+                favourite_count: 60,
+                nsfw: false,
+                play_count: 12245,
+                preview_url: '//b.ppy.sh/preview/1751172.mp3',
+                source: '',
+                status: 'ranked',
+                covers: [Object],
+                spotlight: false
+            },
+            create_at_str: '2023-10-08T13:11:20Z'
+        },
+    ],
+
     //bp
     "bp-list": [{
         accuracy: 0.9983416252072969,
@@ -374,6 +479,8 @@ export async function panel_D(data = {
 
     //user_bp_arr
     "bp-time": [],
+
+    ranked_map_play_count: 1564,
     bonus_pp: 0,
 }) {
     // 导入模板
@@ -384,9 +491,12 @@ export async function panel_D(data = {
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-PD-BG\);">)/;
     const reg_index = /(?<=<g id="Index">)/;
     const reg_card_a1 = /(?<=<g id="Card_A1">)/;
-    const reg_card_f1n = /(?<=<g id="Card_F1">)/;
+    const reg_card_f1 = /(?<=<g id="Card_F1">)/;
+    const reg_card_f2 = /(?<=<g id="Card_F2">)/;
+    const reg_card_f3 = /(?<=<g id="Card_F3">)/;
+    const reg_card_f4 = /(?<=<g id="Card_F4">)/;
     const reg_card_f5 = /(?<=<g id="Card_F5">)/;
-    const reg_card_f6n = /(?<=<g id="Card_F6">)/;
+    const reg_card_f6 = /(?<=<g id="Card_F6">)/;
     const reg_card_f7 = /(?<=<g id="Card_F7">)/;
 
     // 卡片定义
@@ -395,23 +505,29 @@ export async function panel_D(data = {
 
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser));
 
+    const cardF1 = await card_F1(user2CardF1(data.user, mode));
+    const cardF2 = await card_F2({recent: data["re-list"]});
+    const cardF3 = await card_F3({bp: data["bp-list"]});
+    const cardF4 = await card_F4(user2CardF4(data.user));
     const cardF5 = await card_F5(user2CardF5(data.user, mode, data["bp-time"]));
-    const cardF6N = await card_F6N(user2CardF6N(data.user, data.historyUser, mode, data.bonus_pp));
+    const cardF6 = await card_F6(user2CardF6(data.user, data.historyUser, mode, data.bonus_pp, data.ranked_map_play_count));
     const cardF7 = await card_F7(user2CardF7(data.user, mode));
-    const cardF1N = await card_F1N(user2CardF1N(data.user, data.historyUser, mode));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
-    svg = implantSvgBody(svg, 40, 330, cardF1N, reg_card_f1n);
+    svg = implantSvgBody(svg, 40, 330, cardF1, reg_card_f1);
+    svg = implantSvgBody(svg, 620, 330, cardF2, reg_card_f2);
+    svg = implantSvgBody(svg, 620, 690, cardF3, reg_card_f3);
+    svg = implantSvgBody(svg, 620, 880, cardF4, reg_card_f4);
     svg = implantSvgBody(svg, 980, 330, cardF5, reg_card_f5);
-    svg = implantSvgBody(svg, 980, 690, cardF6N, reg_card_f6n);
+    svg = implantSvgBody(svg, 980, 690, cardF6, reg_card_f6);
 
     //F7是不需要平移的，位置由卡片决定
     svg = implantSvgBody(svg, 0, 0, cardF7, reg_card_f7);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Information (!ymi)', 'Info', 'v0.4.0 UU');
+    const panel_name = getPanelNameSVG('Information (!ymi)', 'Info', 'v0.3.2 FT');
 
     // 导入文字
     svg = replaceText(svg, panel_name, reg_index);
@@ -424,24 +540,32 @@ export async function panel_D(data = {
     return svg.toString();
 }
 
-function user2CardF1N(user, historyUser, mode = 'osu') {
+function user2CardF1(user, mode = 'osu') {
     return {
-        user: {
-            play_count: user.statistics.play_count || 0,
-            play_time: user.statistics.play_time || 0,
-            total_hits: user.totalHits || 0,
-        },
-
-        delta: {
-            play_count: (user?.statistics?.play_count - historyUser?.statistics?.play_count) || 0,
-            play_time: (user?.statistics?.play_time - historyUser?.statistics?.play_time) || 0,
-            total_hits: (user?.statistics?.total_hits - historyUser?.statistics?.total_hits) || 0,
-        },
-
         mode: mode,
         level_current: user.levelCurrent,
         level_progress: Math.floor(user.levelProgress),
     }
+}
+
+function user2CardF4(user, historyUser) {
+    return {
+        user: {
+            ssh: user.statistics.ssh,
+            ss: user.statistics.ss,
+            sh: user.statistics.sh,
+            s: user.statistics.s,
+            a: user.statistics.a,
+        },
+
+        historyUser: {
+            ssh: historyUser?.statistics?.ssh,
+            ss: historyUser?.statistics?.ss,
+            sh: historyUser?.statistics?.sh,
+            s: historyUser?.statistics?.s,
+            a: historyUser?.statistics?.a,
+        }
+    };
 }
 
 function user2CardF5(user, mode = 'osu', bp_arr = []) {
@@ -456,7 +580,7 @@ function user2CardF5(user, mode = 'osu', bp_arr = []) {
     };
 }
 
-function user2CardF6N(user, historyUser, mode = 'osu', bonus_pp = 0) {
+function user2CardF6(user, historyUser, mode = 'osu', bonus_pp = 0, ranked_map_play_count = 0) {
     const arr = user.monthlyPlaycounts || [{start_date: 0}];
     let fd = arr[0]?.start_date;
 
@@ -528,24 +652,30 @@ function user2CardF6N(user, historyUser, mode = 'osu', bonus_pp = 0) {
         mid_month = (parseInt(last_month) - 9).toString().padStart(2, '0');
     }
 
-    const medal_arr = user?.user_achievements || [];
-    const medal_count = medal_arr?.length || 0;
-
     return {
         user: {
             ranked_score: user.statistics.ranked_score || 0,
             total_score: user.statistics.total_score || 0,
+            play_count: user.statistics.play_count || 0,
+            play_time: user.statistics.play_time || 0,
 
             played_map: user.beatmap_playcounts_count,
+            ranked_map: ranked_map_play_count,
 
             rep_watched: user.statistics.replays_watched_by_others || 0,
             follower: user.follower_count || 0,
-            medal: medal_count,
+            total_hits: user.totalHits || 0,
         },
 
         delta: {
             ranked_score: (user?.statistics?.ranked_score - historyUser?.statistics?.ranked_score) || 0,
             total_score: (user?.statistics?.total_score - historyUser?.statistics?.total_score) || 0,
+            play_count: (user?.statistics?.play_count - historyUser?.statistics?.play_count) || 0,
+            play_time: (user?.statistics?.play_time - historyUser?.statistics?.play_time) || 0,
+            played_map: 0,
+            rep_watched: 0,
+            follower: 0,
+            total_hits: (user?.statistics?.total_hits - historyUser?.statistics?.total_hits) || 0,
         },
 
         bonus_pp: Math.round(bonus_pp) || 0,

@@ -291,7 +291,7 @@ export function getRoundedTailNumber(number = 0) {
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  */
 export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
-    if (typeof number === 'number') return getRoundedNumberLargerStr(number, level) + getRoundedNumberSmallerStr(number, level2);
+    if (typeof number === 'number') return getRoundedNumberStrLarge(number, level) + getRoundedNumberStrSmall(number, level2);
     else return '0';
 }
 
@@ -300,8 +300,15 @@ export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
  * @return {String} 返回大数字的字符串
  * @param number 数字
  * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
+ * lv5是保留两位数，但是是为了比赛特殊设置的，进位使用了万-亿的设置
+ * lv4是保留四位数 945671 -> 945.6710K
+ * lv3是保留两位数,945671 -> 945.67K
+ * lv2是保留一位数
+ * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
+ * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
+ * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  */
-export function getRoundedNumberLargerStr(number = 0, level = 0) {
+export function getRoundedNumberStrLarge(number = 0, level = 0) {
 
     switch (level) {
         case -1:
@@ -445,8 +452,15 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
  * @return {String} 返回小数字的字符串
  * @param number 数字
  * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4, 5 注意配套使用
+ * lv5是保留两位数，但是是为了比赛特殊设置的，进位使用了万-亿的设置
+ * lv4是保留四位数 945671 -> 945.6710K
+ * lv3是保留两位数,945671 -> 945.67K
+ * lv2是保留一位数
+ * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
+ * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
+ * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  */
-export function getRoundedNumberSmallerStr(number = 0, level = 0) {
+export function getRoundedNumberStrSmall(number = 0, level = 0) {
 
     switch (level) {
         case -1:
@@ -1358,6 +1372,58 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
         return minutes + 'm';
     } else {
         return 'now';
+    }
+}
+
+/**
+ * 获取从秒转换成dhm的时间
+ * @param seconds 秒
+ * @return {string} 时间字符串，比如 3d5h20m
+ */
+export const getTimeByDayHourMinute = (seconds = 0) => {
+    return _getTimeByDayHourMinute(seconds).b + _getTimeByDayHourMinute(seconds).m
+}
+
+//获取从秒转换成dhm的时间
+export const getTimeByDayHourMinuteLarge = (seconds = 0) => {
+    return _getTimeByDayHourMinute(seconds).b
+}
+
+//获取从秒转换成dhm的时间
+export const getTimeByDayHourMinuteSmall = (seconds = 0) => {
+    return _getTimeByDayHourMinute(seconds).m
+}
+
+//获取从秒转换成dhm的时间
+const _getTimeByDayHourMinute = (seconds = 0) => {
+    let pt_b = '';
+    let pt_m = '';
+    if (seconds != null && seconds !== 0) {
+        const days = Math.floor(Math.abs(seconds) / 86400);
+        const hours = Math.floor((Math.abs(seconds) - 86400 * days) / 3600);
+        const minutes = Math.floor((Math.abs(seconds) - 86400 * days - 3600 * hours) / 60);
+
+        if (days > 0) {
+            pt_b = days.toString();
+            pt_m = 'd' + hours + 'h' + minutes + 'm';
+        } else if (hours > 0) {
+            pt_b = hours.toString();
+            pt_m = 'h' + minutes + 'm';
+        } else if (minutes > 0) {
+            pt_b = minutes.toString();
+            pt_m = 'm';
+        } else if (hours > -1) {
+            pt_b = '0';
+            pt_m = 'm';
+        } else {
+            pt_b = '-';
+            pt_m = '';
+        }
+    }
+
+    return {
+        b: pt_b,
+        m: pt_m,
     }
 }
 

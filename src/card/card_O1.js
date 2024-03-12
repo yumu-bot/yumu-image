@@ -1,6 +1,6 @@
 import {getExportFileV3Path, implantImage, implantSvgBody, replaceText} from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_M1} from "../component/label.js";
+import {label_O} from "../component/label.js";
 
 export async function card_O1(data = {
     background: getExportFileV3Path('card-default.png'),
@@ -60,8 +60,8 @@ export async function card_O1(data = {
         const x = sx + i * 90;
         const y = 170;
 
-        const labelM1 = await label_M1(v);
-        svg = implantSvgBody(svg, x, y, labelM1, reg_label);
+        const labelO = await label_O(v);
+        svg = implantSvgBody(svg, x, y, labelO, reg_label);
     }
     // 插入头像
     svg = implantImage(svg, 100, 100, 145, 15, 1, data.avatar, reg_avatar);

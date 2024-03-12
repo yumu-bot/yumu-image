@@ -13,7 +13,7 @@ import {card_A1} from "../card/card_A1.js";
 import {card_E1} from "../card/card_E1.js";
 import {card_E3} from "../card/card_E3.js";
 import {card_E5} from "../card/card_E5.js";
-import {LABEL_OPTION} from "../component/label.js";
+import {LABELS} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
 
@@ -688,22 +688,22 @@ const beatmap2Labels = (beatmap, calcPP) => {
     const hp_m = stat2DataM(hasHPChanged, calcPP.attr.hp, beatmap.drain);
 
     return [{
-        ...LABEL_OPTION.BPM,
+        ...LABELS.BPM,
         ...data2Label(bpm_r, bpm_b, bpm_m, true),
     },{
-        ...LABEL_OPTION.LENGTH,
+        ...LABELS.LENGTH,
         ...data2Label(length_r, length_b, length_m, true),
     },{
-        ...LABEL_OPTION.CS,
+        ...LABELS.CS,
         ...data2Label(cs_r, cs_b, cs_m, isDisplayCS),
     },{
-        ...LABEL_OPTION.AR,
+        ...LABELS.AR,
         ...data2Label(ar_r, ar_b, ar_m, isDisplayAR),
     },{
-        ...LABEL_OPTION.OD,
+        ...LABELS.OD,
         ...data2Label(od_r, od_b, od_m, isDisplayOD),
     },{
-        ...LABEL_OPTION.HP,
+        ...LABELS.HP,
         ...data2Label(hp_r, hp_b, hp_m, true),
     }];
 }
