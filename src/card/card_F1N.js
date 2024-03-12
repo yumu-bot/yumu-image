@@ -76,7 +76,7 @@ export async function card_F1N(data = {
     }
 
     for (const i in deltas) {
-        svg = implantSvgBody(svg, 0, 190 + 240 * i, deltas[i], reg_text);
+        svg = implantSvgBody(svg, 0, 195 + 240 * i, deltas[i], reg_text);
     }
 
     // 获取吉祥物
@@ -158,7 +158,7 @@ async function userData2Labels(data) {
     return arr;
 }
 
-// 注意，这个是以 x=220 居中的
+// 注意，这个是以 x=180 居中的
 function userDelta2Labels(data) {
     const getSign = (T) => {
         if (typeof T === 'number') {
@@ -178,10 +178,10 @@ function userDelta2Labels(data) {
 
     const getPath = (T) => {
         if (isNaN(+T)) {
-            return torus.getTextPath(T, 220, 0, 18, 'center baseline', getColor(1)) ;
+            return torus.getTextPath(T, 180, 0, 18, 'center baseline', getColor(1)) ;
         } else {
             const text = getSign(T) + getRoundedNumberStr(Math.abs(T), 3);
-            return torus.getTextPath(text, 220, 0, 18, 'center baseline', getColor(T)) ;
+            return torus.getTextPath(text, 180, 0, 18, 'center baseline', getColor(T)) ;
         }
     }
 
