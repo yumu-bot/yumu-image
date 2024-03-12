@@ -1341,6 +1341,7 @@ export async function getFlagSvg(code = "cn") {
 
 export async function getFlagPath(code = "cn", x, y, h = 30) {
     if (typeof code != 'string') return '';
+    if (code.toLowerCase() == "tw") code = "cn"; //避免腾讯封掉青天白日旗
 
     const svg = await getFlagSvg(code);
     const len = svg.length;
