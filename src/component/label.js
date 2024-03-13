@@ -641,8 +641,8 @@ export async function label_D2(data = {
     //原来是 x=50，感觉位置怪怪的
     const icon_title = torus.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#aaa");
 
-    const abbr = torus.getTextPath(data.abbr, 56, 44.75, 36, "left baseline", "#fff");
-    const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 36, 24, 420, 44.75, "right baseline", "#fff");
+    const abbr = torus.getTextPath(data.abbr, 420, 44.75, 24, "right baseline", "#aaa");
+    const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 36, 24, 56, 44.75, "left baseline", "#fff");
 
     let svg = `
         <g id="Icon_LD2">
