@@ -1,8 +1,7 @@
 import {
     exportJPEG, getExportFileV3Path, getGameMode, getPanelNameSVG,
     implantImage,
-    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readNetImage,
-    readTemplate,
+    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -507,12 +506,14 @@ export async function panel_J(data = {
     let labelJ2s = [];
 
     for (const i in data.favorite_mappers) {
+        const v = data.favorite_mappers[i];
+
         const h = await label_J2({
             index: parseInt(i) + 1 || 0,
-            avatar: await readNetImage(data.favorite_mappers[i].avatar_url, false, getExportFileV3Path('avatar-guest.png')),
-            name: data.favorite_mappers[i].username || 'Unknown',
-            count: data.favorite_mappers[i].map_count || 0,
-            pp: data.favorite_mappers[i].pp_count || 0,
+            avatar: v?.avatar_url || "https://a.ppy.sh/" , //await readNetImage(, false, getExportFileV3Path('avatar-guest.png')),
+            name: v?.username || 'Unknown',
+            count: v?.map_count || 0,
+            pp: v?.pp_count || 0,
         });
 
         labelJ2s.push(h);

@@ -2,7 +2,6 @@ import {PuHuiTi, torus} from "./font.js";
 import moment from "moment";
 import {
     getApproximateRank,
-    getAvatar,
     getDecimals,
     getExportFileV3Path,
     getGameMode,
@@ -14,7 +13,7 @@ import {
     getTimeDifference,
     isReload,
     rankSS2X,
-    readNetImage,
+    readNetImage, getAvatar,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getModInt, hasMod} from "./mod.js";
@@ -222,7 +221,7 @@ export const PanelGenerate = {
         }
 
         const background = getExportFileV3Path(bg_str);
-        const avatar = await getAvatar(score?.user_id, false, getExportFileV3Path('avatar-guest.png'));
+        const avatar = await getAvatar(score?.user?.avatar_url);
         const country = score?.user?.country?.code || 'CN';
 
         const top1 = score?.user?.username || score?.user_name || 'Unknown';

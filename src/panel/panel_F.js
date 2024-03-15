@@ -6,7 +6,7 @@ import {
     getPanelNameSVG,
     getRoundedNumberStr,
     readNetImage,
-    getExportFileV3Path, getAvatar, replaceBanner
+    getExportFileV3Path, replaceBanner
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -205,7 +205,7 @@ async function round2CardC(round = {}, red_before = 0, blue_before = 0) {
     ) {
         return {
             player_name: score?.user_name, //妈的 为什么get match不给用户名啊
-            player_avatar: score.user ? await readNetImage(score?.user?.avatar_url, false, getExportFileV3Path('avatar-guest.png')): await getAvatar(score.user_id),
+            player_avatar: await readNetImage(score?.user?.avatar_url, false, getExportFileV3Path('avatar-guest.png')),
             player_score: score.score,
             player_mods: score.mods,
             player_rank: score.ranking, //一局比赛里的分数排名，1v1或者team都一样

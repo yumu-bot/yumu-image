@@ -73,9 +73,9 @@ export function initPath() {
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(OSU_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(FLAG_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
-    console.log("缓存目录: ", CACHE_PATH);
-    console.log("图像缓存", IMG_BUFFER_PATH);
-    console.log("osu文件缓存", OSU_BUFFER_PATH);
+    console.log("主缓存目录: ", CACHE_PATH);
+    console.log("图像缓存: ", IMG_BUFFER_PATH);
+    console.log("谱面文件缓存: ", OSU_BUFFER_PATH);
 
     Number.prototype.fixed = function () {
         return fixed(this);
@@ -155,8 +155,16 @@ export async function getMapBG(sid = 0, cover = 'cover', reload = true, defaultI
     return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', reload, defaultImagePath);
 }
 
-export async function getAvatar(uid = 0, reload = true, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
+export async function getAvatarFromUID(uid = 0, reload = true, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
     return await readNetImage('https://a.ppy.sh/' + uid, reload, defaultImagePath);
+}
+
+export async function getAvatar(link = "https://a.ppy.sh/", reload = false, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
+    if (link == null || link == "https://a.ppy.sh/" || link == "") {
+        return defaultImagePath;
+    } else {
+        return await readNetImage(link, reload, defaultImagePath);
+    }
 }
 
 /**

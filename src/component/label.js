@@ -2,7 +2,7 @@ import {
     getExportFileV3Path, getGameMode,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall, getDecimals,
-    implantImage, replaceText, replaceTexts, getAvatar,
+    implantImage, replaceText, replaceTexts, getAvatarFromUID, getAvatar,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor} from "../util/color.js";
@@ -744,7 +744,7 @@ export async function label_J1(data = {
 //BPA-J2-谱师标签
 export async function label_J2(data = {
     index: 1,
-    avatar: getExportFileV3Path('avatar-guest.png'),
+    avatar: 'https://a.ppy.sh/',
     name: 'Sotrash',
     count: 88,
     pp: 1611,
@@ -792,8 +792,8 @@ export async function label_J2(data = {
     svg = replaceText(svg, index, reg_index);
 
     //插入图片
-    svg = implantImage(svg, 70, 70, 8, 8, 1,
-        data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+    const avatar = await getAvatar(data.avatar);
+    svg = implantImage(svg, 70, 70, 8, 8, 1, avatar, reg_avatar);
 
     return svg.toString();
 }
@@ -915,7 +915,7 @@ export async function label_M1(data = {
         mode_icon_path = '';
 
         const uid = data.uid || 0;
-        const avatar = await getAvatar(uid, false);
+        const avatar = await getAvatarFromUID(uid, false);
 
         svg = implantImage(svg, 36, 36, 8, 7, 1, avatar, reg_avatar);
     }
@@ -1002,7 +1002,7 @@ export async function label_M2(data = {
 
     //定义文本
     const uid = data.uid || 0;
-    const avatar = await getAvatar(uid, false);
+    const avatar = await getAvatarFromUID(uid, false);
 
     let host = 'G';
     let host_color = '#382E32'

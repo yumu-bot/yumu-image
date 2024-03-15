@@ -64,7 +64,7 @@ export async function router_svg(req, res) {
  * @return {Promise<any>}
  */
 export async function panel_Beta(score) {
-    const url_avatar = await getAvatar(score.user.id);
+    const url_avatar = await getAvatar(score?.user?.avatar_url);
     const url_bg = await getDiffBG(score.beatmap.id, score.beatmapset.id, 'list@2x', isReload(score.beatmap.ranked));
 
     const mode_int = score.mode_int;

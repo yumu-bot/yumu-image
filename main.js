@@ -89,7 +89,7 @@ app.post('/testApi', async (req, res) => {
 })
 
 app.listen(process.env.PORT, () => {
-    console.log(`== Done. ==\nlisten on: http://localhost:${process.env.PORT}\ncache path: ${CACHE_PATH}`);
+    console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n监听端口: ${process.env.PORT}\n`);
 })
 
 // form: data:text ... img:file

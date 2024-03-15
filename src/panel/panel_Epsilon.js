@@ -1,6 +1,5 @@
 import {
-    exportJPEG,
-    getAvatar,
+    exportJPEG, getAvatar,
     getExportFileV3Path,
     implantImage, readTemplate,
     replaceText
@@ -40,8 +39,9 @@ export async function router_svg(req, res) {
  * @return {Promise<string>}
  */
 export async function panel_Epsilon(data = {
-    username: "SIyuyuko",
-    uid: 7000123,
+    username: "",
+    uid: 0,
+    avatar_url: "https://a.ppy.sh/",
 }, reuse = false) {
     // 导入模板
     let svg = readTemplate('template/Panel_Epsilon.svg');
@@ -51,7 +51,7 @@ export async function panel_Epsilon(data = {
     const reg_avatar = /(?<=<g id="Avatar">)/;
     const reg_text = /(?<=<g id="Text">)/;
 
-    const image = await getAvatar(data.uid || 0);
+    const image = await getAvatar(data?.avatar_url);
     const name = TahomaRegular.getTextPath(
         TahomaRegular.cutStringTail(data.username || 'Unknown', 60, 460, true),
         230, 435, 60, 'center baseline', '#000'
