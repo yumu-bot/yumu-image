@@ -58,6 +58,8 @@ export async function router_svg(req, res) {
 
 /**
  * 帅气逼人的面板, ~~薄纱其他面板~~
+ * 挠餐。。。。。。
+ * 我那张椰树的面板还留着呢，大红大绿，大色块，很明显你是目标用户，和那个老板审美差不多
  * @param score
  * @return {Promise<any>}
  */

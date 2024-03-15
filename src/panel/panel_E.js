@@ -385,7 +385,7 @@ async function score2CardE1(score, calcPP) {
     return {
         mode: score.mode || 'osu',
         star: calcPP.attr.stars || 0,
-        cover: score.beatmapset.covers["list@2x"],
+        cover: score.beatmapset.covers.list,
         title: score.beatmapset.title || '',
         title_unicode: score.beatmapset.title_unicode || '',
         version: score.beatmap.version || '',

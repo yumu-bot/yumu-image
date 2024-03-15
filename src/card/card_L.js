@@ -13,17 +13,17 @@ export async function card_L(data = {
     name: 'Length', //Length, Combo, SR
     card_K: [ //第一个是最大值，第二个是中值（不是平均值），第三个是最小值。如果bp不足2个，中值和最小值留null，如果bp不足3个，中值留null
         {
-            length: 719, //length给秒数（整数）
-            combo: 719, //combo给连击（整数）
+            length: 0, //length给秒数（整数）
+            combo: 0, //combo给连击（整数）
             ranking: 1, //排名，得自己计数，bp是bp几
-            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
-            star: 6.38, // 实际star
-            rank: "A", // bp.rank
-            mods: ['HR']
+            cover: null, //bp.beatmapset.covers['list']
+            star: 0, // 实际star
+            rank: "F", // bp.rank
+            mods: ['']
         },
     ],
 
-}, reuse = false) {
+}) {
 
     // 正则
 

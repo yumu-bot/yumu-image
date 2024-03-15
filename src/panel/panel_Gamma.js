@@ -51,7 +51,6 @@ export async function router_svg(req, res) {
 /**
  * 简略信息面板, 似乎user info和score info集成在一起
  * @param data
- * @param reuse
  * @return {Promise<string>}
  */
 export async function panel_Gamma(data = {
@@ -143,7 +142,7 @@ const PanelGamma = {
 
     scoreVersion: async (score) => {
         const background = getExportFileV3Path('object-score-backimage-' + score.rank + '.jpg');
-        const avatar = await getMapBG(score.beatmapset.id, "list@2x", false);
+        const avatar = await getMapBG(score.beatmapset.id, "list", false);
 
         // 成绩重计算
         const score_statistics = {

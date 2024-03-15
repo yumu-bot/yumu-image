@@ -762,7 +762,7 @@ export const PanelGenerate = {
 
 //给panel_A5用的，期待可以和上面合并
     beatmap2CardH: async (b, calcPP, rank = 1) => {
-        const cover = await getMapBG(b.beatmapset.id, 'list@2x', isReload(b.ranked));
+        const cover = await getMapBG(b.beatmapset.id, 'list', isReload(b.ranked));
         const background = await getMapBG(b.beatmapset.id, 'cover', isReload(b.ranked));
         // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
         // 这个不要下载，请求量太大
@@ -836,7 +836,7 @@ export const PanelGenerate = {
     },
 
     bp2CardH: async (bp, rank = 1) => {
-        const cover = await getMapBG(bp.beatmapset.id, 'list@2x', false);
+        const cover = await getMapBG(bp.beatmapset.id, 'list', false);
         const background = await getMapBG(bp.beatmapset.id, 'cover', false);
 
         const time_diff = getTimeDifference(bp.create_at_str);
@@ -923,7 +923,7 @@ export const PanelGenerate = {
     },
 
     bp2CardJ: async (bp) => {
-        const background = await getMapBG(bp.beatmapset.id, 'list@2x', isReload(bp.beatmap.ranked));
+        const background = await getMapBG(bp.beatmapset.id, 'list', isReload(bp.beatmap.ranked));
 
         return {
             cover: background,
@@ -1056,7 +1056,7 @@ export const PanelGenerate = {
     beatmap2CardO2: async (s) => {
         if (!s) return '';
 
-        const background = await getMapBG(s?.id, 'list@2x', isReload(s.status));
+        const background = await getMapBG(s?.id, 'list', isReload(s.status));
         const map_status = s?.status;
         const title1 = s?.title;
         const title2 = s?.artist;

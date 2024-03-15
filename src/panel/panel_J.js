@@ -296,7 +296,7 @@ export async function panel_J(data = {
             length: 719, //length给秒数（整数）
             combo: 719, //combo给连击（整数）
             ranking: 1, //排名，得自己计数，bp是bp几
-            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list.jpg?1622096843", //bp.beatmapset.covers['list@2x']
             star: 6.38, // 实际star
             rank: "A", // bp.rank
             mods: ['HR']
@@ -308,7 +308,7 @@ export async function panel_J(data = {
             length: 719, //length给秒数（整数）
             combo: 719, //combo给连击（整数）
             ranking: 1, //排名，得自己计数，bp是bp几
-            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list.jpg?1622096843", //bp.beatmapset.covers['list@2x']
             star: 6.38, // 实际star
             rank: "A", // bp.rank
             mods: ['HR']
@@ -320,7 +320,7 @@ export async function panel_J(data = {
             length: 719, //length给秒数（整数）
             combo: 719, //combo给连击（整数）
             ranking: 1, //排名，得自己计数，bp是bp几
-            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list.jpg?1622096843", //bp.beatmapset.covers['list@2x']
             star: 6.38, // 实际star
             rank: "A", // bp.rank
             mods: ['HR']
@@ -478,9 +478,9 @@ export async function panel_J(data = {
     // L卡构建
     let cardLs = [];
 
-    const L1 = await card_L({name: 'Length', card_K: data.bpLength}, true);
-    const L2 = await card_L({name: 'Combo', card_K: data.bpCombo}, true);
-    const L3 = await card_L({name: 'Star Rating', card_K: data.bpSR}, true);
+    const L1 = await card_L({name: 'Length', card_K: data.bpLength});
+    const L2 = await card_L({name: 'Combo', card_K: data.bpCombo});
+    const L3 = await card_L({name: 'Star Rating', card_K: data.bpSR});
 
     cardLs.push(L1, L2, L3);
 

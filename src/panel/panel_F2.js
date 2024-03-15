@@ -267,7 +267,7 @@ export async function panel_F2(
 
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, await getMapBG(beatmap.beatmapset.sid, 'list@2x', isReload(beatmap.beatmapset.ranked)), reg_banner);
+    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, await getMapBG(beatmap.beatmapset.sid, 'list', isReload(beatmap.beatmapset.ranked)), reg_banner);
 
     return svg.toString();
 }
@@ -347,7 +347,7 @@ async function getBeatmapAttr(b = {}, mods = []) {
 
     return {
         ...b,
-        background: await getMapBG(b?.beatmapset?.sid, 'list@2x', isReload(b.beatmapset.ranked)),
+        background: await getMapBG(b?.beatmapset?.sid, 'list', isReload(b.beatmapset.ranked)),
         title: b?.beatmapset?.title,
         artist: b?.beatmapset?.artist,
         mapper: b?.beatmapset?.creator, //creator

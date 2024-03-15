@@ -179,7 +179,7 @@ async function playerData2CardH(p = {}) {
 async function matchData2CardA2(data){
     const star = getRoundedNumberStr(data?.averageStar || 0, 3);
 
-    const background = await getMapBG(data?.series?.firstMapSIDs[0], 'list@2x', false);
+    const background = await getMapBG(data?.series?.firstMapSIDs[0], 'list', false);
 
     const title = data?.series?.seriesStat?.name || "";
     let title1, title2;

@@ -447,7 +447,7 @@ export async function card_M(s = {
 
     //导入背景
 
-    const background = await getMapBG(s.id, 'list@2x', isReload(s.ranked));
+    const background = await getMapBG(s.id, 'list', isReload(s.ranked));
     svg = implantImage(svg,1370,210,0,0,0.5, background, reg_background);
 
     return svg.toString();
