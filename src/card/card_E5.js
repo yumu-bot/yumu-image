@@ -5,7 +5,7 @@ import {
     replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_E, LABEL_OPTION} from "../component/label.js";
+import {label_E, LABELS} from "../component/label.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
@@ -91,17 +91,17 @@ export async function card_E5(data = {
     const statisticsNC = getStatisticsRRect(data.ncStats, data.statistics_max, 400, 60, 500, 22.79)
     const statisticsFC = getStatisticsSVG(data.fcStats, data.statistics_max, 400, 60, 500, 22.79)
 
-    const acc = await label_E({...((mode === 'm') ? LABEL_OPTION.PPACC : LABEL_OPTION.ACC),
+    const acc = await label_E({...((mode === 'm') ? LABELS.PPACC : LABELS.ACC),
         remark: (data.miss > 0) ? '-' + data.miss : '-',
         data_b: getDecimals(data.accuracy * 100, 2),
         data_m: getDecimals(data.accuracy * 100, 3) + '%',
     });
-    const combo = await label_E({...LABEL_OPTION.COMBO,
+    const combo = await label_E({...LABELS.COMBO,
         remark: isFC ? 'FC' : (data.max_combo + 'x'),
         data_b: data.combo ? data.combo.toString() : '0',
         data_m: 'x',
     });
-    const losspp = await label_E({...LABEL_OPTION.LOSSPP,
+    const losspp = await label_E({...LABELS.LOSSPP,
             remark: (data.max_pp > 0) ? (Math.round(data.pp / data.max_pp * 100) - 100) + '%' : '-%',
             data_b: Math.round(data.pp - data.max_pp).toString(),
             data_m: 'PP',

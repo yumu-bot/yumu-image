@@ -1,16 +1,14 @@
 import {
     exportJPEG, getExportFileV3Path, getPanelNameSVG,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
+    getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall,
     getRoundedNumberStr,
-    implantImage,
     implantSvgBody, readNetImage,
     readTemplate, replaceBanner,
     replaceText, transformSvgBody
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
-import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 
 export async function router(req, res) {
@@ -86,6 +84,9 @@ export async function panel_C(data = {}) {
     }
 
     const rowVS = Math.max(redArr.length, blueArr.length) || 0;
+    //后面天选之子会修改 noneArr，所以在这里调出
+    const rowTotal = rowVS + Math.ceil(noneArr.length / 2);
+
     if (isTeamVS) {
         //渲染红队
         for (let i = 0; i < redArr.length; i++) {
@@ -116,8 +117,6 @@ export async function panel_C(data = {}) {
     }
 
     svg = replaceText(svg, cardHs, reg_maincard);
-
-    const rowTotal = rowVS + Math.floor(noneArr.length / 2);
 
     // 计算面板高度
     let panelHeight, cardHeight;
@@ -184,8 +183,8 @@ async function playerData2CardH(p = {}) {
         title2: p.player.country.countryCode || '',
         left1: left1,
         left2: left2,
-        index_b: getRoundedNumberLargerStr(p.mra, 3),
-        index_m: getRoundedNumberSmallerStr(p.mra, 3),
+        index_b: getRoundedNumberStrLarge(p.mra, 3),
+        index_m: getRoundedNumberStrSmall(p.mra, 3),
         index_b_size: 48,
         index_m_size: 36,
         label1: '',

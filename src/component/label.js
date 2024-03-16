@@ -1,15 +1,15 @@
 import {
     getExportFileV3Path, getGameMode,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, getDecimals,
-    implantImage, replaceText, replaceTexts, getAvatar,
+    getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall, getDecimals,
+    implantImage, replaceText, replaceTexts, getAvatarFromUID, getAvatar,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModFullName} from "../util/mod.js";
 
-export const LABEL_OPTION = {
+export const LABELS = {
     ACC: {
         icon: getExportFileV3Path("object-score-accuracy.png"),
         icon_title: 'Accuracy',
@@ -113,55 +113,66 @@ export const LABEL_OPTION = {
     RKS: {
         icon: getExportFileV3Path("object-score-max.png"),
         icon_title: 'Ranked Score',
-        remark: 'RS',
+        remark: '进榜分',
+        abbr: 'RKS',
         color_remark: '#aaa',
     },
     TTS: {
         icon: getExportFileV3Path("object-score-aimpp.png"),
         icon_title: 'Total Score',
-        remark: 'TTS',
+        remark: '总分',
+        abbr: 'TTS',
         color_remark: '#aaa',
     },
     PC: {
         icon: getExportFileV3Path("object-score-combo.png"),
         icon_title: 'Play Count',
-        remark: 'PC',
-        color_remark: '#aaa',
+        remark: '游玩次数',
+        abbr: 'PC',
+        color_remark: '#ccc',
     },
     PT: {
         icon: getExportFileV3Path("object-score-length.png"),
         icon_title: 'Play Time',
-        remark: 'PT',
-        color_remark: '#aaa',
+        remark: '游玩时间',
+        abbr: 'PT',
+        color_remark: '#ccc',
+    },
+    TTH: {
+        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon_title: 'Total Hits',
+        remark: '击打次数',
+        abbr: 'TTH',
+        color_remark: '#ccc',
     },
     RMP: {
         icon: getExportFileV3Path("object-score-approachrate.png"),
-        icon_title: 'Ranked Map PC',
+        icon_title: 'Played Ranked Map',
         remark: '',
         color_remark: '#aaa',
     },
     MPC: {
         icon: getExportFileV3Path("object-score-approachrate.png"),
-        icon_title: 'Total Map PC',
-        remark: '',
+        icon_title: 'Played Map',
+        remark: '玩过',
         color_remark: '#aaa',
     },
     REP: {
         icon: getExportFileV3Path("object-score-circlesize.png"),
-        icon_title: 'Rep being watched',
-        remark: '',
+        icon_title: 'Replay',
+        remark: '回放',
         color_remark: '#aaa',
     },
     FAN: {
         icon: getExportFileV3Path("object-score-healthpoint.png"),
         icon_title: 'Follower',
-        remark: 'Fans',
+        remark: '粉丝',
         color_remark: '#aaa',
     },
-    TTH: {
-        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
-        icon_title: 'Total Hits',
-        remark: 'TTH',
+    MDL: {
+        icon: getExportFileV3Path("object-score-rice.png"),
+        icon_title: 'Medal',
+        remark: '奖章',
         color_remark: '#aaa',
     },
     SR: {
@@ -170,7 +181,7 @@ export const LABEL_OPTION = {
     },
 }
 
-export const PPM_OPTION = {
+export const LABEL_PPM = {
     ACC: {
         icon: getExportFileV3Path("object-score-accuracy.png"),
         icon_title: '准度',
@@ -390,52 +401,8 @@ export const RANK_OPTION = {
     },
 };
 
-//label_B、label_D 与 label_E 一样
 
-export async function label_E(data = {
-    ...LABEL_OPTION.ACC,
-    remark: '-1.64%',
-    data_b: '98',
-    data_m: '.36%',
-    color_remark: '#aaa',
-    title_font: torus,
-}) {
-    // 正则表达式
-    let reg_text = /(?<=<g id="Text_LE">)/;
-    let reg_icon = /(?<=<g id="Icon_LE">)/;
-
-    // 文字的 <path>
-    //原来是 x=50，感觉位置怪怪的
-    let title_font = data.title_font || torus;
-    let icon_title = title_font.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#a1a1a1");
-
-    let datas = torus.getTextPath(data.data_b, 56, 44.75, 36, "left baseline", "#fff");
-
-    if (data.data_m) {
-        let data_b_x = torus.getTextMetrics(data.data_b, 0, 0, 36, "center", "#fff");
-        datas = datas + torus.getTextPath(data.data_m, 56 + data_b_x.width, 44.75, 24, "left baseline", "#fff");
-    }
-
-    // 尽量减少文件的读取,少量文字的模板请直接写在代码里(是少量的,东西多了还是要读取模板)
-    let svg = `
-        <g id="Icon_LE">
-        </g>
-        <g id="Text_LE">
-            ${icon_title}
-            ${datas}
-        </g>
-    `;
-
-    if (data.remark) {
-        let remark = torus.getTextPath(data.remark, 200, 14.88, 18, "right baseline", data.color_remark);
-        svg = replaceText(svg, remark, reg_text);
-    }
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
-
-    return svg.toString();
-}
-
-export async function label_F1(data = {
+export async function label_C1(data = {
     avatar: '',
     name: 'Guozi on osu',
     mods_arr: [],
@@ -448,27 +415,27 @@ export async function label_F1(data = {
 }) {
     //导入模板
     let svg = `  <defs>
-    <clipPath id="clippath-LF1-1">
+    <clipPath id="clippath-LC1-1">
       <circle cx="50" cy="50" r="50" style="fill: none;"/>
     </clipPath>
   </defs>
-  <g id="Avatar_LF1">
+  <g id="Avatar_LC1">
     <circle cx="50" cy="50" r="50" style="fill: #46393f;"/>
     <g style="clip-path: url(#clippath-LF1-1);">
     </g>
   </g>
-  <g id="Mods_LF1">
+  <g id="Mods_LC1">
   </g>
-  <g id="Label_LF1">
+  <g id="Label_LC1">
   </g>
-  <g id="Text_LF1">
+  <g id="Text_LC1">
   </g>`
 
     //正则
-    let reg_text = /(?<=<g id="Text_LF1">)/;
-    let reg_mod = /(?<=<g id="Mods_LF1">)/;
-    let reg_label = /(?<=<g id="Label_LF1">)/;
-    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF1-1\);">)/;
+    let reg_text = /(?<=<g id="Text_LC1">)/;
+    let reg_mod = /(?<=<g id="Mods_LC1">)/;
+    let reg_label = /(?<=<g id="Label_LC1">)/;
+    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LC1-1\);">)/;
 
     //插入模组
     let insertMod = (mod, i, offset_x) => {
@@ -490,8 +457,8 @@ export async function label_F1(data = {
     let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
     let name = torus.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
 
-    let score_b = getRoundedNumberLargerStr(data.score || 0, 5);
-    let score_m = getRoundedNumberSmallerStr(data.score || 0, 5);
+    let score_b = getRoundedNumberStrLarge(data.score || 0, 5);
+    let score_m = getRoundedNumberStrSmall(data.score || 0, 5);
 
     let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor);
 
@@ -514,7 +481,7 @@ export async function label_F1(data = {
     return svg.toString();
 }
 
-export async function label_F2(data = {
+export async function label_C2(data = {
     avatar: 'avatar-guest.png',
     name: 'Guozi on osu',
     mods_arr: [], //这个用不到
@@ -528,31 +495,31 @@ export async function label_F2(data = {
 
     //导入模板
     let svg = `  <defs>
-    <clipPath id="clippath-LF2-1">
+    <clipPath id="clippath-LC2-1">
       <circle cx="15" cy="15" r="15" style="fill: none;"/>
     </clipPath>
   </defs>
-  <g id="Avatar_LF2">
+  <g id="Avatar_LC2">
     <circle cx="15" cy="15" r="15" style="fill: #46393f;"/>
     <g style="clip-path: url(#clippath-LF2-1);">
     </g>
   </g>
-  <g id="Label_LF2">
+  <g id="Label_LC2">
   </g>
-  <g id="Text_LF2">
+  <g id="Text_LC2">
   </g>`
 
     //正则
-    let reg_text = /(?<=<g id="Text_LF2">)/;
-    let reg_label = /(?<=<g id="Label_LF2">)/;
-    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF2-1\);">)/;
+    let reg_text = /(?<=<g id="Text_LC2">)/;
+    let reg_label = /(?<=<g id="Label_LC2">)/;
+    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LC2-1\);">)/;
 
     //定义文本
     let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
     let name = torus.getTextPath(text_name, 32, 13.877, 18, 'left baseline', '#fff');
 
-    let score_b = getRoundedNumberLargerStr(data.score || 0, 3);
-    let score_m = getRoundedNumberSmallerStr(data.score || 0, 3);
+    let score_b = getRoundedNumberStrLarge(data.score || 0, 3);
+    let score_m = getRoundedNumberStrSmall(data.score || 0, 3);
 
     let score = torus.getTextPath(score_b + score_m, 52, 27.877, 14,'left baseline', '#fff');
 
@@ -576,25 +543,25 @@ export async function label_F2(data = {
     return svg.toString();
 }
 
-export async function label_F3(data = {
+export async function label_C3(data = {
     avatar: 'avatar-guest.png',
     isWin: true,
 
 }) {
     //导入模板
     let svg = `  <defs>
-    <clipPath id="clippath-LF3-1">
+    <clipPath id="clippath-LC3-1">
       <circle cx="15" cy="15" r="15" style="fill: none;"/>
     </clipPath>
   </defs>
-  <g id="Avatar_LF3">
+  <g id="Avatar_LC3">
     <circle cx="15" cy="15" r="15" style="fill: #46393f;"/>
     <g style="clip-path: url(#clippath-LF3-1);">
     </g>
   </g>`
 
     //正则
-    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LF3-1\);">)/;
+    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LC3-1\);">)/;
 
     //插入图片，如果输了就变灰
     let isWin = data.isWin;
@@ -602,6 +569,140 @@ export async function label_F3(data = {
     if (!isWin) opa = 0.3;
 
     svg = implantImage(svg, 30, 30, 0, 0, opa, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+
+    return svg.toString();
+}
+
+
+/**
+ * panel D 在 0.4.0 升级的 label（放在右最左边），归类为 label_D1
+ * @param data
+ * @return {Promise<string>}
+ */
+export async function label_D1(data = {
+    ...LABELS.ACC,
+    remark: '-1.64%',
+    data_b: '98',
+    data_m: '.36%',
+    abbr: 'ACC',
+    color_remark: '#aaa',
+    remark_font: torus,
+}) {
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LD1">)/;
+    const reg_icon = /(?<=<g id="Icon_LD1">)/;
+
+    // 文字的 <path>
+    //原来是 x=50，感觉位置怪怪的
+    const icon_title = torus.getTextPath(data.icon_title, 145, 68.88, 18, "right baseline", "#ccc");
+    const abbr = torus.getTextPath(data.abbr, 180, 110, 36, "center baseline", "#fff");
+
+    const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 48, 36, 177.5, 154.88, "center baseline", "#fff"); //这里向左偏移2.5居中
+
+    let svg = `
+        <g id="Icon_LD1">
+        </g>
+        <g id="Text_LD1">
+            ${abbr}
+            ${icon_title}
+            ${number_data}
+        </g>
+    `;
+
+    if (data.remark) {
+        const remark_font = data.remark_font || torus;
+        const remark = remark_font.getTextPath(data.remark, 210, 68.88, 18, "left baseline", data.color_remark);
+        svg = replaceText(svg, remark, reg_text);
+    }
+    svg = implantImage(svg, 74, 74, 142.5, 0, 1, data.icon, reg_icon) //应该是 75
+
+    return svg.toString();
+}
+
+/**
+ * panel D 在 0.4.0 升级的 label（放在右下角），归类为 label_D2
+ * @param data
+ * @return {Promise<string>}
+ */
+export async function label_D2(data = {
+    ...LABELS.ACC,
+    remark: '-1.64%',
+    data_b: '98',
+    data_m: '.36%',
+    abbr: 'ACC',
+    color_remark: '#aaa',
+    remark_font: torus,
+}) {
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LD2">)/;
+    const reg_icon = /(?<=<g id="Icon_LD2">)/;
+
+    // 文字的 <path>
+    //原来是 x=50，感觉位置怪怪的
+    const icon_title = torus.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#aaa");
+
+    const abbr = torus.getTextPath(data.abbr, 420, 44.75, 24, "right baseline", "#aaa");
+    const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 36, 24, 56, 44.75, "left baseline", "#fff");
+
+    let svg = `
+        <g id="Icon_LD2">
+        </g>
+        <g id="Text_LD2">
+            ${abbr}
+            ${icon_title}
+            ${number_data}
+        </g>
+    `;
+    if (data.remark) {
+        const remark_font = data.remark_font || torus;
+        const remark = remark_font.getTextPath(data.remark, 420, 14.88, 18, "right baseline", data.color_remark);
+        svg = replaceText(svg, remark, reg_text);
+    }
+    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+
+    return svg.toString();
+}
+
+/**
+ * label_B、label_D 与 label_E 一样
+ * @param data
+ * @return {Promise<string>}
+ */
+export async function label_E(data = {
+    ...LABELS.ACC,
+    remark: '-1.64%',
+    data_b: '98',
+    data_m: '.36%',
+    color_remark: '#aaa',
+    remark_font: torus,
+    title_font: torus,
+}) {
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LE">)/;
+    const reg_icon = /(?<=<g id="Icon_LE">)/;
+
+    // 文字的 <path>
+    //原来是 x=50，感觉位置怪怪的
+    const title_font = data.title_font || torus;
+    const icon_title = title_font.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#aaa");
+
+    const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 36, 24, 56, 44.75, "left baseline", "#fff");
+
+    let svg = `
+        <g id="Icon_LE">
+        </g>
+        <g id="Text_LE">
+            ${icon_title}
+            ${number_data}
+        </g>
+    `;
+
+    if (data.remark) {
+        const remark_font = data.remark_font || torus;
+        const remark = remark_font.getTextPath(data.remark, 200, 14.88, 18, "right baseline", data.color_remark);
+        svg = replaceText(svg, remark, reg_text);
+    }
+    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
 
     return svg.toString();
 }
@@ -643,7 +744,7 @@ export async function label_J1(data = {
 //BPA-J2-谱师标签
 export async function label_J2(data = {
     index: 1,
-    avatar: getExportFileV3Path('avatar-guest.png'),
+    avatar: 'https://a.ppy.sh/',
     name: 'Sotrash',
     count: 88,
     pp: 1611,
@@ -691,8 +792,8 @@ export async function label_J2(data = {
     svg = replaceText(svg, index, reg_index);
 
     //插入图片
-    svg = implantImage(svg, 70, 70, 8, 8, 1,
-        data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+    const avatar = await getAvatar(data.avatar);
+    svg = implantImage(svg, 70, 70, 8, 8, 1, avatar, reg_avatar);
 
     return svg.toString();
 }
@@ -760,7 +861,7 @@ export async function label_J3(data = {
 }
 
 //Q-M1-难度标签
-export async function label_A1(data = {
+export async function label_M1(data = {
     mode: 'osu',
     difficulty_name: 'Skystar\'s Tragic Love Extra',
     star_rating: 5.46,
@@ -814,7 +915,7 @@ export async function label_A1(data = {
         mode_icon_path = '';
 
         const uid = data.uid || 0;
-        const avatar = await getAvatar(uid, false);
+        const avatar = await getAvatarFromUID(uid, false);
 
         svg = implantImage(svg, 36, 36, 8, 7, 1, avatar, reg_avatar);
     }
@@ -867,7 +968,7 @@ export async function label_A1(data = {
 }
 
 //Q-M2-客串谱师标签
-export async function label_A2(data = {
+export async function label_M2(data = {
     host_uid: 873961,
     uid: 873961,
 }) {
@@ -901,7 +1002,7 @@ export async function label_A2(data = {
 
     //定义文本
     const uid = data.uid || 0;
-    const avatar = await getAvatar(uid, false);
+    const avatar = await getAvatarFromUID(uid, false);
 
     let host = 'G';
     let host_color = '#382E32'
@@ -931,7 +1032,7 @@ export async function label_A2(data = {
 }
 
 //Q-M3-四维标签
-export async function label_A3(data = {
+export async function label_M3(data = {
     label1: {
     },
     label2: {
@@ -984,7 +1085,7 @@ export async function label_A3(data = {
 
 
 //MSL-N1-成绩标签
-export async function label_A4(data = {
+export async function label_N(data = {
     icon: getExportFileV3Path("object-score-acc2.png"),
     icon_title: 'ACC',
     data_b: '98.',
@@ -1010,8 +1111,8 @@ export async function label_A4(data = {
     return svg.toString();
 }
 
-//IM-M1-玩家牌（getUser - groups）
-export async function label_M1(data = {
+//IM-O-玩家牌（getUser - groups）
+export async function label_O(data = {
     "colour": "#A347EB",
     "id": 28,
     "identifier": "bng",
@@ -1021,14 +1122,14 @@ export async function label_M1(data = {
 
     //导入模板
     let svg = `  
-  <g id="RRect_LM1">
+  <g id="RRect_LO1">
   </g>
-  <g id="Text_LM1">
+  <g id="Text_LO1">
   </g>`
 
     //正则
-    const reg_text = /(?<=<g id="Text_LM1">)/;
-    const reg_rrect = /(?<=<g id="RRect_LM1">)/;
+    const reg_text = /(?<=<g id="Text_LO1">)/;
+    const reg_rrect = /(?<=<g id="RRect_LO1">)/;
 
     //定义文本
     const text = torus.getTextPath(data.short_name, 40, 22, 24, 'center baseline', '#fff');

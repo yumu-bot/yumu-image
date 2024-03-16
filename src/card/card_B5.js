@@ -1,10 +1,10 @@
 import {
-    getExportFileV3Path, getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, implantImage, implantSvgBody,
+    getExportFileV3Path, getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall, implantImage, implantSvgBody,
     readTemplate, replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_E, PPM_OPTION} from "../component/label.js";
+import {label_E, LABEL_PPM} from "../component/label.js";
 import {getRankColor} from "../util/color.js";
 
 export async function card_B5(data = {
@@ -23,7 +23,7 @@ export async function card_B5(data = {
     //导入标签
     let parameter = data.parameter.toUpperCase();
 
-    let label = await label_E({...PPM_OPTION[parameter]});
+    let label = await label_E({...LABEL_PPM[parameter]});
 
     svg = implantSvgBody(svg, 20, 15, label, reg_label);
 
@@ -31,8 +31,8 @@ export async function card_B5(data = {
     const rank = getMMRank(data.number);
     const color = getRankColor(rank);
     const background = getMMBG(rank);
-    const number_b = getRoundedNumberLargerStr(data.number,3);
-    const number_m = getRoundedNumberSmallerStr(data.number,3);
+    const number_b = getRoundedNumberStrLarge(data.number,3);
+    const number_m = getRoundedNumberStrSmall(data.number,3);
 
     let rank_text = torus.getTextPath(rank, 305, 58, 60, 'right baseline', color);
     let number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 160, 140, 'center baseline', '#fff');

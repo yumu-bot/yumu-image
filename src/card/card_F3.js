@@ -162,7 +162,7 @@ const bp2CardK = async (bp, bp_ranking = 1) => {
     }
 
     return {
-        map_background: await getMapBG(bp.beatmapset.id, 'list@2x', isReload(bp.beatmap.ranked)),
+        map_background: await getMapBG(bp.beatmapset.id, 'list', isReload(bp.beatmap.ranked)),
         star_rating: star_rating,
         score_rank: bp.rank,
         bp_ranking: bp_ranking, //感觉暂时不使用这个也可以

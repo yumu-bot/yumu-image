@@ -2,11 +2,11 @@ import {
     getDecimals,
     getExportFileV3Path,
     getGameMode,
-    getRoundedNumberLargerStr, getRoundedNumberSmallerStr,
+    getRoundedNumberStrLarge, getRoundedNumberStrSmall,
     implantSvgBody, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_E, LABEL_OPTION} from "../component/label.js";
+import {label_E, LABELS} from "../component/label.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getManiaAimingAccuracy} from "../util/compute-pp.js";
@@ -82,7 +82,7 @@ export async function card_E2(data = {
     const isPF = data.isPF;
 
     // 文字定义
-    const score = torus.get2SizeTextPath(getRoundedNumberLargerStr(data.score, -1), getRoundedNumberSmallerStr(data.score, -1), 84, 60, 335, 79.43, 'left baseline', '#FFF');
+    const score = torus.get2SizeTextPath(getRoundedNumberStrLarge(data.score, -1), getRoundedNumberStrSmall(data.score, -1), 84, 60, 335, 79.43, 'left baseline', '#FFF');
 
     // 导入文字
     svg = replaceTexts(svg, [score], reg_text);
@@ -98,19 +98,19 @@ export async function card_E2(data = {
     const best = getPersonalBestSVG(data.isBest, 20, 20);
     const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 400, 60, 500, 22.79)
 
-    const acc = await label_E({...LABEL_OPTION.ACC,
+    const acc = await label_E({...LABELS.ACC,
         remark: data.acc_index,
         data_b: getDecimals(data.accuracy * 100, 2),
         data_m: getDecimals(data.accuracy * 100, 3) + '%',
     });
-    const combo = await label_E({...LABEL_OPTION.COMBO,
+    const combo = await label_E({...LABELS.COMBO,
         remark: isFC ? 'FC' : (data.max_combo + 'x'),
         data_b: data.combo ? data.combo.toString() : '0',
         data_m: 'x',
     });
     const pp = (mode === 'm') ? (
         await label_E({
-            ...LABEL_OPTION.PP,
+            ...LABELS.PP,
             remark: isPF ? 'Max' : (isFC ? (data.max_pp <= 100000 ? 'SS ' + Math.round(data.max_pp) + 'PP' : 'Inf.PP') :
                 (data.full_pp <= 100000 ? (getManiaAimingAccuracy(data.accuracy) * 100) + '% ' + Math.round(data.full_pp) + 'PP' : (getManiaAimingAccuracy(data.accuracy) * 100) + '% Inf.PP')),
             data_b: data.pp ?
@@ -118,7 +118,7 @@ export async function card_E2(data = {
             data_m: 'PP',
         })
     ) : (
-        await label_E({...LABEL_OPTION.PP,
+        await label_E({...LABELS.PP,
             remark: isPF ? 'Max' : (isFC ? ('SS ' + Math.round(data.max_pp) + 'PP') : ('FC ' + Math.round(data.full_pp) + 'PP')),
             data_b: data.pp ? Math.round(data.pp).toString() : '0',
             data_m: 'PP',

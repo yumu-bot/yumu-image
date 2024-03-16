@@ -1,35 +1,29 @@
 import {
     getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall, getRoundedNumberStr,
+    getRoundedNumberStrSmall,
     implantSvgBody,
     modifyArrayToFixedLength,
     replaceText,
     replaceTexts
 } from "../util/util.js";
-import {torus} from "../util/font.js";
-import {label_E, LABELS} from "../component/label.js";
+import {PuHuiTi, torus} from "../util/font.js";
+import {label_D2, label_E, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function card_F6(data = {
+export async function card_F6N(data = {
     user: {
         ranked_score: 0,
         total_score: 0,
-        play_count: 0,
-        play_time: 0,
         played_map: 0,
         ranked_map: 0,
         rep_watched: 0,
         follower: 0,
-        total_hits: 0,
+        medal: 0,
     },
 
     delta: {
         ranked_score: 0,
         total_score: 0,
-        play_count: 0,
-        play_time: 0,
-
-        total_hits: 0,
     },
 
     pc_arr: [],
@@ -70,14 +64,12 @@ export async function card_F6(data = {
 
     for (const i in labels) {
         svg = implantSvgBody(svg,
-            20 + (i % 4) * 220,
-            (i < 4) ? 65 : 145, labels[i], reg_label);
+            (i < 2) ? 20 + (i % 2) * 440 : 20 + ((i - 2) % 4) * 220,
+            (i < 2) ? 65 : 145, labels[i], reg_label);
     }
 
     for (const i in deltas) {
-        svg = implantSvgBody(svg,
-        80 - 2 + (i % 4) * 220,
-            (i < 4) ? 130 : 210, deltas[i], reg_label); //我也不知道为什么这里要 -2
+        svg = implantSvgBody(svg, 80 - 2 + (i % 2) * 440, 130, deltas[i], reg_label); //我也不知道为什么这里要 -2
     }
 
     // 导入文本
@@ -135,96 +127,54 @@ function getPlayCountChart(pc_arr = []) {
 }
 
 async function userData2Labels(data) {
-    // playtime 格式化
-    let pt_b = '';
-    let pt_m = '';
-
-    if (data?.user?.play_time) {
-        const t = data.user.play_time;
-
-        const days = Math.floor(t / 86400);
-        const hours = Math.floor((t - 86400 * days) / 3600);
-        const minutes = Math.floor((t - 86400 * days - 3600 * hours) / 60);
-
-        if (days > 0) {
-            pt_b = days.toString();
-            pt_m = 'd' + hours + 'h' + minutes + 'm';
-        } else if (hours > 0) {
-            pt_b = hours.toString();
-            pt_m = 'h' + minutes + 'm';
-        } else if (minutes > 0) {
-            pt_b = minutes.toString();
-            pt_m = 'm';
-        } else if (hours > -1) {
-            pt_b = '0';
-            pt_m = 'm';
-        } else {
-            pt_b = '-';
-            pt_m = '';
-        }
-    }
-
-    const isRankedMapPCCalculated = data.user.ranked_map !== 0;
 
     // 卡片定义
-    const rks_b = getRoundedNumberStrLarge(data.user.ranked_score, 4);
-    const rks_m = getRoundedNumberStrSmall(data.user.ranked_score, 4);
-    const tts_b = getRoundedNumberStrLarge(data.user.total_score, 4);
-    const tts_m = getRoundedNumberStrSmall(data.user.total_score, 4);
-    const pc_b = getRoundedNumberStrLarge(data.user.play_count, 0);
-    const pc_m = getRoundedNumberStrSmall(data.user.play_count, 0);
+    const rks_b = getRoundedNumberStrLarge(data.user.ranked_score, 0);
+    const rks_m = getRoundedNumberStrSmall(data.user.ranked_score, 0);
+    const tts_b = getRoundedNumberStrLarge(data.user.total_score, 0);
+    const tts_m = getRoundedNumberStrSmall(data.user.total_score, 0);
 
-    const rmp_b = getRoundedNumberStrLarge(data.user.ranked_map, 0);
-    const rmp_m = getRoundedNumberStrSmall(data.user.ranked_map, 0);
     const mpc_b = getRoundedNumberStrLarge(data.user.played_map, 0);
     const mpc_m = getRoundedNumberStrSmall(data.user.played_map, 0);
-
     const rep_b = getRoundedNumberStrLarge(data.user.rep_watched, 0);
     const rep_m = getRoundedNumberStrSmall(data.user.rep_watched, 0);
     const fan_b = getRoundedNumberStrLarge(data.user.follower, 0);
     const fan_m = getRoundedNumberStrSmall(data.user.follower, 0);
-    const tth_b = getRoundedNumberStrLarge(data.user.total_hits, 4);
-    const tth_m = getRoundedNumberStrSmall(data.user.total_hits, 4);
+    const mdl_b = getRoundedNumberStrLarge(data.user.medal, 0);
+    const mdl_m = getRoundedNumberStrSmall(data.user.medal, 0);
 
     const label_rks =
-        await label_E({...LABELS.RKS, data_b: rks_b, data_m: rks_m});
+        await label_D2({...LABELS.RKS, data_b: rks_b, data_m: rks_m, remark_font: PuHuiTi});
     const label_tts =
-        await label_E({...LABELS.TTS, data_b: tts_b, data_m: tts_m});
-    const label_pc =
-        await label_E({...LABELS.PC, data_b: pc_b, data_m: pc_m});
-    const label_pt =
-        await label_E({...LABELS.PT, data_b: pt_b, data_m: pt_m});
+        await label_D2({...LABELS.TTS, data_b: tts_b, data_m: tts_m, remark_font: PuHuiTi});
 
-    const label_mpl = isRankedMapPCCalculated ?
-        await label_E({...LABELS.RMP, data_b: rmp_b, data_m: rmp_m}) :
-        await label_E({...LABELS.MPC, data_b: mpc_b, data_m: mpc_m})
-    ;
+    const label_mpl =
+        await label_E({...LABELS.MPC, data_b: mpc_b, data_m: mpc_m, remark_font: PuHuiTi});
     const label_rep =
-        await label_E({...LABELS.REP, data_b: rep_b, data_m: rep_m});
+        await label_E({...LABELS.REP, data_b: rep_b, data_m: rep_m, remark_font: PuHuiTi});
     const label_fan =
-        await label_E({...LABELS.FAN, data_b: fan_b, data_m: fan_m});
-    const label_tth =
-        await label_E({...LABELS.TTH, data_b: tth_b, data_m: tth_m});
+        await label_E({...LABELS.FAN, data_b: fan_b, data_m: fan_m, remark_font: PuHuiTi});
+    const label_mdl =
+        await label_E({...LABELS.MDL, data_b: mdl_b, data_m: mdl_m, remark_font: PuHuiTi});
 
     let arr = [];
-    arr.push(label_rks, label_tts, label_pc, label_pt,label_mpl, label_rep, label_fan, label_tth);
+    arr.push(label_rks, label_tts, label_mpl, label_rep, label_fan, label_mdl);
 
     return arr;
 }
 
 function userDelta2Labels(data) {
-    
     const getSign = (T) => {
         if (typeof T === 'number') {
             return (T > 0) ? '+' : ((T < 0) ? '-': '');
         } else return '';
     }
-    
+
     const getColor = (T) => {
         const increase = '#93D02E';
         const decrease = '#DE6055';
         const none = '#CBAA2C00';
-        
+
         if (typeof T === 'number') {
             return (T > 0) ? increase : ((T < 0) ? decrease: none);
         } else return '';
@@ -234,58 +184,21 @@ function userDelta2Labels(data) {
         if (isNaN(+T)) {
             return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
         } else {
-            const text = getSign(T) + getRoundedNumberStr(Math.abs(T), 3);
+            const text = getSign(T) + Math.abs(T);
             return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
         }
-
     }
-
 
     const rks = data?.delta?.ranked_score || 0;
     const tts = data?.delta?.total_score || 0;
-    const pc = data?.delta?.play_count || 0;
-    const pt = data?.delta?.play_time || 0;
-    const tth = data?.delta?.total_hits || 0;
 
-    if (pt === 0) {
-        return new Array(8).fill("");
+    if (data?.delta?.ranked_score === 0) {
+        return new Array(2).fill("");
     }
 
-    let pt_h = '';
-    if (data?.delta?.play_time || data?.delta?.play_time === 0) {
-        let pt_b = getSign(pt);
-        let pt_m;
-
-        const days = Math.floor(Math.abs(pt) / 86400);
-        const hours = Math.floor((Math.abs(pt) - 86400 * days) / 3600);
-        const minutes = Math.floor((Math.abs(pt) - 86400 * days - 3600 * hours) / 60);
-
-        if (days > 0) {
-            pt_b += days.toString();
-            pt_m = 'd' + hours + 'h' + minutes + 'm';
-        } else if (hours > 0) {
-            pt_b += hours.toString();
-            pt_m = 'h' + minutes + 'm';
-        } else if (minutes > 0) {
-            pt_b += minutes.toString();
-            pt_m = 'm';
-        } else if (hours > -1) {
-            pt_b += '0';
-            pt_m = 'm';
-        } else {
-            pt_b = '-';
-            pt_m = '';
-        }
-        pt_h = pt_b + pt_m;
-    }
-
-    const n = ""; //没法做的差值
     let arr = [];
-    for (const x of [rks, tts, pc, pt_h, 0, 0, 0, tth]) {
-        if (x)
-            arr.push(getPath(x));
-        else
-            arr.push(n);
+    for (const x of [rks, tts]) {
+        arr.push(getPath(x));
     }
     return arr;
 }

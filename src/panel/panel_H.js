@@ -159,7 +159,7 @@ function hasRemain(i = 0) {
 }
 
 async function pool2cardA2(data, map_count = 0, mod_count = 0) {
-    const background = await getMapBG(data.firstMapSID, 'cover@2x', false) || getRandomBannerPath();
+    const background = await getMapBG(data.firstMapSID, 'cover', false) || getRandomBannerPath();
 
     const title1 = data.name || '';
     const title3 = data.categoryList ? data.categoryList[0].category ? 'creator: ' + data.categoryList[0].category[0].creater : 'creator?' : '';
@@ -232,7 +232,7 @@ async function beatmap2CardD(b, mod) {
     }
 
     return {
-        background: await getMapBG(b.beatmapset.id, 'cover@2x', isReload(b.ranked)),
+        background: await getMapBG(b.beatmapset.id, 'cover', isReload(b.ranked)),
         title: b.beatmapset.title || '',
         title_unicode: b.beatmapset.title_unicode || '',
         artist: b.beatmapset.artist || '',

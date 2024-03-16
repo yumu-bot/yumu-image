@@ -16,7 +16,7 @@ import {
 } from "../util/util.js";
 import {calcPerformancePoints, getDensityArray} from "../util/compute-pp.js";
 import moment from "moment";
-import {LABEL_OPTION} from "../component/label.js";
+import {LABELS} from "../component/label.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_E1} from "../card/card_E1.js";
 import {card_E2} from "../card/card_E2.js";
@@ -371,8 +371,8 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg, 0, 0, cardE4, reg_card_e4);
 
     // 图片定义
-    const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
-    const banner = await getDiffBG(data.score.beatmap.id, data.score.beatmapset.id, 'cover@2x', isReload(data.score.beatmap.ranked));
+    const background = getExportFileV3Path('object-score-backimage-' + (data?.score?.rank || getApproximateRank(data?.score)) + '.jpg');
+    const banner = await getDiffBG(data.score.beatmap.id, data.score.beatmapset.id, 'cover', isReload(data.score.beatmap.ranked));
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);
@@ -385,7 +385,7 @@ async function score2CardE1(score, calcPP) {
     return {
         mode: score.mode || 'osu',
         star: calcPP.attr.stars || 0,
-        cover: score.beatmapset.covers["list@2x"],
+        cover: score.beatmapset.covers.list,
         title: score.beatmapset.title || '',
         title_unicode: score.beatmapset.title_unicode || '',
         version: score.beatmap.version || '',
@@ -981,22 +981,22 @@ const score2Labels = (score, calcPP) => {
     const hp_m = stat2DataM(hasHPChanged, calcPP.attr.hp, score.beatmap.drain);
 
     return [{
-        ...LABEL_OPTION.BPM,
+        ...LABELS.BPM,
         ...data2Label(bpm_r, bpm_b, bpm_m, true),
     },{
-        ...LABEL_OPTION.LENGTH,
+        ...LABELS.LENGTH,
         ...data2Label(length_r, length_b, length_m, true),
     },{
-        ...LABEL_OPTION.CS,
+        ...LABELS.CS,
         ...data2Label(cs_r, cs_b, cs_m, isDisplayCS),
     },{
-        ...LABEL_OPTION.AR,
+        ...LABELS.AR,
         ...data2Label(ar_r, ar_b, ar_m, isDisplayAR),
     },{
-        ...LABEL_OPTION.OD,
+        ...LABELS.OD,
         ...data2Label(od_r, od_b, od_m, isDisplayOD),
     },{
-        ...LABEL_OPTION.HP,
+        ...LABELS.HP,
         ...data2Label(hp_r, hp_b, hp_m, true),
     }];
 }

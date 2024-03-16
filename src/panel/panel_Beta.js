@@ -58,11 +58,13 @@ export async function router_svg(req, res) {
 
 /**
  * 帅气逼人的面板, ~~薄纱其他面板~~
+ * 挠餐。。。。。。
+ * 我那张椰树的面板还留着呢，大红大绿，大色块，很明显你是目标用户，和那个老板审美差不多
  * @param score
  * @return {Promise<any>}
  */
 export async function panel_Beta(score) {
-    const url_avatar = await getAvatar(score.user.id);
+    const url_avatar = await getAvatar(score?.user?.avatar_url);
     const url_bg = await getDiffBG(score.beatmap.id, score.beatmapset.id, 'list@2x', isReload(score.beatmap.ranked));
 
     const mode_int = score.mode_int;

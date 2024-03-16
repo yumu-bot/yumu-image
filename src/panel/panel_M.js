@@ -1,6 +1,6 @@
 import {
     exportJPEG, getExportFileV3Path, getPanelNameSVG,
-    getRoundedNumberLargerStr, getRoundedNumberSmallerStr, getRoundedNumberStr, getTimeDifference,
+    getRoundedNumberStrLarge, getRoundedNumberStrSmall, getRoundedNumberStr, getTimeDifference,
     implantImage, implantSvgBody, readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
@@ -507,10 +507,10 @@ export async function panel_M(data = {
     svg = replaceTexts(svg, [rank_index, pending_index, guest_index], reg_recent);
 
     // 插入8号卡标签
-    const favorite_b_str = getRoundedNumberLargerStr(data.favorite, 3);
-    const favorite_m_str = getRoundedNumberSmallerStr(data.favorite, 3);
-    const playcount_b_str = getRoundedNumberLargerStr(data.playcount, 2);
-    const playcount_m_str = getRoundedNumberSmallerStr(data.playcount, 2);
+    const favorite_b_str = getRoundedNumberStrLarge(data.favorite, 3);
+    const favorite_m_str = getRoundedNumberStrSmall(data.favorite, 3);
+    const playcount_b_str = getRoundedNumberStrLarge(data.playcount, 2);
+    const playcount_m_str = getRoundedNumberStrSmall(data.playcount, 2);
     const comment_str = getRoundedNumberStr(data.user.comments_count, 0);
     const nominated_str = getRoundedNumberStr(data.user.nominated_beatmapset_count, 0);
     const loved_str = getRoundedNumberStr(data.user.loved_beatmapset_count, 0);

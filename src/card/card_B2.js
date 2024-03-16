@@ -1,11 +1,11 @@
 import {
     getExportFileV3Path,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr, implantImage, implantSvgBody,
+    getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall, implantImage, implantSvgBody,
     readTemplate, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_E, PPM_OPTION} from "../component/label.js";
+import {label_E, LABEL_PPM} from "../component/label.js";
 import {getRankColor} from "../util/color.js";
 
 export async function card_B2(data = {
@@ -23,7 +23,7 @@ export async function card_B2(data = {
     //导入标签
     let parameter = data.parameter.toUpperCase();
 
-    let label = await label_E({...PPM_OPTION[parameter]});
+    let label = await label_E({...LABEL_PPM[parameter]});
 
     svg = implantSvgBody(svg, 20, 15, label, reg_label);
 
@@ -31,8 +31,8 @@ export async function card_B2(data = {
     let rank = getPPMRank(data.number);
     let color = getPPMColor(rank);
     let background = getRankBG(rank);
-    let number_b = getRoundedNumberLargerStr(data.number,2);
-    let number_m = getRoundedNumberSmallerStr(data.number,2);
+    let number_b = getRoundedNumberStrLarge(data.number,2);
+    let number_m = getRoundedNumberStrSmall(data.number,2);
 
     let rank_text;
 

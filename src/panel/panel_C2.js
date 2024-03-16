@@ -1,7 +1,7 @@
 import {
     exportJPEG, getExportFileV3Path, getMapBG, getPanelNameSVG,
-    getRoundedNumberLargerStr,
-    getRoundedNumberSmallerStr,
+    getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall,
     getRoundedNumberStr,
     implantImage,
     implantSvgBody, readNetImage,
@@ -151,8 +151,8 @@ async function playerData2CardH(p = {}) {
         title2: p.player.country.countryCode || '',
         left1: left1,
         left2: left2,
-        index_b: getRoundedNumberLargerStr(p.mra, 3),
-        index_m: getRoundedNumberSmallerStr(p.mra, 3),
+        index_b: getRoundedNumberStrLarge(p.mra, 3),
+        index_m: getRoundedNumberStrSmall(p.mra, 3),
         index_b_size: 48,
         index_m_size: 36,
         label1: '',
@@ -179,7 +179,7 @@ async function playerData2CardH(p = {}) {
 async function matchData2CardA2(data){
     const star = getRoundedNumberStr(data?.averageStar || 0, 3);
 
-    const background = await getMapBG(data?.series?.firstMapSIDs[0], 'list@2x', false);
+    const background = await getMapBG(data?.series?.firstMapSIDs[0], 'list', false);
 
     const title = data?.series?.seriesStat?.name || "";
     let title1, title2;
@@ -200,8 +200,8 @@ async function matchData2CardA2(data){
 
     const right1 = 'SR ' + star + '*';
     const right2 = 'Scores/Player'; // + data.matchStat.id || 0;
-    const right3b = data.playerCount > 0 ? getRoundedNumberLargerStr(data.scoreCount / data.playerCount, 3) : "0";
-    const right3m = data.playerCount > 0 ? getRoundedNumberSmallerStr(data.scoreCount / data.playerCount, 3) : "";
+    const right3b = data.playerCount > 0 ? getRoundedNumberStrLarge(data.scoreCount / data.playerCount, 3) : "0";
+    const right3m = data.playerCount > 0 ? getRoundedNumberStrSmall(data.scoreCount / data.playerCount, 3) : "";
 
     return {
         background: background,

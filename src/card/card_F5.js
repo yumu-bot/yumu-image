@@ -59,7 +59,8 @@ function getBPActivityChart(bp_arr = []) {
     const arr = maximumArrayToFixedLength(bp_arr, 39);
     const user_bp_activity_max = Math.max.apply(Math, arr);
 
-    const bp_activity_text = torus.getTextPath(`BP+${user_bp_activity_max}`,
+    const bp_activity_text = torus.getTextPath(
+        user_bp_activity_max > 0 ? ('BP+' + user_bp_activity_max) : '',
         70 + arr.findIndex((item) => item === user_bp_activity_max) * 20,
         185 + 90 - (user_bp_activity_max / Math.max(5, user_bp_activity_max)) * 90,
         16,

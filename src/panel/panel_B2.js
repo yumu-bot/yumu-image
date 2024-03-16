@@ -1,6 +1,6 @@
 import {
     exportJPEG, getExportFileV3Path, getGameMode, getMapBG,
-    getPanelNameSVG, getRoundedNumberLargerStr, getRoundedNumberSmallerStr, implantImage,
+    getPanelNameSVG, getRoundedNumberStrLarge, getRoundedNumberStrSmall, implantImage,
     implantSvgBody, isReload, readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
@@ -159,7 +159,7 @@ export async function panel_B2(data = {
     svg = implantSvgBody(svg, 0, 0, drawHexIndex(getGameMode(data.beatMap.mode, 0)), reg_hexagon);
 
     // 插入图片和部件（新方法
-    const banner = await getMapBG(data.beatMap.beatmapset.id, 'cover@2x', isReload(data.beatMap.ranked));
+    const banner = await getMapBG(data.beatMap.beatmapset.id, 'cover', isReload(data.beatMap.ranked));
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     // 面板文字
@@ -196,7 +196,7 @@ export async function panel_B2(data = {
     }
 
     const total = ((rc + 0.1 * ln + st + sp + pr) / 4); //暂时不加sv，ln占比减少
-    const total_path = torus.get2SizeTextPath(getRoundedNumberLargerStr(total, 3), getRoundedNumberSmallerStr(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
+    const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, total_path], reg_index);

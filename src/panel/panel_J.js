@@ -1,8 +1,7 @@
 import {
     exportJPEG, getExportFileV3Path, getGameMode, getPanelNameSVG,
     implantImage,
-    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readNetImage,
-    readTemplate,
+    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -296,7 +295,7 @@ export async function panel_J(data = {
             length: 719, //length给秒数（整数）
             combo: 719, //combo给连击（整数）
             ranking: 1, //排名，得自己计数，bp是bp几
-            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list.jpg?1622096843", //bp.beatmapset.covers['list@2x']
             star: 6.38, // 实际star
             rank: "A", // bp.rank
             mods: ['HR']
@@ -308,7 +307,7 @@ export async function panel_J(data = {
             length: 719, //length给秒数（整数）
             combo: 719, //combo给连击（整数）
             ranking: 1, //排名，得自己计数，bp是bp几
-            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list.jpg?1622096843", //bp.beatmapset.covers['list@2x']
             star: 6.38, // 实际star
             rank: "A", // bp.rank
             mods: ['HR']
@@ -320,7 +319,7 @@ export async function panel_J(data = {
             length: 719, //length给秒数（整数）
             combo: 719, //combo给连击（整数）
             ranking: 1, //排名，得自己计数，bp是bp几
-            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list@2x.jpg?1622096843", //bp.beatmapset.covers['list@2x']
+            cover: "https://assets.ppy.sh/beatmaps/382400/covers/list.jpg?1622096843", //bp.beatmapset.covers['list@2x']
             star: 6.38, // 实际star
             rank: "A", // bp.rank
             mods: ['HR']
@@ -427,7 +426,7 @@ export async function panel_J(data = {
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-PJ-BG\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('BP Analysis v2 (!ymba)', 'BPA', 'v0.3.1 EA');
+    const panel_name = getPanelNameSVG('BP Analysis v2 (!ymba)', 'BA', 'v0.3.1 EA');
 
     const pp = data.pp.toFixed(0) || 0;
     const pp_raw = data.pp_raw.toFixed(0) || 0;
@@ -478,9 +477,9 @@ export async function panel_J(data = {
     // L卡构建
     let cardLs = [];
 
-    const L1 = await card_L({name: 'Length', card_K: data.bpLength}, true);
-    const L2 = await card_L({name: 'Combo', card_K: data.bpCombo}, true);
-    const L3 = await card_L({name: 'Star Rating', card_K: data.bpSR}, true);
+    const L1 = await card_L({name: 'Length', card_K: data.bpLength});
+    const L2 = await card_L({name: 'Combo', card_K: data.bpCombo});
+    const L3 = await card_L({name: 'Star Rating', card_K: data.bpSR});
 
     cardLs.push(L1, L2, L3);
 
@@ -507,12 +506,14 @@ export async function panel_J(data = {
     let labelJ2s = [];
 
     for (const i in data.favorite_mappers) {
+        const v = data.favorite_mappers[i];
+
         const h = await label_J2({
             index: parseInt(i) + 1 || 0,
-            avatar: await readNetImage(data.favorite_mappers[i].avatar_url, false, getExportFileV3Path('avatar-guest.png')),
-            name: data.favorite_mappers[i].username || 'Unknown',
-            count: data.favorite_mappers[i].map_count || 0,
-            pp: data.favorite_mappers[i].pp_count || 0,
+            avatar: v?.avatar_url || "https://a.ppy.sh/" , //await readNetImage(, false, getExportFileV3Path('avatar-guest.png')),
+            name: v?.username || 'Unknown',
+            count: v?.map_count || 0,
+            pp: v?.pp_count || 0,
         });
 
         labelJ2s.push(h);
@@ -658,6 +659,21 @@ export async function panel_J(data = {
             svg = implantSvgBody(svg, 1715, 702 + 66 * (i - 1), labelJ3s[i], reg_label_j3);
         }
     }
+
+    // 插入固定的字
+    const title_bpd =
+        torus.getTextPath("BP 100", 1745.025, 646.836, 24, 'left baseline', '#fc2') +
+        torus.getTextPath("BP 50", 1397.881, 646.836, 24, 'left baseline', '#fc2') +
+        torus.getTextPath("BP 1", 1040, 646.836, 24, 'left baseline', '#fc2') +
+        torus.getTextPath("BP Distribution", 1000, 370.795, 30, 'left baseline', '#fff');
+    const title_fm = torus.getTextPath("Favorite Mappers", 1000, 725.795, 30, 'left baseline', '#fff');
+    const title_rks = torus.getTextPath("Ranks", 1560, 725.795, 30, 'left baseline', '#fff');
+    const title_ms = torus.getTextPath("Mods", 740, 365.795, 30, 'left baseline', '#fff');
+    const title_l5 = torus.getTextPath("Last 5 BPs", 380, 365.795, 30, 'left baseline', '#fff');
+    const title_t5 = torus.getTextPath("Top 5 BPs", 55, 365.795, 30, 'left baseline', '#fff');
+
+
+    svg = replaceTexts(svg, [title_bpd, title_fm, title_rks, title_ms, title_l5, title_t5], reg_index)
 
     const background = pp2UserBG(data.pp || 0);
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);

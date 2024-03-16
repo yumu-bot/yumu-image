@@ -73,9 +73,9 @@ export function initPath() {
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(OSU_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(FLAG_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
-    console.log("缓存目录: ", CACHE_PATH);
-    console.log("图像缓存", IMG_BUFFER_PATH);
-    console.log("osu文件缓存", OSU_BUFFER_PATH);
+    console.log("主缓存目录: ", CACHE_PATH);
+    console.log("图像缓存: ", IMG_BUFFER_PATH);
+    console.log("谱面文件缓存: ", OSU_BUFFER_PATH);
 
     Number.prototype.fixed = function () {
         return fixed(this);
@@ -116,7 +116,7 @@ export function getExportFileV3Path(path = '') {
  * @param {number} bid bid
  * @param {number} sid sid
  */
-export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
+export async function getDiffBG(bid, sid, cover = 'cover', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
     try {
         const res = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
             proxy: {},
@@ -151,12 +151,20 @@ export async function getDiffBG(bid, sid, cover = 'cover@2x', reload = true, def
  * @param {string} [defaultImagePath] 出现错误时返回的失败图
  * @return {Promise<string>} 返回位于文件系统的绝对路径
  */
-export async function getMapBG(sid = 0, cover = 'cover@2x', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
+export async function getMapBG(sid = 0, cover = 'cover', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
     return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', reload, defaultImagePath);
 }
 
-export async function getAvatar(uid = 0, reload = true, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
+export async function getAvatarFromUID(uid = 0, reload = true, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
     return await readNetImage('https://a.ppy.sh/' + uid, reload, defaultImagePath);
+}
+
+export async function getAvatar(link = "https://a.ppy.sh/", reload = false, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
+    if (link == null || link == "https://a.ppy.sh/" || link == "") {
+        return defaultImagePath;
+    } else {
+        return await readNetImage(link, reload, defaultImagePath);
+    }
 }
 
 /**
@@ -291,7 +299,7 @@ export function getRoundedTailNumber(number = 0) {
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  */
 export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
-    if (typeof number === 'number') return getRoundedNumberLargerStr(number, level) + getRoundedNumberSmallerStr(number, level2);
+    if (typeof number === 'number') return getRoundedNumberStrLarge(number, level) + getRoundedNumberStrSmall(number, level2);
     else return '0';
 }
 
@@ -300,8 +308,15 @@ export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
  * @return {String} 返回大数字的字符串
  * @param number 数字
  * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
+ * lv5是保留两位数，但是是为了比赛特殊设置的，进位使用了万-亿的设置
+ * lv4是保留四位数 945671 -> 945.6710K
+ * lv3是保留两位数,945671 -> 945.67K
+ * lv2是保留一位数
+ * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
+ * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
+ * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  */
-export function getRoundedNumberLargerStr(number = 0, level = 0) {
+export function getRoundedNumberStrLarge(number = 0, level = 0) {
 
     switch (level) {
         case -1:
@@ -445,8 +460,15 @@ export function getRoundedNumberLargerStr(number = 0, level = 0) {
  * @return {String} 返回小数字的字符串
  * @param number 数字
  * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4, 5 注意配套使用
+ * lv5是保留两位数，但是是为了比赛特殊设置的，进位使用了万-亿的设置
+ * lv4是保留四位数 945671 -> 945.6710K
+ * lv3是保留两位数,945671 -> 945.67K
+ * lv2是保留一位数
+ * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
+ * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
+ * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  */
-export function getRoundedNumberSmallerStr(number = 0, level = 0) {
+export function getRoundedNumberStrSmall(number = 0, level = 0) {
 
     switch (level) {
         case -1:
@@ -1327,6 +1349,7 @@ export async function getFlagSvg(code = "cn") {
 
 export async function getFlagPath(code = "cn", x, y, h = 30) {
     if (typeof code != 'string') return '';
+    if (code.toLowerCase() == "tw") code = "cn"; //避免腾讯封掉青天白日旗
 
     const svg = await getFlagSvg(code);
     const len = svg.length;
@@ -1358,6 +1381,58 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
         return minutes + 'm';
     } else {
         return 'now';
+    }
+}
+
+/**
+ * 获取从秒转换成dhm的时间
+ * @param seconds 秒
+ * @return {string} 时间字符串，比如 3d5h20m
+ */
+export const getTimeByDayHourMinute = (seconds = 0) => {
+    return _getTimeByDayHourMinute(seconds).b + _getTimeByDayHourMinute(seconds).m
+}
+
+//获取从秒转换成dhm的时间
+export const getTimeByDayHourMinuteLarge = (seconds = 0) => {
+    return _getTimeByDayHourMinute(seconds).b
+}
+
+//获取从秒转换成dhm的时间
+export const getTimeByDayHourMinuteSmall = (seconds = 0) => {
+    return _getTimeByDayHourMinute(seconds).m
+}
+
+//获取从秒转换成dhm的时间
+const _getTimeByDayHourMinute = (seconds = 0) => {
+    let pt_b = '';
+    let pt_m = '';
+    if (seconds != null && seconds !== 0) {
+        const days = Math.floor(Math.abs(seconds) / 86400);
+        const hours = Math.floor((Math.abs(seconds) - 86400 * days) / 3600);
+        const minutes = Math.floor((Math.abs(seconds) - 86400 * days - 3600 * hours) / 60);
+
+        if (days > 0) {
+            pt_b = days.toString();
+            pt_m = 'd' + hours + 'h' + minutes + 'm';
+        } else if (hours > 0) {
+            pt_b = hours.toString();
+            pt_m = 'h' + minutes + 'm';
+        } else if (minutes > 0) {
+            pt_b = minutes.toString();
+            pt_m = 'm';
+        } else if (hours > -1) {
+            pt_b = '0';
+            pt_m = 'm';
+        } else {
+            pt_b = '-';
+            pt_m = '';
+        }
+    }
+
+    return {
+        b: pt_b,
+        m: pt_m,
     }
 }
 
