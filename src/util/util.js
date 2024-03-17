@@ -51,7 +51,7 @@ export function initPath() {
             return backoff.then(function () {
                 return axios(config);
             })
-        } else if (error.code === 'ECONNABORTED' && config.__errTime <= config.retry) {
+        } else if (error.code === 'ECONNABORTED' && !config.__no_wait && config.__errTime <= config.retry) {
             console.log(`${config.method} ${config.url} timeout, re send: ${config.__errTime}`);
             config.__errTime += 1;
             let backoff = new Promise(function (resolve) {
@@ -67,7 +67,6 @@ export function initPath() {
             });
         }
         //console.error("request err", config);
-        //这个 太吵了！
         return Promise.reject(error);
     })
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
@@ -123,7 +122,9 @@ export async function getDiffBG(bid, sid, cover = 'cover', reload = true, defaul
             headers: {
                 "SET_ID": sid,
                 "AuthorizationX": SUPER_KEY,
-            }
+            },
+            timeout: 300,
+            __no_wait: true,
         });
         // data 为背景文件在文件系统中的绝对路径 字符串
         // 不是文件本身
