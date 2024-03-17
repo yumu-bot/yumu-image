@@ -3,13 +3,13 @@ import {
     getDecimals,
     getImageFromV3,
     getGameMode, getMapBG,
-    implantImage, isReload,
-    readNetImage,
+    implantImage, readNetImage,
     readTemplate,
     replaceTexts,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
 import {calcPerformancePoints} from "../util/compute-pp.js";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -151,7 +151,7 @@ const PanelGamma = {
             mods: score.mods,
             accuracy: score.accuracy,
         }
-        const calcPP = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode, isReload(score.beatmap.ranked));
+        const calcPP = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode, hasLeaderBoard(score.beatmap.ranked));
         
         const mod_arr = score.mods || [];
         let mod_str = '';

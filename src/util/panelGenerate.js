@@ -1,7 +1,6 @@
 import {PuHuiTi, torus} from "./font.js";
 import moment from "moment";
 import {
-    getApproximateRank,
     getDecimals,
     getImageFromV3,
     getGameMode,
@@ -11,12 +10,10 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
-    isReload,
-    rankSS2X,
     readNetImage, getAvatar,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
-import {getModInt, hasMod} from "./mod.js";
+import {getApproximateRank, getApproximateStarRating, hasLeaderBoard, rankSS2X} from "./star.js";
 
 //公用方法
 //把参数变成面板能读懂的数据（router
@@ -309,7 +306,7 @@ export const PanelGenerate = {
     },
 
     beatmap2CardA2: async (beatmap) => {
-        const background = await getMapBG(beatmap.beatmapset.id, 'list@2x', isReload(beatmap.ranked));
+        const background = await getMapBG(beatmap.beatmapset.id, 'list@2x', hasLeaderBoard(beatmap.ranked));
         const map_status = beatmap.status;
         const title1 = beatmap.beatmapset.title;
         const title2 = beatmap.beatmapset.artist;
@@ -540,7 +537,7 @@ export const PanelGenerate = {
             rank_history: [Object]
         }
     }) => {
-        const background = await readNetImage(s?.covers["card@2x"], isReload(s?.ranked));
+        const background = await readNetImage(s?.covers["card@2x"], hasLeaderBoard(s?.ranked));
         const map_status = s?.status;
         const title1 = s?.title_unicode;
         const title2 = s?.artist_unicode;
@@ -668,7 +665,7 @@ export const PanelGenerate = {
         const ranked_date = s.ranked_date || '';
         const submitted_date = s.submitted_date || '';
 
-        const background = await getMapBG(s.id, 'list@2x', isReload(s.ranked));
+        const background = await getMapBG(s.id, 'list@2x', hasLeaderBoard(s.ranked));
         const map_status = s?.status || 'graveyard';
 
         const isRanked = (map_status === 'ranked' || map_status === 'loved' || map_status === 'approved');
@@ -760,16 +757,16 @@ export const PanelGenerate = {
     },
 
 //给panel_A5用的，期待可以和上面合并
-    beatmap2CardH: async (b, calcPP, rank = 1) => {
-        const cover = await getMapBG(b.beatmapset.id, 'list', isReload(b.ranked));
-        const background = await getMapBG(b.beatmapset.id, 'cover', isReload(b.ranked));
+    score2CardH: async (s, calcPP, rank = 1) => {
+        const cover = await readNetImage(s?.beatmapset?.covers?.list, hasLeaderBoard(s.ranked));
+        const background = await readNetImage(s?.beatmapset?.covers?.cover, hasLeaderBoard(s.ranked));
         // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
         // 这个不要下载，请求量太大
 
-        const time_diff = getTimeDifference(b.create_at_str);
+        const time_diff = getTimeDifference(s.create_at_str);
 
         let mods_width;
-        switch (b.mods.length) {
+        switch (s.mods.length) {
             case 0:
                 mods_width = 0;
                 break;
@@ -792,22 +789,22 @@ export const PanelGenerate = {
                 mods_width = 180;
         }
 
-        const difficulty_name = b.beatmap.version ? torus.cutStringTail(b.beatmap.version, 24,
+        const difficulty_name = s.beatmap.version ? torus.cutStringTail(s.beatmap.version, 24,
             500 - 20 - mods_width - torus.getTextWidth('[] - # ()' + rank + time_diff, 24), true) : '';
-        const color_index = (b.rank === 'XH' || b.rank === 'X') ? '#2A2226' : '#fff';
+        const color_index = (s.rank === 'XH' || s.rank === 'X') ? '#2A2226' : '#fff';
 
-        const artist = torus.cutStringTail(b.beatmapset.artist, 24,
-            500 - 20 - mods_width - torus.getTextWidth(' // ' + b.beatmapset.creator, 24), true);
+        const artist = torus.cutStringTail(s.beatmapset.artist, 24,
+            500 - 20 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
 
-        const title2 = (b.beatmapset.title === b.beatmapset.title_unicode) ? null : b.beatmapset.title_unicode;
+        const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? null : s.beatmapset.title_unicode;
         const index_b = (calcPP.pp < 2000) ? Math.round(calcPP.pp).toString() : 'Inf.';
 
         return {
             background: background,
             cover: cover,
-            title: b.beatmapset.title || '',
+            title: s.beatmapset.title || '',
             title2: title2,
-            left1: artist + ' // ' + b.beatmapset.creator,
+            left1: artist + ' // ' + s.beatmapset.creator,
             left2: '[' + difficulty_name + '] - #' + rank + ' (' + time_diff + ')',
             index_b: index_b,
             index_m: 'PP',
@@ -817,10 +814,10 @@ export const PanelGenerate = {
             label2: '',
             label3: '',
             label4: '',
-            mods_arr: b.mods || [],
+            mods_arr: s.mods || [],
 
             color_title2: '#bbb',
-            color_right: getRankColor(b.rank),
+            color_right: getRankColor(s.rank),
             color_left: getStarRatingColor(calcPP.attr.stars),
             color_index: color_index,
             color_label1: '',
@@ -835,8 +832,8 @@ export const PanelGenerate = {
     },
 
     bp2CardH: async (bp, rank = 1) => {
-        const cover = await getMapBG(bp.beatmapset.id, 'list', false);
-        const background = await getMapBG(bp.beatmapset.id, 'cover', false);
+        const cover = await readNetImage(bp?.beatmapset?.covers?.list, false);
+        const background = await readNetImage(bp?.beatmapset?.covers?.cover, false);
 
         const time_diff = getTimeDifference(bp.create_at_str);
 
@@ -873,21 +870,9 @@ export const PanelGenerate = {
 
         const title2 = (bp.beatmapset.title === bp.beatmapset.title_unicode) ? null : bp.beatmapset.title_unicode;
 
-        const mod = bp.mods || [];
         //随便搞个颜色得了
-        const mod_int = getModInt(mod);
-        let star_rating = bp.beatmap.difficulty_rating || 0;
-        if (hasMod(mod_int, 'DT') || hasMod(mod_int, 'NC')) {
-            star_rating *= 1.4;
-        } else if (hasMod(mod_int, 'HR')) {
-            star_rating *= 1.078;
-        } else if (hasMod(mod_int, 'HT')) {
-            star_rating *= 0.75;
-        } else if (hasMod(mod_int, 'EZ')) {
-            star_rating *= 0.9;
-        } else if (hasMod(mod_int, 'FL')) {
-            star_rating *= 1.3;
-        }
+        const mod = bp?.mods || [];
+        const star_color = getStarRatingColor(getApproximateStarRating(bp?.beatmap?.difficulty_rating, mod))
 
         return {
             background: background,
@@ -908,7 +893,7 @@ export const PanelGenerate = {
 
             color_title2: '#bbb',
             color_right: getRankColor(bp.rank),
-            color_left: getStarRatingColor(star_rating),
+            color_left: star_color,
             color_index: color_index,
             color_label1: '',
             color_label2: '',
@@ -922,7 +907,7 @@ export const PanelGenerate = {
     },
 
     bp2CardJ: async (bp) => {
-        const background = await getMapBG(bp.beatmapset.id, 'list', isReload(bp.beatmap.ranked));
+        const background = await getMapBG(bp.beatmapset.id, 'list', hasLeaderBoard(bp.beatmap.ranked));
 
         return {
             cover: background,
@@ -1055,7 +1040,7 @@ export const PanelGenerate = {
     beatmap2CardO2: async (s) => {
         if (!s) return '';
 
-        const background = await getMapBG(s?.id, 'list', isReload(s.status));
+        const background = await getMapBG(s?.id, 'list', hasLeaderBoard(s.status));
         const map_status = s?.status;
         const title1 = s?.title;
         const title2 = s?.artist;

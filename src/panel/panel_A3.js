@@ -1,13 +1,13 @@
 import {
-    exportJPEG, getMapBG,
+    exportJPEG, getMapBG, getPanelHeight,
     getPanelNameSVG,
-    implantSvgBody, isReload,
-    readTemplate, replaceBanner,
+    implantSvgBody, readTemplate, replaceBanner,
     replaceText
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_N} from "../card/card_N.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -284,19 +284,13 @@ export async function panel_A3(data = {
     // 插入图片和部件（新方法
     // svg = implantImage(svg,1920,320,0,0,0.8, getRandomBannerPath(), reg_banner);
     svg = replaceBanner(svg, reg_banner,
-        await getMapBG(data.beatmap.beatmapset.id, 'cover', isReload(data.beatmap.ranked)));
+        await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked)));
 
     // 计算面板高度
-    const rowTotal = (cardN1s !== []) ? Math.ceil(cardN1s.length / 2) : 0;
-    let panelHeight, cardHeight;
+    const rowTotal = Math.ceil((cardN1s?.length || 0) / 2);
 
-    if (rowTotal >= 0) {
-        panelHeight = 360 + 72 * rowTotal;
-        cardHeight = 70 + 72 * rowTotal;
-    } else {
-        panelHeight = 1080;
-        cardHeight = 790;
-    }
+    const panelHeight = getPanelHeight(cardN1s?.length, 62, 4, 290, 10, 40);
+    const cardHeight = panelHeight - 290;
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);

@@ -1,9 +1,10 @@
 import {
-    getImageFromV3, getMapBG, implantImage, implantSvgBody, isReload, replaceText,
+    getImageFromV3, getMapBG, implantImage, implantSvgBody, replaceText,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_M1, label_M2, label_M3} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function card_M(s = {
     "artist": "HOYO-MiX",
@@ -447,7 +448,7 @@ export async function card_M(s = {
 
     //导入背景
 
-    const background = await getMapBG(s.id, 'list', isReload(s.ranked));
+    const background = await getMapBG(s.id, 'list', hasLeaderBoard(s.ranked));
     svg = implantImage(svg,1370,210,0,0,0.5, background, reg_background);
 
     return svg.toString();

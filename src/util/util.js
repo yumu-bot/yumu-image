@@ -8,7 +8,6 @@ import https from "https";
 import path from "path";
 import moment from "moment";
 import {torus} from "./font.js";
-import {getModInt, hasMod} from "./mod.js";
 import {API} from "../svg-to-image/API.js";
 import JPEGProvider from '../svg-to-image/JPEGProvider.js';
 import PNGProvider from '../svg-to-image/PNGProvider.js';
@@ -1452,6 +1451,27 @@ const _getTimeByDHMS = (seconds = 0) => {
     }
 }
 
+/**
+ * 公用方法：获取面板高度
+ * @param cardCount 卡片数量
+ * @param cardHeight 卡片高度
+ * @param cardPerRow 每行卡片数量，2，4
+ * @param bannerHeight banner 高度 290
+ * @param interval 卡片之间的距离，一般是 40
+ * @param spacing 卡片区域上下的距离，一般是 40
+ * @return {number}
+ */
+export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, bannerHeight = 330, interval = 40, spacing = 40) => {
+    if (cardPerRow == 0) return (bannerHeight + spacing);
+    const row = Math.ceil((cardCount || 0) / cardPerRow);
+
+    if (row >= 0) {
+        return (bannerHeight + 2 * spacing) + (cardHeight + interval) * row - interval;
+    } else {
+        return 1080;
+    }
+}
+
 //公用方法：给面板上名字
 export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
 
@@ -1466,134 +1486,6 @@ export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.
 
     //导入文字
     return (powered_text + '\n' + request_time_text + '\n' + index_text);
-}
-
-//SS和X的转换
-export const rankSS2X = (rank = 'SS') => {
-    switch (rank) {
-        case "SS": return 'X';
-        case "SSH": return 'XH';
-        default: return rank;
-    }
-}
-
-export const getApproximateRank = (score = {
-    statistics: {
-        count_50: 0,
-        count_100: 0,
-        count_300: 0,
-        count_geki: 0,
-        count_katu: 0,
-        count_miss: 0
-    },
-    mode: 'osu',
-    mods: ['']
-}, showFailed = false) => {
-    if (!score.passed && showFailed) return 'F';
-
-    let rank = 'F';
-    let nTotal;
-
-    const n300 = score.statistics.count_300;
-    const n100 = score.statistics.count_100;
-    const n50 = score.statistics.count_50;
-    const n0 = score.statistics.count_miss;
-    const nG = score.statistics.count_geki;
-    const nK = score.statistics.count_katu;
-    const acc = score.accuracy;
-    const hasMiss = (n0 > 0);
-
-    switch (getGameMode(score.mode, 1)) {
-        case 'o' : {
-            nTotal = n300 + n100 + n50 + n0;
-
-            const is50over1p = (n50 / nTotal > 0.01);
-
-            if (n300 === nTotal) {
-                rank = 'SS';
-            } else if (n300 / nTotal >= 0.9) {
-                rank = hasMiss ? 'A' : (is50over1p ? 'A' : 'S');
-            } else if (n300 / nTotal >= 0.8) {
-                rank = hasMiss ? 'B' : 'A';
-            } else if (n300 / nTotal >= 0.7) {
-                rank = hasMiss ? 'C' : 'B';
-            } else if (n300 / nTotal >= 0.6) {
-                rank = 'C';
-            } else {
-                rank = 'D';
-            }
-        }
-            break;
-
-        case 't' : {
-            nTotal = n300 + n100 + n0;
-
-            if (n300 === nTotal) {
-                rank = 'SS';
-            } else if (n300 / nTotal >= 0.9) {
-                rank = hasMiss ? 'A' : 'S';
-            } else if (n300 / nTotal >= 0.8) {
-                rank = hasMiss ? 'B' : 'A';
-            } else if (n300 / nTotal >= 0.7) {
-                rank = hasMiss ? 'C' : 'B';
-            } else if (n300 / nTotal >= 0.6) {
-                rank = 'C';
-            } else {
-                rank = 'D';
-            }
-        }
-            break;
-
-        case 'c' : {
-            const alt_acc = acc || (n300 + n100 + n50) / (n300 + n100 + n50 + nK + n0);
-
-            if (acc === 1) {
-                rank = 'SS';
-            } else if (alt_acc > 0.98) {
-                rank = 'S';
-            } else if (alt_acc > 0.94) {
-                rank = 'A';
-            } else if (alt_acc > 0.90) {
-                rank = 'B';
-            } else if (alt_acc > 0.85) {
-                rank = 'C';
-            } else {
-                rank = 'D';
-            }
-        }
-            break;
-
-        case 'm' : {
-            const alt_acc = acc || (nG + n300 + nK * 2/3 + n100 * 1/3 + n50 * 1/6) / (nG + n300 + n100 + n50 + nK + n0);
-
-            if (alt_acc === 1) {
-                rank = 'SS';
-            } else if (alt_acc >= 0.95) {
-                rank = 'S';
-            } else if (alt_acc >= 0.90) {
-                rank = 'A';
-            } else if (alt_acc >= 0.80) {
-                rank = 'B';
-            } else if (alt_acc >= 0.70) {
-                rank = 'C';
-            } else {
-                rank = 'D';
-            }
-        }
-            break;
-    }
-
-    const isSilver = hasMod(getModInt(score.mods), 'HD') || hasMod(getModInt(score.mods), 'FL');
-    if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
-
-    return rank;
-}
-
-//根据谱面的上架状态决定谱面文件和背景是否需要缓存
-export const isReload = (ranked = 0) => {
-    return !(ranked && (ranked === 1 || ranked === 2 || ranked === 4
-        || ranked === 'ranked' || ranked === 'approved' || ranked === 'loved'
-    )); //ranked, approved, loved
 }
 
 /**

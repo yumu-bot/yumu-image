@@ -1,12 +1,11 @@
 import {
-    exportJPEG, getPanelNameSVG,
-    implantImage, implantSvgBody,
+    exportJPEG, getPanelHeight, getPanelNameSVG,
+    implantSvgBody,
     readTemplate, replaceBanner,
     replaceText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {
@@ -240,28 +239,13 @@ export async function panel_A1(data = {
     for (const i in friend_cardA1s) {
         const x = i % 4;
         const y = Math.floor(i / 4);
-        //230825 加上PP附带的背景（maimai限定DX Rating的底色
-
-        //const pp = data.friend_card_A1[i].statistics.pp;
-        //const glow = getDXRatingBGPath(pp);
 
         svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
-        //svg = implantImage(svg, 510, 290, 470 * x, 290 + 250 * y, 0.4, glow, reg_friend_card_a1); //放一层试试
     }
 
     // 计算面板高度
-    let rowTotal;
-    let panelHeight, cardHeight;
-
-    rowTotal = Math.ceil(friend_cardA1s.length / 4);
-
-    if (rowTotal >= 0) {
-        panelHeight = 330 + 250 * rowTotal;
-        cardHeight = 40 + 250 * rowTotal;
-    } else {
-        panelHeight = 1080;
-        cardHeight = 790;
-    }
+    const panelHeight = getPanelHeight(friend_cardA1s?.length, 210, 4, 290, 40);
+    const cardHeight = panelHeight - 290;
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);

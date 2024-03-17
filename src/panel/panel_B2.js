@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getGameMode, getMapBG,
     getPanelNameSVG, getRoundedNumberStrLarge, getRoundedNumberStrSmall, implantImage,
-    implantSvgBody, isReload, readTemplate,
+    implantSvgBody, readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -10,6 +10,7 @@ import {card_B4} from "../card/card_B4.js";
 import {card_B5} from "../card/card_B5.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -159,7 +160,7 @@ export async function panel_B2(data = {
     svg = implantSvgBody(svg, 0, 0, drawHexIndex(getGameMode(data.beatMap.mode, 0)), reg_hexagon);
 
     // 插入图片和部件（新方法
-    const banner = await getMapBG(data.beatMap.beatmapset.id, 'cover', isReload(data.beatMap.ranked));
+    const banner = await getMapBG(data.beatMap.beatmapset.id, 'cover', hasLeaderBoard(data.beatMap.ranked));
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     // 面板文字

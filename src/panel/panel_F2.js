@@ -4,7 +4,7 @@ import {
     getMapBG, getMatchNameSplitted, getNowTimeStamp,
     getPanelNameSVG, getRoundedNumberStr,
     implantImage,
-    implantSvgBody, isReload, readTemplate,
+    implantSvgBody, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -13,6 +13,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {getMapAttributes} from "../util/compute-pp.js";
 import {getModInt} from "../util/mod.js";
 import moment from "moment";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -267,7 +268,7 @@ export async function panel_F2(
 
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, await getMapBG(beatmap.beatmapset.sid, 'list', isReload(beatmap.beatmapset.ranked)), reg_banner);
+    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, await getMapBG(beatmap.beatmapset.sid, 'list', hasLeaderBoard(beatmap.beatmapset.ranked)), reg_banner);
 
     return svg.toString();
 }
@@ -347,7 +348,7 @@ async function getBeatmapAttr(b = {}, mods = []) {
 
     return {
         ...b,
-        background: await getMapBG(b?.beatmapset?.sid, 'list', isReload(b.beatmapset.ranked)),
+        background: await getMapBG(b?.beatmapset?.sid, 'list', hasLeaderBoard(b.beatmapset.ranked)),
         title: b?.beatmapset?.title,
         artist: b?.beatmapset?.artist,
         mapper: b?.beatmapset?.creator, //creator

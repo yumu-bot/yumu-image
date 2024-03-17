@@ -4,8 +4,7 @@ import {
     getGameMode,
     getMapBG, getPanelNameSVG,
     implantImage,
-    implantSvgBody, isReload, rankSS2X,
-    readTemplate, replaceText,
+    implantSvgBody, readTemplate, replaceText,
 } from "../util/util.js";
 import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {ar2ms, cs2px, data2Label, od2ms, stat2DataM} from "./panel_E.js";
@@ -16,6 +15,7 @@ import {card_E5} from "../card/card_E5.js";
 import {LABELS} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
+import {hasLeaderBoard, rankSS2X} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -167,7 +167,7 @@ export async function panel_E3(data = {
     }
     const mode = data.expected.mode || data.beatmap.mode || 'osu';
 
-    const calcTotal = await calcMap(bid, stat, mode, isReload(data.beatmap.ranked));
+    const calcTotal = await calcMap(bid, stat, mode, hasLeaderBoard(data.beatmap.ranked));
     const calcPP = calcTotal[0];
 
     let calcNC = [];
@@ -193,7 +193,7 @@ export async function panel_E3(data = {
 
     // 图片定义
     const background = getImageFromV3('object-score-backimage-' + rank + '.jpg');
-    const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', isReload(data.beatmap.ranked));
+    const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked));
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);

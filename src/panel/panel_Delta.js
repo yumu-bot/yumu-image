@@ -4,8 +4,7 @@ import {
     getImageFromV3,
     getRoundedNumberStr,
     implantImage,
-    implantSvgBody, isReload,
-    readTemplate,
+    implantSvgBody, readTemplate,
     replaceTexts
 } from "../util/util.js";
 import {lineSeedSans, poppinsBold} from "../util/font.js";
@@ -13,6 +12,7 @@ import {getMapAttributes} from "../util/compute-pp.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModInt} from "../util/mod.js";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -223,7 +223,7 @@ export async function panel_Delta(data = {
     svg = implantSvgBody(svg, 0, 0, od_rrect, reg_od);
     svg = implantSvgBody(svg, 0, 0, length_pie, reg_length);
 
-    const image = await getDiffBG(data.beatMap.id, data.beatMap.beatmapset.id, 'list', isReload(data.beatMap.status));
+    const image = await getDiffBG(data.beatMap.id, data.beatMap.beatmapset.id, 'list', hasLeaderBoard(data.beatMap.status));
 
     svg = (data.hasBG === false) ? svg : implantImage(svg, 1080, 1080, -30, 0, 1, image, reg_background);
     svg = implantImage(svg, 1920, 1080, 0, 0, 1, getImageFromV3('panel-kita.png'), reg_base);

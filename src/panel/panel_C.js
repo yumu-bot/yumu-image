@@ -5,7 +5,7 @@ import {
     getRoundedNumberStr,
     implantSvgBody, readNetImage,
     readTemplate, replaceBanner,
-    replaceText, transformSvgBody
+    replaceText, transformSvgBody, getPanelHeight
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -119,15 +119,9 @@ export async function panel_C(data = {}) {
     svg = replaceText(svg, cardHs, reg_maincard);
 
     // 计算面板高度
-    let panelHeight, cardHeight;
 
-    if (rowTotal) {
-        panelHeight = 330 + 150 * rowTotal;
-        cardHeight = 40 + 150 * rowTotal;
-    } else {
-        panelHeight = 1080;
-        cardHeight = 790;
-    }
+    const panelHeight = getPanelHeight(rowTotal * 2, 110, 2, 290, 40, 40);
+    const cardHeight = panelHeight - 290;
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
@@ -225,7 +219,7 @@ async function drawCardH(data = {}
     x = x_base + 940 * (column - 1);
     y = 330 + 150 * (row - 1);
 
-    const body = await card_H(data, true);
+    const body = await card_H(data);
 
     return transformSvgBody(x, y, body);
 }

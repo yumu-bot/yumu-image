@@ -1,12 +1,11 @@
 import {
-    exportJPEG, getPanelNameSVG, implantImage,
-    implantSvgBody, isReload,
-    readTemplate,
+    exportJPEG, getPanelHeight, getPanelNameSVG, implantImage,
+    implantSvgBody, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A1} from "../card/card_A1.js";
-import {calcPerformancePoints} from "../util/compute-pp.js";
+import {calcPPOnly4UnrankedScore} from "../util/compute-pp.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 
@@ -304,15 +303,8 @@ export async function panel_A5(data = {
     for (const i in data.score) {
         const v = data.score[i];
 
-        // 成绩重计算
-        const score_statistics = {
-            ...v.statistics,
-            combo: v.max_combo,
-            mods: v.mods,
-        }
-        const calcPP = await calcPerformancePoints(v.beatmap.id, score_statistics, v.mode, isReload(v.beatmap.ranked)); //ranked, approved, loved
-
-        const f = await card_H(await PanelGenerate.beatmap2CardH(v, calcPP, parseInt(i) + 1), true);
+        const f = await card_H(
+            await PanelGenerate.score2CardH(v, await calcPPOnly4UnrankedScore(v), parseInt(i) + 1));
         cardHs.push(f);
     }
 
@@ -320,16 +312,10 @@ export async function panel_A5(data = {
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
     // 计算面板高度
-    const rowTotal = (cardHs !== []) ? Math.ceil(cardHs.length / 2) : 0;
-    let panelHeight, cardHeight;
+    const rowTotal = Math.ceil((cardHs?.length || 0) / 2);
 
-    if (rowTotal >= 0) {
-        panelHeight = 330 + 150 * rowTotal;
-        cardHeight = 40 + 150 * rowTotal;
-    } else {
-        panelHeight = 1080;
-        cardHeight = 790;
-    }
+    const panelHeight = getPanelHeight(cardHs?.length, 110, 2, 290, 40);
+    const cardHeight = panelHeight - 290;
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);

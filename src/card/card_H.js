@@ -38,7 +38,7 @@ export async function card_H(data = {
     font_title2: 'torus',
     font_label4: 'torus',
 
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = readTemplate('template/Card_H.svg');
 

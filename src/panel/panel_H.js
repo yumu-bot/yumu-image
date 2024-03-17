@@ -1,7 +1,7 @@
 import {
     exportJPEG, getMapBG, getPanelNameSVG,
     implantImage,
-    implantSvgBody, isReload, readTemplate,
+    implantSvgBody, readTemplate,
     replaceText, transformSvgBody
 } from "../util/util.js";
 import {card_D} from "../card/card_D.js";
@@ -9,6 +9,7 @@ import {getMapAttributes} from "../util/compute-pp.js";
 import {card_A2} from "../card/card_A2.js";
 import {getModInt} from "../util/mod.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -232,7 +233,7 @@ async function beatmap2CardD(b, mod) {
     }
 
     return {
-        background: await getMapBG(b.beatmapset.id, 'cover', isReload(b.ranked)),
+        background: await getMapBG(b.beatmapset.id, 'cover', hasLeaderBoard(b.ranked)),
         title: b.beatmapset.title || '',
         title_unicode: b.beatmapset.title_unicode || '',
         artist: b.beatmapset.artist || '',

@@ -1,13 +1,12 @@
 import {
-    exportJPEG,
-    getPanelNameSVG, implantImage, implantSvgBody,
+    exportJPEG, getPanelHeight,
+    getPanelNameSVG, implantSvgBody,
     readTemplate, replaceBanner,
     replaceText
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_M} from "../card/card_M.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {
@@ -368,22 +367,9 @@ export async function panel_A2(data = {
     svg = replaceBanner(svg, reg_banner);
 
     // 计算面板高度
-    let rowTotal;
-    let panelHeight, cardHeight;
-
-    if (result_count <= 12) {
-        rowTotal = beatmap_cardA2s.length;
-    } else {
-        rowTotal = Math.ceil(beatmap_cardA2s.length / 4);
-    }
-
-    if (rowTotal >= 0) {
-        panelHeight = 330 + 250 * rowTotal;
-        cardHeight = 40 + 250 * rowTotal;
-    } else {
-        panelHeight = 1080;
-        cardHeight = 790;
-    }
+    // 计算面板高度
+    const panelHeight = getPanelHeight(beatmap_cardA2s?.length, 210, 4, 290, 40);
+    const cardHeight = panelHeight - 290;
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);

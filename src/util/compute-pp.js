@@ -4,6 +4,7 @@ import axios from "axios";
 import {Beatmap, Calculator} from "rosu-pp";
 import {getGameMode, OSU_BUFFER_PATH} from "./util.js";
 import {getModInt} from "./mod.js";
+import {getApproximateStarRating, hasLeaderBoard} from "./star.js";
 
 const stat = {
     count_50: 0,
@@ -87,6 +88,67 @@ export async function calcMap(bid, statistics = stat, mode, reload = false) {
     return arr;
 }
 
+//为 panel A5 特意定做的 calcPP
+export async function calcPPOnly4UnrankedScore(score) {
+    // 成绩重计算
+    const score_statistics = {
+        ...score?.statistics,
+        combo: score?.max_combo,
+        mods: score?.mods,
+    }
+
+    if (hasLeaderBoard(score?.beatmap?.ranked)) {
+        if (score?.pp > 0) {
+            // 有 PP，可免税
+            const stars = getApproximateStarRating(score?.beatmap?.difficulty_rating, score?.mods)
+            return {
+                pp: score?.pp,
+                attr: {
+                    stars: stars,
+                }
+            }
+        } else {
+            // 非最好成绩，但是可以免下载
+            return await calcPerformancePoints(score?.beatmap?.id, score_statistics, score?.mode, false);
+        }
+    } else {
+        // 没榜的谱面，必须重新下载，避免计算错误
+        return await calcPerformancePoints(score?.beatmap?.id, score_statistics, score?.mode, true);
+    }
+}
+
+
+/*
+const calcPP = {
+    pp: 10,
+    pp_all: 0,
+    full_pp: 20,
+    full_pp_all: 0,
+    perfect_pp: 40,
+    perfect_pp_all: 0,
+    attr: {
+        mode: 0,
+        version: 14,
+        nCircles: 1,
+        nSliders: 1,
+        nSpinners: 1,
+        ar: 9.7,
+        cs: 4,
+        hp: 5.6,
+        od: 9.3,
+        arHitWindow: 500,
+        odHitWindow: 23.733332951863606,
+        clockRate: 1.5,
+        bpm: 234.00023400023397,
+        stars: 10.6,
+        maxCombo: 457,
+    },
+    score_progress: 0
+}
+
+ */
+
+//主计算 calcPP
 export async function calcPerformancePoints(bid, statistics = stat, mode, reload = false) {
     let mode_int;
     if (statistics.mode_int === void 0) {
@@ -251,7 +313,7 @@ export async function getDensityArray(bid, mode, reload) {
 //根据分数返回玩家目前的进度
 export async function getScoreProgress(bid, statistics, mode, reload) {
     mode = getGameMode(mode, 0);
-    const statTotal = await getStatisticsTotal(bid, statistics, mode, reload);
+    const statTotal = await getStatisticsTotal(bid, statistics, mode);
     const timeList = await getHitObjectTimeList(bid, mode, reload);
     const length = timeList.length;
 
@@ -310,7 +372,7 @@ async function getHitObjectTimeList(bid, mode, reload) {
     return timeList;
 }
 
-async function getStatisticsTotal(bid, statistics = {}, mode = 'osu', reload = false) {
+async function getStatisticsTotal(bid, statistics = {}, mode = 'osu') {
     const n320 = statistics.count_geki || 0;
     const n300 = statistics.count_300 || 0;
     const n200 = statistics.count_katu || 0;

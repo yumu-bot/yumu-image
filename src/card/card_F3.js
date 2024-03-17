@@ -1,11 +1,10 @@
 import {
-    getMapBG, implantSvgBody, isReload,
-    replaceText
+    getMapBG, implantSvgBody, replaceText
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_K} from "./card_K.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getModInt, hasMod} from "../util/mod.js";
+import {getApproximateStarRating, hasLeaderBoard} from "../util/star.js";
 
 export async function card_F3(data = {
     bp: [{
@@ -147,22 +146,11 @@ export async function card_F3(data = {
 
 const bp2CardK = async (bp, bp_ranking = 1) => {
     //随便搞个颜色，就不需要去获取一遍谱面了
-    const mod_int = getModInt(bp.mods);
-    let star_rating = bp.beatmap.difficulty_rating || 0;
-    if (hasMod(mod_int, 'DT') || hasMod(mod_int, 'NC')) {
-        star_rating *= 1.5;
-    } else if (hasMod(mod_int, 'HT')) {
-        star_rating *= 0.75;
-    } else if (hasMod(mod_int, 'HR')) {
-        star_rating *= 1.078;
-    } else if (hasMod(mod_int, 'EZ')) {
-        star_rating *= 0.9;
-    } else if (hasMod(mod_int, 'FL')) {
-        star_rating *= 1.3;
-    }
+    const mod = bp?.mods || [];
+    const star_rating = getApproximateStarRating(bp?.beatmap?.difficulty_rating, mod)
 
     return {
-        map_background: await getMapBG(bp.beatmapset.id, 'list', isReload(bp.beatmap.ranked)),
+        map_background: await getMapBG(bp.beatmapset.id, 'list', hasLeaderBoard(bp.beatmap.ranked)),
         star_rating: star_rating,
         score_rank: bp.rank,
         bp_ranking: bp_ranking, //感觉暂时不使用这个也可以

@@ -1,6 +1,5 @@
 import {
     exportJPEG,
-    getApproximateRank,
     getDecimals,
     getDiffBG,
     getImageFromV3,
@@ -10,8 +9,7 @@ import {
     getRoundedNumberStr,
     getTimeDifference,
     implantImage,
-    implantSvgBody, isReload,
-    readTemplate,
+    implantSvgBody, readTemplate,
     replaceText
 } from "../util/util.js";
 import {calcPerformancePoints, getDensityArray} from "../util/compute-pp.js";
@@ -24,6 +22,7 @@ import {card_E3} from "../card/card_E3.js";
 import {card_E4} from "../card/card_E4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
+import {getApproximateRank, hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -324,36 +323,7 @@ export async function panel_E(data = {
         accuracy: data.score.accuracy,
     }
 
-    const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, isReload(data.score.beatmap.ranked));
-    /*
-    const calcPP = {
-        pp: 10,
-        pp_all: 0,
-        full_pp: 20,
-        full_pp_all: 0,
-        perfect_pp: 40,
-        perfect_pp_all: 0,
-        attr: {
-            mode: 0,
-            version: 14,
-            nCircles: 1,
-            nSliders: 1,
-            nSpinners: 1,
-            ar: 9.7,
-            cs: 4,
-            hp: 5.6,
-            od: 9.3,
-            arHitWindow: 500,
-            odHitWindow: 23.733332951863606,
-            clockRate: 1.5,
-            bpm: 234.00023400023397,
-            stars: 10.6,
-            maxCombo: 457,
-        },
-        score_progress: 0
-    }
-
-     */
+    const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, hasLeaderBoard(data.score.beatmap.ranked));
 
 
     // 卡片定义
@@ -372,7 +342,7 @@ export async function panel_E(data = {
 
     // 图片定义
     const background = getImageFromV3('object-score-backimage-' + (data?.score?.rank || getApproximateRank(data?.score)) + '.jpg');
-    const banner = await getDiffBG(data.score.beatmap.id, data.score.beatmapset.id, 'cover', isReload(data.score.beatmap.ranked));
+    const banner = await getDiffBG(data.score.beatmap.id, data.score.beatmapset.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked));
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);

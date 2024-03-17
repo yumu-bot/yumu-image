@@ -1,14 +1,14 @@
 import {
     getImageFromV3, getGameMode, getMapBG, getRoundedNumberStr,
     implantImage,
-    implantSvgBody, isReload,
-    replaceText
+    implantSvgBody, replaceText
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_J} from "./card_J.js";
 import {calcPerformancePoints} from "../util/compute-pp.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModInt} from "../util/mod.js";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function card_F2(data = {
     recent: [
@@ -163,7 +163,7 @@ export async function card_F2(data = {
 }
 
 const score2CardJ = async (score, calcPP) => {
-    const background = await getMapBG(score.beatmapset.id, 'cover', isReload(score.beatmap.ranked));
+    const background = await getMapBG(score.beatmapset.id, 'cover', hasLeaderBoard(score.beatmap.ranked));
 
     return {
         cover: background,

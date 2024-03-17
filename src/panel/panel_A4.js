@@ -1,13 +1,11 @@
 import {
-    exportJPEG, getPanelNameSVG, implantImage,
-    implantSvgBody,
+    exportJPEG, getPanelHeight, getPanelNameSVG, implantSvgBody,
     readTemplate, replaceBanner,
     replaceText,
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {
@@ -303,7 +301,7 @@ export async function panel_A4(data = {
     let cardHs = [];
     for (const i in data.bps) {
         const bp_generated = await PanelGenerate.bp2CardH(data.bps[i], data.rank[i]);
-        const f = await card_H(bp_generated, true);
+        const f = await card_H(bp_generated);
 
         cardHs.push(f);
     }
@@ -313,15 +311,9 @@ export async function panel_A4(data = {
 
     // 计算面板高度
     const rowTotal = (cardHs !== []) ? Math.ceil(cardHs.length / 2) : 0;
-    let panelHeight, cardHeight;
 
-    if (rowTotal >= 0) {
-        panelHeight = 330 + 150 * rowTotal;
-        cardHeight = 40 + 150 * rowTotal;
-    } else {
-        panelHeight = 1080;
-        cardHeight = 790;
-    }
+    const panelHeight = getPanelHeight(cardHs?.length, 110, 2, 290, 40, 40);
+    const cardHeight = panelHeight - 290;
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
