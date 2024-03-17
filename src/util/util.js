@@ -1397,32 +1397,33 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
 }
 
 /**
- * 获取从秒转换成dhm的时间
+ * 获取从秒转换成dhms的时间
  * @param seconds 秒
- * @return {string} 时间字符串，比如 3d5h20m
+ * @return {string} 时间字符串，比如 3d5h20m 只有到 minute 的等级时才会有 s
  */
-export const getTimeByDayHourMinute = (seconds = 0) => {
-    return _getTimeByDayHourMinute(seconds).b + _getTimeByDayHourMinute(seconds).m
+export const getTimeByDHMS = (seconds = 0) => {
+    return _getTimeByDHMS(seconds).b + _getTimeByDHMS(seconds).m
 }
 
-//获取从秒转换成dhm的时间
-export const getTimeByDayHourMinuteLarge = (seconds = 0) => {
-    return _getTimeByDayHourMinute(seconds).b
+//获取从秒转换成dhms的时间
+export const getTimeByDHMSLarge = (seconds = 0) => {
+    return _getTimeByDHMS(seconds).b
 }
 
-//获取从秒转换成dhm的时间
-export const getTimeByDayHourMinuteSmall = (seconds = 0) => {
-    return _getTimeByDayHourMinute(seconds).m
+//获取从秒转换成dhms的时间
+export const getTimeByDHMSSmall = (seconds = 0) => {
+    return _getTimeByDHMS(seconds).m
 }
 
-//获取从秒转换成dhm的时间
-const _getTimeByDayHourMinute = (seconds = 0) => {
+//获取从秒转换成dhms的时间
+const _getTimeByDHMS = (seconds = 0) => {
     let pt_b = '';
     let pt_m = '';
     if (seconds != null && seconds !== 0) {
         const days = Math.floor(Math.abs(seconds) / 86400);
         const hours = Math.floor((Math.abs(seconds) - 86400 * days) / 3600);
         const minutes = Math.floor((Math.abs(seconds) - 86400 * days - 3600 * hours) / 60);
+        seconds -= (86400 * days - 3600 * hours - 60 * hours);
 
         if (days > 0) {
             pt_b = days.toString();
@@ -1432,10 +1433,13 @@ const _getTimeByDayHourMinute = (seconds = 0) => {
             pt_m = 'h' + minutes + 'm';
         } else if (minutes > 0) {
             pt_b = minutes.toString();
-            pt_m = 'm';
+            pt_m = 'm' + seconds + 's';
+        } else if (seconds > 0) {
+            pt_b = seconds.toString();
+            pt_m = 's';
         } else if (hours > -1) {
             pt_b = '0';
-            pt_m = 'm';
+            pt_m = 's';
         } else {
             pt_b = '-';
             pt_m = '';

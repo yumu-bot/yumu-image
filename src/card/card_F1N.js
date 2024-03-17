@@ -1,9 +1,9 @@
 import {
     getGameMode,
     getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall,
-    getTimeByDayHourMinuteLarge,
-    getTimeByDayHourMinuteSmall,
+    getRoundedNumberStrSmall, getTimeByDHMS,
+    getTimeByDHMSLarge,
+    getTimeByDHMSSmall,
     implantImage,
     implantSvgBody,
     replaceText,
@@ -144,8 +144,8 @@ async function userData2Labels(data) {
     const pc_m = getRoundedNumberStrSmall(data?.user?.play_count, 0);
     const tth_b = getRoundedNumberStrLarge(data?.user?.total_hits, 0);
     const tth_m = getRoundedNumberStrSmall(data?.user?.total_hits, 0);
-    const pt_b = getTimeByDayHourMinuteLarge(data?.user?.play_time);
-    const pt_m = getTimeByDayHourMinuteSmall(data?.user?.play_time);
+    const pt_b = getTimeByDHMSLarge(data?.user?.play_time);
+    const pt_m = getTimeByDHMSSmall(data?.user?.play_time);
 
     const label_pc = await label_D1({...LABELS.PC, data_b: pc_b, data_m: pc_m, remark_font: PuHuiTi});
     const label_tth = await label_D1({...LABELS.TTH, data_b: tth_b, data_m: tth_m, remark_font: PuHuiTi});
@@ -188,12 +188,14 @@ function userDelta2Labels(data) {
     const tts = data?.delta?.total_hits || 0;
     const pt = data?.delta?.play_time || 0;
 
+    const pt_h = getTimeByDHMS(pt);
+
     if (data?.delta?.play_time === 0) {
         return new Array(3).fill("");
     }
 
     let arr = [];
-    for (const x of [pc, tts, pt]) {
+    for (const x of [pc, tts, pt_h]) {
         arr.push(getPath(x));
     }
     return arr;
