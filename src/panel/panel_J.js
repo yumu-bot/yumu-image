@@ -17,7 +17,9 @@ import {getRandomBannerPath, pp2UserBG} from "../util/mascotBanner.js";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
+        console.time("generate j")
         const svg = await panel_J(data);
+        console.timeEnd("generate j")
         res.set('Content-Type', 'image/jpeg');
         console.time("draw j")
         let img;
