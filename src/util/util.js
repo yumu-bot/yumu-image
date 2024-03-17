@@ -123,6 +123,7 @@ export async function getDiffBG(bid, sid, cover = 'cover', reload = true, defaul
                 "SET_ID": sid,
                 "AuthorizationX": SUPER_KEY,
             },
+            timeout: 300,
             __no_wait: true,
         });
         // data 为背景文件在文件系统中的绝对路径 字符串
