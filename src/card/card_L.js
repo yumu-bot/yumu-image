@@ -132,7 +132,7 @@ export async function card_L(data = {
             score_rank: v.rank,
             bp_pp: ('#' + (v.ranking || 0)), //把这个位置用来做ranking的显示了
             bp_remark: '',// PP
-        },true);
+        });
         cardKs.push(h);
     }
 

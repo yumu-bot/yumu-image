@@ -125,7 +125,7 @@ export async function card_F3(data = {
     let card_Ks = [];
     for (const i in data.bp) {
         card_Ks.push(await card_K(
-            await bp2CardK(data.bp[i], parseInt(i) + 1), true));
+            await bp2CardK(data.bp[i], parseInt(i) + 1)));
     }
 
     for (const i in card_Ks) {

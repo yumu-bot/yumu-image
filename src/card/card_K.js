@@ -1,17 +1,17 @@
-import {getExportFileV3Path, implantImage, replaceText} from "../util/util.js";
+import {implantImage, readNetImage, replaceText} from "../util/util.js";
 import {torus} from "../util/font.js";
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_K(data = {
-    map_background: getExportFileV3Path('beatmap-defaultBG.jpg'),
+    map_background: "https://a.ppy.sh/",
     star_rating: 4.35,
     score_rank: 'D',
     bp_ranking: 1, //感觉暂时不使用这个也可以
     bp_pp: 369,
     bp_remark: 'PP',// PP
 
-}, reuse = false) {
+}) {
 
     // 正则
     let reg_text = /(?<=<g id="Text">)/;
@@ -64,7 +64,9 @@ export async function card_K(data = {
     svg = replaceText(svg, circle_sr, reg_overlay);
     svg = replaceText(svg, circle_rank, reg_overlay);
 
-    svg = data.map_background ? implantImage(svg,70,50,0,0,0.5, data.map_background, reg_background) : svg;
+    const bg = await readNetImage(data.map_background, false);
+
+    svg = implantImage(svg,70,50,0,0,0.5, bg, reg_background);
 
     return svg.toString();
 }
