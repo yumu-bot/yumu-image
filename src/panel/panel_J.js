@@ -19,7 +19,14 @@ export async function router(req, res) {
         const data = req.fields || {};
         const svg = await panel_J(data);
         res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
+        console.time("draw j")
+        let img;
+        try {
+            img = await exportJPEG(svg);
+        } catch (e) {
+        }
+        console.timeEnd("draw j")
+        res.send(img);
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
@@ -505,6 +512,7 @@ export async function panel_J(data = {
 
     let labelJ2s = [];
 
+    console.time("j_label_2")
     for (const i in data.favorite_mappers) {
         const v = data.favorite_mappers[i];
 
@@ -518,11 +526,11 @@ export async function panel_J(data = {
 
         labelJ2s.push(h);
     }
-
+    console.timeEnd("j_label_2")
     // 模组标签 J3 构建
 
     let labelJ3s = [];
-
+    console.time("j_label_3")
     for (const v of data.rank_attr) {
         const h = await label_J3({
 
@@ -534,7 +542,7 @@ export async function panel_J(data = {
 
         labelJ3s.push(h);
     }
-
+    console.timeEnd("j_label_3")
     // 绘制bp的pp曲线
     let pp_raw_arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false);
 
