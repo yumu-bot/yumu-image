@@ -188,7 +188,7 @@ function userDelta2Labels(data) {
     const tts = data?.delta?.total_hits || 0;
     const pt = data?.delta?.play_time || 0;
 
-    const pt_h = getTimeByDHMS(pt);
+    const pt_h = (pt > 0) ? '+' + getTimeByDHMS(pt) : '';
 
     if (data?.delta?.play_time === 0) {
         return new Array(3).fill("");
