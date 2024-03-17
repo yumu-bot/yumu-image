@@ -1,6 +1,6 @@
 import {
     exportJPEG, getExportFileV3Path, getGameMode, getPanelNameSVG,
-    implantImage,
+    implantImage,EXPORT_FILE_V3,
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
@@ -13,12 +13,14 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModColor, getRankColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getRandomBannerPath, pp2UserBG} from "../util/mascotBanner.js";
+import fs from "fs";
 
 export async function router(req, res) {
     try {
         const data = req.fields || {};
         console.time("generate j")
         const svg = await panel_J(data);
+        fs.writeFileSync(EXPORT_FILE_V3+'/out.svg', svg, "utf8");
         console.timeEnd("generate j")
         res.set('Content-Type', 'image/jpeg');
         console.time("draw j")
