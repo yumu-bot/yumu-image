@@ -1,10 +1,10 @@
-import {getExportFileV3Path, implantImage, implantSvgBody, replaceText} from "../util/util.js";
+import {getImageFromV3, implantImage, implantSvgBody, replaceText} from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_O} from "../component/label.js";
 
 export async function card_O1(data = {
-    background: getExportFileV3Path('card-default.png'),
-    avatar: getExportFileV3Path('avatar-guest.png'),
+    background: getImageFromV3('card-default.png'),
+    avatar: getImageFromV3('avatar-guest.png'),
 
     name: 'Who',
     groups: []

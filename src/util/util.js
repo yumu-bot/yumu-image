@@ -94,7 +94,7 @@ export function readTemplate(path = '') {
     return fs.readFileSync(path, 'utf8');
 }
 
-export function readImage(path = '') {
+export function readFile(path = '') {
     try {
         return fs.readFileSync(path, 'binary');
     } catch (e) {
@@ -102,11 +102,21 @@ export function readImage(path = '') {
     }
 }
 
-export function readExportFileV3(path = '') {
-    return fs.readFileSync(path_util.join(EXPORT_FILE_V3, path), 'binary');
+/**
+ * 获取来自 v3 的图片
+ * @param path
+ * @return {string} Buffer 图片流
+ */
+export function readImageFromV3(path = '') {
+    return fs.readFileSync(getImageFromV3(path), 'binary');
 }
 
-export function getExportFileV3Path(path = '') {
+/**
+ * 获取来自 v3 的图片链接，可用于 SVG 图片插入
+ * @param path
+ * @return {string} 图片链接
+ */
+export function getImageFromV3(path = '') {
     return path_util.join(EXPORT_FILE_V3, path);
 }
 
@@ -115,7 +125,7 @@ export function getExportFileV3Path(path = '') {
  * @param {number} bid bid
  * @param {number} sid sid
  */
-export async function getDiffBG(bid, sid, cover = 'cover', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
+export async function getDiffBG(bid, sid, cover = 'cover', reload = true, defaultImagePath = getImageFromV3('card-default.png')) {
     try {
         const res = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
             proxy: {},
@@ -146,21 +156,22 @@ export async function getDiffBG(bid, sid, cover = 'cover', reload = true, defaul
 }
 
 /**
+ * 获取谱面 BG
  * @param {number} sid
  * @param {string} [cover]
  * @param {boolean} [reload] 是否强制更新
  * @param {string} [defaultImagePath] 出现错误时返回的失败图
  * @return {Promise<string>} 返回位于文件系统的绝对路径
  */
-export async function getMapBG(sid = 0, cover = 'cover', reload = true, defaultImagePath = getExportFileV3Path('card-default.png')) {
+export async function getMapBG(sid = 0, cover = 'cover', reload = true, defaultImagePath = getImageFromV3('card-default.png')) {
     return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', reload, defaultImagePath);
 }
 
-export async function getAvatarFromUID(uid = 0, reload = true, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
+export async function getAvatarFromUID(uid = 0, reload = true, defaultImagePath = getImageFromV3('avatar-guest.png')) {
     return await readNetImage('https://a.ppy.sh/' + uid, reload, defaultImagePath);
 }
 
-export async function getAvatar(link = "https://a.ppy.sh/", reload = false, defaultImagePath = getExportFileV3Path('avatar-guest.png')) {
+export async function getAvatar(link = "https://a.ppy.sh/", reload = false, defaultImagePath = getImageFromV3('avatar-guest.png')) {
     if (link == null || link == "https://a.ppy.sh/" || link == "") {
         return defaultImagePath;
     } else {
@@ -172,15 +183,15 @@ export async function getAvatar(link = "https://a.ppy.sh/", reload = false, defa
  * 下载文件, 并且位于文件系统的绝对路径
  * @return {Promise<string>} 位于文件系统的绝对路径
  */
-export async function readNetImage(path = '', reload = true, defaultImagePath = getExportFileV3Path('beatmap-DLfailBG.jpg')) {
-    const error = getExportFileV3Path('error.png');
+export async function readNetImage(path = '', reload = true, defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')) {
+    const error = getImageFromV3('error.png');
 
     if (!path || !path.startsWith("http")) {
-        return readImage(path);
+        return readFile(path);
     }
 
     if (path == 'https://osu.ppy.sh/images/layout/avatar-guest.png') {
-        return getExportFileV3Path('avatar-guest.png');
+        return getImageFromV3('avatar-guest.png');
     }
 
     const bufferName = MD5.copy().update(path).digest('hex');
@@ -1033,7 +1044,7 @@ export function getMapStatus(ranked = 0) {
  * @function 获取谱面状态的路径
  * @param {number, String} status 谱面状态，可以是数字可以是字符串
  */
-export function getMapStatusV3Path(status = 0) {
+export function getMapStatusImage(status = 0) {
     let path = '';
 
     if (typeof status === 'number') {
@@ -1084,7 +1095,7 @@ export function getMapStatusV3Path(status = 0) {
         }
     }
 
-    return getExportFileV3Path(path);
+    return getImageFromV3(path);
 }
 
 //获取现在的时间 (UTC+8)

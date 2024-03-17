@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path, getGameMode,
+    getImageFromV3, getGameMode,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall, getDecimals,
     implantImage, replaceText, replaceTexts, getAvatarFromUID, getAvatar,
@@ -11,179 +11,179 @@ import {getModFullName} from "../util/mod.js";
 
 export const LABELS = {
     ACC: {
-        icon: getExportFileV3Path("object-score-accuracy.png"),
+        icon: getImageFromV3("object-score-accuracy.png"),
         icon_title: 'Accuracy',
         color_remark: '#fff',
     },
     COMBO: {
-        icon: getExportFileV3Path("object-score-combo.png"),
+        icon: getImageFromV3("object-score-combo.png"),
         icon_title: 'Combo',
         color_remark: '#fff',
     },
     PP: {
-        icon: getExportFileV3Path("object-score-pp.png"),
+        icon: getImageFromV3("object-score-pp.png"),
         icon_title: 'PP',
         color_remark: '#fff',
     },
     LOSSPP: {
-        icon: getExportFileV3Path("object-score-pp.png"),
+        icon: getImageFromV3("object-score-pp.png"),
         icon_title: 'Loss PP',
         color_remark: '#fff',
     },
     PPACC: {
-        icon: getExportFileV3Path("object-score-accuracy.png"),
+        icon: getImageFromV3("object-score-accuracy.png"),
         icon_title: 'PP Acc',
         color_remark: '#fff',
     },
     AIMPP: {
-        icon: getExportFileV3Path("object-score-aimpp.png"),
+        icon: getImageFromV3("object-score-aimpp.png"),
         icon_title: 'AimPP',
         color_remark: '#aaa',
     },
     SPDPP: {
-        icon: getExportFileV3Path("object-score-spdpp.png"),
+        icon: getImageFromV3("object-score-spdpp.png"),
         icon_title: 'SpeedPP',
         color_remark: '#aaa',
     },
     ACCPP: {
-        icon: getExportFileV3Path("object-score-accpp.png"),
+        icon: getImageFromV3("object-score-accpp.png"),
         icon_title: 'AccPP',
         color_remark: '#aaa',
     },
     RATIO: {
-        icon: getExportFileV3Path("object-score-longnote.png"),
+        icon: getImageFromV3("object-score-longnote.png"),
         icon_title: 'P/G Rate',
         color_remark: '#fff',
     },
     DIFFPP: {
-        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
         icon_title: 'DiffPP',
         color_remark: '#aaa',
     },
     ACC2: {
-        icon: getExportFileV3Path("object-score-accuracy2.png"),
+        icon: getImageFromV3("object-score-accuracy2.png"),
         icon_title: 'Accuracy',
         color_remark: '#fff',
     },
     COMBO2: {
-        icon: getExportFileV3Path("object-score-combo2.png"),
+        icon: getImageFromV3("object-score-combo2.png"),
         icon_title: 'Combo',
         color_remark: '#fff',
     },
     PP2: {
-        icon: getExportFileV3Path("object-score-pp2.png"),
+        icon: getImageFromV3("object-score-pp2.png"),
         icon_title: 'PP',
         color_remark: '#fff',
     },
     SCORE2: {
-        icon: getExportFileV3Path("object-score-score2.png"),
+        icon: getImageFromV3("object-score-score2.png"),
         icon_title: 'Score',
         color_remark: '#fff',
     },
     BPM: {
-        icon: getExportFileV3Path("object-score-beatsperminute.png"),
+        icon: getImageFromV3("object-score-beatsperminute.png"),
         icon_title: 'BPM',
         color_remark: '#aaa',
     },
     LENGTH: {
-        icon: getExportFileV3Path("object-score-length.png"),
+        icon: getImageFromV3("object-score-length.png"),
         icon_title: 'Length',
         color_remark: '#aaa',
     },
     CS: {
-        icon: getExportFileV3Path("object-score-circlesize.png"),
+        icon: getImageFromV3("object-score-circlesize.png"),
         icon_title: 'CS',
         color_remark: '#aaa',
     },
     AR: {
-        icon: getExportFileV3Path("object-score-approachrate.png"),
+        icon: getImageFromV3("object-score-approachrate.png"),
         icon_title: 'AR',
         color_remark: '#aaa',
     },
     OD: {
-        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
         icon_title: 'OD',
         color_remark: '#aaa',
     },
     HP: {
-        icon: getExportFileV3Path("object-score-healthpoint.png"),
+        icon: getImageFromV3("object-score-healthpoint.png"),
         icon_title: 'HP',
         color_remark: '#aaa',
     },
     RKS: {
-        icon: getExportFileV3Path("object-score-max.png"),
+        icon: getImageFromV3("object-score-max.png"),
         icon_title: 'Ranked Score',
         remark: '进榜分',
         abbr: 'RKS',
         color_remark: '#aaa',
     },
     TTS: {
-        icon: getExportFileV3Path("object-score-aimpp.png"),
+        icon: getImageFromV3("object-score-aimpp.png"),
         icon_title: 'Total Score',
         remark: '总分',
         abbr: 'TTS',
         color_remark: '#aaa',
     },
     PC: {
-        icon: getExportFileV3Path("object-score-combo.png"),
+        icon: getImageFromV3("object-score-combo.png"),
         icon_title: 'Play Count',
         remark: '游玩次数',
         abbr: 'PC',
         color_remark: '#ccc',
     },
     PT: {
-        icon: getExportFileV3Path("object-score-length.png"),
+        icon: getImageFromV3("object-score-length.png"),
         icon_title: 'Play Time',
         remark: '游玩时间',
         abbr: 'PT',
         color_remark: '#ccc',
     },
     TTH: {
-        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
         icon_title: 'Total Hits',
         remark: '击打次数',
         abbr: 'TTH',
         color_remark: '#ccc',
     },
     RMP: {
-        icon: getExportFileV3Path("object-score-approachrate.png"),
+        icon: getImageFromV3("object-score-approachrate.png"),
         icon_title: 'Played Ranked Map',
         remark: '',
         color_remark: '#aaa',
     },
     MPC: {
-        icon: getExportFileV3Path("object-score-approachrate.png"),
+        icon: getImageFromV3("object-score-approachrate.png"),
         icon_title: 'Played Map',
         remark: '玩过',
         color_remark: '#aaa',
     },
     REP: {
-        icon: getExportFileV3Path("object-score-circlesize.png"),
+        icon: getImageFromV3("object-score-circlesize.png"),
         icon_title: 'Replay',
         remark: '回放',
         color_remark: '#aaa',
     },
     FAN: {
-        icon: getExportFileV3Path("object-score-healthpoint.png"),
+        icon: getImageFromV3("object-score-healthpoint.png"),
         icon_title: 'Follower',
         remark: '粉丝',
         color_remark: '#aaa',
     },
     MDL: {
-        icon: getExportFileV3Path("object-score-rice.png"),
+        icon: getImageFromV3("object-score-rice.png"),
         icon_title: 'Medal',
         remark: '奖章',
         color_remark: '#aaa',
     },
     SR: {
-        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
         icon_title: 'Star Rating',
     },
 }
 
 export const LABEL_PPM = {
     ACC: {
-        icon: getExportFileV3Path("object-score-accuracy.png"),
+        icon: getImageFromV3("object-score-accuracy.png"),
         icon_title: '准度',
         remark: 'Accuracy',
         data_b: 'Acc',
@@ -192,7 +192,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     PTT: {
-        icon: getExportFileV3Path("object-score-max.png"),
+        icon: getImageFromV3("object-score-max.png"),
         icon_title: '潜力',
         remark: 'Potential',
         data_b: 'Ptt',
@@ -201,7 +201,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     STA: {
-        icon: getExportFileV3Path("object-score-length.png"),
+        icon: getImageFromV3("object-score-length.png"),
         icon_title: '耐力',
         remark: 'Stamina',
         data_b: 'Sta',
@@ -210,7 +210,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     STB: {
-        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
         icon_title: '稳定',
         remark: 'Stability',
         data_b: 'Stb',
@@ -219,7 +219,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     PRE: {
-        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
         icon_title: '彩率',
         remark: 'Precision',
         data_b: 'Pre',
@@ -228,7 +228,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     EFT: {
-        icon: getExportFileV3Path("object-score-healthpoint.png"),
+        icon: getImageFromV3("object-score-healthpoint.png"),
         icon_title: '肝力',
         remark: 'Effort',
         data_b: 'Eft',
@@ -237,7 +237,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     STH: {
-        icon: getExportFileV3Path("object-score-beatsperminute.png"),
+        icon: getImageFromV3("object-score-beatsperminute.png"),
         icon_title: '强度',
         remark: 'Strength',
         data_b: 'Sth',
@@ -246,7 +246,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     OVA: {
-        icon: getExportFileV3Path("object-score-aimpp.png"),
+        icon: getImageFromV3("object-score-aimpp.png"),
         icon_title: '综合',
         remark: 'Overall',
         data_b: 'Ova',
@@ -255,7 +255,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     SAN: {
-        icon: getExportFileV3Path("object-score-spdpp.png"),
+        icon: getImageFromV3("object-score-spdpp.png"),
         icon_title: '理智',
         remark: 'Sanity',
         data_b: 'San',
@@ -265,7 +265,7 @@ export const LABEL_PPM = {
     },
 
     RC: {
-        icon: getExportFileV3Path("object-score-rice.png"),
+        icon: getImageFromV3("object-score-rice.png"),
         icon_title: '米',
         remark: 'Rice',
         data_b: 'RC',
@@ -274,7 +274,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     LN: {
-        icon: getExportFileV3Path("object-score-longnote.png"),
+        icon: getImageFromV3("object-score-longnote.png"),
         icon_title: '面',
         remark: 'Long Note',
         data_b: 'LN',
@@ -283,7 +283,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     SV: {
-        icon: getExportFileV3Path("object-score-beatsperminute.png"),
+        icon: getImageFromV3("object-score-beatsperminute.png"),
         icon_title: '变速',
         remark: 'S.Variation',
         data_b: 'SV',
@@ -292,7 +292,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     ST: {
-        icon: getExportFileV3Path("object-score-healthpoint.png"),
+        icon: getImageFromV3("object-score-healthpoint.png"),
         icon_title: '耐力',
         remark: 'Stamina',
         data_b: 'ST',
@@ -301,7 +301,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     SP: {
-        icon: getExportFileV3Path("object-score-max.png"),
+        icon: getImageFromV3("object-score-max.png"),
         icon_title: '速度',
         remark: 'Speed',
         data_b: 'SP',
@@ -310,7 +310,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     PR: {
-        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
         icon_title: '彩率',
         remark: 'Precision',
         data_b: 'PR',
@@ -320,7 +320,7 @@ export const LABEL_PPM = {
     },
 
     RCD: {
-        icon: getExportFileV3Path("object-score-rice.png"),
+        icon: getImageFromV3("object-score-rice.png"),
         icon_title: '米密度',
         remark: 'Density',
         data_b: 'RCD',
@@ -329,7 +329,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     LND: {
-        icon: getExportFileV3Path("object-score-longnote.png"),
+        icon: getImageFromV3("object-score-longnote.png"),
         icon_title: '面密度',
         remark: 'Density',
         data_b: 'LND',
@@ -341,62 +341,62 @@ export const LABEL_PPM = {
 
 export const RANK_OPTION = {
     PF: {
-        icon: getExportFileV3Path('object-score-PF-small.png'),
+        icon: getImageFromV3('object-score-PF-small.png'),
         icon_title: 'Perfect FC',
     },
 
     FC: {
-        icon: getExportFileV3Path('object-score-FC-small.png'),
+        icon: getImageFromV3('object-score-FC-small.png'),
         icon_title: 'Full Combo',
     },
 
     SSH: {
-        icon: getExportFileV3Path('object-score-XH-small.png'),
+        icon: getImageFromV3('object-score-XH-small.png'),
         icon_title: 'SSH',
     },
 
     XH: {
-        icon: getExportFileV3Path('object-score-XH-small.png'),
+        icon: getImageFromV3('object-score-XH-small.png'),
         icon_title: 'SSH',
     },
 
     X: {
-        icon: getExportFileV3Path('object-score-X-small.png'),
+        icon: getImageFromV3('object-score-X-small.png'),
         icon_title: 'SS',
     },
 
     SS: {
-        icon: getExportFileV3Path('object-score-X-small.png'),
+        icon: getImageFromV3('object-score-X-small.png'),
         icon_title: 'SS',
     },
 
     SH: {
-        icon: getExportFileV3Path('object-score-SH-small.png'),
+        icon: getImageFromV3('object-score-SH-small.png'),
         icon_title: 'SH',
     },
 
     S: {
-        icon: getExportFileV3Path('object-score-S-small.png'),
+        icon: getImageFromV3('object-score-S-small.png'),
         icon_title: 'S',
     },
 
     A: {
-        icon: getExportFileV3Path('object-score-A-small.png'),
+        icon: getImageFromV3('object-score-A-small.png'),
         icon_title: 'A',
     },
 
     B: {
-        icon: getExportFileV3Path('object-score-B-small.png'),
+        icon: getImageFromV3('object-score-B-small.png'),
         icon_title: 'B',
     },
 
     C: {
-        icon: getExportFileV3Path('object-score-C-small.png'),
+        icon: getImageFromV3('object-score-C-small.png'),
         icon_title: 'C',
     },
 
     D: {
-        icon: getExportFileV3Path('object-score-D-small.png'),
+        icon: getImageFromV3('object-score-D-small.png'),
         icon_title: 'D',
     },
 };
@@ -476,7 +476,7 @@ export async function label_C1(data = {
     let opa = 1;
     if (!isWin) opa = 0.3;
 
-    svg = implantImage(svg, 100, 100, 0, 0, opa, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+    svg = implantImage(svg, 100, 100, 0, 0, opa, data.avatar || getImageFromV3('avatar-guest.png'), reg_avatar);
 
     return svg.toString();
 }
@@ -538,7 +538,7 @@ export async function label_C2(data = {
     if (!isWin) opa = 0.3;
 
     //插入图片
-    svg = implantImage(svg, 30, 30, 0, 0, opa, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+    svg = implantImage(svg, 30, 30, 0, 0, opa, data.avatar || getImageFromV3('avatar-guest.png'), reg_avatar);
 
     return svg.toString();
 }
@@ -568,7 +568,7 @@ export async function label_C3(data = {
     let opa = 1;
     if (!isWin) opa = 0.3;
 
-    svg = implantImage(svg, 30, 30, 0, 0, opa, data.avatar || getExportFileV3Path('avatar-guest.png'), reg_avatar);
+    svg = implantImage(svg, 30, 30, 0, 0, opa, data.avatar || getImageFromV3('avatar-guest.png'), reg_avatar);
 
     return svg.toString();
 }
@@ -801,7 +801,7 @@ export async function label_J2(data = {
 
 //BPA-J3-评级标签
 export async function label_J3(data = {
-    icon: getExportFileV3Path('object-score-XH-small.png'),
+    icon: getImageFromV3('object-score-XH-small.png'),
     map_count: 100,
     pp_percentage: 0.667, //占raw pp的比
     pp_count: 12345,
@@ -855,7 +855,7 @@ export async function label_J3(data = {
 
     //插入图片
     svg = implantImage(svg, 40, 40, 0, 0, 1,
-        data.icon || getExportFileV3Path('object-score-F-small.png'), reg_icon);
+        data.icon || getImageFromV3('object-score-F-small.png'), reg_icon);
 
     return svg.toString();
 }
@@ -866,7 +866,7 @@ export async function label_M1(data = {
     difficulty_name: 'Skystar\'s Tragic Love Extra',
     star_rating: 5.46,
     maxWidth: 0,
-    star: getExportFileV3Path('object-beatmap-star.png'),
+    star: getImageFromV3('object-beatmap-star.png'),
 
     hasAvatar: false,
     uid: 7003013
@@ -1086,7 +1086,7 @@ export async function label_M3(data = {
 
 //MSL-N1-成绩标签
 export async function label_N(data = {
-    icon: getExportFileV3Path("object-score-acc2.png"),
+    icon: getImageFromV3("object-score-acc2.png"),
     icon_title: 'ACC',
     data_b: '98.',
     data_m: '36%',

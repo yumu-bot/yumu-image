@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path,
+    getImageFromV3,
     implantImage, replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -7,8 +7,8 @@ import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_J(data = {
-    cover: getExportFileV3Path('beatmap-defaultBG.jpg'),
-    background: getExportFileV3Path('beatmap-defaultBG.jpg'),
+    cover: getImageFromV3('beatmap-defaultBG.jpg'),
+    background: getImageFromV3('beatmap-defaultBG.jpg'),
     title: '',
     artist: '',
     difficulty_name: '',
@@ -19,7 +19,7 @@ export async function card_J(data = {
     mods_arr: [],
     pp: 0 //pp
 
-}, reuse = false) {
+}) {
 
     // 正则
 

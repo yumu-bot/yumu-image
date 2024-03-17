@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path,
+    getImageFromV3,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall, implantImage, implantSvgBody,
     readTemplate, replaceTexts,
@@ -54,7 +54,7 @@ export async function card_B2(data = {
 function getRankBG(rank = 'F') {
     if (rank === 'X+' || rank === 'SS') rank = 'X';
     if (rank === 'S+') rank = 'S';
-    return getExportFileV3Path(`object-score-backimage-${rank}.jpg`)
+    return getImageFromV3(`object-score-backimage-${rank}.jpg`)
 }
 
 function getPPMRank (data = 0) {

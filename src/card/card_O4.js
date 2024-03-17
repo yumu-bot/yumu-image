@@ -1,4 +1,4 @@
-import {getExportFileV3Path, implantImage, replaceText} from "../util/util.js";
+import {getImageFromV3, implantImage, replaceText} from "../util/util.js";
 import {torus} from "../util/font.js";
 
 export async function card_O4(data = {
@@ -7,7 +7,7 @@ export async function card_O4(data = {
     title: '',
     time: 'now',
     sid: 0
-}, reuse = false) {
+}) {
     // 读取模板
     let svg =`
           <g id="Background_CO4">
@@ -63,7 +63,7 @@ function getActivityTypeV3Path(type = '', approval = '') {
         default : return '';
     }
 
-    return getExportFileV3Path(path);
+    return getImageFromV3(path);
 }
 
 function getActivityTypeColor(type = '', approval = '') {

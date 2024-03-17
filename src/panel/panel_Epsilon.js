@@ -1,6 +1,6 @@
 import {
     exportJPEG, getAvatar,
-    getExportFileV3Path,
+    getImageFromV3,
     implantImage, readTemplate,
     replaceText
 } from "../util/util.js";
@@ -57,7 +57,7 @@ export async function panel_Epsilon(data = {
         230, 435, 60, 'center baseline', '#000'
     );
 
-    svg = implantImage(svg, 460, 460, 0, 0, 1, getExportFileV3Path('panel-oldavatar.png'), reg_base);
+    svg = implantImage(svg, 460, 460, 0, 0, 1, getImageFromV3('panel-oldavatar.png'), reg_base);
     svg = implantImage(svg, 320, 320, 70, 40, 1, image, reg_avatar);
     svg = replaceText(svg, name, reg_text);
 

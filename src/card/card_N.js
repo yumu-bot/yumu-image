@@ -1,6 +1,6 @@
 import {
     getDecimals,
-    getExportFileV3Path,
+    getImageFromV3,
     getFlagPath,
     getGameMode,
     getRoundedNumberStrLarge,
@@ -114,9 +114,9 @@ export async function card_N(data = {
 
     //导入背景和头像
 
-    const rank = getExportFileV3Path('object-score-' + data.score.rank + '-small.png');
-    const avatar = await readNetImage(data.score.user.avatar_url, false, getExportFileV3Path('avatar-guest.png'));
-    const background = getExportFileV3Path('object-score-backimage-' + data.score.rank + '.jpg');
+    const rank = getImageFromV3('object-score-' + data.score.rank + '-small.png');
+    const avatar = await readNetImage(data.score.user.avatar_url, false, getImageFromV3('avatar-guest.png'));
+    const background = getImageFromV3('object-score-backimage-' + data.score.rank + '.jpg');
 
     //await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));
     const name = torus.get2SizeTextPath(

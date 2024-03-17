@@ -3,7 +3,7 @@ import {
     getApproximateRank,
     getDecimals,
     getDiffBG,
-    getExportFileV3Path,
+    getImageFromV3,
     getGameMode,
     getNowTimeStamp,
     getPanelNameSVG,
@@ -358,7 +358,7 @@ export async function panel_E(data = {
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    const cardE1 = await card_E1(await score2CardE1(data.score, calcPP), true);
+    const cardE1 = await card_E1(await score2CardE1(data.score, calcPP));
     const cardE2 = await card_E2(await score2CardE2(data.score, calcPP));
     const cardE3 = await card_E3(await score2CardE3(data.score, calcPP));
     const cardE4 = await card_E4({calcPP: calcPP, statistics: score_statistics});
@@ -371,7 +371,7 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg, 0, 0, cardE4, reg_card_e4);
 
     // 图片定义
-    const background = getExportFileV3Path('object-score-backimage-' + (data?.score?.rank || getApproximateRank(data?.score)) + '.jpg');
+    const background = getImageFromV3('object-score-backimage-' + (data?.score?.rank || getApproximateRank(data?.score)) + '.jpg');
     const banner = await getDiffBG(data.score.beatmap.id, data.score.beatmapset.id, 'cover', isReload(data.score.beatmap.ranked));
 
     // 导入图片

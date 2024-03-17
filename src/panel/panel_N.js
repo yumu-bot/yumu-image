@@ -1,6 +1,6 @@
 import {
     exportJPEG,
-    getExportFileV3Path,
+    getImageFromV3,
     getPanelNameSVG,
     getRoundedNumberStr,
     implantImage,
@@ -188,7 +188,7 @@ async function getGuestPanel(guest = [], x = 54, y = 745) {
 
     if (guest == null || guest.length <= 0) {
         //摆烂机制
-        out += PanelDraw.Image(180, -5, 80, 80, getExportFileV3Path('sticker_qiqi_oh.png'))
+        out += PanelDraw.Image(180, -5, 80, 80, getImageFromV3('sticker_qiqi_oh.png'))
         out += torus.getTextPath('Solo Set!', 215, 100, 18, 'center baseline', '#fff')
     } else if (guest.length > 4) {
         //常规：N3
@@ -338,7 +338,7 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LN1\);">)/;
 
     //定义文本
-    const avatar = await readNetImage(u?.avatar_url, false, getExportFileV3Path('avatar-guest.png'));
+    const avatar = await readNetImage(u?.avatar_url, false, getImageFromV3('avatar-guest.png'));
     const abbr_color = u?.profile_colour || 'none';
 
     //获取用户组或者玩家组简称
@@ -413,7 +413,7 @@ async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row
         18, Math.max(max_width - 46 - 30 - name_length, 0),true);
     const diff = torus.getTextPath(diff_str, 46 + 30 + name_length, 14, 14, 'left baseline', '#fff');
 
-    const label_type = PanelDraw.Image(46 + name_length + 5, -2, 20, 20, getExportFileV3Path('object-type-' + type +'.png'));
+    const label_type = PanelDraw.Image(46 + name_length + 5, -2, 20, 20, getImageFromV3('object-type-' + type +'.png'));
 
     //插入文本
     svg = replaceText(svg, name, reg_text);
@@ -422,7 +422,7 @@ async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row
     svg = replaceText(svg, label_type, reg_label);
 
     //插入图片
-    svg = implantImage(svg, 40, 40, 0, 0, 1, await readNetImage(u?.avatar_url, false, getExportFileV3Path('avatar-guest.png')), reg_avatar);
+    svg = implantImage(svg, 40, 40, 0, 0, 1, await readNetImage(u?.avatar_url, false, getImageFromV3('avatar-guest.png')), reg_avatar);
 
     return transformSvgBody(x, y, svg.toString());
 }
@@ -453,7 +453,7 @@ async function label_N3(u = {}) {
     svg = replaceText(svg, label_color, reg_label);
 
     //插入图片
-    svg = implantImage(svg, 45, 45, 0, 0, 1, await readNetImage(u?.avatar_url, false, getExportFileV3Path('avatar-guest.png')), reg_avatar);
+    svg = implantImage(svg, 45, 45, 0, 0, 1, await readNetImage(u?.avatar_url, false, getImageFromV3('avatar-guest.png')), reg_avatar);
 
     return svg.toString();
 }
@@ -492,7 +492,7 @@ async function label_N4(u = {}) {
     svg = replaceText(svg, label_color, reg_label);
 
     //插入图片
-    svg = implantImage(svg, 70, 70, 13, 0, 1, await readNetImage(u?.avatar_url, false, getExportFileV3Path('avatar-guest.png')), reg_avatar);
+    svg = implantImage(svg, 70, 70, 13, 0, 1, await readNetImage(u?.avatar_url, false, getImageFromV3('avatar-guest.png')), reg_avatar);
 
     return svg.toString();
 }
@@ -512,7 +512,7 @@ function label_N6(x = 0, y = 0, type = 'genre', name = '') {
     );
 
     const file = name.replaceAll(" ", "_").toLowerCase() || 'unspecified';
-    const label = getExportFileV3Path('object-' + type + '-' + file + '.png');
+    const label = getImageFromV3('object-' + type + '-' + file + '.png');
 
 
     //插入文本
@@ -694,7 +694,7 @@ async function drawNominators(x, y, bn = [], slot_length) {
 
 function drawIcons(isDraw = true, x, y, link) {
     if (isDraw) {
-        return PanelDraw.Image(x, y, 50, 50, getExportFileV3Path(link));
+        return PanelDraw.Image(x, y, 50, 50, getImageFromV3(link));
     } else {
         return '';
     }

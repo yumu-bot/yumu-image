@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path, getGameMode, getMapBG, getRoundedNumberStr,
+    getImageFromV3, getGameMode, getMapBG, getRoundedNumberStr,
     implantImage,
     implantSvgBody, isReload,
     replaceText
@@ -138,11 +138,11 @@ export async function card_F2(data = {
 
         const calcPP = await calcPerformancePoints(j.beatmap.id, stat, getGameMode(j.mode, 0), false);
 
-        card_Js.push(await card_J(await score2CardJ(j, calcPP), true));
+        card_Js.push(await card_J(await score2CardJ(j, calcPP)));
     }
 
     if (card_Js < 1) {
-        svg = implantImage(svg, 185, 185, 697.5 - 620, 405 - 330, 1, getExportFileV3Path('sticker_qiqi_fallen.png'), reg_card_j);
+        svg = implantImage(svg, 185, 185, 697.5 - 620, 405 - 330, 1, getImageFromV3('sticker_qiqi_fallen.png'), reg_card_j);
     }
 
     for (const i in card_Js) {

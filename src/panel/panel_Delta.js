@@ -1,7 +1,7 @@
 import {
     exportPNG,
     getDiffBG,
-    getExportFileV3Path,
+    getImageFromV3,
     getRoundedNumberStr,
     implantImage,
     implantSvgBody, isReload,
@@ -226,8 +226,8 @@ export async function panel_Delta(data = {
     const image = await getDiffBG(data.beatMap.id, data.beatMap.beatmapset.id, 'list', isReload(data.beatMap.status));
 
     svg = (data.hasBG === false) ? svg : implantImage(svg, 1080, 1080, -30, 0, 1, image, reg_background);
-    svg = implantImage(svg, 1920, 1080, 0, 0, 1, getExportFileV3Path('panel-kita.png'), reg_base);
-    svg = implantImage(svg, 153, 153, 1586, 721, 1, getExportFileV3Path('panel-kita-center.png'), reg_index);
+    svg = implantImage(svg, 1920, 1080, 0, 0, 1, getImageFromV3('panel-kita.png'), reg_base);
+    svg = implantImage(svg, 153, 153, 1586, 721, 1, getImageFromV3('panel-kita-center.png'), reg_index);
 
     return svg.toString();
 }

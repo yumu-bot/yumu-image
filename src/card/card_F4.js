@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path,
+    getImageFromV3,
     implantImage,
     replaceText, replaceTexts
 } from "../util/util.js";
@@ -31,9 +31,9 @@ export async function card_F4(data = {
     const reg_text = /(?<=<g id="Text_CF4">)/;
 
     // 导入评级图片
-    svg = implantImage(svg, 31, 39, 49, 50, 1, getExportFileV3Path('object-score-X-small.png'), reg_grade);
-    svg = implantImage(svg, 25, 35, 157, 52, 1, getExportFileV3Path('object-score-S-small.png'), reg_grade);
-    svg = implantImage(svg, 30, 34, 260, 53, 1, getExportFileV3Path('object-score-A-small.png'), reg_grade);
+    svg = implantImage(svg, 31, 39, 49, 50, 1, getImageFromV3('object-score-X-small.png'), reg_grade);
+    svg = implantImage(svg, 25, 35, 157, 52, 1, getImageFromV3('object-score-S-small.png'), reg_grade);
+    svg = implantImage(svg, 30, 34, 260, 53, 1, getImageFromV3('object-score-A-small.png'), reg_grade);
 
     // 导入评级的数量
     const grade_X = torus.getTextPath((data.user.ss + data.user.ssh).toString(), 65, 118.795, 30, 'center baseline', '#fff');

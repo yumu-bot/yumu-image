@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path, getMapBG, implantImage, implantSvgBody, isReload, replaceText,
+    getImageFromV3, getMapBG, implantImage, implantSvgBody, isReload, replaceText,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_M1, label_M2, label_M3} from "../component/label.js";
@@ -286,7 +286,7 @@ export async function card_M(s = {
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
-                star: getExportFileV3Path('object-beatmap-star.png'),
+                star: getImageFromV3('object-beatmap-star.png'),
                 hasAvatar: false,
                 uid: v.user_id,
             });
@@ -337,7 +337,7 @@ export async function card_M(s = {
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
-                star: getExportFileV3Path('object-beatmap-star.png'),
+                star: getImageFromV3('object-beatmap-star.png'),
                 hasAvatar: true,
                 uid: v.user_id,
             });
@@ -353,7 +353,7 @@ export async function card_M(s = {
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
                 maxWidth: label_compact_remain_width,
-                star: getExportFileV3Path('object-beatmap-star.png'),
+                star: getImageFromV3('object-beatmap-star.png'),
                 hasAvatar: true,
                 uid: v.user_id,
             });
@@ -369,7 +369,7 @@ export async function card_M(s = {
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
-                star: getExportFileV3Path('object-beatmap-star.png'),
+                star: getImageFromV3('object-beatmap-star.png'),
                 hasAvatar: false,
                 uid: v.user_id,
             });
@@ -425,7 +425,7 @@ export async function card_M(s = {
                 difficulty_name: v.version,
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
-                star: getExportFileV3Path('object-beatmap-star.png'),
+                star: getImageFromV3('object-beatmap-star.png'),
                 hasAvatar: true,
                 uid: v.user_id,
             });

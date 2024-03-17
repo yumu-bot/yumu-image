@@ -1,7 +1,7 @@
 import {
     exportJPEG,
     getDecimals,
-    getExportFileV3Path,
+    getImageFromV3,
     getGameMode, getMapBG,
     implantImage, isReload,
     readNetImage,
@@ -54,8 +54,8 @@ export async function router_svg(req, res) {
  * @return {Promise<string>}
  */
 export async function panel_Gamma(data = {
-    background: getExportFileV3Path('card-default.png'),
-    avatar: getExportFileV3Path('avatar-guest.png'),
+    background: getImageFromV3('card-default.png'),
+    avatar: getImageFromV3('avatar-guest.png'),
     mode: 'OSU',
     left1: '123',
     left2: '123',
@@ -99,7 +99,7 @@ export async function panel_Gamma(data = {
     const center2 = torus.getTextPath(data.center2, 440, 310, 18, 'center baseline', '#fff');
 
     const mode = extra.getTextPath(getGameMode(data.mode, -1), 29, 220, 324, 'center baseline', '#3C3639');
-    const hexagon = getExportFileV3Path('object-beatmap-hexagon2.png');
+    const hexagon = getImageFromV3('object-beatmap-hexagon2.png');
 
     // 插入文字
     svg = replaceTexts(svg, [left1, left2, left3, down1, down2, center0, center1, center2, mode], reg_text);
@@ -117,8 +117,8 @@ export async function panel_Gamma(data = {
 
 const PanelGamma = {
     infoVersion: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getImageFromV3('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
 
         return {
             background: background,
@@ -141,7 +141,7 @@ const PanelGamma = {
     },
 
     scoreVersion: async (score) => {
-        const background = getExportFileV3Path('object-score-backimage-' + score.rank + '.jpg');
+        const background = getImageFromV3('object-score-backimage-' + score.rank + '.jpg');
         const avatar = await getMapBG(score.beatmapset.id, "list", false);
 
         // 成绩重计算

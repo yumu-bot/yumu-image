@@ -1,8 +1,8 @@
 import {
     getDecimals,
-    getExportFileV3Path,
+    getImageFromV3,
     getGameMode,
-    getMapStatusV3Path,
+    getMapStatusImage,
     getRoundedNumberStr,
     implantImage,
     implantSvgBody, readNetImage,
@@ -25,7 +25,7 @@ export async function card_E1(data = {
     status: '',
     favourite_count: 0,
     play_count: 0,
-}, reuse = false) {
+}) {
     // 读取模板
     let svg = `   <defs>
             <clipPath id="clippath-CE1-1">
@@ -58,11 +58,11 @@ export async function card_E1(data = {
     const sr_color = getStarRatingColor(data.star);
 
     // 图片定义
-    const hexagon = getExportFileV3Path('object-beatmap-hexagon.png');
+    const hexagon = getImageFromV3('object-beatmap-hexagon.png');
     // 注意，E1 的 cover 不需要用 getDiffBG。
-    const cover = await readNetImage(data.cover, getExportFileV3Path('beatmap-defaultBG.jpg'));
+    const cover = await readNetImage(data.cover, getImageFromV3('beatmap-defaultBG.jpg'));
     // const cover = await getDiffBG(data.bid, data.sid, 'list@2x', isReload(data.status));
-    const status = getMapStatusV3Path(data.status);
+    const status = getMapStatusImage(data.status);
 
     const favorite_count_icon = '<path d="m13,1c3,0,5,2,5,5s-5,7-6,8l-3,3-3-3C5,13,0,9,0,6,0,3.906,2,1,5,1s4,3,4,3c0,0,1-3,4-3Z" style="fill: #fff;"/>';
     const play_count_icon = '<path d="m9,0C4.029,0,0,4.029,0,9s4.029,9,9,9,9-4.029,9-9S13.971,0,9,0Zm-3,14V4l8,5-8,5Z" style="fill: #fff;"/>';
@@ -133,7 +133,7 @@ export async function card_E1(data = {
     svg = implantSvgBody(svg, 746, 74, play_count_icon, reg_overlay);
 
     //导入星数
-    const star_svg = getStarSVGs(getExportFileV3Path('object-beatmap-star.png'), sr_b, sr_m, 40, 40);
+    const star_svg = getStarSVGs(getImageFromV3('object-beatmap-star.png'), sr_b, sr_m, 40, 40);
     svg = implantSvgBody(svg, 40, 106, star_svg, reg_star);
 
     //导出

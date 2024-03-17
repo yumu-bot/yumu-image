@@ -3,7 +3,7 @@ import moment from "moment";
 import {
     getApproximateRank,
     getDecimals,
-    getExportFileV3Path,
+    getImageFromV3,
     getGameMode,
     getMapBG, getMapStatus,
     getMatchNameSplitted,
@@ -23,8 +23,8 @@ import {getModInt, hasMod} from "./mod.js";
 export const PanelGenerate = {
     user2CardA1: async (user, historyUser) => {
         if (user == null) return {
-            background: getExportFileV3Path('card-default.png'),
-            avatar: getExportFileV3Path('sticker_qiqi_secretly_observing.png'),
+            background: getImageFromV3('card-default.png'),
+            avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
             sub_icon1: '',
             sub_icon2: '',
             country: 'CN',
@@ -43,11 +43,11 @@ export const PanelGenerate = {
         if (user?.profile?.card) {
             background = user.profile.card;
         } else {
-            background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'))
+            background = await readNetImage(user?.cover_url || user?.cover?.url, false, getImageFromV3('card-default.png'))
         }
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
 
-        const sub_icon1 = user?.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
+        const sub_icon1 = user?.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
 
         const left1 = '#' + (user?.statistics?.global_rank || '0');
@@ -84,10 +84,10 @@ export const PanelGenerate = {
     },
 
     mapper2CardA1: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getImageFromV3('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
 
-        const sub_icon1 = user.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
+        const sub_icon1 = user.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
 
         const left2 = 'U' + user.id;
@@ -114,9 +114,9 @@ export const PanelGenerate = {
     },
 
     microUser2CardA1: async (microUser) => {
-        const background = await readNetImage(microUser?.cover_url || microUser?.cover?.url, false, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(microUser?.avatar_url || microUser?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
-        const sub_icon1 = microUser.is_supporter ? getExportFileV3Path('object-card-supporter.png') : '';
+        const background = await readNetImage(microUser?.cover_url || microUser?.cover?.url, false, getImageFromV3('card-default.png'));
+        const avatar = await readNetImage(microUser?.avatar_url || microUser?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
+        const sub_icon1 = microUser.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
 
         const country = microUser?.country_code || 'CN';
 
@@ -220,7 +220,7 @@ export const PanelGenerate = {
             }
         }
 
-        const background = getExportFileV3Path(bg_str);
+        const background = getImageFromV3(bg_str);
         const avatar = await getAvatar(score?.user?.avatar_url);
         const country = score?.user?.country?.code || 'CN';
 
@@ -236,7 +236,7 @@ export const PanelGenerate = {
         return {
             background,
             avatar,
-            sub_icon1: getExportFileV3Path(icon_str) ,
+            sub_icon1: getImageFromV3(icon_str) ,
             sub_icon2: '',
             country: country,
 
@@ -630,7 +630,7 @@ export const PanelGenerate = {
     },
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
-        const background = cursor ? await getMapBG(cursor?.id, 'list@2x', false) : await readNetImage(first_beatmapset.covers['list@2x'], false, getExportFileV3Path('card-default.png'));
+        const background = cursor ? await getMapBG(cursor?.id, 'list@2x', false) : await readNetImage(first_beatmapset.covers['list@2x'], false, getImageFromV3('card-default.png'));
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
@@ -946,19 +946,19 @@ export const PanelGenerate = {
             default:
                 return {
                     label1: {
-                        icon: getExportFileV3Path("object-score-circlesize.png"),
+                        icon: getImageFromV3("object-score-circlesize.png"),
                         icon_title: 'CS',
                         data_b: getDecimals(beatmap.cs, 2),
                         data_m: getDecimals(beatmap.cs, 3)
                     },
                     label2: {
-                        icon: getExportFileV3Path("object-score-approachrate.png"),
+                        icon: getImageFromV3("object-score-approachrate.png"),
                         icon_title: 'AR',
                         data_b: getDecimals(beatmap.ar, 2),
                         data_m: getDecimals(beatmap.ar, 3)
                     },
                     label3: {
-                        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+                        icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
                         data_b: getDecimals(beatmap.accuracy, 2),
                         data_m: getDecimals(beatmap.accuracy, 3)
@@ -970,7 +970,7 @@ export const PanelGenerate = {
             case 't' :
                 return {
                     label1: {
-                        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+                        icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
                         data_b: getDecimals(beatmap.accuracy, 2),
                         data_m: getDecimals(beatmap.accuracy, 3)
@@ -982,7 +982,7 @@ export const PanelGenerate = {
                         data_m: ''
                     },
                     label3: {
-                        icon: getExportFileV3Path("object-score-healthpoint.png"),
+                        icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
                         data_b: getDecimals(beatmap.drain, 2),
                         data_m: getDecimals(beatmap.drain, 3)
@@ -994,19 +994,19 @@ export const PanelGenerate = {
             case 'c':
                 return {
                     label1: {
-                        icon: getExportFileV3Path("object-score-circlesize.png"),
+                        icon: getImageFromV3("object-score-circlesize.png"),
                         icon_title: 'CS',
                         data_b: getDecimals(beatmap.cs, 2),
                         data_m: getDecimals(beatmap.cs, 3)
                     },
                     label2: {
-                        icon: getExportFileV3Path("object-score-approachrate.png"),
+                        icon: getImageFromV3("object-score-approachrate.png"),
                         icon_title: 'AR',
                         data_b: getDecimals(beatmap.ar, 2),
                         data_m: getDecimals(beatmap.ar, 3)
                     },
                     label3: {
-                        icon: getExportFileV3Path("object-score-healthpoint.png"),
+                        icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
                         data_b: getDecimals(beatmap.drain, 2),
                         data_m: getDecimals(beatmap.drain, 3)
@@ -1018,19 +1018,19 @@ export const PanelGenerate = {
             case 'm' :
                 return {
                     label1: {
-                        icon: getExportFileV3Path("object-score-circlesize.png"),
+                        icon: getImageFromV3("object-score-circlesize.png"),
                         icon_title: 'CS',
                         data_b: getDecimals(beatmap.cs, 2),
                         data_m: getDecimals(beatmap.cs, 3)
                     },
                     label2: {
-                        icon: getExportFileV3Path("object-score-overalldifficulty.png"),
+                        icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
                         data_b: getDecimals(beatmap.accuracy, 2),
                         data_m: getDecimals(beatmap.accuracy, 3)
                     },
                     label3: {
-                        icon: getExportFileV3Path("object-score-healthpoint.png"),
+                        icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
                         data_b: getDecimals(beatmap.drain, 2),
                         data_m: getDecimals(beatmap.drain, 3)
@@ -1040,8 +1040,8 @@ export const PanelGenerate = {
     },
 
     user2CardO1: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getExportFileV3Path('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getExportFileV3Path('avatar-guest.png'));
+        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getImageFromV3('card-default.png'));
+        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
 
         return {
             background,

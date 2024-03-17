@@ -1,6 +1,6 @@
 import {
-    getExportFileV3Path,
-    getMapStatusV3Path,
+    getImageFromV3,
+    getMapStatusImage,
     implantImage,
     readTemplate,
     replaceTexts,
@@ -8,7 +8,7 @@ import {
 import {torus, PuHuiTi} from "../util/font.js";
 
 export async function card_A2(data = {
-    background: getExportFileV3Path('card-default.png'),
+    background: getImageFromV3('card-default.png'),
     map_status: '',
 
     title1: '',
@@ -82,8 +82,8 @@ export async function card_A2(data = {
     const right3 = torus.get2SizeTextPath(data.right3b, data.right3m, 60, 48, 420, 191.59, 'right baseline', '#fff');
 
     // 插入谱面状态
-    let status = getMapStatusV3Path(data.map_status || '');
-    let background = data.background || getExportFileV3Path('beatmap-DLfailBG.jpg');
+    let status = getMapStatusImage(data.map_status || '');
+    let background = data.background || getImageFromV3('beatmap-DLfailBG.jpg');
 
     svg = implantImage(svg,430,210,0,0,0.5, background, reg_background);
     svg = data.map_status ? implantImage(svg,50,50,370,10,1, status, reg_top_icons) : svg;

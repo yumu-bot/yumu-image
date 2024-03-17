@@ -1,6 +1,6 @@
 import {
     exportJPEG,
-    getExportFileV3Path,
+    getImageFromV3,
     getGameMode, getPanelNameSVG,
     implantImage,
     implantSvgBody, readTemplate,
@@ -45,8 +45,8 @@ const VALUE_NAMES = ['ACC', 'PTT', 'STA', 'STB', 'PRE', 'EFT', 'STH'] // OVA 跟
 export async function panel_B1(data = {
     // A1卡
     card_A1: [{
-        background: getExportFileV3Path('card-default.png'),
-        avatar: getExportFileV3Path('avatar-guest.png'),
+        background: getImageFromV3('card-default.png'),
+        avatar: getImageFromV3('avatar-guest.png'),
         sub_icon1: null,
         sub_icon2: 2,
         name: 'Muziyami',
@@ -188,7 +188,7 @@ export async function panel_B1(data = {
      */
 
     // 画六边形和其他
-    const hexagon = getExportFileV3Path('object-hexagon.png');
+    const hexagon = getImageFromV3('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
 
     return svg.toString();

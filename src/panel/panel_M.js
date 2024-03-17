@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getExportFileV3Path, getPanelNameSVG,
+    exportJPEG, getImageFromV3, getPanelNameSVG,
     getRoundedNumberStrLarge, getRoundedNumberStrSmall, getRoundedNumberStr, getTimeDifference,
     implantImage, implantSvgBody, readTemplate,
     replaceText, replaceTexts
@@ -358,12 +358,12 @@ export async function panel_M(data = {
         const x = 510 + (i % 3) * 305;
         const y = 380 + Math.floor(i / 3) * 145;
 
-        const cardO2 = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_popular_beatmap[i]), true);
+        const cardO2 = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_popular_beatmap[i]));
         svg = implantSvgBody(svg, x, y, cardO2, reg_popular);
     }
 
     if (data.most_popular_beatmap.length < 1) { //摆烂机制
-        svg = implantImage(svg, 185, 185, 867.5, 410, 1, getExportFileV3Path('sticker_qiqi_oh.png'), reg_popular);
+        svg = implantImage(svg, 185, 185, 867.5, 410, 1, getImageFromV3('sticker_qiqi_oh.png'), reg_popular);
     }
 
     // 导入一些标签
@@ -417,7 +417,7 @@ export async function panel_M(data = {
             return curr_percent;
         }, 0);
 
-        genre_svg += PanelDraw.Image(150 - 70, 825 - 70, 140, 140, getExportFileV3Path('object-piechart-overlay2.png'), 1);
+        genre_svg += PanelDraw.Image(150 - 70, 825 - 70, 140, 140, getImageFromV3('object-piechart-overlay2.png'), 1);
 
         svg = replaceText(svg, genre_svg, reg_genre_pie);
     }
@@ -468,7 +468,7 @@ export async function panel_M(data = {
 
         cardO4s.push(await card_O4({
             type: v.type, approval: v.approval, title: v.beatmapset.title, time: delta_time, sid: sid || 0,
-        }, true));
+        }));
     }
 
     for (let i = 0; i < Math.min(recent_activity.length, 7); i++) {
@@ -476,15 +476,15 @@ export async function panel_M(data = {
     }
 
     if (recent_activity.length < 1) { //摆烂机制
-        svg = implantImage(svg, 185, 185, 692.5, 770, 1, getExportFileV3Path('sticker_qiqi_fallen.png'), reg_activity);
+        svg = implantImage(svg, 185, 185, 692.5, 770, 1, getImageFromV3('sticker_qiqi_fallen.png'), reg_activity);
     }
 
     // 导入最近卡
     const O2g = await PanelGenerate.beatmap2CardO2(data.most_recent_ranked_guest_diff);
     const O2g_title2 = data.most_recent_ranked_guest_diff ? data.most_recent_ranked_guest_diff.creator + ' (' + data.most_recent_ranked_guest_diff.artist  + ')' : '';
 
-    const cardO2h = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_recent_ranked_beatmap), true);
-    const cardO2g = await card_O2({...O2g, title2: O2g_title2}, true);
+    const cardO2h = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_recent_ranked_beatmap));
+    const cardO2g = await card_O2({...O2g, title2: O2g_title2});
 
     svg = implantSvgBody(svg, 1120, 745, cardO2h, reg_recent);
     svg = implantSvgBody(svg, 1120, 890, cardO2g, reg_recent);

@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getExportFileV3Path, getGameMode, getMapBG,
+    exportJPEG, getImageFromV3, getGameMode, getMapBG,
     getPanelNameSVG, getRoundedNumberStrLarge, getRoundedNumberStrSmall, implantImage,
     implantSvgBody, isReload, readTemplate,
     replaceText, replaceTexts
@@ -302,7 +302,7 @@ export async function panel_B2(data = {
 
 
     // 画六边形和其他
-    const hexagon = getExportFileV3Path('object-hexagon.png');
+    const hexagon = getImageFromV3('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
 
     return svg.toString();

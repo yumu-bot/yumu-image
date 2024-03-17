@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getExportFileV3Path, getGameMode, getPanelNameSVG,
+    exportJPEG, getImageFromV3, getGameMode, getPanelNameSVG,
     implantImage,
     implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readTemplate,
     replaceText, replaceTexts
@@ -465,12 +465,12 @@ export async function panel_J(data = {
     let cardJs_last = [];
 
     for (const i in data.bpTop5) {
-        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpTop5[i]), true);
+        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpTop5[i]));
         cardJs_top.push(h);
     }
 
     for (const i in data.bpLast5) {
-        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpLast5[i]), true);
+        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpLast5[i]));
         cardJs_last.push(h);
     }
 
@@ -498,7 +498,7 @@ export async function panel_J(data = {
     }
 
     if (labelJ1s < 1) { //摆烂机制
-        svg = implantImage(svg, 185, 185, 750, 600, 1, getExportFileV3Path('sticker_qiqi_secretly_observing.png'), reg_label_j1);
+        svg = implantImage(svg, 185, 185, 750, 600, 1, getImageFromV3('sticker_qiqi_secretly_observing.png'), reg_label_j1);
     }
 
     // 谱师标签 J2 构建
@@ -611,7 +611,7 @@ export async function panel_J(data = {
         return curr_percent;
     }, 0);
 
-    mod_svg += PanelDraw.Image(842 - 70, 470 - 70, 140, 140, getExportFileV3Path('object-piechart-overlay2.png'), 1);
+    mod_svg += PanelDraw.Image(842 - 70, 470 - 70, 140, 140, getImageFromV3('object-piechart-overlay2.png'), 1);
 
     let rank_svg = '';
     data.rank_attr.reduce((prev, curr) => {
@@ -622,7 +622,7 @@ export async function panel_J(data = {
         return curr_percent;
     }, 0);
 
-    rank_svg += PanelDraw.Image(1630 - 70, 815 - 70, 140, 140, getExportFileV3Path('object-piechart-overlay2.png'), 1);
+    rank_svg += PanelDraw.Image(1630 - 70, 815 - 70, 140, 140, getImageFromV3('object-piechart-overlay2.png'), 1);
 
     svg = replaceText(svg, mod_svg, reg_pan_mod);
     svg = replaceText(svg, rank_svg, reg_pan_rank);

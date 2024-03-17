@@ -1,5 +1,5 @@
 import {
-    getDecimals, getExportFileV3Path,
+    getDecimals, getImageFromV3,
     getGameMode,
     implantSvgBody,
     replaceTexts
@@ -88,7 +88,7 @@ export async function card_E5(data = {
 
     const advanced = getAdvancedJudgeSVG(data.advanced_judge, 20, 310)
     const best = '';
-    const statisticsNC = getStatisticsRRect(data.ncStats, data.statistics_max, 400, 60, 500, 22.79)
+    const statisticsNC = getStatisticsRRect(data.ncStats, data.statistics_max, 400, 60, 500)
     const statisticsFC = getStatisticsSVG(data.fcStats, data.statistics_max, 400, 60, 500, 22.79)
 
     const acc = await label_E({...((mode === 'm') ? LABELS.PPACC : LABELS.ACC),
@@ -144,10 +144,10 @@ function getAdvancedJudgeSVG(advanced_judge = 'played', x, y) {
         case "perfect": pf_link = ''; break;
     }
 
-    const pf = getExportFileV3Path(`object-score-perfect${pf_link}.png`);
-    const nm = getExportFileV3Path(`object-score-nomiss${nm_link}.png`);
-    const cl = getExportFileV3Path(`object-score-clear${cl_link}.png`);
-    const pl = getExportFileV3Path(`object-score-play${pl_link}.png`);
+    const pf = getImageFromV3(`object-score-perfect${pf_link}.png`);
+    const nm = getImageFromV3(`object-score-nomiss${nm_link}.png`);
+    const cl = getImageFromV3(`object-score-clear${cl_link}.png`);
+    const pl = getImageFromV3(`object-score-play${pl_link}.png`);
 
     svg += (`<image width="150" height="40" transform="translate(${x + xp} ${y + yp})" xlink:href="${pf}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>\n`
         + `<image width="150" height="40" transform="translate(${x} ${y + yp})" xlink:href="${nm}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>\n`
@@ -167,13 +167,13 @@ function getRingIndexSVG(mode = 'o', x, y, w, h) {
         default: ring_name = 'osu'; break;
     }
 
-    const ring = getExportFileV3Path(`object-score-coloredcircle-${ring_name}.png`);
+    const ring = getImageFromV3(`object-score-coloredcircle-${ring_name}.png`);
 
     return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${ring}"/>`;
 }
 
 function getRingSVG(x, y, w, h) {
-    const index = getExportFileV3Path('object-score-coloredring.png');
+    const index = getImageFromV3('object-score-coloredring.png');
     return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${index}"/>`;
 }
 
@@ -202,7 +202,7 @@ function getMaskSVG(percent = 0, mode = 'o', mx = 0, my = 0, r = 0) {
 }
 
 function getRankSVG(rank = 'XH', x, y) {
-    const path = getExportFileV3Path(`object-score-${rank}.png`);
+    const path = getImageFromV3(`object-score-${rank}.png`);
 
     let mx = 0; //很奇怪，输出明明好好的，但是位置不对
     switch (rank) {
@@ -276,7 +276,7 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, font_h) {
     return svg;
 }
 
-function getStatisticsRRect(stat = [], stat_max = 0, x, y, w, font_h) {
+function getStatisticsRRect(stat = [], stat_max = 0, x, y, w) {
     let svg = '';
 
     stat.forEach((v, i) => {

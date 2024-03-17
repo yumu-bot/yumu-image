@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path,
+    getImageFromV3,
     getDecimals,
     implantImage,
     implantSvgBody,
@@ -81,7 +81,7 @@ export async function card_L(data = {
                 index_b_arr.push(minute + ':');
                 index_m_arr.push(second.toString());
             }
-            card_icon = getExportFileV3Path('object-score-length.png');
+            card_icon = getImageFromV3('object-score-length.png');
         } break;
 
         case 'Combo': {
@@ -93,7 +93,7 @@ export async function card_L(data = {
                 index_b_arr.push(v.toString());
                 index_m_arr.push('x');
             }
-            card_icon = getExportFileV3Path('object-score-combo.png');
+            card_icon = getImageFromV3('object-score-combo.png');
         } break;
 
         case 'Star Rating': {
@@ -105,7 +105,7 @@ export async function card_L(data = {
                 index_b_arr.push(getDecimals(v, 2).toString());
                 index_m_arr.push(getDecimals(v, 3).toString());
             }
-            card_icon = getExportFileV3Path('object-score-beatsperminute.png');
+            card_icon = getImageFromV3('object-score-beatsperminute.png');
         } break;
     }
 

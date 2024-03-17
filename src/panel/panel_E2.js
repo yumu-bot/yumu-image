@@ -1,6 +1,6 @@
 import {
     exportJPEG, getDecimals,
-    getExportFileV3Path,
+    getImageFromV3,
     getGameMode,
     getMapBG, getPanelNameSVG,
     implantImage,
@@ -292,7 +292,7 @@ export async function panel_E2(data = {
     const rank = rank2rank(getApproximateRankSP(data.expected.accuracy, data.expected.miss, data.beatmap.mode, data.expected.mods));
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP), true);
+    const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP));
     const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));
 
@@ -303,7 +303,7 @@ export async function panel_E2(data = {
     svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
 
     // 图片定义
-    const background = getExportFileV3Path('object-score-backimage-' + rank + '.jpg');
+    const background = getImageFromV3('object-score-backimage-' + rank + '.jpg');
     const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', isReload(data.beatmap.ranked));
 
     // 导入图片

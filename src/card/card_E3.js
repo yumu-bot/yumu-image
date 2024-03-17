@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path, getRoundedNumberStr,
+    getImageFromV3, getRoundedNumberStr,
     replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -18,14 +18,14 @@ export async function card_E3(data = {
     fail_percent: 2,
 
     labels: [{
-        icon: getExportFileV3Path("object-score-beatsperminute.png"),
+        icon: getImageFromV3("object-score-beatsperminute.png"),
         icon_title: 'BPM',
         color_remark: '#aaa',
         remark: '-1.64%',
         data_b: '98',
         data_m: '.36%',
     },{
-        icon: getExportFileV3Path("object-score-beatsperminute.png"),
+        icon: getImageFromV3("object-score-beatsperminute.png"),
         icon_title: 'BPM',
         color_remark: '#aaa',
         remark: '7:27',

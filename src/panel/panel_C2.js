@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getExportFileV3Path, getMapBG, getPanelNameSVG,
+    exportJPEG, getImageFromV3, getMapBG, getPanelNameSVG,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
@@ -145,7 +145,7 @@ async function playerData2CardH(p = {}) {
     }
 
     return {
-        background: getExportFileV3Path(pubg),
+        background: getImageFromV3(pubg),
         cover: await readNetImage(p.player.avatar_url, false),
         title: p.player.username || 'UID:' + p.player.id,
         title2: p.player.country.countryCode || '',

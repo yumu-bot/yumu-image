@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path, getRoundedNumberStrLarge,
+    getImageFromV3, getRoundedNumberStrLarge,
     getRoundedNumberStrSmall, implantImage, implantSvgBody,
     readTemplate, replaceText, replaceTexts
 } from "../util/util.js";
@@ -65,7 +65,7 @@ export async function card_B4(data = {
 function getMMBG(rank = 'F') {
     if (rank === 'X+' || rank === 'SS') rank = 'X';
     if (rank === 'S+') rank = 'S';
-    return getExportFileV3Path(`object-score-backimage-${rank}.jpg`)
+    return getImageFromV3(`object-score-backimage-${rank}.jpg`)
 }
 
 function getMMRank (data = 0) {

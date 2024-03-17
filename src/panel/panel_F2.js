@@ -1,6 +1,6 @@
 import {
     exportJPEG,
-    getExportFileV3Path,
+    getImageFromV3,
     getMapBG, getMatchNameSplitted, getNowTimeStamp,
     getPanelNameSVG, getRoundedNumberStr,
     implantImage,
@@ -322,7 +322,7 @@ function getRoundMods(beatmapMods, scoreMods) {
 async function getBeatmapAttr(b = {}, mods = []) {
     if (!b) {
         return {
-            background: getExportFileV3Path('beatmap-DLfailBG.jpg'),
+            background: getImageFromV3('beatmap-DLfailBG.jpg'),
             title: 'Deleted Map',
             artist: '?',
             mapper: '?', //creator

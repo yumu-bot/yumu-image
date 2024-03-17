@@ -42,14 +42,15 @@ export async function card_K(data = {
     // let bp_ranking = data.bp_ranking ?
     //    torus.getTextPath(data.bp_ranking.toString(), 35, 26.795, 30, "center baseline", "#fff") : '';
 
-    let bp_pp;
+    let pp_str;
 
-    if (typeof data.bp_pp === 'string') {
-        bp_pp = data.bp_pp ? torus.getTextPath(data.bp_pp, 35, 45.224, 16, "center baseline", "#fff") : '';
-    } else if (typeof data.bp_pp === 'number') {
-        bp_pp = data.bp_pp ?
-            torus.getTextPath(Math.floor(data.bp_pp).toString() + (data.bp_remark ? data.bp_remark : 'PP'), 35, 45.224, 16, "center baseline", "#fff") : '';
+    if (typeof data?.bp_pp === 'number') {
+        pp_str = Math.floor(data?.bp_pp).toString() + (data?.bp_remark || 'PP');
+    } else {
+        pp_str = data?.bp_pp;
     }
+
+    const bp_pp = torus.getTextPath(pp_str, 35, 45.224, 16, "center baseline", "#fff")
 
     // 定义圆圈
     const circle_sr = data.star_rating ?

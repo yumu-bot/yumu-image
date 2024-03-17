@@ -1,6 +1,6 @@
 import {
     getDecimals,
-    getExportFileV3Path,
+    getImageFromV3,
     getGameMode,
     getRoundedNumberStrLarge, getRoundedNumberStrSmall,
     implantSvgBody, replaceTexts,
@@ -146,7 +146,7 @@ export async function card_E2(data = {
 //顺便把左上角的 personal best 加了
 function getPersonalBestSVG(isBest, x, y) {
     const best_link = (isBest) ? '' : 'default';
-    const image = getExportFileV3Path(`object-score-personalbest${best_link}.png`);
+    const image = getImageFromV3(`object-score-personalbest${best_link}.png`);
 
     return `<image width="40" height="40" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
 }
@@ -169,10 +169,10 @@ function getAdvancedJudgeSVG(advanced_judge = 'played', x, y) {
         case "perfect": pf_link = ''; break;
     }
 
-    const pf = getExportFileV3Path(`object-score-perfect${pf_link}.png`);
-    const nm = getExportFileV3Path(`object-score-nomiss${nm_link}.png`);
-    const cl = getExportFileV3Path(`object-score-clear${cl_link}.png`);
-    const pl = getExportFileV3Path(`object-score-play${pl_link}.png`);
+    const pf = getImageFromV3(`object-score-perfect${pf_link}.png`);
+    const nm = getImageFromV3(`object-score-nomiss${nm_link}.png`);
+    const cl = getImageFromV3(`object-score-clear${cl_link}.png`);
+    const pl = getImageFromV3(`object-score-play${pl_link}.png`);
 
     svg += (`<image width="150" height="40" transform="translate(${x + xp} ${y + yp})" xlink:href="${pf}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>\n`
         + `<image width="150" height="40" transform="translate(${x} ${y + yp})" xlink:href="${nm}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>\n`
@@ -184,7 +184,7 @@ function getAdvancedJudgeSVG(advanced_judge = 'played', x, y) {
 }
 
 function getRingSVG(x, y, w, h) {
-    const index = getExportFileV3Path('object-score-coloredring.png');
+    const index = getImageFromV3('object-score-coloredring.png');
     return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${index}"/>`;
 }
 
@@ -221,13 +221,13 @@ function getRingIndexSVG(mode = 'o', x, y, w, h) {
         default: ring_name = 'osu'; break;
     }
 
-    const ring = getExportFileV3Path(`object-score-coloredcircle-${ring_name}.png`);
+    const ring = getImageFromV3(`object-score-coloredcircle-${ring_name}.png`);
 
     return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${ring}"/>`;
 }
 
 function getRankSVG(rank = 'XH', x, y) {
-    const path = getExportFileV3Path(`object-score-${rank}.png`);
+    const path = getImageFromV3(`object-score-${rank}.png`);
 
     let mx = 0; //很奇怪，输出明明好好的，但是位置不对
     switch (rank) {

@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getExportFileV3Path, getPanelNameSVG,
+    exportJPEG, getImageFromV3, getPanelNameSVG,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
@@ -144,17 +144,17 @@ async function playerData2CardH(p = {}) {
     switch (p.team) {
         case 'red':
             team_color = '#D32F2F';
-            player_background = getExportFileV3Path('card-red.png');
+            player_background = getImageFromV3('card-red.png');
             isTeamVS = true;
             break;
         case 'blue':
             team_color = '#00A0E9';
-            player_background = getExportFileV3Path('card-blue.png');
+            player_background = getImageFromV3('card-blue.png');
             isTeamVS = true;
             break;
         default:
             team_color = '#aaa';
-            player_background = getExportFileV3Path('card-gray.png');
+            player_background = getImageFromV3('card-gray.png');
             isTeamVS = false;
             break;
     }

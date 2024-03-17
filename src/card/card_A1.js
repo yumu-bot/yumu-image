@@ -1,5 +1,5 @@
 import {
-    getExportFileV3Path,
+    getImageFromV3,
     getFlagPath,
     implantImage,
     readTemplate,
@@ -9,9 +9,9 @@ import {torus} from "../util/font.js";
 
 
 export async function card_A1(data = {
-    background: getExportFileV3Path('card-default.png'),
-    avatar: getExportFileV3Path('avatar-guest.png'),
-    sub_icon1: getExportFileV3Path('object-card-supporter.png'),
+    background: getImageFromV3('card-default.png'),
+    avatar: getImageFromV3('avatar-guest.png'),
+    sub_icon1: getImageFromV3('object-card-supporter.png'),
     sub_icon2: '',
     country: null,
 

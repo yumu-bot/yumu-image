@@ -1,5 +1,5 @@
 import moment from "moment";
-import {getExportFileV3Path} from "./util.js";
+import {getImageFromV3} from "./util.js";
 
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
 const bannerTotal = 160; //banner 数量
@@ -125,7 +125,7 @@ export function getMascotPath(mascotname = 'pippi') {
     }
     path = getRandom(mascot_pic_sum_arr[i]);
 
-    return getExportFileV3Path(`Mascots/${mascotname}_${path}.png`);
+    return getImageFromV3(`Mascots/${mascotname}_${path}.png`);
 }
 
 /**
@@ -134,7 +134,7 @@ export function getMascotPath(mascotname = 'pippi') {
  */
 export function getRandomBannerPath() {
     const i = getRandom(bannerTotal)
-    return getExportFileV3Path(`Banner/b${i}.png`);
+    return getImageFromV3(`Banner/b${i}.png`);
 }
 
 /**
@@ -143,7 +143,7 @@ export function getRandomBannerPath() {
  */
 export function getRandomMascotBGPath() {
     const i = getRandom(mascotBGTotal)
-    return getExportFileV3Path(`Background/${i}.png`);
+    return getImageFromV3(`Background/${i}.png`);
 }
 
 //通过 PP 获取玩家颜色（的背景图！pp2Rank
@@ -160,7 +160,7 @@ export function pp2UserBG(pp = 0) {
     else if (pp >= 1000) rank = 'D';
     else rank = 'F';
 
-    return getExportFileV3Path('object-score-backimage-' + rank + '.jpg');
+    return getImageFromV3('object-score-backimage-' + rank + '.jpg');
 }
 
 //获取一个1到目标数的随机整数。如果range小于1，则返回0-1的随机小数。

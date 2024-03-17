@@ -1,4 +1,4 @@
-import {getMapStatusV3Path, implantImage, replaceTexts} from "../util/util.js";
+import {getMapStatusImage, implantImage, replaceTexts} from "../util/util.js";
 import {torus} from "../util/font.js";
 
 export async function card_O2(data = {
@@ -14,7 +14,7 @@ export async function card_O2(data = {
     right1: '',
     right2b: '',
     right2m: '',
-}, reuse = false) {
+}) {
     // 读取模板
     let svg =`
           <defs>
@@ -64,7 +64,7 @@ export async function card_O2(data = {
     svg = replaceTexts(svg, [title1, title2, left1, left2, left3, right1, right2], reg_text);
 
     // 插入背景
-    const status = getMapStatusV3Path(data.map_status || '');
+    const status = getMapStatusImage(data.map_status || '');
     const background = data.background || '';
     svg = data.map_status ? implantImage(svg, 40, 40, 244, 8, 1, status, reg_top_icons) : svg;
     svg = implantImage(svg, 290, 130, 0, 0, 0.6, background, reg_background);
