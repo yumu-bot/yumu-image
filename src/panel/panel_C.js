@@ -3,9 +3,8 @@ import {
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
-    implantSvgBody, readNetImage,
-    readTemplate, replaceBanner,
-    replaceText, transformSvgBody, getPanelHeight
+    implantSvgBody, readTemplate, replaceBanner,
+    replaceText, transformSvgBody, getPanelHeight, getAvatar
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -170,9 +169,11 @@ async function playerData2CardH(p = {}) {
     const pClass = p.playerClass;
     const color_index = (pClass.name === "Strongest Marshal" || pClass.name === "Competent Marshal" || pClass.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
 
+    const avatar = await getAvatar(p.player.avatar_url, true);
+
     return {
         background: player_background,
-        cover: await readNetImage(p.player.avatar_url, false),
+        cover: avatar,
         title: p.player.username || 'UID:' + p.player.id,
         title2: p.player.country.countryCode || '',
         left1: left1,

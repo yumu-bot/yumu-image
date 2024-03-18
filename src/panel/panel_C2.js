@@ -4,9 +4,8 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     implantImage,
-    implantSvgBody, readNetImage,
-    readTemplate,
-    replaceText, transformSvgBody, getPanelHeight
+    implantSvgBody, readTemplate,
+    replaceText, transformSvgBody, getPanelHeight, getAvatar
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -96,7 +95,7 @@ export async function panel_C2(data = {}) {
     svg = replaceText(svg, cardHs, reg_maincard);
 
     // 计算面板高度
-    const panelHeight = getPanelHeight(dataArr.length, 110, 2, 290, 40, 40);
+    const panelHeight = getPanelHeight(dataArr?.length, 110, 2, 290, 40, 40);
     const cardHeight = panelHeight - 290;
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
@@ -135,26 +134,28 @@ async function playerData2CardH(p = {}) {
         default: pubg = 'object-score-backimage-F.jpg'; break;
     }
 
+    const avatar = await getAvatar(p.player.avatar_url, true);
+
     return {
         background: getImageFromV3(pubg),
-        cover: await readNetImage(p.player.avatar_url, false),
-        title: p.player.username || 'UID:' + p.player.id,
-        title2: p.player.country.countryCode || '',
+        cover: avatar,
+        title: p?.player?.username || 'UID:' + p.player.id,
+        title2: p?.player?.country?.countryCode || '',
         left1: left1,
         left2: left2,
-        index_b: getRoundedNumberStrLarge(p.mra, 3),
-        index_m: getRoundedNumberStrSmall(p.mra, 3),
+        index_b: getRoundedNumberStrLarge(p?.mra, 3),
+        index_m: getRoundedNumberStrSmall(p?.mra, 3),
         index_b_size: 48,
         index_m_size: 36,
         label1: '',
         label2: '',
-        label3: pClass.name,
-        label4: pClass.nameCN,
+        label3: pClass?.name,
+        label4: pClass?.nameCN,
         mods_arr: [],
 
         color_title2: '#aaa',
-        color_right: pClass.color,
-        color_left: pClass.color,
+        color_right: pClass?.color,
+        color_left: pClass?.color,
         color_index: color_index,
         color_label1: '',
         color_label2: '',
