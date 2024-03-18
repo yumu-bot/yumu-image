@@ -421,7 +421,7 @@ export async function label_C1(data = {
   </defs>
   <g id="Avatar_LC1">
     <circle cx="50" cy="50" r="50" style="fill: #46393f;"/>
-    <g style="clip-path: url(#clippath-LF1-1);">
+    <g style="clip-path: url(#clippath-LC1-1);">
     </g>
   </g>
   <g id="Mods_LC1">
@@ -446,7 +446,7 @@ export async function label_C1(data = {
         return PanelDraw.Circle(x, 90, 10, mod_color);
     }
 
-    let mods_arr = data.mods_arr || ['']
+    let mods_arr = data?.mods_arr || ['']
     let mods_arr_length = mods_arr.length;
 
     mods_arr.forEach((val, i) => {
@@ -472,17 +472,16 @@ export async function label_C1(data = {
     svg = replaceText(svg, label_color, reg_label);
 
     //插入图片，如果输了就变灰
-    let isWin = data.isWin;
-    let opa = 1;
-    if (!isWin) opa = 0.3;
+    const opacity = data?.isWin ? 1 : 0.3;
+    const avatar = await getAvatar(data.avatar, false);
 
-    svg = implantImage(svg, 100, 100, 0, 0, opa, data.avatar || getImageFromV3('avatar-guest.png'), reg_avatar);
+    svg = implantImage(svg, 100, 100, 0, 0, opacity, avatar, reg_avatar);
 
     return svg.toString();
 }
 
 export async function label_C2(data = {
-    avatar: 'avatar-guest.png',
+    avatar: '',
     name: 'Guozi on osu',
     mods_arr: [], //这个用不到
     score: 268397,
@@ -501,7 +500,7 @@ export async function label_C2(data = {
   </defs>
   <g id="Avatar_LC2">
     <circle cx="15" cy="15" r="15" style="fill: #46393f;"/>
-    <g style="clip-path: url(#clippath-LF2-1);">
+    <g style="clip-path: url(#clippath-LC2-1);">
     </g>
   </g>
   <g id="Label_LC2">
@@ -533,18 +532,17 @@ export async function label_C2(data = {
     svg = replaceText(svg, label_color, reg_label);
 
     //插入图片，如果输了就变灰
-    let isWin = data.isWin;
-    let opa = 1;
-    if (!isWin) opa = 0.3;
+    const opacity = data?.isWin ? 1 : 0.3;
+    const avatar = await getAvatar(data.avatar, false);
 
     //插入图片
-    svg = implantImage(svg, 30, 30, 0, 0, opa, data.avatar || getImageFromV3('avatar-guest.png'), reg_avatar);
+    svg = implantImage(svg, 30, 30, 0, 0, opacity, avatar, reg_avatar);
 
     return svg.toString();
 }
 
 export async function label_C3(data = {
-    avatar: 'avatar-guest.png',
+    avatar: '',
     isWin: true,
 
 }) {
@@ -556,7 +554,7 @@ export async function label_C3(data = {
   </defs>
   <g id="Avatar_LC3">
     <circle cx="15" cy="15" r="15" style="fill: #46393f;"/>
-    <g style="clip-path: url(#clippath-LF3-1);">
+    <g style="clip-path: url(#clippath-LC3-1);">
     </g>
   </g>`
 
@@ -564,11 +562,10 @@ export async function label_C3(data = {
     let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LC3-1\);">)/;
 
     //插入图片，如果输了就变灰
-    let isWin = data.isWin;
-    let opa = 1;
-    if (!isWin) opa = 0.3;
+    const opacity = data?.isWin ? 1 : 0.3;
+    const avatar = await getAvatar(data.avatar, false);
 
-    svg = implantImage(svg, 30, 30, 0, 0, opa, data.avatar || getImageFromV3('avatar-guest.png'), reg_avatar);
+    svg = implantImage(svg, 30, 30, 0, 0, opacity, avatar, reg_avatar);
 
     return svg.toString();
 }
