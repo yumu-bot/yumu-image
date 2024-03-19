@@ -922,8 +922,8 @@ export function getGameMode(mode = '', level = 0) {
                 break;
             }
         }
-    } else if (mode !== '') {
-        modeStr = (mode + '').toLowerCase();
+    } else if (typeof mode == "string") {
+        modeStr = mode.toString().toLowerCase();
     }
 
     switch (level) {

@@ -205,9 +205,9 @@ export function delMod(modInt = 0, mod = '') {
 }
 
 //计算近似V3分数，奖励分没法算
-export function getV3Score(v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gamemode = 'osu', miss = 0,) {
+export function getV3Score(acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gamemode = 'osu', miss = 0) {
 
-    let score = 0;
+    let score;
     let mode = getGameMode(gamemode, 1);
     let modBonus = [];
     let bonus = 1;
@@ -240,14 +240,12 @@ export function getV3Score(v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods
         case 'm' : { //骂娘不需要转换
             //骂娘的acc是 x^(2+2x)，非常陡峭的函数
 
-            //modBonus = ModBonusMANIA;
-            //comboRate = 0.01;
-            //accRate = 0.99;
-            //accIndex = 10;
+            modBonus = ModBonusMANIA;
+            comboScore = 10000;
+            accScore = 990000;
+            accIndex = 10;
 
-            return v1score;
-        }
-            break;
+        } break;
     }
 
     //主计算
@@ -302,7 +300,7 @@ export function getV3Score(v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods
 
     }
 
-    //获取连击指数，if n=1, f(n)=ln2, if n<=400, f(n)=ln(n), if n>400, f(n)=ln(400)，约等于6
+    //v3 获取连击指数，if n=1, f(n)=ln2, if n<=400, f(n)=ln(n), if n>400, f(n)=ln(400)，约等于6
     function getComboIndex(n = 0) {
         if (n > 400) {
             return log4(400);

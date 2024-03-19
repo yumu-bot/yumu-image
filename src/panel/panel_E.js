@@ -21,7 +21,7 @@ import {card_E2} from "../card/card_E2.js";
 import {card_E3} from "../card/card_E3.js";
 import {card_E4} from "../card/card_E4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
+import {getModInt, getV3Score, hasAnyMod, hasMod} from "../util/mod.js";
 import {getApproximateRank, hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
@@ -374,10 +374,12 @@ async function score2CardE2(score, calcPP) {
     const isPF = score.rank === 'XH' || score.rank === 'X';
     const isBest = (score.best_id > 0);
 
+    const scoreStr = (score?.score && score.score > 0) ? score.score : getV3Score(score.accuracy, score.max_combo, score.beatmap.max_combo, score.mods, score.mode, score.statistics.count_miss)
+
     return {
         rank: score.rank || 'F',
         mods: score.mods || [],
-        score: score.score || 0,
+        score: scoreStr,
         accuracy: score.accuracy || 0,
         combo: score.max_combo || 0,
         pp: calcPP.pp || 0,
@@ -385,7 +387,7 @@ async function score2CardE2(score, calcPP) {
 
         advanced_judge: score2AdvancedJudge(score), //进阶评级，也就是面板圆环下面那个玩意
         acc_index: score2AccIndex(score),
-        max_combo: calcPP.attr.maxCombo || 0,
+        max_combo: score?.beatmap?.max_combo || calcPP.attr.maxCombo || 0,
         full_pp: calcPP.full_pp || 0,
         max_pp: calcPP.perfect_pp || 0,
         statistics: score2Statistics(score),
