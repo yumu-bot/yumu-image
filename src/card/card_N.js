@@ -7,8 +7,7 @@ import {
     getRoundedNumberStrSmall,
     getTimeDifference,
     implantImage,
-    implantSvgBody, readNetImage,
-    replaceText, replaceTexts,
+    implantSvgBody, replaceText, replaceTexts, getAvatar,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
@@ -115,7 +114,7 @@ export async function card_N(data = {
     //导入背景和头像
 
     const rank = getImageFromV3('object-score-' + data.score.rank + '-small.png');
-    const avatar = await readNetImage(data.score.user.avatar_url, false, getImageFromV3('avatar-guest.png'));
+    const avatar = await getAvatar(data.score.user.avatar_url, true);
     const background = getImageFromV3('object-score-backimage-' + data.score.rank + '.jpg');
 
     //await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));

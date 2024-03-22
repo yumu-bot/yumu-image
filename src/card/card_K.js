@@ -65,7 +65,7 @@ export async function card_K(data = {
     svg = replaceText(svg, circle_sr, reg_overlay);
     svg = replaceText(svg, circle_rank, reg_overlay);
 
-    const bg = await readNetImage(data.map_background, false);
+    const bg = await readNetImage(data.map_background, true);
 
     svg = implantImage(svg,70,50,0,0,0.5, bg, reg_background);
 

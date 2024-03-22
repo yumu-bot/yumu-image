@@ -65,8 +65,8 @@ export async function router_svg(req, res) {
  * @return {Promise<any>}
  */
 export async function panel_Beta(score) {
-    const url_avatar = await getAvatar(score?.user?.avatar_url);
-    const url_bg = await getDiffBG(score.beatmap.id, score.beatmapset.id, 'list@2x', hasLeaderBoard(score.beatmap.ranked));
+    const avatar = await getAvatar(score?.user?.avatar_url, true);
+    const bg = await getDiffBG(score.beatmap.id, score.beatmapset.id, 'list@2x', hasLeaderBoard(score.beatmap.ranked));
 
     const mode_int = score.mode_int;
     const mods = score.mods;
@@ -148,8 +148,8 @@ export async function panel_Beta(score) {
     }
 
     {// image
-        searchObject(getSvgById(svg, "avatar"), () => true).image["$xlink:href"] = url_avatar;
-        searchObject(getSvgById(svg, "bg"), () => true).image["$xlink:href"] = url_bg;
+        searchObject(getSvgById(svg, "avatar"), () => true).image["$xlink:href"] = avatar;
+        searchObject(getSvgById(svg, "bg"), () => true).image["$xlink:href"] = bg;
     }
 
     {// mods

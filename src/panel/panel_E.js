@@ -325,6 +325,9 @@ export async function panel_E(data = {
 
     const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, hasLeaderBoard(data.score.beatmap.ranked));
 
+    // 图片定义
+    const background = getImageFromV3('object-score-backimage-' + (data?.score?.rank || getApproximateRank(data?.score)) + '.jpg');
+    const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked));
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
@@ -340,10 +343,6 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
     svg = implantSvgBody(svg, 0, 0, cardE4, reg_card_e4);
 
-    // 图片定义
-    const background = getImageFromV3('object-score-backimage-' + (data?.score?.rank || getApproximateRank(data?.score)) + '.jpg');
-    const banner = await getDiffBG(data.score.beatmap.id, data.score.beatmapset.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked));
-
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
@@ -353,9 +352,10 @@ export async function panel_E(data = {
 
 async function score2CardE1(score, calcPP) {
     return {
+        ranked: score?.beatmap?.ranked || 0,
         mode: score.mode || 'osu',
         star: calcPP.attr.stars || 0,
-        cover: score.beatmapset.covers.list,
+        cover: score.beatmapset.covers['list@2x'],
         title: score.beatmapset.title || '',
         title_unicode: score.beatmapset.title_unicode || '',
         version: score.beatmap.version || '',
@@ -404,8 +404,7 @@ async function score2CardE3(score, calcPP) {
     const score_progress = (score.rank === 'F') ? calcPP.score_progress : 1;
 
     return {
-        density_arr: await getDensityArray(score.beatmap.id, score.mode,
-            !(score.beatmap.ranked && (score.beatmap.ranked === 1 || score.beatmap.ranked === 2 || score.beatmap.ranked === 4))),
+        density_arr: await getDensityArray(score.beatmap.id, score.mode, hasLeaderBoard(score?.beatmap?.ranked)),
         retry_arr: score.beatmap.retryList || [],
         fail_arr: score.beatmap.failList || [],
 

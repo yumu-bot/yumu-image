@@ -3,9 +3,8 @@ import {
     getDecimals,
     getImageFromV3,
     getGameMode, getMapBG,
-    implantImage, readNetImage,
-    readTemplate,
-    replaceTexts,
+    implantImage, readTemplate,
+    replaceTexts, getAvatar, getCover,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
 import {calcPerformancePoints} from "../util/compute-pp.js";
@@ -117,8 +116,8 @@ export async function panel_Gamma(data = {
 
 const PanelGamma = {
     infoVersion: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getImageFromV3('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
+        const background = await getCover(user?.cover_url, true);
+        const avatar = await getAvatar(user?.avatar_url, true);
 
         return {
             background: background,

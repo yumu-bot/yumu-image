@@ -160,7 +160,7 @@ function hasRemain(i = 0) {
 }
 
 async function pool2cardA2(data, map_count = 0, mod_count = 0) {
-    const background = await getMapBG(data.firstMapSID, 'cover', false) || getRandomBannerPath();
+    const background = data?.firstMapSID ? await getMapBG(data.firstMapSID, 'cover', false) : getRandomBannerPath();
 
     const title1 = data.name || '';
     const title3 = data.categoryList ? data.categoryList[0].category ? 'creator: ' + data.categoryList[0].category[0].creater : 'creator?' : '';

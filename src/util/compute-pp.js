@@ -18,8 +18,8 @@ const stat = {
     mods_int: 0,
 }
 
-export async function getMapAttributes(bid, mod_int, mode_int = 0, reload = false) {
-    const osuFilePath = await getOsuFilePath(bid, getGameMode(mode_int), reload);
+export async function getMapAttributes(bid, mod_int, mode_int = 0, hasLeaderBoard = true) {
+    const osuFilePath = await getOsuFilePath(bid, getGameMode(mode_int), hasLeaderBoard);
     const beatMap = new Beatmap({
         path: osuFilePath,
     });
@@ -33,13 +33,13 @@ export async function getMapAttributes(bid, mod_int, mode_int = 0, reload = fals
 }
 
 //计算谱面的参数
-export async function calcMap(bid, statistics = stat, mode, reload = false) {
+export async function calcMap(bid, statistics = stat, mode, hasLeaderBoard = true) {
     const mode_int = statistics.mods_int ? getGameMode(statistics.mods_int, -2) :
         (mode ? getGameMode(mode, -2) : 1);
     const mode_name = mode ? getGameMode(mode, 0) :
         (statistics.mods_int ? getGameMode(statistics.mods_int, 0) : 'osu');
 
-    const osuFilePath = await getOsuFilePath(bid, mode_name, reload);
+    const osuFilePath = await getOsuFilePath(bid, mode_name, hasLeaderBoard);
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
@@ -149,7 +149,7 @@ const calcPP = {
  */
 
 //主计算 calcPP
-export async function calcPerformancePoints(bid, statistics = stat, mode, reload = false) {
+export async function calcPerformancePoints(bid, statistics = stat, mode, hasLeaderBoard = true) {
     let mode_int;
     if (statistics.mode_int === void 0) {
         mode_int = getGameMode(mode, -2);
@@ -159,7 +159,7 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
     const mode_name = mode ? getGameMode(mode, 0) :
         (statistics.mode_int ? getGameMode(statistics.mode_int, 0) : 'osu');
 
-    const osuFilePath = await getOsuFilePath(bid, mode_name, reload);
+    const osuFilePath = await getOsuFilePath(bid, mode_name, hasLeaderBoard);
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
@@ -249,7 +249,7 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
 
     const perfect_pp = calculator.performance(beatMap);
 
-    const score_progress = await getScoreProgress(bid, statistics, mode, reload);
+    const score_progress = await getScoreProgress(bid, statistics, mode, hasLeaderBoard);
 
     return {
         pp: now_pp.pp,
@@ -264,19 +264,19 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, reload
 
 }
 
-async function getOsuFilePath(bid, mode, reload = false) {
+async function getOsuFilePath(bid, mode, hasLeaderBoard = true) {
     //mode = mode ? mode.toLowerCase() : 'osu';
     const filePath = `${OSU_BUFFER_PATH}/${bid}.osu`;
 
     try {
-        if (!reload) {
+        if (hasLeaderBoard) {
             fs.accessSync(filePath);
         }
     } catch (e) {
-        reload = true;
+        hasLeaderBoard = false;
     }
 
-    if (reload) {
+    if (hasLeaderBoard === false) {
         let data = await axios.get(`https://osu.ppy.sh/osu/${bid}`);
         if (data.status === 200) {
             fs.writeFileSync(filePath, data.data, {flag: 'w'});
@@ -287,8 +287,8 @@ async function getOsuFilePath(bid, mode, reload = false) {
     return filePath;
 }
 
-export async function getDensityArray(bid, mode, reload) {
-    const timeList = await getHitObjectTimeList(bid, mode, reload);
+export async function getDensityArray(bid, mode, hasLeaderBoard) {
+    const timeList = await getHitObjectTimeList(bid, mode, hasLeaderBoard);
 
     const arrayLength = 26;
     const dataList = new Array(arrayLength).fill(0);
@@ -311,10 +311,10 @@ export async function getDensityArray(bid, mode, reload) {
 }
 
 //根据分数返回玩家目前的进度
-export async function getScoreProgress(bid, statistics, mode, reload) {
+export async function getScoreProgress(bid, statistics, mode, hasLeaderBoard) {
     mode = getGameMode(mode, 0);
     const statTotal = await getStatisticsTotal(bid, statistics, mode);
-    const timeList = await getHitObjectTimeList(bid, mode, reload);
+    const timeList = await getHitObjectTimeList(bid, mode, hasLeaderBoard);
     const length = timeList.length;
 
     const startTime = timeList[0] || 0;
@@ -335,8 +335,8 @@ export async function getScoreProgress(bid, statistics, mode, reload) {
     return progress;
 }
 
-async function getHitObjectTimeList(bid, mode, reload) {
-    const filePath = await getOsuFilePath(bid, mode, reload);
+async function getHitObjectTimeList(bid, mode, hasLeaderBoard) {
+    const filePath = await getOsuFilePath(bid, mode, hasLeaderBoard);
     const input = fs.createReadStream(filePath);
     const rl = readline.createInterface({
         input: input,

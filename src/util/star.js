@@ -157,7 +157,7 @@ export const getApproximateRank = (score = {
 }
 
 /**
- * 根据谱面的上架状态决定谱面文件和背景是否需要缓存
+ * 谱面是否有榜
  * @param ranked
  * @return {boolean} 谱面是否有榜
  */

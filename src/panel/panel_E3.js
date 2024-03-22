@@ -204,6 +204,7 @@ export async function panel_E3(data = {
 
 async function beatmap2CardE1(beatmap, mode, calcPP) {
     return {
+        ranked: beatmap?.ranked || 0,
         mode: mode || 'osu',
         star: calcPP.attr.stars || 0,
         cover: beatmap.beatmapset.covers["list@2x"],
@@ -369,8 +370,7 @@ async function beatmap2CardE3(beatmap, rank, calcPP) {
     const pass_arr = beatmap2PassPercents(beatmap);
 
     return {
-        density_arr: await getDensityArray(beatmap.id, beatmap.mode,
-            !(beatmap.ranked && (beatmap.ranked === 1 || beatmap.ranked === 2 || beatmap.ranked === 4))),
+        density_arr: await getDensityArray(beatmap.id, beatmap.mode, hasLeaderBoard(beatmap.ranked)),
         retry_arr: beatmap.retryList || [],
         fail_arr: beatmap.failList || [],
 

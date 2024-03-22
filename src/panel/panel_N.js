@@ -1,5 +1,5 @@
 import {
-    exportJPEG,
+    exportJPEG, getAvatar,
     getImageFromV3,
     getPanelNameSVG,
     getRoundedNumberStr,
@@ -145,7 +145,8 @@ export async function panel_N(
     svg = replaceText(svg, genre, reg_genre);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920, 320, 0, 0, 0.8, await readNetImage(data?.beatmapset?.covers?.["cover@2x"], false), reg_banner);
+    const cover = await readNetImage(data?.beatmapset?.covers?.cover, true);
+    svg = implantImage(svg,1920, 320, 0, 0, 0.8, cover, reg_banner);
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_beatmap_A2);
     svg = implantSvgBody(svg, 60, 350, cardO1, reg_me);
 
@@ -338,7 +339,7 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LN1\);">)/;
 
     //定义文本
-    const avatar = await readNetImage(u?.avatar_url, false, getImageFromV3('avatar-guest.png'));
+    const avatar = await getAvatar(u?.avatar_url, true);
     const abbr_color = u?.profile_colour || 'none';
 
     //获取用户组或者玩家组简称
@@ -400,7 +401,6 @@ async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LN2-1\);">)/;
 
     //定义文本，限宽 40
-
     const name_str = torus.cutStringTail(u?.username || ('ID:' + (u?.id || 0)), 18, Math.max(max_width - 46 - 15, 40));
     const name_length = torus.getTextWidth(name_str, 18);
     const name = torus.getTextPath(name_str, 46, 14, 18, 'left baseline', '#fff');
@@ -422,7 +422,8 @@ async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row
     svg = replaceText(svg, label_type, reg_label);
 
     //插入图片
-    svg = implantImage(svg, 40, 40, 0, 0, 1, await readNetImage(u?.avatar_url, false, getImageFromV3('avatar-guest.png')), reg_avatar);
+    const avatar = await getAvatar(u?.avatar_url, true);
+    svg = implantImage(svg, 40, 40, 0, 0, 1, avatar, reg_avatar);
 
     return transformSvgBody(x, y, svg.toString());
 }
@@ -453,7 +454,8 @@ async function label_N3(u = {}) {
     svg = replaceText(svg, label_color, reg_label);
 
     //插入图片
-    svg = implantImage(svg, 45, 45, 0, 0, 1, await readNetImage(u?.avatar_url, false, getImageFromV3('avatar-guest.png')), reg_avatar);
+    const avatar = await getAvatar(u?.avatar_url, true);
+    svg = implantImage(svg, 45, 45, 0, 0, 1, avatar, reg_avatar);
 
     return svg.toString();
 }
@@ -492,7 +494,8 @@ async function label_N4(u = {}) {
     svg = replaceText(svg, label_color, reg_label);
 
     //插入图片
-    svg = implantImage(svg, 70, 70, 13, 0, 1, await readNetImage(u?.avatar_url, false, getImageFromV3('avatar-guest.png')), reg_avatar);
+    const avatar = await getAvatar(u?.avatar_url, true);
+    svg = implantImage(svg, 70, 70, 13, 0, 1, avatar, reg_avatar);
 
     return svg.toString();
 }

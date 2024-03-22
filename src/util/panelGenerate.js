@@ -10,7 +10,7 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage, getAvatar,
+    readNetImage, getAvatar, getCover,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, getApproximateStarRating, hasLeaderBoard, rankSS2X} from "./star.js";
@@ -36,13 +36,8 @@ export const PanelGenerate = {
         }
 
 
-        let background;
-        if (user?.profile?.card) {
-            background = user.profile.card;
-        } else {
-            background = await readNetImage(user?.cover_url || user?.cover?.url, false, getImageFromV3('card-default.png'))
-        }
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
+        const background = user?.profile?.card || await getCover(user?.cover_url, true);
+        const avatar = await getAvatar(user?.avatar_url, true);
 
         const sub_icon1 = user?.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
@@ -81,8 +76,8 @@ export const PanelGenerate = {
     },
 
     mapper2CardA1: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getImageFromV3('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
+        const background = await getCover(user?.cover_url, true);
+        const avatar = await getAvatar(user?.avatar_url, true);
 
         const sub_icon1 = user.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
@@ -110,23 +105,24 @@ export const PanelGenerate = {
         };
     },
 
-    microUser2CardA1: async (microUser) => {
-        const background = await readNetImage(microUser?.cover_url || microUser?.cover?.url, false, getImageFromV3('card-default.png'));
-        const avatar = await readNetImage(microUser?.avatar_url || microUser?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
-        const sub_icon1 = microUser.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
+    microUser2CardA1: async (user) => {
+        const background = await getCover(user?.cover_url, true);
+        const avatar = await getAvatar(user?.avatar_url, true);
 
-        const country = microUser?.country_code || 'CN';
+        const sub_icon1 = user.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
 
-        const left1 = microUser.statistics.global_rank ? '#' + microUser.statistics.global_rank : '#0';
-        const left2 = country + (microUser.statistics.country_rank ? '#' + microUser.statistics.country_rank : '#-'); //microUser 没有country rank
+        const country = user?.country_code || 'CN';
 
-        const isBot = microUser.is_bot;
-        const level = microUser?.statistics?.level_current || 0;
-        const progress = microUser?.statistics?.level_progress || 0;
-        const acc = getRoundedNumberStr(microUser?.statistics?.hit_accuracy, 3) || 0;
+        const left1 = user.statistics.global_rank ? '#' + user.statistics.global_rank : '#0';
+        const left2 = country + (user.statistics.country_rank ? '#' + user.statistics.country_rank : '#-'); //microUser 没有country rank
+
+        const isBot = user.is_bot;
+        const level = user?.statistics?.level_current || 0;
+        const progress = user?.statistics?.level_progress || 0;
+        const acc = getRoundedNumberStr(user?.statistics?.hit_accuracy, 3) || 0;
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
-        const right3b = isBot ? '' : (microUser?.statistics?.pp ? Math.round(microUser.statistics.pp).toString() : '');
-        const right3m = isBot ? 'Bot' : (microUser?.statistics?.pp ? 'PP' : 'AFK');
+        const right3b = isBot ? '' : (user?.statistics?.pp ? Math.round(user.statistics.pp).toString() : '');
+        const right3m = isBot ? 'Bot' : (user?.statistics?.pp ? 'PP' : 'AFK');
 
         return {
             background,
@@ -136,7 +132,7 @@ export const PanelGenerate = {
 
             country: country,
 
-            top1: microUser?.username,
+            top1: user?.username,
             left1: left1,
             left2: left2,
             right1: '',
@@ -148,54 +144,7 @@ export const PanelGenerate = {
 
 
     //panel F2 用的转换
-    score2CardA1: async (score = {
-        accuracy: 0.9329874621703416,
-        timestamp: null,
-        mode: 'OSU',
-        mods: [ 'NF', 'HD' ],
-        passed: true,
-        perfect: false,
-        pp: null,
-        rank: 'F',
-        replay: false,
-        score: 363522,
-        user: {
-            id: 10436444,
-            pmOnly: false,
-            avatar_url: 'https://a.ppy.sh/10436444?1675267430.jpeg',
-            default_group: 'default',
-            is_active: true,
-            is_bot: false,
-            is_deleted: false,
-            is_online: false,
-            is_supporter: true,
-            last_visit: [Array],
-            pm_friends_only: false,
-            username: 'No rank',
-            country_code: 'CN',
-            country: [Object]
-        },
-
-        statistics: {
-            count_50: 10,
-            count_100: 53,
-            count_300: 700,
-            count_geki: 92,
-            count_katu: 37,
-            count_miss: 8
-        },
-        type: 'legacy_match_score',
-        best_id: null,
-        id: null,
-        max_combo: 452,
-        mode_int: 0,
-        user_id: 10436444,
-        match: { slot: 5, team: 'red', pass: true },
-        user_name: 'No rank',
-
-        total_score : 4,
-        total_player : 12,
-    }) => {
+    score2CardA1: async (score) => {
         if (!score) return '';
 
         const player_score = score.score || 0;
@@ -218,7 +167,7 @@ export const PanelGenerate = {
         }
 
         const background = getImageFromV3(bg_str);
-        const avatar = await getAvatar(score?.user?.avatar_url);
+        const avatar = await getAvatar(score?.user?.avatar_url, false);
         const country = score?.user?.country?.code || 'CN';
 
         const top1 = score?.user?.username || score?.user_name || 'Unknown';
@@ -358,186 +307,8 @@ export const PanelGenerate = {
 
 
 
-    beatMapSet2CardA2: async (s = {
-        artist: 'Wang Rui',
-        covers: {
-            cover: 'https://assets.ppy.sh/beatmaps/1087774/covers/cover.jpg?1646464034',
-            'cover@2x': 'https://assets.ppy.sh/beatmaps/1087774/covers/cover@2x.jpg?1646464034',
-            card: 'https://assets.ppy.sh/beatmaps/1087774/covers/card.jpg?1646464034',
-            'card@2x': 'https://assets.ppy.sh/beatmaps/1087774/covers/card@2x.jpg?1646464034',
-            list: 'https://assets.ppy.sh/beatmaps/1087774/covers/list.jpg?1646464034',
-            'list@2x': 'https://assets.ppy.sh/beatmaps/1087774/covers/list@2x.jpg?1646464034',
-            slimcover: 'https://assets.ppy.sh/beatmaps/1087774/covers/slimcover.jpg?1646464034',
-            'slimcover@2x': 'https://assets.ppy.sh/beatmaps/1087774/covers/slimcover@2x.jpg?1646464034'
-        },
-        creator: 'Muziyami',
-        nsfw: false,
-        offset: 0,
-        source: '小女花不弃',
-        spotlight: false,
-        status: 'ranked',
-        title: 'Tao Hua Xiao',
-        video: false,
-        ranked: 1,
-        storyboard: true,
-        tags: 'peach blossom cpop c-pop pop chinese 古风 oriental bilibili cover rearrangement 纳兰寻风 na lan xun feng 西门振 xi men zhen 青萝子 qing luo zi op opening xiao nv hua bu qi i will never let you go houshou hari dacaigou kisaki dahkjdas -ovo-',
-        converts: [
-            [Object], [Object], [Object],
-            [Object], [Object], [Object],
-            [Object], [Object], [Object],
-            [Object], [Object], [Object],
-            [Object], [Object], [Object],
-            [Object], [Object], [Object],
-            [Object], [Object], [Object]
-        ],
-        description: {
-            description: ""
-        },
-        genre: { id: 5, name: 'Pop' },
-        language: { id: 4, name: 'Chinese' },
-        ratings: [
-            0, 7, 4, 0,  3,
-            1, 1, 7, 3, 41,
-            270
-        ],
-        mappers: [
-            [Object], [Object],
-            [Object], [Object],
-            [Object], [Object],
-            [Object]
-        ],
-        nominators: [ [Object] ],
-        publicRating: 9.43620178041543,
-        sid: 1087774,
-        bpm: 162,
-        artist_unicode: '汪睿',
-        favourite_count: 404,
-        id: 1087774,
-        play_count: 200243,
-        preview_url: '//b.ppy.sh/preview/1087774.mp3',
-        title_unicode: '桃花笑',
-        user_id: 7003013,
-        can_be_hyped: false,
-        discussion_locked: false,
-        is_scoreable: true,
-        last_updated: 1646464010,
-        legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1005413',
-        nominations_summary: { current: 4, required: 4 },
-        ranked_date: 1647193324,
-        submitted_date: 1577976073,
-        availability: { download_disabled: false, more_information: null },
-        beatmaps: [
-            [Object], [Object],
-            [Object], [Object],
-            [Object], [Object],
-            [Object], [Object],
-            [Object], [Object],
-            [Object]
-        ],
-        current_nominations: [ [Object], [Object], [Object], [Object] ],
-        pack_tags: [ 'S1152' ],
-        recent_favourites: [
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object],
-            [Object], [Object]
-        ],
-        related_users: [
-            [Object], [Object],
-            [Object], [Object],
-            [Object], [Object],
-            [Object], [Object]
-        ],
-        user: {
-            id: 7003013,
-            username: 'Muziyami',
-            discord: 'YumeMuzi#5619',
-            interests: 'yuyuko❤',
-            location: 'China',
-            occupation: 'Elite Graveyarded Mapper',
-            twitter: 'YumeMuzi',
-            website: 'https://github.com/YumeMuzi',
-            badges: [Array],
-            monthlyPlaycounts: [Array],
-            page: [Object],
-            replaysWatchedCounts: [Array],
-            PP: 6196.65,
-            active: true,
-            uid: 7003013,
-            bot: false,
-            osuMode: 'OSU',
-            pp: 6196.65,
-            playCount: 23831,
-            countryRank: 680,
-            levelProgress: 48,
-            levelCurrent: 100,
-            totalHits: 8890988,
-            playTime: 2347198,
-            accuracy: 99.0353,
-            globalRank: 36155,
-            maxCombo: 2801,
-            deleted: false,
-            online: false,
-            commentsCount: 682,
-            supporter: false,
-            avatar_url: 'https://a.ppy.sh/7003013?1704285435.jpeg',
-            country_code: 'CN',
-            default_group: 'default',
-            is_active: true,
-            is_bot: false,
-            is_deleted: false,
-            is_online: false,
-            is_supporter: false,
-            last_visit: 1706131787,
-            pm_friends_only: false,
-            cover_url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg',
-            has_supported: true,
-            join_date: 1440765767,
-            max_blocks: 100,
-            max_friends: 500,
-            playmode: 'osu',
-            playstyle: [Array],
-            post_count: 252,
-            profile_order: [Array],
-            country: [Object],
-            cover: [Object],
-            kudosu: [Object],
-            account_history: [],
-            active_tournament_banners: [],
-            beatmap_playcounts_count: 6892,
-            comments_count: 682,
-            favourite_beatmapset_count: 85,
-            follower_count: 505,
-            graveyard_beatmapset_count: 113,
-            groups: [],
-            guest_beatmapset_count: 26,
-            loved_beatmapset_count: 0,
-            mapping_follower_count: 61,
-            nominated_beatmapset_count: 0,
-            pending_beatmapset_count: 3,
-            previous_usernames: [Array],
-            rank_highest: [Object],
-            ranked_beatmapset_count: 4,
-            scores_best_count: 100,
-            scores_first_count: 0,
-            scores_pinned_count: 3,
-            scores_recent_count: 0,
-            statistics: [Object],
-            support_level: 0,
-            user_achievements: [Array],
-            rank_history: [Object]
-        }
-    }) => {
-        const background = await readNetImage(s?.covers["card@2x"], hasLeaderBoard(s?.ranked));
+    beatMapSet2CardA2: async (s ) => {
+        const background = await readNetImage(s?.covers?.cover, hasLeaderBoard(s?.ranked));
         const map_status = s?.status;
         const title1 = s?.title_unicode;
         const title2 = s?.artist_unicode;
@@ -571,8 +342,8 @@ export const PanelGenerate = {
     },
 
     matchBeatmap2CardA2: async (b) => {
+        const background = await readNetImage(b?.beatmapset?.covers.cover, true);
 
-        const background = await readNetImage(b?.beatmapset?.covers['cover'], false);
         const title1 = b?.beatmapset?.title || 'Deleted Beatmap';
         const title2 = b?.beatmapset?.artist || '-';
         const title3 = b?.beatmapset?.creator || '-';
@@ -627,7 +398,8 @@ export const PanelGenerate = {
     },
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
-        const background = cursor ? await getMapBG(cursor?.id, 'list@2x', false) : await readNetImage(first_beatmapset.covers['list@2x'], false, getImageFromV3('card-default.png'));
+        const background = cursor ?
+            await getMapBG(cursor?.id, 'list', true) : await readNetImage(first_beatmapset.covers?.list, true);
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
@@ -758,8 +530,8 @@ export const PanelGenerate = {
 
 //给panel_A5用的，期待可以和上面合并
     score2CardH: async (s, calcPP, rank = 1) => {
-        const cover = await readNetImage(s?.beatmapset?.covers?.list, hasLeaderBoard(s.ranked));
-        const background = await readNetImage(s?.beatmapset?.covers?.cover, hasLeaderBoard(s.ranked));
+        const cover = await readNetImage(s?.beatmapset?.covers?.list, hasLeaderBoard(s?.beatmap?.ranked));
+        const background = await readNetImage(s?.beatmapset?.covers?.cover, hasLeaderBoard(s?.beatmap?.ranked));
         // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
         // 这个不要下载，请求量太大
 
@@ -832,8 +604,8 @@ export const PanelGenerate = {
     },
 
     bp2CardH: async (bp, rank = 1) => {
-        const cover = await readNetImage(bp?.beatmapset?.covers?.list, false);
-        const background = await readNetImage(bp?.beatmapset?.covers?.cover, false);
+        const cover = await readNetImage(bp?.beatmapset?.covers?.list, true);
+        const background = await readNetImage(bp?.beatmapset?.covers?.cover, true);
 
         const time_diff = getTimeDifference(bp.create_at_str);
 
@@ -1025,8 +797,8 @@ export const PanelGenerate = {
     },
 
     user2CardO1: async (user) => {
-        const background = await readNetImage(user?.cover_url || user?.cover?.url, false, getImageFromV3('card-default.png'));
-        const avatar = await readNetImage(user?.avatar_url || user?.avatar?.url, false, getImageFromV3('avatar-guest.png'));
+        const background = await getCover(user?.cover_url, true);
+        const avatar = await getAvatar(user?.avatar_url, true);
 
         return {
             background,
