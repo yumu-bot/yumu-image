@@ -221,9 +221,9 @@ function userDelta2Labels(data) {
     }
     
     const getColor = (T) => {
-        const increase = '#93D02E';
-        const decrease = '#DE6055';
-        const none = '#CBAA2C00';
+        const increase = '#c2e5c3'; //'#93D02E';
+        const decrease = '#ffcdd2'; // '#DE6055';
+        const none = 'none';
         
         if (typeof T === 'number') {
             return (T > 0) ? increase : ((T < 0) ? decrease: none);
