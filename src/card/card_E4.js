@@ -119,7 +119,7 @@ async function ppVariants2LabelE(calcPP, verPP = '') {
     const fcPP = calcPP.perfect_pp_all[`${version}`] || 0;
 
     const isDisplayFC = fcPP >= nowPP;
-    const isDisplayPP = (nowPP <= 1000 && isDisplayFC);
+    //const isDisplayPP = (nowPP <= 1000 && isDisplayFC);
 
     const percent = isDisplayFC ? (Math.round(nowPP / fcPP * 100).toString() + '%') : '-%';
 
@@ -127,7 +127,7 @@ async function ppVariants2LabelE(calcPP, verPP = '') {
         ...option,
         remark: percent,
         data_b: Math.round(nowPP).toString(),
-        data_m: isDisplayPP ? ('/' + Math.round(fcPP).toString() + ' PP') : '/' + Math.round(fcPP).toString(),
+        data_m: ' / ' + Math.round(fcPP).toString(),
         title_font: torus,
     };
 }
