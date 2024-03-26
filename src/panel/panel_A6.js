@@ -127,10 +127,10 @@ function replaceSlash(md = "") {
     }
 }
 
-function getPanelName(name = ""){
-    const version = 'v0.4.0 UU'
+function getPanelName(name = "", version = 'v0.4.0 UU'){
     switch (name) {
         case "service": return getPanelNameSVG('Service Count', 'SC', version);
+        case "switch": return getPanelNameSVG('Service Switch', 'SW', version);
         case "wiki": return getPanelNameSVG('Wiki Page', 'W', version);
         case "help": return getPanelNameSVG('Help Page', 'H', version);
         default: return getPanelNameSVG('Markdown Page', 'MD', version);
