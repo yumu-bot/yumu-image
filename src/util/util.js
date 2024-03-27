@@ -330,6 +330,7 @@ export function getRoundedTailNumber(number = 0) {
  * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
  * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
+ * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
  */
 export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
     if (typeof number === 'number') return getRoundedNumberStrLarge(number, level) + getRoundedNumberStrSmall(number, level2);
@@ -348,15 +349,19 @@ export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
  * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
  * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
+ * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
  */
 export function getRoundedNumberStrLarge(number = 0, level = 0) {
 
     switch (level) {
+        case -2:
+            return f_2_0();
+            break;
         case -1:
             return f_1();
             break;
         case 0:
-            return f0();
+            return f_2_0();
             break;
         case 1:
             return f1();
@@ -380,7 +385,7 @@ export function getRoundedNumberStrLarge(number = 0, level = 0) {
         }
     }
 
-    function f0() {
+    function f_2_0() {
         if (number <= Math.pow(10, 4)) {
             return Math.floor(number).toString()
 
@@ -500,10 +505,14 @@ export function getRoundedNumberStrLarge(number = 0, level = 0) {
  * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
  * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
+ * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
  */
 export function getRoundedNumberStrSmall(number = 0, level = 0) {
 
     switch (level) {
+        case -2:
+            return f_2();
+            break;
         case -1:
             return f_1();
             break;
@@ -521,6 +530,14 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
         case 5:
             return f5();
             break;
+    }
+
+    function f_2() {
+        if (number <= Math.pow(10, 4)) {
+            return ''
+        } else {
+            return AddSpaceForSmallNum(number);
+        }
     }
 
     function f_1() {
@@ -629,6 +646,28 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
         if (o.substring(1) === '0') o = o.slice(0, 1);
 
         return o + unit;
+    }
+
+    function AddSpaceForSmallNum(number) {
+        const num = SpecialRoundedSmallNum(number);
+
+        const space = " ";
+        const str = num.toString().trim();
+
+        if (str.startsWith("0")) {
+            return str;
+        } else {
+            let outStr = "";
+
+            for (const i in str) {
+                if (i % 4 == 0) {
+                    outStr += space;
+                }
+                outStr += str.charAt(i);
+            }
+
+            return outStr;
+        }
     }
 
     function SpecialRoundedSmallNum(number) {

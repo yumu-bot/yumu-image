@@ -1,4 +1,5 @@
 import {
+    getRoundedNumberStr,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall,
     implantSvgBody,
@@ -129,10 +130,12 @@ function getPlayCountChart(pc_arr = []) {
 async function userData2Labels(data) {
 
     // 卡片定义
-    const rks_b = getRoundedNumberStrLarge(data.user.ranked_score, 0);
-    const rks_m = getRoundedNumberStrSmall(data.user.ranked_score, 0);
-    const tts_b = getRoundedNumberStrLarge(data.user.total_score, 0);
-    const tts_m = getRoundedNumberStrSmall(data.user.total_score, 0);
+    const rks_b = getRoundedNumberStrLarge(data.user.ranked_score, -2);
+    const rks_m = getRoundedNumberStrSmall(data.user.ranked_score, -2);
+    const rks_a = getRoundedNumberStr(data.user.ranked_score, 2);
+    const tts_b = getRoundedNumberStrLarge(data.user.total_score, -2);
+    const tts_m = getRoundedNumberStrSmall(data.user.total_score, -2);
+    const tts_a = getRoundedNumberStr(data.user.total_score, 2);
 
     const mpc_b = getRoundedNumberStrLarge(data.user.played_map, 0);
     const mpc_m = getRoundedNumberStrSmall(data.user.played_map, 0);
@@ -144,9 +147,9 @@ async function userData2Labels(data) {
     const mdl_m = getRoundedNumberStrSmall(data.user.medal, 0);
 
     const label_rks =
-        await label_D2({...LABELS.RKS, data_b: rks_b, data_m: rks_m, remark_font: PuHuiTi});
+        await label_D2({...LABELS.RKS, data_b: rks_b, data_m: rks_m, abbr: rks_a, remark_font: PuHuiTi});
     const label_tts =
-        await label_D2({...LABELS.TTS, data_b: tts_b, data_m: tts_m, remark_font: PuHuiTi});
+        await label_D2({...LABELS.TTS, data_b: tts_b, data_m: tts_m, abbr: tts_a, remark_font: PuHuiTi});
 
     const label_mpl =
         await label_E({...LABELS.MPC, data_b: mpc_b, data_m: mpc_m, remark_font: PuHuiTi});
