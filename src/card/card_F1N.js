@@ -177,10 +177,10 @@ function userDelta2Labels(data) {
 
     const getPath = (T) => {
         if (isNaN(+T)) {
-            return torus.getTextPath(T, 0, 0, 18, 'center baseline', getColor(1)) ;
+            return torus.getTextPath(T, 180, 0, 18, 'center baseline', getColor(1)) ;
         } else {
             const text = getSign(T) + Math.abs(T);
-            return torus.getTextPath(text, 0, 0, 18, 'center baseline', getColor(T)) ;
+            return torus.getTextPath(text, 180, 0, 18, 'center baseline', getColor(T)) ;
         }
     }
 
