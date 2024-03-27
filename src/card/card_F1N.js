@@ -140,10 +140,10 @@ export async function card_F1N(data = {
 
 async function userData2Labels(data) {
     // 卡片定义
-    const pc_b = getRoundedNumberStrLarge(data?.user?.play_count, 0);
-    const pc_m = getRoundedNumberStrSmall(data?.user?.play_count, 0);
-    const tth_b = getRoundedNumberStrLarge(data?.user?.total_hits, 0);
-    const tth_m = getRoundedNumberStrSmall(data?.user?.total_hits, 0);
+    const pc_b = getRoundedNumberStrLarge(data?.user?.play_count, -2);
+    const pc_m = getRoundedNumberStrSmall(data?.user?.play_count, -2);
+    const tth_b = getRoundedNumberStrLarge(data?.user?.total_hits, -2);
+    const tth_m = getRoundedNumberStrSmall(data?.user?.total_hits, -2);
     const pt_b = getTimeByDHMSLarge(data?.user?.play_time);
     const pt_m = getTimeByDHMSSmall(data?.user?.play_time);
 
