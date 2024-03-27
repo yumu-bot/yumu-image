@@ -718,19 +718,19 @@ function getRoundedNumberUnit(number = 0, level = 0) {
         } else if (number < Math.pow(10, 6)) {
             unit = 'K';
         } else if (number < Math.pow(10, 9)) {
-            unit = 'M';
+            unit = 'M'; //Million
         } else if (number < Math.pow(10, 12)) {
-            unit = 'G';
+            unit = 'B'; //Billion
         } else if (number < Math.pow(10, 15)) {
-            unit = 'T';
+            unit = 'T'; //Trillion
         } else if (number < Math.pow(10, 18)) {
-            unit = 'P';
+            unit = 'Q'; //Quadrillion
         } else if (number < Math.pow(10, 21)) {
-            unit = 'E';
+            unit = 'U'; //Quintillion
         } else if (number < Math.pow(10, 24)) {
-            unit = 'Z';
+            unit = 'S'; //Sextillion
         } else {
-            unit = ''
+            unit = 'Z' //Zillion 反正很多
         }
         return unit;
     }
@@ -744,17 +744,17 @@ function getRoundedNumberUnit(number = 0, level = 0) {
         } else if (number < Math.pow(10, 8)) {
             unit = 'M';
         } else if (number < Math.pow(10, 11)) {
-            unit = 'G';
+            unit = 'B';
         } else if (number < Math.pow(10, 14)) {
             unit = 'T';
         } else if (number < Math.pow(10, 17)) {
-            unit = 'P';
+            unit = 'Q';
         } else if (number < Math.pow(10, 20)) {
-            unit = 'E';
+            unit = 'U';
         } else if (number < Math.pow(10, 23)) {
-            unit = 'Z';
+            unit = 'S';
         } else {
-            unit = ''
+            unit = 'Z'
         }
         return unit;
     }
@@ -764,13 +764,13 @@ function getRoundedNumberUnit(number = 0, level = 0) {
         if (number < Math.pow(10, 4)) {  //level==1->100 level==2->1000
             unit = '';
         } else if (number < Math.pow(10, 8)) {
-            unit = 'w';
+            unit = 'w'; //万
         } else if (number < Math.pow(10, 12)) {
-            unit = 'e';
+            unit = 'e'; //亿
         } else if (number < Math.pow(10, 16)) {
-            unit = 'T';
+            unit = 'ew'; //亿万
         } else if (number < Math.pow(10, 20)) {
-            unit = 'j';
+            unit = 'ee'; //亿亿
         } else {
             unit = ''
         }
