@@ -137,14 +137,14 @@ async function userData2Labels(data) {
     const tts_m = getRoundedNumberStrSmall(data.user.total_score, -2);
     const tts_a = getRoundedNumberStr(data.user.total_score, 2);
 
-    const mpc_b = getRoundedNumberStrLarge(data.user.played_map, -2);
-    const mpc_m = getRoundedNumberStrSmall(data.user.played_map, -2);
-    const rep_b = getRoundedNumberStrLarge(data.user.rep_watched, -2);
-    const rep_m = getRoundedNumberStrSmall(data.user.rep_watched, -2);
-    const fan_b = getRoundedNumberStrLarge(data.user.follower, -2);
-    const fan_m = getRoundedNumberStrSmall(data.user.follower, -2);
-    const mdl_b = getRoundedNumberStrLarge(data.user.medal, -2);
-    const mdl_m = getRoundedNumberStrSmall(data.user.medal, -2);
+    const mpc_b = getRoundedNumberStrLarge(data.user.played_map, 0);
+    const mpc_m = getRoundedNumberStrSmall(data.user.played_map, 0);
+    const rep_b = getRoundedNumberStrLarge(data.user.rep_watched, 0);
+    const rep_m = getRoundedNumberStrSmall(data.user.rep_watched, 0);
+    const fan_b = getRoundedNumberStrLarge(data.user.follower, 0);
+    const fan_m = getRoundedNumberStrSmall(data.user.follower, 0);
+    const mdl_b = getRoundedNumberStrLarge(data.user.medal, 0);
+    const mdl_m = getRoundedNumberStrSmall(data.user.medal, 0);
 
     const label_rks =
         await label_D2({...LABELS.RKS, data_b: rks_b, data_m: rks_m, abbr: rks_a, remark_font: PuHuiTi});
@@ -183,12 +183,12 @@ function userDelta2Labels(data) {
         } else return '';
     }
 
-    const getPath = (T, n = T) => {
-        if (isNaN(+n)) {
+    const getPath = (T) => {
+        if (isNaN(+T)) {
             return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
         } else {
-            const text = getSign(n) + Math.abs(T);
-            return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(n)) ;
+            const text = getSign(T) + Math.abs(T);
+            return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
         }
     }
 
@@ -201,10 +201,7 @@ function userDelta2Labels(data) {
 
     let arr = [];
     for (const x of [rks, tts]) {
-        arr.push(
-            getPath(
-                getRoundedNumberStr(x, -2), x)
-        );
+        arr.push(getPath(x));
     }
     return arr;
 }

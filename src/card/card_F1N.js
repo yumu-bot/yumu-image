@@ -175,12 +175,12 @@ function userDelta2Labels(data) {
         } else return '';
     }
 
-    const getPath = (T, n = T) => {
-        if (isNaN(+n)) {
-            return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
+    const getPath = (T) => {
+        if (isNaN(+T)) {
+            return torus.getTextPath(T, 0, 0, 18, 'center baseline', getColor(1)) ;
         } else {
-            const text = getSign(n) + Math.abs(T);
-            return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(n)) ;
+            const text = getSign(T) + Math.abs(T);
+            return torus.getTextPath(text, 0, 0, 18, 'center baseline', getColor(T)) ;
         }
     }
 
