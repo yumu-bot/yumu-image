@@ -5,7 +5,7 @@ import {
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import moment from "moment/moment.js";
+import moment from "moment";
 
 export async function card_F5(data = {
     mode: "osu",
