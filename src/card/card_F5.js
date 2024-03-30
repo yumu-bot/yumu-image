@@ -5,12 +5,16 @@ import {
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import moment from "moment/moment.js";
 
 export async function card_F5(data = {
     mode: "osu",
     country: 'CN',
     country_rank: 1234,
     global_rank: 1234,
+
+    highest_rank: 1,
+    highest_date: 1617857334,
 
     ranking_arr: [],
     bp_arr: [],
@@ -41,9 +45,14 @@ export async function card_F5(data = {
     // 导入文本
     const ranking_title = torus.getTextPath('Ranking', 15, 35.795, 30, 'left baseline', '#fff');
 
-    const ranking_text = torus.get2SizeTextPath(
-        '#' + (data.global_rank || 0), ' ' + (data.country || '') + ' #' + (data.country_rank || 0),
-        36, 24, 880, 44.754, 'right baseline', '#fff', '#aaa');
+    const ranking_b = '#' + (data?.global_rank ? data.global_rank : (data?.highest_rank ? (data.highest_rank + '^') : '0'));
+    const ranking_m =
+        (data?.global_rank ?
+                ' ' + (data?.country || '') + ' #' + (data?.country_rank || '0') :
+                ' (' + (moment(data?.highest_date, "X").format("YYYY/MM/DD") || '?') + ') ' + (data?.country || '')
+        );
+
+    const ranking_text = torus.get2SizeTextPath(ranking_b, ranking_m, 36, 24, 880, 44.754, 'right baseline', '#fff', '#aaa');
 
     svg = replaceTexts(svg, [ranking_title, ranking_text], reg_text);
 

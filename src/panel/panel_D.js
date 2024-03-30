@@ -451,6 +451,9 @@ function user2CardF5(user, mode = 'osu', bp_arr = []) {
         country_rank: user?.statistics?.country_rank,
         global_rank: user?.statistics?.global_rank,
 
+        highest_rank: user?.rank_highest?.rank,
+        highest_date: user?.rank_highest?.updated_at,
+
         ranking_arr: user?.rank_history?.data || [],
         bp_arr: bp_arr,
     };

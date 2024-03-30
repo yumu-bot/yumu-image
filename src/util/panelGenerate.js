@@ -42,8 +42,11 @@ export const PanelGenerate = {
         const sub_icon1 = user?.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
 
-        const left1 = '#' + (user?.statistics?.global_rank || '0');
-        const left2 = country + '#' + (user?.statistics?.country_rank || '0');
+        const left1 = user?.statistics?.global_rank ?
+            '#' + user.statistics.global_rank : (user?.rank_highest?.rank ?
+                    '#' + user.rank_highest.rank + '^ (' + moment(user.rank_highest.updated_at, "X").year() + ')' : '#0'
+            );
+        const left2 = country + (user?.statistics?.country_rank ? ('#' + user.statistics.country_rank) : '');
 
         const isBot = user?.is_bot;
         const level = user?.statistics?.level_current || 0;
