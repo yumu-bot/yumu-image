@@ -19,6 +19,7 @@ const ModInt = {
     "PF": 16384,
 }
 const ModBonusSTD = {
+    null: 1,
     "NM": 1,
     "NF": 1,
     "EZ": 0.5,
@@ -37,6 +38,7 @@ const ModBonusSTD = {
     "PF": 1,
 }
 const ModBonusTAIKO = {
+    null: 1,
     "NM": 1,
     "NF": 1,
     "EZ": 0.5,
@@ -55,6 +57,7 @@ const ModBonusTAIKO = {
     "PF": 1,
 }
 const ModBonusCATCH = {
+    null: 1,
     "NM": 1,
     "NF": 1,
     "EZ": 0.5,
@@ -73,6 +76,7 @@ const ModBonusCATCH = {
     "PF": 1,
 }
 const ModBonusMANIA = {
+    null: 1,
     "NM": 1,
     "NF": 1,
     "EZ": 0.5,
@@ -209,29 +213,25 @@ export function getV3Score(acc = 0.0, combo = 1, maxcombo = 1, mods = [''], game
 
     let score;
     let mode = getGameMode(gamemode, 1);
-    let modBonus = [];
-    let bonus = 1;
+    const multiplier = getModMultiplier(mods, gamemode);
     let comboScore;
     let accScore;
     let accIndex;
 
     switch (mode) {
         case 'o' : {
-            modBonus = ModBonusSTD;
             comboScore = 700000;
             accScore = 300000;
             accIndex = 10;
         }
             break;
         case 't' : { //这里大饼是8，该怎么算呢
-            modBonus = ModBonusTAIKO;
             comboScore = 250000;
             accScore = 750000;
             accIndex = 3.6;
         }
             break;
         case 'c' : { //实现没做好，暂时使用 std 的方案
-            modBonus = ModBonusCATCH;
             comboScore = 600000;
             accScore = 400000;
             accIndex = 1;
@@ -240,7 +240,6 @@ export function getV3Score(acc = 0.0, combo = 1, maxcombo = 1, mods = [''], game
         case 'm' : { //骂娘不需要转换
             //骂娘的acc是 x^(2+2x)，非常陡峭的函数
 
-            modBonus = ModBonusMANIA;
             comboScore = 10000;
             accScore = 990000;
             accIndex = 10;
@@ -257,11 +256,7 @@ export function getV3Score(acc = 0.0, combo = 1, maxcombo = 1, mods = [''], game
     let maxMapComboSum = getComboSum(maxcombo, mode); //理论上最大的连击除数
     let maxPlayerComboSum = getComboSum((combo - minMissCount), mode) * minBreakCount + getComboSum((minComboLeft - minMissLeft), mode);// 理论上玩家得到的连击被除数
 
-    for (const v of mods) {
-        bonus *= modBonus[v];
-    }
-
-    score = Math.floor(bonus * (accScore * Math.pow(acc, accIndex) + (comboScore * maxPlayerComboSum / maxMapComboSum)));
+    score = Math.floor(multiplier * (accScore * Math.pow(acc, accIndex) + (comboScore * maxPlayerComboSum / maxMapComboSum)));
 
     return score;
 
@@ -322,4 +317,23 @@ export function getV3Score(acc = 0.0, combo = 1, maxcombo = 1, mods = [''], game
         }
     }
 
+}
+
+export function getModMultiplier(mods = [], gamemode = 'o') {
+    const mode = getGameMode(gamemode, 1);
+    let modList = [];
+    let multiplier = 1;
+
+    switch (mode) {
+        case 'o': modList = ModBonusSTD; break;
+        case 't': modList = ModBonusTAIKO; break;
+        case 'c': modList = ModBonusCATCH; break;
+        case 'm': modList = ModBonusMANIA; break;
+    }
+
+    for (const v of mods) {
+        multiplier *= modList[v];
+    }
+
+    return multiplier;
 }

@@ -3,13 +3,14 @@ import {
     getImageFromV3,
     getGameMode,
     getRoundedNumberStrLarge, getRoundedNumberStrSmall,
-    implantSvgBody, replaceTexts,
+    implantSvgBody, replaceTexts, getRoundedNumberStr,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getManiaAimingAccuracy} from "../util/compute-pp.js";
+import {getModMultiplier} from "../util/mod.js";
 
 export async function card_E2(data = {
     rank: 'SS',
@@ -43,6 +44,7 @@ export async function card_E2(data = {
     isFC: true,
     isPF: true,
     isBest: true,
+    isLegacy: true,
 
 }) {
     // 读取模板
@@ -82,10 +84,22 @@ export async function card_E2(data = {
     const isPF = data.isPF;
 
     // 文字定义
-    const score = torus.get2SizeTextPath(getRoundedNumberStrLarge(data.score, -1), getRoundedNumberStrSmall(data.score, -1), 84, 60, 335, 79.43, 'left baseline', '#FFF');
+    const score_b = getRoundedNumberStrLarge(data.score, -1);
+    const score_m = getRoundedNumberStrSmall(data.score, -1)
+
+    const score = torus.get2SizeTextPath(score_b, score_m, 84, 60, 335, 79.43, 'left baseline', '#FFF');
+
+    const multiplier = getModMultiplier(data.mods, data.mode);
+
+    const modsCount = data?.mods?.length || 0;
+    const multiplier_maxWidth = 630 - ((modsCount > 2) ? 50 * modsCount - 10 : 100 * modsCount - 10) - torus.getTextWidth(score_b, 84) - torus.getTextWidth(score_m, 60) - 10;
+
+    const mod_multiplier = torus.getTextPath(
+        multiplier === 1 ? "" : torus.cutStringTail(getRoundedNumberStr(multiplier, 3) + "x", 24, multiplier_maxWidth),
+        335 + torus.getTextWidth(score_b, 84) + torus.getTextWidth(score_m, 60) + 10, 79.43, 24, 'left baseline', '#FFF')
 
     // 导入文字
-    svg = replaceTexts(svg, [score], reg_text);
+    svg = replaceTexts(svg, [score, mod_multiplier], reg_text);
 
     // 部件定义
     const mods = getModsSVG(data.mods, 880, 20, 90, 42, 50);
@@ -96,6 +110,7 @@ export async function card_E2(data = {
 
     const advanced = getAdvancedJudgeSVG(data.advanced_judge, 20, 310)
     const best = getPersonalBestSVG(data.isBest, 20, 20);
+    const type = getScoreTypeSVG(data.isLegacy, 20, 250);
     const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 400, 60, 500, 22.79)
 
     const acc = await label_E({...LABELS.ACC,
@@ -133,6 +148,7 @@ export async function card_E2(data = {
 
     svg = implantSvgBody(svg, 0, 0, advanced, reg_advanced);
     svg = implantSvgBody(svg, 0, 0, best, reg_overlay);
+    svg = implantSvgBody(svg, 0, 0, type, reg_overlay);
     svg = implantSvgBody(svg, 0, 0, statistics, reg_label);
 
     svg = implantSvgBody(svg, 350, 350, acc, reg_label);
@@ -146,6 +162,14 @@ export async function card_E2(data = {
 function getPersonalBestSVG(isBest, x, y) {
     const best_link = (isBest) ? '' : 'default';
     const image = getImageFromV3(`object-score-personalbest${best_link}.png`);
+
+    return `<image width="40" height="40" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
+}
+
+//顺便把左上角的 personal best 加了
+function getScoreTypeSVG(isLegacy, x, y) {
+    const best_link = (isLegacy) ? 'default' : '';
+    const image = getImageFromV3(`object-score-legacy${best_link}.png`);
 
     return `<image width="40" height="40" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
 }
