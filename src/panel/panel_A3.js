@@ -289,7 +289,7 @@ export async function panel_A3(data = {
     // 计算面板高度
     const rowTotal = Math.ceil((cardN1s?.length || 0) / 2);
 
-    const panelHeight = getPanelHeight(cardN1s?.length, 62, 4, 290, 10, 40);
+    const panelHeight = getPanelHeight(cardN1s?.length, 62, 2, 290, 10, 40);
     const cardHeight = panelHeight - 290;
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
