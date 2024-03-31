@@ -1534,7 +1534,7 @@ export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, 
 }
 
 //公用方法：给面板上名字
-export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
+export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'GuiWuBot') {
 
     // powered by Yumubot v0.3.2 EA // Score (!ymp / !ymr / !yms)
     const powered_text = torus.getTextPath(
