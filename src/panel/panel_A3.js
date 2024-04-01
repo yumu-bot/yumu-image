@@ -257,7 +257,7 @@ export async function panel_A3(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA3-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Leader Board (!yml)', 'Lead', 'v0.3.1 EA');
+    const panel_name = getPanelNameSVG('Leader Board (!yml)', 'L', 'v0.4.0 UU');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);

@@ -57,7 +57,7 @@ export async function panel_F(data = {}) {
     let reg_card_a2 = /(?<=<g id="CardA2">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Match Monitor Now (!ymmn)', 'Now', 'v0.3.0 EA');
+    const panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', 'v0.4.0 UU');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);

@@ -288,7 +288,7 @@ export async function panel_A4(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA4-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'BP', 'v0.3.1 EA');
+    const panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'BP', 'v0.4.0 UU');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);

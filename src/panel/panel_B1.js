@@ -111,7 +111,7 @@ export async function panel_B1(data = {
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('PP Minus v2.4 (!ppm/!ppmvs)', 'PPM', 'v0.3.2 FT');
+    const panel_name = getPanelNameSVG('PP Minus v2.4 (!ppm/!ppmvs)', 'PM', 'v0.4.0 UU');
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, game_mode_path], reg_index);

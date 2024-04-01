@@ -288,7 +288,7 @@ export async function panel_E(data = {
 
     // 导入文字
     svg = replaceText(svg, getPanelNameSVG(
-        'Score (!ymp / !ymr / !yms)', 'Score', 'v0.3.2 FT', request_time
+        'Score (!ymp / !ymr / !yms)', 'Score', 'v0.4.0 UU', request_time
     ), reg_index);
 
     // 成绩重计算

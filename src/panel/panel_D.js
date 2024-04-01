@@ -411,7 +411,7 @@ export async function panel_D(data = {
     svg = implantSvgBody(svg, 0, 0, cardF7, reg_card_f7);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Information (!ymi)', 'Info', 'v0.4.0 UU');
+    const panel_name = getPanelNameSVG('Information (!ymi)', 'I', 'v0.4.0 UU');
 
     // 导入文字
     svg = replaceText(svg, panel_name, reg_index);

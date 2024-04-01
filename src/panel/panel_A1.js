@@ -215,7 +215,7 @@ export async function panel_A1(data = {
 
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Friends (!ymf)', 'F', 'v0.3.1 EA');
+    const panel_name = getPanelNameSVG('Friends (!ymf)', 'F', 'v0.4.0 UU');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);

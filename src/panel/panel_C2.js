@@ -55,7 +55,7 @@ export async function panel_C2(data = {}) {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PC-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Yumu Series Rating v3.5 (!ymsa)', 'SRA', 'v0.4.0 UU');
+    const panel_name = getPanelNameSVG('Yumu Series Rating v3.5 (!ymsa)', 'SA', 'v0.4.0 UU');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
