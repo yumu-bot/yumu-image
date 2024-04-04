@@ -1477,9 +1477,9 @@ export const getTimeByDHMSSmall = (seconds = 0) => {
 
 //获取从秒转换成dhms的时间
 const _getTimeByDHMS = (seconds = 0) => {
-    let pt_b = '';
+    let pt_b = '-';
     let pt_m = '';
-    if (seconds != null && seconds !== 0) {
+    if (seconds != null && seconds > 0) {
         const days = Math.floor(Math.abs(seconds) / 86400);
         const hours = Math.floor((Math.abs(seconds) - 86400 * days) / 3600);
         const minutes = Math.floor((Math.abs(seconds) - 86400 * days - 3600 * hours) / 60);
