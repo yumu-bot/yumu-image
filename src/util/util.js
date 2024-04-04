@@ -1483,7 +1483,7 @@ const _getTimeByDHMS = (seconds = 0) => {
         const days = Math.floor(Math.abs(seconds) / 86400);
         const hours = Math.floor((Math.abs(seconds) - 86400 * days) / 3600);
         const minutes = Math.floor((Math.abs(seconds) - 86400 * days - 3600 * hours) / 60);
-        seconds -= (86400 * days - 3600 * hours - 60 * hours);
+        seconds -= (86400 * days + 3600 * hours + 60 * hours);
 
         if (days > 0) {
             pt_b = days.toString();
