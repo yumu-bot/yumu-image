@@ -536,7 +536,9 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
         if (number <= Math.pow(10, 4)) {
             return ''
         } else {
-            return AddSpaceForSmallNum(number);
+            return AddSpaceForSmallNum(
+                SpecialRoundedSmallNum(number)
+            );
         }
     }
 
@@ -649,25 +651,20 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
     }
 
     function AddSpaceForSmallNum(number) {
-        const num = SpecialRoundedSmallNum(number);
 
         const space = " ";
-        const str = num.toString().trim();
+        const str = number.toString().trim();
 
-        if (str.startsWith("0")) {
-            return str;
-        } else {
-            let outStr = "";
+        let outStr = "";
 
-            for (const i in str) {
-                if (i % 4 == 0) {
-                    outStr += space;
-                }
-                outStr += str.charAt(i);
+        for (const i in str) {
+            if (i % 4 == 0) {
+                outStr += space;
             }
-
-            return outStr;
+            outStr += str.charAt(i);
         }
+
+        return outStr;
     }
 
     function SpecialRoundedSmallNum(number) {

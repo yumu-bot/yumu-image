@@ -376,7 +376,7 @@ export async function panel_M(data = {
 
     const diff_index = torus.getTextPath('  0       2       2.8      4       5.3      6.5       8       10      ...',
         1450, 550, 18, 'left baseline', '#fff');
-    const length_index = torus.getTextPath('  0    1:00   1:30   2:00   2:30   3:00   3:30   4:00    ...',
+    const length_index = torus.getTextPath('  0    1:00   1:40   2:20   3:00   3:40   4:20   5:00    ...',
         1450, 800, 18, 'left baseline', '#fff');
 
     // 导入2卡右侧的pc和fav

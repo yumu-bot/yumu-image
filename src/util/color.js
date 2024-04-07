@@ -7,11 +7,9 @@ export function getStarRatingColor(SR = 0) {
     let r1 = 0;
     let b1 = 0;
     let g1 = 0;
-    let r2;
-    let b2;
-    let g2;
-    let s = 0;
-    let gamma = 2.2; //伽马值
+    let bottom;
+    let top;
+    const gamma = 2.2; //伽马值
 
 
     if (SR < 1.25) {
@@ -21,7 +19,8 @@ export function getStarRatingColor(SR = 0) {
         r1 = 79;
         g1 = 192;
         b1 = 255;
-        s = (SR - 0.1) / (1.25 - 0.1)
+        bottom = 0.1;
+        top = 1.25;
 
     } else if (SR < 2) {
         r0 = 79;
@@ -30,7 +29,8 @@ export function getStarRatingColor(SR = 0) {
         r1 = 79;
         g1 = 255;
         b1 = 213;
-        s = (SR - 1.25) / (2 - 1.25)
+        bottom = 1.25;
+        top = 2;
 
     } else if (SR < 2.5) {
         r0 = 79;
@@ -39,7 +39,8 @@ export function getStarRatingColor(SR = 0) {
         r1 = 124;
         g1 = 255;
         b1 = 79;
-        s = (SR - 2) / (2.5 - 2)
+        bottom = 2;
+        top = 2.5;
 
     } else if (SR < 3.3) {
         r0 = 124;
@@ -48,7 +49,8 @@ export function getStarRatingColor(SR = 0) {
         r1 = 246;
         g1 = 240;
         b1 = 92;
-        s = (SR - 2.5) / (3.3 - 2.5)
+        bottom = 2.5;
+        top = 3.3;
 
     } else if (SR < 4.2) {
         r0 = 246;
@@ -57,7 +59,8 @@ export function getStarRatingColor(SR = 0) {
         r1 = 255;
         g1 = 104;
         b1 = 104;
-        s = (SR - 3.3) / (4.2 - 3.3)
+        bottom = 3.3;
+        top = 4.2;
 
     } else if (SR < 4.9) {
         r0 = 255;
@@ -66,7 +69,8 @@ export function getStarRatingColor(SR = 0) {
         r1 = 255;
         g1 = 78;
         b1 = 111;
-        s = (SR - 4.2) / (4.9 - 4.2)
+        bottom = 4.2;
+        top = 4.9;
 
     } else if (SR < 5.8) {
         r0 = 255;
@@ -75,7 +79,8 @@ export function getStarRatingColor(SR = 0) {
         r1 = 198;
         g1 = 69;
         b1 = 184;
-        s = (SR - 4.9) / (5.8 - 4.9)
+        bottom = 4.9;
+        top = 5.8;
 
     } else if (SR < 6.7) {
         r0 = 198;
@@ -84,7 +89,8 @@ export function getStarRatingColor(SR = 0) {
         r1 = 101;
         g1 = 99;
         b1 = 222;
-        s = (SR - 5.8) / (6.7 - 5.8)
+        bottom = 5.8;
+        top = 6.7;
 
     } else if (SR < 7.7) {
         r0 = 101;
@@ -93,7 +99,8 @@ export function getStarRatingColor(SR = 0) {
         r1 = 24;
         g1 = 21;
         b1 = 142;
-        s = (SR - 6.7) / (7.7 - 6.7)
+        bottom = 6.7;
+        top = 7.7;
 
     } else if (SR < 9) {
         r0 = 24;
@@ -102,20 +109,25 @@ export function getStarRatingColor(SR = 0) {
         r1 = 0;
         g1 = 0;
         b1 = 0;
-        s = (SR - 7.7) / (9 - 7.7)
+        bottom = 7.7;
+        top = 9;
     }
+
+    const s = (SR - bottom) / (top - bottom);
 
     // https://zhuanlan.zhihu.com/p/37800433/ 伽马的作用
 
-    r2 = Math.pow((1 - s) * Math.pow(r0, gamma) + s * Math.pow(r1, gamma), 1 / gamma);
-    g2 = Math.pow((1 - s) * Math.pow(g0, gamma) + s * Math.pow(g1, gamma), 1 / gamma);
-    b2 = Math.pow((1 - s) * Math.pow(b0, gamma) + s * Math.pow(b1, gamma), 1 / gamma);
+    const color2Hex = (c0 = 0, c1 = 0, s = 0) => {
+        return Math.min(Math.max(
+            Math.round(Math.pow((1 - s) * Math.pow(c0, gamma) + s * Math.pow(c1, gamma), 1 / gamma)
+        ), 0), 255).toString(16).padStart(2, '0');
+    }
 
-    let colorR = Math.round(r2).toString(16).padStart(2, '0')
-    let colorG = Math.round(g2).toString(16).padStart(2, '0')
-    let colorB = Math.round(b2).toString(16).padStart(2, '0')
+    const gHex = color2Hex(g0, g1, s);
+    const bHex = color2Hex(b0, b1, s);
+    const rHex = color2Hex(r0, r1, s);
 
-    color = '#' + colorR + colorG + colorB
+    color = '#' + rHex + gHex + bHex;
 
     if (SR < 0.1) {
         color = '#AAAAAA';
