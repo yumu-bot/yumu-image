@@ -380,7 +380,6 @@ export async function panel_D(data = {
     day: 1,
 }) {
     // 导入模板
-    console.log(data)
     let svg = readTemplate('template/Panel_D.svg');
 
     // 路径定义
