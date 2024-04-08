@@ -37,8 +37,7 @@ export async function card_A1(data = {
     // 文字的 <path>
     const right_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
 
-    const top1 = torus.getTextPath(torus.cutStringTail(data.top1, 42, 290),
-        130, 53.672, 42, "left baseline", "#fff"); //48px
+    const top1 = renderTop1(data.top1)
     const left1 = torus.getTextPath(torus.cutStringTail(data.left1, 24, 390 - right_width), 20, 165.836, 24, "left baseline", "#fff");
     const left2 = torus.getTextPath(torus.cutStringTail(data.left2, 24, 390 - right_width), 20, 191.836, 24, "left baseline", "#fff");
 
@@ -59,5 +58,15 @@ export async function card_A1(data = {
     svg = implantImage(svg, 40, 40, 250, 70, 1, data.sub_icon2, reg_sub_icon2); //x +5px
 
     return svg.toString();
+}
+
+function renderTop1(top1 = "") {
+    let top1_size = 42;
+    if (top1.length > 8) {
+        const top1_width = torus.getTextWidth(top1, top1_size);
+        if (top1_width > 290) top1_size = 36;
+    }
+    return torus.getTextPath(torus.cutStringTail(top1, top1_size, 290),
+        130, 53.672, top1_size, "left baseline", "#fff"); //48px
 }
 
