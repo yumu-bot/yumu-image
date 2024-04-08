@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getGameMode,
+    exportJPEG, getGameMode, getNowTimeStamp,
     getPanelNameSVG,
     implantImage,
     implantSvgBody,
@@ -375,8 +375,12 @@ export async function panel_D(data = {
     //user_bp_arr
     "bp-time": [],
     bonus_pp: 0,
+
+    // 比对自几天前
+    day: 1,
 }) {
     // 导入模板
+    console.log(data)
     let svg = readTemplate('template/Panel_D.svg');
 
     // 路径定义
@@ -411,7 +415,12 @@ export async function panel_D(data = {
     svg = implantSvgBody(svg, 0, 0, cardF7, reg_card_f7);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Information (!ymi)', 'I', 'v0.4.0 UU');
+
+    const day_str = data?.day ? (data.day >= 2 ? (data.day + ' days') : (data.day + ' day')) : '';
+
+    const request_time = 'compare time: ' + day_str + ' ago // request time: ' + getNowTimeStamp();
+
+    const panel_name = getPanelNameSVG('Information (!ymi)', 'I', 'v0.4.0 UU', request_time);
 
     // 导入文字
     svg = replaceText(svg, panel_name, reg_index);

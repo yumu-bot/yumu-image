@@ -188,7 +188,7 @@ function userDelta2Labels(data) {
         if (isNaN(+T)) {
             return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
         } else {
-            const text = getSign(T) + Math.abs(T);
+            const text = getSign(T) + getRoundedNumberStr(T, -2); //Math.abs(T);
             return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
         }
     }
