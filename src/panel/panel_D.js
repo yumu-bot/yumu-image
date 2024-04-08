@@ -416,7 +416,7 @@ export async function panel_D(data = {
 
     // 面板文字
 
-    const day_str = data?.day ? (data.day >= 2 ?
+    const day_str = data?.day != null ? (data.day >= 2 ?
         ('compare time: ' + data.day + ' days ago') : ('compare time: ' + data.day + ' day ago'))
         : '';
 
