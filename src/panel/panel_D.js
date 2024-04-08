@@ -416,9 +416,11 @@ export async function panel_D(data = {
 
     // 面板文字
 
-    const day_str = data?.day ? (data.day >= 2 ? (data.day + ' days') : (data.day + ' day')) : '';
+    const day_str = data?.day ? (data.day >= 2 ?
+        ('compare time: ' + data.day + ' days ago') : ('compare time: ' + data.day + ' day ago'))
+        : '';
 
-    const request_time = 'compare time: ' + day_str + ' ago // request time: ' + getNowTimeStamp();
+    const request_time = day_str + ' // request time: ' + getNowTimeStamp();
 
     const panel_name = getPanelNameSVG('Information (!ymi)', 'I', 'v0.4.0 UU', request_time);
 
