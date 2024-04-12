@@ -287,9 +287,7 @@ export async function panel_E(data = {
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG(
-        'Score (!ymp / !ymr / !yms)', 'Score', 'v0.4.0 UU', request_time
-    ), reg_index);
+    svg = replaceText(svg, getPanelNameSVG('Score (!ymp / !ymr / !yms)', 'S', 'v0.4.0 UU', request_time), reg_index);
 
     // 成绩重计算
     const score_statistics = {

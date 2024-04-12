@@ -264,8 +264,7 @@ export async function panel_E2(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG(
-        'Map Statistics (!ymm)', 'M', 'v0.4.0 UU'), reg_index);
+    svg = replaceText(svg, getPanelNameSVG('Map Statistics (!ymm)', 'M', 'v0.4.0 UU'), reg_index);
 
     // 构建成绩
 
