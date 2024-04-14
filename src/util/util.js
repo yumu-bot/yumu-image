@@ -1477,10 +1477,12 @@ const _getTimeByDHMS = (seconds = 0) => {
     let pt_b = '-';
     let pt_m = '';
     if (seconds != null && seconds > 0) {
-        const days = Math.floor(Math.abs(seconds) / 86400);
-        const hours = Math.floor((Math.abs(seconds) - 86400 * days) / 3600);
-        const minutes = Math.floor((Math.abs(seconds) - 86400 * days - 3600 * hours) / 60);
-        seconds -= (86400 * days + 3600 * hours + 60 * hours);
+        const s = Math.abs(seconds);
+
+        const days = Math.floor(s / 86400);
+        const hours = Math.floor((s % 86400) / 3600);
+        const minutes = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
 
         if (days > 0) {
             pt_b = days.toString();
@@ -1490,9 +1492,9 @@ const _getTimeByDHMS = (seconds = 0) => {
             pt_m = 'h' + minutes + 'm';
         } else if (minutes > 0) {
             pt_b = minutes.toString();
-            pt_m = 'm' + seconds + 's';
-        } else if (seconds > 0) {
-            pt_b = seconds.toString();
+            pt_m = 'm' + sec + 's';
+        } else if (sec > 0) {
+            pt_b = sec.toString();
             pt_m = 's';
         } else if (hours > -1) {
             pt_b = '0';
