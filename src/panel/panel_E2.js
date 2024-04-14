@@ -57,24 +57,7 @@ export async function panel_E2(data = {
         occupation: 'Elite Graveyarded Mapper',
         discord: 'YumeMuzi#5619',
         interests: 'yuyuko❤',
-        monthlyPlaycounts: [
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object],
-            [Object], [Object], [Object], [Object], [Object], [Object]
-        ],
+        monthlyPlaycounts: [[Object],],
         supporter: false,
         uid: 7003013,
         bot: false,
@@ -270,10 +253,10 @@ export async function panel_E2(data = {
 
     const bid = data.beatmap.id;
     const stat = {
-        acc: data.expected.accuracy * 100 || 100,
-        combo: data.expected.combo !== 0 ? data.expected.combo : data.beatmap.max_combo,
-        mods: data.expected.mods || [],
-        nMisses: data.expected.miss || 0,
+        acc: data?.expected?.accuracy * 100 || 100,
+        combo: data?.expected?.combo || data.beatmap.max_combo,
+        mods: data?.expected?.mods || [],
+        nMisses: data?.expected?.miss || 0,
     }
     const mode = data.expected.mode || data.beatmap.mode || 'osu';
 
@@ -340,7 +323,7 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', max_combo = 0, 
         mode: mode,
         mods: expected.mods || [],
         accuracy: expected.accuracy || 0,
-        combo: max_combo || expected.combo,
+        combo: expected.combo || max_combo,
         pp: calcPP.pp.pp || 0,
         miss: expected.miss || 0,
 
@@ -350,7 +333,7 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', max_combo = 0, 
         fcStats: expectedFC2Statistics(calcFC),
         statistics_max: getStatMax(calcNC, calcFC),
 
-        max_combo: calcPP.attr.maxCombo || 0,
+        max_combo: calcPP.attr.maxCombo || max_combo || 0,
         full_pp: calcNC?.[10]?.pp || 0,
         max_pp: calcFC?.[10]?.pp || 0,
 
