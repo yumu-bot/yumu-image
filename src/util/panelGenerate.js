@@ -109,7 +109,7 @@ export const PanelGenerate = {
     },
 
     microUser2CardA1: async (user) => {
-        const background = await getCover(user?.cover_url, true);
+        const background = await getCover(user?.cover?.url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
         const sub_icon1 = user.is_supporter ? getImageFromV3('object-card-supporter.png') : '';

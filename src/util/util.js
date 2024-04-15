@@ -173,7 +173,7 @@ export async function getMapBG(sid = 0, cover = 'cover', useCache = true, defaul
  * @param defaultImagePath
  * @return {Promise<string>}
  */
-export async function getAvatar(link = "https://a.ppy.sh/", useCache = true, defaultImagePath = getImageFromV3('avatar-guest.png')) {
+export async function getAvatar(link, useCache = true, defaultImagePath = getImageFromV3('avatar-guest.png')) {
     if (link == null || link == "https://a.ppy.sh/" || link == "") {
         return defaultImagePath;
     } else if (typeof link === "number") {
@@ -190,7 +190,7 @@ export async function getAvatar(link = "https://a.ppy.sh/", useCache = true, def
  * @param defaultImagePath
  * @return {Promise<string>}
  */
-export async function getCover(link = "https://a.ppy.sh/", useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
+export async function getCover(link, useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
     if (link != null && link.startsWith("https://assets.ppy.sh/beatmaps/")) {
         defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')
     } else if (link == null || link == "") {
