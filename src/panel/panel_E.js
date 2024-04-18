@@ -324,7 +324,7 @@ export async function panel_E(data = {
     return svg.toString();
 }
 
-async function score2CardE1(score, background, calcPP) {
+async function score2CardE1(score, calcPP) {
     return {
         ranked: score?.beatmap?.ranked || 0,
         mode: score?.mode || 'osu',
