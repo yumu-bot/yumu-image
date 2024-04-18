@@ -16,6 +16,7 @@ export async function card_E1(data = {
     ranked: 1,
     mode: 'OSU',
     star: 1.7,
+    background: '',
     cover: '',
     title: '',
     title_unicode: '',
@@ -65,6 +66,7 @@ export async function card_E1(data = {
     // const cover = await getDiffBG(data.bid, data.sid, 'list', hasLeaderBoard(data.ranked));
     const cover = await getDiffBG(data.bid, data.sid, "list@2x", hasLeaderBoard(data.ranked))
         || await readNetImage(data.cover, hasLeaderBoard(data.ranked));
+    console.log(cover)
     const status = getMapStatusImage(data.status);
 
     const favorite_count_icon = '<path d="m13,1c3,0,5,2,5,5s-5,7-6,8l-3,3-3-3C5,13,0,9,0,6,0,3.906,2,1,5,1s4,3,4,3c0,0,1-3,4-3Z" style="fill: #fff;"/>';

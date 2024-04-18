@@ -138,6 +138,7 @@ export async function getDiffBG(bid, sid, cover = 'cover', useCache = true, defa
         // data 为背景文件在文件系统中的绝对路径 字符串
         // 不是文件本身
         const data = res.data;
+
         if (data) {
             return data;
         } else {

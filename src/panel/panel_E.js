@@ -324,22 +324,22 @@ export async function panel_E(data = {
     return svg.toString();
 }
 
-async function score2CardE1(score, calcPP) {
+async function score2CardE1(score, background, calcPP) {
     return {
         ranked: score?.beatmap?.ranked || 0,
-        mode: score.mode || 'osu',
+        mode: score?.mode || 'osu',
         star: calcPP.attr.stars || 0,
-        cover: score.beatmapset.covers['list@2x'],
-        title: score.beatmapset.title || '',
-        title_unicode: score.beatmapset.title_unicode || '',
-        version: score.beatmap.version || '',
-        artist: score.beatmapset.artist || '',
-        creator: score.beatmapset.creator || '',
-        bid: score.beatmap.id || 0,
-        sid: score.beatmapset.id || 0,
-        status: score.beatmapset.status || 'unranked',
-        favourite_count: score.beatmapset.favourite_count || 0,
-        play_count: score.beatmapset.play_count || 0,
+        cover: score?.beatmapset?.covers['list@2x'],
+        title: score?.beatmapset?.title || '',
+        title_unicode: score?.beatmapset?.title_unicode || '',
+        version: score?.beatmap?.version || '',
+        artist: score?.beatmapset?.artist || '',
+        creator: score?.beatmapset?.creator || '',
+        bid: score?.beatmap?.id || 0,
+        sid: score?.beatmapset?.id || 0,
+        status: score?.beatmapset?.status || 'unranked',
+        favourite_count: score?.beatmapset?.favourite_count || 0,
+        play_count: score?.beatmapset?.play_count || 0,
     }
 }
 
