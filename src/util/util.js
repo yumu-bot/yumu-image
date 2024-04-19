@@ -2,8 +2,6 @@ import fs from 'fs';
 import os from "os";
 import crypto from 'crypto';
 import axios from "axios";
-// import exportsJPEG from 'convert-svg-to-jpeg';
-// import exportsPNG from 'convert-svg-to-png';
 import https from "https";
 import path from "path";
 import moment from "moment";
@@ -18,6 +16,9 @@ const exportsPNG = new API(new PNGProvider());
 
 const path_util = path;
 const MD5 = crypto.createHash("md5");
+/**
+ * 文件路径初始化
+ */
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
 export const SUPER_KEY = process.env.SUPER_KEY || "";
@@ -35,6 +36,7 @@ export function initPath() {
         port: 7890,
         protocol: "http",
     }
+    // axios 重试策略
     axios.interceptors.response.use((response) => response, (error) => {
         const {config, response} = error;
 
@@ -1563,4 +1565,16 @@ export function replaceBanner (svg, reg_banner, banner) {
     } else {
         return implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     }
+}
+
+/**
+ * 删除文件
+ */
+export function deleteLocalFile(bid) {
+    axios.get(`http://127.0.0.1:47150/api/file/remove/bid/${bid}`, {
+            proxy: {},
+            headers: {
+                "AuthorizationX": SUPER_KEY,
+            }
+        }).catch(_ => {})
 }

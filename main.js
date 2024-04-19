@@ -1,6 +1,6 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, initPath, readFile} from "./src/util/util.js";
+import {CACHE_PATH, deleteLocalFile, initPath, readFile} from "./src/util/util.js";
 import {router as PanelA1Router} from "./src/panel/panel_A1.js";
 import {router as PanelA2Router} from "./src/panel/panel_A2.js";
 import {router as PanelA3Router} from "./src/panel/panel_A3.js";
@@ -78,6 +78,16 @@ app.post('/panel_Epsilon', panelEpsilonRouter);
 
 app.post('/md', MarkdownRouter);
 app.post('/attr', GetMapAttrRouter);
+
+app.post('/del', (req, res) => {
+    try {
+        const bid = req.fields['bid'];
+        deleteLocalFile(bid)
+    } catch (e) {
+        res.status(500).send({status: e.message})
+    }
+    res.status(200).send({status: 'ok'})
+});
 
 app.post('/testApi', async (req, res) => {
     console.log(req.fields)

@@ -229,7 +229,7 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
 
     switch (mode_int) {
         case 0: {
-            calculator.n300(difficulty.nCircles + difficulty.nSliders);
+            calculator.n300(difficulty.nSpinners + difficulty.nCircles + difficulty.nSliders);
         } break;
         case 1: {
             calculator.n300(attr.nCircles);
@@ -261,7 +261,47 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
         attr: attr,
         score_progress: score_progress,
     };
+}
 
+export async function getMapPerformance(bid, gameMode, mods, reload = false) {
+    const mode_int = getGameMode(gameMode);
+    const osuFilePath = await getOsuFilePath(bid, gameMode, reload);
+    let beatMap = new Beatmap({
+        path: osuFilePath,
+    });
+
+    let calculator = new Calculator({
+        mode: mode_int,
+        mods: mods,
+        acc: 1,
+        nMisses: 0,
+        n100: 0,
+        n50: 0,
+    })
+    const diff = calculator.difficulty(beatMap);
+    calculator.combo(diff.maxCombo);
+
+    switch (mode_int) {
+        case 0: {
+            calculator.n300(diff.nSpinners + diff.nCircles + diff.nSliders);
+        } break;
+        case 1: {
+            calculator.n300(diff.nCircles);
+        } break;
+        case 2: {
+            calculator.n300(diff.nFruits);
+            calculator.n100(diff.nDroplets);
+            calculator.n50(diff.nTinyDroplets);
+            calculator.nKatu(0);
+        } break;
+        case 3: {
+            calculator.n300(0);
+            calculator.nKatu(0);
+            calculator.nGeki(diff.nCircles + diff.nSliders);
+        } break;
+    }
+
+    return calculator.performance(beatMap);
 }
 
 async function getOsuFilePath(bid, mode, hasLeaderBoard = true) {

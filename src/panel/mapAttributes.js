@@ -1,4 +1,4 @@
-import {getMapAttributes} from "../util/compute-pp.js";
+import {getMapAttributes, getMapPerformance} from "../util/compute-pp.js";
 
 export async function router(req, res) {
     const data = req.fields;
@@ -8,10 +8,6 @@ export async function router(req, res) {
         res.send(out);
     } catch (e) {
         res.status(500).send(e.stack);
-        //res.json({ error: e }) 这个或许有用？
-
-        //res.status(500);
-        //res.render('error', {error: e});
     }
 }
 
@@ -29,6 +25,8 @@ async function getAttr(data = dataTemp) {
     let tasks = data.maps.map(async ({id, bid, mods}) => {
         let r =
             await getMapAttributes(bid, mods, data.modeInt);
+        let pp =
+            await getMapPerformance(bid, data.modeInt, mods);
         return {
             id, bid, mods,
 
@@ -43,6 +41,12 @@ async function getAttr(data = dataTemp) {
             bpm: r.bpm.fixed(),
             stars: r.stars.fixed(),
             combo: r.maxCombo,
+
+            pp: pp.pp,
+            ppAim: pp.ppAim,
+            ppSpeed: pp.ppSpeed,
+            ppAcc: pp.ppAcc,
+            ppFlashlight: pp.ppFlashlight,
         };
     })
 
