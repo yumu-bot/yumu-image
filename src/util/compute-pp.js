@@ -263,7 +263,7 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
     };
 }
 
-export async function getMapPerformance(bid, mode_int = 0, mods, hasLeaderBoard = false) {
+export async function getMapPerformance(bid, mods = 0, mode_int = 0, hasLeaderBoard = false) {
     mode_int = getGameMode(mode_int, -2);
     const osuFilePath = await getOsuFilePath(bid, mode_int, hasLeaderBoard);
     let beatMap = new Beatmap({

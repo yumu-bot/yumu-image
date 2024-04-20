@@ -29,7 +29,7 @@ async function getAttr(data = dataTemp) {
         let r =
             await getMapAttributes(bid, mods, data.modeInt, hasLeaderBoard(ranked));
         let pp =
-            await getMapPerformance(bid, data.modeInt, mods, hasLeaderBoard(ranked));
+            await getMapPerformance(bid, mods, data.modeInt, hasLeaderBoard(ranked));
         return {
             id, bid, mods,
 
