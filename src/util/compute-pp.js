@@ -263,9 +263,9 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
     };
 }
 
-export async function getMapPerformance(bid, gameMode, mods, reload = false) {
-    const mode_int = getGameMode(gameMode);
-    const osuFilePath = await getOsuFilePath(bid, gameMode, reload);
+export async function getMapPerformance(bid, mode_int = 0, mods, hasLeaderBoard = false) {
+    mode_int = getGameMode(mode_int, -2);
+    const osuFilePath = await getOsuFilePath(bid, mode_int, hasLeaderBoard);
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
@@ -298,6 +298,9 @@ export async function getMapPerformance(bid, gameMode, mods, reload = false) {
             calculator.n300(0);
             calculator.nKatu(0);
             calculator.nGeki(diff.nCircles + diff.nSliders);
+        } break;
+        default: {
+            calculator.n300(diff.nSpinners + diff.nCircles + diff.nSliders);
         } break;
     }
 

@@ -1,4 +1,5 @@
 import {getMapAttributes, getMapPerformance} from "../util/compute-pp.js";
+import {hasLeaderBoard} from "../util/star";
 
 export async function router(req, res) {
     const data = req.fields;
@@ -15,18 +16,20 @@ const dataTemp = {
     modeInt: 0,
     maps: [
         {
-            id: 0, bid: 0, mods: 0,
+            id: 0, bid: 0, mods: 0, ranked: 0,
         },
     ]
 };
 
 async function getAttr(data = dataTemp) {
+    console.log(data)
 
-    let tasks = data.maps.map(async ({id, bid, mods}) => {
+    let tasks = data.maps.map(async ({id, bid, mods, ranked}) => {
+
         let r =
-            await getMapAttributes(bid, mods, data.modeInt);
+            await getMapAttributes(bid, mods, data.modeInt, hasLeaderBoard(ranked));
         let pp =
-            await getMapPerformance(bid, data.modeInt, mods);
+            await getMapPerformance(bid, data.modeInt, mods, hasLeaderBoard(ranked));
         return {
             id, bid, mods,
 
