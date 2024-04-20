@@ -22,8 +22,6 @@ const dataTemp = {
 };
 
 async function getAttr(data = dataTemp) {
-    console.log(data)
-
     let tasks = data.maps.map(async ({id, bid, mods, ranked}) => {
 
         let r =
