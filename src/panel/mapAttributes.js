@@ -1,5 +1,5 @@
 import {getMapAttributes, getMapPerformance} from "../util/compute-pp.js";
-import {hasLeaderBoard} from "../util/star";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     const data = req.fields;
