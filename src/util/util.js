@@ -5,7 +5,6 @@ import axios from "axios";
 import https from "https";
 import path from "path";
 import moment from "moment";
-import testImage from "image-size";
 import {torus} from "./font.js";
 import {API} from "../svg-to-image/API.js";
 import JPEGProvider from '../svg-to-image/JPEGProvider.js';
@@ -135,13 +134,6 @@ export async function getDiffBG(bid, sid, cover = 'cover', useCache = true, defa
 
         const res = await getBGFromDatabase(bid, sid);
         path = res.data;
-
-        // 尝试仅在使用缓存的时候检测
-        if (await isPictureIntacted(path)) {
-            return path;
-        } else {
-            return defaultImagePath;
-        }
     } catch (e) {
         path = await getMapBG(sid, cover, useCache, defaultImagePath);
     } finally {
@@ -200,16 +192,15 @@ export function deleteBeatMapFromDatabase(bid) {
 /**
  * 读取文件，判断 JPG, PNG, GIF 图片是否完整
  * @param path 位于文件系统的绝对路径
- @return {Promise<boolean>}
+ * @return {Promise<boolean>}
  */
-export async function isPictureIntacted(path = '') {
+export function isPictureIntacted(path = '') {
     if (path == null || path == '') return false;
-    try {
-        await testImage(path)
-        return true
-    } catch (e) {
-        return false;
-    }
+
+    const f = fs.readFileSync(path, 'binary');
+    return (f.startsWith('\xff\xd8') && f.endsWith('\xff\xd9')) // JFIF JPG
+        || f.endsWith('\x49\x45\x4e\x44\xae\x42\x60\x82') // PNG
+        || f.endsWith('\x00\x3b'); // GIF
 }
 
 /**
@@ -257,7 +248,7 @@ export async function getAvatar(link, useCache = true, defaultImagePath = getIma
  */
 export async function getCover(link, useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
     if (link != null && link.startsWith("https://assets.ppy.sh/beatmaps/")) {
-        return  getImageFromV3('beatmap-DLfailBG.jpg')
+        defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')
     } else if (link == null || link == "") {
         return defaultImagePath;
     } else {
@@ -283,20 +274,23 @@ export async function readNetImage(path = '', useCache = true, defaultImagePath 
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
-    if (useCache) {
-        try {
+    try {
+        if (useCache) {
             fs.accessSync(bufferPath, fs.constants.F_OK);
-            // fs.statSync 本身自带检查文件是否存在
 
             if (fs.statSync(bufferPath).size <= 4 * 1024) {
-                useCache = false;
+                throw Error("size err");
             }
-            // 只在获得难度背景那边检查, 不在这里检测
-            // 这边是先下载到内存然后一次写入, 几乎不可能出错
-            // 另一个是下载.osz, 文件比较大所以用流式下载而且还是边下边解压, 所以容易出问题
-        } catch (e) {
-            useCache = false;
+
+            // 尝试仅在使用缓存的时候检测
+            if (isPictureIntacted(bufferPath)) {
+                return bufferPath;
+            } else {
+                return defaultImagePath;
+            }
         }
+    } catch (e) {
+        useCache = false;
     }
     let req;
     let data;
