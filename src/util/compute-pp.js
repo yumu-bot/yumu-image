@@ -264,14 +264,14 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
 }
 
 export async function getMapPerformance(bid, mods = 0, mode_int = 0, hasLeaderBoard = false) {
-    mode_int = getGameMode(mode_int, -2);
-    const osuFilePath = await getOsuFilePath(bid, mode_int, hasLeaderBoard);
+    const modeInt = getGameMode(mode_int, -2);
+    const osuFilePath = await getOsuFilePath(bid, modeInt, hasLeaderBoard);
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
 
     let calculator = new Calculator({
-        mode: mode_int,
+        mode: modeInt,
         mods: mods,
         acc: 1,
         nMisses: 0,
@@ -279,14 +279,17 @@ export async function getMapPerformance(bid, mods = 0, mode_int = 0, hasLeaderBo
         n50: 0,
     })
     const diff = calculator.difficulty(beatMap);
-    calculator.combo(diff.maxCombo);
+    const attr = calculator.mapAttributes(beatMap);
 
-    switch (mode_int) {
+    calculator.combo(diff.maxCombo);
+    calculator.nMisses(0);
+
+    switch (modeInt) {
         case 0: {
-            calculator.n300(diff.nSpinners + diff.nCircles + diff.nSliders);
+            calculator.n300(attr.nSpinners + attr.nCircles + attr.nSliders);
         } break;
         case 1: {
-            calculator.n300(diff.nCircles);
+            calculator.n300(attr.nCircles);
         } break;
         case 2: {
             calculator.n300(diff.nFruits);
@@ -297,10 +300,10 @@ export async function getMapPerformance(bid, mods = 0, mode_int = 0, hasLeaderBo
         case 3: {
             calculator.n300(0);
             calculator.nKatu(0);
-            calculator.nGeki(diff.nCircles + diff.nSliders);
+            calculator.nGeki(attr.nCircles + attr.nSliders);
         } break;
         default: {
-            calculator.n300(diff.nSpinners + diff.nCircles + diff.nSliders);
+            calculator.n300(attr.nSpinners + attr.nCircles + diff.nSliders);
         } break;
     }
 
