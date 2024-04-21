@@ -19,10 +19,22 @@ const stat = {
 }
 
 export async function getMapAttributes(bid, mod_int, mode_int = 0, hasLeaderBoard = true) {
-    const osuFilePath = await getOsuFilePath(bid, getGameMode(mode_int), hasLeaderBoard);
-    const beatMap = new Beatmap({
-        path: osuFilePath,
-    });
+    let osuFilePath = await getOsuFilePath(bid, getGameMode(mode_int, -2), hasLeaderBoard);
+    let beatMap;
+
+    try {
+        beatMap = new Beatmap({
+            path: osuFilePath,
+        });
+    } catch (e) {
+        //如果有问题，强制重新加载
+
+        osuFilePath = await getOsuFilePath(bid, getGameMode(mode_int, -2), false);
+        beatMap = new Beatmap({
+            path: osuFilePath,
+        });
+    }
+
     let calculator = new Calculator({
         mods: mod_int,
     })
