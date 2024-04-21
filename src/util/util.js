@@ -127,37 +127,80 @@ export function getImageFromV3(path = '') {
  * @param {number} sid sid
  */
 export async function getDiffBG(bid, sid, cover = 'cover', useCache = true, defaultImagePath = getImageFromV3('card-default.png')) {
-    try {
-        const res = await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
-            proxy: {},
-            headers: {
-                "SET_ID": sid,
-                "AuthorizationX": SUPER_KEY,
-            },
-            timeout: 300,
-            __no_wait: true,
-        });
-        // data 为背景文件在文件系统中的绝对路径 字符串
-        // 不是文件本身
-        const data = res.data;
+    let path;
 
-        if (data) {
-            return data;
-        } else {
-            return await getMapBG(sid, cover, useCache, defaultImagePath);
-        }
+    try {
+        // data 为背景文件在文件系统中的绝对路径字符串 不是文件本身
+
+        const res = await getBGFromDatabase(bid, sid);
+        path = res.data;
     } catch (e) {
-        return await getMapBG(sid, cover, useCache, defaultImagePath);
+        path = await getMapBG(sid, cover, useCache, defaultImagePath);
     } finally {
-        // 向服务器提交异步任务
-        axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
-            proxy: {},
-            headers: {
-                "SET_ID": sid,
-                "AuthorizationX": SUPER_KEY,
-            }
-        }).catch(_ => {})
+        asyncBeatMapFromDatabase(bid, sid);
+
+        if (isPictureIntacted(path)) {
+            return path;
+        } else {
+            deleteBeatMapFromDatabase(bid);
+            return defaultImagePath;
+        }
     }
+}
+
+/**
+ * 获取图片
+ */
+export async function getBGFromDatabase(bid, sid) {
+    return await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
+        proxy: {},
+        headers: {
+            "SET_ID": sid,
+            "AuthorizationX": SUPER_KEY,
+        },
+        timeout: 300,
+        __no_wait: true,
+    });
+}
+
+/**
+ * 向服务器提交异步任务
+ */
+export function asyncBeatMapFromDatabase(bid, sid) {
+    axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
+        proxy: {},
+        headers: {
+            "SET_ID": sid,
+            "AuthorizationX": SUPER_KEY,
+        }
+    }).catch(_ => {})
+}
+
+
+/**
+ * 向服务器提交删除谱面任务
+ */
+export function deleteBeatMapFromDatabase(bid) {
+    axios.get(`http://127.0.0.1:47150/api/file/remove/bid/${bid}`, {
+        proxy: {},
+        headers: {
+            "AuthorizationX": SUPER_KEY,
+        }
+    }).catch(_ => {})
+}
+
+/**
+ * 读取文件，判断 JPG, PNG, GIF 图片是否完整
+ * @param path 位于文件系统的绝对路径
+ * @return {Promise<boolean>}
+ */
+export function isPictureIntacted(path = '') {
+    if (path == null || path == '') return false;
+
+    const f = fs.readFileSync(path, 'binary');
+    return (f.startsWith('\xff\xd8') && f.endsWith('\xff\xd9')) // JFIF JPG
+        || f.endsWith('\x49\x45\x4e\x44\xae\x42\x60\x82') // PNG
+        || f.endsWith('\x00\x3b'); // GIF
 }
 
 /**
@@ -211,48 +254,58 @@ export async function getCover(link, useCache = true, defaultImagePath = getImag
  * @return {Promise<string>} 位于文件系统的绝对路径
  */
 export async function readNetImage(path = '', useCache = true, defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')) {
-    const error = getImageFromV3('error.png');
+    let image; //这个是路径
 
-    if (!path || !path.startsWith("http")) {
-        return readFile(path);
-    }
+    if (path == null || path == '') image = getImageFromV3('error.png'); //error
 
-    if (path == 'https://osu.ppy.sh/images/layout/avatar-guest.png') {
-        return getImageFromV3('avatar-guest.png');
-    }
-
-    const bufferName = MD5.copy().update(path).digest('hex');
-    const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
-
-    try {
-        if (useCache) {
-            fs.accessSync(bufferPath, fs.constants.F_OK);
-            if (fs.statSync(bufferPath).size <= 4 * 1024) {
-                throw Error("size err");
-            }
-            return bufferPath;
-        }
-    } catch (e) {
-        useCache = false;
-    }
-    let req;
-    let data;
-
-    if (useCache === false) {
-        try {
-            req = await axios.get(path, {responseType: 'arraybuffer'});
-            data = req.data;
-        } catch (e) {
-            console.error("download error", e);
-            return defaultImagePath || error;
-        }
-    }
-
-    if (req && req.status === 200) {
-        fs.writeFileSync(bufferPath, data, 'binary');
-        return bufferPath;
+    if (! path.startsWith("http")) {
+        // 获取本地图片
+        image = readFile(path);
+    } else if (path == 'https://osu.ppy.sh/images/layout/avatar-guest.png') {
+        image = getImageFromV3('avatar-guest.png');
     } else {
-        return defaultImagePath || error;
+        // 获取网络图片
+        const bufferName = MD5.copy().update(path).digest('hex');
+        const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
+
+        try {
+            if (useCache) {
+                fs.accessSync(bufferPath, fs.constants.F_OK);
+                if (fs.statSync(bufferPath).size <= 4 * 1024) {
+                    throw Error("size err");
+                }
+                image = bufferPath;
+            }
+        } catch (e) {
+            useCache = false;
+        }
+
+        let req;
+        let data;
+
+        if (useCache === false) {
+            try {
+                req = await axios.get(path, {responseType: 'arraybuffer'});
+                data = req.data;
+            } catch (e) {
+                console.error("download error", e);
+                image = defaultImagePath;
+            }
+        }
+
+        if (req != null && req.status === 200) {
+            fs.writeFileSync(bufferPath, data, 'binary');
+            image = bufferPath;
+        } else {
+            image = defaultImagePath;
+        }
+    }
+
+
+    if (isPictureIntacted(image)) {
+        return image;
+    } else {
+        return defaultImagePath;
     }
 }
 
@@ -1565,16 +1618,4 @@ export function replaceBanner (svg, reg_banner, banner) {
     } else {
         return implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     }
-}
-
-/**
- * 删除文件
- */
-export function deleteLocalFile(bid) {
-    axios.get(`http://127.0.0.1:47150/api/file/remove/bid/${bid}`, {
-            proxy: {},
-            headers: {
-                "AuthorizationX": SUPER_KEY,
-            }
-        }).catch(_ => {})
 }
