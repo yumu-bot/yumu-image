@@ -203,7 +203,7 @@ export function deleteBeatMapFromDatabase(bid) {
  @return {Promise<boolean>}
  */
 export async function isPictureIntacted(path = '') {
-    if (!path) return false;
+    if (path == null || path == '') return false;
     try {
         await testImage(path)
         return true
@@ -285,6 +285,7 @@ export async function readNetImage(path = '', useCache = true, defaultImagePath 
 
     if (useCache) {
         try {
+            fs.accessSync(bufferPath, fs.constants.F_OK);
             // fs.statSync 本身自带检查文件是否存在
 
             if (fs.statSync(bufferPath).size <= 4 * 1024) {
