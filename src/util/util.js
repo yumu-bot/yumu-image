@@ -254,58 +254,55 @@ export async function getCover(link, useCache = true, defaultImagePath = getImag
  * @return {Promise<string>} 位于文件系统的绝对路径
  */
 export async function readNetImage(path = '', useCache = true, defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')) {
-    let image; //这个是路径
+    const error = getImageFromV3('error.png');
 
-    if (path == null || path == '') image = getImageFromV3('error.png'); //error
+    if (!path || !path.startsWith("http")) {
+        return readFile(path);
+    }
 
-    if (! path.startsWith("http")) {
-        // 获取本地图片
-        image = readFile(path);
-    } else if (path == 'https://osu.ppy.sh/images/layout/avatar-guest.png') {
-        image = getImageFromV3('avatar-guest.png');
-    } else {
-        // 获取网络图片
-        const bufferName = MD5.copy().update(path).digest('hex');
-        const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
+    if (path.endsWith('avatar-guest.png')) {
+        return getImageFromV3('avatar-guest.png');
+    }
 
+    const bufferName = MD5.copy().update(path).digest('hex');
+    const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
+
+    try {
+        if (useCache) {
+            fs.accessSync(bufferPath, fs.constants.F_OK);
+
+            if (fs.statSync(bufferPath).size <= 4 * 1024) {
+                throw Error("size err");
+            }
+
+            // 尝试仅在使用缓存的时候检测
+            if (isPictureIntacted(bufferPath)) {
+                return bufferPath;
+            } else {
+                return defaultImagePath;
+            }
+        }
+    } catch (e) {
+        useCache = false;
+    }
+    let req;
+    let data;
+
+    if (useCache === false) {
         try {
-            if (useCache) {
-                fs.accessSync(bufferPath, fs.constants.F_OK);
-                if (fs.statSync(bufferPath).size <= 4 * 1024) {
-                    throw Error("size err");
-                }
-                image = bufferPath;
-            }
+            req = await axios.get(path, {responseType: 'arraybuffer'});
+            data = req.data;
         } catch (e) {
-            useCache = false;
-        }
-
-        let req;
-        let data;
-
-        if (useCache === false) {
-            try {
-                req = await axios.get(path, {responseType: 'arraybuffer'});
-                data = req.data;
-            } catch (e) {
-                console.error("download error", e);
-                image = defaultImagePath;
-            }
-        }
-
-        if (req != null && req.status === 200) {
-            fs.writeFileSync(bufferPath, data, 'binary');
-            image = bufferPath;
-        } else {
-            image = defaultImagePath;
+            console.error("download error", e);
+            return defaultImagePath || error;
         }
     }
 
-
-    if (isPictureIntacted(image)) {
-        return image;
+    if (req && req.status === 200) {
+        fs.writeFileSync(bufferPath, data, 'binary');
+        return bufferPath;
     } else {
-        return defaultImagePath;
+        return defaultImagePath || error;
     }
 }
 
