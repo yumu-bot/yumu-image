@@ -281,10 +281,12 @@ export async function panel_E(data = {
     const reg_card_e4 = /(?<=<g id="Card_E4">)/;
 
     // 面板文字
-    const score_time = moment(data?.score?.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]')
-        .add(8, 'hour')
-        .format("YYYY-MM-DD HH:mm:ss [+8]");
-    console.log(data)
+    const score_time = (data?.score?.create_at_str != null) ? (
+        moment(data?.score?.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]")) : (
+            //[ 2024, 4, 22, 17, 32, 12, 473533397 ]
+            moment(data?.score?.created_at, '[\[] YYYY, MM, DD, HH, mm, ss, SSSSSSSSS [\]]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]")
+    );
+
     const delta_time = getTimeDifference(data?.score?.create_at_str);
 
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
