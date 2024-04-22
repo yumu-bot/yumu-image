@@ -197,7 +197,14 @@ export function deleteBeatMapFromDatabase(bid) {
 export function isPictureIntacted(path = '') {
     if (path == null || path == '') return false;
 
-    const f = fs.readFileSync(path, 'binary');
+    let f;
+
+    try {
+        f = fs.readFileSync(path, 'binary');
+    } catch (e) {
+        // No Such File
+        return false;
+    }
     return (f.startsWith('\xff\xd8') && f.endsWith('\xff\xd9')) // JFIF JPG
         || f.endsWith('\x49\x45\x4e\x44\xae\x42\x60\x82') // PNG
         || f.endsWith('\x00\x3b'); // GIF
@@ -248,7 +255,7 @@ export async function getAvatar(link, useCache = true, defaultImagePath = getIma
  */
 export async function getCover(link, useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
     if (link != null && link.startsWith("https://assets.ppy.sh/beatmaps/")) {
-        return  getImageFromV3('beatmap-DLfailBG.jpg')
+        return getImageFromV3('beatmap-DLfailBG.jpg')
     } else if (link == null || link == "") {
         return defaultImagePath;
     } else {
@@ -283,7 +290,7 @@ export async function readNetImage(path = '', useCache = true, defaultImagePath 
             }
 
             // 尝试仅在使用缓存的时候检测
-            if (await isPictureIntacted(bufferPath)) {
+            if (isPictureIntacted(bufferPath)) {
                 return bufferPath;
             } else {
                 return defaultImagePath;
