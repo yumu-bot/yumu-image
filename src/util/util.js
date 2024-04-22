@@ -1500,7 +1500,7 @@ export async function getFlagPath(code = "cn", x, y, h = 30) {
 export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment()) {
     const compare_moment = moment(compare, format).add(8, "hours");
 
-    if (!compare_moment) return '-';
+    if (compare_moment == null) return '-';
 
     const years = compare_moment.diff(now, "years");
     const months = compare_moment.diff(now, "months");
