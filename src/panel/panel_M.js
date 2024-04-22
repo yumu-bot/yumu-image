@@ -462,7 +462,7 @@ export async function panel_M(data = {
 
     for (let i = 0; i < Math.min(recent_activity.length, 7); i++) {
         const v = recent_activity[i];
-        const delta_time = getTimeDifference(v.created_at, 'X', moment().add(8, "hours"));
+        const delta_time = getTimeDifference(v.created_at, 'X', moment());
         // /beatmapsets/1576867
         const sid = v.beatmapset.url ? v.beatmapset.url.toString().match("-?\\d+.?\\d*$") : 0;
 

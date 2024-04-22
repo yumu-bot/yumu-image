@@ -1496,9 +1496,16 @@ export async function getFlagPath(code = "cn", x, y, h = 30) {
     return `<g transform="translate(${x} ${y}) scale(${scale})">` + svg.substring(60, len - 6) + '</g>';
 }
 
-//获取时间差
-export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment()) {
-    const compare_moment = moment(compare, format).add(8, "hours");
+/**
+ * 获取时间差
+ * @param compare
+ * @param format
+ * @param now 这个时间是 UTC 时间。如果你输入的时间已经是本地时间（北京时间），这里需要输入 moment();
+ * @return {string}
+ */
+
+export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment().subtract(8, "hours")) {
+    const compare_moment = moment(compare, format);
 
     if (compare_moment == null) return '-';
 
