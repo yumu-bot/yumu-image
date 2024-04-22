@@ -281,23 +281,23 @@ export async function readNetImage(path = '', useCache = true, defaultImagePath 
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
-    try {
-        if (useCache) {
+    if (useCache === true) {
+        let size;
+
+        try {
             fs.accessSync(bufferPath, fs.constants.F_OK);
-
-            if (fs.statSync(bufferPath).size <= 4 * 1024) {
-                throw Error("size err");
-            }
-
-            // 尝试仅在使用缓存的时候检测
-            if (isPictureIntacted(bufferPath)) {
-                return bufferPath;
-            } else {
-                return defaultImagePath;
-            }
+            size = fs.statSync(bufferPath).size;
+        } catch (e) {
+            useCache = false;
         }
-    } catch (e) {
-        useCache = false;
+
+        // 尝试仅在使用缓存的时候检测
+        if (useCache === true && (size > 4 * 1024) && isPictureIntacted(bufferPath)) {
+            return bufferPath;
+        } else {
+            //throw Error("size err");
+            useCache = false;
+        }
     }
     let req;
     let data;
