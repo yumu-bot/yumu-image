@@ -284,9 +284,7 @@ export async function panel_E(data = {
     const score_time = moment(data?.score?.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]')
         .add(8, 'hour')
         .format("YYYY-MM-DD HH:mm:ss [+8]");
-    console.log(data?.score?.create_at_str)
-    console.log(moment(data?.score?.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]'))
-    console.log(score_time)
+    console.log(data)
     const delta_time = getTimeDifference(data?.score?.create_at_str);
 
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
