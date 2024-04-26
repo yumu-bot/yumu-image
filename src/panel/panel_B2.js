@@ -11,6 +11,7 @@ import {card_B5} from "../card/card_B5.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {hasLeaderBoard} from "../util/star.js";
+import {getMapAttributes} from "../util/compute-pp.js";
 
 export async function router(req, res) {
     try {
@@ -177,15 +178,17 @@ export async function panel_B2(data = {
     const rcd_arr = data.mapMinus.riceDensity || [];
     const lnd_arr = data.mapMinus.longNoteDensity || [];
 
-    const rc = 0.47 * Math.pow(getValue(getSum(rc_arr), rc_arr), 0.39);
-    const ln = 0.04 * Math.pow(getValue(getSum(ln_arr), ln_arr), 0.78);
-    const sv = Math.pow(getValue(getSum(sv_arr), sv_arr), 1);
-    const st = 0.2 * Math.pow(getValue(getSum(st_arr), st_arr), 0.5);
-    const sp = 0.3 * Math.pow(getValue(getSum(sp_arr), sp_arr) + Math.max.apply(Math, data.mapMinus.burst), 0.45);//burst应该这么给
-    const pr = 0.43 * Math.pow(getValue(getSum(pr_arr), pr_arr), 0.48);
+    const data_arr = data?.mapMinus?.valueList || [];
 
-    const rcd = 0.4 * Math.pow(getSum(rcd_arr), 0.5);
-    const lnd = 0.4 * Math.pow(getSum(lnd_arr), 0.5);
+    const rc = 0.43 * Math.pow(data_arr[0], 0.5);
+    const ln = 0.45 * Math.pow(data_arr[1], 0.57);
+    const sv = data_arr[2];
+    const st = 0.18 * Math.pow(data_arr[3], 0.79);
+    const sp = 0.33 * Math.pow(data_arr[4], 0.61); //burst应该这么给
+    const pr = 2.78 * Math.pow(data_arr[5] * data.beatMap.accuracy, 0.42);
+
+    const rcd = data.beatMap.count_circles / (data.beatMap.hit_length * 2);
+    const lnd = data.beatMap.count_sliders / data.beatMap.hit_length;
 
     const map_minus_mania = {
         RC: rc,
@@ -196,14 +199,22 @@ export async function panel_B2(data = {
         PR: pr,
     }
 
-    const total = ((rc + 0.1 * ln + st + sp + pr) / 4); //暂时不加sv，ln占比减少
+    const total = ((rc + (0.8 * ln) + st + sp + pr) / 4); //暂时不加sv，ln占比减少
     const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, total_path], reg_index);
 
     // A2定义
-    const cardA2 = await card_A2(await PanelGenerate.beatmap2CardA2(data.beatMap));
+    const b = await getMapAttributes(data.beatMap.id
+        , 0, data.beatMap.mode_int, hasLeaderBoard(data.beatMap.ranked));
+
+    const beatMap = {
+        ...data.beatMap,
+        difficulty_rating: b.stars
+    }
+
+    const cardA2 = await card_A2(await PanelGenerate.beatmap2CardA2(beatMap));
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 获取卡片
@@ -211,7 +222,7 @@ export async function panel_B2(data = {
     let hexagons = [];
     let cardB5s = [];
 
-    for (const name of VALUE_NAMES) {
+    for (const name of (VALUE_NAMES)) { // data?.mapMinus?.abbrList ||
         if (typeof map_minus_mania[name] !== 'number') continue;
         cardB4s.push(await card_B4({parameter: name, number: map_minus_mania[name]}, true, false));
         hexagons.push(map_minus_mania[name] / 8); //8星以上是X
@@ -292,11 +303,6 @@ export async function panel_B2(data = {
     svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, y_arr).toFixed(3), 75 + 1370 + 170, -50 + 580 + 460, 24, 'center baseline', '#fff'), reg_index);
 
     let total_arr = [];
-    data.mapMinus.rice.forEach((v, i) => {
-        let t = v + data.mapMinus.longNote[i] + data.mapMinus.speedVariation[i]
-            + data.mapMinus.stamina[i] + data.mapMinus.speed[i] + data.mapMinus.precision[i];
-        total_arr.push(t);
-    });
     const total_c = PanelDraw.LineChart(total_arr, 0, 0, 1370 + 340, 580 + 460, 150, 95, '#aaa', 1, 0.3, 3)
     svg = implantSvgBody(svg, 0, 0, total_c, reg_right);
     svg = replaceText(svg, torus.getTextPath(Math.round(Math.max.apply(Math, total_arr)).toFixed(3), 75 + 1370 + 340, -50 + 580 + 460, 24, 'center baseline', '#fff'), reg_index);
