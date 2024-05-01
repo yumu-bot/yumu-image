@@ -11,7 +11,6 @@ import {card_B5} from "../card/card_B5.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {hasLeaderBoard} from "../util/star.js";
-import {getMapAttributes} from "../util/compute-pp.js";
 
 export async function router(req, res) {
     try {
@@ -190,7 +189,7 @@ export async function panel_B2(data = {
         PR: pr,
     }
 
-    const total = ((0.5 * rc + 0.5 * ln + co + st + sp + 0.5 * pr) / 4);
+    const total = ((0.5 * rc + 0.5 * ln + co + st + sp + 0.5 * pr) / 4.5);
 
     const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
