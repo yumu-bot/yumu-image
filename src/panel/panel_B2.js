@@ -38,7 +38,7 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-const VALUE_NAMES = ['RC', 'LN', 'SV', 'ST', 'SP', 'PR']
+const VALUE_NAMES = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR']
 
 /**
  * 骂娘谱面某种信息面板, 不玩骂娘看不懂
@@ -168,24 +168,15 @@ export async function panel_B2(data = {
     const panel_name = getPanelNameSVG('Map Minus - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
 
     // 计算数值
-    const rc_arr = data.mapMinus.rice || [];
-    const ln_arr = data.mapMinus.longNote || [];
-    const sv_arr = data.mapMinus.speedVariation || [];
-    const st_arr = data.mapMinus.stamina || [];
-    const sp_arr = data.mapMinus.speed || [];
-    const pr_arr = data.mapMinus.precision || [];
-
-    const rcd_arr = data.mapMinus.riceDensity || [];
-    const lnd_arr = data.mapMinus.longNoteDensity || [];
 
     const data_arr = data?.mapMinus?.valueList || [];
 
-    const rc = 0.43 * Math.pow(data_arr[0], 0.5);
-    const ln = 0.45 * Math.pow(data_arr[1], 0.57);
-    const sv = data_arr[2];
-    const st = 0.18 * Math.pow(data_arr[3], 0.79);
-    const sp = 0.33 * Math.pow(data_arr[4], 0.61); //burst应该这么给
-    const pr = 2.78 * Math.pow(data_arr[5] * data.beatMap.accuracy, 0.42);
+    const rc = data_arr[0];
+    const ln = data_arr[1];
+    const co = data_arr[2];
+    const st = data_arr[3];
+    const sp = data_arr[4];
+    const pr = data_arr[5];
 
     const rcd = data.beatMap.count_circles / (data.beatMap.hit_length * 2);
     const lnd = data.beatMap.count_sliders / data.beatMap.hit_length;
@@ -193,19 +184,21 @@ export async function panel_B2(data = {
     const map_minus_mania = {
         RC: rc,
         LN: ln,
-        SV: sv,
+        CO: co,
         ST: st,
         SP: sp,
         PR: pr,
     }
 
-    const total = ((rc + (0.8 * ln) + st + sp + pr) / 4); //暂时不加sv，ln占比减少
+    const total = ((rc + ln + co + st + sp + pr) / 5.5);
+
     const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, total_path], reg_index);
 
     // A2定义
+    /*
     const b = await getMapAttributes(data.beatMap.id
         , 0, data.beatMap.mode_int, hasLeaderBoard(data.beatMap.ranked));
 
@@ -214,7 +207,9 @@ export async function panel_B2(data = {
         difficulty_rating: b.stars
     }
 
-    const cardA2 = await card_A2(await PanelGenerate.beatmap2CardA2(beatMap));
+     */
+
+    const cardA2 = await card_A2(await PanelGenerate.beatmap2CardA2(data.beatMap));
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 获取卡片
@@ -225,7 +220,7 @@ export async function panel_B2(data = {
     for (const name of (VALUE_NAMES)) { // data?.mapMinus?.abbrList ||
         if (typeof map_minus_mania[name] !== 'number') continue;
         cardB4s.push(await card_B4({parameter: name, number: map_minus_mania[name]}, true, false));
-        hexagons.push(map_minus_mania[name] / 8); //8星以上是X
+        hexagons.push(map_minus_mania[name] / 9); //9星以上是X
     }
 
     svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC'), reg_hexagon);
@@ -234,13 +229,51 @@ export async function panel_B2(data = {
         svg = implantSvgBody(svg, 40, 350 + j * 115, cardB4s[j], reg_left);
     }
 
-    cardB5s.push(await card_B5({parameter: "RCD", number: getValue(rcd, rcd_arr)}));
-    cardB5s.push(await card_B5({parameter: "LND", number: getValue(lnd, lnd_arr)}));
+    cardB5s.push(await card_B5({parameter: "OVA", number: total}));
+    cardB5s.push(await card_B5({parameter: "SV", number: 0}));
 
     svg = implantSvgBody(svg, 630, 860, cardB5s[0], reg_center);
     svg = implantSvgBody(svg, 970, 860, cardB5s[1], reg_center);
 
+    // todo 临时的值
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[7].toFixed(3).toString(), 75 + 1370, -50 + 465, 24, 'center baseline', '#fff'), reg_index);
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[8].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465, 24, 'center baseline', '#fff'), reg_index);
+
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[9].toFixed(3).toString(), 75 + 1370, -50 + 465 + 115, 24, 'center baseline', '#fff'), reg_index);
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[10].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 115, 24, 'center baseline', '#fff'), reg_index);
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[11].toFixed(3).toString(), 75 + 1370 + 340, -50 + 465 + 115, 24, 'center baseline', '#fff'), reg_index);
+
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[12].toFixed(3).toString(), 75 + 1370, -50 + 465 + 230, 24, 'center baseline', '#fff'), reg_index);
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[13].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 230, 24, 'center baseline', '#fff'), reg_index);
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[14].toFixed(3).toString(), 75 + 1370 + 340, -50 + 465 + 230, 24, 'center baseline', '#fff'), reg_index);
+
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[15].toFixed(3).toString(), 75 + 1370, -50 + 465 + 345, 24, 'center baseline', '#fff'), reg_index);
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[16].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 345, 24, 'center baseline', '#fff'), reg_index);
+
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[17].toFixed(3).toString(), 75 + 1370, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[18].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[19].toFixed(3).toString(), 75 + 1370 + 340, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
+
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[20].toFixed(3).toString(), 75 + 1370, -50 + 465 + 575, 24, 'center baseline', '#fff'), reg_index);
+
+    svg = replaceText(svg, torus.getTextPath(data_arr[21].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 575, 24, 'center baseline', '#fff'), reg_index);
+
     // todo 临时的折线图
+    /*
     const s_arr = data.mapMinus.stream || [];
     const s_c = PanelDraw.LineChart(s_arr, 0, 0, 1370, 465, 150, 95, '#00A8EC', 1, 0.3, 3)
     svg = implantSvgBody(svg, 0, 0, s_c, reg_right);
@@ -307,6 +340,8 @@ export async function panel_B2(data = {
     svg = implantSvgBody(svg, 0, 0, total_c, reg_right);
     svg = replaceText(svg, torus.getTextPath(Math.round(Math.max.apply(Math, total_arr)).toFixed(3), 75 + 1370 + 340, -50 + 580 + 460, 24, 'center baseline', '#fff'), reg_index);
 
+     */
+
 
     // 画六边形和其他
     const hexagon = getImageFromV3('object-hexagon.png');
@@ -342,8 +377,8 @@ function drawHexIndex(mode = 'osu') {
     const reg_rrect = /(?<=<g id="Rect">)/;
     const reg_text = /(?<=<g id="IndexText">)/;
 
-    const VALUE_NORMAL = ['RC', 'LN', 'SV', 'ST', 'SP', 'PR'];
-    const VALUE_MANIA = ['RC', 'LN', 'SV', 'ST', 'SP', 'PR'];
+    const VALUE_NORMAL = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR'];
+    const VALUE_MANIA = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR'];
 
     for (let i = 0; i < 6; i++){
         let param;
