@@ -225,7 +225,7 @@ export async function panel_B2(data = {
         svg = implantSvgBody(svg, 40, 350 + j * 115, cardB4s[j], reg_left);
     }
 
-    cardB5s.push(await card_B5({parameter: "OVA", number: total}));
+    cardB5s.push(await card_B5({parameter: "OV", number: total}));
     cardB5s.push(await card_B5({parameter: "SV", number: 0}));
 
     svg = implantSvgBody(svg, 630, 860, cardB5s[0], reg_center);
