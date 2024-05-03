@@ -52,21 +52,21 @@ function getMMBG(rank = 'F') {
 function getMMRank (data = 0) {
     let rank;
 
-    if (data >= 8) {
+    if (data >= 9) {
         rank = 'X+';
-    } else if (data >= 7) {
+    } else if (data >= 8) {
         rank = 'SS';
-    } else if (data >= 6) {
+    } else if (data >= 6.5) {
         rank = 'S+';
-    } else if (data >= 5) {
+    } else if (data >= 5.3) {
         rank = 'S';
     } else if (data >= 4) {
         rank = 'A';
-    } else if (data >= 3) {
+    } else if (data >= 2.8) {
         rank = 'B';
     } else if (data >= 2) {
         rank = 'C';
-    } else if (data > 0) {
+    } else if (data >= 0.1) {
         rank = 'D';
     } else {
         rank = 'F';
