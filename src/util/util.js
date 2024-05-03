@@ -511,9 +511,14 @@ export function getRoundedNumberStrLarge(number = 0, level = 0) {
 
         //如果小数太小，可不要小数点
         let o;
-        let b = 0.1;//boundary
-        if (level === 3) b = 0.01;
-        if (level === 4) b = 0.0001;
+        let b; //boundary
+
+        switch (level) {
+            case 3: b = 0.01; break;
+            case 4: b = 0.0001; break;
+            default: b = 0.1;
+        }
+
         if (Math.abs(number - Math.floor(number)) >= b) {
             o = Math.floor(number).toString() + '.';
         } else {
@@ -676,6 +681,20 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
         }
         let numStr = number.toString();
 
+
+        //如果小数太小，可不要小数
+        let b; //boundary
+
+        switch (level) {
+            case 3: b = 0.01; break;
+            case 4: b = 0.0001; break;
+            default: b = 0.1;
+        }
+
+        if (Math.abs(number - Math.floor(number)) < b) {
+            return unit;
+        }
+
         if (numStr.indexOf('.') === -1) {
             return unit;
         } else {
@@ -696,7 +715,6 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
             } else {
                 return unit;
             }
-            ;
         }
     }
 

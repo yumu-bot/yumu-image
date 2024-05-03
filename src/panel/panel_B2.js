@@ -177,9 +177,6 @@ export async function panel_B2(data = {
     const sp = data_arr[4];
     const pr = data_arr[5];
 
-    const rcd = data.beatMap.count_circles / (data.beatMap.hit_length * 2);
-    const lnd = data.beatMap.count_sliders / data.beatMap.hit_length;
-
     const map_minus_mania = {
         RC: rc,
         LN: ln,
@@ -189,7 +186,7 @@ export async function panel_B2(data = {
         PR: pr,
     }
 
-    const total = ((0.5 * rc + 0.5 * ln + co + st + sp + 0.5 * pr) / 3.8);
+    const total = ((0.5 * rc + 0.5 * ln + co + st + sp + 0.5 * pr) / 4);
 
     const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 

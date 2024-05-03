@@ -85,7 +85,7 @@ function getMMRank (data = 0) {
         rank = 'B';
     } else if (data >= 2) {
         rank = 'C';
-    } else if (data > 0) {
+    } else if (data >= 0.1) {
         rank = 'D';
     } else {
         rank = 'F';
