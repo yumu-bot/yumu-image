@@ -73,7 +73,7 @@ function getMMRank (data = 0) {
 
     if (data >= 9) {
         rank = 'X+';
-    } else if (data >= 8) {
+    } else if (data >= 7) {
         rank = 'SS';
     } else if (data >= 6.5) {
         rank = 'S+';
