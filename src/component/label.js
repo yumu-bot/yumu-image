@@ -283,7 +283,7 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
     CO: {
-        icon: getImageFromV3("object-score-max.png"),
+        icon: getImageFromV3("object-score-circlesize.png"),
         icon_title: '协调',
         remark: 'Coordinate',
         data_b: 'CO',
@@ -327,25 +327,16 @@ export const LABEL_PPM = {
         color_remark: '#aaa',
         title_font: PuHuiTi,
     },
+    OV: {
+        icon: getImageFromV3("object-score-aimpp.png"),
+        icon_title: '综合',
+        remark: 'Overall',
+        data_b: 'OV',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
 
-    RCD: {
-        icon: getImageFromV3("object-score-rice.png"),
-        icon_title: '米密度',
-        remark: 'Density',
-        data_b: 'RCD',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
-    LND: {
-        icon: getImageFromV3("object-score-longnote.png"),
-        icon_title: '面密度',
-        remark: 'Density',
-        data_b: 'LND',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
 };
 
 export const RANK_OPTION = {
