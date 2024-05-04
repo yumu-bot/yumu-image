@@ -164,7 +164,7 @@ export async function panel_B2(data = {
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Map Minus - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
+    const panel_name = getPanelNameSVG('Map Minus v0.6 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.4.0 UU');
 
     // 计算数值
 
@@ -186,7 +186,7 @@ export async function panel_B2(data = {
         PR: pr,
     }
 
-    const total = ((0.5 * rc + 0.5 * ln + co + st + sp + 0.5 * pr) / 4);
+    const total = ((0.6 * rc + 0.6 * ln + 0.8 * co + 1.2 * st + 0.6 * sp + 0.2 * pr) / 3.8);
 
     const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
