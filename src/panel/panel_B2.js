@@ -186,7 +186,7 @@ export async function panel_B2(data = {
         PR: pr,
     }
 
-    const total = ((0.6 * rc + 0.6 * ln + 0.8 * co + 1.2 * st + 0.6 * sp + 0.2 * pr) / 3.8);
+    const total = ((0.6 * rc + 0.6 * ln + 0.8 * co + 1.2 * st + 0.8 * sp + 0.2 * pr) / 3.8);
 
     const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
