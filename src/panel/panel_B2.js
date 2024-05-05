@@ -2,7 +2,7 @@ import {
     exportJPEG, getImageFromV3, getGameMode, getMapBG,
     getPanelNameSVG, getRoundedNumberStrLarge, getRoundedNumberStrSmall, implantImage,
     implantSvgBody, readTemplate,
-    replaceText, replaceTexts
+    replaceText, replaceTexts, getRoundedNumberStr
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
@@ -37,7 +37,7 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-const VALUE_NAMES = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR']
+const VALUE_MANIA = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR']
 
 /**
  * 骂娘谱面某种信息面板, 不玩骂娘看不懂
@@ -45,103 +45,14 @@ const VALUE_NAMES = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR']
  * @return {Promise<string>}
  */
 export async function panel_B2(data = {
-    beatMap: {
-        "beatmapset_id": 13019,
-        "difficulty_rating": 4.76,
-        "id": 48416,
-        "mode": "mania",
-        "status": "approved",
-        "total_length": 202,
-        "user_id": 231631,
-        "version": "BASARA",
-        "accuracy": 7,
-        "ar": 9,
-        "bpm": 130,
-        "convert": false,
-        "count_circles": 789,
-        "count_sliders": 80,
-        "count_spinners": 1,
-        "cs": 4,
-        "deleted_at": null,
-        "drain": 8,
-        "hit_length": 185,
-        "is_scoreable": true,
-        "last_updated": "2014-05-18T17:22:13Z",
-        "mode_int": 0,
-        "passcount": 139943,
-        "playcount": 1871185,
-        "ranked": 2,
-        "url": "https://osu.ppy.sh/beatmaps/48416",
-        "checksum": "bcfbb61d5a6156fa9fb0708432c79d88",
-        "beatmapset": {
-            "artist": "Daisuke Achiwa",
-            "artist_unicode": "Daisuke Achiwa",
-            "covers": {
-                "cover": "https://assets.ppy.sh/beatmaps/13019/covers/cover.jpg?1622032274",
-                "cover@2x": "https://assets.ppy.sh/beatmaps/13019/covers/cover@2x.jpg?1622032274",
-                "card": "https://assets.ppy.sh/beatmaps/13019/covers/card.jpg?1622032274",
-                "card@2x": "https://assets.ppy.sh/beatmaps/13019/covers/card@2x.jpg?1622032274",
-                "list": "https://assets.ppy.sh/beatmaps/13019/covers/list.jpg?1622032274",
-                "list@2x": "https://assets.ppy.sh/beatmaps/13019/covers/list@2x.jpg?1622032274",
-                "slimcover": "https://assets.ppy.sh/beatmaps/13019/covers/slimcover.jpg?1622032274",
-                "slimcover@2x": "https://assets.ppy.sh/beatmaps/13019/covers/slimcover@2x.jpg?1622032274"
-            },
-            "creator": "100pa-",
-            "favourite_count": 1593,
-            "hype": null,
-            "id": 13019,
-            "nsfw": false,
-            "offset": 0,
-            "play_count": 2862911,
-            "preview_url": "//b.ppy.sh/preview/13019.mp3",
-            "source": "Ar tonelico II",
-            "spotlight": false,
-            "status": "approved",
-            "title": "BASARA",
-            "title_unicode": "BASARA",
-            "track_id": null,
-            "user_id": 231631,
-            "video": false,
-            "bpm": 130,
-            "can_be_hyped": false,
-            "deleted_at": null,
-            "discussion_enabled": true,
-            "discussion_locked": false,
-            "is_scoreable": true,
-            "last_updated": "2010-09-08T10:10:59Z",
-            "legacy_thread_url": "https://osu.ppy.sh/community/forums/topics/24360",
-            "nominations_summary": {
-                "current": 0,
-                "required": 2
-            },
-            "ranked": 2,
-            "ranked_date": "2010-12-28T22:17:38Z",
-            "storyboard": false,
-            "submitted_date": "2010-02-12T10:17:22Z",
-            "tags": "ar tonelico ii 2",
-            "availability": {
-                "download_disabled": false,
-                "more_information": null
-            },
-            "ratings": []
-        },
-        "failtimes": {
-            "fail": [],
-            "exit": []
-        },
-        "max_combo": 987
-    },
+    beatMap: {},
 
     mapMinus: {
-        rice: [0],
-        longNote: [0],
-        speedVariation: [0],
-        stamina: [0],
-        speed: [0],
-        precision: [0],
+        valueList: [],
+        subList: [],
 
-        riceDensity: [0],
-        longNoteDensity: [0],
+        stream: [],
+        jack: [],
     }
 
 }) {
@@ -164,29 +75,25 @@ export async function panel_B2(data = {
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Map Minus v0.6 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.4.0 UU');
+    const panel_name = getPanelNameSVG('Map Minus v0.62 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.4.0 UU');
 
     // 计算数值
 
-    const data_arr = data?.mapMinus?.valueList || [];
+    const m = data?.mapMinus;
 
-    const rc = data_arr[0];
-    const ln = data_arr[1];
-    const co = data_arr[2];
-    const st = data_arr[3];
-    const sp = data_arr[4];
-    const pr = data_arr[5];
+    const data_arr = m?.valueList || [];
+    const sub_arr = m?.subList || [];
 
     const map_minus_mania = {
-        RC: rc,
-        LN: ln,
-        CO: co,
-        ST: st,
-        SP: sp,
-        PR: pr,
+        RC: data_arr[0],
+        LN: data_arr[1],
+        CO: data_arr[2],
+        ST: data_arr[3],
+        SP: data_arr[4],
+        PR: data_arr[5],
     }
 
-    const total = ((0.6 * rc + 0.6 * ln + 0.8 * co + 1.2 * st + 0.8 * sp + 0.2 * pr) / 3.8);
+    const total = m?.star || 0;
 
     const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
 
@@ -194,16 +101,6 @@ export async function panel_B2(data = {
     svg = replaceTexts(svg, [panel_name, total_path], reg_index);
 
     // A2定义
-    /*
-    const b = await getMapAttributes(data.beatMap.id
-        , 0, data.beatMap.mode_int, hasLeaderBoard(data.beatMap.ranked));
-
-    const beatMap = {
-        ...data.beatMap,
-        difficulty_rating: b.stars
-    }
-
-     */
 
     const cardA2 = await card_A2(await PanelGenerate.beatmap2CardA2(data.beatMap));
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_maincard);
@@ -213,10 +110,12 @@ export async function panel_B2(data = {
     let hexagons = [];
     let cardB5s = [];
 
-    for (const name of (VALUE_NAMES)) { // data?.mapMinus?.abbrList ||
-        if (typeof map_minus_mania[name] !== 'number') continue;
-        cardB4s.push(await card_B4({parameter: name, number: map_minus_mania[name]}, true, false));
-        hexagons.push(map_minus_mania[name] / 9); //9星以上是X
+    for (let i = 0; i < 6; i++) {
+        const abbr = m?.abbrList[i];
+
+        if (typeof map_minus_mania[abbr] !== 'number') continue;
+        cardB4s.push(await card_B4({parameter: abbr, number: map_minus_mania[abbr]}, true, false));
+        hexagons.push(map_minus_mania[abbr] / 9); //9星以上是X
     }
 
     svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC'), reg_hexagon);
@@ -226,142 +125,45 @@ export async function panel_B2(data = {
     }
 
     cardB5s.push(await card_B5({parameter: "OV", number: total}));
-    cardB5s.push(await card_B5({parameter: "SV", number: 0}));
+    cardB5s.push(await card_B5({parameter: "SV", number: "-"})); //todo NaN
 
     svg = implantSvgBody(svg, 630, 860, cardB5s[0], reg_center);
     svg = implantSvgBody(svg, 970, 860, cardB5s[1], reg_center);
 
     // todo 临时的值
+    function drawChart(array = [], index = 0, name = "null", x = 0, y = 0, color = '#fff') {
+        return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + torus.getTextPath(name + ": " + getRoundedNumberStr(index, 2), 75 + 1370 + x, - 35 + 445 + y, 24, 'center baseline', '#fff')
+    }
 
-    svg = replaceText(svg, torus.getTextPath(data_arr[7].toFixed(3).toString(), 75 + 1370, -50 + 465, 24, 'center baseline', '#fff'), reg_index);
+    svg = replaceTexts(svg, [
+        drawChart(m?.stream, sub_arr[0], 'S', 0, 0, '#39B449'),
+        drawChart(m?.jack, sub_arr[1], 'J', 170, 0, '#8DC73D'),
 
-    svg = replaceText(svg, torus.getTextPath(data_arr[8].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465, 24, 'center baseline', '#fff'), reg_index);
+        drawChart(m?.release, sub_arr[2], 'R', 0, 115, '#00A8EC'),
+        drawChart(m?.shield, sub_arr[3], 'E', 170, 115, '#0071BC'),
+        drawChart(m?.reverseShield, sub_arr[4], 'V', 340, 115, '#0054A6'),
 
+        drawChart(m?.bracket, sub_arr[5], 'B', 0, 230, '#FFF100'),
+        drawChart(m?.handLock, sub_arr[6], 'H', 170, 230, '#FFE11D'),
+        drawChart(m?.overlap, sub_arr[7], 'O', 340, 230, '#EFC72A'),
 
-    svg = replaceText(svg, torus.getTextPath(data_arr[9].toFixed(3).toString(), 75 + 1370, -50 + 465 + 115, 24, 'center baseline', '#fff'), reg_index);
+        drawChart(m?.riceDensity, sub_arr[8], 'C', 0, 345, '#FF9800'),
+        drawChart(m?.lnDensity, sub_arr[9], 'D', 170, 345, '#EB6100'),
 
-    svg = replaceText(svg, torus.getTextPath(data_arr[10].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 115, 24, 'center baseline', '#fff'), reg_index);
+        drawChart(m?.speedJack, sub_arr[10], 'K', 0, 460, '#D32F2F'),
+        drawChart(m?.trill, sub_arr[11], 'I', 170, 460, '#EA68A2'),
+        drawChart(m?.burst, sub_arr[12], 'U', 340, 460, '#EB6877'),
 
-    svg = replaceText(svg, torus.getTextPath(data_arr[11].toFixed(3).toString(), 75 + 1370 + 340, -50 + 465 + 115, 24, 'center baseline', '#fff'), reg_index);
+        drawChart(m?.grace, sub_arr[13], 'G', 0, 575, '#920783'),
+        drawChart(m?.delayedTail, sub_arr[14], 'Y', 170, 575, '#9922EE'),
 
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[12].toFixed(3).toString(), 75 + 1370, -50 + 465 + 230, 24, 'center baseline', '#fff'), reg_index);
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[13].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 230, 24, 'center baseline', '#fff'), reg_index);
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[14].toFixed(3).toString(), 75 + 1370 + 340, -50 + 465 + 230, 24, 'center baseline', '#fff'), reg_index);
-
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[15].toFixed(3).toString(), 75 + 1370, -50 + 465 + 345, 24, 'center baseline', '#fff'), reg_index);
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[16].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 345, 24, 'center baseline', '#fff'), reg_index);
-
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[17].toFixed(3).toString(), 75 + 1370, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[18].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[19].toFixed(3).toString(), 75 + 1370 + 340, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
-
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[20].toFixed(3).toString(), 75 + 1370, -50 + 465 + 575, 24, 'center baseline', '#fff'), reg_index);
-
-    svg = replaceText(svg, torus.getTextPath(data_arr[21].toFixed(3).toString(), 75 + 1370 + 170, -50 + 465 + 575, 24, 'center baseline', '#fff'), reg_index);
-
-    // todo 临时的折线图
-    /*
-    const s_arr = data.mapMinus.stream || [];
-    const s_c = PanelDraw.LineChart(s_arr, 0, 0, 1370, 465, 150, 95, '#00A8EC', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, s_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, s_arr).toFixed(3), 75 + 1370, -50 + 465, 24, 'center baseline', '#fff'), reg_index);
-    const j_arr = data.mapMinus.jack || [];
-    const j_c = PanelDraw.LineChart(j_arr, 0, 0, 1370 + 170, 465, 150, 95, '#0071BC', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, j_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, j_arr).toFixed(3), 75 + 1370 + 170, -50 + 465, 24, 'center baseline', '#fff'), reg_index);
-    const b_arr = data.mapMinus.bracket || [];
-    const b_c = PanelDraw.LineChart(b_arr, 0, 0, 1370 + 340, 465, 150, 95, '#0054A6', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, b_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, b_arr).toFixed(3), 75 + 1370 + 340, -50 + 465, 24, 'center baseline', '#fff'), reg_index);
-
-    const h_arr = data.mapMinus.handLock || [];
-    const h_c = PanelDraw.LineChart(h_arr, 0, 0, 1370, 465 + 115, 150, 95, '#8DC73D', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, h_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, h_arr).toFixed(3), 75 + 1370, -50 + 465 + 115, 24, 'center baseline', '#fff'), reg_index);
-    const o_arr = data.mapMinus.overlap || [];
-    const o_c = PanelDraw.LineChart(o_arr, 0, 0, 1370 + 170, 465 + 115, 150, 95, '#39B449', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, o_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, o_arr).toFixed(3), 75 + 1370 + 170, -50 + 465 + 115, 24, 'center baseline', '#fff'), reg_index);
-    const r_arr = data.mapMinus.release || [];
-    const r_c = PanelDraw.LineChart(r_arr, 0, 0, 1370 + 340, 465 + 115, 150, 95, '#00A550', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, r_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, r_arr).toFixed(3), 75 + 1370 + 340, -50 + 465 + 115, 24, 'center baseline', '#fff'), reg_index);
-
-    const e_arr = data.mapMinus.shield || [];
-    const e_c = PanelDraw.LineChart(e_arr, 0, 0, 1370, 465 + 345, 150, 95, '#F8941B', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, e_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, e_arr).toFixed(3), 75 + 1370, -50 + 465 + 345, 24, 'center baseline', '#fff'), reg_index);
-    const c_arr = data.mapMinus.riceDensity || [];
-    const c_c = PanelDraw.LineChart(c_arr, 0, 0, 1370 + 170, 465 + 345, 150, 95, '#F26420', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, c_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, c_arr).toFixed(3), 75 + 1370 + 170, -50 + 465 + 345, 24, 'center baseline', '#fff'), reg_index);
-    const d_arr = data.mapMinus.longNoteDensity || [];
-    const d_c = PanelDraw.LineChart(d_arr, 0, 0, 1370 + 340, 465 + 345, 150, 95, '#ED1622', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, d_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, d_arr).toFixed(3), 75 + 1370 + 340, -50 + 465 + 345, 24, 'center baseline', '#fff'), reg_index);
-
-    const k_arr = data.mapMinus.speedJack || [];
-    const k_c = PanelDraw.LineChart(k_arr, 0, 0, 1370, 465 + 460, 150, 95, '#EC008C', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, k_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, k_arr).toFixed(3), 75 + 1370, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
-    const i_arr = data.mapMinus.trill || [];
-    const i_c = PanelDraw.LineChart(i_arr, 0, 0, 1370 + 170, 465 + 460, 150, 95, '#92248F', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, i_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, i_arr).toFixed(3), 75 + 1370 + 170, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
-    const u_arr = data.mapMinus.burst || [];
-    const u_c = PanelDraw.LineChart(u_arr, 0, 0, 1370 + 340, 465 + 460, 150, 95, '#662B91', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, u_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.round(Math.max.apply(Math, u_arr)).toFixed(3), 75 + 1370 + 340, -50 + 465 + 460, 24, 'center baseline', '#fff'), reg_index);
-
-    const g_arr = data.mapMinus.grace || [];
-    const g_c = PanelDraw.LineChart(g_arr, 0, 0, 1370, 580 + 460, 150, 95, '#FFF100', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, g_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, g_arr).toFixed(3), 75 + 1370, -50 + 580 + 460, 24, 'center baseline', '#fff'), reg_index);
-    const y_arr = data.mapMinus.delayedTail || [];
-    const y_c = PanelDraw.LineChart(y_arr, 0, 0, 1370 + 170, 580 + 460, 150, 95, '#C3DF9B', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, y_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.max.apply(Math, y_arr).toFixed(3), 75 + 1370 + 170, -50 + 580 + 460, 24, 'center baseline', '#fff'), reg_index);
-
-    let total_arr = [];
-    const total_c = PanelDraw.LineChart(total_arr, 0, 0, 1370 + 340, 580 + 460, 150, 95, '#aaa', 1, 0.3, 3)
-    svg = implantSvgBody(svg, 0, 0, total_c, reg_right);
-    svg = replaceText(svg, torus.getTextPath(Math.round(Math.max.apply(Math, total_arr)).toFixed(3), 75 + 1370 + 340, -50 + 580 + 460, 24, 'center baseline', '#fff'), reg_index);
-
-     */
-
+    ], reg_right);
 
     // 画六边形和其他
     const hexagon = getImageFromV3('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
 
     return svg.toString();
-}
-
-function getSum(arr = []) {
-
-    const sum = arr.reduce(function (prev, curr){
-        return prev + curr;
-    }, 0)
-
-    return Number.isNaN(sum) ? 0 : sum;
-}
-
-function getValue(sum, arr = []) {
-
-    if (arr === undefined || arr.length === 0) {
-        return 0;
-    } else {
-        return sum * 0.1 + sum / arr.length * 0.9;
-    }
 }
 
 function drawHexIndex(mode = 'osu') {

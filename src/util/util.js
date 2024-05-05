@@ -779,6 +779,8 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
 
 //只给 level 1, 2, 3, 4 提供单位
 function getRoundedNumberUnit(number = 0, level = 0) {
+    if (isNaN(number)) return '';
+
     let unit;
     let m = 3;
 
