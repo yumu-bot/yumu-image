@@ -7,11 +7,12 @@ import {torus} from "../util/font.js";
 import {label_E, LABEL_PPM} from "../component/label.js";
 import {getRankColor} from "../util/color.js";
 
-export async function card_B4(data = {
+export async function card_B6(data = {
     parameter: 'RC',
     number: 11.45141919810,
+    level: 6
 }, isReverse = false) {
-    //这个是基于B1卡片改过来的
+    //这个是基于B1，B4卡片改过来的
     //读取面板
     let svg = readTemplate("template/Card_B1.svg");
 
@@ -42,13 +43,14 @@ export async function card_B4(data = {
     svg = implantSvgBody(svg, card_x + 20, 22, label, reg_label);
 
     //添加评级和值和背景
-    const rank = getMMRank(data.number);
+    const rank = getPlusRank(data.level);
+    const roman = getPlusRoman(data.level);
     const color = getRankColor(rank);
-    const background = getMMBG(rank);
+    const background = getPlusBG(rank);
     const number_b = getRoundedNumberStrLarge(data.number,3);
     const number_m = getRoundedNumberStrSmall(data.number,3);
 
-    const rank_text = torus.getTextPath(rank, judge_x_center, 68, 60, 'center baseline', color);
+    const rank_text = torus.getTextPath(roman, judge_x_center, 68, 60, 'center baseline', color);
     const number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 370 + card_x, 68, 'right baseline', '#fff');
 
     svg = replaceTexts(svg, [rank_text, number_text], reg_text);
@@ -62,34 +64,43 @@ export async function card_B4(data = {
     return svg.toString();
 }
 
-function getMMBG(rank = 'F') {
+function getPlusBG(rank = 'F') {
     if (rank === 'X+' || rank === 'SS') rank = 'X';
     if (rank === 'S+') rank = 'S';
     return getImageFromV3(`object-score-backimage-${rank}.jpg`)
 }
 
-function getMMRank (data = 0) {
+function getPlusRank(data = 0) {
     let rank;
 
-    if (data >= 9) {
+    if (data >= 11) {
         rank = 'X+';
-    } else if (data >= 7) {
+    } else if (data >= 9) {
         rank = 'SS';
-    } else if (data >= 6.5) {
+    } else if (data >= 7) {
         rank = 'S+';
-    } else if (data >= 5.3) {
+    } else if (data >= 5) {
         rank = 'S';
-    } else if (data >= 4) {
+    } else if (data >= 3) {
         rank = 'A';
-    } else if (data >= 2.8) {
-        rank = 'B';
     } else if (data >= 2) {
+        rank = 'B';
+    } else if (data >= 1) {
         rank = 'C';
-    } else if (data >= 0.1) {
+    } else if (data >= 0.5) {
         rank = 'D';
     } else {
         rank = 'F';
     }
 
     return rank;
+}
+
+function getPlusRoman(data = 0) {
+    const number_arr = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'EX'];
+
+    if (data < 1) return 'F';
+    if (data > 11) return 'EX';
+
+    return number_arr[Math.round(data - 1)];
 }

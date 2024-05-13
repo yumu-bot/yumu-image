@@ -37,8 +37,6 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-const VALUE_MANIA = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR']
-
 /**
  * 骂娘谱面某种信息面板, 不玩骂娘看不懂
  * @param data
@@ -114,7 +112,7 @@ export async function panel_B2(data = {
         const abbr = m?.abbrList[i];
 
         if (typeof map_minus_mania[abbr] !== 'number') continue;
-        cardB4s.push(await card_B4({parameter: abbr, number: map_minus_mania[abbr]}, true, false));
+        cardB4s.push(await card_B4({parameter: abbr, number: map_minus_mania[abbr]}, false));
         hexagons.push(map_minus_mania[abbr] / 9); //9星以上是X
     }
 

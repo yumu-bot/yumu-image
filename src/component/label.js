@@ -182,6 +182,54 @@ export const LABELS = {
 }
 
 export const LABEL_PPM = {
+    // pp+ 的
+    AIM: {
+        icon: getImageFromV3("object-score-accuracy.png"),
+        icon_title: '准度',
+        remark: 'Accuracy',
+        data_b: 'Acc',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    JMP: {
+        icon: getImageFromV3("object-score-approachrate.png"),
+        icon_title: '跳',
+        remark: 'Jump Aim',
+        data_b: 'Jump',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    FLW: {
+        icon: getImageFromV3("object-score-spdpp.png"),
+        icon_title: '串',
+        remark: 'Flow Aim',
+        data_b: 'Flow',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    SPD: {
+        icon: getImageFromV3("object-score-beatsperminute.png"),
+        icon_title: '速度',
+        remark: 'Speed',
+        data_b: 'Spd',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+
+    PRC: {
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
+        icon_title: '小圈',
+        remark: 'Precision',
+        data_b: 'Pre',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+
     ACC: {
         icon: getImageFromV3("object-score-accuracy.png"),
         icon_title: '准度',
