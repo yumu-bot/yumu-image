@@ -201,7 +201,7 @@ export async function panel_B3(data = {
     svg = replaceText(svg, drawHexIndex(), reg_hexagon);
 
     // 插入图片和部件（新方法
-    const PLUS_ABBR = ['ACC', 'JMP', 'FLW', 'STA', 'SPD', 'PRC']; //决定顺序
+    const PLUS_ABBR = ['PRC', 'JMP', 'FLW', 'ACC', 'STA', 'SPD']; //决定顺序
     const PLUS_VALUE = {
         ACC: 'accuracy',
         JMP: 'jumpAim',
