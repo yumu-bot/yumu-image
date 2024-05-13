@@ -288,7 +288,7 @@ export async function panel_B3(data = {
                 if (typeof value !== 'number') continue;
 
                 index_left.push(
-                    await card_B4({parameter: abbr, number: value}, false)
+                    await card_B6({parameter: abbr, number: value}, false)
                 );
 
                 graph_left.push(value / boundary);
