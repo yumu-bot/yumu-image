@@ -72,8 +72,8 @@ export const PanelDraw = {
         return (path_svg + area_svg).toString();
     },
 
-    //六边形图，data是0-1
-    HexagonChart: (data = [0, 0, 0, 0, 0, 0], cx = 960, cy = 600, r = 230, color = '#fff') => {
+    //六边形图，data是0-1，offset 是直接加在角度上
+    HexagonChart: (data = [0, 0, 0, 0, 0, 0], cx = 960, cy = 600, r = 230, color = '#fff', offset = 0) => {
         const PI_3 = Math.PI / 3;
         let line = `<path d="M `;
         let circle = '';
@@ -81,8 +81,8 @@ export const PanelDraw = {
         for (let i = 0; i < 6; i++) {
             const std_data = Math.min(Math.max(data[i], 0), 1);
 
-            const x = cx - r * Math.cos(PI_3 * i) * std_data;
-            const y = cy - r * Math.sin(PI_3 * i) * std_data;
+            const x = cx - r * Math.cos(PI_3 * i + offset) * std_data;
+            const y = cy - r * Math.sin(PI_3 * i + offset) * std_data;
             line += `${x} ${y} L `;
             circle += PanelDraw.Circle(x, y, 10, color);
         }
