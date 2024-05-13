@@ -184,10 +184,10 @@ export const LABELS = {
 export const LABEL_PPM = {
     // pp+ 的
     AIM: {
-        icon: getImageFromV3("object-score-accuracy.png"),
-        icon_title: '准度',
-        remark: 'Accuracy',
-        data_b: 'Acc',
+        icon: getImageFromV3("object-score-max.png"),
+        icon_title: '移动',
+        remark: 'Aim',
+        data_b: 'Aim',
         data_m: '',
         color_remark: '#aaa',
         title_font: PuHuiTi,
