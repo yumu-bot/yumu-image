@@ -47,8 +47,8 @@ export async function card_B6(data = {
     const roman = getPlusRoman(data.level);
     const color = getRankColor(rank);
     const background = getPlusBG(rank);
-    const number_b = getRoundedNumberStrLarge(data.number,3);
-    const number_m = getRoundedNumberStrSmall(data.number,3);
+    const number_b = getRoundedNumberStrLarge(data.number,-2);
+    const number_m = getRoundedNumberStrSmall(data.number,-2);
 
     const rank_text = torus.getTextPath(roman, judge_x_center, 68, 60, 'center baseline', color);
     const number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 370 + card_x, 68, 'right baseline', '#fff');

@@ -210,7 +210,7 @@ export async function panel_B3(data = {
         SPD: 'speed',
         STA: 'stamina',
     };
-    const PLUS_BOUNDARY = [5800, 1400, 3200, 2800, 3800, 1200]
+    const PLUS_BOUNDARY = [1200, 5800, 1400, 3200, 2800, 3800]
 
     let banner;
     let panel_name;
@@ -220,7 +220,7 @@ export async function panel_B3(data = {
     let plus_right = [];
 
     // 获取卡片
-    let card_left = "";
+    let card_left;
     let card_right = "";
 
     let index_left = [];
