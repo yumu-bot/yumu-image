@@ -601,7 +601,7 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
             return f_1();
             break;
         case 0:
-            return f0_3(3);
+            return f0_3(4);
             break;
         case 1:
             return f1();
