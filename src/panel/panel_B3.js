@@ -264,7 +264,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o1,
                 value: value_o1,
-                round_level: -3,
+                round_level: 0,
                 rank: rank_o1,
                 color: color_o1,
             }));
