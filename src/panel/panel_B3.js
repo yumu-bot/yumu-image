@@ -269,6 +269,8 @@ export async function panel_B3(data = {
                 color: color_o1,
             }));
 
+            const value_o2 = others?.performance?.total;
+
             const level_o2 = others?.advancedStats?.advanced;
             const rank_o2 = getRoman(level_o2);
 
