@@ -518,7 +518,7 @@ async function drawUserPlus(plus, label, graph, arr_abbr, arr_name, at_right = f
             await card_B1({
                 label: LABEL_PPP[abbr],
                 background: background,
-                value: value,
+                value: Math.round(value),
                 round_level: 0,
                 rank: rank,
                 color: color,
