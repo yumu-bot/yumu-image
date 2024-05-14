@@ -13,6 +13,9 @@ import {card_B2} from "../card/card_B2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
+import {LABEL_PPM} from "../component/label.js";
+import {getRankColor} from "../util/color.js";
+import {getRankBG, getRankFromValue} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -89,6 +92,13 @@ export async function panel_B1(data = {
 }) {
     let svg = readTemplate('template/Panel_B.svg');
 
+    const BOUNDARY = [120, 100, 95, 90, 80, 70, 60, 10];
+    const SANITY_BOUNDARY = [120, 100, 95, 90, 80, 70, 60, 20];
+    const SANITY_RANKS = ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X'];
+
+    const VALUE_NORMAL = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH'];
+    const VALUE_MANIA = ['ACC', 'PTT', 'STA', 'PRE', 'EFT', 'STH'];
+
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PB-1\);">)/;
@@ -105,7 +115,7 @@ export async function panel_B1(data = {
     const game_mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
 
     // 画六个标识
-    svg = replaceText(svg, drawHexIndex(mode), reg_hexagon);
+    svg = replaceText(svg, PanelDraw.HexagonIndex((mode === 'mania') ? VALUE_MANIA : VALUE_NORMAL), reg_hexagon);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
@@ -139,8 +149,22 @@ export async function panel_B1(data = {
 
     // 获取卡片
     for (const name of VALUE_NAMES) {
-        if (typeof data.card_b_1[name] !== 'number') continue;
-        card_B1_lefts.push(await card_B1({parameter: name, number: data.card_b_1[name] * 100}, true, false));
+        if (typeof data?.card_b_1[name] !== 'number') continue;
+
+        const value = (data?.card_b_1[name] || 0) * 100;
+        const rank = getRankFromValue(value, BOUNDARY)
+        const color = getRankColor(rank)
+        const background = getRankBG(rank);
+
+        card_B1_lefts.push(await card_B1({
+            label: LABEL_PPM[name?.toUpperCase()],
+            background: background,
+            value: value,
+            round_level: 2,
+            rank: rank,
+            color: color,
+
+        }, false));
         number_left.push(Math.min(Math.max((data.card_b_1[name] * scale_left - 0.6), 0.01) / 4 * 10, 1));
     }
     svg = replaceText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
@@ -160,7 +184,21 @@ export async function panel_B1(data = {
 
         for (const name of VALUE_NAMES) {
             if (typeof data.card_b_2[name] !== 'number') continue;
-            card_B1_rights.push(await card_B1({parameter: name, number: data.card_b_2[name] * 100}, true, true));
+
+            const value = (data?.card_b_2[name] || 0) * 100;
+            const rank = getRankFromValue(value, BOUNDARY)
+            const color = getRankColor(rank)
+            const background = getRankBG(rank);
+
+            card_B1_rights.push(await card_B1({
+                label: LABEL_PPM[name?.toUpperCase()],
+                background: background,
+                value: value,
+                round_level: 2,
+                rank: rank,
+                color: color,
+
+            }, true));
             number_right.push(Math.min(Math.max((data.card_b_2[name] * scale_right - 0.6), 0.01) / 4 * 10, 1));
         }
 
@@ -169,11 +207,66 @@ export async function panel_B1(data = {
         for (const j in card_B1_rights) {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
         }
-        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA}));
-        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_2.OVA}));
+        
+        const value_1 = data?.card_b_1.OVA || 0;
+        const rank_1 = getRankFromValue(value_1, BOUNDARY);
+        const bg_1 = getRankBG(rank_1);
+        const color_1 = getRankColor(rank_1);
+
+        card_B2_centers.push(await card_B2({
+            label: LABEL_PPM.OVA,
+            background: bg_1,
+            value: value_1,
+            round_level: 0,
+            rank: rank_1,
+            color: color_1,
+        }));
+
+
+        const value_2 = data?.card_b_2.OVA || 0;
+        const rank_2 = getRankFromValue(value_2, BOUNDARY);
+        const bg_2 = getRankBG(rank_2);
+        const color_2 = getRankColor(rank_2);
+
+        card_B2_centers.push(await card_B2({
+            label: LABEL_PPM.OVA,
+            background: bg_2,
+            value: value_2,
+            round_level: 0,
+            rank: rank_2,
+            color: color_2,
+        }));
+
     } else {
-        card_B2_centers.push(await card_B2({parameter: "OVA", number: data.card_b_1.OVA}));
-        card_B2_centers.push(await card_B2({parameter: "SAN", number: data.card_b_1.SAN}));
+
+        const value_1 = data?.card_b_1.OVA || 0;
+        const rank_1 = getRankFromValue(value_1, BOUNDARY);
+        const bg_1 = getRankBG(rank_1);
+        const color_1 = getRankColor(value_1);
+
+        card_B2_centers.push(await card_B2({
+            label: LABEL_PPM.OVA,
+            background: bg_1,
+            value: value_1,
+            round_level: 0,
+            rank: rank_1,
+            color: color_1,
+        }));
+
+        const san_value = Math.round(data?.card_b_1.SAN || 0);
+        const san_rank = getRankFromValue(san_value);
+        const san_bg = getRankBG(san_rank);
+        const san_color = getRankColor(san_rank);
+        const san_truly_rank = getRankFromValue(san_value, SANITY_BOUNDARY, SANITY_RANKS); // SAN 指示器
+
+        card_B2_centers.push(await card_B2({
+            label: LABEL_PPM.SAN,
+            background: san_bg,
+            value: san_value,
+            round_level: 0,
+            rank: san_truly_rank,
+            color: san_color,
+        }));
     }
     svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
     svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
@@ -193,33 +286,3 @@ export async function panel_B1(data = {
 
     return svg.toString();
 }
-
-function drawHexIndex(mode = 'osu') {
-    const cx = 960;
-    const cy = 600;
-    const r = 230 + 30; // 中点到边点的距离
-
-    let svg = '<g id="Rect"></g><g id="IndexText"></g>';
-    const reg_rrect = /(?<=<g id="Rect">)/;
-    const reg_text = /(?<=<g id="IndexText">)/;
-
-    const VALUE_NORMAL = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH'];
-    const VALUE_MANIA = ['ACC', 'PTT', 'STA', 'PRE', 'EFT', 'STH'];
-
-    for (let i = 0; i < 6; i++){
-        const param = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i];
-        const PI_3 = Math.PI / 3;
-        const x = cx - r * Math.cos(PI_3 * i);
-        const y = cy - r * Math.sin(PI_3 * i);
-
-        const param_text = torus.getTextPath(param, x, y + 8, 24, 'center baseline', '#fff');
-        svg = replaceText(svg, param_text, reg_text)
-
-        const param_width = torus.getTextWidth(param, 24);
-        const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, '#54454C');
-        svg = replaceText(svg, rrect, reg_rrect);
-
-    }
-    return svg;
-}
-

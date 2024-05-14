@@ -146,19 +146,18 @@ export function getRandomMascotBGPath() {
     return getImageFromV3(`Background/${i}.png`);
 }
 
-//通过 PP 获取玩家颜色（的背景图！pp2Rank
-export function pp2UserBG(pp = 0) {
-    let rank;
+//通过 PP 获取玩家颜色（的背景图！pp2Rank，最后一个是默认的
+export function pp2UserBG(pp = 0, boundary = [], ranks = []) {
+    if (boundary == null || boundary.length < 8) boundary = [15000, 10000, 8000, 6000, 4000, 3000, 2000, 1000]
+    if (ranks == null || ranks.length < 8) ranks = ['PF', 'X', 'XH', 'S', 'A', 'B', 'C', 'D']
 
-    if (pp >= 15000) rank = 'PF';
-    else if (pp >= 10000) rank = 'X';
-    else if (pp >= 8000) rank = 'XH';
-    else if (pp >= 6000) rank = 'S';
-    else if (pp >= 4000) rank = 'A';
-    else if (pp >= 3000) rank = 'B';
-    else if (pp >= 2000) rank = 'C';
-    else if (pp >= 1000) rank = 'D';
-    else rank = 'F';
+    let rank = 'F';
+
+    for (let i = 0; i < 8; i++) {
+        const b = boundary[i];
+
+        if (pp >= b) rank = ranks[i];
+    }
 
     return getImageFromV3('object-score-backimage-' + rank + '.jpg');
 }

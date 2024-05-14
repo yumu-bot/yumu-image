@@ -1,4 +1,7 @@
 //把数组变成可视化的图表
+import {torus} from "./font.js";
+import {replaceText} from "./util.js";
+
 export const PanelDraw = {
     Image: (x = 0, y = 0, w = 100, h = 100, link = '', opacity = 1) => {
         return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${link}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`;
@@ -72,8 +75,10 @@ export const PanelDraw = {
         return (path_svg + area_svg).toString();
     },
 
-    //六边形图，data是0-1，offset 是直接加在角度上
-    HexagonChart: (data = [0, 0, 0, 0, 0, 0], cx = 960, cy = 600, r = 230, color = '#fff', offset = 0) => {
+    //六边形图，data 是 0-1，offset 是直接加在弧度上（弧度制，比如 π/3 = 60°）
+    HexagonChart: (data = [0, 0, 0, 0, 0, 0], cx = 960, cy = 600, r = 230, line_color = '#fff', offset = 0) => {
+        if (data?.length < 6) return '';
+
         const PI_3 = Math.PI / 3;
         let line = `<path d="M `;
         let circle = '';
@@ -84,13 +89,38 @@ export const PanelDraw = {
             const x = cx - r * Math.cos(PI_3 * i + offset) * std_data;
             const y = cy - r * Math.sin(PI_3 * i + offset) * std_data;
             line += `${x} ${y} L `;
-            circle += PanelDraw.Circle(x, y, 10, color);
+            circle += PanelDraw.Circle(x, y, 10, line_color);
         }
 
         line = line.substr(0, line.length - 2);
-        const line1 = `Z" style="fill: none; stroke-width: 6; stroke: ${color}; opacity: 1;"/> `
-        const line2 = `Z" style="fill: ${color}; stroke-width: 6; stroke: none; opacity: 0.3;"/> `
+        const line1 = `Z" style="fill: none; stroke-width: 6; stroke: ${line_color}; opacity: 1;"/> `
+        const line2 = `Z" style="fill: ${line_color}; stroke-width: 6; stroke: none; opacity: 0.3;"/> `
         return line + line1 + line + line2 + circle;
+    },
+
+    // 六边形图的标识，offset 是直接加在弧度上（弧度制，比如 π/3 = 60°），r 是中点到边点的距离，一般比 Hexagon 大一点
+    HexagonIndex: (data = ['A', 'B', 'C', 'D', 'E', 'F'], cx = 960, cy = 600, r = 230 + 30, offset = 0, text_color = '#fff', background_color = '#54454C') => {
+        if (data?.length < 6) return '';
+        const PI_3 = Math.PI / 3;
+
+        let svg = '<g id="Rect"></g><g id="IndexText"></g>';
+        const reg_rrect = /(?<=<g id="Rect">)/;
+        const reg_text = /(?<=<g id="IndexText">)/;
+
+        for (let i = 0; i < 6; i++){
+            const value = data[i];
+
+            const x = cx - r * Math.cos(PI_3 * i + offset);
+            const y = cy - r * Math.sin(PI_3 * i + offset);
+
+            const param_text = torus.getTextPath(value, x, y + 8, 24, 'center baseline', text_color);
+            svg = replaceText(svg, param_text, reg_text)
+            const param_width = torus.getTextWidth(value, 24);
+            const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, background_color);
+            svg = replaceText(svg, rrect, reg_rrect);
+
+        }
+        return svg;
     },
 
     /**

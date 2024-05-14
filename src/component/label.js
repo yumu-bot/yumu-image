@@ -10,6 +10,13 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {getModFullName} from "../util/mod.js";
 
 export const LABELS = {
+    UNDEFINED: {
+        icon: getImageFromV3("object-score-min.png"),
+        icon_title: 'Undefined',
+        remark: '未知',
+        abbr: 'UN',
+        color_remark: '#ccc',
+    },
     ACC: {
         icon: getImageFromV3("object-score-accuracy.png"),
         icon_title: 'Accuracy',
@@ -181,7 +188,7 @@ export const LABELS = {
     },
 }
 
-export const LABEL_PPM = {
+export const LABEL_PPP = {
     // pp+ 的
     AIM: {
         icon: getImageFromV3("object-score-max.png"),
@@ -219,8 +226,16 @@ export const LABEL_PPM = {
         color_remark: '#aaa',
         title_font: PuHuiTi,
     },
-
-    PRC: {
+    STA: {
+        icon: getImageFromV3("object-score-length.png"),
+        icon_title: '耐力',
+        remark: 'Stamina',
+        data_b: 'Sta',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    PRE: {
         icon: getImageFromV3("object-score-overalldifficulty.png"),
         icon_title: '小圈',
         remark: 'Precision',
@@ -230,6 +245,105 @@ export const LABEL_PPM = {
         title_font: PuHuiTi,
     },
 
+    ACC: {
+        icon: getImageFromV3("object-score-accuracy.png"),
+        icon_title: '准度',
+        remark: 'Accuracy',
+        data_b: 'Acc',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+
+    OVA: {
+        icon: getImageFromV3("object-score-aimpp.png"),
+        icon_title: '综合',
+        remark: 'Overall',
+        data_b: 'Ova',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+}
+
+export const LABEL_MM = {
+
+    RC: {
+        icon: getImageFromV3("object-score-rice.png"),
+        icon_title: '米',
+        remark: 'Rice',
+        data_b: 'RC',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    LN: {
+        icon: getImageFromV3("object-score-longnote.png"),
+        icon_title: '面',
+        remark: 'Long Note',
+        data_b: 'LN',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    CO: {
+        icon: getImageFromV3("object-score-circlesize.png"),
+        icon_title: '协调',
+        remark: 'Coordinate',
+        data_b: 'CO',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    ST: {
+        icon: getImageFromV3("object-score-healthpoint.png"),
+        icon_title: '耐力',
+        remark: 'Stamina',
+        data_b: 'ST',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    SP: {
+        icon: getImageFromV3("object-score-max.png"),
+        icon_title: '速度',
+        remark: 'Speed',
+        data_b: 'SP',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    PR: {
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
+        icon_title: '彩率',
+        remark: 'Precision',
+        data_b: 'PR',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    SV: {
+        icon: getImageFromV3("object-score-beatsperminute.png"),
+        icon_title: '变速',
+        remark: 'S.Variation',
+        data_b: 'SV',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+    OV: {
+        icon: getImageFromV3("object-score-aimpp.png"),
+        icon_title: '综合',
+        remark: 'Overall',
+        data_b: 'OV',
+        data_m: '',
+        color_remark: '#aaa',
+        title_font: PuHuiTi,
+    },
+
+}
+
+export const LABEL_PPM = {
     ACC: {
         icon: getImageFromV3("object-score-accuracy.png"),
         icon_title: '准度',
@@ -311,80 +425,6 @@ export const LABEL_PPM = {
         color_remark: '#aaa',
         title_font: PuHuiTi,
     },
-
-    RC: {
-        icon: getImageFromV3("object-score-rice.png"),
-        icon_title: '米',
-        remark: 'Rice',
-        data_b: 'RC',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
-    LN: {
-        icon: getImageFromV3("object-score-longnote.png"),
-        icon_title: '面',
-        remark: 'Long Note',
-        data_b: 'LN',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
-    CO: {
-        icon: getImageFromV3("object-score-circlesize.png"),
-        icon_title: '协调',
-        remark: 'Coordinate',
-        data_b: 'CO',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
-    ST: {
-        icon: getImageFromV3("object-score-healthpoint.png"),
-        icon_title: '耐力',
-        remark: 'Stamina',
-        data_b: 'ST',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
-    SP: {
-        icon: getImageFromV3("object-score-max.png"),
-        icon_title: '速度',
-        remark: 'Speed',
-        data_b: 'SP',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
-    PR: {
-        icon: getImageFromV3("object-score-overalldifficulty.png"),
-        icon_title: '彩率',
-        remark: 'Precision',
-        data_b: 'PR',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
-    SV: {
-        icon: getImageFromV3("object-score-beatsperminute.png"),
-        icon_title: '变速',
-        remark: 'S.Variation',
-        data_b: 'SV',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
-    OV: {
-        icon: getImageFromV3("object-score-aimpp.png"),
-        icon_title: '综合',
-        remark: 'Overall',
-        data_b: 'OV',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
-    },
-
 };
 
 export const RANK_OPTION = {

@@ -7,12 +7,13 @@ import {
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_A2} from "../card/card_A2.js";
-import {card_B4} from "../card/card_B4.js";
-import {card_B5} from "../card/card_B5.js";
-import {card_B6} from "../card/card_B6.js"
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {hasLeaderBoard} from "../util/star.js";
+import {getRankBG, getRankFromValue, hasLeaderBoard} from "../util/star.js";
+import {card_B1} from "../card/card_B1.js";
+import {card_B2} from "../card/card_B2.js";
+import {LABEL_PPP} from "../component/label.js";
+import {getRankColor} from "../util/color.js";
 
 export async function router(req, res) {
     try {
@@ -176,17 +177,37 @@ export async function panel_B3(data = {
         }
     },
 
+    other: {
+
+    },
+
+    others: {
+
+    },
+
 
 }) {
     let svg = readTemplate('template/Panel_B.svg');
 
+    const ABBR = ['JMP', 'FLW', 'ACC', 'STA', 'SPD', 'PRE']; //决定顺序
+    const NAME = {
+        JMP: 'jumpAim',
+        FLW: 'flowAim',
+        PRE: 'precision',
+        SPD: 'speed',
+        STA: 'stamina',
+        ACC: 'accuracy',
+    };
+
+    const LV_BOUNDARY = [11, 9, 7, 5, 3, 1, 0.75, 0.25];
+
     const isUser = data?.isUser;
     const isVs = data?.isVs;
 
-    const me = data?.me;
-    const my = data?.my;
-    const other = data?.other;
-    const others = data?.others;
+    const me = data?.me || [];
+    const my = data?.my || [];
+    const other = data?.other || [];
+    const others = data?.others || [];
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
@@ -198,34 +219,20 @@ export async function panel_B3(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 画六个标识
-    svg = replaceText(svg, drawHexIndex(), reg_hexagon);
+    svg = replaceText(svg, PanelDraw.HexagonIndex(ABBR, 960, 600, 230+30, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
-    const PLUS_ABBR = ['PRC', 'JMP', 'FLW', 'ACC', 'STA', 'SPD']; //决定顺序
-    const PLUS_VALUE = {
-        ACC: 'accuracy',
-        JMP: 'jumpAim',
-        FLW: 'flowAim',
-        STA: 'stamina',
-        SPD: 'speed',
-        PRC: 'precision',
-    };
-
-    const PLUS_BOUNDARY = [1200, 5800, 1400, 3200, 2800, 3800]
 
     let banner;
     let panel_name;
     let type;
 
-    let plus_left = [];
-    let plus_right = [];
-
     // 获取卡片
     let card_left;
     let card_right = "";
 
-    let index_left = [];
-    let index_right = [];
+    let label_left = [];
+    let label_right = [];
     let graph_left = [];
     let graph_right = [];
     let card_center = [];
@@ -233,6 +240,7 @@ export async function panel_B3(data = {
 
     if (isUser) {
         banner = await getAvatar(data?.me?.cover_url, true);
+
         if (isVs) {
             type = 'PX+'
             panel_name = getPanelNameSVG('PP Plus: User VS (!ympx)', 'PX', 'v0.4.0 UU');
@@ -240,139 +248,161 @@ export async function panel_B3(data = {
             card_left = await card_A1(await PanelGenerate.user2CardA1(me));
             card_right = await card_A1(await PanelGenerate.user2CardA1(other));
 
-            for (let i = 0; i < 6; i++) {
-                const abbr = PLUS_ABBR[i];
-                const name = PLUS_VALUE[abbr];
-                const value = plus_left[name];
-                const boundary = PLUS_BOUNDARY[i];
+            await drawUserPlus(my, label_left, graph_left, ABBR, NAME, false);
+            await drawUserPlus(others, label_right, graph_right, ABBR, NAME, true);
 
-                if (typeof value !== 'number') continue;
+            const value_o1 = my?.performance?.total;
 
-                index_left.push(
-                    await card_B6({parameter: abbr, number: value}, false)
-                );
+            const level_o1 = my?.advancedStats?.advanced;
+            const rank_o1 = getRoman(level_o1);
 
-                graph_left.push(value / boundary);
-            }
+            const fake_rank_o1 = getRankFromValue(level_o1, LV_BOUNDARY);
+            const background_o1 = getRankBG(fake_rank_o1);
+            const color_o1 = getRankColor(fake_rank_o1);
 
-            for (let i = 0; i < 6; i++) {
-                const abbr = PLUS_ABBR[i];
-                const name = PLUS_VALUE[abbr];
-                const value = plus_left[name];
-                const boundary = PLUS_BOUNDARY[i];
+            card_center.push(await card_B2({
+                label: LABEL_PPP.OVA,
+                background: background_o1,
+                value: value_o1,
+                round_level: -3,
+                rank: rank_o1,
+                color: color_o1,
+            }));
 
-                if (typeof value !== 'number') continue;
+            const level_o2 = others?.advancedStats?.advanced;
+            const rank_o2 = getRoman(level_o2);
 
-                index_right.push(
-                    await card_B6({parameter: abbr, number: value}, true)
-                );
+            const fake_rank_o2 = getRankFromValue(level_o2, LV_BOUNDARY);
+            const background_o2 = getRankBG(fake_rank_o2);
+            const color_o2 = getRankColor(fake_rank_o2);
 
-                graph_right.push(value / boundary);
-            }
-
-            card_center.push(await card_B5({parameter: "OVA", number: "-"}));
-            card_center.push(await card_B5({parameter: "OVA", number: "-"}));
+            card_center.push(await card_B2({
+                label: LABEL_PPP.OVA,
+                background: background_o2,
+                value: value_o2,
+                round_level: 0,
+                rank: rank_o2,
+                color: color_o2,
+            }));
         } else {
             type = 'PP+'
             panel_name = getPanelNameSVG('PP Plus: User (!ympp)', 'PP', 'v0.4.0 UU');
 
-            plus_left = my;
-
             card_left = await card_A1(await PanelGenerate.user2CardA1(me));
 
-            for (let i = 0; i < 6; i++) {
-                const abbr = PLUS_ABBR[i];
-                const name = PLUS_VALUE[abbr];
-                const value = plus_left[name];
-                const boundary = PLUS_BOUNDARY[i];
+            await drawUserPlus(my, label_left, graph_left, ABBR, NAME, false);
 
-                if (typeof value !== 'number') continue;
+            const value_o1 = my?.performance?.aim;
+            const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]); //todo 这个是临时边界，我不知道 aim 的边界是多少
+            const background_o1 = getRankBG(rank_o1);
+            const color_o1 = getRankColor(rank_o1);
 
-                index_left.push(
-                    await card_B6({parameter: abbr, number: value}, false)
-                );
+            card_center.push(await card_B2({
+                label: LABEL_PPP.AIM,
+                background: background_o1,
+                value: value_o1,
+                round_level: 0,
+                rank: rank_o1,
+                color: color_o1,
+            }));
 
-                graph_left.push(value / boundary);
-            }
 
-            card_center.push(await card_B5({parameter: "AIM", number: plus_left?.aim}));
-            card_center.push(await card_B5({parameter: "OVA", number: plus_left?.total}));
+            const value_o2 = my?.performance?.total;
+
+            const level_o2 = my?.advancedStats?.advanced;
+            const rank_o2 = getRoman(level_o2);
+
+            const fake_rank_o2 = getRankFromValue(level_o2, LV_BOUNDARY);
+            const background_o2 = getRankBG(fake_rank_o2);
+            const color_o2 = getRankColor(fake_rank_o2);
+
+            card_center.push(await card_B2({
+                label: LABEL_PPP.OVA,
+                background: background_o2,
+                value: value_o2,
+                round_level: 0,
+                rank: rank_o2,
+                color: color_o2,
+            }));
+
         }
 
     } else {
         banner = await getMapBG(me?.beatmapset.id, 'cover', hasLeaderBoard(me?.ranked));
         if (isVs) {
             type = 'PC+'
-            panel_name = getPanelNameSVG('PP Plus: BeatMap VS (!ympc)', 'PC', 'v0.4.0 UU');
+            panel_name = getPanelNameSVG('PP Plus: BeatMap Compare (!ympc)', 'PC', 'v0.4.0 UU');
 
-            plus_left = my.difficulty;
-            plus_right = others.difficulty;
             card_left = await card_A2(await PanelGenerate.beatmap2CardA2(me));
             card_right = await card_A2(await PanelGenerate.beatmap2CardA2(other));
 
-            for (let i = 0; i < 6; i++) {
-                const abbr = PLUS_ABBR[i];
-                const name = PLUS_VALUE[abbr];
-                const value = plus_left[name];
 
-                if (typeof value !== 'number') continue;
+            await drawMapPlus(my, label_left, graph_left, ABBR, NAME, false);
+            await drawMapPlus(others, label_right, graph_right, ABBR, NAME, true);
 
-                index_left.push(
-                    await card_B4({parameter: abbr, number: value}, false)
-                );
+            const value_o1 = me?.difficulty?.total;
+            const rank_o1 = getRankFromValue(value_o1);
+            const background_o1 = getRankBG(rank_o1);
+            const color_o1 = getRankColor(rank_o1);
 
-                graph_left.push(value / 4); //这个也太难上4星了
-            }
+            card_center.push(await card_B2({
+                label: LABEL_PPP.OVA,
+                background: background_o1,
+                value: value_o1,
+                round_level: 3,
+                rank: rank_o1,
+                color: color_o1,
+            }));
 
-            for (let i = 0; i < 6; i++) {
-                const abbr = PLUS_ABBR[i];
-                const name = PLUS_VALUE[abbr];
-                const value = plus_right[name];
+            const value_o2 = others?.difficulty?.total;
+            const rank_o2 = getRankFromValue(value_o2);
+            const background_o2 = getRankBG(rank_o2);
+            const color_o2 = getRankColor(rank_o2);
 
-                if (typeof value !== 'number') continue;
-
-                index_right.push(
-                    await card_B4({parameter: abbr, number: value}, true)
-                );
-
-                graph_right.push(value / 4); //这个也太难上4星了
-            }
-
-            card_center.push(await card_B5({parameter: "OVA", number: plus_left?.total}));
-            card_center.push(await card_B5({parameter: "OVA", number: plus_right?.total}));
+            card_center.push(await card_B2({
+                label: LABEL_PPP.OVA,
+                background: background_o2,
+                value: value_o2,
+                round_level: 3,
+                rank: rank_o2,
+                color: color_o2,
+            }));
         } else {
             type = 'PA+'
             panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA', 'v0.4.0 UU');
 
-            plus_left = my.difficulty;
             card_left = await card_A2(await PanelGenerate.beatmap2CardA2(me));
 
-            for (let i = 0; i < 6; i++) {
-                const abbr = PLUS_ABBR[i];
-                const name = PLUS_VALUE[abbr];
-                const value = plus_left[name];
+            await drawMapPlus(my, label_left, graph_left, ABBR, NAME, false);
 
-                if (typeof value !== 'number') continue;
+            const value_o1 = my?.difficulty?.aim;
+            const rank_o1 = getRankFromValue(value_o1, [7, 6, 5, 4.5, 4, 3, 2, 1]); //todo 这个是临时边界，我不知道 aim 的边界是多少
+            const background_o1 = getRankBG(rank_o1);
+            const color_o1 = getRankColor(rank_o1);
 
-                index_left.push(
-                    await card_B4({parameter: abbr, number: value}, false)
-                );
+            card_center.push(await card_B2({
+                label: LABEL_PPP.AIM,
+                background: background_o1,
+                value: value_o1,
+                round_level: 3,
+                rank: rank_o1,
+                color: color_o1,
+            }));
 
-                graph_left.push(value / 4); //这个也太难上4星了
-            }
+            const value_o2 = my?.difficulty?.total;
+            const rank_o2 = getRankFromValue(value_o2);
+            const background_o2 = getRankBG(rank_o2);
+            const color_o2 = getRankColor(rank_o2);
 
-            card_center.push(await card_B5({parameter: "AIM", number: plus_left?.aim}));
-            card_center.push(await card_B5({parameter: "OVA", number: plus_left?.total}));
+            card_center.push(await card_B2({
+                label: LABEL_PPP.OVA,
+                background: background_o2,
+                value: value_o2,
+                round_level: 3,
+                rank: rank_o2,
+                color: color_o2,
+            }));
         }
-    }
-
-    // 把 ACC 放在最下面去
-    if (index_left.length > 0) {
-        index_left.push(index_left.shift());
-    }
-
-    if (index_right.length > 0) {
-        index_right.push(index_right.shift());
     }
 
     // 清算
@@ -383,15 +413,15 @@ export async function panel_B3(data = {
     svg = implantSvgBody(svg, 1450, 40, card_right, reg_maincard);
 
 
-    if (index_left.length > 0) {
+    if (label_left.length > 0) {
         for (let j = 0; j < 6; j++) {
-            svg = implantSvgBody(svg, 40, 350 + j * 115, index_left[j], reg_left);
+            svg = implantSvgBody(svg, 40, 350 + j * 115, label_left[j], reg_left);
         }
     }
 
-    if (index_right.length > 0) {
+    if (label_right.length > 0) {
         for (let j = 0; j < 6; j++) {
-            svg = implantSvgBody(svg, 1350, 350 + j * 115, index_right[j], reg_right);
+            svg = implantSvgBody(svg, 1350, 350 + j * 115, label_right[j], reg_right);
         }
     }
 
@@ -404,11 +434,13 @@ export async function panel_B3(data = {
 
     // 画六边形和其他
     if (graph_left.length > 0) {
-        svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(graph_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
+        svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(graph_left, 960, 600, 230, '#00A8EC',
+            Math.PI / 3), reg_hexagon);
     }
 
     if (graph_right.length > 0) {
-        svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(graph_right, 960, 600, 230, '#FF0000'), reg_hexagon);
+        svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(graph_right, 960, 600, 230, '#FF0000',
+            Math.PI / 3), reg_hexagon);
     }
 
 
@@ -420,33 +452,80 @@ export async function panel_B3(data = {
 
 }
 
+const getRoman = (level = 0) => {
+    if (typeof level != "number") return '-'
 
+    const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'EX']
 
-function drawHexIndex() {
-    const cx = 960;
-    const cy = 600;
-    const r = 230 + 30; // 中点到边点的距离
+    if (level - 1 === 0 && 1 / (level - 1) === -Infinity) {
+        return roman[0];
 
-    let svg = '<g id="Rect"></g><g id="IndexText"></g>';
-    const reg_rrect = /(?<=<g id="Rect">)/;
-    const reg_text = /(?<=<g id="IndexText">)/;
-
-    const VALUE_PLUS = ['ACC', 'JUMP', 'FLOW', 'PRE', 'SPD', 'STA'];
-
-    for (let i = 0; i < 6; i++){
-        const param = VALUE_PLUS[i];
-
-        const PI_3 = Math.PI / 3;
-        const x = cx - r * Math.cos(PI_3 * i);
-        const y = cy - r * Math.sin(PI_3 * i);
-
-        const param_text = torus.getTextPath(param, x, y + 8, 24, 'center baseline', '#fff');
-        svg = replaceText(svg, param_text, reg_text)
-
-        const param_width = torus.getTextWidth(param, 24);
-        const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, '#54454C');
-        svg = replaceText(svg, rrect, reg_rrect);
-
+    } else if (level < 1) {
+        return '.' + Math.round(level * 100);
+    } else {
+        return roman[level - 1];
     }
-    return svg;
+}
+
+async function drawMapPlus(plus, label, graph, arr_abbr, arr_name, at_right = false) {
+    for (let i = 0; i < 6; i++) {
+        const abbr = arr_abbr[i]; //STA
+        const name = arr_name[abbr]; //Stamina
+        const value = plus?.difficulty[name]; //1234
+
+        const rank = getRankFromValue(value, [4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5]); //这个 4 非常难拿
+        const color = getRankColor(rank);
+        const background = getRankBG(rank);
+
+        if (typeof value !== 'number') continue;
+
+        label.push(
+            await card_B1({
+                label: LABEL_PPP[abbr],
+                background: background,
+                value: value,
+                round_level: 3,
+                rank: rank,
+                color: color,
+            }, at_right)
+        );
+
+        graph.push(Math.pow(value / 4, 0.8));
+    }
+}
+
+async function drawUserPlus(plus, label, graph, arr_abbr, arr_name, at_right = false) {
+    // 用于算假 rank 的边界值
+    const lv_boundary = [11, 9, 7, 5, 3, 1, 0.75, 0.25];
+
+    const GRAPH_MAX = [5800, 1400, 3200, 2800, 3800, 1200]
+
+    for (let i = 0; i < 6; i++) {
+        const abbr = arr_abbr[i]; //STA
+        const name = arr_name[abbr]; //Stamina
+        const value = plus?.performance[name]; //1234
+
+        const level = plus?.advancedStats?.index[i]; //lv.10
+        const rank = getRoman(level); //I
+
+        const fake_rank = getRankFromValue(level, lv_boundary); //并不用于显示
+        const color = getRankColor(fake_rank);
+        const background = getRankBG(fake_rank);
+
+        if (typeof value !== 'number') continue;
+
+        label.push(
+            await card_B1({
+                label: LABEL_PPP[abbr],
+                background: background,
+                value: value,
+                round_level: 0,
+                rank: rank,
+                color: color,
+                rank_size: (rank.startsWith('.') ? 48 : 60) //百分比太大了！
+            }, at_right)
+        );
+
+        graph.push(Math.pow(value / GRAPH_MAX[i], 0.8));
+    }
 }

@@ -326,12 +326,13 @@ export function getModColor(Mod = '') {
 /**
  * @function 获取评级颜色
  * @return {String} 返回色彩
- * @param Rank 输入评级
+ * @param rank 输入评级
  */
-export function getRankColor(Rank = 'F') {
-    if (typeof Rank !== 'string') return 'none';
+export function getRankColor(rank = 'F') {
+    if (typeof rank !== 'string') return 'none';
     let color;
-    switch (Rank.toUpperCase()) {
+    switch (rank.toUpperCase()) {
+        case "PF":
         case "XH":
         case "SSH":
         case "X+":

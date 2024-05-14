@@ -1,16 +1,25 @@
 import {
-    exportJPEG, getImageFromV3, getGameMode, getMapBG,
-    getPanelNameSVG, getRoundedNumberStrLarge, getRoundedNumberStrSmall, implantImage,
-    implantSvgBody, readTemplate,
-    replaceText, replaceTexts, getRoundedNumberStr
+    exportJPEG,
+    getImageFromV3,
+    getMapBG,
+    getPanelNameSVG,
+    getRoundedNumberStr,
+    getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall,
+    implantImage,
+    implantSvgBody,
+    readTemplate,
+    replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
-import {card_B4} from "../card/card_B4.js";
-import {card_B5} from "../card/card_B5.js";
+import {card_B1} from "../card/card_B1.js";
+import {card_B2} from "../card/card_B2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {hasLeaderBoard} from "../util/star.js";
+import {getRankBG, getRankFromValue, hasLeaderBoard} from "../util/star.js";
+import {getRankColor} from "../util/color.js";
+import {LABEL_MM} from "../component/label.js";
 
 export async function router(req, res) {
     try {
@@ -55,6 +64,7 @@ export async function panel_B2(data = {
 
 }) {
     let svg = readTemplate('template/Panel_B.svg');
+    const VALUE_MANIA = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR'];
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
@@ -66,7 +76,7 @@ export async function panel_B2(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 画六个标识
-    svg = implantSvgBody(svg, 0, 0, drawHexIndex(getGameMode(data.beatMap.mode, 0)), reg_hexagon);
+    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonIndex(VALUE_MANIA), reg_hexagon); //todo: 这里的 VALUE_MANIA 之后会随着模式切换
 
     // 插入图片和部件（新方法
     const banner = await getMapBG(data.beatMap.beatmapset.id, 'cover', hasLeaderBoard(data.beatMap.ranked));
@@ -104,29 +114,61 @@ export async function panel_B2(data = {
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 获取卡片
-    let cardB4s = [];
+    let cardB1s = [];
     let hexagons = [];
-    let cardB5s = [];
+    let cardB2s = [];
 
     for (let i = 0; i < 6; i++) {
         const abbr = m?.abbrList[i];
-
         if (typeof map_minus_mania[abbr] !== 'number') continue;
-        cardB4s.push(await card_B4({parameter: abbr, number: map_minus_mania[abbr]}, false));
+
+        const value = map_minus_mania[abbr];
+        const rank = getRankFromValue(value);
+        const color = getRankColor(rank);
+        const background = getRankBG(rank);
+
+        cardB1s.push(await card_B1({
+
+            label: LABEL_MM[abbr],
+            background: background,
+            value: value,
+            round_level: 3,
+            rank: rank,
+            color: color,
+
+        }, false));
         hexagons.push(map_minus_mania[abbr] / 9); //9星以上是X
     }
 
     svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
-        svg = implantSvgBody(svg, 40, 350 + j * 115, cardB4s[j], reg_left);
+        svg = implantSvgBody(svg, 40, 350 + j * 115, cardB1s[j], reg_left);
     }
 
-    cardB5s.push(await card_B5({parameter: "OV", number: total}));
-    cardB5s.push(await card_B5({parameter: "SV", number: "-"})); //todo NaN
+    const rank_ov = getRankFromValue(total);
+    const color_ov = getRankColor(rank_ov);
+    const background_ov = getRankBG(rank_ov);
 
-    svg = implantSvgBody(svg, 630, 860, cardB5s[0], reg_center);
-    svg = implantSvgBody(svg, 970, 860, cardB5s[1], reg_center);
+    cardB2s.push(await card_B2({
+        label: LABEL_MM.OV,
+        background: background_ov,
+        value: total,
+        round_level: 3,
+        rank: rank_ov,
+        color: color_ov,
+    }));
+
+    cardB2s.push(await card_B2({
+        label: LABEL_MM.SV,
+        value: 'NaN',
+        round_level: 3,
+    }));
+
+    //todo NaN
+
+    svg = implantSvgBody(svg, 630, 860, cardB2s[0], reg_center);
+    svg = implantSvgBody(svg, 970, 860, cardB2s[1], reg_center);
 
     // todo 临时的值
     function drawChart(array = [], index = 0, name = "null", x = 0, y = 0, color = '#fff') {
@@ -162,39 +204,4 @@ export async function panel_B2(data = {
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
 
     return svg.toString();
-}
-
-function drawHexIndex(mode = 'osu') {
-    const cx = 960;
-    const cy = 600;
-    const r = 230 + 30; // 中点到边点的距离
-
-    let svg = '<g id="Rect"></g><g id="IndexText"></g>';
-    const reg_rrect = /(?<=<g id="Rect">)/;
-    const reg_text = /(?<=<g id="IndexText">)/;
-
-    const VALUE_NORMAL = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR'];
-    const VALUE_MANIA = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR'];
-
-    for (let i = 0; i < 6; i++){
-        let param;
-        if (mode === 'mania') {
-            param = VALUE_MANIA[i];
-        } else {
-            param = VALUE_NORMAL[i];
-        }
-
-        const PI_3 = Math.PI / 3;
-        const x = cx - r * Math.cos(PI_3 * i);
-        const y = cy - r * Math.sin(PI_3 * i);
-
-        const param_text = torus.getTextPath(param, x, y + 8, 24, 'center baseline', '#fff');
-        svg = replaceText(svg, param_text, reg_text)
-
-        const param_width = torus.getTextWidth(param, 24);
-        const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, '#54454C');
-        svg = replaceText(svg, rrect, reg_rrect);
-
-    }
-    return svg;
 }

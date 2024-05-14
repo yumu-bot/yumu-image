@@ -5,12 +5,16 @@ import {
     readTemplate, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_E, LABEL_PPM} from "../component/label.js";
-import {getRankColor} from "../util/color.js";
+import {label_E, LABELS} from "../component/label.js";
 
+// 详细文档参考 card_B1
 export async function card_B2(data = {
-    parameter: 'ACC',
-    number: 11.45141919810
+    label: null,
+    background: null,
+    value: 11.45141919810,
+    round_level: 2,
+    rank: 'F',
+    color: '#aaa',
 }) {
     //读取面板
     let svg = readTemplate("template/Card_B2.svg");
@@ -21,93 +25,20 @@ export async function card_B2(data = {
     let reg_background = /(?<=<g style="clip-path: url\(#clippath-B2-1\);">)/;
 
     //导入标签
-    let parameter = data.parameter.toUpperCase();
-
-    let label = await label_E({...LABEL_PPM[parameter]});
+    const label = await label_E(data?.label || LABELS.UNDEFINED);
 
     svg = implantSvgBody(svg, 20, 15, label, reg_label);
 
     //添加评级和值和背景
-    let rank = getPPMRank(data.number);
-    let color = getPPMColor(rank);
-    let background = getRankBG(rank);
-    let number_b = getRoundedNumberStrLarge(data.number,2);
-    let number_m = getRoundedNumberStrSmall(data.number,2);
+    const number_b = getRoundedNumberStrLarge(data?.value, data?.round_level);
+    const number_m = getRoundedNumberStrSmall(data?.value, data?.round_level);
 
-    let rank_text;
+    const rank_text = torus.getTextPath(data?.rank, 305, 66, 60, 'right baseline', data?.color); //68?
 
-    if (parameter !== 'SAN') {
-        rank_text = torus.getTextPath(rank, 305, 58, 60, 'right baseline', color);
-    } else {
-        let sanityGrade = getSanityGrade (data.number);
-        rank_text = torus.getTextPath(sanityGrade, 305, 58, 60, 'right baseline', color);
-    }
-
-    let number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 160, 140, 'center baseline', '#fff');
+    const number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 160, 140, 'center baseline', '#fff');
 
     svg = replaceTexts(svg, [rank_text, number_text], reg_text);
-    svg = implantImage(svg,320, 160, 0, 0, 0.3, background, reg_background);
+    svg = implantImage(svg,320, 160, 0, 0, 0.3, data?.background || getImageFromV3('object-score-backimage-F.jpg'), reg_background);
 
     return svg.toString();
-}
-
-function getRankBG(rank = 'F') {
-    if (rank === 'X+' || rank === 'SS') rank = 'X';
-    if (rank === 'S+') rank = 'S';
-    return getImageFromV3(`object-score-backimage-${rank}.jpg`)
-}
-
-function getPPMRank (data = 0) {
-    let rank;
-
-    if (data >= 120) {
-        rank = 'X+';
-    } else if (data >= 100) {
-        rank = 'SS';
-    } else if (data >= 95) {
-        rank = 'S+';
-    } else if (data >= 90) {
-        rank = 'S';
-    } else if (data >= 80) {
-        rank = 'A';
-    } else if (data >= 70) {
-        rank = 'B';
-    } else if (data >= 60) {
-        rank = 'C';
-    } else if (data > 0) {
-        rank = 'D';
-    } else {
-        rank = 'F';
-    }
-
-    return rank;
-}
-function getSanityGrade (data = 0) {
-    let grade;
-
-    if (data >= 120) {
-        grade = '?';
-    } else if (data >= 100) {
-        grade = '++';
-    } else if (data >= 95) {
-        grade = '+';
-    } else if (data >= 90) {
-        grade = '-';
-    } else if (data >= 80) {
-        grade = '--';
-    } else if (data >= 70) {
-        grade = '!';
-    } else if (data >= 60) {
-        grade = '!!';
-    } else if (data >= 20) {
-        grade = '!!!';
-    } else {
-        grade = 'X';
-    }
-
-    return grade;
-}
-
-function getPPMColor (rank = 'F') {
-    return getRankColor(rank);
 }

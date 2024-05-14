@@ -401,6 +401,7 @@ export function getRoundedTailNumber(number = 0) {
  * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
+ * lv-3是只把前三位数放大，且不补足，无单位，45671 -> 45 671, 450 -> 450
  */
 export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
     if (typeof number === 'number') return getRoundedNumberStrLarge(number, level) + getRoundedNumberStrSmall(number, level2);
@@ -420,18 +421,22 @@ export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
  * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
+ * lv-3是只把前三位数放大，且不补足，无单位，45671 -> 45 671, 450 -> 450
  */
 export function getRoundedNumberStrLarge(number = 0, level = 0) {
 
     switch (level) {
+        case -3:
+            return f_3_2_0(3);
+            break;
         case -2:
-            return f_2_0();
+            return f_3_2_0(4);
             break;
         case -1:
             return f_1();
             break;
         case 0:
-            return f_2_0();
+            return f_3_2_0(4);
             break;
         case 1:
             return f1();
@@ -451,16 +456,16 @@ export function getRoundedNumberStrLarge(number = 0, level = 0) {
             return number.toString().padStart(7, '0').slice(0, -4);// 4 5671 -> 004
 
         } else {
-            return SpecialRoundedLargeNum(number);
+            return SpecialRoundedLargeNum(number, 4);
         }
     }
 
-    function f_2_0() {
-        if (number <= Math.pow(10, 4)) {
+    function f_3_2_0(times = 4) {
+        if (number <= Math.pow(10, times)) {
             return Math.floor(number).toString()
 
         } else {
-            return SpecialRoundedLargeNum(number);
+            return SpecialRoundedLargeNum(number, times);
         }
     }
 
@@ -542,17 +547,17 @@ export function getRoundedNumberStrLarge(number = 0, level = 0) {
         return o;
     }
 
-    function SpecialRoundedLargeNum(number) {
+    function SpecialRoundedLargeNum(number, times = 4) {
         let p = 0;
 
-        if (number <= Math.pow(10, 8)) {
-            p = 4; //5671 1234 -> 5671
+        if (number <= Math.pow(10, 2 * times)) {
+            p = times; //5671 1234 -> 5671
 
-        } else if (number <= Math.pow(10, 12)) {
-            p = 8; //794 5671 1234 -> 794
+        } else if (number <= Math.pow(10, 3 * times)) {
+            p = 2 * times; //794 5671 1234 -> 794
 
-        } else if (number <= Math.pow(10, 16)) {
-            p = 12; //794 5671 1234 0000 -> 794
+        } else if (number <= Math.pow(10, 4 * times)) {
+            p = 3 * times; //794 5671 1234 0000 -> 794
 
         } else {
             return '';
@@ -581,18 +586,22 @@ export function getRoundedNumberStrLarge(number = 0, level = 0) {
  * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
+ * lv-3是只把前三位数放大，且不补足，无单位，45671 -> 45 671, 450 -> 450
  */
 export function getRoundedNumberStrSmall(number = 0, level = 0) {
 
     switch (level) {
+        case -3:
+            return f0_3(3);
+            break;
         case -2:
-            return f_2();
+            return f_2(4);
             break;
         case -1:
             return f_1();
             break;
         case 0:
-            return f0();
+            return f0_3(3);
             break;
         case 1:
             return f1();
@@ -607,12 +616,12 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
             break;
     }
 
-    function f_2() {
-        if (number <= Math.pow(10, 4)) {
+    function f_2(times = 4) {
+        if (number <= Math.pow(10, times)) {
             return ''
         } else {
             return AddSpaceForSmallNum(
-                SpecialRoundedSmallNum(number)
+                SpecialRoundedSmallNum(number, times)
             );
         }
     }
@@ -621,15 +630,15 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
         if (number <= Math.pow(10, 4)) {
             return number.toString().padStart(4, '0');// 000 0671 -> 0671
         } else {
-            return SpecialRoundedSmallNum(number);
+            return SpecialRoundedSmallNum(number, 4);
         }
     }
 
-    function f0() {
-        if (number <= Math.pow(10, 4)) {
+    function f0_3(times = 4) {
+        if (number <= Math.pow(10, times)) {
             return ''
         } else {
-            return SpecialRoundedSmallNum(number);
+            return SpecialRoundedSmallNum(number, times);
         }
     }
 
@@ -755,21 +764,21 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
         return outStr;
     }
 
-    function SpecialRoundedSmallNum(number) {
+    function SpecialRoundedSmallNum(number, times = 4) {
         let s = 0;
         let o;
 
-        if (number < Math.pow(10, 8)) {
-            s = -4; //5671 1234 -> 1234
+        if (number < Math.pow(10, 2 * times)) {
+            s = -times; //5671 1234 -> 1234
 
-        } else if (number < Math.pow(10, 12)) {
-            s = -8; //794 5671 1234 -> 5671 1234
+        } else if (number < Math.pow(10, 3 * times)) {
+            s = -2 * times; //794 5671 1234 -> 5671 1234
 
-        } else if (number < Math.pow(10, 16)) {
-            s = -12; //794 5671 1234 0000 -> 5671 1234 0000
+        } else if (number < Math.pow(10, 4 * times)) {
+            s = -3 * times; //794 5671 1234 0000 -> 5671 1234 0000
 
-        } else if (number < Math.pow(10, 20)) {
-            s = -16;
+        } else if (number < Math.pow(10, 5 * times)) {
+            s = -4 * times;
 
         }
         o = number.toString().slice(s);
