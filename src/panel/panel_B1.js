@@ -238,11 +238,10 @@ export async function panel_B1(data = {
         }));
 
     } else {
-
         const value_1 = data?.card_b_1.OVA || 0;
         const rank_1 = getRankFromValue(value_1, BOUNDARY);
         const bg_1 = getRankBG(rank_1);
-        const color_1 = getRankColor(value_1);
+        const color_1 = getRankColor(rank_1);
 
         card_B2_centers.push(await card_B2({
             label: LABEL_PPM.OVA,
