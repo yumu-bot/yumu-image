@@ -158,9 +158,10 @@ export async function panel_E3(data = {
     // 构建成绩
 
     const bid = data.beatmap.id;
+    console.log(data.beatmap)
     const stat = {
         acc: data.expected.accuracy * 100 || 100,
-        combo: data.expected.combo !== 0 ? data.expected.combo : data.beatmap.max_combo,
+        combo: data.expected.combo > 0 ? data.expected.combo : data.beatmap.max_combo,
         mods: data.expected.mods || [],
         nMisses: data.expected.miss || 0,
     }

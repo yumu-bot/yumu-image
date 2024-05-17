@@ -332,8 +332,8 @@ export async function panel_B3(data = {
     } else {
         banner = await getMapBG(me?.beatmapset.id, 'cover', hasLeaderBoard(me?.ranked));
         if (isVs) {
-            type = 'PC+'
-            panel_name = getPanelNameSVG('PP Plus: BeatMap Compare (!ympc)', 'PC', 'v0.4.0 UU');
+            type = 'PA+'
+            panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA', 'v0.4.0 UU');
 
             card_left = await card_A2(await PanelGenerate.beatmap2CardA2(me));
             card_right = await card_A2(await PanelGenerate.beatmap2CardA2(other));
@@ -462,6 +462,8 @@ const getRoman = (level = 0) => {
     if (level - 1 === 0 && 1 / (level - 1) === -Infinity) {
         return roman[0];
 
+    } else if (level <= -1) { //-2
+        return '-';
     } else if (level < 1) {
         return '.' + Math.round(level * 100);
     } else {
