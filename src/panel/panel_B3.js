@@ -330,7 +330,7 @@ export async function panel_B3(data = {
         }
 
     } else {
-        banner = await getMapBG(me?.beatmapset.id, 'cover', hasLeaderBoard(me?.ranked));
+        banner = await getMapBG(me?.beatmapset?.id, 'cover', hasLeaderBoard(me?.ranked));
         if (isVs) {
             type = 'PA+'
             panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA', 'v0.4.0 UU');
