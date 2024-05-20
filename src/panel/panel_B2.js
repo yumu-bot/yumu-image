@@ -8,7 +8,7 @@ import {
     getRoundedNumberStrSmall,
     implantImage,
     implantSvgBody,
-    readTemplate,
+    readTemplate, replaceText,
     replaceTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -57,6 +57,7 @@ export async function panel_B2(data = {
     mapMinus: {
         valueList: [],
         subList: [],
+        abbrList: [],
 
         stream: [],
         jack: [],
@@ -64,7 +65,21 @@ export async function panel_B2(data = {
 
 }) {
     let svg = readTemplate('template/Panel_B.svg');
-    const VALUE_MANIA = ['RC', 'LN', 'CO', 'ST', 'SP', 'PR'];
+
+    const m = data?.mapMinus;
+
+    const data_arr = m?.valueList || [];
+    const sub_arr = m?.subList || [];
+    const abbr_arr = m?.abbrList || [];
+
+    const map_minus_mania = {
+        RC: data_arr[0],
+        LN: data_arr[1],
+        CO: data_arr[2],
+        PR: data_arr[3],
+        SP: data_arr[4],
+        ST: data_arr[5],
+    }
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
@@ -76,7 +91,7 @@ export async function panel_B2(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 画六个标识
-    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonIndex(VALUE_MANIA), reg_hexagon); //todo: 这里的 VALUE_MANIA 之后会随着模式切换
+    svg = replaceText(svg , PanelDraw.HexagonIndex(abbr_arr.slice(0, 6), 960, 600, 260, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
     const banner = await getMapBG(data.beatMap.beatmapset.id, 'cover', hasLeaderBoard(data.beatMap.ranked));
@@ -86,20 +101,6 @@ export async function panel_B2(data = {
     const panel_name = getPanelNameSVG('Map Minus v0.7 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.4.0 UU');
 
     // 计算数值
-
-    const m = data?.mapMinus;
-
-    const data_arr = m?.valueList || [];
-    const sub_arr = m?.subList || [];
-
-    const map_minus_mania = {
-        RC: data_arr[0],
-        LN: data_arr[1],
-        CO: data_arr[2],
-        ST: data_arr[3],
-        SP: data_arr[4],
-        PR: data_arr[5],
-    }
 
     const total = m?.star || 0;
 
@@ -119,7 +120,7 @@ export async function panel_B2(data = {
     let cardB2s = [];
 
     for (let i = 0; i < 6; i++) {
-        const abbr = m?.abbrList[i];
+        const abbr = abbr_arr[i];
         if (typeof map_minus_mania[abbr] !== 'number') continue;
 
         const value = map_minus_mania[abbr];
@@ -140,7 +141,7 @@ export async function panel_B2(data = {
         hexagons.push(map_minus_mania[abbr] / 9); //9星以上是X
     }
 
-    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC'), reg_hexagon);
+    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
         svg = implantSvgBody(svg, 40, 350 + j * 115, cardB1s[j], reg_left);
@@ -187,15 +188,15 @@ export async function panel_B2(data = {
         drawChart(m?.handLock, sub_arr[6], 'H', 170, 230, '#FFE11D'),
         drawChart(m?.overlap, sub_arr[7], 'O', 340, 230, '#EFC72A'),
 
-        drawChart(m?.riceDensity, sub_arr[8], 'C', 0, 345, '#FF9800'),
-        drawChart(m?.lnDensity, sub_arr[9], 'D', 170, 345, '#EB6100'),
+        drawChart(m?.grace, sub_arr[13], 'G', 0, 345, '#FF9800'),
+        drawChart(m?.delayedTail, sub_arr[14], 'Y', 170, 345, '#EB6100'),
 
         drawChart(m?.speedJack, sub_arr[10], 'K', 0, 460, '#D32F2F'),
         drawChart(m?.trill, sub_arr[11], 'I', 170, 460, '#EA68A2'),
         drawChart(m?.burst, sub_arr[12], 'U', 340, 460, '#EB6877'),
 
-        drawChart(m?.grace, sub_arr[13], 'G', 0, 575, '#920783'),
-        drawChart(m?.delayedTail, sub_arr[14], 'Y', 170, 575, '#9922EE'),
+        drawChart(m?.riceDensity, sub_arr[8], 'C', 0, 575, '#920783'),
+        drawChart(m?.lnDensity, sub_arr[9], 'D', 170, 575, '#9922EE'),
 
     ], reg_right);
 

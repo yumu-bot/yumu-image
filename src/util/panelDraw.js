@@ -98,8 +98,8 @@ export const PanelDraw = {
         return line + line1 + line + line2 + circle;
     },
 
-    // 六边形图的标识，offset 是直接加在弧度上（弧度制，比如 π/3 = 60°），r 是中点到边点的距离，一般比 Hexagon 大一点
-    HexagonIndex: (data = ['A', 'B', 'C', 'D', 'E', 'F'], cx = 960, cy = 600, r = 230 + 30, offset = 0, text_color = '#fff', background_color = '#54454C') => {
+    // 六边形图的标识，offset 是直接加在弧度上（弧度制，比如 π/3 = 60°），r 是中点到边点的距离，一般比 Hexagon 230 大一点 + 30
+    HexagonIndex: (data = ['A', 'B', 'C', 'D', 'E', 'F'], cx = 960, cy = 600, r = 260, offset = 0, text_color = '#fff', background_color = '#54454C') => {
         if (data?.length < 6) return '';
         const PI_3 = Math.PI / 3;
 
