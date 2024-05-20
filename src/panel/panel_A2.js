@@ -316,8 +316,8 @@ export async function panel_A2(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    const beatmap_count = (data.beatmapsets !== null) ? data.beatmapsets.length : 0;
-    const result_count = Math.min(data.result_count, beatmap_count);
+    const beatmap_arr = data?.beatmapsets || [];
+    const result_count = Math.min(data?.result_count || 0, beatmap_arr?.length || 0);
 
     const search_result = await PanelGenerate.searchResult2CardA2(
         data.total,
@@ -325,41 +325,38 @@ export async function panel_A2(data = {
         data.search,
         result_count,
         data.rule || 'Qualified',
-        data.beatmapsets[0],
+        beatmap_arr[0],
     );
 
     const search_cardA2 = await card_A2(search_result);
     svg = implantSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
 
     //导入其他卡
-    let beatmap_cardA2s = [];
-    let info_cardMs = [];
-
-    for (let i = 0; i < result_count; i++) {
-        const beatmap = await PanelGenerate.searchMap2CardA2(data.beatmapsets[i], i + 1);
-        const f = await card_A2(beatmap);
-        beatmap_cardA2s.push(f);
-    }
 
     // 如果卡片超过12张，则使用紧促型面板，并且不渲染卡片 M
     if (result_count <= 12) {
-        for (const v of data.beatmapsets) {
-            const f = await card_M(v);
-            info_cardMs.push(f);
-        }
-        for (const i in info_cardMs) {
-            svg = implantSvgBody(svg, 510, 330 + 250 * i, info_cardMs[i], reg_card_m);
-        }
+        for (let i = 0; i < result_count; i++) {
+            const m = await card_M(
+                beatmap_arr[i]
+            );
 
-        for (const i in beatmap_cardA2s) {
-            svg = implantSvgBody(svg, 40, 330 + 250 * i, beatmap_cardA2s[i], reg_card_a2);
+            const a2 = await card_A2(
+                await PanelGenerate.searchMap2CardA2(beatmap_arr[i], i + 1)
+            );
+
+            svg = implantSvgBody(svg, 40, 330 + 250 * i, a2, reg_card_a2);
+            svg = implantSvgBody(svg, 510, 330 + 250 * i, m, reg_card_m);
         }
     } else {
         //紧凑型面板
-        for (const i in beatmap_cardA2s) {
+        for (let i = 0; i < result_count; i++) {
+            const a2 = await card_A2(
+                await PanelGenerate.searchMap2CardA2(beatmap_arr[i], i + 1)
+            );
+
             const x = i % 4;
             const y = Math.floor(i / 4);
-            svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, beatmap_cardA2s[i], reg_card_a2);
+            svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, a2, reg_card_a2);
         }
     }
 
@@ -367,12 +364,12 @@ export async function panel_A2(data = {
     svg = replaceBanner(svg, reg_banner);
 
     // 计算面板高度
-    // 计算面板高度
-    const panelHeight = getPanelHeight(beatmap_cardA2s?.length, 210, 4, 290, 40);
+    const panelHeight = result_count <= 12 ?
+        getPanelHeight(result_count, 210, 1, 290, 40) :
+        getPanelHeight(result_count, 210, 4, 290, 40);
     const cardHeight = panelHeight - 290;
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
     svg = replaceText(svg, cardHeight, reg_cardheight);
-
     return svg.toString();
 }

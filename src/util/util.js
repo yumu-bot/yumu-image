@@ -253,14 +253,19 @@ export async function getAvatar(link, useCache = true, defaultImagePath = getIma
  * @param defaultImagePath
  * @return {Promise<string>}
  */
-export async function getCover(link, useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
+export async function getBanner(link, useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
     if (link != null && link.startsWith("https://assets.ppy.sh/beatmaps/")) {
-        return getImageFromV3('beatmap-DLfailBG.jpg')
+        return await getCover(link, useCache, getImageFromV3('beatmap-DLfailBG.jpg'))
     } else if (link == null || link == "") {
         return defaultImagePath;
     } else {
         return await readNetImage(link, useCache, defaultImagePath);
     }
+}
+
+// 其实就可以用 readNetImage
+export async function getCover(link, useCache = true, defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')) {
+    return await readNetImage(link, useCache, defaultImagePath);
 }
 
 /**

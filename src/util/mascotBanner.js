@@ -156,7 +156,10 @@ export function pp2UserBG(pp = 0, boundary = [], ranks = []) {
     for (let i = 0; i < 8; i++) {
         const b = boundary[i];
 
-        if (pp >= b) rank = ranks[i];
+        if (pp >= b) {
+            rank = ranks[i];
+            break;
+        }
     }
 
     return getImageFromV3('object-score-backimage-' + rank + '.jpg');

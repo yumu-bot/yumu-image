@@ -10,7 +10,7 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage, getAvatar, getCover,
+    readNetImage, getAvatar, getBanner, getCover,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, getApproximateStarRating, hasLeaderBoard, rankSS2X} from "./star.js";
@@ -36,7 +36,7 @@ export const PanelGenerate = {
         }
 
 
-        const background = user?.profile?.card || await getCover(user?.cover_url, true);
+        const background = user?.profile?.card || await getBanner(user?.cover_url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
         const sub_icon1 = user?.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
@@ -79,7 +79,7 @@ export const PanelGenerate = {
     },
 
     mapper2CardA1: async (user) => {
-        const background = await getCover(user?.cover_url, true);
+        const background = await getBanner(user?.cover_url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
         const sub_icon1 = user.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
@@ -109,7 +109,7 @@ export const PanelGenerate = {
     },
 
     microUser2CardA1: async (user) => {
-        const background = await getCover(user?.cover?.url, true);
+        const background = await getBanner(user?.cover?.url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
         const sub_icon1 = user.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
@@ -439,12 +439,13 @@ export const PanelGenerate = {
     searchMap2CardA2: async (s, rank) => {
         const ranked_date = s.ranked_date || '';
         const submitted_date = s.submitted_date || '';
+        const ranked = s?.ranked || -2;
 
-        const background = await getMapBG(s.id, 'list@2x', hasLeaderBoard(s.ranked));
+        const background = await getCover(s?.covers['list@2x'], hasLeaderBoard(ranked));
         const map_status = s?.status || 'graveyard';
 
-        const isRanked = (map_status === 'ranked' || map_status === 'loved' || map_status === 'approved');
-        const isQualified = (map_status === 'qualified');
+        const isQualified = ranked === 3;
+        const isRanked = hasLeaderBoard(ranked) && ! isQualified;
 
         const title1 = s.title || 'Unknown Title';
         const title2 = s.artist || 'Unknown Artist';
@@ -800,7 +801,7 @@ export const PanelGenerate = {
     },
 
     user2CardO1: async (user) => {
-        const background = await getCover(user?.cover_url, true);
+        const background = await getBanner(user?.cover_url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
         return {

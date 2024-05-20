@@ -4,7 +4,7 @@ import {
     getImageFromV3,
     getGameMode, getMapBG,
     implantImage, readTemplate,
-    replaceTexts, getAvatar, getCover,
+    replaceTexts, getAvatar, getBanner,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
 import {calcPerformancePoints} from "../util/compute-pp.js";
@@ -116,7 +116,7 @@ export async function panel_Gamma(data = {
 
 const PanelGamma = {
     infoVersion: async (user) => {
-        const background = await getCover(user?.cover_url, true);
+        const background = await getBanner(user?.cover_url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
         return {
