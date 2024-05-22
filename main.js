@@ -7,6 +7,7 @@ import {router as PanelA3Router} from "./src/panel/panel_A3.js";
 import {router as PanelA4Router} from "./src/panel/panel_A4.js";
 import {router as PanelA5Router} from "./src/panel/panel_A5.js";
 import {router as PanelA6Router} from "./src/panel/panel_A6.js";
+import {router as PanelA7Router} from "./src/panel/panel_A7.js";
 import {router as PanelB1Router} from "./src/panel/panel_B1.js";
 import {router as PanelB2Router} from "./src/panel/panel_B2.js";
 import {router as PanelB3Router} from "./src/panel/panel_B3.js";
@@ -30,6 +31,7 @@ import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js"; //XinRan 
 import {router as panelEpsilonRouter} from "./src/panel/panel_Epsilon.js"; //方便使用的面积头像
 import {router as MarkdownRouter} from "./src/panel/markdown.js";
 import {router as GetMapAttrRouter} from "./src/panel/mapAttributes.js";
+import {router as GetPPRouter} from "./src/panel/mapPP.js";
 
 initPath();
 //这里放测试代码
@@ -56,6 +58,7 @@ app.post('/panel_A3', PanelA3Router);
 app.post('/panel_A4', PanelA4Router);
 app.post('/panel_A5', PanelA5Router);
 app.post('/panel_A6', PanelA6Router);
+app.post('/panel_A7', PanelA7Router);
 app.post('/panel_B1', PanelB1Router);
 app.post('/panel_B2', PanelB2Router);
 app.post('/panel_B3', PanelB3Router);
@@ -80,6 +83,7 @@ app.post('/panel_Epsilon', panelEpsilonRouter);
 
 app.post('/md', MarkdownRouter);
 app.post('/attr', GetMapAttrRouter);
+app.post('/pp', GetPPRouter);
 
 app.post('/del', (req, res) => {
     try {

@@ -10,7 +10,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_A4(data);
+        const svg = await panel_A7(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -22,7 +22,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_A4(data);
+        const svg = await panel_A7(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -33,12 +33,12 @@ export async function router_svg(req, res) {
 }
 
 /**
- * bp/tbp 多成绩面板
+ * bf 理论最好成绩面板
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_A4(data = {
-    "me": {
+export async function panel_A7(data = {
+    "user": {
         "id": 17064371,
         "pp": 6279.61,
         "username": "-Spring Night-",
@@ -120,7 +120,7 @@ export async function panel_A4(data = {
         },
     },
 
-    "bps": [
+    "scores": [
         {
             "accuracy" : 0.9940625,
             "mods" : [ ],
@@ -270,11 +270,12 @@ export async function panel_A4(data = {
                 "beatmaps" : null,
                 "ranked_date" : null
             },
-            "create_at_str" : "2023-06-17T11:24:22Z"
+            "create_at_str" : "2023-06-17T11:24:22Z",
+            "fcPP" : 114.514,
         }
     ],
-    "rank": [1,3,4,5,6],
 
+    ranks: []
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_A4.svg');
@@ -288,26 +289,26 @@ export async function panel_A4(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA4-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', 'v0.4.0 UU');
+    const panel_name = getPanelNameSVG('BP Fixed (!ymbf)', 'BF', 'v0.4.0 UU');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.me));
+    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
     svg = implantSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入H卡
     let cardHs = [];
-    for (const i in data.bps) {
-        const bp_generated = await PanelGenerate.bp2CardH(data.bps[i], data.rank[i], false);
+    for (const i in data.scores) {
+        const bp_generated = await PanelGenerate.bp2CardH(data.scores[i], data.ranks[i], true);
         const f = await card_H(bp_generated);
 
         cardHs.push(f);
     }
 
     // 插入图片和部件（新方法
-    svg = replaceBanner(svg, reg_banner, data.me?.profile?.banner);
+    svg = replaceBanner(svg, reg_banner, data.user?.profile?.banner);
 
     // 计算面板高度
     const rowTotal = (cardHs !== []) ? Math.ceil(cardHs.length / 2) : 0;

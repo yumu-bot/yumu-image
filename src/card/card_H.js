@@ -17,8 +17,10 @@ export async function card_H(data = {
     left2: '',
     index_b: '',
     index_m: '',
+    index_l: '', // 小字
     index_b_size: 48,
     index_m_size: 36,
+    index_l_size: 24,
     label1: '',
     label2: '',
     label3: '',
@@ -84,28 +86,30 @@ export async function card_H(data = {
     const color_label3 = data.color_label3 || 'none';
     const color_label4 = data.color_label4 || 'none';
 
-    const font_l4 = (data.font_label4 === 'PuHuiTi') ? PuHuiTi : torus;
-    const font_t2 = (data.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
+    const font_l4 = (data?.font_label4 === 'PuHuiTi') ? PuHuiTi : torus;
+    const font_t2 = (data?.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
 
-    const label3_width = torus.getTextWidth(data.label3 || '', 24) + 30;
-    const label4_width = font_l4.getTextWidth(data.label4 || '', 24) + 30;
+    const label3_width = torus.getTextWidth(data?.label3 || '', 24) + 30;
+    const label4_width = font_l4.getTextWidth(data?.label4 || '', 24) + 30;
 
-    const label1 = torus.getTextPath(data.label1 || '', 50, 20.877, 18, 'center baseline', '#fff');
-    const label2 = torus.getTextPath(data.label2 || '', 50, 96.877, 18, 'center baseline', '#fff');
-    const label3 = torus.getTextPath(data.label3 || '', 710 - label3_width / 2, 34.836, 24, 'center baseline', '#fff');
-    const label4 = font_l4.getTextPath(data.label4 || '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
+    const label1 = torus.getTextPath(data?.label1 || '', 50, 20.877, 18, 'center baseline', '#fff');
+    const label2 = torus.getTextPath(data?.label2 || '', 50, 96.877, 18, 'center baseline', '#fff');
+    const label3 = torus.getTextPath(data?.label3 || '', 710 - label3_width / 2, 34.836, 24, 'center baseline', '#fff');
+    const label4 = font_l4.getTextPath(data?.label4 || '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
 
     const index = torus.get2SizeTextPath(
-        data.index_b, data.index_m,
-        data.index_b_size || 48, data.index_m_size || 36, 815,73.672,'center baseline', data.color_index)
+        data?.index_b, data?.index_m, data?.index_b_size || 48, data?.index_m_size || 36,
+            815, 73.672, 'center baseline', data.color_index)
+        +
+        torus.getTextPath(data?.index_l, 815, 33.672, data?.index_l_size || 24, 'center baseline', data.color_index)
 
     const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 5, 40, 20, 10, color_label1) : '';
     const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 5, 40, 20, 10, color_label2) : '';
     const rrect_label3 = data.label3 ? PanelDraw.Rect(710 - label3_width, 10, label3_width, 34, 17, color_label3) : '';
     const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label4_width, 34, 17, color_label4) : '';
 
-    svg = replaceText(svg, data.color_right || 'none', reg_color_right);
-    svg = replaceText(svg, data.color_left || 'none', reg_color_left);
+    svg = replaceText(svg, data?.color_right || 'none', reg_color_right);
+    svg = replaceText(svg, data?.color_left || 'none', reg_color_left);
 
 
     svg = replaceTexts(svg, [label1, label2, label3, label4, rrect_label1, rrect_label2, rrect_label3, rrect_label4,], reg_label);
