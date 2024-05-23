@@ -673,7 +673,7 @@ const score2AccIndex = (score) => {
             default : {
                 const pp_acc = (nGeki * 320 + n300 * 300 + nKatu * 200 + n100 * 100 + n50 * 50) / ((nGeki + n300 + nKatu + n100 + n50 + n0) * 320);
 
-                return getRoundedNumberStr(pp_acc * 100, 3);
+                return pp_acc < 1 ? getRoundedNumberStr(pp_acc * 100, 3) : 'AP';
             }
         }
     }
