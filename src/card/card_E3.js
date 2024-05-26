@@ -1,5 +1,5 @@
 import {
-    getImageFromV3, getRoundedNumberStr,
+    getImageFromV3, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
     replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -59,16 +59,19 @@ export async function card_E3(data = {
     // 文字定义
     const density = torus.getTextPath("Density", 20, 32.88, 18, "left baseline", "#aaa");
     const retry_fail = torus.getTextPath("Retry // Fail", 20, 152.63, 18, "left baseline", "#aaa");
-    const public_rating = torus.getTextPath("Players Feedback " + getRoundedNumberStr(data.public_rating, 2),
-            540, 32.88, 18, "right baseline", "#aaa");
+    const public_rating = torus.get2SizeTextPath(
+        getRoundedNumberStrLarge(data.public_rating, 2),
+        getRoundedNumberStrSmall(data.public_rating, 2) + ' / 10',
+        24, 18,
+        540, 32.88, "right baseline", "#aaa");
     const percent = torus.getTextPath( "P "
-            + data.pass_percent
-            + "% // R "
-            + data.retry_percent
-            + "% // F "
-            + data.fail_percent
-            + "%",
-            540, 152.63, 18, "right baseline", "#aaa");
+        + data.pass_percent
+        + "% // R "
+        + data.retry_percent
+        + "% // F "
+        + data.fail_percent
+        + "%",
+        540, 152.63, 18, "right baseline", "#aaa");
 
     // 导入文字
     svg = replaceTexts(svg, [density, retry_fail, public_rating, percent], reg_text);
