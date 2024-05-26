@@ -1,6 +1,5 @@
 import {
-    getImageFromV3, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
-    replaceText, replaceTexts,
+    getImageFromV3, getRoundedNumberStr, replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E} from "../component/label.js";
@@ -59,11 +58,8 @@ export async function card_E3(data = {
     // 文字定义
     const density = torus.getTextPath("Density", 20, 32.88, 18, "left baseline", "#aaa");
     const retry_fail = torus.getTextPath("Retry // Fail", 20, 152.63, 18, "left baseline", "#aaa");
-    const public_rating = torus.get2SizeTextPath(
-        getRoundedNumberStrLarge(data.public_rating, 2),
-        getRoundedNumberStrSmall(data.public_rating, 2) + ' / 10',
-        24, 18,
-        540, 32.88, "right baseline", "#aaa");
+    const public_rating = torus.getTextPath(
+        getRoundedNumberStr(data.public_rating, 2) + ' / 10', 540, 32.88, 18, "right baseline", "#aaa");
     const percent = torus.getTextPath( "P "
         + data.pass_percent
         + "% // R "
