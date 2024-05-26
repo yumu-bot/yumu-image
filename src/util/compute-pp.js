@@ -160,6 +160,28 @@ const calcPP = {
 
  */
 
+export async function getMaxCombo(bid, statistics = stat, mode, hasLeaderBoard = true) {
+    return (await getDifficulty(bid, statistics, mode, hasLeaderBoard)).maxCombo
+}
+
+export async function getStarRating(bid, statistics = stat, mode, hasLeaderBoard = true) {
+    return (await getDifficulty(bid, statistics, mode, hasLeaderBoard)).stars
+}
+
+async function getDifficulty(bid, statistics = stat, mode, hasLeaderBoard = true) {
+
+    const mode_name = mode ? getGameMode(mode, 0) :
+        (statistics.mode_int ? getGameMode(statistics.mode_int, 0) : 'osu');
+
+    const osuFilePath = await getOsuFilePath(bid, mode_name, hasLeaderBoard);
+    let beatMap = new Beatmap({
+        path: osuFilePath,
+    });
+
+    let calculator = new Calculator({})
+    return calculator.difficulty(beatMap);
+}
+
 //主计算 calcPP
 export async function calcPerformancePoints(bid, statistics = stat, mode, hasLeaderBoard = true) {
     let mode_int;

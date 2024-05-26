@@ -314,8 +314,19 @@ export async function panel_A7(data = {
     // 导入H卡
     let cardHs = [];
     for (const i in data.scores) {
-        const bp_generated = await PanelGenerate.bp2CardH(data.scores[i], data.ranks[i], true);
-        const f = await card_H(bp_generated);
+        const bp = data.scores[i];
+        const r = data.ranks[i];
+
+        const deltaPP = Math.round(bp?.fcPP - bp?.pp);
+
+        const bp_generated = await PanelGenerate.bp2CardH(bp, r);
+        const f = await card_H({
+            ...bp_generated,
+
+            index_b: bp?.fcPP > 0 ? Math.round(bp.fcPP).toString() : '',
+            index_l: (deltaPP > 0 ? '+' : '') + deltaPP + 'PP',
+            index_l_size: 24,
+        });
 
         cardHs.push(f);
     }

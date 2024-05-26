@@ -608,7 +608,8 @@ export const PanelGenerate = {
         }
     },
 
-    bp2CardH: async (bp, rank = 1, isBPFix = false) => {
+    // panel A7 有细微的改动，请注意
+    bp2CardH: async (bp, rank = 1) => {
         const cover = await readNetImage(bp?.beatmapset?.covers?.list, true);
         const background = await readNetImage(bp?.beatmapset?.covers?.cover, true);
 
@@ -658,12 +659,10 @@ export const PanelGenerate = {
             title2: title2,
             left1: artist + ' // ' + bp.beatmapset.creator,
             left2: '[' + difficulty_name + '] - BP' + rank + ' (' + time_diff + ')',
-            index_b: isBPFix ? Math.round(bp.fcPP).toString() : Math.round(bp.pp).toString(),
+            index_b: Math.round(bp.pp).toString(),
             index_m: 'PP',
-            index_l: isBPFix ? '+' + Math.round(bp.fcPP - bp.pp) + 'PP' : '',
             index_b_size: 48,
             index_m_size: 36,
-            index_l_size: 24,
             label1: '',
             label2: '',
             label3: '',
