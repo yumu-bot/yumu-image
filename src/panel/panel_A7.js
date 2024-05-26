@@ -295,7 +295,20 @@ export async function panel_A7(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const a1 = await PanelGenerate.user2CardA1(data?.user)
+
+    // 修改 A1 展示，让测试 PP 在下面
+    const theoretical_pp = data?.pp || data?.user?.pp || 0;
+    const delta = Math.round(theoretical_pp - data?.user?.pp);
+
+    const right1 = delta > 1 ? '+' + delta + 'PP' : '';
+
+    const me_card_a1 = await card_A1({...a1,
+        right1: right1,
+        right2: 'if no choke (1-10 misses)',
+        right3b: Math.round(theoretical_pp).toString(),
+        right3m: 'PP',
+    });
     svg = implantSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入H卡

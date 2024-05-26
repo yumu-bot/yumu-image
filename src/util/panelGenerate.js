@@ -18,6 +18,7 @@ import {getApproximateRank, getApproximateStarRating, hasLeaderBoard, rankSS2X} 
 //公用方法
 //把参数变成面板能读懂的数据（router
 export const PanelGenerate = {
+    // panel A7 有细微的改动，请注意
     user2CardA1: async (user, historyUser) => {
         if (user == null) return {
             background: getImageFromV3('card-default.png'),
