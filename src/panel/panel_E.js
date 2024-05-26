@@ -781,7 +781,7 @@ const score2Statistics = (score) => {
 
         case 'm': {
             statistics.push({
-                index: '320',
+                index: 'MAX',
                 stat: n320,
                 index_color: '#fff',
                 stat_color: '#fff',
