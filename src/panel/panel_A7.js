@@ -305,7 +305,7 @@ export async function panel_A7(data = {
 
     const me_card_a1 = await card_A1({...a1,
         right1: right1,
-        right2: 'if no choke (<1% misses)',
+        right2: 'if no choke (<= 1% miss)',
         right3b: Math.round(theoretical_pp).toString(),
         right3m: 'PP',
     });
