@@ -253,7 +253,7 @@ export async function panel_B1(data = {
         }));
 
         const san_value = Math.round(data?.card_b_1.SAN || 0);
-        const san_rank = getRankFromValue(san_value);
+        const san_rank = getRankFromValue(san_value, SANITY_BOUNDARY); // 用于颜色判断的 rank
         const san_bg = getRankBG(san_rank);
         const san_color = getRankColor(san_rank);
         const san_truly_rank = getRankFromValue(san_value, SANITY_BOUNDARY, SANITY_RANKS); // SAN 指示器

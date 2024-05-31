@@ -21,7 +21,7 @@ const ModInt = {
 const ModBonusSTD = {
     null: 1,
     "NM": 1,
-    "NF": 1,
+    "NF": 0.5,
     "EZ": 0.5,
     "NV": 1,
     "HD": 1.06,
@@ -40,7 +40,7 @@ const ModBonusSTD = {
 const ModBonusTAIKO = {
     null: 1,
     "NM": 1,
-    "NF": 1,
+    "NF": 0.5,
     "EZ": 0.5,
     "NV": 1,
     "HD": 1.06,
@@ -59,7 +59,7 @@ const ModBonusTAIKO = {
 const ModBonusCATCH = {
     null: 1,
     "NM": 1,
-    "NF": 1,
+    "NF": 0.5,
     "EZ": 0.5,
     "NV": 1,
     "HD": 1.06,
@@ -78,7 +78,7 @@ const ModBonusCATCH = {
 const ModBonusMANIA = {
     null: 1,
     "NM": 1,
-    "NF": 1,
+    "NF": 0.5,
     "EZ": 0.5,
     "NV": 1,
     "HD": 1,
