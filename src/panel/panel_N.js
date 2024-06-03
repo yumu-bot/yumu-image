@@ -218,8 +218,11 @@ async function getGuestPanel(guest = [], x = 54, y = 745) {
 async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 490, y = 330) {
     const hype_count = s?.hype?.current || more?.hypeCount || 0;
     let hype_slot = 615 / 185; // 一般来说是 hype 相比于正常一格的长度比
-    const nom_count = s?.nominations_summary?.current || 0;
-    const nom_slot = s?.nominations_summary?.required || 2;
+
+    const summary = s?.nominations_summary || []
+
+    const nom_count = summary?.current || 0;
+    const nom_slot = (summary?.required_meta?.main_ruleset + summary?.required_meta?.non_main_ruleset) || 2;
     const qua_count = (nom_count === nom_slot && nom_count !== 0) ? 1 : 0
     const rnk_count = (s?.ranked === 1) ? 1 : 0
 

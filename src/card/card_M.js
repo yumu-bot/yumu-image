@@ -23,7 +23,11 @@ export async function card_M(s = {
     "favourite_count": 48,
     "hype": {
         "current": 26,
-        "required": 5
+        "eligible_main_rulesets" : [ 'osu' ],
+        "required_meta": {
+            "main_ruleset": 2,
+            "non_main_ruleset" : 1,
+        }
     },
     "id": 1884753,
     "nsfw": false,
