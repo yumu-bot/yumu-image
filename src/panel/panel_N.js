@@ -349,6 +349,7 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
     const group2AbbrText = (g = u?.default_group) => {
         switch (g) {
             case "bng": return 'B';
+            case "bng_limited": return 'P';
             case "nat": return 'N';
             case "gmt": return 'G';
             case "alm": return 'A';
