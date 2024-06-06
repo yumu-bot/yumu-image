@@ -3,7 +3,7 @@ import {
     getPanelNameSVG,
     implantImage,
     implantSvgBody,
-    readTemplate, replaceBanner,
+    readTemplate, putCustomBanner,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -534,7 +534,7 @@ export async function panel_D(data = {
 
     // 插入图片和部件
     const background = pp2UserBG(data.user.pp || 0);
-    svg = replaceBanner(svg, reg_banner, data.user?.profile?.banner);
+    svg = putCustomBanner(svg, reg_banner, data.user?.profile?.banner);
     svg = implantImage(svg, 1920, 1080, 0, 280, 0.6, background, reg_background);
 
     return svg.toString();

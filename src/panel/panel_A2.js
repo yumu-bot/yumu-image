@@ -1,7 +1,7 @@
 import {
     exportJPEG, getPanelHeight,
     getPanelNameSVG, implantSvgBody,
-    readTemplate, replaceBanner,
+    readTemplate, putCustomBanner,
     replaceText
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
@@ -361,7 +361,7 @@ export async function panel_A2(data = {
     }
 
     // 插入图片和部件（新方法
-    svg = replaceBanner(svg, reg_banner);
+    svg = putCustomBanner(svg, reg_banner);
 
     // 计算面板高度
     const panelHeight = result_count <= 12 ?

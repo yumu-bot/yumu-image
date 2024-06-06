@@ -5,7 +5,7 @@ import {
     replaceText,
     getPanelNameSVG,
     getRoundedNumberStr,
-    replaceBanner
+    putCustomBanner
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -63,7 +63,7 @@ export async function panel_F(data = {}) {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 插入图片和部件（新方法
-    svg = replaceBanner(svg, reg_banner);
+    svg = putCustomBanner(svg, reg_banner);
 
     // 导入成绩卡（C卡
 

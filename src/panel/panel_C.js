@@ -3,7 +3,7 @@ import {
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
-    implantSvgBody, readTemplate, replaceBanner,
+    implantSvgBody, readTemplate, putCustomBanner,
     replaceText, transformSvgBody, getPanelHeight, getAvatar
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
@@ -61,7 +61,7 @@ export async function panel_C(data = {}) {
     const matchInfo = await card_A2(await PanelGenerate.matchData2CardA2(data));
 
     // 插入图片和部件（新方法
-    svg = replaceBanner(svg, reg_banner);
+    svg = putCustomBanner(svg, reg_banner);
     svg = implantSvgBody(svg, 40, 40, matchInfo, reg_maincard);
 
     // 导入H卡

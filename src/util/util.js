@@ -1662,11 +1662,11 @@ export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.
 /**
  * @param svg
  * @param reg_banner
- * @param {string?}banner
+ * @param {string?} custom
  */
-export function replaceBanner (svg, reg_banner, banner) {
-    if (banner) {
-        return implantImage(svg, 1920, 320, 0, 0, 1, banner, reg_banner);
+export function putCustomBanner(svg, reg_banner, custom, custom_opacity = 0.8) {
+    if (custom) {
+        return implantImage(svg, 1920, 320, 0, 0, custom_opacity, custom, reg_banner);
     } else {
         return implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     }
