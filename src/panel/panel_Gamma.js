@@ -62,12 +62,12 @@ export async function router_svg(req, res) {
 export async function panel_Gamma(data = {
     background: getImageFromV3('card-default.png'),
     avatar: getImageFromV3('avatar-guest.png'),
-    mode: 'OSU',
-    left1: '123',
-    left2: '123',
-    left3: '123',
-    down1: '123',
-    down2: '123',
+    mode: '',
+    left1: '',
+    left2: '',
+    left3: '',
+    down1: '',
+    down2: '',
 
     down_left1: '',
     down_left2: '',
@@ -77,13 +77,13 @@ export async function panel_Gamma(data = {
     down_right3: '',
     down_left_color: 'none',
 
-    center0b: '4.',
-    center0m: '36*',
-    center1b: 'HyperText',
+    center0b: '',
+    center0m: '',
+    center1b: '',
     center1m: '',
-    center2: '95.36% // 1337x',
+    center2: '',
 
-    panel: 'score', //score, info
+    panel: '', //score, info
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_Gamma.svg');
@@ -169,12 +169,6 @@ const PanelGamma = {
             left3: 'JOIN / ' + date + difference,
             down1: 'FAN / ' + user?.follower_count || '0',
             down2: 'UID / ' + user?.id || '0',
-            down_left1: null,
-            down_left2: null,
-            down_left3: null,
-            down_right1: null,
-            down_right2: null,
-            down_right3: null,
             center0b: Math.round(user?.pp || 0).toString(),
             center0m: 'PP',
             center1b: user?.username || 'Unknown',
@@ -251,12 +245,6 @@ const PanelGamma = {
             left3: score.beatmap.version,
             down1: getStatistics(score),
             down2: 'b' + score.beatmap.id,
-            down_left1: null,
-            down_left2: null,
-            down_left3: null,
-            down_right1: null,
-            down_right2: null,
-            down_right3: null,
             center0b: getDecimals(calcPP.attr.stars, 2),
             center0m: getDecimals(calcPP.attr.stars, 3) + '*',
             center1b: Math.round(calcPP.pp).toString(),
@@ -290,8 +278,6 @@ const PanelGamma = {
             left1: 'RANK / #' + (user?.globalRank || 0),
             left2: (user?.country?.code || 'UN') + ' / #' + (user?.countryRank || '0'),
             left3: 'JOIN / ' + date + difference,
-            down1: null,
-            down2: null,
 
             down_left1: 'SANITY',
             down_left2: Math.round(sanity).toString(),
