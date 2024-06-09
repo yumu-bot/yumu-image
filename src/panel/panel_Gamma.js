@@ -111,7 +111,7 @@ export async function panel_Gamma(data = {
         200, 330, 16, 'right baseline', '#fff');
 
     const down_left1 = torusRegular.getTextPath(data?.down_left1 || '', 40, 340, 16, 'left baseline', '#fff');
-    const down_left23 = torus.get2SizeTextPath(data?.down_left2, ' ' + (data?.down_left3 || ''),
+    const down_left23 = torus.get2SizeTextPath(data?.down_left2 || '', ' ' + (data?.down_left3 || ''),
         36, 24,  100, 340, 'left baseline', data?.down_left_color);
 
     const down_right1 = torusRegular.getTextPath(torusRegular.cutStringTail(data?.down_right1 || '', 16, 190, true),
