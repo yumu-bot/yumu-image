@@ -1569,22 +1569,22 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
  * @param seconds 秒
  * @return {string} 时间字符串，比如 3d5h20m 只有到 minute 的等级时才会有 s
  */
-export const getTimeByDHMS = (seconds = 0) => {
-    return _getTimeByDHMS(seconds).b + _getTimeByDHMS(seconds).m
+export const getTimeByDHMS = (seconds = 0, has_whitespace = false) => {
+    return _getTimeByDHMS(seconds, has_whitespace).b + _getTimeByDHMS(seconds, has_whitespace).m
 }
 
 //获取从秒转换成dhms的时间
-export const getTimeByDHMSLarge = (seconds = 0) => {
-    return _getTimeByDHMS(seconds).b
+export const getTimeByDHMSLarge = (seconds = 0, has_whitespace) => {
+    return _getTimeByDHMS(seconds, has_whitespace).b
 }
 
 //获取从秒转换成dhms的时间
-export const getTimeByDHMSSmall = (seconds = 0) => {
-    return _getTimeByDHMS(seconds).m
+export const getTimeByDHMSSmall = (seconds = 0, has_whitespace) => {
+    return _getTimeByDHMS(seconds, has_whitespace).m
 }
 
 //获取从秒转换成dhms的时间
-const _getTimeByDHMS = (seconds = 0) => {
+const _getTimeByDHMS = (seconds = 0, has_whitespace = false) => {
     let pt_b = '-';
     let pt_m = '';
     if (seconds != null && seconds > 0) {
@@ -1595,25 +1595,48 @@ const _getTimeByDHMS = (seconds = 0) => {
         const minutes = Math.floor((s % 3600) / 60);
         const sec = s % 60;
 
-        if (days > 0) {
-            pt_b = days.toString();
-            pt_m = 'd' + hours + 'h' + minutes + 'm';
-        } else if (hours > 0) {
-            pt_b = hours.toString();
-            pt_m = 'h' + minutes + 'm';
-        } else if (minutes > 0) {
-            pt_b = minutes.toString();
-            pt_m = 'm' + sec + 's';
-        } else if (sec > 0) {
-            pt_b = sec.toString();
-            pt_m = 's';
-        } else if (hours > -1) {
-            pt_b = '0';
-            pt_m = 's';
+        if (has_whitespace) {
+            if (days > 0) {
+                pt_b = days.toString();
+                pt_m = 'd ' + hours + 'h ' + minutes + 'm';
+            } else if (hours > 0) {
+                pt_b = hours.toString();
+                pt_m = 'h ' + minutes + 'm';
+            } else if (minutes > 0) {
+                pt_b = minutes.toString();
+                pt_m = 'm ' + sec + 's';
+            } else if (sec > 0) {
+                pt_b = sec.toString();
+                pt_m = 's';
+            } else if (hours > -1) {
+                pt_b = '0';
+                pt_m = 's';
+            } else {
+                pt_b = '-';
+                pt_m = '';
+            }
         } else {
-            pt_b = '-';
-            pt_m = '';
+            if (days > 0) {
+                pt_b = days.toString();
+                pt_m = 'd' + hours + 'h' + minutes + 'm';
+            } else if (hours > 0) {
+                pt_b = hours.toString();
+                pt_m = 'h' + minutes + 'm';
+            } else if (minutes > 0) {
+                pt_b = minutes.toString();
+                pt_m = 'm' + sec + 's';
+            } else if (sec > 0) {
+                pt_b = sec.toString();
+                pt_m = 's';
+            } else if (hours > -1) {
+                pt_b = '0';
+                pt_m = 's';
+            } else {
+                pt_b = '-';
+                pt_m = '';
+            }
         }
+
     }
 
     return {
