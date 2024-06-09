@@ -93,7 +93,7 @@ export async function panel_B1(data = {
     let svg = readTemplate('template/Panel_B.svg');
 
     const BOUNDARY = [120, 100, 95, 90, 80, 70, 60, 10];
-    const SANITY_BOUNDARY = [120, 100, 95, 90, 80, 70, 60, 20];
+    const SANITY_BOUNDARY = [120, 100, 95, 90, 80, 70, 60, 0];
     const SANITY_RANKS = ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X'];
 
     const VALUE_NORMAL = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH'];

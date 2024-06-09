@@ -274,9 +274,9 @@ const PanelGamma = {
         const avatar = await getAvatar(user?.avatar_url, true);
 
         const sanity = s?.card_b_1?.SAN || 120;
-        const sanity_rank = getRankFromValue(sanity, [120, 100, 95, 90, 80, 70, 60, 20], ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X']);
+        const sanity_rank = getRankFromValue(sanity, [120, 100, 95, 90, 80, 70, 60, 0], ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X']);
         const sanity_color = getRankColor(
-            getRankFromValue(sanity, [120, 100, 95, 90, 80, 70, 60, 20])
+            getRankFromValue(sanity, [120, 100, 95, 90, 80, 70, 60, 0])
         );
 
         const join = moment(user?.join_date, 'X').add(8, 'hours');
