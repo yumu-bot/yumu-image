@@ -271,11 +271,15 @@ export async function panel_A7(data = {
                 "ranked_date" : null
             },
             "create_at_str" : "2023-06-17T11:24:22Z",
-            "fcPP" : 114.514,
+
+            fcPP : 114.514,
+            index: 68,
+            indexAfter: 76,
+
         }
     ],
 
-    ranks: []
+    //ranks: []
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_A4.svg');
@@ -301,11 +305,13 @@ export async function panel_A7(data = {
     const theoretical_pp = data?.pp || data?.user?.pp || 0;
     const delta = Math.round(theoretical_pp - data?.user?.pp);
 
+    console.log(data)
+
     const right1 = delta > 1 ? '+' + delta + 'PP' : '';
 
     const me_card_a1 = await card_A1({...a1,
         right1: right1,
-        right2: 'if no choke (<= 1% miss)',
+        right2: 'if combo <= 98% / miss <= 1%',
         right3b: Math.round(theoretical_pp).toString(),
         right3m: 'PP',
     });
@@ -315,11 +321,12 @@ export async function panel_A7(data = {
     let cardHs = [];
     for (const i in data.scores) {
         const bp = data.scores[i];
-        const r = data.ranks[i];
 
         const deltaPP = Math.round(bp?.fcPP - bp?.pp);
 
-        const bp_generated = await PanelGenerate.bp2CardH(bp, r);
+        const bp_generated = await PanelGenerate.bp2CardH(bp, bp?.index, bp?.indexAfter);
+        console.log(bp)
+
         const f = await card_H({
             ...bp_generated,
 

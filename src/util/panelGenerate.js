@@ -609,7 +609,7 @@ export const PanelGenerate = {
     },
 
     // panel A7 有细微的改动，请注意
-    bp2CardH: async (bp, rank = 1) => {
+    bp2CardH: async (bp, rank = 1, rank_after = null) => {
         const cover = await readNetImage(bp?.beatmapset?.covers?.list, true);
         const background = await readNetImage(bp?.beatmapset?.covers?.cover, true);
 
@@ -639,8 +639,12 @@ export const PanelGenerate = {
                 mods_width = 180;
         }
 
-        const difficulty_name = bp.beatmap.version ? torus.cutStringTail(bp.beatmap.version, 24,
-            500 - 20 - mods_width - torus.getTextWidth('[] - BP ()' + rank + time_diff, 24), true) : '';
+        const rank_after_str = (typeof rank_after == "number") ? ' -> ' + rank_after : '';
+
+        const difficulty_name = bp.beatmap.version ?
+            torus.cutStringTail(bp.beatmap.version, 24,
+            500 - 20 - mods_width - torus.getTextWidth('[] - BP ()' + rank + rank_after_str + time_diff, 24), true)
+            : '';
         const color_index = (bp.rank === 'XH' || bp.rank === 'X') ? '#2A2226' : '#fff';
 
         const artist = torus.cutStringTail(bp.beatmapset.artist, 24,
@@ -658,7 +662,7 @@ export const PanelGenerate = {
             title: bp.beatmapset.title || '',
             title2: title2,
             left1: artist + ' // ' + bp.beatmapset.creator,
-            left2: '[' + difficulty_name + '] - BP' + rank + ' (' + time_diff + ')',
+            left2: '[' + difficulty_name + '] - BP' + rank + rank_after_str + ' (' + time_diff + ')',
             index_b: Math.round(bp.pp).toString(),
             index_m: 'PP',
             index_b_size: 48,
