@@ -258,7 +258,7 @@ export async function panel_E2(data = {
         mods: data?.expected?.mods || [],
         nMisses: data?.expected?.miss || 0,
     }
-    const mode = data.expected.mode || data.beatmap.mode || 'osu';
+    const mode = getGameMode(data?.expected?.mode, 0, data?.beatmap?.mode);
 
     const calcTotal = await calcMap(bid, stat, mode, hasLeaderBoard(data.beatmap.ranked));
     const calcPP = calcTotal[0];
@@ -271,11 +271,13 @@ export async function panel_E2(data = {
         calcFC.push(calcTotal[i + 11] || 0);
     }
 
-    const rank = rank2rank(getApproximateRankSP(data.expected.accuracy, data.expected.miss, data.beatmap.mode, data.expected.mods));
+    const rank = rank2rank(getApproximateRankSP(data.expected.accuracy, data.expected.miss, mode, data.expected.mods));
+
+
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP));
-    const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
+    const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, mode, calcPP));
+    const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));
 
     // 导入卡片

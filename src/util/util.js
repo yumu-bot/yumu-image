@@ -1052,8 +1052,8 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
  * @param mode 将被格式化的游戏模式，osu taiko catch mania
  * @param level 等级，0为不变，2为全写 osu!standard，-1为获取他们的unicode字符 \uE801，1为简写 o t m c，-2 获取他们的 mode int
  */
-export function getGameMode(mode = '', level = 0) {
-    let modeStr = 'default';
+export function getGameMode(mode = '', level = 0, default_mode = 'default') {
+    let modeStr;
 
     //如果是输入数字，则修改
     if (typeof mode === "number") {
@@ -1086,7 +1086,11 @@ export function getGameMode(mode = '', level = 0) {
         }
     } else if (typeof mode == "string") {
         modeStr = mode.toString().toLowerCase();
+    } else {
+        return default_mode;
     }
+
+    if (modeStr == 'default') return default_mode;
 
     switch (level) {
         case -2:
