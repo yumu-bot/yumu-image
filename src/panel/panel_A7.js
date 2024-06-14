@@ -324,7 +324,7 @@ export async function panel_A7(data = {
 
         const deltaPP = Math.round(bp?.fcPP - bp?.pp);
 
-        const bp_generated = await PanelGenerate.bp2CardH(bp, bp?.index, bp?.indexAfter);
+        const bp_generated = await PanelGenerate.bp2CardH(bp, bp?.index - 1, bp?.indexAfter);
         console.log(bp)
 
         const f = await card_H({
