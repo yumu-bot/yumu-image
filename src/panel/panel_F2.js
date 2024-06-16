@@ -422,14 +422,12 @@ async function roundInfo2CardA2(stat = {
 
     if (round.winningTeam != null) {
         if (isTeamVS) {
-            if (redTeamScore > blueTeamScore) {
-                right1 = ' << ' + (redTeamScore - blueTeamScore) + ' << ';
-            } else if (redTeamScore < blueTeamScore) {
-                right1 = ' >> ' + (redTeamScore - blueTeamScore) + ' >> ';
+            if (redTeamScore !== blueTeamScore) {
+                right1 = '+ ' + Math.abs(redTeamScore - blueTeamScore);
             } else {
-                right1 = ' << 0 >> '
+                right1 = '+- 0'
             }
-            right2 = redTeamScore + ' - ' + blueTeamScore;
+            right2 = redTeamScore + ' vs ' + blueTeamScore;
             right3b = '';
             right3m = round.winningTeam + ' wins';
         } else {
@@ -438,8 +436,8 @@ async function roundInfo2CardA2(stat = {
             right3b = 'h2h';
         }
     } else {
-        right1 = 'd ' + Math.abs(redTeamScore - blueTeamScore);
-        right2 = redTeamScore + ' - ' + blueTeamScore;
+        right1 = '+- 0'
+        right2 = redTeamScore + ' vs ' + blueTeamScore;
         right3b = 'draw';
     }
 
