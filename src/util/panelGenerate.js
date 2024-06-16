@@ -237,7 +237,7 @@ export const PanelGenerate = {
 
         const right1 = (averageStar > 0) ? 'SR ' + star + '*' : 'SR ~' + star + '*';
         const right2 = 'mp' + data.matchStat.id || 0;
-        const right3b = isTeamVS ? (redWins + ' : ' + blueWins) : data.roundCount.toString();
+        const right3b = isTeamVS ? 'TeamVs' : data.roundCount.toString(); //(redWins + ' : ' + blueWins)
         const right3m = isTeamVS ? '' : 'x';
 
         return {
