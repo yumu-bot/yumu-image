@@ -20,11 +20,11 @@ export async function card_D(data = {
     od: 11,
     hp: 6,
     star_rating: 8.88,
-    game_mode: 'osu',
+    mode_int: 0,
 
     font_title2: 'PuHuiTi'
 
-}, reuse = false) {
+}) {
     //读取面板
     let svg = readTemplate("template/Card_D.svg");
 
@@ -103,8 +103,8 @@ export async function card_D(data = {
     let sd_circle2 = 'none';
     let sd_circle3 = 'none';
 
-    switch (data.game_mode) {
-        case "osu" : {
+    switch (data.mode_int) {
+        case 0 : {
             sd_name1 = 'CS';
             sd_name2 = 'AR';
             sd_name3 = 'OD';
@@ -112,13 +112,13 @@ export async function card_D(data = {
             sd_circle2 = ar_color;
             sd_circle3 = od_color;
         } break;
-        case "taiko" :{
+        case 1 :{
             sd_name1 = 'OD';
             sd_name2 = 'HP';
             sd_circle1 = od_color;
             sd_circle2 = hp_color;
         } break;
-        case "catch" : {
+        case 2 : {
             sd_name1 = 'CS';
             sd_name2 = 'AR';
             sd_name3 = 'HP';
@@ -126,7 +126,7 @@ export async function card_D(data = {
             sd_circle2 = ar_color;
             sd_circle3 = hp_color;
         } break;
-        case "mania" : {
+        case 3 : {
             sd_name2 = 'OD';
             sd_name3 = 'HP';
             sd_circle2 = od_color;

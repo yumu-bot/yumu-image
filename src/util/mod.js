@@ -101,6 +101,10 @@ export function hasMod(modInt = 0, mod = '') {
     return ModInt[mod] ? (modInt & ModInt[mod]) !== 0 : false;
 }
 
+export function hasModChangedSR(mod = '') {
+    return (mod === 'DT' || mod === 'NC' || mod === 'HT' || mod === 'DC' || mod === 'HR' || mod === 'EZ' || mod === 'FL')
+}
+
 export function hasAnyMod(modInt = 0, mods = ['']) {
     if (!mods) return false;
     for (const v of mods) {

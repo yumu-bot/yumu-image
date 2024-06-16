@@ -19,7 +19,7 @@ const stat = {
 }
 
 export async function getMapAttributes(bid, mod_int, mode_int = 0, hasLeaderBoard = true) {
-    let osuFilePath = await getOsuFilePath(bid, getGameMode(mode_int, -2), hasLeaderBoard);
+    let osuFilePath = await getOsuFilePath(bid, hasLeaderBoard);
     let beatMap;
 
     try {
@@ -29,7 +29,7 @@ export async function getMapAttributes(bid, mod_int, mode_int = 0, hasLeaderBoar
     } catch (e) {
         //如果有问题，强制重新加载
 
-        osuFilePath = await getOsuFilePath(bid, getGameMode(mode_int, -2), false);
+        osuFilePath = await getOsuFilePath(bid, false);
         beatMap = new Beatmap({
             path: osuFilePath,
         });
@@ -37,7 +37,11 @@ export async function getMapAttributes(bid, mod_int, mode_int = 0, hasLeaderBoar
 
     let calculator = new Calculator({
         mods: mod_int,
+        mode: mode_int,
+        acc: 1,
+        nMisses: 0,
     })
+
     return {
         ...calculator.difficulty(beatMap),
         ...calculator.mapAttributes(beatMap)
@@ -48,10 +52,8 @@ export async function getMapAttributes(bid, mod_int, mode_int = 0, hasLeaderBoar
 export async function calcMap(bid, statistics = stat, mode, hasLeaderBoard = true) {
     const mode_int = statistics.mods_int ? getGameMode(statistics.mods_int, -2) :
         (mode ? getGameMode(mode, -2) : 1);
-    const mode_name = mode ? getGameMode(mode, 0) :
-        (statistics.mods_int ? getGameMode(statistics.mods_int, 0) : 'osu');
 
-    const osuFilePath = await getOsuFilePath(bid, mode_name, hasLeaderBoard);
+    const osuFilePath = await getOsuFilePath(bid, hasLeaderBoard);
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
@@ -169,11 +171,7 @@ export async function getStarRating(bid, statistics = stat, mode, hasLeaderBoard
 }
 
 async function getDifficulty(bid, statistics = stat, mode, hasLeaderBoard = true) {
-
-    const mode_name = mode ? getGameMode(mode, 0) :
-        (statistics.mode_int ? getGameMode(statistics.mode_int, 0) : 'osu');
-
-    const osuFilePath = await getOsuFilePath(bid, mode_name, hasLeaderBoard);
+    const osuFilePath = await getOsuFilePath(bid, hasLeaderBoard);
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
@@ -190,10 +188,8 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
     } else {
         mode_int = getGameMode(statistics.mode_int, -2)
     }
-    const mode_name = mode ? getGameMode(mode, 0) :
-        (statistics.mode_int ? getGameMode(statistics.mode_int, 0) : 'osu');
 
-    const osuFilePath = await getOsuFilePath(bid, mode_name, hasLeaderBoard);
+    const osuFilePath = await getOsuFilePath(bid, hasLeaderBoard);
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
@@ -299,7 +295,7 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
 
 export async function getMapPerformance(bid, mods = 0, mode_int = 0, hasLeaderBoard = false) {
     const modeInt = getGameMode(mode_int, -2);
-    const osuFilePath = await getOsuFilePath(bid, modeInt, hasLeaderBoard);
+    const osuFilePath = await getOsuFilePath(bid, hasLeaderBoard);
     let beatMap = new Beatmap({
         path: osuFilePath,
     });
@@ -344,8 +340,7 @@ export async function getMapPerformance(bid, mods = 0, mode_int = 0, hasLeaderBo
     return calculator.performance(beatMap);
 }
 
-async function getOsuFilePath(bid, mode, hasLeaderBoard = true) {
-    //mode = mode ? mode.toLowerCase() : 'osu';
+async function getOsuFilePath(bid, hasLeaderBoard = true) {
     const filePath = `${OSU_BUFFER_PATH}/${bid}.osu`;
 
     try {
@@ -416,7 +411,7 @@ export async function getScoreProgress(bid, statistics, mode, hasLeaderBoard) {
 }
 
 async function getHitObjectTimeList(bid, mode, hasLeaderBoard) {
-    const filePath = await getOsuFilePath(bid, mode, hasLeaderBoard);
+    const filePath = await getOsuFilePath(bid, hasLeaderBoard);
     const input = fs.createReadStream(filePath);
     const rl = readline.createInterface({
         input: input,

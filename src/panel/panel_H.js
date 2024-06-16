@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getMapBG, getPanelNameSVG,
+    exportJPEG, getGameMode, getMapBG, getPanelNameSVG,
     implantImage,
     implantSvgBody, readTemplate,
     replaceText, transformSvgBody
@@ -7,7 +7,7 @@ import {
 import {card_D} from "../card/card_D.js";
 import {getMapAttributes} from "../util/compute-pp.js";
 import {card_A2} from "../card/card_A2.js";
-import {getModInt} from "../util/mod.js";
+import {getModInt, hasModChangedSR} from "../util/mod.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {hasLeaderBoard} from "../util/star.js";
 
@@ -43,15 +43,18 @@ export async function router_svg(req, res) {
  */
 export async function panel_H (
     data = {
-        name: 'MapPool',
-        firstMapSID: 667290,
-        modPools: [
-            {
-                mod: 'Hidden',
-                modStr: 'HD',
-                beatMaps: []
-            }
-        ]
+        pool: {
+            name: 'MapPool',
+            firstMapSID: 667290,
+            modPools: [
+                {
+                    mod: 'Hidden',
+                    modStr: 'HD',
+                    beatMaps: []
+                }
+            ]
+        },
+        mode: 'OSU',
     }) {
     // 导入模板
     let svg = readTemplate("template/Panel_H.svg");
@@ -71,14 +74,15 @@ export async function panel_H (
     svg = replaceText(svg, panel_name, reg_index);
 
     // 插入主体卡片
-    const pools = data.modPools || [];
+    const pools = data.pool.modPools || [];
+    const mode = getGameMode(data?.mode, 0);
+
     let cards = [];
     let row = 1;
-
     let map_count = 0;
 
     for (const p of pools) {
-        cards.push(await drawModPool(p, row));
+        cards.push(await drawModPool(p, mode, row));
         row += getRowCount(p?.beatMaps?.length);
         map_count += p?.beatMaps?.length;
     }
@@ -90,7 +94,7 @@ export async function panel_H (
 
     // 卡片定义
     const mod_count = pools.length || 0;
-    const poolInfo = await card_A2(await pool2cardA2(data, map_count, mod_count));
+    const poolInfo = await card_A2(await pool2cardA2(data?.pool, mode, map_count, mod_count));
 
     //设置面板高度
     const panelHeight = 330 + 150 * (row - 1);
@@ -110,14 +114,14 @@ async function drawModPool(pool = {
     mod: 'Hidden',
     modStr: 'HD',
     beatMaps: []
-}, rowStart = 1) {
+}, mode = 'osu', rowStart = 1) {
     let data = [];
     const count = pool?.beatMaps?.length || 0;
 
     for (let j = 0; j < getFullRowCount(count); j++) {
         for (let k = 0; k < 3; k++) {
             data.push(
-                await drawCardD(pool.beatMaps[j * 3 + k], pool.modStr, rowStart - 1 + j + 1, k + 1, 3)
+                await drawCardD(pool.beatMaps[j * 3 + k], pool.modStr, mode, rowStart - 1 + j + 1, k + 1, 3)
             );
         }
     }
@@ -125,7 +129,7 @@ async function drawModPool(pool = {
     if (hasRemain(count)) {
         for (let o = 0; o < getRemain(count); o++) {
             data.push(
-                await drawCardD(pool.beatMaps[getFullRowCount(count) * 3 + o], pool.modStr, rowStart - 1 + getFullRowCount(count) + 1, o + 1, getRemain(count))
+                await drawCardD(pool.beatMaps[getFullRowCount(count) * 3 + o], pool.modStr, mode, rowStart - 1 + getFullRowCount(count) + 1, o + 1, getRemain(count))
             );
         }
     }
@@ -133,11 +137,11 @@ async function drawModPool(pool = {
     return data;
 }
 //渲染单张卡片
-async function drawCardD(b, mod = 'NM', row = 1, column = 1, maxColumn = 3) {
+async function drawCardD(b, mod = 'NM', mode = 'osu', row = 1, column = 1, maxColumn = 3) {
     const x = ((3 - maxColumn) * 300 + 80) + 600 * (column - 1);
     const y = 330 + 150 * (row - 1);
 
-    return transformSvgBody(x, y, await card_D(await beatmap2CardD(b, mod)));
+    return transformSvgBody(x, y, await card_D(await beatmap2CardD(b, mod, mode)));
 }
 
 function getRowCount(i = 0) {
@@ -159,15 +163,15 @@ function hasRemain(i = 0) {
     return (getRemain(i) !== 0);
 }
 
-async function pool2cardA2(data, map_count = 0, mod_count = 0) {
-    const background = data?.firstMapSID ? await getMapBG(data.firstMapSID, 'cover', false) : getRandomBannerPath();
+async function pool2cardA2(pool, mode, map_count = 0, mod_count = 0) {
+    const background = pool?.firstMapSID ? await getMapBG(pool.firstMapSID, 'cover', false) : getRandomBannerPath();
 
-    const title1 = data.name || '';
-    const title3 = data.categoryList ? data.categoryList[0].category ? 'creator: ' + data.categoryList[0].category[0].creater : 'creator?' : '';
+    const title1 = pool.name || '';
+    const title3 = pool.categoryList ? pool.categoryList[0].category ? 'creator: ' + pool.categoryList[0].category[0].creater : 'creator?' : '';
 
-    const left2 = data.info ? data.info.toString() : '';
+    const left1 = pool.info ? pool.info.toString() : '';
     const left3 = (map_count && mod_count) ? 'P' + mod_count + ' M' + map_count : '';
-    const right3b = data.id ? data.id.toString() : '0';
+    const right3b = pool.id ? pool.id.toString() : '0';
 
     return {
         background: background,
@@ -177,8 +181,8 @@ async function pool2cardA2(data, map_count = 0, mod_count = 0) {
         title2: '',
         title3: title3,
         title_font: 'PuHuiTi',
-        left1: '',
-        left2: left2,
+        left1: left1,
+        left2: 'mode: ' + mode,
         left3: left3,
         right1: '',
         right2: 'Pool ID:',
@@ -187,22 +191,24 @@ async function pool2cardA2(data, map_count = 0, mod_count = 0) {
     };
 }
 
-async function beatmap2CardD(b, mod) {
+async function beatmap2CardD(b, mod, mode) {
     let cs = b.cs, ar = b.ar, od = b.accuracy, hp = b.drain;
+
+    const mode_int = parseInt(getGameMode(mode, -2));
 
     //修改四维
     if (mod === 'DT' || mod === 'NC') {
         ar = (ar > 5) ? ((1200 - 750 * (ar - 5) / 5) * 2 / 3 - 1200) / 750 * 5 + 5
             : - ((1200 - 600 * (5 - ar) / 5) * 2 / 3 - 1200) / 600 * 5 + 5 ;
-        od = (b.mode_int === 1) ? ( - (50 - (3 * od)) * 2 / 3 + 50) / 3
-            : (b.mode_int === 3) ? ( - (64 - (3 * od)) * 2 / 3 + 64) / 3
+        od = (mode_int === 1) ? ( - (50 - (3 * od)) * 2 / 3 + 50) / 3
+            : (mode_int === 3) ? ( - (64 - (3 * od)) * 2 / 3 + 64) / 3
                 : ( - (80 - (6 * od)) * 2 / 3 + 80) / 3;
         hp *= 3 / 4;
     } else if (mod === 'HT' || mod === 'DC') {
         ar = (ar > 5) ? ((1200 - 750 * (ar - 5) / 5) * 3 / 2 - 1200) / 750 * 5 + 5
             : - ((1200 - 600 * (5 - ar) / 5) * 3 / 2 - 1200) / 600 * 5 + 5 ;
-        od = (b.mode_int === 1) ? ( - (50 - (3 * od)) * 3 / 2 + 50) / 2
-            : (b.mode_int === 3) ? ( - (64 - (3 * od)) * 3 / 2 + 64) / 2
+        od = (mode_int === 1) ? ( - (50 - (3 * od)) * 3 / 2 + 50) / 2
+            : (mode_int === 3) ? ( - (64 - (3 * od)) * 3 / 2 + 64) / 2
                 : ( - (80 - (6 * od)) * 3 / 2 + 80) / 2;
         hp *= 3 / 2;
     } else if (mod === 'HR') {
@@ -217,12 +223,13 @@ async function beatmap2CardD(b, mod) {
         hp /= 2;
     }
 
-    const star = await getStar(b.difficulty_rating, b.id, getModInt([mod]), b.mode_int);
+    const star = await getStar(b.difficulty_rating, b.id, getModInt([mod]), mode_int, b?.mode_int);
 
-    async function getStar(rawStar = 0, bid = 0, mods, modeInt = 0) {
-        if (mod === 'DT' || mod === 'NC' || mod === 'HT' || mod === 'DC' || mod === 'HR' || mod === 'EZ' || mod === 'FL') {
+    // 如果 mod 会影响星数，或者转谱则计算
+    async function getStar(rawStar = 0, bid = 0, mod_int = 0, mode_int = 0, beatmap_mode_int = 0) {
+        if (hasModChangedSR(mod) || mode_int !== beatmap_mode_int) {
             try {
-                const attr = await getMapAttributes(bid, mods, modeInt)
+                const attr = await getMapAttributes(bid, mod_int, mode_int)
                 return attr.stars;
             } catch (e) {
                 return rawStar;
@@ -246,7 +253,7 @@ async function beatmap2CardD(b, mod) {
         od: od,
         hp: hp,
         star_rating: star,
-        game_mode: b.mode,
+        mode_int: mode_int,
 
         font_title2: 'PuHuiTi',
     }
