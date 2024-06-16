@@ -230,7 +230,7 @@ export const PanelGenerate = {
         } else if (data.hasCurrentGame) {
             left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-playing';
         } else {
-            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-continuing';
+            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-in progress';
         }
 
         const left3 = moment(data.matchStat.start_time, 'X').format('YYYY/MM/DD');

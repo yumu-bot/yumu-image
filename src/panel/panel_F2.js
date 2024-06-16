@@ -409,7 +409,7 @@ async function roundInfo2CardA2(stat = {
     if (stat.end_time) {
         left2 = moment(stat.start_time, 'X').format('HH:mm') + '-' + moment(stat.end_time, 'X').format('HH:mm');
     } else {
-        left2 = moment(stat.start_time, 'X').format('HH:mm') + '-continuing';
+        left2 = moment(stat.start_time, 'X').format('HH:mm') + '-in progress';
     }
 
     const left3 = moment(stat.start_time, 'X').format('YYYY/MM/DD');
