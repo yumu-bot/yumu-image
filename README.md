@@ -11,8 +11,9 @@
   - A6: MD 页面，用于帮助和维基 MD/H/W
   - A7: 理论最好成绩 BF
 - B: PPM 评分系统 PM
-  - B1: PM/PV
+  - B1: PP- PM/PV
   - B2: 骂娘谱面解析 MM
+  - B3: PP+ PP/PA/PX
 - C: MRA 斗力系统 RA (严格意义上说这也符合 A 类面板的标准，但是没纳入进去)
   - C2: SRA 斗力系统 SA
 - D: 个人信息 I

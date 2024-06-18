@@ -31,7 +31,6 @@ import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js"; //XinRan 
 import {router as panelEpsilonRouter} from "./src/panel/panel_Epsilon.js"; //方便使用的面积头像
 import {router as MarkdownRouter} from "./src/panel/markdown.js";
 import {router as GetMapAttrRouter} from "./src/panel/mapAttributes.js";
-import {router as GetPPRouter} from "./src/panel/mapPP.js";
 
 initPath();
 //这里放测试代码
@@ -83,7 +82,6 @@ app.post('/panel_Epsilon', panelEpsilonRouter);
 
 app.post('/md', MarkdownRouter);
 app.post('/attr', GetMapAttrRouter);
-app.post('/pp', GetPPRouter);
 
 app.post('/del', (req, res) => {
     try {

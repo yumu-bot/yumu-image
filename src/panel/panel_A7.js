@@ -311,7 +311,7 @@ export async function panel_A7(data = {
 
     const me_card_a1 = await card_A1({...a1,
         right1: right1,
-        right2: 'fixed combo <= 98% / miss <= 1%',
+        right2: 'fixed "choked S / miss <= 1%"',
         right3b: Math.round(theoretical_pp).toString(),
         right3m: 'PP',
     });
