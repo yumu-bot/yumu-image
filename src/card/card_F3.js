@@ -150,7 +150,7 @@ const bp2CardK = async (bp, bp_ranking = 1) => {
     const star_rating = getApproximateStarRating(bp?.beatmap?.difficulty_rating, mod)
 
     return {
-        map_background: await getMapBG(bp.beatmapset.id, 'list', hasLeaderBoard(bp.beatmap.ranked)),
+        map_background: await getMapBG(bp.beatmapset.id, 'list@2x', hasLeaderBoard(bp.beatmap.ranked)),
         star_rating: star_rating,
         score_rank: bp.rank,
         bp_ranking: bp_ranking, //感觉暂时不使用这个也可以

@@ -237,7 +237,7 @@ export const PanelGenerate = {
 
         const right1 = (averageStar > 0) ? 'SR ' + star + '*' : 'SR ~' + star + '*';
         const right2 = 'mp' + data.matchStat.id || 0;
-        const right3b = isTeamVS ? 'TeamVs' : data.roundCount.toString(); //(redWins + ' : ' + blueWins)
+        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) : data.roundCount.toString()
         const right3m = isTeamVS ? '' : 'x';
 
         return {
@@ -403,7 +403,7 @@ export const PanelGenerate = {
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
         const background = cursor ?
-            await getMapBG(cursor?.id, 'list', true) : await readNetImage(first_beatmapset.covers?.list, true);
+            await getMapBG(cursor?.id, 'list@2x', true) : await readNetImage(first_beatmapset.covers?.list, true);
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
@@ -689,7 +689,7 @@ export const PanelGenerate = {
     },
 
     bp2CardJ: async (bp) => {
-        const background = await getMapBG(bp.beatmapset.id, 'list', hasLeaderBoard(bp.beatmap.ranked));
+        const background = await getMapBG(bp.beatmapset.id, 'list@2x', hasLeaderBoard(bp.beatmap.ranked));
 
         return {
             cover: background,

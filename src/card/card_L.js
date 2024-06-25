@@ -16,7 +16,7 @@ export async function card_L(data = {
             length: 0, //length给秒数（整数）
             combo: 0, //combo给连击（整数）
             ranking: 1, //排名，得自己计数，bp是bp几
-            cover: null, //bp.beatmapset.covers['list']
+            cover: null, //bp.beatmapset.covers['list@2x']
             star: 0, // 实际star
             rank: "F", // bp.rank
             mods: ['']
