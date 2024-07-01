@@ -305,8 +305,6 @@ export async function panel_A7(data = {
     const theoretical_pp = data?.pp || data?.user?.pp || 0;
     const delta = Math.round(theoretical_pp - data?.user?.pp);
 
-    console.log(data)
-
     const right1 = delta > 1 ? '+' + delta + 'PP' : '';
 
     const me_card_a1 = await card_A1({...a1,
@@ -325,7 +323,6 @@ export async function panel_A7(data = {
         const deltaPP = Math.round(bp?.fcPP - bp?.pp);
 
         const bp_generated = await PanelGenerate.bp2CardH(bp, bp?.index - 1, bp?.indexAfter);
-        console.log(bp)
 
         const f = await card_H({
             ...bp_generated,
