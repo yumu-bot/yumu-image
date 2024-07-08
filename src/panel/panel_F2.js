@@ -1,17 +1,13 @@
 import {
     exportJPEG,
-    getImageFromV3,
     getMapBG, getMatchNameSplitted, getNowTimeStamp,
-    getPanelNameSVG, getRoundedNumberStr,
-    implantImage,
+    getPanelNameSVG, implantImage,
     implantSvgBody, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getMapAttributes} from "../util/compute-pp.js";
-import {getModInt} from "../util/mod.js";
 import moment from "moment";
 import {hasLeaderBoard} from "../util/star.js";
 
@@ -45,83 +41,7 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_F2(
-    data = {
-        MatchStat: {
-            id: 111413376,
-            name: 'Lazy2',
-            start_time: 1700708849,
-            end_time: null
-        },
-        MatchRound: {
-            id: 577138928,
-            mode: 'osu',
-            mods: [],
-            beatmap: {
-                id: 1000684,
-                mode: 'osu',
-                status: 'ranked',
-                retry: 0,
-                fail: 0,
-                sid: 467761,
-                beatmapset_id: 467761,
-                difficulty_rating: 5.661904336917258,
-                total_length: 316,
-                user_id: 4369739,
-                version: 'Catharsis',
-                beatmapset: {
-                    artist: 'Kumagai Eri(cv.Seto Asami)',
-                    covers: {
-                        cover: 'https://assets.ppy.sh/beatmaps/467761/covers/cover.jpg?1622104855',
-                        'cover@2x': 'https://assets.ppy.sh/beatmaps/467761/covers/cover@2x.jpg?1622104855',
-                        card: 'https://assets.ppy.sh/beatmaps/467761/covers/card.jpg?1622104855',
-                        'card@2x': 'https://assets.ppy.sh/beatmaps/467761/covers/card@2x.jpg?1622104855',
-                        list: 'https://assets.ppy.sh/beatmaps/467761/covers/list.jpg?1622104855',
-                        'list@2x': 'https://assets.ppy.sh/beatmaps/467761/covers/list@2x.jpg?1622104855',
-                        slimcover: 'https://assets.ppy.sh/beatmaps/467761/covers/slimcover.jpg?1622104855',
-                        'slimcover@2x': 'https://assets.ppy.sh/beatmaps/467761/covers/slimcover@2x.jpg?1622104855'
-                    },
-                    creator: 'Yunomi',
-                    nsfw: false,
-                    offset: 0,
-                    source: '音楽少女',
-                    spotlight: false,
-                    status: 'ranked',
-                    title: 'Back to Marie',
-                    video: false,
-                    mappers: [],
-                    nominators: [],
-                    publicRating: 0,
-                    sid: 467761,
-                    artist_unicode: '熊谷絵里（cv.瀬戸麻沙美）',
-                    favourite_count: 241,
-                    id: 467761,
-                    play_count: 201403,
-                    preview_url: '//b.ppy.sh/preview/467761.mp3',
-                    title_unicode: 'Back to Marie',
-                    user_id: 4369739
-                },
-                mode_int: 0,
-                cs: '4',
-                ar: '9.1',
-                od: '8.5'
-            },
-            redTeamScore: 0,
-            blueTeamScore: 0,
-            totalTeamScore: 10097436,
-            winningTeamScore: 2333618,
-            winningTeam: 'none',
-            beatmap_id: 1954530,
-            start_time: 1701810083,
-            end_time: 1701810240,
-            mod_int: null,
-            scoring_type: 'score',
-            team_type: 'head-to-head',
-            scores: []
-        },
-        index: 87
-    }
-) {
+export async function panel_F2(data = {}) {
     // 导入模板
     let svg = readTemplate('template/Panel_F2.svg');
 
@@ -134,7 +54,10 @@ export async function panel_F2(
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PF-2\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Match Rounds (!ymmr)', 'MR', 'v0.4.0 UU', 'roundID: ' + data?.MatchRound?.id + ' // request time: ' + getNowTimeStamp());
+    const request_time = 'match time: ' +
+        moment(data?.MatchStat?.start_time, 'X').format('YYYY/MM/DD HH:mm') + ' - in progress'
+        + ' // request time: ' + getNowTimeStamp();
+    const panel_name = getPanelNameSVG('Match Rounds (!ymmr)', 'MR', 'v0.4.0 UU', request_time);
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
@@ -157,10 +80,8 @@ export async function panel_F2(
     )
 
     const isTeamVS = (data?.MatchRound?.team_type === "team-vs");
+    const totalScore = data?.MatchRound?.teamScore?.total || 0;
 
-    const redTeamScore = data?.MatchRound?.redTeamScore || 0;
-    const blueTeamScore = data?.MatchRound?.blueTeamScore || 0;
-    const totalScore = data?.MatchRound?.totalTeamScore || 0;//isTeamVS ? redTeamScore + blueTeamScore : getTotalScore(noneArr);
     const playerCount = scoreArr.length;
 
     if (isTeamVS) {
@@ -255,11 +176,10 @@ export async function panel_F2(
     svg = replaceText(svg, background_height, reg_height);
 
     // 这里是渲染真实的谱面
-    const beatmap = await getBeatmapAttr(data.MatchRound.beatmap, getRoundMods(data.MatchRound?.mods, data.MatchRound?.scores[0]?.mods))
+    const beatmap = data?.MatchRound?.beatmap; //await getBeatmapAttr(data.MatchRound.beatmap, getRoundMods(data.MatchRound?.mods, data.MatchRound?.scores[0]?.mods))
 
     // 导入比赛简介卡（A2卡
-    const f = await card_A2(await roundInfo2CardA2(data.MatchStat, data.MatchRound,
-        redTeamScore, blueTeamScore, totalScore, data.index, beatmap.background));
+    const f = await card_A2(await roundInfo2CardA2(data));
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
@@ -307,112 +227,84 @@ function implantCardA1(svg, replace, reg, row = 1, column = 1, maxColumn = 1, te
     return svg;
 }
 
-function getRoundMods(beatmapMods, scoreMods) {
-    const b = beatmapMods || [];
-    const arr = b.concat(scoreMods).sort();
+async function roundInfo2CardA2(data = {
+    MatchStat: {
+        name: 'test',
+        id: 114591894,
+        start_time: 1720415600,
+        end_time: null
+    },
+    MatchRound: {
+        mode: 'mania',
+        mods: [],
+        winningTeamScore: 441025,
+        teamScore: { total: 441025, red: 0, blue: 0 },
+        winningTeam: 'none',
+        id: 595346038,
+        beatmap_id: 4249702,
+        start_time: 1720416713,
+        end_time: 1720416753,
+        mod_int: 0,
+        scoring_type: 'score',
+        team_type: 'head-to-head',
+        beatmap: {
+            id: 4249702,
+            mode: 'mania',
+            status: 'ranked',
+            retry: 0,
+            fail: 0,
+            beatMapID: 4249702,
+            osuMode: 'MANIA',
+            beatmapset_id: 2034520,
+            difficulty_rating: 4.34,
+            total_length: 28,
+            user_id: 1192936,
+            version: '[7K] Insane',
+            beatmapset: [Object],
+            mode_int: 3
+        },
+        scores: [ [Object] ]
+    },
+    index: 2
+}) {
+    const isTeamVS = (data?.MatchRound?.team_type === 'team-vs');
 
-    let out = [];
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] !== out[out.length - 1]) {
-            out.push(arr[i]);
-        }
-    }
-    return out;
-}
+    const name = data?.MatchStat?.name || '';
+    const red = data?.MatchRound?.teamScore?.red || 0;
+    const blue = data?.MatchRound?.teamScore?.blue || 0;
 
-async function getBeatmapAttr(b = {}, mods = []) {
-    if (!b) {
-        return {
-            background: getImageFromV3('beatmap-DLfailBG.jpg'),
-            title: 'Deleted Map',
-            artist: '?',
-            mapper: '?', //creator
-            difficulty: '?',
-            status: '',
+    const isContainVS = name.toLowerCase().match('vs');
 
-            bid: 0,
-            star_rating: 0,
-            cs: 0,
-            ar: 0,
-            od: 0,
-            mode: null,
-        }
-    }
-
-    const attr = await getMapAttributes(b.id, getModInt(mods));
-
-    const cs = getRoundedNumberStr(attr.cs, 2);
-    const ar = getRoundedNumberStr(attr.ar, 2);
-    const od = getRoundedNumberStr(attr.od, 2);
-    const mode = b?.mode.toLowerCase() || 'osu';
-
-    return {
-        ...b,
-        background: await getMapBG(b?.beatmapset?.sid, 'list@2x', hasLeaderBoard(b.beatmapset.ranked)),
-        title: b?.beatmapset?.title,
-        artist: b?.beatmapset?.artist,
-        mapper: b?.beatmapset?.creator, //creator
-        difficulty: b?.version,
-        status: b?.status,
-
-        bid: b?.id,
-        star_rating: attr.stars,
-        cs: cs,
-        ar: ar,
-        od: od,
-        mode: mode,
-    }
-}
-
-async function roundInfo2CardA2(stat = {
-    id: 59438351,
-    name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)',
-    start_time: 1584793502,
-    end_time: 1584799428
-}, round = {
-    id: 310431873,
-    mode: 'osu',
-    mods: ['NF', 'HD'],
-    winningTeamScore: 1018967,
-    winningTeam: 'red',
-    beatmap_id: 907200,
-    start_time: 1584794973,
-    end_time: 1584795193,
-    mod_int: null,
-    scoring_type: 'scorev2',
-    team_type: 'team-vs',}, redTeamScore, blueTeamScore, totalScore, index = 0, background) {
-    const isTeamVS = (round?.team_type === 'team-vs');
-
-    const isContainVS = stat.name.toLowerCase().match('vs');
     let title, title1, title2;
     if (isContainVS) {
-        title = getMatchNameSplitted(stat.name);
+        title = getMatchNameSplitted(name);
         title1 = title[0];
         title2 = title[1] + ' vs ' + title[2];
     } else {
-        title1 = stat.name;
+        title1 = name;
         title2 = '';
     }
 
-    let left1 =  'R ' + ((index > 80) ? ('80+') : (index + 1));
-    const mods = round?.mods || [];
+    const mods = data?.MatchRound?.mods || [];
+
+    const background = await getMapBG(data?.MatchRound?.beatmap?.beatmapset?.id);
+
+    let left1;
 
     if (mods.length > 0) {
-        left1 += ' +';
+        left1 = ' +';
+
         mods.forEach(v => {
-            left1 = left1 + v.toString() + ' '
+            left1 += (v.toString() + ' ');
         });
+
         left1 = left1.trim();
     }
 
-    let left2;
-    if (stat.end_time) {
-        left2 = moment(stat.start_time, 'X').format('HH:mm') + '-' + moment(stat.end_time, 'X').format('HH:mm');
-    } else {
-        left2 = moment(stat.start_time, 'X').format('HH:mm') + '-in progress';
-    }
+    // 在之后重构面板后，这里要放 roundID
 
-    const left3 = moment(stat.start_time, 'X').format('YYYY/MM/DD');
+    const left2 = 'Players ' + data?.MatchRound?.scores?.length;
+    const left3 =  'Round ' + ((data?.index > 80) ? ('80+') : data?.index);
 
     let right1;
     let right2;
@@ -420,24 +312,23 @@ async function roundInfo2CardA2(stat = {
     let right3b;
     let right3m = '';
 
-    if (round.winningTeam != null) {
+    if (data?.MatchRound?.winningTeam != null) {
         if (isTeamVS) {
-            if (redTeamScore !== blueTeamScore) {
-                right1 = '+ ' + Math.abs(redTeamScore - blueTeamScore);
+            if (red !== blue) {
+                right1 = '+ ' + Math.abs(red - blue);
             } else {
                 right1 = '+- 0'
             }
-            right2 = redTeamScore + ' vs ' + blueTeamScore;
+            right2 = red + ' vs ' + blue;
             right3b = '';
-            right3m = round.winningTeam + ' wins';
+            right3m = data?.MatchRound?.winningTeam + ' wins';
         } else {
-            right1 = 'Players ' + round?.scores?.length;
-            right2 = 'Total ' + totalScore;
+            right2 = 'Total ' + (data?.MatchRound?.teamScore?.total || 0);
             right3b = 'h2h';
         }
     } else {
         right1 = '+- 0'
-        right2 = redTeamScore + ' vs ' + blueTeamScore;
+        right2 = red + ' vs ' + blue;
         right3b = 'draw';
     }
 

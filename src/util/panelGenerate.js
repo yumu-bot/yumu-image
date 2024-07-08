@@ -200,44 +200,37 @@ export const PanelGenerate = {
         };
     },
 
-    //主程序给的avgStar不靠谱，不如自己算
-    matchData2CardA2: async (data, averageStar = 0) => {
-        const redWins = data.teamPoint.red || 0;
-        const blueWins = data.teamPoint.blue || 0;
+    matchData2CardA2: async (matchCalculate = {}) => {
+        const match = matchCalculate?.match;
+        const data = matchCalculate?.matchData;
 
-        const isTeamVS = data.teamVS;
-        const star = getRoundedNumberStr(averageStar || data.averageStar || 0, 3);
+
+        const redWins = data?.teamPointMap?.red || 0;
+        const blueWins = data?.teamPointMap?.blue || 0;
+
+        const isTeamVS = data?.teamVs;
+        const star = getRoundedNumberStr(data?.averageStar || 0, 3);
 
         const background = await getMapBG(data.firstMapSID, 'list@2x', false);
 
-        const isContainVS = data.matchStat.name.toLowerCase().match('vs');
+        const isContainVS = match?.match?.name.toLowerCase().match('vs');
         let title, title1, title2;
         if (isContainVS) {
-            title = getMatchNameSplitted(data.matchStat.name);
+            title = getMatchNameSplitted(match?.match?.name);
             title1 = title[0];
             title2 = title[1] + ' vs ' + title[2];
         } else {
-            title1 = data.matchStat.name;
+            title1 = match?.match?.name;
             title2 = '';
         }
 
-        //这里的时间戳不需要 .add(8, 'hours')
-        const left1 = 'R' + data.roundCount + ' P' + data.playerCount + ' S' + data.scoreCount;
-        let left2;
+        const left1 = 'Rounds ' + data?.roundCount;
+        const left2 = 'Players ' + data?.playerCount;
+        const left3 = 'Scores ' + data?.scoreCount;
 
-        if (data.matchEnd) {
-            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-' + moment(data.matchStat.end_time, 'X').format('HH:mm');
-        } else if (data.hasCurrentGame) {
-            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-playing';
-        } else {
-            left2 = moment(data.matchStat.start_time, 'X').format('HH:mm') + '-in progress';
-        }
-
-        const left3 = moment(data.matchStat.start_time, 'X').format('YYYY/MM/DD');
-
-        const right1 = (averageStar > 0) ? 'SR ' + star + '*' : 'SR ~' + star + '*';
-        const right2 = 'mp' + data.matchStat.id || 0;
-        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) : data.roundCount.toString()
+        const right1 = 'SR ' + star + '*';
+        const right2 = 'MID ' + match?.match?.id || 0;
+        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) : data?.roundCount.toString()
         const right3m = isTeamVS ? '' : 'x';
 
         return {
@@ -311,7 +304,7 @@ export const PanelGenerate = {
 
 
 
-    beatMapSet2CardA2: async (s ) => {
+    beatMapSet2CardA2: async (s) => {
         const background = await readNetImage(s?.covers?.cover, hasLeaderBoard(s?.ranked));
         const map_status = s?.status;
         const title1 = s?.title_unicode;
@@ -345,8 +338,8 @@ export const PanelGenerate = {
         };
     },
 
-    matchBeatmap2CardA2: async (b) => {
-        const background = await readNetImage(b?.beatmapset?.covers.cover, true);
+    matchBeatmap2CardA2: async (b = {}) => {
+        const background = await readNetImage(b?.beatmapset?.covers['cover@2x'], true);
 
         const title1 = b?.beatmapset?.title || 'Deleted Beatmap';
         const title2 = b?.beatmapset?.artist || '-';

@@ -4,7 +4,7 @@ import {
     getGameMode,
     getMapBG, getPanelNameSVG,
     implantImage,
-    implantSvgBody, readTemplate, replaceText,
+    implantSvgBody, readTemplate, replaceText, getMatchDuration, getNowTimeStamp,
 } from "../util/util.js";
 import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {ar2ms, cs2px, data2Label, od2ms, stat2DataM} from "./panel_E.js";
@@ -49,95 +49,9 @@ export async function router_svg(req, res) {
  */
 // E面板重构计划
 export async function panel_E3(data = {
-    expected: { accuracy: 1, combo: 1262, mods: [ 'HD' ], miss: 0, mode: 'osu'},
-    matchData: {},
-    beatmap: {
-        id: 2274671,
-        mode: 'osu',
-        status: 'ranked',
-        version: 'Brilliant Dreamland',
-        ar: 9.3,
-        cs: 4,
-        bpm: 160,
-        convert: false,
-        passcount: 5485,
-        playcount: 36298,
-        ranked: 1,
-        url: 'https://osu.ppy.sh/beatmaps/2274671',
-        beatMapFailedList: [
-            0,  54,  63, 720, 3110, 1317, 697, 1443, 920, 396, 495, 297,
-            752, 415, 246, 684,  315,  234, 182,  234, 270, 361,  81, 117,
-            54,  27,  63,  90,  315,  137, 261,  298, 153, 200, 153, 136,
-            118, 117,  72, 119,  369,  243,  63,  100, 117,  72, 262, 181,
-            117,  36,  18,   9,   64,   45,  72,   72,  45,  18,  18,  72,
-            37,   9,  45,   0,    1,   18,   9,   27,  55,  18,  27,  46,
-            18,  54,  45,  18,   18,   45,  81,   63,   9,  18,  27,  36,
-            46,  19,   9,  45,   36,    9,  90,   27,   0,  27,   0,  18,
-            81,  54,  72,  18
-        ],
-        beatMapRetryCount: 11059,
-        beatMapFailedCount: 18984,
-        beatMapRetryList: [
-            0,   0,   0, 972, 1503, 712, 342, 297,  27, 234, 261, 441,
-            424, 279, 497, 297,  342, 180, 171,  90, 171, 162,  18,  99,
-            27,  90,  54, 317,  126,  73, 108,  99,  90, 190,  91,  81,
-            54,  37,  27,  99,  171, 108,  27,  72,  29,   9,  23,  27,
-            9,   0,   9,   9,    0,  19,  18,  27,   9,  36,  45,  18,
-            18,  18,   9,   0,   36,  55,  72,  19,  18,  36,  45,  20,
-            9,  72,  27,  18,   63, 109,  18,   9,   9,   9,   0,  72,
-            27,  19,   0,  18,   27,  73,  45,  45,   0,  36,  36,  36,
-            81,  72,  27,   9
-        ],
-        beatMapRating: 0,
-        beatmapset_id: 1087774,
-        difficulty_rating: 5.41,
-        mode_int: 0,
-        total_length: 192,
-        hit_length: 189,
-        user_id: 7003013,
-        accuracy: 8,
-        drain: 6,
-        max_combo: 1262,
-        is_scoreable: true,
-        last_updated: '2022-03-05T07:06:51Z',
-        checksum: '7d479062a03c7cde63513138c622d5c1',
-        count_sliders: 405,
-        count_spinners: 1,
-        count_circles: 432,
-        beatmapset: {
-            video: false,
-            availabilityDownloadDisable: false,
-            fromDatabases: false,
-            ratingList: [Array],
-            ranked: true,
-            rating: 0.9447129909365559,
-            sid: 1087774,
-            mapperUID: 7003013,
-            mapperName: 'Muziyami',
-            id: 1087774,
-            user_id: 7003013,
-            bpm: 162,
-            artist: 'Wang Rui',
-            artist_unicode: '汪睿',
-            title: 'Tao Hua Xiao',
-            title_unicode: '桃花笑',
-            creator: 'Muziyami',
-            favourite_count: 401,
-            nsfw: false,
-            play_count: 196607,
-            preview_url: '//b.ppy.sh/preview/1087774.mp3',
-            source: '小女花不弃',
-            status: 'ranked',
-            legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1005413',
-            tags: 'peach blossom cpop c-pop pop chinese 古风 oriental bilibili cover rearrangement 纳兰寻风 na lan xun feng 西门振 xi men zhen 青萝子 qing luo zi op opening xiao nv hua bu qi i will never let you go houshou hari dacaigou kisaki dahkjdas -ovo-',
-            storyboard: true,
-            covers: [Object],
-            ratings: [Array],
-            spotlight: false,
-            last_updated: 1646464010,
-            ranked_date: 1647193324
-        }
-    }
+    expected: {},
+    match: {}, // match calculate class
+    beatmap: {}
 
 }){
     // 导入模板
@@ -153,12 +67,13 @@ export async function panel_E3(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Match Listener - Match Start! (!ymml)', 'ST', 'v0.4.0 UU'), reg_index);
+    const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
+    const panel_name = getPanelNameSVG('Match Listener - Match Start! (!ymml)', 'ST', 'v0.4.0 UU', request_time);
+    svg = replaceText(svg, panel_name, reg_index);
 
     // 构建成绩
 
     const bid = data.beatmap.id;
-    console.log(data.beatmap)
     const stat = {
         acc: data.expected.accuracy * 100 || 100,
         combo: data.expected.combo > 0 ? data.expected.combo : data.beatmap.max_combo,
@@ -180,7 +95,7 @@ export async function panel_E3(data = {
 
     const rank = rankSS2X(getApproximateRankSP(data.expected.accuracy, data.expected.miss, data.beatmap.mode, data.expected.mods));
     // 卡片定义
-    const cardA2 = await card_A2(await PanelGenerate.matchData2CardA2(data.matchData));
+    const cardA2 = await card_A2(await PanelGenerate.matchData2CardA2(data.match));
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP));
     const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));

@@ -1686,6 +1686,29 @@ export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.
     return (powered_text + '\n' + request_time_text + '\n' + index_text);
 }
 
+// 公用方法：获取比赛的时间和状态，用于右上角。这里的时间戳不需要 .add(8, 'hours')
+export function getMatchDuration(match) {
+    const start = moment(match?.match?.start_time, 'X');
+    const end = moment(match?.match?.end_time, 'X');
+
+    let str;
+
+    if (match?.matchEnd) {
+        let delta = '';
+        if (start.days() != end.days()) {
+            delta = '(+' + end.diff(start, 'days') + 'days)';
+        }
+
+        str = start.format('YYYY/MM/DD HH:mm') + ' - ' + end.format('HH:mm') + delta;
+    } else if (match?.current_game_id != null) {
+        str = start.format('YYYY/MM/DD HH:mm') + ' - select map';
+    } else {
+        str = start.format('YYYY/MM/DD HH:mm') + ' - in progress';
+    }
+
+    return str;
+}
+
 /**
  * @param svg
  * @param reg_banner

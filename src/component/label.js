@@ -545,8 +545,8 @@ export async function label_C1(data = {
     let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
     let name = torus.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
 
-    let score_b = getRoundedNumberStrLarge(data.score || 0, 5);
-    let score_m = getRoundedNumberStrSmall(data.score || 0, 5);
+    let score_b = getRoundedNumberStrLarge(data.score || 0, 0);
+    let score_m = getRoundedNumberStrSmall(data.score || 0, 0);
 
     let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor);
 

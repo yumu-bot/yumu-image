@@ -4,7 +4,7 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     implantSvgBody, readTemplate, putCustomBanner,
-    replaceText, transformSvgBody, getPanelHeight, getAvatar
+    replaceText, transformSvgBody, getPanelHeight, getAvatar, getMatchDuration, getNowTimeStamp
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -52,7 +52,8 @@ export async function panel_C(data = {}) {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PC-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'RA', 'v0.4.0 UU');
+    const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
+    const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'RA', 'v0.4.0 UU', request_time);
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
@@ -66,21 +67,24 @@ export async function panel_C(data = {}) {
 
     // 导入H卡
     let cardHs = [];
-    const isTeamVS = data.teamVS;
-    const playerDataList = data.playerDataList || [];
+
+    const isTeamVS = data?.matchData?.teamVs;
+    const playerData = data?.matchData?.playerDataList;
+
 
     let redArr = [];
     let blueArr = [];
     let noneArr = [];
 
-    for (const v of playerDataList) {
-        const team = v.team;
-        switch (team) {
-            case "red": redArr.push(v); break;
-            case "blue": blueArr.push(v); break;
-            default : noneArr.push(v); break;
+    for (let p of playerData) {
+
+        switch (p?.team) {
+            case "red": redArr.push(p); break;
+            case "blue": blueArr.push(p); break;
+            default : noneArr.push(p); break;
         }
     }
+
 
     const rowVS = Math.max(redArr.length, blueArr.length) || 0;
     //后面天选之子会修改 noneArr，所以在这里调出
@@ -129,12 +133,11 @@ export async function panel_C(data = {}) {
 }
 
 async function playerData2CardH(p = {}) {
-
     let team_color;
     let player_background;
     let isTeamVS;
 
-    switch (p.team) {
+    switch (p?.team) {
         case 'red':
             team_color = '#D32F2F';
             player_background = getImageFromV3('card-red.png');
@@ -152,44 +155,44 @@ async function playerData2CardH(p = {}) {
             break;
     }
 
-    const rws = Math.round(p.rws * 10000) / 100;
+    const rws = Math.round(p?.rws * 10000) / 100;
 
     let left1;
     if (isTeamVS) {
-        left1 = getRoundedNumberStr(p.tts, 3) +
-            ' // ' + p.win + 'W-' + p.lose + 'L (' +
-            Math.round((p.win / (p.win + p.lose)) * 100) + '%)';
+        left1 = getRoundedNumberStr(p.total, 3) +
+            ' // ' + p?.win + 'W-' + p?.lose + 'L (' +
+            Math.round((p?.win / (p?.win + p?.lose)) * 100) + '%)';
     } else {
-        left1 = getRoundedNumberStr(p.tts, 3) +
-            ' // ' + p.win + 'W-' + (p.win + p.lose) + 'P';
+        left1 = getRoundedNumberStr(p?.total, 3) +
+            ' // ' + p?.win + 'W-' + (p?.win + p?.lose) + 'P';
     }
 
-    const left2 = '#' + (p.ranking || 0) + ' (' + rws + ')';
+    const left2 = '#' + (p?.ranking || 0) + ' (' + rws + ')';
 
-    const pClass = p.playerClass;
-    const color_index = (pClass.name === "Strongest Marshal" || pClass.name === "Competent Marshal" || pClass.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
+    const pClass = p?.playerClass;
+    const color_index = (pClass?.name === "Strongest Marshal" || pClass?.name === "Competent Marshal" || pClass?.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
 
     const avatar = await getAvatar(p.player.avatar_url, true);
 
     return {
         background: player_background,
         cover: avatar,
-        title: p.player.username || 'UID:' + p.player.id,
-        title2: p.player.country.countryCode || '',
+        title: p?.player?.username || ('UID:' + p.player.id),
+        title2: p?.player?.country?.countryCode || '',
         left1: left1,
         left2: left2,
-        index_b: getRoundedNumberStrLarge(p.mra, 3),
-        index_m: getRoundedNumberStrSmall(p.mra, 3),
+        index_b: getRoundedNumberStrLarge(p?.mra, 3),
+        index_m: getRoundedNumberStrSmall(p?.mra, 3),
         index_b_size: 48,
         index_m_size: 36,
         label1: '',
         label2: '',
-        label3: pClass.name,
-        label4: pClass.nameCN,
+        label3: pClass?.name,
+        label4: pClass?.nameCN,
         mods_arr: [],
 
         color_title2: '#aaa',
-        color_right: pClass.color,
+        color_right: pClass?.color,
         color_left: team_color,
         color_index: color_index,
         color_label1: '',

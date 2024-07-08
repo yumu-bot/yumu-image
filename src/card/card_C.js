@@ -326,7 +326,7 @@ export async function card_C(data = {
                         let width = teamWidthArr[k];
 
                         if (data[`${team}`][k]) {
-                            await implantRoundLabelF3(
+                            await implantRoundLabelC3(
                                 data[`${team}`][k],
                                 !isReverse ? startX + 34 * i : startX - 30 - 34 * i,
                                 startY - 35 - 34 * j, //从 1 开始
@@ -347,7 +347,7 @@ export async function card_C(data = {
                 const width = teamWidthArr[j];
 
                 if (data[`${team}`]) {
-                    await implantRoundLabelF1(
+                    await implantRoundLabelC1(
                         data[`${team}`][j],
                         calculateX + (width * direction / 2 - 50),
                         startY - 130,
@@ -396,7 +396,7 @@ export async function card_C(data = {
 
                 // 画F标签
                 if (data[`${team}`]) {
-                    await implantRoundLabelF1(
+                    await implantRoundLabelC1(
                         data[`${team}`][j],
                         calculateX + (width * direction / 2 - 50),
                         startY - 130,
@@ -497,9 +497,8 @@ export async function card_C(data = {
 
     // 插入F1 - F3标签的功能函数
 
-    async function implantRoundLabelF1(data, x, y, maxWidth, isWin, scoreTextColor) {
-        const label_F1_impl = data ?
-            await label_C1({
+    async function implantRoundLabelC1(data, x, y, maxWidth, isWin, scoreTextColor) {
+        const c1 = data ? await label_C1({
                 avatar: data.player_avatar || '',
                 name: data.player_name || 'Unknown',
                 mods_arr: data.player_mods || '',
@@ -508,8 +507,8 @@ export async function card_C(data = {
                 maxWidth: maxWidth,
                 isWin: isWin,
                 scoreTextColor: scoreTextColor,
-            }) : '';
-        svg = implantSvgBody(svg, x, y, label_F1_impl, reg_bodycard);
+        }) : '';
+        svg = implantSvgBody(svg, x, y, c1, reg_bodycard);
     }
 
     /*
@@ -528,13 +527,12 @@ export async function card_C(data = {
      */
 
 
-    async function implantRoundLabelF3(data, x, y, isWin) {
-        let label_F3_impl =
-            await label_C3({
+    async function implantRoundLabelC3(data, x, y, isWin) {
+        const c3 = await label_C3({
                 avatar: data ? data.player_avatar : '',
                 isWin: isWin,
             })
-        svg = implantSvgBody(svg, x, y, label_F3_impl, reg_bodycard);
+        svg = implantSvgBody(svg, x, y, c3, reg_bodycard);
     }
 
     return svg.toString();
