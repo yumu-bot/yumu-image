@@ -52,7 +52,7 @@ export async function card_A1(data = {
     svg = replaceTexts(svg, [top1, left1, left2, right1, right2, right3], reg_text);
     // 替换图片
 
-    svg = implantImage(svg, 430, 210, 0, 0, 0.5, data.background, reg_background);
+    svg = implantImage(svg, 430, 210, 0, 0, 0.6, data.background, reg_background);
     svg = implantImage(svg, 100, 100, 20, 20, 1, data.avatar, reg_avatar);
     svg = implantImage(svg, 40, 40, 200, 70, 1, data.sub_icon1, reg_sub_icon1); //x +5px
     svg = implantImage(svg, 40, 40, 250, 70, 1, data.sub_icon2, reg_sub_icon2); //x +5px

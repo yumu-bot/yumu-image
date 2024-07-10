@@ -5,7 +5,6 @@ import {
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A1} from "../card/card_A1.js";
-import {calcPPOnly4UnrankedScore} from "../util/compute-pp.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 
@@ -304,7 +303,7 @@ export async function panel_A5(data = {
         const v = data.score[i];
 
         const f = await card_H(
-            await PanelGenerate.score2CardH(v, await calcPPOnly4UnrankedScore(v), parseInt(i) + 1));
+            await PanelGenerate.score2CardH(v, parseInt(i) + 1));
         cardHs.push(f);
     }
 

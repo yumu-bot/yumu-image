@@ -315,8 +315,8 @@ export async function panel_E(data = {
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    const cardE1 = await card_E1(await score2CardE1(data.score, calcPP));
-    const cardE2 = await card_E2(await score2CardE2(data.score, calcPP));
+    const cardE1 = await card_E1(score2CardE1(data.score, calcPP));
+    const cardE2 = await card_E2(score2CardE2(data.score, calcPP));
     const cardE3 = await card_E3(await score2CardE3(data.score, calcPP));
     const cardE4 = await card_E4({calcPP: calcPP, statistics: score_statistics});
 
@@ -328,13 +328,13 @@ export async function panel_E(data = {
     svg = implantSvgBody(svg, 0, 0, cardE4, reg_card_e4);
 
     // 导入图片
-    svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);
+    svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
     svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
 
     return svg.toString();
 }
 
-async function score2CardE1(score, calcPP) {
+function score2CardE1(score, calcPP) {
     return {
         ranked: score?.beatmap?.ranked || 0,
         mode: score?.mode || 'osu',
@@ -353,7 +353,7 @@ async function score2CardE1(score, calcPP) {
     }
 }
 
-async function score2CardE2(score, calcPP) {
+function score2CardE2(score, calcPP) {
     const isFC = score.perfect || (score.beatmap.max_combo === score.max_combo);
     const isPF = score.rank === 'XH' || score.rank === 'X';
     const isBest = (score.best_id > 0);

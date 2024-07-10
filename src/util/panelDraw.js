@@ -8,7 +8,7 @@ export const PanelDraw = {
     },
 
     Rect: (x = 0, y = 0, w = 0, h = 0, r = 0, color = '#fff', opacity = 1) => {
-        return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" opacity="${opacity}" style="fill: ${color};"/>`;
+        return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: ${color}; fill-opacity: ${opacity}"/>`;
     },
 
     Circle: (cx = 0, cy = 0, r = 0, color = '#fff') => {

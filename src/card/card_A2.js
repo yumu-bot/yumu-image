@@ -85,7 +85,7 @@ export async function card_A2(data = {
     let status = getMapStatusImage(data.map_status || '');
     let background = data.background || getImageFromV3('beatmap-DLfailBG.jpg');
 
-    svg = implantImage(svg,430,210,0,0,0.5, background, reg_background);
+    svg = implantImage(svg, 430, 210, 0, 0, 0.6, background, reg_background);
     svg = data.map_status ? implantImage(svg,50,50,370,10,1, status, reg_top_icons) : svg;
 
     svg = replaceTexts(svg, [title1, title2, title3, right1, right2, right3, left1, left2, left3], reg_text);

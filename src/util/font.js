@@ -8,6 +8,97 @@ const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold
 const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
 const textToSVGTahomaRegular = TextToSVG.loadSync("font/ft71.ttf");
 
+/** 获取多个字体组合成的字形
+ * 数组类的组成是：
+ * font: torus,
+ * text: '',
+ * size: 24,
+ * color: '#fff',
+ * @param array
+ * @param x
+ * @param y
+ * @param anchor
+ * @return {string}
+ */
+export function getMultipleTextPath(array = [{
+    font: "torus",
+    text: '',
+    size: 24,
+    color: '#fff',
+}], x = 0, y = 0, anchor = "center baseline") {
+    if (array == null || array.length === 0) return '';
+
+    let width_array = []; // 累计宽度
+    let total_width = 0;
+
+    // 获取宽度
+
+    for (const i in array) {
+        const v = array[i];
+
+        const font = v.font;
+        const text = v?.text || '';
+        const size = v?.size || 24;
+
+        const width = getTextWidth(font, text, size);
+
+        total_width += width;
+        width_array.push(total_width);
+    }
+
+    // 全部往后移一位，前面加 0
+    total_width = width_array.pop();
+    width_array.unshift(0);
+
+    let out = '';
+
+    for (const i in array) {
+        const v = array[i];
+        const w = width_array[i];
+
+        const font = v.font;
+        const text = v?.text || '';
+        const size = v?.size || 24;
+        const color = v?.color || '#fff';
+
+        switch (anchor) {
+            case "center baseline": {
+                out += getTextPath(font, text, x - (total_width / 2) + w, y, size, "left baseline", color);
+                break;
+            }
+            case "left baseline": {
+                out += getTextPath(font, text, x + w, y, size, "left baseline", color);
+                break;
+            }
+            case "right baseline": {
+                out += getTextPath(font, text, x - total_width + w, y, size, "left baseline", color);
+                break;
+            }
+        }
+    }
+
+    return out;
+}
+
+function getTextWidth(font = torus, text = '', size = 24) {
+    if (font.toString() === "torus") return torus.getTextWidth(text, size);
+    if (font.toString() === "torusRegular") return torusRegular.getTextWidth(text, size);
+    if (font.toString() === "TahomaRegular") return TahomaRegular.getTextWidth(text, size);
+    if (font.toString() === "extra") return extra.getTextWidth(text, size);
+    if (font.toString() === "poppinsBold") return poppinsBold.getTextWidth(text, size);
+    if (font.toString() === "lineSeedSans") return lineSeedSans.getTextWidth(text, size);
+    return 0;
+}
+
+function getTextPath(font = torus, text = '', x, y, size = 24, anchor, fill) {
+    if (font.toString() === "torus") return torus.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "torusRegular") return torusRegular.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "TahomaRegular") return TahomaRegular.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "extra") return extra.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "poppinsBold") return poppinsBold.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "lineSeedSans") return lineSeedSans.getTextPath(text, x, y, size, anchor, fill);
+    return '';
+}
 
 export const TahomaRegular = {};
 
@@ -25,7 +116,7 @@ function getTextPath_TahomaRegular(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTahomaRegular.getPath(text, {
+    return textToSVGTahomaRegular.getPath(text.toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -148,7 +239,7 @@ function getTextPath_poppinsBold(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGpoppinsBold.getPath(text, {
+    return textToSVGpoppinsBold.getPath(text.toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -271,7 +362,7 @@ function getTextPath_lineSeedSans(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGlineSeedSansBold.getPath(text, {
+    return textToSVGlineSeedSansBold.getPath(text.toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -394,7 +485,7 @@ function getTextPath_torus(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTorusSB.getPath(text, {
+    return textToSVGTorusSB.getPath(text.toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -518,7 +609,7 @@ function getTextPath_torusRegular(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTorusRegular.getPath(text, {
+    return textToSVGTorusRegular.getPath(text.toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -640,7 +731,7 @@ function getTextPath_PuHuiTi(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGPuHuiTi.getPath(text, {
+    return textToSVGPuHuiTi.getPath(text.toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -714,6 +805,7 @@ export const extra = {};
 
 extra.getTextPath = getTextPath_extra;
 extra.getTextMetrics = getTextMetrics_extra;
+extra.getTextWidth = getTextWidth_extra;
 
 function getTextPath_extra(
     text = '',
@@ -723,7 +815,7 @@ function getTextPath_extra(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGextra.getPath(text, {
+    return textToSVGextra.getPath(text.toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -753,4 +845,20 @@ function getTextMetrics_extra(
             fill: fill
         }
     })
+}
+
+function getTextWidth_extra(
+    text = '',
+    size = 0,
+) {
+    return textToSVGextra.getMetrics(text.toString(), {
+        x: 0,
+        y: 0,
+        fontSize: size,
+        anchor: 'center baseline',
+        fontFamily: "extra",
+        attributes: {
+            fill: '#fff'
+        }
+    }).width
 }

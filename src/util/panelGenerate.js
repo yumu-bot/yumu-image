@@ -527,7 +527,7 @@ export const PanelGenerate = {
     },
 
 //给panel_A5用的，期待可以和上面合并
-    score2CardH: async (s, calcPP, rank = 1) => {
+    score2CardH: async (s, rank = 1) => {
         const cover = await readNetImage(s?.beatmapset?.covers?.list, hasLeaderBoard(s?.beatmap?.ranked));
         const background = await readNetImage(s?.beatmapset?.covers?.cover, hasLeaderBoard(s?.beatmap?.ranked));
         // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
@@ -567,7 +567,7 @@ export const PanelGenerate = {
             500 - 20 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
 
         const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? null : s.beatmapset.title_unicode;
-        const index_b = (calcPP.pp < 2000) ? Math.round(calcPP.pp).toString() : 'Inf.';
+        const index_b = (s?.pp < 2000) ? Math.round(s?.pp).toString() : 'Inf.';
 
         return {
             background: background,
@@ -588,7 +588,7 @@ export const PanelGenerate = {
 
             color_title2: '#bbb',
             color_right: getRankColor(s.rank),
-            color_left: getStarRatingColor(calcPP.attr.stars),
+            color_left: getStarRatingColor(s?.beatmap?.difficulty_rating),
             color_index: color_index,
             color_label1: '',
             color_label2: '',
