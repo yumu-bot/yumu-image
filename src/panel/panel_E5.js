@@ -595,7 +595,7 @@ const component_E7 = (
 
     const pp = Math.floor(data?.pp || 0);
     const pp_percent = (data?.full_pp > 0) ? Math.round((data?.pp || 0) / data?.full_pp * 100) : 0
-    const full_pp_text = ' / ' + Math.round(data?.full_pp || 0) + ' PP [' + pp_percent + '%]';
+    const full_pp_text = ' / ' + Math.floor(data?.full_pp || 0) + ' PP [' + pp_percent + '%]';
 
     const text_arr = [
         {
@@ -678,6 +678,7 @@ const component_E7 = (
     return svg;
 
     // 在有值的时候最低是 min_width，没有值则是 0
+    // 注意！这个值加起来的和，总会比原来的成绩 PP 的宽度大一点点（因为最短限制为 30）
     function getChildPPWidth(child_pp = 0, child_sum_pp = 0, pp = 0, full_pp = 0, max_width = 460, min_width = 30) {
         const pp_width = (pp / full_pp) * max_width;
         const child_pp_width = (child_pp / child_sum_pp) * pp_width;

@@ -8,7 +8,7 @@
             <rect y="290" width="1920" height="790" rx="20" ry="20" style="fill: none;"/>
         </clipPath>
         <filter id="blur-PE-BG" height="110%" width="110%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
-            <feGaussianBlur in="userSpaceOnUse" stdDeviation="5" result="blur"/>
+            <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
         </filter>
     </defs>
     <g id="BannerBase">
