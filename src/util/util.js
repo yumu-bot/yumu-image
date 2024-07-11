@@ -135,6 +135,7 @@ export async function getDiffBG(bid, sid, cover = 'cover', useCache = true, defa
         const res = await getBGFromDatabase(bid, sid);
         path = res.data;
     } catch (e) {
+        console.error("本地背景读取失败", e);
         path = await getMapBG(sid, cover, useCache, defaultImagePath);
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
@@ -158,7 +159,7 @@ export async function getBGFromDatabase(bid, sid) {
             "SET_ID": sid,
             "AuthorizationX": SUPER_KEY,
         },
-        timeout: 300,
+        timeout: 1500,
         __no_wait: true,
     });
 }
