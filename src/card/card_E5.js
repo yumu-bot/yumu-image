@@ -89,7 +89,7 @@ export async function card_E5(data = {
     const advanced = getAdvancedJudgeSVG(data.advanced_judge, 20, 310)
     const best = '';
     const statisticsNC = getStatisticsRRect(data.ncStats, data.statistics_max, 400, 60, 500)
-    const statisticsFC = getStatisticsSVG(data.statistics, data.statistics_max, 400, 100, 500, 28, 12, 22.79)
+    const statisticsFC = getStatisticsSVG(data.fcStats, data.statistics_max, 400, 100, 500, 28, 12, 22.79)
 
     const acc = await label_E({...((mode === 'm') ? LABELS.PPACC : LABELS.ACC),
         remark: (data.miss > 0) ? '-' + data.miss : '-',
