@@ -4,7 +4,6 @@ import axios from "axios";
 import {Beatmap, Calculator} from "rosu-pp";
 import {getGameMode, OSU_BUFFER_PATH} from "./util.js";
 import {getModInt} from "./mod.js";
-import {getApproximateStarRating, hasLeaderBoard} from "./star.js";
 
 const stat = {
     count_50: 0,
@@ -103,6 +102,8 @@ export async function calcMap(bid, statistics = stat, mode, hasLeaderBoard = tru
 }
 
 //为 panel A5 特意定做的 calcPP
+
+/*
 export async function calcPPOnly4UnrankedScore(score) {
     // 成绩重计算
     const score_statistics = {
@@ -130,6 +131,8 @@ export async function calcPPOnly4UnrankedScore(score) {
         return await calcPerformancePoints(score?.beatmap?.id, score_statistics, score?.mode, true);
     }
 }
+
+ */
 
 
 /*

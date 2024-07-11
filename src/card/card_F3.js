@@ -4,7 +4,7 @@ import {
 import {torus} from "../util/font.js";
 import {card_K} from "./card_K.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getApproximateStarRating, hasLeaderBoard} from "../util/star.js";
+import {hasLeaderBoard} from "../util/star.js";
 
 export async function card_F3(data = {
     bp: [{
@@ -146,15 +146,13 @@ export async function card_F3(data = {
 
 const bp2CardK = async (bp, bp_ranking = 1) => {
     //随便搞个颜色，就不需要去获取一遍谱面了
-    const mod = bp?.mods || [];
-    const star_rating = getApproximateStarRating(bp?.beatmap?.difficulty_rating, mod)
 
     return {
         map_background: await getMapBG(bp.beatmapset.id, 'list@2x', hasLeaderBoard(bp.beatmap.ranked)),
-        star_rating: star_rating,
-        score_rank: bp.rank,
+        star_rating: bp?.beatmap?.difficulty_rating || 0,
+        score_rank: bp?.rank || 0,
         bp_ranking: bp_ranking, //感觉暂时不使用这个也可以
-        bp_pp: bp.pp,
+        bp_pp: bp?.pp || 0,
         bp_remark: 'PP',// PP
     }
 }

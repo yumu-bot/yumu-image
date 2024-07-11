@@ -13,7 +13,7 @@ import {
     readNetImage, getAvatar, getBanner, getMapCover,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
-import {getApproximateRank, getApproximateStarRating, hasLeaderBoard, rankSS2X} from "./star.js";
+import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
 
 //公用方法
 //把参数变成面板能读懂的数据（router
@@ -645,9 +645,8 @@ export const PanelGenerate = {
 
         const title2 = (bp.beatmapset.title === bp.beatmapset.title_unicode) ? null : bp.beatmapset.title_unicode;
 
-        //随便搞个颜色得了
-        const mod = bp?.mods || [];
-        const star_color = getStarRatingColor(getApproximateStarRating(bp?.beatmap?.difficulty_rating, mod))
+        //随便搞个颜色得了 // 240712 已经有 PP 和星数了，故此不需要此方法
+        const star_color = getStarRatingColor(bp?.beatmap?.difficulty_rating)
 
         return {
             background: background,
