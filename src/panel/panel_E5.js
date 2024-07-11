@@ -483,18 +483,24 @@ const component_E6 = async (
     const reg_base = /(?<=<g id="Base_OE6">)/;
 
     const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi",
-        data?.title || '', data?.title_unicode || '', 780 / 2, 50, 90, 48, 24, 780);
+        data?.title || '', data?.title_unicode || '', 780 / 2, 50, 90, 48, 24, 780 - 20);
 
-    const diff = poppinsBold.getTextPath(data?.difficulty_name || '', 780 / 2, 142, 30, 'center baseline', '#fff');
+    const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
+        780 - 40 - 20
+        - poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)
+        - poppinsBold.getTextWidth('s' + (data?.sid || 0), 24)
+        , true)
+
+    const diff = poppinsBold.getTextPath(diff_text, 780 / 2, 142, 30, 'center baseline', '#fff');
     const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 20, 142, 24, 'left baseline', '#fff');
-    const sid = poppinsBold.getTextPath('s' + (data?.sid || 0), 760, 142, 24, 'right baseline', '#fff');
+    const sid = poppinsBold.getTextPath('s' + (data?.sid || 0), 780 - 20, 142, 24, 'right baseline', '#fff');
 
     const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status));
 
     const rect = PanelDraw.Rect(0, 0, 780, 160, 20, '#382e32', 1);
 
     svg = replaceTexts(svg, [t.title, t.title_unicode, bid, sid, diff], reg_label);
-    svg = implantImage(svg, 780, 160, 0, 0, 0.6, background, reg_background);
+    svg = implantImage(svg, 780, 160, 0, 0, 0.4, background, reg_background);
     svg = replaceText(svg, rect, reg_base);
 
     return svg;

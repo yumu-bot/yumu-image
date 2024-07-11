@@ -8,7 +8,7 @@ import {
     implantSvgBody, readNetImage,
     replaceTexts, getDiffBG, getBeatMapTitlePath,
 } from "../util/util.js";
-import {extra, torus} from "../util/font.js";
+import {extra, PuHuiTi, torus} from "../util/font.js";
 import {getStarRatingColor} from "../util/color.js";
 import {hasLeaderBoard} from "../util/star.js";
 
@@ -90,7 +90,7 @@ export async function card_E1(data = {
         getRoundedNumberStr((data.play_count), 2)
         , 845, 90.84, 24, "right baseline", "#fff");
 
-    const title = getBeatMapTitlePath("torus", "torus", data.title, data.title_unicode,
+    const title = getBeatMapTitlePath("torus", "PuHuiTi", data.title, data.title_unicode,
         440, 593.67, 641.6, 48, 36, 860, "center baseline", "#fff", "#fff"
     );
 

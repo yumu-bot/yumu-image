@@ -272,9 +272,12 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, fo
             svg += PanelDraw.Rect(x, y + (height + interval) * i, Math.max(rect_width, height), height, height / 2, color);
         }
 
+        /*
         if (typeof v.stat === "number") {
             svg += PanelDraw.Rect(x, y + (height + interval) * i, w, height, height / 2, color, 0.1);
         }
+
+         */
     });
 
     return svg;
