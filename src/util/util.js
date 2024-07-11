@@ -159,7 +159,7 @@ export async function getBGFromDatabase(bid, sid) {
             "SET_ID": sid,
             "AuthorizationX": SUPER_KEY,
         },
-        timeout: 300,
+        timeout: 1500,
         __no_wait: true,
     });
 }
