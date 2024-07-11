@@ -636,10 +636,10 @@ const component_E7 = (
             const acc_rect = PanelDraw.Rect(18, 105, aim_width + spd_width + acc_width, 30, 15);
             const fl_rect = PanelDraw.Rect(18, 105, aim_width + spd_width + acc_width + fl_width, 30, 15);
 
-            const aim_text = getChildPPPath(Math.round(data?.aim_pp), 20, 128, 24, aim_width, aim_width, 12);
-            const spd_text = getChildPPPath(Math.round(data?.spd_pp), 20, 128, 24, aim_width + spd_width, spd_width, 12);
-            const acc_text = getChildPPPath(Math.round(data?.acc_pp), 20, 128, 24, aim_width + spd_width + acc_width, acc_width, 12);
-            const fl_text = getChildPPPath(Math.round(data?.fl_pp), 20, 128, 24, aim_width + spd_width + acc_width + fl_width, fl_width, 12);
+            const aim_text = getChildPPPath(Math.round(data?.aim_pp), 20, 128, 24, aim_width, aim_width, 15);
+            const spd_text = getChildPPPath(Math.round(data?.spd_pp), 20, 128, 24, aim_width + spd_width, spd_width, 15);
+            const acc_text = getChildPPPath(Math.round(data?.acc_pp), 20, 128, 24, aim_width + spd_width + acc_width, acc_width, 15);
+            const fl_text = getChildPPPath(Math.round(data?.fl_pp), 20, 128, 24, aim_width + spd_width + acc_width + fl_width, fl_width, 15);
 
             svg = replaceText(svg, aim_rect, reg_clip2);
             svg = replaceText(svg, spd_rect, reg_clip3);
@@ -658,8 +658,8 @@ const component_E7 = (
             const diff_rect = PanelDraw.Rect(18, 105, diff_width, 30, 15);
             const acc_rect = PanelDraw.Rect(18, 105, diff_width + acc_width, 30, 15);
 
-            const diff_text = getChildPPPath(Math.round(data?.diff_pp), 20, 128, 24, diff_width, diff_width, 12);
-            const acc_text = getChildPPPath(Math.round(data?.acc_pp), 20, 128, 24, diff_width + acc_width, acc_width, 12);
+            const diff_text = getChildPPPath(Math.round(data?.diff_pp), 20, 128, 24, diff_width, diff_width, 15);
+            const acc_text = getChildPPPath(Math.round(data?.acc_pp), 20, 128, 24, diff_width + acc_width, acc_width, 15);
 
             svg = replaceText(svg, diff_rect, reg_clip3);
             svg = replaceText(svg, acc_rect, reg_clip4);
