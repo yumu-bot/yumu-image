@@ -593,9 +593,9 @@ const component_E7 = (
     const reg_clip5 = /(?<=<clipPath id="clippath-OE7-5">)/;
     const reg_clip6 = /(?<=<clipPath id="clippath-OE7-6">)/; //181,100,217 | 238,96,156
 
-    const pp = Math.floor(data?.pp || 0);
+    const pp = Math.round(data?.pp || 0);
     const pp_percent = (data?.full_pp > 0) ? Math.round((data?.pp || 0) / data?.full_pp * 100) : 0
-    const full_pp_text = ' / ' + Math.floor(data?.full_pp || 0) + ' PP [' + pp_percent + '%]';
+    const full_pp_text = ' / ' + Math.round(data?.full_pp || 0) + ' PP [' + pp_percent + '%]';
 
     const text_arr = [
         {
