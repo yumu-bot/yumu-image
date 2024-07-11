@@ -111,7 +111,7 @@ export async function card_E2(data = {
     const advanced = getAdvancedJudgeSVG(data.advanced_judge, 20, 310)
     const best = getPersonalBestSVG(data.isBest, 20, 20);
     const type = getScoreTypeSVG(data.isLegacy, 20, 250);
-    const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 400, 60, 500, 22.79)
+    const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 400, 100, 500, 28, 12, 22.79)
 
     const acc = await label_E({...LABELS.ACC,
         remark: data.acc_index,
@@ -295,11 +295,11 @@ function getModsSVG(mods = [""], x, y, mod_w, text_h, interval) {
     return svg;
 }
 
-function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, font_h) {
+function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, font_h) {
     let svg = '';
 
     stat.forEach((v, i) => {
-        const text_y = y + font_h + (i + 1) * 40;
+        const text_y = y + font_h + i * (height + interval);
         const index_text_x = x - 14;
         const stat_text_x = x + w + 12;
 
@@ -317,7 +317,11 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, font_h) {
 
         if (v.stat > 0) {
             const rect_width = w * v.stat / stat_max;
-            svg += PanelDraw.Rect(x, y + 40 * (i + 1), Math.max(rect_width, 20), 28, 10, color);
+            svg += PanelDraw.Rect(x, y + (height + interval) * i, Math.max(rect_width, height), height, height / 2, color);
+        }
+
+        if (typeof v.stat === "number") {
+            svg += PanelDraw.Rect(x, y + (height + interval) * i, w, height, height / 2, color, 0.2);
         }
     });
 

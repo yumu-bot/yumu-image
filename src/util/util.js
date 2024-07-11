@@ -5,7 +5,7 @@ import axios from "axios";
 import https from "https";
 import path from "path";
 import moment from "moment";
-import {torus} from "./font.js";
+import {PuHuiTi, torus, cutStringTail, getTextPath, getTextWidth} from "./font.js";
 import {API} from "../svg-to-image/API.js";
 import JPEGProvider from '../svg-to-image/JPEGProvider.js';
 import PNGProvider from '../svg-to-image/PNGProvider.js';
@@ -190,6 +190,51 @@ export function deleteBeatMapFromDatabase(bid) {
 }
 
 /**
+ * 根据谱面罗马音和原文，返回方便展示的字形
+ * @param font
+ * @param fon2
+ * @param title
+ * @param title_unicode
+ * @param size
+ * @param size2
+ * @param maximum_width
+ * @return {title: ..., title_unicode: ...,}
+ */
+export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '', title_unicode = '', x = 0, y = 0, y2 = 0, size = 36, size2 = 24, maximum_width = 780, anchor = "center baseline", color = "#fff", color2 = color) {
+
+    let title_text;
+    let title_unicode_text;
+
+    //如果相等，第二段不显示
+    if (title === title_unicode) {
+        let title_cut = cutStringTail(font, title, size, maximum_width, false);
+        let title_exceed;
+
+        if (title_cut.length === title.toString().length) {
+            title_exceed = '';
+        } else {
+            title_exceed = title.toString().substring(title_cut.length);
+        }
+
+        title_text = getTextPath(font, title_cut, x, y, size, anchor, color);
+        title_unicode_text = getTextPath(font,
+            cutStringTail(font, title_exceed, size2, maximum_width, true),
+            x, y2, size2, anchor, color2);
+    } else {
+        const title_str = cutStringTail(font, title, size, maximum_width, true);
+        title_text = getTextPath(font, title_str, x, y, size, anchor, color);
+
+        const title_unicode_str = cutStringTail(font2, title_unicode, size2, maximum_width, true)
+        title_unicode_text = getTextPath(font2, title_unicode_str, x, y2, size2, anchor, color2);
+    }
+
+    return {
+        title: title_text,
+        title_unicode: title_unicode_text,
+    }
+}
+
+/**
  * 读取文件，判断 JPG, PNG, GIF 图片是否完整
  * @param path 位于文件系统的绝对路径
  * @return {Promise<boolean>}
@@ -255,7 +300,7 @@ export async function getAvatar(link, useCache = true, defaultImagePath = getIma
  */
 export async function getBanner(link, useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
     if (link != null && link.startsWith("https://assets.ppy.sh/beatmaps/")) {
-        return await getCover(link, useCache, getImageFromV3('beatmap-DLfailBG.jpg'))
+        return await getMapCover(link, useCache, getImageFromV3('beatmap-DLfailBG.jpg'))
     } else if (link == null || link == "") {
         return defaultImagePath;
     } else {
@@ -264,7 +309,7 @@ export async function getBanner(link, useCache = true, defaultImagePath = getIma
 }
 
 // 其实就可以用 readNetImage
-export async function getCover(link, useCache = true, defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')) {
+export async function getMapCover(link, useCache = true, defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')) {
     return await readNetImage(link, useCache, defaultImagePath);
 }
 

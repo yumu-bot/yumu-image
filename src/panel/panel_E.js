@@ -2,7 +2,6 @@ import {
     exportJPEG,
     getDecimals,
     getDiffBG,
-    getImageFromV3,
     getGameMode,
     getNowTimeStamp,
     getPanelNameSVG,
@@ -22,7 +21,7 @@ import {card_E3} from "../card/card_E3.js";
 import {card_E4} from "../card/card_E4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, getV3Score, hasAnyMod, hasMod} from "../util/mod.js";
-import {getApproximateRank, hasLeaderBoard} from "../util/star.js";
+import {getApproximateRank, getRankBG, hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -297,7 +296,7 @@ export async function panel_E(data = {
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Score (!ymp / !ymr / !yms)', 'S', 'v0.4.0 UU', request_time), reg_index);
+    svg = replaceText(svg, getPanelNameSVG('Legacy Score (!ymp / !ymr / !yms)', 'S', 'v0.4.0 UU', request_time), reg_index);
 
     // 成绩重计算
     const score_statistics = {
@@ -310,7 +309,7 @@ export async function panel_E(data = {
     const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, hasLeaderBoard(data.score.beatmap.ranked));
 
     // 图片定义
-    const background = getImageFromV3('object-score-backimage-' + (data?.score?.rank || getApproximateRank(data?.score)) + '.jpg');
+    const background = getRankBG((data?.score?.rank || getApproximateRank(data?.score)));
     const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked));
 
     // 卡片定义

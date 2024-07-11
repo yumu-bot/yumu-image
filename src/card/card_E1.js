@@ -6,9 +6,9 @@ import {
     getRoundedNumberStr,
     implantImage,
     implantSvgBody, readNetImage,
-    replaceTexts, getDiffBG,
+    replaceTexts, getDiffBG, getBeatMapTitlePath,
 } from "../util/util.js";
-import {extra, PuHuiTi, torus} from "../util/font.js";
+import {extra, torus} from "../util/font.js";
 import {getStarRatingColor} from "../util/color.js";
 import {hasLeaderBoard} from "../util/star.js";
 
@@ -90,32 +90,12 @@ export async function card_E1(data = {
         getRoundedNumberStr((data.play_count), 2)
         , 845, 90.84, 24, "right baseline", "#fff");
 
-    let title_text;
-    let title_unicode_text;
+    const title = getBeatMapTitlePath("torus", "torus", data.title, data.title_unicode,
+        440, 593.67, 641.6, 48, 36, 860, "center baseline", "#fff", "#fff"
+    );
 
-    //如果相等，第二段不显示
-    if (data.title === data.title_unicode) {
-        let title = torus.cutStringTail(data.title, 48, 860,false);
-        let title_exceed;
-
-        if (title.length === data.title.toString().length) {
-            title_exceed = '';
-        } else {
-            title_exceed = data.title.toString().substring(title.length);
-        }
-
-        title_text = torus.getTextPath(title, 440, 593.67, 48, "center baseline", "#fff");
-        title_unicode_text = torus.getTextPath(
-                torus.cutStringTail(title_exceed, 36, 860, true),
-                440, 641.6, 36, "center baseline", "#fff");
-    } else {
-        title_text = torus.getTextPath(
-            torus.cutStringTail(data.title, 48, 860, true),
-            440, 593.67, 48, "center baseline", "#fff");
-        title_unicode_text = PuHuiTi.getTextPath(
-                PuHuiTi.cutStringTail(data.title_unicode, 36, 860, true),
-                440, 641.6, 36, "center baseline", "#fff");
-    }
+    const title_text = title.title
+    const title_unicode_text = title.title_unicode;
 
     const version_text = torus.getTextPath(
             torus.cutStringTail(data.version, 36, 860),

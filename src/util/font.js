@@ -80,26 +80,6 @@ export function getMultipleTextPath(array = [{
     return out;
 }
 
-function getTextWidth(font = torus, text = '', size = 24) {
-    if (font.toString() === "torus") return torus.getTextWidth(text, size);
-    if (font.toString() === "torusRegular") return torusRegular.getTextWidth(text, size);
-    if (font.toString() === "TahomaRegular") return TahomaRegular.getTextWidth(text, size);
-    if (font.toString() === "extra") return extra.getTextWidth(text, size);
-    if (font.toString() === "poppinsBold") return poppinsBold.getTextWidth(text, size);
-    if (font.toString() === "lineSeedSans") return lineSeedSans.getTextWidth(text, size);
-    return 0;
-}
-
-function getTextPath(font = torus, text = '', x, y, size = 24, anchor, fill) {
-    if (font.toString() === "torus") return torus.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "torusRegular") return torusRegular.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "TahomaRegular") return TahomaRegular.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "extra") return extra.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "poppinsBold") return poppinsBold.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "lineSeedSans") return lineSeedSans.getTextPath(text, x, y, size, anchor, fill);
-    return '';
-}
-
 export const TahomaRegular = {};
 
 TahomaRegular.getTextPath = getTextPath_TahomaRegular;
@@ -861,4 +841,37 @@ function getTextWidth_extra(
             fill: '#fff'
         }
     }).width
+}
+
+export function getTextWidth(font = "torus", text = '', size = 24) {
+    if (font.toString() === "torus") return torus.getTextWidth(text, size);
+    if (font.toString() === "torusRegular") return torusRegular.getTextWidth(text, size);
+    if (font.toString() === "TahomaRegular") return TahomaRegular.getTextWidth(text, size);
+    if (font.toString() === "PuHuiTi") return PuHuiTi.getTextWidth(text, size);
+    if (font.toString() === "extra") return extra.getTextWidth(text, size);
+    if (font.toString() === "poppinsBold") return poppinsBold.getTextWidth(text, size);
+    if (font.toString() === "lineSeedSans") return lineSeedSans.getTextWidth(text, size);
+    return 0;
+}
+
+export function getTextPath(font = "torus", text = '', x, y, size = 24, anchor, fill) {
+    if (font.toString() === "torus") return torus.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "torusRegular") return torusRegular.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "TahomaRegular") return TahomaRegular.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "PuHuiTi") return PuHuiTi.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "extra") return extra.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "poppinsBold") return poppinsBold.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "lineSeedSans") return lineSeedSans.getTextPath(text, x, y, size, anchor, fill);
+    return '';
+}
+
+export function cutStringTail(font = "torus", text = '', size = 24, max_width = 0, is_dot3_needed = true) {
+    if (font.toString() === "torus") return torus.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (font.toString() === "torusRegular") return torusRegular.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (font.toString() === "TahomaRegular") return TahomaRegular.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (font.toString() === "PuHuiTi") return PuHuiTi.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (font.toString() === "extra") return extra.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (font.toString() === "poppinsBold") return poppinsBold.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (font.toString() === "lineSeedSans") return lineSeedSans.cutStringTail(text, size, max_width, is_dot3_needed);
+    return text;
 }

@@ -91,14 +91,16 @@ export const LABELS = {
         icon: getImageFromV3("object-score-beatsperminute.png"),
         icon_title: 'BPM',
         color_remark: '#aaa',
-        bar_min: 120,
+        bar_color: '#A864A8',
+        bar_min: 90,
         bar_mid: 180,
-        bar_max: 240,
+        bar_max: 270,
     },
     LENGTH: {
         icon: getImageFromV3("object-score-length.png"),
         icon_title: 'Length',
         color_remark: '#aaa',
+        bar_color: '#F06EA9',
         bar_min: 30,
         bar_mid: 120,
         bar_max: 210,
@@ -107,6 +109,7 @@ export const LABELS = {
         icon: getImageFromV3("object-score-circlesize.png"),
         icon_title: 'CS',
         color_remark: '#aaa',
+        bar_color: '#00BFF3',
         bar_min: 2,
         bar_mid: 4,
         bar_max: 6,
@@ -115,14 +118,16 @@ export const LABELS = {
         icon: getImageFromV3("object-score-approachrate.png"),
         icon_title: 'AR',
         color_remark: '#aaa',
-        bar_min: 7,
+        bar_color: '#7CC576',
+        bar_min: 7.5,
         bar_mid: 9,
-        bar_max: 11,
+        bar_max: 10.5,
     },
     OD: {
         icon: getImageFromV3("object-score-overalldifficulty.png"),
         icon_title: 'OD',
         color_remark: '#aaa',
+        bar_color: '#FFF467',
         bar_min: 6,
         bar_mid: 8,
         bar_max: 10,
@@ -131,6 +136,7 @@ export const LABELS = {
         icon: getImageFromV3("object-score-healthpoint.png"),
         icon_title: 'HP',
         color_remark: '#aaa',
+        bar_color: '#F26C4F',
         bar_min: 4,
         bar_mid: 6,
         bar_max: 8,
@@ -810,13 +816,13 @@ export async function label_E(data = {
     return svg.toString();
 }
 
-export async function label_E5(data = {
+export function label_E5(data = {
     ...LABELS.ACC,
     remark: '-1.64%',
     data_b: '98',
     data_m: '.36%',
     data_a: '',
-    color_remark: '#aaa',
+    bar_color: '#fff',
     bar_progress: 1,
     bar_min: 120,
     bar_mid: 180,
@@ -827,21 +833,25 @@ export async function label_E5(data = {
     const reg_icon = /(?<=<g id="Icon_LE5">)/;
 
     // 文字的 <path>
-    //原来是 x=50，感觉位置怪怪的
-    const icon_title = poppinsBold.getTextPath(data.icon_title, 25, 65, 16, 'center baseline', '#fff');
+    // 原来是 16，感觉太大了，length 会超出
+    const icon_title = poppinsBold.getTextPath(data.icon_title, 25, 65, 14, 'center baseline', '#fff');
 
+    const number_color = data?.bar_progress == null ? '#666' : '#fff';
     const number_arr = [{
         font: "poppinsBold",
         text: data?.data_b || 0,
         size: 36,
+        color: number_color,
     }, {
         font: "poppinsBold",
         text: (data?.data_m + ' ') || 0,
         size: 24,
+        color: number_color,
     }, {
         font: "poppinsBold",
         text: data?.data_a || 0,
         size: 16,
+        color: number_color,
     }]
 
     const number_data = getMultipleTextPath(number_arr, 55, 32, "left baseline")
@@ -852,17 +862,18 @@ export async function label_E5(data = {
         <g id="Text_LE5">
         </g>
     `;
-    const remark = poppinsBold.getTextPath(data?.remark, 215, 32, 16, "right baseline", '#666');
 
-    const bar_min = poppinsBold.getTextPath(data?.bar_min, 55, 65, 16, "left baseline", '#666');
-    const bar_mid = poppinsBold.getTextPath(data?.bar_mid, 135, 65, 16, "center baseline", '#666');
-    const bar_max = poppinsBold.getTextPath(data?.bar_max, 215, 65, 16, "right baseline", '#666');
+    // 原来是 16，感觉太大了
+    const remark = poppinsBold.getTextPath(data?.remark, 215, 32, 14, "right baseline", '#666');
 
-    const progress = data?.bar_progress || 0.1;
-    const bar_width = progress <= 0 ? 0 : Math.max(10, progress * 160);
+    const bar_min = poppinsBold.getTextPath(data?.bar_min, 55, 65, 14, "left baseline", '#666');
+    const bar_mid = poppinsBold.getTextPath(data?.bar_mid, 135, 65, 14, "center baseline", '#666');
+    const bar_max = poppinsBold.getTextPath(data?.bar_max, 215, 65, 14, "right baseline", '#666');
 
-    const bar = PanelDraw.Rect(55, 38, bar_width, 10, 5, '#A864A8')
-    const bar_base = PanelDraw.Rect(55, 38, 160, 10, 5, '#A864A8', 0.2)
+    const bar_width = data?.bar_progress == null ? 0 : Math.max(10, data?.bar_progress * 160);
+
+    const bar = PanelDraw.Rect(55, 38, bar_width, 10, 5, data?.bar_color || '#fff')
+    const bar_base = PanelDraw.Rect(55, 38, 160, 10, 5, data?.bar_color || '#fff', 0.2)
 
     svg = replaceTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
     svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)

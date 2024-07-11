@@ -161,8 +161,14 @@ export const getApproximateRank = (score = {
  * @param ranked
  * @return {boolean} 谱面是否有榜
  */
-export const hasLeaderBoard = (ranked = 0) => {
-    return (typeof ranked === "number") && (ranked === 1 || ranked === 2 || ranked === 4);
+export const hasLeaderBoard = (ranked) => {
+    if (typeof ranked === "number") {
+        return (ranked === 1 || ranked === 2 || ranked === 4);
+    } else if (typeof ranked === "string") {
+        return (ranked === 'qualified' || ranked === 'ranked' || ranked === 'loved');
+    } else {
+        return false;
+    }
 }
 
 // 获取评级背景。把 S+ 和 X+ 统一一下。

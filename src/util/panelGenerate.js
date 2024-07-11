@@ -10,7 +10,7 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage, getAvatar, getBanner, getCover,
+    readNetImage, getAvatar, getBanner, getMapCover,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, getApproximateStarRating, hasLeaderBoard, rankSS2X} from "./star.js";
@@ -435,7 +435,7 @@ export const PanelGenerate = {
         const submitted_date = s.submitted_date || '';
         const ranked = s?.ranked || -2;
 
-        const background = await getCover(s?.covers['list@2x'], hasLeaderBoard(ranked));
+        const background = await getMapCover(s?.covers['list@2x'], hasLeaderBoard(ranked));
         const map_status = s?.status || 'graveyard';
 
         const isQualified = ranked === 3;
