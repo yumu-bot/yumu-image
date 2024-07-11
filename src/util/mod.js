@@ -41,7 +41,7 @@ const ModBonusSTD = {
     "NM": 1,
     "NF": 0.5,
     "EZ": 0.5,
-    "NV": 1,
+    "TD": 1,
     "HD": 1.06,
     "HR": 1.06,
     "SD": 1,
@@ -60,7 +60,7 @@ const ModBonusTAIKO = {
     "NM": 1,
     "NF": 0.5,
     "EZ": 0.5,
-    "NV": 1,
+    "TD": 1,
     "HD": 1.06,
     "HR": 1.06,
     "SD": 1,
@@ -79,7 +79,7 @@ const ModBonusCATCH = {
     "NM": 1,
     "NF": 0.5,
     "EZ": 0.5,
-    "NV": 1,
+    "TD": 1,
     "HD": 1.06,
     "HR": 1.12,
     "SD": 1,
@@ -98,7 +98,7 @@ const ModBonusMANIA = {
     "NM": 1,
     "NF": 0.5,
     "EZ": 0.5,
-    "NV": 1,
+    "TD": 1,
     "HD": 1,
     "HR": 1,
     "SD": 1,
@@ -231,7 +231,7 @@ export function delMod(modInt = 0, mod = '') {
 }
 
 //计算近似V3分数，奖励分没法算
-export function getV3Score(acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gamemode = 'osu', miss = 0) {
+export function getV3Score(acc = 0.0, combo = 1, max_combo = 1, mods = [''], gamemode = 'osu', miss = 0) {
 
     let score;
     let mode = getGameMode(gamemode, 1);
@@ -270,12 +270,12 @@ export function getV3Score(acc = 0.0, combo = 1, maxcombo = 1, mods = [''], game
     }
 
     //主计算
-    let minBreakCount = Math.max(Math.floor(maxcombo / combo), 1); //理论上最少的连击中断次数
-    let minComboLeft = Math.max(maxcombo - minBreakCount * combo, 0); // 理论上最少的剩余连击
+    let minBreakCount = Math.max(Math.floor(max_combo / combo), 1); //理论上最少的连击中断次数
+    let minComboLeft = Math.max(max_combo - minBreakCount * combo, 0); // 理论上最少的剩余连击
     let minMissCount = Math.max(Math.floor(miss / minBreakCount), 0); // 理论上最少的失误平均
     let minMissLeft = Math.max(miss - minMissCount * minBreakCount, 0); // 理论上最少的剩余失误
 
-    let maxMapComboSum = getComboSum(maxcombo, mode); //理论上最大的连击除数
+    let maxMapComboSum = getComboSum(max_combo, mode); //理论上最大的连击除数
     let maxPlayerComboSum = getComboSum((combo - minMissCount), mode) * minBreakCount + getComboSum((minComboLeft - minMissLeft), mode);// 理论上玩家得到的连击被除数
 
     score = Math.floor(multiplier * (accScore * Math.pow(acc, accIndex) + (comboScore * maxPlayerComboSum / maxMapComboSum)));
