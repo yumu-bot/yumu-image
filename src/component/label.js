@@ -854,7 +854,7 @@ export function label_E5(data = {
         color: number_color,
     }]
 
-    const number_data = getMultipleTextPath(number_arr, 55, 32, "left baseline")
+    const number_data = getMultipleTextPath(number_arr, 61, 32, "left baseline")
 
     let svg = `
         <g id="Icon_LE5">
@@ -866,14 +866,14 @@ export function label_E5(data = {
     // 原来是 16，感觉太大了
     const remark = poppinsBold.getTextPath(data?.remark, 215, 32, 14, "right baseline", '#666');
 
-    const bar_min = poppinsBold.getTextPath(data?.bar_min, 55, 65, 14, "left baseline", '#666');
-    const bar_mid = poppinsBold.getTextPath(data?.bar_mid, 135, 65, 14, "center baseline", '#666');
+    const bar_min = poppinsBold.getTextPath(data?.bar_min, 61, 65, 14, "left baseline", '#666');
+    const bar_mid = poppinsBold.getTextPath(data?.bar_mid, 138, 65, 14, "center baseline", '#666');
     const bar_max = poppinsBold.getTextPath(data?.bar_max, 215, 65, 14, "right baseline", '#666');
 
-    const bar_width = data?.bar_progress == null ? 0 : Math.max(10, data?.bar_progress * 160);
+    const bar_width = data?.bar_progress == null ? 0 : Math.max(10, data?.bar_progress * 154);
 
-    const bar = PanelDraw.Rect(55, 38, bar_width, 10, 5, data?.bar_color || '#fff')
-    const bar_base = PanelDraw.Rect(55, 38, 160, 10, 5, data?.bar_color || '#fff', 0.2)
+    const bar = PanelDraw.Rect(61, 38, bar_width, 10, 5, data?.bar_color || '#fff')
+    const bar_base = PanelDraw.Rect(61, 38, 154, 10, 5, data?.bar_color || '#fff', 0.2)
 
     svg = replaceTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
     svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
