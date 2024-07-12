@@ -511,12 +511,15 @@ const component_E7 = (
     data = {
         pp: 0,
         full_pp: 0,
+        perfect_pp: 0,
 
         aim_pp: 0,
         spd_pp: 0,
         acc_pp: 0,
         fl_pp:  0,
         diff_pp: 0,
+
+        is_fc: true,
 
         mode: 'osu',
     }) => {
@@ -594,14 +597,41 @@ const component_E7 = (
     const reg_clip5 = /(?<=<clipPath id="clippath-OE7-5">)/;
     const reg_clip6 = /(?<=<clipPath id="clippath-OE7-6">)/; //181,100,217 | 238,96,156
 
-    const pp = Math.round(data?.pp || 0);
-    const pp_percent = (data?.full_pp > 0) ? Math.round((data?.pp || 0) / data?.full_pp * 100) : 0
-    const full_pp_text = ' / ' + Math.round(data?.full_pp || 0) + ' PP [' + pp_percent + '%]';
+    const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 0;
+    const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 0;
+
+    const is_fc = data?.is_fc &&
+        (460 - poppinsBold.getTextWidth(data?.perfect_pp || '', 24) - 30) > (460 * (1 - fc_percent))
+
+    let reference_pp; // 参考 PP，有时是 FC PP，有时是 SS PP
+
+    let percent;
+    let reference_pp_text;
+    let fc_pp_text;
+    let percent_type;
+
+    if (is_fc) {
+        reference_pp = data?.perfect_pp;
+
+        percent = pf_percent;
+        percent_type = 'SS'
+        fc_pp_text = '';
+    } else {
+        reference_pp = data?.full_pp;
+
+        percent = fc_percent;
+        percent_type = 'FC'
+        fc_pp_text = Math.round(data?.perfect_pp || 0);
+    }
+
+    reference_pp_text = ' / ' + Math.round(reference_pp) + ' ' + percent_type +' [' + Math.round(percent * 100) + '%]';
+
+    const fc_pp = poppinsBold.getTextPath(fc_pp_text, 475 - 15, 128, 24, 'right baseline', '#fff')
 
     const text_arr = [
         {
             font: "poppinsBold",
-            text: pp,
+            text: Math.round(data?.pp || 0),
             size: 84,
             color: '#fff',
         },
@@ -613,7 +643,7 @@ const component_E7 = (
         },
         {
             font: "poppinsBold",
-            text: full_pp_text,
+            text: reference_pp_text,
             size: 24,
             color: '#fff',
         },
@@ -674,7 +704,7 @@ const component_E7 = (
     const pp_rect = PanelDraw.Rect(18, 105, pp_width, 30, 15);
     svg = replaceText(svg, pp_rect, reg_clip6);
 
-    svg = replaceTexts(svg, [texts, title], reg_text);
+    svg = replaceTexts(svg, [texts, title, fc_pp], reg_text);
 
     return svg;
 
@@ -998,15 +1028,22 @@ const PanelEGenerate = {
     },
 
     score2componentE7: (score, attr) => {
+        const is_fc = (score?.max_combo / score?.beatmap?.max_combo) > 0.98
+            || getGameMode(score?.mode, 1) === 'm'
+            || getGameMode(score?.mode, 1) === 't'
+
         return {
             pp: score?.pp || 0,
             full_pp: attr?.full_pp || 0,
+            perfect_pp: attr?.perfect_pp || 0,
 
             aim_pp: attr?.aim_pp || 0,
             spd_pp: attr?.spd_pp || 0,
             acc_pp: attr?.acc_pp || 0,
             fl_pp: attr?.fl_pp || 0,
             diff_pp: attr?.diff_pp || 0,
+
+            is_fc: is_fc,
 
             mode: score?.mode,
         }
