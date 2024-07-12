@@ -1011,7 +1011,7 @@ const PanelEGenerate = {
 
     score2componentE8: (score) => {
         const s = score?.score || 0
-        const score_v3 = s < 0 ? getV3Score(score?.accuracy, score?.combo, score?.beatmap?.max_combo, score?.mods, score?.mode, score?.statistics?.count_miss) : s;
+        const score_v3 = (s > 0) ? s : getV3Score(score?.accuracy, score?.combo, score?.beatmap?.max_combo, score?.mods, score?.mode, score?.statistics?.count_miss);
 
         return {
             score: score_v3,
