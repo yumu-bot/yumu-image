@@ -330,6 +330,7 @@ const component_E2 = (
         fail_arr: [],
 
         public_rating: 0,
+        star: 0,
 
         pass: 0,
         play: 0,
@@ -483,7 +484,7 @@ const component_E6 = async (
     const reg_base = /(?<=<g id="Base_OE6">)/;
 
     const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi",
-        data?.title || '', data?.title_unicode || '', 780 / 2, 50, 90, 48, 24, 780 - 20);
+        data?.title || '', data?.title_unicode || '', 780 / 2, 55, 100, 48, 24, 780 - 20);
 
     const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
         780 - 40 - 20
@@ -901,6 +902,8 @@ const PanelEGenerate = {
             density_arr: density,
             retry_arr: score?.beatmap?.retryList || [],
             fail_arr: score?.beatmap?.failList || [],
+
+            star: score?.beatmap?.difficulty_rating || 0,
 
             public_rating: score?.beatmap?.beatmapset?.publicRating,
 
