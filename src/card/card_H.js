@@ -156,8 +156,8 @@ export async function card_H(data = {
     svg = replaceTexts(svg, [title, title2, left1, left2], reg_text);
 
     // 插入图片
-    svg = data.cover ? implantImage(svg, 176,110,20,0,1, data.cover, reg_avatar) : svg;
-    svg = data.background ? implantImage(svg,900,110,0,0,0.3, data.background, reg_background) : svg;
+    svg = data.cover ? implantImage(svg, 176, 110, 20, 0, 1, data.cover, reg_avatar) : svg;
+    svg = data.background ? implantImage(svg,900, 110, 0, 0, 0.2, data.background, reg_background) : svg;
 
     return svg.toString();
 }

@@ -408,7 +408,7 @@ export async function panel_B3(data = {
     }
 
     // 清算
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
+    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
 
     // A2定义
     svg = implantSvgBody(svg, 40, 40, card_left, reg_maincard);

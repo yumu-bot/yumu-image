@@ -235,8 +235,8 @@ export async function panel_E5(data = {
     svg = implantSvgBody(svg, 1390, 770, componentE10, reg_card_e3);
 
     // 导入图片
-    svg = implantImage(svg, 1920, 1080, 0, 0, 0.4, background, reg_background);
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
+    svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
+    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
 
     return svg.toString();
 }
@@ -500,7 +500,7 @@ const component_E6 = async (
     const rect = PanelDraw.Rect(0, 0, 780, 160, 20, '#382e32', 1);
 
     svg = replaceTexts(svg, [t.title, t.title_unicode, bid, sid, diff], reg_label);
-    svg = implantImage(svg, 780, 160, 0, 0, 0.4, background, reg_background);
+    svg = implantImage(svg, 780, 160, 0, 0, 0.6, background, reg_background);
     svg = replaceText(svg, rect, reg_base);
 
     return svg;

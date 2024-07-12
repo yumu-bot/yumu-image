@@ -111,8 +111,8 @@ export async function panel_E3(data = {
     const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked));
 
     // 导入图片
-    svg = implantImage(svg, 1920, 1080, 0, 0, 0.8, background, reg_background);
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
+    svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
+    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
 
     return svg.toString();
 }

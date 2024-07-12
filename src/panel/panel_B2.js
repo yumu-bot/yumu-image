@@ -95,7 +95,7 @@ export async function panel_B2(data = {
 
     // 插入图片和部件（新方法
     const banner = await getMapBG(data.beatMap.beatmapset.id, 'cover', hasLeaderBoard(data.beatMap.ranked));
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
+    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
 
     // 面板文字
     const panel_name = getPanelNameSVG('Map Minus v0.7 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.4.0 UU');
