@@ -692,7 +692,7 @@ const component_E7 = (
     }
 
     function isTextShown(font = 'poppinsBold', child_pp = 0, size = 24, max_width = 0, interval = 0) {
-        return child_pp > 0 && (max_width + 2 * interval >= getTextWidth(font, child_pp.toString(), size));
+        return child_pp > 0 && (max_width - 2 * interval >= getTextWidth(font, child_pp.toString(), size));
     }
 };
 
