@@ -600,8 +600,11 @@ const component_E7 = (
     const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 0;
     const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 0;
 
-    const is_fc = data?.is_fc &&
-        (460 - poppinsBold.getTextWidth(data?.perfect_pp || '', 24) - 30) > (460 * (1 - fc_percent))
+    let is_fc = data?.is_fc;
+
+    const over = 460 - poppinsBold.getTextWidth(Math.round(data?.perfect_pp || 0), 24) - 30 < (460 * fc_percent);
+    if (over) is_fc = true;
+
 
     let reference_pp; // 参考 PP，有时是 FC PP，有时是 SS PP
 
@@ -657,10 +660,10 @@ const component_E7 = (
         case 'o': {
             const sum = data?.aim_pp + data?.spd_pp + data?.acc_pp + data?.fl_pp || 0;
 
-            const aim_width = getChildPPWidth(data?.aim_pp, sum, data?.pp, data?.full_pp);
-            const spd_width = getChildPPWidth(data?.spd_pp, sum, data?.pp, data?.full_pp);
-            const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, data?.full_pp);
-            const fl_width = getChildPPWidth(data?.fl_pp, sum, data?.pp, data?.full_pp);
+            const aim_width = getChildPPWidth(data?.aim_pp, sum, data?.pp, reference_pp);
+            const spd_width = getChildPPWidth(data?.spd_pp, sum, data?.pp, reference_pp);
+            const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
+            const fl_width = getChildPPWidth(data?.fl_pp, sum, data?.pp, reference_pp);
 
             const aim_rect = PanelDraw.Rect(18, 105, aim_width, 30, 15);
             const spd_rect = PanelDraw.Rect(18, 105, aim_width + spd_width, 30, 15);
@@ -683,8 +686,8 @@ const component_E7 = (
         case 't': {
             const sum = data?.diff_pp + data?.acc_pp || 0;
 
-            const diff_width = getChildPPWidth(data?.diff_pp, sum, data?.pp, data?.full_pp);
-            const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, data?.full_pp);
+            const diff_width = getChildPPWidth(data?.diff_pp, sum, data?.pp, reference_pp);
+            const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
 
             const diff_rect = PanelDraw.Rect(18, 105, diff_width, 30, 15);
             const acc_rect = PanelDraw.Rect(18, 105, diff_width + acc_width, 30, 15);
@@ -700,7 +703,7 @@ const component_E7 = (
     }
 
     // 保底 PP
-    const pp_width = (data?.pp > 0 && data?.full_pp > 0) ? ((data?.pp / data?.full_pp) * 460) : 0;
+    const pp_width = (data?.pp > 0) ? ((data?.pp / reference_pp) * 460) : 0;
     const pp_rect = PanelDraw.Rect(18, 105, pp_width, 30, 15);
     svg = replaceText(svg, pp_rect, reg_clip6);
 
