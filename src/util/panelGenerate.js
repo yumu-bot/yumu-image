@@ -339,7 +339,6 @@ export const PanelGenerate = {
 
     matchBeatMap2CardA2: async (b = {}) => {
         const background = await readNetImage(b?.beatmapset?.covers['cover@2x'], true);
-        console.log(b)
 
         const title1 = b?.beatmapset?.title || 'Deleted Beatmap';
         const title2 = b?.beatmapset?.artist || '-';
