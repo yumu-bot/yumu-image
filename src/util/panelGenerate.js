@@ -251,20 +251,20 @@ export const PanelGenerate = {
         };
     },
 
-    beatmap2CardA2: async (beatmap) => {
-        const background = await getMapBG(beatmap.beatmapset.id, 'list@2x', hasLeaderBoard(beatmap.ranked));
-        const map_status = beatmap.status;
-        const title1 = beatmap.beatmapset.title;
-        const title2 = beatmap.beatmapset.artist;
-        const title3 = beatmap.version;
+    beatMap2CardA2: async (b) => {
+        const background = await getMapBG(b.beatmapset.id, 'list@2x', hasLeaderBoard(b.ranked));
+        const map_status = b.status;
+        const title1 = b.beatmapset.title;
+        const title2 = b.beatmapset.artist;
+        const title3 = b.version;
         const title_font = torus;
         const left1 = '';
-        const left2 = beatmap.beatmapset.creator;
-        const left3 = beatmap.id ? 'B' + beatmap.id : 'B0';
+        const left2 = b.beatmapset.creator;
+        const left3 = b.id ? 'B' + b.id : 'B0';
         const right1 = '';
-        const right2 = getBeatmapStats(beatmap);
-        const right3b = getDecimals(beatmap.difficulty_rating, 2);
-        const right3m = getDecimals(beatmap.difficulty_rating, 3) + '*';
+        const right2 = getBeatmapStats(b);
+        const right3b = getDecimals(b.difficulty_rating, 2);
+        const right3m = getDecimals(b.difficulty_rating, 3) + '*';
 
         function getBeatmapStats(beatmap) {
             const cs = Math.round(beatmap.cs * 10) / 10;
@@ -303,7 +303,6 @@ export const PanelGenerate = {
     },
 
 
-
     beatMapSet2CardA2: async (s) => {
         const background = await readNetImage(s?.covers?.cover, hasLeaderBoard(s?.ranked));
         const map_status = s?.status;
@@ -338,8 +337,9 @@ export const PanelGenerate = {
         };
     },
 
-    matchBeatmap2CardA2: async (b = {}) => {
+    matchBeatMap2CardA2: async (b = {}) => {
         const background = await readNetImage(b?.beatmapset?.covers['cover@2x'], true);
+        console.log(b)
 
         const title1 = b?.beatmapset?.title || 'Deleted Beatmap';
         const title2 = b?.beatmapset?.artist || '-';

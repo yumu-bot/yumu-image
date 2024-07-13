@@ -484,7 +484,7 @@ const component_E6 = async (
     const reg_base = /(?<=<g id="Base_OE6">)/;
 
     const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi",
-        data?.title || '', data?.title_unicode || '', 780 / 2, 55, 100, 48, 24, 780 - 20);
+        data?.title || '', data?.title_unicode || '', 780 / 2, 55, 98, 48, 24, 780 - 20);
 
     const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
         780 - 40 - 20

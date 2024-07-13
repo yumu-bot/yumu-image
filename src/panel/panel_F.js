@@ -332,7 +332,7 @@ export async function panel_F(data = {
     let background_height = panel_height - 290;
 
     for (const i in beatmap_arr) {
-        const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap_arr[i]));
+        const b = await card_A2(await PanelGenerate.matchBeatMap2CardA2(beatmap_arr[i]));
         svg = implantSvgBody(svg, 40, 330 + i * 250, b, reg_card_a2);
     }
 

@@ -111,7 +111,7 @@ export async function panel_B2(data = {
 
     // A2定义
 
-    const cardA2 = await card_A2(await PanelGenerate.beatmap2CardA2(data.beatMap));
+    const cardA2 = await card_A2(await PanelGenerate.beatMap2CardA2(data.beatMap));
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 获取卡片

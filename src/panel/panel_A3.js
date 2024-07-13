@@ -263,7 +263,7 @@ export async function panel_A3(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    const beatmap_generated = await PanelGenerate.beatmap2CardA2(data.beatmap);
+    const beatmap_generated = await PanelGenerate.beatMap2CardA2(data.beatmap);
     const beatmap_a2 = await card_A2(beatmap_generated);
     svg = implantSvgBody(svg, 40, 40, beatmap_a2, reg_beatmap_a2);
 

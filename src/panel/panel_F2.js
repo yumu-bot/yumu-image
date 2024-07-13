@@ -183,7 +183,7 @@ export async function panel_F2(data = {}) {
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
-    const b = await card_A2(await PanelGenerate.matchBeatmap2CardA2(beatmap));
+    const b = await card_A2(await PanelGenerate.matchBeatMap2CardA2(beatmap));
     svg = implantSvgBody(svg, 1450, 40, b, reg_maincard);
 
 
