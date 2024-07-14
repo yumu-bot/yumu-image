@@ -37,7 +37,7 @@ export function getMultipleTextPath(array = [{
         const v = array[i];
 
         const font = v.font;
-        const text = v?.text || '';
+        const text = v.text;
         const size = v?.size || 24;
 
         const width = getTextWidth(font, text, size);
@@ -57,7 +57,7 @@ export function getMultipleTextPath(array = [{
         const w = width_array[i];
 
         const font = v.font;
-        const text = v?.text || '';
+        const text = v.text;
         const size = v?.size || 24;
         const color = v?.color || '#fff';
 
