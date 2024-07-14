@@ -839,17 +839,17 @@ export function label_E5(data = {
     const number_color = data?.bar_progress == null ? '#666' : '#fff';
     const number_arr = [{
         font: "poppinsBold",
-        text: data?.data_b || 0,
+        text: data?.data_b || '',
         size: 36,
         color: number_color,
     }, {
         font: "poppinsBold",
-        text: (data?.data_m + ' ') || 0,
+        text: (data?.data_m || '') + ' ',
         size: 24,
         color: number_color,
     }, {
         font: "poppinsBold",
-        text: data?.data_a || 0,
+        text: data?.data_a || '',
         size: 16,
         color: number_color,
     }]
