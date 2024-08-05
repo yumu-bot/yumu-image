@@ -488,19 +488,19 @@ const component_E6 = async (
 
     const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
         780 - 40 - 20
+        - poppinsBold.getTextWidth(data?.beatmapset?.creator || '', 24)
         - poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)
-        - poppinsBold.getTextWidth('s' + (data?.sid || 0), 24)
         , true)
 
     const diff = poppinsBold.getTextPath(diff_text, 780 / 2, 142, 30, 'center baseline', '#fff');
-    const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 20, 142, 24, 'left baseline', '#fff');
-    const sid = poppinsBold.getTextPath('s' + (data?.sid || 0), 780 - 20, 142, 24, 'right baseline', '#fff');
+    const creator = poppinsBold.getTextPath(data?.beatmapset?.creator || '', 20, 142, 24, 'left baseline', '#fff');
+    const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 780 - 20, 142, 24, 'right baseline', '#fff');
 
     const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status));
 
-    const rect = PanelDraw.Rect(0, 0, 780, 160, 20, '#382e32', 1);
+    const rect = PanelDraw.Rect(0, 0, 780, 1060, 20, '#382e32', 1);
 
-    svg = replaceTexts(svg, [t.title, t.title_unicode, bid, sid, diff], reg_label);
+    svg = replaceTexts(svg, [t.title, t.title_unicode, bid, creator, diff], reg_label);
     svg = implantImage(svg, 780, 160, 0, 0, 0.6, background, reg_background);
     svg = replaceText(svg, rect, reg_base);
 
@@ -720,12 +720,23 @@ const component_E7 = (
     }
 
     function getChildPPPath(child_pp = 0, x = 0, y = 0, size = 24, width = 30, max_width = 30, interval = 0) {
-        return isTextShown('poppinsBold', child_pp, size, width, interval) ?
-            poppinsBold.getTextPath(child_pp, x + width - interval, y, size, 'right baseline', '#382c32') : '';
+        const shown = isTextShown('poppinsBold', child_pp, size, width, interval);
+        const slight = isTextSlightlyWider('poppinsBold', child_pp, size, width, interval);
+
+
+        return shown ?
+            poppinsBold.getTextPath(child_pp, x + width - interval, y, size, 'right baseline', '#382c32') : 
+            (slight ? poppinsBold.getTextPath(child_pp, x + 1/2 * width, y, size, 'center baseline', '#382c32') : '');
     }
 
+    // 宽度大于最大宽 + 2x 间距
     function isTextShown(font = 'poppinsBold', child_pp = 0, size = 24, max_width = 0, interval = 0) {
         return child_pp > 0 && (max_width - 2 * interval >= getTextWidth(font, child_pp.toString(), size));
+    }
+
+    // 宽度大于最大宽 + 1/4x 间距
+    function isTextSlightlyWider(font = 'poppinsBold', child_pp = 0, size = 24, max_width = 0, interval = 0) {
+        return child_pp > 0 && (max_width - 1/4 * interval >= getTextWidth(font, child_pp.toString(), size));
     }
 };
 
