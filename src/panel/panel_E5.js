@@ -1038,7 +1038,7 @@ const PanelEGenerate = {
             difficulty_name: score?.beatmap?.version || '',
             bid: score?.beatmap?.id || 0,
             sid: score?.beatmapset?.id || 0,
-            creator: score?.beatmap?.creator || '',
+            creator: score?.beatmapset?.creator || '',
             status: score?.beatmap?.status || 'pending',
         }
     },
