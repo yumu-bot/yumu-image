@@ -727,7 +727,7 @@ const component_E7 = (
 
         return shown ?
             poppinsBold.getTextPath(child_pp.toString(), x + width - interval, y, size, 'right baseline', '#382c32') : 
-            (slight ? poppinsBold.getTextPath(child_pp.toString(), x + 1/2 * width, y, size, 'center baseline', '#382c32') : '');
+            (slight ? poppinsBold.getTextPath(child_pp.toString(), x + 1/2 * interval + 1/2 * width, y, size, 'center baseline', '#382c32') : '');
     }
 
     // 宽度大于最大宽 + 2x 间距
@@ -735,9 +735,9 @@ const component_E7 = (
         return child_pp > 0 && (max_width - 2 * interval >= getTextWidth(font, child_pp.toString(), size));
     }
 
-    // 宽度大于最大宽 + 1/4x 间距
+    // 宽度大于最大宽 + 1/2x 间距
     function isTextSlightlyWider(font = 'poppinsBold', child_pp = 0, size = 24, max_width = 0, interval = 0) {
-        return child_pp > 0 && (max_width - 1/4 * interval >= getTextWidth(font, child_pp.toString(), size));
+        return child_pp > 0 && (max_width - 1/2 * interval >= getTextWidth(font, child_pp.toString(), size));
     }
 };
 
