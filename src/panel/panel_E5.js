@@ -462,6 +462,7 @@ const component_E6 = async (
         title: '',
         title_unicode: '',
         difficulty_name: '',
+        creator: '',
         bid: 0,
         sid: 0,
         status: 'pending',
@@ -488,12 +489,12 @@ const component_E6 = async (
 
     const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
         780 - 40 - 20
-        - poppinsBold.getTextWidth(data?.beatmapset?.creator || '', 24)
+        - poppinsBold.getTextWidth(data?.creator || '', 24)
         - poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)
         , true)
 
     const diff = poppinsBold.getTextPath(diff_text, 780 / 2, 142, 30, 'center baseline', '#fff');
-    const creator = poppinsBold.getTextPath(data?.beatmapset?.creator || '', 20, 142, 24, 'left baseline', '#fff');
+    const creator = poppinsBold.getTextPath(data?.creator || '', 20, 142, 24, 'left baseline', '#fff');
     const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 780 - 20, 142, 24, 'right baseline', '#fff');
 
     const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status));
@@ -1037,6 +1038,7 @@ const PanelEGenerate = {
             difficulty_name: score?.beatmap?.version || '',
             bid: score?.beatmap?.id || 0,
             sid: score?.beatmapset?.id || 0,
+            creator: score?.beatmap?.creator || '',
             status: score?.beatmap?.status || 'pending',
         }
     },
