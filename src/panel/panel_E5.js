@@ -461,6 +461,7 @@ const component_E6 = async (
     data = {
         title: '',
         title_unicode: '',
+        artist: '',
         difficulty_name: '',
         creator: '',
         bid: 0,
@@ -485,7 +486,7 @@ const component_E6 = async (
     const reg_base = /(?<=<g id="Base_OE6">)/;
 
     const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi",
-        data?.title || '', data?.title_unicode || '', 780 / 2, 55, 98, 48, 24, 780 - 20);
+        data?.title || '', data?.title_unicode || '', data?.artist || '', 780 / 2, 55, 98, 48, 24, 780 - 20);
 
     const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
         780 - 40 - 20
@@ -1035,6 +1036,7 @@ const PanelEGenerate = {
         return {
             title: score?.beatmapset?.title || '',
             title_unicode: score?.beatmapset?.title_unicode || '',
+            artist: score?.beatmapset?.artist || '',
             difficulty_name: score?.beatmap?.version || '',
             bid: score?.beatmap?.id || 0,
             sid: score?.beatmapset?.id || 0,

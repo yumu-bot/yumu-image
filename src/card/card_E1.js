@@ -90,7 +90,7 @@ export async function card_E1(data = {
         getRoundedNumberStr((data.play_count), 2)
         , 845, 90.84, 24, "right baseline", "#fff");
 
-    const title = getBeatMapTitlePath("torus", "PuHuiTi", data.title, data.title_unicode,
+    const title = getBeatMapTitlePath("torus", "PuHuiTi", data.title, data.title_unicode, null,
         440, 593.67, 641.6, 48, 36, 860, "center baseline", "#fff", "#fff"
     );
 

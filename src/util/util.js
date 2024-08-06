@@ -201,7 +201,7 @@ export function deleteBeatMapFromDatabase(bid) {
  * @param maximum_width
  * @return {title: ..., title_unicode: ...,}
  */
-export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '', title_unicode = '', x = 0, y = 0, y2 = 0, size = 36, size2 = 24, maximum_width = 780, anchor = "center baseline", color = "#fff", color2 = color) {
+export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '', title_unicode = '', artist = null, x = 0, y = 0, y2 = 0, size = 36, size2 = 24, maximum_width = 780, anchor = "center baseline", color = "#fff", color2 = color) {
 
     let title_text;
     let title_unicode_text;
@@ -212,7 +212,11 @@ export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '
         let title_exceed;
 
         if (title_cut.length === title.toString().length) {
-            title_exceed = '';
+            if (typeof artist === "string") {
+                title_exceed = '<' + artist + '>';
+            } else {
+                title_exceed = '';
+            }
         } else {
             title_exceed = title.toString().substring(title_cut.length);
         }
