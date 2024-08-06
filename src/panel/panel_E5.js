@@ -667,15 +667,15 @@ const component_E7 = (
             const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
             const fl_width = getChildPPWidth(data?.fl_pp, sum, data?.pp, reference_pp);
 
-            const aim_rect = PanelDraw.Rect(18, 105, aim_width, 30, 15);
-            const spd_rect = PanelDraw.Rect(18, 105, aim_width + spd_width, 30, 15);
-            const acc_rect = PanelDraw.Rect(18, 105, aim_width + spd_width + acc_width, 30, 15);
-            const fl_rect = PanelDraw.Rect(18, 105, aim_width + spd_width + acc_width + fl_width, 30, 15);
+            const aim_rect = PanelDraw.Rect(15, 105, aim_width, 30, 15);
+            const spd_rect = PanelDraw.Rect(15, 105, aim_width + spd_width, 30, 15);
+            const acc_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width, 30, 15);
+            const fl_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width + fl_width, 30, 15);
 
-            const aim_text = getChildPPPath(Math.round(data?.aim_pp), 20, 128, 24, aim_width, aim_width, 15);
-            const spd_text = getChildPPPath(Math.round(data?.spd_pp), 20, 128, 24, aim_width + spd_width, spd_width, 15);
-            const acc_text = getChildPPPath(Math.round(data?.acc_pp), 20, 128, 24, aim_width + spd_width + acc_width, acc_width, 15);
-            const fl_text = getChildPPPath(Math.round(data?.fl_pp), 20, 128, 24, aim_width + spd_width + acc_width + fl_width, fl_width, 15);
+            const aim_text = getChildPPPath(data?.aim_pp, 15, 128, 24, aim_width, aim_width, 10);
+            const spd_text = getChildPPPath(data?.spd_pp, 15, 128, 24, aim_width + spd_width, spd_width, 10);
+            const acc_text = getChildPPPath(data?.acc_pp, 15, 128, 24, aim_width + spd_width + acc_width, acc_width, 10);
+            const fl_text = getChildPPPath(data?.fl_pp, 15, 128, 24, aim_width + spd_width + acc_width + fl_width, fl_width, 10);
 
             svg = replaceText(svg, aim_rect, reg_clip2);
             svg = replaceText(svg, spd_rect, reg_clip3);
@@ -691,11 +691,11 @@ const component_E7 = (
             const diff_width = getChildPPWidth(data?.diff_pp, sum, data?.pp, reference_pp);
             const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
 
-            const diff_rect = PanelDraw.Rect(18, 105, diff_width, 30, 15);
-            const acc_rect = PanelDraw.Rect(18, 105, diff_width + acc_width, 30, 15);
+            const diff_rect = PanelDraw.Rect(15, 105, diff_width, 30, 15);
+            const acc_rect = PanelDraw.Rect(15, 105, diff_width + acc_width, 30, 15);
 
-            const diff_text = getChildPPPath(Math.round(data?.diff_pp), 20, 128, 24, diff_width, diff_width, 15);
-            const acc_text = getChildPPPath(Math.round(data?.acc_pp), 20, 128, 24, diff_width + acc_width, acc_width, 15);
+            const diff_text = getChildPPPath(data?.diff_pp, 15, 128, 24, diff_width, diff_width, 10);
+            const acc_text = getChildPPPath(data?.acc_pp, 15, 128, 24, diff_width + acc_width, acc_width, 10);
 
             svg = replaceText(svg, diff_rect, reg_clip3);
             svg = replaceText(svg, acc_rect, reg_clip4);
@@ -706,7 +706,7 @@ const component_E7 = (
 
     // 保底 PP
     const pp_width = (data?.pp > 0) ? ((data?.pp / reference_pp) * 460) : 0;
-    const pp_rect = PanelDraw.Rect(18, 105, pp_width, 30, 15);
+    const pp_rect = PanelDraw.Rect(15, 105, pp_width, 30, 15);
     svg = replaceText(svg, pp_rect, reg_clip6);
 
     svg = replaceTexts(svg, [texts, title, fc_pp], reg_text);
@@ -722,23 +722,23 @@ const component_E7 = (
     }
 
     function getChildPPPath(child_pp = 0, x = 0, y = 0, size = 24, width = 30, max_width = 30, interval = 0) {
-        const shown = isTextShown('poppinsBold', child_pp, size, width, interval);
-        const slight = isTextSlightlyWider('poppinsBold', child_pp, size, width, interval);
-
+        const pp_str = Math.round(child_pp).toString();
+        const shown = isTextShown('poppinsBold', child_pp, size, max_width, interval);
+        const slight = isTextSlightlyWider('poppinsBold', child_pp, size, max_width, interval);
 
         return shown ?
-            poppinsBold.getTextPath(child_pp.toString(), x + width - interval, y, size, 'right baseline', '#382c32') : 
-            (slight ? poppinsBold.getTextPath(child_pp.toString(), x + 1/2 * (width - getTextWidth('poppinsBold', child_pp.toString(), size)), y, size, 'center baseline', '#382c32') : '');
+            poppinsBold.getTextPath(pp_str, x + width - interval, y, size, 'right baseline', '#382c32') :
+            (slight ? poppinsBold.getTextPath(pp_str, x + width - (1/2 * max_width), y, size, 'center baseline', '#382c32') : '');
     }
 
     // 宽度大于最大宽 + 2x 间距
-    function isTextShown(font = 'poppinsBold', child_pp = 0, size = 24, max_width = 0, interval = 0) {
-        return child_pp > 0 && (max_width - 2 * interval >= getTextWidth(font, child_pp.toString(), size));
+    function isTextShown(font = 'poppinsBold', pp = 0, size = 24, max_width = 0, interval = 0) {
+        return typeof pp === "number" && max_width > 0 && (max_width - 2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
     }
 
     // 宽度大于最大宽 + 1/2x 间距
-    function isTextSlightlyWider(font = 'poppinsBold', child_pp = 0, size = 24, max_width = 0, interval = 0) {
-        return child_pp > 0 && (max_width - 1/2 * interval >= getTextWidth(font, child_pp.toString(), size));
+    function isTextSlightlyWider(font = 'poppinsBold', pp = 0, size = 24, max_width = 0, interval = 0) {
+        return typeof pp === "number" && max_width > 0 && (max_width - 1/2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
     }
 };
 
