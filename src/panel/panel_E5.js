@@ -727,7 +727,7 @@ const component_E7 = (
 
         return shown ?
             poppinsBold.getTextPath(child_pp.toString(), x + width - interval, y, size, 'right baseline', '#382c32') : 
-            (slight ? poppinsBold.getTextPath(child_pp.toString(), x + 1/2 * interval + 1/2 * width, y, size, 'center baseline', '#382c32') : '');
+            (slight ? poppinsBold.getTextPath(child_pp.toString(), x + 1/2 * (width - interval), y, size, 'center baseline', '#382c32') : '');
     }
 
     // 宽度大于最大宽 + 2x 间距
