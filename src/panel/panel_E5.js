@@ -499,7 +499,7 @@ const component_E6 = async (
 
     const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status));
 
-    const rect = PanelDraw.Rect(0, 0, 780, 1060, 20, '#382e32', 1);
+    const rect = PanelDraw.Rect(0, 0, 780, 160, 20, '#382e32', 1);
 
     svg = replaceTexts(svg, [t.title, t.title_unicode, bid, creator, diff], reg_label);
     svg = implantImage(svg, 780, 160, 0, 0, 0.6, background, reg_background);
