@@ -494,10 +494,11 @@ const component_E6 = async (
         data?.title || '', data?.title_unicode || '', data?.artist || '', 780 / 2, 55, 98, 48, 24, 780 - 20);
 
     const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
-        780 - 40 - 20
-        - poppinsBold.getTextWidth(data?.creator || '', 24)
-        - poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)
-        , true)
+        780 - 40 - 10
+        - 2 * Math.max(
+            poppinsBold.getTextWidth(data?.creator || '', 24),
+            poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)
+        ), true)
 
     const diff = poppinsBold.getTextPath(diff_text, 780 / 2, 142, 30, 'center baseline', '#fff');
     const creator = poppinsBold.getTextPath(data?.creator || '', 20, 142, 24, 'left baseline', '#fff');
