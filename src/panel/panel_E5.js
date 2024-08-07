@@ -552,16 +552,16 @@ const component_E7 = (
                 <stop offset="100%" style="stop-color:rgb(0,242,254); stop-opacity:1" />
             </linearGradient>
             <linearGradient id="grad-OE7-13" x1="0%" y1="0" x2="100%" y2="50%">
-                <stop offset="0%" style="stop-color:rgb(160,233,154); stop-opacity:1" />
+                <stop offset="0%" style="stop-color:rgb(94,220,91); stop-opacity:1" />
                 <stop offset="100%" style="stop-color:rgb(202,248,129); stop-opacity:1" />
             </linearGradient>
             <linearGradient id="grad-OE7-14" x1="0%" y1="0" x2="100%" y2="50%">
-                <stop offset="0%" style="stop-color:rgb(247,203,107); stop-opacity:1" />
+                <stop offset="0%" style="stop-color:rgb(252,172,70); stop-opacity:1" />
                 <stop offset="100%" style="stop-color:rgb(254,220,69); stop-opacity:1" />
             </linearGradient>
             <linearGradient id="grad-OE7-15" x1="0%" y1="50%" x2="100%" y2="50%">
-                <stop offset="0%" style="stop-color:rgb(216,92,109); stop-opacity:1" />
-                <stop offset="100%" style="stop-color:rgb(255,136,124); stop-opacity:1" />
+                <stop offset="0%" style="stop-color:rgb(231,72,138); stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgb(255,120,107); stop-opacity:1" />
             </linearGradient>
             <linearGradient id="grad-OE7-16" x1="0%" y1="50%" x2="100%" y2="50%">
                 <stop offset="0%" style="stop-color:rgb(79,172,254); stop-opacity:1" />
