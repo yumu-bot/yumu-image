@@ -533,19 +533,19 @@ const component_E7 = (
                 <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
             <clipPath id="clippath-OE7-2">
-            
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
             <clipPath id="clippath-OE7-3">
-            
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
             <clipPath id="clippath-OE7-4">
-            
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
             <clipPath id="clippath-OE7-5">
-            
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
             <clipPath id="clippath-OE7-6">
-            
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
             <linearGradient id="grad-OE7-12" x1="0%" y1="50%" x2="100%" y2="50%">
                 <stop offset="0%" style="stop-color:rgb(79,172,254); stop-opacity:1" />
@@ -574,30 +574,30 @@ const component_E7 = (
           </g>
           <g id="Rect_OE7">
             <g id="Clip_OE7-6" style="clip-path: url(#clippath-OE7-6);">
-              <rect x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: url(#grad-OE7-16); fill-opacity: 1"/>
+            
             </g>
             <g id="Clip_OE7-5" style="clip-path: url(#clippath-OE7-5);">
-              <rect x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: url(#grad-OE7-15); fill-opacity: 1"/>
+            
             </g>
             <g id="Clip_OE7-4" style="clip-path: url(#clippath-OE7-4);">
-              <rect x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: url(#grad-OE7-14); fill-opacity: 1"/>
+            
             </g>
             <g id="Clip_OE7-3" style="clip-path: url(#clippath-OE7-3);">
-              <rect x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: url(#grad-OE7-13); fill-opacity: 1"/>
+            
             </g>
             <g id="Clip_OE7-2" style="clip-path: url(#clippath-OE7-2);">
-              <rect x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: url(#grad-OE7-12); fill-opacity: 1"/>
+            
             </g>
           </g>
           <g id="Text_OE7">
           </g>`;
 
     const reg_text = /(?<=<g id="Text_OE7">)/;
-    const reg_clip2 = /(?<=<clipPath id="clippath-OE7-2">)/;
-    const reg_clip3 = /(?<=<clipPath id="clippath-OE7-3">)/;
-    const reg_clip4 = /(?<=<clipPath id="clippath-OE7-4">)/;
-    const reg_clip5 = /(?<=<clipPath id="clippath-OE7-5">)/;
-    const reg_clip6 = /(?<=<clipPath id="clippath-OE7-6">)/; //181,100,217 | 238,96,156
+    const reg_clip2 = /(?<=<g id="Clip_OE7-2" style="clip-path: url\(#clippath-OE7-2\);">)/;
+    const reg_clip3 = /(?<=<g id="Clip_OE7-3" style="clip-path: url\(#clippath-OE7-3\);">)/;
+    const reg_clip4 = /(?<=<g id="Clip_OE7-4" style="clip-path: url\(#clippath-OE7-4\);">)/;
+    const reg_clip5 = /(?<=<g id="Clip_OE7-5" style="clip-path: url\(#clippath-OE7-5\);">)/;
+    const reg_clip6 = /(?<=<g id="Clip_OE7-6" style="clip-path: url\(#clippath-OE7-6\);">)/; //181,100,217 | 238,96,156
 
     const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 0;
     const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 0;
@@ -667,10 +667,10 @@ const component_E7 = (
             const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
             const fl_width = getChildPPWidth(data?.fl_pp, sum, data?.pp, reference_pp);
 
-            const aim_rect = PanelDraw.Rect(15, 105, aim_width, 30, 15);
-            const spd_rect = PanelDraw.Rect(15, 105, aim_width + spd_width, 30, 15);
-            const acc_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width, 30, 15);
-            const fl_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width + fl_width, 30, 15);
+            const aim_rect = PanelDraw.Rect(15, 105, aim_width, 30, 15, "url(#grad-OE7-12)", 1);
+            const spd_rect = PanelDraw.Rect(15, 105, aim_width + spd_width, 30, 15, "url(#grad-OE7-13)", 1);
+            const acc_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width, 30, 15, "url(#grad-OE7-14)", 1);
+            const fl_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width + fl_width, 30, 15, "url(#grad-OE7-15)", 1);
 
             const aim_text = getChildPPPath(data?.aim_pp, 15, 128, 24, aim_width, aim_width, 10);
             const spd_text = getChildPPPath(data?.spd_pp, 15, 128, 24, aim_width + spd_width, spd_width, 10);
@@ -691,8 +691,8 @@ const component_E7 = (
             const diff_width = getChildPPWidth(data?.diff_pp, sum, data?.pp, reference_pp);
             const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
 
-            const diff_rect = PanelDraw.Rect(15, 105, diff_width, 30, 15);
-            const acc_rect = PanelDraw.Rect(15, 105, diff_width + acc_width, 30, 15);
+            const diff_rect = PanelDraw.Rect(15, 105, diff_width, 30, 15, "url(#grad-OE7-12)", 1);
+            const acc_rect = PanelDraw.Rect(15, 105, diff_width + acc_width, 30, 15, "url(#grad-OE7-13)", 1);
 
             const diff_text = getChildPPPath(data?.diff_pp, 15, 128, 24, diff_width, diff_width, 10);
             const acc_text = getChildPPPath(data?.acc_pp, 15, 128, 24, diff_width + acc_width, acc_width, 10);
@@ -706,7 +706,7 @@ const component_E7 = (
 
     // 保底 PP
     const pp_width = (data?.pp > 0) ? ((data?.pp / reference_pp) * 460) : 0;
-    const pp_rect = PanelDraw.Rect(15, 105, pp_width, 30, 15);
+    const pp_rect = PanelDraw.Rect(15, 105, pp_width, 30, 15, "url(#grad-OE7-16)", 1);
     svg = replaceText(svg, pp_rect, reg_clip6);
 
     svg = replaceTexts(svg, [texts, title, fc_pp], reg_text);
@@ -736,9 +736,9 @@ const component_E7 = (
         return typeof pp === "number" && max_width > 0 && (max_width - 2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
     }
 
-    // 宽度大于最大宽 + 1/2x 间距
+    // 宽度大于最大宽 - 1/2x 间距
     function isTextSlightlyWider(font = 'poppinsBold', pp = 0, size = 24, max_width = 0, interval = 0) {
-        return typeof pp === "number" && max_width > 0 && (max_width - 1/2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
+        return typeof pp === "number" && max_width > 0 && (max_width + 1/2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
     }
 };
 
@@ -923,6 +923,17 @@ const PanelEGenerate = {
                 else name = 'UNKNOWN';
                 break;
             }
+            case "m": {
+                if (sr < 0.1) name = 'NEW';
+                else if (sr < 2) name = 'EZ';
+                else if (sr < 2.8) name = 'NM';
+                else if (sr < 4) name = 'HD';
+                else if (sr < 5.3) name = 'MX';
+                else if (sr < 6.5) name = 'SC';
+                else if (sr >= 6.5) name = 'SHD';
+                else name = 'UNKNOWN';
+                break;
+            }
             default: {
                 if (sr < 0.1) name = 'NEW';
                 else if (sr < 2) name = 'EASY';
@@ -978,10 +989,51 @@ const PanelEGenerate = {
         let isDisplayAR = true;
         let isDisplayOD = true;
 
+        let cs_min = 2;
+        let cs_mid = 4;
+        let cs_max = 6;
+        let ar_min = 7.5;
+        let ar_mid = 9;
+        let ar_max = 10.5;
+        let od_min = 5.5;
+        let od_mid = 8;
+        let od_max = 10.5;
+        let hp_min = 4;
+        let hp_mid = 6;
+        let hp_max = 8;
+
         switch (mode) {
-            case 't' : isDisplayAR = false; isDisplayCS = false; break;
-            case 'c' : isDisplayOD = false; break;
-            case 'm' : isDisplayAR = false; break;
+            case 't' : {
+                cs_min = 0;
+                cs_mid = 0;
+                cs_max = 0;
+                ar_min = 0;
+                ar_mid = 0;
+                ar_max = 0;
+                od_min = 4;
+                od_mid = 6;
+                od_max = 8;
+                isDisplayAR = false;
+                isDisplayCS = false;
+            } break;
+            case 'c' : {
+                od_min = 0;
+                od_mid = 0;
+                od_max = 0;
+                isDisplayOD = false;
+            } break;
+            case 'm' : {
+                cs_min = 4;
+                cs_mid = 6;
+                cs_max = 8;
+                ar_min = 0;
+                ar_mid = 0;
+                ar_max = 0;
+                hp_min = 7;
+                hp_mid = 8.5;
+                hp_max = 10;
+                isDisplayAR = false;
+            } break;
         }
 
         return {
@@ -1002,19 +1054,31 @@ const PanelEGenerate = {
             },{
                 ...LABELS.CS,
                 ...stat2label(score?.beatmap?.cs, cs2px(score?.beatmap?.cs, mode),
-                    getProgress(score?.beatmap?.cs, 2, 6), original.cs, isDisplayCS),
+                    getProgress(score?.beatmap?.cs, cs_min, cs_max), original.cs, isDisplayCS),
+                bar_min: cs_min,
+                bar_mid: cs_mid,
+                bar_max: cs_max,
             },{
                 ...LABELS.AR,
                 ...stat2label(score?.beatmap?.ar, ar2ms(score?.beatmap?.ar, mode),
-                    getProgress(score?.beatmap?.ar, 7.5, 10.5), original.ar, isDisplayAR),
+                    getProgress(score?.beatmap?.ar, ar_min, ar_max), original.ar, isDisplayAR),
+                bar_min: ar_min,
+                bar_mid: ar_mid,
+                bar_max: ar_max,
             },{
                 ...LABELS.OD,
                 ...stat2label(score?.beatmap?.od, od2ms(score?.beatmap?.od, mode),
-                    getProgress(score?.beatmap?.od, 6, 10), original.od, isDisplayOD),
+                    getProgress(score?.beatmap?.od, od_min, od_max), original.od, isDisplayOD),
+                bar_min: od_min,
+                bar_mid: od_mid,
+                bar_max: od_max,
             },{
                 ...LABELS.HP,
                 ...stat2label(score?.beatmap?.hp, '-',
-                    getProgress(score?.beatmap?.hp, 4, 8), original.hp, true),
+                    getProgress(score?.beatmap?.hp, hp_min, hp_max), original.hp, true),
+                bar_min: hp_min,
+                bar_mid: hp_mid,
+                bar_max: hp_max,
             }]
         };
     },
