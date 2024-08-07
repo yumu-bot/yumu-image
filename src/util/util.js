@@ -410,13 +410,13 @@ export function replaceTexts(base = '', replaces = [''], reg = /.*/) {
     return base;
 }
 
-export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/) {
+export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/, ratio = "xMidYMid slice") {
     if (image != null) {
         if (x === 0 && y === 0) {
-            const replace = `<image width="${w}" height="${h}" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
+            const replace = `<image width="${w}" height="${h}" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
             return base.replace(reg, replace);
         } else {
-            const replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
+            const replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
             return base.replace(reg, replace);
         }
     } else {
