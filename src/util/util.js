@@ -261,6 +261,25 @@ export function isPictureIntacted(path = '') {
 }
 
 /**
+ * 判断文件大小
+ * @param path 本地文件路径
+ * @return {number|number} 文件 Byte，除以 1024 就是 KByte，不是 bit
+ */
+export function getFileSize(path = "") {
+    let size;
+    try {
+        fs.accessSync(path, fs.constants.F_OK);
+        size = fs.statSync(path).size;
+    } catch (e) {
+        // No Such File
+        return -1;
+    }
+
+    return size;
+}
+
+
+/**
  * 获取谱面 BG
  * @param {number} sid
  * @param {string} [cover]
@@ -1369,7 +1388,7 @@ export function getMatchNameSplitted(text = '') {
     return out;
 }
 
-export function base64Text2PngStr(buffer) {
+export function binary2Base64Text(buffer) {
     let data = Buffer.from(buffer, 'binary').toString('base64');
     return 'data:image/png;base64,' + data;
 }

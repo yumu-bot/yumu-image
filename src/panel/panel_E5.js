@@ -16,7 +16,7 @@ import {
     implantSvgBody,
     readTemplate,
     replaceText,
-    replaceTexts
+    replaceTexts, getFileSize
 } from "../util/util.js";
 import moment from "moment";
 import {getApproximateRank, getRankBG, hasLeaderBoard} from "../util/star.js";
@@ -236,7 +236,12 @@ export async function panel_E5(data = {
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
+
+    if (getFileSize(banner) / 1024 >= 120) {
+        svg = implantImage(svg, 1920, 330, 0, 200, 0.8, banner, reg_banner);
+    } else {
+        svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
+    }
 
     return svg.toString();
 }
