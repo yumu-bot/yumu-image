@@ -496,12 +496,14 @@ const component_E6 = async (
     const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
         820 - 40 - 10
         - 2 * Math.max(
-            poppinsBold.getTextWidth(data?.creator || '', 24),
+            poppinsBold.getTextWidth(poppinsBold.cutStringTail(data?.creator || '', 30, 240, true), 24),
             poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)
         ), true)
 
     const diff = poppinsBold.getTextPath(diff_text, 820 / 2, 142, 30, 'center baseline', '#fff');
-    const creator = poppinsBold.getTextPath(data?.creator || '', 20, 142, 24, 'left baseline', '#fff');
+    const creator = poppinsBold.getTextPath(
+        poppinsBold.cutStringTail(data?.creator || '', 30,240, true),
+        20, 142, 24, 'left baseline', '#fff');
     const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 820 - 20, 142, 24, 'right baseline', '#fff');
 
     const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status));
@@ -697,8 +699,8 @@ const component_E7 = (
             const diff_width = getChildPPWidth(data?.diff_pp, sum, data?.pp, reference_pp);
             const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
 
-            const diff_rect = PanelDraw.Rect(15, 105, diff_width, 30, 15, "url(#grad-OE7-12)", 1);
-            const acc_rect = PanelDraw.Rect(15, 105, diff_width + acc_width, 30, 15, "url(#grad-OE7-13)", 1);
+            const diff_rect = PanelDraw.Rect(15, 105, diff_width, 30, 15, "url(#grad-OE7-13)", 1);
+            const acc_rect = PanelDraw.Rect(15, 105, diff_width + acc_width, 30, 15, "url(#grad-OE7-14)", 1);
 
             const diff_text = getChildPPPath(data?.diff_pp, 15, 128, 24, diff_width, diff_width, 10);
             const acc_text = getChildPPPath(data?.acc_pp, 15, 128, 24, diff_width + acc_width, acc_width, 10);
