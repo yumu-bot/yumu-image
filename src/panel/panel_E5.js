@@ -228,7 +228,7 @@ export async function panel_E5(data = {
     svg = implantSvgBody(svg, 40, 770, componentE3, reg_card_e1);
     svg = implantSvgBody(svg, 550, 330, componentE4, reg_card_e2);
     svg = implantSvgBody(svg, 1280, 330, componentE5, reg_card_e2);
-    svg = implantSvgBody(svg, 570, 880, componentE6, reg_card_e2);
+    svg = implantSvgBody(svg, 550, 880, componentE6, reg_card_e2);
     svg = implantSvgBody(svg, 1390, 330, componentE7, reg_card_e3);
     svg = implantSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
     svg = implantSvgBody(svg, 1390, 600, componentE9, reg_card_e3);
@@ -475,7 +475,7 @@ const component_E6 = async (
     }) => {
     let svg = `   <defs>
             <clipPath id="clippath-OE6-1">
-                <rect id="BG_Base" x="0" y="0" width="780" height="160" rx="20" ry="20" style="fill: none;"/>
+                <rect id="BG_Base" x="0" y="0" width="820" height="160" rx="20" ry="20" style="fill: none;"/>
             </clipPath>
             </defs>
         <g id="Base_OE6">
@@ -491,25 +491,25 @@ const component_E6 = async (
     const reg_base = /(?<=<g id="Base_OE6">)/;
 
     const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi",
-        data?.title || '', data?.title_unicode || '', data?.artist || '', 780 / 2, 55, 98, 48, 24, 780 - 20);
+        data?.title || '', data?.title_unicode || '', data?.artist || '', 820 / 2, 55, 98, 48, 24, 820 - 20);
 
     const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
-        780 - 40 - 10
+        820 - 40 - 10
         - 2 * Math.max(
             poppinsBold.getTextWidth(data?.creator || '', 24),
             poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)
         ), true)
 
-    const diff = poppinsBold.getTextPath(diff_text, 780 / 2, 142, 30, 'center baseline', '#fff');
+    const diff = poppinsBold.getTextPath(diff_text, 820 / 2, 142, 30, 'center baseline', '#fff');
     const creator = poppinsBold.getTextPath(data?.creator || '', 20, 142, 24, 'left baseline', '#fff');
-    const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 780 - 20, 142, 24, 'right baseline', '#fff');
+    const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 820 - 20, 142, 24, 'right baseline', '#fff');
 
     const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status));
 
-    const rect = PanelDraw.Rect(0, 0, 780, 160, 20, '#382e32', 1);
+    const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
     svg = replaceTexts(svg, [t.title, t.title_unicode, bid, creator, diff], reg_label);
-    svg = implantImage(svg, 780, 160, 0, 0, 0.6, background, reg_background);
+    svg = implantImage(svg, 820, 160, 0, 0, 0.6, background, reg_background);
     svg = replaceText(svg, rect, reg_base);
 
     return svg;
@@ -770,12 +770,12 @@ const component_E8 = (
     const score = getMultipleTextPath([
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrLarge(data?.score, -1),
+                text: getRoundedNumberStrLarge(data?.score, (data?.mods.length <= 5) ? -1 : 0),
                 size: 56,
             },
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrSmall(data?.score, -1),
+                text: getRoundedNumberStrSmall(data?.score, (data?.mods.length <= 5) ? -1 : 0),
                 size: 36,
             }
         ],
