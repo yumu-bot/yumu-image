@@ -770,12 +770,12 @@ const component_E8 = (
     const score = getMultipleTextPath([
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrLarge(data?.score, (data?.mods.length <= 5) ? -1 : 0),
+                text: getRoundedNumberStrLarge(data?.score, (data?.mods.length <= 4) ? -1 : 0),
                 size: 56,
             },
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrSmall(data?.score, (data?.mods.length <= 5) ? -1 : 0),
+                text: getRoundedNumberStrSmall(data?.score, (data?.mods.length <= 4) ? -1 : 0),
                 size: 36,
             }
         ],
