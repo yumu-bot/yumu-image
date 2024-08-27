@@ -79,7 +79,7 @@ export async function panel_E6(data = {
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
     const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.beatmap, data.expected));
-    const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.beatmap, data.density));
+    const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.beatmap, data.density, rank));
     const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.beatmap, data.original));
     const componentE4 = component_E4(PanelEGenerate.score2componentE4(data.beatmap));
     const componentE5 = component_E5(PanelEGenerate.score2componentE5(data.beatmap));
@@ -733,9 +733,9 @@ const component_E10 = (
     const statistics_nc = getStatisticsSVG(data.statistics_nc, data.statistics_max, 64, 45, 360, 20, 16, 16) // 345
     const statistics_fc = getStatisticsSVG(data.statistics_fc, data.statistics_max, 64, 45, 360, 20, 16, 16) // 345
 
-    let misses_text = 'miss : ' + (data?.misses || '0');
+    let misses_text = 'miss : ' + (data.misses || '0');
 
-    const misses = (getGameMode(data?.mode, 1) === 'm') ?
+    const misses = (data.misses > 0) ?
         poppinsBold.getTextPath(
             misses_text, 475, 28, 18, 'right baseline', '#fff'
         )
@@ -847,7 +847,7 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE2: (b, density = []) => {
+    score2componentE2: (b, density = [], rank) => {
         return {
             density_arr: density,
             retry_arr: b?.retryList || [],
@@ -861,7 +861,7 @@ const PanelEGenerate = {
             play: b?.playcount || 0,
             progress: 1,
 
-            color: getRankColor(b.rank),
+            color: getRankColor(rank),
         }
     },
 
@@ -1044,7 +1044,7 @@ const PanelEGenerate = {
             statistics_fc: expectedFC2Statistics(pp),
             statistics_max: getStatMax(pp),
 
-            misses: expected?.misses || 0,
+            misses: expected.misses || 0,
             mode: b?.mode,
         }
     },
