@@ -4,10 +4,10 @@ import {
     getGameMode,
     getMapBG, getPanelNameSVG,
     implantImage,
-    implantSvgBody, readTemplate, replaceText, getMatchDuration, getNowTimeStamp,
+    implantSvgBody, readTemplate, replaceText, getMatchDuration, getNowTimeStamp, od2ms, ar2ms, cs2px,
 } from "../util/util.js";
 import {calcMap, getDensityArray} from "../util/compute-pp.js";
-import {ar2ms, cs2px, data2Label, od2ms, stat2DataM} from "./panel_E.js";
+import {data2Label, stat2DataM} from "./panel_E.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_E1} from "../card/card_E1.js";
 import {card_E3} from "../card/card_E3.js";

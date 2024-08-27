@@ -84,6 +84,7 @@ export async function calcMap(bid, statistics = stat, mode, hasLeaderBoard = tru
         maxCombo: difficulty.maxCombo,
         mods_int: mod_int,
     };
+
     //把原成绩放在第0位
     arr.push({acc: statistics.acc, pp: calc_N.performance(beatMap), attr: attr});
 

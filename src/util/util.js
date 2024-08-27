@@ -5,7 +5,7 @@ import axios from "axios";
 import https from "https";
 import path from "path";
 import moment from "moment";
-import {PuHuiTi, torus, cutStringTail, getTextPath, getTextWidth} from "./font.js";
+import {cutStringTail, getTextPath, PuHuiTi, torus} from "./font.js";
 import {API} from "../svg-to-image/API.js";
 import JPEGProvider from '../svg-to-image/JPEGProvider.js';
 import PNGProvider from '../svg-to-image/PNGProvider.js';
@@ -1789,4 +1789,69 @@ export function putCustomBanner(svg, reg_banner, custom, custom_opacity = 0.8) {
     } else {
         return implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
     }
+}
+
+export const cs2px = (cs, mode = 'o') => {
+    switch (mode) {
+        case 'o': {
+            const osupixel = (54.4 - 4.48 * cs).toFixed(2);
+            if (osupixel.substr(-3) === '.00') return osupixel.slice(0, -3) + 'px';
+            if (osupixel.substr(-2) === '.0') return osupixel.slice(0, -2) + 'px';
+            else return osupixel + 'px';
+        }
+        case 'm': {
+            return cs.toFixed(0) + ' Keys'
+        }
+        default: {
+            return '-';
+        }
+    }
+}
+
+export const ar2ms = (ar, mode = 'o') => {
+    switch (mode) {
+        case 'o':
+        case 'c': {
+            if (ar > 5) {
+                if (ar > 11) return '300ms';
+                else return Math.floor(1200 - (150 * (ar - 5))) + 'ms';
+            } else {
+                return Math.floor(1800 - (120 * ar)) + 'ms';
+            }
+        }
+        default: {
+            return '-'
+        }
+    }
+}
+
+export const od2ms = (od, mode = 'o') => {
+    let ms;
+    switch (mode) {
+        case 'o': {
+            if (od > 11) return '14ms';
+            ms = Math.floor(80 - (6 * od)).toString();
+            break;
+        }
+        case 't': {
+            if (od > 10) return '17ms';
+            ms = Math.floor(50 - (3 * od)).toString();
+            break;
+        }
+        case 'c': {
+            return '-';
+        }
+        case 'm': {
+            if (od > 11) return '31ms';
+            if (od < 0) return '64ms';
+            ms = Math.floor(64 - (3 * od)).toString();
+            break;
+        }
+        default: {
+            ms = '0';
+        }
+    }
+    if (ms.substr(-3) === '.00') return ms.slice(0, -3) + 'ms';
+    if (ms.substr(-2) === '.0') return ms.slice(0, -2) + 'ms';
+    else return ms + 'ms';
 }

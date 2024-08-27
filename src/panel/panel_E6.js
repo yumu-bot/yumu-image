@@ -1,37 +1,26 @@
 import {
-    exportJPEG,
-    getBeatMapTitlePath,
-    getDecimals,
-    getDiffBG,
-    getGameMode,
-    getImageFromV3,
-    getMapStatusImage,
-    getNowTimeStamp,
-    getPanelNameSVG,
-    getRoundedNumberStr,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall,
-    getTimeDifference,
-    implantImage,
-    implantSvgBody,
+    ar2ms, cs2px,
+    exportJPEG, getBeatMapTitlePath, getDecimals,
+    getDiffBG, getFileSize, getGameMode, getImageFromV3, getMapStatusImage,
+    getPanelNameSVG, getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
+    implantImage, implantSvgBody, od2ms,
     readTemplate,
-    replaceText,
-    replaceTexts, getFileSize, od2ms, ar2ms, cs2px
+    replaceText, replaceTexts
 } from "../util/util.js";
-import moment from "moment";
-import {getApproximateRank, getRankBG, hasLeaderBoard} from "../util/star.js";
+import {getRankBG, hasLeaderBoard} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi, torus} from "../util/font.js";
-import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {extra, getMultipleTextPath, getTextWidth, poppinsBold, torus} from "../util/font.js";
+import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getV3Score} from "../util/mod.js";
+import {getModInt, hasMod} from "../util/mod.js";
+
 
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_E5(data);
+        const svg = await panel_E6(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -43,7 +32,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_E5(data);
+        const svg = await panel_E6(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -53,121 +42,16 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-/**
- * 超级成绩面板
- * @param data
- * @return {Promise<string>}
- */
-// E面板升级计划
-export async function panel_E5(data = {
+export async function panel_E6(data = {
     user: {},
 
     density: {},
-    progress: 1,
     original: {},
+    pp: [],
     attributes: {},
+    expected: {},
 
-    score: {
-        accuracy: 0.9361111111111111,
-        osuMods: [ 'HD' ],
-        passed: true,
-        perfect: false,
-        rank: 'A',
-        replay: true,
-        score: 1444022,
-        statistics: {
-            countAll: 240,
-            null: true,
-            count_50: 0,
-            count_100: 20,
-            count_300: 218,
-            count_geki: 0,
-            count_katu: 0,
-            count_miss: 2
-        },
-        type: 'score_best_osu',
-        legacy: true,
-        user: {
-            id: 7003013,
-            pmOnly: false,
-            userID: 7003013,
-            avatar_url: 'https://a.ppy.sh/7003013?1704285435.jpeg',
-            default_group: 'default',
-            is_active: true,
-            is_bot: false,
-            is_deleted: false,
-            is_online: false,
-            is_supporter: false,
-            last_visit: [Array],
-            pm_friends_only: false,
-            username: 'Muziyami',
-            country_code: 'CN'
-        },
-        mods: [ 'HD' ],
-        createTimePretty: [ 2024, 7, 9, 18, 45, 11 ],
-        pp: 183.94418,
-        uid: 7003013,
-        best_id: 4651668661,
-        max_combo: 303,
-        user_id: 7003013,
-        create_at_str: '2024-07-09T10:45:11Z',
-        id: 4651668661,
-        mode: 'OSU',
-        mode_int: 0,
-        beatmap: {
-            id: 4645012,
-            mode: 'osu',
-            status: 'qualified',
-            convert: false,
-            retry: 0,
-            fail: 0,
-            od: 8.3,
-            cs: 4,
-            ar: 9.3,
-            osuMode: 'OSU',
-            hp: 5,
-            bpm: 144,
-            beatMapID: 4645012,
-            beatmapset_id: 2195334,
-            difficulty_rating: 5.2104692,
-            total_length: 53,
-            user_id: 9590557,
-            version: 'Extra',
-            beatmapset: [Object],
-            max_combo: 414,
-            accuracy: 8.3,
-            count_circles: 70,
-            count_sliders: 170,
-            count_spinners: 0,
-            drain: 5,
-            hit_length: 53,
-            mode_int: 0,
-            passcount: 58,
-            playcount: 190
-        },
-        beatmapset: {
-            artist: 'Lei Lei',
-            covers: [Object],
-            nsfw: false,
-            source: '',
-            status: 'qualified',
-            title: 'Wo Ai Wan Dian Wei',
-            storyboard: false,
-            mappers: [],
-            nominators: [],
-            publicRating: 0,
-            fromDatabase: false,
-            sid: 2195334,
-            artist_unicode: '雷雷',
-            favourite_count: 3,
-            id: 2195334,
-            play_count: 519,
-            title_unicode: '我爱玩典韦',
-            user_id: 9590557,
-            legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1933407'
-        }
-    },
-
+    beatmap: {},
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_E.svg');
@@ -181,44 +65,30 @@ export async function panel_E5(data = {
     const reg_card_e2 = /(?<=<g id="Card_E2">)/;
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
-    // 面板文字
-    let score_time;
-    let delta_time;
-
-    if (data?.score?.create_at_str != null) {
-        score_time = moment(data?.score?.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]");
-        delta_time = getTimeDifference(data?.score?.create_at_str)
-    } else {
-        //created_at 是北京时间，所以处理的时候不需要 +8
-        //[ 2024, 4, 22, 17, 32, 12, 473533397 ]
-        score_time = moment(data?.score?.created_at, '[\[] YYYY, MM, DD, HH, mm, ss, SSSSSSSSS [\]]').format("YYYY-MM-DD HH:mm:ss [+8]")
-        delta_time = getTimeDifference(data?.score?.created_at, '[\[] YYYY, MM, DD, HH, mm, ss, SSSSSSSSS [\]]', moment())
-    }
-
-    const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
-
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Excellent Score (!ymp / !ymr / !yms)', 'S', 'v0.4.1 SE', request_time), reg_index);
+    svg = replaceText(svg, getPanelNameSVG('Map Statistics (!ymm)', 'M', 'v0.4.1 SE'), reg_index);
 
-    // 评级
-    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`object-score-${data?.score?.rank || 'F'}2.png`), reg_index);
+    const mode = getGameMode(data?.expected?.mode, 0, data?.beatmap?.mode);
+
+    const rank = rank2rank(getApproximateRankSP(data?.expected?.accuracy, data?.expected?.miss, mode, data?.expected?.mods));
 
     // 图片定义
-    const background = getRankBG((data?.score?.rank || getApproximateRank(data?.score)));
-    const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked));
+    const background = getRankBG(rank);
+    const banner = await getDiffBG(data?.beatmap?.id, data?.beatmap?.beatmapset?.id, 'cover', hasLeaderBoard(data?.beatmap.ranked));
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.score));
-    const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.score, data.density, data.progress));
-    const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.score, data.original));
-    const componentE4 = component_E4(PanelEGenerate.score2componentE4(data.score));
-    const componentE5 = component_E5(PanelEGenerate.score2componentE5(data.score));
-    const componentE6 = await component_E6(PanelEGenerate.score2componentE6(data.score));
-    const componentE7 = component_E7(PanelEGenerate.score2componentE7(data.score, data.attributes));
-    const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score));
-    const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.score));
-    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score));
+    const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.beatmap, data.expected));
+    const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.beatmap, data.density));
+    const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.beatmap, data.original));
+    const componentE4 = component_E4(PanelEGenerate.score2componentE4(data.beatmap));
+    const componentE5 = component_E5(PanelEGenerate.score2componentE5(data.beatmap));
+    const componentE6 = await component_E6(PanelEGenerate.score2componentE6(data.beatmap));
+    const componentE7 = component_E7(PanelEGenerate.score2componentE7(data.beatmap, data.expected, data.attributes, data.pp));
+    const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.expected));
+    const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.beatmap, data.expected));
+    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.beatmap, data.expected, data.pp));
+    const componentE11 = await component_E11(PanelEGenerate.score2componentE11(data.beatmap));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -232,6 +102,7 @@ export async function panel_E5(data = {
     svg = implantSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
     svg = implantSvgBody(svg, 1390, 600, componentE9, reg_card_e3);
     svg = implantSvgBody(svg, 1390, 770, componentE10, reg_card_e3);
+    svg = implantSvgBody(svg, 550, 290, componentE11, reg_card_e3);
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
@@ -244,7 +115,6 @@ export async function panel_E5(data = {
 
     return svg.toString();
 }
-
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
 const component_E1 = (
     data = {
@@ -367,7 +237,10 @@ const component_E2 = (
     const density_arr_max = Math.max.apply(Math, data.density_arr) / density_scale;
     const density = PanelDraw.LineChart(data.density_arr, density_arr_max, 0, 15, 115, 460, 80, data.color, 1, 0.4, 3);
 
+    /*
     const fail_index = data.progress < 1 ? PanelDraw.Rect(20 + (457 * data.progress) + 1.5, 35, 3, 80, 1.5, '#ed6c9e') : '';
+
+     */
 
     //中下的失败率重试率图像
     const rf_arr = data.fail_arr ? data.fail_arr.map(function (v, i) {
@@ -379,7 +252,7 @@ const component_E2 = (
     const fail = PanelDraw.BarChart(data.fail_arr, rf_max, 0,
         15, 235, 460, 80, 2, 0, '#ed6c9e');
 
-    svg += (density + retry + fail + fail_index + title1 + title2 + public_rating + percent);
+    svg += (density + retry + fail + title1 + title2 + public_rating + percent);
 
     return svg;
 };
@@ -415,7 +288,7 @@ const component_E3 = (
 
 const component_E4 = (
     data = {
-        image: '',
+        image: ''
     }) => {
     let svg = `
         <g id="Base_OE4">
@@ -751,7 +624,6 @@ const component_E7 = (
 
 const component_E8 = (
     data = {
-        score: 0,
         mods: [],
     }) => {
     let svg = `
@@ -768,26 +640,13 @@ const component_E8 = (
     const reg_base = /(?<=<g id="Base_OE8">)/;
 
     const mods = getModsSVG(data.mods, 390, 10, 90, 42, 50); // y = 15
-    const score = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: getRoundedNumberStrLarge(data?.score, (data?.mods.length <= 4) ? -1 : 0),
-                size: 56,
-            },
-            {
-                font: 'poppinsBold',
-                text: getRoundedNumberStrSmall(data?.score, (data?.mods.length <= 4) ? -1 : 0),
-                size: 36,
-            }
-        ],
-        20, 62, 'left baseline')
 
-    const title = (data?.mods.length > 0) ? '' : poppinsBold.getTextPath('Score', 475, 28, 18, 'right baseline');
+    const title = poppinsBold.getTextPath('Mods', 15, 28, 18, 'left baseline');
 
     const rect = PanelDraw.Rect(0, 0, 490, 80, 20, '#382e32', 1);
 
     svg = replaceText(svg, mods, reg_mods);
-    svg = replaceTexts(svg, [title, score], reg_text);
+    svg = replaceText(svg, title, reg_text);
     svg = replaceText(svg, rect, reg_base);
 
     return svg;
@@ -850,10 +709,11 @@ const component_E9 = (
 
 const component_E10 = (
     data = {
-        statistics: [],
+        statistics_nc: [],
+        statistics_fc: [],
         statistics_max: 0,
 
-        ratio: 0,
+        misses: 0,
         mode: '',
     }) => {
     let svg = `
@@ -866,44 +726,70 @@ const component_E10 = (
     const reg_text = /(?<=<g id="Text_OE10">)/;
     const reg_base = /(?<=<g id="Base_OE10">)/;
 
-    const title = poppinsBold.getTextPath('Judges', 15, 28, 18, 'left baseline', '#fff');
+    const title = poppinsBold.getTextPath('Acc / PP Graph', 15, 28, 18, 'left baseline', '#fff');
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 64, 45, 360, 20, 16, 16) // 345
+    const statistics_nc = getStatisticsSVG(data.statistics_nc, data.statistics_max, 64, 45, 360, 20, 16, 16) // 345
+    const statistics_fc = getStatisticsSVG(data.statistics_fc, data.statistics_max, 64, 45, 360, 20, 16, 16) // 345
 
-    let ratio_text;
+    let misses_text = 'miss : ' + (data?.misses || '0');
 
-    if (data.ratio === Infinity) {
-        ratio_text = 'P : G = Infinity'
-    } else if (data.ratio === 0) {
-        ratio_text = 'P : G = 0'
-    } else if (data.ratio >= 1) {
-        ratio_text = 'P : G = ' + getRoundedNumberStr(data.ratio, 2) +' : 1';
-    } else {
-        ratio_text = 'P : G = 1 : ' + getRoundedNumberStr(1 / data.ratio, 2)
-    }
-
-    const perfect_great_ratio = (getGameMode(data?.mode, 1) === 'm') ?
+    const misses = (getGameMode(data?.mode, 1) === 'm') ?
         poppinsBold.getTextPath(
-            ratio_text, 475, 28, 18, 'right baseline', '#fff'
+            misses_text, 475, 28, 18, 'right baseline', '#fff'
         )
         : ''
 
-    svg = replaceTexts(svg, [title, statistics, perfect_great_ratio], reg_text);
+    svg = replaceTexts(svg, [title, statistics_nc, statistics_fc, misses], reg_text);
     svg = replaceText(svg, rect, reg_base);
 
     return svg;
 }
 
+const component_E11 = async (
+    data = {
+        bid: 0,
+        sid: 0,
+        ranked: 'pending'
+    }) => {
+    let svg = `
+            <defs>
+                <clipPath id="clippath-CE11-1">
+                    <polygon points="410 80 220 190 220 410 410 520 600 410 600 190 410 80" style="fill: none;"/>
+                </clipPath>
+            </defs>
+        <g id="Base_OE11">
+        </g>
+        <g id="Background_OE11" style="clip-path: url(#clippath-CE11-1);">
+        </g>
+        <g id="Overlay_OE11">
+        </g>
+    `;
+
+    const reg_overlay = /(?<=<g id="Overlay_OE11">)/;
+    const reg_cover = /(?<=<g id="Background_OE11" style="clip-path: url\(#clippath-CE11-1\);">)/;
+    const reg_base = /(?<=<g id="Base_OE11">)/;
+
+    const cover = await getDiffBG(data?.bid, data?.sid, 'list@2x', hasLeaderBoard(data?.ranked));
+    const hexagon = getImageFromV3('object-beatmap-hexagon.png')
+    const base = getImageFromV3('object-beatmap-mask.png')
+
+    svg = implantImage(svg, 420, 450, 200, 75, 1, hexagon, reg_overlay)
+    svg = implantImage(svg, 380, 410, 220, 95, 1, cover, reg_cover)
+    svg = implantImage(svg, 420, 450, 200, 75, 1, base, reg_base)
+
+    return svg;
+}
+
+
 // 私有转换方式
 const PanelEGenerate = {
-    score2componentE1: (score) => {
-
+    score2componentE1: (b, expected) => {
         // sr 2 difficulty name
-        const sr = score?.beatmap.difficulty_rating || 0;
+        const sr = b?.difficulty_rating || 0;
 
-        const mode = score?.mode || 'osu';
+        const mode = expected?.mode || 'osu';
 
         let name;
 
@@ -961,36 +847,36 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE2: (score, density = [], progress = 0) => {
+    score2componentE2: (b, density = []) => {
         return {
             density_arr: density,
-            retry_arr: score?.beatmap?.retryList || [],
-            fail_arr: score?.beatmap?.failList || [],
+            retry_arr: b?.retryList || [],
+            fail_arr: b?.failList || [],
 
-            star: score?.beatmap?.difficulty_rating || 0,
+            star: b?.difficulty_rating || 0,
 
-            public_rating: score?.beatmap?.beatmapset?.publicRating,
+            public_rating: b?.beatmapset?.publicRating,
 
-            pass: score?.beatmap?.passcount || 0,
-            play: score?.beatmap?.playcount || 0,
-            progress: progress,
+            pass: b?.passcount || 0,
+            play: b?.playcount || 0,
+            progress: 1,
 
-            color: getRankColor(score.rank),
+            color: getRankColor(b.rank),
         }
     },
 
-    score2componentE3: (score, original) => {
-        const mode = getGameMode(score.mode, 1);
+    score2componentE3: (b, original) => {
+        const mode = getGameMode(b.mode, 1);
 
-        const bpm_r = (score?.beatmap?.bpm > 0) ? (60000 / score?.beatmap?.bpm).toFixed(0) + 'ms' : '-';
-        const bpm_b = getDecimals(score?.beatmap?.bpm, 2);
-        const bpm_m = getDecimals(score?.beatmap?.bpm, 3);
-        const bpm_p = getProgress(score?.beatmap?.bpm, 90, 270);
+        const bpm_r = (b?.bpm > 0) ? (60000 / b?.bpm).toFixed(0) + 'ms' : '-';
+        const bpm_b = getDecimals(b?.bpm, 2);
+        const bpm_m = getDecimals(b?.bpm, 3);
+        const bpm_p = getProgress(b?.bpm, 90, 270);
 
-        const length_r = Math.floor(score?.beatmap?.total_length / 60) + ':' + (score?.beatmap?.total_length % 60).toFixed(0).padStart(2, '0');
-        const length_b = Math.floor(score?.beatmap?.hit_length / 60) + ':';
-        const length_m = (score?.beatmap?.hit_length % 60).toFixed(0).padStart(2, '0');
-        const length_p = getProgress(score?.beatmap?.hit_length, 30, 210);
+        const length_r = Math.floor(b?.total_length / 60) + ':' + (b?.total_length % 60).toFixed(0).padStart(2, '0');
+        const length_b = Math.floor(b?.hit_length / 60) + ':';
+        const length_m = (b?.hit_length % 60).toFixed(0).padStart(2, '0');
+        const length_p = getProgress(b?.hit_length, 30, 210);
 
         let isDisplayCS = true;
         let isDisplayAR = true;
@@ -1060,29 +946,29 @@ const PanelEGenerate = {
                 bar_progress: length_p,
             },{
                 ...LABELS.CS,
-                ...stat2label(score?.beatmap?.cs, cs2px(score?.beatmap?.cs, mode),
-                    getProgress(score?.beatmap?.cs, cs_min, cs_max), original.cs, isDisplayCS),
+                ...stat2label(b?.cs, cs2px(b?.cs, mode),
+                    getProgress(b?.cs, cs_min, cs_max), original.cs, isDisplayCS),
                 bar_min: cs_min,
                 bar_mid: cs_mid,
                 bar_max: cs_max,
             },{
                 ...LABELS.AR,
-                ...stat2label(score?.beatmap?.ar, ar2ms(score?.beatmap?.ar, mode),
-                    getProgress(score?.beatmap?.ar, ar_min, ar_max), original.ar, isDisplayAR),
+                ...stat2label(b?.ar, ar2ms(b?.ar, mode),
+                    getProgress(b?.ar, ar_min, ar_max), original.ar, isDisplayAR),
                 bar_min: ar_min,
                 bar_mid: ar_mid,
                 bar_max: ar_max,
             },{
                 ...LABELS.OD,
-                ...stat2label(score?.beatmap?.od, od2ms(score?.beatmap?.od, mode),
-                    getProgress(score?.beatmap?.od, od_min, od_max), original.od, isDisplayOD),
+                ...stat2label(b?.od, od2ms(b?.od, mode),
+                    getProgress(b?.od, od_min, od_max), original.od, isDisplayOD),
                 bar_min: od_min,
                 bar_mid: od_mid,
                 bar_max: od_max,
             },{
                 ...LABELS.HP,
-                ...stat2label(score?.beatmap?.hp, '-',
-                    getProgress(score?.beatmap?.hp, hp_min, hp_max), original.hp, true),
+                ...stat2label(b?.hp, '-',
+                    getProgress(b?.hp, hp_min, hp_max), original.hp, true),
                 bar_min: hp_min,
                 bar_mid: hp_mid,
                 bar_max: hp_max,
@@ -1090,95 +976,201 @@ const PanelEGenerate = {
         };
     },
 
-    score2componentE4: (score) => {
+    score2componentE4: (b) => {
         return {
-            image: getMapStatusImage(score?.beatmap?.ranked)
+            image: getMapStatusImage(b?.ranked)
         }
     },
 
-    score2componentE5: (score) => {
+    score2componentE5: (b) => {
         return {
-            favorite: score?.beatmapset?.favourite_count || 0,
-            playcount: score?.beatmapset?.play_count || 0,
+            favorite: b?.beatmapset?.favourite_count || 0,
+            playcount: b?.beatmapset?.play_count || 0,
         }
     },
 
-    score2componentE6: (score) => {
+    score2componentE6: (b) => {
         return {
-            title: score?.beatmapset?.title || '',
-            title_unicode: score?.beatmapset?.title_unicode || '',
-            artist: score?.beatmapset?.artist || '',
-            difficulty_name: score?.beatmap?.version || '',
-            bid: score?.beatmap?.id || 0,
-            sid: score?.beatmapset?.id || 0,
-            creator: score?.beatmapset?.creator || '',
-            status: score?.beatmap?.status || 'pending',
+            title: b?.beatmapset?.title || '',
+            title_unicode: b?.beatmapset?.title_unicode || '',
+            artist: b?.beatmapset?.artist || '',
+            difficulty_name: b?.version || '',
+            bid: b?.id || 0,
+            sid: b?.beatmapset?.id || 0,
+            creator: b?.beatmapset?.creator || '',
+            status: b?.status || 'pending',
         }
     },
 
-    score2componentE7: (score, attr) => {
-        const is_fc = (score?.max_combo / score?.beatmap?.max_combo) > 0.98
-            || getGameMode(score?.mode, 1) === 'm'
-            || getGameMode(score?.mode, 1) === 't'
+    score2componentE7: (b, expected, attr, pp) => {
+        const is_fc = (expected?.combo / b?.max_combo) > 0.98
+            || getGameMode(expected?.mode, 1) === 'm'
+            || getGameMode(expected?.mode, 1) === 't'
 
         return {
-            pp: score?.pp || 0,
-            full_pp: attr?.full_pp || 0,
-            perfect_pp: attr?.perfect_pp || 0,
+            pp: attr?.pp || 0,
+            full_pp: pp[0] || 0,
+            perfect_pp: pp[1] || 0,
 
-            aim_pp: attr?.aim_pp || 0,
-            spd_pp: attr?.spd_pp || 0,
-            acc_pp: attr?.acc_pp || 0,
-            fl_pp: attr?.fl_pp || 0,
-            diff_pp: attr?.diff_pp || 0,
+            aim_pp: attr?.ppAim || 0,
+            spd_pp: attr?.ppSpeed || 0,
+            acc_pp: attr?.ppAcc || 0,
+            fl_pp: attr?.ppFlashlight || 0,
+            diff_pp: attr?.ppDifficulty || 0,
 
             is_fc: is_fc,
 
-            mode: score?.mode,
+            mode: b?.mode,
         }
     },
 
-    score2componentE8: (score) => {
-        const s = score?.score || 0
-        const score_v3 = (s > 0) ? s : getV3Score(score?.accuracy, score?.max_combo, score?.beatmap?.max_combo, score?.mods, score?.mode, score?.statistics?.count_miss);
-
+    score2componentE8: (expected) => {
         return {
-            score: score_v3,
-            mods: score?.mods || [],
+            mods: expected?.mods || [],
         }
     },
 
-    score2componentE9: (score) => {
+    score2componentE9: (b, expected) => {
         return {
-            accuracy: score?.accuracy || 0,
-            combo: score?.max_combo || 0,
-            max_combo: score?.beatmap.max_combo || 0,
+            accuracy: expected?.accuracy || 0,
+            combo: expected?.combo || 0,
+            max_combo: b.max_combo || 0,
         }
     },
 
-    score2componentE10: (score) => {
-        let ratio;
+    score2componentE10: (b, expected, pp) => {
+        return {
+            statistics_nc: expectedNC2Statistics(pp),
+            statistics_fc: expectedFC2Statistics(pp),
+            statistics_max: getStatMax(pp),
 
-        if (score.statistics.count_300 === 0) {
-            if (score.statistics.count_geki === 0) {
-                ratio = 0;
+            misses: expected?.misses || 0,
+            mode: b?.mode,
+        }
+    },
+
+    score2componentE11: (b) => {
+        return {
+            bid: b?.id,
+            sid: b?.beatmapset?.id,
+            ranked: b?.ranked,
+        }
+    },
+}
+
+
+
+//SS和X的转换
+const rank2rank = (rank = 'SS') => {
+    switch (rank) {
+        case "SS": return 'X';
+        case "SSH": return 'XH';
+        default: return rank;
+    }
+}
+
+const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = ['']) => {
+    let rank = 'F';
+    const hasMiss = miss > 0;
+
+    switch (getGameMode(mode, 1)) {
+        case 'o' : {
+
+            if (acc === 1) {
+                rank = 'SS';
+            } else if (acc >= 0.9317) {
+                if (hasMiss) {
+                    rank = 'A';
+                } else {
+                    rank = 'S';
+                }
+            } else if (acc >= 0.8333) {
+                if (hasMiss) {
+                    rank = 'B';
+                } else {
+                    rank = 'A';
+                }
+            } else if (acc >= 0.75) {
+                if (hasMiss) {
+                    rank = 'C';
+                } else {
+                    rank = 'B';
+                }
+            } else if (acc >= 0.6) {
+                rank = 'C';
             } else {
-                ratio = Infinity;
+                rank = 'D';
             }
-        } else if (score.statistics.count_geki === 0) {
-            ratio = 0;
-        } else {
-            ratio = score.statistics.count_geki / score.statistics.count_300
-        }
+        } break;
 
-        return {
-            statistics: score2Statistics(score),
-            statistics_max: score2StatisticsMax(score),
+        case 't' : {
 
-            ratio: ratio,
-            mode: score.mode,
-        }
-    },
+            if (acc === 1) {
+                rank = 'SS';
+            } else if (acc >= 0.95) {
+                if (hasMiss) {
+                    rank = 'A';
+                } else {
+                    rank = 'S';
+                }
+            } else if (acc >= 0.9) {
+                if (hasMiss) {
+                    rank = 'B';
+                } else {
+                    rank = 'A';
+                }
+            } else if (acc >= 0.8) {
+                if (hasMiss) {
+                    rank = 'C';
+                } else {
+                    rank = 'B';
+                }
+            } else if (acc >= 0.6) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        } break;
+
+        case 'c' : {
+
+            if (acc === 1) {
+                rank = 'SS';
+            } else if (acc > 0.98) {
+                rank = 'S';
+            } else if (acc > 0.94) {
+                rank = 'A';
+            } else if (acc > 0.90) {
+                rank = 'B';
+            } else if (acc > 0.85) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        } break;
+
+        case 'm' : {
+
+            if (acc === 1) {
+                rank = 'SS';
+            } else if (acc >= 0.95) {
+                rank = 'S';
+            } else if (acc >= 0.90) {
+                rank = 'A';
+            } else if (acc >= 0.80) {
+                rank = 'B';
+            } else if (acc >= 0.70) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        } break;
+    }
+
+    const isSilver = hasMod(getModInt(mods), 'HD') || hasMod(getModInt(mods), 'FL');
+    if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
+
+    return rank;
 }
 
 // bottom: 保底
@@ -1235,176 +1227,98 @@ const getModsSVG = (mods = [""], x, y, mod_w, text_h, interval) => {
     return svg;
 }
 
+const getStatMax = (pp) => {
+    let max = 0
 
-//老面板的newJudge
-const score2Statistics = (score) => {
-    const n320 = score.statistics.count_geki;
-    const n300 = score.statistics.count_300;
-    const n200 = score.statistics.count_katu;
-    const n100 = score.statistics.count_100;
-    const n50 = score.statistics.count_50;
-    const n0 = score.statistics.count_miss;
-
-    let statistics = [];
-    const mode = getGameMode(score.mode, 1);
-
-    switch (mode) {
-        case 'o': {
-            statistics.push({
-                index: '300',
-                stat: n300,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#8DCFF4',
-            }, {
-                index: '100',
-                stat: n100,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#79C471',
-            }, {
-                index: '50',
-                stat: n50,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#FEF668',
-            }, {}, {
-                index: '0',
-                stat: n0,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#ED6C9E',
-            });
-            break;
-        }
-
-        case 't': {
-            statistics.push({
-                index: '300',
-                stat: n300,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#8DCFF4',
-            }, {
-                index: '150',
-                stat: n100,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#79C471',
-            }, {}, {
-                index: '0',
-                stat: n0,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#ED6C9E',
-            });
-            break;
-        }
-
-        case 'c': {
-            statistics.push({
-                index: '300',
-                stat: n300,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#8DCFF4',
-            }, {
-                index: '100',
-                stat: n100,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#79C471',
-            }, {
-                index: '50',
-                stat: n50,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#FEF668',
-            }, {}, {
-                index: '0',
-                stat: n0,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#ED6C9E',
-            }, {
-                index: 'MD',
-                stat: n200,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#A1A1A1',
-            });
-            break;
-        }
-
-        case 'm': {
-            statistics.push({
-                index: 'MAX',
-                stat: n320,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#8DCFF4',
-            }, {
-                index: '300',
-                stat: n300,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#FEF668',
-            }, {
-                index: '200',
-                stat: n200,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#79C471',
-            }, {
-                index: '100',
-                stat: n100,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#5E8AC6',
-            }, {
-                index: '50',
-                stat: n50,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#A1A1A1',
-            }, {
-                index: '0',
-                stat: n0,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#ED6C9E',
-            });
-            break;
-        }
-
+    for (const p of pp) {
+        max = Math.max(max, p);
     }
 
+    return max;
+}
+
+const expectedFC2Statistics = (pp) => {
+    let statistics = [];
+    statistics.push({
+        index: '100',
+        stat: Math.round(pp[1]),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#88C5F3',
+    }, {
+        index: '99',
+        stat: Math.round(pp[2]),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#8CC4C1',
+    }, {
+        index: '98',
+        stat: Math.round(pp[3]),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#8FC295',
+    }, {
+        index: '96',
+        stat: Math.round(pp[4]),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#A7CE95',
+    }, {
+        index: '94',
+        stat: Math.round(pp[5]),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#C4DB95',
+    }, {
+        index: '92',
+        stat: Math.round(pp[6]),
+        index_color: '#fff',
+        stat_color: '#fff',
+        rrect_color: '#FFF995',
+    });
     return statistics;
 }
 
-//老面板的sumJudge
-const score2StatisticsMax = (score) => {
-    const n320 = score.statistics.count_geki;
-    const n300 = score.statistics.count_300;
-    const n200 = score.statistics.count_katu;
-    const n100 = score.statistics.count_100;
-    const n50 = score.statistics.count_50;
-    const n0 = score.statistics.count_miss;
-
-    const mode = getGameMode(score.mode, 1);
-
-    switch (mode) {
-        case 'o':
-            return n300 + n100 + n50 + n0;
-        case 't':
-            return n300 + n100 + n0;
-        case 'c':
-            return Math.max(n300 + n100 + n0, n50, n200); //小果miss(katu)也要传过去的
-        case 'm':
-            return Math.max(n320 + n300, n200, n100, n50, n0);
-        default:
-            return n320 + n300 + n200 + n100 + n50 + n0;
-    }
+const expectedNC2Statistics = (pp = []) => {
+    let statistics = [];
+    statistics.push({
+        index: '100',
+        stat: Math.round(pp[7]),
+        index_color: '#fff',
+        stat_color: 'none',
+        rrect_color: '#55B1EF',
+    }, {
+        index: '99',
+        stat: Math.round(pp[8]),
+        index_color: '#fff',
+        stat_color: 'none',
+        rrect_color: '#5EB0AB',
+    }, {
+        index: '98',
+        stat: Math.round(pp[9]),
+        index_color: '#fff',
+        stat_color: 'none',
+        rrect_color: '#62AE70',
+    }, {
+        index: '96',
+        stat: Math.round(pp[10]),
+        index_color: '#fff',
+        stat_color: 'none',
+        rrect_color: '#88BD6F',
+    }, {
+        index: '94',
+        stat: Math.round(pp[11]),
+        index_color: '#fff',
+        stat_color: 'none',
+        rrect_color: '#ADCE6D',
+    }, {
+        index: '92',
+        stat: Math.round(pp[12]),
+        index_color: '#fff',
+        stat_color: 'none',
+        rrect_color: '#FFF767',
+    });
+    return statistics;
 }
 
 function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, font_h) {
