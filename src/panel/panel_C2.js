@@ -107,7 +107,7 @@ export async function panel_C2(data = {}) {
 async function playerData2CardH(p = {}) {
     const rws = Math.round(p.rws * 10000) / 100;
 
-    const left1 = getRoundedNumberStr(p.tts, 3) +
+    const left1 = getRoundedNumberStr(p.total, 3) +
             ' // ' + p.win + 'W-' + p.lose + 'L (' +
             Math.round((p.win / (p.win + p.lose)) * 100) + '%)';
 
