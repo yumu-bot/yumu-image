@@ -1,7 +1,7 @@
 import fs from 'fs';
 import os from "os";
 import crypto from 'crypto';
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import https from "https";
 import path from "path";
 import moment from "moment";
@@ -135,7 +135,11 @@ export async function getDiffBG(bid, sid, cover = 'cover', useCache = true, defa
         const res = await getBGFromDatabase(bid, sid);
         path = res.data;
     } catch (e) {
-        console.error("本地背景读取失败", e);
+        if (e instanceof AxiosError) {
+            console.error("本地背景读取超时");
+        } else {
+            console.error("本地背景读取失败", e);
+        }
         path = await getMapBG(sid, cover, useCache, defaultImagePath);
     } finally {
         asyncBeatMapFromDatabase(bid, sid);

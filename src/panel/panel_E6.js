@@ -761,7 +761,7 @@ const component_E11 = async (
             </defs>
         <g id="Base_OE11">
         </g>
-        <g id="Background_OE11" style="clip-path: url(#clippath-CE11-1);">
+        <g id="Background_OE11" style="clip-path: url(#clippath-OE11-1);">
         </g>
         <g id="Overlay_OE11">
         </g>
@@ -1049,7 +1049,7 @@ const PanelEGenerate = {
     score2componentE11: (b) => {
         return {
             bid: b?.id,
-            sid: b?.beatmapset?.id,
+            sid: b?.beatmapset?.id || b?.beatmapset_id,
             ranked: b?.ranked,
         }
     },

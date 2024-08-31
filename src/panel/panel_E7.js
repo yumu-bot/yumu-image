@@ -212,8 +212,6 @@ export async function panel_E7(data = {
     const componentE11 = await component_E11(PanelEGenerate.score2componentE11(data.beatmap));
     const componentE12 = component_E12(PanelEGenerate.score2componentE12(last_round, length));
     const componentE13 = await component_E13(PanelEGenerate.score2componentE13(players));
-
-
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_card_a1);
     svg = implantSvgBody(svg, 40, 330, componentE1, reg_card_e1);
@@ -252,7 +250,7 @@ const card_E7 = async (
     let svg = `
             <defs>
                 <clipPath id="clippath-CE7-1">
-                    <circle cx="10" cy="40" r="40" style="fill: none;"/>
+                    <circle cx="50" cy="40" r="40" style="fill: none;"/>
                 </clipPath>
             </defs>
         <g id="Base_CE7">
@@ -262,18 +260,20 @@ const card_E7 = async (
         <g id="Text_CE7">
         </g>
     `;
+    if (data?.avatar == null || data?.avatar === '') return ''
 
     const reg_text = /(?<=<g id="Text_CE7">)/;
     const reg_avatar = /(?<=<g id="Background_CE7" style="clip-path: url\(#clippath-CE7-1\);">)/;
 
-
     const avatar = await getAvatar(data?.avatar);
-    const name = (data?.show_name === true) ? torus.getTextPath(data?.name, 50, 90, 18, 'center baseline', data?.name_color) : ''
+    const name = (data?.show_name === true) ? torus.getTextPath(
+        torus.cutStringTail(data?.name, 18,104)
+        , 50, 100, 18, 'center baseline', data?.name_color) : ''
 
-    svg = replaceText(svg, avatar, reg_avatar)
+    svg = implantImage(svg, 80, 80, 10, 0, 1, avatar, reg_avatar)
     svg = replaceText(svg, name, reg_text)
 
-    return svg;
+    return svg.toString();
 }
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
@@ -584,7 +584,7 @@ const component_E11 = async (
     data = {
         bid: 0,
         sid: 0,
-        ranked: 'pending'
+        ranked: 0
     }) => {
     let svg = `
             <defs>
@@ -594,7 +594,7 @@ const component_E11 = async (
             </defs>
         <g id="Base_OE11">
         </g>
-        <g id="Background_OE11" style="clip-path: url(#clippath-CE11-1);">
+        <g id="Background_OE11" style="clip-path: url(#clippath-OE11-1);">
         </g>
         <g id="Overlay_OE11">
         </g>
@@ -619,6 +619,7 @@ const component_E12 = (
     data = {
         scoring_type: '',
         team_type: '',
+        vs_type: '',
         player_count: 1,
     }
 ) => {
@@ -710,7 +711,7 @@ const component_E12 = (
         },
         {
             font: "poppinsBold",
-            text: ' ',
+            text: ' ' + data?.vs_type,
             size: 48,
             color: '#fff',
         },
@@ -746,31 +747,40 @@ const component_E13 = async (
     let svg = `
         <g id="Base_OE13">
         </g>
+        <g id="Avatar_OE13">
+        </g>
         <g id="Text_OE13">
         </g>
     `;
 
     const reg_text = /(?<=<g id="Text_OE13">)/;
+    const reg_avatar = /(?<=<g id="Avatar_OE13">)/;
     const reg_base = /(?<=<g id="Base_OE13">)/;
 
     const title = poppinsBold.getTextPath('Lobby', 15, 28, 18, 'left baseline', '#fff');
 
-    if (data.players?.length <= 12) {
-        for (let i = 0; i > 2; i++) {
-            for (let j = 0; j > 3; i++) {
-                const k = i * j
+    const length = data.players?.length || 0
+
+    if (length <= 12) {
+        outer : for (let i = 0; i <= 2; i++) {
+            for (let j = 0; j <= 3; j++) {
+                const k = i * 4 + j
+
+                if (k >= length) break outer;
                 const e7 = await card_E7(PanelEGenerate.player2cardE7(data.players[k], true))
 
-                svg = implantSvgBody(svg, j * 118 + 18, i * 135 + 40, e7, reg_text)
+                svg = implantSvgBody(svg, j * 118 + 18, i * 135 + 40, e7, reg_avatar)
             }
         }
     } else {
-        for (let i = 0; i > 3; i++) {
-            for (let j = 0; j > 3; i++) {
-                const k = i * j
-                const e7 = await card_E7(PanelEGenerate.player2cardE7(data.players[k], true))
+        outer : for (let i = 0; i <= 3; i++) {
+            for (let j = 0; j <= 3; j++) {
+                const k = i * 4 + j
 
-                svg = implantSvgBody(svg, j * 118 + 18, i * 100 + 40, e7, reg_text)
+                if (k >= length) break outer;
+                const e7 = await card_E7(PanelEGenerate.player2cardE7(data.players[k], false))
+
+                svg = implantSvgBody(svg, j * 118 + 18, i * 100 + 40, e7, reg_avatar)
             }
         }
     }
@@ -779,15 +789,16 @@ const component_E13 = async (
 
     svg = replaceText(svg, title, reg_text);
     svg = replaceText(svg, rect, reg_base);
-    return svg
+
+    return svg.toString()
 }
 
 // 私有转换方式
 const PanelEGenerate = {
     player2cardE7: (player, show_name = false) => {
         return {
-            avatar: player?.avatar,
-            name: player?.name,
+            avatar: player?.avatar_url || '',
+            name: player?.username || '',
             name_color: '#fff',
 
             show_name: show_name,
@@ -1018,7 +1029,7 @@ const PanelEGenerate = {
     score2componentE11: (b) => {
         return {
             bid: b?.id,
-            sid: b?.beatmapset?.id,
+            sid: b?.beatmapset?.id || b?.beatmapset_id,
             ranked: b?.ranked,
         }
     },
@@ -1036,15 +1047,25 @@ const PanelEGenerate = {
         let team_type;
         switch (round?.team_type) {
             case "team-vs": team_type = 'VS'; break
-            case "head-to-head": team_type = 'H2H'; break
+            case "head-to-head": team_type = 'VS'; break
             case "tag-coop": team_type = 'TAG'; break
-            case "tag-team-vs": team_type = 'T.VS'; break
+            case "tag-team-vs": team_type = 'TAG'; break
             default: team_type = '?'; break
+        }
+
+        let vs_type;
+        switch (round?.team_type) {
+            case "team-vs": vs_type = 'TEAM'; break
+            case "head-to-head": vs_type = 'H2H'; break
+            case "tag-coop": vs_type = 'COOP'; break
+            case "tag-team-vs": vs_type = 'VS'; break
+            default: vs_type = '?'; break
         }
 
         return {
             scoring_type: scoring_type,
             team_type: team_type,
+            vs_type: vs_type,
             player_count: player_count,
         }
     },
