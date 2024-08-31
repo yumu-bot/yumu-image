@@ -1,26 +1,25 @@
 import {
     ar2ms, cs2px,
-    exportJPEG, getBeatMapTitlePath, getDecimals,
-    getDiffBG, getFileSize, getGameMode, getImageFromV3, getMapStatusImage,
-    getPanelNameSVG, getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
+    exportJPEG, getAvatar, getBeatMapTitlePath, getDecimals,
+    getDiffBG, getFileSize, getGameMode, getImageFromV3, getMapStatusImage, getPanelNameSVG,
+    getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
     implantImage, implantSvgBody, od2ms,
     readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
 import {getRankBG, hasLeaderBoard} from "../util/star.js";
-import {card_A1} from "../card/card_A1.js";
+import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {extra, getMultipleTextPath, getTextWidth, poppinsBold, torus} from "../util/font.js";
+import {extra, getMultipleTextPath, poppinsBold, torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModInt, hasMod} from "../util/mod.js";
 
 
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_E6(data);
+        const svg = await panel_E7(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -32,7 +31,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_E6(data);
+        const svg = await panel_E7(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -42,16 +41,125 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-export async function panel_E6(data = {
-    user: {},
+export async function panel_E7(data = {
+    match: {
+        match: {
+            matchEnd: false,
+            match: {
+                name: 'test',
+                id: 115297403,
+                start_time: 1725036606,
+                end_time: null
+            },
+            events: [ [Object], [Object], [Object], [Object] ],
+            users: [ [Object] ],
+            first_event_id: 2380999128,
+            latest_event_id: 2380999986,
+            current_game_id: null
+        },
+        matchData: {
+            teamVs: false,
+            averageStar: 3.896571159362793,
+            firstMapSID: 2034520,
+            playerDataList: [ [Object] ],
+            teamPointMap: { none: 2 },
+            roundCount: 2,
+            playerCount: 1,
+            scoreCount: 2,
+            playerDataMap: { '7003013': [Object] }
+        },
+        rounds: [
+            {
+                mode: 'mania',
+                mods: [],
+                winningTeam: 'none',
+                teamScore: [Object],
+                winningTeamScore: 449308,
+                id: 599586560,
+                beatmap_id: 4249702,
+                start_time: 1725036695,
+                end_time: 1725036735,
+                mod_int: 0,
+                scoring_type: 'score',
+                team_type: 'head-to-head',
+                beatmap: [Object],
+                scores: [Array]
+            },
+            {
+                mode: 'mania',
+                mods: [],
+                winningTeam: 'none',
+                teamScore: [Object],
+                winningTeamScore: 611979,
+                id: 599586738,
+                beatmap_id: 1212852,
+                start_time: 1725036815,
+                end_time: 1725036854,
+                mod_int: 0,
+                scoring_type: 'score',
+                team_type: 'head-to-head',
+                beatmap: [Object],
+                scores: [Array]
+            }
+        ],
+        scores: [
+            {
+                accuracy: 0.7668970814132104,
+                timestamp: null,
+                mode: 'mania',
+                mods: [],
+                passed: true,
+                perfect: false,
+                pp: null,
+                rank: 'F',
+                replay: false,
+                score: 449308,
+                statistics: [Object],
+                type: 'legacy_match_score',
+                ranking: 1,
+                user: [Object],
+                best_id: null,
+                id: null,
+                max_combo: 114,
+                mode_int: 3,
+                user_id: 7003013,
+                match: [Object]
+            },
+            {
+                accuracy: 0.9155435759209344,
+                timestamp: null,
+                mode: 'mania',
+                mods: [],
+                passed: true,
+                perfect: false,
+                pp: null,
+                rank: 'F',
+                replay: false,
+                score: 611979,
+                statistics: [Object],
+                type: 'legacy_match_score',
+                ranking: 1,
+                user: [Object],
+                best_id: null,
+                id: null,
+                max_combo: 210,
+                mode_int: 3,
+                user_id: 7003013,
+                match: [Object]
+            }
+        ],
+        beatmapApiService: {}
+    }
+    ,
 
-    density: {},
+    mode: 'osu',
+    players: [],
+
+    density: [10, 20, 30, 40, 50, 40, 30, 20, 10, 0],
     original: {},
-    pp: [],
-    attributes: {},
-    expected: {},
 
     beatmap: {},
+
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_E.svg');
@@ -66,43 +174,58 @@ export async function panel_E6(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Map Statistics (!ymm)', 'M', 'v0.4.1 SE'), reg_index);
+    svg = replaceText(svg, getPanelNameSVG('Match Start (passive module)', 'ST', 'v0.4.1 SE'), reg_index);
 
     // 需要参数
-    const mode = getGameMode(data?.expected?.mode, 0, data?.beatmap?.mode);
-    const rank = rank2rank(getApproximateRankSP(data?.expected?.accuracy, data?.expected?.miss, mode, data?.expected?.mods));
+    const match = data?.match || {}
+    const players = data?.players || []
+    const length = players?.length || 0
+
+    const last_round = (match?.rounds != null && match?.rounds?.length > 0) ? match.rounds[match.rounds.length - 1] : {}
+
+    const mode = getGameMode(data?.mode, 0, last_round?.mode);
+
+    let rank
+    if (length <= 1) rank = 'F'
+    if (length <= 2) rank = 'D'
+    if (length <= 4) rank = 'C'
+    if (length <= 6) rank = 'B'
+    if (length <= 8) rank = 'A'
+    if (length <= 10) rank = 'S'
+    if (length <= 12) rank = 'SH'
+    if (length <= 14) rank = 'X'
+    if (length <= 16) rank = 'XH'
 
     // 图片定义
     const background = getRankBG(rank);
     const banner = await getDiffBG(data?.beatmap?.id, data?.beatmap?.beatmapset?.id, 'cover', hasLeaderBoard(data?.beatmap.ranked));
 
     // 卡片定义
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const cardA2 = await card_A2(await PanelGenerate.matchData2CardA2(data.match));
     const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.beatmap, mode));
     const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.beatmap, data.density, rank));
     const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.beatmap, data.original));
     const componentE4 = component_E4(PanelEGenerate.score2componentE4(data.beatmap));
     const componentE5 = component_E5(PanelEGenerate.score2componentE5(data.beatmap));
     const componentE6 = await component_E6(PanelEGenerate.score2componentE6(data.beatmap));
-    const componentE7 = component_E7(PanelEGenerate.score2componentE7(data.beatmap, data.expected, data.attributes, data.pp));
-    const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.expected));
-    const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.beatmap, data.expected));
-    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.beatmap, data.expected, data.pp));
+    const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.mods));
     const componentE11 = await component_E11(PanelEGenerate.score2componentE11(data.beatmap));
+    const componentE12 = component_E12(PanelEGenerate.score2componentE12(last_round, length));
+    const componentE13 = await component_E13(PanelEGenerate.score2componentE13(players));
+
 
     // 导入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = implantSvgBody(svg, 40, 40, cardA2, reg_card_a1);
     svg = implantSvgBody(svg, 40, 330, componentE1, reg_card_e1);
     svg = implantSvgBody(svg, 40, 500, componentE2, reg_card_e1);
     svg = implantSvgBody(svg, 40, 770, componentE3, reg_card_e1);
     svg = implantSvgBody(svg, 550, 330, componentE4, reg_card_e2);
     svg = implantSvgBody(svg, 1280, 330, componentE5, reg_card_e2);
     svg = implantSvgBody(svg, 550, 880, componentE6, reg_card_e2);
-    svg = implantSvgBody(svg, 1390, 330, componentE7, reg_card_e3);
     svg = implantSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
-    svg = implantSvgBody(svg, 1390, 600, componentE9, reg_card_e3);
-    svg = implantSvgBody(svg, 1390, 770, componentE10, reg_card_e3);
     svg = implantSvgBody(svg, 550, 290, componentE11, reg_card_e3);
+    svg = implantSvgBody(svg, 1390, 330, componentE12, reg_card_e3);
+    svg = implantSvgBody(svg, 1390, 600, componentE13, reg_card_e3);
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
@@ -115,6 +238,44 @@ export async function panel_E6(data = {
 
     return svg.toString();
 }
+
+
+const card_E7 = async (
+    data = {
+        avatar: '',
+        name: '',
+        name_color: 'none',
+
+        show_name: false,
+    }) => {
+
+    let svg = `
+            <defs>
+                <clipPath id="clippath-CE7-1">
+                    <circle cx="10" cy="40" r="40" style="fill: none;"/>
+                </clipPath>
+            </defs>
+        <g id="Base_CE7">
+        </g>
+        <g id="Background_CE7" style="clip-path: url(#clippath-CE7-1);">
+        </g>
+        <g id="Text_CE7">
+        </g>
+    `;
+
+    const reg_text = /(?<=<g id="Text_CE7">)/;
+    const reg_avatar = /(?<=<g id="Background_CE7" style="clip-path: url\(#clippath-CE7-1\);">)/;
+
+
+    const avatar = await getAvatar(data?.avatar);
+    const name = (data?.show_name === true) ? torus.getTextPath(data?.name, 50, 90, 18, 'center baseline', data?.name_color) : ''
+
+    svg = replaceText(svg, avatar, reg_avatar)
+    svg = replaceText(svg, name, reg_text)
+
+    return svg;
+}
+
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
 const component_E1 = (
     data = {
@@ -389,239 +550,6 @@ const component_E6 = async (
     return svg;
 }
 
-const component_E7 = (
-    data = {
-        pp: 0,
-        full_pp: 0,
-        perfect_pp: 0,
-
-        aim_pp: 0,
-        spd_pp: 0,
-        acc_pp: 0,
-        fl_pp:  0,
-        diff_pp: 0,
-
-        is_fc: true,
-
-        mode: 'osu',
-    }) => {
-
-    // 读取模板
-    let svg =
-        `   <defs>
-            <clipPath id="clippath-OE7-1">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-OE7-2">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-OE7-3">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-OE7-4">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-OE7-5">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-OE7-6">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <linearGradient id="grad-OE7-12" x1="0%" y1="50%" x2="100%" y2="50%">
-                <stop offset="0%" style="stop-color:rgb(79,172,254); stop-opacity:1" />
-                <stop offset="100%" style="stop-color:rgb(0,242,254); stop-opacity:1" />
-            </linearGradient>
-            <linearGradient id="grad-OE7-13" x1="0%" y1="0" x2="100%" y2="50%">
-                <stop offset="0%" style="stop-color:rgb(94,220,91); stop-opacity:1" />
-                <stop offset="100%" style="stop-color:rgb(202,248,129); stop-opacity:1" />
-            </linearGradient>
-            <linearGradient id="grad-OE7-14" x1="0%" y1="0" x2="100%" y2="50%">
-                <stop offset="0%" style="stop-color:rgb(252,172,70); stop-opacity:1" />
-                <stop offset="100%" style="stop-color:rgb(254,220,69); stop-opacity:1" />
-            </linearGradient>
-            <linearGradient id="grad-OE7-15" x1="0%" y1="50%" x2="100%" y2="50%">
-                <stop offset="0%" style="stop-color:rgb(231,72,138); stop-opacity:1" />
-                <stop offset="100%" style="stop-color:rgb(255,120,107); stop-opacity:1" />
-            </linearGradient>
-            <linearGradient id="grad-OE7-16" x1="0%" y1="50%" x2="100%" y2="50%">
-                <stop offset="0%" style="stop-color:rgb(79,172,254); stop-opacity:1" />
-                <stop offset="100%" style="stop-color:rgb(0,242,254); stop-opacity:1" />
-            </linearGradient>
-          </defs>
-          <g id="Base_OE7">
-            <rect id="Base" x="0" y="0" width="490" height="150" rx="20" ry="20" style="fill: #382e32;"/>
-            <rect id="Star" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: url(#grad-OE7-12); fill-opacity: 0.2"/>
-          </g>
-          <g id="Rect_OE7">
-            <g id="Clip_OE7-6" style="clip-path: url(#clippath-OE7-6);">
-            
-            </g>
-            <g id="Clip_OE7-5" style="clip-path: url(#clippath-OE7-5);">
-            
-            </g>
-            <g id="Clip_OE7-4" style="clip-path: url(#clippath-OE7-4);">
-            
-            </g>
-            <g id="Clip_OE7-3" style="clip-path: url(#clippath-OE7-3);">
-            
-            </g>
-            <g id="Clip_OE7-2" style="clip-path: url(#clippath-OE7-2);">
-            
-            </g>
-          </g>
-          <g id="Text_OE7">
-          </g>`;
-
-    const reg_text = /(?<=<g id="Text_OE7">)/;
-    const reg_clip2 = /(?<=<g id="Clip_OE7-2" style="clip-path: url\(#clippath-OE7-2\);">)/;
-    const reg_clip3 = /(?<=<g id="Clip_OE7-3" style="clip-path: url\(#clippath-OE7-3\);">)/;
-    const reg_clip4 = /(?<=<g id="Clip_OE7-4" style="clip-path: url\(#clippath-OE7-4\);">)/;
-    const reg_clip5 = /(?<=<g id="Clip_OE7-5" style="clip-path: url\(#clippath-OE7-5\);">)/;
-    const reg_clip6 = /(?<=<g id="Clip_OE7-6" style="clip-path: url\(#clippath-OE7-6\);">)/; //181,100,217 | 238,96,156
-
-    const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 0;
-    const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 0;
-
-    let is_fc = data?.is_fc;
-
-    const over = 460 - poppinsBold.getTextWidth(Math.round(data?.perfect_pp || 0), 24) - 30 < (460 * fc_percent);
-    if (over) is_fc = true;
-
-
-    let reference_pp; // 参考 PP，有时是 FC PP，有时是 SS PP
-
-    let percent;
-    let reference_pp_text;
-    let fc_pp_text;
-    let percent_type;
-
-    if (is_fc) {
-        reference_pp = data?.perfect_pp;
-
-        percent = pf_percent;
-        percent_type = 'SS'
-        fc_pp_text = '';
-    } else {
-        reference_pp = data?.full_pp;
-
-        percent = fc_percent;
-        percent_type = 'FC'
-        fc_pp_text = Math.round(data?.perfect_pp || 0);
-    }
-
-    reference_pp_text = ' / ' + Math.round(reference_pp) + ' ' + percent_type +' [' + Math.round(percent * 100) + '%]';
-
-    const fc_pp = poppinsBold.getTextPath(fc_pp_text, 475 - 15, 128, 24, 'right baseline', '#fff')
-
-    const text_arr = [
-        {
-            font: "poppinsBold",
-            text: Math.round(data?.pp || 0),
-            size: 84,
-            color: '#fff',
-        },
-        {
-            font: "poppinsBold",
-            text: ' PP',
-            size: 48,
-            color: '#fff',
-        },
-        {
-            font: "poppinsBold",
-            text: reference_pp_text,
-            size: 24,
-            color: '#fff',
-        },
-    ]
-
-    const texts = getMultipleTextPath(text_arr, 20, 88, "left baseline");
-
-    const title = poppinsBold.getTextPath('Performance Points', 475, 28, 18, 'right baseline', '#fff')
-
-    switch (getGameMode(data?.mode, 1)) {
-        case 'o': {
-            const sum = data?.aim_pp + data?.spd_pp + data?.acc_pp + data?.fl_pp || 0;
-
-            const aim_width = getChildPPWidth(data?.aim_pp, sum, data?.pp, reference_pp);
-            const spd_width = getChildPPWidth(data?.spd_pp, sum, data?.pp, reference_pp);
-            const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
-            const fl_width = getChildPPWidth(data?.fl_pp, sum, data?.pp, reference_pp);
-
-            const aim_rect = PanelDraw.Rect(15, 105, aim_width, 30, 15, "url(#grad-OE7-12)", 1);
-            const spd_rect = PanelDraw.Rect(15, 105, aim_width + spd_width, 30, 15, "url(#grad-OE7-13)", 1);
-            const acc_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width, 30, 15, "url(#grad-OE7-14)", 1);
-            const fl_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width + fl_width, 30, 15, "url(#grad-OE7-15)", 1);
-
-            const aim_text = getChildPPPath(data?.aim_pp, 15, 128, 24, aim_width, aim_width, 10);
-            const spd_text = getChildPPPath(data?.spd_pp, 15, 128, 24, aim_width + spd_width, spd_width, 10);
-            const acc_text = getChildPPPath(data?.acc_pp, 15, 128, 24, aim_width + spd_width + acc_width, acc_width, 10);
-            const fl_text = getChildPPPath(data?.fl_pp, 15, 128, 24, aim_width + spd_width + acc_width + fl_width, fl_width, 10);
-
-            svg = replaceText(svg, aim_rect, reg_clip2);
-            svg = replaceText(svg, spd_rect, reg_clip3);
-            svg = replaceText(svg, acc_rect, reg_clip4);
-            svg = replaceText(svg, fl_rect, reg_clip5);
-            svg = replaceTexts(svg, [aim_text, spd_text, acc_text, fl_text], reg_text);
-            break;
-        }
-
-        case 't': {
-            const sum = data?.diff_pp + data?.acc_pp || 0;
-
-            const diff_width = getChildPPWidth(data?.diff_pp, sum, data?.pp, reference_pp);
-            const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
-
-            const diff_rect = PanelDraw.Rect(15, 105, diff_width, 30, 15, "url(#grad-OE7-13)", 1);
-            const acc_rect = PanelDraw.Rect(15, 105, diff_width + acc_width, 30, 15, "url(#grad-OE7-14)", 1);
-
-            const diff_text = getChildPPPath(data?.diff_pp, 15, 128, 24, diff_width, diff_width, 10);
-            const acc_text = getChildPPPath(data?.acc_pp, 15, 128, 24, diff_width + acc_width, acc_width, 10);
-
-            svg = replaceText(svg, diff_rect, reg_clip3);
-            svg = replaceText(svg, acc_rect, reg_clip4);
-            svg = replaceTexts(svg, [diff_text, acc_text], reg_text);
-            break;
-        }
-    }
-
-    // 保底 PP
-    const pp_width = (data?.pp > 0) ? ((data?.pp / reference_pp) * 460) : 0;
-    const pp_rect = PanelDraw.Rect(15, 105, pp_width, 30, 15, "url(#grad-OE7-16)", 1);
-    svg = replaceText(svg, pp_rect, reg_clip6);
-
-    svg = replaceTexts(svg, [texts, title, fc_pp], reg_text);
-
-    return svg;
-
-    // 在有值的时候最低是 min_width，没有值则是 0
-    // 注意！这个值加起来的和，总会比原来的成绩 PP 的宽度大一点点（因为最短限制为 30）
-    function getChildPPWidth(child_pp = 0, child_sum_pp = 0, pp = 0, full_pp = 0, max_width = 460, min_width = 30) {
-        const pp_width = (pp / full_pp) * max_width;
-        const child_pp_width = (child_pp / child_sum_pp) * pp_width;
-        return (child_pp > 0) ? Math.max(min_width, child_pp_width) : 0;
-    }
-
-    function getChildPPPath(child_pp = 0, x = 0, y = 0, size = 24, width = 30, max_width = 30, interval = 0) {
-        const pp_str = Math.round(child_pp).toString();
-        const shown = isTextShown('poppinsBold', child_pp, size, max_width, interval);
-        const slight = isTextSlightlyWider('poppinsBold', child_pp, size, max_width, interval);
-
-        return shown ?
-            poppinsBold.getTextPath(pp_str, x + width - interval, y, size, 'right baseline', '#382c32') :
-            (slight ? poppinsBold.getTextPath(pp_str, x + width - (1/2 * max_width), y, size, 'center baseline', '#382c32') : '');
-    }
-
-    // 宽度大于最大宽 + 2x 间距
-    function isTextShown(font = 'poppinsBold', pp = 0, size = 24, max_width = 0, interval = 0) {
-        return typeof pp === "number" && max_width > 0 && (max_width - 2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
-    }
-
-    // 宽度大于最大宽 - 1/2x 间距
-    function isTextSlightlyWider(font = 'poppinsBold', pp = 0, size = 24, max_width = 0, interval = 0) {
-        return typeof pp === "number" && max_width > 0 && (max_width + 1/2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
-    }
-};
-
 const component_E8 = (
     data = {
         mods: [],
@@ -647,101 +575,6 @@ const component_E8 = (
 
     svg = replaceText(svg, mods, reg_mods);
     svg = replaceText(svg, title, reg_text);
-    svg = replaceText(svg, rect, reg_base);
-
-    return svg;
-}
-
-const component_E9 = (
-    data = {
-        accuracy: 0,
-        combo: 0,
-        max_combo: 0,
-    }) => {
-    let svg = `
-        <g id="Base_OE9">
-        </g>
-        <g id="Text_OE9">
-        </g>
-    `;
-
-    const reg_text = /(?<=<g id="Text_OE9">)/;
-    const reg_base = /(?<=<g id="Base_OE9">)/;
-
-    const title = poppinsBold.getTextPath('Accuracy', 15, 28, 18, 'left baseline', '#fff');
-    const title2 = poppinsBold.getTextPath('Combo', 15, 98, 18, 'left baseline', '#fff');
-
-    const accuracy = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: getRoundedNumberStrLarge((data?.accuracy || 0) * 100, 3),
-                size: 60,
-            },
-            {
-                font: 'poppinsBold',
-                text: getRoundedNumberStrSmall((data?.accuracy || 0) * 100, 3) + ' %',
-                size: 36
-            }
-        ],
-        470, 62, 'right baseline')
-
-    const combo = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: data?.combo || 0,
-                size: 60,
-            },
-            {
-                font: 'poppinsBold',
-                text: ' / ' + data?.max_combo || 0,
-                size: 36,
-            }
-        ],
-        470, 132, 'right baseline')
-
-    const rect = PanelDraw.Rect(0, 0, 490, 150, 20, '#382e32', 1);
-
-    svg = replaceTexts(svg, [title, title2, accuracy, combo], reg_text);
-    svg = replaceText(svg, rect, reg_base);
-
-    return svg;
-}
-
-const component_E10 = (
-    data = {
-        statistics_nc: [],
-        statistics_fc: [],
-        statistics_max: 0,
-
-        misses: 0,
-        mode: '',
-    }) => {
-    let svg = `
-        <g id="Base_OE10">
-        </g>
-        <g id="Text_OE10">
-        </g>
-    `;
-
-    const reg_text = /(?<=<g id="Text_OE10">)/;
-    const reg_base = /(?<=<g id="Base_OE10">)/;
-
-    const title = poppinsBold.getTextPath('Acc / PP Graph', 15, 28, 18, 'left baseline', '#fff');
-
-    const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
-
-    const statistics_nc = getStatisticsSVG(data.statistics_nc, data.statistics_max, 64, 45, 360, 20, 16, 16) // 345
-    const statistics_fc = getStatisticsSVG(data.statistics_fc, data.statistics_max, 64, 45, 360, 20, 16, 16) // 345
-
-    let misses_text = 'miss : ' + (data.misses || '0');
-
-    const misses = (data.misses > 0) ?
-        poppinsBold.getTextPath(
-            misses_text, 475, 28, 18, 'right baseline', '#fff'
-        )
-        : ''
-
-    svg = replaceTexts(svg, [title, statistics_nc, statistics_fc, misses], reg_text);
     svg = replaceText(svg, rect, reg_base);
 
     return svg;
@@ -782,8 +615,185 @@ const component_E11 = async (
     return svg;
 }
 
+const component_E12 = (
+    data = {
+        scoring_type: '',
+        team_type: '',
+        player_count: 1,
+    }
+) => {
+
+    // 读取模板
+    let svg =
+        `   <defs>
+            <clipPath id="clippath-OE12-1">
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
+            </clipPath>
+            <clipPath id="clippath-OE12-2">
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
+            </clipPath>
+            <clipPath id="clippath-OE12-3">
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
+            </clipPath>
+            <clipPath id="clippath-OE12-4">
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
+            </clipPath>
+            <clipPath id="clippath-OE12-5">
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
+            </clipPath>
+            <clipPath id="clippath-OE12-6">
+                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
+            </clipPath>
+            <linearGradient id="grad-OE12-12" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" style="stop-color:rgb(79,172,254); stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgb(0,242,254); stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="grad-OE12-13" x1="0%" y1="0" x2="100%" y2="50%">
+                <stop offset="0%" style="stop-color:rgb(94,220,91); stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgb(202,248,129); stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="grad-OE12-14" x1="0%" y1="0" x2="100%" y2="50%">
+                <stop offset="0%" style="stop-color:rgb(252,172,70); stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgb(254,220,69); stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="grad-OE12-15" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" style="stop-color:rgb(231,72,138); stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgb(255,120,107); stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="grad-OE12-16" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" style="stop-color:rgb(79,172,254); stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgb(0,242,254); stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <g id="Base_OE12">
+            <rect id="Base" x="0" y="0" width="490" height="150" rx="20" ry="20" style="fill: #382e32;"/>
+            <rect id="Star" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: url(#grad-OE12-12); fill-opacity: 0.2"/>
+          </g>
+          <g id="Rect_OE12">
+            <g id="Clip_OE12-6" style="clip-path: url(#clippath-OE12-6);">
+            
+            </g>
+            <g id="Clip_OE12-5" style="clip-path: url(#clippath-OE12-5);">
+            
+            </g>
+            <g id="Clip_OE12-4" style="clip-path: url(#clippath-OE12-4);">
+            
+            </g>
+            <g id="Clip_OE12-3" style="clip-path: url(#clippath-OE12-3);">
+            
+            </g>
+            <g id="Clip_OE12-2" style="clip-path: url(#clippath-OE12-2);">
+            
+            </g>
+          </g>
+          <g id="Text_OE12">
+          </g>`;
+
+    const reg_text = /(?<=<g id="Text_OE12">)/;
+    /*
+    const reg_clip2 = /(?<=<g id="Clip_OE12-2" style="clip-path: url\(#clippath-OE12-2\);">)/;
+    const reg_clip3 = /(?<=<g id="Clip_OE12-3" style="clip-path: url\(#clippath-OE12-3\);">)/;
+    const reg_clip4 = /(?<=<g id="Clip_OE12-4" style="clip-path: url\(#clippath-OE12-4\);">)/;
+    const reg_clip5 = /(?<=<g id="Clip_OE12-5" style="clip-path: url\(#clippath-OE12-5\);">)/;
+
+     */
+    const reg_clip6 = /(?<=<g id="Clip_OE12-6" style="clip-path: url\(#clippath-OE12-6\);">)/; //181,100,217 | 238,96,156
+
+
+
+    const text_arr = [
+        {
+            font: "poppinsBold",
+            text: data?.team_type,
+            size: 84,
+            color: '#fff',
+        },
+        {
+            font: "poppinsBold",
+            text: ' ',
+            size: 48,
+            color: '#fff',
+        },
+        {
+            font: "poppinsBold",
+            text: ' / ' + data?.scoring_type,
+            size: 24,
+            color: '#fff',
+        },
+    ]
+
+    const texts = getMultipleTextPath(text_arr, 20, 88, "left baseline");
+
+    const title = poppinsBold.getTextPath('Scoring Type', 475, 28, 18, 'right baseline', '#fff')
+
+    const width = Math.max((data?.player_count || 0) / 16 * 460, 30)
+
+    const player_rect = PanelDraw.Rect(15, 105, width, 30, 15, "url(#grad-OE12-16)", 1);
+    const player_text = poppinsBold.getTextPath(data?.player_count.toString(), 15 + width - 10, 128, 24, 'right baseline', '#fff');
+
+    svg = replaceText(svg, player_rect, reg_clip6);
+    svg = replaceTexts(svg, [texts, title, player_text], reg_text);
+
+    return svg;
+
+}
+
+const component_E13 = async (
+    data = {
+        players: [],
+    }
+) => {
+    let svg = `
+        <g id="Base_OE13">
+        </g>
+        <g id="Text_OE13">
+        </g>
+    `;
+
+    const reg_text = /(?<=<g id="Text_OE13">)/;
+    const reg_base = /(?<=<g id="Base_OE13">)/;
+
+    const title = poppinsBold.getTextPath('Lobby', 15, 28, 18, 'left baseline', '#fff');
+
+    if (data.players?.length <= 12) {
+        for (let i = 0; i > 2; i++) {
+            for (let j = 0; j > 3; i++) {
+                const k = i * j
+                const e7 = await card_E7(PanelEGenerate.player2cardE7(data.players[k], true))
+
+                svg = implantSvgBody(svg, j * 118 + 18, i * 135 + 40, e7, reg_text)
+            }
+        }
+    } else {
+        for (let i = 0; i > 3; i++) {
+            for (let j = 0; j > 3; i++) {
+                const k = i * j
+                const e7 = await card_E7(PanelEGenerate.player2cardE7(data.players[k], true))
+
+                svg = implantSvgBody(svg, j * 118 + 18, i * 100 + 40, e7, reg_text)
+            }
+        }
+    }
+
+    const rect = PanelDraw.Rect(0, 0, 490, 440, 20, '#382e32', 1);
+
+    svg = replaceText(svg, title, reg_text);
+    svg = replaceText(svg, rect, reg_base);
+    return svg
+}
+
 // 私有转换方式
 const PanelEGenerate = {
+    player2cardE7: (player, show_name = false) => {
+        return {
+            avatar: player?.avatar,
+            name: player?.name,
+            name_color: '#fff',
+
+            show_name: show_name,
+        }
+    },
+
     score2componentE1: (b, mode) => {
         // sr 2 difficulty name
         const sr = b?.difficulty_rating || 0;
@@ -999,50 +1009,9 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE7: (b, expected, attr, pp) => {
-        const is_fc = (expected?.combo / b?.max_combo) > 0.98
-            || getGameMode(expected?.mode, 1) === 'm'
-            || getGameMode(expected?.mode, 1) === 't'
-
+    score2componentE8: (mods) => {
         return {
-            pp: attr?.pp || 0,
-            full_pp: pp[0] || 0,
-            perfect_pp: pp[1] || 0,
-
-            aim_pp: attr?.ppAim || 0,
-            spd_pp: attr?.ppSpeed || 0,
-            acc_pp: attr?.ppAcc || 0,
-            fl_pp: attr?.ppFlashlight || 0,
-            diff_pp: attr?.ppDifficulty || 0,
-
-            is_fc: is_fc,
-
-            mode: b?.mode,
-        }
-    },
-
-    score2componentE8: (expected) => {
-        return {
-            mods: expected?.mods || [],
-        }
-    },
-
-    score2componentE9: (b, expected) => {
-        return {
-            accuracy: expected?.accuracy || 0,
-            combo: expected?.combo || 0,
-            max_combo: b.max_combo || 0,
-        }
-    },
-
-    score2componentE10: (b, expected, pp) => {
-        return {
-            statistics_nc: expectedNC2Statistics(pp),
-            statistics_fc: expectedFC2Statistics(pp),
-            statistics_max: getStatMax(pp),
-
-            misses: expected.misses || 0,
-            mode: b?.mode,
+            mods: mods || [],
         }
     },
 
@@ -1053,120 +1022,40 @@ const PanelEGenerate = {
             ranked: b?.ranked,
         }
     },
+
+    score2componentE12: (round = {}, player_count = 1) => {
+        let scoring_type;
+        switch (round?.scoring_type) {
+            case "score": scoring_type = 'score V1'; break
+            case "scorev2": scoring_type = 'score V2'; break
+            case "accuracy": scoring_type = 'accuracy'; break
+            case "combo": scoring_type = 'combo'; break
+            default: scoring_type = 'unknown'; break
+        }
+
+        let team_type;
+        switch (round?.team_type) {
+            case "team-vs": team_type = 'VS'; break
+            case "head-to-head": team_type = 'H2H'; break
+            case "tag-coop": team_type = 'TAG'; break
+            case "tag-team-vs": team_type = 'T.VS'; break
+            default: team_type = '?'; break
+        }
+
+        return {
+            scoring_type: scoring_type,
+            team_type: team_type,
+            player_count: player_count,
+        }
+    },
+
+    score2componentE13: (players) => {
+        return {
+            players: players
+        }
+    },
 }
 
-//SS和X的转换
-const rank2rank = (rank = 'SS') => {
-    switch (rank) {
-        case "SS": return 'X';
-        case "SSH": return 'XH';
-        default: return rank;
-    }
-}
-
-const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = ['']) => {
-    let rank = 'F';
-    const hasMiss = miss > 0;
-
-    switch (getGameMode(mode, 1)) {
-        case 'o' : {
-
-            if (acc === 1) {
-                rank = 'SS';
-            } else if (acc >= 0.9317) {
-                if (hasMiss) {
-                    rank = 'A';
-                } else {
-                    rank = 'S';
-                }
-            } else if (acc >= 0.8333) {
-                if (hasMiss) {
-                    rank = 'B';
-                } else {
-                    rank = 'A';
-                }
-            } else if (acc >= 0.75) {
-                if (hasMiss) {
-                    rank = 'C';
-                } else {
-                    rank = 'B';
-                }
-            } else if (acc >= 0.6) {
-                rank = 'C';
-            } else {
-                rank = 'D';
-            }
-        } break;
-
-        case 't' : {
-
-            if (acc === 1) {
-                rank = 'SS';
-            } else if (acc >= 0.95) {
-                if (hasMiss) {
-                    rank = 'A';
-                } else {
-                    rank = 'S';
-                }
-            } else if (acc >= 0.9) {
-                if (hasMiss) {
-                    rank = 'B';
-                } else {
-                    rank = 'A';
-                }
-            } else if (acc >= 0.8) {
-                if (hasMiss) {
-                    rank = 'C';
-                } else {
-                    rank = 'B';
-                }
-            } else if (acc >= 0.6) {
-                rank = 'C';
-            } else {
-                rank = 'D';
-            }
-        } break;
-
-        case 'c' : {
-
-            if (acc === 1) {
-                rank = 'SS';
-            } else if (acc > 0.98) {
-                rank = 'S';
-            } else if (acc > 0.94) {
-                rank = 'A';
-            } else if (acc > 0.90) {
-                rank = 'B';
-            } else if (acc > 0.85) {
-                rank = 'C';
-            } else {
-                rank = 'D';
-            }
-        } break;
-
-        case 'm' : {
-
-            if (acc === 1) {
-                rank = 'SS';
-            } else if (acc >= 0.95) {
-                rank = 'S';
-            } else if (acc >= 0.90) {
-                rank = 'A';
-            } else if (acc >= 0.80) {
-                rank = 'B';
-            } else if (acc >= 0.70) {
-                rank = 'C';
-            } else {
-                rank = 'D';
-            }
-        } break;
-    }
-
-    const isSilver = hasMod(getModInt(mods), 'HD') || hasMod(getModInt(mods), 'FL');
-    if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
-
-    return rank;
-}
 
 // bottom: 保底
 const getProgress = (x, min, max, bottom = 1 / 16) => {
@@ -1218,133 +1107,6 @@ const getModsSVG = (mods = [""], x, y, mod_w, text_h, interval) => {
 
         return `<path transform="translate(${x} ${y})"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${color};"/>\n` + mod_abbr + '\n';
     }
-
-    return svg;
-}
-
-const getStatMax = (pp) => {
-    let max = 0
-
-    for (const p of pp) {
-        max = Math.max(max, p);
-    }
-
-    return max;
-}
-
-const expectedFC2Statistics = (pp) => {
-    let statistics = [];
-    statistics.push({
-        index: '100',
-        stat: Math.round(pp[1]),
-        index_color: '#fff',
-        stat_color: '#fff',
-        rrect_color: '#88C5F3',
-    }, {
-        index: '99',
-        stat: Math.round(pp[2]),
-        index_color: '#fff',
-        stat_color: '#fff',
-        rrect_color: '#8CC4C1',
-    }, {
-        index: '98',
-        stat: Math.round(pp[3]),
-        index_color: '#fff',
-        stat_color: '#fff',
-        rrect_color: '#8FC295',
-    }, {
-        index: '96',
-        stat: Math.round(pp[4]),
-        index_color: '#fff',
-        stat_color: '#fff',
-        rrect_color: '#A7CE95',
-    }, {
-        index: '94',
-        stat: Math.round(pp[5]),
-        index_color: '#fff',
-        stat_color: '#fff',
-        rrect_color: '#C4DB95',
-    }, {
-        index: '92',
-        stat: Math.round(pp[6]),
-        index_color: '#fff',
-        stat_color: '#fff',
-        rrect_color: '#FFF995',
-    });
-    return statistics;
-}
-
-const expectedNC2Statistics = (pp = []) => {
-    let statistics = [];
-    statistics.push({
-        index: '100',
-        stat: Math.round(pp[7]),
-        index_color: '#fff',
-        stat_color: 'none',
-        rrect_color: '#55B1EF',
-    }, {
-        index: '99',
-        stat: Math.round(pp[8]),
-        index_color: '#fff',
-        stat_color: 'none',
-        rrect_color: '#5EB0AB',
-    }, {
-        index: '98',
-        stat: Math.round(pp[9]),
-        index_color: '#fff',
-        stat_color: 'none',
-        rrect_color: '#62AE70',
-    }, {
-        index: '96',
-        stat: Math.round(pp[10]),
-        index_color: '#fff',
-        stat_color: 'none',
-        rrect_color: '#88BD6F',
-    }, {
-        index: '94',
-        stat: Math.round(pp[11]),
-        index_color: '#fff',
-        stat_color: 'none',
-        rrect_color: '#ADCE6D',
-    }, {
-        index: '92',
-        stat: Math.round(pp[12]),
-        index_color: '#fff',
-        stat_color: 'none',
-        rrect_color: '#FFF767',
-    });
-    return statistics;
-}
-
-function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, font_h) {
-    let svg = '';
-
-    stat.forEach((v, i) => {
-        const text_y = y + font_h + i * (height + interval);
-        const index_text_x = x - 10;
-        const stat_text_x = x + w + 10;
-
-        const index = (v.index === 0) ? '0' : (v.index || '');
-        const stat = (v.stat === 0) ? '0' : (v.stat || '');
-
-        const color = v.rrect_color;
-
-        const index_text = poppinsBold.getTextPath(index.toString(),
-            index_text_x, text_y, 18, "right baseline", v.index_color);
-        const stat_text = poppinsBold.getTextPath(stat.toString(),
-            stat_text_x, text_y, 18, "left baseline", v.stat_color);
-
-        svg += (index_text + stat_text);
-
-        if (v.stat > 0) {
-            const rect_width = w * v.stat / stat_max;
-            svg += PanelDraw.Rect(x, y + (height + interval) * i, Math.max(rect_width, height), height, height / 2, color);
-        }
-
-        if (typeof v.stat === "number") {
-            svg += PanelDraw.Rect(x, y + (height + interval) * i, w, height, height / 2, color, 0.1);
-        }
-    });
 
     return svg;
 }

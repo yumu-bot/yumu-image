@@ -866,7 +866,7 @@ const component_E10 = (
     const reg_text = /(?<=<g id="Text_OE10">)/;
     const reg_base = /(?<=<g id="Base_OE10">)/;
 
-    const title = poppinsBold.getTextPath('Judges', 15, 28, 18, 'left baseline', '#fff');
+    const title = poppinsBold.getTextPath('Judgment', 15, 28, 18, 'left baseline', '#fff');
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 

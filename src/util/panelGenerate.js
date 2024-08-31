@@ -200,7 +200,7 @@ export const PanelGenerate = {
         };
     },
 
-    matchData2CardA2: async (matchCalculate = {}) => {
+    matchData2CardA2: async (matchCalculate = {}, beatmap = null) => {
         const match = matchCalculate?.match;
         const data = matchCalculate?.matchData;
 
@@ -211,7 +211,9 @@ export const PanelGenerate = {
         const isTeamVS = data?.teamVs;
         const star = getRoundedNumberStr(data?.averageStar || 0, 3);
 
-        const background = await getMapBG(data.firstMapSID, 'list@2x', false);
+        const background = await getMapBG(
+            beatmap == null ? data.firstMapSID : beatmap.beatmapset.id,
+            'list@2x', beatmap == null ? false : hasLeaderBoard(beatmap.ranked));
 
         const isContainVS = match?.match?.name.toLowerCase().match('vs');
         let title, title1, title2;
