@@ -61,7 +61,7 @@ export async function panel_C2(data = {}) {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    const cardA2 = await card_A2(await matchData2CardA2(data));
+    const cardA2 = await card_A2(await seriesData2CardA2(data));
 
     // 插入图片和部件（新方法
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
@@ -69,11 +69,11 @@ export async function panel_C2(data = {}) {
 
     // 导入H卡
     let cardHs = [];
-    const playerDataList = data?.series?.playerDataList || [];
+    const players = data?.seriesData?.playerDataList || [];
 
     let dataArr = [];
 
-    for (const v of playerDataList) {
+    for (const v of players) {
         dataArr.push(v);
     }
     //渲染不在队伍（无队伍）
@@ -105,7 +105,6 @@ export async function panel_C2(data = {}) {
 }
 
 async function playerData2CardH(p = {}) {
-
     const rws = Math.round(p.rws * 10000) / 100;
 
     const left1 = getRoundedNumberStr(p.tts, 3) +
@@ -168,12 +167,15 @@ async function playerData2CardH(p = {}) {
     };
 }
 
-async function matchData2CardA2(data){
-    const star = getRoundedNumberStr(data?.averageStar || 0, 3);
+async function seriesData2CardA2(data){
+    const s_data = data?.seriesData
+    const s_stat = data?.series?.seriesStat
 
-    const background = await getMapBG(data?.series?.firstMapSIDs[0], 'list@2x', false);
+    const star = getRoundedNumberStr(s_data?.averageStar || 0, 3);
 
-    const title = data?.series?.seriesStat?.name || "";
+    const background = await getMapBG(s_data?.firstMapSID, 'list@2x', false);
+
+    const title = s_stat?.name || "";
     let title1, title2;
     const title_cut = PuHuiTi.cutStringTail(title, 36, 390,false);
     if (title_cut.length === title.toString().length) {
@@ -185,15 +187,18 @@ async function matchData2CardA2(data){
     }
 
     //这里的时间戳不需要 .add(8, 'hours')
-    const left1 = 'M' + data.matchCount + ' R' + data.roundCount + ' P' + data.playerCount + ' S' + data.scoreCount;
+    const left1 = 'M' + s_data?.matchCount +
+        ' R' + s_data?.roundCount +
+        ' P' + s_data?.playerCount +
+        ' S' + s_data?.scoreCount;
 
-    const left2 = moment(data?.series?.seriesStat?.start_time, 'X').format('YYYY/MM/DD HH:mm')
-    const left3 = moment(data?.series?.seriesStat?.end_time, 'X').format('YYYY/MM/DD HH:mm');
+    const left2 = moment(s_stat?.start_time, 'X').format('YYYY/MM/DD HH:mm')
+    const left3 = moment(s_stat?.end_time, 'X').format('YYYY/MM/DD HH:mm');
 
     const right1 = 'SR ' + star + '*';
     const right2 = 'Scores/Player'; // + data.matchStat.id || 0;
-    const right3b = data.playerCount > 0 ? getRoundedNumberStrLarge(data.scoreCount / data.playerCount, 3) : "0";
-    const right3m = data.playerCount > 0 ? getRoundedNumberStrSmall(data.scoreCount / data.playerCount, 3) : "";
+    const right3b = s_data?.playerCount > 0 ? getRoundedNumberStrLarge(s_data?.scoreCount / s_data?.playerCount, 3) : "0";
+    const right3m = s_data?.playerCount > 0 ? getRoundedNumberStrSmall(s_data?.scoreCount / s_data?.playerCount, 3) : "";
 
     return {
         background: background,
