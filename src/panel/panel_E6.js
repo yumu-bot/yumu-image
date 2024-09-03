@@ -873,7 +873,7 @@ const PanelEGenerate = {
         const length_r = Math.floor(b?.total_length / 60) + ':' + (b?.total_length % 60).toFixed(0).padStart(2, '0');
         const length_b = Math.floor(b?.hit_length / 60) + ':';
         const length_m = (b?.hit_length % 60).toFixed(0).padStart(2, '0');
-        const length_p = getProgress(b?.hit_length, 30, 210);
+        const length_p = getProgress(b?.hit_length, 30, 270);
 
         let isDisplayCS = true;
         let isDisplayAR = true;
@@ -920,8 +920,8 @@ const PanelEGenerate = {
                 ar_mid = 0;
                 ar_max = 0;
                 hp_min = 7;
-                hp_mid = 8.5;
-                hp_max = 10;
+                hp_mid = 8;
+                hp_max = 9;
                 isDisplayAR = false;
             } break;
         }

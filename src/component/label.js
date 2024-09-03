@@ -102,8 +102,8 @@ export const LABELS = {
         color_remark: '#aaa',
         bar_color: '#F06EA9',
         bar_min: 30,
-        bar_mid: 120,
-        bar_max: 210,
+        bar_mid: 150,
+        bar_max: 270,
     },
     CS: {
         icon: getImageFromV3("object-score-circlesize.png"),
