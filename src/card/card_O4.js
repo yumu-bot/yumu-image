@@ -70,14 +70,14 @@ function getActivityTypeColor(type = '', approval = '') {
 
     switch (type) {
         case 'beatmapsetApprove': {
-            if (approval === 'ranked') return '#6ACCFE';
-            else if (approval === 'qualified') return '#A5CC00';
-            else return '#fff';
+            if (approval === 'ranked') return '#4fc3f7';
+            else if (approval === 'qualified') return '#aeea00';
+            else return '#4caf50';
         }
-        case 'beatmapsetDelete': return '#D56E74';
-        case 'beatmapsetRevive': return '#D46DA1';
-        case 'beatmapsetUpdate': return '#ADCE6D';
-        case 'beatmapsetUpload': return '#FFF767';
+        case 'beatmapsetDelete': return '#d32f5f';
+        case 'beatmapsetRevive': return '#673ab7';
+        case 'beatmapsetUpdate': return '#ff9800';
+        case 'beatmapsetUpload': return '#ffff00';
         default : return '#fff';
     }
 }
@@ -86,14 +86,14 @@ function getActivityTypeOperate(type = '', approval = '') {
 
     switch (type) {
         case 'beatmapsetApprove': {
-            if (approval === 'ranked') return 'Rank';
-            else if (approval === 'qualified') return 'Qua';
-            else return '';
+            if (approval === 'ranked') return 'Ranked';
+            else if (approval === 'qualified') return 'Qualified';
+            else return 'Approved';
         }
-        case 'beatmapsetDelete': return 'Del';
-        case 'beatmapsetRevive': return 'Rev';
-        case 'beatmapsetUpdate': return 'Upd';
-        case 'beatmapsetUpload': return 'Upl';
+        case 'beatmapsetDelete': return 'Delete';
+        case 'beatmapsetRevive': return 'Revive';
+        case 'beatmapsetUpdate': return 'Update';
+        case 'beatmapsetUpload': return 'Upload';
         default : return '';
     }
 }
