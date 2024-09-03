@@ -1022,42 +1022,43 @@ export function getV3Score(v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods
 export function getDecimals(number = 0, whichData = 0) {
 
     //去除小数，保留两位
-    let sr = (Math.round(number * 100) / 100) || 0;
+    const sr = (Math.round(number * 100) / 100) || 0;
 
     //避免浮点缺陷
-    let sr_b = Math.floor(sr);
-    let sr_m = Math.round((sr - sr_b) * 100) / 100;
+    const sr_b = Math.floor(sr);
+    const sr_mm = Math.round((sr - sr_b) * 100) / 100;
+    const sr_m = Math.round((sr - sr_b) * 10) / 10;
 
     let text_sr_b;
-    if (sr_m === 0) {
+    if (sr_mm === 0) {
         text_sr_b = sr_b.toString();
     } else {
         text_sr_b = sr_b + '.';
     }
 
-    let text_sr_m = sr_m.toString().slice(2, 4);
-    if (text_sr_m.slice(1) === '0') {
-        text_sr_m = text_sr_m.slice(0, 1);
-    } else if (text_sr_m === '00') {
-        text_sr_m = '';
+    let text_sr_mm = sr_mm.toString().slice(2, 4);
+    if (text_sr_mm.slice(1) === '0') {
+        text_sr_mm = text_sr_mm.slice(0, 1);
+    } else if (text_sr_mm === '00') {
+        text_sr_mm = '';
     }
 
-    let text_sr_mm = sr_m.toString().slice(2, 3);
-    if (text_sr_m.slice(1) === '0') {
-        text_sr_m = text_sr_m.slice(0, 1);
+    let text_sr_m = sr_m.toString().slice(2, 3);
+    if (text_sr_m === '0') {
+        text_sr_m = '';
     }
 
     switch (whichData) {
         case 0:
             return sr_b;
         case 1:
-            return sr_m;
+            return sr_mm;
         case 2:
             return text_sr_b;
         case 3:
-            return text_sr_m;
-        case 4:
             return text_sr_mm;
+        case 4:
+            return text_sr_m;
     }
 
 }
