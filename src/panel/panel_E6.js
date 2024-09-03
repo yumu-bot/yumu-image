@@ -487,7 +487,6 @@ const component_E7 = (
     const over = 460 - poppinsBold.getTextWidth(Math.round(data?.perfect_pp || 0), 24) - 30 < (460 * fc_percent);
     if (over) is_fc = true;
 
-
     let reference_pp; // 参考 PP，有时是 FC PP，有时是 SS PP
 
     let percent;
@@ -509,7 +508,13 @@ const component_E7 = (
         fc_pp_text = Math.round(data?.perfect_pp || 0);
     }
 
-    reference_pp_text = ' / ' + Math.round(reference_pp) + ' ' + percent_type +' [' + Math.round(percent * 100) + '%]';
+    const is_perfect = percent_type === 'SS' && Math.round(percent * 100) > 99.9
+
+    if (is_perfect) {
+        reference_pp_text = ' / PERFECT';
+    } else {
+        reference_pp_text = ' / ' + Math.round(reference_pp) + ' ' + percent_type + ' [' + Math.round(percent * 100) + '%]';
+    }
 
     const fc_pp = poppinsBold.getTextPath(fc_pp_text, 475 - 15, 128, 24, 'right baseline', '#fff')
 
