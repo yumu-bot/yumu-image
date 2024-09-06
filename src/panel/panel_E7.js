@@ -3,7 +3,7 @@ import {
     exportJPEG, getAvatar, getBeatMapTitlePath, getDecimals,
     getDiffBG, getFileSize, getGameMode, getImageFromV3, getMapStatusImage, getPanelNameSVG,
     getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
-    implantImage, implantSvgBody, od2ms,
+    implantImage, implantSvgBody, isBlankString, od2ms,
     readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
@@ -260,7 +260,7 @@ const card_E7 = async (
         <g id="Text_CE7">
         </g>
     `;
-    if (data?.avatar == null || data?.avatar === '') return ''
+    if (isBlankString(data?.avatar)) return ''
 
     const reg_text = /(?<=<g id="Text_CE7">)/;
     const reg_avatar = /(?<=<g id="Background_CE7" style="clip-path: url\(#clippath-CE7-1\);">)/;

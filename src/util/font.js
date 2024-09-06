@@ -1,4 +1,5 @@
 import TextToSVG from "text-to-svg";
+import {isEmptyArray} from "./util.js";
 
 const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
 const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.3.ttf");
@@ -26,7 +27,7 @@ export function getMultipleTextPath(array = [{
     size: 24,
     color: '#fff',
 }], x = 0, y = 0, anchor = "center baseline") {
-    if (array == null || array.length === 0) return '';
+    if (isEmptyArray(array)) return '';
 
     let width_array = []; // 累计宽度
     let total_width = 0;

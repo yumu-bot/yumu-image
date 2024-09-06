@@ -16,7 +16,7 @@ import {
     implantSvgBody,
     readTemplate,
     replaceText,
-    replaceTexts, getFileSize, od2ms, ar2ms, cs2px
+    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString
 } from "../util/util.js";
 import moment from "moment";
 import {getApproximateRank, getRankBG, hasLeaderBoard} from "../util/star.js";
@@ -920,12 +920,13 @@ const component_E10P = (
     const reg_rank = /(?<=<g id="Rank_OE11">)/;
     const reg_crown = /(?<=<g id="Crown_OE11">)/;
 
-    svg = data.rainbow_rank !== null ?
-        implantImage(svg, 100, 100, 20, 160, 1, getImageFromV3(data.rainbow_rank), reg_rank) : ''
-    svg = data.rainbow_crown !== null ?
-        implantImage(svg, 100, 100, 140, 160, 1, getImageFromV3(data.rainbow_crown), reg_crown) : ''
+    svg = isNotBlankString(data?.rainbow_rank) ?
+        implantImage(svg, 100, 100, 20, 160, 1, getImageFromV3(data?.rainbow_rank), reg_rank) :
+        implantImage(svg, 100, 100, 20, 160, 1, getImageFromV3(data?.rainbow_crown), reg_crown)
+    svg = isNotBlankString(data?.rainbow_rank) ?
+        implantImage(svg, 100, 100, 140, 160, 1, getImageFromV3(data?.rainbow_crown), reg_crown) : svg
 
-    return svg;
+    return svg.toString();
 }
 
 

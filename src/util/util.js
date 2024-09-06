@@ -194,6 +194,34 @@ export function deleteBeatMapFromDatabase(bid) {
     }).catch(_ => {})
 }
 
+export function isBlankString(str = "") {
+    return (str == null) || (str == undefined) || (typeof str !== "string") || (typeof str === "string" && str.replaceAll(/\\s*/, "").length === 0)
+}
+
+export function isEmptyString(str = "") {
+    return (str == null) || (str == undefined) || (typeof str !== "string") || (typeof str === "string" && str.length === 0)
+}
+
+export function isEmptyArray(arr = []) {
+    return (arr == null) || (arr == undefined) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length === 0)
+}
+
+export function isNull(object) {
+    return (object == null) || (object == undefined)
+}
+
+export function isNotBlankString(str = "") {
+    return ! isBlankString(str)
+}
+
+export function isNotEmptyString(str = "") {
+    return ! isEmptyString(str)
+}
+
+export function isNotEmptyArray(arr = []) {
+    return ! isEmptyArray(arr)
+}
+
 /**
  * 根据谱面罗马音和原文，返回方便展示的字形
  * @param font
@@ -249,7 +277,7 @@ export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '
  * @return {Promise<boolean>}
  */
 export function isPictureIntacted(path = '') {
-    if (path == null || path == '') return false;
+    if (isBlankString(path)) return false;
 
     let f;
 
@@ -310,7 +338,7 @@ export async function getMapBG(sid = 0, cover = 'cover', useCache = true, defaul
  * @return {Promise<string>}
  */
 export async function getAvatar(link, useCache = true, defaultImagePath = getImageFromV3('avatar-guest.png')) {
-    if (link == null || link == "https://a.ppy.sh/" || link == "") {
+    if (isBlankString(link) || link == "https://a.ppy.sh/") {
         return defaultImagePath;
     } else if (typeof link === "number") {
         return await readNetImage('https://a.ppy.sh/' + link, useCache, defaultImagePath);
@@ -327,9 +355,9 @@ export async function getAvatar(link, useCache = true, defaultImagePath = getIma
  * @return {Promise<string>}
  */
 export async function getBanner(link, useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
-    if (link != null && link.startsWith("https://assets.ppy.sh/beatmaps/")) {
+    if (isBlankString(link) && link.startsWith("https://assets.ppy.sh/beatmaps/")) {
         return await getMapCover(link, useCache, getImageFromV3('beatmap-DLfailBG.jpg'))
-    } else if (link == null || link == "") {
+    } else if (isBlankString(link)) {
         return defaultImagePath;
     } else {
         return await readNetImage(link, useCache, defaultImagePath);

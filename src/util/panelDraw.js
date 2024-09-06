@@ -1,6 +1,6 @@
 //把数组变成可视化的图表
 import {torus} from "./font.js";
-import {replaceText} from "./util.js";
+import {isEmptyArray, replaceText} from "./util.js";
 
 export const PanelDraw = {
     Image: (x = 0, y = 0, w = 100, h = 100, link = '', opacity = 1) => {
@@ -21,7 +21,7 @@ export const PanelDraw = {
 
     //柱状图，Histogram，max 如果填 null，即用数组的最大值。max_undertake是数组的最大值小于这个值时的 保底机制
     BarChart: (arr = [0], max = null, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff', max_undertake = 0, floor = 0, minColor = '#aaa', opacity = 1) => {
-        if (arr == null) return '';
+        if (isEmptyArray(arr)) return '';
 
         const arr_max = (typeof max === 'number') ? max :
             ((typeof max_undertake === 'number') ? Math.max(Math.max.apply(Math, arr), max_undertake) : Math.max.apply(Math, arr));
@@ -47,7 +47,7 @@ export const PanelDraw = {
 
     //折线图，max/min 如果填 0，即用数组的最大值
     LineChart: (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3, is0toMin = false) => {
-        if (arr == null) return '';
+        if (isEmptyArray(arr)) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
         const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;
         const delta = Math.abs(arr_max - arr_min);

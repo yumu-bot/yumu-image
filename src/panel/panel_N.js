@@ -4,7 +4,7 @@ import {
     getPanelNameSVG,
     getRoundedNumberStr,
     implantImage,
-    implantSvgBody, readNetImage,
+    implantSvgBody, isEmptyArray, readNetImage,
     readTemplate,
     replaceText,
     replaceTexts, transformSvgBody
@@ -187,7 +187,7 @@ function getTagPanel(tags = [""], x, y, size = 18, color = '#3399CC', max_width 
 async function getGuestPanel(guest = [], x = 54, y = 745) {
     let out = "";
 
-    if (guest == null || guest.length <= 0) {
+    if (isEmptyArray(guest)) {
         //摆烂机制
         out += PanelDraw.Image(180, -5, 80, 80, getImageFromV3('sticker_qiqi_oh.png'))
         out += torus.getTextPath('Solo Set!', 215, 100, 18, 'center baseline', '#fff')
