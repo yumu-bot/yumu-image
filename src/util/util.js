@@ -217,7 +217,7 @@ export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '
 
         if (title_cut.length === title.toString().length) {
             if (typeof artist === "string") {
-                title_exceed = '<' + artist + '>';
+                title_exceed = artist;
             } else {
                 title_exceed = '';
             }

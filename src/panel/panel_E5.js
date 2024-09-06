@@ -218,7 +218,8 @@ export async function panel_E5(data = {
     const componentE7 = component_E7(PanelEGenerate.score2componentE7(data.score, data.attributes));
     const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score));
     const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.score));
-    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score));
+    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score, data.progress));
+    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.progress));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -231,6 +232,7 @@ export async function panel_E5(data = {
     svg = implantSvgBody(svg, 1390, 330, componentE7, reg_card_e3);
     svg = implantSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
     svg = implantSvgBody(svg, 1390, 600, componentE9, reg_card_e3);
+    svg = implantSvgBody(svg, 1390, 770, componentE10P, reg_card_e3);
     svg = implantSvgBody(svg, 1390, 770, componentE10, reg_card_e3);
 
     // 导入图片
@@ -901,6 +903,32 @@ const component_E10 = (
     return svg;
 }
 
+const component_E10P = (
+    data = {
+        mode: '',
+        rainbow_rank: '',
+        rainbow_crown: ''
+    }) => {
+    let svg = `
+        <g id="Crown_OE11">
+        </g>
+        <g id="Rank_OE11">
+        </g>
+    `;
+    if (getGameMode(data?.mode, 1) !== 't') return ''
+
+    const reg_rank = /(?<=<g id="Rank_OE11">)/;
+    const reg_crown = /(?<=<g id="Crown_OE11">)/;
+
+    svg = data.rainbow_rank !== null ?
+        implantImage(svg, 100, 100, 20, 160, 1, getImageFromV3(data.rainbow_rank), reg_rank) : ''
+    svg = data.rainbow_crown !== null ?
+        implantImage(svg, 100, 100, 140, 160, 1, getImageFromV3(data.rainbow_crown), reg_crown) : ''
+
+    return svg;
+}
+
+
 // 私有转换方式
 const PanelEGenerate = {
     score2componentE1: (score) => {
@@ -1161,7 +1189,7 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE10: (score) => {
+    score2componentE10: (score, progress) => {
         let ratio;
 
         if (score.statistics.count_300 === 0) {
@@ -1178,10 +1206,54 @@ const PanelEGenerate = {
 
         return {
             statistics: score2Statistics(score),
-            statistics_max: score2StatisticsMax(score),
+            statistics_max: score2StatisticsMax(score, progress),
 
             ratio: ratio,
             mode: score.mode,
+        }
+    },
+
+    score2componentE10P: (score, progress) => {
+        const rainbow_rating = score?.accuracy * (progress || 0)
+
+        let rainbow_rank;
+
+        if (rainbow_rating < 0.5) {
+            rainbow_rank = null
+        } else if (rainbow_rating < 0.6) {
+            rainbow_rank = 'object-score-iki-iron.png'
+        } else if (rainbow_rating < 0.7) {
+            rainbow_rank = 'object-score-iki-bronze.png'
+        } else if (rainbow_rating < 0.8) {
+            rainbow_rank = 'object-score-iki-silver.png'
+        } else if (rainbow_rating < 0.9) {
+            rainbow_rank = 'object-score-miyabi-gold.png'
+        } else if (rainbow_rating < 0.95) {
+            rainbow_rank = 'object-score-miyabi-pink.png'
+        } else if (rainbow_rating < 1) {
+            rainbow_rank = 'object-score-miyabi-purple.png'
+        } else {
+            rainbow_rank = 'object-score-kiwami-rainbow.png'
+        }
+
+        let rainbow_crown;
+
+        if (score?.rank === 'F') {
+            rainbow_crown = 'object-score-don-failed.png'
+        } else if (score?.statistics?.count_miss === 0) {
+            if (score?.statistics?.count_100 === 0) {
+                rainbow_crown = 'object-score-crown-rainbow.png'
+            } else {
+                rainbow_crown = 'object-score-crown-gold.png'
+            }
+        } else {
+            rainbow_crown = 'object-score-crown-silver.png'
+        }
+
+        return {
+            mode: score.mode,
+            rainbow_rank: rainbow_rank,
+            rainbow_crown: rainbow_crown
         }
     },
 }
@@ -1296,7 +1368,7 @@ const score2Statistics = (score) => {
                 index_color: '#fff',
                 stat_color: '#fff',
                 rrect_color: '#79C471',
-            }, {}, {
+            }, {
                 index: '0',
                 stat: n0,
                 index_color: '#fff',
@@ -1388,7 +1460,7 @@ const score2Statistics = (score) => {
 }
 
 //老面板的sumJudge
-const score2StatisticsMax = (score) => {
+const score2StatisticsMax = (score, progress) => {
     const n320 = score.statistics.count_geki;
     const n300 = score.statistics.count_300;
     const n200 = score.statistics.count_katu;
@@ -1398,17 +1470,17 @@ const score2StatisticsMax = (score) => {
 
     const mode = getGameMode(score.mode, 1);
 
+    const index = 1 / (progress > 0 ? progress : 1)
+
     switch (mode) {
         case 'o':
-            return n300 + n100 + n50 + n0;
+            return Math.ceil((n300 + n100 + n50 + n0) * index);
         case 't':
-            return n300 + n100 + n0;
+            return Math.ceil((n300 + n100 + n0) * index);
         case 'c':
-            return Math.max(n300 + n100 + n0, n50, n200); //小果miss(katu)也要传过去的
+            return Math.ceil(Math.max(n300 + n100 + n0, n50, n200) * index); //小果miss(katu)也要传过去的
         case 'm':
-            return Math.max(n320 + n300, n200, n100, n50, n0);
-        default:
-            return n320 + n300 + n200 + n100 + n50 + n0;
+            return Math.ceil(Math.max(n320 + n300, n200, n100, n50, n0) * index);
     }
 }
 
