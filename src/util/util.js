@@ -195,7 +195,7 @@ export function deleteBeatMapFromDatabase(bid) {
 }
 
 export function isBlankString(str = "") {
-    return (str == null) || (str == undefined) || (typeof str !== "string") || (typeof str === "string" && str.replaceAll(/\\s*/, "").length === 0)
+    return (str == null) || (str == undefined) || (typeof str !== "string") || (typeof str === "string" && str.replaceAll(/\\s*/g, "").length === 0)
 }
 
 export function isEmptyString(str = "") {
