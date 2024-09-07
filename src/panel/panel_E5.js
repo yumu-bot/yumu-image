@@ -219,7 +219,7 @@ export async function panel_E5(data = {
     const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score));
     const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.score));
     const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score, data.progress));
-    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.progress));
+    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.attributes, data.progress));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -1214,8 +1214,12 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE10P: (score, progress) => {
-        const rainbow_rating = score?.accuracy * (progress || 0)
+    score2componentE10P: (score, attr, progress) => {
+
+        const pp = score?.pp || 0
+        const perfect_pp = attr?.perfect_pp || 0
+
+        const rainbow_rating = (perfect_pp > 0) ? ((pp / perfect_pp) * (progress || 0)) : ((score?.accuracy || 0) * (progress || 0))
 
         let rainbow_rank;
 
