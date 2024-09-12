@@ -1223,17 +1223,18 @@ const PanelEGenerate = {
 
         let rainbow_rank;
 
-        if (rainbow_rating < 0.5) {
-            rainbow_rank = null
-        } else if (rainbow_rating < 0.6) {
+        // 因为 pp 占比其实非常难拿高，所以这里把本来的 0.5-0.95 改成了 0.4-0.9
+        if (rainbow_rating < 0.4) {
+            rainbow_rank = 'object-score-jimaodan.png'
+        } else if (rainbow_rating < 0.5) {
             rainbow_rank = 'object-score-iki-iron.png'
-        } else if (rainbow_rating < 0.7) {
+        } else if (rainbow_rating < 0.6) {
             rainbow_rank = 'object-score-iki-bronze.png'
-        } else if (rainbow_rating < 0.8) {
+        } else if (rainbow_rating < 0.7) {
             rainbow_rank = 'object-score-iki-silver.png'
-        } else if (rainbow_rating < 0.9) {
+        } else if (rainbow_rating < 0.8) {
             rainbow_rank = 'object-score-miyabi-gold.png'
-        } else if (rainbow_rating < 0.95) {
+        } else if (rainbow_rating < 0.9) {
             rainbow_rank = 'object-score-miyabi-pink.png'
         } else if (rainbow_rating < 1) {
             rainbow_rank = 'object-score-miyabi-purple.png'
