@@ -1215,9 +1215,8 @@ const PanelEGenerate = {
     },
 
     score2componentE10P: (score, attr, progress) => {
-
-        const pp = score?.pp || 0
-        const perfect_pp = attr?.perfect_pp || 0
+        const pp = score?.pp || 0 //只有三位精度，并且取 floor
+        const perfect_pp = Math.floor((attr?.perfect_pp || 0) * 1000) / 1000
 
         const rainbow_rating = (perfect_pp > 0) ? ((pp / perfect_pp) * (progress || 0)) : ((score?.accuracy || 0) * (progress || 0))
 
@@ -1236,7 +1235,7 @@ const PanelEGenerate = {
             rainbow_rank = 'object-score-miyabi-gold.png'
         } else if (rainbow_rating < 0.9) {
             rainbow_rank = 'object-score-miyabi-pink.png'
-        } else if (rainbow_rating < 1) {
+        } else if (rainbow_rating <= 0.999) {
             rainbow_rank = 'object-score-miyabi-purple.png'
         } else {
             rainbow_rank = 'object-score-kiwami-rainbow.png'
