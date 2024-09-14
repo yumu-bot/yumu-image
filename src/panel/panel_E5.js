@@ -1215,27 +1215,29 @@ const PanelEGenerate = {
     },
 
     score2componentE10P: (score, attr, progress) => {
-        const pp = score?.pp || 0 //只有三位精度，并且取 floor
-        const perfect_pp = Math.floor((attr?.perfect_pp || 0) * 1000) / 1000
+        const count = score?.beatmap?.count_circles + score?.beatmap?.count_sliders + score?.beatmap?.count_spinners
+        const rattle_rate = count > 0 ? ((count - score?.beatmap?.count_sliders) / count): 1
 
-        const rainbow_rating = (perfect_pp > 0) ? ((pp / perfect_pp) * (progress || 0)) : ((score?.accuracy || 0) * (progress || 0))
+        // const pp = score?.pp || 0 //只有三位精度，并且取 floor
+        // const perfect_pp = Math.floor((attr?.perfect_pp || 0) * 1000) / 1000
+
+        const rainbow_rating = ((score?.accuracy || 0) * (progress || 0))
 
         let rainbow_rank;
 
-        // 因为 pp 占比其实非常难拿高，所以这里把本来的 0.5-0.95 改成了 0.4-0.9
-        if (rainbow_rating < 0.4) {
+        if (rainbow_rating < 0.75) {
             rainbow_rank = 'object-score-jimaodan.png'
-        } else if (rainbow_rating < 0.5) {
-            rainbow_rank = 'object-score-iki-iron.png'
-        } else if (rainbow_rating < 0.6) {
-            rainbow_rank = 'object-score-iki-bronze.png'
-        } else if (rainbow_rating < 0.7) {
-            rainbow_rank = 'object-score-iki-silver.png'
         } else if (rainbow_rating < 0.8) {
-            rainbow_rank = 'object-score-miyabi-gold.png'
+            rainbow_rank = 'object-score-iki-iron.png'
+        } else if (rainbow_rating < 0.85) {
+            rainbow_rank = 'object-score-iki-bronze.png'
         } else if (rainbow_rating < 0.9) {
+            rainbow_rank = 'object-score-iki-silver.png'
+        } else if (rainbow_rating < 0.95) {
+            rainbow_rank = 'object-score-miyabi-gold.png'
+        } else if (rainbow_rating < 0.975) {
             rainbow_rank = 'object-score-miyabi-pink.png'
-        } else if (rainbow_rating <= 0.999) {
+        } else if (rainbow_rating < Math.max(Math.min(rattle_rate, 0.998), 0.99)) {
             rainbow_rank = 'object-score-miyabi-purple.png'
         } else {
             rainbow_rank = 'object-score-kiwami-rainbow.png'
