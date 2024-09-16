@@ -1,0 +1,12 @@
+name: update bot
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update:
+    runs-on: self-hosted
+    steps:
+      - name: Update
+        run: ~/sh/update_node_object.sh
