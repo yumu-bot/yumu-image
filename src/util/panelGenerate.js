@@ -10,7 +10,7 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage, getAvatar, getBanner, getMapCover,
+    readNetImage, getAvatar, getBanner, getMapCover, isASCII
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
@@ -197,6 +197,52 @@ export const PanelGenerate = {
             right2: right2,
             right3b: right3b,
             right3m: right3m,
+        };
+    },
+
+    maimaiPlayer2CardA1: async (user) => {
+        let background;
+
+        if (user.rating < 1000) background = 'object-score-backimage-F.jpg'
+        else if (user.rating < 2000) background = 'object-score-backimage-B.jpg'
+        else if (user.rating < 4000) background = 'object-score-backimage-A.jpg'
+        else if (user.rating < 7000) background = 'object-score-backimage-SP.jpg'
+        else if (user.rating < 10000) background = 'object-score-backimage-D.jpg'
+        else if (user.rating < 12000) background = 'object-score-backimage-C.jpg'
+        else if (user.rating < 13000) background = 'object-score-backimage-S.jpg'
+        else if (user.rating < 14000) background = 'object-score-backimage-SH.jpg'
+        else if (user.rating < 14500) background = 'object-score-backimage-X.jpg'
+        else if (user.rating < 15000) background = 'object-score-backimage-XH.jpg'
+        else background = 'object-score-backimage-PF.jpg'
+
+        let dan
+
+        if (user.dan === 0) dan = 'beginner'
+        else if (user.dan <= 10) dan = user.dan + ' dan'
+        else if (user.dan <= 20) dan = 'shin ' + (user.dan - 10) + ' dan'
+        else if (user.dan === 21) dan = 'shin kaiden'
+        else if (user.dan === 22) dan = 'uchi kaiden'
+        else dan = ''
+
+
+        return {
+            background: getImageFromV3(background),
+            avatar: getImageFromV3('Maimai/avatar-guest.png'),
+            sub_icon1: '',
+            sub_icon2: '',
+            country: null,
+
+            top1: user.name,
+            top2: user.probername,
+            font_top2: isASCII(user.probername) ? 'torus' :'PuHuiTi',
+            font_left1: 'PuHuiTi',
+
+            left1: user.plate,
+            left2: dan,
+            right1: '',
+            right2: 'Rating: ' + user.base  + ' + ' + user.additional,
+            right3b: user.rating,
+            right3m: '',
         };
     },
 

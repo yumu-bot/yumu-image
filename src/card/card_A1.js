@@ -5,7 +5,7 @@ import {
     readTemplate,
     replaceText, replaceTexts,
 } from "../util/util.js";
-import {torus} from "../util/font.js";
+import {PuHuiTi, torus} from "../util/font.js";
 
 
 export async function card_A1(data = {
@@ -16,12 +16,16 @@ export async function card_A1(data = {
     country: null,
 
     top1: 'Muziyami',
+    top2: '',
     left1: '#28075',
     left2: 'CN#1611',
     right1: '',
     right2: '98.7% Lv.93(24%)',
     right3b: '4396',
     right3m: 'PP',
+
+    font_left1: 'torus',
+    font_top2: 'torus'
 }) {
     // 读取模板
     let svg = readTemplate('template/Card_A1.svg');
@@ -37,8 +41,12 @@ export async function card_A1(data = {
     // 文字的 <path>
     const right_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
 
+    const font_top2 = (data.font_top2 === "torus") ? torus : PuHuiTi
+    const font_left1 = (data.font_left1 === "torus") ? torus : PuHuiTi
+
     const top1 = renderTop1(data.top1)
-    const left1 = torus.getTextPath(torus.cutStringTail(data.left1, 24, 390 - right_width), 20, 165.836, 24, "left baseline", "#fff");
+    const top2 = font_top2.getTextPath(font_top2.cutStringTail(data.top2, 24, 290 - right_width), 130, 85.836, 24, "left baseline", "#fff");
+    const left1 = font_left1.getTextPath(font_left1.cutStringTail(data.left1, 24, 390 - right_width), 20, 165.836, 24, "left baseline", "#fff");
     const left2 = torus.getTextPath(torus.cutStringTail(data.left2, 24, 390 - right_width), 20, 191.836, 24, "left baseline", "#fff");
 
     const right1 = torus.getTextPath(data.right1, 420, 114.836, 24, 'right baseline', '#fff');
@@ -50,6 +58,7 @@ export async function card_A1(data = {
     // 替换内容
     svg = replaceText(svg, flagSvg, reg_country_flag); //高44宽60吧
     svg = replaceTexts(svg, [top1, left1, left2, right1, right2, right3], reg_text);
+    svg = replaceTexts(svg, [top1, top2, left1, left2, right1, right2, right3], reg_text);
     // 替换图片
 
     svg = implantImage(svg, 430, 210, 0, 0, 0.6, data.background, reg_background);

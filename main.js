@@ -35,6 +35,8 @@ import {router as panelEpsilonRouter} from "./src/panel/panel_Epsilon.js"; //方
 import {router as MarkdownRouter} from "./src/panel/markdown.js";
 import {router as GetMapAttrRouter} from "./src/panel/mapAttributes.js";
 
+import {router as PanelMERouter} from "./src/panel/panel_ME.js";
+
 initPath();
 //这里放测试代码
 
@@ -85,6 +87,8 @@ app.post('/panel_Beta', panelBetaRouter);
 app.post('/panel_Gamma', panelGammaRouter);
 app.post('/panel_Delta', panelDeltaRouter);
 app.post('/panel_Epsilon', panelEpsilonRouter);
+
+app.post('/panel_ME', PanelMERouter);
 
 app.post('/md', MarkdownRouter);
 app.post('/attr', GetMapAttrRouter);
