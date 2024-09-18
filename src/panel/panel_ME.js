@@ -917,6 +917,7 @@ const PanelMEGenerate = {
 
         switch (song.basic_info.genre) {
             case "东方Project":
+            case "東方Project":
                 category = "Touhou Project";
                 break;
             case "舞萌":
