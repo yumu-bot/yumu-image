@@ -1039,7 +1039,7 @@ function getDigit(achievement = 0.0, digit = 4) {
     let m_str
 
     if (m !== 0) {
-        m_str = '.' + m.toString()
+        m_str = '.' + m.toString().padStart(digit, '0')
     } else {
         m_str = ''
     }
