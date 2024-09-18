@@ -381,6 +381,7 @@ const component_E2 = (
     const reg_base = /(?<=<g id="Base_OE2">)/;
     const reg_text = /(?<=<g id="Text_OE2">)/;
 
+    console.log(data?.version)
     let version;
 
     switch (data?.version) {
@@ -444,6 +445,12 @@ const component_E2 = (
             break;
         case "maimai でらっくす FESTiVAL PLUS":
             version = 'object-version-maimai-dx-festival-plus.png';
+            break;
+        case "maimai でらっくす BUDDiES":
+            version = 'object-version-maimai-dx-buddies.png';
+            break;
+        case "maimai でらっくす BUDDiES PLUS":
+            version = 'object-version-maimai-dx-buddies-plus.png';
             break;
         case "maimai でらっくす PRiSM":
             version = 'object-version-maimai-dx-prism.png';
