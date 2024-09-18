@@ -381,7 +381,6 @@ const component_E2 = (
     const reg_base = /(?<=<g id="Base_OE2">)/;
     const reg_text = /(?<=<g id="Text_OE2">)/;
 
-    console.log(data?.version)
     let version;
 
     switch (data?.version) {
