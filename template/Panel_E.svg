@@ -18,6 +18,10 @@
         <g style="clip-path: url(#clippath-PE-BR);">
         </g>
     </g>
+    <g id="BannerBlurred">
+        <g filter="url(#blur-PE-BG)" style="clip-path: url(#clippath-PE-BR);">
+        </g>
+    </g>
     <g id="Background">
         <rect y="290" width="1920" height="790" rx="20" ry="20" style="fill: #2a2226;"/>
         <g filter="url(#blur-PE-BG)" style="clip-path: url(#clippath-PE-BG);">

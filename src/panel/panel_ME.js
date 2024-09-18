@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getBeatMapTitlePath, getImageFromV3,
+    exportJPEG, getBeatMapTitlePath, getDecimals, getImageFromV3,
     getPanelNameSVG, getRoundedNumberStr, implantImage,
     implantSvgBody, isASCII, readNetImage,
     readTemplate,
@@ -202,7 +202,7 @@ export async function panel_ME(data = {
     let svg = readTemplate('template/Panel_E.svg');
 
     // 路径定义
-    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/;
+    const reg_banner_blurred = /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BR\);">)/;
     const reg_background = /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BG\);">)/;
     const reg_index = /(?<=<g id="Index">)/;
     const reg_card_a1 = /(?<=<g id="Card_A1">)/;
@@ -233,7 +233,6 @@ export async function panel_ME(data = {
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.maimaiPlayer2CardA1(data.user));
 
-
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
     svg = implantSvgBody(svg, 40, 330, componentE1, reg_card_e1);
@@ -249,7 +248,7 @@ export async function panel_ME(data = {
 
     // 导入图片
     svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
+    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner_blurred);
 
 
     return svg.toString()
@@ -258,7 +257,6 @@ export async function panel_ME(data = {
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
 const component_E1 = (
     data = {
-        level: '10',
         label: 'Expert',
         difficulty: 10.4,
     }) => {
@@ -318,6 +316,7 @@ const component_E1 = (
             break;
     }
 
+    /*
     let level = data?.level || '0'
     const difficulty_b = Math.floor(data?.difficulty || 0);
     let difficulty_m
@@ -332,16 +331,18 @@ const component_E1 = (
         difficulty_m = '';
     }
 
+     */
+
     const text_arr = [
         {
             font: "poppinsBold",
-            text: difficulty_b,
+            text: getDecimals(data?.difficulty, 2),
             size: 84,
             color: '#fff',
         },
         {
             font: "poppinsBold",
-            text: difficulty_m,
+            text: getDecimals(data?.difficulty, 4),
             size: 48,
             color: '#fff',
         },
@@ -857,7 +858,6 @@ const PanelMEGenerate = {
     score2componentE1: (score) => {
 
         return {
-            level: score.level,
             label: score.level_label,
             difficulty: score.ds,
         }
