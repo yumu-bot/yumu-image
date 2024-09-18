@@ -951,7 +951,7 @@ const PanelMEGenerate = {
     score2componentE7: (score) => {
         return {
             rating: score?.ra || 0,
-            max: Math.floor(score.ds * 1.05 * 22.4),
+            max: Math.floor(score.ds * 1.005 * 22.4),
         }
     },
 
