@@ -46,8 +46,8 @@ export async function card_A1(data = {
 
     const top1 = renderTop1(data.top1)
     const top2 = font_top2.getTextPath(font_top2.cutStringTail(data.top2, 24, 290), 130, 85.836, 24, "left baseline", "#fff");
-    const left1 = font_left1.getTextPath(font_left1.cutStringTail(data.left1, size_left1, 390 - right_width), 20, 165.836, 24, "left baseline", "#fff");
-    const left2 = font_left2.getTextPath(font_left2.cutStringTail(data.left2, size_left2, 390 - right_width), 20, 191.836, 24, "left baseline", "#fff");
+    const left1 = font_left1.getTextPath(font_left1.cutStringTail(data.left1, size_left1, 390 - right_width), 20, 165.836, size_left1, "left baseline", "#fff");
+    const left2 = font_left2.getTextPath(font_left2.cutStringTail(data.left2, size_left2, 390 - right_width), 20, 191.836, size_left2, "left baseline", "#fff");
 
     const right1 = torus.getTextPath(data.right1, 420, 114.836, 24, 'right baseline', '#fff');
     const right2 = torus.getTextPath(data.right2, 420, 141.836, 24, "right baseline", "#fff");
