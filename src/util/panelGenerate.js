@@ -216,12 +216,13 @@ export const PanelGenerate = {
         else background = 'object-score-backimage-PF.jpg'
 
         let dan
+        const dan_arr = ['初', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
-        if (user.dan === 0) dan = 'beginner'
-        else if (user.dan <= 10) dan = user.dan + ' dan'
-        else if (user.dan <= 20) dan = 'shin ' + (user.dan - 10) + ' dan'
-        else if (user.dan === 21) dan = 'shin kaiden'
-        else if (user.dan === 22) dan = 'uchi kaiden'
+        if (user.dan === 0) dan = '初学者'
+        else if (user.dan <= 10) dan = dan_arr[user.dan - 1] + '段'
+        else if (user.dan <= 20) dan = '真' + dan_arr[user.dan - 11] + '段'
+        else if (user.dan === 21) dan = '真皆伝'
+        else if (user.dan === 22) dan = '裏皆伝'
         else dan = ''
 
 
@@ -236,6 +237,7 @@ export const PanelGenerate = {
             top2: user.probername,
             font_top2: isASCII(user.probername) ? 'torus' :'PuHuiTi',
             font_left1: 'PuHuiTi',
+            font_left2: 'PuHuiTi',
 
             left1: user.plate,
             left2: dan,
