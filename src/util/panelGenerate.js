@@ -10,7 +10,7 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage, getAvatar, getBanner, getMapCover
+    readNetImage, getAvatar, getBanner, getMapCover, getMaimaiLevelBG
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
@@ -201,19 +201,7 @@ export const PanelGenerate = {
     },
 
     maimaiPlayer2CardA1: async (user) => {
-        let background;
-
-        if (user.rating < 1000) background = 'object-score-backimage-F.jpg'
-        else if (user.rating < 2000) background = 'object-score-backimage-B.jpg'
-        else if (user.rating < 4000) background = 'object-score-backimage-A.jpg'
-        else if (user.rating < 7000) background = 'object-score-backimage-SP.jpg'
-        else if (user.rating < 10000) background = 'object-score-backimage-D.jpg'
-        else if (user.rating < 12000) background = 'object-score-backimage-C.jpg'
-        else if (user.rating < 13000) background = 'object-score-backimage-S.jpg'
-        else if (user.rating < 14000) background = 'object-score-backimage-SH.jpg'
-        else if (user.rating < 14500) background = 'object-score-backimage-X.jpg'
-        else if (user.rating < 15000) background = 'object-score-backimage-XH.jpg'
-        else background = 'object-score-backimage-PF.jpg'
+        const background = getMaimaiLevelBG(user.rating);
 
         let dan
         const dan_arr = ['初', '二', '三', '四', '五', '六', '七', '八', '九', '十']
@@ -227,7 +215,7 @@ export const PanelGenerate = {
 
 
         return {
-            background: getImageFromV3(background),
+            background: background,
             avatar: getImageFromV3('Maimai/avatar-guest.png'),
             sub_icon1: '',
             sub_icon2: '',
@@ -239,7 +227,7 @@ export const PanelGenerate = {
             left1: user.plate,
             left2: dan,
             right1: '',
-            right2: 'Rating: ' + user.base  + ' + ' + user.additional,
+            right2:  (user?.base != null) ? 'Rating: ' + user.base  + ' + ' + user.additional : '',
             right3b: user.rating,
             right3m: '',
         };

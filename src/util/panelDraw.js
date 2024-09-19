@@ -15,8 +15,17 @@ export const PanelDraw = {
         return `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill: ${color};"/>`;
     },
 
-    Polygon: (x = 0, y = 0, controls = '', ex = 0, ey = 0, color = '#fff') => {
-        return `<polygon points="${x} ${y} ${controls} ${ex} ${ey}" style="fill: ${color};"/>`
+    Polygon: (x = 0, y = 0, controls = '', ex = 0, ey = 0, color = '#fff', opacity = 1) => {
+        return `<polygon points="${x} ${y} ${controls} ${ex} ${ey}" style="fill: ${color}; fill-opacity: ${opacity}"/>`
+    },
+
+    Diamond: (x = 0, y = 0, w = 0, h = 0, color = '#fff', opacity = 1) => {
+        const top = (x + w/2) + ' ' + y;
+        const right = (x + w) + ' ' + (y + h/2);
+        const bottom = (x + w/2) + ' ' + (y + h);
+        const left = x + ' ' + (y + h/2);
+
+        return `<polygon points="${top} ${right} ${bottom} ${left} ${top}" style="fill: ${color}; fill-opacity: ${opacity}"/>`
     },
 
     //柱状图，Histogram，max 如果填 null，即用数组的最大值。max_undertake是数组的最大值小于这个值时的 保底机制
@@ -161,7 +170,7 @@ export const PanelDraw = {
         const yMax = cy - r * Math.cos(radCurr);
 
         const controls = `${xMin} ${yMin} ${assist}${xMax} ${yMax}`; //这里assist后面的空格是故意删去的
-        return PanelDraw.Polygon(cx, cy, controls, cx, cy, color);
+        return PanelDraw.Polygon(cx, cy, controls, cx, cy, color, 1);
 
         //获取中继点
         function getAssistPoint(radMin = 0, radMax = 0, cx = 0, cy = 0, r = 100) {

@@ -1,9 +1,18 @@
 import {
-    exportJPEG, getBeatMapTitlePath, getDecimals, getImageFromV3,
-    getPanelNameSVG, getRoundedNumberStr, implantImage,
-    implantSvgBody, isASCII, readNetImage,
+    exportJPEG,
+    getBeatMapTitlePath,
+    getDecimals,
+    getImageFromV3,
+    getMaimaiRankBG,
+    getMaimaiBG,
+    getPanelNameSVG,
+    getRoundedNumberStr,
+    implantImage,
+    implantSvgBody,
+    isASCII,
     readTemplate,
-    replaceText, replaceTexts
+    replaceText,
+    replaceTexts, getMaimaiType
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -217,8 +226,8 @@ export async function panel_ME(data = {
     svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`Maimai/object-score-${data?.score?.rate || 'D'}.png`), reg_index);
 
     // 图片定义
-    const background = getMaimaiBG(data.score.rate);
-    const banner = await getMaimaiSongBG(data.song.id);
+    const background = getMaimaiRankBG(data.score.rate);
+    const banner = await getMaimaiBG(data.song.id);
     const componentE1 = component_E1(PanelMEGenerate.score2componentE1(data.score));
     const componentE2 = component_E2(PanelMEGenerate.score2componentE2(data.song));
     const componentE3 = component_E3(PanelMEGenerate.score2componentE3(data.diff, data.score.level, data.chart.fit_diff));
@@ -625,7 +634,7 @@ const component_E6 = async (
         20, 142, 24, 'left baseline', '#fff');
     const bid = poppinsBold.getTextPath((data?.id || 0).toString(), 820 - 20, 142, 24, 'right baseline', '#fff');
 
-    const background = await getMaimaiSongBG(data?.id);
+    const background = await getMaimaiBG(data?.id);
 
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
@@ -887,21 +896,8 @@ const PanelMEGenerate = {
     },
 
     score2componentE4: (type) => {
-        let image;
-        switch (type) {
-            case 'DX':
-                image = getImageFromV3('Maimai/object-type-deluxe.png');
-                break;
-            case 'SD':
-                image = getImageFromV3('Maimai/object-type-standard.png');
-                break;
-            default :
-                image = '';
-                break;
-        }
-
         return {
-            image: image,
+            image: getMaimaiType(type),
         }
     },
 
@@ -979,65 +975,6 @@ const PanelMEGenerate = {
             dx: chart.avg_dx,
         }
     },
-}
-
-function getMaimaiBG(rank) {
-    let out;
-
-    switch (rank) {
-        case 'sssp':
-        case 'sss':
-            out = 'object-score-backimage-SSS.jpg';
-            break;
-        case 'ssp':
-        case 'ss':
-            out = 'object-score-backimage-X.jpg';
-            break;
-        case 'sp':
-        case 's':
-            out = 'object-score-backimage-S.jpg';
-            break;
-        case 'aaa':
-        case 'aa':
-        case 'a':
-            out = 'object-score-backimage-D.jpg';
-            break;
-        case 'bbb':
-        case 'bb':
-        case 'b':
-            out = 'object-score-backimage-B.jpg';
-            break;
-        case 'c':
-            out = 'object-score-backimage-A.jpg';
-            break;
-        case 'd':
-            out = 'object-score-backimage-F.jpg';
-            break;
-        default:
-            out = 'object-score-backimage-SH.jpg';
-            break;
-    }
-
-    return getImageFromV3(out)
-}
-
-async function getMaimaiSongBG(song_id = 0) {
-    if (typeof song_id == "number" && fs.existsSync(getImageFromV3('Maimai/' + song_id + '.png'))) {
-        return getImageFromV3('Maimai/' + song_id + '.png')
-    } else {
-        let id;
-
-        if (song_id == null) {
-            id = 1;
-        } else if (song_id === 1235) {
-            id = song_id + 10000; // 这是水鱼的 bug，不关我们的事
-        } else if (song_id > 10000 && song_id < 11000) {
-            id = song_id - 10000;
-        } else {
-            id = song_id;
-        }
-        return await readNetImage('https://www.diving-fish.com/covers/' + id.toString().padStart(5, '0') + '.png', true, getImageFromV3('Maimai/00000.png'))
-    }
 }
 
 function getDigit(achievement = 0.0, digit = 4) {
