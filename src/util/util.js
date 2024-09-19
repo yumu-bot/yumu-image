@@ -223,7 +223,7 @@ export function isNotEmptyArray(arr = []) {
 }
 
 export function isASCII(str = '') {
-    if (typeof str !== "string") return false
+    if (typeof str !== "string" || str.length === 0) return false
 
     const pattern = /^[\x00-\x7F]+$/; // ASCII范围的Unicode编码
     return pattern.test(str);

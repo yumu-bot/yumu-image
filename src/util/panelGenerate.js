@@ -10,7 +10,7 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage, getAvatar, getBanner, getMapCover, isASCII
+    readNetImage, getAvatar, getBanner, getMapCover
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
@@ -235,9 +235,6 @@ export const PanelGenerate = {
 
             top1: user.name,
             top2: user.probername,
-            font_top2: isASCII(user.probername) ? 'torus' :'PuHuiTi',
-            font_left1: 'PuHuiTi',
-            font_left2: 'PuHuiTi',
 
             left1: user.plate,
             left2: dan,
