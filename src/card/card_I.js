@@ -146,11 +146,11 @@ export async function card_I(data = {
 
 function getDifficultyColor(index = 0) {
     switch (index) {
-        case 0: return '#009944'
         case 1: return '#fff100'
         case 2: return '#d32f2f'
         case 3: return '#9922ee'
         case 4: return '#f7d8fe'
+        default: return '#009944'
     }
 }
 
