@@ -95,9 +95,9 @@ export async function card_I(data = {
             230 - torus.getTextWidth(achievement_text, 16) - 5), 190, 64, charter_size, 'left baseline', '#fff')
 
     const rating_max = Math.floor(data.difficulty * 1.005 * 22.4) || 0
-    const rating = torus.get2SizeTextPath(data?.rating >= rating_max ? ('') : ('(' + rating_max + ') '),
+    const rating = torus.get2SizeTextPath(data?.rating >= rating_max ? ('') : ('[' + rating_max + '] '),
         data?.rating.toString(),
-        24, 40, 420, 100, 'right baseline', '#fff')
+        18, 40, 420, 100, 'right baseline', '#fff')
 
     const achievement = torus.getTextPath(achievement_text, 420, 64, 16, 'right baseline', '#fff')
 
@@ -131,12 +131,12 @@ export async function card_I(data = {
 
     const difficulty_text = getRoundedNumberStr(data.difficulty, 2);
     const difficulty = torus.getTextPath(difficulty_text, 50, 22, 18, 'center baseline', too_bright ? '#000' : '#fff')
-    const difficulty_base = PanelDraw.Rect(30, 6, 40, 20, 5, difficulty_color, 1)
+    const difficulty_base = PanelDraw.Rect(30, 6, 40, 20, 10, difficulty_color, 1)
 
     const id_width = torus.getTextWidth(data.id.toString(), 18)
-    const id_base_width = Math.max(50, id_width + 10)
+    const id_base_width = Math.max(40, id_width + 10)
     const id = torus.getTextPath(data.id.toString(), 30 + (id_base_width / 2), 100, 18, 'center baseline', too_bright ? '#000' : '#fff')
-    const id_base = PanelDraw.Rect(30, 84, id_base_width, 20, 5, difficulty_color, 1)
+    const id_base = PanelDraw.Rect(30, 84, id_base_width, 20, 10, difficulty_color, 1)
 
     svg = replaceTexts(svg, [difficulty, id], reg_text)
     svg = replaceTexts(svg, [difficulty_base, id_base], reg_overlay)
