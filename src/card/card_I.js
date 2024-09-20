@@ -201,20 +201,20 @@ function getComboAndSync(combo = '', sync = '') {
     let combo_color
 
     switch (combo) {
-        case 'fc': combo_color = '#009944'; break;
-        case 'fcp': combo_color = '#b3d465'; break;
-        case 'ap': combo_color = '#ff9800'; break;
-        case 'app': combo_color = '#fff100'; break;
+        case 'fc': combo_color = '#b3d465'; break;
+        case 'fcp': combo_color = '#d3e6a6'; break;
+        case 'ap': combo_color = '#ffcd80'; break;
+        case 'app': combo_color = '#fdf793'; break;
         default: combo_color = '#46393f'; break;
     }
 
     let sync_color;
     switch (sync) {
-        case 'sync': sync_color = '#0068b7'; break;
-        case 'fs': sync_color = '#00a0e9'; break;
-        case 'fsp': sync_color = '#80d8ff'; break;
-        case 'fsd': sync_color = '#ff9800'; break;
-        case 'fsdp': sync_color = '#fff100'; break;
+        case 'sync': sync_color = '#1fbdfe'; break;
+        case 'fs': sync_color = '#80d8ff'; break;
+        case 'fsp': sync_color = '#e1f6ff'; break;
+        case 'fsd': sync_color = '#ffcd80'; break;
+        case 'fsdp': sync_color = '#fdf793'; break;
         default: sync_color = '#46393f'; break;
     }
 
