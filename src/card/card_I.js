@@ -163,19 +163,19 @@ function getDXRatingStars(rating = 0, max = 0) {
 
     if (div >= 0.97) {
         level = 5
-        color = '#fff100'
+        color = '#fdf793'
     } else if (div >= 0.95) {
         level = 4
-        color = '#ff9800'
+        color = '#ffcd80'
     } else if (div >= 0.93) {
         level = 3
-        color = '#ff9800'
+        color = '#ffcd80'
     } else if (div >= 0.9) {
         level = 2
-        color = '#009944'
+        color = '#b3d465'
     } else if (div >= 0.85) {
         level = 1
-        color = '#009944'
+        color = '#b3d465'
     } else {
         return ''
     }

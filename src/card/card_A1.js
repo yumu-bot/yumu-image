@@ -38,13 +38,25 @@ export async function card_A1(data = {
     // 文字的 <path>
     const right_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
 
+    const font_top1 = isASCII(data.top1) ? torus : PuHuiTi
     const font_top2 = isASCII(data.top2) ? torus : PuHuiTi
     const font_left1 = isASCII(data.left1) ? torus : PuHuiTi
     const font_left2 = isASCII(data.left2) ? torus : PuHuiTi
     const size_left1 = isASCII(data.left1) ? 24 : 22
     const size_left2 = isASCII(data.left2) ? 24 : 22
 
-    const top1 = renderTop1(data.top1)
+    let top1_size;
+    if (data.top1?.length > 8 && torus.getTextWidth(data.top1, 42) > 290) {
+        top1_size = 36;
+    } else {
+        top1_size = 42
+    }
+
+    if (! isASCII(data.top1)) {
+        top1_size -= 4;
+    }
+
+    const top1 = font_top1.getTextPath(font_top1.cutStringTail(data.top1, top1_size, 290), 130, 53.672, top1_size, "left baseline", "#fff");
     const top2 = font_top2.getTextPath(font_top2.cutStringTail(data.top2, 24, 290), 130, 85.836, 24, "left baseline", "#fff");
     const left1 = font_left1.getTextPath(font_left1.cutStringTail(data.left1, size_left1, 390 - right_width), 20, 165.836, size_left1, "left baseline", "#fff");
     const left2 = font_left2.getTextPath(font_left2.cutStringTail(data.left2, size_left2, 390 - right_width), 20, 191.836, size_left2, "left baseline", "#fff");
@@ -68,14 +80,3 @@ export async function card_A1(data = {
 
     return svg.toString();
 }
-
-function renderTop1(top1 = "") {
-    let top1_size = 42;
-    if (top1.length > 8) {
-        const top1_width = torus.getTextWidth(top1, top1_size);
-        if (top1_width > 290) top1_size = 36;
-    }
-    return torus.getTextPath(torus.cutStringTail(top1, top1_size, 290),
-        130, 53.672, top1_size, "left baseline", "#fff"); //48px
-}
-
