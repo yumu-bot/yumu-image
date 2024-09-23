@@ -590,7 +590,7 @@ const component_E7 = (
     }
 
     // 保底 PP
-    const pp_width = (data?.pp > 0) ? ((data?.pp / reference_pp) * 460) : 0;
+    const pp_width = (reference_pp > 0) ? ((data?.pp / reference_pp) * 460) : 460;
     const pp_rect = PanelDraw.Rect(15, 105, pp_width, 30, 15, "url(#grad-OE7-16)", 1);
     svg = replaceText(svg, pp_rect, reg_clip6);
 
