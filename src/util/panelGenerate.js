@@ -601,7 +601,7 @@ export const PanelGenerate = {
             500 - 20 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
 
         const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? null : s.beatmapset.title_unicode;
-        const index_b = (s?.pp < 2000) ? Math.round(s?.pp).toString() : 'Inf.';
+        const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : '>10K';
 
         return {
             background: background,
