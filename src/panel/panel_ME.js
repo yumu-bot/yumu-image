@@ -684,7 +684,7 @@ const component_E7 = (
     let reference_pp_text;
     const max = Math.max(data.rating, data.max);
     const is_perfect = data.rating >= data.max
-    const percent = max > 0 ? data.rating / max : 0
+    const percent = max > 0 ? data.rating / max : 100
 
     if (is_perfect) {
         reference_pp_text = ' / PERFECT';

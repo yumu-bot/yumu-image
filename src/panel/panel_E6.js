@@ -479,8 +479,8 @@ const component_E7 = (
     const reg_clip5 = /(?<=<g id="Clip_OE7-5" style="clip-path: url\(#clippath-OE7-5\);">)/;
     const reg_clip6 = /(?<=<g id="Clip_OE7-6" style="clip-path: url\(#clippath-OE7-6\);">)/; //181,100,217 | 238,96,156
 
-    const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 0;
-    const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 0;
+    const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 100;
+    const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 100;
 
     let is_fc = data?.is_fc;
 
