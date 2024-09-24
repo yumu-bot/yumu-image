@@ -139,8 +139,9 @@ export async function panel_MA(data = {
         for (let i = 0; i < Math.min(l, 5); i++) {
             const v = data.versions[i]
             svg = implantImage(svg, 260, 130, 1920 - 40 - 260 - 270 * i, 130 + 20, 1, getMaimaiVersionBG(v), reg_index);
-            svg = replaceText(svg, PanelDraw.Rect(1920 - 40 - 270 * l, 130 + 20, 270 * l, 130, 20, '#46393f', 1), reg_index)
         }
+
+        svg = replaceText(svg, PanelDraw.Rect(1920 - 40 - 270 * l, 130 + 20, 270 * l, 130, 20, '#46393f', 1), reg_index)
     }
 
     // 计算面板高度
