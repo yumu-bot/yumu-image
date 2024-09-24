@@ -3,8 +3,6 @@ import {
     getBeatMapTitlePath,
     getDecimals,
     getImageFromV3,
-    getMaimaiRankBG,
-    getMaimaiBG,
     getPanelNameSVG,
     getRoundedNumberStr,
     implantImage,
@@ -12,13 +10,14 @@ import {
     isASCII,
     readTemplate,
     replaceText,
-    replaceTexts, getMaimaiType
+    replaceTexts
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import fs from "fs";
+import {getMaimaiBG, getMaimaiRankBG, getMaimaiType, getMaimaiVersionBG} from "../util/maimai.js";
 
 export async function router(req, res) {
     try {
@@ -390,83 +389,9 @@ const component_E2 = (
     const reg_base = /(?<=<g id="Base_OE2">)/;
     const reg_text = /(?<=<g id="Text_OE2">)/;
 
-    let version;
+    const version = getMaimaiVersionBG(data.version);
 
-    switch (data?.version) {
-        case "maimai":
-            version = 'object-version-maimai.png';
-            break;
-        case "maimai PLUS":
-            version = 'object-version-maimai-plus.png';
-            break;
-        case "maimai GreeN":
-            version = 'object-version-maimai-green.png';
-            break;
-        case "maimai GreeN PLUS":
-            version = 'object-version-maimai-green-plus.png';
-            break;
-        case "maimai ORANGE":
-            version = 'object-version-maimai-orange.png';
-            break;
-        case "maimai ORANGE PLUS":
-            version = 'object-version-maimai-orange-plus.png';
-            break;
-        case "maimai PiNK":
-            version = 'object-version-maimai-pink.png';
-            break;
-        case "maimai PiNK PLUS":
-            version = 'object-version-maimai-pink-plus.png';
-            break;
-        case "maimai MURASAKi":
-            version = 'object-version-maimai-murasaki.png';
-            break;
-        case "maimai MURASAKi PLUS":
-            version = 'object-version-maimai-murasaki-plus.png';
-            break;
-        case "maimai MiLK":
-            version = 'object-version-maimai-murasaki.png';
-            break;
-        case "MiLK PLUS":
-            version = 'object-version-maimai-murasaki-plus.png';
-            break;
-        case "maimai FiNALE":
-        case "maimai でらっくす":
-            version = 'object-version-maimai-dx.png';
-            break;
-        case "maimai でらっくす PLUS":
-            version = 'object-version-maimai-dx-plus.png';
-            break;
-        case "maimai でらっくす Splash":
-            version = 'object-version-maimai-dx-splash.png';
-            break;
-        case "maimai でらっくす Splash PLUS":
-            version = 'object-version-maimai-dx-splash-plus.png';
-            break;
-        case "maimai でらっくす UNiVERSE":
-            version = 'object-version-maimai-dx-universe.png';
-            break;
-        case "maimai でらっくす UNiVERSE PLUS":
-            version = 'object-version-maimai-dx-universe-plus.png';
-            break;
-        case "maimai でらっくす FESTiVAL":
-            version = 'object-version-maimai-dx-festival.png';
-            break;
-        case "maimai でらっくす FESTiVAL PLUS":
-            version = 'object-version-maimai-dx-festival-plus.png';
-            break;
-        case "maimai でらっくす BUDDiES":
-            version = 'object-version-maimai-dx-buddies.png';
-            break;
-        case "maimai でらっくす BUDDiES PLUS":
-            version = 'object-version-maimai-dx-buddies-plus.png';
-            break;
-        case "maimai でらっくす PRiSM":
-            version = 'object-version-maimai-dx-prism.png';
-            break;
-        case "maimai でらっくす PRiSM PLUS":
-            version = 'object-version-maimai-dx-prism-plus.png';
-            break;
-    }
+
 
     let diffs = ''
 
@@ -480,7 +405,7 @@ const component_E2 = (
 
     const title = poppinsBold.getTextPath('Version', 15, 28, 18, 'left baseline', '#fff');
 
-    svg = implantImage(svg, 370, 185, 58, 42, 1, getImageFromV3('Maimai/' + version), reg_base)
+    svg = implantImage(svg, 370, 185, 58, 42, 1, version, reg_base)
 
     svg = replaceText(svg, PanelDraw.Rect(0, 0, 490, 250, 20, '#382e32'), reg_base);
 

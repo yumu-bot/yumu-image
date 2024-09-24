@@ -1,12 +1,13 @@
 import {
     exportJPEG, getPanelNameSVG, implantImage,
-    implantSvgBody, readTemplate,
+    implantSvgBody, isNotEmptyArray, readTemplate,
     replaceText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_I} from "../card/card_I.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
+import {getMaimaiVersionBG} from "../util/maimai.js";
 
 export async function router(req, res) {
     try {
@@ -57,11 +58,13 @@ export async function panel_MA(data = {
         "charter": "mai-Star",
         "type": "DX",
         "max": 234,
-        "position": null,
+        "position": 0,
     },],
 
     // 仅 b35+b15 使用
     scores_latest: [],
+    versions: [''],
+    panel: "MA"
 }) {
     let svg = readTemplate('template/Panel_MA.svg');
 
@@ -74,7 +77,15 @@ export async function panel_MA(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-MA1-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Maimai Multiple Scores (!ymx)', 'SS', 'v0.4.1 SE');
+    let panel_name
+
+    if (data?.panel === 'MB') {
+        panel_name = getPanelNameSVG('Maimai Multiple Bests (!ymmb)', 'MB', 'v0.4.1 SE');
+    } else if (data?.panel === 'MV') {
+        panel_name = getPanelNameSVG('Maimai Version Scores (!ymmv)', 'MV', 'v0.4.1 SE');
+    } else {
+        panel_name = getPanelNameSVG('Maimai Multiple Scores (!ymx)', 'SS', 'v0.4.1 SE');
+    }
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
@@ -120,6 +131,13 @@ export async function panel_MA(data = {
 
     // 导入图片
     svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+
+    if (isNotEmptyArray(data.versions)) {
+        for (let i = 0; i < Math.min(data.versions.length, 5); i++) {
+            const v = data.versions[i]
+            svg = implantImage(svg, 520, 260, 1920 - 40 - 520 - 100 * i, 20, 1, getMaimaiVersionBG(v), reg_index);
+        }
+    }
 
     // 计算面板高度
     const cardHeight = I1_height + I2_height + 40

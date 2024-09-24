@@ -10,10 +10,11 @@ import {
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage, getAvatar, getBanner, getMapCover, getMaimaiLevelBG
+    readNetImage, getAvatar, getBanner, getMapCover
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
+import {getMaimaiLevelBG} from "./maimai.js";
 
 //公用方法
 //把参数变成面板能读懂的数据（router
@@ -227,7 +228,7 @@ export const PanelGenerate = {
             left1: user.plate,
             left2: dan,
             right1: '',
-            right2:  (user?.base != null) ? 'Rating: ' + user.base  + ' + ' + user.additional : '',
+            right2:  (user?.base > 0) ? 'Rating: ' + user.base  + ' + ' + user.additional : '',
             right3b: user.rating,
             right3m: '',
         };

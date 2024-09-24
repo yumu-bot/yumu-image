@@ -227,7 +227,14 @@ export function isASCII(str = '') {
 
     const pattern = /^[\x00-\x7F]+$/; // ASCII范围的Unicode编码
     return pattern.test(str);
+}
 
+export function isNumber(str = '') {
+    if (typeof str == "number") return true
+    else if (typeof str !== "string" || str.length === 0) return false
+
+    const pattern = /^\s*(-?[0-9]+[.]?[0-9]*)\s*$/; // ASCII范围的Unicode编码
+    return pattern.test(str);
 }
 
 /**
@@ -1897,94 +1904,3 @@ export const od2ms = (od, mode = 'o') => {
     else return ms + 'ms';
 }
 
-export async function getMaimaiBG(song_id = 0) {
-    if (typeof song_id == "number" && fs.existsSync(getImageFromV3('Maimai/' + song_id + '.png'))) {
-        return getImageFromV3('Maimai/' + song_id + '.png')
-    } else {
-        let id;
-
-        if (song_id == null) {
-            id = 1;
-        } else if (song_id === 1235) {
-            id = song_id + 10000; // 这是水鱼的 bug，不关我们的事
-        } else if (song_id > 10000 && song_id < 11000) {
-            id = song_id - 10000;
-        } else {
-            id = song_id;
-        }
-        return await readNetImage('https://www.diving-fish.com/covers/' + id.toString().padStart(5, '0') + '.png', true, getImageFromV3('Maimai/00000.png'))
-    }
-}
-
-export function getMaimaiRankBG(rank) {
-    let out;
-
-    switch (rank) {
-        case 'sssp':
-            out = 'object-score-backimage-PF.jpg';
-            break;
-        case 'sss':
-            out = 'object-score-backimage-SSS.jpg';
-            break;
-        case 'ssp':
-        case 'ss':
-            out = 'object-score-backimage-X.jpg';
-            break;
-        case 'sp':
-        case 's':
-            out = 'object-score-backimage-S.jpg';
-            break;
-        case 'aaa':
-        case 'aa':
-        case 'a':
-            out = 'object-score-backimage-D.jpg';
-            break;
-        case 'bbb':
-        case 'bb':
-        case 'b':
-            out = 'object-score-backimage-B.jpg';
-            break;
-        case 'c':
-            out = 'object-score-backimage-A.jpg';
-            break;
-        case 'd':
-            out = 'object-score-backimage-F.jpg';
-            break;
-        default:
-            out = 'object-score-backimage-SH.jpg';
-            break;
-    }
-
-    return getImageFromV3(out)
-}
-
-export function getMaimaiLevelBG(rating = 0) {
-    let background;
-
-    if (rating < 1000) background = 'object-score-backimage-F.jpg'
-    else if (rating < 2000) background = 'object-score-backimage-B.jpg'
-    else if (rating < 4000) background = 'object-score-backimage-A.jpg'
-    else if (rating < 7000) background = 'object-score-backimage-SP.jpg'
-    else if (rating < 10000) background = 'object-score-backimage-D.jpg'
-    else if (rating < 12000) background = 'object-score-backimage-C.jpg'
-    else if (rating < 13000) background = 'object-score-backimage-S.jpg'
-    else if (rating < 14000) background = 'object-score-backimage-SH.jpg'
-    else if (rating < 14500) background = 'object-score-backimage-X.jpg'
-    else if (rating < 15000) background = 'object-score-backimage-XH.jpg'
-    else background = 'object-score-backimage-PF.jpg'
-
-    return getImageFromV3(background);
-}
-
-export function getMaimaiType(type = '') {
-    switch (type) {
-        case 'DX':
-            return getImageFromV3('Maimai/object-type-deluxe.png');
-            break;
-        case 'SD':
-            return getImageFromV3('Maimai/object-type-standard.png');
-            break;
-        default :
-            return '';
-    }
-}

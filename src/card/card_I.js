@@ -1,9 +1,10 @@
 import {
-    getImageFromV3, getMaimaiBG, getMaimaiRankBG, getMaimaiType, getRoundedNumberStr,
+    getImageFromV3, getRoundedNumberStr,
     implantImage, implantSvgBody, isASCII, replaceText, replaceTexts,
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {getMaimaiBG, getMaimaiRankBG, getMaimaiType} from "../util/maimai.js";
 
 // maimai 多成绩面板
 export async function card_I(data = {
@@ -12,7 +13,7 @@ export async function card_I(data = {
     rating: 0,
     achievements: 0.0,
     index: 0,
-    position: 1,
+    position: 0,
 
     score: 0,
     max: 0,
@@ -84,7 +85,8 @@ export async function card_I(data = {
     const artist_font = isASCII(data?.artist) ? torus : PuHuiTi;
     const charter_font = isASCII(data?.charter) ? torus : PuHuiTi;
 
-    const achievement_text = '#' + (data?.position || 1) + ' // ' + (data?.achievements || 0).toFixed(4) + '%'
+    const position = data?.position >= 1 ? ('#' + data.position + ' // ') : ''
+    const achievement_text = position + (data?.achievements || 0).toFixed(4) + '%'
 
     const title = title_font.getTextPath(
         title_font.cutStringTail(data?.title, title_size, 230), 190, 24, title_size, 'left baseline', '#fff')
