@@ -135,9 +135,10 @@ export async function panel_MA(data = {
 
     if (isNotEmptyArray(data.versions)) {
         const l = data.versions.length;
+        const x = Math.min(l, 5);
 
-        for (let i = 0; i < Math.min(l, 5); i++) {
-            const v = data.versions[i]
+        for (let i = 0; i < x; i++) {
+            const v = data.versions[x - i - 1] // 反向获取
             svg = implantImage(svg, 260, 130, 1920 - 40 - 10 - 260 - 270 * i, 140, 1, getMaimaiVersionBG(v), reg_index);
         }
 
