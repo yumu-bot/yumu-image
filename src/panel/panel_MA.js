@@ -8,6 +8,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_I} from "../card/card_I.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {getMaimaiVersionBG} from "../util/maimai.js";
+import {PanelDraw} from "../util/panelDraw";
 
 export async function router(req, res) {
     try {
@@ -133,9 +134,12 @@ export async function panel_MA(data = {
     svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
 
     if (isNotEmptyArray(data.versions)) {
-        for (let i = 0; i < Math.min(data.versions.length, 5); i++) {
+        const l = data.versions.length;
+
+        for (let i = 0; i < Math.min(l, 5); i++) {
             const v = data.versions[i]
             svg = implantImage(svg, 260, 130, 1920 - 40 - 260 - 270 * i, 130 + 20, 1, getMaimaiVersionBG(v), reg_index);
+            svg = replaceText(svg, PanelDraw.Rect(1920 - 40 - 10 - 270 * l, 130 + 20, 270 * l + 10, 130, 20, '#46393f', 1), reg_index)
         }
     }
 
