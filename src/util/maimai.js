@@ -168,8 +168,9 @@ export function getMaimaiVersionBG(version = '') {
             v = 'object-version-maimai-dx-prism.png';
             break;
         case "maimai でらっくす PRiSM PLUS":
-            v = '' //'object-version-maimai-dx-prism-plus.png';
-            break;
+            return ''
+            //v = 'object-version-maimai-dx-prism-plus.png';
+            //break;
         default:
             return ''
     }
