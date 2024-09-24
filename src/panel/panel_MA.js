@@ -8,7 +8,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_I} from "../card/card_I.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {getMaimaiVersionBG} from "../util/maimai.js";
-import {PanelDraw} from "../util/panelDraw";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function router(req, res) {
     try {
