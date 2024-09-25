@@ -97,7 +97,7 @@ function getTextPath_TahomaRegular(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTahomaRegular.getPath(text.toString(), {
+    return textToSVGTahomaRegular.getPath((text || "").toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -133,7 +133,7 @@ function getTextWidth_TahomaRegular(
     text = '',
     size = 0,
 ) {
-    return textToSVGTahomaRegular.getMetrics(text.toString(), {
+    return textToSVGTahomaRegular.getMetrics((text || "").toString(), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -220,7 +220,7 @@ function getTextPath_poppinsBold(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGpoppinsBold.getPath(text.toString(), {
+    return textToSVGpoppinsBold.getPath((text || "").toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -256,7 +256,7 @@ function getTextWidth_poppinsBold(
     text = '',
     size = 0,
 ) {
-    return textToSVGpoppinsBold.getMetrics(text.toString(), {
+    return textToSVGpoppinsBold.getMetrics((text || "").toString(), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -343,7 +343,7 @@ function getTextPath_lineSeedSans(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGlineSeedSansBold.getPath(text.toString(), {
+    return textToSVGlineSeedSansBold.getPath((text || "").toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -379,7 +379,7 @@ function getTextWidth_lineSeedSans(
     text = '',
     size = 0,
 ) {
-    return textToSVGlineSeedSansBold.getMetrics(text.toString(), {
+    return textToSVGlineSeedSansBold.getMetrics((text || "").toString(), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -466,7 +466,7 @@ function getTextPath_torus(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTorusSB.getPath(text.toString(), {
+    return textToSVGTorusSB.getPath((text || "").toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -502,7 +502,7 @@ function getTextWidth_torus(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusSB.getMetrics(text.toString(), {
+    return textToSVGTorusSB.getMetrics((text || "").toString(), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -590,7 +590,7 @@ function getTextPath_torusRegular(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGTorusRegular.getPath(text.toString(), {
+    return textToSVGTorusRegular.getPath((text || "").toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -626,7 +626,7 @@ function getTextWidth_torusRegular(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusRegular.getMetrics(text.toString(), {
+    return textToSVGTorusRegular.getMetrics((text || "").toString(), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -712,7 +712,7 @@ function getTextPath_PuHuiTi(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGPuHuiTi.getPath(text.toString(), {
+    return textToSVGPuHuiTi.getPath((text || "").toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -748,7 +748,7 @@ function getTextWidth_PuHuiTi(
     text = '',
     size = 0,
 ) {
-    return textToSVGPuHuiTi.getMetrics(text.toString(), {
+    return textToSVGPuHuiTi.getMetrics((text || "").toString(), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -796,7 +796,7 @@ function getTextPath_extra(
     anchor = 'left top',
     fill = '#fff'
 ) {
-    return textToSVGextra.getPath(text.toString(), {
+    return textToSVGextra.getPath((text || "").toString(), {
         x: x,
         y: y,
         fontSize: size,
@@ -832,7 +832,7 @@ function getTextWidth_extra(
     text = '',
     size = 0,
 ) {
-    return textToSVGextra.getMetrics(text.toString(), {
+    return textToSVGextra.getMetrics((text || "").toString(), {
         x: 0,
         y: 0,
         fontSize: size,

@@ -228,7 +228,7 @@ export const PanelGenerate = {
             left1: user.plate,
             left2: dan,
             right1: '',
-            right2:  (user?.base > 0) ? 'Rating: ' + user.base  + ' + ' + user.additional : '',
+            right2:  (user?.base > 0) ? 'Rating: ' + user.base  + ' + ' + user.additional : 'Rating:',
             right3b: user.rating,
             right3m: '',
         };
