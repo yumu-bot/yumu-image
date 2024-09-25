@@ -217,7 +217,7 @@ export const PanelGenerate = {
 
         return {
             background: background,
-            avatar: getImageFromV3('Maimai/avatar-guest.png'),
+            avatar: getImageFromV3('Maimai', 'avatar-guest.png'),
             sub_icon1: '',
             sub_icon2: '',
             country: null,

@@ -125,7 +125,7 @@ export function getMascotPath(mascotname = 'pippi') {
     }
     path = getRandom(mascot_pic_sum_arr[i]);
 
-    return getImageFromV3(`Mascots/${mascotname}_${path}.png`);
+    return getImageFromV3('Mascots', `${mascotname}_${path}.png`);
 }
 
 /**
@@ -134,11 +134,11 @@ export function getMascotPath(mascotname = 'pippi') {
  */
 export function getRandomBannerPath() {
     if (moment().isBefore(moment("2024/09/24 08:00", "YYYY/MM/DD HH:mm"))) {
-        return getImageFromV3(`Banner/a1.png`);
+        return getImageFromV3('Banner', 'a1.png');
     }
 
     const i = getRandom(bannerTotal)
-    return getImageFromV3(`Banner/b${i}.png`);
+    return getImageFromV3('Banner', `b${i}.png`);
 }
 
 /**
@@ -147,7 +147,7 @@ export function getRandomBannerPath() {
  */
 export function getRandomMascotBGPath() {
     const i = getRandom(mascotBGTotal)
-    return getImageFromV3(`Background/${i}.png`);
+    return getImageFromV3('Background', `${i}.png`);
 }
 
 //通过 PP 获取玩家颜色（的背景图！pp2Rank，最后一个是默认的
@@ -166,7 +166,7 @@ export function pp2UserBG(pp = 0, boundary = [], ranks = []) {
         }
     }
 
-    return getImageFromV3('object-score-backimage-' + rank + '.jpg');
+    return getImageFromV3(`object-score-backimage-${rank}.jpg`);
 }
 
 //获取一个1到目标数的随机整数。如果range小于1，则返回0-1的随机小数。

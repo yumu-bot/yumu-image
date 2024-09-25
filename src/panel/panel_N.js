@@ -417,7 +417,7 @@ async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row
         18, Math.max(max_width - 46 - 30 - name_length, 0),true);
     const diff = torus.getTextPath(diff_str, 46 + 30 + name_length, 14, 14, 'left baseline', '#fff');
 
-    const label_type = PanelDraw.Image(46 + name_length + 5, -2, 20, 20, getImageFromV3('object-type-' + type +'.png'));
+    const label_type = PanelDraw.Image(46 + name_length + 5, -2, 20, 20, getImageFromV3(`object-type-${type}.png`));
 
     //插入文本
     svg = replaceText(svg, name, reg_text);
@@ -519,7 +519,7 @@ function label_N6(x = 0, y = 0, type = 'genre', name = '') {
     );
 
     const file = name.replaceAll(" ", "_").toLowerCase() || 'unspecified';
-    const label = getImageFromV3('object-' + type + '-' + file + '.png');
+    const label = getImageFromV3(`object-${type}-${file}.png`);
 
 
     //插入文本

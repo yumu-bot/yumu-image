@@ -2,21 +2,27 @@ import fs from "fs";
 import {getImageFromV3, readNetImage} from "./util.js";
 
 export async function getMaimaiBG(song_id = 0) {
-    if (typeof song_id == "number" && fs.existsSync(getImageFromV3('Maimai/' + song_id + '.png'))) {
-        return getImageFromV3('Maimai/' + song_id + '.png')
-    } else {
-        let id;
+    let id;
 
-        if (song_id == null) {
-            id = 1;
-        } else if (song_id === 1235) {
-            id = song_id + 10000; // 这是水鱼的 bug，不关我们的事
-        } else if (song_id > 10000 && song_id < 11000) {
-            id = song_id - 10000;
-        } else {
-            id = song_id;
-        }
-        return await readNetImage('https://www.diving-fish.com/covers/' + id.toString().padStart(5, '0') + '.png', true, getImageFromV3('Maimai/00000.png'))
+    if (song_id == null) {
+        id = 0;
+    } else if (song_id === 1235) {
+        id = 11235; // 这是水鱼的 bug，不关我们的事
+    } else if (song_id > 10000 && song_id < 11000) {
+        id = song_id - 10000;
+    } else if (song_id > 100000) {
+        id = song_id - 100000;
+    } else {
+        id = song_id;
+    }
+
+    const song = id.toString().padStart(5, '0')
+    const path = getImageFromV3('Maimai', 'Cover', `${song}.png`);
+
+    if (fs.existsSync(path)) {
+        return path
+    } else {
+        return await readNetImage(`https://www.diving-fish.com/covers/${song}.png`, true, getImageFromV3('Maimai', 'Cover', '00000.png'))
     }
 }
 
@@ -83,9 +89,9 @@ export function getMaimaiLevelBG(rating = 0) {
 export function getMaimaiType(type = '') {
     switch (type) {
         case 'DX':
-            return getImageFromV3('Maimai/object-type-deluxe.png');
+            return getImageFromV3('Maimai', 'object-type-deluxe.png');
         case 'SD':
-            return getImageFromV3('Maimai/object-type-standard.png');
+            return getImageFromV3('Maimai', 'object-type-standard.png');
         default :
             return '';
     }
@@ -175,7 +181,7 @@ export function getMaimaiVersionBG(version = '') {
             return ''
     }
 
-    return getImageFromV3('Maimai/' + v)
+    return getImageFromV3('Maimai', v)
 }
 
 export function getMaimaiVersionAbbreviation(version = '') {

@@ -117,8 +117,8 @@ export function readImageFromV3(path = '') {
  * @param path
  * @return {string} 图片链接
  */
-export function getImageFromV3(path = '') {
-    return path_util.join(EXPORT_FILE_V3, path);
+export function getImageFromV3(...paths) {
+    return path_util.join(EXPORT_FILE_V3, ...paths);
 }
 
 /**

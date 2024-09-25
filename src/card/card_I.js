@@ -116,7 +116,7 @@ export async function card_I(data = {
     const background = getMaimaiRankBG(data.rank);
     svg = implantImage(svg, 290, 110, 140, 0, 0.4, background, reg_background);
 
-    const rank = getImageFromV3('Maimai/object-score-' + (data?.rank || 'd') + '2.png')
+    const rank = getImageFromV3('Maimai', `object-score-${data?.rank || 'd'}2.png`)
     svg = implantImage(svg, 56, 30, 185 + 2, 75, 1, rank, reg_rank);
 
     const stars = getDXRatingStars(data.score, data.max);

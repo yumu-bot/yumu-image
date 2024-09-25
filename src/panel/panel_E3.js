@@ -107,7 +107,7 @@ export async function panel_E3(data = {
     svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
 
     // 图片定义
-    const background = getImageFromV3('object-score-backimage-' + rank + '.jpg');
+    const background = getImageFromV3(`object-score-backimage-${rank}.jpg`);
     const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked));
 
     // 导入图片

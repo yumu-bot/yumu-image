@@ -222,7 +222,7 @@ export async function panel_ME(data = {
     svg = replaceText(svg, getPanelNameSVG('maimai Best Performance (!ymmb)', 'MB', 'v0.4.1 SE'), reg_index);
 
     // 评级
-    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`Maimai/object-score-${data?.score?.rate || 'D'}.png`), reg_index);
+    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3('Maimai', `object-score-${data?.score?.rate || 'd'}.png`), reg_index);
 
     // 图片定义
     const background = getMaimaiRankBG(data.score.rate);
@@ -366,7 +366,7 @@ const component_E1 = (
 
     const title = poppinsBold.getTextPath('Difficulty', 475, 28, 18, 'right baseline', '#fff')
 
-    svg = implantImage(svg, 66, 67, 20, 20, 1, getImageFromV3('Maimai/' + circle_text), reg_text)
+    svg = implantImage(svg, 66, 67, 20, 20, 1, getImageFromV3('Maimai', circle_text), reg_text)
     svg = replaceText(svg, difficulty_rrect, reg_difficulty)
     svg = replaceTexts(svg, [texts, title], reg_text);
 
@@ -682,8 +682,8 @@ const component_E8 = (
         default: sync = 'object-score-sync-solo.png'; break;
     }
 
-    svg = implantImage(svg, 225, 50, 15, 15, 1, getImageFromV3('Maimai/' + combo), reg_text)
-    svg = implantImage(svg, 225, 50, 250, 15, 1, getImageFromV3('Maimai/' + sync), reg_text)
+    svg = implantImage(svg, 225, 50, 15, 15, 1, getImageFromV3('Maimai', combo), reg_text)
+    svg = implantImage(svg, 225, 50, 250, 15, 1, getImageFromV3('Maimai', sync), reg_text)
     svg = replaceText(svg, rect, reg_base);
 
     return svg;
