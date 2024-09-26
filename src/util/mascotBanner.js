@@ -2,7 +2,8 @@ import moment from "moment";
 import {getImageFromV3} from "./util.js";
 
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
-const bannerTotal = 170; //banner 数量
+const defaultBannerTotal = 170; //默认 banner 数量
+const maimaiBannerTotal = 20; //maimai banner 数量
 const mascotBGTotal = 13; //吉祥物 BG 数量
 
 /**
@@ -132,13 +133,19 @@ export function getMascotPath(mascotname = 'pippi') {
  * @function 获取随机的头图路径
  * @return {String} 返回横幅路径
  */
-export function getRandomBannerPath() {
+export function getRandomBannerPath(type = "default") {
     if (moment().isBefore(moment("2024/09/24 08:00", "YYYY/MM/DD HH:mm"))) {
         return getImageFromV3('Banner', 'a1.png');
     }
 
-    const i = getRandom(bannerTotal)
-    return getImageFromV3('Banner', `b${i}.png`);
+    if (type === "maimai") {
+        const i = getRandom(maimaiBannerTotal)
+        return getImageFromV3('Banner', `d${i}.png`);
+    } else {
+        const i = getRandom(defaultBannerTotal)
+        return getImageFromV3('Banner', `b${i}.png`);
+    }
+
 }
 
 /**

@@ -131,7 +131,7 @@ export async function panel_MA(data = {
     }
 
     // 导入图片
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath("maimai"), reg_banner);
 
     if (isNotEmptyArray(data.versions)) {
         const l = data.versions.length;
