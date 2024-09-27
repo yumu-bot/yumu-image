@@ -836,28 +836,31 @@ const PanelMEGenerate = {
     score2componentE6: (song, index) => {
         let category
 
-        switch (song.basic_info.genre) {
+        switch (song?.basic_info?.genre) {
             case "东方Project":
             case "東方Project":
                 category = "Touhou Project";
                 break;
+            case "maimai":
             case "舞萌":
                 category = "maimai";
                 break;
             case "niconico & VOCALOID":
                 category = "niconico & VOCALOID";
                 break;
+            case "POPSアニメ":
             case "流行&动漫":
                 category = "POPS & ANIME";
                 break;
             case "其他游戏":
                 category = "GAME & VARIETY";
                 break;
+            case "オンゲキCHUNITHM":
             case "音击&中二节奏":
                 category = "Ongeki & CHUNITHM";
                 break;
             default:
-                category = "";
+                category = song?.basic_info?.genre.toString();
                 break;
         }
 
