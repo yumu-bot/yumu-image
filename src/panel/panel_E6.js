@@ -521,7 +521,7 @@ const component_E7 = (
     const text_arr = [
         {
             font: "poppinsBold",
-            text: Math.round(data?.pp || 0),
+            text: Math.round(data?.pp || 0).toString(),
             size: 84,
             color: '#fff',
         },
