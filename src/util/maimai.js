@@ -132,10 +132,10 @@ export function getMaimaiVersionBG(version = '') {
             v = 'object-version-maimai-murasaki-plus.png';
             break;
         case "maimai MiLK":
-            v = 'object-version-maimai-murasaki.png';
+            v = 'object-version-maimai-milk.png';
             break;
         case "MiLK PLUS":
-            v = 'object-version-maimai-murasaki-plus.png';
+            v = 'object-version-maimai-milk-plus.png';
             break;
         case "maimai FiNALE":
             v = 'object-version-maimai-finale.png';
