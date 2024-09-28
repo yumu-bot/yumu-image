@@ -134,7 +134,7 @@ export function getMascotPath(mascotname = 'pippi') {
  * @return {String} 返回横幅路径
  */
 export function getRandomBannerPath(type = "default") {
-    if (moment().isBefore(moment("2024/09/24 08:00", "YYYY/MM/DD HH:mm"))) {
+    if (moment().isBefore(moment("2024/09/29 23:59", "YYYY/MM/DD HH:mm"))) {
         return getImageFromV3('Banner', 'a1.png');
     }
 
