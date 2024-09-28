@@ -1,6 +1,13 @@
 import {
-    exportJPEG, getPanelNameSVG, getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall, implantImage,
-    implantSvgBody, isNotEmptyArray, readTemplate,
+    exportJPEG,
+    getImageFromV3,
+    getPanelNameSVG,
+    getRoundedNumberStr,
+    getRoundedNumberStrLarge,
+    getRoundedNumberStrSmall,
+    implantImage,
+    implantSvgBody,
+    readTemplate,
     replaceText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -8,13 +15,9 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_I} from "../card/card_I.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {
-    getCHUNITHMBG,
+    getCHUNITHMCover, getCHUNITHMRank,
     getCHUNITHMRankBG,
-    getCHUNITHMRatingBG,
-    getMaimaiBG,
-    getMaimaiVersionBG
 } from "../util/maimai.js";
-import {PanelDraw} from "../util/panelDraw.js";
 
 export async function router(req, res) {
     try {
@@ -162,6 +165,10 @@ async function chuScore2CardI(score = {
     ra: 11.82,
     title: 'TECHNOPOLIS 2085'
 }) {
+    const rate = getCHUNITHMRank(score?.score || 0)
+
+    const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
+    const score_text = position + (score?.score || 0).toString()
 
     const difficulty_color = getDifficultyColor(score?.level_index)
 
@@ -171,15 +178,15 @@ async function chuScore2CardI(score = {
     const too_bright = (score?.level_index || 0) === 1;
 
     return {
-        background: getCHUNITHMRankBG(score?.rate || ''),
-        cover: await getCHUNITHMBG(score?.mid || 0),
-        rank: getCHUNITHMRankBG(score?.score || 0),
+        background: getCHUNITHMRankBG(score?.score || 0),
+        cover: await getCHUNITHMCover(score?.mid || 0),
+        rank: getImageFromV3('Chunithm', `object-score-${rate}2.png`),
         type: '',
 
         title: score?.title || '',
         left1: score?.artist || '',
         left2: score?.charter || '',
-        right: '',
+        right: score_text,
         index_b: getRoundedNumberStrLarge(score?.ra || 0, 3),
         index_m: getRoundedNumberStrSmall(score?.ra || 0, 3),
         index_l: rating_max_text, // 右下角左边的小字

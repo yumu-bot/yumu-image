@@ -1,7 +1,7 @@
 import fs from "fs";
 import {getImageFromV3, readNetImage} from "./util.js";
 
-export async function getMaimaiBG(song_id = 0) {
+export async function getMaimaiCover(song_id = 0) {
     let id;
 
     if (song_id == null) {
@@ -243,7 +243,7 @@ export function getMaimaiVersionAbbreviation(version = '') {
 
 
 
-export async function getCHUNITHMBG(song_id = 0) {
+export async function getCHUNITHMCover(song_id = 0) {
     const song = song_id.toString()
     const path = getImageFromV3('Chunithm', 'Cover', `${song}.png`);
 
@@ -255,7 +255,43 @@ export async function getCHUNITHMBG(song_id = 0) {
 }
 
 export function getCHUNITHMRankBG(score = 0) {
-    return getImageFromV3('Chunithm', `object-score-${getCHUNITHMRank(score)}2.png`)
+    let out;
+
+    switch (getCHUNITHMRank(score)) {
+        case 'sssp':
+        case 'sss':
+            out = 'object-score-backimage-PF.jpg';
+            break;
+        case 'ssp':
+        case 'ss':
+            out = 'object-score-backimage-SSS.jpg';
+            break;
+        case 'sp':
+        case 's':
+            out = 'object-score-backimage-X.jpg';
+            break;
+        case 'aaa':
+        case 'aa':
+        case 'a':
+            out = 'object-score-backimage-S.jpg';
+            break;
+        case 'bbb':
+        case 'bb':
+        case 'b':
+            out = 'object-score-backimage-B.jpg';
+            break;
+        case 'c':
+            out = 'object-score-backimage-A.jpg';
+            break;
+        case 'd':
+            out = 'object-score-backimage-F.jpg';
+            break;
+        default:
+            out = 'object-score-backimage-SH.jpg';
+            break;
+    }
+
+    return getImageFromV3(out)
 }
 
 export function getCHUNITHMRating(score = 0, difficulty = 0) {

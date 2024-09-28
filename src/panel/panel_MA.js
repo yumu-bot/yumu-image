@@ -7,7 +7,7 @@ import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_I} from "../card/card_I.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {getMaimaiBG, getMaimaiRankBG, getMaimaiType, getMaimaiVersionBG} from "../util/maimai.js";
+import {getMaimaiCover, getMaimaiRankBG, getMaimaiType, getMaimaiVersionBG} from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function router(req, res) {
@@ -186,7 +186,7 @@ async function maiScore2CardI(score = {
 
     return {
         background: getMaimaiRankBG(score?.rate || ''),
-        cover: await getMaimaiBG(score?.song_id || 0),
+        cover: await getMaimaiCover(score?.song_id || 0),
         rank: getImageFromV3('Maimai', `object-score-${score?.rate || 'd'}2.png`),
         type: getMaimaiType(score?.type),
 
