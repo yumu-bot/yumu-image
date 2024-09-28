@@ -6,6 +6,7 @@ const defaultBannerTotal = 170; //默认 banner 数量
 const maimaiBannerTotal = 20; //maimai banner 数量
 const mascotBGTotal = 13; //吉祥物 BG 数量
 
+
 /**
  * @function 随机提供游戏模式对应的吉祥物名字
  * @return {String} 返回吉祥物名字
