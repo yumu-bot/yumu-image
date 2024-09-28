@@ -15,6 +15,37 @@ export const PanelDraw = {
         return `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill: ${color};"/>`;
     },
 
+    /**
+     * 发光圆圈。
+     * @param cx 圆心的横坐标
+     * @param cy 圆心的纵坐标
+     * @param r 圆半径
+     * @param base_color 圆圈内的颜色
+     * @param luminous_color 圆圈外发光的颜色
+     * @param lr 发光半径
+     * @param name 避免重名的名称，可以自己设定一个，也可以让程序自己算
+     * @return {string}
+     * @constructor
+     */
+
+    LuminousCircle: (cx = 0, cy = 0, r = 0, base_color = '#fff', luminous_color = '#fff', lr = 0.75 * r, name = (cx * cy * r).toString()) => {
+        const full = (r + lr)
+        const stop = (full > 0) ? Math.round(Math.min(Math.abs(r / full), 1) * 100) : 50
+
+        return `
+        <g>
+            <defs>
+            <radialGradient id="RadialGradient${name}">
+              <stop offset="0%" stop-color="${base_color}"/>
+              <stop offset="${stop}%" stop-color="${base_color}"/>
+              <stop offset="${stop}%" stop-color="${luminous_color}"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+        </defs>
+        <circle cx="${cx}" cy="${cy}" r="${full}" fill="url(#RadialGradient${name})" />
+        </g>`;
+    },
+
     Polygon: (x = 0, y = 0, controls = '', ex = 0, ey = 0, color = '#fff', opacity = 1) => {
         return `<polygon points="${x} ${y} ${controls} ${ex} ${ey}" style="fill: ${color}; fill-opacity: ${opacity}"/>`
     },

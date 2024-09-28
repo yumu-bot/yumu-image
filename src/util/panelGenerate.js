@@ -14,7 +14,7 @@ import {
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
-import {getMaimaiLevelBG} from "./maimai.js";
+import {getCHUNITHMRatingBG, getMaimaiRatingBG} from "./maimai.js";
 
 //公用方法
 //把参数变成面板能读懂的数据（router
@@ -202,7 +202,7 @@ export const PanelGenerate = {
     },
 
     maimaiPlayer2CardA1: async (user) => {
-        const background = getMaimaiLevelBG(user.rating);
+        const background = getMaimaiRatingBG(user.rating);
 
         let dan
         const dan_arr = ['初', '二', '三', '四', '五', '六', '七', '八', '九', '十']
@@ -213,7 +213,6 @@ export const PanelGenerate = {
         else if (user.dan === 21) dan = '真皆伝'
         else if (user.dan === 22) dan = '裏皆伝'
         else dan = ''
-
 
         return {
             background: background,
@@ -231,6 +230,36 @@ export const PanelGenerate = {
             right2:  (user?.base > 0) ? 'Rating: ' + user.base  + ' + ' + user.additional : 'Rating:',
             right3b: user.rating,
             right3m: '',
+        };
+    },
+
+
+
+    chunithmPlayer2CardA1: async (user = {
+        name: 'Muz',
+        probername: 'Muziya',
+        rating: 12.51,
+        base: 225.19999999999996,
+        additional: 125.16
+    }) => {
+        const background = getCHUNITHMRatingBG(user.rating);
+
+        return {
+            background: background,
+            avatar: getImageFromV3('Chunithm', 'avatar-guest.png'),
+            sub_icon1: '',
+            sub_icon2: '',
+            country: null,
+
+            top1: user.name,
+            top2: user.probername,
+
+            left1: '',
+            left2: '',
+            right1: '',
+            right2:  (user?.base > 0) ? 'Rating: ' + getRoundedNumberStr(user.base, 3)  + ' + ' + getRoundedNumberStr(user.additional, 3) : 'Rating:',
+            right3b: getRoundedNumberStrLarge(user.rating, 3),
+            right3m: getRoundedNumberStrSmall(user.rating, 3),
         };
     },
 

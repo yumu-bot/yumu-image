@@ -68,7 +68,7 @@ export function getMaimaiRankBG(rank) {
     return getImageFromV3(out)
 }
 
-export function getMaimaiLevelBG(rating = 0) {
+export function getMaimaiRatingBG(rating = 0) {
     let background;
 
     if (rating < 1000) background = 'object-score-backimage-F.jpg'
@@ -239,4 +239,70 @@ export function getMaimaiVersionAbbreviation(version = '') {
         default:
             return ''
     }
+}
+
+
+
+export async function getCHUNITHMBG(song_id = 0) {
+    const song = song_id.toString()
+    const path = getImageFromV3('Chunithm', 'Cover', `${song}.png`);
+
+    if (fs.existsSync(path)) {
+        return path
+    } else {
+        return await readNetImage(`https://assets2.lxns.net/chunithm/jacket/${song}.png`, true, getImageFromV3('Chunithm', 'Cover', '0.png'))
+    }
+}
+
+export function getCHUNITHMRankBG(score = 0) {
+    return getImageFromV3('Chunithm', `object-score-${getCHUNITHMRank(score)}2.png`)
+}
+
+export function getCHUNITHMRating(score = 0, difficulty = 0) {
+    if (typeof score != "number") return 0
+
+    if (score >= 1009000) return difficulty + 2.15
+    else if (score >= 1007500) return difficulty + 2 + Math.floor((score - 1007500) / 100) * 0.01
+    else if (score >= 1005000) return difficulty + 1.5 + Math.floor((score - 1005000) / 50) * 0.01
+    else if (score >= 1000000) return difficulty + 1 + Math.floor((score - 1000000) / 100) * 0.01
+    else if (score >= 975000) return difficulty + Math.floor((score - 975000) / 250) * 0.01
+    else if (score >= 925000) return Math.max(difficulty - 3, 0)
+    else if (score >= 900000) return Math.max(difficulty - 5, 0)
+    else if (score >= 800000) return Math.max(difficulty - 5, 0) / 2
+    else if (score >= 500000) return 0
+    else return 0
+}
+
+export function getCHUNITHMRank(score = 0) {
+    if (typeof score != "number") return 'd'
+
+    if (score >= 1009000) return 'sssp'
+    else if (score >= 1007500) return 'sss'
+    else if (score >= 1005000) return 'ssp'
+    else if (score >= 1000000) return 'ss'
+    else if (score >= 975000) return 's'
+    else if (score >= 950000) return 'aaa'
+    else if (score >= 925000) return 'aa'
+    else if (score >= 900000) return 'a'
+    else if (score >= 800000) return 'bbb'
+    else if (score >= 700000) return 'bb'
+    else if (score >= 600000) return 'b'
+    else if (score >= 500000) return 'c'
+    else return 'd'
+}
+
+export function getCHUNITHMRatingBG(rating = 0) {
+    let background;
+
+    if (rating < 4) background = 'object-score-backimage-A.jpg'
+    else if (rating < 7) background = 'object-score-backimage-SP.jpg'
+    else if (rating < 10) background = 'object-score-backimage-D.jpg'
+    else if (rating < 12) background = 'object-score-backimage-C.jpg'
+    else if (rating < 13.25) background = 'object-score-backimage-S.jpg'
+    else if (rating < 14.5) background = 'object-score-backimage-SH.jpg'
+    else if (rating < 15.25) background = 'object-score-backimage-X.jpg'
+    else if (rating < 16) background = 'object-score-backimage-XH.jpg'
+    else background = 'object-score-backimage-PF.jpg'
+
+    return getImageFromV3(background);
 }
