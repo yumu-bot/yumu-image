@@ -16,7 +16,7 @@ import {card_I} from "../card/card_I.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {
     getCHUNITHMCover, getCHUNITHMRank,
-    getCHUNITHMRankBG,
+    getCHUNITHMRankBG, getCHUNITHMDifficultyColor,
 } from "../util/maimai.js";
 
 export async function router(req, res) {
@@ -90,7 +90,7 @@ export async function panel_MA2(data = {
     let panel_name
 
     if (data?.panel === 'CB') {
-        panel_name = getPanelNameSVG('CHUNITHM Multiple Best Scores (!ymmb)', 'MB', 'v0.4.1 SE');
+        panel_name = getPanelNameSVG('CHUNITHM Multiple Best Scores (!ymmb)', 'CB', 'v0.4.1 SE');
     } else {
         panel_name = getPanelNameSVG('CHUNITHM Multiple Scores (!ymy)', 'SS', 'v0.4.1 SE');
     }
@@ -170,7 +170,7 @@ async function chuScore2CardI(score = {
     const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
     const score_text = position + (score?.score || 0).toString()
 
-    const difficulty_color = getDifficultyColor(score?.level_index)
+    const difficulty_color = getCHUNITHMDifficultyColor(score?.level_index)
 
     const rating_max = (score?.ds || 0) + 2.15
     const rating_max_text = score?.score >= 1009000 ? ('') : ('[' + getRoundedNumberStr(rating_max, 3) + '] ')
@@ -206,16 +206,5 @@ async function chuScore2CardI(score = {
 
         color_component1: '', // 星星 //注意。这个组件的锚点在左下角
         color_component2: '',
-    }
-}
-
-
-function getDifficultyColor(index = 0) {
-    switch (index) {
-        case 1: return '#fff100'
-        case 2: return '#d32f2f'
-        case 3: return '#9922ee'
-        case 4: return '#382e32'
-        default: return '#009944'
     }
 }

@@ -239,8 +239,9 @@ export const PanelGenerate = {
         name: 'Muz',
         probername: 'Muziya',
         rating: 12.51,
-        base: 225.19999999999996,
-        additional: 125.16
+        base: 7.82,
+        additional: 4.12,
+        average: 12.65
     }) => {
         const background = getCHUNITHMRatingBG(user.rating);
 
@@ -255,7 +256,7 @@ export const PanelGenerate = {
             top2: user.probername,
 
             left1: '',
-            left2: '',
+            left2: (user?.average > 0) ? 'B30 Avg.: ' + getRoundedNumberStr(user.average, 3) : '',
             right1: '',
             right2:  (user?.base > 0) ? 'Rating: ' + getRoundedNumberStr(user.base, 3)  + ' + ' + getRoundedNumberStr(user.additional, 3) : 'Rating:',
             right3b: getRoundedNumberStrLarge(user.rating, 3),

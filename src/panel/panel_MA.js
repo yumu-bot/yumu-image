@@ -7,7 +7,13 @@ import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_I} from "../card/card_I.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {getMaimaiCover, getMaimaiRankBG, getMaimaiType, getMaimaiVersionBG} from "../util/maimai.js";
+import {
+    getMaimaiCover,
+    getMaimaiDifficultyColor,
+    getMaimaiRankBG,
+    getMaimaiType,
+    getMaimaiVersionBG
+} from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function router(req, res) {
@@ -182,7 +188,7 @@ async function maiScore2CardI(score = {
 
     const too_bright = (score?.level_index || 0) === 4 || (score?.level_index || 0) === 1;
 
-    const difficulty_color = getDifficultyColor(score?.level_index || 0)
+    const difficulty_color = getMaimaiDifficultyColor(score?.level_index || 0)
 
     return {
         background: getMaimaiRankBG(score?.rate || ''),
@@ -213,16 +219,6 @@ async function maiScore2CardI(score = {
 
         color_component1: getDXRatingStars(score?.dxScore || 0, score?.max || 0), // 星星 //注意。这个组件的锚点在左下角
         color_component2: getComboAndSync(score?.fc, score?.fs),
-    }
-}
-
-function getDifficultyColor(index = 0) {
-    switch (index) {
-        case 1: return '#fff100'
-        case 2: return '#d32f2f'
-        case 3: return '#9922ee'
-        case 4: return '#f7d8fe'
-        default: return '#009944'
     }
 }
 

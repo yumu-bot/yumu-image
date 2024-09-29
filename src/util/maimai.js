@@ -241,6 +241,16 @@ export function getMaimaiVersionAbbreviation(version = '') {
     }
 }
 
+export function getMaimaiDifficultyColor(index = 0) {
+    switch (index) {
+        case 1: return '#fff100'
+        case 2: return '#d32f2f'
+        case 3: return '#9922ee'
+        case 4: return '#f7d8fe'
+        default: return '#009944'
+    }
+}
+
 
 
 export async function getCHUNITHMCover(song_id = 0) {
@@ -341,4 +351,15 @@ export function getCHUNITHMRatingBG(rating = 0) {
     else background = 'object-score-backimage-PF.jpg'
 
     return getImageFromV3(background);
+}
+
+
+export function getCHUNITHMDifficultyColor(index = 0) {
+    switch (index) {
+        case 1: return '#fff100'
+        case 2: return '#d32f2f'
+        case 3: return '#9922ee'
+        case 4: return '#000000'
+        default: return '#009944'
+    }
 }
