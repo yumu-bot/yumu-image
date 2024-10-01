@@ -134,16 +134,16 @@ export function getMascotPath(mascotname = 'pippi') {
  * @function 获取随机的头图路径
  * @return {String} 返回横幅路径
  */
-export function getRandomBannerPath(type = "default") {
+export function getRandomBannerPath(type = "default", index = 0) {
     if (moment().isBefore(moment("2024/09/29 23:59", "YYYY/MM/DD HH:mm"))) {
         return getImageFromV3('Banner', 'a1.png');
     }
 
     if (type === "maimai") {
-        const i = getRandom(maimaiBannerTotal)
+        const i = index || getRandom(maimaiBannerTotal)
         return getImageFromV3('Banner', `d${i}.png`);
     } else {
-        const i = getRandom(defaultBannerTotal)
+        const i = index || getRandom(defaultBannerTotal)
         return getImageFromV3('Banner', `b${i}.png`);
     }
 
@@ -180,10 +180,12 @@ export function pp2UserBG(pp = 0, boundary = [], ranks = []) {
 //获取一个1到目标数的随机整数。如果range小于1，则返回0-1的随机小数。
 export function getRandom(range = 0) {
     if (range > 1) {
-        return Math.round(parseInt(moment().format("SSS")) / 999 * (range - 1)) + 1;
+        return Math.round((- Math.random() + 1) * (range - 1)) + 1
+        //return Math.round(parseInt(moment().format("SSS")) / 999 * (range - 1)) + 1;
     } else if (range === 1) {
         return 1;
     } else {
-        return parseInt(moment().format("SSS")) / 999;
+        return (- Math.random() + 1)
+        //return parseInt(moment().format("SSS")) / 999;
     }
 }

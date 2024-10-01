@@ -17,7 +17,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import fs from "fs";
-import {getMaimaiCover, getMaimaiRankBG, getMaimaiType, getMaimaiVersionBG} from "../util/maimai.js";
+import {getMaimaiCategory, getMaimaiCover, getMaimaiRankBG, getMaimaiType, getMaimaiVersionBG} from "../util/maimai.js";
 
 export async function router(req, res) {
     try {
@@ -834,49 +834,19 @@ const PanelMEGenerate = {
     },
 
     score2componentE6: (song, index) => {
-        let category
-
-        switch (song?.basic_info?.genre) {
-            case "东方Project":
-            case "東方Project":
-                category = "Touhou Project";
-                break;
-            case "maimai":
-            case "舞萌":
-                category = "maimai";
-                break;
-            case "niconico & VOCALOID":
-                category = "niconico & VOCALOID";
-                break;
-            case "POPSアニメ":
-            case "流行&动漫":
-                category = "POPS & ANIME";
-                break;
-            case "其他游戏":
-                category = "GAME & VARIETY";
-                break;
-            case "オンゲキCHUNITHM":
-            case "音击&中二节奏":
-                category = "Ongeki & CHUNITHM";
-                break;
-            default:
-                category = song?.basic_info?.genre.toString();
-                break;
-        }
-
         return {
             title: song.basic_info.title,
             artist: song.basic_info.artist,
             charter: song.charts[index].charter,
             id: song.id,
-            category: category,
+            category: getMaimaiCategory(song?.basic_info?.genre),
         }
     },
 
     score2componentE7: (score) => {
         return {
             rating: score?.ra || 0,
-            max: Math.floor(score.ds * 1.005 * 22.4),
+            max: Math.floor(score?.ds * 1.005 * 22.4),
         }
     },
 

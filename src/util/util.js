@@ -199,15 +199,29 @@ export function isBlankString(str = "") {
 }
 
 export function isEmptyString(str = "") {
-    return (str == null) || (str == undefined) || (typeof str !== "string") || (typeof str === "string" && str.length === 0)
+    return (str == null) || (str == undefined) || (typeof str !== "string") || str.trim().length === 0
 }
 
 export function isEmptyArray(arr = []) {
-    return (arr == null) || (arr == undefined) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length === 0)
+    return (arr == null) || (arr == undefined) || !(Array.isArray(arr)) || (arr?.length == 0)
 }
 
+// {} 和 [] 不为空
 export function isNull(object) {
     return (object == null) || (object == undefined)
+}
+
+export function isNullOrEmptyObject(object) {
+    return isNull(object) || (object === {}) || (object === [])
+}
+
+// {} 和 [] 不为空
+export function isNotNull(object) {
+    return ! isNull(object)
+}
+
+export function isNotNullOrEmptyObject(object) {
+    return ! isNullOrEmptyObject(object)
 }
 
 export function isNotBlankString(str = "") {

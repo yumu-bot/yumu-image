@@ -1,6 +1,14 @@
 import fs from "fs";
 import {getImageFromV3, readNetImage} from "./util.js";
 
+// 导入一些特殊 banner，比如 7 号是潘多拉，11号是 Splash 的改版 Shabi
+export function getMaimaiBannerIndex(song) {
+    if (song?.id === 834) return 7;
+    if (song?.from === "maimai でらっくす Splash") return 11;
+
+    return 0;
+}
+
 export async function getMaimaiCover(song_id = 0) {
     let id;
 
@@ -241,13 +249,100 @@ export function getMaimaiVersionAbbreviation(version = '') {
     }
 }
 
+export function getMaimaiCategory(genre = '') {
+    switch (genre.trim()) {
+        case "东方Project":
+        case "東方Project":
+            return "Touhou Project";
+
+        case "maimai":
+        case "舞萌":
+            return "maimai";
+
+        case "niconico & VOCALOID":
+            return "niconico & VOCALOID";
+
+        case "POPSアニメ":
+        case "流行&动漫":
+            return "POPS & ANIME";
+
+        case "其他游戏":
+            return "GAME & VARIETY";
+
+        case "オンゲキCHUNITHM":
+        case "音击&中二节奏":
+            return "Ongeki & CHUNITHM";
+
+        default:
+            return genre.toString();
+
+    }
+}
+
+export function getMaimaiDifficulty(index = 0) {
+    switch (index) {
+        case 0: return 'BASIC'
+        case 1: return 'ADVANCED'
+        case 2: return 'EXPERT'
+        case 3: return 'MASTER'
+        case 4: return 'Re:MASTER'
+        default: return 'U.TA.GE'
+    }
+}
+
 export function getMaimaiDifficultyColor(index = 0) {
     switch (index) {
+        case 0: return '#009944'
         case 1: return '#fff100'
         case 2: return '#d32f2f'
         case 3: return '#9922ee'
         case 4: return '#f7d8fe'
-        default: return '#009944'
+        default: return '#d46da1'
+    }
+}
+
+
+
+export function getMaimaiDifficultyColors(index = 0) {
+    let color1
+    let color2
+
+    switch (index) {
+        case 0: {
+            color1 = '#009944'
+            color2 = '#209900'
+            break
+        }
+        case 1: {
+            color1 = '#fff100'
+            color2 = '#ffcc00'
+            break
+        }
+        case 2: {
+            color1 = '#d32f2f'
+            color2 = '#d32f7f'
+            break
+        }
+        case 3: {
+            color1 = '#9922ee'
+            color2 = '#bb22ee'
+            break
+        }
+        case 4: {
+            color1 = '#f7d8fe'
+            color2 = '#fed8ec'
+            break
+        }
+        default: {
+            color1 = '#d46da1'
+            color2 = '#d46d70'
+            break
+        }
+    }
+
+    return {
+        color1: color1,
+        color2: color2,
     }
 }
 

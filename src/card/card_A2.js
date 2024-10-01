@@ -1,7 +1,7 @@
 import {
     getImageFromV3,
     getMapStatusImage,
-    implantImage,
+    implantImage, isASCII,
     readTemplate,
     replaceTexts,
 } from "../util/util.js";
@@ -14,8 +14,6 @@ export async function card_A2(data = {
     title1: '',
     title2: '',
     title3: '',
-    title_font: '',
-    title3_font: '',
     left1: '',
     left2: '',
     left3: '',
@@ -23,6 +21,9 @@ export async function card_A2(data = {
     right2: '',
     right3b: '',
     right3m: '',
+
+    right3b_size: 60,
+    right3m_size: 48,
 
 }) {
     // 读取模板
@@ -34,19 +35,14 @@ export async function card_A2(data = {
     let reg_top_icons = /(?<=<g id="TopIcons">)/;
 
     //赋予字体
-    let title_font;
-    if (data.title_font === 'PuHuiTi') {
-        title_font = PuHuiTi;
-    } else {
-        title_font = torus;
-    }
-
-    let title3_font = title_font;
-    if (data.title3_font === 'PuHuiTi') {
-        title3_font = PuHuiTi;
-    } else if (data.title3_font === 'torus') {
-        title3_font = torus;
-    }
+    const title_font = isASCII(data?.title1) ? torus : PuHuiTi
+    const title2_font = isASCII(data?.title2) ? torus : PuHuiTi
+    const title3_font = isASCII(data?.title3) ? torus : PuHuiTi
+    const left1_font = isASCII(data?.left1) ? torus : PuHuiTi
+    const title_size = isASCII(data?.title1) ? 36 : 32
+    const title2_size = isASCII(data?.title2) ? 24 : 22
+    const title3_size = isASCII(data?.title3) ? 24 : 22
+    const left1_size = isASCII(data?.left1) ? 24 : 22
 
     // 宽度限制
     const title1_maxWidth = data.map_status ? 350 : 390;
@@ -58,18 +54,18 @@ export async function card_A2(data = {
     // 文字定义
 
     const title1 = title_font.getTextPath(
-        title_font.cutStringTail(data.title1, 36, title1_maxWidth),
-        20, 46.6, 36, 'left baseline', '#fff');
-    const title2 = title_font.getTextPath(
-        title_font.cutStringTail(data.title2, 24, title_maxWidth),
-        20, 77.4, 24, 'left baseline', '#fff');
+        title_font.cutStringTail(data.title1, title_size, title1_maxWidth),
+        20, 46.6, title_size, 'left baseline', '#fff');
+    const title2 = title2_font.getTextPath(
+        title2_font.cutStringTail(data.title2, title2_size, title_maxWidth),
+        20, 77.4, title2_size, 'left baseline', '#fff');
     const title3 = title3_font.getTextPath(
-        title3_font.cutStringTail(data.title3, 24, title_maxWidth),
-        20, 107.4, 24, 'left baseline', '#fff');
+        title3_font.cutStringTail(data.title3, title3_size, title_maxWidth),
+        20, 107.4, title3_size, 'left baseline', '#fff');
 
-    const left1 = torus.getTextPath(
-        torus.cutStringTail(data.left1, 24, left_maxWidth, true),
-        20, 140.836, 24, 'left baseline', '#fff');
+    const left1 = left1_font.getTextPath(
+        torus.cutStringTail(data.left1, left1_size, left_maxWidth, true),
+        20, 140.836, left1_size, 'left baseline', '#fff');
     const left2 = torus.getTextPath(
         torus.cutStringTail(data.left2, 24, left_maxWidth, true),
         20, 165.836, 24, 'left baseline', '#fff');
@@ -79,11 +75,11 @@ export async function card_A2(data = {
 
     const right1 = torus.getTextPath(data.right1, 420, 114.836, 24, 'right baseline', '#fff');
     const right2 = torus.getTextPath(data.right2, 420, 141.836, 24, 'right baseline', '#fff');
-    const right3 = torus.get2SizeTextPath(data.right3b, data.right3m, 60, 48, 420, 191.59, 'right baseline', '#fff');
+    const right3 = torus.get2SizeTextPath(data.right3b, data.right3m, data?.right3b_size, data?.right3m_size, 420, 191.59, 'right baseline', '#fff');
 
     // 插入谱面状态
-    let status = getMapStatusImage(data.map_status || '');
-    let background = data.background || getImageFromV3('beatmap-DLfailBG.jpg');
+    const status = getMapStatusImage(data.map_status || '');
+    const background = data.background || getImageFromV3('beatmap-DLfailBG.jpg');
 
     svg = implantImage(svg, 430, 210, 0, 0, 0.6, background, reg_background);
     svg = data.map_status ? implantImage(svg,50,50,370,10,1, status, reg_top_icons) : svg;

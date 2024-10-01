@@ -4,17 +4,21 @@ import {
     getDecimals,
     getImageFromV3,
     getGameMode,
-    getMapBG, getMapStatus,
+    getMapBG,
+    getMapStatus,
     getMatchNameSplitted,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     getTimeDifference,
-    readNetImage, getAvatar, getBanner, getMapCover
+    readNetImage,
+    getAvatar,
+    getBanner,
+    getMapCover,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
-import {getCHUNITHMRatingBG, getMaimaiRatingBG} from "./maimai.js";
+import {getCHUNITHMRatingBG, getMaimaiCategory, getMaimaiCover, getMaimaiRatingBG} from "./maimai.js";
 
 //公用方法
 //把参数变成面板能读懂的数据（router
@@ -233,8 +237,6 @@ export const PanelGenerate = {
         };
     },
 
-
-
     chunithmPlayer2CardA1: async (user = {
         name: 'Muz',
         probername: 'Muziya',
@@ -264,10 +266,57 @@ export const PanelGenerate = {
         };
     },
 
+    maimaiSong2CardA2: async (song = {}, has_deluxe = false, has_standard = false) => {
+        const background = await getMaimaiCover(song?.id);
+
+        const title1 = song?.basic_info?.title || '-'
+        const title2 = song?.basic_info?.artist || '-'
+
+        const left1 = (song?.basic_info?.from || '-').replaceAll("でらっくす", 'DX')
+
+        const left2 = getMaimaiCategory(song?.basic_info?.genre)
+        const left3 = song?.basic_info?.bpm ? ('BPM = ' + song?.basic_info?.bpm.toString()) : ''
+
+        let right3b, right3m
+        let song_id = song?.id || 0
+
+        if (has_deluxe && has_standard) {
+            right3b = "(10)"
+
+            if (song_id >= 10000 && song_id < 100000) {
+                song_id -= 10000
+            }
+
+        } else {
+            right3b = ''
+        }
+
+        right3m = song_id.toString()
+
+        return {
+            background: background,
+            map_status: '',
+
+            title1: title1,
+            title2: title2,
+            title3: '',
+            title_font: '', // ?
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: '',
+            right2: "songID:",
+            right3b: right3b,
+            right3m: right3m,
+
+            right3b_size: 36,
+            right3m_size: 60,
+        };
+    },
+
     matchData2CardA2: async (matchCalculate = {}, beatmap = null) => {
         const match = matchCalculate?.match;
         const data = matchCalculate?.matchData;
-
 
         const redWins = data?.teamPointMap?.red || 0;
         const blueWins = data?.teamPointMap?.blue || 0;
@@ -275,9 +324,9 @@ export const PanelGenerate = {
         const isTeamVS = data?.teamVs;
         const star = getRoundedNumberStr(data?.averageStar || 0, 3);
 
-        const background = await getMapBG(
-            beatmap == null ? data.firstMapSID : beatmap.beatmapset.id,
-            'list@2x', beatmap == null ? false : hasLeaderBoard(beatmap.ranked));
+        const sid = beatmap ? (data?.firstMapSID || 0) : beatmap.beatmapset.id
+
+        const background = await getMapBG(sid, 'list@2x', hasLeaderBoard(beatmap?.ranked));
 
         const isContainVS = match?.match?.name.toLowerCase().match('vs');
         let title, title1, title2;
@@ -305,7 +354,6 @@ export const PanelGenerate = {
 
             title1: title1,
             title2: title2,
-            title_font: 'PuHuiTi',
             left1: left1,
             left2: left2,
             left3: left3,
@@ -323,7 +371,6 @@ export const PanelGenerate = {
         const title1 = b.beatmapset.title;
         const title2 = b.beatmapset.artist;
         const title3 = b.version;
-        const title_font = torus;
         const left1 = '';
         const left2 = b.beatmapset.creator;
         const left3 = b.id ? 'B' + b.id : 'B0';
@@ -357,7 +404,6 @@ export const PanelGenerate = {
             title1: title1,
             title2: title2,
             title3: title3,
-            title_font: title_font,
             left1: left1,
             left2: left2,
             left3: left3,
@@ -375,7 +421,6 @@ export const PanelGenerate = {
         const title1 = s?.title_unicode;
         const title2 = s?.artist_unicode;
         const title3 = s?.creator;
-        const title_font = (s?.title === s?.title_unicode && s?.artist === s?.artist_unicode) ? 'torus' : 'PuHuiTi';
         const left1 = '';
         const left2 = getMapStatus(s?.ranked);
         const left3 = s?.id ? ('S' + s.id) : 'S0';
@@ -391,8 +436,6 @@ export const PanelGenerate = {
             title1: title1,
             title2: title2,
             title3: title3,
-            title_font: title_font,
-            title3_font: 'torus',
             left1: left1,
             left2: left2,
             left3: left3,
@@ -449,7 +492,6 @@ export const PanelGenerate = {
             title1: title1,
             title2: title2,
             title3: title3,
-            title_font: 'torus',
             left2: left2,
             left3: left3,
             map_status: status,
@@ -466,7 +508,6 @@ export const PanelGenerate = {
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
         const title3 = '';
-        const title_font = torus;
         const left1 = 'time duration:';
         const left2 = cursor ? moment(parseInt(cursor.queued_at)).format("MM-DD HH:mm:ss") :
             (first_beatmapset.ranked_date ?
@@ -484,7 +525,6 @@ export const PanelGenerate = {
             title1: title1,
             title2: title2,
             title3: title3,
-            title_font: title_font,
             left1: left1,
             left2: left2,
             left3: left3,
@@ -509,7 +549,6 @@ export const PanelGenerate = {
         const title1 = s.title || 'Unknown Title';
         const title2 = s.artist || 'Unknown Artist';
         const title3 = s.creator || 'Unknown Mapper';
-        const title_font = torus;
         const left1 = '';
         const left2 = '#' + rank || '#0';
         const left3 = 's' + s.id || 's0';
@@ -556,7 +595,6 @@ export const PanelGenerate = {
             title1: title1,
             title2: title2,
             title3: title3,
-            title_font: title_font,
             left1: left1,
             left2: left2,
             left3: left3,

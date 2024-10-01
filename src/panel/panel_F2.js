@@ -79,7 +79,7 @@ export async function panel_F2(data = {}) {
         }
     )
 
-    const isTeamVS = (data?.MatchRound?.team_type === "team-vs");
+    const isTeamVS = ((data?.MatchRound?.team_type || data?.MatchRound?.teamType) === "team-vs");
     const totalScore = data?.MatchRound?.teamScore?.total || 0;
 
     const playerCount = scoreArr.length;
@@ -267,7 +267,7 @@ async function roundInfo2CardA2(data = {
     },
     index: 2
 }) {
-    const isTeamVS = (data?.MatchRound?.team_type === 'team-vs');
+    const isTeamVS = ((data?.MatchRound?.team_type || data?.MatchRound?.teamType) === 'team-vs');
 
     const name = data?.MatchStat?.name || '';
     const red = data?.MatchRound?.teamScore?.red || 0;

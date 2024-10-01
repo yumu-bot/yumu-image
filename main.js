@@ -38,6 +38,7 @@ import {router as GetMapAttrRouter} from "./src/panel/mapAttributes.js";
 import {router as PanelMARouter} from "./src/panel/panel_MA.js";
 import {router as PanelMA2Router} from "./src/panel/panel_MA2.js";
 import {router as PanelMERouter} from "./src/panel/panel_ME.js";
+import {router as PanelMSRouter} from "./src/panel/panel_MS.js";
 
 
 initPath();
@@ -94,6 +95,7 @@ app.post('/panel_Epsilon', panelEpsilonRouter);
 app.post('/panel_MA', PanelMARouter);
 app.post('/panel_MA2', PanelMA2Router);
 app.post('/panel_ME', PanelMERouter);
+app.post('/panel_MS', PanelMSRouter);
 
 app.post('/md', MarkdownRouter);
 app.post('/attr', GetMapAttrRouter);
