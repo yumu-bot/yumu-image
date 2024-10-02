@@ -76,6 +76,14 @@ export function getMaimaiRankBG(rank) {
     return getImageFromV3(out)
 }
 
+export function getMaimaiMaximumRating(ds = 0) {
+    return Math.floor((ds || 0) * 1.005 * 22.4)
+}
+
+export function isMaimaiMaximumRating(ra = 0, ds = 0) {
+    return ra > 0 && ra >= getMaimaiMaximumRating(ds)
+}
+
 export function getMaimaiRatingBG(rating = 0) {
     let background;
 
@@ -279,7 +287,7 @@ export function getMaimaiCategory(genre = '') {
     }
 }
 
-export function getMaimaiDifficulty(index = 0) {
+export function getMaimaiDifficultyName(index = 0) {
     switch (index) {
         case 0: return 'BASIC'
         case 1: return 'ADVANCED'
@@ -310,22 +318,22 @@ export function getMaimaiDifficultyColors(index = 0) {
     switch (index) {
         case 0: {
             color1 = '#009944'
-            color2 = '#209900'
+            color2 = '#109900'
             break
         }
         case 1: {
             color1 = '#fff100'
-            color2 = '#ffcc00'
+            color2 = '#ffbb00'
             break
         }
         case 2: {
-            color1 = '#d32f2f'
-            color2 = '#d32f7f'
+            color1 = '#f44336'
+            color2 = '#f43681'
             break
         }
         case 3: {
             color1 = '#9922ee'
-            color2 = '#bb22ee'
+            color2 = '#cc22ee'
             break
         }
         case 4: {
@@ -335,7 +343,7 @@ export function getMaimaiDifficultyColors(index = 0) {
         }
         default: {
             color1 = '#d46da1'
-            color2 = '#d46d70'
+            color2 = '#d46d60'
             break
         }
     }

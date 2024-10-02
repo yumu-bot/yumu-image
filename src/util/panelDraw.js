@@ -1,6 +1,7 @@
 //把数组变成可视化的图表
 import {torus} from "./font.js";
 import {isEmptyArray, replaceText} from "./util.js";
+import {hex2rgbColor} from "./color.js";
 
 export const PanelDraw = {
     Image: (x = 0, y = 0, w = 100, h = 100, link = '', opacity = 1) => {
@@ -9,6 +10,32 @@ export const PanelDraw = {
 
     Rect: (x = 0, y = 0, w = 0, h = 0, r = 0, color = '#fff', opacity = 1) => {
         return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: ${color}; fill-opacity: ${opacity}"/>`;
+    },
+
+    GradientRect: (x = 0, y = 0, w = 0, h = 0, r = 0, colors = [
+        {
+            offset: "0%",
+            color: "#FFF",
+            opacity: 1,
+        }
+    ], opacity = 1, position = {
+        x1: "0%",
+        y1: "0%",
+        x2: "100%",
+        y2: "0%",
+    }) => {
+        let out = `<g><defs>
+                <linearGradient id="grad${x * y * w * h}" x1="${position.x1}" y1="${position.y1}" x2="${position.x2}" y2="${position.y2}">`
+
+        for (const c of colors) {
+            out += `<stop offset="${c.offset}" style="stop-color:rgb(${hex2rgbColor(c.color)});stop-opacity:${c.opacity}" />`
+        }
+
+        out += `</linearGradient>
+                </defs>
+                <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: url(#grad${x * y * w * h}); fill-opacity: ${opacity}"/></g>`;
+
+        return out
     },
 
     Circle: (cx = 0, cy = 0, r = 0, color = '#fff') => {

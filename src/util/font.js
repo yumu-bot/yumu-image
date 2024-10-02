@@ -8,6 +8,7 @@ const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
 const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold.ttf");
 const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
 const textToSVGTahomaRegular = TextToSVG.loadSync("font/ft71.ttf");
+const textToSVGBerlinBold = TextToSVG.loadSync("font/BerlinsansExpert-Bold.ttf");
 
 /** 获取多个字体组合成的字形
  * 数组类的组成是：
@@ -81,6 +82,142 @@ export function getMultipleTextPath(array = [{
     return out;
 }
 
+
+export const BerlinBold = {};
+
+BerlinBold.getTextPath = getTextPath_BerlinBold;
+BerlinBold.get2SizeTextPath = get2SizeTextPath_BerlinBold;
+BerlinBold.getTextMetrics = getTextMetrics_BerlinBold;
+BerlinBold.getTextWidth = getTextWidth_BerlinBold;
+BerlinBold.cutStringTail = cutStringTail_BerlinBold;
+
+function getTextPath_BerlinBold(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff',
+    shadow = false
+) {
+    return ((shadow === false) ? '' :
+            textToSVGBerlinBold.getPath((text || "").toString(), {
+                x: x + 2,
+                y: y + 2,
+                fontSize: size,
+                anchor: anchor,
+                fontFamily: "BerlinBold",
+                attributes: {
+                    fill: '#1c1719'
+                }
+            })
+    ) + textToSVGBerlinBold.getPath((text || "").toString(), {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "BerlinBold",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextMetrics_BerlinBold(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGBerlinBold.getMetrics(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "BerlinBold",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextWidth_BerlinBold(
+    text = '',
+    size = 0,
+) {
+    return textToSVGBerlinBold.getMetrics((text || "").toString(), {
+        x: 0,
+        y: 0,
+        fontSize: size,
+        anchor: 'center baseline',
+        fontFamily: "BerlinBold",
+        attributes: {
+            fill: '#fff'
+        }
+    }).width
+}
+
+function cutStringTail_BerlinBold(
+    text = '',
+    size = 36,
+    maxWidth = 0,
+    isDot3Needed = true,
+) {
+    if (BerlinBold.getTextWidth(text, size) <= maxWidth) {
+        return text;
+    }
+
+    let dot3 = '...';
+    let dot3_width = isDot3Needed ? BerlinBold.getTextWidth(dot3, size) : 0;
+    let out_text = '';
+    maxWidth -= dot3_width;
+
+    for (let i = 0; BerlinBold.getTextWidth(out_text, size) < maxWidth; i++) {
+        out_text += text.slice(i, i + 1);
+    }
+
+    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
+}
+
+
+/**
+ * @function 获取大小文本的 BerlinBold 字体 SVG 路径
+ * @return {String}
+ * @param largerText {String} 较大的文本
+ * @param smallerText {String} 较小的文本
+ * @param largeSize {Number} 大文本尺寸
+ * @param smallSize {Number} 小文本尺寸
+ * @param x {Number} 锚点横坐标
+ * @param y {Number} 锚点横坐标
+ * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
+ * @param color {String} 十六进制颜色，#FFF
+ */
+
+function get2SizeTextPath_BerlinBold(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+    let width_b = BerlinBold.getTextWidth(largerText, largeSize);
+    let width_m = BerlinBold.getTextWidth(smallerText, smallSize);
+    let width_a = (width_b + width_m) / 2; // 全长的一半长
+
+    let out;
+
+    if (anchor === "left baseline") {
+        out = BerlinBold.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            BerlinBold.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+
+    } else if (anchor === "right baseline") {
+        out = BerlinBold.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            BerlinBold.getTextPath(smallerText, x, y, smallSize, anchor, color);
+
+    } else if (anchor === "center baseline") {
+        out = BerlinBold.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            BerlinBold.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+    }
+
+    return out;
+}
+
 export const TahomaRegular = {};
 
 TahomaRegular.getTextPath = getTextPath_TahomaRegular;
@@ -95,7 +232,7 @@ function getTextPath_TahomaRegular(
     y = 0,
     size = 36,
     anchor = 'left top',
-    fill = '#fff'
+    fill = '#fff',
 ) {
     return textToSVGTahomaRegular.getPath((text || "").toString(), {
         x: x,
@@ -852,6 +989,7 @@ export function getTextWidth(font = "torus", text = '', size = 24) {
     if (font.toString() === "extra") return extra.getTextWidth(text, size);
     if (font.toString() === "poppinsBold") return poppinsBold.getTextWidth(text, size);
     if (font.toString() === "lineSeedSans") return lineSeedSans.getTextWidth(text, size);
+    if (font.toString() === "BerlinBold") return BerlinBold.getTextWidth(text, size);
     return 0;
 }
 
@@ -863,6 +1001,7 @@ export function getTextPath(font = "torus", text = '', x, y, size = 24, anchor, 
     if (font.toString() === "extra") return extra.getTextPath(text, x, y, size, anchor, fill);
     if (font.toString() === "poppinsBold") return poppinsBold.getTextPath(text, x, y, size, anchor, fill);
     if (font.toString() === "lineSeedSans") return lineSeedSans.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "BerlinBold") return BerlinBold.getTextPath(text, x, y, size, anchor, fill);
     return '';
 }
 

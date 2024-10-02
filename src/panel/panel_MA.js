@@ -9,7 +9,7 @@ import {card_I} from "../card/card_I.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {
     getMaimaiCover,
-    getMaimaiDifficultyColor,
+    getMaimaiDifficultyColor, getMaimaiMaximumRating,
     getMaimaiRankBG,
     getMaimaiType,
     getMaimaiVersionBG
@@ -183,7 +183,7 @@ async function maiScore2CardI(score = {
     const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
     const achievement_text = position + (score?.achievements || 0).toFixed(4) + '%'
 
-    const rating_max = Math.floor(score.ds * 1.005 * 22.4) || 0
+    const rating_max = getMaimaiMaximumRating(score?.ds)
     const rating_max_text = score?.ra >= rating_max ? ('') : ('[' + rating_max + '] ')
 
     const too_bright = (score?.level_index || 0) === 4 || (score?.level_index || 0) === 1;

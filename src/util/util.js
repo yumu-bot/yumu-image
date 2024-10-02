@@ -471,18 +471,27 @@ export function replaceTexts(base = '', replaces = [''], reg = /.*/) {
     return base;
 }
 
-export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/, ratio = "xMidYMid slice") {
+export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/, ratio = "xMidYMid slice", rotate90 = false) {
+    let replace
+
     if (image != null) {
         if (x === 0 && y === 0) {
-            const replace = `<image width="${w}" height="${h}" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
-            return base.replace(reg, replace);
+            replace = `<image width="${w}" height="${h}" xlink:href="${image}"
+            style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
+        } else if (rotate90 == false) {
+            replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}"
+            style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
         } else {
-            const replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity};" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
-            return base.replace(reg, replace);
+            // 注意这里 h w 是反的，因为转了 90 度
+            replace = `<g transform="translate(${x} ${y}) rotate(270) translate(w)">
+            <image width="${h}" height="${w}" xlink:href="${image}" 
+            style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/> </g>`
         }
     } else {
         return base;
     }
+
+    return base.replace(reg, replace);
 }
 
 //如果不需要修改位置，用replaceText就行
@@ -823,42 +832,32 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
         while (number >= 1000 || number <= -1000) {
             number /= 1000;
         }
-        let numStr = number.toString();
-
 
         //如果小数太小，可不要小数
         let b; //boundary
 
         switch (level) {
-            case 3: b = 0.01; break;
-            case 4: b = 0.0001; break;
-            default: b = 0.1;
+            case 3: b = 2; break;
+            case 4: b = 4; break;
+            default: b = 1;
         }
 
-        if (Math.abs(number - Math.floor(number)) < b) {
+        if (Math.abs(number - Math.floor(number)) < Math.pow(10, - b) || number.toString().indexOf('.') === -1) {
             return unit;
         }
 
-        if (numStr.indexOf('.') === -1) {
-            return unit;
+        let numStr = Math.abs(number - Math.floor(number)).toString();
+
+        if (numStr?.length >= 2) {
+            o = numStr.slice(2, 2 + b)
+
+            while (o.length > 0 && o.slice(-1) == '0') {
+                o = o.slice(0, -1)
+            }
+
+            return o + unit;
         } else {
-            switch (level) {
-                case 2:
-                    o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 2);
-                    break;
-                case 3:
-                    o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 3);
-                    break;
-                case 4:
-                    o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 5);
-                    break;
-            }
-
-            if (parseInt(o) !== 0) {
-                return o + unit;
-            } else {
-                return unit;
-            }
+            return unit;
         }
     }
 

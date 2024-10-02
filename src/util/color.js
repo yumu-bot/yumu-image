@@ -1,3 +1,25 @@
+import {isNotEmptyString} from "./util.js";
+
+// 返回的结果是 xxx, xxx, xxx
+export function hex2rgbColor(hex = '#AAAAAA') {
+    if (isNotEmptyString(hex) && hex.slice(0, 1) === '#') {
+        if (hex.length === 7) {
+            const r = parseInt('0x' + hex.slice(1, 3), 16)
+            const g = parseInt('0x' + hex.slice(3, 5), 16)
+            const b = parseInt('0x' + hex.slice(5, 7), 16)
+
+            return `${r},${g},${b}`
+        } else if (hex.length === 4) {
+            const r = parseInt('0x' + hex.slice(1, 2) + hex.slice(1, 2), 16)
+            const g = parseInt('0x' + hex.slice(2, 3) + hex.slice(2, 3), 16)
+            const b = parseInt('0x' + hex.slice(3, 4) + hex.slice(3, 4), 16)
+
+            return `${r},${g},${b}`
+        }
+    }
+
+    return "0,0,0"
+}
 
 export function getStarRatingColor(SR = 0) {
     let color;

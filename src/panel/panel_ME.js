@@ -17,7 +17,14 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import fs from "fs";
-import {getMaimaiCategory, getMaimaiCover, getMaimaiRankBG, getMaimaiType, getMaimaiVersionBG} from "../util/maimai.js";
+import {
+    getMaimaiCategory,
+    getMaimaiCover,
+    getMaimaiMaximumRating,
+    getMaimaiRankBG,
+    getMaimaiType,
+    getMaimaiVersionBG
+} from "../util/maimai.js";
 
 export async function router(req, res) {
     try {
@@ -846,7 +853,7 @@ const PanelMEGenerate = {
     score2componentE7: (score) => {
         return {
             rating: score?.ra || 0,
-            max: Math.floor(score?.ds * 1.005 * 22.4),
+            max: getMaimaiMaximumRating(score?.ds),
         }
     },
 
