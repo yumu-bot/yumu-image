@@ -4,7 +4,8 @@ import {getImageFromV3, readNetImage} from "./util.js";
 // 导入一些特殊 banner，比如 7 号是潘多拉，11号是 Splash 的改版 Shabi
 export function getMaimaiBannerIndex(song) {
     if (song?.id === 834) return 7;
-    if (song?.from === "maimai でらっくす Splash") return 11;
+    if (song?.from === "maimai でらっくす Splash" || song?.from === "maimai でらっくす Splash PLUS") return 11;
+    if (song?.id === 417) return 28;
 
     return 0;
 }

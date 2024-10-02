@@ -3,7 +3,7 @@ import {getImageFromV3} from "./util.js";
 
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
 const defaultBannerTotal = 170; //默认 banner 数量
-const maimaiBannerTotal = 20; //maimai banner 数量
+const maimaiBannerTotal = 30; //maimai banner 数量
 const mascotBGTotal = 13; //吉祥物 BG 数量
 
 
