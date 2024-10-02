@@ -501,12 +501,12 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
         [
             {
                 offset: "0%",
-                color: "#00a0e9",
+                color: "#0068b7",
                 opacity: 1,
             },
             {
                 offset: "100%",
-                color: "#82d7fc",
+                color: "#00a0e9",
                 opacity: 1,
             },
         ]
@@ -515,12 +515,12 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
         [
             {
                 offset: "0%",
-                color: "#0068b7",
+                color: "#00a0e9",
                 opacity: 1,
             },
             {
                 offset: "100%",
-                color: "#00a0e9",
+                color: "#82d7fc",
                 opacity: 1,
             },
         ]
