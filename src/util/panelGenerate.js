@@ -324,7 +324,7 @@ export const PanelGenerate = {
         const isTeamVS = data?.teamVs;
         const star = getRoundedNumberStr(data?.averageStar || 0, 3);
 
-        const sid = beatmap ? (data?.firstMapSID || 0) : beatmap.beatmapset.id
+        const sid = beatmap ? (data?.firstMapSID || 0) : (beatmap?.beatmapset?.id || 0)
 
         const background = await getMapBG(sid, 'list@2x', hasLeaderBoard(beatmap?.ranked));
 
