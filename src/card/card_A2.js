@@ -75,7 +75,9 @@ export async function card_A2(data = {
 
     const right1 = torus.getTextPath(data.right1, 420, 114.836, 24, 'right baseline', '#fff');
     const right2 = torus.getTextPath(data.right2, 420, 141.836, 24, 'right baseline', '#fff');
-    const right3 = torus.get2SizeTextPath(data.right3b, data.right3m, data?.right3b_size, data?.right3m_size, 420, 191.59, 'right baseline', '#fff');
+    const right3 = torus.get2SizeTextPath(data.right3b, data.right3m,
+        data?.right3b_size || 60, data?.right3m_size || 48,
+        420, 191.59, 'right baseline', '#fff');
 
     // 插入谱面状态
     const status = getMapStatusImage(data.map_status || '');
