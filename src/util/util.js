@@ -349,6 +349,8 @@ export function getFileSize(path = "") {
  * @return {Promise<string>} 返回位于文件系统的绝对路径
  */
 export async function getMapBG(sid = 0, cover = 'cover', useCache = true, defaultImagePath = getImageFromV3('card-default.png')) {
+    if (sid === 0 || ! Number.isInteger(sid)) return defaultImagePath
+
     const bg = await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', useCache, defaultImagePath);
 
     // 部分官网的 list@2x 分辨率特别低，尺寸小于 15 KB，比如这个图 728088 list@2x
