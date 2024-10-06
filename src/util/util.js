@@ -386,10 +386,10 @@ export async function getAvatar(link, useCache = true, defaultImagePath = getIma
  * @return {Promise<string>}
  */
 export async function getBanner(link, useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
-    if (isBlankString(link) && link.startsWith("https://assets.ppy.sh/beatmaps/")) {
-        return await getMapCover(link, useCache, getImageFromV3('beatmap-DLfailBG.jpg'))
-    } else if (isBlankString(link)) {
+    if (isBlankString(link)) {
         return defaultImagePath;
+    } else if (link.startsWith("https://assets.ppy.sh/beatmaps/")) {
+        return await getMapCover(link, useCache, getImageFromV3('beatmap-DLfailBG.jpg'))
     } else {
         return await readNetImage(link, useCache, defaultImagePath);
     }
