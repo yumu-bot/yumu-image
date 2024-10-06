@@ -14,7 +14,7 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    getMapCover,
+    getMapCover, isNullOrEmptyObject,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
@@ -153,14 +153,20 @@ export const PanelGenerate = {
 
 
     //panel F2 用的转换
-    score2CardA1: async (score) => {
-        if (!score) return '';
+    matchScore2CardA1: async (score) => {
+        if (isNullOrEmptyObject(score)) return '';
 
         const player_score = score.score || 0;
         const total_score = score.total_score || 0;
         const total_player = score.total_player || 0;
+
         const rating = (total_score > 0) ? Math.round(player_score * total_player / total_score * 100) / 100 : 0;
+        const rating_str = rating > 0 ? (' *' + rating + ' ') : ' '
         const pp_str = (score?.pp > 0) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
+        const acc_str = (Math.round((score?.accuracy || 0) * 10000) / 100) + '%'
+        const combo = score?.max_combo || score?.maxCombo || 0
+        const combo_str = combo > 0 ? (combo + 'x') : ''
+
         const mods_arr = score?.mods || [];
         const rank = rankSS2X(getApproximateRank(score, true));
         const bg_str = 'object-score-backimage-' + rank + '.jpg';
@@ -182,9 +188,9 @@ export const PanelGenerate = {
         const top1 = score?.user?.username || score?.user_name || 'Unknown';
 
         const left1 = score?.user?.country?.name || 'Unknown';
-        const left2 = 'P' + (score?.match?.slot + 1) + ' *' + rating + ' ' + pp_str;
-        const right2 = (Math.round((score?.accuracy || 0) * 10000) / 100) + '%' + ' '
-            + rank + mods + ' ' + (score?.max_combo || 0) + 'x';
+        const left2 = 'P' + (score?.match?.slot + 1) + rating_str + pp_str;
+        const right2 = acc_str + ' '
+            + rank + mods + ' ' + combo_str;
         const right3b = getRoundedNumberStrLarge(player_score, 0);
         const right3m = getRoundedNumberStrSmall(player_score, 0);
 
@@ -314,9 +320,9 @@ export const PanelGenerate = {
         };
     },
 
-    matchData2CardA2: async (matchCalculate = {}, beatmap = null) => {
-        const match = matchCalculate?.match;
-        const data = matchCalculate?.matchData;
+    matchCal2CardA2: async (c = {}, beatmap = null) => {
+        const match = c?.match;
+        const data = c?.matchData;
 
         const redWins = data?.teamPointMap?.red || 0;
         const blueWins = data?.teamPointMap?.blue || 0;
@@ -324,7 +330,7 @@ export const PanelGenerate = {
         const isTeamVS = data?.teamVs;
         const star = getRoundedNumberStr(data?.averageStar || 0, 3);
 
-        const sid = beatmap ? (data?.firstMapSID || 0) : (beatmap?.beatmapset?.id || 0)
+        const sid = beatmap?.beatmapset?.id || data?.firstMapSID || 0
 
         const background = await getMapBG(sid, 'list@2x', hasLeaderBoard(beatmap?.ranked));
 

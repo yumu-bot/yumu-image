@@ -1658,7 +1658,17 @@ export async function getFlagSvg(code = "cn") {
 
 export async function getFlagPath(code = "cn", x, y, h = 30) {
     if (typeof code != 'string') return '';
-    if (code.toLowerCase() == "tw") code = "cn"; //避免腾讯封掉青天白日旗
+
+    //避免腾讯封掉青天白日旗
+    const image = getImageFromV3('flag-TW.png')
+    if (code.toLowerCase() == "tw") {
+        if (fs.existsSync(image)) {
+            return `<g transform="translate(${x}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${image}"
+            style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
+        } else {
+            code = "cn"
+        }
+    }
 
     const svg = await getFlagSvg(code);
     const len = svg.length;

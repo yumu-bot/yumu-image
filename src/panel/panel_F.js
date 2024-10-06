@@ -340,7 +340,7 @@ export async function panel_F(data = {
     svg = replaceText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    const matchInfo = await card_A2(await PanelGenerate.matchData2CardA2(data));
+    const matchInfo = await card_A2(await PanelGenerate.matchCal2CardA2(data));
     svg = implantSvgBody(svg,40,40, matchInfo, reg_maincard);
 
     return svg.toString();

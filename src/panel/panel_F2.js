@@ -23,6 +23,7 @@ export async function router(req, res) {
     }
     res.end();
 }
+
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
@@ -72,9 +73,15 @@ export async function panel_F2(data = {}) {
     scoreArr.forEach(
         (v) => {
             switch (v.match.team) {
-                case 'red': redArr.push(v); break;
-                case 'blue': blueArr.push(v); break;
-                default : noneArr.push(v); break;
+                case 'red':
+                    redArr.push(v);
+                    break;
+                case 'blue':
+                    blueArr.push(v);
+                    break;
+                default :
+                    noneArr.push(v);
+                    break;
             }
         }
     )
@@ -91,14 +98,14 @@ export async function panel_F2(data = {}) {
         for (const v of redArr) {
             v.total_score = totalScore;
             v.total_player = playerCount;
-            const f = await card_A1(await PanelGenerate.score2CardA1(v));
+            const f = await card_A1(await PanelGenerate.matchScore2CardA1(v));
             redA1.push(f);
         }
 
         for (const v of blueArr) {
             v.total_score = totalScore;
             v.total_player = playerCount;
-            const f = await card_A1(await PanelGenerate.score2CardA1(v));
+            const f = await card_A1(await PanelGenerate.matchScore2CardA1(v));
             blueA1.push(f);
         }
 
@@ -145,7 +152,7 @@ export async function panel_F2(data = {}) {
         for (const v of noneArr) {
             v.total_score = totalScore;
             v.total_player = playerCount;
-            const f = await card_A1(await PanelGenerate.score2CardA1(v));
+            const f = await card_A1(await PanelGenerate.matchScore2CardA1(v));
             noneA1.push(f);
         }
 
@@ -160,7 +167,7 @@ export async function panel_F2(data = {}) {
         //天选之子 有 1,2,3
         if (r > 0) {
             for (let m = 0; m < r; m++) {
-                svg = implantCardA1(svg, noneA1[m], reg_bodycard, 1, m + 1,  r, 'none');
+                svg = implantCardA1(svg, noneA1[m], reg_bodycard, 1, m + 1, r, 'none');
             }
         }
 
@@ -200,24 +207,43 @@ function implantCardA1(svg, replace, reg, row = 1, column = 1, maxColumn = 1, te
     switch (team) {
         case "red": {
             switch (maxColumn) {
-                case 1: startX = 275; break;
-                case 2: startX = 40; break;
+                case 1:
+                    startX = 275;
+                    break;
+                case 2:
+                    startX = 40;
+                    break;
             }
-        } break;
+        }
+            break;
         case "blue": {
             switch (maxColumn) {
-                case 1: startX = 1215; break;
-                case 2: startX = 980; break;
+                case 1:
+                    startX = 1215;
+                    break;
+                case 2:
+                    startX = 980;
+                    break;
             }
-        } break;
+        }
+            break;
         case "none": {
             switch (maxColumn) {
-                case 1: startX = 745; break;
-                case 2: startX = 510; break;
-                case 3: startX = 275; break;
-                case 4: startX = 40; break;
+                case 1:
+                    startX = 745;
+                    break;
+                case 2:
+                    startX = 510;
+                    break;
+                case 3:
+                    startX = 275;
+                    break;
+                case 4:
+                    startX = 40;
+                    break;
             }
-        } break;
+        }
+            break;
     }
 
     const x = startX + 470 * (column - 1);
@@ -238,7 +264,7 @@ async function roundInfo2CardA2(data = {
         mode: 'mania',
         mods: [],
         winningTeamScore: 441025,
-        teamScore: { total: 441025, red: 0, blue: 0 },
+        teamScore: {total: 441025, red: 0, blue: 0},
         winningTeam: 'none',
         id: 595346038,
         beatmap_id: 4249702,
@@ -263,7 +289,7 @@ async function roundInfo2CardA2(data = {
             beatmapset: [Object],
             mode_int: 3
         },
-        scores: [ [Object] ]
+        scores: [[Object]]
     },
     index: 2
 }) {
@@ -304,7 +330,7 @@ async function roundInfo2CardA2(data = {
     // 在之后重构面板后，这里要放 roundID
 
     const left2 = 'Players ' + data?.MatchRound?.scores?.length;
-    const left3 =  'Round ' + ((data?.index > 80) ? ('80+') : data?.index);
+    const left3 = 'Round ' + ((data?.index > 80) ? ('80+') : data?.index);
 
     let right1;
     let right2;
@@ -313,23 +339,24 @@ async function roundInfo2CardA2(data = {
     let right3m = '';
 
     if (data?.MatchRound?.winningTeam != null) {
-        if (isTeamVS) {
-            if (red !== blue) {
-                right1 = '+ ' + Math.abs(red - blue);
-            } else {
-                right1 = '+- 0'
-            }
-            right2 = red + ' vs ' + blue;
-            right3b = '';
-            right3m = data?.MatchRound?.winningTeam + ' wins';
+        if (red !== blue) {
+            right1 = '+ ' + Math.abs(red - blue);
         } else {
+            right1 = '+- 0'
+        }
+        right2 = red + ' vs ' + blue;
+        right3b = '';
+        right3m = data?.MatchRound?.winningTeam + ' wins';
+    } else {
+        if (isTeamVS) {
+            right1 = '+- 0'
+            right2 = red + ' vs ' + blue;
+            right3b = 'draw';
+        } else {
+            right1 = '';
             right2 = 'Total ' + (data?.MatchRound?.teamScore?.total || 0);
             right3b = 'h2h';
         }
-    } else {
-        right1 = '+- 0'
-        right2 = red + ' vs ' + blue;
-        right3b = 'draw';
     }
 
 
