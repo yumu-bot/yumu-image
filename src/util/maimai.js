@@ -1,5 +1,5 @@
 import fs from "fs";
-import {getImageFromV3, readNetImage} from "./util.js";
+import {getImageFromV3, isEmptyString, readNetImage} from "./util.js";
 
 // 导入一些特殊 banner，比如 7 号是潘多拉，11号是 Splash 的改版 Shabi
 export function getMaimaiBannerIndex(song) {
@@ -75,6 +75,23 @@ export function getMaimaiRankBG(rank) {
     }
 
     return getImageFromV3(out)
+}
+
+// 图片推荐尺寸：320 * 52，左侧有 50 px 的头像框
+export function getMaimaiPlate(platename = "") {
+    if (isEmptyString(platename)) return ''
+
+    const path = getImageFromV3("Maimai", "Plate", platename + ".png")
+    const default_path = getImageFromV3("Maimai", "Plate", "default.png")
+    const base_path = getImageFromV3("Maimai", "Plate", "0.png")
+
+    if (fs.existsSync(path)) {
+        return path
+    } else if (fs.existsSync(default_path)) {
+        return default_path
+    } else {
+        return base_path
+    }
 }
 
 export function getMaimaiMaximumRating(ds = 0) {

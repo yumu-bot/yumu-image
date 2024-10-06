@@ -168,7 +168,8 @@ export async function panel_ME(data = {
         "plate": "",
         "rating": 16384,
         "base": 6247,
-        "additional": 704
+        "additional": 704,
+        "platename": ""
     },
     chart: {
         cnt: 40548,

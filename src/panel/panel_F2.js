@@ -2,7 +2,7 @@ import {
     exportJPEG,
     getMapBG, getMatchNameSplitted, getNowTimeStamp,
     getPanelNameSVG, implantImage,
-    implantSvgBody, readTemplate,
+    implantSvgBody, isNotBlankString, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -338,7 +338,7 @@ async function roundInfo2CardA2(data = {
     let right3b;
     let right3m = '';
 
-    if (data?.MatchRound?.winningTeam != null) {
+    if (isNotBlankString(data?.MatchRound?.winningTeam)) {
         if (red !== blue) {
             right1 = '+ ' + Math.abs(red - blue);
         } else {

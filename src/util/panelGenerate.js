@@ -14,11 +14,11 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    getMapCover, isNullOrEmptyObject,
+    getMapCover, isNullOrEmptyObject, isNotBlankString,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
-import {getCHUNITHMRatingBG, getMaimaiCategory, getMaimaiCover, getMaimaiRatingBG} from "./maimai.js";
+import {getCHUNITHMRatingBG, getMaimaiCategory, getMaimaiCover, getMaimaiPlate, getMaimaiRatingBG} from "./maimai.js";
 
 //公用方法
 //把参数变成面板能读懂的数据（router
@@ -30,6 +30,7 @@ export const PanelGenerate = {
             avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
             sub_icon1: '',
             sub_icon2: '',
+            sub_banner: '',
             country: 'CN',
 
             top1: 'YumuBot',
@@ -72,6 +73,7 @@ export const PanelGenerate = {
             avatar,
             sub_icon1: sub_icon1,
             sub_icon2: '',
+            sub_banner: '',
             country: country,
 
             top1: user?.username,
@@ -102,6 +104,7 @@ export const PanelGenerate = {
             avatar,
             sub_icon1: sub_icon1,
             sub_icon2: '',
+            sub_banner: '',
             country: country,
 
             top1: user?.username,
@@ -138,6 +141,7 @@ export const PanelGenerate = {
             avatar,
             sub_icon1: sub_icon1,
             sub_icon2: '',
+            sub_banner: '',
 
             country: country,
 
@@ -199,6 +203,7 @@ export const PanelGenerate = {
             avatar,
             sub_icon1: getImageFromV3(icon_str) ,
             sub_icon2: '',
+            sub_banner: '',
             country: country,
 
             top1: top1,
@@ -224,17 +229,34 @@ export const PanelGenerate = {
         else if (user.dan === 22) dan = '裏皆伝'
         else dan = ''
 
+        let top2;
+        let left1;
+        let sub_banner;
+
+        const plate_image = getMaimaiPlate(user.platename)
+
+        if (isNotBlankString(plate_image)) {
+            top2 = ''
+            left1 = user.probername
+            sub_banner = plate_image
+        } else {
+            top2 = user.probername
+            left1 = ''
+            sub_banner = ''
+        }
+
         return {
             background: background,
             avatar: getImageFromV3('Maimai', 'avatar-guest.png'),
             sub_icon1: '',
             sub_icon2: '',
+            sub_banner: sub_banner,
             country: null,
 
             top1: user.name,
-            top2: user.probername,
+            top2: top2,
 
-            left1: user.plate,
+            left1: left1,
             left2: dan,
             right1: '',
             right2:  (user?.base > 0) ? 'Rating: ' + user.base  + ' + ' + user.additional : 'Rating:',
@@ -258,6 +280,7 @@ export const PanelGenerate = {
             avatar: getImageFromV3('Chunithm', 'avatar-guest.png'),
             sub_icon1: '',
             sub_icon2: '',
+            sub_banner: '',
             country: null,
 
             top1: user.name,

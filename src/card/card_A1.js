@@ -13,6 +13,7 @@ export async function card_A1(data = {
     avatar: getImageFromV3('avatar-guest.png'),
     sub_icon1: getImageFromV3('object-card-supporter.png'),
     sub_icon2: '',
+    sub_banner: '',
     country: null,
 
     top1: 'Muziyami',
@@ -29,6 +30,7 @@ export async function card_A1(data = {
 
     // 路径定义
     const reg_text = /(?<=<g id="Text">)/;
+    const reg_banner = /(?<=<g id="Banner" style="clip-path: url\(#clippath-CA1-6\);">)/;
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-CA1-1\);">)/;
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CA1-2\);">)/;
     const reg_country_flag = /(?<=<g style="clip-path: url\(#clippath-CA1-3\);">)/;
@@ -75,8 +77,9 @@ export async function card_A1(data = {
 
     svg = implantImage(svg, 430, 210, 0, 0, 0.6, data.background, reg_background);
     svg = implantImage(svg, 100, 100, 20, 20, 1, data.avatar, reg_avatar);
-    svg = implantImage(svg, 40, 40, 200, 70, 1, data.sub_icon1, reg_sub_icon1); //x +5px
-    svg = implantImage(svg, 40, 40, 250, 70, 1, data.sub_icon2, reg_sub_icon2); //x +5px
+    svg = implantImage(svg, 40, 40, 200, 70, 1, data?.sub_icon1 || '', reg_sub_icon1); //x +5px
+    svg = implantImage(svg, 40, 40, 250, 70, 1, data?.sub_icon2 || '', reg_sub_icon2); //x +5px
+    svg = implantImage(svg, 320, 52, 70, 68, 1, data?.sub_banner || '', reg_banner);
 
     return svg.toString();
 }
