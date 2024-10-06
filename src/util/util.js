@@ -203,7 +203,7 @@ export function isEmptyString(str = "") {
 }
 
 export function isEmptyArray(arr = []) {
-    return isNull(str) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length == 0)
+    return isNull(arr) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length == 0)
 }
 
 // {} 和 [] 不为空
