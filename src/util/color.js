@@ -1,8 +1,8 @@
-import {isNotEmptyString} from "./util.js";
+import {isNotBlankString} from "./util.js";
 
 // 返回的结果是 xxx, xxx, xxx
 export function hex2rgbColor(hex = '#AAAAAA') {
-    if (isNotEmptyString(hex) && hex.slice(0, 1) === '#') {
+    if (isNotBlankString(hex) && hex.slice(0, 1) === '#') {
         if (hex.length === 7) {
             const r = parseInt('0x' + hex.slice(1, 3), 16)
             const g = parseInt('0x' + hex.slice(3, 5), 16)

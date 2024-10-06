@@ -195,15 +195,15 @@ export function deleteBeatMapFromDatabase(bid) {
 }
 
 export function isBlankString(str = "") {
-    return (str == null) || (str == undefined) || (typeof str !== "string") || (typeof str === "string" && str.replaceAll(/\\s*/g, "").length === 0)
+    return isNull(str) || (typeof str !== "string") || (typeof str === "string" && str?.trim()?.length === 0)
 }
 
 export function isEmptyString(str = "") {
-    return (str == null) || (str == undefined) || (typeof str !== "string") || str.trim().length === 0
+    return isNull(str) || (typeof str !== "string") || (typeof str === "string" && str?.length === 0)
 }
 
 export function isEmptyArray(arr = []) {
-    return (arr == null) || (arr == undefined) || !(Array.isArray(arr)) || (arr?.length == 0)
+    return isNull(str) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length == 0)
 }
 
 // {} 和 [] 不为空
@@ -212,7 +212,7 @@ export function isNull(object) {
 }
 
 export function isNullOrEmptyObject(object) {
-    return isNull(object) || (object === {}) || (object === [])
+    return isNull(object) || (object == {}) || (object == [])
 }
 
 // {} 和 [] 不为空
@@ -237,15 +237,15 @@ export function isNotEmptyArray(arr = []) {
 }
 
 export function isASCII(str = '') {
-    if (typeof str !== "string" || str.length === 0) return false
+    if (isBlankString(str)) return false
 
     const pattern = /^[\x00-\x7F]+$/; // ASCII范围的Unicode编码
     return pattern.test(str);
 }
 
 export function isNumber(str = '') {
-    if (typeof str == "number") return true
-    else if (typeof str !== "string" || str.length === 0) return false
+    if (isBlankString(str)) return false
+    else if (typeof str == "number") return true
 
     const pattern = /^\s*(-?[0-9]+[.]?[0-9]*)\s*$/; // ASCII范围的Unicode编码
     return pattern.test(str);
