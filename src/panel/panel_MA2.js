@@ -11,13 +11,14 @@ import {
     replaceText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
+import {card_I2} from "../card/card_I2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {card_I} from "../card/card_I.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {
     getCHUNITHMCover, getCHUNITHMRank,
     getCHUNITHMRankBG, getCHUNITHMDifficultyColor,
 } from "../util/maimai.js";
+import {PanelDraw} from "../util/panelDraw.js";
 
 export async function router(req, res) {
     try {
@@ -109,11 +110,11 @@ export async function panel_MA2(data = {
     let cardI2 = [];
 
     for (const s of standard) {
-        cardI1.push(card_I(await chuScore2CardI(s))) ;
+        cardI1.push(card_I2(await chuScore2CardI2(s))) ;
     }
 
     for (const s of deluxe) {
-        cardI2.push(card_I(await chuScore2CardI(s))) ;
+        cardI2.push(card_I2(await chuScore2CardI2(s))) ;
     }
 
 
@@ -206,5 +207,83 @@ async function chuScore2CardI(score = {
 
         color_component1: '', // 星星 //注意。这个组件的锚点在左下角
         color_component2: '',
+    }
+}
+
+async function chuScore2CardI2(score = {
+    position: 45,
+    artist: 'PRASTIK DANCEFLOOR',
+    charter: 'じゃこレモン',
+    cid: 2972,
+    ds: 12.1,
+    score: 970350,
+    fc: '',
+    level: '12',
+    level_index: 2,
+    level_label: 'Expert',
+    mid: 1100,
+    ra: 11.82,
+    title: 'TECHNOPOLIS 2085'
+}) {
+    const rate = getCHUNITHMRank(score?.score || 0)
+
+    const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
+    const score_text = (score?.score || 0).toString()
+
+    const difficulty_color = getCHUNITHMDifficultyColor(score?.level_index)
+
+    const rating = score?.ra || 0
+    const rating_max = (score?.ds || 0) + 2.15
+    const rating_max_text = score?.score >= 1009000 ? ('') : (' [' + getRoundedNumberStr(rating_max, 3) + ']')
+
+    const right = position + getRoundedNumberStr(rating, 3) + rating_max_text
+
+    const too_bright = (score?.level_index || 0) === 1;
+
+    return {
+        background: getCHUNITHMRankBG(score?.score || 0),
+        cover: await getCHUNITHMCover(score?.mid || 0),
+        rank: getImageFromV3('Chunithm', `object-score-${rate}2.png`),
+        type: '',
+        level: 0,
+
+        title: score?.title || '',
+        left1: score?.artist || '',
+        left2: score?.charter || '',
+        right: right,
+        index_b: score_text.slice(0, -4) || '0',
+        index_m: score_text.slice(-4) || '0000',
+        index_l: '',
+        index_b_size: 40,
+        index_m_size: 24,
+        index_l_size: 18,
+        label1: score?.ds?.toString() || '?',
+        label2: score?.mid?.toString() || '0',
+
+        color_text: '#fff',
+        color_label1: too_bright ? '#000' : '#fff',
+        color_label2: too_bright ? '#000' : '#fff',
+
+        color_left: difficulty_color,
+        color_rrect1: difficulty_color,
+        color_rrect2: difficulty_color,
+
+        component1: '',
+        component2: '',
+        component3: drawCombo(score?.fc),
+    }
+
+
+    function drawCombo(combo = '') {
+        let combo_image
+
+        switch (combo) {
+            case 'fullcombo': combo_image = 'fullcombo'; break;
+            case 'fullchain': combo_image = 'fullchain'; break;
+            case 'alljustice': combo_image = 'alljustice'; break;
+            default: return ''; //combo_image = 'clear'; break;
+        }
+
+        return PanelDraw.Image(0, 0, 105, 15, getImageFromV3('Chunithm', `object-icon-chain-${combo_image}.png`))
     }
 }

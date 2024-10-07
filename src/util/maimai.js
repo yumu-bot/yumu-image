@@ -35,6 +35,34 @@ export async function getMaimaiCover(song_id = 0) {
     }
 }
 
+export function getMaimaiDXStarColor(star = 0) {
+    if (star >= 5) return '#fbf365'
+    else if (star >= 3) return '#ffb84d'
+    else if (star >= 1) return '#6fc576'
+    else return 'none'
+}
+
+export function getMaimaiDXStarLevel(dx = 0, dx_max = 0) {
+    if (typeof dx_max !== "number" || dx_max <= 0) return 0
+
+    const div = dx / dx_max;
+
+    if (div >= 0.97) {
+        return 5
+    } else if (div >= 0.95) {
+        return 4
+    } else if (div >= 0.93) {
+        return 3
+    } else if (div >= 0.9) {
+        return 2
+    } else if (div >= 0.85) {
+        return 1
+    } else {
+        return 0
+    }
+    
+}
+
 export function getMaimaiRankBG(rank) {
     let out;
 

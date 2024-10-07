@@ -21,7 +21,7 @@ import {
     getMaimaiBannerIndex,
     getMaimaiCover, getMaimaiDifficultyName, getMaimaiDifficultyColors, getMaimaiMaximumRating,
     getMaimaiRankBG,
-    getMaimaiType, isMaimaiMaximumRating,
+    getMaimaiType, isMaimaiMaximumRating, getMaimaiDXStarLevel, getMaimaiDXStarColor,
 } from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {poppinsBold} from "../util/font.js";
@@ -353,7 +353,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
 
     const percent = rating / max_rating
 
-    const stars = getDXRatingStars(score?.dxScore, score?.max)
+    const stars = drawStars(score?.dxScore, score?.max)
     const component = component_G1(song?.charts[index]?.notes, score?.achievements || 0)
 
     return {
@@ -594,37 +594,12 @@ function getJudgeScoreString(score = 0) {
 }
 
 // 锚点在右下角
-function getDXRatingStars(rating = 0, max = 0) {
+function drawStars(dx = 0, max = 0) {
     if (typeof max !== "number" || max <= 0) return ''
 
-    const div = rating / max;
-    let level
-    let color
-    let y_delta
-
-    if (div >= 0.97) {
-        level = 5
-        color = '#fbf365'
-        y_delta = 14
-    } else if (div >= 0.95) {
-        level = 4
-        color = '#ffb84d'
-        y_delta = 16
-    } else if (div >= 0.93) {
-        level = 3
-        color = '#ffb84d'
-        y_delta = 16
-    } else if (div >= 0.9) {
-        level = 2
-        color = '#6fc576'
-        y_delta = 16
-    } else if (div >= 0.85) {
-        level = 1
-        color = '#6fc576'
-        y_delta = 16
-    } else {
-        return ''
-    }
+    const level = getMaimaiDXStarLevel(dx, max)
+    const color = getMaimaiDXStarColor(level)
+    const y_delta = (level >= 5) ? 14 : 16
 
     const diamonds = [
         PanelDraw.Diamond(-12, -12, 12, 12, color),
