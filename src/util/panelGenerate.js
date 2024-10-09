@@ -310,10 +310,22 @@ export const PanelGenerate = {
         let song_id = song?.id || 0
 
         if (has_deluxe && has_standard) {
-            right3b = "(10)"
-
-            if (song_id >= 10000 && song_id < 100000) {
+            if (song_id < 10000) {
+                // do nothing
+            } else if (song_id >= 10000 && song_id < 100000) {
                 song_id -= 10000
+            } else if (song_id >= 100000 && song_id < 110000) {
+                song_id -= 110000
+            } else if (song_id >= 110000 && song_id < 120000) {
+                song_id -= 120000
+            } else if (song_id >= 120000 && song_id < 130000) {
+                song_id -= 130000
+            }
+
+            if (song_id >= 1000) {
+                right3b = "(1)"
+            } else {
+                right3b = "(10)"
             }
 
         } else {
