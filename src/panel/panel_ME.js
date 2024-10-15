@@ -572,7 +572,7 @@ const component_E6 = async (
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
     svg = replaceTexts(svg, [t.title, t.title_unicode, bid, charter, diff], reg_label);
-    svg = implantImage(svg, 820, 160, 0, 0, 0.6, background, reg_background);
+    svg = implantImage(svg, 820, 160, 0, 0, 0.4, background, reg_background);
     svg = replaceText(svg, rect, reg_base);
 
     return svg;
