@@ -408,6 +408,7 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
         <g id="Text_LG1">
         </g>
     `;
+    const note = notes || []
     const sum = ((note?.tap + note?.hold + note?.slide + note?.break_ + note?.touch) || -1)
 
     const reg_base = /(?<=<g id="Base_LG1">)/
@@ -455,7 +456,6 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     // 换算得到的基础分损失：PF 0, GR -0.2, GD -0.5, MS -1, Hold x2, Slide x3, Break x5
     // 换算得到的绝赞基础分损失：CP~PF2 0, GR1 -1, GR2 -2, GR3 -2.5, GD -break_great2, MS -5,
     // 换算得到的绝赞额外分奖励：CP 1, PF1 0.75, PF2 0.5, GR1~3 0.4, GD 0.3, MS 0,
-    const note = notes || []
 
     const tap_count = poppinsBold.getTextPath((note?.tap || 0).toString(),
         37, 72, 14, 'center baseline', '#fff')
