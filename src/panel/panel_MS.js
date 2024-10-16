@@ -408,12 +408,13 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
         <g id="Text_LG1">
         </g>
     `;
+    const sum = ((note?.tap + note?.hold + note?.slide + note?.break_ + note?.touch) || -1)
 
     const reg_base = /(?<=<g id="Base_LG1">)/
     const reg_icon = /(?<=<g id="Icon_LG1">)/
     const reg_text = /(?<=<g id="Text_LG1">)/
 
-    const achievement_text = achievement > 0 ? (((achievement >= 100) ? '+' : '-') + getRoundedNumberStr(Math.abs(achievement - 100), 4) + ' %') : '-'
+    const achievement_text = achievement > 0 ? (((achievement >= 100) ? '+' : '-') + getRoundedNumberStr(Math.abs(achievement - 100), 4) + ' %') : (sum > 0 ? ('DX Score: ' + sum * 3) : '-')
 
     const title = poppinsBold.getTextPath('Notes', 10, 20, 14, 'left baseline', '#fff')
     const acc = poppinsBold.getTextPath(achievement_text, 280, 20, 14, 'right baseline', '#fff')
@@ -468,7 +469,7 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
         37 + 216, 72, 14, 'center baseline', '#fff')
 
     // 占比矩形
-    const width = 270 / ((note?.tap + note?.hold + note?.slide + note?.break_ + note?.touch) || -1)
+    const width = 270 / sum
     const tap_rrect = PanelDraw.GradientRect(10, 80, width * ((note?.tap) || 0), 10, 5,
         [
             {
