@@ -314,17 +314,19 @@ export function getMaimaiCategory(genre = '') {
             return "maimai";
 
         case "niconico & VOCALOID":
+        case "niconicoボーカロイド":
             return "niconico & VOCALOID";
 
-        case "POPSアニメ":
         case "流行&动漫":
+        case "POPSアニメ":
             return "POPS & ANIME";
 
         case "其他游戏":
+        case "ゲームバラエティ":
             return "GAME & VARIETY";
 
-        case "オンゲキCHUNITHM":
         case "音击&中二节奏":
+        case "オンゲキCHUNITHM":
             return "Ongeki & CHUNITHM";
 
         default:
