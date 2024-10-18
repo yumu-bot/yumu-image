@@ -4,7 +4,7 @@ import {
     getImageFromV3,
     getGameMode, getMapBG,
     implantImage, readTemplate,
-    replaceTexts, getAvatar, getBanner, getTimeByDHMS, getRoundedNumberStr, getTimeDifference,
+    replaceTexts, getAvatar, getBanner, getTimeByDHMS, getRoundedNumberStr, getTimeDifference, replaceText,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
 import {calcPerformancePoints} from "../util/compute-pp.js";
@@ -66,6 +66,7 @@ export async function panel_Gamma(data = {
     left1: '',
     left2: '',
     left3: '',
+
     down1: '',
     down2: '',
 
@@ -76,6 +77,8 @@ export async function panel_Gamma(data = {
     down_right2: '',
     down_right3: '',
     down_left_color: 'none',
+
+    background_color: '',
 
     center0b: '',
     center0m: '',
@@ -91,6 +94,7 @@ export async function panel_Gamma(data = {
     // 路径定义
     const reg_text = /(?<=<g id="Text">)/;
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-PGamma-BG\);" filter="url\(#blur-PGamma-BG\)">)/;
+    const reg_background_color = /(?<=<g id="Background">)/;
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-PGamma-MC\);">)/;
     const reg_map_hexagon = /(?<=<g id="HexagonChart">)/; // 移到上一层
     const reg_index = /(?<=<g id="Index">)/;
@@ -127,7 +131,7 @@ export async function panel_Gamma(data = {
         36, 24, 440, 280, 'center baseline', '#fff');
     const center2 = torus.getTextPath(data.center2, 440, 310, 18, 'center baseline', '#fff');
 
-    const mode = extra.getTextPath(getGameMode(data.mode, -1), 29, 220, 324, 'center baseline', '#3C3639');
+    const mode = extra.getTextPath(getGameMode(data.mode, -1), 29, 220, 324, 'center baseline', '#fff', 0.1); //3C3639
     const hexagon = getImageFromV3('object-beatmap-hexagon2.png');
 
     // 插入文字
@@ -144,6 +148,11 @@ export async function panel_Gamma(data = {
 
     // 插入图片和部件（新方法
 
+    const base = PanelDraw.Rect(0, 0, 240, 360, 0, '#2A2226', 1)
+    const background_color = PanelDraw.Rect(0, 0, 240, 360, 0, data?.background_color || 'none', 0.1)
+    svg = replaceText(svg, [base, background_color], reg_background_color)
+    svg = replaceText(svg, background_color, reg_background) // 这个是用来给中间分界线处的渐变上色的
+,
     svg = implantImage(svg, 148, 160, 366, 80, 1, data.avatar, reg_avatar);
     svg = implantImage(svg, 400, 360, 240, 0, is_score ? 1 : 0.6, data.background, reg_background);
     svg = implantImage(svg, 148, 160, 366, 80, 1, hexagon, reg_map_hexagon);
@@ -175,6 +184,7 @@ const PanelGamma = {
             center1m: '',
             center2: getRoundedNumberStr(user?.accuracy, 3) + '% // Lv.' + user.levelCurrent,
 
+            background_color: '#2a2226',
             panel: 'info',
         };
     },
@@ -251,6 +261,7 @@ const PanelGamma = {
             center1m: 'PP',
             center2: getRoundedNumberStr((score?.accuracy || 0) * 100, 3) + '% // ' + (score.max_combo || 0) + 'x // ' + score.rank + mod_str,
 
+            background_color: '#2a2226',
             panel: 'score',
         };
     },
@@ -296,6 +307,7 @@ const PanelGamma = {
 
             center2: getRoundedNumberStr(user?.accuracy, 3) + '% // Lv.' + (user?.levelCurrent || '0'),
 
+            background_color: sanity_color,
             panel: 'sanity',
         };
     },

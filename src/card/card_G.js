@@ -94,7 +94,7 @@ export function card_G(data = {
             }
         ]
     )
-    const label1 = BerlinBold.getTextPath(data?.label1, 20 + (label1_width + 40) / 2, 56, 36, 'center baseline', '#fff', true)
+    const label1 = BerlinBold.getTextPath(data?.label1, 20 + (label1_width + 40) / 2, 56, 36, 'center baseline', '#fff', 1, true)
 
     const label2_width = BerlinBold.getTextWidth(data?.label2, 48)
     const label2_rrect = PanelDraw.GradientRect(310 - label2_width - 40, 255, label2_width + 40, 50, 25, [
@@ -109,7 +109,7 @@ export function card_G(data = {
             }
         ]
     )
-    const label2 = BerlinBold.getTextPath(data?.label2, 310 - (label2_width + 40) / 2, 290, 48, 'center baseline', '#fff', true)
+    const label2 = BerlinBold.getTextPath(data?.label2, 310 - (label2_width + 40) / 2, 290, 48, 'center baseline', '#fff', 1, true)
 
     const base1 = PanelDraw.Rect(30, 30, 290, 310, 20, '#46393f', 1)
 

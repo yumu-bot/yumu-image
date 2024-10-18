@@ -98,6 +98,7 @@ function getTextPath_BerlinBold(
     size = 36,
     anchor = 'left top',
     fill = '#fff',
+    opacity = 1,
     shadow = false
 ) {
     return ((shadow === false) ? '' :
@@ -118,7 +119,8 @@ function getTextPath_BerlinBold(
         anchor: anchor,
         fontFamily: "BerlinBold",
         attributes: {
-            fill: fill
+            "fill": fill,
+            "fill-opacity": opacity
         }
     })
 }
@@ -233,6 +235,7 @@ function getTextPath_TahomaRegular(
     size = 36,
     anchor = 'left top',
     fill = '#fff',
+    opacity = 1,
 ) {
     return textToSVGTahomaRegular.getPath((text || "").toString(), {
         x: x,
@@ -241,7 +244,8 @@ function getTextPath_TahomaRegular(
         anchor: anchor,
         fontFamily: "TahomaRegular",
         attributes: {
-            fill: fill
+            "fill": fill,
+            "fill-opacity": opacity
         }
     })
 }
@@ -355,7 +359,8 @@ function getTextPath_poppinsBold(
     y = 0,
     size = 36,
     anchor = 'left top',
-    fill = '#fff'
+    fill = '#fff',
+    opacity = 1,
 ) {
     return textToSVGpoppinsBold.getPath((text || "").toString(), {
         x: x,
@@ -364,7 +369,8 @@ function getTextPath_poppinsBold(
         anchor: anchor,
         fontFamily: "poppinsBold",
         attributes: {
-            fill: fill
+            "fill": fill,
+            "fill-opacity": opacity
         }
     })
 }
@@ -478,7 +484,8 @@ function getTextPath_lineSeedSans(
     y = 0,
     size = 36,
     anchor = 'left top',
-    fill = '#fff'
+    fill = '#fff',
+    opacity = 1,
 ) {
     return textToSVGlineSeedSansBold.getPath((text || "").toString(), {
         x: x,
@@ -487,7 +494,8 @@ function getTextPath_lineSeedSans(
         anchor: anchor,
         fontFamily: "lineSeedSans",
         attributes: {
-            fill: fill
+            "fill": fill,
+            "fill-opacity": opacity
         }
     })
 }
@@ -601,7 +609,8 @@ function getTextPath_torus(
     y = 0,
     size = 36,
     anchor = 'left top',
-    fill = '#fff'
+    fill = '#fff',
+    opacity = 1
 ) {
     return textToSVGTorusSB.getPath((text || "").toString(), {
         x: x,
@@ -610,7 +619,8 @@ function getTextPath_torus(
         anchor: anchor,
         fontFamily: "Torus",
         attributes: {
-            fill: fill
+            "fill": fill,
+            "fill-opacity": opacity
         }
     })
 }
@@ -725,7 +735,8 @@ function getTextPath_torusRegular(
     y = 0,
     size = 36,
     anchor = 'left top',
-    fill = '#fff'
+    fill = '#fff',
+    opacity = 1,
 ) {
     return textToSVGTorusRegular.getPath((text || "").toString(), {
         x: x,
@@ -734,7 +745,8 @@ function getTextPath_torusRegular(
         anchor: anchor,
         fontFamily: "TorusRegular",
         attributes: {
-            fill: fill
+            "fill": fill,
+            "fill-opacity": opacity
         }
     })
 }
@@ -847,7 +859,8 @@ function getTextPath_PuHuiTi(
     y = 0,
     size = 36,
     anchor = 'left top',
-    fill = '#fff'
+    fill = '#fff',
+    opacity = 1
 ) {
     return textToSVGPuHuiTi.getPath((text || "").toString(), {
         x: x,
@@ -856,7 +869,8 @@ function getTextPath_PuHuiTi(
         anchor: anchor,
         fontFamily: "PuHuiTi",
         attributes: {
-            fill: fill
+            "fill": fill,
+            "fill-opacity": opacity
         }
     })
 }
@@ -931,7 +945,8 @@ function getTextPath_extra(
     y = 0,
     size = 36,
     anchor = 'left top',
-    fill = '#fff'
+    fill = '#fff',
+    opacity = 1,
 ) {
     return textToSVGextra.getPath((text || "").toString(), {
         x: x,
@@ -940,7 +955,8 @@ function getTextPath_extra(
         anchor: anchor,
         fontFamily: "extra",
         attributes: {
-            fill: fill
+            "fill": fill,
+            "fill-opacity": opacity
         }
     })
 }
