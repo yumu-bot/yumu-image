@@ -1,7 +1,7 @@
 import {
     getImageFromV3, getGameMode, getMapBG, getRoundedNumberStr,
     implantImage,
-    implantSvgBody, replaceText
+    implantSvgBody, replaceText, getOsuScoreType
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_J} from "./card_J.js";
@@ -168,6 +168,8 @@ const score2CardJ = async (score, calcPP) => {
     return {
         cover: background,
         background: background,
+        type: getOsuScoreType(bp.build_id),
+
         title: score.beatmapset.title || '',
         artist: score.beatmapset.artist || '',
         difficulty_name: score.beatmap.version || '',

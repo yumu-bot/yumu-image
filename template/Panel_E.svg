@@ -40,6 +40,8 @@
     <g id="IndexBase">
         <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>
     </g>
+    <g id="IndexPlus">
+    </g>
     <g id="Index">
     </g>
 </svg>

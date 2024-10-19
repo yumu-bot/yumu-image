@@ -426,7 +426,7 @@ export async function panel_J(data = {
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-PJ-BG\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('BP Analysis v2 (!ymba)', 'BA', 'v0.4.0 UU');
+    const panel_name = getPanelNameSVG('BP Analysis v2 (!ymba)', 'BA', 'v0.5.0 DX');
 
     const pp = data.pp.toFixed(0) || 0;
     const pp_raw = data.pp_raw.toFixed(0) || 0;

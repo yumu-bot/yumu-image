@@ -174,7 +174,7 @@ export async function panel_E7(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Match Start (passive module)', 'ST', 'v0.4.1 SE'), reg_index);
+    svg = replaceText(svg, getPanelNameSVG('Match Start (passive module)', 'ST', 'v0.5.0 DX'), reg_index);
 
     // 需要参数
     const match = data?.match || {}

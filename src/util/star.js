@@ -172,7 +172,8 @@ export const hasLeaderBoard = (ranked) => {
 }
 
 // 获取评级背景。把 S+ 和 X+ 统一一下。
-export const getRankBG = (rank = 'F') => {
+export const getRankBG = (rank = 'F', passed = true) => {
+    if (passed === false) rank = 'F';
     if (rank === 'X+' || rank === 'SS') rank = 'X';
     if (rank === 'S+') rank = 'S';
     return getImageFromV3(`object-score-backimage-${rank}.jpg`)

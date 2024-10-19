@@ -184,6 +184,7 @@ export function getModColor(Mod = '') {
             color = '#22AC38';
             break;
         case "HD":
+        case "FI":
             color = '#F8B551';
             break;
         case "HR":
@@ -245,6 +246,9 @@ export function getModColor(Mod = '') {
         case "DC":
             color = '#DADADA';
             break;
+        case "CO":
+            color = '#F8B551';
+            break;
         case "BL":
             color = '#EB6100';
             break;
@@ -301,6 +305,7 @@ export function getModColor(Mod = '') {
         case "FF":
         case "BU":
         case "SY":
+        case "DP":
             color = '#EA68A2';
             break;
 
@@ -338,7 +343,7 @@ export function getModColor(Mod = '') {
             break;
 
         default:
-            color = 'none';
+            color = '#1c1719';
             break;
     }
 
@@ -349,8 +354,10 @@ export function getModColor(Mod = '') {
  * @function 获取评级颜色
  * @return {String} 返回色彩
  * @param rank 输入评级
+ * @param passed 是否通过，等于之前的 'F'
  */
-export function getRankColor(rank = 'F') {
+export function getRankColor(rank = 'F', passed = true) {
+    if (passed === false) return '#616161'
     if (typeof rank !== 'string') return 'none';
     let color;
     switch (rank.toUpperCase()) {
@@ -463,3 +470,4 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
         }
     }
 }
+

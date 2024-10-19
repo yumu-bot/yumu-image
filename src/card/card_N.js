@@ -202,7 +202,7 @@ export async function card_N(data = {
         return PanelDraw.Rect(x, 6, 40, 20, 10, getModColor(mod)) + '\n' + mod_abbr_path + '\n';
     }
 
-    const mods_arr = data.score.mods || ['']
+    const mods_arr = (data.score.mods || [{acronym: ''}])?.filter(v => v.acronym !== 'CL')
     const mods_arr_length = mods_arr.length;
 
     if (mods_arr_length <= 5 && mods_arr_length > 0) {

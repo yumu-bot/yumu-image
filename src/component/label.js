@@ -544,13 +544,13 @@ export async function label_C1(data = {
   </g>`
 
     //正则
-    let reg_text = /(?<=<g id="Text_LC1">)/;
-    let reg_mod = /(?<=<g id="Mods_LC1">)/;
-    let reg_label = /(?<=<g id="Label_LC1">)/;
-    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LC1-1\);">)/;
+    const reg_text = /(?<=<g id="Text_LC1">)/;
+    const reg_mod = /(?<=<g id="Mods_LC1">)/;
+    const reg_label = /(?<=<g id="Label_LC1">)/;
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LC1-1\);">)/;
 
     //插入模组
-    let insertMod = (mod, i, offset_x) => {
+    const insertMod = (mod, i, offset_x) => {
         let x = offset_x + i * 10;
         let mod_color = getModColor(mod);
 
@@ -558,25 +558,25 @@ export async function label_C1(data = {
         return PanelDraw.Circle(x, 90, 10, mod_color);
     }
 
-    let mods_arr = data?.mods_arr || ['']
-    let mods_arr_length = mods_arr.length;
+    const mods_arr = (data?.mods_arr || [{acronym: ''}])?.filter(v => v.acronym !== 'CL')
+    const mods_arr_length = mods_arr.length;
 
     mods_arr.forEach((val, i) => {
         svg = replaceText(svg, insertMod(val, i, 100 - mods_arr_length * 10), reg_mod);
     });
 
     //定义文本
-    let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
-    let name = torus.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
+    const text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
+    const name = torus.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
 
-    let score_b = getRoundedNumberStrLarge(data.score || 0, 0);
-    let score_m = getRoundedNumberStrSmall(data.score || 0, 0);
+    const score_b = getRoundedNumberStrLarge(data.score || 0, 0);
+    const score_m = getRoundedNumberStrSmall(data.score || 0, 0);
 
-    let score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor);
+    const score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor);
 
-    let rank = torus.getTextPath(data.rank.toString() || '0', 15, 15.877, 18, 'center baseline', '#fff');
+    const rank = torus.getTextPath(data.rank.toString() || '0', 15, 15.877, 18, 'center baseline', '#fff');
 
-    let label_color = `
+    const label_color = `
     <rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${getUserRankColor(data.rank) || '#46393f'};"/>`;
 
     //插入文本

@@ -9,6 +9,8 @@ import {PanelDraw} from "../util/panelDraw.js";
 export async function card_J(data = {
     cover: getImageFromV3('beatmap-defaultBG.jpg'),
     background: getImageFromV3('beatmap-defaultBG.jpg'),
+    type: '',
+
     title: '',
     artist: '',
     difficulty_name: '',
@@ -123,13 +125,16 @@ export async function card_J(data = {
         return PanelDraw.Circle(offset_x, offset_y, 5, getModColor(mod));
     }
 
-    const length = data.mods_arr ? data.mods_arr.length : 0;
+    const mods_arr = (data.mods_arr || [])?.filter(v => v.acronym !== 'CL')
+    const length = mods_arr.length;
 
     for (let i = 0; i < length; ++i) {
+        const v = mods_arr[i]
+
         if (i < 3){
-            svg = replaceText(svg, insertMod(data.mods_arr[i], i, 0), reg_mod)
+            svg = replaceText(svg, insertMod(v.acronym || v.toString(), i, 0), reg_mod)
         } else {
-            svg = replaceText(svg, insertMod(data.mods_arr[i], i - 3, 1), reg_mod)
+            svg = replaceText(svg, insertMod(v.acronym || v.toString(), i - 3, 1), reg_mod)
         }
     }
 
@@ -140,6 +145,8 @@ export async function card_J(data = {
     svg = replaceText(svg, star_rrect, reg_overlay)
 
     // 替换图片
+
+    svg = implantImage(svg, 30, 20, 85, 4, 1, data?.type || '', reg_text);
 
     svg = data.background ? implantImage(svg, 310, 80, 0, 0, 0.2, data.background, reg_background) : svg;
     svg = data.cover ? implantImage(svg, 120, 80, 0, 0, 1, data.cover, reg_cover) : svg;

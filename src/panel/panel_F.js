@@ -291,7 +291,7 @@ export async function panel_F(data = {
 
     // 面板文字
     const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
-    const panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', 'v0.4.0 UU', request_time);
+    const panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', 'v0.5.0 DX', request_time);
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);

@@ -98,7 +98,7 @@ export async function panel_B2(data = {
     svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Map Minus v0.7 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.4.0 UU');
+    const panel_name = getPanelNameSVG('Map Minus v0.7 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.5.0 DX');
 
     // 计算数值
 

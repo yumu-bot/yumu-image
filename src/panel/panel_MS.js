@@ -165,7 +165,7 @@ export async function panel_MS(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-MS1-1\);">)/;
 
     // 面板文字
-    let panel_name = getPanelNameSVG('Maimai Song Info (!ymms)', 'MS', 'v0.4.1 SE');
+    let panel_name = getPanelNameSVG('Maimai Song Info (!ymms)', 'MS', 'v0.5.0 DX');
 
 
     // 插入文字

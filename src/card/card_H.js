@@ -11,6 +11,8 @@ import {PanelDraw} from "../util/panelDraw.js";
 export async function card_H(data = {
     background: '',
     cover: '',
+    type: '',
+
     title: '',
     title2: '',
     left1: '',
@@ -35,6 +37,7 @@ export async function card_H(data = {
     color_label2: '',
     color_label3: '',
     color_label4: '',
+    color_label12: '#fff',
     color_left12: '#fff',
 
     font_title2: 'torus',
@@ -66,16 +69,16 @@ export async function card_H(data = {
         } else return '';
     }
 
-    const mods_arr = data.mods_arr || ['']
+    const mods_arr = (data.mods_arr || [{acronym: ''}]).filter(v => v.acronym !== 'CL')
     const mods_arr_length = mods_arr.length;
 
     if (mods_arr_length <= 2 && mods_arr_length > 0) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, 2 * i), reg_mod);
+            svg = replaceText(svg, insertMod(val?.acronym || val.toString(), 2 * i), reg_mod);
         });
     } else if (mods_arr_length > 2) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, i), reg_mod);
+            svg = replaceText(svg, insertMod(val?.acronym || val.toString(), i), reg_mod);
         });
     }
 
@@ -89,11 +92,13 @@ export async function card_H(data = {
     const font_l4 = (data?.font_label4 === 'PuHuiTi') ? PuHuiTi : torus;
     const font_t2 = (data?.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
 
+    const label1_width = torus.getTextWidth(data?.label1 || '', 18) + 16;
+    const label2_width = torus.getTextWidth(data?.label2 || '', 18) + 16;
     const label3_width = torus.getTextWidth(data?.label3 || '', 24) + 30;
     const label4_width = font_l4.getTextWidth(data?.label4 || '', 24) + 30;
 
-    const label1 = torus.getTextPath(data?.label1 || '', 50, 20.877, 18, 'center baseline', '#fff');
-    const label2 = torus.getTextPath(data?.label2 || '', 50, 96.877, 18, 'center baseline', '#fff');
+    const label1 = torus.getTextPath(data?.label1 || '', 38, 20.877, 18, 'left baseline', data?.color_label12 || '#fff');
+    const label2 = torus.getTextPath(data?.label2 || '', 38, 100.877, 18, 'left baseline', data?.color_label12 || '#fff');
     const label3 = torus.getTextPath(data?.label3 || '', 710 - label3_width / 2, 34.836, 24, 'center baseline', '#fff');
     const label4 = font_l4.getTextPath(data?.label4 || '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
 
@@ -103,14 +108,15 @@ export async function card_H(data = {
         +
         torus.getTextPath(data?.index_l, 815, 33.672, data?.index_l_size || 24, 'center baseline', data.color_index)
 
-    const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 5, 40, 20, 10, color_label1) : '';
-    const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 5, 40, 20, 10, color_label2) : '';
+    const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 5, label1_width, 20, 10, color_label1) : '';
+    const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 85, label2_width, 20, 10, color_label2) : '';
     const rrect_label3 = data.label3 ? PanelDraw.Rect(710 - label3_width, 10, label3_width, 34, 17, color_label3) : '';
     const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label4_width, 34, 17, color_label4) : '';
 
     svg = replaceText(svg, data?.color_right || 'none', reg_color_right);
     svg = replaceText(svg, data?.color_left || 'none', reg_color_left);
 
+    svg = implantImage(svg, 45, 30, 140, 0, 1, data?.type || '', reg_label);
 
     svg = replaceTexts(svg, [label1, label2, label3, label4, rrect_label1, rrect_label2, rrect_label3, rrect_label4,], reg_label);
     svg = replaceText(svg, index, reg_text);

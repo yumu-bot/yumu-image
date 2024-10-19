@@ -342,7 +342,7 @@ export async function panel_M(data = {
     const reg_genre_pie = /(?<=<g style="clip-path: url\(#clippath-PM1-2\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('I\'m Mapper (!ymim)', 'IM', 'v0.3.2 FT');
+    const panel_name = getPanelNameSVG('I\'m Mapper (!ymim)', 'IM', 'v0.5.0 DX');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);

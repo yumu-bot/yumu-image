@@ -16,7 +16,7 @@ import {
     implantSvgBody,
     readTemplate,
     replaceText,
-    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString
+    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString, isNotNumber
 } from "../util/util.js";
 import moment from "moment";
 import {getApproximateRank, getRankBG, hasLeaderBoard} from "../util/star.js";
@@ -24,9 +24,8 @@ import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi, torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
-import {PanelDraw} from "../util/panelDraw.js";
+import {PanelDraw, RainbowRect} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getV3Score} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -40,6 +39,7 @@ export async function router(req, res) {
     }
     res.end();
 }
+
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
@@ -60,6 +60,7 @@ export async function router_svg(req, res) {
  */
 // E面板升级计划
 export async function panel_E5(data = {
+    panel: "",
     user: {},
 
     density: {},
@@ -68,104 +69,145 @@ export async function panel_E5(data = {
     attributes: {},
 
     score: {
-        accuracy: 0.9361111111111111,
-        osuMods: [ 'HD' ],
-        passed: true,
-        perfect: false,
-        rank: 'A',
-        replay: true,
-        score: 1444022,
-        statistics: {
-            countAll: 240,
-            null: true,
-            count_50: 0,
-            count_100: 20,
-            count_300: 218,
-            count_geki: 0,
-            count_katu: 0,
-            count_miss: 2
-        },
-        type: 'score_best_osu',
-        legacy: true,
-        user: {
-            id: 7003013,
-            pmOnly: false,
-            userID: 7003013,
-            avatar_url: 'https://a.ppy.sh/7003013?1704285435.jpeg',
-            default_group: 'default',
-            is_active: true,
-            is_bot: false,
-            is_deleted: false,
-            is_online: false,
-            is_supporter: false,
-            last_visit: [Array],
-            pm_friends_only: false,
-            username: 'Muziyami',
-            country_code: 'CN'
-        },
-        mods: [ 'HD' ],
-        createTimePretty: [ 2024, 7, 9, 18, 45, 11 ],
-        pp: 183.94418,
-        uid: 7003013,
-        best_id: 4651668661,
-        max_combo: 303,
-        user_id: 7003013,
-        create_at_str: '2024-07-09T10:45:11Z',
-        id: 4651668661,
+        mods: [],
         mode: 'OSU',
-        mode_int: 0,
+        pp: 5.7076308198503005,
+        classic_total_score: 319362,
+        preserve: true,
+        processed: true,
+        ranked: false,
+        maximum_statistics: {
+            perfect: 0,
+            great: 116,
+            good: 0,
+            ok: 0,
+            meh: 0,
+            miss: 0,
+            ignore_hit: 68,
+            ignore_miss: 0,
+            large_tick_hit: 10,
+            large_tick_miss: 0,
+            small_tick_hit: 0,
+            small_tick_miss: 0,
+            slider_tail_hit: 68,
+            large_bonus: 20,
+            small_bonus: 0
+        },
+        statistics: {
+            perfect: 0,
+            great: 104,
+            good: 0,
+            ok: 3,
+            meh: 5,
+            miss: 4,
+            ignore_hit: 68,
+            ignore_miss: 10,
+            large_tick_hit: 8,
+            large_tick_miss: 2,
+            small_tick_hit: 0,
+            small_tick_miss: 0,
+            slider_tail_hit: 66,
+            large_bonus: 12
+        },
+        total_score_without_mods: 593320,
+        beatmap_id: 3787814,
+        best_id: 0,
+        id: 3706199494,
+        rank: 'A',
+        type: 'solo_score',
+        user_id: 7003013,
+        accuracy: 0.924724,
+        // 这个是否为空可以判断成绩的种类
+        build_id: 7739,
+        ended_at: '2024-10-19T08:02:52Z',
+        is_perfect_combo: false,
+        legacy_perfect: false,
+        legacy_score_id: 0,
+        legacy_total_score: 0,
+        max_combo: 86,
+        passed: true,
+        ruleset_id: 0,
+        started_at: '2024-10-19T08:02:06Z',
+        total_score: 593320,
+        replay: false,
+        current_user_attributes: {pin: null},
         beatmap: {
-            id: 4645012,
+            id: 3787814,
             mode: 'osu',
-            status: 'qualified',
+            status: 'graveyard',
+            retryList: [Array],
+            failList: [Array],
             convert: false,
+            ranked: -2,
+            url: 'https://osu.ppy.sh/beatmaps/3787814',
             retry: 0,
-            fail: 0,
-            od: 8.3,
-            cs: 4,
-            ar: 9.3,
+            fail: 27,
             osuMode: 'OSU',
-            hp: 5,
-            bpm: 144,
-            beatMapID: 4645012,
-            beatmapset_id: 2195334,
-            difficulty_rating: 5.2104692,
-            total_length: 53,
-            user_id: 9590557,
-            version: 'Extra',
+            ar: 7,
+            od: 5,
+            cs: 3.5,
+            bpm: 185,
+            beatMapID: 3787814,
+            hp: 4,
+            previewName: 'MixBadGun - NMDB to the Black World (Muziyami) [H*rd]',
+            beatmapset_id: 1844042,
+            difficulty_rating: 2.8238842,
+            total_length: 37,
+            user_id: 7003013,
+            version: 'H*rd',
             beatmapset: [Object],
-            max_combo: 414,
-            accuracy: 8.3,
-            count_circles: 70,
-            count_sliders: 170,
-            count_spinners: 0,
-            drain: 5,
-            hit_length: 53,
+            checksum: 'a681f568d6b66a2b770d3a1fe76ddece',
+            max_combo: 194,
+            accuracy: 5,
+            count_circles: 47,
+            count_sliders: 68,
+            count_spinners: 1,
+            drain: 4,
+            hit_length: 37,
+            is_scoreable: false,
+            last_updated: '2022-09-27T12:45:10Z',
             mode_int: 0,
-            passcount: 58,
-            playcount: 190
+            passcount: 100,
+            playcount: 188
         },
         beatmapset: {
-            artist: 'Lei Lei',
+            artist: 'MixBadGun',
             covers: [Object],
+            creator: 'Muziyami',
             nsfw: false,
+            offset: 0,
             source: '',
-            status: 'qualified',
-            title: 'Wo Ai Wan Dian Wei',
+            spotlight: false,
+            status: 'graveyard',
+            title: 'NMDB to the Black World',
+            video: true,
+            ranked: -2,
             storyboard: false,
+            tags: 'vocaloid 黒塗り世界宛て書簡 致涂黑世界的书信 重音テトkasane teto フロクロ frog96 furokuro kuronuri sekai ate shokan nanban dainuno nan man da bu letter to the black world 玄景龙 mc 喊麦 快手 youtube poop music ytpmv otomad 音mad 鬼畜 bilibili chinese japanese pop ballad meme nmdbrrc cut short version',
+            ratings: [Array],
             mappers: [],
             nominators: [],
             publicRating: 0,
-            fromDatabase: false,
-            sid: 2195334,
-            artist_unicode: '雷雷',
-            favourite_count: 3,
-            id: 2195334,
-            play_count: 519,
-            title_unicode: '我爱玩典韦',
-            user_id: 9590557,
-            legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1933407'
-        }
+            bpm: 185,
+            sid: 1844042,
+            artist_unicode: '坏枪',
+            favourite_count: 5,
+            id: 1844042,
+            play_count: 1270,
+            preview_url: '//b.ppy.sh/preview/1844042.mp3',
+            title_unicode: '黒塗り世界宛て南蛮大布',
+            user_id: 7003013,
+            can_be_hyped: false,
+            discussion_locked: false,
+            is_scoreable: false,
+            last_updated: 1664282709,
+            legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1641939',
+            nominations_summary: [Object],
+            submitted_date: 1662537776,
+            availability: [Object]
+        },
+
+        user: {},
     },
 
 }) {
@@ -176,38 +218,66 @@ export async function panel_E5(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/;
     const reg_background = /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BG\);">)/;
     const reg_index = /(?<=<g id="Index">)/;
+    const reg_index_plus = /(?<=<g id="IndexPlus">)/;
     const reg_card_a1 = /(?<=<g id="Card_A1">)/;
     const reg_card_e1 = /(?<=<g id="Card_E1">)/;
     const reg_card_e2 = /(?<=<g id="Card_E2">)/;
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
+    const is_lazer = data?.score?.build_id > 0
+    if (is_lazer) svg = replaceText(svg, RainbowRect, reg_index_plus)
+
     // 面板文字
     let score_time;
     let delta_time;
 
-    if (data?.score?.create_at_str != null) {
-        score_time = moment(data?.score?.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]");
-        delta_time = getTimeDifference(data?.score?.create_at_str)
+    if (data?.score?.ended_at != null) {
+        score_time = moment(data?.score?.ended_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]");
+        delta_time = getTimeDifference(data?.score?.ended_at)
     } else {
         //created_at 是北京时间，所以处理的时候不需要 +8
         //[ 2024, 4, 22, 17, 32, 12, 473533397 ]
-        score_time = moment(data?.score?.created_at, '[\[] YYYY, MM, DD, HH, mm, ss, SSSSSSSSS [\]]').format("YYYY-MM-DD HH:mm:ss [+8]")
-        delta_time = getTimeDifference(data?.score?.created_at, '[\[] YYYY, MM, DD, HH, mm, ss, SSSSSSSSS [\]]', moment())
+        score_time = moment(data?.score?.started_at, '[\[] YYYY, MM, DD, HH, mm, ss, SSSSSSSSS [\]]').format("YYYY-MM-DD HH:mm:ss [+8]")
+        delta_time = getTimeDifference(data?.score?.started_at, '[\[] YYYY, MM, DD, HH, mm, ss, SSSSSSSSS [\]]', moment())
     }
 
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
+    let panel_name
+
+    switch (data?.panel) {
+        case "B": {
+            panel_name = getPanelNameSVG('Best Score (!ymb)', 'B', 'v0.5.0 DX', request_time);
+        } break;
+        case "P": {
+            panel_name = getPanelNameSVG('Passed Score (!ymp)', 'P', 'v0.5.0 DX', request_time);
+        } break;
+        case "R": {
+            panel_name = getPanelNameSVG('Recent Score (!ymr)', 'R', 'v0.5.0 DX', request_time);
+        } break;
+        case "S": {
+            panel_name = getPanelNameSVG('Score (!yms)', 'S', 'v0.5.0 DX', request_time);
+        } break;
+        case "BQ": {
+            panel_name = getPanelNameSVG('Best Score Query (!ymbq)', 'BQ', 'v0.5.0 DX', request_time);
+        } break;
+        default: {
+            panel_name = getPanelNameSVG('Excellent Score (!ymp / !ymr / !yms)', 'S', 'v0.5.0 DX', request_time);
+        } break;
+    }
+
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Excellent Score (!ymp / !ymr / !yms)', 'S', 'v0.4.1 SE', request_time), reg_index);
+    svg = replaceText(svg, panel_name, reg_index);
 
     // 评级
     svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`object-score-${data?.score?.rank || 'F'}2.png`), reg_index);
 
     // 图片定义
-    const background = getRankBG((data?.score?.rank || getApproximateRank(data?.score)));
+    const background = getRankBG((data?.score?.rank || getApproximateRank(data?.score)), data?.score?.passed);
     const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked));
 
     // 卡片定义
+
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
     const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.score));
     const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.score, data.density, data.progress));
@@ -216,9 +286,9 @@ export async function panel_E5(data = {
     const componentE5 = component_E5(PanelEGenerate.score2componentE5(data.score));
     const componentE6 = await component_E6(PanelEGenerate.score2componentE6(data.score));
     const componentE7 = component_E7(PanelEGenerate.score2componentE7(data.score, data.attributes));
-    const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score));
+    const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score, is_lazer));
     const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.score));
-    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score, data.progress));
+    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score, data.progress, is_lazer));
     const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.attributes, data.progress));
 
     // 导入卡片
@@ -527,7 +597,7 @@ const component_E7 = (
         aim_pp: 0,
         spd_pp: 0,
         acc_pp: 0,
-        fl_pp:  0,
+        fl_pp: 0,
         diff_pp: 0,
 
         is_fc: true,
@@ -742,7 +812,7 @@ const component_E7 = (
 
         return shown ?
             poppinsBold.getTextPath(pp_str, x + width - interval, y, size, 'right baseline', '#382c32') :
-            (slight ? poppinsBold.getTextPath(pp_str, x + width - (1/2 * max_width), y, size, 'center baseline', '#382c32') : '');
+            (slight ? poppinsBold.getTextPath(pp_str, x + width - (1 / 2 * max_width), y, size, 'center baseline', '#382c32') : '');
     }
 
     // 宽度大于最大宽 + 2x 间距
@@ -752,7 +822,7 @@ const component_E7 = (
 
     // 宽度大于最大宽 - 1/2x 间距
     function isTextSlightlyWider(font = 'poppinsBold', pp = 0, size = 24, max_width = 0, interval = 0) {
-        return typeof pp === "number" && max_width > 0 && (max_width + 1/2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
+        return typeof pp === "number" && max_width > 0 && (max_width + 1 / 2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
     }
 };
 
@@ -858,7 +928,7 @@ const component_E9 = (
 const component_E10 = (
     data = {
         statistics: [],
-        statistics_max: 0,
+        statistics_max: [],
 
         ratio: 0,
         mode: '',
@@ -886,7 +956,7 @@ const component_E10 = (
     } else if (data.ratio === 0) {
         ratio_text = 'P : G = 0'
     } else if (data.ratio >= 1) {
-        ratio_text = 'P : G = ' + getRoundedNumberStr(data.ratio, 2) +' : 1';
+        ratio_text = 'P : G = ' + getRoundedNumberStr(data.ratio, 2) + ' : 1';
     } else {
         ratio_text = 'P : G = 1 : ' + getRoundedNumberStr(1 / data.ratio, 2)
     }
@@ -915,7 +985,7 @@ const component_E10P = (
         <g id="Rank_OE11">
         </g>
     `;
-    if (getGameMode(data?.mode, 1) !== 't') return ''
+    if (data?.mode !== 1) return ''
 
     const reg_rank = /(?<=<g id="Rank_OE11">)/;
     const reg_crown = /(?<=<g id="Crown_OE11">)/;
@@ -937,7 +1007,7 @@ const PanelEGenerate = {
         // sr 2 difficulty name
         const sr = score?.beatmap.difficulty_rating || 0;
 
-        const mode = score?.mode || 'osu';
+        const mode = score?.ruleset_id || 'osu';
 
         let name;
 
@@ -1009,12 +1079,12 @@ const PanelEGenerate = {
             play: score?.beatmap?.playcount || 0,
             progress: progress,
 
-            color: getRankColor(score.rank),
+            color: getRankColor(score.rank, score.passed),
         }
     },
 
     score2componentE3: (score, original) => {
-        const mode = getGameMode(score.mode, 1);
+        const mode = getGameMode(score?.ruleset_id, 1);
 
         const bpm_r = (score?.beatmap?.bpm > 0) ? (60000 / score?.beatmap?.bpm).toFixed(0) + 'ms' : '-';
         const bpm_b = getDecimals(score?.beatmap?.bpm, 2);
@@ -1056,13 +1126,15 @@ const PanelEGenerate = {
                 od_max = 8;
                 isDisplayAR = false;
                 isDisplayCS = false;
-            } break;
+            }
+                break;
             case 'c' : {
                 od_min = 0;
                 od_mid = 0;
                 od_max = 0;
                 isDisplayOD = false;
-            } break;
+            }
+                break;
             case 'm' : {
                 cs_min = 4;
                 cs_mid = 6;
@@ -1074,7 +1146,8 @@ const PanelEGenerate = {
                 hp_mid = 8;
                 hp_max = 9;
                 isDisplayAR = false;
-            } break;
+            }
+                break;
         }
 
         return {
@@ -1085,35 +1158,35 @@ const PanelEGenerate = {
                 data_m: bpm_m,
                 data_a: '',
                 bar_progress: bpm_p,
-            },{
+            }, {
                 ...LABELS.LENGTH,
                 remark: length_r,
                 data_b: length_b,
                 data_m: length_m,
                 data_a: '',
                 bar_progress: length_p,
-            },{
+            }, {
                 ...LABELS.CS,
                 ...stat2label(score?.beatmap?.cs, cs2px(score?.beatmap?.cs, mode),
                     getProgress(score?.beatmap?.cs, cs_min, cs_max), original.cs, isDisplayCS),
                 bar_min: cs_min,
                 bar_mid: cs_mid,
                 bar_max: cs_max,
-            },{
+            }, {
                 ...LABELS.AR,
                 ...stat2label(score?.beatmap?.ar, ar2ms(score?.beatmap?.ar, mode),
                     getProgress(score?.beatmap?.ar, ar_min, ar_max), original.ar, isDisplayAR),
                 bar_min: ar_min,
                 bar_mid: ar_mid,
                 bar_max: ar_max,
-            },{
+            }, {
                 ...LABELS.OD,
                 ...stat2label(score?.beatmap?.od, od2ms(score?.beatmap?.od, mode),
                     getProgress(score?.beatmap?.od, od_min, od_max), original.od, isDisplayOD),
                 bar_min: od_min,
                 bar_mid: od_mid,
                 bar_max: od_max,
-            },{
+            }, {
                 ...LABELS.HP,
                 ...stat2label(score?.beatmap?.hp, '-',
                     getProgress(score?.beatmap?.hp, hp_min, hp_max), original.hp, true),
@@ -1152,8 +1225,8 @@ const PanelEGenerate = {
 
     score2componentE7: (score, attr) => {
         const is_fc = (score?.max_combo / score?.beatmap?.max_combo) > 0.98
-            || getGameMode(score?.mode, 1) === 'm'
-            || getGameMode(score?.mode, 1) === 't'
+            || getGameMode(score?.ruleset_id, 1) === 'm'
+            || getGameMode(score?.ruleset_id, 1) === 't'
 
         return {
             pp: score?.pp || 0,
@@ -1168,16 +1241,13 @@ const PanelEGenerate = {
 
             is_fc: is_fc,
 
-            mode: score?.mode,
+            mode: score?.ruleset_id,
         }
     },
 
-    score2componentE8: (score) => {
-        const s = score?.score || 0
-        const score_v3 = (s > 0) ? s : getV3Score(score?.accuracy, score?.max_combo, score?.beatmap?.max_combo, score?.mods, score?.mode, score?.statistics?.count_miss);
-
+    score2componentE8: (score, is_lazer = false) => {
         return {
-            score: score_v3,
+            score: is_lazer ? (score?.total_score || 0) : (score?.legacy_total_score || 0),
             mods: score?.mods || [],
         }
     },
@@ -1190,33 +1260,33 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE10: (score, progress) => {
+    score2componentE10: (score, progress, is_lazer = false) => {
         let ratio;
 
-        if (score.statistics.count_300 === 0) {
-            if (score.statistics.count_geki === 0) {
+        if (score.statistics.great === 0) {
+            if (score.statistics.perfect === 0) {
                 ratio = 0;
             } else {
                 ratio = Infinity;
             }
-        } else if (score.statistics.count_geki === 0) {
+        } else if (score.statistics.perfect === 0) {
             ratio = 0;
         } else {
-            ratio = score.statistics.count_geki / score.statistics.count_300
+            ratio = score.statistics.perfect / score.statistics.great
         }
 
         return {
-            statistics: score2Statistics(score),
-            statistics_max: score2StatisticsMax(score, progress),
+            statistics: score2Statistics(score.statistics, score.ruleset_id, is_lazer),
+            statistics_max: score2StatisticsMax(score.maximum_statistics, score.statistics, score.ruleset_id, is_lazer, progress),
 
             ratio: ratio,
-            mode: score.mode,
+            mode: score.ruleset_id,
         }
     },
 
     score2componentE10P: (score, attr, progress) => {
         const count = score?.beatmap?.count_circles + score?.beatmap?.count_sliders + score?.beatmap?.count_spinners
-        const rattle_rate = count > 0 ? ((count - score?.beatmap?.count_sliders) / count): 1
+        const rattle_rate = count > 0 ? ((count - score?.beatmap?.count_sliders) / count) : 1
 
         // const pp = score?.pp || 0 //只有三位精度，并且取 floor
         // const perfect_pp = Math.floor((attr?.perfect_pp || 0) * 1000) / 1000
@@ -1245,10 +1315,10 @@ const PanelEGenerate = {
 
         let rainbow_crown;
 
-        if (score?.rank === 'F') {
+        if (score?.passed === false) {
             rainbow_crown = 'object-score-don-failed.png'
-        } else if (score?.statistics?.count_miss === 0) {
-            if (score?.statistics?.count_100 === 0) {
+        } else if (score?.statistics?.miss === 0) {
+            if (score?.statistics?.ok === 0) {
                 rainbow_crown = 'object-score-crown-rainbow.png'
             } else {
                 rainbow_crown = 'object-score-crown-gold.png'
@@ -1258,7 +1328,7 @@ const PanelEGenerate = {
         }
 
         return {
-            mode: score.mode,
+            mode: score?.ruleset_id,
             rainbow_rank: rainbow_rank,
             rainbow_crown: rainbow_crown
         }
@@ -1295,23 +1365,36 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
 }
 
 // 同 panelE 的方法，注意这里 x 是第一个 mod 的左下角
-const getModsSVG = (mods = [""], x, y, mod_w, text_h, interval) => {
+const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) => {
     let svg = '';
+
+    mods = mods?.filter(v => v.acronym !== 'CL')
+
     const length = mods ? mods.length : 0;
 
-    if (length <= 2 && length > 0) {
-        mods.forEach((v, i) => {
-            svg += insertMod(v, x - ((length - 1) * 2 * interval) + (2 * i * interval), y, mod_w, text_h);
-        });
-    } else if (length > 2) {
-        mods.forEach((v, i) => {
-            svg += insertMod(v, x - ((length - 1) * interval) + (i * interval), y, mod_w, text_h);
-        });
+    let multiplier = 1
+
+    if (length > 0 && length <= 2) {
+        multiplier = 2
+    } else if (length > 2 && length <= 4) {
+        multiplier = 3/2
+    } else if (length > 4 && length <= 6) {
+        multiplier = 1
+    } else if (length > 6 && length <= 8) {
+        multiplier = 2/3
+    } else if (length > 8) {
+        multiplier = 7/12
     }
 
-    function insertMod(mod, x, y, w, text_h){
-        const color = getModColor(mod);
-        const mod_abbr = torus.getTextPath(mod.toString(), x + (w / 2), y + text_h, 36, 'center baseline', '#fff');
+    mods.forEach((v, i) => {
+        svg += insertMod(v, x + (i - (length - 1)) * multiplier * interval, y, mod_w, text_h);
+    });
+
+    function insertMod(mod, x, y, w, text_h) {
+        const v = mod?.acronym || mod.toString()
+
+        const color = getModColor(v);
+        const mod_abbr = torus.getTextPath(v, x + (w / 2), y + text_h, 36, 'center baseline', '#fff');
 
         return `<path transform="translate(${x} ${y})"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${color};"/>\n` + mod_abbr + '\n';
     }
@@ -1321,186 +1404,390 @@ const getModsSVG = (mods = [""], x, y, mod_w, text_h, interval) => {
 
 
 //老面板的newJudge
-const score2Statistics = (score) => {
-    const n320 = score.statistics.count_geki;
-    const n300 = score.statistics.count_300;
-    const n200 = score.statistics.count_katu;
-    const n100 = score.statistics.count_100;
-    const n50 = score.statistics.count_50;
-    const n0 = score.statistics.count_miss;
+const score2Statistics = (statistics, mode, is_lazer = false) => {
+    const s = statistics
 
-    let statistics = [];
-    const mode = getGameMode(score.mode, 1);
+    let stats = [];
 
-    switch (mode) {
-        case 'o': {
-            statistics.push({
-                index: '300',
-                stat: n300,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#8DCFF4',
-            }, {
-                index: '100',
-                stat: n100,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#79C471',
-            }, {
-                index: '50',
-                stat: n50,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#FEF668',
-            }, {}, {
-                index: '0',
-                stat: n0,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#ED6C9E',
-            });
-            break;
+    if (is_lazer) {
+        switch (getGameMode(mode, 1)) {
+            case 'o': {
+                stats.push({
+                    index: '300',
+                    stat: s.great,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: '100',
+                    stat: s.ok,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#79C471',
+                }, {
+                    index: '50',
+                    stat: s.meh,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                }, {
+                    index: '0',
+                    stat: s.miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#ED6C9E',
+                }, {}, {}, {}, {
+                    index: 'TICK',
+                    stat: s.large_tick_hit,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: 'END',
+                    stat: s.slider_tail_hit,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {}, {
+                    index: 'O+',
+                    stat: s.large_bonus,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                }, {
+                    index: 'O?',
+                    stat: s.small_bonus,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                });
+                break;
+            }
+
+            case 't': {
+                stats.push({
+                    index: '300',
+                    stat: s.great,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: '150',
+                    stat: s.ok,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#79C471',
+                }, {
+                    index: '0',
+                    stat: s.miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#ED6C9E',
+                }, {}, {}, {}, {}, {}, {}, {
+                    index: 'BNS',
+                    stat: s.large_bonus,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                });
+                break;
+            }
+
+            case 'c': {
+                stats.push({
+                    index: '300',
+                    stat: s.great,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: '100',
+                    stat: s.large_tick_hit,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#79C471',
+                }, {
+                    index: '50',
+                    stat: s.small_tick_hit,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                }, {}, {
+                    index: '0',
+                    stat: s.miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#ED6C9E',
+                }, {}, {}, {}, {
+                    index: 'MD',
+                    stat: s.small_tick_miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#A1A1A1',
+                }, {}, {}, {
+                    index: 'BNN',
+                    stat: s.large_bonus,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                });
+                break;
+            }
+
+            case 'm': {
+                stats.push({
+                    index: 'MAX',
+                    stat: s.perfect,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: '300',
+                    stat: s.great,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                }, {
+                    index: '200',
+                    stat: s.good,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#79C471',
+                }, {
+                    index: '100',
+                    stat: s.ok,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#5E8AC6',
+                }, {
+                    index: '50',
+                    stat: s.meh,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#A1A1A1',
+                }, {
+                    index: '0',
+                    stat: s.miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#ED6C9E',
+                });
+                break;
+            }
         }
+    } else {
+        switch (getGameMode(mode, 1)) {
+            case 'o': {
+                stats.push({
+                    index: '300',
+                    stat: s.great,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: '100',
+                    stat: s.ok,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#79C471',
+                }, {
+                    index: '50',
+                    stat: s.meh,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                }, {}, {
+                    index: '0',
+                    stat: s.miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#ED6C9E',
+                });
+                break;
+            }
 
-        case 't': {
-            statistics.push({
-                index: '300',
-                stat: n300,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#8DCFF4',
-            }, {
-                index: '150',
-                stat: n100,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#79C471',
-            }, {
-                index: '0',
-                stat: n0,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#ED6C9E',
-            });
-            break;
+            case 't': {
+                stats.push({
+                    index: '300',
+                    stat: s.great,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: '150',
+                    stat: s.ok,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#79C471',
+                }, {
+                    index: '0',
+                    stat: s.miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#ED6C9E',
+                });
+                break;
+            }
+
+            case 'c': {
+                stats.push({
+                    index: '300',
+                    stat: s.great,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: '100',
+                    stat: s.large_tick_hit,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#79C471',
+                }, {
+                    index: '50',
+                    stat: s.small_tick_hit,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                }, {}, {
+                    index: '0',
+                    stat: s.miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#ED6C9E',
+                }, {
+                    index: 'MD',
+                    stat: s.small_tick_miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#A1A1A1',
+                });
+                break;
+            }
+
+            case 'm': {
+                stats.push({
+                    index: 'MAX',
+                    stat: s.perfect,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: '300',
+                    stat: s.great,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#FEF668',
+                }, {
+                    index: '200',
+                    stat: s.good,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#79C471',
+                }, {
+                    index: '100',
+                    stat: s.ok,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#5E8AC6',
+                }, {
+                    index: '50',
+                    stat: s.meh,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#A1A1A1',
+                }, {
+                    index: '0',
+                    stat: s.miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#ED6C9E',
+                });
+                break;
+            }
+
         }
-
-        case 'c': {
-            statistics.push({
-                index: '300',
-                stat: n300,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#8DCFF4',
-            }, {
-                index: '100',
-                stat: n100,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#79C471',
-            }, {
-                index: '50',
-                stat: n50,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#FEF668',
-            }, {}, {
-                index: '0',
-                stat: n0,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#ED6C9E',
-            }, {
-                index: 'MD',
-                stat: n200,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#A1A1A1',
-            });
-            break;
-        }
-
-        case 'm': {
-            statistics.push({
-                index: 'MAX',
-                stat: n320,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#8DCFF4',
-            }, {
-                index: '300',
-                stat: n300,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#FEF668',
-            }, {
-                index: '200',
-                stat: n200,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#79C471',
-            }, {
-                index: '100',
-                stat: n100,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#5E8AC6',
-            }, {
-                index: '50',
-                stat: n50,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#A1A1A1',
-            }, {
-                index: '0',
-                stat: n0,
-                index_color: '#fff',
-                stat_color: '#fff',
-                rrect_color: '#ED6C9E',
-            });
-            break;
-        }
-
     }
 
-    return statistics;
+    return stats;
 }
 
 //老面板的sumJudge
-const score2StatisticsMax = (score, progress) => {
-    const n320 = score.statistics.count_geki;
-    const n300 = score.statistics.count_300;
-    const n200 = score.statistics.count_katu;
-    const n100 = score.statistics.count_100;
-    const n50 = score.statistics.count_50;
-    const n0 = score.statistics.count_miss;
+const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false) => {
+    const m = max_statistics
+    const s = statistics
 
-    const mode = getGameMode(score.mode, 1);
+    if (is_lazer) {
+        // Deluxe
+        switch (getGameMode(mode, 1)) {
+            case 'o': {
+                const max = m.great
+                const tick = m.large_tick_hit
+                const end = m.slider_tail_hit
+                const bonus = m.large_bonus
+                const spin = m.small_bonus
 
-    const index = 1 / (progress > 0 ? progress : 1)
-
-    switch (mode) {
-        case 'o':
-            return Math.ceil((n300 + n100 + n50 + n0) * index);
-        case 't':
-            return Math.ceil((n300 + n100 + n0) * index);
-        case 'c':
-            return Math.ceil(Math.max(n300 + n100 + n0, n50, n200) * index); //小果miss(katu)也要传过去的
-        case 'm':
-            return Math.ceil(Math.max(n320 + n300, n200, n100, n50, n0) * index);
+                return [max, max, max, max, 0, 0,
+                    0, tick, end, 0, bonus, spin]
+            }
+            case 't': {
+                const max = m.great
+                const bonus = m.large_bonus
+                return [max, max, max, 0, 0, 0,
+                    0, 0, 0, bonus]
+            }
+            case 'c': {
+                const max = Math.max(m.great + m.large_tick_hit, m.small_tick_hit)
+                const droplet = m.small_tick_hit
+                const banana = m.large_bonus
+                return [max, max, max, 0, max, 0,
+                    0, 0, droplet, 0, 0, banana]
+            }
+            case 'm': {
+                const max = Math.max((s.great + s.perfect), s.good, s.ok, s.meh, s.miss)
+                return [max, max, max, max, max, max]
+            }
+        }
+    } else {
+        // Standard
+        switch (getGameMode(mode, 1)) {
+            case 'o': {
+                const max = m.great
+                return [max, max, max, 0, max]
+            }
+            case 't': {
+                const max = m.great
+                return [max, max, max]
+            }
+            case 'c': {
+                const max = m.great
+                const droplet = m.small_tick_hit
+                return [max, max, max, 0, max, droplet]
+            }
+            case 'm': {
+                const max = Math.max((s.great + s.perfect), s.good, s.ok, s.meh, s.miss)
+                return [max, max, max, max, max, max]
+            }
+        }
     }
 }
 
-function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, font_h) {
+function getStatisticsSVG(statistics = [], max_statistics = [], x, y, w, height, interval, font_h) {
     let svg = '';
 
-    stat.forEach((v, i) => {
-        const text_y = y + font_h + i * (height + interval);
-        const index_text_x = x - 10;
-        const stat_text_x = x + w + 10;
+    // Standard
+    for (let i = 0; i < Math.min(statistics?.length, 6); i++) {
+        const v = statistics[i]
+        const m = max_statistics[i]
 
-        const index = (v.index === 0) ? '0' : (v.index || '');
-        const stat = (v.stat === 0) ? '0' : (v.stat || '');
+        if (isNotNumber(v.stat)) continue
+
+        const rrect_y = y + i * (height + interval);
+        const text_y = rrect_y + font_h;
+        const index_text_x = x - 10;
+        const stat_text_x = x + w + (v.stat < 10000 ? 10 : 5);
+
+        const index = v.index.toString();
+        const stat = v.stat.toString();
 
         const color = v.rrect_color;
 
@@ -1512,14 +1799,50 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, fo
         svg += (index_text + stat_text);
 
         if (v.stat > 0) {
-            const rect_width = w * v.stat / stat_max;
-            svg += PanelDraw.Rect(x, y + (height + interval) * i, Math.max(rect_width, height), height, height / 2, color);
+            const rect_width = w * v.stat / m;
+            svg += PanelDraw.Rect(x, rrect_y, Math.max(rect_width, height), height, height / 2, color);
         }
 
-        if (typeof v.stat === "number") {
-            svg += PanelDraw.Rect(x, y + (height + interval) * i, w, height, height / 2, color, 0.1);
+        svg += PanelDraw.Rect(x, rrect_y, w, height, height / 2, color, 0.1);
+    }
+
+    // Deluxe
+    if (statistics?.length > 6) {
+        for (let i = 6; i < Math.min(statistics?.length, 12); i++) {
+            const v = statistics[i]
+            const m = max_statistics[i]
+
+            if (isNotNumber(v.stat)) continue
+
+            const deluxe_width = (w / 2) - 50
+            const deluxe_x = (i < 9) ? x : (x + (w / 2) + 50)
+
+            const rrect_y = (i < 9) ? y + (i - 6 + 3) * (height + interval) : y + (i - 9 + 3) * (height + interval);
+            const text_y = rrect_y + font_h;
+            const index_text_x = deluxe_x - 10;
+            const stat_text_x = deluxe_x + deluxe_width + (v.stat < 10000 ? 10 : 5);
+
+            const index = v.index.toString();
+            const stat = v.stat.toString();
+
+            const color = v.rrect_color;
+
+            const index_text = poppinsBold.getTextPath(index,
+                index_text_x, text_y, 18, "right baseline", v.index_color);
+            const stat_text = poppinsBold.getTextPath(stat,
+                stat_text_x, text_y, 18, "left baseline", v.stat_color);
+
+            svg += (index_text + stat_text);
+
+            if (v.stat > 0) {
+                const rect_width = deluxe_width * v.stat / m;
+                svg += PanelDraw.Rect(deluxe_x, rrect_y, Math.max(rect_width, height), height, height / 2, color, 0.4); // 这些附加数据不要太亮
+            }
+
+            svg += PanelDraw.Rect(deluxe_x, rrect_y, deluxe_width, height, height / 2, color, 0.1);
         }
-    });
+    }
+
 
     return svg;
 }

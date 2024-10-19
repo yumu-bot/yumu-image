@@ -14,7 +14,7 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    getMapCover, isNullOrEmptyObject, isNotBlankString,
+    getMapCover, isNullOrEmptyObject, isNotBlankString, getOsuScoreType,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
@@ -674,10 +674,8 @@ export const PanelGenerate = {
     score2CardH: async (s, rank = 1) => {
         const cover = await readNetImage(s?.beatmapset?.covers?.list, hasLeaderBoard(s?.beatmap?.ranked));
         const background = await readNetImage(s?.beatmapset?.covers?.cover, hasLeaderBoard(s?.beatmap?.ranked));
-        // const background = beatmap ? await getDiffBG(beatmap.id, getExportFileV3Path('beatmap-DLfailBG.jpg')) : '';
-        // 这个不要下载，请求量太大
 
-        const time_diff = getTimeDifference(s.create_at_str);
+        const time_diff = getTimeDifference(s.ended_at);
 
         let mods_width;
         switch (s.mods.length) {
@@ -731,7 +729,7 @@ export const PanelGenerate = {
             mods_arr: s.mods || [],
 
             color_title2: '#bbb',
-            color_right: getRankColor(s.rank),
+            color_right: getRankColor(s.rank, s.passed),
             color_left: getStarRatingColor(s?.beatmap?.difficulty_rating),
             color_index: color_index,
             color_label1: '',
@@ -749,8 +747,9 @@ export const PanelGenerate = {
     bp2CardH: async (bp, rank = 1, rank_after = null) => {
         const cover = await readNetImage(bp?.beatmapset?.covers?.list, true);
         const background = await readNetImage(bp?.beatmapset?.covers?.cover, true);
+        const type = getOsuScoreType(bp.build_id)
 
-        const time_diff = getTimeDifference(bp.create_at_str);
+        const time_diff = getTimeDifference(bp.ended_at);
 
         let mods_width;
         switch (bp.mods.length) {
@@ -790,11 +789,15 @@ export const PanelGenerate = {
         const title2 = (bp.beatmapset.title === bp.beatmapset.title_unicode) ? null : bp.beatmapset.title_unicode;
 
         //随便搞个颜色得了 // 240712 已经有 PP 和星数了，故此不需要此方法
-        const star_color = getStarRatingColor(bp?.beatmap?.difficulty_rating)
+        const star = bp?.beatmap?.difficulty_rating || 0
+        const star_color = getStarRatingColor(star)
+        const color_label12 = (star < 2 && star > 3) ? '#000' : '#fff'
 
         return {
             background: background,
             cover: cover,
+            type: type,
+
             title: bp.beatmapset.title || '',
             title2: title2,
             left1: artist + ' // ' + bp.beatmapset.creator,
@@ -803,8 +806,8 @@ export const PanelGenerate = {
             index_m: 'PP',
             index_b_size: 48,
             index_m_size: 36,
-            label1: '',
-            label2: '',
+            label1: getRoundedNumberStr(star, 2),
+            label2: bp?.beatmap?.id?.toString() || '',
             label3: '',
             label4: '',
             mods_arr: bp.mods || [],
@@ -813,10 +816,11 @@ export const PanelGenerate = {
             color_right: getRankColor(bp.rank),
             color_left: star_color,
             color_index: color_index,
-            color_label1: '',
-            color_label2: '',
+            color_label1: star_color,
+            color_label2: star_color,
             color_label3: '',
             color_label4: '',
+            color_label12: color_label12,
             color_left12: '#bbb',
 
             font_title2: 'PuHuiTi',
@@ -830,6 +834,8 @@ export const PanelGenerate = {
         return {
             cover: background,
             background: background,
+            type: getOsuScoreType(bp.build_id),
+
             title: bp.beatmapset ? bp.beatmapset.title : 'Unknown Title',
             artist: bp.beatmapset ? bp.beatmapset.artist : 'Unknown Artist',
             difficulty_name: bp.beatmap ? bp.beatmap.version : '-',

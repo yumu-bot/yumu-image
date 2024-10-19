@@ -91,9 +91,9 @@ export async function panel_MA2(data = {
     let panel_name
 
     if (data?.panel === 'CB') {
-        panel_name = getPanelNameSVG('CHUNITHM Multiple Best Scores (!ymmb)', 'CB', 'v0.4.1 SE');
+        panel_name = getPanelNameSVG('CHUNITHM Multiple Best Scores (!ymmb)', 'CB', 'v0.5.0 DX');
     } else {
-        panel_name = getPanelNameSVG('CHUNITHM Multiple Scores (!ymy)', 'SS', 'v0.4.1 SE');
+        panel_name = getPanelNameSVG('CHUNITHM Multiple Scores (!ymy)', 'SS', 'v0.5.0 DX');
     }
 
     // 插入文字

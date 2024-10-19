@@ -127,7 +127,7 @@ function replaceSlash(md = "") {
     }
 }
 
-function getPanelName(name = "", version = 'v0.4.0 UU'){
+function getPanelName(name = "", version = 'v0.5.0 DX'){
     switch (name) {
         case "service": return getPanelNameSVG('Service Count', 'SC', version);
         case "switch": return getPanelNameSVG('Service Switch', 'SW', version);

@@ -152,7 +152,7 @@ export async function panel_Gamma(data = {
     const background_color = PanelDraw.Rect(0, 0, 240, 360, 0, data?.background_color || 'none', 0.1)
     svg = replaceText(svg, [base, background_color], reg_background_color)
     svg = replaceText(svg, background_color, reg_background) // 这个是用来给中间分界线处的渐变上色的
-,
+
     svg = implantImage(svg, 148, 160, 366, 80, 1, data.avatar, reg_avatar);
     svg = implantImage(svg, 400, 360, 240, 0, is_score ? 1 : 0.6, data.background, reg_background);
     svg = implantImage(svg, 148, 160, 366, 80, 1, hexagon, reg_map_hexagon);

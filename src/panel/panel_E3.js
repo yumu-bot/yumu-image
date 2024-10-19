@@ -68,7 +68,7 @@ export async function panel_E3(data = {
 
     // 导入文字
     const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
-    const panel_name = getPanelNameSVG('Match Listener - Match Start! (!ymml)', 'ST', 'v0.4.0 UU', request_time);
+    const panel_name = getPanelNameSVG('Match Listener - Match Start! (!ymml)', 'ST', 'v0.5.0 DX', request_time);
     svg = replaceText(svg, panel_name, reg_index);
 
     // 构建成绩

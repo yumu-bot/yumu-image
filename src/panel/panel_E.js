@@ -301,7 +301,7 @@ export async function panel_E(
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Legacy Score (!ymp / !ymr / !yms)', 'S', 'v0.4.0 UU', request_time), reg_index);
+    svg = replaceText(svg, getPanelNameSVG('Legacy Score (!ymp / !ymr / !yms)', 'S', 'v0.5.0 DX', request_time), reg_index);
 
     // 成绩重计算
     const score_statistics = {

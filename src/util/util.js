@@ -212,7 +212,21 @@ export function isNull(object) {
 }
 
 export function isNullOrEmptyObject(object) {
-    return isNull(object) || (object == {}) || (object == [])
+    return isNull(object) || Object.keys(object).length === 0
+}
+
+export function isASCII(str = '') {
+    if (isBlankString(str)) return false
+
+    const pattern = /^[\x00-\x7F]+$/; // ASCII范围的Unicode编码
+    return pattern.test(str);
+}
+
+export function isNumber(num) {
+    if (typeof num == "number") return true
+
+    const pattern = /^\s*(-?[0-9]+[.]?[0-9]*)\s*$/;
+    return pattern.test(num.toString());
 }
 
 // {} 和 [] 不为空
@@ -236,19 +250,8 @@ export function isNotEmptyArray(arr = []) {
     return ! isEmptyArray(arr)
 }
 
-export function isASCII(str = '') {
-    if (isBlankString(str)) return false
-
-    const pattern = /^[\x00-\x7F]+$/; // ASCII范围的Unicode编码
-    return pattern.test(str);
-}
-
-export function isNumber(str = '') {
-    if (isBlankString(str)) return false
-    else if (typeof str == "number") return true
-
-    const pattern = /^\s*(-?[0-9]+[.]?[0-9]*)\s*$/; // ASCII范围的Unicode编码
-    return pattern.test(str);
+export function isNotNumber(str = '') {
+    return ! isNumber(str)
 }
 
 /**
@@ -1815,7 +1818,7 @@ export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, 
 //公用方法：给面板上名字
 export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
 
-    // powered by Yumubot v0.3.2 EA // Score (!ymp / !ymr / !yms)
+    // powered by Yumubot v0.5.0 DX // Score (!ymp / !ymr / !yms)
     const powered_text = torus.getTextPath(
         "powered by " + powered.toString() + " " + version.toString() + " \/\/ " + name.toString(),
         20, 26.84, 24, "left baseline", "#fff");
@@ -1927,5 +1930,12 @@ export const od2ms = (od, mode = 'o') => {
     if (ms.substr(-3) === '.00') return ms.slice(0, -3) + 'ms';
     if (ms.substr(-2) === '.0') return ms.slice(0, -2) + 'ms';
     else return ms + 'ms';
+}
+
+export function getOsuScoreType(build_id) {
+    if (isNotNumber(build_id)) return '';
+
+    else if (build_id > 0) return getImageFromV3('object-type-lazer.png');
+    else return getImageFromV3('object-type-stable.png');
 }
 

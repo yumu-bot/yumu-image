@@ -268,3 +268,35 @@ export const PanelDraw = {
         }
     }
 }
+
+export const RainbowRect = PanelDraw.GradientRect(510, 40, 195, 60, 15, [
+    {
+        offset: "0%",
+        color: "#d56e74",
+        opacity: 1,
+    },{
+        offset: "14%",
+        color: "#dd8d52",
+        opacity: 1,
+    },{
+        offset: "28%",
+        color: "#fff767",
+        opacity: 1,
+    },{
+        offset: "42%",
+        color: "#88bd6f",
+        opacity: 1,
+    },{
+        offset: "57%",
+        color: "#55b1ef",
+        opacity: 1,
+    },{
+        offset: "71%",
+        color: "#59509e",
+        opacity: 1,
+    },{
+        offset: "86%",
+        color: "#925c9f",
+        opacity: 1,
+    }
+], 0.4)

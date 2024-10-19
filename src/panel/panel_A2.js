@@ -310,7 +310,7 @@ export async function panel_A2(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA2-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Qualified Map List (!ymq)', 'Q', 'v0.4.0 UU');
+    const panel_name = getPanelNameSVG('Qualified Map List (!ymq)', 'Q', 'v0.5.0 DX');
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);
