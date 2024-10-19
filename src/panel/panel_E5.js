@@ -1307,7 +1307,7 @@ const PanelEGenerate = {
             rainbow_rank = 'object-score-miyabi-gold.png'
         } else if (rainbow_rating < 0.975) {
             rainbow_rank = 'object-score-miyabi-pink.png'
-        } else if (rainbow_rating < 0.9995) {
+        } else if (rainbow_rating < 0.9999) {
             rainbow_rank = 'object-score-miyabi-purple.png'
         } else {
             rainbow_rank = 'object-score-kiwami-rainbow.png'
