@@ -1285,13 +1285,13 @@ const PanelEGenerate = {
     },
 
     score2componentE10P: (score, attr, progress) => {
-        const count = score?.beatmap?.count_circles + score?.beatmap?.count_sliders + score?.beatmap?.count_spinners
-        const rattle_rate = count > 0 ? ((count - score?.beatmap?.count_sliders) / count) : 1
 
-        // const pp = score?.pp || 0 //只有三位精度，并且取 floor
-        // const perfect_pp = Math.floor((attr?.perfect_pp || 0) * 1000) / 1000
+        const s = score.statistics
+        const m = score.maximum_statistics
 
-        const rainbow_rating = ((score?.accuracy || 0) * (progress || 0))
+        const rainbow_rating = (((s?.great || 0) + 0.5 * (s?.ok || 0)) /
+            (m?.great || 0) * (progress || 0) + 0.0001 * ((s?.small_bonus || 0) + (s?.ignore_hit || 0)))
+            || ((score?.accuracy || 0) * (progress || 0))
 
         let rainbow_rank;
 
@@ -1307,7 +1307,7 @@ const PanelEGenerate = {
             rainbow_rank = 'object-score-miyabi-gold.png'
         } else if (rainbow_rating < 0.975) {
             rainbow_rank = 'object-score-miyabi-pink.png'
-        } else if (rainbow_rating < Math.max(Math.min(rattle_rate, 0.998), 0.99)) {
+        } else if (rainbow_rating < 0.9995) {
             rainbow_rank = 'object-score-miyabi-purple.png'
         } else {
             rainbow_rank = 'object-score-kiwami-rainbow.png'
@@ -1484,11 +1484,23 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat_color: '#fff',
                     rrect_color: '#ED6C9E',
                 }, {}, {}, {}, {}, {}, {}, {
-                    index: 'BNS',
+                    index: 'O+',
                     stat: s.large_bonus,
                     index_color: '#fff',
                     stat_color: '#fff',
+                    rrect_color: '#8DCFF4',
+                }, {
+                    index: '==',
+                    stat: s.small_bonus,
+                    index_color: '#fff',
+                    stat_color: '#fff',
                     rrect_color: '#FEF668',
+                }, {
+                    index: '()',
+                    stat: s.ignore_hit,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: '#A1A1A1',
                 });
                 break;
             }
@@ -1731,9 +1743,11 @@ const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false)
             }
             case 't': {
                 const max = m.great
-                const bonus = m.large_bonus
+                const large = m.large_bonus
+                const drumroll = m.small_bonus
+                const spinner = m.ignore_hit
                 return [max, max, max, 0, 0, 0,
-                    0, 0, 0, bonus]
+                    0, 0, 0, large, drumroll, spinner]
             }
             case 'c': {
                 const max = Math.max(m.great + m.large_tick_hit, m.small_tick_hit)
