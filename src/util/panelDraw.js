@@ -301,7 +301,7 @@ export const RainbowRect = PanelDraw.GradientRect(510, 40, 195, 60, 15, [
     }
 ], 0.4, {
     x1: "0%",
-    y1: "0%",
+    y1: "45%",
     x2: "100%",
-    y2: "20%",
+    y2: "55%",
 })
