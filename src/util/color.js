@@ -263,6 +263,7 @@ export function getModColor(Mod = '') {
             color = '#601986';
             break;
         case "CL":
+        case "TP":
             color = '#920783';
             break;
         case "AL":

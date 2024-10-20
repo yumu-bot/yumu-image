@@ -13,6 +13,7 @@ import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {matchAnyMod} from "../util/mod.js";
 
 export async function card_N(data = {
     score: {
@@ -207,11 +208,23 @@ export async function card_N(data = {
 
     if (mods_arr_length <= 5 && mods_arr_length > 0) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, 2 * i, 900 + 16 - mods_arr_length * 48), reg_mod);
+            let acronym = val?.acronym || val.toString()
+
+            if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
+                acronym = val?.speed_change?.toString() + 'x'
+            }
+
+            svg = replaceText(svg, insertMod(acronym, 2 * i, 900 + 16 - mods_arr_length * 48), reg_mod);
         });
     } else if (mods_arr_length > 5) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val, i, 900 - 8 - mods_arr_length * 24), reg_mod);
+            let acronym = val?.acronym || val.toString()
+
+            if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
+                acronym = val?.speed_change?.toString() + 'x'
+            }
+
+            svg = replaceText(svg, insertMod(acronym, i, 900 - 8 - mods_arr_length * 24), reg_mod);
         });
     }
 

@@ -1,5 +1,5 @@
-import {getModInt, hasMod} from "./mod.js";
-import {getGameMode, getImageFromV3} from "./util.js";
+import {getModInt, hasMod, matchAnyMods} from "./mod.js";
+import {getGameMode, getImageFromV3, isNotNumber} from "./util.js";
 
 //SS和X的转换
 export const rankSS2X = (rank = 'SS') => {
@@ -44,6 +44,138 @@ export const getApproximateStarRating = (star = 0, mods = ['']) => {
 
     return star;
 }
+// 从新版成绩中，获取稳定版的准确率
+export const getStableAccuracyFromLazerScore = (score) => {
+    if (getScoreType(score.build_id) !== 'stable') return score?.accuracy || 0
+
+    const m = score.maximum_statistics
+    const s = score.statistics
+
+    let total = m.great
+
+    switch (score?.ruleset_id) {
+        case 0: {
+            const hit = s.great + 1/3 * s.ok + 1/6 * s.meh
+            return hit / total
+        }
+        case 1 : {
+            return (s.great + 1/2 * s.ok) / total
+        }
+
+        case 2 : {
+            const hit = s.great + s.large_tick_hit + s.small_tick_hit
+            total = m.great + m.large_tick_hit + m.small_tick_hit
+
+            return hit / total
+
+        }
+
+        case 3 : {
+            const hit = s.perfect + s.great + 2/3 * s.good + 1/3 * s.ok + 1/6 * s.meh
+            total = m.perfect
+            return hit / total
+
+        }
+    }
+
+    return 0
+}
+
+// 从新版成绩中，获取稳定版的评级
+export const getStableRankFromLazerScore = (score) => {
+    if (score?.pass === false) return 'F'
+    if (getScoreType(score.build_id) !== 'stable') return score?.rank
+
+    const m = score.maximum_statistics
+    const s = score.statistics
+
+    let rank = 'F'
+    const hasMiss = (s.miss > 0)
+
+    const accuracy = getStableAccuracyFromLazerScore(score)
+    const p300 = s.great / m.great
+
+    switch (score?.ruleset_id) {
+        case 0: {
+            const is50over1p = (s.meh / m.great > 0.01);
+
+            if (p300 === 1) {
+                rank = 'SS';
+            } else if (p300 >= 0.9) {
+                rank = hasMiss ? 'A' : (is50over1p ? 'A' : 'S');
+            } else if (p300 >= 0.8) {
+                rank = hasMiss ? 'B' : 'A';
+            } else if (p300 >= 0.7) {
+                rank = hasMiss ? 'C' : 'B';
+            } else if (p300 >= 0.6) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+        break;
+        case 1 : {
+
+            if (p300 === 1) {
+                rank = 'SS';
+            } else if (p300 >= 0.9) {
+                rank = hasMiss ? 'A' : 'S';
+            } else if (p300 >= 0.8) {
+                rank = hasMiss ? 'B' : 'A';
+            } else if (p300 >= 0.7) {
+                rank = hasMiss ? 'C' : 'B';
+            } else if (p300 >= 0.6) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+
+        case 2 : {
+
+            if (accuracy === 1) {
+                rank = 'SS';
+            } else if (accuracy > 0.98) {
+                rank = 'S';
+            } else if (accuracy > 0.94) {
+                rank = 'A';
+            } else if (accuracy > 0.90) {
+                rank = 'B';
+            } else if (accuracy > 0.85) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+
+        case 3 : {
+            if (accuracy === 1) {
+                rank = 'SS';
+            } else if (accuracy >= 0.95) {
+                rank = 'S';
+            } else if (accuracy >= 0.90) {
+                rank = 'A';
+            } else if (accuracy >= 0.80) {
+                rank = 'B';
+            } else if (accuracy >= 0.70) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+    }
+
+    const isSilver = matchAnyMods(score.mods, ['HD', 'FL', 'BL', 'CO']);
+    if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
+
+    return rank
+}
+
+
+// 获取可能的评级
 export const getApproximateRank = (score = {
     statistics: {
         count_50: 0,
@@ -194,4 +326,24 @@ export const getRankFromValue = (value = 0, boundary = [9, 7, 6.5, 5.3, 4, 2.8, 
     }
 
     return 'F';
+}
+
+// null，lazer，stable
+export function getScoreType(build_id) {
+    if (isNotNumber(build_id)) return null;
+    else if (build_id > 0) return 'lazer'
+    else return 'stable'
+}
+
+export function getScoreTypeImage(build_id) {
+    const type = getScoreType(build_id)
+
+    switch (type) {
+        case null:
+            return ''
+        case 'lazer':
+            return getImageFromV3('object-type-lazer.png');
+        case 'stable':
+            return getImageFromV3('object-type-stable.png');
+    }
 }

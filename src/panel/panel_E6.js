@@ -3,7 +3,7 @@ import {
     exportJPEG, getBeatMapTitlePath, getDecimals,
     getDiffBG, getFileSize, getGameMode, getImageFromV3, getMapStatusImage,
     getPanelNameSVG, getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
-    implantImage, implantSvgBody, od2ms,
+    implantImage, implantSvgBody, isNumber, od2ms,
     readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
@@ -14,7 +14,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModInt, hasMod} from "../util/mod.js";
+import {getModInt, hasMod, matchAnyMod} from "../util/mod.js";
 
 
 export async function router(req, res) {
@@ -1203,23 +1203,41 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
 }
 
 // 同 panelE 的方法，注意这里 x 是第一个 mod 的左下角
-const getModsSVG = (mods = [""], x, y, mod_w, text_h, interval) => {
+const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) => {
     let svg = '';
+
+    mods = mods?.filter(v => v.acronym !== 'CL')
+
     const length = mods ? mods.length : 0;
 
-    if (length <= 2 && length > 0) {
-        mods.forEach((v, i) => {
-            svg += insertMod(v, x - ((length - 1) * 2 * interval) + (2 * i * interval), y, mod_w, text_h);
-        });
-    } else if (length > 2) {
-        mods.forEach((v, i) => {
-            svg += insertMod(v, x - ((length - 1) * interval) + (i * interval), y, mod_w, text_h);
-        });
+    let multiplier = 1
+
+    if (length > 0 && length <= 2) {
+        multiplier = 2
+    } else if (length > 2 && length <= 4) {
+        multiplier = 3/2
+    } else if (length > 4 && length <= 6) {
+        multiplier = 1
+    } else if (length > 6 && length <= 8) {
+        multiplier = 2/3
+    } else if (length > 8) {
+        multiplier = 7/12
     }
 
-    function insertMod(mod, x, y, w, text_h){
-        const color = getModColor(mod);
-        const mod_abbr = torus.getTextPath(mod.toString(), x + (w / 2), y + text_h, 36, 'center baseline', '#fff');
+    mods.forEach((v, i) => {
+        svg += insertMod(v, x + (i - (length - 1)) * multiplier * interval, y, mod_w, text_h);
+    });
+
+    function insertMod(mod, x, y, w, text_h) {
+        let acronym = mod?.acronym || mod.toString()
+
+        const color = getModColor(acronym);
+
+        if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(mod?.settings?.speed_change)) {
+            acronym = mod?.settings?.speed_change?.toString() + 'x'
+        }
+
+        const mod_abbr = torus.getTextPath(acronym, x + (w / 2), y + text_h, 36, 'center baseline', '#fff');
 
         return `<path transform="translate(${x} ${y})"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${color};"/>\n` + mod_abbr + '\n';
     }

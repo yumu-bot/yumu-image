@@ -24,7 +24,7 @@ import {card_E2} from "../card/card_E2.js";
 import {card_E3} from "../card/card_E3.js";
 import {card_E4} from "../card/card_E4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getModInt, getV3Score, hasAnyMod, hasMod} from "../util/mod.js";
+import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
 import {getApproximateRank, getRankBG, hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
@@ -362,7 +362,7 @@ function score2CardE2(score, calcPP) {
     const isPF = score.rank === 'XH' || score.rank === 'X';
     const isBest = (score.best_id > 0);
 
-    const scoreStr = (score?.score && score.score > 0) ? score.score : getV3Score(score.accuracy, score.max_combo, score.beatmap.max_combo, score.mods, score.mode, score.statistics.count_miss)
+    const scoreStr = (score?.score && score.score > 0) ? score.score : 0
 
     return {
         rank: score.rank || 'F',

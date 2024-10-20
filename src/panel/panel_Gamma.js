@@ -2,9 +2,18 @@ import {
     exportJPEG,
     getDecimals,
     getImageFromV3,
-    getGameMode, getMapBG,
-    implantImage, readTemplate,
-    replaceTexts, getAvatar, getBanner, getTimeByDHMS, getRoundedNumberStr, getTimeDifference, replaceText,
+    getGameMode,
+    getMapBG,
+    implantImage,
+    readTemplate,
+    replaceTexts,
+    getAvatar,
+    getBanner,
+    getTimeByDHMS,
+    getRoundedNumberStr,
+    getTimeDifference,
+    replaceText,
+    isNotEmptyArray,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
 import {calcPerformancePoints} from "../util/compute-pp.js";
@@ -202,14 +211,14 @@ const PanelGamma = {
         }
         const calcPP = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode, hasLeaderBoard(score.beatmap.ranked));
 
-        const mod_arr = score.mods || [];
+        const mods_arr = score.mods || [];
         let mod_str = '';
 
-        if (mod_arr !== []) {
+        if (isNotEmptyArray(mods_arr)) {
             mod_str += ' +';
 
-            for (const v of mod_arr) {
-                mod_str += (v.toString() + ', ');
+            for (const v of mods_arr) {
+                mod_str += ((v?.acronym || v.toString()) + ', ');
             }
 
             mod_str = mod_str.slice(0, -2);

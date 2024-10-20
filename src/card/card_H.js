@@ -1,5 +1,5 @@
 import {
-    implantImage,
+    implantImage, isNumber,
     readTemplate,
     replaceText,
     replaceTexts
@@ -7,6 +7,7 @@ import {
 import {torus, PuHuiTi} from "../util/font.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {matchAnyMod} from "../util/mod.js";
 
 export async function card_H(data = {
     background: '',
@@ -27,6 +28,7 @@ export async function card_H(data = {
     label2: '',
     label3: '',
     label4: '',
+    label5: '',
     mods_arr: [],
 
     color_title2: '#aaa',
@@ -37,6 +39,7 @@ export async function card_H(data = {
     color_label2: '',
     color_label3: '',
     color_label4: '',
+    color_label5: '',
     color_label12: '#fff',
     color_left12: '#fff',
 
@@ -74,11 +77,23 @@ export async function card_H(data = {
 
     if (mods_arr_length <= 2 && mods_arr_length > 0) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val?.acronym || val.toString(), 2 * i), reg_mod);
+            let acronym = val?.acronym || val.toString()
+
+            if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
+                acronym = val?.speed_change?.toString() + 'x'
+            }
+
+            svg = replaceText(svg, insertMod(acronym, 2 * i), reg_mod);
         });
     } else if (mods_arr_length > 2) {
         mods_arr.forEach((val, i) => {
-            svg = replaceText(svg, insertMod(val?.acronym || val.toString(), i), reg_mod);
+            let acronym = val?.acronym || val.toString()
+
+            if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
+                acronym = val?.speed_change?.toString() + 'x'
+            }
+
+            svg = replaceText(svg, insertMod(acronym, i), reg_mod);
         });
     }
 
@@ -88,6 +103,7 @@ export async function card_H(data = {
     const color_label2 = data.color_label2 || 'none';
     const color_label3 = data.color_label3 || 'none';
     const color_label4 = data.color_label4 || 'none';
+    const color_label5 = data.color_label5 || 'none';
 
     const font_l4 = (data?.font_label4 === 'PuHuiTi') ? PuHuiTi : torus;
     const font_t2 = (data?.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
@@ -96,11 +112,13 @@ export async function card_H(data = {
     const label2_width = torus.getTextWidth(data?.label2 || '', 18) + 16;
     const label3_width = torus.getTextWidth(data?.label3 || '', 24) + 30;
     const label4_width = font_l4.getTextWidth(data?.label4 || '', 24) + 30;
+    const label5_width = torus.getTextWidth(data?.label5 || '', 18) + 16;
 
-    const label1 = torus.getTextPath(data?.label1 || '', 38, 20.877, 18, 'left baseline', data?.color_label12 || '#fff');
-    const label2 = torus.getTextPath(data?.label2 || '', 38, 100.877, 18, 'left baseline', data?.color_label12 || '#fff');
+    const label1 = torus.getTextPath(data?.label1 || '', 38, 21.877, 18, 'left baseline', data?.color_label12 || '#fff');
+    const label2 = torus.getTextPath(data?.label2 || '', 38, 99.877, 18, 'left baseline', data?.color_label12 || '#fff');
     const label3 = torus.getTextPath(data?.label3 || '', 710 - label3_width / 2, 34.836, 24, 'center baseline', '#fff');
     const label4 = font_l4.getTextPath(data?.label4 || '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
+    const label5 = torus.getTextPath(data?.label5 || '', 177, 99.877, 18, 'right baseline', data?.color_label12 || '#fff');
 
     const index = torus.get2SizeTextPath(
         data?.index_b, data?.index_m, data?.index_b_size || 48, data?.index_m_size || 36,
@@ -108,17 +126,18 @@ export async function card_H(data = {
         +
         torus.getTextPath(data?.index_l, 815, 33.672, data?.index_l_size || 24, 'center baseline', data.color_index)
 
-    const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 5, label1_width, 20, 10, color_label1) : '';
-    const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 85, label2_width, 20, 10, color_label2) : '';
+    const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 6, label1_width, 20, 10, color_label1) : '';
+    const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 84, label2_width, 20, 10, color_label2) : '';
     const rrect_label3 = data.label3 ? PanelDraw.Rect(710 - label3_width, 10, label3_width, 34, 17, color_label3) : '';
     const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label4_width, 34, 17, color_label4) : '';
+    const rrect_label5 = data.label5 ? PanelDraw.Rect(185 - label5_width, 84, label5_width, 20, 10, color_label5) : '';
 
     svg = replaceText(svg, data?.color_right || 'none', reg_color_right);
     svg = replaceText(svg, data?.color_left || 'none', reg_color_left);
 
-    svg = implantImage(svg, 45, 30, 140, 0, 1, data?.type || '', reg_label);
+    svg = implantImage(svg, 45, 30, 145, 2, 1, data?.type || '', reg_label);
 
-    svg = replaceTexts(svg, [label1, label2, label3, label4, rrect_label1, rrect_label2, rrect_label3, rrect_label4,], reg_label);
+    svg = replaceTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
     svg = replaceText(svg, index, reg_text);
 
     // 计算标题的长度

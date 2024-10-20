@@ -5,6 +5,7 @@ import {
 import {torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {matchAnyMod} from "../util/mod.js";
 
 export async function card_J(data = {
     cover: getImageFromV3('beatmap-defaultBG.jpg'),
@@ -125,16 +126,22 @@ export async function card_J(data = {
         return PanelDraw.Circle(offset_x, offset_y, 5, getModColor(mod));
     }
 
-    const mods_arr = (data.mods_arr || [])?.filter(v => v.acronym !== 'CL')
+    const mods_arr = (data.mods_arr || [{acronym: ''}])?.filter(v => v.acronym !== 'CL')
     const length = mods_arr.length;
 
     for (let i = 0; i < length; ++i) {
-        const v = mods_arr[i]
+        const mod = mods_arr[i]
+
+        let acronym = mod?.acronym || mod.toString()
+
+        if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(mod?.settings?.speed_change)) {
+            acronym = mod?.settings?.speed_change?.toString() + 'x'
+        }
 
         if (i < 3){
-            svg = replaceText(svg, insertMod(v.acronym || v.toString(), i, 0), reg_mod)
+            svg = replaceText(svg, insertMod(acronym, i, 0), reg_mod)
         } else {
-            svg = replaceText(svg, insertMod(v.acronym || v.toString(), i - 3, 1), reg_mod)
+            svg = replaceText(svg, insertMod(acronym, i - 3, 1), reg_mod)
         }
     }
 

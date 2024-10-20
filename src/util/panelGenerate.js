@@ -14,10 +14,17 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    getMapCover, isNullOrEmptyObject, isNotBlankString, getOsuScoreType,
+    getMapCover, isNullOrEmptyObject, isNotBlankString,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
-import {getApproximateRank, hasLeaderBoard, rankSS2X} from "./star.js";
+import {
+    getApproximateRank,
+    getScoreTypeImage,
+    getStableAccuracyFromLazerScore,
+    getStableRankFromLazerScore,
+    hasLeaderBoard,
+    rankSS2X
+} from "./star.js";
 import {getCHUNITHMRatingBG, getMaimaiCategory, getMaimaiCover, getMaimaiPlate, getMaimaiRatingBG} from "./maimai.js";
 
 //公用方法
@@ -670,15 +677,16 @@ export const PanelGenerate = {
         }
     },
 
-//给panel_A5用的，期待可以和上面合并
+    // 给panel_A5用的
     score2CardH: async (s, rank = 1) => {
         const cover = await readNetImage(s?.beatmapset?.covers?.list, hasLeaderBoard(s?.beatmap?.ranked));
         const background = await readNetImage(s?.beatmapset?.covers?.cover, hasLeaderBoard(s?.beatmap?.ranked));
+        const type = getScoreTypeImage(s.build_id)
 
         const time_diff = getTimeDifference(s.ended_at);
 
         let mods_width;
-        switch (s.mods.length) {
+        switch (s?.mods?.filter(v => v?.acronym !== 'CL')?.length) {
             case 0:
                 mods_width = 0;
                 break;
@@ -701,8 +709,10 @@ export const PanelGenerate = {
                 mods_width = 180;
         }
 
+        const acc = getRoundedNumberStr((getStableAccuracyFromLazerScore(s) * 100), 3) + '%'
+        const combo = (s.max_combo || 0) + 'x'
         const difficulty_name = s.beatmap.version ? torus.cutStringTail(s.beatmap.version, 24,
-            500 - 20 - mods_width - torus.getTextWidth('[] - # ()' + rank + time_diff, 24), true) : '';
+            500 - 20 - mods_width - torus.getTextWidth('[] -   ()' + acc + combo + time_diff, 24), true) : '';
         const color_index = (s.rank === 'XH' || s.rank === 'X') ? '#2A2226' : '#fff';
 
         const artist = torus.cutStringTail(s.beatmapset.artist, 24,
@@ -711,31 +721,41 @@ export const PanelGenerate = {
         const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? null : s.beatmapset.title_unicode;
         const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : '>10K';
 
+        const star = s?.beatmap?.difficulty_rating || 0
+
+        const star_color = getStarRatingColor(star)
+        const color_label12 = (star < 4) ? '#000' : '#fff'
+
         return {
             background: background,
             cover: cover,
+            type: type,
+
             title: s.beatmapset.title || '',
             title2: title2,
             left1: artist + ' // ' + s.beatmapset.creator,
-            left2: '[' + difficulty_name + '] - #' + rank + ' (' + time_diff + ')',
+            left2: '[' + difficulty_name + '] - ' + acc + ' ' + combo + ' (' + time_diff + ')',
             index_b: index_b,
             index_m: 'PP',
             index_b_size: 48,
             index_m_size: 36,
-            label1: '',
-            label2: '',
+            label1: getRoundedNumberStr(star, 2),
+            label2: s?.beatmap?.id?.toString() || '',
             label3: '',
             label4: '',
+            label5: '#' + rank,
             mods_arr: s.mods || [],
 
             color_title2: '#bbb',
-            color_right: getRankColor(s.rank, s.passed),
-            color_left: getStarRatingColor(s?.beatmap?.difficulty_rating),
+            color_right: getRankColor(getStableRankFromLazerScore(s)),
+            color_left: star_color,
             color_index: color_index,
-            color_label1: '',
-            color_label2: '',
+            color_label1: star_color,
+            color_label2: star_color,
             color_label3: '',
             color_label4: '',
+            color_label5: star_color,
+            color_label12: color_label12,
             color_left12: '#bbb',
 
             font_title2: 'PuHuiTi',
@@ -744,15 +764,9 @@ export const PanelGenerate = {
     },
 
     // panel A7 有细微的改动，请注意
-    bp2CardH: async (bp, rank = 1, rank_after = null) => {
-        const cover = await readNetImage(bp?.beatmapset?.covers?.list, true);
-        const background = await readNetImage(bp?.beatmapset?.covers?.cover, true);
-        const type = getOsuScoreType(bp.build_id)
-
-        const time_diff = getTimeDifference(bp.ended_at);
-
+    bp2CardH: async (s, rank = 1, rank_after = null) => {
         let mods_width;
-        switch (bp.mods.length) {
+        switch (s?.mods?.filter(v => v?.acronym !== 'CL')?.length) {
             case 0:
                 mods_width = 0;
                 break;
@@ -775,56 +789,27 @@ export const PanelGenerate = {
                 mods_width = 180;
         }
 
-        const rank_after_str = (typeof rank_after == "number") ? ' -> ' + rank_after : '';
+        const is_after = (typeof rank_after == "number")
 
-        const difficulty_name = bp.beatmap.version ?
-            torus.cutStringTail(bp.beatmap.version, 24,
-            500 - 20 - mods_width - torus.getTextWidth('[] - BP ()' + rank + rank_after_str + time_diff, 24), true)
-            : '';
-        const color_index = (bp.rank === 'XH' || bp.rank === 'X') ? '#2A2226' : '#fff';
+        const card_h = await PanelGenerate.score2CardH(s, rank)
 
-        const artist = torus.cutStringTail(bp.beatmapset.artist, 24,
-            500 - 20 - mods_width - torus.getTextWidth(' // ' + bp.beatmapset.creator, 24), true);
+        if (is_after) {
+            const time_diff = getTimeDifference(s.ended_at);
+            const rank_after_str = ' -> ' + rank_after;
+            const difficulty_name = s.beatmap.version ?
+                torus.cutStringTail(s.beatmap.version, 24,
+                    500 - 20 - mods_width - torus.getTextWidth('[] - BP ()' + rank + rank_after_str + time_diff, 24), true)
+                : '';
 
-        const title2 = (bp.beatmapset.title === bp.beatmapset.title_unicode) ? null : bp.beatmapset.title_unicode;
-
-        //随便搞个颜色得了 // 240712 已经有 PP 和星数了，故此不需要此方法
-        const star = bp?.beatmap?.difficulty_rating || 0
-        const star_color = getStarRatingColor(star)
-        const color_label12 = (star < 2 && star > 3) ? '#000' : '#fff'
-
-        return {
-            background: background,
-            cover: cover,
-            type: type,
-
-            title: bp.beatmapset.title || '',
-            title2: title2,
-            left1: artist + ' // ' + bp.beatmapset.creator,
-            left2: '[' + difficulty_name + '] - BP' + rank + rank_after_str + ' (' + time_diff + ')',
-            index_b: Math.round(bp.pp).toString(),
-            index_m: 'PP',
-            index_b_size: 48,
-            index_m_size: 36,
-            label1: getRoundedNumberStr(star, 2),
-            label2: bp?.beatmap?.id?.toString() || '',
-            label3: '',
-            label4: '',
-            mods_arr: bp.mods || [],
-
-            color_title2: '#bbb',
-            color_right: getRankColor(bp.rank),
-            color_left: star_color,
-            color_index: color_index,
-            color_label1: star_color,
-            color_label2: star_color,
-            color_label3: '',
-            color_label4: '',
-            color_label12: color_label12,
-            color_left12: '#bbb',
-
-            font_title2: 'PuHuiTi',
-            font_label4: 'torus',
+            return {
+                ...card_h,
+                left2: '[' + difficulty_name + '] - BP' + rank + rank_after_str + ' (' + time_diff + ')',
+            }
+        } else {
+            return {
+                ...card_h,
+                label5: 'B' + rank,
+            }
         }
     },
 
@@ -834,7 +819,7 @@ export const PanelGenerate = {
         return {
             cover: background,
             background: background,
-            type: getOsuScoreType(bp.build_id),
+            type: getScoreTypeImage(bp.build_id),
 
             title: bp.beatmapset ? bp.beatmapset.title : 'Unknown Title',
             artist: bp.beatmapset ? bp.beatmapset.artist : 'Unknown Artist',

@@ -2,12 +2,12 @@ import {
     getImageFromV3, getGameMode,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall, getDecimals,
-    implantImage, replaceText, replaceTexts, getAvatar,
+    implantImage, replaceText, replaceTexts, getAvatar, isNumber,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getModFullName} from "../util/mod.js";
+import {getModFullName, matchAnyMod} from "../util/mod.js";
 
 export const LABELS = {
     UNDEFINED: {
@@ -562,7 +562,13 @@ export async function label_C1(data = {
     const mods_arr_length = mods_arr.length;
 
     mods_arr.forEach((val, i) => {
-        svg = replaceText(svg, insertMod(val, i, 100 - mods_arr_length * 10), reg_mod);
+        let acronym = val?.acronym || val.toString()
+
+        if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
+            acronym = val?.speed_change?.toString() + 'x'
+        }
+
+        svg = replaceText(svg, insertMod(acronym, i, 100 - mods_arr_length * 10), reg_mod);
     });
 
     //定义文本

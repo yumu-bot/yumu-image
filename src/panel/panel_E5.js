@@ -16,16 +16,22 @@ import {
     implantSvgBody,
     readTemplate,
     replaceText,
-    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString, isNotNumber
+    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString, isNotNumber, isNumber
 } from "../util/util.js";
 import moment from "moment";
-import {getApproximateRank, getRankBG, hasLeaderBoard} from "../util/star.js";
+import {
+    getRankBG,
+    getStableAccuracyFromLazerScore,
+    getStableRankFromLazerScore,
+    hasLeaderBoard
+} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi, torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw, RainbowRect} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
+import {matchAnyMod} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -270,10 +276,11 @@ export async function panel_E5(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 评级
-    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`object-score-${data?.score?.rank || 'F'}2.png`), reg_index);
+    const rank = getStableRankFromLazerScore(data?.score)
+    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`object-score-${rank}2.png`), reg_index);
 
     // 图片定义
-    const background = getRankBG((data?.score?.rank || getApproximateRank(data?.score)), data?.score?.passed);
+    const background = getRankBG(rank, data?.score?.passed);
     const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked));
 
     // 卡片定义
@@ -1254,7 +1261,7 @@ const PanelEGenerate = {
 
     score2componentE9: (score) => {
         return {
-            accuracy: score?.accuracy || 0,
+            accuracy: getStableAccuracyFromLazerScore(score),
             combo: score?.max_combo || 0,
             max_combo: score?.beatmap.max_combo || 0,
         }
@@ -1391,10 +1398,15 @@ const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) =
     });
 
     function insertMod(mod, x, y, w, text_h) {
-        const v = mod?.acronym || mod.toString()
+        let acronym = mod?.acronym || mod.toString()
 
-        const color = getModColor(v);
-        const mod_abbr = torus.getTextPath(v, x + (w / 2), y + text_h, 36, 'center baseline', '#fff');
+        const color = getModColor(acronym);
+
+        if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(mod?.settings?.speed_change)) {
+            acronym = mod?.settings?.speed_change?.toString() + 'x'
+        }
+
+        const mod_abbr = torus.getTextPath(acronym, x + (w / 2), y + text_h, 36, 'center baseline', '#fff');
 
         return `<path transform="translate(${x} ${y})"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${color};"/>\n` + mod_abbr + '\n';
     }

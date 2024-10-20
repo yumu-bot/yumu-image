@@ -224,9 +224,10 @@ export function isASCII(str = '') {
 
 export function isNumber(num) {
     if (typeof num == "number") return true
-
-    const pattern = /^\s*(-?[0-9]+[.]?[0-9]*)\s*$/;
-    return pattern.test(num.toString());
+    if (typeof num == "string") {
+        const pattern = /^\s*(-?[0-9]+[.]?[0-9]*)\s*$/;
+        return pattern.test(num?.toString());
+    } else return false
 }
 
 // {} 和 [] 不为空
@@ -1930,12 +1931,5 @@ export const od2ms = (od, mode = 'o') => {
     if (ms.substr(-3) === '.00') return ms.slice(0, -3) + 'ms';
     if (ms.substr(-2) === '.0') return ms.slice(0, -2) + 'ms';
     else return ms + 'ms';
-}
-
-export function getOsuScoreType(build_id) {
-    if (isNotNumber(build_id)) return '';
-
-    else if (build_id > 0) return getImageFromV3('object-type-lazer.png');
-    else return getImageFromV3('object-type-stable.png');
 }
 
