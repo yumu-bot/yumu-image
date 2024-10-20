@@ -1773,7 +1773,7 @@ const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false)
                 return [max, max, max]
             }
             case 'c': {
-                const max = m.great
+                const max = Math.max(m.great, m.small_tick_hit)
                 const droplet = m.small_tick_hit
                 return [max, max, max, 0, max, droplet]
             }
