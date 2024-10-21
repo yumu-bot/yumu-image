@@ -1,5 +1,5 @@
 import {
-    implantImage, isNumber,
+    implantImage, isNotNullOrEmptyObject, isNumber,
     readTemplate,
     replaceText,
     replaceTexts
@@ -62,40 +62,45 @@ export async function card_H(data = {
     // 插入模组
     const insertMod = (mod, i) => {
         let offset_x = 620 - i * 20;
-        if (mod !== '') {
+
+        if (isNotNullOrEmptyObject(mod)) {
+            const acronym = mod?.acronym || mod.toString()
+            const mod_color = getModColor(acronym)
+            let speed = '';
+
+            if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(mod?.settings?.speed_change)) {
+                speed = mod?.settings?.speed_change?.toString() + 'x'
+            }
+
+            if (matchAnyMod(mod, ['WU', 'WD']) && isNumber(mod?.settings?.final_rate)) {
+                speed = mod?.settings?.final_rate?.toString() + 'x'
+            }
+
+            if (matchAnyMod(mod, ['AS']) && isNumber(mod?.settings?.initial_rate)) {
+                speed = mod?.settings?.initial_rate?.toString() + 'x'
+            }
 
             // 模组 svg 化
-            const mod_abbr_path = torus.getTextPath(mod.toString(), (offset_x + 45), 66, 36, 'center baseline', '#fff');
-            return `<path transform="translate(${offset_x} 24)"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${getModColor(mod)};"/>\n${mod_abbr_path}\n`;
+            const mod_speed_path = torus.getTextPath(speed, (offset_x + 45), 66 - 28, 16, 'center baseline', '#fff');
+            const mod_abbr_path = torus.getTextPath(acronym, (offset_x + 45), 66, 36, 'center baseline', '#fff');
 
-            //return `<image transform="translate(${offset_x} 350)" width="90" height="64" xlink:href="${getExportFileV3Path('Mods/' + mod + '.png')}"/>`;
+            return `<path transform="translate(${offset_x} 24)"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${mod_color};"/>\n${mod_abbr_path}\n${mod_speed_path}\n`;
         } else return '';
     }
 
     const mods_arr = (data.mods_arr || [{acronym: ''}]).filter(v => v.acronym !== 'CL')
     const mods_arr_length = mods_arr.length;
 
+    let multiplier
     if (mods_arr_length <= 2 && mods_arr_length > 0) {
-        mods_arr.forEach((val, i) => {
-            let acronym = val?.acronym || val.toString()
-
-            if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
-                acronym = val?.speed_change?.toString() + 'x'
-            }
-
-            svg = replaceText(svg, insertMod(acronym, 2 * i), reg_mod);
-        });
+        multiplier = 2
     } else if (mods_arr_length > 2) {
-        mods_arr.forEach((val, i) => {
-            let acronym = val?.acronym || val.toString()
-
-            if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
-                acronym = val?.speed_change?.toString() + 'x'
-            }
-
-            svg = replaceText(svg, insertMod(acronym, i), reg_mod);
-        });
+        multiplier = 1
     }
+
+    mods_arr.forEach((mod, i) => {
+        svg = replaceText(svg, insertMod(mod, multiplier * i), reg_mod);
+    });
 
     // 插入四个小标签
     const color_title2 = data.color_title2 || 'none';

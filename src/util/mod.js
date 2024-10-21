@@ -136,6 +136,8 @@ export function matchAnyMods(mods = [{acronym: ''}], list = []) {
 }
 
 export function matchAnyMod(mod = {acronym: ''}, list = []) {
+    if (isEmptyArray(list)) return false
+
     for (const s of list) {
         if (mod?.acronym?.toString().toUpperCase() === s?.toString().toUpperCase()) {
             return true;

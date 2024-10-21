@@ -1,11 +1,10 @@
 import {
     getImageFromV3,
-    implantImage, isNumber, replaceText, replaceTexts,
+    implantImage, replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {matchAnyMod} from "../util/mod.js";
 
 export async function card_J(data = {
     cover: getImageFromV3('beatmap-defaultBG.jpg'),
@@ -123,7 +122,11 @@ export async function card_J(data = {
         let offset_x = 179 + i * 14;
         let offset_y = 69 - j * 12; //原来是 14，后面做了调整
 
-        return PanelDraw.Circle(offset_x, offset_y, 5, getModColor(mod));
+        let acronym = mod?.acronym || mod.toString()
+
+        const mod_color = getModColor(acronym)
+
+        return PanelDraw.Circle(offset_x, offset_y, 5, mod_color);
     }
 
     const mods_arr = (data.mods_arr || [{acronym: ''}])?.filter(v => v.acronym !== 'CL')
@@ -132,16 +135,10 @@ export async function card_J(data = {
     for (let i = 0; i < length; ++i) {
         const mod = mods_arr[i]
 
-        let acronym = mod?.acronym || mod.toString()
-
-        if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(mod?.settings?.speed_change)) {
-            acronym = mod?.settings?.speed_change?.toString() + 'x'
-        }
-
         if (i < 3){
-            svg = replaceText(svg, insertMod(acronym, i, 0), reg_mod)
+            svg = replaceText(svg, insertMod(mod, i, 0), reg_mod)
         } else {
-            svg = replaceText(svg, insertMod(acronym, i - 3, 1), reg_mod)
+            svg = replaceText(svg, insertMod(mod, i - 3, 1), reg_mod)
         }
     }
 

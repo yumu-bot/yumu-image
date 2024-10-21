@@ -2,12 +2,12 @@ import {
     getImageFromV3, getGameMode,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall, getDecimals,
-    implantImage, replaceText, replaceTexts, getAvatar, isNumber,
+    implantImage, replaceText, replaceTexts, getAvatar,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getModFullName, matchAnyMod} from "../util/mod.js";
+import {getModFullName} from "../util/mod.js";
 
 export const LABELS = {
     UNDEFINED: {
@@ -552,7 +552,9 @@ export async function label_C1(data = {
     //插入模组
     const insertMod = (mod, i, offset_x) => {
         let x = offset_x + i * 10;
-        let mod_color = getModColor(mod);
+
+        const acronym = mod?.acronym || mod.toString()
+        const mod_color = getModColor(acronym)
 
         if (mod === 'NF') return ''; //不画NF的图标，因为没必要
         return PanelDraw.Circle(x, 90, 10, mod_color);
@@ -561,14 +563,8 @@ export async function label_C1(data = {
     const mods_arr = (data?.mods_arr || [{acronym: ''}])?.filter(v => v.acronym !== 'CL')
     const mods_arr_length = mods_arr.length;
 
-    mods_arr.forEach((val, i) => {
-        let acronym = val?.acronym || val.toString()
-
-        if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
-            acronym = val?.speed_change?.toString() + 'x'
-        }
-
-        svg = replaceText(svg, insertMod(acronym, i, 100 - mods_arr_length * 10), reg_mod);
+    mods_arr.forEach((mod, i) => {
+        svg = replaceText(svg, insertMod(mod, i, 100 - mods_arr_length * 10), reg_mod);
     });
 
     //定义文本

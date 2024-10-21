@@ -13,7 +13,6 @@ import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {matchAnyMod} from "../util/mod.js";
 
 export async function card_N(data = {
     score: {
@@ -193,40 +192,31 @@ export async function card_N(data = {
         }
     }
 
-
     // 插入模组，因为先插的在上面，所以从左边插
     const insertMod = (mod, i, offset_x) => {
         const x = offset_x + i * 24;
 
+        const acronym = mod?.acronym || mod.toString()
+        const mod_color = getModColor(acronym)
+
         // 模组 svg 化
-        const mod_abbr_path = torus.getTextPath(mod.toString(), (x + 20), 21, 16, 'center baseline', '#fff');
-        return PanelDraw.Rect(x, 6, 40, 20, 10, getModColor(mod)) + '\n' + mod_abbr_path + '\n';
+        const mod_abbr_path = torus.getTextPath(acronym, (x + 20), 21, 16, 'center baseline', '#fff');
+        return PanelDraw.Rect(x, 6, 40, 20, 10, mod_color) + '\n' + mod_abbr_path + '\n';
     }
 
     const mods_arr = (data.score.mods || [{acronym: ''}])?.filter(v => v.acronym !== 'CL')
     const mods_arr_length = mods_arr.length;
 
+    let multiplier
     if (mods_arr_length <= 5 && mods_arr_length > 0) {
-        mods_arr.forEach((val, i) => {
-            let acronym = val?.acronym || val.toString()
-
-            if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
-                acronym = val?.speed_change?.toString() + 'x'
-            }
-
-            svg = replaceText(svg, insertMod(acronym, 2 * i, 900 + 16 - mods_arr_length * 48), reg_mod);
-        });
+        multiplier = 2
     } else if (mods_arr_length > 5) {
-        mods_arr.forEach((val, i) => {
-            let acronym = val?.acronym || val.toString()
-
-            if (matchAnyMod(val, ['DT', 'NC', 'HT', 'DC']) && isNumber(val?.speed_change)) {
-                acronym = val?.speed_change?.toString() + 'x'
-            }
-
-            svg = replaceText(svg, insertMod(acronym, i, 900 - 8 - mods_arr_length * 24), reg_mod);
-        });
+        multiplier = 1
     }
+
+    mods_arr.forEach((mod, i) => {
+        svg = replaceText(svg, insertMod(mod, multiplier * i, 900 - multiplier * 8 - mods_arr_length * multiplier * 24), reg_mod);
+    });
 
     // 插入图片和部件（新方法
     svg = implantImage(svg, 40, 40, 15, 10, 1, rank, reg_label);
