@@ -83,7 +83,7 @@ export const getStableAccuracyFromLazerScore = (score) => {
 
 // 从新版成绩中，获取稳定版的评级
 export const getStableRankFromLazerScore = (score) => {
-    if (score?.pass === false) return 'F'
+    if (score?.passed === false) return 'F'
     if (getScoreType(score.build_id) !== 'stable') return score?.rank
 
     const m = score.maximum_statistics
