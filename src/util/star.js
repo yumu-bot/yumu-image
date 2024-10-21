@@ -307,6 +307,7 @@ export const hasLeaderBoard = (ranked) => {
 export const getRankBG = (rank = 'F', passed = true) => {
     if (passed === false) rank = 'F';
     if (rank === 'X+' || rank === 'SS') rank = 'X';
+    if (rank === 'SSH') rank = 'XH';
     if (rank === 'S+') rank = 'S';
     return getImageFromV3(`object-score-backimage-${rank}.jpg`)
 }
