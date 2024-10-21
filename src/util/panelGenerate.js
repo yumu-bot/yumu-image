@@ -719,7 +719,11 @@ export const PanelGenerate = {
             500 - 20 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
 
         const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? null : s.beatmapset.title_unicode;
-        const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : '>10K';
+        const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : getRoundedNumberStr(s?.pp, 1);
+
+        // 这是大概的进度
+        const approximate_progress = (s?.total_hit > 0) ? (s?.score_hit / s?.total_hit) : 1
+        const index_l = (s?.passed === true || approximate_progress === 1) ? '' : Math.round(approximate_progress * 100) + '%'
 
         const star = s?.beatmap?.difficulty_rating || 0
 
@@ -737,8 +741,10 @@ export const PanelGenerate = {
             left2: '[' + difficulty_name + '] - ' + acc + ' ' + combo + ' (' + time_diff + ')',
             index_b: index_b,
             index_m: 'PP',
+            index_l: index_l,
             index_b_size: 48,
             index_m_size: 36,
+            index_l_size: 24,
             label1: getRoundedNumberStr(star, 2),
             label2: s?.beatmap?.id?.toString() || '',
             label3: '',

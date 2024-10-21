@@ -322,10 +322,10 @@ export async function panel_A7(data = {
 
         const deltaPP = Math.round(bp?.fcPP - bp?.pp);
 
-        const bp_generated = await PanelGenerate.bp2CardH(bp, bp?.index - 1, bp?.indexAfter);
+        const card_h = await PanelGenerate.bp2CardH(bp, bp?.index - 1, bp?.indexAfter);
 
         const f = await card_H({
-            ...bp_generated,
+            ...card_h,
 
             index_b: bp?.fcPP > 0 ? Math.round(bp.fcPP).toString() : '',
             index_l: (deltaPP > 0 ? '+' : '') + deltaPP + 'PP',
