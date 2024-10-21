@@ -148,7 +148,7 @@ export async function getDiffBG(bid, sid, cover = 'cover', useCache = true, defa
             return path;
         } else {
             deleteBeatMapFromDatabase(bid);
-            return defaultImagePath;
+            return await getMapBG(sid, cover, useCache, defaultImagePath);
         }
     }
 }
@@ -307,7 +307,7 @@ export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '
 /**
  * 读取文件，判断 JPG, PNG, GIF 图片是否完整
  * @param path 位于文件系统的绝对路径
- * @return {Promise<boolean>}
+ * @return {boolean}
  */
 export function isPictureIntacted(path = '') {
     if (isBlankString(path)) return false;
