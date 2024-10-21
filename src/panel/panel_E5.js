@@ -23,7 +23,7 @@ import {
     getRankBG,
     getStableAccuracyFromLazerScore,
     getStableRankFromLazerScore,
-    hasLeaderBoard
+    hasLeaderBoard, rankSS2X
 } from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -277,7 +277,7 @@ export async function panel_E5(data = {
 
     // 评级
     const rank = getStableRankFromLazerScore(data?.score)
-    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`object-score-${rank}2.png`), reg_index);
+    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`object-score-${rankSS2X(rank)}2.png`), reg_index);
 
     // 图片定义
     const background = getRankBG(rank, data?.score?.passed);
