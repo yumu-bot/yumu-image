@@ -14,7 +14,7 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    getMapCover, isNullOrEmptyObject, isNotBlankString,
+    isNullOrEmptyObject, isNotBlankString,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -588,7 +588,7 @@ export const PanelGenerate = {
         const submitted_date = s.submitted_date || '';
         const ranked = s?.ranked || -2;
 
-        const background = await getMapCover(s?.covers['list@2x'], hasLeaderBoard(ranked));
+        const background = await readNetImage(s?.covers['list@2x'], hasLeaderBoard(ranked));
         const map_status = s?.status || 'graveyard';
 
         const isQualified = ranked === 3;

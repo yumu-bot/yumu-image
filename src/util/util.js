@@ -353,7 +353,8 @@ export function getFileSize(path = "") {
  * @return {Promise<string>} 返回位于文件系统的绝对路径
  */
 export async function getMapBG(sid = 0, cover = 'cover', useCache = true, defaultImagePath = getImageFromV3('card-default.png')) {
-    if (sid === 0 || ! Number.isInteger(sid)) return defaultImagePath
+
+    if (sid === 0 || isNotNumber(sid)) return defaultImagePath
 
     const bg = await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', useCache, defaultImagePath);
 
@@ -393,15 +394,10 @@ export async function getBanner(link, useCache = true, defaultImagePath = getIma
     if (isBlankString(link)) {
         return defaultImagePath;
     } else if (link.startsWith("https://assets.ppy.sh/beatmaps/")) {
-        return await getMapCover(link, useCache, getImageFromV3('beatmap-DLfailBG.jpg'))
+        return await readNetImage(link, useCache, getImageFromV3('beatmap-DLfailBG.jpg'))
     } else {
         return await readNetImage(link, useCache, defaultImagePath);
     }
-}
-
-// 其实就可以用 readNetImage
-export async function getMapCover(link, useCache = true, defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')) {
-    return await readNetImage(link, useCache, defaultImagePath);
 }
 
 /**
@@ -436,7 +432,6 @@ export async function readNetImage(path = '', useCache = true, defaultImagePath 
         if (useCache === true && (size > 4 * 1024) && isPictureIntacted(bufferPath)) {
             return bufferPath;
         } else {
-            //throw Error("size err");
             useCache = false;
         }
     }
