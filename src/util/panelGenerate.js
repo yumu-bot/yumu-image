@@ -678,7 +678,7 @@ export const PanelGenerate = {
     },
 
     // 给panel_A5用的
-    score2CardH: async (s, rank = 1) => {
+    score2CardH: async (s, identifier = 1) => {
         const cover = await readNetImage(s?.beatmapset?.covers?.list, hasLeaderBoard(s?.beatmap?.ranked));
         const background = await readNetImage(s?.beatmapset?.covers?.cover, hasLeaderBoard(s?.beatmap?.ranked));
         const type = getScoreTypeImage(s.build_id)
@@ -713,7 +713,9 @@ export const PanelGenerate = {
         const combo = (s.max_combo || 0) + 'x'
         const difficulty_name = s.beatmap.version ? torus.cutStringTail(s.beatmap.version, 24,
             500 - 10 - mods_width - torus.getTextWidth('[] -   ()' + acc + combo + time_diff, 24), true) : '';
-        const color_index = (s.rank === 'XH' || s.rank === 'X') ? '#2A2226' : '#fff';
+
+        const rank = getStableRankFromLazerScore(s)
+        const color_index = (rank === 'SSH' || rank === 'SS' || rank === 'XH' || rank === 'X') ? '#2A2226' : '#fff';
 
         const artist = torus.cutStringTail(s.beatmapset.artist, 24,
             500 - 10 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
@@ -749,7 +751,7 @@ export const PanelGenerate = {
             label2: s?.beatmap?.id?.toString() || '',
             label3: '',
             label4: '',
-            label5: '#' + rank,
+            label5: '#' + identifier,
             mods_arr: s.mods || [],
 
             color_title2: '#bbb',
