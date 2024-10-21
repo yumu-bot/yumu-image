@@ -1667,7 +1667,7 @@ export async function getFlagPath(code = "cn", x, y, h = 30) {
     const image = getImageFromV3('flag-TW.png')
     if (code.toLowerCase() == "tw") {
         if (fs.existsSync(image)) {
-            return `<g transform="translate(${x}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${image}"
+            return `<g transform="translate(${x - 4}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${image}"
             style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
         } else {
             code = "cn"
