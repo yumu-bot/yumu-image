@@ -20,8 +20,6 @@ import {getRankColor, getStarRatingColor} from "./color.js";
 import {
     getApproximateRank,
     getScoreTypeImage,
-    getStableAccuracyFromLazerScore,
-    getStableRankFromLazerScore,
     hasLeaderBoard,
     rankSS2X
 } from "./star.js";
@@ -709,12 +707,12 @@ export const PanelGenerate = {
                 mods_width = 180;
         }
 
-        const acc = getRoundedNumberStr((getStableAccuracyFromLazerScore(s) * 100), 3) + '%'
+        const acc = getRoundedNumberStr((s?.legacy_accuracy * 100), 3) + '%'
         const combo = (s.max_combo || 0) + 'x'
         const difficulty_name = s.beatmap.version ? torus.cutStringTail(s.beatmap.version, 24,
             500 - 10 - mods_width - torus.getTextWidth('[] -   ()' + acc + combo + time_diff, 24), true) : '';
 
-        const rank = getStableRankFromLazerScore(s)
+        const rank = s?.legacy_rank
         const color_index = (rank === 'SSH' || rank === 'SS' || rank === 'XH' || rank === 'X') ? '#2A2226' : '#fff';
 
         const artist = torus.cutStringTail(s.beatmapset.artist, 24,
@@ -755,7 +753,7 @@ export const PanelGenerate = {
             mods_arr: s.mods || [],
 
             color_title2: '#bbb',
-            color_right: getRankColor(getStableRankFromLazerScore(s)),
+            color_right: getRankColor(s?.legacy_rank),
             color_left: star_color,
             color_index: color_index,
             color_label1: star_color,

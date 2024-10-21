@@ -12,6 +12,7 @@ export const rankSS2X = (rank = 'SS') => {
             return rank;
     }
 }
+
 /**
  * 获取大致星数，用于不需要展示星数的场合，比如多成绩
  * @param star 原星数
@@ -45,6 +46,7 @@ export const getApproximateStarRating = (star = 0, mods = ['']) => {
     return star;
 }
 // 从新版成绩中，获取稳定版的准确率
+// 去他妈的，写主程序里去了
 export const getStableAccuracyFromLazerScore = (score) => {
     if (getScoreType(score.build_id) !== 'stable') return score?.accuracy || 0
 
@@ -82,6 +84,7 @@ export const getStableAccuracyFromLazerScore = (score) => {
 }
 
 // 从新版成绩中，获取稳定版的评级
+// 去他妈的，写主程序里去了
 export const getStableRankFromLazerScore = (score) => {
     if (score?.passed === false) return 'F'
     if (getScoreType(score.build_id) !== 'stable') return score?.rank

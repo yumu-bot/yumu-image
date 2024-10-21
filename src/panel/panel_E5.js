@@ -21,9 +21,7 @@ import {
 import moment from "moment";
 import {
     getRankBG,
-    getStableAccuracyFromLazerScore,
-    getStableRankFromLazerScore,
-    hasLeaderBoard, rankSS2X
+    hasLeaderBoard
 } from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -213,6 +211,9 @@ export async function panel_E5(data = {
             availability: [Object]
         },
 
+        legacy_rank: 'F',
+        legacy_accuracy: 0.0,
+
         user: {},
     },
 
@@ -276,8 +277,8 @@ export async function panel_E5(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 评级
-    const rank = getStableRankFromLazerScore(data?.score)
-    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`object-score-${rankSS2X(rank)}2.png`), reg_index);
+    const rank = data?.score?.legacy_rank
+    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3(`object-score-${rank}2.png`), reg_index);
 
     // 图片定义
     const background = getRankBG(rank, data?.score?.passed);
@@ -1263,7 +1264,7 @@ const PanelEGenerate = {
 
     score2componentE9: (score) => {
         return {
-            accuracy: getStableAccuracyFromLazerScore(score),
+            accuracy: score?.legacy_accuracy,
             combo: score?.max_combo || 0,
             max_combo: score?.beatmap.max_combo || 0,
         }
