@@ -135,7 +135,7 @@ export async function card_H(data = {
     svg = replaceText(svg, data?.color_right || 'none', reg_color_right);
     svg = replaceText(svg, data?.color_left || 'none', reg_color_left);
 
-    svg = implantImage(svg, 45, 30, 145, 2, 1, data?.type || '', reg_label);
+    svg = implantImage(svg, 45, 30, 140, 2, 1, data?.type || '', reg_label);
 
     svg = replaceTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
     svg = replaceText(svg, index, reg_text);
