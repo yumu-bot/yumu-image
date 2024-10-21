@@ -1387,7 +1387,7 @@ const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) =
     if (length > 0 && length <= 2) {
         multiplier = 2
     } else if (length > 2 && length <= 4) {
-        multiplier = 3/2
+        multiplier = 5/4
     } else if (length > 4 && length <= 6) {
         multiplier = 1
     } else if (length > 6 && length <= 8) {
