@@ -712,11 +712,11 @@ export const PanelGenerate = {
         const acc = getRoundedNumberStr((getStableAccuracyFromLazerScore(s) * 100), 3) + '%'
         const combo = (s.max_combo || 0) + 'x'
         const difficulty_name = s.beatmap.version ? torus.cutStringTail(s.beatmap.version, 24,
-            500 - 20 - mods_width - torus.getTextWidth('[] -   ()' + acc + combo + time_diff, 24), true) : '';
+            500 - 10 - mods_width - torus.getTextWidth('[] -   ()' + acc + combo + time_diff, 24), true) : '';
         const color_index = (s.rank === 'XH' || s.rank === 'X') ? '#2A2226' : '#fff';
 
         const artist = torus.cutStringTail(s.beatmapset.artist, 24,
-            500 - 20 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
+            500 - 10 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
 
         const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? null : s.beatmapset.title_unicode;
         const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : getRoundedNumberStr(s?.pp, 1);
@@ -804,7 +804,7 @@ export const PanelGenerate = {
             const rank_after_str = ' -> ' + rank_after;
             const difficulty_name = s.beatmap.version ?
                 torus.cutStringTail(s.beatmap.version, 24,
-                    500 - 20 - mods_width - torus.getTextWidth('[] - BP ()' + rank + rank_after_str + time_diff, 24), true)
+                    500 - 10 - mods_width - torus.getTextWidth('[] - BP ()' + rank + rank_after_str + time_diff, 24), true)
                 : '';
 
             return {
