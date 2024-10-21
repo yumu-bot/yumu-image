@@ -1,6 +1,6 @@
 import {
     getImageFromV3,
-    implantImage, replaceText, replaceTexts,
+    implantImage, isNumber, replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
