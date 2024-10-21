@@ -126,7 +126,7 @@ export function getImageFromV3(...paths) {
  * @param {number} bid bid
  * @param {number} sid sid
  */
-export async function getDiffBG(bid, sid, cover = 'cover', useCache = true, defaultImagePath = getImageFromV3('card-default.png')) {
+export async function getDiffBG(bid, sid, cover = 'cover', use_cache = true, is_dmca = false, default_image_path = getImageFromV3('card-default.png')) {
     let path;
 
     try {
@@ -140,15 +140,18 @@ export async function getDiffBG(bid, sid, cover = 'cover', useCache = true, defa
         } else {
             console.error("本地背景读取失败", e);
         }
-        path = await getMapBG(sid, cover, useCache, defaultImagePath);
+        path = await getMapBG(sid, cover, use_cache, default_image_path);
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
 
         if (isPictureIntacted(path)) {
             return path;
         } else {
-            deleteBeatMapFromDatabase(bid);
-            return await getMapBG(sid, cover, useCache, defaultImagePath);
+            if (is_dmca === false) {
+                deleteBeatMapFromDatabase(bid);
+            }
+
+            return await getMapBG(sid, cover, use_cache, default_image_path);
         }
     }
 }
@@ -348,19 +351,19 @@ export function getFileSize(path = "") {
  * 获取谱面 BG
  * @param {number} sid
  * @param {string} [cover]
- * @param {boolean} [useCache] 是否用缓存，false 强制更新
- * @param {string} [defaultImagePath] 出现错误时返回的失败图
+ * @param {boolean} [use_cache] 是否用缓存，false 强制更新
+ * @param {string} [default_image_path] 出现错误时返回的失败图
  * @return {Promise<string>} 返回位于文件系统的绝对路径
  */
-export async function getMapBG(sid = 0, cover = 'cover', useCache = true, defaultImagePath = getImageFromV3('card-default.png')) {
+export async function getMapBG(sid = 0, cover = 'cover', use_cache = true, default_image_path = getImageFromV3('card-default.png')) {
 
-    if (sid === 0 || isNotNumber(sid)) return defaultImagePath
+    if (sid === 0 || isNotNumber(sid)) return default_image_path
 
-    const bg = await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', useCache, defaultImagePath);
+    const bg = await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', use_cache, default_image_path);
 
     // 部分官网的 list@2x 分辨率特别低，尺寸小于 15 KB，比如这个图 728088 list@2x
     if (cover === 'list@2x' && fs.statSync(bg).size <= 15 * 1024) {
-        return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/cover.jpg', useCache, defaultImagePath);
+        return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/cover.jpg', use_cache, default_image_path);
     }
 
     return bg;
@@ -369,34 +372,34 @@ export async function getMapBG(sid = 0, cover = 'cover', useCache = true, defaul
 /**
  * 获取玩家头像。如果为空返回 avatar-guest.png
  * @param link
- * @param useCache 如果用到的是链接，那读缓存也没问题
- * @param defaultImagePath
+ * @param use_cache 如果用到的是链接，那读缓存也没问题
+ * @param default_image_path
  * @return {Promise<string>}
  */
-export async function getAvatar(link, useCache = true, defaultImagePath = getImageFromV3('avatar-guest.png')) {
+export async function getAvatar(link, use_cache = true, default_image_path = getImageFromV3('avatar-guest.png')) {
     if (isBlankString(link) || link == "https://a.ppy.sh/") {
-        return defaultImagePath;
+        return default_image_path;
     } else if (typeof link === "number") {
-        return await readNetImage('https://a.ppy.sh/' + link, useCache, defaultImagePath);
+        return await readNetImage('https://a.ppy.sh/' + link, use_cache, default_image_path);
     } else {
-        return await readNetImage(link, useCache, defaultImagePath);
+        return await readNetImage(link, use_cache, default_image_path);
     }
 }
 
 /**
  * 获取玩家横幅。如果为空返回 Banner/c1-c9.png
  * @param link
- * @param useCache
- * @param defaultImagePath
+ * @param use_cache
+ * @param default_image_path
  * @return {Promise<string>}
  */
-export async function getBanner(link, useCache = true, defaultImagePath = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
+export async function getBanner(link, use_cache = true, default_image_path = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
     if (isBlankString(link)) {
-        return defaultImagePath;
+        return default_image_path;
     } else if (link.startsWith("https://assets.ppy.sh/beatmaps/")) {
-        return await readNetImage(link, useCache, getImageFromV3('beatmap-DLfailBG.jpg'))
+        return await readNetImage(link, use_cache, getImageFromV3('beatmap-DLfailBG.jpg'))
     } else {
-        return await readNetImage(link, useCache, defaultImagePath);
+        return await readNetImage(link, use_cache, default_image_path);
     }
 }
 
@@ -404,7 +407,7 @@ export async function getBanner(link, useCache = true, defaultImagePath = getIma
  * 下载文件, 并且位于文件系统的绝对路径
  * @return {Promise<string>} 位于文件系统的绝对路径
  */
-export async function readNetImage(path = '', useCache = true, defaultImagePath = getImageFromV3('beatmap-DLfailBG.jpg')) {
+export async function readNetImage(path = '', use_cache = true, default_image_path = getImageFromV3('beatmap-DLfailBG.jpg')) {
     const error = getImageFromV3('error.png');
 
     if (!path || !path.startsWith("http")) {
@@ -418,33 +421,33 @@ export async function readNetImage(path = '', useCache = true, defaultImagePath 
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
-    if (useCache === true) {
+    if (use_cache === true) {
         let size;
 
         try {
             fs.accessSync(bufferPath, fs.constants.F_OK);
             size = fs.statSync(bufferPath).size;
         } catch (e) {
-            useCache = false;
+            use_cache = false;
         }
 
         // 尝试仅在使用缓存的时候检测
-        if (useCache === true && (size > 4 * 1024) && isPictureIntacted(bufferPath)) {
+        if (use_cache === true && (size > 4 * 1024) && isPictureIntacted(bufferPath)) {
             return bufferPath;
         } else {
-            useCache = false;
+            use_cache = false;
         }
     }
     let req;
     let data;
 
-    if (useCache === false) {
+    if (use_cache === false) {
         try {
             req = await axios.get(path, {responseType: 'arraybuffer'});
             data = req.data;
         } catch (e) {
             console.error("download error", e);
-            return defaultImagePath || error;
+            return default_image_path || error;
         }
     }
 
@@ -452,7 +455,7 @@ export async function readNetImage(path = '', useCache = true, defaultImagePath 
         fs.writeFileSync(bufferPath, data, 'binary');
         return bufferPath;
     } else {
-        return defaultImagePath || error;
+        return default_image_path || error;
     }
 }
 

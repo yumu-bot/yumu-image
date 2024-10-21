@@ -74,7 +74,8 @@ export async function panel_E6(data = {
 
     // 图片定义
     const background = getRankBG(rank);
-    const banner = await getDiffBG(data?.beatmap?.id, data?.beatmap?.beatmapset?.id, 'cover', hasLeaderBoard(data?.beatmap.ranked));
+    const banner = await getDiffBG(data?.beatmap?.id, data?.beatmap?.beatmapset?.id, 'cover', hasLeaderBoard(data?.beatmap.ranked),
+        data?.beatmap?.beatmapset?.availability?.more_information != null);
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
@@ -344,6 +345,7 @@ const component_E6 = async (
         bid: 0,
         sid: 0,
         status: 'pending',
+        is_dmca: false,
     }) => {
     let svg = `   <defs>
             <clipPath id="clippath-OE6-1">
@@ -378,7 +380,7 @@ const component_E6 = async (
         20, 142, 24, 'left baseline', '#fff');
     const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 820 - 20, 142, 24, 'right baseline', '#fff');
 
-    const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status));
+    const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status), data.is_dmca);
 
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
@@ -756,7 +758,8 @@ const component_E11 = async (
     data = {
         bid: 0,
         sid: 0,
-        ranked: 'pending'
+        ranked: 'pending',
+        is_dmca: false,
     }) => {
     let svg = `
             <defs>
@@ -776,7 +779,7 @@ const component_E11 = async (
     const reg_cover = /(?<=<g id="Background_OE11" style="clip-path: url\(#clippath-OE11-1\);">)/;
     const reg_base = /(?<=<g id="Base_OE11">)/;
 
-    const cover = await getDiffBG(data?.bid, data?.sid, 'list@2x', hasLeaderBoard(data?.ranked));
+    const cover = await getDiffBG(data?.bid, data?.sid, 'list@2x', hasLeaderBoard(data?.ranked), data.is_dmca);
     const hexagon = getImageFromV3('object-beatmap-hexagon.png')
     const base = getImageFromV3('object-beatmap-mask.png')
 
@@ -1001,6 +1004,7 @@ const PanelEGenerate = {
             sid: b?.beatmapset?.id || 0,
             creator: b?.beatmapset?.creator || '',
             status: b?.status || 'pending',
+            is_dmca: b?.beatmapset?.availability?.more_information != null
         }
     },
 
@@ -1056,6 +1060,7 @@ const PanelEGenerate = {
             bid: b?.id,
             sid: b?.beatmapset?.id || b?.beatmapset_id,
             ranked: b?.ranked,
+            is_dmca: b?.beatmapset?.availability?.more_information != null
         }
     },
 }

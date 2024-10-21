@@ -66,7 +66,8 @@ export async function router_svg(req, res) {
  */
 export async function panel_Beta(score) {
     const avatar = await getAvatar(score?.user?.avatar_url, true);
-    const bg = await getDiffBG(score.beatmap.id, score.beatmapset.id, 'list@2x', hasLeaderBoard(score.beatmap.ranked));
+    const bg = await getDiffBG(score.beatmap.id, score.beatmapset.id, 'list@2x', hasLeaderBoard(score.beatmap.ranked),
+        score?.beatmap?.beatmapset?.availability?.more_information != null);
 
     const mode_int = score.mode_int;
     const mods = score.mods;

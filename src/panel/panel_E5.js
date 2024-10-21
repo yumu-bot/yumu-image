@@ -281,7 +281,7 @@ export async function panel_E5(data = {
 
     // 图片定义
     const background = getRankBG(rank, data?.score?.passed);
-    const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked));
+    const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked), data?.score?.beatmap?.beatmapset?.availability?.more_information != null);
 
     // 卡片定义
 
@@ -550,6 +550,7 @@ const component_E6 = async (
         bid: 0,
         sid: 0,
         status: 'pending',
+        is_dmca: false,
     }) => {
     let svg = `   <defs>
             <clipPath id="clippath-OE6-1">
@@ -584,7 +585,7 @@ const component_E6 = async (
         20, 142, 24, 'left baseline', '#fff');
     const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 820 - 20, 142, 24, 'right baseline', '#fff');
 
-    const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status));
+    const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status), data.is_dmca);
 
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
@@ -1227,6 +1228,7 @@ const PanelEGenerate = {
             sid: score?.beatmapset?.id || 0,
             creator: score?.beatmapset?.creator || '',
             status: score?.beatmap?.status || 'pending',
+            is_dmca: score?.beatmap?.beatmapset?.availability?.more_information != null
         }
     },
 

@@ -139,7 +139,8 @@ export async function panel_Delta(data = {
     svg = implantSvgBody(svg, 0, 0, od_rrect, reg_od);
     svg = implantSvgBody(svg, 0, 0, length_pie, reg_length);
 
-    const image = await getDiffBG(data.beatmap.id, data.beatmap.beatmapset.id, 'list@2x', hasLeaderBoard(data.beatmap.status));
+    const image = await getDiffBG(data.beatmap.id, data.beatmap.beatmapset.id, 'list@2x', hasLeaderBoard(data.beatmap.status),
+        data?.beatmap?.beatmapset?.availability?.more_information != null);
 
     svg = (data.hasBG === false) ? svg : implantImage(svg, 1080, 1080, -30, 0, 1, image, reg_background);
     svg = implantImage(svg, 1920, 1080, 0, 0, 1, getImageFromV3('panel-kita.png'), reg_base);
