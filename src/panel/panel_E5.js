@@ -1414,7 +1414,7 @@ const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) =
         }
 
         if (matchAnyMod(mod, ['AS']) && isNumber(mod?.settings?.initial_rate)) {
-            speed = '~' + mod?.settings?.initial_rate?.toString()
+            speed = mod?.settings?.initial_rate?.toString() + 'x'
         }
 
         const mod_speed_path = torus.getTextPath(speed, x + (w / 2), y + text_h - 28, 16, 'center baseline', '#fff');
