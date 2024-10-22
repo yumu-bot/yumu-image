@@ -1,5 +1,5 @@
 import {getModInt, hasMod, matchAnyMods} from "./mod.js";
-import {getGameMode, getImageFromV3, isNotNumber} from "./util.js";
+import {getGameMode, getImageFromV3, isNumber} from "./util.js";
 
 //SS和X的转换
 export const rankSS2X = (rank = 'SS') => {
