@@ -3,7 +3,7 @@ import {
     exportJPEG, getBeatMapTitlePath, getDecimals,
     getDiffBG, getFileSize, getGameMode, getImageFromV3, getMapStatusImage,
     getPanelNameSVG, getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
-    implantImage, implantSvgBody, isNumber, od2ms,
+    implantImage, implantSvgBody, od2ms,
     readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
@@ -14,7 +14,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModInt, hasMod, matchAnyMod} from "../util/mod.js";
+import {getModAdditionalInformation, getModInt, hasMod} from "../util/mod.js";
 
 
 export async function router(req, res) {
@@ -1236,24 +1236,12 @@ const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) =
     function insertMod(mod, x, y, w, text_h) {
         const acronym = mod?.acronym || mod.toString()
         const mod_color = getModColor(acronym)
-        let speed = '';
+        const additional = getModAdditionalInformation(mod);
 
-        if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(mod?.settings?.speed_change)) {
-            speed = mod?.settings?.speed_change?.toString() + 'x'
-        }
-
-        if (matchAnyMod(mod, ['WU', 'WD']) && isNumber(mod?.settings?.final_rate)) {
-            speed = mod?.settings?.final_rate?.toString() + 'x'
-        }
-
-        if (matchAnyMod(mod, ['AS']) && isNumber(mod?.settings?.initial_rate)) {
-            speed = mod?.settings?.initial_rate?.toString() + 'x'
-        }
-
-        const mod_speed_path = torus.getTextPath(speed, x + (w / 2), y + text_h - 28, 16, 'center baseline', '#fff');
+        const mod_additional_path = torus.getTextPath(additional, x + (w / 2), y + text_h - 28, 16, 'center baseline', '#fff');
         const mod_abbr_path = torus.getTextPath(acronym, x + (w / 2), y + text_h, 36, 'center baseline', '#fff');
 
-        return `<path transform="translate(${x} ${y})"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${mod_color};"/>\n` + mod_abbr_path + '\n' + mod_speed_path + '\n';
+        return `<path transform="translate(${x} ${y})"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${mod_color};"/>\n` + mod_abbr_path + '\n' + mod_additional_path + '\n';
     }
 
     return svg;

@@ -1,4 +1,4 @@
-import {getGameMode, isEmptyArray} from "./util.js";
+import {getGameMode, isEmptyArray, isNumber} from "./util.js";
 
 const ModInt = {
     null: 0,
@@ -123,24 +123,28 @@ export function hasModChangedSR(mod = '') {
     return (mod === 'DT' || mod === 'NC' || mod === 'HT' || mod === 'DC' || mod === 'HR' || mod === 'EZ' || mod === 'FL')
 }
 
-export function matchAnyMods(mods = [{acronym: ''}], list = []) {
-    if (isEmptyArray(mods) || isEmptyArray(list)) return false
-
-    for (const m of mods) {
-        if (matchAnyMod(m, list) === true) {
-            return true
-        }
-    }
-
-    return false
+export function matchMod(mod = {acronym: ''}, name = '') {
+    return mod?.acronym?.toString().toUpperCase() === name?.toString().toUpperCase();
 }
 
 export function matchAnyMod(mod = {acronym: ''}, list = []) {
     if (isEmptyArray(list)) return false
 
     for (const s of list) {
-        if (mod?.acronym?.toString().toUpperCase() === s?.toString().toUpperCase()) {
+        if (matchMod(mod, s) === true) {
             return true;
+        }
+    }
+
+    return false
+}
+
+export function matchAnyMods(mods = [{acronym: ''}], list = []) {
+    if (isEmptyArray(mods) || isEmptyArray(list)) return false
+
+    for (const m of mods) {
+        if (matchAnyMod(m, list) === true) {
+            return true
         }
     }
 
@@ -161,6 +165,55 @@ export function hasAllMod(modInt = 0, mod = ['']) {
     if (!mod) return false;
     const all = getModInt(mod);
     return (all & modInt) === all;
+}
+
+
+// 根据 lazer 模组信息，返回展示在模组上的附加信息
+export function getModAdditionalInformation(mod = {
+    acronym: '',
+    settings: {
+        speed_change: null,
+        final_rate: null,
+        initial_rate: null,
+
+        // EZ
+        extra_lives: null,
+
+        // AC
+        restart: null, // 默认 false
+        minimum_accuracy: null, // 如果没有那就是 0.90
+        accuracy_judge_mode: null, // "1" 就是 standard，也就是当前值，如果是 null 那就是谱面理论最大
+    }
+}) {
+    const s = mod?.settings;
+
+    let info = ''
+
+    if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(s?.speed_change)) {
+        info = s?.speed_change?.toString() + 'x'
+    }
+
+    if (matchAnyMod(mod, ['WU', 'WD']) && isNumber(s?.final_rate)) {
+        info = s?.final_rate?.toString() + 'x'
+    }
+
+    if (matchMod(mod, 'AS') && isNumber(s?.extra_lives)) {
+        info = s?.extra_lives?.toString() + '+'
+    }
+
+    if (matchMod(mod, 'EZ') && isNumber(s?.initial_rate)) {
+        info = s?.initial_rate?.toString() + 'x'
+    }
+
+    if (matchMod(mod, 'AC') && isNumber(s?.minimum_accuracy)) {
+        if (s?.accuracy_judge_mode === "1") {
+            info += '<'
+        }
+
+        info = Math.round(s?.minimum_accuracy * 100).toString() + '%'
+    }
+
+    return info
 }
 
 export function getModFullName(mod = 'NM') {
