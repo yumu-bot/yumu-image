@@ -812,10 +812,7 @@ export const PanelGenerate = {
                 left2: '[' + difficulty_name + '] - BP' + rank + rank_after_str + ' (' + time_diff + ')',
             }
         } else {
-            return {
-                ...card_h,
-                label5: 'B' + rank,
-            }
+            return card_h
         }
     },
 
