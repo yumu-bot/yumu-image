@@ -334,8 +334,7 @@ export const getRankFromValue = (value = 0, boundary = [9, 7, 6.5, 5.3, 4, 2.8, 
 
 // null，lazer，stable
 export function getScoreType(build_id) {
-    if (isNotNumber(build_id)) return null;
-    else if (build_id > 0) return 'lazer'
+    if (isNumber(build_id) && build_id > 0) return 'lazer';
     else return 'stable'
 }
 
