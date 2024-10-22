@@ -958,16 +958,16 @@ const component_E10 = (
 
     const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 64, 45, 360, 20, 16, 16) // 345
 
-    let ratio_text;
+    let ratio_text = 'MAX : 300 = ';
 
     if (data.ratio === Infinity) {
-        ratio_text = 'P : G = Infinity'
+        ratio_text += 'Infinity'
     } else if (data.ratio === 0) {
-        ratio_text = 'P : G = 0'
+        ratio_text += '0'
     } else if (data.ratio >= 1) {
-        ratio_text = 'P : G = ' + getRoundedNumberStr(data.ratio, 2) + ' : 1';
+        ratio_text += (getRoundedNumberStr(data.ratio, 2) + ' : 1')
     } else {
-        ratio_text = 'P : G = 1 : ' + getRoundedNumberStr(1 / data.ratio, 2)
+        ratio_text += ('1 : ' + getRoundedNumberStr(1 / data.ratio, 2))
     }
 
     const perfect_great_ratio = (getGameMode(data?.mode, 1) === 'm') ?
