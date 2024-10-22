@@ -2,7 +2,6 @@ import {
     exportJPEG,
     getImageFromV3,
     getPanelNameSVG,
-    getRoundedNumberStr,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall,
     implantImage,
@@ -354,7 +353,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     const percent = rating / max_rating
 
     const stars = drawStars(score?.dxScore, score?.max)
-    const component = component_G1(song?.charts[index]?.notes, score?.achievements || 0)
+    const component = component_G1(song?.charts[index]?.notes)
 
     return {
         background: background,
@@ -399,7 +398,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     }
 }
 
-const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_: 26 }, achievement = 0) => {
+const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_: 26 }) => {
     let svg = `
         <g id="Base_LG1">
         </g>
@@ -415,10 +414,10 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     const reg_icon = /(?<=<g id="Icon_LG1">)/
     const reg_text = /(?<=<g id="Text_LG1">)/
 
-    const achievement_text = achievement > 0 ? (((achievement >= 100) ? '+' : '-') + getRoundedNumberStr(Math.abs(achievement - 100), 4) + ' %') : (sum > 0 ? ('DX Score: ' + sum * 3) : '-')
+    const dx_text = (sum > 0 ? ('DX Score: ' + sum * 3) : '-')
 
     const title = poppinsBold.getTextPath('Notes', 10, 20, 14, 'left baseline', '#fff')
-    const acc = poppinsBold.getTextPath(achievement_text, 280, 20, 14, 'right baseline', '#fff')
+    const dx = poppinsBold.getTextPath(dx_text, 280, 20, 14, 'right baseline', '#fff')
 
     svg = implantImage(svg, 40, 25, 10 + 7, 30, 1,
         getImageFromV3('Maimai', 'object-note-tap.png'), reg_icon)
@@ -574,7 +573,7 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
 
     const base = PanelDraw.Rect(0, 0, 290, 210, 20, '#46393f', 1)
 
-    svg = replaceTexts(svg, [title, acc,
+    svg = replaceTexts(svg, [title, dx,
         break_critical, break_perfect1, break_perfect2, break_great1, break_great2, break_great3, break_good, break_miss,
         tap_great, tap_good, tap_miss, tap_count, hold_count, slide_count, touch_count, break_count], reg_text)
 

@@ -39,10 +39,14 @@ export async function card_A2(data = {
     const title2_font = isASCII(data?.title2) ? torus : PuHuiTi
     const title3_font = isASCII(data?.title3) ? torus : PuHuiTi
     const left1_font = isASCII(data?.left1) ? torus : PuHuiTi
+    const left2_font = isASCII(data?.left2) ? torus : PuHuiTi
+    const left3_font = isASCII(data?.left3) ? torus : PuHuiTi
     const title_size = isASCII(data?.title1) ? 36 : 32
     const title2_size = isASCII(data?.title2) ? 24 : 22
     const title3_size = isASCII(data?.title3) ? 24 : 22
     const left1_size = isASCII(data?.left1) ? 24 : 22
+    const left2_size = isASCII(data?.left2) ? 24 : 22
+    const left3_size = isASCII(data?.left3) ? 24 : 22
 
     // 宽度限制
     const title1_maxWidth = data.map_status ? 350 : 390;
@@ -66,12 +70,12 @@ export async function card_A2(data = {
     const left1 = left1_font.getTextPath(
         torus.cutStringTail(data.left1, left1_size, left_maxWidth, true),
         20, 140.836, left1_size, 'left baseline', '#fff');
-    const left2 = torus.getTextPath(
+    const left2 = left2_font.getTextPath(
         torus.cutStringTail(data.left2, 24, left_maxWidth, true),
-        20, 165.836, 24, 'left baseline', '#fff');
-    const left3 = torus.getTextPath(
+        20, 165.836, left2_size, 'left baseline', '#fff');
+    const left3 = left3_font.getTextPath(
         torus.cutStringTail(data.left3, 24, left_maxWidth, true),
-        20, 191.836, 24, 'left baseline', '#fff');
+        20, 191.836, left3_size, 'left baseline', '#fff');
 
     const right1 = torus.getTextPath(data.right1, 420, 114.836, 24, 'right baseline', '#fff');
     const right2 = torus.getTextPath(data.right2, 420, 141.836, 24, 'right baseline', '#fff');

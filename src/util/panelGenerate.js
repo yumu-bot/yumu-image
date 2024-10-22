@@ -307,9 +307,10 @@ export const PanelGenerate = {
         const title2 = song?.basic_info?.artist || '-'
 
         const left1 = (song?.basic_info?.from || '-').replaceAll("でらっくす", 'DX')
-
         const left2 = getMaimaiCategory(song?.basic_info?.genre)
-        const left3 = song?.basic_info?.bpm ? ('BPM = ' + song?.basic_info?.bpm.toString()) : ''
+        const left3 = song?.alias || ''
+
+        const right1 = song?.basic_info?.bpm ? ('BPM = ' + song?.basic_info?.bpm.toString()) : ''
 
         let right3b, right3m
         let song_id = song?.id || 0
@@ -350,7 +351,7 @@ export const PanelGenerate = {
             left1: left1,
             left2: left2,
             left3: left3,
-            right1: '',
+            right1: right1,
             right2: "songID:",
             right3b: right3b,
             right3m: right3m,
