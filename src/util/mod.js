@@ -205,7 +205,7 @@ export function getModAdditionalInformation(mod = {
         info = s?.initial_rate?.toString() + 'x'
     }
 
-    if (matchMod(mod, 'AC') && isNumber(s?.minimum_accuracy)) {
+    if (matchMod(mod, 'AC')) {
         if (s?.accuracy_judge_mode === "1") {
             info += '<'
         }
