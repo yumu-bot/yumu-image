@@ -14,6 +14,7 @@ export function card_I2(data = {
     level: 0,  // 星星数量
 
     title: '',
+    title2: '', // 外号
     left1: '',
     left2: '',
     right: '',
@@ -42,7 +43,7 @@ export function card_I2(data = {
     let svg = `
     <defs>
     <clipPath id="clippath-CI2-1">
-        <rect x="120" width="310" height="110" rx="20" ry="20" style="fill: none;"/>
+        <rect x="100" width="330" height="110" rx="20" ry="20" style="fill: none;"/>
     </clipPath>
     <clipPath id="clippath-CI2-2">
          <rect width="80" height="110" rx="20" ry="20" style="fill: none;"/>
@@ -56,7 +57,7 @@ export function card_I2(data = {
     </defs>
     <g id="Base-CI2">
         <rect width="430" height="110" rx="20" ry="20" style="fill: #46393f;"/>
-        <rect x="20" width="160" height="110" rx="20" ry="20" style="fill: #382e32;"/>
+        <rect x="20" width="120" height="110" rx="20" ry="20" style="fill: #382e32;"/>
     </g>
     <g id="Background-CI2">
         <g filter="url(#blur-CI2-BG)" style="clip-path: url(#clippath-CI2-1);">
@@ -89,15 +90,29 @@ export function card_I2(data = {
 
     // 文本
     const title_size = isASCII(data?.title) ? 24 : 22;
+    const title2_size = isASCII(data?.title2) ? 16 : 14;
     const left1_size = isASCII(data?.left1) ? 16 : 14;
     const left2_size = isASCII(data?.left2) ? 16 : 14;
 
     const title_font = isASCII(data?.title) ? torus : PuHuiTi;
+    const title2_font = isASCII(data?.title2) ? torus : PuHuiTi;
     const left1_font = isASCII(data?.left1) ? torus : PuHuiTi;
     const left2_font = isASCII(data?.left2) ? torus : PuHuiTi;
 
+    // 优先显示 title2
+    let title2_width = title2_font.getTextWidth(data?.title2 || '', title2_size)
+    let title_width = Math.min(title_font.getTextWidth(data?.title || '', title_size), 260 - 20 - title2_width - 10)
+
+    // 副标题太长也不行
+    if (title2_width > 260 - 20 - 50 - 10) {
+        title_width = Math.min(title_font.getTextWidth(data?.title || '', title_size), 260 - 20 - 50 - 10)
+        title2_width = 260 - 20 - 50 - title_width - 10
+    }
+
     const title = title_font.getTextPath(
-        title_font.cutStringTail(data?.title || '', title_size, 260 - 20), 150, 24, title_size, 'left baseline', '#fff')
+        title_font.cutStringTail(data?.title || '', title_size, title_width), 150, 24, title_size, 'left baseline', '#fff')
+    const title2 = title2_font.getTextPath(
+        title2_font.cutStringTail(data?.title2 || '', title2_size, title2_width), 150 + title_width + 8, 24, title2_size, 'left baseline', '#bbb')
     const left1 = left1_font.getTextPath(
         left1_font.cutStringTail(data?.left1 || '', left1_size,
             (isNotBlankString(data?.component3) ? 160 : 260) - 16 * (data?.level || 0)),
@@ -131,7 +146,7 @@ export function card_I2(data = {
 
     const index = getMultipleTextPath(index_arr, 420, 100, 'right baseline')
 
-    svg = replaceTexts(svg, [title, left1, left2, right, index], reg_text)
+    svg = replaceTexts(svg, [title, title2, left1, left2, right, index], reg_text)
 
     // 图片和矩形
     const left_rrect = PanelDraw.Rect(0, 0, 80, 110, 20, data?.color_left || '#382e32', 1)

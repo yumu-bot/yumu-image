@@ -61,6 +61,7 @@ export async function panel_MS(data = {
     songs: [{
         "id": "319",
         "title": "幻想のサテライト",
+        "alias": "幻想的卫星",
         "type": "SD",
         "ds": [
             4.0,

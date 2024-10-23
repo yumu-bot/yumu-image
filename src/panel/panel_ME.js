@@ -72,6 +72,7 @@ export async function panel_ME(data = {
     song: {
         "id": "10319",
         "title": "幻想のサテライト",
+        "alias": "幻想的卫星",
         "type": "DX",
         "ds": [
             4.0,

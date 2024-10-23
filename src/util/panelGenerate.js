@@ -306,11 +306,13 @@ export const PanelGenerate = {
         const title1 = song?.basic_info?.title || '-'
         const title2 = song?.basic_info?.artist || '-'
 
-        const left1 = (song?.basic_info?.from || '-').replaceAll("でらっくす", 'DX')
-        const left2 = getMaimaiCategory(song?.basic_info?.genre)
-        const left3 = song?.alias || ''
+        const left1 = song?.alias || ''
+        const left2 = (song?.basic_info?.from || '-')
+            .replaceAll("でらっくす", 'DX')
+            .replaceAll(" PLUS", '+')
+        const left3 = getMaimaiCategory(song?.basic_info?.genre)
 
-        const right1 = song?.basic_info?.bpm ? ('BPM = ' + song?.basic_info?.bpm.toString()) : ''
+        const right1 = song?.basic_info?.bpm ? ('BPM ' + song?.basic_info?.bpm.toString()) : ''
 
         let right3b, right3m
         let song_id = song?.id || 0

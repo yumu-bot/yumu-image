@@ -231,7 +231,7 @@ export async function panel_E5(data = {
     const reg_card_e2 = /(?<=<g id="Card_E2">)/;
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
-    const is_lazer = data?.score?.build_id > 0
+    const is_lazer = data?.score?.is_lazer === true
     if (is_lazer) svg = replaceText(svg, RainbowRect, reg_index_plus)
 
     // 面板文字

@@ -280,6 +280,7 @@ async function maiScore2CardI2(score = {
     "rate": "sssp",
     "song_id": 10319,
     "title": "幻想のサテライト",
+    "alias": "幻想的卫星",
     "artist": "豚乙女",
     "charter": "mai-Star",
     "type": "DX",
@@ -307,6 +308,7 @@ async function maiScore2CardI2(score = {
         level: getMaimaiDXStarLevel(score?.dxScore, score?.max),
 
         title: score?.title || '',
+        title2: score?.alias || '',
         left1: score?.artist || '',
         left2: score?.charter || '',
         right: right,
