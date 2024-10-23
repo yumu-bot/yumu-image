@@ -355,10 +355,8 @@ export function getModColor(Mod = '') {
  * @function 获取评级颜色
  * @return {String} 返回色彩
  * @param rank 输入评级
- * @param passed 是否通过，等于之前的 'F'
  */
-export function getRankColor(rank = 'F', passed = true) {
-    if (passed === false) return '#616161'
+export function getRankColor(rank = 'F') {
     if (typeof rank !== 'string') return 'none';
     let color;
     switch (rank.toUpperCase()) {

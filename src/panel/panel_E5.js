@@ -1088,7 +1088,7 @@ const PanelEGenerate = {
             play: score?.beatmap?.playcount || 0,
             progress: progress,
 
-            color: getRankColor(score.rank, score.passed),
+            color: getRankColor(score.legacy_rank),
         }
     },
 
