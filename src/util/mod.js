@@ -210,7 +210,11 @@ export function getModAdditionalInformation(mod = {
             info += '<'
         }
 
-        info = Math.round(s?.minimum_accuracy * 100).toString() + '%'
+        if (isNumber(s?.minimum_accuracy)) {
+            info += Math.round(s?.minimum_accuracy * 100).toString() + '%'
+        } else {
+            info += '90%'
+        }
     }
 
     return info
