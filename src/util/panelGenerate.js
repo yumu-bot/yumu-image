@@ -726,7 +726,7 @@ export const PanelGenerate = {
 
         // 这是大概的进度
         const approximate_progress = (s?.total_hit > 0) ? (s?.score_hit / s?.total_hit) : 1
-        const index_l = (s?.passed === true || approximate_progress === 1) ? '' : Math.round(approximate_progress * 100) + '%'
+        const index_l = (s?.passed === false || s?.legacy_rank === 'F') ? Math.round(approximate_progress * 100) + '%' : ''
 
         const star = s?.beatmap?.difficulty_rating || 0
 
