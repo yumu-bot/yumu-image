@@ -8,6 +8,7 @@ const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
 const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold.ttf");
 const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
 const textToSVGTahomaRegular = TextToSVG.loadSync("font/ft71.ttf");
+const textToSVGTahomaBold = TextToSVG.loadSync("font/tahomabd.ttf");
 const textToSVGBerlinBold = TextToSVG.loadSync("font/BerlinsansExpert-Bold.ttf");
 
 /** 获取多个字体组合成的字形
@@ -340,6 +341,131 @@ function get2SizeTextPath_TahomaRegular(largerText, smallerText, largeSize, smal
     } else if (anchor === "center baseline") {
         out = TahomaRegular.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
             TahomaRegular.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+    }
+
+    return out;
+}
+
+export const TahomaBold = {};
+
+TahomaBold.getTextPath = getTextPath_TahomaBold;
+TahomaBold.get2SizeTextPath = get2SizeTextPath_TahomaBold;
+TahomaBold.getTextMetrics = getTextMetrics_TahomaBold;
+TahomaBold.getTextWidth = getTextWidth_TahomaBold;
+TahomaBold.cutStringTail = cutStringTail_TahomaBold;
+
+function getTextPath_TahomaBold(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff',
+    opacity = 1,
+) {
+    return textToSVGTahomaBold.getPath((text || "").toString(), {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "TahomaBold",
+        attributes: {
+            "fill": fill,
+            "fill-opacity": opacity
+        }
+    })
+}
+
+function getTextMetrics_TahomaBold(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGTahomaBold.getMetrics(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "TahomaBold",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+function getTextWidth_TahomaBold(
+    text = '',
+    size = 0,
+) {
+    return textToSVGTahomaBold.getMetrics((text || "").toString(), {
+        x: 0,
+        y: 0,
+        fontSize: size,
+        anchor: 'center baseline',
+        fontFamily: "TahomaBold",
+        attributes: {
+            fill: '#fff'
+        }
+    }).width
+}
+
+function cutStringTail_TahomaBold(
+    text = '',
+    size = 36,
+    maxWidth = 0,
+    isDot3Needed = true,
+) {
+    if (TahomaBold.getTextWidth(text, size) <= maxWidth) {
+        return text;
+    }
+
+    let dot3 = '...';
+    let dot3_width = isDot3Needed ? TahomaBold.getTextWidth(dot3, size) : 0;
+    let out_text = '';
+    maxWidth -= dot3_width;
+
+    for (let i = 0; TahomaBold.getTextWidth(out_text, size) < maxWidth; i++) {
+        out_text += text.slice(i, i + 1);
+    }
+
+    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
+}
+
+
+/**
+ * @function 获取大小文本的 TahomaBold 字体 SVG 路径
+ * @return {String}
+ * @param largerText {String} 较大的文本
+ * @param smallerText {String} 较小的文本
+ * @param largeSize {Number} 大文本尺寸
+ * @param smallSize {Number} 小文本尺寸
+ * @param x {Number} 锚点横坐标
+ * @param y {Number} 锚点横坐标
+ * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
+ * @param color {String} 十六进制颜色，#FFF
+ */
+
+function get2SizeTextPath_TahomaBold(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+    let width_b = TahomaBold.getTextWidth(largerText, largeSize);
+    let width_m = TahomaBold.getTextWidth(smallerText, smallSize);
+    let width_a = (width_b + width_m) / 2; // 全长的一半长
+
+    let out;
+
+    if (anchor === "left baseline") {
+        out = TahomaBold.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            TahomaBold.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+
+    } else if (anchor === "right baseline") {
+        out = TahomaBold.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            TahomaBold.getTextPath(smallerText, x, y, smallSize, anchor, color);
+
+    } else if (anchor === "center baseline") {
+        out = TahomaBold.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            TahomaBold.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
     }
 
     return out;
@@ -1001,6 +1127,7 @@ export function getTextWidth(font = "torus", text = '', size = 24) {
     if (font.toString() === "torus") return torus.getTextWidth(text, size);
     if (font.toString() === "torusRegular") return torusRegular.getTextWidth(text, size);
     if (font.toString() === "TahomaRegular") return TahomaRegular.getTextWidth(text, size);
+    if (font.toString() === "TahomaBold") return TahomaBold.getTextWidth(text, size);
     if (font.toString() === "PuHuiTi") return PuHuiTi.getTextWidth(text, size);
     if (font.toString() === "extra") return extra.getTextWidth(text, size);
     if (font.toString() === "poppinsBold") return poppinsBold.getTextWidth(text, size);
@@ -1013,6 +1140,7 @@ export function getTextPath(font = "torus", text = '', x, y, size = 24, anchor, 
     if (font.toString() === "torus") return torus.getTextPath(text, x, y, size, anchor, fill);
     if (font.toString() === "torusRegular") return torusRegular.getTextPath(text, x, y, size, anchor, fill);
     if (font.toString() === "TahomaRegular") return TahomaRegular.getTextPath(text, x, y, size, anchor, fill);
+    if (font.toString() === "TahomaBold") return TahomaBold.getTextPath(text, x, y, size, anchor, fill);
     if (font.toString() === "PuHuiTi") return PuHuiTi.getTextPath(text, x, y, size, anchor, fill);
     if (font.toString() === "extra") return extra.getTextPath(text, x, y, size, anchor, fill);
     if (font.toString() === "poppinsBold") return poppinsBold.getTextPath(text, x, y, size, anchor, fill);
@@ -1025,6 +1153,7 @@ export function cutStringTail(font = "torus", text = '', size = 24, max_width = 
     if (font.toString() === "torus") return torus.cutStringTail(text, size, max_width, is_dot3_needed);
     if (font.toString() === "torusRegular") return torusRegular.cutStringTail(text, size, max_width, is_dot3_needed);
     if (font.toString() === "TahomaRegular") return TahomaRegular.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (font.toString() === "TahomaBold") return TahomaBold.cutStringTail(text, size, max_width, is_dot3_needed);
     if (font.toString() === "PuHuiTi") return PuHuiTi.cutStringTail(text, size, max_width, is_dot3_needed);
     if (font.toString() === "extra") return extra.cutStringTail(text, size, max_width, is_dot3_needed);
     if (font.toString() === "poppinsBold") return poppinsBold.cutStringTail(text, size, max_width, is_dot3_needed);
