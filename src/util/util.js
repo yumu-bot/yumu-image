@@ -197,15 +197,39 @@ export function deleteBeatMapFromDatabase(bid) {
     }).catch(_ => {})
 }
 
-export function isBlankString(str = "") {
-    return isNull(str) || (typeof str !== "string") || (typeof str === "string" && str?.trim()?.length === 0)
+function isBlankStringOrNotNull(str) {
+    if (typeof str !== "string") {
+        try {
+            str.toString().trim()?.length === 0
+        } catch (e) {
+            return false
+        }
+    } else {
+        return str?.trim()?.length === 0
+    }
 }
 
-export function isEmptyString(str = "") {
-    return isNull(str) || (typeof str !== "string") || (typeof str === "string" && str?.length === 0)
+function isEmptyStringOrNotNull(str) {
+    if (typeof str !== "string") {
+        try {
+            str.toString()?.length === 0
+        } catch (e) {
+            return false
+        }
+    } else {
+        return str?.length === 0
+    }
 }
 
-export function isEmptyArray(arr = []) {
+export function isBlankString(str) {
+    return isNull(str) || isBlankStringOrNotNull(str)
+}
+
+export function isEmptyString(str) {
+    return isNull(str) || isEmptyStringOrNotNull(str)
+}
+
+export function isEmptyArray(arr) {
     return isNull(arr) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length == 0)
 }
 
@@ -215,7 +239,11 @@ export function isNull(object) {
 }
 
 export function isNullOrEmptyObject(object) {
-    return isNull(object) || Object.keys(object).length === 0
+    return isNull(object) || isEmptyObject(object)
+}
+
+export function isEmptyObject(object) {
+    return Object?.keys(object)?.length === 0
 }
 
 export function isASCII(str = '') {
@@ -379,10 +407,10 @@ export async function getMapBG(sid = 0, cover = 'cover', use_cache = true, defau
 export async function getAvatar(link, use_cache = true, default_image_path = getImageFromV3('avatar-guest.png')) {
     if (isBlankString(link) || link == "https://a.ppy.sh/") {
         return default_image_path;
-    } else if (typeof link === "number") {
+    } else if (isNumber(link)) {
         return await readNetImage('https://a.ppy.sh/' + link, use_cache, default_image_path);
     } else {
-        return await readNetImage(link, use_cache, default_image_path);
+        return await readNetImage(link?.toString(), use_cache, default_image_path);
     }
 }
 

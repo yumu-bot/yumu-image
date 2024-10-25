@@ -326,6 +326,7 @@ export async function panel_A2(data = {
         result_count,
         data.rule || 'Qualified',
         beatmap_arr[0],
+        beatmap_arr[beatmap_arr.length - 1],
     );
 
     const search_cardA2 = await card_A2(search_result);
@@ -336,12 +337,12 @@ export async function panel_A2(data = {
     // 如果卡片超过12张，则使用紧促型面板，并且不渲染卡片 M
     if (result_count <= 12) {
         for (let i = 0; i < result_count; i++) {
-            const m = await card_M(
-                beatmap_arr[i]
-            );
+            const v = beatmap_arr[i]
+
+            const m = await card_M(v);
 
             const a2 = await card_A2(
-                await PanelGenerate.searchMap2CardA2(beatmap_arr[i], i + 1)
+                await PanelGenerate.searchMap2CardA2(v, i + 1)
             );
 
             svg = implantSvgBody(svg, 40, 330 + 250 * i, a2, reg_card_a2);

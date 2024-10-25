@@ -14,7 +14,7 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    isNullOrEmptyObject, isNotBlankString,
+    isNullOrEmptyObject, isNotBlankString, isNotNull,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -550,7 +550,7 @@ export const PanelGenerate = {
         };
     },
 
-    searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset) => {
+    searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset, last_beatmapset) => {
         const background = cursor ?
             await getMapBG(cursor?.id, 'list@2x', true) : await readNetImage(first_beatmapset.covers?.list, true);
         const map_status = rule;
@@ -558,10 +558,12 @@ export const PanelGenerate = {
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
         const title3 = '';
         const left1 = 'time duration:';
-        const left2 = cursor ? moment(parseInt(cursor.queued_at)).format("MM-DD HH:mm:ss") :
-            (first_beatmapset.ranked_date ?
-                moment(first_beatmapset.ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours').format("MM-DD HH:mm:ss") : 'null');
-        const left3 = moment().format("MM-DD HH:mm:ss");
+
+        const left2 = isNotNull(cursor) ? moment(parseInt(cursor.approved_date)).format("MM-DD HH:mm:ss") :
+            (isNotNull(first_beatmapset.ranked_date) ?
+                moment(first_beatmapset.ranked_date, 'X').add(8, 'hours').format("MM-DD HH:mm:ss") : 'null');
+        const left3 = (isNotNull(last_beatmapset.ranked_date) ?
+            moment(last_beatmapset.ranked_date, 'X').add(8, 'hours').format("MM-DD HH:mm:ss") : 'null');
         const right1 = 'total ' + total + 'x' || 'total 0x';
         const right2 = 'results:';
         const right3b = result_count.toString() || '0';
