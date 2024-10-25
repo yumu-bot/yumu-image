@@ -1,5 +1,5 @@
-import {getMapStatusImage, implantImage, replaceTexts} from "../util/util.js";
-import {torus} from "../util/font.js";
+import {getMapStatusImage, implantImage, isASCII, replaceTexts} from "../util/util.js";
+import {PuHuiTi, torus} from "../util/font.js";
 
 export async function card_O2(data = {
     background: '',
@@ -7,7 +7,6 @@ export async function card_O2(data = {
 
     title1: '',
     title2: '',
-    title_font: torus,
     left1: '',
     left2: '',
     left3: '',
@@ -32,7 +31,17 @@ export async function card_O2(data = {
           <g id="Text_CO2">
           </g>`;
     // 赋予字体
-    const title_font = data.title_font || torus;
+    const title1_font = isASCII(data?.title1) ? torus : PuHuiTi;
+    const title2_font = isASCII(data?.title2) ? torus : PuHuiTi;
+    const left1_font = isASCII(data?.left1) ? torus : PuHuiTi;
+    const left2_font = isASCII(data?.left2) ? torus : PuHuiTi;
+    const left3_font = isASCII(data?.left3) ? torus : PuHuiTi;
+
+    const title1_size = isASCII(data?.title1) ? 24 : 22;
+    const title2_size = isASCII(data?.title2) ? 18 : 16;
+    const left1_size = isASCII(data?.left1) ? 18 : 16;
+    const left2_size = isASCII(data?.left2) ? 18 : 16;
+    const left3_size = isASCII(data?.left3) ? 18 : 16;
 
     // 宽度限制
     const title_maxWidth = data.map_status ? 230 : 270;
@@ -48,18 +57,18 @@ export async function card_O2(data = {
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-CO2-1\);">)/;
 
     // 插入文本
-    const title1 = title_font.getTextPath(title_font.cutStringTail(data.title1, 24, title_maxWidth)
-        , 16, 27, 24, 'left baseline', '#fff');
-    const title2 = title_font.getTextPath(title_font.cutStringTail(data.title2, 18, title_maxWidth)
-        , 16, 51, 18, 'left baseline', '#fff');
-    const left1 = title_font.getTextPath(title_font.cutStringTail(data.left1, 18, left1_maxWidth)
-        , 16, 75, 18, 'left baseline', '#fff');
-    const left2 = title_font.getTextPath(title_font.cutStringTail(data.left2, 18, left2_maxWidth)
-        , 16, 97, 18, 'left baseline', '#fff');
-    const left3 = title_font.getTextPath(title_font.cutStringTail(data.left3, 18, left2_maxWidth)
-        , 16, 119, 18, 'left baseline', '#fff');
-    const right1 = title_font.getTextPath(data.right1, 280, 75, 18, 'right baseline', '#fff');
-    const right2 = title_font.get2SizeTextPath(data.right2b, data.right2m, 48, 36, 280, 119, 'right baseline', '#fff');
+    const title1 = title1_font.getTextPath(title1_font.cutStringTail(data.title1, title1_size, title_maxWidth)
+        , 16, 27, title1_size, 'left baseline', '#fff');
+    const title2 = title2_font.getTextPath(title2_font.cutStringTail(data.title2, title2_size, title_maxWidth)
+        , 16, 51, title2_size, 'left baseline', '#fff');
+    const left1 = left1_font.getTextPath(left1_font.cutStringTail(data.left1, left1_size, left1_maxWidth)
+        , 16, 75, left1_size, 'left baseline', '#fff');
+    const left2 = left2_font.getTextPath(left2_font.cutStringTail(data.left2, left2_size, left2_maxWidth)
+        , 16, 97, left2_size, 'left baseline', '#fff');
+    const left3 = left3_font.getTextPath(left3_font.cutStringTail(data.left3, left3_size, left2_maxWidth)
+        , 16, 119, left3_size, 'left baseline', '#fff');
+    const right1 = torus.getTextPath(data.right1, 280, 75, 18, 'right baseline', '#fff');
+    const right2 = torus.get2SizeTextPath(data.right2b, data.right2m, 48, 36, 280, 119, 'right baseline', '#fff');
 
     svg = replaceTexts(svg, [title1, title2, left1, left2, left3, right1, right2], reg_text);
 

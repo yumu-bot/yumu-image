@@ -1,4 +1,4 @@
-import {getImageFromV3, implantImage, replaceText} from "../util/util.js";
+import {getImageFromV3, getMapBG, implantImage, replaceText} from "../util/util.js";
 import {torus} from "../util/font.js";
 
 export async function card_O4(data = {
@@ -9,9 +9,15 @@ export async function card_O4(data = {
     sid: 0
 }) {
     // 读取模板
-    let svg =`
-          <g id="Background_CO4">
+    let svg =`<defs>
+        <clipPath id="clippath-CO4">
+            <rect width="550" height="30" rx="10" ry="10" style="fill: none;"/>
+        </clipPath>
+        </defs>
+          <g id="Base_CO4">
             <rect width="550" height="30" rx="10" ry="10" style="fill: #46393F;"/>
+          </g>
+          <g id="Background_CO4" clip-path="url(#clippath-CO4)">
           </g>
           <g id="Image_CO4">
           </g>
@@ -21,6 +27,7 @@ export async function card_O4(data = {
     // 路径定义
     const reg_text = /(?<=<g id="Text_CO4">)/;
     const reg_image = /(?<=<g id="Image_CO4">)/;
+    const reg_background = /(?<=<g id="Background_CO4" clip-path="url\(#clippath-CO4\)">)/;
 
     // 插入文本
     if (!data.type) return '';
@@ -40,7 +47,9 @@ export async function card_O4(data = {
         : '(' + time + ') ' + operate + ' \"'  + title_cut_str + '\"';
 
     const title = torus.getTextPath(title_str, 40, 20, 18, 'left baseline', color);
+    const bg = await getMapBG(data?.sid, 'cover', false)
 
+    svg = implantImage(svg, 550, 30, 0, 0, 0.3, bg, reg_background);
     svg = implantImage(svg, 30, 30, 5, 0, 1, type, reg_image);
     svg = replaceText(svg, title, reg_text);
 

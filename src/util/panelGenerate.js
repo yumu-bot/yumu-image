@@ -959,9 +959,8 @@ export const PanelGenerate = {
 
         const background = await getMapBG(s?.id, 'list', hasLeaderBoard(s.status));
         const map_status = s?.status;
-        const title1 = s?.title;
-        const title2 = s?.artist;
-        const title_font = torus;
+        const title1 = s?.title_unicode || s?.title;
+        const title2 = s?.artist_unicode || s?.artist;
         const left1 = '';
         const left2 = '*' + s?.favourite_count;
         const left3 = s?.id ? 'S' + s.id : '0';
@@ -975,7 +974,6 @@ export const PanelGenerate = {
 
             title1: title1,
             title2: title2,
-            title_font: title_font,
             left1: left1,
             left2: left2,
             left3: left3,

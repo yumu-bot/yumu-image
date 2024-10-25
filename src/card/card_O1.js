@@ -47,9 +47,9 @@ export async function card_O1(data = {
     const groups = (data.groups.length >= 1) ? data.groups : [{
         "colour": "#382E32",
         "id": -1,
-        "identifier": "user",
-        "name": "Normal User",
-        "short_name": "USER",
+        "identifier": "mapper",
+        "name": "Normal Mapper",
+        "short_name": "M",
     }];
     const group_count = Math.min(groups.length, 4);
 
