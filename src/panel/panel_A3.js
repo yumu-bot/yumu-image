@@ -130,113 +130,77 @@ export async function panel_A3(data = {
 
     "scores": [
         {
-            "accuracy": 0.9882943143812709,
-            "best_id": 4399593261,
-            "created_at": "2023-03-17T09:18:25Z",
-            "id": 4399593261,
-            "max_combo": 943,
-            "mode": "osu",
-            "mode_int": 0,
+            "classic_total_score": 6178113,
+            "preserve": true,
+            "processed": true,
+            "ranked": true,
+            "maximum_statistics": {
+                "great": 407,
+                "legacy_combo_increase": 201
+            },
             "mods": [
-                "HD",
-                "DT"
-            ],
-            "passed": true,
-            "perfect": false,
-            "pp": 566.194,
-            "rank": "A",
-            "replay": true,
-            "score": 15905693,
-            "statistics": {
-                "count_100": 9,
-                "count_300": 588,
-                "count_50": 0,
-                "count_geki": 135,
-                "count_katu": 8,
-                "count_miss": 1
-            },
-            "type": "score_best_osu",
-            "user_id": 7892320,
-            "current_user_attributes": {
-                "pin": null
-            },
-            "user": {
-                "avatar_url": "https://a.ppy.sh/7892320?1682816993.png",
-                "country_code": "KR",
-                "default_group": "default",
-                "id": 7892320,
-                "is_active": true,
-                "is_bot": false,
-                "is_deleted": false,
-                "is_online": false,
-                "is_supporter": true,
-                "last_visit": null,
-                "pm_friends_only": false,
-                "profile_colour": null,
-                "username": "mx10002",
-                "country": {
-                    "code": "KR",
-                    "name": "South Korea"
+                {
+                    "acronym": "DT"
                 },
-                "cover": {
-                    "custom_url": "https://assets.ppy.sh/user-profile-covers/7892320/33a28c19f958fdec86d058a054ca7435a3b559784111a5c6eee78b22552aab81.jpeg",
-                    "url": "https://assets.ppy.sh/user-profile-covers/7892320/33a28c19f958fdec86d058a054ca7435a3b559784111a5c6eee78b22552aab81.jpeg",
-                    "id": null
+                {
+                    "acronym": "HR"
+                },
+                {
+                    "acronym": "HD"
+                },
+                {
+                    "acronym": "CL"
                 }
-            }
-        },
-        {
-            "accuracy": 1,
-            "best_id": 3340006101,
-            "created_at": "2020-11-26T01:07:20Z",
-            "id": 3340006101,
-            "max_combo": 945,
-            "mode": "osu",
-            "mode_int": 0,
-            "mods": [
-                "HD",
-                "HR"
             ],
-            "passed": true,
-            "perfect": true,
-            "pp": 345.155,
-            "rank": "XH",
-            "replay": true,
-            "score": 15369469,
             "statistics": {
-                "count_100": 0,
-                "count_300": 598,
-                "count_50": 0,
-                "count_geki": 144,
-                "count_katu": 0,
-                "count_miss": 0
+                "ok": 11,
+                "great": 396
             },
-            "type": "score_best_osu",
-            "user_id": 3328742,
+            "beatmap_id": 1786111,
+            "best_id": null,
+            "id": 1660540401,
+            "rank": "SH",
+            "type": "solo_score",
+            "user_id": 11592896,
+            "accuracy": 0.981982,
+            "build_id": null,
+            "ended_at": "2022-12-26T13:10:49Z",
+            "has_replay": true,
+            "is_perfect_combo": true,
+            "legacy_perfect": true,
+            "legacy_score_id": 4344841537,
+            "legacy_total_score": 7667511,
+            "max_combo": 608,
+            "passed": true,
+            "pp": 773.991,
+            "ruleset_id": 0,
+            "started_at": null,
+            "total_score": 1124277,
+            "replay": true,
             "current_user_attributes": {
                 "pin": null
             },
             "user": {
-                "avatar_url": "https://a.ppy.sh/3328742?1680518887.png",
-                "country_code": "US",
+                "avatar_url": "https://a.ppy.sh/11592896?1729090646.png",
+                "country_code": "GB",
                 "default_group": "default",
-                "id": 3328742,
+                "id": 11592896,
                 "is_active": true,
                 "is_bot": false,
                 "is_deleted": false,
                 "is_online": false,
-                "is_supporter": true,
-                "last_visit": "2023-07-22T10:44:12+00:00",
+                "is_supporter": false,
+                "last_visit": "2024-10-24T23:32:34+00:00",
                 "pm_friends_only": false,
                 "profile_colour": null,
-                "username": "Trail Mix",
+                "username": "rudj",
                 "country": {
-                    "code": "US",
-                    "name": "United States"
+                    "code": "GB",
+                    "name": "United Kingdom"
                 },
                 "cover": {
-                    "custom_url": "https://assets.ppy.sh/user-profile-covers/3328742/bc1fd5cd4ae4307dc8e34a3a41aa3fc7ce39fcc15bc6d9f27d60022e95dd5db7.jpeg",
-                    "url": "https://assets.ppy.sh/user-profile-covers/3328742/bc1fd5cd4ae4307dc8e34a3a41aa3fc7ce39fcc15bc6d9f27d60022e95dd5db7.jpeg",
+                    "custom_url": "https://assets.ppy.sh/user-profile-covers/11592896/95dd37554b724dfb11b8257e647ab854366135396db70c2be9a1f515252413cf.png",
+                    "url": "https://assets.ppy.sh/user-profile-covers/11592896/95dd37554b724dfb11b8257e647ab854366135396db70c2be9a1f515252413cf.png",
                     "id": null
                 }
             }
@@ -275,7 +239,7 @@ export async function panel_A3(data = {
         const f = await card_N({
             score: data.scores[i],
             score_rank: parseInt(i) + 1 || 0,
-            compare_score: data.scores[i0].score,
+            compare_score: data.scores[i0].total_score,
         })
 
         cardN1s.push(f);

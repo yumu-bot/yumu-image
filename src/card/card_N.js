@@ -2,7 +2,6 @@ import {
     getDecimals,
     getImageFromV3,
     getFlagPath,
-    getGameMode,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall,
     getTimeDifference,
@@ -13,64 +12,10 @@ import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {getScoreTypeImage} from "../util/star.js";
 
 export async function card_N(data = {
-    score: {
-        "accuracy": 0.9882943143812709,
-        "best_id": 4399593261,
-        "created_at": "2023-03-17T09:18:25Z",
-        "id": 4399593261,
-        "max_combo": 943,
-        "mode": "osu",
-        "mode_int": 0,
-        "mods": [
-            "HD",
-            "DT"
-        ],
-        "passed": true,
-        "perfect": false,
-        "pp": 566.194,
-        "rank": "A",
-        "replay": true,
-        "score": 15905693,
-        "statistics": {
-            "count_100": 9,
-            "count_300": 588,
-            "count_50": 0,
-            "count_geki": 135,
-            "count_katu": 8,
-            "count_miss": 1
-        },
-        "type": "score_best_osu",
-        "user_id": 7892320,
-        "current_user_attributes": {
-            "pin": null
-        },
-        "user": {
-            "avatar_url": "https://a.ppy.sh/7892320?1682816993.png",
-            "country_code": "KR",
-            "default_group": "default",
-            "id": 7892320,
-            "is_active": true,
-            "is_bot": false,
-            "is_deleted": false,
-            "is_online": false,
-            "is_supporter": true,
-            "last_visit": null,
-            "pm_friends_only": false,
-            "profile_colour": null,
-            "username": "mx10002",
-            "country": {
-                "code": "KR",
-                "name": "South Korea"
-            },
-            "cover": {
-                "custom_url": "https://assets.ppy.sh/user-profile-covers/7892320/33a28c19f958fdec86d058a054ca7435a3b559784111a5c6eee78b22552aab81.jpeg",
-                "url": "https://assets.ppy.sh/user-profile-covers/7892320/33a28c19f958fdec86d058a054ca7435a3b559784111a5c6eee78b22552aab81.jpeg",
-                "id": null
-            }
-        }
-    },
+    score: {},
 
     score_rank: 1,
     compare_score: 15905693,
@@ -123,7 +68,7 @@ export async function card_N(data = {
         ' #' + data.score_rank, 26, 18, 130, 26, 'left baseline', '#fff'); //lS24 sS16 / y 24
     const flagSvg = await getFlagPath(data.score.user.country_code, 130, 32, 20);
 
-    const score_date = getTimeDifference(data.score.created_at);
+    const score_date = getTimeDifference(data.score.ended_at);
     const background_opacity = getBGOpacity(score_date);
 
     const country_date = torus.get2SizeTextPath(
@@ -134,7 +79,7 @@ export async function card_N(data = {
     const acc = data.score.accuracy * 100;
     const combo = data.score.max_combo;
     const pp = Math.round(data.score.pp);
-    const score = data.score.score;
+    const score = data.score.total_score;
 
     const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
     const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 10, 36 + 17, 18, 'right baseline', '#aaa');
@@ -167,10 +112,9 @@ export async function card_N(data = {
     const stat_min_width = 10;
     const stat_full_width = 325;
 
-    const mode = getGameMode(data.score.mode, 1);
-    const stat_arr = getStatArr(data, mode);
-    const stat_width_arr = getStatWidthArr(data, mode, stat_min_width, stat_full_width, stat_interval);
-    const stat_color_arr = getStatColorArr(mode);
+    const stat_arr = getStatArr(data.score, data.score.ruleset_id);
+    const stat_width_arr = getStatWidthArr(data?.score?.total_hit || 0, stat_arr, stat_min_width, stat_full_width, stat_interval);
+    const stat_color_arr = getStatColorArr(data.score.ruleset_id);
 
     let width_sum = 0;
     for (const i in stat_arr) {
@@ -215,14 +159,18 @@ export async function card_N(data = {
     }
 
     mods_arr.forEach((mod, i) => {
-        svg = replaceText(svg, insertMod(mod, multiplier * i, 900 - multiplier * 8 - mods_arr_length * multiplier * 24), reg_mod);
+        svg = replaceText(svg, insertMod(mod, multiplier * i, 900 - 32 + multiplier * 24 - mods_arr_length * multiplier * 24), reg_mod);
     });
+
+    const type = getScoreTypeImage(data?.score?.build_id)
+    svg = implantImage(svg, 45, 30, 295, 30, 1, type, reg_label);
 
     // 插入图片和部件（新方法
     svg = implantImage(svg, 40, 40, 15, 10, 1, rank, reg_label);
     svg = implantImage(svg, 50, 50, 70, 6, 1, avatar, reg_avatar);
     svg = implantImage(svg, 915, 62, 0, 0, background_opacity, background, reg_background);
     svg = replaceTexts(svg, [name, country_date, delta_score_text, flagSvg], reg_text);
+
     svg = implantSvgBody(svg, 350, 6, n1_acc, reg_label);
     svg = implantSvgBody(svg, 460, 6, n1_combo, reg_label);
     svg = implantSvgBody(svg, 570, 6, n1_pp, reg_label);
@@ -230,32 +178,7 @@ export async function card_N(data = {
 
     return svg.toString();
 }
-function getStatWidthArr (data, mode = 'o', minWidth = 10, fullWidth = 325, interval = 5) {
-    const c320 = data.score.statistics.count_geki;
-    const c300 = data.score.statistics.count_300;
-    const c200 = data.score.statistics.count_katu;
-    const c100 = data.score.statistics.count_100;
-    const c50 = data.score.statistics.count_50;
-    const c0 = data.score.statistics.count_miss;
-
-    // 分配应该统计的参数
-    let stat_arr = getStatArr(data, mode);
-    let stat_sum = 0;
-    switch (mode) {
-        case 'o': {
-            stat_sum = c300 + c100 + c50 + c0;
-        } break;
-        case 't': {
-            stat_sum = c300 + c100 + c0;
-        } break;
-        case 'c': {
-            stat_sum = c300 + c100 + c50 + c0;
-        } break;
-        case 'm': {
-            stat_sum = c320 + c300 + c200 + c100 + c50 + c0;
-        } break;
-    }
-
+function getStatWidthArr (stat_sum = 1, stat_arr = [], minWidth = 10, fullWidth = 325, interval = 5) {
     let stat_width_arr = [];
     let remain_width = fullWidth;
     let remain_width_calc;
@@ -293,44 +216,69 @@ function getStatWidthArr (data, mode = 'o', minWidth = 10, fullWidth = 325, inte
     return stat_width_arr;
 }
 
-function getStatArr(data, mode = 'o') {
-    const c320 = data.score.statistics.count_geki;
-    const c300 = data.score.statistics.count_300;
-    const c200 = data.score.statistics.count_katu;
-    const c100 = data.score.statistics.count_100;
-    const c50 = data.score.statistics.count_50;
-    const c0 = data.score.statistics.count_miss;
+function getStatArr(score = {statistics: {
+        perfect: 0,
+        great: 104,
+        good: 0,
+        ok: 3,
+        meh: 5,
+        miss: 4,
+        ignore_hit: 68,
+        ignore_miss: 10,
+        large_tick_hit: 8,
+        large_tick_miss: 2,
+        small_tick_hit: 0,
+        small_tick_miss: 0,
+        slider_tail_hit: 66,
+        large_bonus: 12
+    },}, mode = 0) {
+    const s = score.statistics
 
     let stat_arr = [];
     switch (mode) {
-        case 'o': {
-            stat_arr.push(c300, c100, c50, c0);
+        case 0: {
+            stat_arr.push(s.great);
+            stat_arr.push(s.ok);
+            stat_arr.push(s.meh);
+            stat_arr.push(s.miss);
         } break;
-        case 't': {
-            stat_arr.push(c300, c100, c0);
+        case 1: {
+            stat_arr.push(s.great);
+            stat_arr.push(s.ok);
+            stat_arr.push(s.miss);
         } break;
-        case 'c': {
-            stat_arr.push(c300, c100, c50, c0);
+        case 2: {
+            stat_arr.push(s.great);
+            stat_arr.push(s.large_tick_hit);
+            stat_arr.push(s.small_tick_hit);
+            stat_arr.push(s.miss);
         } break;
-        case 'm': {
-            stat_arr.push(c320, c300, c200, c100, c50, c0);
+        case 3: {
+            stat_arr.push(s.perfect);
+            stat_arr.push(s.great);
+            stat_arr.push(s.good);
+            stat_arr.push(s.ok);
+            stat_arr.push(s.meh);
+            stat_arr.push(s.miss);
         } break;
     }
     return stat_arr;
 }
 
-function getStatColorArr(mode = 'o') {
+function getStatColorArr(mode = 0) {
     let stat_color_arr = [];
 
     switch (mode) {
-        case 'o':
-        case 'c':
+        case 0:
             stat_color_arr = ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E'];
             break;
-        case 't':
+        case 1:
+            stat_color_arr = ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E'];
+            break;
+        case 2:
             stat_color_arr = ['#8DCEF4', '#79C471', '#ED6C9E'];
             break;
-        case 'm':
+        case 3:
             stat_color_arr = ['#8DCEF4', '#FEF668', '#79C471', '#5E8AC6',
                 '#A1A1A1', '#ED6C9E'];
             break;
