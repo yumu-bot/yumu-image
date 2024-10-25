@@ -207,7 +207,7 @@ export function getModAdditionalInformation(mod = {
 
     if (matchMod(mod, 'AC')) {
         if (s?.accuracy_judge_mode === "1") {
-            info += '<'
+            info += '>'
         }
 
         if (isNumber(s?.minimum_accuracy)) {
