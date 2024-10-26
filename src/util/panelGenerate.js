@@ -14,7 +14,7 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    isNullOrEmptyObject, isNotBlankString, isNotNull, isNotEmptyArray,
+    isNullOrEmptyObject, isNotBlankString, isNotNull, isNotEmptyArray, getTimeByDHMS,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -151,8 +151,7 @@ export const PanelGenerate = {
                 ('Seen: ' + user?.last_visit[0]?.toString()?.slice(-2) + '-' + user?.last_visit[1] + '-' + user?.last_visit[2])
                 : ''; break;
             case "play_count": right1 = 'PC: ' + (user?.statistics?.play_count || 0) ; break;
-            case "play_time": right1 = 'PT: ' + moment(user?.statistics?.play_time, 'X')
-                .format('DD[d]HH[h]mm[m]'); break;
+            case "play_time": right1 = 'PT: ' + getTimeByDHMS(user?.statistics?.play_time, false); break;
             case "total_hits": right1 = 'TTH: ' + (user?.statistics?.total_hits || 0) ; break;
 
             case "online": right1 = (user?.is_online === true) ? 'online' : 'offline'; break;
