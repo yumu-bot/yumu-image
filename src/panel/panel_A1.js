@@ -200,11 +200,11 @@ export async function panel_A1(data = {
             "countryCode": "TW",
             "countryName": "Taiwan"
         },
-    }]
+    }],
+
+    type: "null"
 }) {
     let svg = readTemplate('template/Panel_A1.svg');
-
-
     // 路径定义
     let reg_index = /(?<=<g id="Index">)/;
     let reg_me_card_a1 = /(?<=<g id="Me_Card_A1">)/;
@@ -213,7 +213,6 @@ export async function panel_A1(data = {
     let reg_panelheight = '${panelheight}';
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA1-1\);">)/;
 
-
     // 面板文字
     const panel_name = getPanelNameSVG('Friends (!ymf)', 'F', 'v0.5.0 DX');
 
@@ -221,13 +220,12 @@ export async function panel_A1(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A1卡
-
     const me_cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.me_card_A1));
 
     let friend_cardA1s = [];
 
     for (const i in data.friend_card_A1) {
-        const f = await card_A1(await PanelGenerate.microUser2CardA1(data.friend_card_A1[i]));
+        const f = await card_A1(await PanelGenerate.microUser2CardA1(data.friend_card_A1[i], data?.type));
         friend_cardA1s.push(f);
     }
 

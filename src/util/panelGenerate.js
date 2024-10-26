@@ -14,7 +14,7 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    isNullOrEmptyObject, isNotBlankString, isNotNull,
+    isNullOrEmptyObject, isNotBlankString, isNotNull, isNotEmptyArray,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -122,7 +122,7 @@ export const PanelGenerate = {
         };
     },
 
-    microUser2CardA1: async (user) => {
+    microUser2CardA1: async (user, type = null) => {
         const background = await getBanner(user?.cover?.url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
@@ -131,12 +131,33 @@ export const PanelGenerate = {
         const country = user?.country_code || 'CN';
 
         const left1 = user.statistics.global_rank ? '#' + user.statistics.global_rank : '#0';
-        const left2 = country + (user.statistics.country_rank ? '#' + user.statistics.country_rank : '#-'); //microUser 没有country rank
+        const left2 = country + (user?.id?.toString() || '0');
+        // (user.statistics.country_rank ? '#' + user.statistics.country_rank : '#-') microUser 没有country rank
 
         const isBot = user.is_bot;
         const level = user?.statistics?.level_current || 0;
         const progress = user?.statistics?.level_progress || 0;
         const acc = getRoundedNumberStr(user?.statistics?.hit_accuracy, 3) || 0;
+
+        let right1
+
+        switch (type) {
+            /*
+            case "time": left3 = 'Last: ' + moment(user?.last_visit, 'X').add(8, 'hour')
+                .format('YYYY-MM-DD HH:mm:ss'); break;
+
+             */
+            case "time": right1 = isNotEmptyArray(user?.last_visit) ?
+                ('Seen: ' + user?.last_visit[0]?.slice(-2) + '-' + user?.last_visit[1] + '-' + user?.last_visit[2])
+                : ''; break;
+            case "play_count": right1 = 'PC: ' + (user?.statistics?.play_count || 0) ; break;
+            case "play_time": right1 = 'PT: ' + moment(user?.statistics?.play_time, 'X')
+                .format('DD[d]HH[h]mm[m]'); break;
+            case "total_hits": right1 = 'TTH: ' + (user?.statistics?.total_hits || 0) ; break;
+
+            case "online": right1 = (user?.is_online === true) ? 'online' : 'offline'; break;
+            default: right1 = ""; break;
+        }
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
         const right3b = isBot ? '' : (user?.statistics?.pp ? Math.round(user.statistics.pp).toString() : '');
         const right3m = isBot ? 'Bot' : (user?.statistics?.pp ? 'PP' : 'AFK');
@@ -153,7 +174,8 @@ export const PanelGenerate = {
             top1: user?.username,
             left1: left1,
             left2: left2,
-            right1: '',
+            left3: '',
+            right1: right1,
             right2: right2,
             right3b: right3b,
             right3m: right3m,
