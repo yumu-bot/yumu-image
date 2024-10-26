@@ -148,7 +148,7 @@ export const PanelGenerate = {
 
              */
             case "time": right1 = isNotEmptyArray(user?.last_visit) ?
-                ('Seen: ' + user?.last_visit[0]?.slice(-2) + '-' + user?.last_visit[1] + '-' + user?.last_visit[2])
+                ('Seen: ' + user?.last_visit[0]?.toString()?.slice(-2) + '-' + user?.last_visit[1] + '-' + user?.last_visit[2])
                 : ''; break;
             case "play_count": right1 = 'PC: ' + (user?.statistics?.play_count || 0) ; break;
             case "play_time": right1 = 'PT: ' + moment(user?.statistics?.play_time, 'X')
