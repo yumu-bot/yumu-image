@@ -131,7 +131,7 @@ export const PanelGenerate = {
         const country = user?.country_code || 'CN';
 
         const left1 = user.statistics.global_rank ? '#' + user.statistics.global_rank : '#0';
-        const left2 = country + (user?.id?.toString() || '0');
+        const left2 = country + ' ' + (user?.id?.toString() || '0');
         // (user.statistics.country_rank ? '#' + user.statistics.country_rank : '#-') microUser 没有country rank
 
         const isBot = user.is_bot;
