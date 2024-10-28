@@ -164,7 +164,7 @@ export async function card_D(data = {
     svg = replaceText(svg, text_mod_color, reg_mod_color);
 
     // 插入图片
-    svg = implantImage(svg, 560 ,110 ,0 ,0 , 0.6, data.background, reg_background);
+    svg = implantImage(svg, 560 ,110 ,0 ,0 , 0.4, data.background, reg_background);
 
     return svg.toString();
 }
