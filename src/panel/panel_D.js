@@ -4,7 +4,7 @@ import {
     implantImage,
     implantSvgBody,
     readTemplate, putCustomBanner,
-    replaceText,
+    replaceText, isNumber,
 } from "../util/util.js";
 import {card_F1N} from "../card/card_F1N.js";
 import {card_A1} from "../card/card_A1.js";
@@ -414,12 +414,12 @@ export async function panel_D(data = {
     svg = implantSvgBody(svg, 0, 0, cardF7, reg_card_f7);
 
     // 面板文字
+    const day_str = isNumber(data.day) ? (data.day >= 2 ?
+            ('compare time: ' + data.day + ' days ago // ') :
+            ('compare time: ' + data.day + ' day ago // ')) :
+        '';
 
-    const day_str = data?.day != null ? (data.day >= 2 ?
-        ('compare time: ' + data.day + ' days ago') : ('compare time: ' + data.day + ' day ago'))
-        : '';
-
-    const request_time = day_str + ' // request time: ' + getNowTimeStamp();
+    const request_time = day_str + 'request time: ' + getNowTimeStamp();
 
     const panel_name = getPanelNameSVG('Information (!ymi)', 'I', 'v0.5.0 DX', request_time);
 
