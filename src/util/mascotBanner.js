@@ -2,6 +2,7 @@ import moment from "moment";
 import {getImageFromV3} from "./util.js";
 
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
+const mascot_transparency_sum_arr = [2, 1, 0, 0, 1, 0, 0, 1, 0, 1];
 const defaultBannerTotal = 170; //默认 banner 数量
 const maimaiBannerTotal = 30; //maimai banner 数量
 const mascotBGTotal = 13; //吉祥物 BG 数量
@@ -125,7 +126,7 @@ export function getMascotPath(mascotname = 'pippi') {
             i = 9;
             break;
     }
-    path = getRandom(mascot_pic_sum_arr[i]);
+    path = getRandom(Math.max(1, mascot_pic_sum_arr[i]));
 
     return getImageFromV3('Mascots', `${mascotname}_${path}.png`);
 }
@@ -156,6 +157,58 @@ export function getRandomBannerPath(type = "default", index = 0) {
 export function getRandomMascotBGPath() {
     const i = getRandom(mascotBGTotal)
     return getImageFromV3('Background', `${i}.png`);
+}
+
+/**
+ * @function 获取随机的吉祥物看板
+ * @return {String} 返回吉祥物看板路径
+ */
+export function getRandomMascotTransparentPath(mascot_name = 'pippi') {
+    let i;
+    let path;
+
+    let name = mascot_name
+
+    switch (mascot_name) {
+        case 'pippi':
+            i = 0;
+            break;
+        case 'Mocha':
+            i = 1;
+            break;
+        case 'Aiko':
+            i = 1;
+            name = 'Mocha'
+            break;
+        case 'Alisa':
+            i = 1;
+            name = 'Mocha'
+            break;
+        case 'Chirou':
+            i = 4;
+            break;
+        case 'Tama':
+            i = 4;
+            name = 'Chirou'
+            break;
+        case 'Taikonator':
+            i = 4;
+            name = 'Chirou'
+            break;
+        case 'Yuzu':
+            i = 7;
+            break;
+        case 'Mani':
+            i = 9;
+            name = 'Mari'
+            break;
+        case 'Mari':
+            i = 9;
+            break;
+    }
+    path = getRandom(Math.max(1, mascot_transparency_sum_arr[i]));
+
+    return getImageFromV3('Mascots', 'Transparent', `${name}_${path}.png`)
 }
 
 //通过 PP 获取玩家颜色（的背景图！pp2Rank，最后一个是默认的

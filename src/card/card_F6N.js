@@ -159,7 +159,7 @@ async function userData2Labels(data) {
     const label_fan =
         await label_E({...LABELS.FAN, data_b: fan_b, data_m: fan_m, remark_font: PuHuiTi});
     const label_mdl =
-        await label_E({...LABELS.MDL, data_b: mdl_b, data_m: mdl_m, remark_font: PuHuiTi});
+        await label_E({...LABELS.MED, data_b: mdl_b, data_m: mdl_m, remark_font: PuHuiTi});
 
     let arr = [];
     arr.push(label_rks, label_tts, label_mpl, label_rep, label_fan, label_mdl);

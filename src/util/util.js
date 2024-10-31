@@ -261,6 +261,11 @@ export function isNumber(num) {
     } else return false
 }
 
+// 'none' 不包括在内
+export function isHexColor(str) {
+    return isNotBlankString(str) && (str?.toString()?.slice(0, 1) === '#')
+}
+
 // {} 和 [] 不为空
 export function isNotNull(object) {
     return ! isNull(object)
@@ -351,9 +356,24 @@ export function isPictureIntacted(path = '') {
         // No Such File
         return false;
     }
-    return (f.startsWith('\xff\xd8') && f.endsWith('\xff\xd9')) // JFIF JPG
-        || f.endsWith('\x49\x45\x4e\x44\xae\x42\x60\x82') // PNG
-        || f.endsWith('\x00\x3b'); // GIF
+    return (f.startsWith('\xff\xd8')
+            && f.endsWith('\xff\xd9'))
+        || // JFIF JPG
+        (f.startsWith('\x89\x50\x4E\x47\x0D\x0A\x1A\x0A')
+            && f.endsWith('\x49\x45\x4e\x44\xae\x42\x60\x82'))
+        || // PNG
+        (f.startsWith("\x47\x49\x46\x38\x39\x61")
+            && f.endsWith('\x00\x3b')); // GIF
+}
+
+export function isPicturePng(path = '') {
+    try {
+        f = fs.readFileSync(path, 'binary');
+    } catch (e) {
+        // No Such File
+        return false;
+    }
+    return f.startsWith('\x89\x50\x4E\x47\x0D\x0A\x1A\x0A') // PNG or APNG
 }
 
 /**

@@ -2,7 +2,7 @@ import {
     getImageFromV3, getGameMode,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall, getDecimals,
-    implantImage, replaceText, replaceTexts, getAvatar,
+    implantImage, replaceText, replaceTexts, getAvatar, isASCII, isHexColor, isNotEmptyString,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor} from "../util/color.js";
@@ -147,6 +147,7 @@ export const LABELS = {
         remark: '进榜分',
         abbr: 'RKS',
         color_remark: '#aaa',
+        bar_color: '#A864A8',
     },
     TTS: {
         icon: getImageFromV3("object-score-aimpp.png"),
@@ -154,6 +155,7 @@ export const LABELS = {
         remark: '总分',
         abbr: 'TTS',
         color_remark: '#aaa',
+        bar_color: '#F06EA9',
     },
     PC: {
         icon: getImageFromV3("object-score-combo.png"),
@@ -161,6 +163,7 @@ export const LABELS = {
         remark: '游玩次数',
         abbr: 'PC',
         color_remark: '#ccc',
+        bar_color: '#00BFF3',
     },
     PT: {
         icon: getImageFromV3("object-score-length.png"),
@@ -168,6 +171,7 @@ export const LABELS = {
         remark: '游玩时间',
         abbr: 'PT',
         color_remark: '#ccc',
+        bar_color: '#7CC576',
     },
     TTH: {
         icon: getImageFromV3("object-score-overalldifficulty.png"),
@@ -175,36 +179,54 @@ export const LABELS = {
         remark: '击打次数',
         abbr: 'TTH',
         color_remark: '#ccc',
+        bar_color: '#FFF467',
     },
     RMP: {
         icon: getImageFromV3("object-score-approachrate.png"),
         icon_title: 'Played Ranked Map',
         remark: '',
         color_remark: '#aaa',
+        bar_color: '#F26C4F',
     },
     MPC: {
         icon: getImageFromV3("object-score-approachrate.png"),
         icon_title: 'Played Map',
         remark: '玩过',
+        abbr: 'MPC',
         color_remark: '#aaa',
+        bar_color: '#5eb0ab',
     },
     REP: {
         icon: getImageFromV3("object-score-circlesize.png"),
         icon_title: 'Replay',
         remark: '回放',
+        abbr: 'REP',
         color_remark: '#aaa',
+        bar_color: '#587ec2',
+    },
+    MXC: {
+        icon: getImageFromV3("object-score-combo.png"),
+        icon_title: 'Max Combo',
+        remark: '最大连击',
+        abbr: 'MXC',
+        color_remark: '#aaa',
+        bar_color: '#587ec2',
     },
     FAN: {
         icon: getImageFromV3("object-score-healthpoint.png"),
         icon_title: 'Follower',
         remark: '粉丝',
+        abbr: 'FAN',
         color_remark: '#aaa',
+        bar_color: '#de96bb',
     },
-    MDL: {
+    MED: {
         icon: getImageFromV3("object-score-rice.png"),
         icon_title: 'Medal',
         remark: '奖章',
+        abbr: 'MED',
         color_remark: '#aaa',
+        bar_color: '#e6ad59',
     },
     SR: {
         icon: getImageFromV3("object-score-overalldifficulty.png"),
@@ -744,6 +766,13 @@ export async function label_D2(data = {
     color_remark: '#aaa',
     remark_font: torus,
 }) {
+    let svg = `
+        <g id="Icon_LD2">
+        </g>
+        <g id="Text_LD2">
+        </g>
+    `;
+
     // 正则表达式
     const reg_text = /(?<=<g id="Text_LD2">)/;
     const reg_icon = /(?<=<g id="Icon_LD2">)/;
@@ -755,20 +784,200 @@ export async function label_D2(data = {
     const abbr = torus.getTextPath(data.abbr, 420, 44.75, 24, "right baseline", "#aaa");
     const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 36, 24, 56, 44.75, "left baseline", "#fff");
 
-    let svg = `
-        <g id="Icon_LD2">
-        </g>
-        <g id="Text_LD2">
-            ${abbr}
-            ${icon_title}
-            ${number_data}
-        </g>
-    `;
+    svg = replaceTexts(svg, [abbr, icon_title, number_data], reg_text)
+
     if (data.remark) {
         const remark_font = data.remark_font || torus;
         const remark = remark_font.getTextPath(data.remark, 420, 14.88, 18, "right baseline", data.color_remark);
         svg = replaceText(svg, remark, reg_text);
     }
+    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+
+    return svg.toString();
+}
+/**
+ * panel D 在 0.5.0 升级的 label（放在左下角），归类为 label_D3
+ * @param data
+ * @return {string}
+ */
+export function label_D3(data = {
+    icon: '',
+    text: '',
+    delta: '',
+    delta_color: 'none',
+    hide: false
+}) {
+    let svg = `
+        <g id="Icon_LD3">
+        </g>
+        <g id="Text_LD3">
+        </g>
+    `;
+
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LD3">)/;
+    const reg_icon = /(?<=<g id="Icon_LD3">)/;
+
+    const text = poppinsBold.getTextPath(data?.text || '',
+        42, 32, 18, 'left baseline', '#fff')
+    const delta = poppinsBold.getTextPath(data?.delta || '',
+        42, 32 - 18, 18, 'left baseline', data?.delta_color)
+
+    svg = replaceTexts(svg, [text, delta], reg_text)
+
+    // 自设的时候只需要这两个字段
+    if (data.hide !== true) {
+        svg = implantImage(svg, 40, 40, 5, 5,
+            1, data?.icon, reg_icon)
+    }
+
+    return svg.toString()
+}
+
+/**
+ * panel D 在 0.5.0 升级的 label（放在左上角），归类为 label_D4
+ * @param data
+ * @return {string}
+ */
+export function label_D4(data = {
+    icon: '',
+    icon_title: 'Play Count',
+    remark: '游玩次数',
+    data_b: '25',
+    data_m: '0436',
+    abbr: 'PC',
+    bar_color: 'none',
+    delta: '',
+    delta_color: '',
+    hide: false
+}) {
+    let svg = `
+        <g id="Icon_LD4">
+        </g>
+        <g id="Text_LD4">
+        </g>
+    `;
+
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LD4">)/;
+    const reg_icon = /(?<=<g id="Icon_LD4">)/;
+
+    // 字体
+    const title_font = isASCII(data?.icon_title) ? poppinsBold : PuHuiTi
+    const remark_font = isASCII(data?.remark) ? poppinsBold : PuHuiTi
+    const abbr_font = isASCII(data?.abbr) ? poppinsBold : PuHuiTi
+
+    const title_size = isASCII(data?.icon_title) ? 18 : 16
+    const remark_size = isASCII(data?.remark) ? 18 : 16
+    const abbr_size = isASCII(data?.abbr) ? 18 : 16
+
+    const title_arr = [{
+        font: title_font,
+        text: data?.icon_title + ' ',
+        size: title_size,
+        color: '#bbb',
+    }, {
+        font: remark_font,
+        text: data?.remark,
+        size: remark_size,
+        color: '#bbb',
+    }]
+
+    const title = getMultipleTextPath(title_arr, 450, 50, 'right baseline')
+
+    const abbr = abbr_font.getTextPath(data.hide ? '' : data.abbr, 75, 50, abbr_size, "left baseline", "#bbb");
+
+    const number_data = poppinsBold.get2SizeTextPath(data.data_b, data.data_m, 40, 30, 75, 30, "left baseline", "#fff");
+
+    // 自设的时候只需要这一个字段
+    if (data.hide === true) {
+        svg = replaceTexts(svg, [number_data], reg_text)
+
+        return svg.toString()
+    }
+
+    svg = replaceTexts(svg, [abbr, title, number_data], reg_text)
+
+    if (isHexColor(data?.bar_color)) {
+        const rrect = PanelDraw.Rect(60, 0, 4, 50,
+            2, data.bar_color, 1)
+
+        svg = replaceText(svg, rrect, reg_icon)
+    }
+
+    if (isNotEmptyString(data?.delta)) {
+        const delta = poppinsBold.getTextPath(data?.delta || '', 75, -4, 18, 'left baseline', data?.delta_color || 'none', 1)
+
+        svg = replaceText(svg, delta, reg_text)
+    }
+
+    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+
+    return svg.toString();
+}
+
+/**
+* panel D 在 0.5.0 升级的 label（放在右下角），归类为 label_D5
+* @param data
+* @return {string}
+    */
+export function label_D5(data = {
+    icon: '',
+    remark: '游玩次数',
+    data_b: '25',
+    data_m: '0436',
+    abbr: 'PC',
+    bar_color: 'none',
+    delta: '',
+    delta_color: '',
+    hide: false
+}) {
+    let svg = `
+        <g id="Icon_LD5">
+        </g>
+        <g id="Text_LD5">
+        </g>
+    `;
+
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LD5">)/;
+    const reg_icon = /(?<=<g id="Icon_LD5">)/;
+
+    // 字体
+    const remark_font = isASCII(data?.remark) ? poppinsBold : PuHuiTi
+    const abbr_font = isASCII(data?.abbr) ? poppinsBold : PuHuiTi
+
+    const remark_size = isASCII(data?.remark) ? 18 : 16
+    const abbr_size = isASCII(data?.abbr) ? 18 : 16
+
+    const remark = remark_font.getTextPath(data?.remark, 215, 50, remark_size, 'right baseline', '#bbb')
+
+    const abbr = abbr_font.getTextPath(data.hide ? '' : data.abbr, 75, 50, abbr_size, "left baseline", "#bbb");
+
+    const number_data = poppinsBold.get2SizeTextPath(data.data_b, data.data_m, 40, 30, 75, 30, "left baseline", "#fff");
+
+    // 自设的时候只需要这一个字段
+    if (data.hide === true) {
+        svg = replaceTexts(svg, [number_data], reg_text)
+
+        return svg.toString()
+    }
+
+    svg = replaceTexts(svg, [abbr, remark, number_data], reg_text)
+
+    if (isHexColor(data?.bar_color)) {
+        const rrect = PanelDraw.Rect(60, 0, 4, 50,
+            2, data.bar_color, 1)
+
+        svg = replaceText(svg, rrect, reg_icon)
+    }
+
+    if (isNotEmptyString(data?.delta)) {
+        const delta = poppinsBold.getTextPath(data?.delta || '', 75, -4, 18, 'left baseline', data?.delta_color || 'none', 1)
+
+        svg = replaceText(svg, delta, reg_text)
+    }
+
     svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
 
     return svg.toString();

@@ -21,6 +21,7 @@ const textToSVGBerlinBold = TextToSVG.loadSync("font/BerlinsansExpert-Bold.ttf")
  * @param x
  * @param y
  * @param anchor
+ * @param shadow
  * @return {string}
  */
 export function getMultipleTextPath(array = [{
@@ -28,7 +29,7 @@ export function getMultipleTextPath(array = [{
     text: '',
     size: 24,
     color: '#fff',
-}], x = 0, y = 0, anchor = "center baseline") {
+}], x = 0, y = 0, anchor = "center baseline", shadow = false) {
     if (isEmptyArray(array)) return '';
 
     let width_array = []; // 累计宽度
@@ -66,14 +67,23 @@ export function getMultipleTextPath(array = [{
 
         switch (anchor) {
             case "center baseline": {
+                if (shadow !== false) {
+                    out += getTextPath(font, text, x - (total_width / 2) + w + 2, y + 2, size, "left baseline", '#1c1719');
+                }
                 out += getTextPath(font, text, x - (total_width / 2) + w, y, size, "left baseline", color);
                 break;
             }
             case "left baseline": {
+                if (shadow !== false) {
+                    out += getTextPath(font, text, x + w + 2, y + 2, size, "left baseline", '#1c1719');
+                }
                 out += getTextPath(font, text, x + w, y, size, "left baseline", color);
                 break;
             }
             case "right baseline": {
+                if (shadow !== false) {
+                    out += getTextPath(font, text, x - total_width + w + 2, y + 2, size, "left baseline", "left baseline", '#1c1719');
+                }
                 out += getTextPath(font, text, x - total_width + w, y, size, "left baseline", color);
                 break;
             }
@@ -223,6 +233,7 @@ function get2SizeTextPath_BerlinBold(largerText, smallerText, largeSize, smallSi
 
 export const TahomaRegular = {};
 
+TahomaRegular.name = "TahomaRegular"
 TahomaRegular.getTextPath = getTextPath_TahomaRegular;
 TahomaRegular.get2SizeTextPath = get2SizeTextPath_TahomaRegular;
 TahomaRegular.getTextMetrics = getTextMetrics_TahomaRegular;
@@ -348,6 +359,7 @@ function get2SizeTextPath_TahomaRegular(largerText, smallerText, largeSize, smal
 
 export const TahomaBold = {};
 
+TahomaBold.name = "TahomaBold"
 TahomaBold.getTextPath = getTextPath_TahomaBold;
 TahomaBold.get2SizeTextPath = get2SizeTextPath_TahomaBold;
 TahomaBold.getTextMetrics = getTextMetrics_TahomaBold;
@@ -473,6 +485,7 @@ function get2SizeTextPath_TahomaBold(largerText, smallerText, largeSize, smallSi
 
 export const poppinsBold = {};
 
+poppinsBold.name = "poppinsBold"
 poppinsBold.getTextPath = getTextPath_poppinsBold;
 poppinsBold.get2SizeTextPath = get2SizeTextPath_poppinsBold;
 poppinsBold.getTextMetrics = getTextMetrics_poppinsBold;
@@ -598,6 +611,7 @@ function get2SizeTextPath_poppinsBold(largerText, smallerText, largeSize, smallS
 
 export const lineSeedSans = {};
 
+lineSeedSans.name = "lineSeedSans"
 lineSeedSans.getTextPath = getTextPath_lineSeedSans;
 lineSeedSans.get2SizeTextPath = get2SizeTextPath_lineSeedSans;
 lineSeedSans.getTextMetrics = getTextMetrics_lineSeedSans;
@@ -723,6 +737,7 @@ function get2SizeTextPath_lineSeedSans(largerText, smallerText, largeSize, small
 
 export const torus = {};
 
+torus.name = "torus"
 torus.getTextPath = getTextPath_torus;
 torus.get2SizeTextPath = get2SizeTextPath_torus;
 torus.getTextMetrics = getTextMetrics_torus;
@@ -849,6 +864,7 @@ function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x
 
 export const torusRegular = {};
 
+torusRegular.name = "torusRegular"
 torusRegular.getTextPath = getTextPath_torusRegular;
 torusRegular.get2SizeTextPath = get2SizeTextPath_torusRegular;
 torusRegular.getTextMetrics = getTextMetrics_torusRegular;
@@ -974,6 +990,7 @@ function get2SizeTextPath_torusRegular(largerText, smallerText, largeSize, small
 
 export const PuHuiTi = {};
 
+PuHuiTi.name = "PuHuiTi"
 PuHuiTi.getTextPath = getTextPath_PuHuiTi;
 PuHuiTi.getTextMetrics = getTextMetrics_PuHuiTi;
 PuHuiTi.getTextWidth = getTextWidth_PuHuiTi;
@@ -1061,6 +1078,7 @@ function cutStringTail_PuHuiTi(
 
 export const extra = {};
 
+extra.name = "extra"
 extra.getTextPath = getTextPath_extra;
 extra.getTextMetrics = getTextMetrics_extra;
 extra.getTextWidth = getTextWidth_extra;
@@ -1123,40 +1141,51 @@ function getTextWidth_extra(
     }).width
 }
 
+function getFontName(font = torus) {
+    if (typeof font == "object") return Object.values(font)[0]
+    else return font?.toString()
+}
+
 export function getTextWidth(font = "torus", text = '', size = 24) {
-    if (font.toString() === "torus") return torus.getTextWidth(text, size);
-    if (font.toString() === "torusRegular") return torusRegular.getTextWidth(text, size);
-    if (font.toString() === "TahomaRegular") return TahomaRegular.getTextWidth(text, size);
-    if (font.toString() === "TahomaBold") return TahomaBold.getTextWidth(text, size);
-    if (font.toString() === "PuHuiTi") return PuHuiTi.getTextWidth(text, size);
-    if (font.toString() === "extra") return extra.getTextWidth(text, size);
-    if (font.toString() === "poppinsBold") return poppinsBold.getTextWidth(text, size);
-    if (font.toString() === "lineSeedSans") return lineSeedSans.getTextWidth(text, size);
-    if (font.toString() === "BerlinBold") return BerlinBold.getTextWidth(text, size);
+    const name = getFontName(font)
+
+    if (name === "torus") return torus.getTextWidth(text, size);
+    if (name === "torusRegular") return torusRegular.getTextWidth(text, size);
+    if (name === "TahomaRegular") return TahomaRegular.getTextWidth(text, size);
+    if (name === "TahomaBold") return TahomaBold.getTextWidth(text, size);
+    if (name === "PuHuiTi") return PuHuiTi.getTextWidth(text, size);
+    if (name === "extra") return extra.getTextWidth(text, size);
+    if (name === "poppinsBold") return poppinsBold.getTextWidth(text, size);
+    if (name === "lineSeedSans") return lineSeedSans.getTextWidth(text, size);
+    if (name === "BerlinBold") return BerlinBold.getTextWidth(text, size);
     return 0;
 }
 
 export function getTextPath(font = "torus", text = '', x, y, size = 24, anchor, fill) {
-    if (font.toString() === "torus") return torus.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "torusRegular") return torusRegular.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "TahomaRegular") return TahomaRegular.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "TahomaBold") return TahomaBold.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "PuHuiTi") return PuHuiTi.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "extra") return extra.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "poppinsBold") return poppinsBold.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "lineSeedSans") return lineSeedSans.getTextPath(text, x, y, size, anchor, fill);
-    if (font.toString() === "BerlinBold") return BerlinBold.getTextPath(text, x, y, size, anchor, fill);
+    const name = getFontName(font)
+
+    if (name === "torus") return torus.getTextPath(text, x, y, size, anchor, fill);
+    if (name === "torusRegular") return torusRegular.getTextPath(text, x, y, size, anchor, fill);
+    if (name === "TahomaRegular") return TahomaRegular.getTextPath(text, x, y, size, anchor, fill);
+    if (name === "TahomaBold") return TahomaBold.getTextPath(text, x, y, size, anchor, fill);
+    if (name === "PuHuiTi") return PuHuiTi.getTextPath(text, x, y, size, anchor, fill);
+    if (name === "extra") return extra.getTextPath(text, x, y, size, anchor, fill);
+    if (name === "poppinsBold") return poppinsBold.getTextPath(text, x, y, size, anchor, fill);
+    if (name === "lineSeedSans") return lineSeedSans.getTextPath(text, x, y, size, anchor, fill);
+    if (name === "BerlinBold") return BerlinBold.getTextPath(text, x, y, size, anchor, fill);
     return '';
 }
 
 export function cutStringTail(font = "torus", text = '', size = 24, max_width = 0, is_dot3_needed = true) {
-    if (font.toString() === "torus") return torus.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (font.toString() === "torusRegular") return torusRegular.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (font.toString() === "TahomaRegular") return TahomaRegular.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (font.toString() === "TahomaBold") return TahomaBold.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (font.toString() === "PuHuiTi") return PuHuiTi.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (font.toString() === "extra") return extra.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (font.toString() === "poppinsBold") return poppinsBold.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (font.toString() === "lineSeedSans") return lineSeedSans.cutStringTail(text, size, max_width, is_dot3_needed);
+    const name = getFontName(font)
+
+    if (name === "torus") return torus.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (name === "torusRegular") return torusRegular.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (name === "TahomaRegular") return TahomaRegular.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (name === "TahomaBold") return TahomaBold.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (name === "PuHuiTi") return PuHuiTi.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (name === "extra") return extra.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (name === "poppinsBold") return poppinsBold.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (name === "lineSeedSans") return lineSeedSans.cutStringTail(text, size, max_width, is_dot3_needed);
     return text;
 }

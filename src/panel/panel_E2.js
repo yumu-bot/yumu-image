@@ -143,7 +143,7 @@ export async function panel_E2(data = {
         },
         country: { countryCode: 'CN', countryName: 'China' },
         kudosu: { total: 391, available: 391 },
-        rank_history: { mode: 'OSU', history: [Array] }
+        rank_history: { mode: 'OSU', data: [Array] }
     },
     beatmap: {
         id: 2274671,
