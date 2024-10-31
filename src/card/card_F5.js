@@ -71,11 +71,11 @@ function getBPActivityChart(bp_arr = []) {
     const bp_activity_text = torus.getTextPath(
         user_bp_activity_max > 0 ? ('BP+' + user_bp_activity_max) : '',
         70 + arr.findIndex((item) => item === user_bp_activity_max) * 20,
-        185 + 90 - (user_bp_activity_max / Math.max(5, user_bp_activity_max)) * 90,
+        195 + 90 - (user_bp_activity_max / Math.max(5, user_bp_activity_max)) * 90,
         16,
         'center baseline',
         '#aaa');
-    const bp_chart = PanelDraw.BarChart(arr, null, 0, 62, 280, 780, 90, 8, 4, '#8DCFF4', 5, 16);
+    const bp_chart = PanelDraw.BarChart(arr, null, 0, 62, 290, 780, 90, 8, 4, '#8DCFF4', 5, 16);
 
     const ranking_day_90 = torus.getTextPath('-90d', 60, 316.836, 24, 'left baseline', '#fc2');
     const ranking_day_45 = torus.getTextPath('-45d', 450, 316.836, 24, 'center baseline', '#fc2');
