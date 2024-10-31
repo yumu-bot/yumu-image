@@ -821,7 +821,7 @@ export function label_D3(data = {
     const text = poppinsBold.getTextPath(data?.text || '',
         42, 32, 18, 'left baseline', '#fff')
     const delta = poppinsBold.getTextPath(data?.delta || '',
-        42, 32 - 18, 18, 'left baseline', data?.delta_color)
+        42, 32 - 18, 14, 'left baseline', data?.delta_color)
 
     svg = replaceTexts(svg, [text, delta], reg_text)
 
