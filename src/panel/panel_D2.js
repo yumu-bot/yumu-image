@@ -373,8 +373,8 @@ const component_D3 = (
         const l = (count * 460 / data?.sum)
 
         if (l > 0) {
-            length += Math.min(Math.max(l, 15), 460)
-            rrect_lengths.push(length)
+            length += Math.max(l, 15)
+            rrect_lengths.push(Math.min(length, 460))
         } else {
             rrect_lengths.push(0)
         }
