@@ -573,7 +573,7 @@ const component_D7 = (
 
     const reg = /(?<=<g id="Component_OD7">)/;
 
-    const arr = modifyArrayToFixedLength(data.pc_time, 90);
+    const arr = data?.pc_time || [];
 
     const pc_max = Math.max.apply(Math, arr);
     const pc_min = 0;
