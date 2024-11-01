@@ -87,6 +87,9 @@ export async function panel_D2(data = {
         <clipPath id="clippath-PD2-BG">
         <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: none;"/>
         </clipPath>
+        <filter id="blur-PD2-BG" height="110%" width="110%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
+            <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
+        </filter>
     </defs>
     <g id="BannerBase">
         <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719"/>
@@ -97,7 +100,7 @@ export async function panel_D2(data = {
     </g>
     <g id="Background">
         <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: #2a2226;"/>
-        <g style="clip-path: url(#clippath-PD2-BG);">
+        <g filter="url(#blur-PD2-BG)" style="clip-path: url(#clippath-PD2-BG);">
         </g>
     </g>
     <g id="Component">
@@ -113,7 +116,7 @@ export async function panel_D2(data = {
 
     // 路径定义
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PD2-BR\);">)/;
-    const reg_background = /(?<=<g style="clip-path: url\(#clippath-PD2-BG\);">)/;
+    const reg_background = /(?<=<g filter="url\(#blur-PD2-BG\)" style="clip-path: url\(#clippath-PD2-BG\);">)/;
     const reg_index = /(?<=<g id="Index">)/;
     const reg_component = /(?<=<g id="Component">)/;
     const reg_card_a1 = /(?<=<g id="Card_A1">)/
@@ -634,8 +637,8 @@ const component_D8 = (
     // 卡片定义
     const rks_b = getRoundedNumberStrLarge(data.user.ranked_score, 2);
     const rks_m = getRoundedNumberStrSmall(data.user.ranked_score, 2);
-    const tts_b = getRoundedNumberStrLarge(data.user.total_score, 1);
-    const tts_m = getRoundedNumberStrSmall(data.user.total_score, 1);
+    const tts_b = getRoundedNumberStrLarge(data.user.total_score, 2);
+    const tts_m = getRoundedNumberStrSmall(data.user.total_score, 2);
     const mpc_b = getRoundedNumberStrLarge(data.user.played_map, 0);
     const mpc_m = getRoundedNumberStrSmall(data.user.played_map, 0);
     const med_b = getRoundedNumberStrLarge(data.user.medal, 0);
