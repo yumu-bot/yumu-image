@@ -943,11 +943,13 @@ const getColor = (T) => {
 }
 
 const getText = (T) => {
-    if (isNaN(+T)) {
-        return T;
+    const abs = Math.abs(T);
+
+    if (isNotNumber(T)) {
+        return '0';
     } else if (T >= 100000) {
-        return getSign(T) + getRoundedNumberStr(Math.abs(T), 3);
+        return getSign(T) + getRoundedNumberStr(abs, 3);
     } else {
-        return getSign(T) + Math.abs(T);
+        return getSign(T) + abs;
     }
 }
