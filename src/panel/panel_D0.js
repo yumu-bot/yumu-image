@@ -192,6 +192,7 @@ export async function panel_D(data = {
         max_friends: 1000,
         playmode: 'osu',
         post_count: 22,
+        profile_hue: 226,
         profile_order: [
             'me',
             'recent_activity',

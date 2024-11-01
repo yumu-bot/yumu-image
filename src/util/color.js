@@ -1,5 +1,34 @@
 import {isHexColor} from "./util.js";
 
+// Yumu Panel v0.5 颜色自定义，默认的色相全是 342（这也是巧克力面板的原色
+export const PanelColor = {
+    // 基层，一般看不到这个颜色
+    base: (hue = 342) => {
+        return getRGBFromHSL(hue || 342, 0.1, 0.1)
+    },
+
+    // 底层，一般作为面板的底板
+    bottom: (hue = 342) => {
+        return getRGBFromHSL(hue || 342, 0.1, 0.15)
+    },
+
+    // 中层，一般作为模块的底板
+    middle: (hue = 342) => {
+        return getRGBFromHSL(hue || 342, 0.1, 0.2)
+    },
+
+    // 上层，一般作为卡片的底板
+    top: (hue = 342) => {
+        return getRGBFromHSL(hue || 342, 0.1, 0.25)
+    },
+
+    // 覆盖层，一般覆盖在卡片上
+    overlay: (hue = 342) => {
+        return getRGBFromHSL(hue || 342, 0.1, 0.3)
+    },
+}
+
+
 // 返回的结果是 xxx, xxx, xxx
 export function hex2rgbColor(hex = '#AAAAAA') {
     if (isHexColor(hex)) {
@@ -19,6 +48,58 @@ export function hex2rgbColor(hex = '#AAAAAA') {
     }
 
     return "0,0,0"
+}
+
+export function getRGBFromHSL(hue = 0, saturation = 0, lightness = 0) {
+
+    // Normalize hue to be in the range [0, 6]
+    const h = Math.max(Math.min(hue, 360), 0) / 60
+
+    // Calculate chroma (C), a measure of the color intensity
+    const chroma = (1 - Math.abs(2 * Math.max(Math.min(lightness, 1), 0) - 1))
+        * Math.max(Math.min(saturation, 1), 0)
+    const x = chroma * (1 - Math.abs(h % 2 - 1))
+    const m = Math.max(
+        Math.max(Math.min(lightness, 1),
+            0) - chroma / 2, 0)
+
+    // Initialize rgb values
+    let r = 0, g = 0, b = 0
+
+    // Determine the RGB components based on the hue sector
+    if (0 <= h && h < 1) {
+        r = chroma
+        g = x
+        b = 0
+    } else if (1 <= h && h < 2) {
+        r = x
+        g = chroma
+        b = 0
+    } else if (2 <= h && h < 3) {
+        r = 0
+        g = chroma
+        b = x
+    } else if (3 <= h && h < 4) {
+        r = 0
+        g = x
+        b = chroma
+    }
+    else if (4 <= h && h < 5) {
+        r = x
+        g = 0
+        b = chroma
+    } else if (5 <= h && h <= 6) {
+        r = chroma
+        g = 0
+        b = x
+    }
+
+    // Add m to each component to match the desired lightness
+    const r_hex = Math.round((r + m) * 255).toString(16).padStart(2, '0')
+    const g_hex = Math.round((g + m) * 255).toString(16).padStart(2, '0')
+    const b_hex = Math.round((b + m) * 255).toString(16).padStart(2, '0')
+
+    return '#' + r_hex + g_hex + b_hex
 }
 
 export function getStarRatingColor(SR = 0) {

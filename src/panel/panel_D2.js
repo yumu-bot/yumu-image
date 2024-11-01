@@ -27,7 +27,7 @@ import {getMascotName, getRandomMascotTransparentPath, pp2UserBG} from "../util/
 import {label_D3, label_D4, label_D5, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {poppinsBold} from "../util/font.js";
-import {getRankColor, getStarRatingColor} from "../util/color.js";
+import {getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
 import moment from "moment";
 
 export async function router(req, res) {
@@ -77,6 +77,18 @@ export async function panel_D2(data = {
     best_time: [0],
     mode: '',
 }) {
+    // 自设定义
+    const has_custom_mascot = false;
+    const has_custom_panel = false;
+
+    const user = data?.user
+    const scores = data?.scores
+    const history = data?.history_user
+    const days = data?.history_days
+    const best_time = data?.best_time || []
+
+    const hue = user?.profile_hue || 342
+
     let svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080">
     <defs>
@@ -91,14 +103,14 @@ export async function panel_D2(data = {
         </filter>
     </defs>
     <g id="BannerBase">
-        <rect width="1920" height="320" rx="20" ry="20" style="fill: #1c1719"/>
+        <rect width="1920" height="320" rx="20" ry="20" style="fill: ${PanelColor.base(hue)}"/>
     </g>
     <g id="Banner">
         <g style="clip-path: url(#clippath-PD2-BR);">
         </g>
     </g>
     <g id="Background">
-        <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: #2a2226;"/>
+        <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: ${PanelColor.bottom(hue)};"/>
         <g filter="url(#blur-PD2-BG)" style="clip-path: url(#clippath-PD2-BG);">
         </g>
     </g>
@@ -107,7 +119,7 @@ export async function panel_D2(data = {
     <g id="Card_A1">
     </g>
     <g id="IndexBase">
-        <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: #382e32;"/>
+        <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: ${PanelColor.middle(hue)};"/>
     </g>
     <g id="Index">
     </g>
@@ -120,32 +132,22 @@ export async function panel_D2(data = {
     const reg_component = /(?<=<g id="Component">)/;
     const reg_card_a1 = /(?<=<g id="Card_A1">)/
 
-    // 自设定义
-    const has_custom_mascot = false;
-    const has_custom_panel = false;
-
-    const user = data?.user
-    const scores = data?.scores
-    const history = data?.history_user
-    const days = data?.history_days
-    const best_time = data?.best_time || []
-
     // 卡片定义
     const cardA1 = await card_A1(
         await PanelGenerate.user2CardA1(user, history)
     );
-    const componentD1 = component_D1(PanelDGenerate.user2componentD1(user, history, has_custom_panel));
-    const componentD2 = component_D2(await PanelDGenerate.scores2componentD2(scores, has_custom_panel));
-    const componentD3 = component_D3(PanelDGenerate.user2componentD3(user, history, has_custom_panel));
+    const componentD1 = component_D1(PanelDGenerate.user2componentD1(user, history, has_custom_panel, hue));
+    const componentD2 = component_D2(await PanelDGenerate.scores2componentD2(scores, has_custom_panel, hue));
+    const componentD3 = component_D3(PanelDGenerate.user2componentD3(user, history, has_custom_panel, hue));
 
     // D4 是可能出现的看板娘
-    const componentD4 = component_D4(PanelDGenerate.mascot2componentD4(user, getGameMode(data?.mode, 0).toLowerCase(), has_custom_mascot));
+    const componentD4 = component_D4(PanelDGenerate.mascot2componentD4(user, getGameMode(data?.mode, 0).toLowerCase(), has_custom_mascot, hue));
 
 
-    const componentD5 = component_D5(PanelDGenerate.user2componentD5(user?.rank_history?.data || [], has_custom_panel));
-    const componentD6 = component_D6(PanelDGenerate.user2componentD6(best_time, has_custom_panel));
-    const componentD7 = component_D7(PanelDGenerate.user2componentD7(user.monthlyPlaycounts || [{start_date: 0}], has_custom_panel));
-    const componentD8 = component_D8(PanelDGenerate.user2componentD8(user, history, has_custom_panel));
+    const componentD5 = component_D5(PanelDGenerate.user2componentD5(user?.rank_history?.data || [], has_custom_panel, hue));
+    const componentD6 = component_D6(PanelDGenerate.user2componentD6(best_time, has_custom_panel, hue));
+    const componentD7 = component_D7(PanelDGenerate.user2componentD7(user.monthlyPlaycounts || [{start_date: 0}], has_custom_panel, hue));
+    const componentD8 = component_D8(PanelDGenerate.user2componentD8(user, history, has_custom_panel, hue));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -197,7 +199,8 @@ const component_D1 = (
         },
 
         join: 0,
-        has_custom_panel: false
+        has_custom_panel: false,
+        hue: 342,
     }
 ) => {
     let svg = `<g id="Component_OD1">
@@ -263,7 +266,7 @@ const component_D1 = (
 
     if (!hide) {
         const title = poppinsBold.getTextPath('Main Statistics', 15, 27, 18, 'left baseline', '#fff', 1)
-        const rrect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 270, 20, PanelColor.middle(data.hue), 1)
 
         svg = replaceTexts(svg, [title, rrect], reg)
     }
@@ -274,7 +277,8 @@ const component_D1 = (
 const component_D2 = (
     data = {
         scores: [],
-        has_custom_panel: false
+        has_custom_panel: false,
+        hue: 342,
     }
 ) => {
     let svg = `<g id="Component_OD2">
@@ -294,7 +298,7 @@ const component_D2 = (
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Bests', 15, 27, 18, 'left baseline', '#fff', 1)
-        const rrect = PanelDraw.Rect(0, 0, 490, 300, 20, '#382e32', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 300, 20, PanelColor.middle(data.hue), 1)
 
         svg = replaceTexts(svg, [title, rrect], reg)
     }
@@ -308,6 +312,7 @@ const component_D3 = (
         sum: 1,
         delta: [],
         has_custom_panel: false,
+        hue: 342,
     }
 ) => {
     let svg = `<g id="Component_OD3">
@@ -380,7 +385,7 @@ const component_D3 = (
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Ranks', 15, 27 - 5, 18, 'left baseline', '#fff', 1)
-        const rrect = PanelDraw.Rect(0, 0, 490, 100, 20, '#382e32', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 100, 20, PanelColor.middle(data.hue), 1)
 
         svg = replaceTexts(svg, [title, rrect], reg)
     }
@@ -391,7 +396,8 @@ const component_D3 = (
 const component_D4 = (
     data = {
         mascot: '',
-        is_png: false
+        is_png: false,
+        hue: 342,
     }
 ) => {
     let svg = `<defs>
@@ -417,7 +423,7 @@ const component_D4 = (
 
         svg = implantImage(svg, 820, 710, 550, 330, 1, data?.mascot || '', reg, 'xMidYMid slice')
 
-        svg = replaceText(svg, PanelDraw.Rect(550, 330, 820, 710, 20, '#382e32', 1), reg_base)
+        svg = replaceText(svg, PanelDraw.Rect(550, 330, 820, 710, 20, PanelColor.middle(data.hue), 1), reg_base)
     }
 
     return svg.toString()
@@ -426,7 +432,8 @@ const component_D4 = (
 const component_D5 = (
     data = {
         rank_time: [],
-        has_custom_panel: false
+        has_custom_panel: false,
+        hue: 342,
     }
 ) => {
     let svg = `<g id="Component_OD5">
@@ -483,7 +490,7 @@ const component_D5 = (
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Rank History', 15, 27, 18, 'left baseline', '#fff', 1)
-        const rrect = PanelDraw.Rect(0, 0, 490, 180, 20, '#382e32', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 180, 20, PanelColor.middle(data.hue), 1)
 
         svg = replaceTexts(svg, [title, rrect], reg)
     }
@@ -494,7 +501,8 @@ const component_D5 = (
 const component_D6 = (
     data = {
         bp_time: [],
-        has_custom_panel: false
+        has_custom_panel: false,
+        hue: 342,
     }
 ) => {
     let svg = `<g id="Component_OD6">
@@ -538,7 +546,7 @@ const component_D6 = (
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Bests History', 15, 27 - 5, 18, 'left baseline', '#fff', 1)
-        const rrect = PanelDraw.Rect(0, 0, 490, 100, 20, '#382e32', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 100, 20, PanelColor.middle(data.hue), 1)
 
         svg = replaceTexts(svg, [title, rrect], reg)
     }
@@ -553,7 +561,8 @@ const component_D7 = (
         x_axis_1: '',
         x_axis_2: '',
         x_axis_3: '',
-        has_custom_panel: false
+        has_custom_panel: false,
+        hue: 342,
     }
 ) => {
     let svg = `<g id="Component_OD7">
@@ -590,7 +599,7 @@ const component_D7 = (
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Play History', 15, 27 - 5, 18, 'left baseline', '#fff', 1)
-        const rrect = PanelDraw.Rect(0, 0, 490, 100, 20, '#382e32', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 100, 20, PanelColor.middle(data.hue), 1)
 
         svg = replaceTexts(svg, [title, rrect], reg)
     }
@@ -618,6 +627,7 @@ const component_D8 = (
         },
 
         has_custom_panel: false,
+        hue: 342,
     }
 ) => {
     let svg = `<g id="Component_OD8">
@@ -701,7 +711,7 @@ const component_D8 = (
 
     if (!hide) {
         const title = poppinsBold.getTextPath('Secondary Statistics', 15, 27, 18, 'left baseline', '#fff', 1)
-        const rrect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 270, 20, PanelColor.middle(data.hue), 1)
 
         svg = replaceTexts(svg, [title, rrect], reg)
     }
@@ -711,7 +721,7 @@ const component_D8 = (
 
 // 私有转换方式
 const PanelDGenerate = {
-    user2componentD1: (user, history_user, has_custom_panel = false) => {
+    user2componentD1: (user, history_user, has_custom_panel = false, hue) => {
         const s = user.statistics
         const h = history_user.statistics
 
@@ -730,10 +740,11 @@ const PanelDGenerate = {
 
             join: user?.join_date,
             has_custom_panel: has_custom_panel,
+            hue: hue,
         }
     },
 
-    scores2componentD2: async (scores = [], has_custom_panel = false) => {
+    scores2componentD2: async (scores = [], has_custom_panel = false, hue) => {
         let d2s = []
 
         for (const s of scores) {
@@ -770,10 +781,11 @@ const PanelDGenerate = {
         return {
             scores: d2s,
             has_custom_panel: has_custom_panel,
+            hue: hue,
         }
     },
 
-    user2componentD3: (user, history_user, has_custom_panel = false) => {
+    user2componentD3: (user, history_user, has_custom_panel = false, hue) => {
         const s = user.statistics
         const h = history_user.statistics
 
@@ -791,10 +803,11 @@ const PanelDGenerate = {
             ],
 
             has_custom_panel: has_custom_panel,
+            hue: hue,
         }
     },
 
-    mascot2componentD4: (user = {}, mode = 'osu', has_custom_mascot = false) => {
+    mascot2componentD4: (user = {}, mode = 'osu', has_custom_mascot = false, hue) => {
         let path
 
         if (has_custom_mascot === true) {
@@ -812,21 +825,24 @@ const PanelDGenerate = {
 
         return {
             mascot: path,
-            is_png: true
+            is_png: true,
+            hue: hue,
         }
     },
 
-    user2componentD5: (rank_time = [], has_custom_panel = false) => {
+    user2componentD5: (rank_time = [], has_custom_panel = false, hue) => {
         return {
             rank_time: rank_time || [],
             has_custom_panel: has_custom_panel,
+            hue: hue,
         }
     },
 
-    user2componentD6: (bp_time = [], has_custom_panel = false) => {
+    user2componentD6: (bp_time = [], has_custom_panel = false, hue) => {
         return {
             bp_time: bp_time || [],
             has_custom_panel: has_custom_panel,
+            hue: hue,
         }
     },
 
@@ -834,7 +850,7 @@ const PanelDGenerate = {
         {
             "start_date": "2018-10-01",
             "count": 61
-        }], has_custom_panel = false) => {
+        }], has_custom_panel = false, hue) => {
 
         const pc_time = monthly_pc.map(v => {
             return v.count
@@ -867,6 +883,7 @@ const PanelDGenerate = {
                 x_axis_3: latest.format('YYYY-MM'),
 
                 has_custom_panel: has_custom_panel,
+                hue: hue,
             }
         } else {
             return {
@@ -877,11 +894,12 @@ const PanelDGenerate = {
                 x_axis_3: moment(moment.now(), 'X').format('YYYY-MM'),
 
                 has_custom_panel: has_custom_panel,
+                hue: hue,
             }
         }
     },
 
-    user2componentD8: (user, history_user, has_custom_panel = false) => {
+    user2componentD8: (user, history_user, has_custom_panel = false, hue) => {
         const s = user.statistics
         const h = history_user.statistics
 
@@ -904,6 +922,7 @@ const PanelDGenerate = {
             },
 
             has_custom_panel: has_custom_panel,
+            hue: hue,
         }
     },
 }
