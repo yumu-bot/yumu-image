@@ -15,7 +15,6 @@ import {
     getDiffBG,
     getImageFromV3,
     getRoundedNumberStr,
-    isNull,
     replaceTexts,
     isNotNumber,
     getTimeDifference,
@@ -345,25 +344,11 @@ const component_D3 = (
             text += count?.toString()
         }
 
-        let delta_text;
-        let delta_color;
-
-        if (isNull(delta) || delta === 0) {
-            delta_text = ''
-            delta_color = 'none'
-        } else if (delta < 0) {
-            delta_text = '-' + delta
-            delta_color = '#ffcdd2'
-        } else {
-            delta_text = '+' + delta
-            delta_color = '#c2e5c3'
-        }
-
         const label = label_D3({
             icon: icon,
             text: text,
-            delta: delta_text,
-            delta_color: delta_color,
+            delta: getText(delta),
+            delta_color: getColor(delta),
             hide: data.has_custom_panel
         })
 
@@ -927,7 +912,7 @@ function getDelta(user = 0, delta = null) {
 
 // 等于原来 D 卡的 userDelta2Labels
 const getSign = (T) => {
-    if (typeof T === 'number') {
+    if (isNumber(T)) {
         return (T > 0) ? '+' : ((T < 0) ? '-' : '');
     } else return '';
 }
