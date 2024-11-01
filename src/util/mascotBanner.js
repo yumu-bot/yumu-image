@@ -2,7 +2,7 @@ import moment from "moment";
 import {getImageFromV3} from "./util.js";
 
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
-const mascot_transparency_sum_arr = [1, 1, 0, 0, 1, 0, 0, 1, 0, 1];
+const mascot_transparency_sum_arr = [2, 1, 0, 0, 1, 0, 0, 1, 0, 1];
 const defaultBannerTotal = 170; //默认 banner 数量
 const maimaiBannerTotal = 30; //maimai banner 数量
 const mascotBGTotal = 13; //吉祥物 BG 数量
