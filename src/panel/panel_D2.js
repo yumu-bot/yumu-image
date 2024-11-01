@@ -370,8 +370,14 @@ const component_D3 = (
         svg = implantSvgBody(svg, x, 25, label, reg)
 
         // 底部颜色
-        length += (count * 460 / data?.sum)
-        rrect_lengths.push(length)
+        const l = (count * 460 / data?.sum)
+
+        if (l > 0) {
+            length += Math.min(Math.max(l, 15), 460)
+            rrect_lengths.push(length)
+        } else {
+            rrect_lengths.push(0)
+        }
     }
 
     const rrect_colors = ['#FAFAFA', '#FFFF00',
@@ -393,7 +399,6 @@ const component_D3 = (
 
     return svg.toString()
 }
-
 
 const component_D4 = (
     data = {
