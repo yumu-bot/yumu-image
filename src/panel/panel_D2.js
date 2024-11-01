@@ -329,15 +329,18 @@ const component_D3 = (
         const icon = getImageFromV3('object-score-' + rank + '-small.png')
 
         let text;
+        let delta_text = getText(delta);
 
         if (rank === 'S' || rank === 'SH') {
             text = ''
         } else {
             text = ' '
+            delta_text = ' ' + delta_text
         }
 
         if (count < 1000) {
             text += (' ' + count)
+            delta_text = ' ' + delta_text
         } else if (count >= 100000) {
             text += getRoundedNumberStr(rank, 3)
         } else {
@@ -347,7 +350,7 @@ const component_D3 = (
         const label = label_D3({
             icon: icon,
             text: text,
-            delta: getText(delta),
+            delta: delta_text,
             delta_color: getColor(delta),
             hide: data.has_custom_panel
         })
