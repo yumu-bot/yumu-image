@@ -763,7 +763,7 @@ const PanelDGenerate = {
                 title: Math.round(s?.pp).toString() || '0',
                 title_m: 'PP',
 
-                left: star.toString(),
+                left: getRoundedNumberStr(star, 3),
                 left_color: star_text_color,
                 left_rrect_color: star_rrect_color,
 
