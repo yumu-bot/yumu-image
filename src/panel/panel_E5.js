@@ -20,14 +20,14 @@ import {
 } from "../util/util.js";
 import moment from "moment";
 import {
-    getRankBG,
+    getRankBG, getScoreTypeImage,
     hasLeaderBoard
 } from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi, torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
-import {PanelDraw, RainbowRect} from "../util/panelDraw.js";
+import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
 import {getModAdditionalInformation} from "../util/mod.js";
 
@@ -232,7 +232,7 @@ export async function panel_E5(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     const is_lazer = data?.score?.is_lazer === true
-    if (is_lazer) svg = replaceText(svg, RainbowRect, reg_index_plus)
+    svg = implantImage(svg, 170, 70, 1725, 220, 1, getScoreTypeImage(data?.score?.build_id, 2), reg_index_plus)
 
     // 面板文字
     let score_time;

@@ -338,15 +338,15 @@ export function getScoreType(build_id) {
     else return 'stable'
 }
 
-export function getScoreTypeImage(build_id) {
+export function getScoreTypeImage(build_id, version = '') {
     const type = getScoreType(build_id)
 
     switch (type) {
         case null:
             return ''
         case 'lazer':
-            return getImageFromV3('object-type-lazer.png');
+            return getImageFromV3('object-type-lazer' + version + '.png');
         case 'stable':
-            return getImageFromV3('object-type-stable.png');
+            return getImageFromV3('object-type-stable' + version + '.png');
     }
 }
