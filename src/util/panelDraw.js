@@ -119,32 +119,64 @@ export const PanelDraw = {
         return (rect_svg + '</g>').toString();
     },
 
-    //折线图，max/min 如果填 0，即用数组的最大值
+    /**
+     * 折线图，max/min
+     * @param arr
+     * @param max 如果填 0，即用数组的最大值
+     * @param min 如果填 0，即用数组的最小值
+     * @param x 图像左下角 x
+     * @param y 图像左下角 y
+     * @param w
+     * @param h
+     * @param color 折线颜色
+     * @param path_opacity 折线透明度
+     * @param area_opacity 区域透明度
+     * @param stroke_width 折线宽度
+     * @param is0toMin 如果数值为 0，则画在最小值的地方，适用于个人排名之类的情况
+     * @return {string}
+     * @constructor
+     */
     LineChart: (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3, is0toMin = false) => {
-        if (isEmptyArray(arr)) return '';
+        if (isEmptyArray(arr) || arr?.length < 1) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
         const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;
         const delta = Math.abs(arr_max - arr_min);
-        const step = w / arr.length;
-        const x0 = x + step / 4; //为了居中，这里要加上最后1步除以4的距离
-        const y0 = y;
+        const step = w / (arr.length - 1);
 
-        const initial = (delta > 0) ? ((arr.shift() - arr_min) / (arr_max - arr_min) * h) : 0;
+        const initial = (delta > 0) ? ((arr[0] - arr_min) / (arr_max - arr_min) * h) : 0;
 
-        let path_svg = `<svg> <path d="M ${x0} ${y0 - initial} S `;
+        let path_svg = `<svg> <path d="M ${x} ${y - initial} S `;
         let area_svg = path_svg;
 
-        arr.forEach((v, i) => {
-            const height = (delta > 0) ? ((v - arr_min) / (arr_max - arr_min) * h) : 0;
-            const lineto_x = x0 + step * (i + 1);
-            const lineto_y = (v === 0 && is0toMin) ? y0 : y0 - height; //如果数值为 0，则画在最小值的地方
+        for (let i = 1; i < arr.length; i++) {
+            const v = arr[i]
 
-            path_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `; // 第一个xy是点位置，第二个是控制点位置
-            area_svg += `${lineto_x} ${lineto_y} ${lineto_x + step / 2} ${lineto_y} `;
-        })
+            const height = (delta > 0) ? ((v - arr_min) / (arr_max - arr_min) * h) : 0;
+            const lineto_x = x + step * i;
+            const lineto_y = (v === 0 && is0toMin) ? y : y - height; //如果数值为 0，则画在最小值的地方
+
+            // 图像点位置
+            const position_point = `${lineto_x} ${lineto_y} `
+
+            path_svg += position_point;
+            area_svg += position_point;
+
+            if (i < (arr.length - 1)) {
+                // 贝塞尔曲线的控制点位置
+                const control_point = `${lineto_x + step / 2} ${lineto_y} `
+
+                path_svg += control_point
+                area_svg += control_point
+            } else {
+                // 最后一个控制点与结束点相同，否则会导致渲染错误
+                path_svg += position_point
+                area_svg += position_point
+            }
+        }
+
 
         path_svg += `" style="fill: none; stroke: ${color}; opacity: ${path_opacity}; stroke-miterlimit: 10; stroke-width: ${stroke_width}px;"/> </svg>`
-        area_svg += `L ${x0 + w - step / 2} ${y0} L ${x0} ${y0} Z" style="fill: ${color}; stroke: none; fill-opacity: ${area_opacity};"/> </svg>`//这里要减去最后1步除以2，我也不知道为什么
+        area_svg += `L ${x + w} ${y} L ${x} ${y} Z" style="fill: ${color}; stroke: none; fill-opacity: ${area_opacity};"/> </svg>`
 
         return (path_svg + area_svg).toString();
     },
