@@ -129,8 +129,9 @@ export async function panel_Delta(data = {
     const ar_rrect = PanelDraw.Rect(1010, 858, 336 * Math.max(Math.min(attr.ar, 11), 0) / 11, 8, 4, ryou_color);
     const od_rrect = PanelDraw.Rect(1010, 950, 336 * Math.max(Math.min(attr.od, 11), 0) / 11, 8, 4, hitori_color);
 
-    const length_pie = PanelDraw.PieChart(
-        Math.min(length_num / 600, 1), 1662.5, 797.5, 200, 0, mod_color);
+    const length_pie = PanelDraw.Pie(1662.5, 797.5, 200,
+        Math.min(length_num / 600, 1), 0, mod_color);
+    console.log(length_pie)
 
     svg = implantSvgBody(svg, 0, 0, mod_rrect, reg_stat);
     svg = implantSvgBody(svg, 0, 0, sr_rrect, reg_sr);

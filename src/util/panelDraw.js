@@ -77,6 +77,70 @@ export const PanelDraw = {
         return `<polygon points="${x} ${y} ${controls} ${ex} ${ey}" style="fill: ${color}; fill-opacity: ${opacity}"/>`
     },
 
+    /**
+     * 绘制圆弧（其实可以画椭圆弧，到时候再说吧
+     * @param x
+     * @param y
+     * @param x2
+     * @param y2
+     * @param r
+     * @param color
+     * @param opacity
+     * @param type 0 小弧，1 大弧
+     * @param direction 0 逆时针，1 顺时针
+     * @return {string}
+     * @constructor
+     */
+    Arc: (x = 0, y = 0, x2 = 0, y2 = 0, r = 0, color = '#fff', opacity = 1, type = 0, direction = 0) => {
+        return `<path d="M ${x} ${y} A ${r} ${r} 0 ${type} ${direction} ${x2} ${y2}" style="stroke: ${color}; stroke-opacity: ${opacity}"/>`
+    },
+
+    /**
+     * 绘制饼图。无需使用遮罩。
+     * @param cx 饼图中心 x 坐标
+     * @param cy 饼图中心 y 坐标
+     * @param r 饼图半径
+     * @param current 当前进度，0-1
+     * @param previous 之前进度，0-1
+     * @param color 颜色
+     * @param opacity
+     * @param direction 0 逆时针，1 顺时针
+     * @return {string}
+     * @constructor
+     */
+    Pie: (cx = 0, cy = 0, r = 0, current = 0, previous = 0, color = '#fff', opacity = 1, direction = 1) => {
+        const pi = Math.PI;
+        let rad_curr = 2 * pi * current;
+        let rad_prev = 2 * pi * previous;
+
+        //如果小于start，则变换位置
+        if (rad_curr < rad_prev) {
+            rad_prev = rad_prev + rad_curr;
+            rad_curr = rad_prev - rad_curr;
+            rad_prev = rad_prev - rad_curr;
+        }
+
+        let sin_sign;
+        const cos_sign = -1
+
+        if (direction === 1) {
+            sin_sign = 1
+        } else {
+            sin_sign = -1
+        }
+
+        const x1 = cx + r * sin_sign * Math.sin(rad_prev);
+        const y1 = cy + r * cos_sign * Math.cos(rad_prev);
+
+        const x2 = cx + r * sin_sign * Math.sin(rad_curr);
+        const y2 = cy + r * cos_sign * Math.cos(rad_curr);
+
+        // 绘制弧线时，使用长弧或者短弧 0 小弧，1 大弧
+        const type = Math.abs(current - previous) >= 0.5 ? 1 : 0
+
+        return `<path d="M ${x1} ${y1} A ${r} ${r} 0 ${type} ${direction} ${x2} ${y2} L ${cx} ${cy} L ${x1} ${y1} Z" style="fill: ${color}; fill-opacity: ${opacity}"/>`
+    },
+
     Diamond: (x = 0, y = 0, w = 0, h = 0, color = '#fff', opacity = 1) => {
         const top = (x + w/2) + ' ' + y;
         const right = (x + w) + ' ' + (y + h/2);
@@ -230,14 +294,14 @@ export const PanelDraw = {
     },
 
     /**
-     * @function 绘制饼图，需要搭配一个圆当 Mask
+     * @function 绘制饼图，需要搭配一个圆当 Mask。**请使用重构后的 Pie 功能。**
      * @return {String} 圆饼图的 svg
-     * @param curr 数据，0-1
+     * @param curr
      * @param cx 中心横坐标
      * @param cy 中心纵坐标
      * @param r 半径
-     * @param prev 起始位置，0-1（已经除以过 2π
-     * @param color 颜色
+     * @param prev
+     * @param color
      */
     PieChart: (curr = 1.0, cx = 0, cy = 0, r = 100, prev = 0, color = '#fff') => {
         const pi = Math.PI;

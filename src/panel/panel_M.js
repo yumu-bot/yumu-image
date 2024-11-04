@@ -413,7 +413,7 @@ export async function panel_M(data = {
         genre_arr.reduce((prev, curr, i) => {
             const curr_percent = prev + curr / genre_sum;
             const color = genre_color[i];
-            genre_svg += PanelDraw.PieChart(curr_percent, 150, 825, 100, prev, color);
+            genre_svg += PanelDraw.Pie(150, 825, 100, curr_percent, prev, color);
             return curr_percent;
         }, 0);
 
