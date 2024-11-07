@@ -1980,3 +1980,10 @@ export const od2ms = (od, mode = 'o') => {
     else return ms + 'ms';
 }
 
+
+
+export function compileTemplate(path) {
+    const template = readTemplate(path);
+    const fnBody = "return `" + template.replace(/`/g, '\\`') + "`;";
+    return new Function("obj", fnBody);
+}
