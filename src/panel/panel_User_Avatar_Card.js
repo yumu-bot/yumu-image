@@ -1,15 +1,4 @@
-import {compileTemplate, exportJPEG} from "../util/util.js";
-
-/**
- * get user avatar card params
- * @param {string} banner
- * @param {string} avatar
- * @param {string} color
- * @param {string} name
- */
-function generateParams(banner, avatar, color, name) {
-    return {banner, avatar, color, name}
-}
+import {compileTemplate, exportJPEG, getAvatar, readNetImage} from "../util/util.js";
 
 const userAvatarCardTemplate = compileTemplate("template/test/User_Avatar_Card.svg");
 
@@ -26,6 +15,15 @@ export async function router(req, res) {
     res.end();
 }
 
+/**
+ * @param {string} data.banner
+ * @param {string} data.avatar
+ * @param {string} data.color
+ * @param {string} data.name
+ * @returns {Promise<String>}
+ */
 async function panel(data) {
+    data.avatar = await getAvatar(data.avatar);
+    data.banner = await readNetImage(data.banner);
     return userAvatarCardTemplate(data);
 }
