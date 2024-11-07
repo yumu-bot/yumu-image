@@ -367,6 +367,7 @@ export function isPictureIntacted(path = '') {
 }
 
 export function isPicturePng(path = '') {
+    let f;
     try {
         f = fs.readFileSync(path, 'binary');
     } catch (e) {
