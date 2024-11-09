@@ -113,7 +113,7 @@ export async function panel_N(
         + ' // ( ) Suggestion ' + (data?.more?.suggestCount || 0)
         + ' // (*) Praise ' + (data?.more?.praiseCount || 0)
         + ' // Pack ' + (data?.beatmapset?.pack_tags[0] || "null")
-        + ' // Rate ' + getRoundedNumberStr(data?.beatmapset?.publicRating, 2);
+        + ' // Rate ' + getRoundedNumberStr(data?.beatmapset?.public_rating, 2);
 
     const stat = torus.getTextPath(stat_str, 1570, 645, 18, 'right baseline', '#aaa');
 

@@ -191,7 +191,7 @@ export async function panel_E5(data = {
             ratings: [Array],
             mappers: [],
             nominators: [],
-            publicRating: 0,
+            public_rating: 0,
             bpm: 185,
             sid: 1844042,
             artist_unicode: '坏枪',

@@ -235,7 +235,7 @@ export function isEmptyArray(arr) {
 
 // {} 和 [] 不为空
 export function isNull(object) {
-    return (object == null) || (object == undefined)
+    return (object === null) || (object === undefined) || (typeof object === "undefined") || (object === "")
 }
 
 export function isNullOrEmptyObject(object) {
@@ -289,6 +289,14 @@ export function isNotEmptyArray(arr = []) {
 
 export function isNotNumber(str = '') {
     return ! isNumber(str)
+}
+
+export function requireNonNullElse(obj, obj2) {
+    if (isNull(obj)) {
+        if (isNull(obj2)) {
+            throw Error("保底输入了空值！")
+        } else return obj2
+    } else return obj
 }
 
 /**

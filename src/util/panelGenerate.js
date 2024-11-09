@@ -14,7 +14,7 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    isNullOrEmptyObject, isNotBlankString, isNotNull, isNotEmptyArray, getTimeByDHMS,
+    isNullOrEmptyObject, isNotBlankString, isNotNull, isNotEmptyArray, getTimeByDHMS, requireNonNullElse,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -702,9 +702,11 @@ export const PanelGenerate = {
     },
 
     // 给panel_A5用的
-    score2CardH: async (s, identifier = 1) => {
-        const cover = await readNetImage(s?.beatmapset?.covers?.list, hasLeaderBoard(s?.beatmap?.ranked));
-        const background = await readNetImage(s?.beatmapset?.covers?.cover, hasLeaderBoard(s?.beatmap?.ranked));
+    score2CardH: async (s, identifier = 1, use_cache = null) => {
+        const cache = requireNonNullElse(use_cache, hasLeaderBoard(s?.beatmap?.ranked || s?.beatmap?.status))
+
+        const cover = await readNetImage(s?.beatmapset?.covers?.list, cache);
+        const background = await readNetImage(s?.beatmapset?.covers?.cover, cache);
         const type = getScoreTypeImage(s.build_id)
 
         const time_diff = getTimeDifference(s.ended_at);
@@ -823,7 +825,7 @@ export const PanelGenerate = {
 
         const is_after = (typeof rank_after == "number")
 
-        const card_h = await PanelGenerate.score2CardH(s, rank)
+        const card_h = await PanelGenerate.score2CardH(s, rank, true)
 
         if (is_after) {
             const time_diff = getTimeDifference(s.ended_at);

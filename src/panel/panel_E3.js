@@ -289,7 +289,7 @@ async function beatmap2CardE3(beatmap, rank, calcPP) {
         retry_arr: beatmap.retryList || [],
         fail_arr: beatmap.failList || [],
 
-        public_rating: beatmap?.beatmapset?.publicRating, //beatmap2PublicRating(beatmap),
+        public_rating: beatmap?.beatmapset?.public_rating, //beatmap2PublicRating(beatmap),
         pass_percent: pass_arr[0],
         retry_percent: pass_arr[1],
         fail_percent: pass_arr[2],

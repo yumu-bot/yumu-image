@@ -317,6 +317,7 @@ export async function panel_A7(data = {
 
     // 导入H卡
     let cardHs = [];
+    console.time('bp')
     for (const i in data.scores) {
         const bp = data.scores[i];
 
@@ -334,6 +335,7 @@ export async function panel_A7(data = {
 
         cardHs.push(f);
     }
+    console.timeEnd('bp')
 
     // 插入图片和部件（新方法
     svg = putCustomBanner(svg, reg_banner, data.user?.profile?.banner);
