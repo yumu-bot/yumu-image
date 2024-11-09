@@ -1082,7 +1082,7 @@ const PanelEGenerate = {
 
             star: score?.beatmap?.difficulty_rating || 0,
 
-            public_rating: score?.beatmap?.beatmapset?.publicRating,
+            public_rating: score?.beatmap?.beatmapset?.public_rating,
 
             pass: score?.beatmap?.passcount || 0,
             play: score?.beatmap?.playcount || 0,
