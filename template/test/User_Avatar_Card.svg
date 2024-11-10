@@ -26,9 +26,8 @@
             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
             <feGaussianBlur stdDeviation="3"/>
         </filter>
-        <pattern patternUnits="userSpaceOnUse" x="-323" y="0" width="1793" height="620" id="banner-image">
-            <image id="fill-image-render-1067-0" href="${obj.banner}" preserveAspectRatio="xMidYMid slice" width="1793" height="620" opacity="1">
-            </image>
+        <pattern patternUnits="userSpaceOnUse" width="847.5" height="523.75" id="banner-image">
+            <image href="${obj.banner}" preserveAspectRatio="xMidYMid slice" width="847.5" height="523.75" opacity="1"/>
         </pattern>
 
         <radialGradient id="name-shadow" cx="0.5" cy="0.5" r="0.5">
