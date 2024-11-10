@@ -83,8 +83,8 @@ function getActivityTypeColor(type = '', approval = '') {
             else if (approval === 'qualified') return '#aeea00';
             else return '#4caf50';
         }
-        case 'beatmapsetDelete': return '#d32f5f';
-        case 'beatmapsetRevive': return '#673ab7';
+        case 'beatmapsetDelete': return '#DB567E';
+        case 'beatmapsetRevive': return '#8964CD';
         case 'beatmapsetUpdate': return '#ff9800';
         case 'beatmapsetUpload': return '#ffff00';
         default : return '#fff';
