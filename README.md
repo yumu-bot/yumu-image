@@ -46,6 +46,7 @@
 - Gamma 成绩和信息简版 X/Y
 - Delta XinRan 比赛面板 K
 - Epsilon 截图用头像 OA
+- Zeta 截图用头像 OC
 
 ## 卡片
 

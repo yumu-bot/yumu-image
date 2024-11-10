@@ -33,7 +33,7 @@ import {router as panelBetaRouter} from "./src/panel/panel_Beta.js"; //scoreSpec
 import {router as panelGammaRouter} from "./src/panel/panel_Gamma.js"; //怎么，看不过去密集的设计？
 import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js"; //XinRan panel
 import {router as panelEpsilonRouter} from "./src/panel/panel_Epsilon.js"; //方便使用的面积头像
-import {router as panelUserAvatarCard} from "./src/panel/panel_User_Avatar_Card.js";// 一个展示头像的新设计
+import {router as panelZetaRouter} from "./src/panel/panel_Zeta.js";// 一个展示头像的新设计
 import {router as MarkdownRouter} from "./src/panel/markdown.js";
 import {router as GetMapAttrRouter} from "./src/panel/mapAttributes.js";
 
@@ -94,7 +94,7 @@ app.post('/panel_Beta', panelBetaRouter);
 app.post('/panel_Gamma', panelGammaRouter);
 app.post('/panel_Delta', panelDeltaRouter);
 app.post('/panel_Epsilon', panelEpsilonRouter);
-app.post('/panel_avatar', panelUserAvatarCard);
+app.post('/panel_Zeta', panelZetaRouter);
 
 app.post('/panel_MA', PanelMARouter);
 app.post('/panel_MA2', PanelMA2Router);

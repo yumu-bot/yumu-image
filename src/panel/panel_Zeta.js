@@ -5,7 +5,7 @@ const userAvatarCardTemplate = compileTemplate("template/test/User_Avatar_Card.s
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel(data);
+        const svg = await panel_Zeta(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -22,7 +22,7 @@ export async function router(req, res) {
  * @param {string} data.name
  * @returns {Promise<String>}
  */
-async function panel(data) {
+async function panel_Zeta(data) {
     data.avatar = await getAvatar(data.avatar);
     data.banner = await readNetImage(data.banner);
     return userAvatarCardTemplate(data);

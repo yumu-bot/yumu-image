@@ -298,6 +298,7 @@ export async function panel_D(data = {
             is_deleted: false,
             is_online: false,
             is_supporter: false,
+            is_mutual: true,
             last_visit: [Array],
             pm_friends_only: false,
             username: 'SIyuyuko',

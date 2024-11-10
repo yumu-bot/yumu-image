@@ -225,7 +225,7 @@ export async function panel_A1(data = {
     let friend_cardA1s = [];
 
     for (const i in data.friend_card_A1) {
-        const f = await card_A1(await PanelGenerate.microUser2CardA1(data.friend_card_A1[i], data?.type));
+        const f = await card_A1(await PanelGenerate.microUser2CardA1(data.friend_card_A1[i], data?.type, true));
         friend_cardA1s.push(f);
     }
 

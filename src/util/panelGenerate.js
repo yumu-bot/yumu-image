@@ -122,11 +122,32 @@ export const PanelGenerate = {
         };
     },
 
-    microUser2CardA1: async (user, type = null) => {
+    microUser2CardA1: async (user, type = null, show_mutual = false) => {
         const background = await getBanner(user?.cover?.url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
-        const sub_icon1 = user.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
+        let sub_icon1 = ''
+        let sub_icon2 = ''
+
+        if (show_mutual) {
+            if (user.is_mutual) {
+                if (user.is_supporter) {
+                    sub_icon1 = getImageFromV3('object-card-supporter.png')
+                    sub_icon2 = getImageFromV3('object-card-mutual.png')
+                } else {
+                    sub_icon1 = getImageFromV3('object-card-mutual.png')
+                }
+            } else {
+                if (user.is_supporter) {
+                    sub_icon1 = getImageFromV3('object-card-supporter.png')
+                    sub_icon2 = getImageFromV3('object-card-follower.png')
+                } else {
+                    sub_icon1 = getImageFromV3('object-card-follower.png')
+                }
+            }
+        } else if (user.is_supporter) {
+            sub_icon1 = getImageFromV3('object-card-supporter.png')
+        }
 
         const country = user?.country_code || 'CN';
 
@@ -142,11 +163,6 @@ export const PanelGenerate = {
         let right1
 
         switch (type) {
-            /*
-            case "time": left3 = 'Last: ' + moment(user?.last_visit, 'X').add(8, 'hour')
-                .format('YYYY-MM-DD HH:mm:ss'); break;
-
-             */
             case "time": right1 = isNotEmptyArray(user?.last_visit) ?
                 ('Seen: ' + user?.last_visit[0]?.toString()?.slice(-2) + '-' + user?.last_visit[1] + '-' + user?.last_visit[2])
                 : ''; break;
@@ -165,7 +181,7 @@ export const PanelGenerate = {
             background,
             avatar,
             sub_icon1: sub_icon1,
-            sub_icon2: '',
+            sub_icon2: sub_icon2,
             sub_banner: '',
 
             country: country,
