@@ -6,7 +6,7 @@ export async function router(req, res) {
     try {
         const data = req.fields || {};
         const svg = await panel(data);
-        res.set('Content-Type', 'image/jpeg');
+        res.set('Content-Type', 'image/png');
         res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
