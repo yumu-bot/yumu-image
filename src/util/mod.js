@@ -221,7 +221,7 @@ export function getModAdditionalInformation(mod = {
 }
 
 export function getModFullName(mod = 'NM') {
-    switch (mod.toUpperCase()) {
+    switch (mod?.toUpperCase()) {
         case "4K":
             return '4Keys';
         case "5K":
@@ -277,7 +277,7 @@ export function getModFullName(mod = 'NM') {
         case "TP":
             return 'TargetPractice';
         default:
-            return 'NoMod';
+            return mod?.toUpperCase();
     }
 }
 

@@ -1058,7 +1058,7 @@ const PanelEGenerate = {
     score2componentE11: (b) => {
         return {
             bid: b?.id,
-            sid: b?.beatmapset?.id || b?.beatmapset_id,
+            sid: b?.beatmapset?.id || b?.beatmap.beatmapset_id,
             ranked: b?.ranked,
             is_dmca: b?.beatmapset?.availability?.more_information != null
         }

@@ -195,7 +195,7 @@ export async function panel_F2(data = {}) {
 
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, await getMapBG(beatmap.beatmapset.sid, 'cover', hasLeaderBoard(beatmap.beatmapset.ranked)), reg_banner);
+    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, await getMapBG(beatmap.beatmapset_id, 'cover', hasLeaderBoard(beatmap.beatmapset.ranked)), reg_banner);
 
     return svg.toString();
 }

@@ -4,53 +4,104 @@ import {isHexColor} from "./util.js";
 export const PanelColor = {
     // 基层，一般看不到这个颜色
     base: (hue = 342) => {
-        return getRGBFromHSL(hue || 342, 0.1, 0.1)
+        return hsl2hex(hue || 342, 0.1, 0.1)
     },
 
     // 底层，一般作为面板的底板
     bottom: (hue = 342) => {
-        return getRGBFromHSL(hue || 342, 0.1, 0.15)
+        return hsl2hex(hue || 342, 0.1, 0.15)
     },
 
     // 中层，一般作为模块的底板
     middle: (hue = 342) => {
-        return getRGBFromHSL(hue || 342, 0.1, 0.2)
+        return hsl2hex(hue || 342, 0.1, 0.2)
     },
 
     // 上层，一般作为卡片的底板
     top: (hue = 342) => {
-        return getRGBFromHSL(hue || 342, 0.1, 0.25)
+        return hsl2hex(hue || 342, 0.1, 0.25)
     },
 
     // 覆盖层，一般覆盖在卡片上
     overlay: (hue = 342) => {
-        return getRGBFromHSL(hue || 342, 0.1, 0.3)
+        return hsl2hex(hue || 342, 0.1, 0.3)
+    },
+
+    // 最亮层，现在用于某些场景的字太黑的问题
+    bright: (hue = 342) => {
+        return hsl2hex(hue || 342, 0.1, 0.7)
     },
 }
 
 
 // 返回的结果是 xxx, xxx, xxx
 export function hex2rgbColor(hex = '#AAAAAA') {
+    const rgb = hex2rgb(hex);
+
+    return `${rgb.r},${rgb.g},${rgb.b}`
+}
+
+export function hex2rgb(hex = '#AAAAAA') {
     if (isHexColor(hex)) {
         if (hex.length === 7) {
             const r = parseInt('0x' + hex.slice(1, 3), 16)
             const g = parseInt('0x' + hex.slice(3, 5), 16)
             const b = parseInt('0x' + hex.slice(5, 7), 16)
 
-            return `${r},${g},${b}`
+            return {
+                r: r, g: g, b: b
+            }
         } else if (hex.length === 4) {
             const r = parseInt('0x' + hex.slice(1, 2) + hex.slice(1, 2), 16)
             const g = parseInt('0x' + hex.slice(2, 3) + hex.slice(2, 3), 16)
             const b = parseInt('0x' + hex.slice(3, 4) + hex.slice(3, 4), 16)
 
-            return `${r},${g},${b}`
+            return {
+                r: r, g: g, b: b
+            }
         }
     }
 
-    return "0,0,0"
+    return {
+        r: 0, g: 0, b: 0
+    }
 }
 
-export function getRGBFromHSL(hue = 0, saturation = 0, lightness = 0) {
+export function hex2hsl(hex = '#AAAAAA') {
+    const rgb = hex2rgb(hex)
+
+    const rgb_max = Math.max(rgb.r, rgb.g, rgb.b)
+    const rgb_min = Math.min(rgb.r, rgb.g, rgb.b)
+    const delta = rgb_max - rgb_min
+
+    const lightness = (rgb_max + rgb_min) / 2.0
+    
+    let hue
+    let saturation
+    
+    const del_R = (((rgb_max - rgb.r) / 6.0) + (delta / 2.0)) / delta;
+    const del_G = (((rgb_max - rgb.g) / 6.0) + (delta / 2.0)) / delta;
+    const del_B = (((rgb_max - rgb.b) / 6.0) + (delta / 2.0)) / delta;
+
+    if (lightness < 0.5) {
+        saturation = delta / (rgb_max + rgb_min);
+    } else {
+        saturation = delta / (2 - rgb_max - rgb_min);
+    }
+
+    if (rgb.r === rgb_max) hue = del_B - del_G;
+    else if (rgb.g === rgb_max) hue = (1.0 / 3.0) + del_R - del_B;
+    else if (rgb.b === rgb_max) hue = (2.0 / 3.0) + del_G - del_R;
+
+    if (hue < 0) hue += 1;
+    if (hue > 1) hue -= 1;
+
+    return {
+        h: hue, s: saturation, l: lightness
+    }
+}
+
+export function hsl2hex(hue = 0, saturation = 0, lightness = 0) {
 
     // Normalize hue to be in the range [0, 6]
     const h = Math.max(Math.min(hue, 360), 0) / 60
@@ -83,8 +134,7 @@ export function getRGBFromHSL(hue = 0, saturation = 0, lightness = 0) {
         r = 0
         g = x
         b = chroma
-    }
-    else if (4 <= h && h < 5) {
+    } else if (4 <= h && h < 5) {
         r = x
         g = 0
         b = chroma
@@ -257,7 +307,7 @@ export function getUserRankColor(rank = 0) {
 
 export function getModColor(Mod = '') {
     let color;
-    switch (Mod) {
+    switch (Mod?.toUpperCase()) {
         case "NF":
             color = '#0068B7';
             break;
@@ -475,6 +525,9 @@ export function getRankColor(rank = 'F') {
             break;
         case "F":
             color = '#616161';
+            break;
+        case "FC":
+            color = '#7ECEF4';
             break;
         default:
             color = 'none';

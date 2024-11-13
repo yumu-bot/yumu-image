@@ -757,7 +757,7 @@ const PanelDGenerate = {
             const rank_text_color = (rank === 'X' || rank === 'XH') ? '#000' : '#fff';
 
             const data = {
-                background: await getDiffBG(s.beatmap_id, s.beatmapset.sid,
+                background: await getDiffBG(s.beatmap_id, s.beatmap.beatmapset_id,
                     'list', s.ranked,
                     (s?.beatmapset?.availability?.more_information != null)),
                 title: Math.round(s?.pp).toString() || '0',

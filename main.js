@@ -25,6 +25,7 @@ import {router as PanelFRouter} from "./src/panel/panel_F.js";
 import {router as PanelF2Router} from "./src/panel/panel_F2.js";
 import {router as PanelHRouter} from "./src/panel/panel_H.js";
 import {router as PanelJRouter} from "./src/panel/panel_J.js";
+import {router as PanelJ2Router} from "./src/panel/panel_J2.js";
 import {router as PanelMRouter} from "./src/panel/panel_M.js";
 import {router as PanelNRouter} from "./src/panel/panel_N.js";
 
@@ -86,6 +87,7 @@ app.post('/panel_F', PanelFRouter);
 app.post('/panel_F2', PanelF2Router);
 app.post('/panel_H', PanelHRouter);
 app.post('/panel_J', PanelJRouter);
+app.post('/panel_J2', PanelJ2Router);
 app.post('/panel_M', PanelMRouter);
 app.post('/panel_N', PanelNRouter);
 
