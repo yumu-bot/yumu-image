@@ -743,7 +743,7 @@ const PanelJGenerate = {
                 ranking: 1,
                 cover: "https://assets.ppy.sh/beatmaps/382400/covers/list.jpg?1622096843",
                 star: 6.38,
-                rank: "A", // bp.rank
+                rank: "A",
                 bpm: 111,
                 mods: ['HR']
             },
