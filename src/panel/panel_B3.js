@@ -264,7 +264,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o1,
                 value: value_o1,
-                round_level: 0,
+                round_level: -4,
                 rank: rank_o1,
                 color: color_o1,
             }));
@@ -282,7 +282,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o2,
                 value: value_o2,
-                round_level: 0,
+                round_level: -4,
                 rank: rank_o2,
                 color: color_o2,
             }));
@@ -295,15 +295,19 @@ export async function panel_B3(data = {
             await drawUserPlus(my, label_left, graph_left, ABBR, NAME, false);
 
             const value_o1 = my?.performance?.aim;
-            const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]); //todo 这个是临时边界，我不知道 aim 的边界是多少
-            const background_o1 = getRankBG(rank_o1);
-            const color_o1 = getRankColor(rank_o1);
+            //const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
+
+            const rank_o1 = getRoman(getLevel(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]))
+
+            const fake_rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
+            const background_o1 = getRankBG(fake_rank_o1);
+            const color_o1 = getRankColor(fake_rank_o1);
 
             card_center.push(await card_B2({
                 label: LABEL_PPP.AIM,
                 background: background_o1,
                 value: value_o1,
-                round_level: 0,
+                round_level: -4,
                 rank: rank_o1,
                 color: color_o1,
             }));
@@ -322,7 +326,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o2,
                 value: value_o2,
-                round_level: 0,
+                round_level: -4,
                 rank: rank_o2,
                 color: color_o2,
             }));
@@ -445,13 +449,22 @@ export async function panel_B3(data = {
             Math.PI / 3), reg_hexagon);
     }
 
-
     const hexagon = getImageFromV3('object-hexagon.png');
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
 
-
     return svg.toString();
+}
 
+const getLevel = (data = 0, level_arr = []) => {
+    const arr = level_arr.reverse()
+
+    for (let i = 0; i < arr.length; i++) {
+        const v = arr[i]
+        if (data > v) {
+            return i
+        }
+    }
+    return 0
 }
 
 const getRoman = (level = 0) => {
@@ -523,7 +536,7 @@ async function drawUserPlus(plus, label, graph, arr_abbr, arr_name, at_right = f
                 label: LABEL_PPP[abbr],
                 background: background,
                 value: value,
-                round_level: 0,
+                round_level: -4,
                 rank: rank,
                 color: color,
                 rank_size: (rank.startsWith('.') ? 48 : 60) //百分比太大了！

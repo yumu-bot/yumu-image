@@ -627,10 +627,14 @@ export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
  * lv-3是只把前三位数放大，且不补足，无单位，45671 -> 45 671, 450 -> 450
+ * lv-4是只把后两位数缩小，且不补足，无单位，45671 -> 45 671, 450 -> 4 50
  */
 export function getRoundedNumberStrLarge(number = 0, level = 0) {
 
     switch (level) {
+        case -4:
+            return f_3_2_0(2);
+            break;
         case -3:
             return f_3_2_0(3);
             break;
@@ -673,7 +677,6 @@ export function getRoundedNumberStrLarge(number = 0, level = 0) {
             return SpecialRoundedLargeNum(number, times);
         }
     }
-
 
     function f1() {
         let o;
@@ -767,6 +770,7 @@ export function getRoundedNumberStrLarge(number = 0, level = 0) {
         } else {
             return '';
         }
+
         let re = Math.floor(number / Math.pow(10, p));
 
         if (re === 0) {
@@ -792,10 +796,14 @@ export function getRoundedNumberStrLarge(number = 0, level = 0) {
  * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
  * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
  * lv-3是只把前三位数放大，且不补足，无单位，45671 -> 45 671, 450 -> 450
+ * lv-4是只把后两位数缩小，且不补足，无单位，45671 -> 45 671, 450 -> 4 50
  */
 export function getRoundedNumberStrSmall(number = 0, level = 0) {
 
     switch (level) {
+        case -4:
+            return f0_3(2);
+            break;
         case -3:
             return f0_3(3);
             break;
