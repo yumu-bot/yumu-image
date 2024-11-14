@@ -270,7 +270,6 @@ export async function panel_B3(data = {
             }));
 
             const value_o2 = others?.performance?.total;
-
             const level_o2 = others?.advancedStats?.advanced;
             const rank_o2 = getRoman(level_o2);
 
@@ -297,9 +296,8 @@ export async function panel_B3(data = {
             const value_o1 = my?.performance?.aim;
             //const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
 
-            const rank_o1 = getRoman(
-                getLevel(value_o1, [1300, 1700, 1975, 2250, 2525, 2800, 3075, 3365, 3800, 4400, 4900, 5900, 6900])
-            )
+            const level_o1 = my?.advancedStats?.index[my?.advancedStats?.index.length - 1] || 0;
+            const rank_o1 = getRoman(level_o1)
 
             const fake_rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
             const background_o1 = getRankBG(fake_rank_o1);
@@ -457,43 +455,22 @@ export async function panel_B3(data = {
     return svg.toString();
 }
 
-const getLevel = (data = 0, arr = []) => {
-    if (isEmptyArray(arr)) {
-        return 0
-    }
-
-    let level = (arr.length - 1) || 0;
-
-    for (let i = 0; i < arr.length; i++) {
-        const v = arr[i]
-        if (data < v) {
-            level = i
-        }
-    }
-
-    if (level === 0) {
-        const first = arr[0]
-
-        return ((first - data) / first) || 0
-    } else {
-        return level
-    }
-}
-
 const getRoman = (level = 0) => {
     if (typeof level != "number") return '-'
 
-    const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'EX']
+    const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
 
-    if (level - 1 === 0 && 1 / (level - 1) === -Infinity) {
-        return roman[0];
-
-    } else if (level <= -1) { //-2
-        return '-';
+    if (level <= 0) {
+        return '-'
     } else if (level < 1) {
+        // 0 - 1
         return '.' + Math.round(level * 100);
+    } else if (level < 11) {
+        // 1 - 10
+        return roman[Math.round(level - 1)]
     } else {
-        return roman[level - 1];
+        // 11+
+        return 'EX'
     }
 }
 
