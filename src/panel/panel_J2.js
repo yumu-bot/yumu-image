@@ -440,7 +440,7 @@ const component_J4 = (
             data_b: (data?.bests_size || 0).toString().padStart(3, '0'),
 
             bar_progress: (data?.bests_size || 0) / 100,
-            bar_color: '#fff',
+            bar_color: '#DADADA',
             max_width: max_width,
             hide: data.has_custom_panel,
             hue: data.hue,
@@ -480,8 +480,8 @@ const component_J4 = (
     // 插入饼图
     let mod_svg = '';
 
-    // 这里是给 nomod 的饼
-    mod_svg += PanelDraw.Pie(200, 136, 95, 0, data.bests_size / 100, '#fff');
+    // 这里是给 no mod 的饼
+    mod_svg += PanelDraw.Pie(200, 136, 95, 0, data.bests_size / 100, '#DADADA');
 
     mods.reduce((prev, curr) => {
         const curr_percent = prev + curr.percent;
@@ -540,7 +540,7 @@ const component_J5 = (
         let color = getModColor(m)
 
         // no mod 没有颜色，这里赋灰色
-        if (color === 'none') color = '#BDBDBD'
+        if (color === 'none') color = '#DADADA'
 
         graph2_colors.push(color)
     }
@@ -554,7 +554,7 @@ const component_J5 = (
     svg = replaceTexts(svg, [rank_svg, mods_svg, b1, b50, b100], reg)
 
     if (!data.has_custom_panel) {
-        const title = poppinsBold.getTextPath('BP Dist.', 15, 27, 18, 'left baseline', '#fff', 1)
+        const title = poppinsBold.getTextPath('Bests Distribution', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 820, 300, 20, PanelColor.middle(data.hue), 1)
 
         const title_graph1 = poppinsBold.getTextPath('Ranks / SR', 805, 22, 12, 'right baseline', '#fff', 1)
@@ -677,7 +677,7 @@ const component_J7 = (
     svg = replaceTexts(svg, [times_chart, dist_chart, hour_text, hour_max_text], reg)
 
     if (!data.has_custom_panel) {
-        const title = poppinsBold.getTextPath('Time Dist', 15, 27, 18, 'left baseline', '#fff', 1)
+        const title = poppinsBold.getTextPath('Time Distribution', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 490, 190, 20, PanelColor.middle(data.hue), 1)
 
         svg = replaceTexts(svg, [title, rrect], reg)
