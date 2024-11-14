@@ -1,8 +1,15 @@
 import {
-    exportJPEG, getPanelNameSVG,
+    exportJPEG,
+    getPanelNameSVG,
     implantImage,
     implantSvgBody,
-    replaceText, replaceTexts, getRoundedNumberStr, putCustomBanner, getDiffBG, getTimeByDHMS, getImageFromV3
+    replaceText,
+    replaceTexts,
+    getRoundedNumberStr,
+    putCustomBanner,
+    getDiffBG,
+    getImageFromV3,
+    modifyArrayToFixedLength, getTime
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -69,9 +76,10 @@ export async function panel_J2(data = {
     time_dist_arr: [0, 0, 0, 0, 0, 0, 0, 0],
 
     rank_arr: ['A', 'SS', 'SS', 'B'], //给评级的统计数据。
-    rank_elect_arr: ['SS', 'A', 'B'], //给根据数量排名的评级，越靠前数量越多
 
-    bp_length_arr: [24, 59, 81, 75], //bp长度的统计数据
+    length_arr: [24, 59, 81, 75], //长度的统计数据
+    mods_arr: [["HD"], ["HR", "HD"]],
+    star_arr: [0, 0],
 
     mods_attr: [
         {
@@ -142,12 +150,14 @@ export async function panel_J2(data = {
     const time_arr = data?.time_arr || []
     const time_dist_arr = data?.time_dist_arr || []
     const rank_arr = data?.rank_arr || []
-    const rank_elect_arr = data?.rank_elect_arr || []
-    const bp_length_arr = data?.bp_length_arr || []
-    const mods_attr = data?.mods_attr || []
-    const rank_attr = data?.rank_attr || []
+    const length_arr = data?.length_arr || []
+    const star_arr = data?.star_arr || []
+    const mods_arr = data?.mods_arr || []
+
     const client_count = data?.client_count || []
 
+    const mods_attr = data?.mods_attr || []
+    const rank_attr = data?.rank_attr || []
     const bpm_attr = data?.bpm_attr || []
     const length_attr = data?.length_attr || []
     const combo_attr = data?.combo_attr || []
@@ -210,6 +220,9 @@ export async function panel_J2(data = {
     const componentJ2 = component_J2(await PanelJGenerate.scores2componentJ2(bests, has_custom_panel, hue));
     const componentJ3 = component_J3(PanelJGenerate.rank2componentJ3(rank_attr, has_custom_panel, hue));
     const componentJ4 = component_J4(PanelJGenerate.mods2componentJ4(mods_attr, has_custom_panel, hue));
+    const componentJ5 = component_J5(PanelJGenerate.distribution2componentJ5(rank_arr, mods_arr, star_arr, length_arr, has_custom_panel, hue));
+    const componentJ6 = component_J6(PanelJGenerate.pp2componentJ6(pp_raw_arr, has_custom_panel, hue));
+    const componentJ7 = ''//component_J7(PanelJGenerate.times2componentJ7(time_arr, time_dist_arr, has_custom_panel, hue));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -217,6 +230,9 @@ export async function panel_J2(data = {
     svg = implantSvgBody(svg, 40, 740, componentJ2, reg_component);
     svg = implantSvgBody(svg, 550, 330, componentJ3, reg_component);
     svg = implantSvgBody(svg, 970, 330, componentJ4, reg_component);
+    svg = implantSvgBody(svg, 550, 740, componentJ5, reg_component);
+    svg = implantSvgBody(svg, 1390, 330, componentJ6, reg_component);
+    svg = implantSvgBody(svg, 1390, 530, componentJ7, reg_component);
 
     // 插入图片和部件
     const background = pp2UserBG(data.user.pp || 0);
@@ -370,11 +386,13 @@ const component_J3 = (
 
     rank_svg += PanelDraw.Image(200 - 95, 136 - 95, 190, 190, getImageFromV3('object-piechart-overlay2.png'), 1);
 
+    svg = replaceText(svg, rank_svg, reg)
+
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Ranks', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 400, 390, 20, PanelColor.middle(data.hue), 1)
 
-        svg = replaceTexts(svg, [title, rank_svg, rrect], reg)
+        svg = replaceTexts(svg, [title, rrect], reg)
     }
 
     return svg.toString()
@@ -450,11 +468,126 @@ const component_J4 = (
 
     mod_svg += PanelDraw.Image(200 - 95, 136 - 95, 190, 190, getImageFromV3('object-piechart-overlay2.png'), 1);
 
+    svg = replaceText(svg, mod_svg, reg)
+
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Mods', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 400, 390, 20, PanelColor.middle(data.hue), 1)
 
-        svg = replaceTexts(svg, [title, mod_svg, rrect], reg)
+        svg = replaceTexts(svg, [title, rrect], reg)
+    }
+
+    return svg.toString()
+}
+
+const component_J5 = (
+    data = {
+        rank_arr: [],
+        mods_arr: [],
+        star_arr: [],
+        length_arr: [],
+        has_custom_panel: false,
+        hue: 342,
+    }
+) => {
+    let svg = `<g id="Component_OJ5">
+    </g>`
+
+    const reg = /(?<=<g id="Component_OJ5">)/;
+
+    const mods = data?.mods_arr || [['']]
+    const rank = data?.rank_arr || []
+    const star = data?.star_arr || []
+    const length = data?.length_arr || []
+
+    const graph1_colors = []
+    const graph2_colors = []
+
+    for (const i in rank) {
+        const r = rank[i] || ''
+        graph1_colors.push(getRankColor(r))
+    }
+    const rank_svg = PanelDraw.BarChart(star, 0, 0, 11, 150, 798, 110, 3, 2, graph1_colors, 5, 6, null, 1)
+
+    for (const i in mods) {
+        const m = mods[i][0] || ''
+        let color = getModColor(m)
+
+        // no mod 没有颜色，这里赋灰色
+        if (color === 'none') color = '#BDBDBD'
+
+        graph2_colors.push(color)
+    }
+
+    const mods_svg = PanelDraw.BarChart(length, 0, 0, 11, 180, 798, 110, 3, 2, graph2_colors, 60, 6, null, 1, true)
+
+    const b1 = poppinsBold.getTextPath('#1', 10, 170, 14, 'left baseline')
+    const b50 = poppinsBold.getTextPath('#50', 410, 170, 14, 'center baseline')
+    const b100 = poppinsBold.getTextPath('#100', 810, 170, 14, 'right baseline')
+
+    svg = replaceTexts(svg, [rank_svg, mods_svg, b1, b50, b100], reg)
+
+    if (!data.has_custom_panel) {
+        const title = poppinsBold.getTextPath('BP Dist.', 15, 27, 18, 'left baseline', '#fff', 1)
+        const rrect = PanelDraw.Rect(0, 0, 820, 300, 20, PanelColor.middle(data.hue), 1)
+
+        const title_graph1 = poppinsBold.getTextPath('Ranks / SR', 805, 22, 12, 'right baseline', '#fff', 1)
+
+        const title_graph2 = poppinsBold.getTextPath('Mods / Length', 804, 290, 12, 'right baseline', '#fff', 1)
+
+        svg = replaceTexts(svg, [title, title_graph1, title_graph2, rrect], reg)
+    }
+
+    return svg.toString()
+}
+
+const component_J6 = (
+    data = {
+        pp_raw_arr: [],
+        has_custom_panel: false,
+        hue: 342,
+    }
+) => {
+    let svg = `<g id="Component_OJ6">
+    </g>`
+
+    const reg = /(?<=<g id="Component_OJ6">)/;
+
+    const arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false);
+
+    const pp_max = Math.max.apply(Math, arr);
+    const pp_min = Math.min.apply(Math, arr);
+    const pp_average = (pp_max + pp_min) / 2;
+
+    const y_max = getRoundedNumberStr(pp_max, 1);
+    const y_mid = getRoundedNumberStr(pp_average, 1);
+    const y_min = getRoundedNumberStr(pp_min, 1);
+
+    // 绘制坐标
+    const pp_axis =
+        poppinsBold.getTextPath(y_max, 15, 48, 14, 'left baseline', '#fff') +
+        poppinsBold.getTextPath(y_mid, 15, (48 + 154) / 2, 14, 'left baseline', '#fff') +
+        poppinsBold.getTextPath(y_min, 15, 154, 14, 'left baseline', '#fff');
+
+    const position_axis = poppinsBold.getTextPath('#1', 35, 170, 14, 'left baseline', '#fff')
+        + poppinsBold.getTextPath('#50', 257.5, 170, 14, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('#100', 480, 170, 14, 'right baseline', '#fff');
+
+    const rank_chart = PanelDraw.LineChart(arr, 0, 0, 50, 155, 415, 115, '#fc2', 1, 0, 4, false);
+
+    const average = poppinsBold.getTextPath(
+        'Average: ' + (pp_average || '0')
+        + ' PP',
+        475, 27, 18, 'right baseline', '#fff', 1
+    )
+
+    svg = replaceTexts(svg, [average, rank_chart, pp_axis, position_axis], reg)
+
+    if (!data.has_custom_panel) {
+        const title = poppinsBold.getTextPath('Rank History', 15, 27, 18, 'left baseline', '#fff', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 180, 20, PanelColor.middle(data.hue), 1)
+
+        svg = replaceTexts(svg, [title, rrect], reg)
     }
 
     return svg.toString()
@@ -463,15 +596,6 @@ const component_J4 = (
 // 私有转换方式
 const PanelJGenerate = {
     attr2componentJ1: (bpm_attr, length_attr, combo_attr, star_attr, client_count, has_custom_panel = false, hue) => {
-        const getTime = (seconds = 0) => {
-            const minute = Math.floor(seconds / 60)
-            const second = seconds % 60
-
-            return minute.toString()
-                + ':'
-                + second.toString().padStart(2, '0')
-        }
-
         const attr2labelJ5 = (attr = [
             {
                 length: 719,
@@ -613,7 +737,7 @@ const PanelJGenerate = {
                 right_rrect_color: rank_rrect_color,
 
                 bottom_left: s?.beatmap_id.toString() || '0',
-                bottom_right: getTimeByDHMS(s?.beatmap?.total_length),
+                bottom_right: getTime(s?.beatmap?.total_length),
             }
 
             d2s.push(await card_D2(data))
@@ -632,7 +756,7 @@ const PanelJGenerate = {
             has_custom_panel: has_custom_panel,
             hue: hue,
         }
-        },
+    },
 
     mods2componentJ4: (mods_attr, has_custom_panel = false, hue) => {
         return {
@@ -640,5 +764,24 @@ const PanelJGenerate = {
             has_custom_panel: has_custom_panel,
             hue: hue,
         }
-        },
+    },
+
+    distribution2componentJ5: (rank_arr, mods_arr, star_arr, length_arr, has_custom_panel = false, hue) => {
+        return {
+            rank_arr: rank_arr,
+            mods_arr: mods_arr,
+            star_arr: star_arr,
+            length_arr: length_arr,
+            has_custom_panel: has_custom_panel,
+            hue: hue,
+        }
+    },
+
+    pp2componentJ6: (pp_raw_arr, has_custom_panel = false, hue) => {
+        return {
+            pp_raw_arr: pp_raw_arr,
+            has_custom_panel: has_custom_panel,
+            hue: hue,
+        }
+    },
 }

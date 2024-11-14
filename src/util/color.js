@@ -307,7 +307,7 @@ export function getUserRankColor(rank = 0) {
 
 export function getModColor(Mod = '') {
     let color;
-    switch (Mod?.toUpperCase()) {
+    switch (Mod.toString().toUpperCase()) {
         case "NF":
             color = '#0068B7';
             break;
@@ -475,7 +475,7 @@ export function getModColor(Mod = '') {
             break;
 
         default:
-            color = '#1c1719';
+            color = 'none';
             break;
     }
 
@@ -490,7 +490,7 @@ export function getModColor(Mod = '') {
 export function getRankColor(rank = 'F') {
     if (typeof rank !== 'string') return 'none';
     let color;
-    switch (rank.toUpperCase()) {
+    switch (rank.toString().toUpperCase()) {
         case "PF":
         case "XH":
         case "SSH":

@@ -1,6 +1,6 @@
 //把数组变成可视化的图表
 import {torus} from "./font.js";
-import {isEmptyArray, replaceText} from "./util.js";
+import {isEmptyArray, isNumber, replaceText} from "./util.js";
 import {hex2rgbColor} from "./color.js";
 
 export const PanelDraw = {
@@ -38,8 +38,8 @@ export const PanelDraw = {
         return out
     },
 
-    Circle: (cx = 0, cy = 0, r = 0, color = '#fff') => {
-        return `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill: ${color};"/>`;
+    Circle: (cx = 0, cy = 0, r = 0, color = '#fff', opacity = 1) => {
+        return `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill: ${color}; fill-opacity: ${opacity}"/>`;
     },
 
     /**
@@ -150,13 +150,13 @@ export const PanelDraw = {
         return `<polygon points="${top} ${right} ${bottom} ${left} ${top}" style="fill: ${color}; fill-opacity: ${opacity}"/>`
     },
 
-    //柱状图，Histogram，max 如果填 null，即用数组的最大值。max_undertake是数组的最大值小于这个值时的 保底机制
-    BarChart: (arr = [0], max = null, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff' || ['#fff'], max_undertake = 0, floor = 0, minColor = '#aaa', opacity = 1) => {
+    //柱状图，Histogram，max 如果填 0，即用数组的最大值。max_undertake是数组的最大值小于这个值时的 保底机制
+    BarChart: (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff' || ['#fff'], max_undertake = 0, floor = 0, minColor = '#aaa', opacity = 1, is_reverse = false) => {
         if (isEmptyArray(arr)) return '';
 
-        const arr_max = (typeof max === 'number') ? max :
-            ((typeof max_undertake === 'number') ? Math.max(Math.max.apply(Math, arr), max_undertake) : Math.max.apply(Math, arr));
-        const arr_min = (typeof min === 'number') ? min : Math.min.apply(Math, arr);
+        const arr_max = (isNumber(max) && max > 0) ? max :
+            (isNumber(max_undertake) ? Math.max(Math.max.apply(Math, arr), max_undertake) : Math.max.apply(Math, arr));
+        const arr_min = (isNumber(min) && min > 0) ? min : Math.min.apply(Math, arr);
         const step = w / arr.length; //如果是100个，一步好像刚好5.2px
         const width = step - gap; //实际宽度
         let rect_svg = '<g>';
@@ -175,7 +175,7 @@ export const PanelDraw = {
             const height = isFloor ? floor : Math.min((v - arr_min) / (arr_max - arr_min), 1) * h;
             const rectColor = isMin ? minColor : rrect_color;
             const x0 = x + step * i;
-            const y0 = y - height;
+            const y0 = is_reverse ? y : (y - height);
 
             rect_svg += PanelDraw.Rect(x0, y0, width, height, r, rectColor, opacity);
         })
@@ -362,7 +362,29 @@ export const PanelDraw = {
             }
             return assist.toString();
         }
-    }
+    },
+
+    // 散点图
+    Scatter: (x = 0, y = 0, w = 0, h = 0, r = 0, opacity = 1, data_x = [0], data_y = [0], colors = ['none'], x_min = 0, x_max = 0, y_min = 0, y_max = 0,
+    ) => {
+        let svg = '<g>'
+
+        if (isEmptyArray(data_x) || isEmptyArray(data_y) || isEmptyArray(colors)) return ''
+
+        for (const i in data_x) {
+            const dx = data_x[i]
+            const dy = data_y[i]
+            const color = colors[i]
+
+            const cx = x + ((dx - x_min) / (x_max - x_min) || dx)
+            const cy = y + ((dy - y_min) / (y_max - y_min) || dy)
+
+            svg += PanelDraw.Circle(cx, cy, r, color, opacity)
+        }
+
+        svg += '</g>'
+        return svg.toString()
+    },
 }
 
 export const RainbowRect = PanelDraw.GradientRect(510, 40, 195, 60, 15, [

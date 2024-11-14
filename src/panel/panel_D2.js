@@ -18,7 +18,7 @@ import {
     replaceTexts,
     isNotNumber,
     getTimeDifference,
-    modifyArrayToFixedLength, isNotEmptyArray, getGameMode, isNotBlankString, isPicturePng,
+    modifyArrayToFixedLength, isNotEmptyArray, getGameMode, isNotBlankString, isPicturePng, getTime,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_D2} from "../card/card_D2.js";
@@ -772,7 +772,7 @@ const PanelDGenerate = {
                 right_rrect_color: rank_rrect_color,
 
                 bottom_left: s?.beatmap_id.toString() || '0',
-                bottom_right: getTimeByDHMS(s?.beatmap?.total_length),
+                bottom_right: getTime(s?.beatmap?.total_length),
             }
 
             d2s.push(await card_D2(data))

@@ -1769,8 +1769,14 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
     }
 }
 
+export const getTime = (seconds = 0) => {
+    const m = Math.floor(seconds / 60).toString()
+    const s = (seconds % 60).toString().padStart(2, '0')
+    return m + ':' + s
+}
+
 /**
- * 获取从秒转换成dhms的时间
+ * 获取从秒转换成dhms的时间，如果要获取 分:秒 的格式，请使用 getTime
  * @param seconds 秒
  * @return {string} 时间字符串，比如 3d5h20m 只有到 minute 的等级时才会有 s
  */
