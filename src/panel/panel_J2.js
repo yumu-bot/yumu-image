@@ -563,7 +563,7 @@ const component_J6 = (
         }) / arr.length) || 0
 
     const y_max = getRoundedNumberStr(pp_max, 1);
-    const y_mid = getRoundedNumberStr(pp_average, 1);
+    const y_mid = getRoundedNumberStr((pp_max + pp_min) / 2, 1);
     const y_min = getRoundedNumberStr(pp_min, 1);
 
     // 绘制坐标
