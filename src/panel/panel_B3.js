@@ -2,7 +2,7 @@ import {
     exportJPEG, getImageFromV3, getMapBG,
     getPanelNameSVG, implantImage,
     implantSvgBody, readTemplate,
-    replaceText, replaceTexts, getAvatar
+    replaceText, replaceTexts, getAvatar, isEmptyArray
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -458,13 +458,20 @@ export async function panel_B3(data = {
 const getLevel = (data = 0, level_arr = []) => {
     const arr = level_arr.reverse()
 
+    if (isEmptyArray(arr)) {
+        return 0
+    }
+
     for (let i = 0; i < arr.length; i++) {
         const v = arr[i]
         if (data > v) {
             return i
         }
     }
-    return 0
+
+    const last = arr[arr.length - 1]
+
+    return ((last - data) / last) || 0
 }
 
 const getRoman = (level = 0) => {
