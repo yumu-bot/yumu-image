@@ -557,7 +557,10 @@ const component_J6 = (
 
     const pp_max = Math.max.apply(Math, arr);
     const pp_min = Math.min.apply(Math, arr);
-    const pp_average = (pp_max + pp_min) / 2;
+    const pp_average = Math.round(
+        arr.reduce((prev, curr) => {
+            return prev + curr
+        }) / arr.length) || 0
 
     const y_max = getRoundedNumberStr(pp_max, 1);
     const y_mid = getRoundedNumberStr(pp_average, 1);
