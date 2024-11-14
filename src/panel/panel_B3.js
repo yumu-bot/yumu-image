@@ -462,7 +462,7 @@ const getLevel = (data = 0, arr = []) => {
         return 0
     }
 
-    let level = arr[arr.length - 1];
+    let level = (arr.length - 1) || 0;
 
     for (let i = 0; i < arr.length; i++) {
         const v = arr[i]
