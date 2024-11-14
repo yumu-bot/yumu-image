@@ -119,6 +119,10 @@ export const PanelDraw = {
             rad_curr = rad_prev - rad_curr;
             rad_prev = rad_prev - rad_curr;
         }
+        // 整圆
+        if (rad_curr - rad_prev > 2 * pi - 1e-7) {
+            return PanelDraw.Circle(cx, cy, r, color, opacity)
+        }
 
         let sin_sign;
         const cos_sign = -1
@@ -376,8 +380,8 @@ export const PanelDraw = {
             const dy = data_y[i]
             const color = colors[i]
 
-            const cx = x + ((dx - x_min) / (x_max - x_min) || dx)
-            const cy = y + ((dy - y_min) / (y_max - y_min) || dy)
+            const cx = x + w * ((dx - x_min) / (x_max - x_min) || 0)
+            const cy = y + r + (h - 2 * r) * ((dy - y_min) / (y_max - y_min) || 0)
 
             svg += PanelDraw.Circle(cx, cy, r, color, opacity)
         }

@@ -439,7 +439,7 @@ export async function getAvatar(link, use_cache = true, default_image_path = get
     } else if (isNumber(link)) {
         return await readNetImage('https://a.ppy.sh/' + link, use_cache, default_image_path);
     } else {
-        return await readNetImage(link?.toString(), use_cache, default_image_path);
+        return await readNetImage(link + '', use_cache, default_image_path);
     }
 }
 

@@ -1253,6 +1253,262 @@ export async function label_J3(data = {
     return svg.toString();
 }
 
+//BA-J4-模组评级标签
+export function label_J4(data = {
+    icon_title: 'Play Count',
+    remark: '3946 PP',
+    data_b: '024',
+    abbr: 'PC',
+
+    bar_progress: 0,
+    bar_color: 'none',
+    max_width: 120,
+    hide: false,
+    hue: 342,
+}) {
+    let svg = `
+        <g id="Text_LJ4">
+        </g>
+    `;
+
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LJ4">)/;
+
+    const is_dark_mode = (hex2hsl(data.bar_color).l <= 0.2)
+    const is_too_short = data?.max_width <= 120
+
+    const title_max_width = data?.max_width - 20 - 10 - poppinsBold.getTextWidth(data?.remark, 16)
+    const title_str = poppinsBold.cutStringTail(
+        is_too_short ? data.abbr : data.icon_title, 16, title_max_width
+    )
+
+    const icon_title = poppinsBold.getTextPath(title_str, 8, 20, 16, 'left baseline', '#fff');
+    const number_data = poppinsBold.getTextPath(data.data_b, 8, 52, 30, "left baseline", data.bar_color)
+    const remark = poppinsBold.getTextPath(data?.remark, data?.max_width - 20 + 2, 20, 16, "right baseline", '#fff');
+
+    const progress = data?.bar_progress || 0
+    const bar_width = progress === 0 ? 0 : Math.max(20, progress * data?.max_width);
+
+    const bar = PanelDraw.Rect(0, 0, bar_width, 60, 10, data?.bar_color || '#fff', 0.2)
+    const bar_base = PanelDraw.Rect(0, 0, data?.max_width, 60, 10,
+        is_dark_mode ? PanelColor.bright(data.hue) : PanelColor.top(data.hue),
+        1)
+    const bar_side = PanelDraw.Rect(data?.max_width - 12, 8, 4, 44, 2, data?.bar_color || '#fff', 1)
+
+    svg = replaceTexts(svg, [icon_title, number_data, remark, bar_side, bar, bar_base], reg_text)
+
+    return svg.toString();
+}
+
+//BA-J5-参数标签
+export function label_J5(data = {
+    icon: '',
+    icon_title: 'Play Count',
+    remark: '#35 - #65',
+    data_b: '96 - ',
+    data_m: '267',
+    data_b_size: 36,
+    data_m_size: 24,
+    abbr: 'PC',
+    bar_min: 0,
+    bar_mid: 0,
+    bar_max: 0,
+    bar_min_text: null,
+    bar_mid_text: null,
+    bar_max_text: null,
+    min: 0,
+    max: 0,
+    bar_color: 'none',
+    hide: false,
+}) {
+    let svg = `
+        <g id="Icon_LJ5">
+        </g>
+        <g id="Text_LJ5">
+        </g>
+    `;
+
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LJ5">)/;
+    const reg_icon = /(?<=<g id="Icon_LJ5">)/;
+
+    // 原来是 16，感觉太大了，length 会超出
+    const icon_title = poppinsBold.getTextPath(data.abbr, 25, 65, 14, 'center baseline', '#fff');
+
+    const progress_before = Math.min(Math.max(data.min - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 0
+    const progress_after = Math.min(Math.max(data.max - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 1
+
+    const number_color =
+        (progress_after - progress_before < 0) ? '#666' : '#fff';
+    const number_arr = [{
+        font: "poppinsBold",
+        text: data?.data_b || '',
+        size: data?.data_b_size || 36,
+        color: number_color,
+    }, {
+        font: "poppinsBold",
+        text: (data?.data_m || '') + ' ',
+        size: data?.data_m_size || 24,
+        color: number_color,
+    }]
+
+    const number_data = getMultipleTextPath(number_arr, 60, 32, "left baseline")
+
+    // 原来是 16，感觉太大了
+    const remark = poppinsBold.getTextPath(data?.remark, 450, 30, 14, "right baseline", '#666');
+
+    const bar_min = poppinsBold.getTextPath(data?.bar_min_text || data?.bar_min?.toString(), 60, 65, 14, "left baseline", '#666');
+    const bar_mid = poppinsBold.getTextPath(data?.bar_mid_text || data?.bar_mid?.toString(), 255, 65, 14, "center baseline", '#666');
+    const bar_max = poppinsBold.getTextPath(data?.bar_max_text || data?.bar_max?.toString(), 450, 65, 14, "right baseline", '#666');
+
+    const bar_width = Math.max(10, (progress_after - progress_before) * 390);
+
+    const bar = PanelDraw.Rect(60 + 390 * progress_before, 38, bar_width, 10, 5, data?.bar_color || '#fff')
+    const bar_base = PanelDraw.Rect(60, 38, 390, 10, 5, data?.bar_color || '#fff', 0.2)
+
+    svg = replaceTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
+    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+
+    return svg.toString();
+}
+
+//BPA-J6-新谱师标签
+export async function label_J6(data = {
+    avatar_url: 'https://a.ppy.sh/1947052?1730218340.png',
+    username: 'Sakaue Nachi',
+    map_count: 2,
+    pp_count: 576.812,
+    index: 1,
+}, hue = 342) {
+    let svg = `
+    <defs>
+        <clipPath id="clippath-LJ6">
+            <rect width="55" height="55" rx="10" ry="10" style="fill: none;"/>
+        </clipPath>
+    </defs>
+        <g id="Text_LJ6">
+        </g>
+        <g id="Avatar_LJ6" clip-path="url(#clippath-LJ6)">
+        </g>
+    `;
+
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LJ6">)/;
+    const reg_avatar = /(?<=<g id="Avatar_LJ6" clip-path="url\(#clippath-LJ6\)">)/;
+
+    const avatar = await getAvatar(data.avatar_url, true)
+
+    svg = implantImage(svg, 55, 55, 0, 0, 1, avatar, reg_avatar)
+
+    const name = poppinsBold.getTextPath(
+        poppinsBold.cutStringTail(data.username, 22, 160),
+        55 + 10, 52, 22, 'left baseline'
+    )
+
+    const index = poppinsBold.getTextPath(
+        '#' + (data.index || '0'), 55 + 10, 14, 18, 'left baseline'
+    )
+
+    const pp = poppinsBold.getTextPath(
+        Math.round(data.pp_count || '0') + ' PP', 225, 14 - 2, 16, 'right baseline'
+    )
+
+    const count = poppinsBold.getTextPath(
+        (data.map_count || '0') + ' x', 225, 32 - 2, 16, 'right baseline'
+    )
+
+    const base = PanelDraw.Rect(0, 0, 55, 55, 10, PanelColor.top(hue))
+
+    svg = replaceTexts(svg, [name, index, pp, count, base], reg_text)
+
+    return svg.toString()
+}
+
+//BPA-J7-新谱师标签（第一
+export async function label_J7(data = {
+    avatar_url: 'https://a.ppy.sh/1947052?1730218340.png',
+    username: 'Sakaue Nachi',
+    map_count: 2,
+    pp_count: 576.812,
+    index: 1,
+}, hue = 342) {
+    let svg = `
+    <defs>
+        <clipPath id="clippath-LJ7">
+            <rect x="390" y="15" width="85" height="85" rx="20" ry="20" style="fill: none;"/>
+        </clipPath>
+    </defs>
+        <g id="Text_LJ7">
+        </g>
+        <g id="Avatar_LJ7" clip-path="url(#clippath-LJ7)">
+        </g>
+    `;
+
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LJ7">)/;
+    const reg_avatar = /(?<=<g id="Avatar_LJ7" clip-path="url\(#clippath-LJ7\)">)/;
+
+    const avatar = await getAvatar(data.avatar_url, true)
+
+    svg = implantImage(svg, 85, 85, 390, 15, 1, avatar, reg_avatar)
+
+    const name = poppinsBold.getTextPath(
+        poppinsBold.cutStringTail(data.username, 22, 325),
+        15, 96, 36, 'left baseline'
+    )
+
+    const index = getMultipleTextPath(
+        [{
+            font: poppinsBold,
+            text: '#',
+            size: 20,
+            color: '#fff',
+        }, {
+            font: poppinsBold,
+            text: (data.index || '0'),
+            size: 30,
+            color: '#fff',
+        },
+        ], 15, 60, 'left baseline'
+    )
+
+    const pp = getMultipleTextPath(
+        [{
+            font: poppinsBold,
+            text: Math.round(data.pp_count || '0'),
+            size: 30,
+            color: '#fff',
+        }, {
+            font: poppinsBold,
+            text: ' PP',
+            size: 20,
+            color: '#fff',
+        },
+        ], 380, 60, 'right baseline'
+    )
+
+    const count = getMultipleTextPath(
+        [{
+            font: poppinsBold,
+            text: (data.map_count || '0'),
+            size: 30,
+            color: '#fff',
+        }, {
+            font: poppinsBold,
+            text: ' x',
+            size: 20,
+            color: '#fff',
+        },
+        ], 380, 96, 'right baseline'
+    )
+
+    const base = PanelDraw.Rect(390, 15, 85, 85, 20, PanelColor.top(hue))
+
+    svg = replaceTexts(svg, [name, index, pp, count, base], reg_text)
+
+    return svg.toString()
+}
+
 //Q-M1-难度标签
 export async function label_M1(data = {
     mode: 'osu',
@@ -1356,126 +1612,6 @@ export async function label_M1(data = {
 
     svg = replaceText(svg, rrect_sr_path, reg_rrect);
     svg = replaceText(svg, rrect_base_path, reg_rrect);
-
-    return svg.toString();
-}
-
-//BA-J4-模组评级标签
-export function label_J4(data = {
-    icon_title: 'Play Count',
-    remark: '3946 PP',
-    data_b: '024',
-    abbr: 'PC',
-
-    bar_progress: 0,
-    bar_color: 'none',
-    max_width: 120,
-    hide: false,
-    hue: 342,
-}) {
-    let svg = `
-        <g id="Text_LJ4">
-        </g>
-    `;
-
-    // 正则表达式
-    const reg_text = /(?<=<g id="Text_LJ4">)/;
-
-    const is_dark_mode = (hex2hsl(data.bar_color).l <= 0.2)
-    const is_too_short = data?.max_width <= 120
-
-    const title_max_width = data?.max_width - 20 - 10 - poppinsBold.getTextWidth(data?.remark, 16)
-    const title_str = poppinsBold.cutStringTail(
-        is_too_short ? data.abbr : data.icon_title, 16, title_max_width
-    )
-
-    const icon_title = poppinsBold.getTextPath(title_str, 8, 20, 16, 'left baseline', '#fff');
-    const number_data = poppinsBold.getTextPath(data.data_b, 8, 52, 30, "left baseline", data.bar_color)
-    const remark = poppinsBold.getTextPath(data?.remark, data?.max_width - 20 + 2, 20, 16, "right baseline", '#fff');
-
-    const progress = data?.bar_progress || 0
-    const bar_width = progress === 0 ? 0 : Math.max(20, progress * data?.max_width);
-
-    const bar = PanelDraw.Rect(0, 0, bar_width, 60, 10, data?.bar_color || '#fff', 0.2)
-    const bar_base = PanelDraw.Rect(0, 0, data?.max_width, 60, 10,
-        is_dark_mode ? PanelColor.bright(data.hue) : PanelColor.top(data.hue),
-        1)
-    const bar_side = PanelDraw.Rect(data?.max_width - 12, 8, 4, 44, 2, data?.bar_color || '#fff', 1)
-
-    svg = replaceTexts(svg, [icon_title, number_data, remark, bar_side, bar, bar_base], reg_text)
-
-    return svg.toString();
-}
-
-//BA-J5-参数标签
-export function label_J5(data = {
-    icon: '',
-    icon_title: 'Play Count',
-    remark: '#35 - #65',
-    data_b: '96 - ',
-    data_m: '267',
-    data_b_size: 36,
-    data_m_size: 24,
-    abbr: 'PC',
-    bar_min: 0,
-    bar_mid: 0,
-    bar_max: 0,
-    bar_min_text: null,
-    bar_mid_text: null,
-    bar_max_text: null,
-    min: 0,
-    max: 0,
-    bar_color: 'none',
-    hide: false,
-}) {
-    // 正则表达式
-    const reg_text = /(?<=<g id="Text_LJ5">)/;
-    const reg_icon = /(?<=<g id="Icon_LJ5">)/;
-
-    // 文字的 <path>
-    // 原来是 16，感觉太大了，length 会超出
-    const icon_title = poppinsBold.getTextPath(data.abbr, 25, 65, 14, 'center baseline', '#fff');
-
-    const progress_before = Math.min(Math.max(data.min - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 0
-    const progress_after = Math.min(Math.max(data.max - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 1
-
-    const number_color =
-        (progress_after - progress_before < 0) ? '#666' : '#fff';
-    const number_arr = [{
-        font: "poppinsBold",
-        text: data?.data_b || '',
-        size: data?.data_b_size || 36,
-        color: number_color,
-    }, {
-        font: "poppinsBold",
-        text: (data?.data_m || '') + ' ',
-        size: data?.data_m_size || 24,
-        color: number_color,
-    }]
-
-    const number_data = getMultipleTextPath(number_arr, 60, 32, "left baseline")
-
-    let svg = `
-        <g id="Icon_LJ5">
-        </g>
-        <g id="Text_LJ5">
-        </g>
-    `;
-
-    // 原来是 16，感觉太大了
-    const remark = poppinsBold.getTextPath(data?.remark, 450, 30, 14, "right baseline", '#666');
-
-    const bar_min = poppinsBold.getTextPath(data?.bar_min_text || data?.bar_min?.toString(), 60, 65, 14, "left baseline", '#666');
-    const bar_mid = poppinsBold.getTextPath(data?.bar_mid_text || data?.bar_mid?.toString(), 255, 65, 14, "center baseline", '#666');
-    const bar_max = poppinsBold.getTextPath(data?.bar_max_text || data?.bar_max?.toString(), 450, 65, 14, "right baseline", '#666');
-
-    const bar_width = Math.max(10, (progress_after - progress_before) * 390);
-
-    const bar = PanelDraw.Rect(60 + 390 * progress_before, 38, bar_width, 10, 5, data?.bar_color || '#fff')
-    const bar_base = PanelDraw.Rect(60, 38, 390, 10, 5, data?.bar_color || '#fff', 0.2)
-
-    svg = replaceTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
 
     return svg.toString();
 }

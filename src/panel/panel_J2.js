@@ -9,11 +9,11 @@ import {
     putCustomBanner,
     getDiffBG,
     getImageFromV3,
-    modifyArrayToFixedLength, getTime
+    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
-import {label_J4, label_J5, LABELS} from "../component/label.js";
+import {label_J4, label_J5, label_J6, label_J7, LABELS} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModColor, getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -219,10 +219,11 @@ export async function panel_J2(data = {
     const componentJ1 = component_J1(PanelJGenerate.attr2componentJ1(bpm_attr, length_attr, combo_attr, star_attr, client_count, has_custom_panel, hue));
     const componentJ2 = component_J2(await PanelJGenerate.scores2componentJ2(bests, has_custom_panel, hue));
     const componentJ3 = component_J3(PanelJGenerate.rank2componentJ3(rank_attr, has_custom_panel, hue));
-    const componentJ4 = component_J4(PanelJGenerate.mods2componentJ4(mods_attr, has_custom_panel, hue));
+    const componentJ4 = component_J4(PanelJGenerate.mods2componentJ4(mods_attr, user.pp, pp_raw_arr?.length || 0, has_custom_panel, hue));
     const componentJ5 = component_J5(PanelJGenerate.distribution2componentJ5(rank_arr, mods_arr, star_arr, length_arr, has_custom_panel, hue));
     const componentJ6 = component_J6(PanelJGenerate.pp2componentJ6(pp_raw_arr, has_custom_panel, hue));
-    const componentJ7 = ''//component_J7(PanelJGenerate.times2componentJ7(time_arr, time_dist_arr, has_custom_panel, hue));
+    const componentJ7 = component_J7(PanelJGenerate.times2componentJ7(time_arr, time_dist_arr, pp_raw_arr, rank_arr, has_custom_panel, hue));
+    const componentJ8 = await component_J8(PanelJGenerate.mappers2componentJ8(favorite_mappers, has_custom_panel, hue));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -233,10 +234,11 @@ export async function panel_J2(data = {
     svg = implantSvgBody(svg, 550, 740, componentJ5, reg_component);
     svg = implantSvgBody(svg, 1390, 330, componentJ6, reg_component);
     svg = implantSvgBody(svg, 1390, 530, componentJ7, reg_component);
+    svg = implantSvgBody(svg, 1390, 740, componentJ8, reg_component);
 
     // 插入图片和部件
-    const background = pp2UserBG(data.user.pp || 0);
-    svg = putCustomBanner(svg, reg_banner, data.user?.profile?.banner);
+    const background = pp2UserBG(user.pp || 0);
+    svg = putCustomBanner(svg, reg_banner, user?.profile?.banner);
     svg = implantImage(svg, 1920, 1080, 0, 280, 0.6, background, reg_background);
 
 
@@ -401,6 +403,8 @@ const component_J3 = (
 const component_J4 = (
     data = {
         mods_attr: [],
+        user_pp: 0,
+        bests_size: 0,
         has_custom_panel: false,
         hue: 342,
     }
@@ -425,6 +429,24 @@ const component_J4 = (
     } else {
         max_width = 120
         x_count = 3
+    }
+
+    // 全是 no mod 的玩家只能这样处理
+    if (isEmptyArray(mods)) {
+        const label = label_J4({
+            icon_title: 'No Mod',
+            abbr: 'NM',
+            remark: Math.round(data?.user_pp || 0) + ' PP',
+            data_b: (data?.bests_size || 0).toString().padStart(3, '0'),
+
+            bar_progress: (data?.bests_size || 0) / 100,
+            bar_color: '#fff',
+            max_width: max_width,
+            hide: data.has_custom_panel,
+            hue: data.hue,
+        })
+
+        svg = implantSvgBody(svg, 10, 250, label, reg)
     }
 
     for (let i = 0; i < Math.min(mods.length, 6); i++) {
@@ -457,6 +479,10 @@ const component_J4 = (
 
     // 插入饼图
     let mod_svg = '';
+
+    // 这里是给 nomod 的饼
+    mod_svg += PanelDraw.Pie(200, 136, 95, 0, data.bests_size / 100, '#fff');
+
     mods.reduce((prev, curr) => {
         const curr_percent = prev + curr.percent;
         const color = getModColor(curr.index);
@@ -533,7 +559,7 @@ const component_J5 = (
 
         const title_graph1 = poppinsBold.getTextPath('Ranks / SR', 805, 22, 12, 'right baseline', '#fff', 1)
 
-        const title_graph2 = poppinsBold.getTextPath('Mods / Length', 804, 290, 12, 'right baseline', '#fff', 1)
+        const title_graph2 = poppinsBold.getTextPath('Mods / Length', 804, 288, 12, 'right baseline', '#fff', 1)
 
         svg = replaceTexts(svg, [title, title_graph1, title_graph2, rrect], reg)
     }
@@ -587,8 +613,119 @@ const component_J6 = (
     svg = replaceTexts(svg, [average, rank_chart, pp_axis, position_axis], reg)
 
     if (!data.has_custom_panel) {
-        const title = poppinsBold.getTextPath('Rank History', 15, 27, 18, 'left baseline', '#fff', 1)
+        const title = poppinsBold.getTextPath('PP', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 490, 180, 20, PanelColor.middle(data.hue), 1)
+
+        svg = replaceTexts(svg, [title, rrect], reg)
+    }
+
+    return svg.toString()
+}
+
+const component_J7 = (
+    data = {
+        time_arr: [],
+        time_dist_arr: [],
+        pp_raw_arr: [],
+        rank_arr: [],
+        has_custom_panel: false,
+        hue: 342,
+    }
+) => {
+    let svg = `<g id="Component_OJ7">
+    </g>`
+
+    const reg = /(?<=<g id="Component_OJ7">)/;
+
+    const times = data?.time_arr || []
+    const dist = data?.time_dist_arr || []
+    const pp = data?.pp_raw_arr || []
+    const rank = data?.rank_arr || []
+
+    const dist_chart = PanelDraw.BarChart(dist, 0, 0, 15, 40 + 120, 460, 120, 4, 4, [
+        '#0075A9', '#00736D', '#007130', '#0D7D25',
+        '#648C0C', '#B7AB00', '#AD6B00', '#A84200'
+    ], 0, 2)
+
+    const colors = rank.map((v) => {return getRankColor(v)})
+
+    const times_chart = PanelDraw.Scatter(15, 40, 460, 120, 4, 0.9, times, pp, colors, 0, 24, Math.min.apply(Math, pp), Math.max.apply(Math, pp))
+
+    let hour_text = ''
+    for (let i = 0; i < 9; i++) {
+        const hour = (i * 3).toString()
+        hour_text += poppinsBold.getTextPath(hour, 15 - 2 + i * (460 / 8), 180, 14, 'center baseline')
+    }
+
+    let hour_max_count = 0
+    let hour_max_index = 0
+    for (let i = 0; i < 9; i++) {
+        const count = dist[i]
+
+        if (count >= hour_max_count) {
+            hour_max_count = count
+            hour_max_index = i
+        }
+    }
+
+    const hour_max_text = poppinsBold.getTextPath(
+        'Max: ' + hour_max_count + 'x ['
+        + (hour_max_index * 3) + '-'
+        + ((hour_max_index + 1) * 3) + ']'
+        , 475, 27, 18, 'right baseline')
+
+    svg = replaceTexts(svg, [times_chart, dist_chart, hour_text, hour_max_text], reg)
+
+    if (!data.has_custom_panel) {
+        const title = poppinsBold.getTextPath('Time Dist', 15, 27, 18, 'left baseline', '#fff', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 190, 20, PanelColor.middle(data.hue), 1)
+
+        svg = replaceTexts(svg, [title, rrect], reg)
+    }
+
+    return svg.toString()
+}
+
+const component_J8 = async (
+    data = {
+        favorite_mappers: [],
+        has_custom_panel: false,
+        hue: 342,
+    }
+) => {
+    let svg = `<g id="Component_OJ8">
+    </g>`
+
+    const reg = /(?<=<g id="Component_OJ8">)/;
+
+    const mappers = data?.favorite_mappers || []
+
+    const most_favorite = mappers[0]
+
+    if (isNotNull(most_favorite)) {
+        // J6 单人版
+        const label = await label_J7({
+            ...most_favorite,
+            index: 1
+        }, data.hue)
+        svg = replaceText(svg, label, reg)
+    }
+
+    for (let i = 1; i < Math.min(mappers.length, 7); i++) {
+        const x = (i - 1) % 2
+        const y = Math.floor((i - 1) / 2)
+
+        const label = await label_J6({
+            ...mappers[i],
+            index: i + 1,
+        }, data.hue)
+
+        svg = implantSvgBody(svg, 10 + x * 235, 105 + y * 65, label, reg)
+    }
+
+    if (!data.has_custom_panel) {
+        const title = poppinsBold.getTextPath('Favorite Mappers', 15, 27, 18, 'left baseline', '#fff', 1)
+        const rrect = PanelDraw.Rect(0, 0, 490, 300, 20, PanelColor.middle(data.hue), 1)
 
         svg = replaceTexts(svg, [title, rrect], reg)
     }
@@ -761,9 +898,11 @@ const PanelJGenerate = {
         }
     },
 
-    mods2componentJ4: (mods_attr, has_custom_panel = false, hue) => {
+    mods2componentJ4: (mods_attr, user_pp, bests_size, has_custom_panel = false, hue) => {
         return {
             mods_attr: mods_attr,
+            user_pp: user_pp,
+            bests_size: bests_size,
             has_custom_panel: has_custom_panel,
             hue: hue,
         }
@@ -783,6 +922,25 @@ const PanelJGenerate = {
     pp2componentJ6: (pp_raw_arr, has_custom_panel = false, hue) => {
         return {
             pp_raw_arr: pp_raw_arr,
+            has_custom_panel: has_custom_panel,
+            hue: hue,
+        }
+    },
+
+    times2componentJ7: (time_arr, time_dist_arr, pp_raw_arr, rank_arr, has_custom_panel = false, hue) => {
+        return {
+            time_arr: time_arr,
+            time_dist_arr: time_dist_arr,
+            pp_raw_arr: pp_raw_arr,
+            rank_arr: rank_arr,
+            has_custom_panel: has_custom_panel,
+            hue: hue,
+        }
+    },
+
+    mappers2componentJ8: (favorite_mappers, has_custom_panel = false, hue) => {
+        return {
+            favorite_mappers: favorite_mappers,
             has_custom_panel: has_custom_panel,
             hue: hue,
         }
