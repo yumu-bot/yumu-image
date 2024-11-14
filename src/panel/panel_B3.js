@@ -2,7 +2,7 @@ import {
     exportJPEG, getImageFromV3, getMapBG,
     getPanelNameSVG, implantImage,
     implantSvgBody, readTemplate,
-    replaceText, replaceTexts, getAvatar, isEmptyArray
+    replaceText, replaceTexts, getAvatar
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
