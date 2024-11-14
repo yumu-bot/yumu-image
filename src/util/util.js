@@ -984,7 +984,7 @@ export function getRoundedNumberStrSmall(number = 0, level = 0) {
             s = -4 * times;
 
         }
-        o = number.toString().slice(s);
+        o = Math.round(number).toString().slice(s);
         return o;
     }
 }
