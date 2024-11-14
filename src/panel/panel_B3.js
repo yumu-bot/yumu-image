@@ -297,7 +297,9 @@ export async function panel_B3(data = {
             const value_o1 = my?.performance?.aim;
             //const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
 
-            const rank_o1 = getRoman(getLevel(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]))
+            const rank_o1 = getRoman(
+                getLevel(value_o1, [1300, 1700, 1975, 2250, 2525, 2800, 3075, 3365, 3800, 4400, 4900, 5900, 6900])
+            )
 
             const fake_rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
             const background_o1 = getRankBG(fake_rank_o1);
@@ -455,23 +457,27 @@ export async function panel_B3(data = {
     return svg.toString();
 }
 
-const getLevel = (data = 0, level_arr = []) => {
-    const arr = level_arr.reverse()
-
+const getLevel = (data = 0, arr = []) => {
     if (isEmptyArray(arr)) {
         return 0
     }
 
+    let level = 0;
+
     for (let i = 0; i < arr.length; i++) {
         const v = arr[i]
-        if (data > v) {
-            return i
+        if (data < v) {
+            level = i
         }
     }
 
-    const last = arr[arr.length - 1]
+    if (level === 0) {
+        const first = arr[0]
 
-    return ((last - data) / last) || 0
+        return ((first - data) / first) || 0
+    } else {
+        return level
+    }
 }
 
 const getRoman = (level = 0) => {
