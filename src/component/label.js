@@ -1306,9 +1306,11 @@ export function label_J5(data = {
     icon_title: 'Play Count',
     remark: '#35 - #65',
     data_b: '96 - ',
-    data_m: '267',
+    data_m: '267 ',
+    data_l: '[134]',
     data_b_size: 36,
     data_m_size: 24,
+    data_l_size: 18,
     abbr: 'PC',
     bar_min: 0,
     bar_mid: 0,
@@ -1342,7 +1344,7 @@ export function label_J5(data = {
         (progress_after - progress_before < 0) ? '#666' : '#fff';
     const number_arr = [{
         font: "poppinsBold",
-        text: data?.data_b || '',
+        text: (data?.data_b || '') + ' ',
         size: data?.data_b_size || 36,
         color: number_color,
     }, {
@@ -1350,12 +1352,16 @@ export function label_J5(data = {
         text: (data?.data_m || '') + ' ',
         size: data?.data_m_size || 24,
         color: number_color,
+    }, {
+        font: "poppinsBold",
+        text: (data?.data_l || ''),
+        size: data?.data_l_size || 18,
+        color: number_color,
     }]
 
-    const number_data = getMultipleTextPath(number_arr, 60, 32, "left baseline")
+    const number_data = getMultipleTextPath(number_arr, 60, 32 - 2, "left baseline")
 
-    // 原来是 16，感觉太大了
-    const remark = poppinsBold.getTextPath(data?.remark, 450, 30, 14, "right baseline", '#666');
+    const remark = poppinsBold.getTextPath(data?.remark, 450, 30, 14, "right baseline", '#fff');
 
     const bar_min = poppinsBold.getTextPath(data?.bar_min_text || data?.bar_min?.toString(), 60, 65, 14, "left baseline", '#666');
     const bar_mid = poppinsBold.getTextPath(data?.bar_mid_text || data?.bar_mid?.toString(), 255, 65, 14, "center baseline", '#666');
@@ -1402,24 +1408,20 @@ export async function label_J6(data = {
 
     const name = poppinsBold.getTextPath(
         poppinsBold.cutStringTail(data.username, 22, 160),
-        55 + 10, 52, 22, 'left baseline'
+        55 + 10, 46, 22, 'left baseline'
     )
 
     const index = poppinsBold.getTextPath(
-        '#' + (data.index || '0'), 55 + 10, 14, 18, 'left baseline'
+        '#' + (data.index || '0'), 55 + 10, 20, 18, 'left baseline'
     )
 
-    const pp = poppinsBold.getTextPath(
-        Math.round(data.pp_count || '0') + ' PP', 225, 14 - 2, 16, 'right baseline'
-    )
-
-    const count = poppinsBold.getTextPath(
-        (data.map_count || '0') + ' x', 225, 32 - 2, 16, 'right baseline'
+    const pp_and_count = poppinsBold.getTextPath(
+        Math.round(data.pp_count || '0') + ' PP [' + (data.map_count || '0') + 'x]', 225, 20, 16, 'right baseline'
     )
 
     const base = PanelDraw.Rect(0, 0, 55, 55, 10, PanelColor.top(hue))
 
-    svg = replaceTexts(svg, [name, index, pp, count, base], reg_text)
+    svg = replaceTexts(svg, [name, index, pp_and_count, base], reg_text)
 
     return svg.toString()
 }
@@ -1454,7 +1456,7 @@ export async function label_J7(data = {
 
     const name = poppinsBold.getTextPath(
         poppinsBold.cutStringTail(data.username, 22, 325),
-        15, 96, 36, 'left baseline'
+        15, 94, 36, 'left baseline'
     )
 
     const index = getMultipleTextPath(
@@ -1495,11 +1497,11 @@ export async function label_J7(data = {
             color: '#fff',
         }, {
             font: poppinsBold,
-            text: ' x',
-            size: 20,
+            text: 'x',
+            size: 30, // 这个 20 就太小了
             color: '#fff',
         },
-        ], 380, 96, 'right baseline'
+        ], 380, 94, 'right baseline'
     )
 
     const base = PanelDraw.Rect(390, 15, 85, 85, 20, PanelColor.top(hue))

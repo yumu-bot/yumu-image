@@ -118,8 +118,6 @@ export async function panel_J2(data = {
         },
     ],
 
-    client_count: [93, 7], //版本成绩数量，第一个是 stable，第二个是 lazer
-
     bpm_attr: [
         {
             length: 719,
@@ -136,6 +134,8 @@ export async function panel_J2(data = {
     combo_attr: [],
     star_attr: [],
 
+    client_count: [93, 7], //版本成绩数量，第一个是 stable，第二个是 lazer
+    pp_sum: 0,
 }) {
     // 自设定义
     const has_custom_panel = false;
@@ -155,6 +155,7 @@ export async function panel_J2(data = {
     const mods_arr = data?.mods_arr || []
 
     const client_count = data?.client_count || []
+    const pp_sum = data?.pp_sum || []
 
     const mods_attr = data?.mods_attr || []
     const rank_attr = data?.rank_attr || []
@@ -213,13 +214,15 @@ export async function panel_J2(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 卡片定义
+    const bests_size = pp_raw_arr?.length || 0
+
     const cardA1 = await card_A1(
         await PanelGenerate.user2CardA1(user)
     );
     const componentJ1 = component_J1(PanelJGenerate.attr2componentJ1(bpm_attr, length_attr, combo_attr, star_attr, client_count, has_custom_panel, hue));
     const componentJ2 = component_J2(await PanelJGenerate.scores2componentJ2(bests, has_custom_panel, hue));
     const componentJ3 = component_J3(PanelJGenerate.rank2componentJ3(rank_attr, has_custom_panel, hue));
-    const componentJ4 = component_J4(PanelJGenerate.mods2componentJ4(mods_attr, user.pp, pp_raw_arr?.length || 0, has_custom_panel, hue));
+    const componentJ4 = component_J4(PanelJGenerate.mods2componentJ4(mods_attr, pp_sum, bests_size, has_custom_panel, hue));
     const componentJ5 = component_J5(PanelJGenerate.distribution2componentJ5(rank_arr, mods_arr, star_arr, length_arr, has_custom_panel, hue));
     const componentJ6 = component_J6(PanelJGenerate.pp2componentJ6(pp_raw_arr, has_custom_panel, hue));
     const componentJ7 = component_J7(PanelJGenerate.times2componentJ7(time_arr, time_dist_arr, pp_raw_arr, rank_arr, has_custom_panel, hue));
@@ -403,7 +406,7 @@ const component_J3 = (
 const component_J4 = (
     data = {
         mods_attr: [],
-        user_pp: 0,
+        pp_sum: 0,
         bests_size: 0,
         has_custom_panel: false,
         hue: 342,
@@ -436,7 +439,7 @@ const component_J4 = (
         const label = label_J4({
             icon_title: 'No Mod',
             abbr: 'NM',
-            remark: Math.round(data?.user_pp || 0) + ' PP',
+            remark: Math.round(data?.pp_sum || 0) + ' PP',
             data_b: (data?.bests_size || 0).toString().padStart(3, '0'),
 
             bar_progress: (data?.bests_size || 0) / 100,
@@ -551,8 +554,6 @@ const component_J5 = (
     const b50 = poppinsBold.getTextPath('#50', 410, 170, 14, 'center baseline')
     const b100 = poppinsBold.getTextPath('#100', 810, 170, 14, 'right baseline')
 
-    svg = replaceTexts(svg, [rank_svg, mods_svg, b1, b50, b100], reg)
-
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Bests Distribution', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 820, 300, 20, PanelColor.middle(data.hue), 1)
@@ -563,6 +564,9 @@ const component_J5 = (
 
         svg = replaceTexts(svg, [title, title_graph1, title_graph2, rrect], reg)
     }
+
+    // 让标题在最上层
+    svg = replaceTexts(svg, [rank_svg, mods_svg, b1, b50, b100], reg)
 
     return svg.toString()
 }
@@ -749,9 +753,10 @@ const PanelJGenerate = {
             },
         ], type = 'bpm', has_custom_panel = false) => {
             const max_attr = attr[0]
+            const mid_attr = attr[1]
             const min_attr = attr[2]
 
-            let label_const, max, min, data_b, data_m, bar_min, bar_mid, bar_max
+            let label_const, max, data_l, min, data_b, data_m, bar_min, bar_mid, bar_max
 
             let bar_min_text = null, bar_mid_text = null, bar_max_text = null
 
@@ -762,6 +767,7 @@ const PanelJGenerate = {
                     max = max_attr?.bpm || 0
                     data_b = min
                     data_m = max
+                    data_l = mid_attr?.bpm || 0
                     bar_min = 60
                     bar_mid = 180
                     bar_max = 300
@@ -772,6 +778,7 @@ const PanelJGenerate = {
                     max = max_attr?.length || 0
                     data_b = getTime(min)
                     data_m = getTime(max)
+                    data_l = getTime(mid_attr?.length || 0)
                     bar_min = 30
                     bar_mid = 300
                     bar_max = 530
@@ -785,6 +792,7 @@ const PanelJGenerate = {
                     max = max_attr?.combo || 0
                     data_b = min
                     data_m = max
+                    data_l = mid_attr?.combo || 0
                     bar_min = 0
                     bar_mid = 1500
                     bar_max = 3000
@@ -795,16 +803,18 @@ const PanelJGenerate = {
                     max = max_attr?.star || 0
                     data_b = getRoundedNumberStr(min, 3)
                     data_m = getRoundedNumberStr(max, 3)
+                    data_l = getRoundedNumberStr(mid_attr?.star || 0, 3)
                     bar_min = 0
                     bar_mid = 4.5
                     bar_max = 9
                 } break;
                 default: {
                     label_const = LABELS.UNDEFINED
-                    max = 0
                     min = 0
+                    max = 0
                     data_b = '0'
-                    data_m = ''
+                    data_m = '0'
+                    data_l = '0'
                     bar_min = 0
                     bar_mid = 0
                     bar_max = 0
@@ -812,15 +822,17 @@ const PanelJGenerate = {
             }
 
             const hide = has_custom_panel === true
-            const remark = `#${min_attr?.ranking || '?'} - #${max_attr?.ranking || '?'}`
+            const remark = `#${min_attr?.ranking || '?'} - #${max_attr?.ranking || '?'} [#${mid_attr?.ranking || '?'}]`
 
             return label_J5({
                 ...label_const,
                 remark: remark,
-                data_b: data_b + ' - ',
+                data_b: data_b + ' -',
                 data_m: data_m,
+                data_l: '[' + data_l + ']',
                 data_b_size: 24,
                 data_m_size: 36,
+                data_l_size: 18,
                 bar_min: bar_min,
                 bar_mid: bar_mid,
                 bar_max: bar_max,
@@ -898,10 +910,10 @@ const PanelJGenerate = {
         }
     },
 
-    mods2componentJ4: (mods_attr, user_pp, bests_size, has_custom_panel = false, hue) => {
+    mods2componentJ4: (mods_attr, pp_sum, bests_size, has_custom_panel = false, hue) => {
         return {
             mods_attr: mods_attr,
-            user_pp: user_pp,
+            pp_sum: pp_sum,
             bests_size: bests_size,
             has_custom_panel: has_custom_panel,
             hue: hue,
