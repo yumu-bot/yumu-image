@@ -16,7 +16,7 @@ import {
     implantSvgBody,
     readTemplate,
     replaceText,
-    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString, isNotNumber
+    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString, isNotNumber, getDifficultyName
 } from "../util/util.js";
 import moment from "moment";
 import {
@@ -687,8 +687,8 @@ const component_E7 = (
     const reg_clip5 = /(?<=<g id="Clip_OE7-5" style="clip-path: url\(#clippath-OE7-5\);">)/;
     const reg_clip6 = /(?<=<g id="Clip_OE7-6" style="clip-path: url\(#clippath-OE7-6\);">)/; //181,100,217 | 238,96,156
 
-    const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 100;
-    const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 100;
+    const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 1;
+    const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 1;
 
     let is_fc = data?.is_fc;
 
@@ -702,7 +702,14 @@ const component_E7 = (
     let fc_pp_text;
     let percent_type;
 
-    if (is_fc) {
+    if (getGameMode(data?.mode, 1) === 'm' && fc_percent < 0.95 && pf_percent < 0.95) {
+        // mania 的争取 FC 模式
+        reference_pp = data?.full_pp;
+
+        percent = fc_percent;
+        percent_type = 'FC'
+        fc_pp_text = Math.round(data?.perfect_pp || 0);
+    } else if (is_fc) {
         reference_pp = data?.perfect_pp;
 
         percent = pf_percent;
@@ -716,7 +723,7 @@ const component_E7 = (
         fc_pp_text = Math.round(data?.perfect_pp || 0);
     }
 
-    const is_perfect = percent_type === 'SS' && Math.round(percent * 100) > 99.9
+    const is_perfect = percent_type === 'SS' && Math.round(percent * 100) > 100 - 1e-7
 
     if (is_perfect) {
         reference_pp_text = ' / PERFECT';
@@ -748,8 +755,9 @@ const component_E7 = (
     ]
 
     const texts = getMultipleTextPath(text_arr, 20, 88, "left baseline");
-
     const title = poppinsBold.getTextPath('Performance Points', 475, 28, 18, 'right baseline', '#fff')
+
+    svg = replaceTexts(svg, [texts, title, fc_pp], reg_text);
 
     switch (getGameMode(data?.mode, 1)) {
         case 'o': {
@@ -801,8 +809,6 @@ const component_E7 = (
     const pp_width = (reference_pp > 0) ? ((data?.pp / reference_pp) * 460) : 460;
     const pp_rect = PanelDraw.Rect(15, 105, pp_width, 30, 15, "url(#grad-OE7-16)", 1);
     svg = replaceText(svg, pp_rect, reg_clip6);
-
-    svg = replaceTexts(svg, [texts, title, fc_pp], reg_text);
 
     return svg;
 
@@ -1224,7 +1230,7 @@ const PanelEGenerate = {
             title: score?.beatmapset?.title || '',
             title_unicode: score?.beatmapset?.title_unicode || '',
             artist: score?.beatmapset?.artist || '',
-            difficulty_name: score?.beatmap?.version || '',
+            difficulty_name: getDifficultyName(score?.beatmap),
             bid: score?.beatmap?.id || 0,
             sid: score?.beatmapset?.id || 0,
             creator: score?.beatmapset?.creator || '',

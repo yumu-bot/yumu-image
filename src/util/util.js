@@ -2001,7 +2001,23 @@ export const od2ms = (od, mode = 'o') => {
     else return ms + 'ms';
 }
 
+// 添加 key 数
+export function getDifficultyName(beatmap) {
+    let difficulty_text = (beatmap?.version || '').toString()
 
+    if (getGameMode(beatmap?.mode, 1) === 'm') {
+        const pattern = /^\[\d+K].*/g
+
+        if (pattern.test(difficulty_text) === false) {
+            const key = Math.round(beatmap.cs)
+            const remove_pattern = new RegExp("\\s*" + key + "K\\s*", "g");
+
+            difficulty_text = '[' + key + 'K] ' + difficulty_text.replace(remove_pattern, ' ').trim()
+        }
+    }
+
+    return difficulty_text
+}
 
 export function compileTemplate(path) {
     const template = readTemplate(path);

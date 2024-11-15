@@ -1,7 +1,7 @@
 import {
     ar2ms, cs2px,
     exportJPEG, getAvatar, getBeatMapTitlePath, getDecimals,
-    getDiffBG, getFileSize, getGameMode, getImageFromV3, getMapStatusImage, getPanelNameSVG,
+    getDiffBG, getDifficultyName, getFileSize, getGameMode, getImageFromV3, getMapStatusImage, getPanelNameSVG,
     getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
     implantImage, implantSvgBody, isBlankString, od2ms,
     readTemplate,
@@ -1014,7 +1014,7 @@ const PanelEGenerate = {
             title: b?.beatmapset?.title || '',
             title_unicode: b?.beatmapset?.title_unicode || '',
             artist: b?.beatmapset?.artist || '',
-            difficulty_name: b?.version || '',
+            difficulty_name: getDifficultyName(b) || '',
             bid: b?.id || 0,
             sid: b?.beatmapset?.id || 0,
             creator: b?.beatmapset?.creator || '',

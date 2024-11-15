@@ -14,7 +14,13 @@ import {
     readNetImage,
     getAvatar,
     getBanner,
-    isNullOrEmptyObject, isNotBlankString, isNotNull, isNotEmptyArray, getTimeByDHMS, requireNonNullElse,
+    isNullOrEmptyObject,
+    isNotBlankString,
+    isNotNull,
+    isNotEmptyArray,
+    getTimeByDHMS,
+    requireNonNullElse,
+    getDifficultyName,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -753,7 +759,9 @@ export const PanelGenerate = {
 
         const acc = getRoundedNumberStr((s?.legacy_accuracy * 100), 3) + '%'
         const combo = (s.max_combo || 0) + 'x'
-        const difficulty_name = s.beatmap.version ? torus.cutStringTail(s.beatmap.version, 24,
+
+        const difficulty_name = s.beatmap.version ? torus.cutStringTail(
+            getDifficultyName(s.beatmap), 24,
             500 - 10 - mods_width - torus.getTextWidth('[] -   ()' + acc + combo + time_diff, 24), true) : '';
 
         const rank = s?.legacy_rank

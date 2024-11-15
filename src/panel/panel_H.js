@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getGameMode, getMapBG, getPanelNameSVG,
+    exportJPEG, getDifficultyName, getGameMode, getMapBG, getPanelNameSVG,
     implantImage,
     implantSvgBody, readTemplate,
     replaceText, transformSvgBody
@@ -245,7 +245,7 @@ async function beatmap2CardD(b, mod, mode) {
         title_unicode: b.beatmapset.title_unicode || '',
         artist: b.beatmapset.artist || '',
         mapper: b.beatmapset.creator || '',
-        difficulty: b.version || '',
+        difficulty: getDifficultyName(b) || '',
         bid: b.id || 0,
         mod: mod,
         cs: cs,

@@ -1,7 +1,7 @@
 import {
     getImageFromV3, getGameMode, getMapBG, getRoundedNumberStr,
     implantImage,
-    implantSvgBody, replaceText
+    implantSvgBody, replaceText, getDifficultyName
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_J} from "./card_J.js";
@@ -172,7 +172,7 @@ const score2CardJ = async (score, calcPP) => {
 
         title: score.beatmapset.title || '',
         artist: score.beatmapset.artist || '',
-        difficulty_name: score.beatmap.version || '',
+        difficulty_name: getDifficultyName(score.beatmap) || '',
         star_rating: calcPP.attr.stars,
         score_rank: score.rank,
         accuracy: getRoundedNumberStr(score.accuracy * 100, 3), //%

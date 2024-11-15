@@ -1,4 +1,5 @@
 import {
+    getDifficultyName,
     getImageFromV3, getMapBG, implantImage, implantSvgBody, replaceText,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
@@ -288,7 +289,7 @@ export async function card_M(s = {
         for (const v of s.beatmaps) {
             const f1 = await label_M1({
                 mode: v.mode,
-                difficulty_name: v.version,
+                difficulty_name: getDifficultyName(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
                 star: getImageFromV3('object-beatmap-star.png'),
@@ -339,7 +340,7 @@ export async function card_M(s = {
             const v = s.beatmaps[i];
             const f1c = await label_M1({
                 mode: v.mode,
-                difficulty_name: v.version,
+                difficulty_name: getDifficultyName(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
                 star: getImageFromV3('object-beatmap-star.png'),
@@ -355,7 +356,7 @@ export async function card_M(s = {
             const v = s.beatmaps[j];
             const f1r = await label_M1({
                 mode: v.mode,
-                difficulty_name: v.version,
+                difficulty_name: getDifficultyName(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_compact_remain_width,
                 star: getImageFromV3('object-beatmap-star.png'),
@@ -371,7 +372,7 @@ export async function card_M(s = {
             const v = s.beatmaps[k];
             const f1 = await label_M1({
                 mode: v.mode,
-                difficulty_name: v.version,
+                difficulty_name: getDifficultyName(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
                 star: getImageFromV3('object-beatmap-star.png'),
@@ -427,7 +428,7 @@ export async function card_M(s = {
             const v = s.beatmaps[i];
             const f1c = await label_M1({
                 mode: v.mode,
-                difficulty_name: v.version,
+                difficulty_name: getDifficultyName(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
                 star: getImageFromV3('object-beatmap-star.png'),
