@@ -2003,9 +2003,10 @@ export const od2ms = (od, mode = 'o') => {
 
 // 添加 key 数
 export function getDifficultyName(beatmap) {
+    console.log(beatmap)
     let difficulty_text = (beatmap?.version || '').toString()
 
-    if (getGameMode(beatmap?.mode, 1) === 'm') {
+    if (beatmap?.mode_int === 3) {
         const pattern = /^\[\d+K].*/g
 
         if (pattern.test(difficulty_text) === false) {
