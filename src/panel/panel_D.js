@@ -270,111 +270,13 @@ export async function panel_D(data = {
     historyUser: null,
 
     //bp
-    "bp-list": [{
-        accuracy: 0.9983416252072969,
-        mods: [ 'HD' ],
-        passed: true,
-        perfect: true,
-        pp: 245.363,
-        rank: 'SH',
-        replay: true,
-        score: 7625753,
-        statistics: {
-            count_50: 0,
-            count_100: 1,
-            count_300: 401,
-            count_geki: 114,
-            count_katu: 1,
-            count_miss: 0
-        },
-        user: {
-            id: 9794030,
-            avatar: 'https://a.ppy.sh/9794030?1689442698.jpeg',
-            pmOnly: false,
-            avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
-            default_group: 'default',
-            is_active: true,
-            is_bot: false,
-            is_deleted: false,
-            is_online: false,
-            is_supporter: false,
-            is_mutual: true,
-            last_visit: [Array],
-            pm_friends_only: false,
-            username: 'SIyuyuko',
-            country_code: 'CN'
-        },
-        weight: { percentage: 69.83373, pp: 171.34613 },
-        best_id: 4280526255,
-        max_combo: 600,
-        user_id: 9794030,
-        created_at: [ 2022, 9, 27, 12, 1, 36 ],
-        id: 4280526255,
-        mode: 'OSU',
-        mode_int: 0,
-        beatmap: {
-            id: 1982050,
-            mode: 'osu',
-            status: 'ranked',
-            version: "Kaguya_Sama's Extra",
-            ar: 9.5,
-            cs: 4,
-            bpm: 108,
-            convert: false,
-            passcount: 12285,
-            playcount: 59715,
-            ranked: 1,
-            url: 'https://osu.ppy.sh/beatmaps/1982050',
-            beatMapFailedCount: 0,
-            beatMapRetryCount: 0,
-            beatMapRating: 0,
-            beatmapset_id: 318425,
-            difficulty_rating: 5.55,
-            mode_int: 0,
-            total_length: 102,
-            hit_length: 102,
-            user_id: 9326064,
-            accuracy: 8.8,
-            drain: 5.5,
-            is_scoreable: true,
-            last_updated: '2019-04-06T18:48:01Z',
-            checksum: '546572114dec84e7dbbdddda45a03fa9',
-            count_sliders: 183,
-            count_spinners: 0,
-            count_circles: 219
-        },
-        beatmapset: {
-            video: true,
-            fromDatabases: false,
-            mapperUID: 2732340,
-            sid: 318425,
-            mapperName: 'Taeyang',
-            ranked: true,
-            rating: 0,
-            id: 318425,
-            user_id: 2732340,
-            artist: 'Forte Escape',
-            artist_unicode: 'Forte Escape',
-            title: 'Ask to Wind',
-            title_unicode: '바람에게 부탁해',
-            creator: 'Taeyang',
-            favourite_count: 144,
-            nsfw: false,
-            play_count: 314154,
-            preview_url: '//b.ppy.sh/preview/318425.mp3',
-            source: 'DJMAX',
-            status: 'ranked',
-            covers: [Object],
-            spotlight: false
-        },
-        create_at_str: '2022-09-27T12:01:36Z'
-    }],
+    "bp-list": [],
 
     // osu taiko catch mania
     mode: "osu",
 
     //user_bp_arr
-    "bp-time": [],
+    "bp-times": [],
     bonus_pp: 0,
 
     // 比对自几天前
@@ -399,7 +301,7 @@ export async function panel_D(data = {
 
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser));
 
-    const cardF5 = await card_F5(user2CardF5(data.user, mode, data["bp-time"]));
+    const cardF5 = await card_F5(user2CardF5(data.user, mode, data["bp-times"]));
     const cardF6N = await card_F6N(user2CardF6N(data.user, data.historyUser, mode, data.bonus_pp));
     const cardF7 = await card_F7(user2CardF7(data.user, mode));
     const cardF1N = await card_F1N(user2CardF1N(data.user, data.historyUser, mode));
