@@ -2003,7 +2003,6 @@ export const od2ms = (od, mode = 'o') => {
 
 // 添加 key 数
 export function getDifficultyName(beatmap) {
-    console.log(beatmap)
     let difficulty_text = (beatmap?.version || '').toString()
 
     if (beatmap?.mode_int === 3) {
