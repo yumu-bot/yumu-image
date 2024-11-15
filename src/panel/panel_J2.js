@@ -554,19 +554,22 @@ const component_J5 = (
     const b50 = poppinsBold.getTextPath('#50', 410, 170, 14, 'center baseline')
     const b100 = poppinsBold.getTextPath('#100', 810, 170, 14, 'right baseline')
 
+    // 让这两个标题在最上层，因为可能被遮挡
+    if (!data.has_custom_panel) {
+        const title_graph1 = poppinsBold.getTextPath('Ranks / SR', 805, 22, 12, 'right baseline', '#fff', 1)
+        const title_graph2 = poppinsBold.getTextPath('Mods / Length', 804, 288, 12, 'right baseline', '#fff', 1)
+
+        svg = replaceTexts(svg, [title_graph1, title_graph2], reg)
+    }
+
+    svg = replaceTexts(svg, [rank_svg, mods_svg, b1, b50, b100], reg)
+
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Bests Distribution', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 820, 300, 20, PanelColor.middle(data.hue), 1)
 
-        const title_graph1 = poppinsBold.getTextPath('Ranks / SR', 805, 22, 12, 'right baseline', '#fff', 1)
-
-        const title_graph2 = poppinsBold.getTextPath('Mods / Length', 804, 288, 12, 'right baseline', '#fff', 1)
-
-        svg = replaceTexts(svg, [title, title_graph1, title_graph2, rrect], reg)
+        svg = replaceTexts(svg, [title, rrect], reg)
     }
-
-    // 让标题在最上层
-    svg = replaceTexts(svg, [rank_svg, mods_svg, b1, b50, b100], reg)
 
     return svg.toString()
 }
