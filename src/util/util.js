@@ -413,7 +413,6 @@ export function getFileSize(path = "") {
  * @return {Promise<string>} 返回位于文件系统的绝对路径
  */
 export async function getMapBG(sid = 0, cover = 'cover', use_cache = true, default_image_path = getImageFromV3('card-default.png')) {
-
     if (sid === 0 || isNotNumber(sid)) return default_image_path
 
     const bg = await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', use_cache, default_image_path);

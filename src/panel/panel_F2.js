@@ -86,8 +86,9 @@ export async function panel_F2(data = {}) {
         }
     )
 
-    const isTeamVS = ((data?.MatchRound?.team_type || data?.MatchRound?.teamType) === "team-vs");
-    const totalScore = data?.MatchRound?.teamScore?.total || 0;
+    const round = data?.MatchRound
+    const isTeamVS = ((round?.team_type || round?.teamType) === "team-vs");
+    const totalScore = round?.team_score?.total || round?.teamScore?.total || 0;
 
     const playerCount = scoreArr.length;
 
@@ -183,7 +184,7 @@ export async function panel_F2(data = {}) {
     svg = replaceText(svg, background_height, reg_height);
 
     // 这里是渲染真实的谱面
-    const beatmap = data?.MatchRound?.beatmap; //await getBeatmapAttr(data.MatchRound.beatmap, getRoundMods(data.MatchRound?.mods, data.MatchRound?.scores[0]?.mods))
+    const beatmap = round?.beatmap; 
 
     // 导入比赛简介卡（A2卡
     const f = await card_A2(await roundInfo2CardA2(data));
@@ -279,7 +280,6 @@ async function roundInfo2CardA2(data = {
             status: 'ranked',
             retry: 0,
             fail: 0,
-            beatMapID: 4249702,
             osuMode: 'MANIA',
             beatmapset_id: 2034520,
             difficulty_rating: 4.34,
@@ -293,11 +293,12 @@ async function roundInfo2CardA2(data = {
     },
     index: 2
 }) {
-    const isTeamVS = ((data?.MatchRound?.team_type || data?.MatchRound?.teamType) === 'team-vs');
+    const round = data?.MatchRound
+    const isTeamVS = ((round?.team_type || round?.teamType) === 'team-vs');
 
     const name = data?.MatchStat?.name || '';
-    const red = data?.MatchRound?.teamScore?.red || 0;
-    const blue = data?.MatchRound?.teamScore?.blue || 0;
+    const red = round?.teamScore?.red || 0;
+    const blue = round?.teamScore?.blue || 0;
 
     const isContainVS = name.toLowerCase().match('vs');
 
@@ -311,9 +312,9 @@ async function roundInfo2CardA2(data = {
         title2 = '';
     }
 
-    const mods = data?.MatchRound?.mods || [];
+    const mods = round?.mods || [];
 
-    const background = await getMapBG(data?.MatchRound?.beatmap?.beatmapset?.id);
+    const background = await getMapBG(round?.beatmap?.beatmapset_id);
 
     let left1;
 
@@ -329,7 +330,7 @@ async function roundInfo2CardA2(data = {
 
     // 在之后重构面板后，这里要放 roundID
 
-    const left2 = 'Players ' + data?.MatchRound?.scores?.length;
+    const left2 = 'Players ' + round?.scores?.length;
     const left3 = 'Round ' + ((data?.index > 80) ? ('80+') : data?.index);
 
     let right1;
@@ -338,7 +339,7 @@ async function roundInfo2CardA2(data = {
     let right3b;
     let right3m = '';
 
-    if (isNotBlankString(data?.MatchRound?.winningTeam)) {
+    if (isNotBlankString(round?.winningTeam)) {
         if (red !== blue) {
             right1 = '+ ' + Math.abs(red - blue);
         } else {
@@ -346,7 +347,7 @@ async function roundInfo2CardA2(data = {
         }
         right2 = red + ' vs ' + blue;
         right3b = '';
-        right3m = data?.MatchRound?.winningTeam + ' wins';
+        right3m = round?.winningTeam + ' wins';
     } else {
         if (isTeamVS) {
             right1 = '+- 0'
@@ -354,7 +355,7 @@ async function roundInfo2CardA2(data = {
             right3b = 'draw';
         } else {
             right1 = '';
-            right2 = 'Total ' + (data?.MatchRound?.teamScore?.total || 0);
+            right2 = 'Total ' + (round?.teamScore?.total || 0);
             right3b = 'h2h';
         }
     }
