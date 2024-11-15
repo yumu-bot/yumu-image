@@ -348,6 +348,11 @@ const component_J3 = (
         x_count = 3
     }
 
+    // fc 如果是空的，就去掉它
+    if (rank[0]?.index === 'FC' && rank[0]?.map_count <= 0) {
+        rank.shift()
+    }
+
     for (let i = 0; i < Math.min(rank.length, 6); i++) {
         const v = rank[i]
         /*{
