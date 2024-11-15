@@ -556,7 +556,7 @@ const component_J5 = (
 
     // 让这两个标题在最上层，因为可能被遮挡
     if (!data.has_custom_panel) {
-        const title_graph1 = poppinsBold.getTextPath('Ranks / SR', 805, 22, 12, 'right baseline', '#fff', 1)
+        const title_graph1 = poppinsBold.getTextPath('Ranks / Star Rating', 805, 22, 12, 'right baseline', '#fff', 1)
         const title_graph2 = poppinsBold.getTextPath('Mods / Length', 804, 288, 12, 'right baseline', '#fff', 1)
 
         svg = replaceTexts(svg, [title_graph1, title_graph2], reg)
