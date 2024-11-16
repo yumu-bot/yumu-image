@@ -614,24 +614,24 @@ const component_E7 = (
         return (child_pp > 0) ? Math.max(min_width, child_pp_width) : 0;
     }
 
-    function getChildPPPath(child_pp = 0, x = 0, y = 0, size = 24, width = 30, max_width = 30, interval = 0) {
+    function getChildPPPath(child_pp = 0, x = 0, y = 0, size = 24, offset = 30, width = 30, interval = 0, max_width = 460) {
         const pp_str = Math.round(child_pp).toString();
-        const shown = isTextShown('poppinsBold', child_pp, size, max_width, interval);
-        const slight = isTextSlightlyWider('poppinsBold', child_pp, size, max_width, interval);
+        const shown = isTextShown('poppinsBold', child_pp, size, width, interval);
+        const slight = isTextSlightlyWider('poppinsBold', child_pp, size, width, interval);
 
         return shown ?
-            poppinsBold.getTextPath(pp_str, x + width - interval, y, size, 'right baseline', '#382c32') :
-            (slight ? poppinsBold.getTextPath(pp_str, x + width - (1/2 * max_width), y, size, 'center baseline', '#382c32') : '');
+            poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - interval, y, size, 'right baseline', '#382c32') :
+            (slight ? poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - (1 / 2 * width), y, size, 'center baseline', '#382c32') : '');
     }
 
     // 宽度大于最大宽 + 2x 间距
-    function isTextShown(font = 'poppinsBold', pp = 0, size = 24, max_width = 0, interval = 0) {
-        return typeof pp === "number" && max_width > 0 && (max_width - 2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
+    function isTextShown(font = 'poppinsBold', pp = 0, size = 24, width = 0, interval = 0) {
+        return typeof pp === "number" && width > 0 && (width - 2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
     }
 
     // 宽度大于最大宽 - 1/2x 间距
-    function isTextSlightlyWider(font = 'poppinsBold', pp = 0, size = 24, max_width = 0, interval = 0) {
-        return typeof pp === "number" && max_width > 0 && (max_width + 1/2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
+    function isTextSlightlyWider(font = 'poppinsBold', pp = 0, size = 24, width = 0, interval = 0) {
+        return typeof pp === "number" && width > 0 && (width + 1/2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
     }
 };
 
