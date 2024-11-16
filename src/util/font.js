@@ -113,7 +113,7 @@ function getTextPath_BerlinBold(
     shadow = false
 ) {
     return ((shadow === false) ? '' :
-            textToSVGBerlinBold.getPath((text || "").toString(), {
+            textToSVGBerlinBold.getPath((text + ""), {
                 x: x + 2,
                 y: y + 2,
                 fontSize: size,
@@ -123,7 +123,7 @@ function getTextPath_BerlinBold(
                     fill: '#1c1719'
                 }
             })
-    ) + textToSVGBerlinBold.getPath((text || "").toString(), {
+    ) + textToSVGBerlinBold.getPath((text + ""), {
         x: x,
         y: y,
         fontSize: size,
@@ -160,7 +160,7 @@ function getTextWidth_BerlinBold(
     text = '',
     size = 0,
 ) {
-    return textToSVGBerlinBold.getMetrics((text || "").toString(), {
+    return textToSVGBerlinBold.getMetrics((text + ""), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -249,7 +249,7 @@ function getTextPath_TahomaRegular(
     fill = '#fff',
     opacity = 1,
 ) {
-    return textToSVGTahomaRegular.getPath((text || "").toString(), {
+    return textToSVGTahomaRegular.getPath((text + ""), {
         x: x,
         y: y,
         fontSize: size,
@@ -286,7 +286,7 @@ function getTextWidth_TahomaRegular(
     text = '',
     size = 0,
 ) {
-    return textToSVGTahomaRegular.getMetrics((text || "").toString(), {
+    return textToSVGTahomaRegular.getMetrics((text + ""), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -375,7 +375,7 @@ function getTextPath_TahomaBold(
     fill = '#fff',
     opacity = 1,
 ) {
-    return textToSVGTahomaBold.getPath((text || "").toString(), {
+    return textToSVGTahomaBold.getPath((text + ""), {
         x: x,
         y: y,
         fontSize: size,
@@ -412,7 +412,7 @@ function getTextWidth_TahomaBold(
     text = '',
     size = 0,
 ) {
-    return textToSVGTahomaBold.getMetrics((text || "").toString(), {
+    return textToSVGTahomaBold.getMetrics((text + ""), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -501,7 +501,7 @@ function getTextPath_poppinsBold(
     fill = '#fff',
     opacity = 1,
 ) {
-    return textToSVGpoppinsBold.getPath((text || "").toString(), {
+    return textToSVGpoppinsBold.getPath((text + ""), {
         x: x,
         y: y,
         fontSize: size,
@@ -538,7 +538,7 @@ function getTextWidth_poppinsBold(
     text = '',
     size = 0,
 ) {
-    return textToSVGpoppinsBold.getMetrics((text || "").toString(), {
+    return textToSVGpoppinsBold.getMetrics((text + ""), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -627,7 +627,7 @@ function getTextPath_lineSeedSans(
     fill = '#fff',
     opacity = 1,
 ) {
-    return textToSVGlineSeedSansBold.getPath((text || "").toString(), {
+    return textToSVGlineSeedSansBold.getPath((text + ""), {
         x: x,
         y: y,
         fontSize: size,
@@ -664,7 +664,7 @@ function getTextWidth_lineSeedSans(
     text = '',
     size = 0,
 ) {
-    return textToSVGlineSeedSansBold.getMetrics((text || "").toString(), {
+    return textToSVGlineSeedSansBold.getMetrics((text + ""), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -753,7 +753,7 @@ function getTextPath_torus(
     fill = '#fff',
     opacity = 1
 ) {
-    return textToSVGTorusSB.getPath((text || "").toString(), {
+    return textToSVGTorusSB.getPath((text + ""), {
         x: x,
         y: y,
         fontSize: size,
@@ -790,7 +790,7 @@ function getTextWidth_torus(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusSB.getMetrics((text || "").toString(), {
+    return textToSVGTorusSB.getMetrics((text + ""), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -880,7 +880,7 @@ function getTextPath_torusRegular(
     fill = '#fff',
     opacity = 1,
 ) {
-    return textToSVGTorusRegular.getPath((text || "").toString(), {
+    return textToSVGTorusRegular.getPath((text + ""), {
         x: x,
         y: y,
         fontSize: size,
@@ -917,7 +917,7 @@ function getTextWidth_torusRegular(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusRegular.getMetrics((text || "").toString(), {
+    return textToSVGTorusRegular.getMetrics((text + ""), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -1005,7 +1005,7 @@ function getTextPath_PuHuiTi(
     fill = '#fff',
     opacity = 1
 ) {
-    return textToSVGPuHuiTi.getPath((text || "").toString(), {
+    return textToSVGPuHuiTi.getPath((text + ""), {
         x: x,
         y: y,
         fontSize: size,
@@ -1042,7 +1042,7 @@ function getTextWidth_PuHuiTi(
     text = '',
     size = 0,
 ) {
-    return textToSVGPuHuiTi.getMetrics((text || "").toString(), {
+    return textToSVGPuHuiTi.getMetrics((text + ""), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -1092,7 +1092,7 @@ function getTextPath_extra(
     fill = '#fff',
     opacity = 1,
 ) {
-    return textToSVGextra.getPath((text || "").toString(), {
+    return textToSVGextra.getPath((text + ""), {
         x: x,
         y: y,
         fontSize: size,
@@ -1129,7 +1129,7 @@ function getTextWidth_extra(
     text = '',
     size = 0,
 ) {
-    return textToSVGextra.getMetrics((text || "").toString(), {
+    return textToSVGextra.getMetrics((text + ""), {
         x: 0,
         y: 0,
         fontSize: size,
