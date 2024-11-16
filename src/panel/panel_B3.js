@@ -174,7 +174,9 @@ export async function panel_B3(data = {
             stamina: 20.62887514360274,
             accuracy: 4.471821737893736,
             total: 337.4939954788446
-        }
+        },
+
+        advanced_stats: {}
     },
 
     other: {
@@ -253,7 +255,7 @@ export async function panel_B3(data = {
 
             const value_o1 = my?.performance?.total;
 
-            const level_o1 = my?.advancedStats?.advanced;
+            const level_o1 = my?.advanced_stats?.advanced;
             const rank_o1 = getRoman(level_o1);
 
             const fake_rank_o1 = getRankFromValue(level_o1, LV_BOUNDARY);
@@ -270,7 +272,7 @@ export async function panel_B3(data = {
             }));
 
             const value_o2 = others?.performance?.total;
-            const level_o2 = others?.advancedStats?.advanced;
+            const level_o2 = others?.advanced_stats?.advanced;
             const rank_o2 = getRoman(level_o2);
 
             const fake_rank_o2 = getRankFromValue(level_o2, LV_BOUNDARY);
@@ -296,7 +298,7 @@ export async function panel_B3(data = {
             const value_o1 = my?.performance?.aim;
             //const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
 
-            const level_o1 = my?.advancedStats?.index[my?.advancedStats?.index.length - 1] || 0;
+            const level_o1 = my?.advanced_stats?.index[my?.advanced_stats?.index.length - 1] || 0;
             const rank_o1 = getRoman(level_o1)
 
             const fake_rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
@@ -315,7 +317,7 @@ export async function panel_B3(data = {
 
             const value_o2 = my?.performance?.total;
 
-            const level_o2 = my?.advancedStats?.advanced;
+            const level_o2 = my?.advanced_stats?.advanced;
             const rank_o2 = getRoman(level_o2);
 
             const fake_rank_o2 = getRankFromValue(level_o2, LV_BOUNDARY);
@@ -512,7 +514,7 @@ async function drawUserPlus(plus, label, graph, arr_abbr, arr_name, at_right = f
         const name = arr_name[abbr]; //Stamina
         const value = plus?.performance[name]; //1234
 
-        const level = plus?.advancedStats?.index[i]; //lv.10
+        const level = plus?.advanced_stats?.index[i]; //lv.10
         const rank = getRoman(level); //I
 
         const fake_rank = getRankFromValue(level, lv_boundary); //并不用于显示

@@ -408,15 +408,15 @@ export const PanelGenerate = {
 
     matchCal2CardA2: async (c = {}, beatmap = null) => {
         const match = c?.match;
-        const data = c?.matchData;
+        const data = c?.match_data;
 
-        const redWins = data?.teamPointMap?.red || 0;
-        const blueWins = data?.teamPointMap?.blue || 0;
+        const redWins = data?.team_point_map?.red || 0;
+        const blueWins = data?.team_point_map?.blue || 0;
 
-        const isTeamVS = data?.teamVs;
-        const star = getRoundedNumberStr(data?.averageStar || 0, 3);
+        const isTeamVS = data?.team_vs;
+        const star = getRoundedNumberStr(data?.average_star || 0, 3);
 
-        const sid = beatmap?.beatmapset?.id || data?.firstMapSID || 0
+        const sid = beatmap?.beatmapset?.id || data?.first_map_sid || 0
 
         const background = await getMapBG(sid, 'list@2x', hasLeaderBoard(beatmap?.ranked));
 
@@ -431,13 +431,13 @@ export const PanelGenerate = {
             title2 = '';
         }
 
-        const left1 = 'Rounds ' + data?.roundCount;
-        const left2 = 'Players ' + data?.playerCount;
-        const left3 = 'Scores ' + data?.scoreCount;
+        const left1 = 'Rounds ' + data?.round_count;
+        const left2 = 'Players ' + data?.player_count;
+        const left3 = 'Scores ' + data?.score_count;
 
         const right1 = 'SR ' + star + '*';
         const right2 = 'MID ' + match?.match?.id || 0;
-        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) : data?.roundCount.toString()
+        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) : data?.round_count.toString()
         const right3m = isTeamVS ? '' : 'x';
 
         return {

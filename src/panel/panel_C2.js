@@ -39,11 +39,15 @@ export async function router_svg(req, res) {
 }
 
 /**
- * 比赛评分2号, 不是木斗力那个
+ * 系列斗力 SRA
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_C2(data = {}) {
+export async function panel_C2(data = {
+    series_data: {
+        match_count: 0,
+    }
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');
 
@@ -69,7 +73,7 @@ export async function panel_C2(data = {}) {
 
     // 导入H卡
     let cardHs = [];
-    const players = data?.seriesData?.playerDataList || [];
+    const players = data?.series_data?.player_data_list || [];
 
     let dataArr = [];
 
@@ -114,11 +118,11 @@ async function playerData2CardH(p = {}) {
 
     const left2 = '#' + (p.ranking || 0) + ' (' + rws + ')';
 
-    const pClass = p.playerClass;
-    const color_index = (pClass.name === "Strongest Marshal" || pClass.name === "Competent Marshal" || pClass.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
+    const player_class = p.player_class;
+    const color_index = (player_class.name === "Strongest Marshal" || player_class.name === "Competent Marshal" || player_class.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
 
     let pubg;
-    switch (pClass.color) {
+    switch (player_class.color) {
         case "#FFF100": pubg = 'object-score-backimage-X.jpg'; break;
         case "#FF9800": pubg = 'object-score-backimage-S.jpg'; break;
         case "#22AC38": pubg = 'object-score-backimage-A.jpg'; break;
@@ -139,7 +143,7 @@ async function playerData2CardH(p = {}) {
         background: getImageFromV3(pubg),
         cover: avatar,
         title: p?.player?.username || 'UID:' + p.player.id,
-        title2: p?.player?.country?.countryCode || '',
+        title2: p?.player?.country?.country_code || '',
         left1: left1,
         left2: left2,
         index_b: getRoundedNumberStrLarge(p?.mra, 3),
@@ -148,13 +152,13 @@ async function playerData2CardH(p = {}) {
         index_m_size: 36,
         label1: '',
         label2: '',
-        label3: pClass?.name,
-        label4: pClass?.nameCN,
+        label3: player_class?.name,
+        label4: player_class?.name_cn,
         mods_arr: [],
 
         color_title2: '#aaa',
-        color_right: pClass?.color,
-        color_left: pClass?.color,
+        color_right: player_class?.color,
+        color_left: player_class?.color,
         color_index: color_index,
         color_label1: '',
         color_label2: '',
@@ -168,12 +172,12 @@ async function playerData2CardH(p = {}) {
 }
 
 async function seriesData2CardA2(data){
-    const s_data = data?.seriesData
-    const s_stat = data?.series?.seriesStat
+    const s_data = data?.series_data
+    const s_stat = data?.series?.series_stat
 
-    const star = getRoundedNumberStr(s_data?.averageStar || 0, 3);
+    const star = getRoundedNumberStr(s_data?.average_star || 0, 3);
 
-    const background = await getMapBG(s_data?.firstMapSID, 'list@2x', false);
+    const background = await getMapBG(s_data?.first_map_sid, 'list@2x', false);
 
     const title = s_stat?.name || "";
     let title1, title2;
@@ -187,18 +191,18 @@ async function seriesData2CardA2(data){
     }
 
     //这里的时间戳不需要 .add(8, 'hours')
-    const left1 = 'M' + s_data?.matchCount +
-        ' R' + s_data?.roundCount +
-        ' P' + s_data?.playerCount +
-        ' S' + s_data?.scoreCount;
+    const left1 = 'M' + s_data?.match_count +
+        ' R' + s_data?.round_count +
+        ' P' + s_data?.player_count +
+        ' S' + s_data?.score_count;
 
-    const left2 = moment(s_stat?.start_time, 'X').format('YYYY/MM/DD HH:mm')
-    const left3 = moment(s_stat?.end_time, 'X').format('YYYY/MM/DD HH:mm');
+    const left2 = '' //moment(s_stat?.start_time, 'X').format('YYYY/MM/DD HH:mm')
+    const left3 = '' //moment(s_stat?.end_time, 'X').format('YYYY/MM/DD HH:mm');
 
     const right1 = 'SR ' + star + '*';
     const right2 = 'Scores/Player'; // + data.matchStat.id || 0;
-    const right3b = s_data?.playerCount > 0 ? getRoundedNumberStrLarge(s_data?.scoreCount / s_data?.playerCount, 3) : "0";
-    const right3m = s_data?.playerCount > 0 ? getRoundedNumberStrSmall(s_data?.scoreCount / s_data?.playerCount, 3) : "";
+    const right3b = s_data?.player_count > 0 ? getRoundedNumberStrLarge(s_data?.score_count / s_data?.player_count, 3) : "0";
+    const right3m = s_data?.player_count > 0 ? getRoundedNumberStrSmall(s_data?.score_count / s_data?.player_count, 3) : "";
 
     return {
         background: background,

@@ -141,7 +141,7 @@ export async function panel_E2(data = {
             url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg',
             custom_url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg'
         },
-        country: { countryCode: 'CN', countryName: 'China' },
+        country: { country_code: 'CN', countryName: 'China' },
         kudosu: { total: 391, available: 391 },
         rank_history: { mode: 'OSU', data: [Array] }
     },

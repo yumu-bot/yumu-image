@@ -115,7 +115,7 @@ export async function panel_A1(data = {
             "custom_url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg"
         },
         "country": {
-            "countryCode": "TW",
+            "country_code": "TW",
             "countryName": "Taiwan"
         },
     },
@@ -197,7 +197,7 @@ export async function panel_A1(data = {
             "custom_url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg"
         },
         "country": {
-            "countryCode": "TW",
+            "country_code": "TW",
             "countryName": "Taiwan"
         },
     }],

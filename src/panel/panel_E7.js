@@ -57,24 +57,24 @@ export async function panel_E7(data = {
             latest_event_id: 2380999986,
             current_game_id: null
         },
-        matchData: {
-            teamVs: false,
-            averageStar: 3.896571159362793,
-            firstMapSID: 2034520,
-            playerDataList: [ [Object] ],
-            teamPointMap: { none: 2 },
-            roundCount: 2,
-            playerCount: 1,
-            scoreCount: 2,
-            playerDataMap: { '7003013': [Object] }
+        match_data: {
+            team_vs: false,
+            average_star: 3.896571159362793,
+            first_map_sid: 2034520,
+            player_data_list: [ [Object] ],
+            team_point_map: { none: 2 },
+            round_count: 2,
+            player_count: 1,
+            score_count: 2,
+            player_data_map: { '7003013': [Object] }
         },
         rounds: [
             {
                 mode: 'mania',
                 mods: [],
-                winningTeam: 'none',
-                teamScore: [Object],
-                winningTeamScore: 449308,
+                winning_team: 'none',
+                team_score: [Object],
+                winning_team_score: 449308,
                 id: 599586560,
                 beatmap_id: 4249702,
                 start_time: 1725036695,
@@ -88,9 +88,9 @@ export async function panel_E7(data = {
             {
                 mode: 'mania',
                 mods: [],
-                winningTeam: 'none',
-                teamScore: [Object],
-                winningTeamScore: 611979,
+                winning_team: 'none',
+                team_score: [Object],
+                winning_team_score: 611979,
                 id: 599586738,
                 beatmap_id: 1212852,
                 start_time: 1725036815,
@@ -148,7 +148,6 @@ export async function panel_E7(data = {
                 match: [Object]
             }
         ],
-        beatmapApiService: {}
     }
     ,
 

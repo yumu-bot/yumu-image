@@ -88,9 +88,9 @@ export async function panel_F2(data = {}) {
 
     const round = data?.MatchRound
     const isTeamVS = ((round?.team_type || round?.teamType) === "team-vs");
-    const totalScore = round?.team_score?.total || round?.teamScore?.total || 0;
+    const totalScore = round?.team_score?.total || round?.team_score?.total || 0;
 
-    const playerCount = scoreArr.length;
+    const player_count = scoreArr.length;
 
     if (isTeamVS) {
         let redA1 = [];
@@ -98,14 +98,14 @@ export async function panel_F2(data = {}) {
 
         for (const v of redArr) {
             v.total_score = totalScore;
-            v.total_player = playerCount;
+            v.total_player = player_count;
             const f = await card_A1(await PanelGenerate.matchScore2CardA1(v));
             redA1.push(f);
         }
 
         for (const v of blueArr) {
             v.total_score = totalScore;
-            v.total_player = playerCount;
+            v.total_player = player_count;
             const f = await card_A1(await PanelGenerate.matchScore2CardA1(v));
             blueA1.push(f);
         }
@@ -152,7 +152,7 @@ export async function panel_F2(data = {}) {
 
         for (const v of noneArr) {
             v.total_score = totalScore;
-            v.total_player = playerCount;
+            v.total_player = player_count;
             const f = await card_A1(await PanelGenerate.matchScore2CardA1(v));
             noneA1.push(f);
         }
@@ -264,9 +264,9 @@ async function roundInfo2CardA2(data = {
     MatchRound: {
         mode: 'mania',
         mods: [],
-        winningTeamScore: 441025,
-        teamScore: {total: 441025, red: 0, blue: 0},
-        winningTeam: 'none',
+        winning_team_score: 441025,
+        team_score: {total: 441025, red: 0, blue: 0},
+        winning_team: 'none',
         id: 595346038,
         beatmap_id: 4249702,
         start_time: 1720416713,
@@ -297,8 +297,8 @@ async function roundInfo2CardA2(data = {
     const isTeamVS = ((round?.team_type || round?.teamType) === 'team-vs');
 
     const name = data?.MatchStat?.name || '';
-    const red = round?.teamScore?.red || 0;
-    const blue = round?.teamScore?.blue || 0;
+    const red = round?.team_score?.red || 0;
+    const blue = round?.team_score?.blue || 0;
 
     const isContainVS = name.toLowerCase().match('vs');
 
@@ -339,7 +339,7 @@ async function roundInfo2CardA2(data = {
     let right3b;
     let right3m = '';
 
-    if (isNotBlankString(round?.winningTeam)) {
+    if (isNotBlankString(round?.winning_team)) {
         if (red !== blue) {
             right1 = '+ ' + Math.abs(red - blue);
         } else {
@@ -347,7 +347,7 @@ async function roundInfo2CardA2(data = {
         }
         right2 = red + ' vs ' + blue;
         right3b = '';
-        right3m = round?.winningTeam + ' wins';
+        right3m = round?.winning_team + ' wins';
     } else {
         if (isTeamVS) {
             right1 = '+- 0'
@@ -355,7 +355,7 @@ async function roundInfo2CardA2(data = {
             right3b = 'draw';
         } else {
             right1 = '';
-            right2 = 'Total ' + (round?.teamScore?.total || 0);
+            right2 = 'Total ' + (round?.team_score?.total || 0);
             right3b = 'h2h';
         }
     }

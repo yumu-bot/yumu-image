@@ -55,23 +55,23 @@ export async function panel_F(data = {
         latest_event_id: 1362015297,
         current_game_id: null
     },
-    matchData: {
-        teamVs: true,
-        averageStar: 5.236081123352051,
-        firstMapSID: 1001507,
-        playerDataList: [],
-        teamPointMap: { red: 8, blue: 5 },
-        roundCount: 13,
-        playerCount: 11,
-        scoreCount: 82
+    match_data: {
+        team_vs: true,
+        average_star: 5.236081123352051,
+        first_map_sid: 1001507,
+        player_data_list: [],
+        team_point_map: { red: 8, blue: 5 },
+        round_count: 13,
+        player_count: 11,
+        score_count: 82
     },
     rounds: [
         {
             mode: 'osu',
             mods: [],
-            winningTeamScore: 505657,
-            teamScore: [Object],
-            winningTeam: 'red',
+            winning_team_score: 505657,
+            team_score: [Object],
+            winning_team: 'red',
             id: 310430020,
             beatmap_id: 2167576,
             start_time: 1584794145,
@@ -85,9 +85,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [],
-            winningTeamScore: 686658,
-            teamScore: [Object],
-            winningTeam: 'red',
+            winning_team_score: 686658,
+            team_score: [Object],
+            winning_team: 'red',
             id: 310431140,
             beatmap_id: 1567613,
             start_time: 1584794644,
@@ -101,9 +101,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [Array],
-            winningTeamScore: 1018967,
-            teamScore: [Object],
-            winningTeam: 'red',
+            winning_team_score: 1018967,
+            team_score: [Object],
+            winning_team: 'red',
             id: 310431873,
             beatmap_id: 907200,
             start_time: 1584794973,
@@ -117,9 +117,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [Array],
-            winningTeamScore: 1457248,
-            teamScore: [Object],
-            winningTeam: 'red',
+            winning_team_score: 1457248,
+            team_score: [Object],
+            winning_team: 'red',
             id: 310432805,
             beatmap_id: 1501761,
             start_time: 1584795377,
@@ -133,9 +133,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [Array],
-            winningTeamScore: 1788145,
-            teamScore: [Object],
-            winningTeam: 'red',
+            winning_team_score: 1788145,
+            team_score: [Object],
+            winning_team: 'red',
             id: 310433743,
             beatmap_id: 1649420,
             start_time: 1584795772,
@@ -149,9 +149,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [Array],
-            winningTeamScore: 1380483,
-            teamScore: [Object],
-            winningTeam: 'blue',
+            winning_team_score: 1380483,
+            team_score: [Object],
+            winning_team: 'blue',
             id: 310434904,
             beatmap_id: 1557405,
             start_time: 1584796255,
@@ -165,9 +165,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [Array],
-            winningTeamScore: 1946290,
-            teamScore: [Object],
-            winningTeam: 'blue',
+            winning_team_score: 1946290,
+            team_score: [Object],
+            winning_team: 'blue',
             id: 310435821,
             beatmap_id: 1058266,
             start_time: 1584796652,
@@ -181,9 +181,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [Array],
-            winningTeamScore: 1814300,
-            teamScore: [Object],
-            winningTeam: 'blue',
+            winning_team_score: 1814300,
+            team_score: [Object],
+            winning_team: 'blue',
             id: 310437250,
             beatmap_id: 2127734,
             start_time: 1584797232,
@@ -197,9 +197,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [],
-            winningTeamScore: 1951160,
-            teamScore: [Object],
-            winningTeam: 'red',
+            winning_team_score: 1951160,
+            team_score: [Object],
+            winning_team: 'red',
             id: 310438019,
             beatmap_id: 169090,
             start_time: 1584797543,
@@ -213,9 +213,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [Array],
-            winningTeamScore: 1732445,
-            teamScore: [Object],
-            winningTeam: 'blue',
+            winning_team_score: 1732445,
+            team_score: [Object],
+            winning_team: 'blue',
             id: 310438890,
             beatmap_id: 1624962,
             start_time: 1584797898,
@@ -229,9 +229,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [Array],
-            winningTeamScore: 2283324,
-            teamScore: [Object],
-            winningTeam: 'blue',
+            winning_team_score: 2283324,
+            team_score: [Object],
+            winning_team: 'blue',
             id: 310440193,
             beatmap_id: 1714705,
             start_time: 1584798418,
@@ -245,9 +245,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [Array],
-            winningTeamScore: 1806035,
-            teamScore: [Object],
-            winningTeam: 'red',
+            winning_team_score: 1806035,
+            team_score: [Object],
+            winning_team: 'red',
             id: 310440938,
             beatmap_id: 1674896,
             start_time: 1584798716,
@@ -261,9 +261,9 @@ export async function panel_F(data = {
         {
             mode: 'osu',
             mods: [],
-            winningTeamScore: 1146381,
-            teamScore: [Object],
-            winningTeam: 'red',
+            winning_team_score: 1146381,
+            team_score: [Object],
+            winning_team: 'red',
             id: 310441611,
             beatmap_id: 1000684,
             start_time: 1584798967,
@@ -306,11 +306,11 @@ export async function panel_F(data = {
     let blueWins = 0;
 
     for (const v of data?.rounds) {
-        if (v.winningTeam === 'red') {
+        if (v.winning_team === 'red') {
             redWins ++;
         }
 
-        if (v.winningTeam === 'blue') {
+        if (v.winning_team === 'blue') {
             blueWins ++;
         }
 
@@ -375,12 +375,12 @@ async function round2CardC(round = {}
     return {
         statistics: {
             is_team_vs: round.team_type === 'team-vs', // TFF表示平局，当然，这个很少见
-            is_team_red_win: round.winningTeam === 'red', //如果不是team vs，这个值默认false
-            is_team_blue_win: round.winningTeam === 'blue', //如果不是team vs，这个值默认false
+            is_team_red_win: round.winning_team === 'red', //如果不是team vs，这个值默认false
+            is_team_blue_win: round.winning_team === 'blue', //如果不是team vs，这个值默认false
 
-            score_team_red: round?.teamScore?.red,
-            score_team_blue: round?.teamScore?.blue,
-            score_total: round?.teamScore?.total,
+            score_team_red: round?.team_score?.red,
+            score_team_blue: round?.team_score?.blue,
+            score_total: round?.team_score?.total,
             wins_team_red_before: red_before, //这局之前红赢了几局？从0开始，不是 team vs 默认0
             wins_team_blue_before: blue_before,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
