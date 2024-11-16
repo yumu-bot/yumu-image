@@ -34,11 +34,11 @@ export async function card_D2(data = {
     <g style="clip-path: url(#clippath-CD2-1);">
     </g>
   </g>
-  <g id="Text" filter="url(#text-shadow)">
+  <g id="Text">
   </g>
 `
     // 路径定义
-    const reg_text = /(?<=<g id="Text" filter="url(#text-shadow)">)/
+    const reg_text = /(?<=<g id="Text">)/
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-CD2-1\);">)/
 
     // 文字定义
