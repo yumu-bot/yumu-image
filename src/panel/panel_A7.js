@@ -272,7 +272,7 @@ export async function panel_A7(data = {
             },
             "create_at_str" : "2023-06-17T11:24:22Z",
 
-            fcPP : 114.514,
+            fc_pp : 114.514,
             index: 68,
             indexAfter: 76,
 
@@ -317,25 +317,23 @@ export async function panel_A7(data = {
 
     // 导入H卡
     let cardHs = [];
-    console.time('bp')
     for (const i in data.scores) {
         const bp = data.scores[i];
 
-        const deltaPP = Math.round(bp?.fcPP - bp?.pp);
+        const deltaPP = Math.round(bp?.fc_pp - bp?.pp);
 
         const card_h = await PanelGenerate.bp2CardH(bp, bp?.index - 1, bp?.indexAfter);
 
         const f = await card_H({
             ...card_h,
 
-            index_b: bp?.fcPP > 0 ? Math.round(bp.fcPP).toString() : '',
+            index_b: bp?.fc_pp > 0 ? Math.round(bp.fc_pp).toString() : '',
             index_l: (deltaPP > 0 ? '+' : '') + deltaPP + 'PP',
             index_l_size: 24,
         });
 
         cardHs.push(f);
     }
-    console.timeEnd('bp')
 
     // 插入图片和部件（新方法
     svg = putCustomBanner(svg, reg_banner, data.user?.profile?.banner);

@@ -116,18 +116,18 @@ async function ppVariants2LabelE(calcPP, verPP = '') {
     }
 
     const nowPP = calcPP.pp_all[`${version}`] || 0;
-    const fcPP = calcPP.perfect_pp_all[`${version}`] || 0;
+    const fc_pp = calcPP.perfect_pp_all[`${version}`] || 0;
 
-    const isDisplayFC = fcPP >= nowPP;
+    const isDisplayFC = fc_pp >= nowPP;
     //const isDisplayPP = (nowPP <= 1000 && isDisplayFC);
 
-    const percent = isDisplayFC ? (Math.round(nowPP / fcPP * 100).toString() + '%') : '-%';
+    const percent = isDisplayFC ? (Math.round(nowPP / fc_pp * 100).toString() + '%') : '-%';
 
     return {
         ...option,
         remark: percent,
         data_b: Math.round(nowPP).toString(),
-        data_m: ' / ' + Math.round(fcPP).toString(),
+        data_m: ' / ' + Math.round(fc_pp).toString(),
         title_font: torus,
     };
 }
