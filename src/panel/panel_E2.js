@@ -57,7 +57,7 @@ export async function panel_E2(data = {
         occupation: 'Elite Graveyarded Mapper',
         discord: 'YumeMuzi#5619',
         interests: 'yuyuko❤',
-        monthlyPlaycounts: [[Object],],
+        monthly_playcounts: [[Object],],
         supporter: false,
         uid: 7003013,
         bot: false,

@@ -123,7 +123,7 @@ function user2CardF1N(user, historyUser, mode = 'osu') {
         user: {
             play_count: user.statistics.play_count || 0,
             play_time: user.statistics.play_time || 0,
-            total_hits: user.totalHits || 0,
+            total_hits: user.total_hits || 0,
         },
 
         delta: {
@@ -154,7 +154,7 @@ function user2CardF5(user, mode = 'osu', bp_arr = []) {
 }
 
 function user2CardF6N(user, historyUser, mode = 'osu', bonus_pp = 0) {
-    const arr = user.monthlyPlaycounts || [{start_date: 0}];
+    const arr = user.monthly_playcounts || [{start_date: 0}];
     let fd = arr[0]?.start_date;
 
     const pc_arr = [];

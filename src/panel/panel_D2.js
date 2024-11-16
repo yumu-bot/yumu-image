@@ -146,7 +146,7 @@ export async function panel_D2(data = {
 
     const componentD5 = component_D5(PanelDGenerate.user2componentD5(user?.rank_history?.data || [], has_custom_panel, hue));
     const componentD6 = component_D6(PanelDGenerate.user2componentD6(best_time, has_custom_panel, hue));
-    const componentD7 = component_D7(PanelDGenerate.user2componentD7(user.monthlyPlaycounts || [{start_date: 0}], has_custom_panel, hue));
+    const componentD7 = component_D7(PanelDGenerate.user2componentD7(user.monthly_playcounts || [{start_date: 0}], has_custom_panel, hue));
     const componentD8 = component_D8(PanelDGenerate.user2componentD8(user, history, has_custom_panel, hue));
 
     // 导入卡片
