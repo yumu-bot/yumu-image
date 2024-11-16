@@ -55,9 +55,9 @@ export async function panel_B2(data = {
     beatMap: {},
 
     mapMinus: {
-        valueList: [],
-        subList: [],
-        abbrList: [],
+        value_list: [],
+        sub_list: [],
+        abbr_list: [],
 
         stream: [],
         jack: [],
@@ -68,9 +68,9 @@ export async function panel_B2(data = {
 
     const m = data?.mapMinus;
 
-    const data_arr = m?.valueList || [];
-    const sub_arr = m?.subList || [];
-    const abbr_arr = m?.abbrList || [];
+    const data_arr = m?.value_list || [];
+    const sub_arr = m?.sub_list || [];
+    const abbr_arr = m?.abbr_list || [];
 
     const map_minus_mania = {
         RC: data_arr[0],
@@ -182,21 +182,21 @@ export async function panel_B2(data = {
 
         drawChart(m?.release, sub_arr[2], 'R', 0, 115, '#00A8EC'),
         drawChart(m?.shield, sub_arr[3], 'E', 170, 115, '#0071BC'),
-        drawChart(m?.reverseShield, sub_arr[4], 'V', 340, 115, '#0054A6'),
+        drawChart(m?.reverse_shield, sub_arr[4], 'V', 340, 115, '#0054A6'),
 
         drawChart(m?.bracket, sub_arr[5], 'B', 0, 230, '#FFF100'),
-        drawChart(m?.handLock, sub_arr[6], 'H', 170, 230, '#FFE11D'),
+        drawChart(m?.hand_lock, sub_arr[6], 'H', 170, 230, '#FFE11D'),
         drawChart(m?.overlap, sub_arr[7], 'O', 340, 230, '#EFC72A'),
 
         drawChart(m?.grace, sub_arr[13], 'G', 0, 345, '#FF9800'),
-        drawChart(m?.delayedTail, sub_arr[14], 'Y', 170, 345, '#EB6100'),
+        drawChart(m?.delayed_tail, sub_arr[14], 'Y', 170, 345, '#EB6100'),
 
-        drawChart(m?.speedJack, sub_arr[10], 'K', 0, 460, '#D32F2F'),
+        drawChart(m?.speed_jack, sub_arr[10], 'K', 0, 460, '#D32F2F'),
         drawChart(m?.trill, sub_arr[11], 'I', 170, 460, '#EA68A2'),
         drawChart(m?.burst, sub_arr[12], 'U', 340, 460, '#EB6877'),
 
-        drawChart(m?.riceDensity, sub_arr[8], 'C', 0, 575, '#920783'),
-        drawChart(m?.lnDensity, sub_arr[9], 'D', 170, 575, '#9922EE'),
+        drawChart(m?.rice_density, sub_arr[8], 'C', 0, 575, '#920783'),
+        drawChart(m?.ln_density, sub_arr[9], 'D', 170, 575, '#9922EE'),
 
     ], reg_right);
 
