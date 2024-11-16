@@ -78,7 +78,7 @@ export async function panel_D(data = {
 
     // 卡片定义
     const mode = data.mode ? getGameMode(data.mode.toLowerCase(), 0) :
-        (data.user.playmode ? getGameMode(data.user.playmode.toLowerCase(), 0) : 'default');
+        (data.user.mode ? getGameMode(data.user.mode.toLowerCase(), 0) : 'default');
 
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser));
 

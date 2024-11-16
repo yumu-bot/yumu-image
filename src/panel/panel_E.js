@@ -69,15 +69,15 @@ export async function panel_E(
                 "discord": null,
                 "interests": null,
                 "playCount": 36485,
-                "globalRank": 30495,
-                "countryRank": 529,
+                "global_rank": 30495,
+                "country_rank": 529,
                 "accuracy": 98.3481,
-                "levelCurrent": 101,
+                "level_current": 101,
                 "levelProgress": 15,
                 "bot": false,
-                "maxCombo": 3430,
-                "playTime": 4617717,
-                "totalHits": 17074899,
+                "max_combo": 3430,
+                "play_time": 4617717,
+                "total_hits": 17074899,
                 "deleted": false,
                 "online": false,
                 "supporter": true,
@@ -91,7 +91,7 @@ export async function panel_E(
                 "is_supporter": true,
                 "last_visit": null,
                 "pm_friends_only": false,
-                "playmode": "OSU",
+                "mode": "OSU",
                 "unranked_beatmapset_count": 1,
                 "ranked_beatmapset_count": 0,
                 "ranked_and_approved_beatmapset_count": 0,
@@ -139,7 +139,7 @@ export async function panel_E(
                 },
                 "country": {
                     "country_code": "TW",
-                    "countryName": "Taiwan"
+                    "country_name": "Taiwan"
                 }
             },
 
@@ -166,7 +166,7 @@ export async function panel_E(
                     "id" : 17064371,
                     "cover" : null,
                     "avatar" : "https://a.ppy.sh/17064371?1675693670.jpeg",
-                    "pmOnly" : false,
+                    "pm_only" : false,
                     "avatar_url" : "https://a.ppy.sh/17064371?1675693670.jpeg",
                     "cover_url" : null,
                     "default_group" : "default",
@@ -375,7 +375,7 @@ function score2CardE2(score, calcPP) {
 
         advanced_judge: score2AdvancedJudge(score), //进阶评级，也就是面板圆环下面那个玩意
         acc_index: score2AccIndex(score),
-        max_combo: score?.beatmap?.max_combo || calcPP.attr.maxCombo || 0,
+        max_combo: score?.beatmap?.max_combo || calcPP.attr.max_combo || 0,
         full_pp: calcPP.full_pp || 0,
         max_pp: calcPP.perfect_pp || 0,
         statistics: score2Statistics(score),

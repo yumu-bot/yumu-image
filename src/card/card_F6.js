@@ -135,7 +135,7 @@ function getPlayCountChart(pc_arr = []) {
 }
 
 async function userData2Labels(data) {
-    // playtime 格式化
+    // play_time 格式化
     let pt_b = '';
     let pt_m = '';
 

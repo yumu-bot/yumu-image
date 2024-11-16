@@ -74,7 +74,7 @@ export async function panel_D(data = {
             user: {
                 id: 9794030,
                 avatar: 'https://a.ppy.sh/9794030?1689442698.jpeg',
-                pmOnly: false,
+                pm_only: false,
                 avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
                 default_group: 'default',
                 is_active: true,
@@ -174,7 +174,7 @@ export async function panel_D(data = {
         user: {
             id: 9794030,
             avatar: 'https://a.ppy.sh/9794030?1689442698.jpeg',
-            pmOnly: false,
+            pm_only: false,
             avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
             default_group: 'default',
             is_active: true,
@@ -280,7 +280,7 @@ export async function panel_D(data = {
 
     // 卡片定义
     const mode = data.mode ? getGameMode(data.mode.toLowerCase(), 0) :
-        (data.user.playmode ? getGameMode(data.user.playmode.toLowerCase(), 0) : 'default');
+        (data.user.mode ? getGameMode(data.user.mode.toLowerCase(), 0) : 'default');
 
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser));
 
@@ -322,7 +322,7 @@ export async function panel_D(data = {
 function user2CardF1(user, mode = 'osu') {
     return {
         mode: mode,
-        level_current: user.levelCurrent,
+        level_current: user.level_current,
         level_progress: Math.floor(user.levelProgress),
     }
 }
@@ -443,7 +443,7 @@ function user2CardF6(user, historyUser, mode = 'osu', bonus_pp = 0, ranked_map_p
 
             rep_watched: user.statistics.replays_watched_by_others || 0,
             follower: user.follower_count || 0,
-            total_hits: user.totalHits || 0,
+            total_hits: user.total_hits || 0,
         },
 
         delta: {

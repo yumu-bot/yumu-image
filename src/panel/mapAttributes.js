@@ -41,7 +41,7 @@ async function getAttr(data = dataTemp) {
 
             bpm: r.bpm.fixed(),
             stars: r.stars.fixed(),
-            combo: r.maxCombo,
+            combo: r.max_combo,
 
             pp: pp.pp,
             ppAim: pp.ppAim,

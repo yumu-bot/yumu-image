@@ -216,7 +216,7 @@ export const PanelGenerate = {
         const rating_str = rating > 0 ? (' *' + rating + ' ') : ' '
         const pp_str = (score?.pp > 0) ? ' (' + Math.round(score.pp) + 'PP) ' : '';
         const acc_str = (Math.round((score?.accuracy || 0) * 10000) / 100) + '%'
-        const combo = score?.max_combo || score?.maxCombo || 0
+        const combo = score?.max_combo || score?.max_combo || 0
         const combo_str = combo > 0 ? (combo + 'x') : ''
 
         const mods_arr = score?.mods || [];

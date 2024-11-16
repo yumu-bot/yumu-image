@@ -182,8 +182,8 @@ const PanelGamma = {
             background: background,
             avatar: avatar,
             mode: user?.rank_history?.mode || 'osu',
-            left1: 'RANK / #' + (user?.globalRank || 0),
-            left2: (user?.country?.code || 'UN') + ' / #' + (user?.countryRank || '0'),
+            left1: 'RANK / #' + (user?.global_rank || 0),
+            left2: (user?.country?.code || 'UN') + ' / #' + (user?.country_rank || '0'),
             left3: 'JOIN / ' + date + difference,
             down1: 'FAN / ' + user?.follower_count || '0',
             down2: 'UID / ' + user?.id || '0',
@@ -191,7 +191,7 @@ const PanelGamma = {
             center0m: 'PP',
             center1b: user?.username || 'Unknown',
             center1m: '',
-            center2: getRoundedNumberStr(user?.accuracy, 3) + '% // Lv.' + user.levelCurrent,
+            center2: getRoundedNumberStr(user?.accuracy, 3) + '% // Lv.' + user.level_current,
 
             background_color: '#2a2226',
             panel: 'info',
@@ -295,8 +295,8 @@ const PanelGamma = {
             background: background,
             avatar: avatar,
             mode: user?.rank_history?.mode || 'osu',
-            left1: 'RANK / #' + (user?.globalRank || 0),
-            left2: (user?.country?.code || 'UN') + ' / #' + (user?.countryRank || '0'),
+            left1: 'RANK / #' + (user?.global_rank || 0),
+            left2: (user?.country?.code || 'UN') + ' / #' + (user?.country_rank || '0'),
             left3: 'JOIN / ' + date + difference,
 
             down_left1: 'SANITY',
@@ -305,8 +305,8 @@ const PanelGamma = {
             // SANITY_BOUNDARY, SANITY_RANKS
             down_left3: sanity_rank,
             down_right1: 'PC / ' + (user?.playCount || 0),
-            down_right2: 'TTH / ' + (user?.totalHits || 0),
-            down_right3: 'PT / ' + getTimeByDHMS((user?.playTime || 0), true),
+            down_right2: 'TTH / ' + (user?.total_hits || 0),
+            down_right3: 'PT / ' + getTimeByDHMS((user?.play_time || 0), true),
             down_left_color: sanity_color,
 
             center0b: Math.round(user?.pp || 0).toString(),
@@ -314,7 +314,7 @@ const PanelGamma = {
             center1b: user?.username || 'Unknown',
             center1m: '',
 
-            center2: getRoundedNumberStr(user?.accuracy, 3) + '% // Lv.' + (user?.levelCurrent || '0'),
+            center2: getRoundedNumberStr(user?.accuracy, 3) + '% // Lv.' + (user?.level_current || '0'),
 
             background_color: sanity_color,
             panel: 'sanity',

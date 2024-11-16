@@ -76,12 +76,12 @@ export async function calcMap(bid, statistics = stat, mode, hasLeaderBoard = tru
     let fc_arr = [];
     let calc_N = new Calculator({...calcBase});
     const difficulty = calc_N.difficulty(beatMap);
-    let calc_F = new Calculator({...calcBase, nMisses: 0, combo: difficulty.maxCombo});
+    let calc_F = new Calculator({...calcBase, nMisses: 0, combo: difficulty.max_combo});
 
     const attr = {
         ...calc_N.mapAttributes(beatMap),
         stars: difficulty.stars,
-        maxCombo: difficulty.maxCombo,
+        max_combo: difficulty.max_combo,
         mods_int: mod_int,
     };
 
@@ -92,7 +92,7 @@ export async function calcMap(bid, statistics = stat, mode, hasLeaderBoard = tru
         //acc 重新赋值
         const a = 90 + i;
         calc_N = new Calculator({...calcBase, acc: a});
-        calc_F = new Calculator({...calcBase, nMisses: 0, combo: difficulty.maxCombo, acc: a});
+        calc_F = new Calculator({...calcBase, nMisses: 0, combo: difficulty.max_combo, acc: a});
 
         nc_arr.push(calc_N.performance(beatMap));
         fc_arr.push(calc_F.performance(beatMap));
@@ -159,7 +159,7 @@ const calcPP = {
         clockRate: 1.5,
         bpm: 234.00023400023397,
         stars: 10.6,
-        maxCombo: 457,
+        max_combo: 457,
     },
     score_progress: 0
 }
@@ -167,7 +167,7 @@ const calcPP = {
  */
 
 export async function getMaxCombo(bid, statistics = stat, mode, hasLeaderBoard = true) {
-    return (await getDifficulty(bid, statistics, mode, hasLeaderBoard)).maxCombo
+    return (await getDifficulty(bid, statistics, mode, hasLeaderBoard)).max_combo
 }
 
 export async function getStarRating(bid, statistics = stat, mode, hasLeaderBoard = true) {
@@ -216,13 +216,13 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
     const attr = {
         ...calculator.mapAttributes(beatMap),
         stars: difficulty.stars,
-        maxCombo: difficulty.maxCombo,
+        max_combo: difficulty.max_combo,
         mods_int: mod_int,
     };
 
     //fc 或者 mania Aiming PP
-    const maxCombo = difficulty.maxCombo;
-    calculator.combo(maxCombo);
+    const max_combo = difficulty.max_combo;
+    calculator.combo(max_combo);
 
     let full_pp;
     if (mode_int !== 3) {
@@ -240,7 +240,7 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
             n300: aimingStats.count_300,
             nGeki: aimingStats.count_geki,
             nKatu: aimingStats.count_katu,
-            combo: maxCombo,
+            combo: max_combo,
             acc: aimingAcc,
             mode: mode_int,
             mods: mod_int,
@@ -252,7 +252,7 @@ export async function calcPerformancePoints(bid, statistics = stat, mode, hasLea
     calculator = new Calculator({
         mode: mode_int,
         mods: mod_int,
-        combo: maxCombo,
+        combo: max_combo,
         acc: 1,
         nGeki: statistics.count_geki,
         nKatu: statistics.count_katu,
@@ -315,7 +315,7 @@ export async function getMapPerformance(bid, mods = 0, mode_int = 0, hasLeaderBo
     const diff = calculator.difficulty(beatMap);
     const attr = calculator.mapAttributes(beatMap);
 
-    calculator.combo(diff.maxCombo);
+    calculator.combo(diff.max_combo);
     calculator.nMisses(0);
 
     switch (modeInt) {

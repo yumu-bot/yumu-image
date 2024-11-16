@@ -1077,7 +1077,7 @@ function getRoundedNumberUnit(number = 0, level = 0) {
 }
 
 /*
-export function getV3Score(v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods = [''], gamemode = 'osu') {
+export function getV3Score(v1score = 0, acc = 0.0, combo = 1, max_combo = 1, mods = [''], gamemode = 'osu') {
 
     let score = 1000000;
     let mode = getGameMode(gamemode, 1);
@@ -1126,7 +1126,7 @@ export function getV3Score(v1score = 0, acc = 0.0, combo = 1, maxcombo = 1, mods
         bonus *= modBonus[v];
     }
 
-    let comboScore = comboRate * (combo / Math.max(maxcombo, 1));
+    let comboScore = comboRate * (combo / Math.max(max_combo, 1));
     let accScore = accRate * Math.pow(acc, accIndex);
 
     return Math.floor(score * bonus * (comboScore + accScore));

@@ -46,15 +46,15 @@ export async function panel_A7(data = {
         "discord": null,
         "interests": null,
         "playCount": 36485,
-        "globalRank": 30495,
-        "countryRank": 529,
+        "global_rank": 30495,
+        "country_rank": 529,
         "accuracy": 98.3481,
-        "levelCurrent": 101,
+        "level_current": 101,
         "levelProgress": 15,
         "bot": false,
-        "maxCombo": 3430,
-        "playTime": 4617717,
-        "totalHits": 17074899,
+        "max_combo": 3430,
+        "play_time": 4617717,
+        "total_hits": 17074899,
         "deleted": false,
         "online": false,
         "supporter": true,
@@ -68,7 +68,7 @@ export async function panel_A7(data = {
         "is_supporter": true,
         "last_visit": null,
         "pm_friends_only": false,
-        "playmode": "OSU",
+        "mode": "OSU",
         "unranked_beatmapset_count": 1,
         "ranked_beatmapset_count": 0,
         "ranked_and_approved_beatmapset_count": 0,
@@ -116,7 +116,7 @@ export async function panel_A7(data = {
         },
         "country": {
             "country_code": "TW",
-            "countryName": "Taiwan"
+            "country_name": "Taiwan"
         },
     },
 
@@ -168,7 +168,7 @@ export async function panel_A7(data = {
                 "id" : 17064371,
                 "cover" : null,
                 "avatar" : "https://a.ppy.sh/17064371?1675693670.jpeg",
-                "pmOnly" : false,
+                "pm_only" : false,
                 "avatar_url" : "https://a.ppy.sh/17064371?1675693670.jpeg",
                 "cover_url" : null,
                 "default_group" : "default",
@@ -208,12 +208,6 @@ export async function panel_A7(data = {
                 "playcount" : 1209979,
                 "ranked" : 1,
                 "url" : "https://osu.ppy.sh/beatmaps/2993974",
-                "beatMapRatingList" : null,
-                "beatMapRetryList" : null,
-                "beatMapFailedList" : null,
-                "beatMapRating" : 0.0,
-                "beatMapRetryCount" : 0,
-                "beatMapFailedCount" : 0,
                 "beatmapset_id" : 1456709,
                 "difficulty_rating" : 6.17,
                 "mode_int" : 0,
@@ -274,7 +268,7 @@ export async function panel_A7(data = {
 
             fc_pp : 114.514,
             index: 68,
-            indexAfter: 76,
+            index_after: 76,
 
         }
     ],
@@ -322,7 +316,7 @@ export async function panel_A7(data = {
 
         const deltaPP = Math.round(bp?.fc_pp - bp?.pp);
 
-        const card_h = await PanelGenerate.bp2CardH(bp, bp?.index - 1, bp?.indexAfter);
+        const card_h = await PanelGenerate.bp2CardH(bp, bp?.index - 1, bp?.index_after);
 
         const f = await card_H({
             ...card_h,

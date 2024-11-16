@@ -32,7 +32,7 @@ export async function card_F2(data = {
             user: {
                 id: 9794030,
                 avatar: 'https://a.ppy.sh/9794030?1689442698.jpeg',
-                pmOnly: false,
+                pm_only: false,
                 avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
                 default_group: 'default',
                 is_active: true,

@@ -63,15 +63,15 @@ export async function panel_E2(data = {
         bot: false,
         online: true,
         deleted: false,
-        totalHits: 8881602,
+        total_hits: 8881602,
         playCount: 23796,
-        countryRank: 666,
-        levelCurrent: 100,
+        country_rank: 666,
+        level_current: 100,
         accuracy: 99.0353,
         levelProgress: 48,
-        globalRank: 35559,
-        playTime: 2344876,
-        maxCombo: 2801,
+        global_rank: 35559,
+        play_time: 2344876,
+        max_combo: 2801,
         avatar_url: 'https://a.ppy.sh/7003013?1689405046.jpeg',
         cover_url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg',
         default_group: 'default',
@@ -82,7 +82,7 @@ export async function panel_E2(data = {
         is_supporter: false,
         last_visit: '2023-12-24T16:18:11+00:00',
         pm_friends_only: false,
-        playmode: 'OSU',
+        mode: 'OSU',
         nominated_beatmapset_count: 0,
         favourite_beatmapset_count: 85,
         graveyard_beatmapset_count: 116,
@@ -141,7 +141,7 @@ export async function panel_E2(data = {
             url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg',
             custom_url: 'https://assets.ppy.sh/user-profile-covers/7003013/2c77630af47d21907bd8a286162e6169bdbb4c8306cc0ac1bb088004890562e7.jpeg'
         },
-        country: { country_code: 'CN', countryName: 'China' },
+        country: { country_code: 'CN', country_name: 'China' },
         kudosu: { total: 391, available: 391 },
         rank_history: { mode: 'OSU', data: [Array] }
     },
@@ -317,7 +317,7 @@ async function beatmap2CardE1(beatmap, mode, calcPP) {
 }
 
 async function expect2CardE5(expected, rank = 'F', mode = 'osu', max_combo = 0, calcPP, calcNC = [0], calcFC = [0]) {
-    const isFC = expected.combo >= calcPP.attr.maxCombo && expected.miss <= 0;
+    const isFC = expected.combo >= calcPP.attr.max_combo && expected.miss <= 0;
     const isPF = rank === 'XH' || rank === 'X';
 
     return {
@@ -335,7 +335,7 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', max_combo = 0, 
         fcStats: expectedFC2Statistics(calcFC),
         statistics_max: getStatMax(calcNC, calcFC),
 
-        max_combo: calcPP.attr.maxCombo || max_combo || 0,
+        max_combo: calcPP.attr.max_combo || max_combo || 0,
         full_pp: calcNC?.[10]?.pp || 0,
         max_pp: calcFC?.[10]?.pp || 0,
 

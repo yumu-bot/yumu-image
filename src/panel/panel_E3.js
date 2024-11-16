@@ -137,7 +137,7 @@ async function beatmap2CardE1(beatmap, mode, calcPP) {
 }
 
 async function expect2CardE5(expected, rank = 'F', mode = 'osu', max_combo = 0, calcPP, calcNC = [0], calcFC = [0]) {
-    const isFC = expected.combo >= calcPP.attr.maxCombo && expected.miss <= 0;
+    const isFC = expected.combo >= calcPP.attr.max_combo && expected.miss <= 0;
     const isPF = rank === 'XH' || rank === 'X';
 
     return {
@@ -155,7 +155,7 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', max_combo = 0, 
         fcStats: expectedFC2Statistics(calcFC),
         statistics_max: getStatMax(calcNC, calcFC),
 
-        max_combo: calcPP.attr.maxCombo || 0,
+        max_combo: calcPP.attr.max_combo || 0,
         full_pp: calcNC?.[10]?.pp || 0,
         max_pp: calcFC?.[10]?.pp || 0,
 

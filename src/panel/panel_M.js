@@ -56,15 +56,15 @@ export async function panel_M(data = {
         "discord": null,
         "interests": null,
         "playCount": 36485,
-        "globalRank": 30495,
-        "countryRank": 529,
+        "global_rank": 30495,
+        "country_rank": 529,
         "accuracy": 98.3481,
-        "levelCurrent": 101,
+        "level_current": 101,
         "levelProgress": 15,
         "bot": false,
-        "maxCombo": 3430,
-        "playTime": 4617717,
-        "totalHits": 17074899,
+        "max_combo": 3430,
+        "play_time": 4617717,
+        "total_hits": 17074899,
         "deleted": false,
         "online": false,
         "supporter": true,
@@ -78,7 +78,7 @@ export async function panel_M(data = {
         "is_supporter": true,
         "last_visit": null,
         "pm_friends_only": false,
-        "playmode": "OSU",
+        "mode": "OSU",
         "nominated_beatmapset_count": null,
         "beatmap_playcounts_count": 6766,
         "unranked_beatmapset_count": 2,
@@ -134,7 +134,7 @@ export async function panel_M(data = {
         },
         "country": {
             "country_code": "TW",
-            "countryName": "Taiwan"
+            "country_name": "Taiwan"
         },
     }, //getUser
 
