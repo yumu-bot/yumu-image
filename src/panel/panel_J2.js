@@ -458,7 +458,7 @@ const component_J4 = (
             data_b: (data?.bests_size || 0).toString().padStart(3, '0'),
 
             bar_progress: (data?.bests_size || 0) / 100,
-            bar_color: '#DADADA',
+            bar_color: '#EEE',
             max_width: max_width,
             hide: data.has_custom_panel,
             hue: data.hue,
@@ -499,7 +499,7 @@ const component_J4 = (
     let mod_svg = '';
 
     // 这里是给 no mod 的饼
-    mod_svg += PanelDraw.Pie(200, 136, 95, 0, data.bests_size / 100, '#DADADA');
+    mod_svg += PanelDraw.Pie(200, 136, 95, 0, data.bests_size / 100, '#EEE');
 
     mods.reduce((prev, curr) => {
         const curr_percent = prev + curr.percent;
