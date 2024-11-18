@@ -3,15 +3,13 @@ import {
     getImageFromV3,
     getPanelNameSVG,
     getRoundedNumberStr,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall,
     implantImage,
     implantSvgBody,
     readTemplate,
     replaceText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_I2} from "../card/card_I2.js";
+import {card_I3} from "../card/card_I3.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {
@@ -106,43 +104,43 @@ export async function panel_MA2(data = {
     const deluxe = data?.scores_latest || []
 
     // 导入i卡
-    let cardI1 = [];
-    let cardI2 = [];
+    let card_b30 = [];
+    let card_r10 = [];
 
     for (const s of standard) {
-        cardI1.push(card_I2(await chuScore2CardI2(s))) ;
+        card_b30.push(card_I3(await chuScore2CardI3(s))) ;
     }
 
     for (const s of deluxe) {
-        cardI2.push(card_I2(await chuScore2CardI2(s))) ;
+        card_r10.push(card_I3(await chuScore2CardI3(s))) ;
     }
 
 
     // 插入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
-    const I1_height = Math.ceil(cardI1.length / 4) * 150
-    const I2_height = Math.ceil(cardI2.length / 4) * 150
+    const b30_height = Math.ceil(card_b30.length / 5) * 150
+    const r10_height = Math.ceil(card_r10.length / 5) * 150
 
-    for (const i in cardI1) {
-        const x = i % 4;
-        const y = Math.floor(i / 4);
+    for (const i in card_b30) {
+        const x = i % 5;
+        const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 150 * y, cardI1[i], reg_card_i);
+        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_b30[i], reg_card_i);
     }
 
-    for (const i in cardI2) {
-        const x = i % 4;
-        const y = Math.floor(i / 4);
+    for (const i in card_r10) {
+        const x = i % 5;
+        const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 150 * y + I1_height, cardI2[i], reg_card_i);
+        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + b30_height, card_r10[i], reg_card_i);
     }
 
     // 导入图片
     svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath("maimai"), reg_banner);
 
     // 计算面板高度
-    const cardHeight = I1_height + I2_height + 40
+    const cardHeight = b30_height + r10_height + (80 - 15)
     const panelHeight = cardHeight + 290
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
@@ -151,21 +149,8 @@ export async function panel_MA2(data = {
     return svg.toString()
 }
 
-async function chuScore2CardI(score = {
-    position: 45,
-    artist: 'PRASTIK DANCEFLOOR',
-    charter: 'じゃこレモン',
-    cid: 2972,
-    ds: 12.1,
-    score: 970350,
-    fc: '',
-    level: '12',
-    level_index: 2,
-    level_label: 'Expert',
-    mid: 1100,
-    ra: 11.82,
-    title: 'TECHNOPOLIS 2085'
-}) {
+/*
+async function chuScore2CardI(score) {
     const rate = getCHUNITHMRank(score?.score || 0)
 
     const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
@@ -210,21 +195,7 @@ async function chuScore2CardI(score = {
     }
 }
 
-async function chuScore2CardI2(score = {
-    position: 45,
-    artist: 'PRASTIK DANCEFLOOR',
-    charter: 'じゃこレモン',
-    cid: 2972,
-    ds: 12.1,
-    score: 970350,
-    fc: '',
-    level: '12',
-    level_index: 2,
-    level_label: 'Expert',
-    mid: 1100,
-    ra: 11.82,
-    title: 'TECHNOPOLIS 2085'
-}) {
+async function chuScore2CardI2(score) {
     const rate = getCHUNITHMRank(score?.score || 0)
 
     const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
@@ -272,18 +243,87 @@ async function chuScore2CardI2(score = {
         component2: '',
         component3: drawCombo(score?.fc),
     }
+}
 
+ */
 
-    function drawCombo(combo = '') {
-        let combo_image
+async function chuScore2CardI3(score = {
+    position: 45,
+    artist: 'PRASTIK DANCEFLOOR',
+    charter: 'じゃこレモン',
+    cid: 2972,
+    ds: 12.1,
+    score: 970350,
+    fc: '',
+    level: '12',
+    level_index: 2,
+    level_label: 'Expert',
+    mid: 1100,
+    ra: 11.82,
+    title: 'TECHNOPOLIS 2085'
+}) {
+    const rate = getCHUNITHMRank(score?.score || 0)
 
-        switch (combo) {
-            case 'fullcombo': combo_image = 'fullcombo'; break;
-            case 'fullchain': combo_image = 'fullchain'; break;
-            case 'alljustice': combo_image = 'alljustice'; break;
-            default: return ''; //combo_image = 'clear'; break;
-        }
+    const score_text = (score?.score || 0).toString()
 
-        return PanelDraw.Image(0, 0, 105, 15, getImageFromV3('Chunithm', `object-icon-chain-${combo_image}.png`))
+    const difficulty_color = getCHUNITHMDifficultyColor(score?.level_index)
+
+    const rating = score?.ra || 0
+    const rating_max = (score?.ds || 0) + 2.15
+    const rating_max_text = score?.score >= 1009000 ? (' [MAX]') : (' [' + getRoundedNumberStr(rating_max, 3) + ']')
+
+    const too_bright = (score?.level_index || 0) === 1;
+
+    return {
+        background: getCHUNITHMRankBG(score?.score || 0),
+        cover: await getCHUNITHMCover(score?.mid || 0),
+        rank: getImageFromV3('Chunithm', `object-score-${rate}2.png`),
+        type: '',
+        level: 0,
+
+        title: score?.title || '',
+        left1: score?.artist || '',
+        left2: score?.charter || '',
+        left3: getRoundedNumberStr(rating, 3),
+        left4: rating_max_text,
+
+        index_b: score_text.slice(0, -4) || '0',
+        index_m: score_text.slice(-4) || '0000',
+        index_l: '',
+        index_b_size: 32,
+        index_m_size: 20,
+        index_r_size: 18,
+        label1: score?.ds?.toString() || '?',
+        label2: score?.position >= 1 ? ('#' + score.position) : '',
+        label3: score?.mid?.toString() || '0',
+
+        color_text: '#fff',
+        color_label1: too_bright ? '#000' : '#fff',
+        color_label2: too_bright ? '#000' : '#fff',
+        color_label3: too_bright ? '#000' : '#fff',
+
+        color_left: difficulty_color,
+        color_rrect1: difficulty_color,
+        color_rrect2: difficulty_color,
+        color_rrect3: difficulty_color,
+
+        component1: '',
+        component2: '',
+        component3: drawCombo(score?.fc),
+
+        left3_is_right: true,
     }
+}
+
+function drawCombo(combo = '') {
+    let combo_image
+
+    switch (combo) {
+        case 'fullcombo': combo_image = 'fullcombo'; break;
+        case 'fullchain': combo_image = 'fullchain'; break;
+        case 'alljustice': combo_image = 'alljustice'; break;
+        default: return ''; //combo_image = 'clear'; break;
+    }
+
+    return PanelDraw.Image(0, 0, 105, 15, getImageFromV3('Chunithm', `object-icon-chain-${combo_image}.png`))
 }

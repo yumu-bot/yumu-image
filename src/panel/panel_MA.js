@@ -5,16 +5,16 @@ import {
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {card_I2} from "../card/card_I2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {
     getMaimaiCover,
-    getMaimaiDifficultyColor, getMaimaiDXStarLevel, getMaimaiDXStarColor, getMaimaiMaximumRating,
+    getMaimaiDifficultyColor, getMaimaiDXStarLevel, getMaimaiMaximumRating,
     getMaimaiRankBG,
     getMaimaiType,
     getMaimaiVersionBG
 } from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {card_I3} from "../card/card_I3.js";
 
 export async function router(req, res) {
     try {
@@ -104,36 +104,36 @@ export async function panel_MA(data = {
     const deluxe = data?.scores_latest || []
 
     // 导入i卡
-    let cardI1 = [];
-    let cardI2 = [];
+    let card_sd = [];
+    let card_dx = [];
 
     for (const s of standard) {
-        cardI1.push(card_I2(await maiScore2CardI2(s))) ;
+        card_sd.push(card_I3(await maiScore2CardI3(s))) ;
     }
 
     for (const s of deluxe) {
-        cardI2.push(card_I2(await maiScore2CardI2(s))) ;
+        card_dx.push(card_I3(await maiScore2CardI3(s))) ;
     }
 
 
     // 插入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
-    const I1_height = Math.ceil(cardI1.length / 4) * 150
-    const I2_height = Math.ceil(cardI2.length / 4) * 150
+    const sd_height = Math.ceil(card_sd.length / 5) * 150
+    const dx_height = Math.ceil(card_dx.length / 5) * 150
 
-    for (const i in cardI1) {
-        const x = i % 4;
-        const y = Math.floor(i / 4);
+    for (const i in card_sd) {
+        const x = i % 5;
+        const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 150 * y, cardI1[i], reg_card_i);
+        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_sd[i], reg_card_i);
     }
 
-    for (const i in cardI2) {
-        const x = i % 4;
-        const y = Math.floor(i / 4);
+    for (const i in card_dx) {
+        const x = i % 5;
+        const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 150 * y + I1_height, cardI2[i], reg_card_i);
+        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + sd_height, card_dx[i], reg_card_i);
     }
 
     // 导入图片
@@ -152,7 +152,7 @@ export async function panel_MA(data = {
     }
 
     // 计算面板高度
-    const cardHeight = I1_height + I2_height + 40
+    const cardHeight = sd_height + dx_height + 80 - 15
     const panelHeight = cardHeight + 290
 
     svg = replaceText(svg, panelHeight, reg_panelheight);
@@ -161,25 +161,8 @@ export async function panel_MA(data = {
     return svg.toString()
 }
 
-async function maiScore2CardI(score = {
-    "achievements": 100.5133,
-    "ds": 10.4,
-    "dxScore": 1125,
-    "fc": "fc",
-    "fs": "sync",
-    "level": "10",
-    "level_index": 2,
-    "level_label": "Expert",
-    "ra": 234,
-    "rate": "sssp",
-    "song_id": 10319,
-    "title": "幻想のサテライト",
-    "artist": "豚乙女",
-    "charter": "mai-Star",
-    "type": "DX",
-    "max": 234,
-    "position": 0,
-}) {
+/*
+async function maiScore2CardI(score) {
     const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
     const achievement_text = position + (score?.achievements || 0).toFixed(4) + '%'
 
@@ -267,26 +250,7 @@ async function maiScore2CardI(score = {
     }
 }
 
-async function maiScore2CardI2(score = {
-    "achievements": 100.5133,
-    "ds": 10.4,
-    "dxScore": 1125,
-    "fc": "fc",
-    "fs": "sync",
-    "level": "10",
-    "level_index": 2,
-    "level_label": "Expert",
-    "ra": 234,
-    "rate": "sssp",
-    "song_id": 10319,
-    "title": "幻想のサテライト",
-    "alias": "幻想的卫星",
-    "artist": "豚乙女",
-    "charter": "mai-Star",
-    "type": "DX",
-    "max": 234,
-    "position": 0,
-}) {
+async function maiScore2CardI2(score) {
     const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
     const achievement_text = (score?.achievements || 0).toFixed(4).toString()
 
@@ -333,32 +297,105 @@ async function maiScore2CardI2(score = {
         component2: drawSync(score?.fs),
         component3: '',
     }
+}
 
-    function drawCombo(combo = '') {
-        let combo_image
+ */
 
-        switch (combo) {
-            case 'fc': combo_image = 'fullcombo'; break;
-            case 'fcp': combo_image = 'fullcomboplus'; break;
-            case 'ap': combo_image = 'allperfect'; break;
-            case 'app': combo_image = 'allperfectplus'; break;
-            default: combo_image = 'clear'; break;
-        }
+async function maiScore2CardI3(score = {
+    "achievements": 100.5133,
+    "ds": 10.4,
+    "dxScore": 1125,
+    "fc": "fc",
+    "fs": "sync",
+    "level": "10",
+    "level_index": 2,
+    "level_label": "Expert",
+    "ra": 234,
+    "rate": "sssp",
+    "song_id": 10319,
+    "title": "幻想のサテライト",
+    "alias": "幻想的卫星",
+    "artist": "豚乙女",
+    "charter": "mai-Star",
+    "type": "DX",
+    "max": 234,
+    "position": 0,
+}) {
+    const achievement_text = (score?.achievements || 0).toFixed(4).toString()
 
-        return PanelDraw.Image(0, 0, 27, 30, getImageFromV3('Maimai', `object-icon-combo-${combo_image}.png`))
+    const rating = Math.round(score?.ra || 0)
+    const rating_max = getMaimaiMaximumRating(score?.ds)
+    const rating_max_text = (rating >= rating_max) ? (' [MAX]') : (' [' + rating_max + ']')
+
+    const too_bright = (score?.level_index || 0) === 4 || (score?.level_index || 0) === 1;
+
+    const difficulty_color = getMaimaiDifficultyColor(score?.level_index || 0)
+
+    return {
+        background: getMaimaiRankBG(score?.rate || ''),
+        cover: await getMaimaiCover(score?.song_id || 0),
+        rank: getImageFromV3('Maimai', `object-score-${score?.rate || 'd'}2.png`),
+        type: getMaimaiType(score?.type),
+        level: getMaimaiDXStarLevel(score?.dxScore, score?.max),
+
+        title: score?.title || '',
+        title2: score?.alias || '',
+        left1: score?.artist || '',
+        left2: score?.charter || '',
+        left3: rating.toString(),
+        left4: rating_max_text,
+        index_b: achievement_text.slice(0, -3),
+        index_m: achievement_text.slice(-3),
+        index_r: (score?.achievements > 0) ? '%' : '',
+        index_b_size: 32,
+        index_m_size: 20,
+        index_r_size: 18,
+        label1: score?.ds?.toString() || '?',
+        label2: score?.position >= 1 ? ('#' + score.position) : '',
+        label3: score?.song_id?.toString() || '?',
+
+        color_text: '#fff',
+        color_label1: too_bright ? '#000' : '#fff',
+        color_label2: too_bright ? '#000' : '#fff',
+        color_label3: too_bright ? '#000' : '#fff',
+
+        color_left: difficulty_color,
+        color_rrect1: difficulty_color,
+        color_rrect2: difficulty_color,
+        color_rrect3: difficulty_color,
+
+        component1: drawCombo(score?.fc),
+        component2: drawSync(score?.fs),
+        component3: '',
+
+        left3_is_right: false,
+    }
+}
+
+function drawCombo(combo = '') {
+    let combo_image
+
+    switch (combo) {
+        case 'fc': combo_image = 'fullcombo'; break;
+        case 'fcp': combo_image = 'fullcomboplus'; break;
+        case 'ap': combo_image = 'allperfect'; break;
+        case 'app': combo_image = 'allperfectplus'; break;
+        default: combo_image = 'clear'; break;
     }
 
-    function drawSync(sync = '') {
-        let sync_image;
-        switch (sync) {
-            case 'sync': sync_image = 'sync'; break;
-            case 'fs': sync_image = 'fullsync'; break;
-            case 'fsp': sync_image = 'fullsyncplus'; break;
-            case 'fsd': sync_image = 'fullsyncdx'; break;
-            case 'fsdp': sync_image = 'fullsyncdxplus'; break;
-            default: sync_image = 'solo'; break;
-        }
+    return PanelDraw.Image(0, 0, 27, 30, getImageFromV3('Maimai', `object-icon-combo-${combo_image}.png`))
+}
 
-        return PanelDraw.Image(0, 0, 27, 30, getImageFromV3('Maimai', `object-icon-sync-${sync_image}.png`))
+function drawSync(sync = '') {
+    let sync_image;
+    switch (sync) {
+        case 'sync': sync_image = 'sync'; break;
+        case 'fs': sync_image = 'fullsync'; break;
+        case 'fsp': sync_image = 'fullsyncplus'; break;
+        case 'fsd': sync_image = 'fullsyncdx'; break;
+        case 'fsdp': sync_image = 'fullsyncdxplus'; break;
+        default: sync_image = 'solo'; break;
     }
+
+    return PanelDraw.Image(0, 0, 27, 30, getImageFromV3('Maimai', `object-icon-sync-${sync_image}.png`))
 }
