@@ -50,7 +50,7 @@ export function card_I3(data = {
     let svg = `
     <defs>
     <clipPath id="clippath-CI3-1">
-        <rect x="100" width="330" height="130" rx="20" ry="20" style="fill: none;"/>
+        <rect x="100" width="252" height="130" rx="20" ry="20" style="fill: none;"/>
     </clipPath>
     <clipPath id="clippath-CI3-2">
          <rect width="80" height="130" rx="20" ry="20" style="fill: none;"/>
