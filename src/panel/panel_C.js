@@ -22,6 +22,7 @@ export async function router(req, res) {
     }
     res.end();
 }
+
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
@@ -40,7 +41,214 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_C(data = {}) {
+export async function panel_C(
+    data = {
+        match: {
+            match: {
+                id: 59438351,
+                start_time: '2020-03-21T12:25:02Z',
+                end_time: '2020-03-21T14:03:48Z',
+                name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)'
+            },
+            events: [
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object], [Object], [Object], [Object],
+                [Object], [Object], [Object]
+            ],
+            users: [
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object]
+            ],
+            first_event_id: 1361962243,
+            latest_event_id: 1362015297,
+            name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)',
+            id: 59438351,
+            start_time: '2020-03-21T12:25:02Z',
+            end_time: '2020-03-21T14:03:48Z',
+            is_match_end: true,
+            current_game_id: 310441611
+        },
+        team_point_map: { red: 1, blue: 1 },
+        player_data_list: [
+            {
+                player: [Object],
+                team: 'blue',
+                total: 8661974,
+                era: 2.1824220418938887,
+                dra: 2.3296940100373185,
+                mra: 2.2266036323369174,
+                rws: 0.15572318352897652,
+                ranking: 0,
+                win: 60,
+                lose: 96,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 5931781,
+                era: 1.602831307466496,
+                dra: 1.8968876038306823,
+                mra: 1.6910481963757518,
+                rws: 0.28895869270118807,
+                ranking: 0,
+                win: 96,
+                lose: 60,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 6117850,
+                era: 1.4337745766925736,
+                dra: 1.6230915779855204,
+                mra: 1.4905696770804575,
+                rws: 0.32511577364068933,
+                ranking: 0,
+                win: 88,
+                lose: 55,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 3056718,
+                era: 1.2134904285274843,
+                dra: 1.0707662005066485,
+                mra: 1.1706731601212335,
+                rws: 0.0824295694221074,
+                ranking: 0,
+                win: 40,
+                lose: 64,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 4213115,
+                era: 1.0475938549218036,
+                dra: 1.3587446453878695,
+                mra: 1.1409390920616234,
+                rws: 0.2238940383733162,
+                ranking: 0,
+                win: 88,
+                lose: 55,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 3607347,
+                era: 0.8827840945691331,
+                dra: 1.1326633693450312,
+                mra: 0.9577478770019026,
+                rws: 0.07782256916500134,
+                ranking: 0,
+                win: 50,
+                lose: 80,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 1493278,
+                era: 0.8653558260789316,
+                dra: 0.3365453932922233,
+                mra: 0.706712696242919,
+                rws: 0.10738337660851119,
+                ranking: 0,
+                win: 15,
+                lose: 24,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 824972,
+                era: 0.6325713596452961,
+                dra: 0.29308774190421083,
+                mra: 0.5307262743229705,
+                rws: 0.05932470642939672,
+                ranking: 0,
+                win: 15,
+                lose: 24,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 718575,
+                era: 0.6229456903875666,
+                dra: 0.2912907621255022,
+                mra: 0.5234492119089473,
+                rws: 0.14001763895717406,
+                ranking: 1,
+                win: 24,
+                lose: 15,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 795730,
+                era: 0.2953528058013916,
+                dra: 0.306844914431696,
+                mra: 0.2988004383904829,
+                rws: 0.11628873379333274,
+                ranking: 0,
+                win: 32,
+                lose: 20,
+                player_class: [Object],
+                arc: 13
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 1113317,
+                era: 0.2208780140154365,
+                dra: 0.36038378115329717,
+                mra: 0.2627297441567947,
+                rws: 0.04803596062983229,
+                ranking: 0,
+                win: 25,
+                lose: 40,
+                player_class: [Object],
+                arc: 13
+            }
+        ],
+        is_team_vs: true,
+        average_star: 5.223287765796368,
+        first_map_bid: 2167576
+    }
+
+) {
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');
 
@@ -59,7 +267,7 @@ export async function panel_C(data = {}) {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    const matchInfo = await card_A2(await PanelGenerate.matchCal2CardA2(data));
+    const matchInfo = await card_A2(await PanelGenerate.matchRating2CardA2(data));
 
     // 插入图片和部件（新方法
     svg = putCustomBanner(svg, reg_banner);
@@ -68,9 +276,9 @@ export async function panel_C(data = {}) {
     // 导入H卡
     let cardHs = [];
 
-    const isTeamVS = data?.match_data?.team_vs;
-    const playerData = data?.match_data?.player_data_list;
-    
+    const isTeamVS = data?.is_team_vs;
+    const playerData = data?.player_data_list;
+
     let redArr = [];
     let blueArr = [];
     let noneArr = [];
@@ -78,9 +286,15 @@ export async function panel_C(data = {}) {
     for (let p of playerData) {
 
         switch (p?.team) {
-            case "red": redArr.push(p); break;
-            case "blue": blueArr.push(p); break;
-            default : noneArr.push(p); break;
+            case "red":
+                redArr.push(p);
+                break;
+            case "blue":
+                blueArr.push(p);
+                break;
+            default :
+                noneArr.push(p);
+                break;
         }
     }
 
@@ -93,12 +307,12 @@ export async function panel_C(data = {}) {
         //渲染红队
         for (let i = 0; i < redArr.length; i++) {
             cardHs.push(
-                await drawCardH(await playerData2CardH(redArr[i]), i + 1 ,1, 2));
+                await drawCardH(await playerData2CardH(redArr[i]), i + 1, 1, 2));
         }
         //渲染蓝队
         for (let i = 0; i < blueArr.length; i++) {
             cardHs.push(
-                await drawCardH(await playerData2CardH(blueArr[i]), i + 1 ,2, 2));
+                await drawCardH(await playerData2CardH(blueArr[i]), i + 1, 2, 2));
         }
     } else {
         //渲染不在队伍（无队伍）
@@ -204,6 +418,7 @@ async function playerData2CardH(p = {}) {
         font_label4: 'PuHuiTi',
     };
 }
+
 async function drawCardH(data = {}
     , row = 1, column = 1, maxColumn = 2) {
     let x;

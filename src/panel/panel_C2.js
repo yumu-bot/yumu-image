@@ -1,11 +1,11 @@
 import {
-    exportJPEG, getImageFromV3, getMapBG, getPanelNameSVG,
+    exportJPEG, getImageFromV3, getPanelNameSVG,
     getRoundedNumberStrLarge,
     getRoundedNumberStrSmall,
     getRoundedNumberStr,
     implantImage,
     implantSvgBody, readTemplate,
-    replaceText, transformSvgBody, getPanelHeight, getAvatar
+    replaceText, transformSvgBody, getPanelHeight, getAvatar, getDiffBG
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -44,9 +44,8 @@ export async function router_svg(req, res) {
  * @return {Promise<string>}
  */
 export async function panel_C2(data = {
-    series_data: {
-        match_count: 0,
-    }
+    match_count: 0,
+
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');
@@ -65,7 +64,7 @@ export async function panel_C2(data = {
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    const cardA2 = await card_A2(await seriesData2CardA2(data));
+    const cardA2 = await card_A2(await seriesRating2CardA2(data));
 
     // 插入图片和部件（新方法
     svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
@@ -73,7 +72,7 @@ export async function panel_C2(data = {
 
     // 导入H卡
     let cardHs = [];
-    const players = data?.series_data?.player_data_list || [];
+    const players = data?.player_data_list || [];
 
     let dataArr = [];
 
@@ -171,15 +170,14 @@ async function playerData2CardH(p = {}) {
     };
 }
 
-async function seriesData2CardA2(data){
-    const s_data = data?.series_data
-    const s_stat = data?.series?.series_stat
+async function seriesRating2CardA2(sr){
+    const star = getRoundedNumberStr(sr?.average_star || 0, 3);
 
-    const star = getRoundedNumberStr(s_data?.average_star || 0, 3);
+    const background = await getDiffBG(sr?.first_map_bid, 0, 'list@2x', true);
 
-    const background = await getMapBG(s_data?.first_map_sid, 'list@2x', false);
+    console.log(sr?.first_map_bid)
 
-    const title = s_stat?.name || "";
+    const title = sr?.statistics?.name || "";
     let title1, title2;
     const title_cut = PuHuiTi.cutStringTail(title, 36, 390,false);
     if (title_cut.length === title.toString().length) {
@@ -191,18 +189,18 @@ async function seriesData2CardA2(data){
     }
 
     //这里的时间戳不需要 .add(8, 'hours')
-    const left1 = 'M' + s_data?.match_count +
-        ' R' + s_data?.round_count +
-        ' P' + s_data?.player_count +
-        ' S' + s_data?.score_count;
+    const left1 = 'M' + sr?.match_count +
+        ' R' + sr?.round_count +
+        ' P' + sr?.player_count +
+        ' S' + sr?.score_count;
 
-    const left2 = '' //moment(s_stat?.start_time, 'X').format('YYYY/MM/DD HH:mm')
-    const left3 = '' //moment(s_stat?.end_time, 'X').format('YYYY/MM/DD HH:mm');
+    const left2 = moment(sr?.statistics?.start_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]\'').format('YYYY/MM/DD HH:mm')
+    const left3 = moment(sr?.statistics?.end_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]\'').format('YYYY/MM/DD HH:mm');
 
     const right1 = 'SR ' + star + '*';
     const right2 = 'Scores/Player'; // + data.matchStat.id || 0;
-    const right3b = s_data?.player_count > 0 ? getRoundedNumberStrLarge(s_data?.score_count / s_data?.player_count, 3) : "0";
-    const right3m = s_data?.player_count > 0 ? getRoundedNumberStrSmall(s_data?.score_count / s_data?.player_count, 3) : "";
+    const right3b = sr?.player_count > 0 ? getRoundedNumberStrLarge(sr?.score_count / sr?.player_count, 3) : "0";
+    const right3m = sr?.player_count > 0 ? getRoundedNumberStrSmall(sr?.score_count / sr?.player_count, 3) : "";
 
     return {
         background: background,

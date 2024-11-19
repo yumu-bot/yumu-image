@@ -58,7 +58,7 @@ export async function panel_F(data = {
     match_data: {
         team_vs: true,
         average_star: 5.236081123352051,
-        first_map_sid: 1001507,
+        first_map_bid: 1001507,
         player_data_list: [],
         team_point_map: { red: 8, blue: 5 },
         round_count: 13,
@@ -340,7 +340,7 @@ export async function panel_F(data = {
     svg = replaceText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    const matchInfo = await card_A2(await PanelGenerate.matchCal2CardA2(data));
+    const matchInfo = await card_A2(await PanelGenerate.matchRating2CardA2(data));
     svg = implantSvgBody(svg,40,40, matchInfo, reg_maincard);
 
     return svg.toString();

@@ -95,7 +95,7 @@ export async function panel_E3(data = {
 
     const rank = rankSS2X(getApproximateRankSP(data.expected.accuracy, data.expected.miss, data.beatmap.mode, data.expected.mods));
     // 卡片定义
-    const cardA2 = await card_A2(await PanelGenerate.matchCal2CardA2(data.match));
+    const cardA2 = await card_A2(await PanelGenerate.matchRating2CardA2(data.match));
     const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, data.expected.mode || data.beatmap.mode, calcPP));
     const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, data.beatmap.mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));

@@ -45,7 +45,7 @@ export async function panel_H (
     data = {
         pool: {
             name: 'MapPool',
-            first_map_sid: 667290,
+            first_map_bid: 667290,
             modPools: [
                 {
                     mod: 'Hidden',
@@ -164,7 +164,7 @@ function hasRemain(i = 0) {
 }
 
 async function pool2cardA2(pool, mode, map_count = 0, mod_count = 0) {
-    const background = pool?.first_map_sid ? await getMapBG(pool.first_map_sid, 'cover', false) : getRandomBannerPath();
+    const background = pool?.first_map_bid ? await getMapBG(pool.first_map_bid, 'cover', false) : getRandomBannerPath();
 
     const title1 = pool.name || '';
     const title3 = pool.categoryList ? pool.categoryList[0].category ? 'creator: ' + pool.categoryList[0].category[0].creater : 'creator?' : '';

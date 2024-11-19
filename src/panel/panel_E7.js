@@ -60,7 +60,7 @@ export async function panel_E7(data = {
         match_data: {
             team_vs: false,
             average_star: 3.896571159362793,
-            first_map_sid: 2034520,
+            first_map_bid: 2034520,
             player_data_list: [ [Object] ],
             team_point_map: { none: 2 },
             round_count: 2,
@@ -200,7 +200,7 @@ export async function panel_E7(data = {
     const banner = await getDiffBG(data?.beatmap?.id, data?.beatmap?.beatmapset?.id, 'cover', hasLeaderBoard(data?.beatmap.ranked), data?.beatmap?.beatmapset?.availability?.more_information != null);
 
     // 卡片定义
-    const cardA2 = await card_A2(await PanelGenerate.matchCal2CardA2(data.match));
+    const cardA2 = await card_A2(await PanelGenerate.matchRating2CardA2(data.match));
     const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.beatmap, mode));
     const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.beatmap, data.density, rank));
     const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.beatmap, data.original));

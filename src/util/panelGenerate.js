@@ -20,7 +20,7 @@ import {
     isNotEmptyArray,
     getTimeByDHMS,
     requireNonNullElse,
-    getDifficultyName,
+    getDifficultyName, getDiffBG,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -406,38 +406,36 @@ export const PanelGenerate = {
         };
     },
 
-    matchCal2CardA2: async (c = {}, beatmap = null) => {
-        const match = c?.match;
-        const data = c?.match_data;
+    matchRating2CardA2: async (r = {}, beatmap = null) => {
+        const redWins = r?.team_point_map?.red || 0;
+        const blueWins = r?.team_point_map?.blue || 0;
 
-        const redWins = data?.team_point_map?.red || 0;
-        const blueWins = data?.team_point_map?.blue || 0;
+        const isTeamVS = r?.is_team_vs;
+        const star = getRoundedNumberStr(r?.average_star || 0, 3);
 
-        const isTeamVS = data?.team_vs;
-        const star = getRoundedNumberStr(data?.average_star || 0, 3);
+        const bid = r?.first_map_bid || 0
+        const sid = beatmap?.beatmapset?.id || 0
+        const background = (bid !== 0) ? await getDiffBG(r?.first_map_bid, sid, 'list@2x', false)
+            : await getMapBG(sid, 'list@2x', hasLeaderBoard(beatmap?.ranked))
 
-        const sid = beatmap?.beatmapset?.id || data?.first_map_sid || 0
-
-        const background = await getMapBG(sid, 'list@2x', hasLeaderBoard(beatmap?.ranked));
-
-        const isContainVS = match?.match?.name.toLowerCase().match('vs');
+        const isContainVS = r?.match?.name.toLowerCase().match('vs');
         let title, title1, title2;
         if (isContainVS) {
-            title = getMatchNameSplitted(match?.match?.name);
+            title = getMatchNameSplitted(r?.match?.name);
             title1 = title[0];
             title2 = title[1] + ' vs ' + title[2];
         } else {
-            title1 = match?.match?.name;
+            title1 = r?.match?.name;
             title2 = '';
         }
 
-        const left1 = 'Rounds ' + data?.round_count;
-        const left2 = 'Players ' + data?.player_count;
-        const left3 = 'Scores ' + data?.score_count;
+        const left1 = 'Rounds ' + r?.round_count;
+        const left2 = 'Players ' + r?.player_count;
+        const left3 = 'Scores ' + r?.score_count;
 
         const right1 = 'SR ' + star + '*';
-        const right2 = 'MID ' + match?.match?.id || 0;
-        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) : data?.round_count.toString()
+        const right2 = 'MID ' + r?.match?.id || 0;
+        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) : r?.round_count.toString()
         const right3m = isTeamVS ? '' : 'x';
 
         return {
