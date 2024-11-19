@@ -1,16 +1,23 @@
-import omit from 'lodash.omit';
-import pick from 'lodash.pick';
 import Converter from './Converter.js';
 
 const _provider = Symbol('provider');
 
+function omit(object, props) {
+    let o = { ...object}
+    delete o[props];
+    return o;
+}
+function pick(object, props) {
+    let o = {}
+    if (props in object)o[props] = object[props];
+    return o;
+}
 /**
  * The application programming interface for a SVG converter {@link Provider}.
  *
  * @public
  */
 export class API {
-
     /**
      * Creates an instance of {@link API} using the specified <code>provider</code>.
      *
