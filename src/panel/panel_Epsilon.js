@@ -49,7 +49,7 @@ export async function panel_Epsilon(data = {
     // 导入模板
     let svg = `<?xml version="1.0" encoding="UTF-8"?> <svg xmlns="http://www.w3.org/2000/svg" width="460" height="${height}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 460 ${height}">
     <g id="Base">
-        <rect width="460" height="${height}" rx="0" ry="0" style="fill: #efecfa;"/>
+        <rect width="460" height="${height}" rx="0" ry="0" style="fill: #f1eefb;"/>
     </g>
     <g id="Background">
     </g>
