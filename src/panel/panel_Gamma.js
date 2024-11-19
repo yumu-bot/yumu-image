@@ -174,7 +174,7 @@ const PanelGamma = {
         const background = await getBanner(user?.cover_url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
-        const join = moment(user?.join_date, 'X').add(8, 'hours');
+        const join = moment(user?.join_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours');
         const date = user?.join_date ? join.format('YYYY-MM-DD') : 'Unknown';
         const difference = user?.join_date ? (' (' + getTimeDifference(join) + ')') : '';
 
@@ -287,7 +287,7 @@ const PanelGamma = {
             getRankFromValue(sanity, [120, 100, 95, 90, 80, 70, 60, 0])
         );
 
-        const join = moment(user?.join_date, 'X').add(8, 'hours');
+        const join = moment(user?.join_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours');
         const date = user?.join_date ? join.format('YYYY-MM-DD') : 'Unknown';
         const difference = user?.join_date ? (' (' + getTimeDifference(join) + ')') : '';
 
