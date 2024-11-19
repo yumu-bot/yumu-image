@@ -1,5 +1,5 @@
 import {
-    exportPNG, getAvatar, getFlagPath, getImageFromV3,
+    exportJPEG, getAvatar, getFlagPath, getImageFromV3,
     implantImage, isNotEmptyArray, replaceTexts
 } from "../util/util.js";
 import {TahomaBold, TahomaRegular} from "../util/font.js";
@@ -10,7 +10,7 @@ export async function router(req, res) {
         const data = req.fields || {};
         const svg = await panel_Epsilon(data);
         res.set('Content-Type', 'image/png');
-        res.send(await exportPNG(svg));
+        res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
