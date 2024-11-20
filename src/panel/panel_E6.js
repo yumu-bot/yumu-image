@@ -818,12 +818,12 @@ const PanelEGenerate = {
             }
             case "c": {
                 if (sr < 0.1) name = 'NEW';
-                else if (sr < 2) name = 'CUP';
-                else if (sr < 2.8) name = 'SALAD';
-                else if (sr < 4) name = 'PLATTER';
-                else if (sr < 5.3) name = 'RAIN';
-                else if (sr < 6.5) name = 'OVERDOSE';
-                else if (sr >= 6.5) name = 'DELUGE';
+                else if (sr < 1.8) name = 'CUP';
+                else if (sr < 2.5) name = 'SALAD';
+                else if (sr < 3.5) name = 'PLATTER';
+                else if (sr < 4.6) name = 'RAIN';
+                else if (sr < 6) name = 'OVERDOSE';
+                else if (sr >= 6) name = 'DELUGE';
                 else name = 'UNKNOWN';
                 break;
             }
