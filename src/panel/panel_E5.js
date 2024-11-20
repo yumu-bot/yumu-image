@@ -944,6 +944,7 @@ const component_E10 = (
     data = {
         statistics: [],
         statistics_max: [],
+        statistics_full: [],
 
         ratio: 0,
         mode: '',
@@ -962,7 +963,7 @@ const component_E10 = (
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 64, 45, 360, 20, 16, 16) // 345
+    const statistics = getStatisticsSVG(data.statistics, data.statistics_max, data.statistics_full, 64, 45, 360, 20, 16, 16) // 345
 
     let ratio_text = 'MAX : 300 = ';
 
@@ -1295,6 +1296,14 @@ const PanelEGenerate = {
             statistics: score2Statistics(score.statistics, score.ruleset_id, is_lazer),
             statistics_max: score2StatisticsMax(score.maximum_statistics, score.statistics, score.ruleset_id, is_lazer, progress),
 
+            // 仅限 catch 使用
+            statistics_full: (score.ruleset_id !== 2) ? [] : [
+                score.maximum_statistics.great,
+                score.maximum_statistics.large_tick_hit,
+                score.maximum_statistics.small_tick_hit
+            ],
+
+            // 仅限 mania 使用
             ratio: ratio,
             mode: score.ruleset_id,
         }
@@ -1768,7 +1777,7 @@ const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false)
                     0, 0, 0, large, drumroll, spinner]
             }
             case 'c': {
-                const max = Math.max(m.great + m.large_tick_hit, m.small_tick_hit)
+                const max = Math.max(m.great, m.large_tick_hit, m.small_tick_hit)
                 const droplet = m.small_tick_hit
                 const banana = m.large_bonus
                 return [max, max, max, 0, max, 0,
@@ -1803,7 +1812,7 @@ const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false)
     }
 }
 
-function getStatisticsSVG(statistics = [], max_statistics = [], x, y, w, height, interval, font_h) {
+function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics = [], x, y, w, height, interval, font_h) {
     let svg = '';
 
     // Standard
@@ -1835,7 +1844,10 @@ function getStatisticsSVG(statistics = [], max_statistics = [], x, y, w, height,
             svg += PanelDraw.Rect(x, rrect_y, Math.max(rect_width, height), height, height / 2, color);
         }
 
-        svg += PanelDraw.Rect(x, rrect_y, w, height, height / 2, color, 0.1);
+        const f = full_statistics[i]
+        const back_rrect_width = Math.min(((w * f / m) || w), w)
+
+        svg += PanelDraw.Rect(x, rrect_y, back_rrect_width, height, height / 2, color, 0.1);
     }
 
     // Deluxe
