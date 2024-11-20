@@ -16,7 +16,7 @@ import {
     implantSvgBody,
     readTemplate,
     replaceText,
-    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString, isNotNumber, getDifficultyName
+    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString, isNotNumber, getDifficultyName, isNumber
 } from "../util/util.js";
 import moment from "moment";
 import {
@@ -1844,8 +1844,8 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
             svg += PanelDraw.Rect(x, rrect_y, Math.max(rect_width, height), height, height / 2, color);
         }
 
-        const f = full_statistics[i]
-        const back_rrect_width = Math.min(((w * f / m) || w), w)
+        const f = (w * full_statistics[i] / m)
+        const back_rrect_width = isNumber(f) ? Math.min(f, w) : w
 
         svg += PanelDraw.Rect(x, rrect_y, back_rrect_width, height, height / 2, color, 0.1);
     }
