@@ -106,11 +106,11 @@ export async function card_H(data = {
     const label4_width = font_l4.getTextWidth(data?.label4 || '', 24) + 30;
     const label5_width = torus.getTextWidth(data?.label5 || '', 18) + 16;
 
-    const label1 = torus.getTextPath(data?.label1 || '', 38, 21.877, 18, 'left baseline', data?.color_label12 || '#fff');
-    const label2 = torus.getTextPath(data?.label2 || '', 38, 99.877, 18, 'left baseline', data?.color_label12 || '#fff');
+    const label1 = torus.getTextPath(data?.label1 || '', 38, 23.877, 18, 'left baseline', data?.color_label12 || '#fff');
+    const label2 = torus.getTextPath(data?.label2 || '', 38, 97.877, 18, 'left baseline', data?.color_label12 || '#fff');
     const label3 = torus.getTextPath(data?.label3 || '', 710 - label3_width / 2, 34.836, 24, 'center baseline', '#fff');
     const label4 = font_l4.getTextPath(data?.label4 || '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
-    const label5 = torus.getTextPath(data?.label5 || '', 177, 99.877, 18, 'right baseline', data?.color_label12 || '#fff');
+    const label5 = torus.getTextPath(data?.label5 || '', 177, 97.877, 18, 'right baseline', data?.color_label12 || '#fff');
 
     const index = torus.get2SizeTextPath(
         data?.index_b, data?.index_m, data?.index_b_size || 48, data?.index_m_size || 36,
@@ -118,16 +118,16 @@ export async function card_H(data = {
         +
         torus.getTextPath(data?.index_l, 815, 33.672, data?.index_l_size || 24, 'center baseline', data.color_index)
 
-    const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 6, label1_width, 20, 10, color_label1) : '';
-    const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 84, label2_width, 20, 10, color_label2) : '';
+    const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 8, label1_width, 20, 10, color_label1) : '';
+    const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 82, label2_width, 20, 10, color_label2) : '';
     const rrect_label3 = data.label3 ? PanelDraw.Rect(710 - label3_width, 10, label3_width, 34, 17, color_label3) : '';
     const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label4_width, 34, 17, color_label4) : '';
-    const rrect_label5 = data.label5 ? PanelDraw.Rect(185 - label5_width, 84, label5_width, 20, 10, color_label5) : '';
+    const rrect_label5 = data.label5 ? PanelDraw.Rect(185 - label5_width, 82, label5_width, 20, 10, color_label5) : '';
 
     svg = replaceText(svg, data?.color_right || 'none', reg_color_right);
     svg = replaceText(svg, data?.color_left || 'none', reg_color_left);
 
-    svg = implantImage(svg, 45, 30, 140, 2, 1, data?.type || '', reg_label);
+    svg = implantImage(svg, 45, 30, 140, 4, 1, data?.type || '', reg_label);
 
     svg = replaceTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
     svg = replaceText(svg, index, reg_text);
