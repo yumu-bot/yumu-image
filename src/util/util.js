@@ -254,11 +254,14 @@ export function isASCII(str = '') {
 }
 
 export function isNumber(num) {
-    if (typeof num == "number") return true
-    if (typeof num == "string") {
+    if (typeof num == "number") {
+        return ! Number.isNaN(num)
+    } else if (typeof num == "string") {
         const pattern = /^\s*(-?[0-9]+[.]?[0-9]*)\s*$/;
         return pattern.test(num?.toString());
-    } else return false
+    } else {
+        return false
+    }
 }
 
 // 'none' 不包括在内
