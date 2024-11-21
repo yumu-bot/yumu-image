@@ -1014,7 +1014,7 @@ export async function label_E(data = {
     const title_font = data.title_font || torus;
     const icon_title = title_font.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#aaa");
 
-    const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 36, 24, 56, 44.75, "left baseline", "#fff");
+    const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 36, 24, 56, 44.75 + 1.25, "left baseline", "#fff");
 
     let svg = `
         <g id="Icon_LE">

@@ -33,7 +33,7 @@ export async function card_B2(data = {
     const number_b = getRoundedNumberStrLarge(data?.value, data?.round_level);
     const number_m = getRoundedNumberStrSmall(data?.value, data?.round_level);
 
-    const rank_text = torus.getTextPath(data?.rank, 305, 66, 60, 'right baseline', data?.color); //68?
+    const rank_text = torus.getTextPath(data?.rank, 305, 64, 56, 'right baseline', data?.color); //68?
 
     const number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 160, 140, 'center baseline', '#fff');
 
