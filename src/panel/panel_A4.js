@@ -56,7 +56,7 @@ export async function panel_A4(data = {
 
     // 面板文字
     let panel_name
-    const request_time = 'scores count: ' + (data?.scores || []).length || 0 + ' // request time: ' + getNowTimeStamp();
+    const request_time = 'scores count: ' + ((data?.scores || []).length || 0 )+ ' // request time: ' + getNowTimeStamp();
 
     switch (data?.panel) {
         case "T": {
