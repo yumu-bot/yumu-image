@@ -1,7 +1,7 @@
 import {
     exportJPEG, getPanelHeight, getPanelNameSVG, implantSvgBody,
     readTemplate, putCustomBanner,
-    replaceText,
+    replaceText, getNowTimeStamp,
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A1} from "../card/card_A1.js";
@@ -41,8 +41,7 @@ export async function panel_A4(data = {
     "user": {},
     "scores": [],
     "rank": [1,3,4,5,6],
-    "panel" : "",
-
+    "panel": "",
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_A4.svg');
@@ -57,19 +56,20 @@ export async function panel_A4(data = {
 
     // 面板文字
     let panel_name
+    const request_time = 'scores count: ' + (data?.scores || []).length || 0 + ' // request time: ' + getNowTimeStamp();
 
     switch (data?.panel) {
         case "T": {
-            panel_name = getPanelNameSVG('Today Bests (!ymt)', 'T', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('Today Bests (!ymt)', 'T', 'v0.5.0 DX', request_time);
         } break;
         case "BS": {
-            panel_name = getPanelNameSVG('Best Scores (!ymbs)', 'BS', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('Best Scores (!ymbs)', 'BS', 'v0.5.0 DX', request_time);
         } break;
         case "BQ": {
-            panel_name = getPanelNameSVG('Best Scores Query (!ymbq)', 'BQ', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('Best Scores Query (!ymbq)', 'BQ', 'v0.5.0 DX', request_time);
         } break;
         default: {
-            getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', 'v0.5.0 DX');
+            getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', 'v0.5.0 DX', request_time);
         } break;
     }
 
