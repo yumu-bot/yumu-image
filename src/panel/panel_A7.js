@@ -316,7 +316,7 @@ export async function panel_A7(data = {
 
         const deltaPP = Math.round(bp?.fc_pp - bp?.pp);
 
-        const card_h = await PanelGenerate.bp2CardH(bp, bp?.index - 1, bp?.index_after);
+        const card_h = await PanelGenerate.fixedBestScore2CardH(bp, bp?.index - 1, bp?.index_after);
 
         const f = await card_H({
             ...card_h,

@@ -732,7 +732,7 @@ export const PanelGenerate = {
         const time_diff = getTimeDifference(s.ended_at);
 
         let mods_width;
-        switch (s?.mods?.filter(v => v?.acronym !== 'CL')?.length) {
+        switch (s?.mods?.length) {
             case 0:
                 mods_width = 0;
                 break;
@@ -752,7 +752,7 @@ export const PanelGenerate = {
                 mods_width = 180;
                 break;
             default:
-                mods_width = 180;
+                mods_width = 0;
         }
 
         const acc = getRoundedNumberStr((s?.legacy_accuracy * 100), 3) + '%'
@@ -820,9 +820,9 @@ export const PanelGenerate = {
     },
 
     // panel A7 有细微的改动，请注意
-    bp2CardH: async (s, rank = 1, rank_after = null) => {
+    fixedBestScore2CardH: async (s, rank = 1, rank_after = null) => {
         let mods_width;
-        switch (s?.mods?.filter(v => v?.acronym !== 'CL')?.length) {
+        switch (s?.mods?.length) {
             case 0:
                 mods_width = 0;
                 break;
@@ -842,7 +842,7 @@ export const PanelGenerate = {
                 mods_width = 180;
                 break;
             default:
-                mods_width = 180;
+                mods_width = 0;
         }
 
         const is_after = (typeof rank_after == "number")
@@ -853,7 +853,7 @@ export const PanelGenerate = {
             const time_diff = getTimeDifference(s.ended_at);
             const rank_after_str = ' -> ' + rank_after;
             const difficulty_name = s.beatmap.version ?
-                torus.cutStringTail(s.beatmap.version, 24,
+                torus.cutStringTail(getDifficultyName(s.beatmap), 24,
                     500 - 10 - mods_width - torus.getTextWidth('[] - BP ()' + rank + rank_after_str + time_diff, 24), true)
                 : '';
 

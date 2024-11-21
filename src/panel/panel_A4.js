@@ -84,7 +84,7 @@ export async function panel_A4(data = {
     let cardHs = [];
     for (const i in data.scores) {
         const f = await card_H(
-            await PanelGenerate.bp2CardH(data.scores[i], data.rank[i], false)
+            await PanelGenerate.score2CardH(data.scores[i], data.rank[i])
         );
 
         cardHs.push(f);
