@@ -309,7 +309,7 @@ export const PanelDraw = {
             const color = colors[i]
 
             const cx = x + w * ((dx - x_min) / (x_max - x_min) || 0)
-            const cy = y + r + (h - 2 * r) * ((dy - y_min) / (y_max - y_min) || 0)
+            const cy = y + h - (r + (h - 2 * r) * ((dy - y_min) / (y_max - y_min) || 0))
 
             svg += PanelDraw.Circle(cx, cy, r, color, opacity)
         }
