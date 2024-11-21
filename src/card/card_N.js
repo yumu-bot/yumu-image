@@ -148,7 +148,7 @@ export async function card_N(data = {
         return PanelDraw.Rect(x, 6, 40, 20, 10, mod_color) + '\n' + mod_abbr_path + '\n';
     }
 
-    const mods_arr = (data.score.mods || [{acronym: ''}])?.filter(v => v.acronym !== 'CL')
+    const mods_arr = data.score.mods || [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
 
     let multiplier

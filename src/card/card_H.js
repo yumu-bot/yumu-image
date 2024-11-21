@@ -75,7 +75,7 @@ export async function card_H(data = {
         } else return '';
     }
 
-    const mods_arr = (data.mods_arr || [{acronym: ''}]).filter(v => v.acronym !== 'CL')
+    const mods_arr = data.mods_arr || [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
 
     let multiplier

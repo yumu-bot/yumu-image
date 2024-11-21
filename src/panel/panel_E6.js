@@ -1217,8 +1217,6 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
 const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) => {
     let svg = '';
 
-    mods = mods?.filter(v => v.acronym !== 'CL')
-
     const length = mods ? mods.length : 0;
 
     let multiplier = 1

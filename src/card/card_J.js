@@ -129,7 +129,7 @@ export async function card_J(data = {
         return PanelDraw.Circle(offset_x, offset_y, 5, mod_color);
     }
 
-    const mods_arr = (data.mods_arr || [{acronym: ''}])?.filter(v => v.acronym !== 'CL')
+    const mods_arr = data.mods_arr || [{acronym: ''}]
     const length = mods_arr.length;
 
     for (let i = 0; i < length; ++i) {

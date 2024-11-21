@@ -590,7 +590,7 @@ export async function label_C1(data = {
         return PanelDraw.Circle(x, 90, 10, mod_color);
     }
 
-    const mods_arr = (data?.mods_arr || [{acronym: ''}])?.filter(v => v.acronym !== 'CL')
+    const mods_arr = data?.mods_arr || [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
 
     mods_arr.forEach((mod, i) => {

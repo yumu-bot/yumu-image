@@ -1393,8 +1393,6 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
 const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) => {
     let svg = '';
 
-    mods = mods?.filter(v => v.acronym !== 'CL')
-
     const length = mods ? mods.length : 0;
 
     let multiplier = 1
@@ -1845,7 +1843,7 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
         }
 
         const f = (w * full_statistics[i] / m)
-        const back_rrect_width = isNumber(f) ? Math.min(f, w) : w
+        const back_rrect_width = isNumber(f) ? Math.min(f, m) : m
 
         svg += PanelDraw.Rect(x, rrect_y, back_rrect_width, height, height / 2, color, 0.1);
     }
