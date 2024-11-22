@@ -242,7 +242,7 @@ function drawSync(sync = '') {
 
 // 私有转换
 const maimaiDistPlayer2CardA1 = async (user, dist_rating, count, size) => {
-    const background = getMaimaiRatingBG(user.rating);
+    const background = getMaimaiRatingBG(dist_rating || user.rating);
 
     let dan
     const dan_arr = ['初', '二', '三', '四', '五', '六', '七', '八', '九', '十']
