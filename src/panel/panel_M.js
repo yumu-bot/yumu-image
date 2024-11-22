@@ -362,7 +362,7 @@ export async function panel_M(data = {
         svg = implantSvgBody(svg, x, y, cardO2, reg_popular);
     }
 
-    if (data.most_popular_beatmap.length < 1) { //摆烂机制
+    if ((data.most_popular_beatmap?.length || 0) < 1) { //摆烂机制
         svg = implantImage(svg, 185, 185, 867.5, 410, 1, getImageFromV3('sticker_qiqi_oh.png'), reg_popular);
     }
 
