@@ -354,7 +354,7 @@ export async function panel_M(data = {
     const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data.user));
 
     // 导入O2
-    for (let i = 0; i < Math.min(data.most_popular_beatmap.length, 6); i++) {
+    for (let i = 0; i < Math.min(data.most_popular_beatmap?.length || 0, 6); i++) {
         const x = 510 + (i % 3) * 305;
         const y = 380 + Math.floor(i / 3) * 145;
 
