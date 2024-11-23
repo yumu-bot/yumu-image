@@ -1845,8 +1845,6 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
         const f = (w * full_statistics[i] / m)
         const back_rrect_width = isNumber(f) ? Math.min(f, w) : w
 
-        console.log(f, isNumber(f))
-
         svg += PanelDraw.Rect(x, rrect_y, back_rrect_width, height, height / 2, color, 0.1);
     }
 
