@@ -242,10 +242,8 @@ export async function panel_E5(data = {
         score_time = moment(data?.score?.ended_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]");
         delta_time = getTimeDifference(data?.score?.ended_at)
     } else {
-        //created_at 是北京时间，所以处理的时候不需要 +8
-        //[ 2024, 4, 22, 17, 32, 12, 473533397 ]
-        score_time = moment(data?.score?.started_at, '[\[] YYYY, MM, DD, HH, mm, ss, SSSSSSSSS [\]]').format("YYYY-MM-DD HH:mm:ss [+8]")
-        delta_time = getTimeDifference(data?.score?.started_at, '[\[] YYYY, MM, DD, HH, mm, ss, SSSSSSSSS [\]]', moment())
+        score_time = moment(data?.score?.started_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]")
+        delta_time = getTimeDifference(data?.score?.started_at)
     }
 
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
