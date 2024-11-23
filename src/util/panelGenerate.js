@@ -548,7 +548,7 @@ export const PanelGenerate = {
         const status = b?.status;
         let right2;
 
-        switch (getGameMode(b?.mode, 1)) {
+        switch (getGameMode(b?.mode_int, 1)) {
             case 'o': {
                 right2 = 'CS' + (b?.cs || 0) +
                     ' AR' + (b?.ar || 0) +
