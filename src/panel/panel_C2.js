@@ -194,8 +194,8 @@ async function seriesRating2CardA2(sr){
         ' P' + sr?.player_count +
         ' S' + sr?.score_count;
 
-    const left2 = moment(sr?.statistics?.start_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]\'').format('YYYY/MM/DD HH:mm')
-    const left3 = moment(sr?.statistics?.end_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]\'').format('YYYY/MM/DD HH:mm');
+    const left2 = moment(sr?.statistics?.start_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY/MM/DD HH:mm')
+    const left3 = moment(sr?.statistics?.end_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY/MM/DD HH:mm');
 
     const right1 = 'SR ' + star + '*';
     const right2 = 'Scores/Player'; // + data.matchStat.id || 0;

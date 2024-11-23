@@ -70,7 +70,18 @@ export async function panel_E5(data = {
     density: {},
     progress: 1,
     original: {},
-    attributes: {},
+    attributes: {
+        effectiveMissCount: 0,
+        pp: 80.44228072561536,
+        ppAcc: 28.862448688369962,
+        ppAim: 33.25959319645674,
+        ppFlashlight: 0,
+        ppSpeed: 14.784026882398623,
+        stars: 4.22719632824042,
+        full_pp: 80.44228072561536,
+        perfect_pp: 94.27103939186196
+    }
+    ,
 
     score: {
         mods: [],
@@ -294,8 +305,8 @@ export async function panel_E5(data = {
     const componentE7 = component_E7(PanelEGenerate.score2componentE7(data.score, data.attributes));
     const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score, is_lazer));
     const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.score));
-    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score, data.progress, is_lazer));
-    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.attributes, data.progress));
+    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score, data.attributes, data.progress, is_lazer));
+    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.progress));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -944,6 +955,7 @@ const component_E10 = (
         statistics_max: [],
         statistics_full: [],
 
+        effective_miss_count: 0,
         ratio: 0,
         mode: '',
     }) => {
@@ -981,7 +993,15 @@ const component_E10 = (
         )
         : ''
 
-    svg = replaceTexts(svg, [title, statistics, perfect_great_ratio], reg_text);
+    const effective_miss_text = 'effective miss: ' + (data?.effective_miss_count || 0)
+
+    const effective_miss = (getGameMode(data?.mode, 1) === 'o' || getGameMode(data?.mode, 1) === 't') ?
+        poppinsBold.getTextPath(
+            effective_miss_text, 475, 28, 18, 'right baseline', '#fff'
+        )
+        : ''
+
+    svg = replaceTexts(svg, [title, statistics, perfect_great_ratio, effective_miss], reg_text);
     svg = replaceText(svg, rect, reg_base);
 
     return svg;
@@ -1275,7 +1295,7 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE10: (score, progress, is_lazer = false) => {
+    score2componentE10: (score, attr, progress, is_lazer = false) => {
         let ratio;
 
         if (score.statistics.great === 0) {
@@ -1294,6 +1314,9 @@ const PanelEGenerate = {
             statistics: score2Statistics(score.statistics, score.ruleset_id, is_lazer),
             statistics_max: score2StatisticsMax(score.maximum_statistics, score.statistics, score.ruleset_id, is_lazer, progress),
 
+            // 仅限 standard, taiko 使用
+            effective_miss_count: attr?.effectiveMissCount || attr?.effective_miss_count || 0,
+
             // 仅限 catch 使用
             statistics_full: (score.ruleset_id !== 2) ? [] : [
                 score.maximum_statistics.great,
@@ -1307,8 +1330,7 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE10P: (score, attr, progress) => {
-
+    score2componentE10P: (score, progress) => {
         const s = score.statistics
         const m = score.maximum_statistics
 

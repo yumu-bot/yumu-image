@@ -4,7 +4,7 @@ import {
     readTemplate,
     replaceText,
     getPanelNameSVG,
-    putCustomBanner, getPanelHeight, getNowTimeStamp, getMatchDuration
+    putCustomBanner, getPanelHeight, getNowTimeStamp, getMatchDuration, isNotNull, isNotEmptyArray
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -22,6 +22,7 @@ export async function router(req, res) {
     }
     res.end();
 }
+
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
@@ -40,243 +41,273 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_F(data = {
-    match: {
-        matchEnd: true,
+export async function panel_F(
+    data = {
         match: {
-            name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)',
-            id: 59438351,
-            start_time: 1584793502,
-            end_time: 1584799428
+            match: {
+                id: 116281503,
+                start_time: '2024-11-23T13:24:27Z',
+                end_time: '2024-11-23T14:30:06Z',
+                name: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)'
+            },
+            events: [
+                [Object], [Object]
+            ],
+            users: [
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object]
+            ],
+            first_event_id: 2400727928,
+            latest_event_id: 2400743601,
+            name: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)',
+            id: 116281503,
+            start_time: '2024-11-23T13:24:27Z',
+            end_time: '2024-11-23T14:30:06Z',
+            current_game_id: 605701082,
+            is_match_end: true
         },
-        events: [],
-        users: [],
-        first_event_id: 1361962243,
-        latest_event_id: 1362015297,
-        current_game_id: null
-    },
-    match_data: {
-        team_vs: true,
-        average_star: 5.236081123352051,
-        first_map_bid: 1001507,
-        player_data_list: [],
-        team_point_map: { red: 8, blue: 5 },
-        round_count: 13,
-        player_count: 11,
-        score_count: 82
-    },
-    rounds: [
-        {
-            mode: 'osu',
-            mods: [],
-            winning_team_score: 505657,
-            team_score: [Object],
-            winning_team: 'red',
-            id: 310430020,
-            beatmap_id: 2167576,
-            start_time: 1584794145,
-            end_time: 1584794439,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [],
-            winning_team_score: 686658,
-            team_score: [Object],
-            winning_team: 'red',
-            id: 310431140,
-            beatmap_id: 1567613,
-            start_time: 1584794644,
-            end_time: 1584794783,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [Array],
-            winning_team_score: 1018967,
-            team_score: [Object],
-            winning_team: 'red',
-            id: 310431873,
-            beatmap_id: 907200,
-            start_time: 1584794973,
-            end_time: 1584795193,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [Array],
-            winning_team_score: 1457248,
-            team_score: [Object],
-            winning_team: 'red',
-            id: 310432805,
-            beatmap_id: 1501761,
-            start_time: 1584795377,
-            end_time: 1584795619,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [Array],
-            winning_team_score: 1788145,
-            team_score: [Object],
-            winning_team: 'red',
-            id: 310433743,
-            beatmap_id: 1649420,
-            start_time: 1584795772,
-            end_time: 1584795985,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [Array],
-            winning_team_score: 1380483,
-            team_score: [Object],
-            winning_team: 'blue',
-            id: 310434904,
-            beatmap_id: 1557405,
-            start_time: 1584796255,
-            end_time: 1584796405,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [Array],
-            winning_team_score: 1946290,
-            team_score: [Object],
-            winning_team: 'blue',
-            id: 310435821,
-            beatmap_id: 1058266,
-            start_time: 1584796652,
-            end_time: 1584796909,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [Array],
-            winning_team_score: 1814300,
-            team_score: [Object],
-            winning_team: 'blue',
-            id: 310437250,
-            beatmap_id: 2127734,
-            start_time: 1584797232,
-            end_time: 1584797394,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [],
-            winning_team_score: 1951160,
-            team_score: [Object],
-            winning_team: 'red',
-            id: 310438019,
-            beatmap_id: 169090,
-            start_time: 1584797543,
-            end_time: 1584797702,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [Array],
-            winning_team_score: 1732445,
-            team_score: [Object],
-            winning_team: 'blue',
-            id: 310438890,
-            beatmap_id: 1624962,
-            start_time: 1584797898,
-            end_time: 1584798149,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [Array],
-            winning_team_score: 2283324,
-            team_score: [Object],
-            winning_team: 'blue',
-            id: 310440193,
-            beatmap_id: 1714705,
-            start_time: 1584798418,
-            end_time: 1584798567,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [Array],
-            winning_team_score: 1806035,
-            team_score: [Object],
-            winning_team: 'red',
-            id: 310440938,
-            beatmap_id: 1674896,
-            start_time: 1584798716,
-            end_time: 1584798848,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        },
-        {
-            mode: 'osu',
-            mods: [],
-            winning_team_score: 1146381,
-            team_score: [Object],
-            winning_team: 'red',
-            id: 310441611,
-            beatmap_id: 1000684,
-            start_time: 1584798967,
-            end_time: 1584799293,
-            mod_int: null,
-            scoring_type: 'scorev2',
-            team_type: 'team-vs',
-            beatmap: [Object],
-            scores: [Array]
-        }
-    ],
-    scores: [],
-}) {
+        player_data_list: [
+            {
+                player: [Object],
+                team: 'red',
+                total: 7131318,
+                era: 2.409392955909547,
+                dra: 3.32713040312523,
+                mra: 2.684714190074252,
+                rws: 0.2635810036318896,
+                ranking: 1,
+                win: 5,
+                lose: 2,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 979179,
+                era: 2.241279980893068,
+                dra: 0.45214934420171227,
+                mra: 1.7045407898856613,
+                rws: 0.321379691072398,
+                ranking: 2,
+                win: 1,
+                lose: 0,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 4676598,
+                era: 1.5253184232645483,
+                dra: 2.121219335121382,
+                mra: 1.7040886968215982,
+                rws: 0.12662065991089874,
+                ranking: 3,
+                win: 2,
+                lose: 4,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 1498317,
+                era: 1.4568271569878393,
+                dra: 0.6882058564108698,
+                mra: 1.2262407668147484,
+                rws: 0.2792749071999805,
+                ranking: 4,
+                win: 2,
+                lose: 0,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 2734480,
+                era: 1.2026700431760864,
+                dra: 1.2363866435735449,
+                mra: 1.212785023295324,
+                rws: 0.09589009752078287,
+                ranking: 5,
+                win: 2,
+                lose: 2,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 1674484,
+                era: 0.9370008858904217,
+                dra: 0.8175143553483543,
+                mra: 0.9011549267278014,
+                rws: 0.14010494803606763,
+                ranking: 6,
+                win: 2,
+                lose: 1,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 2609236,
+                era: 0.7343125839609195,
+                dra: 1.222937809497593,
+                mra: 0.8809001516219215,
+                rws: 0.14493501439913356,
+                ranking: 7,
+                win: 4,
+                lose: 1,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 2206038,
+                era: 0.816201190923976,
+                dra: 1.0234658758355475,
+                mra: 0.8783805963974475,
+                rws: 0.06334786626225819,
+                ranking: 8,
+                win: 1,
+                lose: 3,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 3065247,
+                era: 0.6420163626673259,
+                dra: 1.3912509879016661,
+                mra: 0.8667867502376279,
+                rws: 0.12637293863535617,
+                ranking: 9,
+                win: 4,
+                lose: 2,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 613499,
+                era: 1.015316628611717,
+                dra: 0.28329158460139187,
+                mra: 0.7957091154086193,
+                rws: 0,
+                ranking: 10,
+                win: 0,
+                lose: 1,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 1493264,
+                era: 0.7826617513149234,
+                dra: 0.7537407675786031,
+                mra: 0.7739854561940273,
+                rws: 0,
+                ranking: 11,
+                win: 0,
+                lose: 3,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 1473871,
+                era: 0.596783365506359,
+                dra: 0.6769350268669793,
+                mra: 0.6208288639145451,
+                rws: 0.11159444886673577,
+                ranking: 12,
+                win: 1,
+                lose: 2,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 967789,
+                era: 0.6398033636415603,
+                dra: 0.46314071555183595,
+                mra: 0.586804569214643,
+                rws: 0.1111516025878635,
+                ranking: 13,
+                win: 1,
+                lose: 1,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'red',
+                total: 978393,
+                era: 0.5020406404849433,
+                dra: 0.425191286239161,
+                mra: 0.4789858342112086,
+                rws: 0.07473635800633968,
+                ranking: 14,
+                win: 1,
+                lose: 1,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 413943,
+                era: 0.4335165257525749,
+                dra: 0.20315749109752268,
+                mra: 0.3644088153560592,
+                rws: 0,
+                ranking: 15,
+                win: 0,
+                lose: 1,
+                player_class: [Object],
+                arc: 7
+            },
+            {
+                player: [Object],
+                team: 'blue',
+                total: 2046514,
+                era: 0.0648581410141856,
+                dra: 0.9142825170486069,
+                mra: 0.31968545382451197,
+                rws: 0.044756806467039334,
+                ranking: 16,
+                win: 2,
+                lose: 4,
+                player_class: [Object],
+                arc: 7
+            }
+        ],
+        round_count: 7,
+        score_count: 56,
+        player_count: 16,
+        first_map_bid: 794779,
+        is_team_vs: true,
+        team_point_map: {red: 5, blue: 2},
+        average_star: 6.1233713286263605
+    }
+) {
     // 导入模板
     let svg = readTemplate('template/Panel_F.svg');
 
@@ -299,22 +330,25 @@ export async function panel_F(data = {
     // 插入图片和部件（新方法
     svg = putCustomBanner(svg, reg_banner);
 
-    // 导入成绩卡（C卡
+    // 导入成绩卡（C卡\
+    const events = (data?.match?.events || []).filter(value => {
+        return isNotNull(value.game) && isNotEmptyArray(value.game.scores)
+    })
 
-    let card_Cs = [];
+    const card_Cs = [];
     let redWins = 0;
     let blueWins = 0;
 
-    for (const v of data?.rounds) {
+    for (const v of events) {
         if (v.winning_team === 'red') {
-            redWins ++;
+            redWins++;
         }
 
         if (v.winning_team === 'blue') {
-            blueWins ++;
+            blueWins++;
         }
 
-        card_Cs.push(await card_C(await round2CardC(v, redWins, blueWins)));
+        card_Cs.push(await card_C(await event2CardC(v, redWins, blueWins)));
     }
 
     for (const i in card_Cs) {
@@ -322,14 +356,14 @@ export async function panel_F(data = {
     }
 
     //导入谱面卡 A2卡
-    const rounds = data?.rounds || [];
-
-    let beatmap_arr = [];
-    rounds.forEach(v => {beatmap_arr.push(v?.beatmap)});
+    const beatmap_arr = [];
+    events.forEach(v => {
+        beatmap_arr.push(v?.game?.beatmap)
+    });
 
 
     const panel_height = getPanelHeight(beatmap_arr?.length, 210, 1, 330, 40, 40)
-    let background_height = panel_height - 290;
+    const background_height = panel_height - 290;
 
     for (const i in beatmap_arr) {
         const b = await card_A2(await PanelGenerate.matchBeatMap2CardA2(beatmap_arr[i]));
@@ -340,25 +374,60 @@ export async function panel_F(data = {
     svg = replaceText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    const matchInfo = await card_A2(await PanelGenerate.matchRating2CardA2(data));
-    svg = implantSvgBody(svg,40,40, matchInfo, reg_maincard);
+    const matchInfo = await card_A2(await PanelGenerate.matchRating2CardA2(data, beatmap_arr[0]));
+    svg = implantSvgBody(svg, 40, 40, matchInfo, reg_maincard);
 
     return svg.toString();
 }
 
-async function round2CardC(round = {}
+async function event2CardC(
+    event = {
+        id: 2400731946,
+        detail: {type: 'other', text: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)'},
+        timestamp: '2024-11-23T13:41:52Z',
+        game: {
+            id: 605697970,
+            beatmap: {},
+            beatmap_id: 794779,
+            start_time: '2024-11-23T13:41:52Z',
+            end_time: '2024-11-23T13:44:07Z',
+            mode_int: 0,
+            mods: ['NF'],
+            scores: [
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object],
+                [Object], [Object]
+            ],
+            team_type: 'team-vs',
+            scoring_type: 'scorev2',
+            mode: 'OSU',
+            winning_team_score: 3046798,
+            winning_team: 'red',
+            is_team_vs: true
+        },
+        type: 'Other',
+        text: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)'
+    }
     , red_before = 0, blue_before = 0) {
+    const round = event?.game || {}
+    const scores = round?.scores || []
 
-    const scoreArr = round?.scores || [];
-    let redArr = [], blueArr = [], noneArr = [];
+    let red_arr = [], blue_arr = [], none_arr = [];
 
-    for (const v of scoreArr) {
+    for (const v of scores) {
         const f = await score2LabelC2(v);
 
         switch (v?.match?.team) {
-            case 'red': redArr.push(f); break;
-            case 'blue': blueArr.push(f); break;
-            default : noneArr.push(f); break;
+            case 'red':
+                red_arr.push(f);
+                break;
+            case 'blue':
+                blue_arr.push(f);
+                break;
+            default :
+                none_arr.push(f);
+                break;
         }
     }
 
@@ -378,14 +447,14 @@ async function round2CardC(round = {}
             is_team_red_win: round.winning_team === 'red', //如果不是team vs，这个值默认false
             is_team_blue_win: round.winning_team === 'blue', //如果不是team vs，这个值默认false
 
-            score_team_red: round?.team_score?.red,
-            score_team_blue: round?.team_score?.blue,
-            score_total: round?.team_score?.total,
+            score_team_red: round.red_team_score,
+            score_team_blue: round.blue_team_score,
+            score_total: round.total_team_score,
             wins_team_red_before: red_before, //这局之前红赢了几局？从0开始，不是 team vs 默认0
             wins_team_blue_before: blue_before,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
-        red: redArr,
-        blue: blueArr,
-        none: noneArr,
+        red: red_arr,
+        blue: blue_arr,
+        none: none_arr,
     }
 }
