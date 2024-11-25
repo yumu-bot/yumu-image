@@ -993,9 +993,14 @@ const component_E10 = (
         )
         : ''
 
-    const effective_miss_text = 'effective miss: ' + (data?.effective_miss_count || 0)
+    const is_effective_miss_shown =
+        (getGameMode(data?.mode, 1) === 'o' || getGameMode(data?.mode, 1) === 't')
+        && isNumber(data?.effective_miss_count)
+        && (Math.abs(data?.effective_miss_count - Math.round(data?.effective_miss_count)) > 1e-3)
 
-    const effective_miss = (getGameMode(data?.mode, 1) === 'o' || getGameMode(data?.mode, 1) === 't') ?
+    const effective_miss_text = 'effective miss: ' + getRoundedNumberStr(data?.effective_miss_count || 0, 3)
+
+    const effective_miss = is_effective_miss_shown ?
         poppinsBold.getTextPath(
             effective_miss_text, 475, 28, 18, 'right baseline', '#fff'
         )
@@ -1315,7 +1320,7 @@ const PanelEGenerate = {
             statistics_max: score2StatisticsMax(score.maximum_statistics, score.statistics, score.ruleset_id, is_lazer, progress),
 
             // 仅限 standard, taiko 使用
-            effective_miss_count: getRoundedNumberStr(attr?.effective_miss_count || 0, 3),
+            effective_miss_count: attr?.effective_miss_count,
 
             // 仅限 catch 使用
             statistics_full: (score.ruleset_id !== 2) ? [] : [
