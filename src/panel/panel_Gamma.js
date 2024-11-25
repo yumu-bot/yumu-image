@@ -304,7 +304,7 @@ const PanelGamma = {
 
             // SANITY_BOUNDARY, SANITY_RANKS
             down_left3: sanity_rank,
-            down_right1: 'PC / ' + (user?.playCount || 0),
+            down_right1: 'PC / ' + (user?.play_count || 0),
             down_right2: 'TTH / ' + (user?.total_hits || 0),
             down_right3: 'PT / ' + getTimeByDHMS((user?.play_time || 0), true),
             down_left_color: sanity_color,

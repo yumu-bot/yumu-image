@@ -255,10 +255,10 @@ const component_D1 = (
     svg = implantSvgBody(svg, 20, 50 + 75, label_tth, reg)
     svg = implantSvgBody(svg, 20, 50 + 150, label_pt, reg)
 
-    const join = poppinsBold.getTextPath('Join: ' + moment(data?.join, 'X')
-            .format('YYYY-MM-DD')
+    const join = poppinsBold.getTextPath('Join: ' +
+        moment(data?.join, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY-MM-DD')
         + ' ['
-        + getTimeDifference(data?.join, 'X')
+        + getTimeDifference(data?.join)
         + ']',
         470, 27, 18, 'right baseline', '#fff')
 

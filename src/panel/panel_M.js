@@ -48,95 +48,7 @@ export async function router_svg(req, res) {
  * @return {Promise<string>}
  */
 export async function panel_M(data = {
-    user: {
-        "id": 17064371,
-        "pp": 6279.61,
-        "username": "-Spring Night-",
-        "occupation": null,
-        "discord": null,
-        "interests": null,
-        "playCount": 36485,
-        "global_rank": 30495,
-        "country_rank": 529,
-        "accuracy": 98.3481,
-        "level_current": 101,
-        "levelProgress": 15,
-        "bot": false,
-        "max_combo": 3430,
-        "play_time": 4617717,
-        "total_hits": 17074899,
-        "deleted": false,
-        "online": false,
-        "supporter": true,
-        "avatar_url": "https://a.ppy.sh/17064371?1675693670.jpeg",
-        "cover_url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-        "default_group": "default",
-        "is_active": true,
-        "is_bot": false,
-        "is_deleted": false,
-        "is_online": false,
-        "is_supporter": true,
-        "last_visit": null,
-        "pm_friends_only": false,
-        "mode": "OSU",
-        "nominated_beatmapset_count": null,
-        "beatmap_playcounts_count": 6766,
-        "unranked_beatmapset_count": 2,
-        "favourite_beatmapset_count": 84,
-        "graveyard_beatmapset_count": 112,
-        "groups": [],
-        "guest_beatmapset_count": 23,
-        "loved_beatmapset_count": 0,
-        "mapping_follower_count": 56,
-        "has_supported": true,
-        "join_date": "2020-05-15T14:10:44+00:00",
-        "kudosu": {
-            "total": 391,
-            "available": 391
-        },
-        "max_friends": 500,
-        "comments_count": 11,
-        "support_level": 2,
-        "post_count": 2,
-        "follower_count": 308,
-        "raw": null,
-        "statistics": {
-            "pp": 6279.61,
-            "ss": 37,
-            "ssh": 10,
-            "s": 1122,
-            "sh": 62,
-            "a": 1951,
-            "ranked": true,
-            "pp_7K": null,
-            "pp_4K": null,
-            "count_50": 210333,
-            "count_100": 1884554,
-            "count_300": 14980012,
-            "count_geki": null,
-            "count_katu": null,
-            "count_miss": 493039,
-            "ranked_score": 40881075082,
-            "total_score": 142776445598,
-            "hit_accuracy": 98.3481,
-            "play_count": 36485,
-            "play_time": 4617717,
-            "total_hits": 17074899,
-            "maximum_combo": 3430,
-            "is_ranked": true,
-            "global_rank": 30495,
-            "replays_watched_by_others": 25,
-            "country_rank": 529
-        },
-        "cover": {
-            "url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg",
-            "custom_url": "https://assets.ppy.sh/user-profile-covers/17064371/4569c736003fcc6fbd0c75ac618784c60a8732f5fa2d704974600d440baee205.jpeg"
-        },
-        "country": {
-            "country_code": "TW",
-            "country_name": "Taiwan"
-        },
-    }, //getUser
+    user: {}, //getUser
 
     most_popular_beatmap: [
         {
@@ -202,69 +114,7 @@ export async function panel_M(data = {
                 "count_sliders": 321,
                 "count_spinners": 4,
                 "count_circles": 624
-            }, {
-                "id": 4092434,
-                "mode": "osu",
-                "status": "pending",
-                "version": "Euphyllia",
-                "ar": 8.0,
-                "cs": 4.0,
-                "bpm": 168.0,
-                "convert": false,
-                "passcount": 0,
-                "playcount": 1,
-                "ranked": 0,
-                "url": "https://osu.ppy.sh/beatmaps/4092434",
-                "beatMapRating": 0.0,
-                "beatMapRetryCount": 0,
-                "beatMapFailedCount": 0,
-                "beatmapset_id": 1972258,
-                "difficulty_rating": 4.05,
-                "mode_int": 0,
-                "total_length": 235,
-                "hit_length": 89,
-                "user_id": 17064371,
-                "accuracy": 7.0,
-                "drain": 5.0,
-                "max_combo": 381,
-                "is_scoreable": false,
-                "last_updated": "2023-08-04T13:58:58Z",
-                "checksum": "839abf5a5984f2b5e779c6bbbf4e4050",
-                "count_sliders": 102,
-                "count_spinners": 2,
-                "count_circles": 156
-            }, {
-                "id": 4102609,
-                "mode": "osu",
-                "status": "pending",
-                "version": "Sun_Smile's Expert",
-                "ar": 9.3,
-                "cs": 3.6,
-                "bpm": 168.0,
-                "convert": false,
-                "passcount": 6,
-                "playcount": 41,
-                "ranked": 0,
-                "url": "https://osu.ppy.sh/beatmaps/4102609",
-                "beatMapRating": 0.0,
-                "beatMapRetryCount": 0,
-                "beatMapFailedCount": 0,
-                "beatmapset_id": 1972258,
-                "difficulty_rating": 5.94,
-                "mode_int": 0,
-                "total_length": 237,
-                "hit_length": 237,
-                "user_id": 8664140,
-                "accuracy": 8.4,
-                "drain": 5.0,
-                "max_combo": 1310,
-                "is_scoreable": false,
-                "last_updated": "2023-08-04T13:58:58Z",
-                "checksum": "d39c20132a417a4d68c9181c291c9235",
-                "count_sliders": 288,
-                "count_spinners": 4,
-                "count_circles": 712
-            }]
+            }, ]
         }],//根据游玩数量排序，走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，给6张即可。
 
     most_recent_ranked_beatmap: {},//需要判断，如果玩家的ranked_and_approved_beatmapset_count不为0，则走search，搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any，筛选出ranked/qualified中。上传时间最靠前，但是谱面主（host）是uid所指的人的那张谱面即可。如果没有结果返回空
@@ -282,7 +132,6 @@ export async function panel_M(data = {
     recent_activity: [
         {
             "created_at": "2023-08-26T10:10:40+00:00",
-            "createdAt": "2023-08-26T10:10:40+00:00",
             "id": 806548619,
             "type": "beatmapsetDelete",
             "beatmapset": {
@@ -292,7 +141,6 @@ export async function panel_M(data = {
         },
         {
             "created_at": "2023-08-13T13:45:32+00:00",
-            "createdAt": "2023-08-13T13:45:32+00:00",
             "id": 804445276,
             "type": "beatmapsetUpdate",
             "beatmapset": {
@@ -304,21 +152,6 @@ export async function panel_M(data = {
                 "url": "/u/7003013"
             }
         },
-        {
-            "created_at": "2023-08-19T09:02:58+00:00",
-            "createdAt": "2023-08-19T09:02:58+00:00",
-            "id": 805399429,
-            "type": "beatmapsetApprove",
-            "approval": "ranked",
-            "beatmapset": {
-                "title": "Mitsukiyo - Midsummer cat",
-                "url": "/beatmapsets/2021170"
-            },
-            "user": {
-                "username": "Setu",
-                "url": "/users/12190421"
-            }
-        }
     ],
     playcount: 0,
     favorite: 0,

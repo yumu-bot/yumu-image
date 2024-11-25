@@ -71,17 +71,17 @@ export async function panel_E5(data = {
     progress: 1,
     original: {},
     attributes: {
-        effectiveMissCount: 0,
-        pp: 80.44228072561536,
-        ppAcc: 28.862448688369962,
-        ppAim: 33.25959319645674,
-        ppFlashlight: 0,
-        ppSpeed: 14.784026882398623,
-        stars: 4.22719632824042,
-        full_pp: 80.44228072561536,
-        perfect_pp: 94.27103939186196
-    }
-    ,
+        effective_miss_count: 1.0078382838283828,
+        pp: 201.40540077771928,
+        pp_acc: 51.6400779167333,
+        pp_aim: 85.3547123277813,
+        pp_flashlight: 0,
+        pp_speed: 56.031742770816585,
+        pp_difficulty: 0,
+        stars: 5.359699675204284,
+        full_pp: 221.08364861738923,
+        perfect_pp: 238.41765087602147
+    },
 
     score: {
         mods: [],
@@ -1268,11 +1268,11 @@ const PanelEGenerate = {
             full_pp: attr?.full_pp || 0,
             perfect_pp: attr?.perfect_pp || 0,
 
-            aim_pp: attr?.aim_pp || 0,
-            spd_pp: attr?.spd_pp || 0,
-            acc_pp: attr?.acc_pp || 0,
-            fl_pp: attr?.fl_pp || 0,
-            diff_pp: attr?.diff_pp || 0,
+            aim_pp: attr?.pp_aim || 0,
+            spd_pp: attr?.pp_speed || 0,
+            acc_pp: attr?.pp_acc || 0,
+            fl_pp: attr?.pp_flashlight || 0,
+            diff_pp: attr?.pp_difficulty || 0,
 
             is_fc: is_fc,
 
@@ -1315,7 +1315,7 @@ const PanelEGenerate = {
             statistics_max: score2StatisticsMax(score.maximum_statistics, score.statistics, score.ruleset_id, is_lazer, progress),
 
             // 仅限 standard, taiko 使用
-            effective_miss_count: attr?.effectiveMissCount || attr?.effective_miss_count || 0,
+            effective_miss_count: getRoundedNumberStr(attr?.effective_miss_count || 0, 3),
 
             // 仅限 catch 使用
             statistics_full: (score.ruleset_id !== 2) ? [] : [

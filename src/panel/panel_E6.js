@@ -1024,11 +1024,11 @@ const PanelEGenerate = {
             full_pp: pp[0] || 0,
             perfect_pp: pp[1] || 0,
 
-            aim_pp: attr?.ppAim || 0,
-            spd_pp: attr?.ppSpeed || 0,
-            acc_pp: attr?.ppAcc || 0,
-            fl_pp: attr?.ppFlashlight || 0,
-            diff_pp: attr?.ppDifficulty || 0,
+            aim_pp: attr?.pp_aim || 0,
+            spd_pp: attr?.pp_speed || 0,
+            acc_pp: attr?.pp_acc || 0,
+            fl_pp: attr?.pp_flashlight || 0,
+            diff_pp: attr?.pp_difficulty || 0,
 
             is_fc: is_fc,
 

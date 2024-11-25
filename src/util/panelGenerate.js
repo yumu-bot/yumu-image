@@ -475,7 +475,7 @@ export const PanelGenerate = {
             const od = Math.round(beatmap.accuracy * 10) / 10;
             const hp = Math.round(beatmap.drain * 10) / 10;
 
-            switch (getGameMode(beatmap.mode, 1)) {
+            switch (getGameMode(beatmap.mode_int, 1)) {
                 case 'o':
                     return 'CS' + cs + ' AR' + ar + ' OD' + od;
                 case 't':
@@ -602,9 +602,9 @@ export const PanelGenerate = {
 
         const left2 = isNotNull(cursor) ? moment(parseInt(cursor.approved_date)).format("MM-DD HH:mm:ss") :
             (isNotNull(first_beatmapset.ranked_date) ?
-                moment(first_beatmapset.ranked_date, 'X').add(8, 'hours').format("MM-DD HH:mm:ss") : 'null');
+                moment(first_beatmapset.ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours').format("YYYY-MM-DD HH:mm") : 'null');
         const left3 = (isNotNull(last_beatmapset.ranked_date) ?
-            moment(last_beatmapset.ranked_date, 'X').add(8, 'hours').format("MM-DD HH:mm:ss") : 'null');
+            moment(last_beatmapset.ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours').format("YYYY-MM-DD HH:mm") : 'null');
         const right1 = 'total ' + total + 'x' || 'total 0x';
         const right2 = 'results:';
         const right3b = result_count.toString() || '0';
@@ -648,15 +648,15 @@ export const PanelGenerate = {
             (isRanked ? 'Ranked:' :
                 'Submitted:');
 
-        const right2 = isQualified ? getApproximateRankedTime(ranked_date, 'X') :
+        const right2 = isQualified ? getApproximateRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]') :
             (isRanked ? moment(ranked_date, 'X').utcOffset(960).format("YYYY-MM-DD HH:mm") :
                 moment(submitted_date, 'X').utcOffset(960).format("YYYY-MM-DD HH:mm"));
         let right3b;
         let right3m;
 
-        const days = getApproximateLeftRankedTime(ranked_date, 'X', 0);
-        const hours = getApproximateLeftRankedTime(ranked_date, 'X', 1);
-        const minutes = getApproximateLeftRankedTime(ranked_date, 'X', 2);
+        const days = getApproximateLeftRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]', 0);
+        const hours = getApproximateLeftRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]', 1);
+        const minutes = getApproximateLeftRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]', 2);
 
         if (isQualified) {
             if (days > 0) {
