@@ -24,8 +24,10 @@ export const PanelDraw = {
         x2: "100%",
         y2: "0%",
     }) => {
+        const name = Math.sqrt(x * y * w * h) + (colors[0].color || '#fff')
+
         let out = `<g><defs>
-                <linearGradient id="grad${x * y * w * h}" x1="${position.x1}" y1="${position.y1}" x2="${position.x2}" y2="${position.y2}">`
+                <linearGradient id="grad${name}" x1="${position.x1}" y1="${position.y1}" x2="${position.x2}" y2="${position.y2}">`
 
         for (const c of colors) {
             out += `<stop offset="${c.offset}" style="stop-color:rgb(${hex2rgbColor(c.color)});stop-opacity:${c.opacity}" />`
@@ -33,7 +35,7 @@ export const PanelDraw = {
 
         out += `</linearGradient>
                 </defs>
-                <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: url(#grad${x * y * w * h}); fill-opacity: ${opacity}"/></g>`;
+                <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: url(#grad${name}); fill-opacity: ${opacity}"/></g>`;
 
         return out
     },
