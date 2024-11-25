@@ -175,8 +175,6 @@ async function seriesRating2CardA2(sr){
 
     const background = await getDiffBG(sr?.first_map_bid, 0, 'list@2x', true);
 
-    console.log(sr?.first_map_bid)
-
     const title = sr?.statistics?.name || "";
     let title1, title2;
     const title_cut = PuHuiTi.cutStringTail(title, 36, 390,false);
