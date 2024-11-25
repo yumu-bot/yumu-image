@@ -649,8 +649,8 @@ export const PanelGenerate = {
                 'Submitted:');
 
         const right2 = isQualified ? getApproximateRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]') :
-            (isRanked ? moment(ranked_date, 'X').utcOffset(960).format("YYYY-MM-DD HH:mm") :
-                moment(submitted_date, 'X').utcOffset(960).format("YYYY-MM-DD HH:mm"));
+            (isRanked ? moment(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm") :
+                moment(submitted_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm"));
         let right3b;
         let right3m;
 

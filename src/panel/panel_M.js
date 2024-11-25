@@ -295,7 +295,7 @@ export async function panel_M(data = {
 
     for (let i = 0; i < Math.min(recent_activity.length, 7); i++) {
         const v = recent_activity[i];
-        const delta_time = getTimeDifference(v.created_at, 'X', moment());
+        const delta_time = getTimeDifference(v.created_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]', moment());
         // /beatmapsets/1576867
         let sid
 

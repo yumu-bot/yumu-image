@@ -56,7 +56,7 @@ export async function panel_F2(data = {}) {
 
     // 面板文字
     const request_time = 'match time: ' +
-        moment(data?.MatchStat?.start_time, 'X').format('YYYY/MM/DD HH:mm') + ' - in progress'
+        moment(data?.MatchStat?.start_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY/MM/DD HH:mm') + ' - in progress'
         + ' // request time: ' + getNowTimeStamp();
     const panel_name = getPanelNameSVG('Match Rounds (!ymmr)', 'MR', 'v0.5.0 DX', request_time);
 

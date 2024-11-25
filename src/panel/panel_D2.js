@@ -889,9 +889,9 @@ const PanelDGenerate = {
             return {
                 pc_time: [],
                 time: '0d',
-                x_axis_1: moment(moment.now(), 'X').subtract(42, 'months').format('YYYY-MM'),
-                x_axis_2: moment(moment.now(), 'X').subtract(21, 'months').format('YYYY-MM'),
-                x_axis_3: moment(moment.now(), 'X').format('YYYY-MM'),
+                x_axis_1: moment().subtract(42, 'months').format('YYYY-MM'),
+                x_axis_2: moment().subtract(21, 'months').format('YYYY-MM'),
+                x_axis_3: moment().format('YYYY-MM'),
 
                 has_custom_panel: has_custom_panel,
                 hue: hue,
