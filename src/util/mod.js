@@ -220,8 +220,8 @@ export function getModAdditionalInformation(mod = {
     return info
 }
 
-export function getModFullName(mod = 'NM') {
-    switch (mod?.toUpperCase()) {
+export function getModFullName(abbr = 'NM') {
+    switch (abbr?.toUpperCase()) {
         case "4K":
             return '4Keys';
         case "5K":
@@ -276,8 +276,80 @@ export function getModFullName(mod = 'NM') {
             return 'TouchDevice';
         case "TP":
             return 'TargetPractice';
+
+        case "DC":
+            return 'Daycore';
+        case "NR":
+            return 'NoRelease';
+        case "BL":
+            return 'Blinds';
+        case "CO":
+            return 'Cover';
+        case "ST":
+            return 'StrictTracking';
+        case "AC":
+            return 'AccuracyChallenge';
+        case "DA":
+            return 'DifficultyAdjust';
+        case "CL":
+            return 'Classic';
+        case "AL":
+            return 'Alternate';
+        case "SG":
+            return 'SingleTap';
+        case "SW":
+            return 'Swap';
+        case "DS":
+            return 'DualStages';
+        case "IV":
+            return 'Invert';
+        case "CS":
+            return 'ConstantSpeed';
+        case "HO":
+            return 'HoldOff';
+
+        case "TR":
+            return 'Transform';
+        case "WG":
+            return 'Wiggle';
+        case "SI":
+            return 'SpinIn';
+        case "GR":
+            return 'Grow';
+        case "DF":
+            return 'Deflate';
+        case "WU":
+            return 'WindUp';
+        case "WD":
+            return 'WindDown';
+        case "TC":
+            return 'Traceable';
+        case "BR":
+            return 'BarrelRoll';
+        case "AD":
+            return 'ApproachDifferent';
+        case "MU":
+            return 'Muted';
+        case "NS":
+            return 'NoScope';
+        case "MG":
+            return 'Magnetised';
+        case "RP":
+            return 'Repel';
+        case "AS":
+            return 'AdaptiveSpeed';
+        case "FR":
+            return 'FreezeFrame';
+        case "FF":
+            return 'FloatingFruits';
+        case "BU":
+            return 'Bubbles';
+        case "SY":
+            return 'Synesthesia';
+        case "DP":
+            return 'Depth';
         default:
-            return mod?.toUpperCase();
+            return abbr?.toUpperCase();
     }
 }
 

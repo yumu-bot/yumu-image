@@ -1192,16 +1192,16 @@ export function getDecimals(number = 0, whichData = 0) {
 
 /**
  * @function 修整数组，太短则在前面补0，太长则卡掉前面的
- * @return {Number[]} 返回裁剪好的数组
+ * @return {[]} 返回裁剪好的数组
  * @param arr 需要裁剪的数组
  * @param target_length 需要的数组长度
  * @param direction 如果是真，则在前面补，如果是假，则在后面补
  */
-export function modifyArrayToFixedLength(arr = [0], target_length = 0, direction = true) {
+export function modifyArrayToFixedLength(arr = [0], target_length = 0, direction = true, empty_object = 0) {
     if (arr.length < target_length) {
         for (let i = (target_length - arr.length); i > 0; i--) {
-            if (direction) arr.unshift(0);
-            else arr.push(0);
+            if (direction) arr.unshift(empty_object);
+            else arr.push(empty_object);
         }
         return arr;
 

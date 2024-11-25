@@ -940,10 +940,10 @@ const PanelJGenerate = {
 
     distribution2componentJ5: (rank_arr, mods_arr, star_arr, length_arr, has_custom_panel = false, hue) => {
         return {
-            rank_arr: rank_arr,
-            mods_arr: mods_arr,
-            star_arr: star_arr,
-            length_arr: length_arr,
+            rank_arr: modifyArrayToFixedLength(rank_arr, 100, false, 'F'),
+            mods_arr: modifyArrayToFixedLength(mods_arr, 100, false, ["4K"]), // none 是无色，这里用同为暗色的 4K
+            star_arr: modifyArrayToFixedLength(star_arr, 100, false, 0),
+            length_arr: modifyArrayToFixedLength(length_arr, 100, false, 0),
             has_custom_panel: has_custom_panel,
             hue: hue,
         }
