@@ -52,9 +52,9 @@ export async function router_svg(req, res) {
  * @return {Promise<string>}
  */
 export async function panel_B2(data = {
-    beatMap: {},
+    beatmap: {},
 
-    mapMinus: {
+    map_minus: {
         value_list: [],
         sub_list: [],
         abbr_list: [],
@@ -66,7 +66,7 @@ export async function panel_B2(data = {
 }) {
     let svg = readTemplate('template/Panel_B.svg');
 
-    const m = data?.mapMinus;
+    const m = data?.map_minus;
 
     const data_arr = m?.value_list || [];
     const sub_arr = m?.sub_list || [];
@@ -94,7 +94,7 @@ export async function panel_B2(data = {
     svg = replaceText(svg , PanelDraw.HexagonIndex(abbr_arr.slice(0, 6), 960, 600, 260, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
-    const banner = await getMapBG(data.beatMap.beatmapset.id, 'cover', hasLeaderBoard(data.beatMap.ranked));
+    const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked));
     svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
 
     // 面板文字
@@ -111,7 +111,7 @@ export async function panel_B2(data = {
 
     // A2定义
 
-    const cardA2 = await card_A2(await PanelGenerate.beatMap2CardA2(data.beatMap));
+    const cardA2 = await card_A2(await PanelGenerate.beatMap2CardA2(data.beatmap));
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 获取卡片
@@ -205,4 +205,14 @@ export async function panel_B2(data = {
     svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
 
     return svg.toString();
+}
+
+function getTypeImage(type = "DEFAULT") {
+    let image = ''
+
+    switch (type) {
+        default: image = 'default'
+    }
+
+    return getImageFromV3('Mods', image + '.png')
 }
