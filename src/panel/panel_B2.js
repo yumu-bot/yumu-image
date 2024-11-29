@@ -33,6 +33,7 @@ export async function router(req, res) {
     }
     res.end();
 }
+
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
@@ -61,7 +62,10 @@ export async function panel_B2(data = {
 
         stream: [],
         jack: [],
-    }
+    },
+
+    type: "",
+    type_percent: 0.7,
 
 }) {
     let svg = readTemplate('template/Panel_B.svg');
@@ -91,7 +95,7 @@ export async function panel_B2(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 画六个标识
-    svg = replaceText(svg , PanelDraw.HexagonIndex(abbr_arr.slice(0, 6), 960, 600, 260, Math.PI / 3), reg_hexagon);
+    svg = replaceText(svg, PanelDraw.HexagonIndex(abbr_arr.slice(0, 6), 960, 600, 260, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
     const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked));
@@ -101,7 +105,6 @@ export async function panel_B2(data = {
     const panel_name = getPanelNameSVG('Map Minus v0.7 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.5.0 DX');
 
     // 计算数值
-
     const total = m?.star || 0;
 
     const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
@@ -110,7 +113,6 @@ export async function panel_B2(data = {
     svg = replaceTexts(svg, [panel_name, total_path], reg_index);
 
     // A2定义
-
     const cardA2 = await card_A2(await PanelGenerate.beatMap2CardA2(data.beatmap));
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
@@ -171,9 +173,18 @@ export async function panel_B2(data = {
     svg = implantSvgBody(svg, 630, 860, cardB2s[0], reg_center);
     svg = implantSvgBody(svg, 970, 860, cardB2s[1], reg_center);
 
+    // 插入种类（测试中）
+    const type_image = getTypeImage(data?.type, data?.type_percent)
+    const type_percent = data?.type_percent > 0 ?
+        torus.getTextPath(Math.round(data?.type_percent * 100) + '%', 1685 + 195/2, 210 - 8, 16, 'center baseline', '#fff')
+        : ''
+
+    svg = replaceText(svg, type_percent, reg_right)
+    svg = implantImage(svg, 195, 60, 1685, 210, 1, type_image, reg_right)
+
     // todo 临时的值
     function drawChart(array = [], index = 0, name = "null", x = 0, y = 0, color = '#fff') {
-        return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + torus.getTextPath(name + ": " + getRoundedNumberStr(index, 2), 75 + 1370 + x, - 35 + 445 + y, 24, 'center baseline', '#fff')
+        return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + torus.getTextPath(name + ": " + getRoundedNumberStr(index, 2), 75 + 1370 + x, -35 + 445 + y, 24, 'center baseline', '#fff')
     }
 
     svg = replaceTexts(svg, [
@@ -207,11 +218,76 @@ export async function panel_B2(data = {
     return svg.toString();
 }
 
-function getTypeImage(type = "DEFAULT") {
+function getTypeImage(type = "DEFAULT", type_percent = 1) {
     let image = ''
 
-    switch (type) {
-        default: image = 'default'
+    if (type_percent < 0.3) {
+        type = "DEFAULT"
+    }
+
+    switch (type.toString().toUpperCase()) {
+        case "EASY_JUMP_TRILL":
+        case "HARD_JUMP_TRILL":
+            image = 'jump_trill'
+            break
+        case "JACK":
+        case "HARD_JACK":
+            image = 'jack'
+            break
+        case "SPEED_STREAM":
+            image = 'speed_stream'
+            break
+        case "STAMINA_RICE":
+            image = 'stamina'
+            break
+        case "EASY_COORDINATE":
+        case "HARD_COORDINATE":
+            image = 'coordinate'
+            break
+        case "EASY_RELEASE":
+        case "HARD_RELEASE":
+            image = 'release'
+            break
+        case "EASY_STREAM":
+        case "HARD_STREAM":
+            image = 'stream'
+            break
+        case "EASY_HYBRID":
+        case "HARD_HYBRID":
+            image = 'hybrid'
+            break
+        case "SHORT_LN":
+            image = 'short_long_note'
+            break
+        case "IRREGULAR_LN":
+            image = 'irregular_release'
+            break
+        case "SINGLE_LINE":
+            image = 'single_track'
+            break
+        case "OVERESTIMATED_SR":
+            image = 'easy'
+            break
+        case "UNDERESTIMATED_SR":
+            image = 'extreme'
+            break
+        case "CLASSIC":
+            image = 'rice'
+            break
+        case "MODERN":
+            image = 'long_note'
+            break
+        case "BURST":
+            image = 'burst'
+            break
+        case "AWMRONE":
+            image = 'awmrone'
+            break
+        case "DEFAULT":
+            image = 'default'
+            break
+        default:
+            return ''
     }
 
     return getImageFromV3('Mods', image + '.png')
