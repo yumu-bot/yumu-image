@@ -84,35 +84,36 @@ export async function panel_N(
     svg = replaceTexts(svg, [favorite_title, tag_title, progress_title, discussion_title, guest_title, genre_title], reg_index);
 
     // 插入1号卡标签
-    const total_length = data?.more?.totalLength || 0;
+    const total_length = data?.more?.total_length || 0;
 
-    const diff_str_b = data?.more?.hostCount.toString() || '0';
-    const diff_str_m = data?.more?.totalCount.toString() || '0';
-    const star_str_b = data?.more?.minSR || '0';
-    const star_str_m = data?.more?.maxSR || '0';
+    const diff_str_b = data?.more?.host_count.toString() || '0';
+    const diff_str_m = data?.more?.total_count.toString() || '0';
+    const star_str_b = data?.more?.min_star || '0';
+    const star_str_m = data?.more?.max_star || '0';
     const length_str_b = Math.floor(total_length / 60).toString();
     const length_str_m = (total_length % 60).toString().padStart(2, "0");
 
     const diff = torus.get2SizeTextPath(diff_str_b, '/' + diff_str_m, 42, 30, 120, 616, 'center baseline', '#fff');
-    const star = (data?.more?.minSR !== "") ? torus.get2SizeTextPath(star_str_b, '~' + star_str_m, 42, 30, 255, 616, 'center baseline', '#fff') :
+    const star = (data?.more?.min_star !== "") ? torus.get2SizeTextPath(star_str_b, '~' + star_str_m, 42, 30, 255, 616, 'center baseline', '#fff') :
         torus.getTextPath(star_str_m,255, 616, 42,'center baseline', '#fff')
     ;
     const length = torus.get2SizeTextPath(length_str_b, ':' + length_str_m, 42, 30, 390, 616, 'center baseline', '#fff');
 
     const diff_index = torus.getTextPath('Diff', 120, 648, 24, 'center baseline', '#aaa');
-    const star_index = torus.getTextPath('SR', 255, 648, 24, 'center baseline', '#aaa');
+    const star_index = torus.getTextPath('Star', 255, 648, 24, 'center baseline', '#aaa');
     const length_index = torus.getTextPath('Length', 390, 648, 24, 'center baseline', '#aaa');
 
     svg = replaceTexts(svg, [diff, star, length], reg_index);
     svg = replaceTexts(svg, [diff_index, star_index, length_index], reg_index);
 
     // 插入8号卡标签
+    const pack_tags = data?.beatmapset?.pack_tags || []
 
-    const stat_str = '(?) Not Solved ' + (data?.more?.notSolvedCount || 0)
-        + ' // (!) Problem ' + (data?.more?.problemCount || 0)
-        + ' // ( ) Suggestion ' + (data?.more?.suggestCount || 0)
-        + ' // (*) Praise ' + (data?.more?.praiseCount || 0)
-        + ' // Pack ' + (data?.beatmapset?.pack_tags[0] || "null")
+    const stat_str = '(?) Not Solved ' + (data?.more?.not_solved_count || 0)
+        + ' // (!) Problem ' + (data?.more?.problem_count || 0)
+        + ' // ( ) Suggestion ' + (data?.more?.suggest_count || 0)
+        + ' // (*) Praise ' + (data?.more?.praise_count || 0)
+        + ' // Pack ' + (pack_tags[0] || "null")
         + ' // Rate ' + getRoundedNumberStr(data?.beatmapset?.public_rating, 2);
 
     const stat = torus.getTextPath(stat_str, 1570, 645, 18, 'right baseline', '#aaa');
