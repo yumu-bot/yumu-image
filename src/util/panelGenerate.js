@@ -727,7 +727,7 @@ export const PanelGenerate = {
 
         const cover = await readNetImage(s?.beatmapset?.covers?.list, cache);
         const background = await readNetImage(s?.beatmapset?.covers?.cover, cache);
-        const type = getScoreTypeImage(s.build_id)
+        const type = getScoreTypeImage(s.is_lazer)
 
         const time_diff = getTimeDifference(s.ended_at);
 
@@ -872,7 +872,7 @@ export const PanelGenerate = {
         return {
             cover: background,
             background: background,
-            type: getScoreTypeImage(bp.build_id),
+            type: getScoreTypeImage(bp.is_lazer),
 
             title: bp.beatmapset ? bp.beatmapset.title : 'Unknown Title',
             artist: bp.beatmapset ? bp.beatmapset.artist : 'Unknown Artist',

@@ -164,6 +164,7 @@ export async function panel_A3(data = {
             "user_id": 11592896,
             "accuracy": 0.981982,
             "build_id": null,
+            "is_lazer": false,
             "ended_at": "2022-12-26T13:10:49Z",
             "has_replay": true,
             "is_perfect_combo": true,

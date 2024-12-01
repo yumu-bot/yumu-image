@@ -168,7 +168,7 @@ const score2CardJ = async (score, calcPP) => {
     return {
         cover: background,
         background: background,
-        type: getScoreTypeImage(bp.build_id),
+        type: getScoreTypeImage(score.is_lazer),
 
         title: score.beatmapset.title || '',
         artist: score.beatmapset.artist || '',

@@ -1,5 +1,5 @@
 import {getModInt, hasMod, matchAnyMods} from "./mod.js";
-import {getGameMode, getImageFromV3, isNumber} from "./util.js";
+import {getGameMode, getImageFromV3} from "./util.js";
 
 //SS和X的转换
 export const rankSS2X = (rank = 'SS') => {
@@ -332,21 +332,13 @@ export const getRankFromValue = (value = 0, boundary = [9, 7, 6.5, 5.3, 4, 2.8, 
     return 'F';
 }
 
-// null，lazer，stable
-export function getScoreType(build_id) {
-    if (isNumber(build_id) && build_id > 0) return 'lazer';
-    else return 'stable'
-}
-
-export function getScoreTypeImage(build_id, version = '') {
-    const type = getScoreType(build_id)
-
-    switch (type) {
+export function getScoreTypeImage(is_lazer, version = '') {
+    switch (is_lazer) {
         case null:
             return ''
-        case 'lazer':
+        case true:
             return getImageFromV3('object-type-lazer' + version + '.png');
-        case 'stable':
+        case false:
             return getImageFromV3('object-type-stable' + version + '.png');
     }
 }

@@ -162,7 +162,7 @@ export async function card_N(data = {
         svg = replaceText(svg, insertMod(mod, multiplier * i, 900 - 32 + multiplier * 24 - mods_arr_length * multiplier * 24), reg_mod);
     });
 
-    const type = getScoreTypeImage(data?.score?.build_id)
+    const type = getScoreTypeImage(data?.score?.is_lazer)
     svg = implantImage(svg, 45, 30, 295, 30, 1, type, reg_label);
 
     // 插入图片和部件（新方法
