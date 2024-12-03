@@ -133,7 +133,7 @@ export async function panel_N(
     const favorite = await getFavoritePanel(data?.beatmapset?.recent_favourites, 1620, 660);
 
     // 导入 Discussion
-    const discussion = await getDisscussionPanel(data?.discussion, data?.users, 510, 660);
+    const discussion = await getDiscussionPanel(data?.discussion, data?.users, 510, 660);
 
     // 导入 Favorite
     const genre = getGenrePanel(data?.beatmapset?.genre, data?.beatmapset?.language);
@@ -217,7 +217,7 @@ async function getGuestPanel(guest = [], x = 54, y = 745) {
 }
 
 async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 490, y = 330) {
-    const hype_count = s?.hype?.current || more?.hypeCount || 0;
+    const hype_count = s?.hype?.current || more?.hype_count || 0;
     let hype_slot = 615 / 185; // 一般来说是 hype 相比于正常一格的长度比
 
     const summary = s?.nominations_summary || []
@@ -258,7 +258,9 @@ async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 
     let rrect = "";
     let icon = "";
 
-    rrect += drawHype(x_hype, y_rrect, hype_slot * Math.min(1, hype_count / 5), hype_slot);
+    const hype_width = isSpecialRanked ? 1 : Math.min(1, hype_count / 5) // 部分老图没有 hype，但是依旧能飞
+
+    rrect += drawHype(x_hype, y_rrect, hype_slot * hype_width, hype_slot);
     rrect += drawRRect(nom_count, nom_slot, x_nom, y_rrect, slot_length - 5, '#B3FD66');
 
     const nominator = await drawNominators(x_nom, y_nominator, s?.nominators, slot_length)
@@ -290,7 +292,7 @@ async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 
 
 }
 
-async function getDisscussionPanel(discussion, user, x, y) {
+async function getDiscussionPanel(discussion, user, x, y) {
     return await renderDiscussion(discussion, user, x, y, 4, 360, 1060);
 }
 
