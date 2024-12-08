@@ -37,7 +37,7 @@ export async function card_A1(data = {
     const reg_sub_icon1 = /(?<=<g style="clip-path: url\(#clippath-CA1-4\);">)/;
     const reg_sub_icon2 = /(?<=<g style="clip-path: url\(#clippath-CA1-5\);">)/;
 
-    // 文字的 <path>
+    // 文本定义
     const right_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
 
     const font_top1 = isASCII(data.top1) ? torus : PuHuiTi

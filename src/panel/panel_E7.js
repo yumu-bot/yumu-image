@@ -487,7 +487,7 @@ const component_E5 = (
     const pc = poppinsBold.getTextPath(getRoundedNumberStr(data?.playcount, 1), 78, 47, 16, 'right baseline', '#fff')
 
     svg = replaceTexts(svg, [fav, pc], reg_text);
-    svg = implantImage(svg, 18, 16, 12, 10, 1, getImageFromV3('object-beatmap-favorite.png'), reg_text);
+    svg = implantImage(svg, 18, 18, 12, 10 - 1, 1, getImageFromV3('object-beatmap-favorite.png'), reg_text);
     svg = implantImage(svg, 18, 18, 12, 32, 1, getImageFromV3('object-beatmap-playcount.png'), reg_text);
     svg = replaceText(svg, rect, reg_base);
 

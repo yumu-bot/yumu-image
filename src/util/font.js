@@ -5,6 +5,7 @@ const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
 const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.3.ttf");
 const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
+const textToSVGTorusBold = TextToSVG.loadSync("font/Torus-Bold.ttf");
 const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold.ttf");
 const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
 const textToSVGTahomaRegular = TextToSVG.loadSync("font/ft71.ttf");
@@ -96,12 +97,16 @@ export function getMultipleTextPath(array = [{
 
 export const BerlinBold = {};
 
+BerlinBold.name = "BerlinBold";
 BerlinBold.getTextPath = getTextPath_BerlinBold;
 BerlinBold.get2SizeTextPath = get2SizeTextPath_BerlinBold;
 BerlinBold.getTextMetrics = getTextMetrics_BerlinBold;
 BerlinBold.getTextWidth = getTextWidth_BerlinBold;
 BerlinBold.cutStringTail = cutStringTail_BerlinBold;
 
+/**
+ * @return {string}
+ */
 function getTextPath_BerlinBold(
     text = '',
     x = 0,
@@ -156,6 +161,9 @@ function getTextMetrics_BerlinBold(
     })
 }
 
+/**
+ * @return {number}
+ */
 function getTextWidth_BerlinBold(
     text = '',
     size = 0,
@@ -172,6 +180,9 @@ function getTextWidth_BerlinBold(
     }).width
 }
 
+/**
+ * @return {string}
+ */
 function cutStringTail_BerlinBold(
     text = '',
     size = 36,
@@ -240,6 +251,9 @@ TahomaRegular.getTextMetrics = getTextMetrics_TahomaRegular;
 TahomaRegular.getTextWidth = getTextWidth_TahomaRegular;
 TahomaRegular.cutStringTail = cutStringTail_TahomaRegular;
 
+/**
+ * @return {string}
+ */
 function getTextPath_TahomaRegular(
     text = '',
     x = 0,
@@ -282,6 +296,9 @@ function getTextMetrics_TahomaRegular(
     })
 }
 
+/**
+ * @return {number}
+ */
 function getTextWidth_TahomaRegular(
     text = '',
     size = 0,
@@ -298,6 +315,9 @@ function getTextWidth_TahomaRegular(
     }).width
 }
 
+/**
+ * @return {string}
+ */
 function cutStringTail_TahomaRegular(
     text = '',
     size = 36,
@@ -366,6 +386,9 @@ TahomaBold.getTextMetrics = getTextMetrics_TahomaBold;
 TahomaBold.getTextWidth = getTextWidth_TahomaBold;
 TahomaBold.cutStringTail = cutStringTail_TahomaBold;
 
+/**
+ * @return {string}
+ */
 function getTextPath_TahomaBold(
     text = '',
     x = 0,
@@ -408,6 +431,9 @@ function getTextMetrics_TahomaBold(
     })
 }
 
+/**
+ * @return {number}
+ */
 function getTextWidth_TahomaBold(
     text = '',
     size = 0,
@@ -424,6 +450,9 @@ function getTextWidth_TahomaBold(
     }).width
 }
 
+/**
+ * @return {string}
+ */
 function cutStringTail_TahomaBold(
     text = '',
     size = 36,
@@ -492,6 +521,9 @@ poppinsBold.getTextMetrics = getTextMetrics_poppinsBold;
 poppinsBold.getTextWidth = getTextWidth_poppinsBold;
 poppinsBold.cutStringTail = cutStringTail_poppinsBold;
 
+/**
+ * @return {string}
+ */
 function getTextPath_poppinsBold(
     text = '',
     x = 0,
@@ -534,6 +566,9 @@ function getTextMetrics_poppinsBold(
     })
 }
 
+/**
+ * @return {number}
+ */
 function getTextWidth_poppinsBold(
     text = '',
     size = 0,
@@ -550,6 +585,9 @@ function getTextWidth_poppinsBold(
     }).width
 }
 
+/**
+ * @return {string}
+ */
 function cutStringTail_poppinsBold(
     text = '',
     size = 36,
@@ -618,6 +656,9 @@ lineSeedSans.getTextMetrics = getTextMetrics_lineSeedSans;
 lineSeedSans.getTextWidth = getTextWidth_lineSeedSans;
 lineSeedSans.cutStringTail = cutStringTail_lineSeedSans;
 
+/**
+ * @return {string}
+ */
 function getTextPath_lineSeedSans(
     text = '',
     x = 0,
@@ -660,6 +701,9 @@ function getTextMetrics_lineSeedSans(
     })
 }
 
+/**
+ * @return {number}
+ */
 function getTextWidth_lineSeedSans(
     text = '',
     size = 0,
@@ -676,6 +720,9 @@ function getTextWidth_lineSeedSans(
     }).width
 }
 
+/**
+ * @return {string}
+ */
 function cutStringTail_lineSeedSans(
     text = '',
     size = 36,
@@ -744,6 +791,9 @@ torus.getTextMetrics = getTextMetrics_torus;
 torus.getTextWidth = getTextWidth_torus;
 torus.cutStringTail = cutStringTail_torus;
 
+/**
+ * @return {string}
+ */
 function getTextPath_torus(
     text = '',
     x = 0,
@@ -786,6 +836,9 @@ function getTextMetrics_torus(
     })
 }
 
+/**
+ * @return {number}
+ */
 function getTextWidth_torus(
     text = '',
     size = 0,
@@ -802,6 +855,9 @@ function getTextWidth_torus(
     }).width
 }
 
+/**
+ * @return {string}
+ */
 function cutStringTail_torus(
     text = '',
     size = 36,
@@ -862,6 +918,142 @@ function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x
     return out;
 }
 
+export const torusBold = {};
+
+torusBold.name = "torusBold"
+torusBold.getTextPath = getTextPath_torusBold;
+torusBold.get2SizeTextPath = get2SizeTextPath_torusBold;
+torusBold.getTextMetrics = getTextMetrics_torusBold;
+torusBold.getTextWidth = getTextWidth_torusBold;
+torusBold.cutStringTail = cutStringTail_torusBold;
+
+/**
+ * @return {string}
+ */
+function getTextPath_torusBold(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff',
+    opacity = 1
+) {
+    return textToSVGTorusBold.getPath((text + ""), {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "TorusBold",
+        attributes: {
+            "fill": fill,
+            "fill-opacity": opacity
+        }
+    })
+}
+
+function getTextMetrics_torusBold(
+    text = '',
+    x = 0,
+    y = 0,
+    size = 36,
+    anchor = 'left top',
+    fill = '#fff'
+) {
+    return textToSVGTorusBold.getMetrics(text, {
+        x: x,
+        y: y,
+        fontSize: size,
+        anchor: anchor,
+        fontFamily: "TorusBold",
+        attributes: {
+            fill: fill
+        }
+    })
+}
+
+/**
+ * @return {number}
+ */
+function getTextWidth_torusBold(
+    text = '',
+    size = 0,
+) {
+    return textToSVGTorusBold.getMetrics((text + ""), {
+        x: 0,
+        y: 0,
+        fontSize: size,
+        anchor: 'center baseline',
+        fontFamily: "TorusBold",
+        attributes: {
+            fill: '#fff'
+        }
+    }).width
+}
+
+/**
+ * @return {string}
+ */
+function cutStringTail_torusBold(
+    text = '',
+    size = 36,
+    maxWidth = 0,
+    isDot3Needed = true,
+) {
+    if (torusBold.getTextWidth(text, size) <= maxWidth) {
+        return text;
+    }
+
+    let dot3 = '...';
+    let dot3_width = isDot3Needed ? torusBold.getTextWidth(dot3, size) : 0;
+    let out_text = '';
+    maxWidth -= dot3_width;
+
+    for (let i = 0; torusBold.getTextWidth(out_text, size) < maxWidth; i++) {
+        out_text += text.slice(i, i + 1);
+    }
+
+    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
+}
+
+
+/**
+ * @function 获取大小文本的 torusBold 字体 SVG 路径
+ * @return {String}
+ * @param largerText {String} 较大的文本
+ * @param smallerText {String} 较小的文本
+ * @param largeSize {Number} 大文本尺寸
+ * @param smallSize {Number} 小文本尺寸
+ * @param x {Number} 锚点横坐标
+ * @param y {Number} 锚点横坐标
+ * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
+ * @param color {String} 十六进制颜色，#FFF
+ * @param color2 {String} 十六进制颜色，#FFF，可不输入
+ */
+
+function get2SizeTextPath_torusBold(largerText, smallerText, largeSize, smallSize, x, y, anchor, color, color2 = color) {
+    let width_b = torusBold.getTextWidth(largerText, largeSize);
+    let width_m = torusBold.getTextWidth(smallerText, smallSize);
+    let width_a = (width_b + width_m) / 2; // 全长的一半长
+
+    let out;
+
+    if (anchor === "left baseline") {
+        out = torusBold.getTextPath(largerText, x, y, largeSize, anchor, color) +
+            torusBold.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color2);
+
+    } else if (anchor === "right baseline") {
+        out = torusBold.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+            torusBold.getTextPath(smallerText, x, y, smallSize, anchor, color2);
+
+    } else if (anchor === "center baseline") {
+        out = torusBold.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+            torusBold.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color2);
+    }
+
+    return out;
+}
+
 export const torusRegular = {};
 
 torusRegular.name = "torusRegular"
@@ -871,6 +1063,9 @@ torusRegular.getTextMetrics = getTextMetrics_torusRegular;
 torusRegular.getTextWidth = getTextWidth_torusRegular;
 torusRegular.cutStringTail = cutStringTail_torusRegular;
 
+/**
+ * @return {string}
+ */
 function getTextPath_torusRegular(
     text = '',
     x = 0,
@@ -913,6 +1108,9 @@ function getTextMetrics_torusRegular(
     })
 }
 
+/**
+ * @return {number}
+ */
 function getTextWidth_torusRegular(
     text = '',
     size = 0,
@@ -929,10 +1127,14 @@ function getTextWidth_torusRegular(
     }).width
 }
 
+/**
+ * @return {string}
+ */
 function cutStringTail_torusRegular(
     text = '',
     size = 36,
     maxWidth = 0,
+    isDot3Needed = true,
 ) {
     if (torusRegular.getTextWidth(text, size) <= maxWidth) {
         return text;
@@ -947,7 +1149,7 @@ function cutStringTail_torusRegular(
         out_text += text.slice(i, i + 1);
     }
 
-    return out_text.slice(0, -1) + dot3; //因为超长才能跳出，所以裁去超长的那个字符
+    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
 }
 
 
@@ -996,6 +1198,9 @@ PuHuiTi.getTextMetrics = getTextMetrics_PuHuiTi;
 PuHuiTi.getTextWidth = getTextWidth_PuHuiTi;
 PuHuiTi.cutStringTail = cutStringTail_PuHuiTi;
 
+/**
+ * @return {string}
+ */
 function getTextPath_PuHuiTi(
     text = '',
     x = 0,
@@ -1038,6 +1243,9 @@ function getTextMetrics_PuHuiTi(
     });
 }
 
+/**
+ * @return {number}
+ */
 function getTextWidth_PuHuiTi(
     text = '',
     size = 0,
@@ -1054,6 +1262,9 @@ function getTextWidth_PuHuiTi(
     }).width
 }
 
+/**
+ * @return {string}
+ */
 function cutStringTail_PuHuiTi(
     text = '',
     size = 36,
@@ -1083,6 +1294,9 @@ extra.getTextPath = getTextPath_extra;
 extra.getTextMetrics = getTextMetrics_extra;
 extra.getTextWidth = getTextWidth_extra;
 
+/**
+ * @return {string}
+ */
 function getTextPath_extra(
     text = '',
     x = 0,
@@ -1125,6 +1339,9 @@ function getTextMetrics_extra(
     })
 }
 
+/**
+ * @return {number}
+ */
 function getTextWidth_extra(
     text = '',
     size = 0,
@@ -1146,11 +1363,15 @@ function getFontName(font = torus) {
     else return font?.toString()
 }
 
-export function getTextWidth(font = "torus", text = '', size = 24) {
+export /**
+ * @return {number}
+ */
+function getTextWidth(font = "torus", text = '', size = 24) {
     const name = getFontName(font)
 
     if (name === "torus") return torus.getTextWidth(text, size);
     if (name === "torusRegular") return torusRegular.getTextWidth(text, size);
+    if (name === "torusBold") return torusBold.getTextWidth(text, size);
     if (name === "TahomaRegular") return TahomaRegular.getTextWidth(text, size);
     if (name === "TahomaBold") return TahomaBold.getTextWidth(text, size);
     if (name === "PuHuiTi") return PuHuiTi.getTextWidth(text, size);
@@ -1166,6 +1387,7 @@ export function getTextPath(font = "torus", text = '', x, y, size = 24, anchor, 
 
     if (name === "torus") return torus.getTextPath(text, x, y, size, anchor, fill);
     if (name === "torusRegular") return torusRegular.getTextPath(text, x, y, size, anchor, fill);
+    if (name === "torusBold") return torusBold.getTextPath(text, x, y, size, anchor, fill);
     if (name === "TahomaRegular") return TahomaRegular.getTextPath(text, x, y, size, anchor, fill);
     if (name === "TahomaBold") return TahomaBold.getTextPath(text, x, y, size, anchor, fill);
     if (name === "PuHuiTi") return PuHuiTi.getTextPath(text, x, y, size, anchor, fill);
@@ -1181,6 +1403,7 @@ export function cutStringTail(font = "torus", text = '', size = 24, max_width = 
 
     if (name === "torus") return torus.cutStringTail(text, size, max_width, is_dot3_needed);
     if (name === "torusRegular") return torusRegular.cutStringTail(text, size, max_width, is_dot3_needed);
+    if (name === "torusBold") return torusBold.cutStringTail(text, size, max_width, is_dot3_needed);
     if (name === "TahomaRegular") return TahomaRegular.cutStringTail(text, size, max_width, is_dot3_needed);
     if (name === "TahomaBold") return TahomaBold.cutStringTail(text, size, max_width, is_dot3_needed);
     if (name === "PuHuiTi") return PuHuiTi.cutStringTail(text, size, max_width, is_dot3_needed);

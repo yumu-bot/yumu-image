@@ -33,6 +33,20 @@ export const PanelColor = {
     },
 }
 
+export function changeHexLightness(hex = '#AAAAAA', difference = 0) {
+    const hsl = hex2hsl(hex)
+
+    hsl.l = clamp01(hsl.l + difference)
+
+    return hsl2hex(hsl.h, hsl.s, hsl.l)
+}
+
+export function changeHexLightnessTo(hex = '#AAAAAA', lightness = 0) {
+    const hsl = hex2hsl(hex)
+
+    return hsl2hex(hsl.h, hsl.s, lightness)
+}
+
 
 // 返回的结果是 xxx, xxx, xxx
 export function hex2rgbColor(hex = '#AAAAAA') {
@@ -104,15 +118,12 @@ export function hex2hsl(hex = '#AAAAAA') {
 export function hsl2hex(hue = 0, saturation = 0, lightness = 0) {
 
     // Normalize hue to be in the range [0, 6]
-    const h = Math.max(Math.min(hue, 360), 0) / 60
+    const h = clamp(hue, 360, 0) / 60
 
     // Calculate chroma (C), a measure of the color intensity
-    const chroma = (1 - Math.abs(2 * Math.max(Math.min(lightness, 1), 0) - 1))
-        * Math.max(Math.min(saturation, 1), 0)
+    const chroma = (1 - Math.abs(2 * clamp01(lightness) - 1)) * clamp01(saturation)
     const x = chroma * (1 - Math.abs(h % 2 - 1))
-    const m = Math.max(
-        Math.max(Math.min(lightness, 1),
-            0) - chroma / 2, 0)
+    const m = Math.max(clamp01(lightness) - chroma / 2, 0)
 
     // Initialize rgb values
     let r = 0, g = 0, b = 0
@@ -271,9 +282,9 @@ export function getStarRatingColor(SR = 0) {
     // https://zhuanlan.zhihu.com/p/37800433/ 伽马的作用
 
     const color2Hex = (c0 = 0, c1 = 0, s = 0) => {
-        return Math.min(Math.max(
+        return clamp(
             Math.round(Math.pow((1 - s) * Math.pow(c0, gamma) + s * Math.pow(c1, gamma), 1 / gamma)
-        ), 0), 255).toString(16).padStart(2, '0');
+        ), 255, 0).toString(16).padStart(2, '0');
     }
 
     const gHex = color2Hex(g0, g1, s);
@@ -482,6 +493,19 @@ export function getModColor(Mod = '') {
     return color;
 }
 
+export function getMapStatusColor(ranked = null) {
+    switch (ranked) {
+        case -2: return hsl2hex(0, 0, 0)
+        case -1: return hsl2hex(20, 1, 0.7)
+        case 0: return hsl2hex(45, 1, 0.7)
+        case 1: return hsl2hex(90, 1, 0.7)
+        case 2: return hsl2hex(90, 1, 0.7)
+        case 3: return hsl2hex(200, 1, 0.7)
+        case 4: return hsl2hex(333, 1, 0.7)
+        default: return 'none'
+    }
+}
+
 /**
  * @function 获取评级颜色
  * @return {String} 返回色彩
@@ -602,5 +626,13 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
             return colorArr[i];
         }
     }
+}
+
+function clamp01(number = 0) {
+    return clamp(number, 1, 0)
+}
+
+function clamp(number = 0, max = number, min = number) {
+    return Math.min(Math.max(number, min), max)
 }
 

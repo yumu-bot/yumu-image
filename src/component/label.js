@@ -733,7 +733,7 @@ export async function label_D1(data = {
     const reg_text = /(?<=<g id="Text_LD1">)/;
     const reg_icon = /(?<=<g id="Icon_LD1">)/;
 
-    // 文字的 <path>
+    // 文本定义
     //原来是 x=50，感觉位置怪怪的
     const icon_title = torus.getTextPath(data.icon_title, 145, 68.88, 18, "right baseline", "#ccc");
     const abbr = torus.getTextPath(data.abbr, 180, 110, 36, "center baseline", "#fff");
@@ -785,7 +785,7 @@ export async function label_D2(data = {
     const reg_text = /(?<=<g id="Text_LD2">)/;
     const reg_icon = /(?<=<g id="Icon_LD2">)/;
 
-    // 文字的 <path>
+    // 文本定义
     //原来是 x=50，感觉位置怪怪的
     const icon_title = torus.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#aaa");
 
@@ -1009,7 +1009,7 @@ export async function label_E(data = {
     const reg_text = /(?<=<g id="Text_LE">)/;
     const reg_icon = /(?<=<g id="Icon_LE">)/;
 
-    // 文字的 <path>
+    // 文本定义
     //原来是 x=50，感觉位置怪怪的
     const title_font = data.title_font || torus;
     const icon_title = title_font.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#aaa");
@@ -1047,11 +1047,18 @@ export function label_E5(data = {
     bar_mid: 180,
     bar_max: 240,
 }) {
+    let svg = `
+        <g id="Icon_LE5">
+        </g>
+        <g id="Text_LE5">
+        </g>
+    `;
+
     // 正则表达式
     const reg_text = /(?<=<g id="Text_LE5">)/;
     const reg_icon = /(?<=<g id="Icon_LE5">)/;
 
-    // 文字的 <path>
+    // 文本定义
     // 原来是 16，感觉太大了，length 会超出
     const icon_title = poppinsBold.getTextPath(data.icon_title, 25, 65, 14, 'center baseline', '#fff');
 
@@ -1074,13 +1081,6 @@ export function label_E5(data = {
     }]
 
     const number_data = getMultipleTextPath(number_arr, 61, 32, "left baseline")
-
-    let svg = `
-        <g id="Icon_LE5">
-        </g>
-        <g id="Text_LE5">
-        </g>
-    `;
 
     // 原来是 16，感觉太大了
     const remark = poppinsBold.getTextPath(data?.remark, 215, 32, 14, "right baseline", '#666');
