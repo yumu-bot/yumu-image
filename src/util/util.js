@@ -1486,38 +1486,28 @@ const t = new Date;
  * @param text 输入比赛名字
  */
 export function getMatchNameSplitted(text = '') {
-    let out = []
-    let name = '';
-    let team1 = '';
-    let team2 = '';
-    let isTeam1 = true;
-    let position = 0;
+    const reg = /(?<name>[\s\S]*)?[:：]?(?<team1>[\s\S]*)?(([Vv][Ss]\s*)(?<team2>[\s\S]*))?/g
 
-    for (let i = 0; i < text.length; i++) {
-        let char = text.slice(i, i + 1);
+    const capture_groups = reg.exec(text).groups
 
-        if (char === '：' || char === ':') {
-            name = text.slice(0, i);
-        }
+    const name = capture_groups.name
+    const team1 = capture_groups.team1
+    const team2 = capture_groups.team2
 
-        if (char === '(' || char === '（') {
-            position = i
-        }
-
-        if (char === ')' || char === '）') {
-            if (isTeam1) {
-                team1 = text.slice(position + 1, i)
-                isTeam1 = false;
-            } else {
-                team2 = text.slice(position + 1, i)
-            }
+    //转换失败的保底机制
+    if (team1 === '' || team2 === '') {
+        return {
+            name: text,
+            team1: '',
+            team2: '',
         }
     }
 
-    //转换失败的保底机制
-    if (name === '' || team1 === '' || team2 === '') name = text;
-    out.push(name, team1, team2)
-    return out;
+    return {
+        name: requireNonNullElse(name, ''),
+        team1: requireNonNullElse(team1, ''),
+        team2: requireNonNullElse(team2, ''),
+    }
 }
 
 export function binary2Base64Text(buffer) {

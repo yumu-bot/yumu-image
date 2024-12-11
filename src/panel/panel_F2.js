@@ -2,7 +2,7 @@ import {
     exportJPEG,
     getMapBG, getMatchNameSplitted, getNowTimeStamp,
     getPanelNameSVG, implantImage,
-    implantSvgBody, isNotBlankString, readTemplate,
+    implantSvgBody, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -42,7 +42,45 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_F2(data = {}) {
+export async function panel_F2(data = {
+    stat: {
+        name: 'test',
+        id: 114591894,
+        start_time: 1720415600,
+        end_time: null
+    },
+    round: {
+        mode: 'mania',
+        mods: [],
+        winning_team_score: 441025,
+        team_score: {total: 441025, red: 0, blue: 0},
+        winning_team: 'none',
+        id: 595346038,
+        beatmap_id: 4249702,
+        start_time: 1720416713,
+        end_time: 1720416753,
+        mod_int: 0,
+        scoring_type: 'score',
+        team_type: 'head-to-head',
+        beatmap: {
+            id: 4249702,
+            mode: 'mania',
+            status: 'ranked',
+            retry: 0,
+            fail: 0,
+            osuMode: 'MANIA',
+            beatmapset_id: 2034520,
+            difficulty_rating: 4.34,
+            total_length: 28,
+            user_id: 1192936,
+            version: '[7K] Insane',
+            beatmapset: [Object],
+            mode_int: 3
+        },
+        scores: [[Object]]
+    },
+    index: 2
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_F2.svg');
 
@@ -56,7 +94,7 @@ export async function panel_F2(data = {}) {
 
     // 面板文字
     const request_time = 'match time: ' +
-        moment(data?.MatchStat?.start_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY/MM/DD HH:mm') + ' - in progress'
+        moment(data?.stat?.start_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY/MM/DD HH:mm') + ' - in progress'
         + ' // request time: ' + getNowTimeStamp();
     const panel_name = getPanelNameSVG('Match Rounds (!ymmr)', 'MR', 'v0.5.0 DX', request_time);
 
@@ -67,7 +105,8 @@ export async function panel_F2(data = {}) {
     let panel_height = 330;
     let background_height = 40;
 
-    const scoreArr = data.MatchRound.scores || [];
+    const round = data.round
+    const scoreArr = round.scores || [];
     let redArr = [], blueArr = [], noneArr = [];
 
     scoreArr.forEach(
@@ -86,7 +125,6 @@ export async function panel_F2(data = {}) {
         }
     )
 
-    const round = data?.MatchRound
     const isTeamVS = ((round?.team_type || round?.teamType) === "team-vs");
     const totalScore = round?.team_score?.total || round?.team_score?.total || 0;
 
@@ -254,49 +292,11 @@ function implantCardA1(svg, replace, reg, row = 1, column = 1, maxColumn = 1, te
     return svg;
 }
 
-async function roundInfo2CardA2(data = {
-    MatchStat: {
-        name: 'test',
-        id: 114591894,
-        start_time: 1720415600,
-        end_time: null
-    },
-    MatchRound: {
-        mode: 'mania',
-        mods: [],
-        winning_team_score: 441025,
-        team_score: {total: 441025, red: 0, blue: 0},
-        winning_team: 'none',
-        id: 595346038,
-        beatmap_id: 4249702,
-        start_time: 1720416713,
-        end_time: 1720416753,
-        mod_int: 0,
-        scoring_type: 'score',
-        team_type: 'head-to-head',
-        beatmap: {
-            id: 4249702,
-            mode: 'mania',
-            status: 'ranked',
-            retry: 0,
-            fail: 0,
-            osuMode: 'MANIA',
-            beatmapset_id: 2034520,
-            difficulty_rating: 4.34,
-            total_length: 28,
-            user_id: 1192936,
-            version: '[7K] Insane',
-            beatmapset: [Object],
-            mode_int: 3
-        },
-        scores: [[Object]]
-    },
-    index: 2
-}) {
-    const round = data?.MatchRound
-    const isTeamVS = ((round?.team_type || round?.teamType) === 'team-vs');
+async function roundInfo2CardA2(data) {
+    const round = data.round
+    const isTeamVS = (round?.team_type === 'team-vs');
 
-    const name = data?.MatchStat?.name || '';
+    const name = data?.stat?.name || '';
     const red = round?.team_score?.red || 0;
     const blue = round?.team_score?.blue || 0;
 
@@ -328,33 +328,25 @@ async function roundInfo2CardA2(data = {
         left1 = left1.trim();
     }
 
-    // 在之后重构面板后，这里要放 roundID
+    const left2 = 'Rounds ' + ((data?.index > 80) ? ('80+') : data?.index);
+    const left3 = 'Scores' + (round?.scores?.length || '0')
 
-    const left2 = 'Players ' + round?.scores?.length;
-    const left3 = 'Round ' + ((data?.index > 80) ? ('80+') : data?.index);
+    const right1 = 'MID: ' + (data?.stat?.id || '0')
 
-    let right1;
     let right2;
-
     let right3b;
     let right3m = '';
 
-    if (isNotBlankString(round?.winning_team)) {
-        if (red !== blue) {
-            right1 = '+ ' + Math.abs(red - blue);
-        } else {
-            right1 = '+- 0'
-        }
-        right2 = red + ' vs ' + blue;
+    if (round?.team_type === 'team-vs' || round?.team_type === 'tag-coop-vs') {
+
+        right2 = red + ' vs ' + blue + ' (' +  Math.abs(red - blue) + ')';
         right3b = '';
         right3m = round?.winning_team + ' wins';
     } else {
         if (isTeamVS) {
-            right1 = '+- 0'
             right2 = red + ' vs ' + blue;
             right3b = 'draw';
         } else {
-            right1 = '';
             right2 = 'Total ' + (round?.team_score?.total || 0);
             right3b = 'h2h';
         }

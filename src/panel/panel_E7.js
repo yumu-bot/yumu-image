@@ -3,7 +3,7 @@ import {
     exportJPEG, getAvatar, getBeatMapTitlePath, getDecimals,
     getDiffBG, getDifficultyName, getFileSize, getGameMode, getImageFromV3, getMapStatusImage, getPanelNameSVG,
     getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
-    implantImage, implantSvgBody, isBlankString, od2ms,
+    implantImage, implantSvgBody, isBlankString, isNotEmptyArray, od2ms,
     readTemplate,
     replaceText, replaceTexts
 } from "../util/util.js";
@@ -28,6 +28,7 @@ export async function router(req, res) {
     }
     res.end();
 }
+
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
@@ -41,128 +42,181 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-export async function panel_E7(data = {
-    match: {
+export async function panel_E7(
+    data = {
+        density: [
+            21, 29, 60, 48, 46, 46, 43, 61,
+            15, 38, 71, 47, 45, 39, 45, 42,
+            31, 0, 6, 23, 16, 41, 34, 50,
+            46, 24, 22
+        ],
+        mode: 'OSU',
+        beatmap: {
+            beatmapset_id: 1068409,
+            difficulty_rating: 5.17,
+            id: 2474678,
+            mode: 'OSU',
+            status: 'ranked',
+            total_length: 301,
+            user_id: 10063190,
+            version: 'Insane',
+            beatmapset: {
+                offset: 0,
+                status: 'ranked',
+                title: 'Hype feat. Such',
+                video: false,
+                artist: 'PSYQUI',
+                artist_unicode: 'PSYQUI',
+                covers: [Object],
+                creator: 'Smug Nanachi',
+                favourite_count: 691,
+                id: 1068409,
+                nsfw: false,
+                play_count: 775865,
+                preview_url: '//b.ppy.sh/preview/1068409.mp3',
+                spotlight: false,
+                title_unicode: 'Hype feat. Such',
+                user_id: 10063190,
+                preview_name: 'PSYQUI - Hype feat. Such (Smug Nanachi) [1068409]',
+                public_rating: 0,
+                has_leader_board: true
+            },
+            max_combo: 0,
+            retryList: [0],
+            failList: [0],
+            preview_name: 'PSYQUI - Hype feat. Such (Smug Nanachi) [Insane]',
+            retry: 0,
+            fail: 0,
+            has_leader_board: true
+        },
         match: {
-            matchEnd: false,
             match: {
-                name: 'test',
-                id: 115297403,
-                start_time: 1725036606,
-                end_time: null
+                match: [Object],
+                events: [Array],
+                users: [Array],
+                first_event_id: 2404410052,
+                latest_event_id: 2404414518,
+                name: '<6.8* and <7min',
+                id: 116463100,
+                start_time: '2024-12-11T07:28:32Z',
+                is_match_end: false,
+                current_game_id: 606844256
             },
-            events: [ [Object], [Object], [Object], [Object] ],
-            users: [ [Object] ],
-            first_event_id: 2380999128,
-            latest_event_id: 2380999986,
-            current_game_id: null
+            player_data_list: [[Object], [Object], [Object], [Object], [Object]],
+            team_point_map: {none: 11},
+            is_team_vs: false,
+            average_star: 5.935454467426647,
+            first_map_bid: 2535520,
+            round_count: 11,
+            score_count: 27,
+            player_count: 5
         },
-        match_data: {
-            team_vs: false,
-            average_star: 3.896571159362793,
-            first_map_bid: 2034520,
-            player_data_list: [ [Object] ],
-            team_point_map: { none: 2 },
-            round_count: 2,
-            player_count: 1,
-            score_count: 2,
-            player_data_map: { '7003013': [Object] }
-        },
-        rounds: [
+        players: [
             {
-                mode: 'mania',
-                mods: [],
-                winning_team: 'none',
-                team_score: [Object],
-                winning_team_score: 449308,
-                id: 599586560,
-                beatmap_id: 4249702,
-                start_time: 1725036695,
-                end_time: 1725036735,
-                mod_int: 0,
-                scoring_type: 'score',
-                team_type: 'head-to-head',
-                beatmap: [Object],
-                scores: [Array]
+                id: 22765044,
+                bot: false,
+                deleted: false,
+                online: true,
+                user_id: 22765044,
+                supporter: false,
+                avatar_url: 'https://a.ppy.sh/22765044?1689314108.jpeg',
+                default_group: 'default',
+                is_active: true,
+                is_bot: false,
+                is_deleted: false,
+                is_online: true,
+                is_supporter: false,
+                last_visit: '2024-12-11T08:30:57',
+                pm_friends_only: false,
+                username: 'SayaBeMySide',
+                country_code: 'CN',
+                country: [Object]
             },
             {
-                mode: 'mania',
-                mods: [],
-                winning_team: 'none',
-                team_score: [Object],
-                winning_team_score: 611979,
-                id: 599586738,
-                beatmap_id: 1212852,
-                start_time: 1725036815,
-                end_time: 1725036854,
-                mod_int: 0,
-                scoring_type: 'score',
-                team_type: 'head-to-head',
-                beatmap: [Object],
-                scores: [Array]
-            }
-        ],
-        scores: [
-            {
-                accuracy: 0.7668970814132104,
-                timestamp: null,
-                mode: 'mania',
-                mods: [],
-                passed: true,
-                perfect: false,
-                pp: null,
-                rank: 'F',
-                replay: false,
-                score: 449308,
-                statistics: [Object],
-                type: 'legacy_match_score',
-                ranking: 1,
-                user: [Object],
-                best_id: null,
-                id: null,
-                max_combo: 114,
-                mode_int: 3,
-                user_id: 7003013,
-                match: [Object]
+                id: 32823926,
+                bot: false,
+                deleted: false,
+                online: true,
+                user_id: 32823926,
+                supporter: false,
+                avatar_url: 'https://a.ppy.sh/32823926?1730204073.jpeg',
+                default_group: 'default',
+                is_active: true,
+                is_bot: false,
+                is_deleted: false,
+                is_online: true,
+                is_supporter: false,
+                last_visit: '2024-12-11T08:30:55',
+                pm_friends_only: false,
+                username: 'Rui23',
+                country_code: 'CN',
+                country: [Object]
             },
             {
-                accuracy: 0.9155435759209344,
-                timestamp: null,
-                mode: 'mania',
-                mods: [],
-                passed: true,
-                perfect: false,
-                pp: null,
-                rank: 'F',
-                replay: false,
-                score: 611979,
-                statistics: [Object],
-                type: 'legacy_match_score',
-                ranking: 1,
-                user: [Object],
-                best_id: null,
-                id: null,
-                max_combo: 210,
-                mode_int: 3,
-                user_id: 7003013,
-                match: [Object]
+                id: 26357944,
+                bot: false,
+                deleted: false,
+                online: true,
+                user_id: 26357944,
+                supporter: false,
+                avatar_url: 'https://a.ppy.sh/26357944?1733273465.jpeg',
+                default_group: 'default',
+                is_active: true,
+                is_bot: false,
+                is_deleted: false,
+                is_online: true,
+                is_supporter: false,
+                last_visit: '2024-12-11T08:30:53',
+                pm_friends_only: false,
+                username: '0723',
+                country_code: 'CN',
+                country: [Object]
+            },
+            {
+                id: 16276378,
+                bot: false,
+                deleted: false,
+                online: true,
+                user_id: 16276378,
+                supporter: false,
+                avatar_url: 'https://a.ppy.sh/16276378?1723052275.jpeg',
+                default_group: 'default',
+                is_active: true,
+                is_bot: false,
+                is_deleted: false,
+                is_online: true,
+                is_supporter: false,
+                last_visit: '2024-12-11T08:30:54',
+                pm_friends_only: false,
+                username: 'Lezr',
+                country_code: 'CN',
+                country: [Object]
+            },
+            {
+                id: 27608705,
+                bot: false,
+                deleted: false,
+                online: true,
+                user_id: 27608705,
+                supporter: true,
+                avatar_url: 'https://a.ppy.sh/27608705?1729442880.jpeg',
+                default_group: 'default',
+                is_active: true,
+                is_bot: false,
+                is_deleted: false,
+                is_online: true,
+                is_supporter: true,
+                last_visit: '2024-12-11T08:30:54',
+                pm_friends_only: false,
+                username: 'fufuOwO',
+                country_code: 'CN',
+                country: [Object]
             }
-        ],
+        ]
     }
-    ,
-
-    mode: 'osu',
-    players: [],
-
-    density: [10, 20, 30, 40, 50, 40, 30, 20, 10, 0],
-    original: {},
-
-    beatmap: {},
-
-}) {
+) {
     // 导入模板
     let svg = readTemplate('template/Panel_E.svg');
-
     // 路径定义
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/;
     const reg_background = /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BG\);">)/;
@@ -180,7 +234,7 @@ export async function panel_E7(data = {
     const players = data?.players || []
     const length = players?.length || 0
 
-    const last_round = (match?.rounds != null && match?.rounds?.length > 0) ? match.rounds[match.rounds.length - 1] : {}
+    const last_round = isNotEmptyArray(match?.match?.events) ? match.match.events[match.match.events.length - 1] : {}
 
     const mode = getGameMode(data?.mode, 0, last_round?.mode);
 
@@ -200,7 +254,7 @@ export async function panel_E7(data = {
     const banner = await getDiffBG(data?.beatmap?.id, data?.beatmap?.beatmapset?.id, 'cover', hasLeaderBoard(data?.beatmap.ranked), data?.beatmap?.beatmapset?.availability?.more_information != null);
 
     // 卡片定义
-    const cardA2 = await card_A2(await PanelGenerate.matchRating2CardA2(data.match));
+    const cardA2 = await card_A2(await PanelGenerate.matchRating2CardA2(data.match, data.beatmap));
     const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.beatmap, mode));
     const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.beatmap, data.density, rank));
     const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.beatmap, data.original));
@@ -266,7 +320,7 @@ const card_E7 = async (
 
     const avatar = await getAvatar(data?.avatar);
     const name = (data?.show_name === true) ? torus.getTextPath(
-        torus.cutStringTail(data?.name, 18,104)
+        torus.cutStringTail(data?.name, 18, 104)
         , 50, 100, 18, 'center baseline', data?.name_color) : ''
 
     svg = implantImage(svg, 80, 80, 10, 0, 1, avatar, reg_avatar)
@@ -702,7 +756,6 @@ const component_E12 = (
     const reg_clip6 = /(?<=<g id="Clip_OE12-6" style="clip-path: url\(#clippath-OE12-6\);">)/; //181,100,217 | 238,96,156
 
 
-
     const text_arr = [
         {
             font: "poppinsBold",
@@ -927,13 +980,15 @@ const PanelEGenerate = {
                 od_max = 8;
                 isDisplayAR = false;
                 isDisplayCS = false;
-            } break;
+            }
+                break;
             case 'c' : {
                 od_min = 0;
                 od_mid = 0;
                 od_max = 0;
                 isDisplayOD = false;
-            } break;
+            }
+                break;
             case 'm' : {
                 cs_min = 4;
                 cs_mid = 6;
@@ -945,7 +1000,8 @@ const PanelEGenerate = {
                 hp_mid = 8;
                 hp_max = 9;
                 isDisplayAR = false;
-            } break;
+            }
+                break;
         }
 
         return {
@@ -956,35 +1012,35 @@ const PanelEGenerate = {
                 data_m: bpm_m,
                 data_a: '',
                 bar_progress: bpm_p,
-            },{
+            }, {
                 ...LABELS.LENGTH,
                 remark: length_r,
                 data_b: length_b,
                 data_m: length_m,
                 data_a: '',
                 bar_progress: length_p,
-            },{
+            }, {
                 ...LABELS.CS,
                 ...stat2label(b?.cs, cs2px(b?.cs, mode),
                     getProgress(b?.cs, cs_min, cs_max), original.cs, isDisplayCS),
                 bar_min: cs_min,
                 bar_mid: cs_mid,
                 bar_max: cs_max,
-            },{
+            }, {
                 ...LABELS.AR,
                 ...stat2label(b?.ar, ar2ms(b?.ar, mode),
                     getProgress(b?.ar, ar_min, ar_max), original.ar, isDisplayAR),
                 bar_min: ar_min,
                 bar_mid: ar_mid,
                 bar_max: ar_max,
-            },{
+            }, {
                 ...LABELS.OD,
                 ...stat2label(b?.od, od2ms(b?.od, mode),
                     getProgress(b?.od, od_min, od_max), original.od, isDisplayOD),
                 bar_min: od_min,
                 bar_mid: od_mid,
                 bar_max: od_max,
-            },{
+            }, {
                 ...LABELS.HP,
                 ...stat2label(b?.hp, '-',
                     getProgress(b?.hp, hp_min, hp_max), original.hp, true),
@@ -1037,32 +1093,49 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE12: (round = {}, player_count = 1) => {
+    score2componentE12: (event = {}, player_count = 1) => {
         let scoring_type;
-        switch (round?.scoring_type) {
-            case "score": scoring_type = 'score V1'; break
-            case "scorev2": scoring_type = 'score V2'; break
-            case "accuracy": scoring_type = 'accuracy'; break
-            case "combo": scoring_type = 'combo'; break
-            default: scoring_type = 'unknown'; break
+        switch (event?.game?.scoring_type) {
+            case "score":
+                scoring_type = 'score V1';
+                break
+            case "scorev2":
+                scoring_type = 'score V2';
+                break
+            case "accuracy":
+                scoring_type = 'accuracy';
+                break
+            case "combo":
+                scoring_type = 'combo';
+                break
+            default:
+                scoring_type = 'unknown';
+                break
         }
 
         let team_type;
-        switch (round?.team_type) {
-            case "team-vs": team_type = 'VS'; break
-            case "head-to-head": team_type = 'VS'; break
-            case "tag-coop": team_type = 'TAG'; break
-            case "tag-team-vs": team_type = 'TAG'; break
-            default: team_type = '?'; break
-        }
-
         let vs_type;
-        switch (round?.team_type) {
-            case "team-vs": vs_type = 'TEAM'; break
-            case "head-to-head": vs_type = 'H2H'; break
-            case "tag-coop": vs_type = 'COOP'; break
-            case "tag-team-vs": vs_type = 'VS'; break
-            default: vs_type = '?'; break
+        switch (event?.game?.team_type) {
+            case "team-vs":
+                team_type = 'VS';
+                vs_type = 'TEAM';
+                break
+            case "head-to-head":
+                team_type = 'VS';
+                vs_type = 'H2H';
+                break
+            case "tag-coop":
+                team_type = 'TAG';
+                vs_type = 'COOP';
+                break
+            case "tag-team-vs":
+                team_type = 'TAG';
+                vs_type = 'VS';
+                break
+            default:
+                team_type = '?';
+                vs_type = '?';
+                break
         }
 
         return {
