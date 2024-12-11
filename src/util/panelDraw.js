@@ -1,5 +1,5 @@
 //把数组变成可视化的图表
-import {torus} from "./font.js";
+import {torusBold} from "./font.js";
 import {isEmptyArray, isNumber, replaceText} from "./util.js";
 import {hex2rgbColor} from "./color.js";
 
@@ -289,9 +289,9 @@ export const PanelDraw = {
             const x = cx - r * Math.cos(PI_3 * i + offset);
             const y = cy - r * Math.sin(PI_3 * i + offset);
 
-            const param_text = torus.getTextPath(value, x, y + 8, 24, 'center baseline', text_color);
+            const param_text = torusBold.getTextPath(value, x, y + 8, 24, 'center baseline', text_color);
             svg = replaceText(svg, param_text, reg_text)
-            const param_width = torus.getTextWidth(value, 24);
+            const param_width = torusBold.getTextWidth(value, 24);
             const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, background_color);
             svg = replaceText(svg, rrect, reg_rrect);
 

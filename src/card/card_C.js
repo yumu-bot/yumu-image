@@ -3,7 +3,7 @@ import {
     implantSvgBody, readTemplate,
     replaceText, replaceTexts,
 } from "../util/util.js";
-import {torus, torusRegular} from "../util/font.js";
+import {torus, torusBold, torusRegular} from "../util/font.js";
 import {label_C1, label_C3} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
@@ -124,19 +124,19 @@ export async function card_C(data = {
         //上底色、左右分数和最亮的那个得点
         if (data.statistics.is_team_red_win) {
             svg = replaceText(svg, red_color_list[1], reg_backcolor); //其实 1 才是最正的那个颜色
-            red_font = torus;
+            red_font = torusBold;
             blue_font = torusRegular;
             svg = implantSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0), 176, red_point_plus, reg_pluspoint);
 
         } else if (data.statistics.is_team_blue_win) {
             svg = replaceText(svg, blue_color_list[1], reg_backcolor);
             red_font = torusRegular;
-            blue_font = torus;
+            blue_font = torusBold;
             svg = implantSvgBody(svg, 1338 - 16 * Math.max((data.statistics.wins_team_blue_before - 1), 0), 176, blue_point_plus, reg_pluspoint);
 
         } else {
-            red_font = torusRegular;
-            blue_font = torusRegular;
+            red_font = torusBold;
+            blue_font = torusBold;
             svg = replaceText(svg, '#382e32', reg_backcolor);
         }
 

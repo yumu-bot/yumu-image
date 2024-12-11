@@ -4,7 +4,7 @@ import {
     getRoundedNumberStrSmall, getDecimals,
     implantImage, replaceText, replaceTexts, getAvatar, isASCII, isHexColor, isNotEmptyString,
 } from "../util/util.js";
-import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold} from "../util/font.js";
+import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor, hex2hsl, PanelColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModFullName} from "../util/mod.js";
@@ -598,15 +598,15 @@ export async function label_C1(data = {
     });
 
     //定义文本
-    const text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
-    const name = torus.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
+    const text_name = torusBold.cutStringTail(data.name || '', 18, data.maxWidth || 100);
+    const name = torusBold.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
 
     const score_b = getRoundedNumberStrLarge(data.score || 0, 0);
     const score_m = getRoundedNumberStrSmall(data.score || 0, 0);
 
-    const score = torus.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor);
+    const score = torusBold.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor);
 
-    const rank = torus.getTextPath(data.rank.toString() || '0', 15, 15.877, 18, 'center baseline', '#fff');
+    const rank = torusBold.getTextPath(data.rank.toString() || '0', 15, 15.877, 18, 'center baseline', '#fff');
 
     const label_color = `
     <rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${getUserRankColor(data.rank) || '#46393f'};"/>`;
