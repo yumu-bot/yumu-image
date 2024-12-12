@@ -235,7 +235,7 @@ export function isEmptyArray(arr) {
 
 // {} 和 [] 不为空
 export function isNull(object) {
-    return (object === null) || (object === undefined) || (typeof object === "undefined") || (object === "")
+    return (object === null) || (object === undefined) || (typeof object === "undefined")
 }
 
 export function isNullOrEmptyObject(object) {
