@@ -1536,7 +1536,7 @@ const t = new Date;
  * @param text 输入比赛名字
  */
 export function getMatchNameSplitted(text = '') {
-    const reg = /(?<name>[\s\S]*)?[:：]?(?<team1>[\s\S]*)?(([Vv][Ss]\s*)(?<team2>[\s\S]*))?/g
+    const reg = /(?<name>[^:：]*)?[:：]\s*([(（]?(?<team1>[^()（）]*)[)）]?)?\s*[Vv][Ss]\s*([(（]?(?<team2>[^()（）]*)[)）])?/
 
     const capture_groups = reg.exec(text).groups
 
