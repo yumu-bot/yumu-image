@@ -20,7 +20,7 @@ import {
     isNotEmptyArray,
     getTimeByDHMS,
     requireNonNullElse,
-    getDifficultyName, getDiffBG,
+    getDifficultyName, getDiffBG, isNotEmptyString,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -418,14 +418,13 @@ export const PanelGenerate = {
         const background = (bid !== 0) ? await getDiffBG(r?.first_map_bid, sid, 'list@2x', false)
             : await getMapBG(sid, 'list@2x', hasLeaderBoard(beatmap?.ranked))
 
-        const isContainVS = r?.match?.name.toLowerCase().match('vs');
-        let title, title1, title2;
-        if (isContainVS) {
-            title = getMatchNameSplitted(r?.match?.name);
-            title1 = title[0];
-            title2 = title[1] + ' vs ' + title[2];
+        const split = getMatchNameSplitted(r?.match?.name)
+
+        let title2;
+        const title1 = split.name;
+        if (isNotEmptyString(split.team1)) {
+            title2 = split.team1 + ' vs ' + split.team2;
         } else {
-            title1 = r?.match?.name;
             title2 = '';
         }
 

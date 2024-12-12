@@ -197,6 +197,9 @@ export function deleteBeatMapFromDatabase(bid) {
     }).catch(_ => {})
 }
 
+/**
+ * @return boolean
+ */
 function isBlankStringOrNotNull(str) {
     if (typeof str !== "string") {
         try {
@@ -209,6 +212,9 @@ function isBlankStringOrNotNull(str) {
     }
 }
 
+/**
+ * @return boolean
+ */
 function isEmptyStringOrNotNull(str) {
     if (typeof str !== "string") {
         try {
@@ -221,31 +227,52 @@ function isEmptyStringOrNotNull(str) {
     }
 }
 
+/**
+ * @return boolean
+ */
 export function isBlankString(str) {
     return isNull(str) || isBlankStringOrNotNull(str)
 }
 
+/**
+ * @return boolean
+ */
 export function isEmptyString(str) {
     return isNull(str) || isEmptyStringOrNotNull(str)
 }
 
+/**
+ * @return boolean
+ */
 export function isEmptyArray(arr) {
     return isNull(arr) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length == 0)
 }
 
 // {} 和 [] 不为空
+/**
+ * @return boolean
+ */
 export function isNull(object) {
     return (object === null) || (object === undefined) || (typeof object === "undefined")
 }
 
+/**
+ * @return boolean
+ */
 export function isNullOrEmptyObject(object) {
     return isNull(object) || isEmptyObject(object)
 }
 
+/**
+ * @return boolean
+ */
 export function isEmptyObject(object) {
     return Object?.keys(object)?.length === 0
 }
 
+/**
+ * @return boolean
+ */
 export function isASCII(str = '') {
     if (isBlankString(str)) return false
 
@@ -253,6 +280,9 @@ export function isASCII(str = '') {
     return pattern.test(str);
 }
 
+/**
+ * @return boolean
+ */
 export function isNumber(num) {
     if (typeof num == "number") {
         return ! Number.isNaN(num)
@@ -265,31 +295,52 @@ export function isNumber(num) {
 }
 
 // 'none' 不包括在内
+/**
+ * @return boolean
+ */
 export function isHexColor(str) {
     return isNotBlankString(str) && (str?.toString()?.slice(0, 1) === '#')
 }
 
 // {} 和 [] 不为空
+/**
+ * @return boolean
+ */
 export function isNotNull(object) {
     return ! isNull(object)
 }
 
+/**
+ * @return boolean
+ */
 export function isNotNullOrEmptyObject(object) {
     return ! isNullOrEmptyObject(object)
 }
 
+/**
+ * @return boolean
+ */
 export function isNotBlankString(str = "") {
     return ! isBlankString(str)
 }
 
+/**
+ * @return boolean
+ */
 export function isNotEmptyString(str = "") {
     return ! isEmptyString(str)
 }
 
+/**
+ * @return boolean
+ */
 export function isNotEmptyArray(arr = []) {
     return ! isEmptyArray(arr)
 }
 
+/**
+ * @return boolean
+ */
 export function isNotNumber(str = '') {
     return ! isNumber(str)
 }
@@ -1482,7 +1533,6 @@ const t = new Date;
 
 /**
  * @function 获取分割好的比赛名字
- * @return {String[]}0 - 比赛名称 1 - 左边队伍 2 - 右边队伍
  * @param text 输入比赛名字
  */
 export function getMatchNameSplitted(text = '') {
@@ -1497,7 +1547,7 @@ export function getMatchNameSplitted(text = '') {
     //转换失败的保底机制
     if (team1 === '' || team2 === '') {
         return {
-            name: text,
+            name: requireNonNullElse(text, ''),
             team1: '',
             team2: '',
         }

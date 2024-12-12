@@ -2,7 +2,7 @@ import {
     exportJPEG,
     getMapBG, getMatchNameSplitted, getNowTimeStamp,
     getPanelNameSVG, implantImage,
-    implantSvgBody, readTemplate,
+    implantSvgBody, isNotEmptyString, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -296,19 +296,16 @@ async function roundInfo2CardA2(data) {
     const round = data.round
     const isTeamVS = (round?.team_type === 'team-vs');
 
-    const name = data?.stat?.name || '';
     const red = round?.team_score?.red || 0;
     const blue = round?.team_score?.blue || 0;
 
-    const isContainVS = name.toLowerCase().match('vs');
+    const split = getMatchNameSplitted(data?.stat?.name)
 
-    let title, title1, title2;
-    if (isContainVS) {
-        title = getMatchNameSplitted(name);
-        title1 = title[0];
-        title2 = title[1] + ' vs ' + title[2];
+    let title2;
+    const title1 = split.name;
+    if (isNotEmptyString(split.team1)) {
+        title2 = split.team1 + ' vs ' + split.team2;
     } else {
-        title1 = name;
         title2 = '';
     }
 
