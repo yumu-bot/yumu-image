@@ -592,7 +592,8 @@ export const PanelGenerate = {
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset, last_beatmapset) => {
         const background = cursor ?
-            await getMapBG(cursor?.id, 'list@2x', true) : await readNetImage(first_beatmapset.covers?.list, true);
+            await getMapBG(cursor?.id, 'list@2x', true) :
+            await readNetImage(first_beatmapset?.covers?.list || last_beatmapset?.covers?.list, true);
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
