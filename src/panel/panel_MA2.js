@@ -4,7 +4,7 @@ import {
     getPanelNameSVG,
     getRoundedNumberStr,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, isNotEmptyArray,
     readTemplate,
     replaceText
 } from "../util/util.js";
@@ -120,6 +120,7 @@ export async function panel_MA2(data = {
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
     const b30_height = Math.ceil(card_b30.length / 5) * 150
+    let r10_offset = 0
     const r10_height = Math.ceil(card_r10.length / 5) * 150
 
     for (const i in card_b30) {
@@ -129,18 +130,20 @@ export async function panel_MA2(data = {
         svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_b30[i], reg_card_i);
     }
 
+    if (isNotEmptyArray(card_b30) && isNotEmptyArray(card_r10)) r10_offset = 20
+
     for (const i in card_r10) {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + b30_height, card_r10[i], reg_card_i);
+        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + b30_height + r10_offset, card_r10[i], reg_card_i);
     }
 
     // 导入图片
     svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath("maimai"), reg_banner);
 
     // 计算面板高度
-    const cardHeight = b30_height + r10_height + (80 - 15)
+    const cardHeight = b30_height + r10_height + r10_offset + (80 - 15)
     const panelHeight = cardHeight + 290
 
     svg = replaceText(svg, panelHeight, reg_panelheight);

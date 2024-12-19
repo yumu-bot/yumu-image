@@ -120,6 +120,7 @@ export async function panel_MA(data = {
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
     const sd_height = Math.ceil(card_sd.length / 5) * 150
+    let dx_offset = 0 // 偏移值
     const dx_height = Math.ceil(card_dx.length / 5) * 150
 
     for (const i in card_sd) {
@@ -129,11 +130,13 @@ export async function panel_MA(data = {
         svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_sd[i], reg_card_i);
     }
 
+    if (isNotEmptyArray(card_sd) || isNotEmptyArray(card_dx)) dx_offset = 20
+
     for (const i in card_dx) {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + sd_height, card_dx[i], reg_card_i);
+        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + sd_height + dx_offset, card_dx[i], reg_card_i);
     }
 
     // 导入图片
@@ -152,7 +155,7 @@ export async function panel_MA(data = {
     }
 
     // 计算面板高度
-    const cardHeight = sd_height + dx_height + 80 - 15
+    const cardHeight = sd_height + dx_offset + dx_height + 80 - 15
     const panelHeight = cardHeight + 290
 
     svg = replaceText(svg, panelHeight, reg_panelheight);

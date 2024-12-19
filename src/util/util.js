@@ -569,7 +569,11 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
     }
 }
 
-
+/**
+ * @param {number | string} base
+ * @param {number | string} replace
+ * @param {RegExp | string} reg
+ */
 export function replaceText(base = '', replace = '', reg = /.*/) {
     return base.replace(reg, replace);
 }
