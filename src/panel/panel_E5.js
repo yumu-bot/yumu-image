@@ -1293,10 +1293,15 @@ const PanelEGenerate = {
     },
 
     score2componentE9: (score) => {
+        /**
+         * @type {number}
+         */
+        const max_combo = ((score.ruleset_id === 3) ? score?.maximum_statistics.perfect : score?.beatmap.max_combo) || 0
+
         return {
             accuracy: score?.legacy_accuracy,
             combo: score?.max_combo || 0,
-            max_combo: score?.beatmap.max_combo || 0,
+            max_combo: max_combo || 0,
         }
     },
 
