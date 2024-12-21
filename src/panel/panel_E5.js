@@ -1296,7 +1296,7 @@ const PanelEGenerate = {
         /**
          * @type {number}
          */
-        const max_combo = ((score.ruleset_id === 3) ? score?.maximum_statistics.perfect : score?.beatmap.max_combo) || 0
+        const max_combo = ((score.ruleset_id === 3 && score.is_lazer) ? score?.maximum_statistics.perfect : score?.beatmap.max_combo) || 0
 
         return {
             accuracy: score?.legacy_accuracy,
