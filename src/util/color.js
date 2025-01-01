@@ -418,9 +418,10 @@ export function getModColor(Mod = '') {
             color = '#7B0046';
             break;
         case "DS":
+        case "BM":
             color = '#9E005E';
             break;
-        case "IV":
+        case "IN":
             color = '#5F5BA8';
             break;
         case "CS":

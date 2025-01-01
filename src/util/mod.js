@@ -301,7 +301,7 @@ export function getModFullName(abbr = 'NM') {
             return 'Swap';
         case "DS":
             return 'DualStages';
-        case "IV":
+        case "IN":
             return 'Invert';
         case "CS":
             return 'ConstantSpeed';
@@ -348,6 +348,8 @@ export function getModFullName(abbr = 'NM') {
             return 'Synesthesia';
         case "DP":
             return 'Depth';
+        case "BM":
+            return 'Bloom';
         default:
             return abbr?.toUpperCase();
     }
