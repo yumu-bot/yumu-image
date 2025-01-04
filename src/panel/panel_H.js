@@ -46,16 +46,18 @@ export async function panel_H (
         pool: {
             name: 'MapPool',
             first_map_bid: 667290,
-            modPools: [
+            mod_pools: [
                 {
                     mod: 'Hidden',
-                    modStr: 'HD',
-                    beatMaps: []
+                    mod_str: 'HD',
+                    mod_color: '#EA68A2',
+                    beatmaps: [],
                 }
             ]
         },
         mode: 'OSU',
     }) {
+    
     // 导入模板
     let svg = readTemplate("template/Panel_H.svg");
 
@@ -74,7 +76,7 @@ export async function panel_H (
     svg = replaceText(svg, panel_name, reg_index);
 
     // 插入主体卡片
-    const pools = data.pool.modPools || [];
+    const pools = data.pool.mod_pools || [];
     const mode = getGameMode(data?.mode, 0);
 
     let cards = [];
@@ -83,8 +85,8 @@ export async function panel_H (
 
     for (const p of pools) {
         cards.push(await drawModPool(p, mode, row));
-        row += getRowCount(p?.beatMaps?.length);
-        map_count += p?.beatMaps?.length;
+        row += getRowCount(p?.beatmaps?.length);
+        map_count += p?.beatmaps?.length;
     }
 
     //执行上面的代码
@@ -112,16 +114,16 @@ export async function panel_H (
 
 async function drawModPool(pool = {
     mod: 'Hidden',
-    modStr: 'HD',
-    beatMaps: []
+    mod_str: 'HD',
+    beatmaps: []
 }, mode = 'osu', rowStart = 1) {
     let data = [];
-    const count = pool?.beatMaps?.length || 0;
+    const count = pool?.beatmaps?.length || 0;
 
     for (let j = 0; j < getFullRowCount(count); j++) {
         for (let k = 0; k < 3; k++) {
             data.push(
-                await drawCardD(pool.beatMaps[j * 3 + k], pool.modStr, mode, rowStart - 1 + j + 1, k + 1, 3)
+                await drawCardD(pool.beatmaps[j * 3 + k], pool.mod_str, mode, rowStart - 1 + j + 1, k + 1, 3)
             );
         }
     }
@@ -129,7 +131,7 @@ async function drawModPool(pool = {
     if (hasRemain(count)) {
         for (let o = 0; o < getRemain(count); o++) {
             data.push(
-                await drawCardD(pool.beatMaps[getFullRowCount(count) * 3 + o], pool.modStr, mode, rowStart - 1 + getFullRowCount(count) + 1, o + 1, getRemain(count))
+                await drawCardD(pool.beatmaps[getFullRowCount(count) * 3 + o], pool.mod_str, mode, rowStart - 1 + getFullRowCount(count) + 1, o + 1, getRemain(count))
             );
         }
     }
@@ -167,7 +169,7 @@ async function pool2cardA2(pool, mode, map_count = 0, mod_count = 0) {
     const background = pool?.first_map_bid ? await getMapBG(pool.first_map_bid, 'cover', false) : getRandomBannerPath();
 
     const title1 = pool.name || '';
-    const title3 = pool.categoryList ? pool.categoryList[0].category ? 'creator: ' + pool.categoryList[0].category[0].creater : 'creator?' : '';
+    const title3 = pool.category_list ? pool.category_list[0].category ? 'creator: ' + pool.category_list[0].category[0].creater : 'creator?' : '';
 
     const left1 = pool.info ? pool.info.toString() : '';
     const left3 = (map_count && mod_count) ? 'P' + mod_count + ' M' + map_count : '';
