@@ -112,25 +112,25 @@ export function card_I3(data = {
 
     // 优先显示 title2
     let title2_width = title2_font.getTextWidth(data?.title2 || '', title2_size)
-    let left1_width = Math.min(left1_font.getTextWidth(data?.left1 || '', title_size), 207 - 20 - title2_width - 10)
+    let left1_width = Math.min(left1_font.getTextWidth(data?.left1 || '', title_size), 207 - 20 - title2_width - 10 + 4)
 
     // 副标题太长也不行
-    if (title2_width > 207 - 20 - 50 - 10) {
-        left1_width = Math.min(left1_font.getTextWidth(data?.left1 || '', title_size), 207 - 20 - 50 - 10)
-        title2_width = 207 - 20 - 50 - left1_width - 10
+    if (title2_width > 207 - 20 - 50 - 10 + 4) {
+        left1_width = Math.min(left1_font.getTextWidth(data?.left1 || '', title_size), 207 - 20 - 50 - 10 + 4)
+        title2_width = 207 - 20 - 50 - left1_width - 10 + 4
     }
 
-    const title_width = 207 - 20 - (isNotBlankString(data?.type) ? 30 : 0)
-    const left2_width = 207 - 20 - (isNotBlankString(data?.component3) ? 105 : 0) - 16 * (data?.level || 0)
+    const title_width = 207 - 20 - (isNotBlankString(data?.type) ? 30 : 0) + 4
+    const left2_width = 207 - 20 - (isNotBlankString(data?.component3) ? 105 : 0) - 16 * (data?.level || 0) + 4
 
     const title = title_font.getTextPath(
-        title_font.cutStringTail(data?.title || '', title_size, title_width), 157, 26, title_size, 'left baseline', '#fff')
+        title_font.cutStringTail(data?.title || '', title_size, title_width), 157 - 2, 26, title_size, 'left baseline', '#fff')
     const title2 = title2_font.getTextPath(
         title2_font.cutStringTail(data?.title2 || '', title2_size, title2_width), 342, 46, title2_size, 'right baseline', '#bbb')
     const left1 = left1_font.getTextPath(
-        left1_font.cutStringTail(data?.left1 || '', left1_size, left1_width), 157, 46, left1_size, 'left baseline', '#fff')
+        left1_font.cutStringTail(data?.left1 || '', left1_size, left1_width), 157 - 2, 46, left1_size, 'left baseline', '#fff')
     const left2 = left2_font.getTextPath(
-        left2_font.cutStringTail(data?.left2 || '', left2_size, left2_width), 157, 66, left2_size, 'left baseline', '#fff')
+        left2_font.cutStringTail(data?.left2 || '', left2_size, left2_width), 157 - 2, 66, left2_size, 'left baseline', '#fff')
     const left34_arr = [
         {
             font: left3_font,
@@ -146,7 +146,7 @@ export function card_I3(data = {
     ]
 
     const left3 = data?.left3_is_right ? getMultipleTextPath(left34_arr, 342, 90, 'right baseline')
-        : getMultipleTextPath(left34_arr, 157, 90, 'left baseline')
+        : getMultipleTextPath(left34_arr, 157 - 2, 90, 'left baseline')
 
     const index_arr = [
         {
@@ -179,7 +179,7 @@ export function card_I3(data = {
 
     svg = implantImage(svg, 130, 130, 15, 0, 1, data?.cover, reg_cover);
     svg = implantImage(svg, 352, 130, 0, 0, 0.4, data?.background, reg_background);
-    svg = implantImage(svg, 56, 30, 154, 96, 1, data?.rank, reg_rank);
+    svg = implantImage(svg, 56, 30, 154 - 2, 96, 1, data?.rank, reg_rank);
 
     svg = implantSvgBody(svg, 290, 68, data?.component1, reg_rank) // 27 * 30
     svg = implantSvgBody(svg, 290 + 28, 68, data?.component2, reg_rank) // 27 * 30

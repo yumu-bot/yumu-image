@@ -105,7 +105,7 @@ export async function panel_MD(data = {
         svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_sd[i], reg_card_i);
     }
 
-    if (isNotEmptyArray(card_sd) || isNotEmptyArray(card_dx)) dx_offset = 20
+    if (isNotEmptyArray(card_sd) && isNotEmptyArray(card_dx)) dx_offset = 20
 
     for (const i in card_dx) {
         const x = i % 5;

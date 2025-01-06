@@ -26,7 +26,7 @@ const textToSVGBerlinBold = TextToSVG.loadSync("font/BerlinsansExpert-Bold.ttf")
  * @return {string}
  */
 export function getMultipleTextPath(array = [{
-    font: "torus",
+    font: "torus" || torus,
     text: '',
     size: 24,
     color: '#fff',
