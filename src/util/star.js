@@ -298,9 +298,9 @@ export const getApproximateRank = (score = {
  */
 export const hasLeaderBoard = (ranked) => {
     if (typeof ranked === "number") {
-        return (ranked === 1 || ranked === 2 || ranked === 4);
+        return (ranked > 1e-6);
     } else if (typeof ranked === "string") {
-        return (ranked === 'qualified' || ranked === 'ranked' || ranked === 'loved');
+        return (ranked === 'ranked' || ranked === 'qualified' || ranked === 'approved' || ranked === 'loved');
     } else {
         return false;
     }
