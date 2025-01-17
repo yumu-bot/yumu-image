@@ -368,8 +368,8 @@ function label_A8(data = {
         }
     }
 
-    const text = torusBold.getTextPath(data?.text, text_middle, 19, 20, 'center baseline', '#fff', 1)
-    const base = PanelDraw.Rect(0, 0, width, 25, 7, data?.color || 'none', 0.4)
+    const text = torusBold.getTextPath(data?.text, text_middle + 2, 19, 20, 'center baseline', '#fff', 1)
+    const base = PanelDraw.Rect(0, 0, width, 25, 7, data?.color || 'none', 0.6)
 
     svg = replaceText(svg, text, reg_text)
     svg = replaceText(svg, base, reg_base)

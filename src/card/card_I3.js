@@ -1,7 +1,7 @@
 import {
     implantImage, implantSvgBody, isASCII, isNotBlankString, replaceText, replaceTexts,
 } from "../util/util.js";
-import {getMultipleTextPath, PuHuiTi, torus} from "../util/font.js";
+import {getMultipleTextPath, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiDXStarColor} from "../util/maimai.js";
 
@@ -185,21 +185,21 @@ export function card_I3(data = {
     svg = implantSvgBody(svg, 290 + 28, 68, data?.component2, reg_rank) // 27 * 30
 
     // 左侧覆盖部分
-    const label1_width = torus.getTextWidth(data?.label1, 18)
+    const label1_width = torusBold.getTextWidth(data?.label1, 18)
     const label1_rrect_width = Math.max(40, label1_width + 10)
-    const label1 = torus.getTextPath(data?.label1, 25 + (label1_rrect_width / 2), 24, 18,
+    const label1 = torusBold.getTextPath(data?.label1, 25 + (label1_rrect_width / 2), 24, 18,
         'center baseline', data?.color_label1)
     const label1_rrect = PanelDraw.Rect(25, 8, label1_rrect_width, 20, 10, data?.color_rrect1, 1)
 
-    const label2_width = torus.getTextWidth(data?.label2, 18)
+    const label2_width = torusBold.getTextWidth(data?.label2, 18)
     const label2_rrect_width = Math.max(40, label2_width + 10)
-    const label2 = torus.getTextPath(data?.label2, 25 + (label2_rrect_width / 2), 118, 18,
+    const label2 = torusBold.getTextPath(data?.label2, 25 + (label2_rrect_width / 2), 118, 18,
         'center baseline', data?.color_label2)
     const label2_rrect = PanelDraw.Rect(25, 102, label2_rrect_width, 20, 10, data?.color_rrect2, 1)
 
-    const label3_width = torus.getTextWidth(data?.label3, 18)
+    const label3_width = torusBold.getTextWidth(data?.label3, 18)
     const label3_rrect_width = Math.max(40, label3_width + 10)
-    const label3 = torus.getTextPath(data?.label3, 135 - (label3_rrect_width / 2), 118, 18,
+    const label3 = torusBold.getTextPath(data?.label3, 135 - (label3_rrect_width / 2), 118, 18,
         'center baseline', data?.color_label3)
     const label3_rrect = PanelDraw.Rect(135 - label3_rrect_width, 102, label3_rrect_width, 20, 10, data?.color_rrect3, 1)
 
