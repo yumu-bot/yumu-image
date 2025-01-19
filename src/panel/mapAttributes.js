@@ -8,6 +8,7 @@ export async function router(req, res) {
         const out = await getAttr(data);
         res.send(out);
     } catch (e) {
+        console.error(e);
         res.status(500).send(e.stack);
     }
 }

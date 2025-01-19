@@ -11,6 +11,7 @@ export async function router(req, res) {
         res.set('Content-Type', 'image/jpeg');
         res.send(data.image);
     } catch (e) {
+        console.error(e);
         res.status(500).send(e.stack);
     }
 }
