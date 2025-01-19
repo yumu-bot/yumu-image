@@ -45,7 +45,7 @@
 
 - Alpha 文字面板
 - Beta 一个超帅的新面板
-- Gamma 成绩和信息简版 X/Y
+- Gamma 成绩和信息简版 IC/PC
 - Delta XinRan 比赛面板 K
 - Epsilon 截图用头像 OA
 - Zeta 截图用头像 OC

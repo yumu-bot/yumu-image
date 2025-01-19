@@ -16,8 +16,7 @@ import {
     isNotEmptyArray,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
-import {calcPerformancePoints} from "../util/compute-pp.js";
-import {getRankFromValue, hasLeaderBoard} from "../util/star.js";
+import {getRankFromValue} from "../util/star.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getRankColor} from "../util/color.js";
 import moment from "moment";
@@ -203,6 +202,7 @@ const PanelGamma = {
         const background = getImageFromV3('object-score-backimage-' + score.rank + '.jpg');
         const avatar = await getMapBG(score.beatmapset.id, "list", false);
 
+        /*
         // 成绩重计算
         const score_statistics = {
             ...score.statistics,
@@ -211,6 +211,8 @@ const PanelGamma = {
             accuracy: score.accuracy,
         }
         const calcPP = await calcPerformancePoints(score.beatmap.id, score_statistics, score.mode, hasLeaderBoard(score.beatmap.ranked));
+
+         */
 
         const mods_arr = score.mods || [];
         let mod_str = '';
@@ -228,33 +230,34 @@ const PanelGamma = {
         const getStatistics = (score) => {
             switch (getGameMode(score.mode, 1)) {
                 case 'o': {
-                    return score.statistics.count_300 + ' / '
-                        + score.statistics.count_100 + ' / '
-                        + score.statistics.count_50 + ' / '
-                        + score.statistics.count_miss;
+                    return score.statistics.great + ' / '
+                        + score.statistics.ok + ' / '
+                        + score.statistics.meh + ' / '
+                        + score.statistics.miss;
                 }
                 case 't': {
-                    return score.statistics.count_300 + ' / '
-                        + score.statistics.count_100 + ' / '
-                        + score.statistics.count_miss;
+                    return score.statistics.great + ' / '
+                        + score.statistics.ok + ' / '
+                        + score.statistics.miss;
                 }
                 case 'c': {
-                    return score.statistics.count_300 + ' / '
-                        + score.statistics.count_100 + ' / '
-                        + score.statistics.count_50 + ' / '
-                        + score.statistics.count_miss + ' (-'
-                        + score.statistics.count_katu + ')';
+                    return score.statistics.great + ' / '
+                        + score.statistics.large_tick_hit + ' / '
+                        + score.statistics.small_tick_hit + ' / '
+                        + score.statistics.miss + ' (-'
+                        + score.statistics.small_tick_miss + ')';
                 }
                 case 'm': {
-                    return score.statistics.count_geki + ' (+'
-                        + score.statistics.count_300 + ') / '
-                        + score.statistics.count_katu + ' / '
-                        + score.statistics.count_100 + ' / '
-                        + score.statistics.count_50 + ' / '
-                        + score.statistics.count_miss;
+                    return (score.statistics.great + score.statistics.perfect) + ' (+'
+                        + score.statistics.perfect + ') / '
+                        + score.statistics.good + ' / '
+                        + score.statistics.ok + ' / '
+                        + score.statistics.meh + ' / '
+                        + score.statistics.miss;
                 }
             }
         }
+
 
         return {
             background: background,
@@ -265,9 +268,9 @@ const PanelGamma = {
             left3: score.beatmap.version,
             down1: getStatistics(score),
             down2: 'b' + score.beatmap.id,
-            center0b: getDecimals(calcPP.attr.stars, 2),
-            center0m: getDecimals(calcPP.attr.stars, 3) + '*',
-            center1b: Math.round(calcPP.pp).toString(),
+            center0b: getDecimals(score.beatmap.difficulty_rating, 2),
+            center0m: getDecimals(score.beatmap.difficulty_rating, 3) + '*',
+            center1b: Math.round(score.pp).toString(),
             center1m: 'PP',
             center2: getRoundedNumberStr((score?.accuracy || 0) * 100, 3) + '% // ' + (score.max_combo || 0) + 'x // ' + score.rank + mod_str,
 

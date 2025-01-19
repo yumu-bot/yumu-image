@@ -1,13 +1,11 @@
 import {
-    getImageFromV3, getGameMode, getMapBG, getRoundedNumberStr,
+    getImageFromV3, getMapBG, getRoundedNumberStr,
     implantImage,
     implantSvgBody, replaceText, getDifficultyName
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_J} from "./card_J.js";
-import {calcPerformancePoints} from "../util/compute-pp.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getModInt} from "../util/mod.js";
 import {getScoreTypeImage, hasLeaderBoard} from "../util/star.js";
 
 export async function card_F2(data = {
@@ -128,17 +126,7 @@ export async function card_F2(data = {
     // 导入J卡
     let card_Js = [];
     for (const j of data.recent) {
-        const mod_int = getModInt(j.mods || []);
-        const stat = {
-            ...j.statistics,
-            combo: j.max_combo,
-            mods: j.mods,
-            mods_int: mod_int,
-        }
-
-        const calcPP = await calcPerformancePoints(j.beatmap.id, stat, getGameMode(j.mode, 0), false);
-
-        card_Js.push(await card_J(await score2CardJ(j, calcPP)));
+        card_Js.push(await card_J(await score2CardJ(j)));
     }
 
     if (card_Js < 1) {
@@ -162,7 +150,7 @@ export async function card_F2(data = {
     return svg;
 }
 
-const score2CardJ = async (score, calcPP) => {
+const score2CardJ = async (score) => {
     const background = await getMapBG(score.beatmapset.id, 'cover', hasLeaderBoard(score.beatmap.ranked));
 
     return {
@@ -173,11 +161,11 @@ const score2CardJ = async (score, calcPP) => {
         title: score.beatmapset.title || '',
         artist: score.beatmapset.artist || '',
         difficulty_name: getDifficultyName(score.beatmap) || '',
-        star_rating: calcPP.attr.stars,
+        star_rating: score.beatmap.difficulty,
         score_rank: score.rank,
         accuracy: getRoundedNumberStr(score.accuracy * 100, 3), //%
         combo: score.max_combo, //x
         mods_arr: score.mods || [],
-        pp: Math.round(calcPP.pp) //pp
+        pp: Math.round(score.pp) //pp
     }
 }
