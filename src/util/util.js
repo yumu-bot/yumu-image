@@ -1540,27 +1540,36 @@ const t = new Date;
  * @param text 输入比赛名字
  */
 export function getMatchNameSplitted(text = '') {
-    const reg = /(?<name>[^:：]*)?[:：]\s*([(（]?(?<team1>[^()（）]*)[)）]?)?\s*[Vv][Ss]\s*([(（]?(?<team2>[^()（）]*)[)）])?/
+    try {
+        const reg = /(?<name>[^:：]*)?[:：]\s*([(（]?(?<team1>[^()（）]*)[)）]?)?\s*[Vv][Ss]\s*([(（]?(?<team2>[^()（）]*)[)）])?/
 
-    const capture_groups = reg.exec(text).groups
+        const capture_groups = reg.exec(text).groups
 
-    const name = capture_groups.name
-    const team1 = capture_groups.team1
-    const team2 = capture_groups.team2
+        const name = capture_groups.name
+        const team1 = capture_groups.team1
+        const team2 = capture_groups.team2
 
-    //转换失败的保底机制
-    if (team1 === '' || team2 === '') {
+        //转换失败的保底机制
+        if (team1 === '' || team2 === '') {
+            return {
+                name: requireNonNullElse(text, ''),
+                team1: '',
+                team2: '',
+            }
+        }
+
+        return {
+            name: requireNonNullElse(name, ''),
+            team1: requireNonNullElse(team1, ''),
+            team2: requireNonNullElse(team2, ''),
+        }
+    } catch (e) {
+        console.error(e)
         return {
             name: requireNonNullElse(text, ''),
             team1: '',
             team2: '',
         }
-    }
-
-    return {
-        name: requireNonNullElse(name, ''),
-        team1: requireNonNullElse(team1, ''),
-        team2: requireNonNullElse(team2, ''),
     }
 }
 
