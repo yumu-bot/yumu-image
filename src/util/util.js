@@ -753,7 +753,8 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
         } while (dec_str.length > 0 && dec_str.charAt(dec_str.length - 1) === '0')
 
         if (dec_str.length > 0) {
-            dec_str = '.' + dec_str + unit(number, 0)
+            int_str += '.'
+            dec_str += unit(number, 0)
         } else {
             dec_str = unit(number, 0)
         }
@@ -800,7 +801,7 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
             integer: int_str,
             decimal: dec_str,
 
-            int: parseInt(int_str),
+            int: parseInt(int_str, 10),
             dec: parseFloat('0.' + dec_str),
         }
     } else {
