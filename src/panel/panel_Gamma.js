@@ -1,6 +1,5 @@
 import {
     exportJPEG,
-    getDecimals,
     getImageFromV3,
     getGameMode,
     getMapBG,
@@ -10,10 +9,9 @@ import {
     getAvatar,
     getBanner,
     getTimeByDHMS,
-    getRoundedNumberStr,
     getTimeDifference,
     replaceText,
-    isNotEmptyArray,
+    isNotEmptyArray, round, rounds,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
 import {getRankFromValue} from "../util/star.js";
@@ -191,7 +189,7 @@ const PanelGamma = {
             center0m: 'PP',
             center1b: user?.username || 'Unknown',
             center1m: '',
-            center2: getRoundedNumberStr(user?.accuracy, 3) + '% // Lv.' + user.level_current,
+            center2: round(user?.accuracy, 2) + '% // Lv.' + user.level_current,
 
             background_color: '#2a2226',
             panel: 'info',
@@ -258,6 +256,7 @@ const PanelGamma = {
             }
         }
 
+        const sr = rounds(score.beatmap.difficulty_rating, 2)
 
         return {
             background: background,
@@ -268,11 +267,11 @@ const PanelGamma = {
             left3: score.beatmap.version,
             down1: getStatistics(score),
             down2: 'b' + score.beatmap.id,
-            center0b: getDecimals(score.beatmap.difficulty_rating, 2),
-            center0m: getDecimals(score.beatmap.difficulty_rating, 3) + '*',
+            center0b: sr.integer,
+            center0m: sr.decimal + '*',
             center1b: Math.round(score.pp).toString(),
             center1m: 'PP',
-            center2: getRoundedNumberStr((score?.accuracy || 0) * 100, 3) + '% // ' + (score.max_combo || 0) + 'x // ' + score.rank + mod_str,
+            center2: round((score?.accuracy || 0) * 100, 2) + '% // ' + (score.max_combo || 0) + 'x // ' + score.rank + mod_str,
 
             background_color: '#2a2226',
             panel: 'score',
@@ -318,7 +317,7 @@ const PanelGamma = {
             center1b: user?.username || 'Unknown',
             center1m: '',
 
-            center2: getRoundedNumberStr(user?.accuracy, 3) + '% // Lv.' + (user?.level_current || '0'),
+            center2: round(user?.accuracy, 2) + '% // Lv.' + (user?.level_current || '0'),
 
             background_color: sanity_color,
             panel: 'sanity',

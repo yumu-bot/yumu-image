@@ -1,8 +1,6 @@
 import {
-    getImageFromV3,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall, implantImage, implantSvgBody,
-    readTemplate, replaceTexts,
+    getImageFromV3, implantImage, implantSvgBody,
+    readTemplate, replaceTexts, rounds,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -12,7 +10,7 @@ export async function card_B2(data = {
     label: null,
     background: null,
     value: 11.45141919810,
-    round_level: 2,
+    round_level: 1,
     rank: 'F',
     color: '#aaa',
 }) {
@@ -30,8 +28,9 @@ export async function card_B2(data = {
     svg = implantSvgBody(svg, 20, 15, label, reg_label);
 
     //添加评级和值和背景
-    const number_b = getRoundedNumberStrLarge(data?.value, data?.round_level);
-    const number_m = getRoundedNumberStrSmall(data?.value, data?.round_level);
+    const number = rounds(data?.value, data?.round_level)
+    const number_b = number.integer
+    const number_m = number.decimal
 
     const rank_text = torus.getTextPath(data?.rank, 305, 64, 56, 'right baseline', data?.color); //68?
 

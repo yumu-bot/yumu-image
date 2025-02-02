@@ -1,11 +1,8 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall,
-    getRoundedNumberStr,
     implantImage,
     implantSvgBody, readTemplate,
-    replaceText, transformSvgBody, getPanelHeight, getAvatar, getDiffBG
+    replaceText, transformSvgBody, getPanelHeight, getAvatar, getDiffBG, round, rounds
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -110,7 +107,7 @@ export async function panel_C2(data = {
 async function playerData2CardH(p = {}) {
     const rws = Math.round(p.rws * 10000) / 100;
 
-    const left1 = getRoundedNumberStr(p.total, 3) +
+    const left1 = round(p.total, 2) +
             ' // ' + p.win + 'W-' + p.lose + 'L (' +
             Math.round((p.win / (p.win + p.lose)) * 100) + '%)';
 
@@ -137,6 +134,7 @@ async function playerData2CardH(p = {}) {
     }
 
     const avatar = await getAvatar(p.player.avatar_url, true);
+    const mra_number = rounds(p?.mra, 2)
 
     return {
         background: getImageFromV3(pubg),
@@ -145,8 +143,8 @@ async function playerData2CardH(p = {}) {
         title2: p?.player?.country?.country_code || '',
         left1: left1,
         left2: left2,
-        index_b: getRoundedNumberStrLarge(p?.mra, 3),
-        index_m: getRoundedNumberStrSmall(p?.mra, 3),
+        index_b: mra_number.integer,
+        index_m: mra_number.decimal,
         index_b_size: 48,
         index_m_size: 36,
         label1: '',
@@ -171,7 +169,7 @@ async function playerData2CardH(p = {}) {
 }
 
 async function seriesRating2CardA2(sr){
-    const star = getRoundedNumberStr(sr?.average_star || 0, 3);
+    const star = round(sr?.average_star || 0, 2);
 
     const background = await getDiffBG(sr?.first_map_bid, 0, 'list@2x', true);
 
@@ -197,8 +195,11 @@ async function seriesRating2CardA2(sr){
 
     const right1 = 'SR ' + star + '*';
     const right2 = 'Scores/Player'; // + data.matchStat.id || 0;
-    const right3b = sr?.player_count > 0 ? getRoundedNumberStrLarge(sr?.score_count / sr?.player_count, 3) : "0";
-    const right3m = sr?.player_count > 0 ? getRoundedNumberStrSmall(sr?.score_count / sr?.player_count, 3) : "";
+
+    const sp_number = rounds(sr?.score_count / sr?.player_count, 2)
+
+    const right3b = sr?.player_count > 0 ? sp_number.integer : "0";
+    const right3m = sr?.player_count > 0 ? sp_number.decimal : "";
 
     return {
         background: background,

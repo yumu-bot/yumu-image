@@ -1,11 +1,10 @@
 import {
     exportJPEG,
     getImageFromV3,
-    getPanelNameSVG, getRoundedNumberStr,
-    implantImage,
+    getPanelNameSVG, implantImage,
     implantSvgBody, isNotBlankString, isNotEmptyArray,
     readTemplate,
-    replaceText,
+    replaceText, round,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
@@ -172,7 +171,7 @@ async function maiDistribution2CardI3(dist = {
     const too_bright = (dist.score?.level_index || 0) === 4 || (dist.score?.level_index || 0) === 1;
 
     const difficulty_color = getMaimaiDifficultyColor(dist.score?.level_index || 0)
-    const level = (dist.chart.fit_diff > 0) ? ((getRoundedNumberStr(dist.chart.fit_diff, 3)) + ' [' + dist.score?.ds + ']') : dist.score?.ds
+    const level = (dist.chart.fit_diff > 0) ? ((round(dist.chart.fit_diff, 2)) + ' [' + dist.score?.ds + ']') : dist.score?.ds
 
     return {
         background: getMaimaiRankBG(dist.score?.rate || ''),

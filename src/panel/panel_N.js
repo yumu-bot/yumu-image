@@ -2,12 +2,11 @@ import {
     exportJPEG, getAvatar,
     getImageFromV3,
     getPanelNameSVG,
-    getRoundedNumberStr,
     implantImage,
     implantSvgBody, isEmptyArray, readNetImage,
     readTemplate,
     replaceText,
-    replaceTexts, transformSvgBody
+    replaceTexts, round, transformSvgBody
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -114,7 +113,7 @@ export async function panel_N(
         + ' // ( ) Suggestion ' + (data?.more?.suggest_count || 0)
         + ' // (*) Praise ' + (data?.more?.praise_count || 0)
         + ' // Pack ' + (pack_tags[0] || "null")
-        + ' // Rate ' + getRoundedNumberStr(data?.beatmapset?.public_rating, 2);
+        + ' // Rate ' + round(data?.beatmapset?.public_rating, 1);
 
     const stat = torus.getTextPath(stat_str, 1570, 645, 18, 'right baseline', '#aaa');
 

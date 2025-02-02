@@ -1,11 +1,11 @@
 import {
     getBeatMapTitlePath,
     getGameMode,
-    getImageFromV3, getMapStatus, getRoundedNumberStr,
+    getImageFromV3, getMapStatus,
     implantImage, implantSvgBody,
     isNotBlankString,
     isNotEmptyArray, readNetImage,
-    replaceText, replaceTexts, transformSvgBody
+    replaceText, replaceTexts, round, transformSvgBody
 } from "../util/util.js";
 import {extra, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -102,13 +102,13 @@ export async function card_A3(beatmapset = {}) {
 
     const fav = label_A8({
         image: getImageFromV3('object-beatmap-favorite.png'),
-        text: getRoundedNumberStr(beatmapset.favourite_count, 2),
+        text: round(beatmapset.favourite_count, 1),
         color: '#1c1719',
     })
 
     const pc = label_A8({
         image: getImageFromV3('object-beatmap-playcount.png'),
-        text: getRoundedNumberStr(beatmapset.play_count, 2),
+        text: round(beatmapset.play_count, 1),
         color: '#1c1719',
     })
 
@@ -166,7 +166,7 @@ function drawDifficultyLabels(beatmaps = []) {
         return label_A8({
             image: null,
             has_text: true,
-            text: getRoundedNumberStr(v.difficulty_rating, 3),
+            text: round(v.difficulty_rating, 2),
             color: getStarRatingColor(v.difficulty_rating)
         })
     })
@@ -175,7 +175,7 @@ function drawDifficultyLabels(beatmaps = []) {
         return label_A8({
             image: null,
             has_text: false,
-            text: getRoundedNumberStr(v.difficulty_rating, 3),
+            text: round(v.difficulty_rating, 2),
             color: getStarRatingColor(v.difficulty_rating)
         })
     })

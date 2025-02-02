@@ -1,12 +1,10 @@
 import {
-    getDecimals,
     getImageFromV3,
     getGameMode,
     getMapStatusImage,
-    getRoundedNumberStr,
     implantImage,
     implantSvgBody, readNetImage,
-    replaceTexts, getDiffBG, getBeatMapTitlePath,
+    replaceTexts, getDiffBG, getBeatMapTitlePath, round, rounds,
 } from "../util/util.js";
 import {extra, PuHuiTi, torus} from "../util/font.js";
 import {getStarRatingColor} from "../util/color.js";
@@ -72,22 +70,23 @@ export async function card_E1(data = {
     const play_count_icon = '<path d="m9,0C4.029,0,0,4.029,0,9s4.029,9,9,9,9-4.029,9-9S13.971,0,9,0Zm-3,14V4l8,5-8,5Z" style="fill: #fff;"/>';
 
     // 文字定义
-    const sr = data.star;
-    const isSRLegal = (sr >= 0 && sr <= 20);
+    const isSRLegal = (data.star >= 0 && data.star <= 20);
 
-    const sr_b = isSRLegal ? getDecimals(data.star, 0) : 20;
-    const sr_m = isSRLegal ? getDecimals(data.star, 1) : 0;
-    const sr_b_str = isSRLegal ? getDecimals(data.star, 2) : '20';
-    const sr_m_str = isSRLegal ? getDecimals(data.star, 3) : '+';
+    const sr = rounds(data.star, 1, 3)
+
+    const sr_b = isSRLegal ? sr.int : 20;
+    const sr_m = isSRLegal ? sr.dec : 0;
+    const sr_b_str = isSRLegal ? sr.integer : '20';
+    const sr_m_str = isSRLegal ? sr.decimal : '+';
 
     const sr_text = torus.get2SizeTextPath(sr_b_str, sr_m_str,
         48, 36, 160, 83.67, 'center baseline', '#fff');
     const mode_text = extra.getTextPath(getGameMode(data.mode, -1), 48, 86.24, 48, "left baseline", sr_color);
     const favorite_count_text = torus.getTextPath(
-        getRoundedNumberStr((data.favourite_count), 2)
+        round((data.favourite_count), 1)
         , 845, 63.84, 24, "right baseline", "#fff");
     const play_count_text = torus.getTextPath(
-        getRoundedNumberStr((data.play_count), 2)
+        round((data.play_count), 1)
         , 845, 90.84, 24, "right baseline", "#fff");
 
     const title = getBeatMapTitlePath("torus", "PuHuiTi", data.title, data.title_unicode, null,

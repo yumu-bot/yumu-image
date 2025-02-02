@@ -1,10 +1,8 @@
 import {
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall, getRoundedNumberStr,
     implantSvgBody,
     modifyArrayToFixedLength,
     replaceText,
-    replaceTexts
+    replaceTexts, round, rounds
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -167,24 +165,24 @@ async function userData2Labels(data) {
     const isRankedMapPCCalculated = data.user.ranked_map !== 0;
 
     // 卡片定义
-    const rks_b = getRoundedNumberStrLarge(data.user.ranked_score, 4);
-    const rks_m = getRoundedNumberStrSmall(data.user.ranked_score, 4);
-    const tts_b = getRoundedNumberStrLarge(data.user.total_score, 4);
-    const tts_m = getRoundedNumberStrSmall(data.user.total_score, 4);
-    const pc_b = getRoundedNumberStrLarge(data.user.play_count, 0);
-    const pc_m = getRoundedNumberStrSmall(data.user.play_count, 0);
+    const rks_b = rounds(data.user.ranked_score, 4).integer;
+    const rks_m = rounds(data.user.ranked_score, 4).decimal;
+    const tts_b = rounds(data.user.total_score, 4).integer;
+    const tts_m = rounds(data.user.total_score, 4).decimal;
+    const pc_b = rounds(data.user.play_count, -4).integer;
+    const pc_m = rounds(data.user.play_count, -4).decimal;
 
-    const rmp_b = getRoundedNumberStrLarge(data.user.ranked_map, 0);
-    const rmp_m = getRoundedNumberStrSmall(data.user.ranked_map, 0);
-    const mpc_b = getRoundedNumberStrLarge(data.user.played_map, 0);
-    const mpc_m = getRoundedNumberStrSmall(data.user.played_map, 0);
+    const rmp_b = rounds(data.user.ranked_map, -4).integer;
+    const rmp_m = rounds(data.user.ranked_map, -4).decimal;
+    const mpc_b = rounds(data.user.played_map, -4).integer;
+    const mpc_m = rounds(data.user.played_map, -4).decimal;
 
-    const rep_b = getRoundedNumberStrLarge(data.user.rep_watched, 0);
-    const rep_m = getRoundedNumberStrSmall(data.user.rep_watched, 0);
-    const fan_b = getRoundedNumberStrLarge(data.user.follower, 0);
-    const fan_m = getRoundedNumberStrSmall(data.user.follower, 0);
-    const tth_b = getRoundedNumberStrLarge(data.user.total_hits, 4);
-    const tth_m = getRoundedNumberStrSmall(data.user.total_hits, 4);
+    const rep_b = rounds(data.user.rep_watched, -4).integer;
+    const rep_m = rounds(data.user.rep_watched, -4).decimal;
+    const fan_b = rounds(data.user.follower, -4).integer;
+    const fan_m = rounds(data.user.follower, -4).decimal;
+    const tth_b = rounds(data.user.total_hits, 4).integer;
+    const tth_m = rounds(data.user.total_hits, 4).decimal;
 
     const label_rks =
         await label_E({...LABELS.RKS, data_b: rks_b, data_m: rks_m});
@@ -234,7 +232,7 @@ function userDelta2Labels(data) {
         if (isNaN(+T)) {
             return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
         } else {
-            const text = getSign(T) + getRoundedNumberStr(Math.abs(T), 3);
+            const text = getSign(T) + round(Math.abs(T), 2);
             return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
         }
 

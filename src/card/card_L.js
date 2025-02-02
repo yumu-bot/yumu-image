@@ -1,9 +1,8 @@
 import {
     getImageFromV3,
-    getDecimals,
     implantImage,
     implantSvgBody,
-    replaceText,
+    replaceText, rounds,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_K} from "./card_K.js";
@@ -102,8 +101,10 @@ export async function card_L(data = {
             }
 
             for (const v of index_arr) {
-                index_b_arr.push(getDecimals(v, 2).toString());
-                index_m_arr.push(getDecimals(v, 3).toString());
+                const vn = rounds(v, 2)
+
+                index_b_arr.push(vn.integer);
+                index_m_arr.push(vn.decimal);
             }
             card_icon = getImageFromV3('object-score-beatsperminute.png');
         } break;

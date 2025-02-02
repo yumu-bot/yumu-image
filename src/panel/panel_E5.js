@@ -1,22 +1,28 @@
 import {
     exportJPEG,
     getBeatMapTitlePath,
-    getDecimals,
     getDiffBG,
     getGameMode,
     getImageFromV3,
     getMapStatusImage,
     getNowTimeStamp,
     getPanelNameSVG,
-    getRoundedNumberStr,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall,
     getTimeDifference,
     implantImage,
     implantSvgBody,
     readTemplate,
     replaceText,
-    replaceTexts, getFileSize, od2ms, ar2ms, cs2px, isNotBlankString, isNotNumber, getDifficultyName, isNumber
+    replaceTexts,
+    getFileSize,
+    od2ms,
+    ar2ms,
+    cs2px,
+    isNotBlankString,
+    isNotNumber,
+    getDifficultyName,
+    isNumber,
+    rounds,
+    round
 } from "../util/util.js";
 import moment from "moment";
 import {
@@ -388,13 +394,13 @@ const component_E1 = (
     const text_arr = [
         {
             font: "poppinsBold",
-            text: getRoundedNumberStrLarge(star, 3),
+            text: rounds(star, 2).integer,
             size: 84,
             color: '#fff',
         },
         {
             font: "poppinsBold",
-            text: getRoundedNumberStrSmall(star, 3),
+            text: rounds(star, 2).decimal,
             size: 48,
             color: '#fff',
         },
@@ -441,7 +447,7 @@ const component_E2 = (
 
     const pass_percent = data?.play > 0 ? Math.round(data?.pass / data?.play * 100) : 0;
 
-    const public_rating = poppinsBold.getTextPath(getRoundedNumberStr(data?.public_rating, 2) + ' / 10', 475, 28, 18, 'right baseline', '#fff');
+    const public_rating = poppinsBold.getTextPath(round(data?.public_rating, 1) + ' / 10', 475, 28, 18, 'right baseline', '#fff');
     const percent = poppinsBold.getTextPath(data?.pass + ' / ' + data?.play + ' [' + pass_percent + '%]', 475, 138, 18, 'right baseline', '#fff');
 
 
@@ -539,8 +545,8 @@ const component_E5 = (
     const reg_base = /(?<=<g id="Base_OE5">)/;
     const rect = PanelDraw.Rect(0, 0, 90, 60, 20, '#382e32', 1);
 
-    const fav = poppinsBold.getTextPath(getRoundedNumberStr(data?.favorite, 1), 78, 25, 16, 'right baseline', '#fff')
-    const pc = poppinsBold.getTextPath(getRoundedNumberStr(data?.playcount, 1), 78, 47, 16, 'right baseline', '#fff')
+    const fav = poppinsBold.getTextPath(round(data?.favorite, 1, -1), 78, 25, 16, 'right baseline', '#fff')
+    const pc = poppinsBold.getTextPath(round(data?.playcount, 1, -1), 78, 47, 16, 'right baseline', '#fff')
 
     svg = replaceTexts(svg, [fav, pc], reg_text);
     svg = implantImage(svg, 18, 18, 12, 10 - 1, 1, getImageFromV3('object-beatmap-favorite.png'), reg_text);
@@ -872,12 +878,12 @@ const component_E8 = (
     const score = getMultipleTextPath([
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrLarge(data?.score, (data?.mods.length <= 4) ? -1 : 0),
+                text: rounds(data?.score, -4, (data?.mods.length <= 4) ? 1 : 0).integer,
                 size: 56,
             },
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrSmall(data?.score, (data?.mods.length <= 4) ? -1 : 0),
+                text: rounds(data?.score, -4, (data?.mods.length <= 4) ? 1 : 0).decimal,
                 size: 36,
             }
         ],
@@ -916,12 +922,12 @@ const component_E9 = (
     const accuracy = getMultipleTextPath([
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrLarge((data?.accuracy || 0) * 100, 3),
+                text: rounds((data?.accuracy || 0) * 100, 2).integer,
                 size: 60,
             },
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrSmall((data?.accuracy || 0) * 100, 3) + ' %',
+                text: rounds((data?.accuracy || 0) * 100, 2).decimal + ' %',
                 size: 36
             }
         ],
@@ -982,9 +988,9 @@ const component_E10 = (
     } else if (data.ratio === 0) {
         ratio_text += '0'
     } else if (data.ratio >= 1) {
-        ratio_text += (getRoundedNumberStr(data.ratio, 2) + ' : 1')
+        ratio_text += (round(data.ratio, 1) + ' : 1')
     } else {
-        ratio_text += ('1 : ' + getRoundedNumberStr(1 / data.ratio, 2))
+        ratio_text += ('1 : ' + round(1 / data.ratio, 1))
     }
 
     const perfect_great_ratio = (getGameMode(data?.mode, 1) === 'm') ?
@@ -998,7 +1004,7 @@ const component_E10 = (
         && isNumber(data?.effective_miss_count)
         && (Math.abs(data?.effective_miss_count - Math.round(data?.effective_miss_count)) > 1e-3)
 
-    const effective_miss_text = 'effective miss: ' + getRoundedNumberStr(data?.effective_miss_count || 0, 3)
+    const effective_miss_text = 'effective miss: ' + round(data?.effective_miss_count || 0, 2)
 
     const effective_miss = is_effective_miss_shown ?
         poppinsBold.getTextPath(
@@ -1125,9 +1131,10 @@ const PanelEGenerate = {
     score2componentE3: (score, original) => {
         const mode = getGameMode(score?.ruleset_id, 1);
 
+        const bpm = rounds(score?.beatmap?.bpm, 2)
         const bpm_r = (score?.beatmap?.bpm > 0) ? (60000 / score?.beatmap?.bpm).toFixed(0) + 'ms' : '-';
-        const bpm_b = getDecimals(score?.beatmap?.bpm, 2);
-        const bpm_m = getDecimals(score?.beatmap?.bpm, 3);
+        const bpm_b = bpm.integer
+        const bpm_m = bpm.decimal
         const bpm_p = getProgress(score?.beatmap?.bpm, 90, 270);
 
         const length_r = Math.floor(score?.beatmap?.total_length / 60) + ':' + (score?.beatmap?.total_length % 60).toFixed(0).padStart(2, '0');
@@ -1400,14 +1407,16 @@ const getProgress = (x, min, max, bottom = 1 / 16) => {
 const stat2label = (stat, remark, progress, original, isDisplay) => {
     const hasChanged = Math.abs(original - stat) > 0.1;
 
-    const stat_b = getDecimals(stat, 2);
-    const stat_m = getDecimals(stat, 4);
+    const stat_number = rounds(stat, 1)
+
+    const stat_b = stat_number.integer
+    const stat_m = stat_number.decimal
 
     if (isDisplay) return {
         remark: remark,
         data_b: stat_b,
         data_m: stat_m,
-        data_a: hasChanged ? (' [' + getDecimals(original, 2) + getDecimals(original, 4) + ']') : '',
+        data_a: hasChanged ? (' [' + round(original, 1) + ']') : '',
         bar_progress: progress,
     }
     else return {

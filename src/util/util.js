@@ -181,7 +181,8 @@ export function asyncBeatMapFromDatabase(bid, sid) {
             "SET_ID": sid,
             "AuthorizationX": SUPER_KEY,
         }
-    }).catch(_ => {})
+    }).catch(_ => {
+    })
 }
 
 
@@ -194,7 +195,8 @@ export function deleteBeatMapFromDatabase(bid) {
         headers: {
             "AuthorizationX": SUPER_KEY,
         }
-    }).catch(_ => {})
+    }).catch(_ => {
+    })
 }
 
 /**
@@ -285,7 +287,7 @@ export function isASCII(str = '') {
  */
 export function isNumber(num) {
     if (typeof num == "number") {
-        return ! Number.isNaN(num)
+        return !Number.isNaN(num)
     } else if (typeof num == "string") {
         const pattern = /^\s*(-?[0-9]+[.]?[0-9]*)\s*$/;
         return pattern.test(num?.toString());
@@ -307,42 +309,42 @@ export function isHexColor(str) {
  * @return boolean
  */
 export function isNotNull(object) {
-    return ! isNull(object)
+    return !isNull(object)
 }
 
 /**
  * @return boolean
  */
 export function isNotNullOrEmptyObject(object) {
-    return ! isNullOrEmptyObject(object)
+    return !isNullOrEmptyObject(object)
 }
 
 /**
  * @return boolean
  */
 export function isNotBlankString(str = "") {
-    return ! isBlankString(str)
+    return !isBlankString(str)
 }
 
 /**
  * @return boolean
  */
 export function isNotEmptyString(str = "") {
-    return ! isEmptyString(str)
+    return !isEmptyString(str)
 }
 
 /**
  * @return boolean
  */
 export function isNotEmptyArray(arr = []) {
-    return ! isEmptyArray(arr)
+    return !isEmptyArray(arr)
 }
 
 /**
  * @return boolean
  */
 export function isNotNumber(str = '') {
-    return ! isNumber(str)
+    return !isNumber(str)
 }
 
 export function requireNonNullElse(obj, obj2) {
@@ -634,615 +636,252 @@ ${svgBody}
 // 数字处理并显示
 
 /**
- * @function 数字处理（去掉数字尾巴的0000
- * @return {String} 返回处理好的字符串
+ * 第二版处理数字。如果要分开，请使用 rounds
  * @param number 数字
+ * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，负数用于特别大的数
+ * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格
+ * @returns {string}
  */
-export function getRoundedTailNumber(number = 0) {
-    const numberStr = (number !== null) ? number.toString() : '';
-
-    for (let i = 0; i < numberStr.length; i++) {
-
-    }
-
-    if (numberStr.substr(-3) === '.00') return numberStr.slice(0, -3);
-    if (numberStr.substr(-2) === '.0') return numberStr.slice(0, -2);
-}
-
-
-/**
- * @function 数字处理（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
- * @return {String} 返回小数字的字符串
- * @param number 数字
- * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
- * lv5是保留两位数，但是是为了比赛特殊设置的，进位使用了万-亿的设置
- * lv4是保留四位数 945671 -> 945.6710K
- * lv3是保留两位数,945671 -> 945.67K
- * lv2是保留一位数
- * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
- * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
- * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
- * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
- * lv-3是只把前三位数放大，且不补足，无单位，45671 -> 45 671, 450 -> 450
- */
-export function getRoundedNumberStr(number = 0, level = 0, level2 = level) {
-    if (typeof number === 'number') return getRoundedNumberStrLarge(number, level) + getRoundedNumberStrSmall(number, level2);
-    else return '0';
+export function round(number = 0, level = 0, sub_level = 0) {
+    const r = rounds(number, level, sub_level)
+    return r.integer + r.decimal
 }
 
 /**
- * @function 数字处理（大数字）（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
- * @return {String} 返回大数字的字符串
+ * 第二版处理数字
  * @param number 数字
- * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4 注意配套使用
- * lv5是保留两位数，但是是为了比赛特殊设置的，进位使用了万-亿的设置
- * lv4是保留四位数 945671 -> 945.6710K
- * lv3是保留两位数,945671 -> 945.67K
- * lv2是保留一位数
- * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
- * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
- * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
- * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
- * lv-3是只把前三位数放大，且不补足，无单位，45671 -> 45 671, 450 -> 450
- * lv-4是只把后两位数缩小，且不补足，无单位，45671 -> 45 671, 450 -> 4 50
+ * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，decimal
+ * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格，3 附加输出分好的整数部分和小数部分
+ * @returns {{integer: string, decimal: string} | {integer: string, decimal: string, int: number, dec: number}}
  */
-export function getRoundedNumberStrLarge(number = 0, level = 0) {
-
-    switch (level) {
-        case -4:
-            return f_3_2_0(2);
-            break;
-        case -3:
-            return f_3_2_0(3);
-            break;
-        case -2:
-            return f_3_2_0(4);
-            break;
-        case -1:
-            return f_1();
-            break;
-        case 0:
-            return f_3_2_0(4);
-            break;
-        case 1:
-            return f1();
-            break;
-        case 2:
-        case 3:
-        case 4:
-            return f2_4();
-            break;
-        case 5:
-            return f5();
-            break;
+export function rounds(number = 0, level = 0, sub_level = 0) {
+    if (isNotNumber(number)) return {
+        integer: (number || '') + '',
+        decimal: '',
     }
 
-    function f_1() {
-        if (number <= Math.pow(10, 7)) {
-            return number.toString().padStart(7, '0').slice(0, -4);// 4 5671 -> 004
+    let int_str = ''
+    let dec_str = ''
 
-        } else {
-            return SpecialRoundedLargeNum(number, 4);
-        }
-    }
+    // 尽可能缩短
+    if (sub_level === -1) {
+        {
+            const s0 = '0.';
+            const s1 = number.toString().slice(0, 1) + '.';
+            const s2 = number.toString().slice(0, 2);
 
-    function f_3_2_0(times = 4) {
-        if (number <= Math.pow(10, times)) {
-            return Math.floor(number).toString()
-
-        } else {
-            return SpecialRoundedLargeNum(number, times);
-        }
-    }
-
-    function f1() {
-        let o;
-        let s0 = '0.';
-        let s1 = number.toString().slice(0, 1) + '.';
-        let s2 = number.toString().slice(0, 2);
-
-        if (number < Math.pow(10, 3)) {
-            o = Math.floor(number).toString();
-        } else if (number < Math.pow(10, 4)) {
-            o = s1;
-        } else if (number < Math.pow(10, 5)) {
-            o = s2;
-        } else if (number < Math.pow(10, 6)) {
-            o = s0;
-        } else if (number < Math.pow(10, 7)) {
-            o = s1;
-        } else if (number < Math.pow(10, 8)) {
-            o = s2;
-        } else if (number < Math.pow(10, 9)) {
-            o = s0;
-        } else if (number < Math.pow(10, 10)) {
-            o = s1;
-        } else if (number < Math.pow(10, 11)) {
-            o = s2;
-        } else if (number < Math.pow(10, 12)) {
-            o = s0;
-        } else if (number < Math.pow(10, 13)) {
-            o = s1;
-        } else if (number < Math.pow(10, 14)) {
-            o = s2;
-        } else if (number < Math.pow(10, 15)) {
-            o = s0;
-        } else if (number < Math.pow(10, 16)) {
-            o = s1;
-        } else o = Math.floor(number).toString();
-        return o;
-    }
-
-    //旧 level
-    function f2_4() {
-        while (Math.abs(number) >= 1000) {
-            number /= 1000;
-        }
-
-        //如果小数太小，可不要小数点
-        let o;
-        let b; //boundary
-
-        switch (level) {
-            case 3: b = 0.01; break;
-            case 4: b = 0.0001; break;
-            default: b = 0.1;
-        }
-
-        if (Math.abs(number - Math.floor(number)) >= b) {
-            o = Math.floor(number).toString() + '.';
-        } else {
-            o = Math.floor(number).toString();
-        }
-        return o;
-    }
-
-    function f5() {
-        while (Math.abs(number) >= 10000) {
-            number /= 10000;
-        }
-
-        //如果小数太小，可不要小数点
-        let o;
-        if (Math.abs(number - Math.floor(number)) >= 0.01) {
-            o = Math.floor(number).toString() + '.';
-        } else {
-            o = Math.floor(number).toString();
-        }
-        return o;
-    }
-
-    function SpecialRoundedLargeNum(number, times = 4) {
-        let p = 0;
-
-        if (number <= Math.pow(10, 2 * times)) {
-            p = times; //5671 1234 -> 5671
-
-        } else if (number <= Math.pow(10, 3 * times)) {
-            p = 2 * times; //794 5671 1234 -> 794
-
-        } else if (number <= Math.pow(10, 4 * times)) {
-            p = 3 * times; //794 5671 1234 0000 -> 794
-
-        } else {
-            return '';
-        }
-
-        let re = Math.floor(number / Math.pow(10, p));
-
-        if (re === 0) {
-            return ''
-        } else {
-            return re.toString()
-        }
-    }
-
-}
-
-/**
- * @function 数字处理（小数字）（缩进数字，与主bot的DataUtil - getRoundedNumberStr效果一样
- * @return {String} 返回小数字的字符串
- * @param number 数字
- * @param level 等级，现在支持lv -1, 0, 1, 2, 3, 4, 5 注意配套使用
- * lv5是保留两位数，但是是为了比赛特殊设置的，进位使用了万-亿的设置
- * lv4是保留四位数 945671 -> 945.6710K
- * lv3是保留两位数,945671 -> 945.67K
- * lv2是保留一位数
- * lv1是保留一位数且尽可能缩短,0-999-1.0K-99K-0.1M-99M
- * lv0是只把前四位数放大，且不补足，无单位 7945671 -> 794 5671, 12450 -> 1 2450
- * lv-1是只把前四位数放大，且补足到7位，无单位 7945671 -> 794 5671, 12450 -> 001 2450 0 -> 0000000
- * lv-2是只把前四位数放大，且不补足，无单位，留空格 7945671 -> 794 5671, 12450 -> 1 2450
- * lv-3是只把前三位数放大，且不补足，无单位，45671 -> 45 671, 450 -> 450
- * lv-4是只把后两位数缩小，且不补足，无单位，45671 -> 45 671, 450 -> 4 50
- */
-export function getRoundedNumberStrSmall(number = 0, level = 0) {
-
-    switch (level) {
-        case -4:
-            return f0_3(2);
-            break;
-        case -3:
-            return f0_3(3);
-            break;
-        case -2:
-            return f_2(4);
-            break;
-        case -1:
-            return f_1();
-            break;
-        case 0:
-            return f0_3(4);
-            break;
-        case 1:
-            return f1();
-            break;
-        case 2:
-        case 3:
-        case 4:
-            return f2_4();
-            break;
-        case 5:
-            return f5();
-            break;
-    }
-
-    function f_2(times = 4) {
-        if (number <= Math.pow(10, times)) {
-            return ''
-        } else {
-            return AddSpaceForSmallNum(
-                SpecialRoundedSmallNum(number, times)
-            );
-        }
-    }
-
-    function f_1() {
-        if (number <= Math.pow(10, 4)) {
-            return number.toString().padStart(4, '0');// 000 0671 -> 0671
-        } else {
-            return SpecialRoundedSmallNum(number, 4);
-        }
-    }
-
-    function f0_3(times = 4) {
-        if (number <= Math.pow(10, times)) {
-            return ''
-        } else {
-            return SpecialRoundedSmallNum(number, times);
-        }
-    }
-
-    function f1() {
-        let o;
-        let unit = getRoundedNumberUnit(number, level);
-        let s0 = Math.floor(number).toString().slice(0, 1);
-        let s1 = Math.floor(number).toString().slice(1, 2);
-
-        if (number < Math.pow(10, 3)) {
-            o = unit;
-        } else if (number < Math.pow(10, 4)) {
-            o = s1 + unit;
-        } else if (number < Math.pow(10, 5)) {
-            o = unit;
-        } else if (number < Math.pow(10, 6)) {
-            o = s0 + unit;
-        } else if (number < Math.pow(10, 7)) {
-            o = s1 + unit;
-        } else if (number < Math.pow(10, 8)) {
-            o = unit;
-        } else if (number < Math.pow(10, 9)) {
-            o = s0 + unit;
-        } else if (number < Math.pow(10, 10)) {
-            o = s1 + unit;
-        } else if (number < Math.pow(10, 11)) {
-            o = unit;
-        } else if (number < Math.pow(10, 12)) {
-            o = s0 + unit;
-        } else if (number < Math.pow(10, 13)) {
-            o = s1 + unit;
-        } else if (number < Math.pow(10, 14)) {
-            o = unit;
-        } else if (number < Math.pow(10, 15)) {
-            o = s0 + unit;
-        } else if (number < Math.pow(10, 16)) {
-            o = s1 + unit;
-        } else o = '';
-        return o;
-    }
-
-    //旧 level
-
-    function f2_4() {
-        let o;
-        let unit = getRoundedNumberUnit(number, level);
-        while (number >= 1000 || number <= -1000) {
-            number /= 1000;
-        }
-
-        //如果小数太小，可不要小数
-        let b; //boundary
-
-        switch (level) {
-            case 3: b = 2; break;
-            case 4: b = 4; break;
-            default: b = 1;
-        }
-
-        if (Math.abs(number - Math.floor(number)) < Math.pow(10, - b) || number.toString().indexOf('.') === -1) {
-            return unit;
-        }
-
-        let numStr = Math.abs(number - Math.floor(number)).toString();
-
-        if (numStr?.length >= 2) {
-            o = numStr.slice(2, 2 + b)
-
-            while (o.length > 0 && o.slice(-1) == '0') {
-                o = o.slice(0, -1)
+            if (number < Math.pow(10, 3)) {
+                int_str = Math.floor(number).toString();
+            } else if (number < Math.pow(10, 4)) {
+                int_str = s1;
+            } else if (number < Math.pow(10, 5)) {
+                int_str = s2;
+            } else if (number < Math.pow(10, 6)) {
+                int_str = s0;
+            } else if (number < Math.pow(10, 7)) {
+                int_str = s1;
+            } else if (number < Math.pow(10, 8)) {
+                int_str = s2;
+            } else if (number < Math.pow(10, 9)) {
+                int_str = s0;
+            } else if (number < Math.pow(10, 10)) {
+                int_str = s1;
+            } else if (number < Math.pow(10, 11)) {
+                int_str = s2;
+            } else if (number < Math.pow(10, 12)) {
+                int_str = s0;
+            } else if (number < Math.pow(10, 13)) {
+                int_str = s1;
+            } else if (number < Math.pow(10, 14)) {
+                int_str = s2;
+            } else if (number < Math.pow(10, 15)) {
+                int_str = s0;
+            } else if (number < Math.pow(10, 16)) {
+                int_str = s1;
+            } else {
+                int_str = Math.floor(number).toString()
             }
-
-            return o + unit;
-        } else {
-            return unit;
-        }
-    }
-
-    function f5() {
-        let o;
-        let unit = getRoundedNumberUnit(number, level);
-        while (number >= 10000 || number <= -10000) {
-            number /= 10000;
-        }
-        let numStr = number.toString();
-
-        if (numStr.indexOf('.') === -1) {
-            return unit;
-        } else {
-            o = numStr.slice(numStr.indexOf('.') + 1, numStr.indexOf('.') + 3);
         }
 
-        if (o === '00') o = '';
-        if (o.substring(1) === '0') o = o.slice(0, 1);
+        {
+            const u = unit(number, -1);
+            const s0 = Math.floor(number).toString().slice(0, 1);
+            const s1 = Math.floor(number).toString().slice(1, 2);
 
-        return o + unit;
-    }
-
-    function AddSpaceForSmallNum(number) {
-
-        const space = " ";
-        const str = number.toString().trim();
-
-        let outStr = "";
-
-        for (const i in str) {
-            if (i % 4 == 0) {
-                outStr += space;
+            if (number < Math.pow(10, 3)) {
+                dec_str = u;
+            } else if (number < Math.pow(10, 4)) {
+                dec_str = s1 + u;
+            } else if (number < Math.pow(10, 5)) {
+                dec_str = u;
+            } else if (number < Math.pow(10, 6)) {
+                dec_str = s0 + u;
+            } else if (number < Math.pow(10, 7)) {
+                dec_str = s1 + u;
+            } else if (number < Math.pow(10, 8)) {
+                dec_str = u;
+            } else if (number < Math.pow(10, 9)) {
+                dec_str = s0 + u;
+            } else if (number < Math.pow(10, 10)) {
+                dec_str = s1 + u;
+            } else if (number < Math.pow(10, 11)) {
+                dec_str = u;
+            } else if (number < Math.pow(10, 12)) {
+                dec_str = s0 + u;
+            } else if (number < Math.pow(10, 13)) {
+                dec_str = s1 + u;
+            } else if (number < Math.pow(10, 14)) {
+                dec_str = u;
+            } else if (number < Math.pow(10, 15)) {
+                dec_str = s0 + u;
+            } else if (number < Math.pow(10, 16)) {
+                dec_str = s1 + u;
+            } else {
+                dec_str = '';
             }
-            outStr += str.charAt(i);
         }
+    } else if (level >= 0) {
+        // 3.02 -> 3 / 0.02000000004
+        const int = Math.floor(number)
+        const dec = Math.round((number - int) * Math.pow(10, level)) / Math.pow(10, level)
 
-        return outStr;
-    }
+        int_str = int.toString()
+        dec_str = dec.toString().slice(2, 2 + level)
 
-    function SpecialRoundedSmallNum(number, times = 4) {
+        do {
+            dec_str.slice(0, dec_str.length - 1)
+        } while (dec_str.length > 0 && dec_str.charAt(dec_str.length - 1) === '0')
+
+        if (dec_str.length > 0) {
+            dec_str = '.' + dec_str + unit(number, 0)
+        } else {
+            dec_str = unit(number, 0)
+        }
+    } else {
+        const times = Math.abs(level)
+
         let s = 0;
         let o;
 
         if (number < Math.pow(10, 2 * times)) {
             s = -times; //5671 1234 -> 1234
-
         } else if (number < Math.pow(10, 3 * times)) {
             s = -2 * times; //794 5671 1234 -> 5671 1234
-
         } else if (number < Math.pow(10, 4 * times)) {
             s = -3 * times; //794 5671 1234 0000 -> 5671 1234 0000
-
         } else if (number < Math.pow(10, 5 * times)) {
             s = -4 * times;
-
         }
-        o = Math.round(number).toString().slice(s);
-        return o;
+
+        const str = (sub_level === 1) ? Math.floor(number).toString().padStart(7, '0') : Math.floor(number).toString()
+
+        int_str = str.slice(0, s)
+        dec_str = str.slice(s)
+
+        // 加空格
+        if (sub_level === 2) {
+            let space_str = "";
+
+            for (const i in dec_str) {
+                if (i % 4 == 0) {
+                    space_str += space;
+                }
+
+                space_str += dec_str.charAt(i);
+            }
+
+            dec_str = space_str
+        }
+
+    }
+
+    if (sub_level === 3) {
+        return {
+            integer: int_str,
+            decimal: dec_str,
+
+            int: parseInt(int_str),
+            dec: parseFloat('0.' + dec_str),
+        }
+    } else {
+        return {
+            integer: int_str,
+            decimal: dec_str,
+        }
     }
 }
-
-//只给 level 1, 2, 3, 4 提供单位
-function getRoundedNumberUnit(number = 0, level = 0) {
-    if (isNaN(number)) return '';
-
-    let unit;
-    let m = 3;
-
-    switch (level) {
-        case 1:
-            return f1();
-            break;
-        case 2:
-        case 3:
-        case 4:
-            return f2_4();
-            break;
-        case 5:
-            return f5();
-            break;
-    }
-
-    function f2_4() {
-
-        if (number < Math.pow(10, 3)) {  //level==1->100 level==2->1000
-            unit = '';
-        } else if (number < Math.pow(10, 6)) {
-            unit = 'K';
-        } else if (number < Math.pow(10, 9)) {
-            unit = 'M'; //Million
-        } else if (number < Math.pow(10, 12)) {
-            unit = 'B'; //Billion
-        } else if (number < Math.pow(10, 15)) {
-            unit = 'T'; //Trillion
-        } else if (number < Math.pow(10, 18)) {
-            unit = 'Q'; //Quadrillion
-        } else if (number < Math.pow(10, 21)) {
-            unit = 'U'; //Quintillion
-        } else if (number < Math.pow(10, 24)) {
-            unit = 'S'; //Sextillion
-        } else {
-            unit = 'Z' //Zillion 反正很多
-        }
-        return unit;
-    }
-
-    function f1() {
-
-        if (number < Math.pow(10, 3)) { //0.1K，但是数据还没到1K的位置，就给100了
-            unit = '';
-        } else if (number < Math.pow(10, 5)) { // 1000 -> 1.0K 99 000 -> 99K 从这开始，和上面相比就要减一了
-            unit = 'K';
-        } else if (number < Math.pow(10, 8)) {
-            unit = 'M';
-        } else if (number < Math.pow(10, 11)) {
-            unit = 'B';
-        } else if (number < Math.pow(10, 14)) {
-            unit = 'T';
-        } else if (number < Math.pow(10, 17)) {
-            unit = 'Q';
-        } else if (number < Math.pow(10, 20)) {
-            unit = 'U';
-        } else if (number < Math.pow(10, 23)) {
-            unit = 'S';
-        } else {
-            unit = 'Z'
-        }
-        return unit;
-    }
-
-    function f5() {
-
-        if (number < Math.pow(10, 4)) {  //level==1->100 level==2->1000
-            unit = '';
-        } else if (number < Math.pow(10, 8)) {
-            unit = 'w'; //万
-        } else if (number < Math.pow(10, 12)) {
-            unit = 'e'; //亿
-        } else if (number < Math.pow(10, 16)) {
-            unit = 'ew'; //亿万
-        } else if (number < Math.pow(10, 20)) {
-            unit = 'ee'; //亿亿
-        } else {
-            unit = ''
-        }
-        return unit;
-    }
-}
-
-/*
-export function getV3Score(v1score = 0, acc = 0.0, combo = 1, max_combo = 1, mods = [''], gamemode = 'osu') {
-
-    let score = 1000000;
-    let mode = getGameMode(gamemode, 1);
-    let modBonus = [];
-    let bonus = 1;
-    let comboRate = 0.7;
-    let accRate = 0.3;
-    let accIndex = 10;
-
-    switch (mode) {
-        case 'o' : {
-            modBonus = ModBonusSTD;
-            comboRate = 0.7;
-            accRate = 0.3;
-            accIndex = 3.6;
-        }
-            break;
-        case 't' : {
-            modBonus = ModBonusTAIKO;
-            comboRate = 0.25;
-            accRate = 0.75;
-            accIndex = 3.6;
-        }
-            break;
-        case 'c' : { //实现没做好，暂时使用 std 的方案
-            modBonus = ModBonusCATCH;
-            comboRate = 0.7;
-            accRate = 0.3;
-            accIndex = 3.6;
-        }
-            break;
-        case 'm' : { //骂娘不需要转换
-
-            //modBonus = ModBonusMANIA;
-            //comboRate = 0.01;
-            //accRate = 0.99;
-            //accIndex = 10;
-
-
-            return v1score;
-        }
-            break;
-    }
-
-    for (const v of mods) {
-        bonus *= modBonus[v];
-    }
-
-    let comboScore = comboRate * (combo / Math.max(max_combo, 1));
-    let accScore = accRate * Math.pow(acc, accIndex);
-
-    return Math.floor(score * bonus * (comboScore + accScore));
-
-}
-*/
-
-//色彩管理。或许开个 color util 会更好？=====================================================================================
-
 
 /**
- * @function 预处理星数（或其他小数）成想要的部分。不止星数！
- * @return 返回 8, 0.34, 8., 34。前两个是数据，后两个是字符串
- * @param number 小数
- * @param whichData 要哪个数据？可输入0-4，分别是0整数、1小数、2整数带小数点部分、3纯小数部分（两位以下，4纯小数部分（一位以下
+ * 重写了获取单位的逻辑
+ * @param number 数字
+ * @param pattern 种类，0 常规，-1 缩短，1 中文语境
+ * @returns {string}
  */
-export function getDecimals(number = 0, whichData = 0) {
+function unit(number = 0, pattern = 0) {
+    switch (pattern) {
+        case 0: {
+            if (number < Math.pow(10, 3)) {
+                return '';
+            } else if (number < Math.pow(10, 6)) {
+                return 'K';
+            } else if (number < Math.pow(10, 9)) {
+                return 'M'; //Million
+            } else if (number < Math.pow(10, 12)) {
+                return 'B'; //Billion
+            } else if (number < Math.pow(10, 15)) {
+                return 'T'; //Trillion
+            } else if (number < Math.pow(10, 18)) {
+                return 'Q'; //Quadrillion
+            } else if (number < Math.pow(10, 21)) {
+                return 'U'; //Quintillion
+            } else if (number < Math.pow(10, 24)) {
+                return 'S'; //Sextillion
+            } else {
+                return 'Z' //Zillion 反正很多
+            }
+        }
 
-    //去除小数，保留两位
-    const sr = (Math.round(number * 100) / 100) || 0;
+        case -1: {
+            if (number < Math.pow(10, 3)) { //0.1K，但是数据还没到1K的位置，就给100了
+                return '';
+            } else if (number < Math.pow(10, 5)) { // 1000 -> 1.0K 99 000 -> 99K 从这开始，和上面相比就要减一了
+                return 'K';
+            } else if (number < Math.pow(10, 8)) {
+                return 'M';
+            } else if (number < Math.pow(10, 11)) {
+                return 'B';
+            } else if (number < Math.pow(10, 14)) {
+                return 'T';
+            } else if (number < Math.pow(10, 17)) {
+                return 'Q';
+            } else if (number < Math.pow(10, 20)) {
+                return 'U';
+            } else if (number < Math.pow(10, 23)) {
+                return 'S';
+            } else {
+                return 'Z'
+            }
+        }
 
-    //避免浮点缺陷
-    const sr_b = Math.floor(sr);
-    const sr_mm = Math.round((sr - sr_b) * 100) / 100;
-    const sr_m = Math.round((sr - sr_b) * 10) / 10;
+        case 1: {
+            if (number < Math.pow(10, 4)) {  //level==1->100 level==2->1000
+                return '';
+            } else if (number < Math.pow(10, 8)) {
+                return 'w'; //万
+            } else if (number < Math.pow(10, 12)) {
+                return 'e'; //亿
+            } else if (number < Math.pow(10, 16)) {
+                return 'ew'; //亿万
+            } else if (number < Math.pow(10, 20)) {
+                return 'ee'; //亿亿
+            } else {
+                return ''
+            }
+        }
 
-    let text_sr_b;
-    if (sr_mm === 0) {
-        text_sr_b = sr_b.toString();
-    } else {
-        text_sr_b = sr_b + '.';
+        default:
+            return ''
     }
-
-    let text_sr_mm = sr_mm.toString().slice(2, 4);
-    if (text_sr_mm.slice(1) === '0') {
-        text_sr_mm = text_sr_mm.slice(0, 1);
-    } else if (text_sr_mm === '00') {
-        text_sr_mm = '';
-    }
-
-    let text_sr_m = sr_m.toString().slice(2, 3);
-    if (text_sr_m === '0') {
-        text_sr_m = '';
-    }
-
-    switch (whichData) {
-        case 0:
-            return sr_b;
-        case 1:
-            return sr_mm;
-        case 2:
-            return text_sr_b;
-        case 3:
-            return text_sr_mm;
-        case 4:
-            return text_sr_m;
-    }
-
 }
 
 /**

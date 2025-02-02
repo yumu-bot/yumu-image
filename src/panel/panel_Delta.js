@@ -2,10 +2,9 @@ import {
     exportPNG,
     getDiffBG,
     getImageFromV3,
-    getRoundedNumberStr,
     implantImage,
     implantSvgBody, readTemplate,
-    replaceTexts
+    replaceTexts, round
 } from "../util/util.js";
 import {lineSeedSans, poppinsBold} from "../util/font.js";
 import {getMapAttributes} from "../util/compute-pp.js";
@@ -42,7 +41,6 @@ export async function router_svg(req, res) {
 /**
  * 某个比赛的信息展示
  * @param data
- * @param reuse
  * @return {Promise<string>}
  */
 export async function panel_Delta(data = {
@@ -52,7 +50,7 @@ export async function panel_Delta(data = {
     mod: 'NM',
     position: '1',
     hasBG: true
-}, reuse = false) {
+}) {
     // 导入模板
     let svg = readTemplate('template/Panel_Delta.svg');
 
@@ -89,11 +87,11 @@ export async function panel_Delta(data = {
     const length_minute_str = Math.floor(length_num / 60).toString();
     const length_second_str = Math.floor(length_num % 60).toString().padStart(2, '0');
     const bpm_str = Math.round(attr.bpm).toString();
-    const star_str = getRoundedNumberStr(attr.stars, 3);
-    const cs_str = getRoundedNumberStr(attr.cs, 2);
-    const ar_str = getRoundedNumberStr(attr.ar, 2);
-    const od_str = getRoundedNumberStr(attr.od, 2);
-    const round = lineSeedSans.getTextPath(
+    const star_str = round(attr.stars, 2);
+    const cs_str = round(attr.cs, 1);
+    const ar_str = round(attr.ar, 1);
+    const od_str = round(attr.od, 1);
+    const round_data = lineSeedSans.getTextPath(
         lineSeedSans.cutStringTail(data.round || 'Unknown', 42, 783 - 20, true)
         , 391.5, 538, 42, 'center baseline', '#282425');
 
@@ -120,7 +118,7 @@ export async function panel_Delta(data = {
     const length = poppinsBold.getTextPath(length_minute_str + ':' + length_second_str, 1662.5, 820, 58, 'center baseline', '#fff');
 
     // 插入文字
-    svg = replaceTexts(svg, [round, title, artist, difficulty, bid, bpm, mod, star, cs, ar, od, length], reg_text);
+    svg = replaceTexts(svg, [round_data, title, artist, difficulty, bid, bpm, mod, star, cs, ar, od, length], reg_text);
 
     // 插入图片和部件（新方法
     const mod_rrect = PanelDraw.Rect(1360, 100, 186, 82, 0, mod_color);

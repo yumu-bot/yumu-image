@@ -2,8 +2,6 @@ import {
     exportJPEG,
     getImageFromV3,
     getPanelNameSVG,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall,
     implantImage,
     implantSvgBody,
     isNotEmptyArray,
@@ -11,7 +9,7 @@ import {
     isNotNullOrEmptyObject,
     readTemplate,
     replaceText,
-    replaceTexts
+    replaceTexts, rounds
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -280,7 +278,7 @@ async function applySingleVersion(song = {}, scores = [{}]) {
 
 }
 
-// 歌曲有多个版本，或者多个版本、> 5 个难度有成绩
+// 歌曲有多个版本，或者多个版本，> 5 个难度有成绩
 // 会显示最高的 5 个成绩，亦或是显示最高的几个难度
 function applyMultipleVersion(standard = {}, deluxe = {}, score = {}) {
 
@@ -342,8 +340,10 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     const difficulty = song?.ds[index]
     const diff_colors = getMaimaiDifficultyColors(index)
 
-    const main_b = has_score ? getRoundedNumberStrLarge(score?.achievements, 4) : '-'
-    const main_m = has_score ? (getRoundedNumberStrSmall(score?.achievements, 4) + ' %') : ''
+    const achievements = rounds(score?.achievements, 4)
+
+    const main_b = has_score ? achievements.integer : '-'
+    const main_m = has_score ? (achievements.decimal + ' %') : ''
 
     const rating = score?.ra || 0
     const max_rating = getMaimaiMaximumRating(difficulty)
@@ -584,14 +584,18 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
 }
 
 function getJudgeScoreString(score = 0) {
-    let out = (score > 0) ? '+' : ((score < 0) ? '-' : '')
+    const out = (score > 0) ? '+' : ((score < 0) ? '-' : '')
 
-    let large = getRoundedNumberStrLarge(Math.abs(score), 4)
-    const small = getRoundedNumberStrSmall(Math.abs(score), 4)
+    const score_number = rounds(Math.abs(score), 4)
 
-    if (large.startsWith('0')) large = '.'
+    const large = score_number.integer
+    const small = score_number.decimal
 
-    return out + large + small
+    if (large.startsWith('0')) {
+        return out + '.' + small
+    } else {
+        return out + large + small
+    }
 }
 
 // 锚点在右下角

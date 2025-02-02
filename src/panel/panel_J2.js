@@ -5,11 +5,10 @@ import {
     implantSvgBody,
     replaceText,
     replaceTexts,
-    getRoundedNumberStr,
     putCustomBanner,
     getDiffBG,
     getImageFromV3,
-    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray
+    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, round
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -610,9 +609,9 @@ const component_J6 = (
             return prev + curr
         }) / arr.length) || 0
 
-    const y_max = getRoundedNumberStr(pp_max, 1);
-    const y_mid = getRoundedNumberStr((pp_max + pp_min) / 2, 1);
-    const y_min = getRoundedNumberStr(pp_min, 1);
+    const y_max = round(pp_max, 1, -1);
+    const y_mid = round((pp_max + pp_min) / 2, 1, -1);
+    const y_min = round(pp_min, 1, -1);
 
     // 绘制坐标
     const pp_axis =
@@ -819,9 +818,9 @@ const PanelJGenerate = {
                     label_const = LABELS.SR
                     min = min_attr?.star || 0
                     max = max_attr?.star || 0
-                    data_b = getRoundedNumberStr(min, 3)
-                    data_m = getRoundedNumberStr(max, 3)
-                    data_l = getRoundedNumberStr(mid_attr?.star || 0, 3)
+                    data_b = round(min, 2)
+                    data_m = round(max, 2)
+                    data_l = round(mid_attr?.star || 0, 2)
                     bar_min = 0
                     bar_mid = 4.5
                     bar_max = 9
@@ -898,7 +897,7 @@ const PanelJGenerate = {
                 title: Math.round(s?.pp).toString() || '0',
                 title_m: 'PP',
 
-                left: getRoundedNumberStr(star, 3),
+                left: round(star, 2),
                 left_color: star_text_color,
                 left_rrect_color: star_rrect_color,
 

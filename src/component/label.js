@@ -1,8 +1,5 @@
 import {
-    getImageFromV3, getGameMode,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall, getDecimals,
-    implantImage, replaceText, replaceTexts, getAvatar, isASCII, isHexColor, isNotEmptyString,
+    getImageFromV3, getGameMode, implantImage, replaceText, replaceTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, rounds,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor, hex2hsl, PanelColor} from "../util/color.js";
@@ -601,8 +598,9 @@ export async function label_C1(data = {
     const text_name = torusBold.cutStringTail(data.name || '', 18, data.maxWidth || 100);
     const name = torusBold.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
 
-    const score_b = getRoundedNumberStrLarge(data.score || 0, 0);
-    const score_m = getRoundedNumberStrSmall(data.score || 0, 0);
+    const score_number = rounds(data?.score || 0, -4)
+    const score_b = score_number.integer
+    const score_m = score_number.decimal
 
     const score = torusBold.get2SizeTextPath(score_b, score_m, 24, 18, 50, 152.836, 'center baseline', data.scoreTextColor);
 
@@ -653,22 +651,23 @@ export async function label_C2(data = {
   </g>`
 
     //正则
-    let reg_text = /(?<=<g id="Text_LC2">)/;
-    let reg_label = /(?<=<g id="Label_LC2">)/;
-    let reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LC2-1\);">)/;
+    const reg_text = /(?<=<g id="Text_LC2">)/;
+    const reg_label = /(?<=<g id="Label_LC2">)/;
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LC2-1\);">)/;
 
     //定义文本
-    let text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
-    let name = torus.getTextPath(text_name, 32, 13.877, 18, 'left baseline', '#fff');
+    const text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
+    const name = torus.getTextPath(text_name, 32, 13.877, 18, 'left baseline', '#fff');
 
-    let score_b = getRoundedNumberStrLarge(data.score || 0, 3);
-    let score_m = getRoundedNumberStrSmall(data.score || 0, 3);
+    const score_number = rounds(data?.score || 0, 2)
+    const score_b = score_number.integer
+    const score_m = score_number.decimal
 
-    let score = torus.getTextPath(score_b + score_m, 52, 27.877, 14,'left baseline', '#fff');
+    const score = torus.getTextPath(score_b + score_m, 52, 27.877, 14,'left baseline', '#fff');
 
-    let rank = torus.getTextPath(data.rank.toString() || '0', 40, 27.877, 14, 'center baseline', '#fff');
+    const rank = torus.getTextPath(data.rank.toString() || '0', 40, 27.877, 14, 'center baseline', '#fff');
 
-    let label_color = `
+    const label_color = `
     <rect x="30" y="16" width="20" height="14" rx="7" ry="7" style="fill: ${getUserRankColor(data.rank) || '#46393f'};"/>`;
 
     //插入文本
@@ -1546,9 +1545,10 @@ export async function label_M1(data = {
     const diff_name_path = torus.getTextPath(
         torus.cutStringTail(data.difficulty_name, 18, data.maxWidth - 50 - 10, true),
         50, 20, 18, 'left baseline', '#fff');
+    const sr_number = rounds(data.star_rating, 2)
     const star_rating_path = torus.get2SizeTextPath(
-        getDecimals(data.star_rating, 2),
-        getDecimals(data.star_rating, 3),
+        sr_number.integer,
+        sr_number.decimal,
         24,
         18,
         50,
@@ -1575,9 +1575,10 @@ export async function label_M1(data = {
     svg = replaceTexts(svg, [diff_name_path, star_rating_path, mode_icon_path], reg_text);
 
     //星数
-    let sr_b = getDecimals(data.star_rating, 0);
-    let sr_m = getDecimals(data.star_rating, 1);
-    let sr_m_scale = Math.pow(sr_m, 0.8);
+    const sr = rounds(data.star_rating, 1, 3)
+
+    let sr_b = sr.integer
+    let sr_m_scale = Math.pow(sr.dec, 0.8);
 
     //超宽处理
     const dot3 = torus.getTextPath('...',data.maxWidth - 18 ,44 ,18,'right baseline', '#BE2CFA');

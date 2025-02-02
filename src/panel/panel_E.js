@@ -2,18 +2,16 @@ import {
     ar2ms,
     cs2px,
     exportJPEG,
-    getDecimals,
     getDiffBG,
     getGameMode,
     getNowTimeStamp,
     getPanelNameSVG,
-    getRoundedNumberStr,
     getTimeDifference,
     implantImage,
     implantSvgBody,
     od2ms,
     readTemplate,
-    replaceText
+    replaceText, round, rounds
 } from "../util/util.js";
 import {calcPerformancePoints, getDensityArray} from "../util/compute-pp.js";
 import moment from "moment";
@@ -641,15 +639,15 @@ const score2AccIndex = (score) => {
                     return 'AP';
                 case 'SH' :
                 case 'S' :
-                    return '-' + getRoundedNumberStr(Math.ceil(nTotal - nNotMiss), 1) + ' SS';
+                    return '-' + round(Math.ceil(nTotal - nNotMiss), 1, -1) + ' SS';
                 case 'A' :
-                    return '-' + getRoundedNumberStr(Math.ceil(0.9801 * nTotal - nNotMiss), 1) + ' S';
+                    return '-' + round(Math.ceil(0.9801 * nTotal - nNotMiss), 1, -1) + ' S';
                 case 'B' :
-                    return '-' + getRoundedNumberStr(Math.ceil(0.9401 * nTotal - nNotMiss), 1) + ' A';
+                    return '-' + round(Math.ceil(0.9401 * nTotal - nNotMiss), 1, -1) + ' A';
                 case 'C' :
-                    return '-' + getRoundedNumberStr(Math.ceil(0.9001 * nTotal - nNotMiss), 1) + ' B';
+                    return '-' + round(Math.ceil(0.9001 * nTotal - nNotMiss), 1, -1) + ' B';
                 case 'D' :
-                    return '-' + getRoundedNumberStr(Math.ceil(0.8501 * nTotal - nNotMiss), 1) + ' C';
+                    return '-' + round(Math.ceil(0.8501 * nTotal - nNotMiss), 1, -1) + ' C';
                 default :
                     return '~ ' + getApproximateRank(score);
             }
@@ -677,7 +675,7 @@ const score2AccIndex = (score) => {
             default : {
                 const pp_acc = (nGeki * 320 + n300 * 300 + nKatu * 200 + n100 * 100 + n50 * 50) / ((nGeki + n300 + nKatu + n100 + n50 + n0) * 320);
 
-                return pp_acc < 1 ? getRoundedNumberStr(pp_acc * 100, 3) : 'AP';
+                return pp_acc < 1 ? round(pp_acc * 100, 2) : 'AP';
             }
         }
     }
@@ -903,8 +901,8 @@ const score2Labels = (score, calcPP) => {
     }
 
     const bpm_r = (bpm > 0) ? (60000 / bpm).toFixed(0) + 'ms' : '-';
-    const bpm_b = getDecimals(bpm, 2);
-    const bpm_m = getDecimals(bpm, 3);
+    const bpm_b = rounds(bpm, 2).integer
+    const bpm_m = rounds(bpm, 2).decimal
 
     const length_r = Math.floor(drain / 60) + ':' + (drain % 60).toFixed(0).padStart(2, '0');
     const length_b = Math.floor(length / 60) + ':';
@@ -925,19 +923,19 @@ const score2Labels = (score, calcPP) => {
     const hasHPChanged = ((mode !== 'm') && hasAnyMod(mod_int, ["EZ", "HR"]));
 
     const cs_r = cs2px(calcPP.attr.cs, mode);
-    const cs_b = getDecimals(calcPP.attr.cs, 2);
+    const cs_b = rounds(calcPP.attr.cs, 1).integer;
     const cs_m = stat2DataM(hasCSChanged, calcPP.attr.cs, score.beatmap.cs);
 
     const ar_r = ar2ms(calcPP.attr.ar, mode);
-    const ar_b = getDecimals(calcPP.attr.ar, 2);
+    const ar_b = rounds(calcPP.attr.ar, 1).integer;
     const ar_m = stat2DataM(hasARChanged, calcPP.attr.ar, score.beatmap.ar);
 
     const od_r = od2ms(calcPP.attr.od, mode);
-    const od_b = getDecimals(calcPP.attr.od, 2);
+    const od_b = rounds(calcPP.attr.od, 1).integer;
     const od_m = stat2DataM(hasODChanged, calcPP.attr.od, score.beatmap.accuracy);
 
     const hp_r = '-';
-    const hp_b = getDecimals(calcPP.attr.hp, 2);
+    const hp_b = rounds(calcPP.attr.hp, 1).integer;
     const hp_m = stat2DataM(hasHPChanged, calcPP.attr.hp, score.beatmap.drain);
 
     return [{
@@ -962,7 +960,7 @@ const score2Labels = (score, calcPP) => {
 }
 
 export const stat2DataM = (hasChanged = false, after = 0, before = 0) => {
-    return getDecimals(after, 4) + (hasChanged ? (' (' + getDecimals(before, 2) + getDecimals(before, 4) + ')') : '');
+    return rounds(after, 1).decimal + (hasChanged ? (' (' + rounds(before, 1) + ')') : '');
 }
 
 export const data2Label = (remark, data_b, data_m, isDisplay = true) => {

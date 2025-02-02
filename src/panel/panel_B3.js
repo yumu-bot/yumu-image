@@ -266,7 +266,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o1,
                 value: value_o1,
-                round_level: -4,
+                round_level: -2,
                 rank: rank_o1,
                 color: color_o1,
             }));
@@ -283,7 +283,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o2,
                 value: value_o2,
-                round_level: -4,
+                round_level: -2,
                 rank: rank_o2,
                 color: color_o2,
             }));
@@ -309,7 +309,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.AIM,
                 background: background_o1,
                 value: value_o1,
-                round_level: -4,
+                round_level: -2,
                 rank: rank_o1,
                 color: color_o1,
             }));
@@ -328,7 +328,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o2,
                 value: value_o2,
-                round_level: -4,
+                round_level: -2,
                 rank: rank_o2,
                 color: color_o2,
             }));
@@ -357,7 +357,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o1,
                 value: value_o1,
-                round_level: 3,
+                round_level: 2,
                 rank: rank_o1,
                 color: color_o1,
             }));
@@ -371,7 +371,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o2,
                 value: value_o2,
-                round_level: 3,
+                round_level: 2,
                 rank: rank_o2,
                 color: color_o2,
             }));
@@ -392,7 +392,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.AIM,
                 background: background_o1,
                 value: value_o1,
-                round_level: 3,
+                round_level: 2,
                 rank: rank_o1,
                 color: color_o1,
             }));
@@ -406,7 +406,7 @@ export async function panel_B3(data = {
                 label: LABEL_PPP.OVA,
                 background: background_o2,
                 value: value_o2,
-                round_level: 3,
+                round_level: 2,
                 rank: rank_o2,
                 color: color_o2,
             }));
@@ -493,7 +493,7 @@ async function drawMapPlus(plus, label, graph, arr_abbr, arr_name, at_right = fa
                 label: LABEL_PPP[abbr],
                 background: background,
                 value: value,
-                round_level: 3,
+                round_level: 2,
                 rank: rank,
                 color: color,
             }, at_right)
@@ -528,7 +528,7 @@ async function drawUserPlus(plus, label, graph, arr_abbr, arr_name, at_right = f
                 label: LABEL_PPP[abbr],
                 background: background,
                 value: value,
-                round_level: -4,
+                round_level: -2,
                 rank: rank,
                 color: color,
                 rank_size: (rank.startsWith('.') ? 48 : 60) //百分比太大了！

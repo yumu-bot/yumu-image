@@ -160,7 +160,7 @@ export async function panel_B1(data = {
             label: LABEL_PPM[name?.toUpperCase()],
             background: background,
             value: value,
-            round_level: 2,
+            round_level: 1,
             rank: rank,
             color: color,
 
@@ -194,7 +194,7 @@ export async function panel_B1(data = {
                 label: LABEL_PPM[name?.toUpperCase()],
                 background: background,
                 value: value,
-                round_level: 2,
+                round_level: 1,
                 rank: rank,
                 color: color,
 
@@ -217,7 +217,7 @@ export async function panel_B1(data = {
             label: LABEL_PPM.OVA,
             background: bg_1,
             value: value_1,
-            round_level: 0,
+            round_level: -4,
             rank: rank_1,
             color: color_1,
         }));
@@ -232,7 +232,7 @@ export async function panel_B1(data = {
             label: LABEL_PPM.OVA,
             background: bg_2,
             value: value_2,
-            round_level: 0,
+            round_level: -4,
             rank: rank_2,
             color: color_2,
         }));
@@ -247,7 +247,7 @@ export async function panel_B1(data = {
             label: LABEL_PPM.OVA,
             background: bg_1,
             value: value_1,
-            round_level: 0,
+            round_level: -4,
             rank: rank_1,
             color: color_1,
         }));
@@ -262,7 +262,7 @@ export async function panel_B1(data = {
             label: LABEL_PPM.SAN,
             background: san_bg,
             value: san_value,
-            round_level: 0,
+            round_level: -4,
             rank: san_truly_rank,
             color: san_color,
         }));

@@ -3,13 +3,10 @@ import {
     getImageFromV3,
     getMapBG,
     getPanelNameSVG,
-    getRoundedNumberStr,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall,
     implantImage,
     implantSvgBody,
     readTemplate, replaceText,
-    replaceTexts
+    replaceTexts, round, rounds
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
@@ -106,8 +103,8 @@ export async function panel_B2(data = {
 
     // 计算数值
     const total = m?.star || 0;
-
-    const total_path = torus.get2SizeTextPath(getRoundedNumberStrLarge(total, 3), getRoundedNumberStrSmall(total, 3), 60, 36, 960, 614, 'center baseline', '#fff');
+    const total_number = rounds(total, 2)
+    const total_path = torus.get2SizeTextPath(total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', '#fff');
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, total_path], reg_index);
@@ -135,7 +132,7 @@ export async function panel_B2(data = {
             label: LABEL_MM[abbr],
             background: background,
             value: value,
-            round_level: 3,
+            round_level: 2,
             rank: rank,
             color: color,
 
@@ -157,7 +154,7 @@ export async function panel_B2(data = {
         label: LABEL_MM.OV,
         background: background_ov,
         value: total,
-        round_level: 3,
+        round_level: 2,
         rank: rank_ov,
         color: color_ov,
     }));
@@ -165,7 +162,7 @@ export async function panel_B2(data = {
     cardB2s.push(await card_B2({
         label: LABEL_MM.SV,
         value: 'NaN',
-        round_level: 3,
+        round_level: 2,
     }));
 
     //todo NaN
@@ -184,7 +181,7 @@ export async function panel_B2(data = {
 
     // todo 临时的值
     function drawChart(array = [], index = 0, name = "null", x = 0, y = 0, color = '#fff') {
-        return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + torus.getTextPath(name + ": " + getRoundedNumberStr(index, 2), 75 + 1370 + x, -35 + 445 + y, 24, 'center baseline', '#fff')
+        return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + torus.getTextPath(name + ": " + round(index, 1), 75 + 1370 + x, -35 + 445 + y, 24, 'center baseline', '#fff')
     }
 
     svg = replaceTexts(svg, [

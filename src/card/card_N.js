@@ -1,12 +1,9 @@
 import {
-    getDecimals,
     getImageFromV3,
     getFlagPath,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall,
     getTimeDifference,
     implantImage,
-    implantSvgBody, replaceText, replaceTexts, getAvatar,
+    implantSvgBody, replaceText, replaceTexts, getAvatar, rounds,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
@@ -84,10 +81,12 @@ export async function card_N(data = {
     const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
     const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 10, 36 + 17, 18, 'right baseline', '#aaa');
 
+    const acc_number = rounds(acc, 2)
+
     const n1_acc = await label_N({
         ...LABELS.ACC2,
-        data_b: getDecimals(acc, 2),
-        data_m: getDecimals(acc, 3) + '%',
+        data_b: acc_number.integer,
+        data_m: acc_number.decimal + '%',
     });
     const n1_combo = await label_N({
         ...LABELS.COMBO2,
@@ -99,10 +98,13 @@ export async function card_N(data = {
         data_b: pp.toString(),
         data_m: 'PP',
     });
+
+    const score_number = rounds(score, -4, 1)
+
     const n1_score = await label_N({
         ...LABELS.SCORE2,
-        data_b: getRoundedNumberStrLarge(score, -1),
-        data_m: getRoundedNumberStrSmall(score, -1),
+        data_b: score_number.integer,
+        data_m: score_number.decimal,
     });
 
     // 导入评价，x和y是矩形的左上角

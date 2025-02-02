@@ -1,11 +1,10 @@
 import {
     ar2ms, cs2px,
-    exportJPEG, getBeatMapTitlePath, getDecimals,
+    exportJPEG, getBeatMapTitlePath,
     getDiffBG, getDifficultyName, getFileSize, getGameMode, getImageFromV3, getMapStatusImage,
-    getPanelNameSVG, getRoundedNumberStr, getRoundedNumberStrLarge, getRoundedNumberStrSmall,
-    implantImage, implantSvgBody, od2ms,
+    getPanelNameSVG, implantImage, implantSvgBody, od2ms,
     readTemplate,
-    replaceText, replaceTexts
+    replaceText, replaceTexts, round, rounds
 } from "../util/util.js";
 import {getRankBG, hasLeaderBoard} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
@@ -170,13 +169,13 @@ const component_E1 = (
     const text_arr = [
         {
             font: "poppinsBold",
-            text: getRoundedNumberStrLarge(star, 3),
+            text: rounds(star, 2).integer,
             size: 84,
             color: '#fff',
         },
         {
             font: "poppinsBold",
-            text: getRoundedNumberStrSmall(star, 3),
+            text: rounds(star, 2).decimal,
             size: 48,
             color: '#fff',
         },
@@ -223,7 +222,7 @@ const component_E2 = (
 
     const pass_percent = data?.play > 0 ? Math.round(data?.pass / data?.play * 100) : 0;
 
-    const public_rating = poppinsBold.getTextPath(getRoundedNumberStr(data?.public_rating, 2) + ' / 10', 475, 28, 18, 'right baseline', '#fff');
+    const public_rating = poppinsBold.getTextPath(round(data?.public_rating, 1) + ' / 10', 475, 28, 18, 'right baseline', '#fff');
     const percent = poppinsBold.getTextPath(data?.pass + ' / ' + data?.play + ' [' + pass_percent + '%]', 475, 138, 18, 'right baseline', '#fff');
 
 
@@ -324,8 +323,8 @@ const component_E5 = (
     const reg_base = /(?<=<g id="Base_OE5">)/;
     const rect = PanelDraw.Rect(0, 0, 90, 60, 20, '#382e32', 1);
 
-    const fav = poppinsBold.getTextPath(getRoundedNumberStr(data?.favorite, 1), 78, 25, 16, 'right baseline', '#fff')
-    const pc = poppinsBold.getTextPath(getRoundedNumberStr(data?.playcount, 1), 78, 47, 16, 'right baseline', '#fff')
+    const fav = poppinsBold.getTextPath(round(data?.favorite, 1, -1), 78, 25, 16, 'right baseline', '#fff')
+    const pc = poppinsBold.getTextPath(round(data?.playcount, 1, -1), 78, 47, 16, 'right baseline', '#fff')
 
     svg = replaceTexts(svg, [fav, pc], reg_text);
     svg = implantImage(svg, 18, 18, 12, 10 - 1, 1, getImageFromV3('object-beatmap-favorite.png'), reg_text);
@@ -687,12 +686,12 @@ const component_E9 = (
     const accuracy = getMultipleTextPath([
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrLarge((data?.accuracy || 0) * 100, 3),
+                text: rounds((data?.accuracy || 0) * 100, 2).integer,
                 size: 60,
             },
             {
                 font: 'poppinsBold',
-                text: getRoundedNumberStrSmall((data?.accuracy || 0) * 100, 3) + ' %',
+                text: rounds((data?.accuracy || 0) * 100, 2).decimal + ' %',
                 size: 36
             }
         ],
@@ -879,9 +878,10 @@ const PanelEGenerate = {
     score2componentE3: (b, original) => {
         const mode = getGameMode(b.mode, 1);
 
+        const bpm = rounds(score?.beatmap?.bpm, 2)
         const bpm_r = (b?.bpm > 0) ? (60000 / b?.bpm).toFixed(0) + 'ms' : '-';
-        const bpm_b = getDecimals(b?.bpm, 2);
-        const bpm_m = getDecimals(b?.bpm, 3);
+        const bpm_b = bpm.integer
+        const bpm_m = bpm.decimal
         const bpm_p = getProgress(b?.bpm, 90, 270);
 
         const length_r = Math.floor(b?.total_length / 60) + ':' + (b?.total_length % 60).toFixed(0).padStart(2, '0');
@@ -1194,14 +1194,16 @@ const getProgress = (x, min, max, bottom = 1 / 16) => {
 const stat2label = (stat, remark, progress, original, isDisplay) => {
     const hasChanged = Math.abs(original - stat) > 0.1;
 
-    const stat_b = getDecimals(stat, 2);
-    const stat_m = getDecimals(stat, 4);
+    const stat_number = rounds(stat, 1)
+
+    const stat_b = stat_number.integer
+    const stat_m = stat_number.decimal
 
     if (isDisplay) return {
         remark: remark,
         data_b: stat_b,
         data_m: stat_m,
-        data_a: hasChanged ? (' [' + getDecimals(original, 2) + getDecimals(original, 4) + ']') : '',
+        data_a: hasChanged ? (' [' + round(original, 1) + ']') : '',
         bar_progress: progress,
     }
     else return {

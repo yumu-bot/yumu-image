@@ -1,8 +1,7 @@
-import {
-    getDecimals, getImageFromV3,
+import {getImageFromV3,
     getGameMode,
     implantSvgBody,
-    replaceTexts
+    replaceTexts, rounds
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -71,13 +70,12 @@ export async function card_E5(data = {
     const isFC = data.isFC;
 
     // 文字定义
-    const ppLarge = torus.get2SizeTextPath(
-        getDecimals(data.pp, 2),
-        getDecimals(data.pp, 3) + 'PP',
+    const pp_number = rounds(data.pp, 1)
+    const pp_large = torus.get2SizeTextPath(pp_number.integer, pp_number.decimal + 'PP',
         84, 60, 335, 79.43, 'left baseline', '#FFF');
 
     // 导入文字
-    svg = replaceTexts(svg, [ppLarge], reg_text);
+    svg = replaceTexts(svg, [pp_large], reg_text);
 
     // 部件定义
     const mods = getModsSVG(data.mods, 880, 20, 90, 42, 50);
@@ -91,10 +89,12 @@ export async function card_E5(data = {
     const statisticsNC = getStatisticsRRect(data.ncStats, data.statistics_max, 400, 60, 500)
     const statisticsFC = getStatisticsSVG(data.fcStats, data.statistics_max, 400, 100, 500, 28, 12, 22.79)
 
+    const acc_number = rounds(data.accuracy * 100, 2)
+
     const acc = await label_E({...((mode === 'm') ? LABELS.PPACC : LABELS.ACC),
         remark: (data.miss > 0) ? '-' + data.miss : '-',
-        data_b: getDecimals(data.accuracy * 100, 2),
-        data_m: getDecimals(data.accuracy * 100, 3) + '%',
+        data_b: acc_number.integer,
+        data_m: acc_number.decimal + '%',
     });
     const combo = await label_E({...LABELS.COMBO,
         remark: isFC ? 'FC' : (data.max_combo + 'x'),

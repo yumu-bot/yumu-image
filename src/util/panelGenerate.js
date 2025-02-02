@@ -1,15 +1,11 @@
 import {PuHuiTi, torus} from "./font.js";
 import moment from "moment";
 import {
-    getDecimals,
     getImageFromV3,
     getGameMode,
     getMapBG,
     getMapStatus,
     getMatchNameSplitted,
-    getRoundedNumberStrLarge,
-    getRoundedNumberStrSmall,
-    getRoundedNumberStr,
     getTimeDifference,
     readNetImage,
     getAvatar,
@@ -20,7 +16,7 @@ import {
     isNotEmptyArray,
     getTimeByDHMS,
     requireNonNullElse,
-    getDifficultyName, getDiffBG, isNotEmptyString,
+    getDifficultyName, getDiffBG, isNotEmptyString, round, rounds,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -69,7 +65,7 @@ export const PanelGenerate = {
         const isBot = user?.is_bot;
         const level = user?.statistics?.level_current || 0;
         const progress = user?.statistics?.level_progress || 0;
-        const acc = getRoundedNumberStr(user?.statistics?.hit_accuracy, 3) || 0;
+        const acc = round(user?.statistics?.hit_accuracy, 2) || '0';
         const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
         const right3b = isBot ? 'Bot' : (user?.pp ? Math.round(user?.pp).toString() : '');
         const right3m = isBot ? '' : (user?.pp ? 'PP' :
@@ -164,7 +160,7 @@ export const PanelGenerate = {
         const isBot = user.is_bot;
         const level = user?.statistics?.level_current || 0;
         const progress = user?.statistics?.level_progress || 0;
-        const acc = getRoundedNumberStr(user?.statistics?.hit_accuracy, 3) || 0;
+        const acc = round(user?.statistics?.hit_accuracy, 2) || '0';
 
         let right1
 
@@ -236,6 +232,7 @@ export const PanelGenerate = {
         const background = getImageFromV3(bg_str);
         const avatar = await getAvatar(score?.user?.avatar_url, false);
         const country = score?.user?.country?.code || 'CN';
+        const score_number = rounds(player_score, -4)
 
         const top1 = score?.user?.username || score?.user_name || 'Unknown';
 
@@ -243,8 +240,8 @@ export const PanelGenerate = {
         const left2 = 'P' + (score?.match?.slot + 1) + rating_str + pp_str;
         const right2 = acc_str + ' '
             + rank + mods + ' ' + combo_str;
-        const right3b = getRoundedNumberStrLarge(player_score, 0);
-        const right3m = getRoundedNumberStrSmall(player_score, 0);
+        const right3b = score_number.integer
+        const right3m = score_number.decimal
 
         return {
             background,
@@ -322,6 +319,7 @@ export const PanelGenerate = {
         average: 12.65
     }) => {
         const background = getCHUNITHMRatingBG(user.rating);
+        const rating = rounds(user.rating, 2)
 
         return {
             background: background,
@@ -335,11 +333,11 @@ export const PanelGenerate = {
             top2: user.probername,
 
             left1: '',
-            left2: (user?.average > 0) ? 'B30 Avg.: ' + getRoundedNumberStr(user.average, 3) : '',
+            left2: (user?.average > 0) ? 'B30 Avg.: ' + round(user.average, 2) : '',
             right1: '',
-            right2:  (user?.base > 0) ? 'Rating: ' + getRoundedNumberStr(user.base, 3)  + ' + ' + getRoundedNumberStr(user.additional, 3) : 'Rating:',
-            right3b: getRoundedNumberStrLarge(user.rating, 3),
-            right3m: getRoundedNumberStrSmall(user.rating, 3),
+            right2:  (user?.base > 0) ? 'Rating: ' + round(user.base, 2)  + ' + ' + round(user.additional, 2) : 'Rating:',
+            right3b: rating.integer,
+            right3m: rating.decimal,
         };
     },
 
@@ -411,7 +409,7 @@ export const PanelGenerate = {
         const blueWins = r?.team_point_map?.blue || 0;
 
         const isTeamVS = r?.is_team_vs;
-        const star = getRoundedNumberStr(r?.average_star || 0, 3);
+        const star = round(r?.average_star || 0, 2);
 
         const bid = r?.first_map_bid || 0
         const sid = beatmap?.beatmapset?.id || 0
@@ -457,6 +455,7 @@ export const PanelGenerate = {
     beatMap2CardA2: async (b) => {
         const background = await getMapBG(b.beatmapset.id, 'list@2x', hasLeaderBoard(b.ranked));
         const map_status = b.status;
+        const sr = rounds(b.difficulty_rating, 1)
         const title1 = b.beatmapset.title;
         const title2 = b.beatmapset.artist;
         const title3 = b.version;
@@ -465,8 +464,8 @@ export const PanelGenerate = {
         const left3 = b.id ? 'B' + b.id : 'B0';
         const right1 = '';
         const right2 = getBeatmapStats(b);
-        const right3b = getDecimals(b.difficulty_rating, 2);
-        const right3m = getDecimals(b.difficulty_rating, 3) + '*';
+        const right3b = sr.integer
+        const right3m = sr.decimal + '*';
 
         function getBeatmapStats(beatmap) {
             const cs = Math.round(beatmap.cs * 10) / 10;
@@ -507,6 +506,7 @@ export const PanelGenerate = {
     beatMapSet2CardA2: async (s) => {
         const background = await readNetImage(s?.covers?.cover, hasLeaderBoard(s?.ranked));
         const map_status = s?.status;
+        const play_count = rounds(s?.play_count, 2);
         const title1 = s?.title_unicode;
         const title2 = s?.artist_unicode;
         const title3 = s?.creator;
@@ -515,8 +515,8 @@ export const PanelGenerate = {
         const left3 = s?.id ? ('S' + s.id) : 'S0';
         const right1 = 'Favorite ' + s?.favourite_count;
         const right2 = 'Play Counts';
-        const right3b = getRoundedNumberStrLarge(s?.play_count, 3);
-        const right3m = getRoundedNumberStrSmall(s?.play_count, 3);
+        const right3b = play_count.integer
+        const right3m = play_count.decimal
 
         return {
             background: background,
@@ -573,8 +573,10 @@ export const PanelGenerate = {
             }
         }
 
-        const right3b = getDecimals(b?.difficulty_rating,2);
-        const right3m = getDecimals(b?.difficulty_rating,3) + '*';
+        const sr = rounds(b?.difficulty_rating, 1)
+
+        const right3b = sr.integer
+        const right3m = sr.decimal + '*';
 
         return {
             background: background,
@@ -755,7 +757,7 @@ export const PanelGenerate = {
                 mods_width = 0;
         }
 
-        const acc = getRoundedNumberStr((s?.legacy_accuracy * 100), 3) + '%'
+        const acc = round((s?.legacy_accuracy * 100), 2) + '%'
         const combo = (s.max_combo || 0) + 'x'
 
         const difficulty_name = s.beatmap.version ? torus.cutStringTail(
@@ -769,7 +771,7 @@ export const PanelGenerate = {
             500 - 10 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
 
         const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? null : s.beatmapset.title_unicode;
-        const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : getRoundedNumberStr(s?.pp, 1);
+        const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : round(s?.pp, 1, -1);
 
         // 这是大概的进度
         const approximate_progress = (s?.total_hit > 0) ? (s?.score_hit / s?.total_hit) : 1
@@ -795,7 +797,7 @@ export const PanelGenerate = {
             index_b_size: 48,
             index_m_size: 36,
             index_l_size: 24,
-            label1: getRoundedNumberStr(star, 2),
+            label1: round(star, 1),
             label2: s?.beatmap?.id?.toString() || '',
             label3: '',
             label4: '',
@@ -895,20 +897,20 @@ export const PanelGenerate = {
                     label1: {
                         icon: getImageFromV3("object-score-circlesize.png"),
                         icon_title: 'CS',
-                        data_b: getDecimals(beatmap.cs, 2),
-                        data_m: getDecimals(beatmap.cs, 3)
+                        data_b: rounds(beatmap.cs, 1).integer,
+                        data_m: rounds(beatmap.cs, 1).decimal,
                     },
                     label2: {
                         icon: getImageFromV3("object-score-approachrate.png"),
                         icon_title: 'AR',
-                        data_b: getDecimals(beatmap.ar, 2),
-                        data_m: getDecimals(beatmap.ar, 3)
+                        data_b: rounds(beatmap.ar, 1).integer,
+                        data_m: rounds(beatmap.ar, 1).decimal,
                     },
                     label3: {
                         icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
-                        data_b: getDecimals(beatmap.accuracy, 2),
-                        data_m: getDecimals(beatmap.accuracy, 3)
+                        data_b: rounds(beatmap.accuracy, 1).integer,
+                        data_m: rounds(beatmap.accuracy, 1).decimal,
                     },
 
                     maxWidth: label_width,
@@ -919,8 +921,8 @@ export const PanelGenerate = {
                     label1: {
                         icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
-                        data_b: getDecimals(beatmap.accuracy, 2),
-                        data_m: getDecimals(beatmap.accuracy, 3)
+                        data_b: rounds(beatmap.accuracy, 1).integer,
+                        data_m: rounds(beatmap.accuracy, 1).decimal
                     },
                     label2: {
                         icon: '',
@@ -931,8 +933,8 @@ export const PanelGenerate = {
                     label3: {
                         icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
-                        data_b: getDecimals(beatmap.drain, 2),
-                        data_m: getDecimals(beatmap.drain, 3)
+                        data_b: rounds(beatmap.drain, 1).integer,
+                        data_m: rounds(beatmap.drain, 1).decimal
                     },
 
                     maxWidth: label_width,
@@ -943,20 +945,20 @@ export const PanelGenerate = {
                     label1: {
                         icon: getImageFromV3("object-score-circlesize.png"),
                         icon_title: 'CS',
-                        data_b: getDecimals(beatmap.cs, 2),
-                        data_m: getDecimals(beatmap.cs, 3)
+                        data_b: rounds(beatmap.cs, 1).integer,
+                        data_m: rounds(beatmap.cs, 1).decimal,
                     },
                     label2: {
                         icon: getImageFromV3("object-score-approachrate.png"),
                         icon_title: 'AR',
-                        data_b: getDecimals(beatmap.ar, 2),
-                        data_m: getDecimals(beatmap.ar, 3)
+                        data_b: rounds(beatmap.ar, 1).integer,
+                        data_m: rounds(beatmap.ar, 1).decimal,
                     },
                     label3: {
                         icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
-                        data_b: getDecimals(beatmap.drain, 2),
-                        data_m: getDecimals(beatmap.drain, 3)
+                        data_b: rounds(beatmap.drain, 1).integer,
+                        data_m: rounds(beatmap.drain, 1).decimal
                     },
 
                     maxWidth: label_width,
@@ -967,20 +969,20 @@ export const PanelGenerate = {
                     label1: {
                         icon: getImageFromV3("object-score-circlesize.png"),
                         icon_title: 'CS',
-                        data_b: getDecimals(beatmap.cs, 2),
-                        data_m: getDecimals(beatmap.cs, 3)
+                        data_b: rounds(beatmap.cs, 1).integer,
+                        data_m: rounds(beatmap.cs, 1).decimal,
                     },
                     label2: {
                         icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
-                        data_b: getDecimals(beatmap.accuracy, 2),
-                        data_m: getDecimals(beatmap.accuracy, 3)
+                        data_b: rounds(beatmap.accuracy, 1).integer,
+                        data_m: rounds(beatmap.accuracy, 1).decimal,
                     },
                     label3: {
                         icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
-                        data_b: getDecimals(beatmap.drain, 2),
-                        data_m: getDecimals(beatmap.drain, 3)
+                        data_b: rounds(beatmap.drain, 1).integer,
+                        data_m: rounds(beatmap.drain, 1).decimal
                     },
                 };
         }
@@ -1004,14 +1006,15 @@ export const PanelGenerate = {
 
         const background = await getMapBG(s?.id, 'list', hasLeaderBoard(s.status));
         const map_status = s?.status;
+        const play_count = rounds(s?.play_count, 1)
         const title1 = s?.title_unicode || s?.title;
         const title2 = s?.artist_unicode || s?.artist;
         const left1 = '';
         const left2 = '*' + s?.favourite_count;
         const left3 = s?.id ? 'S' + s.id : '0';
         const right1 = 'Play Counts';
-        const right2b = getRoundedNumberStrLarge(s?.play_count, 2);
-        const right2m = getRoundedNumberStrSmall(s?.play_count, 2);
+        const right2b = play_count.integer
+        const right2m = play_count.decimal
 
         return {
             background: background,

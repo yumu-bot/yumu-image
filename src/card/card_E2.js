@@ -1,9 +1,7 @@
 import {
-    getDecimals,
     getImageFromV3,
     getGameMode,
-    getRoundedNumberStrLarge, getRoundedNumberStrSmall,
-    implantSvgBody, replaceTexts, getRoundedNumberStr,
+    implantSvgBody, replaceTexts, round, rounds,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -84,8 +82,8 @@ export async function card_E2(data = {
     const isPF = data.isPF;
 
     // 文字定义
-    const score_b = getRoundedNumberStrLarge(data.score, -1);
-    const score_m = getRoundedNumberStrSmall(data.score, -1)
+    const score_b = rounds(data.score, -4, 1).integer
+    const score_m = rounds(data.score, -4, 1).decimal
 
     const score = torus.get2SizeTextPath(score_b, score_m, 84, 60, 335, 79.43, 'left baseline', '#FFF');
 
@@ -95,7 +93,7 @@ export async function card_E2(data = {
     const multiplier_maxWidth = 630 - ((modsCount > 2) ? 50 * modsCount - 10 : 100 * modsCount - 10) - torus.getTextWidth(score_b, 84) - torus.getTextWidth(score_m, 60) - 10;
 
     const mod_multiplier = torus.getTextPath(
-        multiplier === 1 ? "" : torus.cutStringTail(getRoundedNumberStr(multiplier, 3) + "x", 24, multiplier_maxWidth),
+        multiplier === 1 ? "" : torus.cutStringTail(round(multiplier, 2) + "x", 24, multiplier_maxWidth),
         335 + torus.getTextWidth(score_b, 84) + torus.getTextWidth(score_m, 60) + 10, 79.43, 24, 'left baseline', '#FFF')
 
     // 导入文字
@@ -115,8 +113,8 @@ export async function card_E2(data = {
 
     const acc = await label_E({...LABELS.ACC,
         remark: data.acc_index,
-        data_b: getDecimals(data.accuracy * 100, 2),
-        data_m: getDecimals(data.accuracy * 100, 3) + '%',
+        data_b: rounds(data.accuracy * 100, 1).integer,
+        data_m: rounds(data.accuracy * 100, 1).decimal + '%',
     });
     const combo = await label_E({...LABELS.COMBO,
         remark: isFC ? 'FC' : (data.max_combo + 'x'),

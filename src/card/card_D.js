@@ -1,7 +1,7 @@
 import {
-    getDecimals, implantImage,
+    implantImage,
     readTemplate,
-    replaceText, replaceTexts
+    replaceText, replaceTexts, rounds
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {getColorInSpectrum, getModColor} from "../util/color.js";
@@ -78,8 +78,10 @@ export async function card_D(data = {
     let text_mod =
         torus.getTextPath(data.mod, 500, 30.754, 36, 'center baseline', "#fff");
 
-    let text_star_b = getDecimals(data.star_rating,2);
-    let text_star_m = getDecimals(data.star_rating,3) + '*';
+    const star_number = rounds(data.star_rating, 1)
+
+    let text_star_b = star_number.integer
+    let text_star_m = star_number.decimal + '*';
     let star_m_width = torus.getTextWidth(text_star_m,36);
     let text_star =
         torus.getTextPath(text_star_b, 550 - star_m_width, 96.59, 60, "right baseline", "#fff") +
