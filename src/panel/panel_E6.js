@@ -485,7 +485,7 @@ const component_E7 = (
 
     let is_fc = data?.is_fc;
 
-    const over = 460 - poppinsBold.getTextWidth(Math.round(data?.perfect_pp || 0), 24) - 30 < (460 * fc_percent);
+    const over = 460 - poppinsBold.getTextWidth(Math.round(data?.perfect_pp || 0).toString(), 24) - 30 < (460 * fc_percent);
     if (over) is_fc = true;
 
     let reference_pp; // 参考 PP，有时是 FC PP，有时是 SS PP
@@ -878,7 +878,7 @@ const PanelEGenerate = {
     score2componentE3: (b, original) => {
         const mode = getGameMode(b.mode, 1);
 
-        const bpm = rounds(score?.beatmap?.bpm, 2)
+        const bpm = rounds(b?.bpm, 2)
         const bpm_r = (b?.bpm > 0) ? (60000 / b?.bpm).toFixed(0) + 'ms' : '-';
         const bpm_b = bpm.integer
         const bpm_m = bpm.decimal
