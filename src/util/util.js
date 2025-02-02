@@ -742,6 +742,13 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
         }
     } else if (level >= 0) {
         // 3.02 -> 3 / 0.02000000004
+
+        const u = unit(number, 0)
+
+        while (number >= 1000 || number <= -1000) {
+            number /= 1000;
+        }
+
         const int = Math.floor(number)
         const dec = Math.round((number - int) * Math.pow(10, level)) / Math.pow(10, level)
 
@@ -754,9 +761,9 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
 
         if (dec_str.length > 0) {
             int_str += '.'
-            dec_str += unit(number, 0)
+            dec_str += u
         } else {
-            dec_str = unit(number, 0)
+            dec_str = u
         }
     } else {
         const times = Math.abs(level)
