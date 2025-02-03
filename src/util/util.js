@@ -755,9 +755,9 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
         int_str = int.toString()
         dec_str = dec.toString().slice(2, 2 + level)
 
-        do {
+        while (dec_str.length > 0 && dec_str.charAt(dec_str.length - 1) === '0') {
             dec_str.slice(0, dec_str.length - 1)
-        } while (dec_str.length > 0 && dec_str.charAt(dec_str.length - 1) === '0')
+        }
 
         if (dec_str.length > 0) {
             int_str += '.'
