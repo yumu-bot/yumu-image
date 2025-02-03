@@ -792,7 +792,7 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
 
             for (const i in dec_str) {
                 if (i % 4 == 0) {
-                    space_str += space;
+                    space_str += " ";
                 }
 
                 space_str += dec_str.charAt(i);
