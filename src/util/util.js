@@ -766,12 +766,15 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
             dec_str = u
         }
     } else {
+        const str = (sub_level === 1) ? Math.floor(number).toString().padStart(7, '0') : Math.floor(number).toString()
         const times = Math.abs(level)
 
         let s = 0;
         let o;
 
-        if (number < Math.pow(10, 2 * times)) {
+        if (number < Math.pow(10, times)) {
+            s = Math.floor(number).toString().length
+        } else if (number < Math.pow(10, 2 * times)) {
             s = -times; //5671 1234 -> 1234
         } else if (number < Math.pow(10, 3 * times)) {
             s = -2 * times; //794 5671 1234 -> 5671 1234
@@ -781,7 +784,6 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
             s = -4 * times;
         }
 
-        const str = (sub_level === 1) ? Math.floor(number).toString().padStart(7, '0') : Math.floor(number).toString()
 
         int_str = str.slice(0, s)
         dec_str = str.slice(s)
