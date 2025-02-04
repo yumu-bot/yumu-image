@@ -573,7 +573,7 @@ export const PanelGenerate = {
             }
         }
 
-        const sr = rounds(b?.difficulty_rating, 1)
+        const sr = rounds(b?.difficulty_rating, 2)
 
         const right3b = sr.integer
         const right3m = sr.decimal + '*';
