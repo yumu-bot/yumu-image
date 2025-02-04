@@ -141,7 +141,7 @@ export async function card_A3(beatmapset = {}) {
     svg = implantSvgBody(svg, 600 - sid.width - 10, 144, sid.svg, reg_label)
     svg = implantSvgBody(svg, 10, 10, status.svg, reg_label)
 
-    svg = implantImage(svg, 430, 175, 170, 0, 0.4, image, reg_background)
+    svg = implantImage(svg, 430, 175, 170, 0, 0.3, image, reg_background)
     svg = implantImage(svg, 210, 210, 0, 0, 1, image, reg_cover)
 
     svg = replaceText(svg, base, reg_base)
@@ -322,7 +322,7 @@ function drawDifficultyLabels(beatmaps = []) {
  * @param data
  * @return {{svg: string, width: number}}
  */
-function label_A8(data = {
+export function label_A8(data = {
     image: null,
     has_text: true, // true：没图片的时候，显示字段。有图片的时候默认显示字段
     text: '',

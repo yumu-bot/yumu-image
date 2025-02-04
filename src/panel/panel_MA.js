@@ -115,7 +115,6 @@ export async function panel_MA(data = {
         card_dx.push(card_I3(await maiScore2CardI3(s))) ;
     }
 
-
     // 插入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 

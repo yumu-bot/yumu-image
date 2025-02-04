@@ -11,7 +11,7 @@
         </g>
     </g>
     <g id="Background">
-        <rect y="290" width="1920" height="${cardheight}" rx="20" ry="20" style="fill: #2a2226;"/>
+        <rect y="290" width="1920" height="${cardheight}" rx="20" ry="20" style="fill: #382e32;"/>
     </g>
     <g id="CardI">
     </g>

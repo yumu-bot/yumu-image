@@ -10,6 +10,11 @@ export function getMaimaiBannerIndex(song) {
     return 0;
 }
 
+/**
+ *
+ * @param song_id
+ * @returns {Promise<string>}
+ */
 export async function getMaimaiCover(song_id = 0) {
     let id;
 
@@ -20,7 +25,10 @@ export async function getMaimaiCover(song_id = 0) {
     } else if (song_id > 10000 && song_id < 11000) {
         id = song_id - 10000;
     } else if (song_id > 100000) {
-        id = song_id - 100000;
+        id = song_id;
+
+        id %= 10000
+        id += 10000
     } else {
         id = song_id;
     }
@@ -196,6 +204,7 @@ export function getMaimaiVersionBG(version = '') {
         case "maimai MiLK":
             v = 'object-version-maimai-milk.png';
             break;
+        case "maimai MiLK PLUS":
         case "MiLK PLUS":
             v = 'object-version-maimai-milk-plus.png';
             break;
@@ -246,58 +255,104 @@ export function getMaimaiVersionBG(version = '') {
     return getImageFromV3('Maimai', v)
 }
 
+export function getMaimaiVersionColor(version = '') {
+    switch (version) {
+        case "maimai":
+        case "maimai PLUS":
+            return '#00A29D'
+        case "maimai GreeN":
+        case "maimai GreeN PLUS":
+            return '#D0FD00'
+        case "maimai ORANGE":
+        case "maimai ORANGE PLUS":
+            return '#FF6400'
+        case "maimai PiNK":
+        case "maimai PiNK PLUS":
+            return '#FE006F'
+        case "maimai MURASAKi":
+        case "maimai MURASAKi PLUS":
+            return '#A863A8'
+        case "maimai MiLK":
+        case "maimai MiLK PLUS":
+        case "MiLK PLUS":
+            return '#fff'
+        case "maimai FiNALE":
+            return '#C69C6E'
+        case "maimai でらっくす":
+        case "maimai でらっくす PLUS":
+            return '#FFEB42'
+        case "maimai でらっくす Splash":
+        case "maimai でらっくす Splash PLUS":
+            return '#67C1A9'
+        case "maimai でらっくす UNiVERSE":
+        case "maimai でらっくす UNiVERSE PLUS":
+            return '#00BFF3'
+        case "maimai でらっくす FESTiVAL":
+        case "maimai でらっくす FESTiVAL PLUS":
+            return '#BD87F7'
+        case "maimai でらっくす BUDDiES":
+        case "maimai でらっくす BUDDiES PLUS":
+            return '#5574B9'
+        case "maimai でらっくす PRiSM":
+        case "maimai でらっくす PRiSM PLUS":
+            return '#F1A3BB'
+        default:
+            return ''
+    }
+}
+
 export function getMaimaiVersionAbbreviation(version = '') {
     switch (version) {
         case "maimai":
             return 'MAI'
         case "maimai PLUS":
-            return 'MAI-P'
+            return 'MAI+'
         case "maimai GreeN":
             return 'GRN'
         case "maimai GreeN PLUS":
-            return 'GRN-P'
+            return 'GRN+'
         case "maimai ORANGE":
-            return 'ORA'
+            return 'ORG'
         case "maimai ORANGE PLUS":
-            return 'ORA-P'
+            return 'ORG+'
         case "maimai PiNK":
             return 'PNK'
         case "maimai PiNK PLUS":
-            return 'PNK-P'
+            return 'PNK+'
         case "maimai MURASAKi":
             return 'MSK'
         case "maimai MURASAKi PLUS":
-            return 'MSK-P'
+            return 'MSK+'
         case "maimai MiLK":
             return 'MLK'
         case "MiLK PLUS":
-            return 'MLK-P'
+            return 'MLK+'
         case "maimai FiNALE":
             return 'FNL'
         case "maimai でらっくす":
             return 'DX'
         case "maimai でらっくす PLUS":
-            return 'DX-P'
+            return 'DX+'
         case "maimai でらっくす Splash":
             return 'SPL'
         case "maimai でらっくす Splash PLUS":
-            return 'SPL-P'
+            return 'SPL+'
         case "maimai でらっくす UNiVERSE":
             return 'UNI'
         case "maimai でらっくす UNiVERSE PLUS":
-            return 'UNI-P'
+            return 'UNI+'
         case "maimai でらっくす FESTiVAL":
             return 'FES'
         case "maimai でらっくす FESTiVAL PLUS":
-            return 'FES-P'
+            return 'FES+'
         case "maimai でらっくす BUDDiES":
             return 'BUD'
         case "maimai でらっくす BUDDiES PLUS":
-            return 'BUD-P'
+            return 'BUD+'
         case "maimai でらっくす PRiSM":
             return 'PRS'
         case "maimai でらっくす PRiSM PLUS":
-            return 'PRS-P'
+            return 'PRS+'
         default:
             return ''
     }
@@ -328,6 +383,10 @@ export function getMaimaiCategory(genre = '') {
         case "音击&中二节奏":
         case "オンゲキCHUNITHM":
             return "Ongeki & CHUNITHM";
+
+        case "宴会場":
+        case "宴会场":
+            return "U * TA * GE";
 
         default:
             return genre.toString();
