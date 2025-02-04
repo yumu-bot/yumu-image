@@ -770,7 +770,6 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
         const times = Math.abs(level)
 
         let s = 0;
-        let o;
 
         if (number < Math.pow(10, times)) {
             s = Math.floor(number).toString().length
@@ -783,7 +782,6 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
         } else if (number < Math.pow(10, 5 * times)) {
             s = -4 * times;
         }
-
 
         int_str = str.slice(0, s)
         dec_str = str.slice(s)
