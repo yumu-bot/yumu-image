@@ -11,7 +11,7 @@ import {card_A4} from "../card/card_A4.js";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_MC(data);
+        const svg = await panel_MF(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -23,7 +23,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_MC(data);
+        const svg = await panel_MF(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -38,7 +38,7 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_MC(data = {
+export async function panel_MF(data = {
     user: {},
     songs: [{
         "id": "8",

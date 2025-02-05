@@ -129,7 +129,7 @@ export async function card_A3(beatmapset = {}) {
     const difficulty = drawDifficultyLabels(beatmapset.beatmaps)
 
     const base = PanelDraw.Rect(0, 0, 600, 210, 20, '#382E32', 1)
-        + PanelDraw.Rect(0, 0, 600, 210, 20, getMapStatusColor(beatmapset.ranked), 0.2)
+        + PanelDraw.Rect(0, 0, 600, 210, 20, getMapStatusColor(beatmapset.ranked), 0.3)
         + PanelDraw.Rect(170, 0, 430, 175, 20, '#382E32', 1) // 背景图片层底板
 
     // 导入

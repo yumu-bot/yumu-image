@@ -183,7 +183,7 @@ export async function card_A4(song = {
         color: '#1c1719',
     })
 
-    const base = PanelDraw.Rect(0, 0, 445, 210, 20, getMaimaiVersionColor(song.basic_info.from), 0.2)
+    const base = PanelDraw.Rect(0, 0, 445, 210, 20, getMaimaiVersionColor(song.basic_info.from), 0.3)
         + PanelDraw.Rect(0, 0, 445, 175, 20, '#382E32', 1) // 背景图片层底板
 
     svg = implantSvgBody(svg, 15, 175, difficulty, reg_label)
