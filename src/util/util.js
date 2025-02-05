@@ -749,8 +749,18 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
             number /= 1000;
         }
 
-        const int = Math.floor(number)
-        const dec = Math.round((number - int) * Math.pow(10, level)) / Math.pow(10, level)
+        let int = Math.trunc(number)
+        let dec = Math.round(Math.abs(number - int) * Math.pow(10, level)) / Math.pow(10, level)
+
+        // 1.95 ->lv.1-> 1 / 1, 因此需要进位
+        if (dec >= 1 - Math.pow(10, - level)) {
+            if (int < 0) {
+                int --
+            } else {
+                int ++
+            }
+            dec = 0
+        }
 
         int_str = int.toString()
         dec_str = dec.toString().slice(2, 2 + level)
