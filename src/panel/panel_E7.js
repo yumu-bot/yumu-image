@@ -940,7 +940,7 @@ const PanelEGenerate = {
     score2componentE3: (b, original) => {
         const mode = getGameMode(b.mode, 1);
 
-        const bpm = rounds(score?.beatmap?.bpm, 2)
+        const bpm = rounds(b?.beatmap?.bpm, 2)
         const bpm_r = (b?.bpm > 0) ? (60000 / b?.bpm).toFixed(0) + 'ms' : '-';
         const bpm_b = bpm.integer
         const bpm_m = bpm.decimal
