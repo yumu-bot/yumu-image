@@ -1348,9 +1348,8 @@ const PanelEGenerate = {
     },
 
     score2componentE10P: (score) => {
-        const s = score.statistics
-
         /*
+        const s = score.statistics
         const m = score.maximum_statistics
 
         const rainbow_rating = (((s?.great || 0) + 0.5 * (s?.ok || 0)) /
@@ -1359,9 +1358,9 @@ const PanelEGenerate = {
 
          */
 
-        const rainbow_rating = (s?.total_score_without_mods != null && s.total_score_without_mods > 0) ?
-            s.total_score_without_mods / 1000000 :
-            (s?.total_score || 0) / (1000000 * getModMultiplier(score?.mods || [], score?.mode || 'osu'))
+        const rainbow_rating = (score?.total_score_without_mods != null && score.total_score_without_mods > 0) ?
+            score.total_score_without_mods / 1000000 :
+            (score?.total_score || 0) / (1000000 * getModMultiplier(score?.mods || [], score?.mode || 'osu'))
 
         let rainbow_rank;
 
