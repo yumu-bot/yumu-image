@@ -35,7 +35,7 @@ import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi, torus} f
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModAdditionalInformation} from "../util/mod.js";
+import {getModAdditionalInformation, getModMultiplier} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -312,7 +312,7 @@ export async function panel_E5(data = {
     const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score, is_lazer));
     const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.score));
     const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score, data.attributes, data.progress, is_lazer));
-    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.progress));
+    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score));
 
     // 导入卡片
     svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -1347,29 +1347,39 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE10P: (score, progress) => {
+    score2componentE10P: (score) => {
         const s = score.statistics
+
+        /*
         const m = score.maximum_statistics
 
         const rainbow_rating = (((s?.great || 0) + 0.5 * (s?.ok || 0)) /
             (m?.great || 0) * (progress || 0) + 0.0001 * ((s?.small_bonus || 0) + (s?.ignore_hit || 0)))
             || ((score?.accuracy || 0) * (progress || 0))
 
+         */
+
+        const rainbow_rating = (s?.total_score_without_mods != null && s.total_score_without_mods > 0) ?
+            s.total_score_without_mods / 1000000 :
+            (s?.total_score || 0) / (1000000 * getModMultiplier(score?.mods || [], score?.mode || 'osu'))
+
         let rainbow_rank;
 
-        if (rainbow_rating < 0.75) {
+        if (score.rank === 'X' || score.rank === 'XH') {
+            rainbow_rank = 'object-score-kiwami-rainbow.png'
+        } else if (rainbow_rating < 0.5 - 1e-4) {
             rainbow_rank = 'object-score-jimaodan.png'
-        } else if (rainbow_rating < 0.8) {
+        } else if (rainbow_rating < 0.6 - 1e-4) {
             rainbow_rank = 'object-score-iki-iron.png'
-        } else if (rainbow_rating < 0.85) {
+        } else if (rainbow_rating < 0.7 - 1e-4) {
             rainbow_rank = 'object-score-iki-bronze.png'
-        } else if (rainbow_rating < 0.9) {
+        } else if (rainbow_rating < 0.8 - 1e-4) {
             rainbow_rank = 'object-score-iki-silver.png'
-        } else if (rainbow_rating < 0.95) {
+        } else if (rainbow_rating < 0.9 - 1e-4) {
             rainbow_rank = 'object-score-miyabi-gold.png'
-        } else if (rainbow_rating < 0.975) {
+        } else if (rainbow_rating < 0.95 - 1e-4) {
             rainbow_rank = 'object-score-miyabi-pink.png'
-        } else if (rainbow_rating < 0.9999) {
+        } else if (rainbow_rating < 1 - 1e-4) {
             rainbow_rank = 'object-score-miyabi-purple.png'
         } else {
             rainbow_rank = 'object-score-kiwami-rainbow.png'

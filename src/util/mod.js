@@ -38,81 +38,78 @@ const ModInt = {
 }
 const ModBonusSTD = {
     null: 1,
-    "NM": 1,
+    "DC": 0.3,
+    "HT": 0.3,
     "NF": 0.5,
     "EZ": 0.5,
-    "TD": 1,
     "HD": 1.06,
     "HR": 1.06,
-    "SD": 1,
-    "DT": 1.12,
+    "DT": 1.1,
+    "NC": 1.1,
     "RX": 0.1,
-    "HT": 0.3,
-    "NC": 1.12,
     "FL": 1.12,
-    "AT": 1,
     "SO": 0.9,
-    "AP": 1,
-    "PF": 1,
+    "TP": 0.1,
+    "DA": 0.5,
+    "CL": 0.96,
+    "WU": 0.5,
+    "WD": 0.5,
+    "MG": 0.5,
+    "AS": 0.5,
+    "SY": 0.8,
 }
 const ModBonusTAIKO = {
     null: 1,
-    "NM": 1,
+    "DC": 0.3,
+    "HT": 0.3,
     "NF": 0.5,
     "EZ": 0.5,
-    "TD": 1,
     "HD": 1.06,
     "HR": 1.06,
-    "SD": 1,
-    "DT": 1.12,
+    "DT": 1.1,
+    "NC": 1.1,
     "RX": 0.1,
-    "HT": 0.3,
-    "NC": 1.12,
     "FL": 1.12,
-    "AT": 1,
     "SO": 0.9,
-    "AP": 1,
-    "PF": 1,
+    "DA": 0.5,
+    "CL": 0.96,
+    "CS": 0.9,
+    "WU": 0.5,
+    "WD": 0.5,
+    "AS": 0.5,
 }
 const ModBonusCATCH = {
     null: 1,
-    "NM": 1,
+    "DC": 0.3,
+    "HT": 0.3,
     "NF": 0.5,
     "EZ": 0.5,
-    "TD": 1,
     "HD": 1.06,
     "HR": 1.12,
-    "SD": 1,
-    "DT": 1.12,
+    "DT": 1.1,
+    "NC": 1.1,
     "RX": 0.1,
-    "HT": 0.5,
-    "NC": 1.12,
     "FL": 1.12,
-    "AT": 1,
     "SO": 0.9,
-    "AP": 1,
-    "PF": 1,
+    "DA": 0.5,
+    "CL": 0.96,
+    "WU": 0.5,
+    "WD": 0.5,
 }
 const ModBonusMANIA = {
     null: 1,
-    "NM": 1,
+    "DC": 0.3,
+    "HT": 0.3,
+    "NR": 0.9,
     "NF": 0.5,
     "EZ": 0.5,
-    "TD": 1,
-    "HD": 1,
-    "HR": 1,
-    "SD": 1,
-    "DT": 1,
-    "RX": 0,
-    "HT": 0.5,
-    "NC": 1,
-    "FL": 1,
-    "AT": 1,
-    "SO": 0,
-    "AP": 1,
-    "PF": 1,
-    "MR": 1,
-    "FI": 1,
+    "DA": 0.5,
+    "CL": 0.96,
+    "CS": 0.9,
+    "HO": 0.9,
+    "WU": 0.5,
+    "WD": 0.5,
+    "AS": 0.5,
 }
 
 export function hasMod(modInt = 0, mod = '') {
@@ -385,9 +382,15 @@ export function delMod(modInt = 0, mod = '') {
     return ModInt[mod] ? modInt & ~ModInt[mod] : modInt;
 }
 
-export function getModMultiplier(mods = [], gamemode = 'o') {
-    const mode = getGameMode(gamemode, 1);
-    let modList = [];
+/**
+ * 获取模组倍率 (lazer 基准)
+ * @param mods
+ * @param game_mode
+ * @returns {number} 倍率
+ */
+export function getModMultiplier(mods = [{acronym: ''}], game_mode = 'o') {
+    const mode = getGameMode(game_mode, 1);
+    let modList
     let multiplier = 1;
 
     switch (mode) {
@@ -406,7 +409,7 @@ export function getModMultiplier(mods = [], gamemode = 'o') {
     }
 
     for (const v of mods) {
-        multiplier *= modList[v];
+        multiplier *= modList[v?.acronym];
     }
 
     return multiplier;
