@@ -1056,6 +1056,50 @@ const PanelEGenerate = {
 
         let name;
 
+        const difficulty_arr = (score?.difficulty_name || "").split(/\s+/)
+
+        const difficulty = difficulty_arr[difficulty_arr.length - 1]
+            .replaceAll("0", "o")
+            .replaceAll("1", "i")
+            .replaceAll("3", "e")
+            .replaceAll("4", "a")
+            .replaceAll("5", "s")
+            .replaceAll("6", "b")
+            .replaceAll("7", "t")
+            .replaceAll("9", "g")
+            .toUpperCase()
+
+        const iidx = ["Beginner", "Normal", "Hyper", "Another", "Black Another", "Leggendaria"]
+
+        const sdvx = ["Basic", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "Exceed"]
+        const sdvx_short = ["BSC", "ADX", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "XCD"]
+
+        /*
+        const arcaea = ["Past", "Present", "Future", "Eternal", "Beyond"]
+        const arcaea_short = ["PST", "PRS", "FTR", "ETR", "BYD"]
+
+         */
+
+        for (const d of iidx) {
+            if (d != null && difficulty.includes(d.toUpperCase())) return d.toUpperCase()
+        }
+
+        for (const i in sdvx) {
+            if (difficulty.includes(sdvx[i].toUpperCase()) || difficulty.includes(sdvx_short[i].toUpperCase())) {
+                return sdvx_short[i].toUpperCase()
+            }
+        }
+
+        /*
+
+        for (const i in arcaea) {
+            if (difficulty.includes(arcaea[i].toUpperCase()) || difficulty.includes(arcaea_short[i].toUpperCase()) {
+                return arcaea_short[i].toUpperCase()
+            }
+        }
+
+         */
+
         switch (getGameMode(mode, 1)) {
             case "t": {
                 if (sr < 0.1) name = 'NEW';
@@ -1064,7 +1108,8 @@ const PanelEGenerate = {
                 else if (sr < 4) name = 'MUZUKASHII';
                 else if (sr < 5.3) name = 'ONI';
                 else if (sr < 6.5) name = 'INNER ONI';
-                else if (sr >= 6.5) name = 'URA ONI';
+                else if (sr < 8) name = 'URA ONI';
+                else if (sr >= 8) name = 'HELL ONI';
                 else name = 'UNKNOWN';
                 break;
             }
@@ -1075,7 +1120,8 @@ const PanelEGenerate = {
                 else if (sr < 3.5) name = 'PLATTER';
                 else if (sr < 4.6) name = 'RAIN';
                 else if (sr < 6) name = 'OVERDOSE';
-                else if (sr >= 6) name = 'DELUGE';
+                else if (sr < 8) name = 'DELUGE';
+                else if (sr >= 8) name = 'EXCEED';
                 else name = 'UNKNOWN';
                 break;
             }
@@ -1086,7 +1132,8 @@ const PanelEGenerate = {
                 else if (sr < 4) name = 'HD';
                 else if (sr < 5.3) name = 'MX';
                 else if (sr < 6.5) name = 'SC';
-                else if (sr >= 6.5) name = 'SHD';
+                else if (sr < 8) name = 'SHD';
+                else if (sr >= 8) name = 'EX';
                 else name = 'UNKNOWN';
                 break;
             }
@@ -1097,7 +1144,8 @@ const PanelEGenerate = {
                 else if (sr < 4) name = 'HARD';
                 else if (sr < 5.3) name = 'INSANE';
                 else if (sr < 6.5) name = 'EXPERT';
-                else if (sr >= 6.5) name = 'ULTRA';
+                else if (sr < 8) name = 'MASTER';
+                else if (sr >= 8) name = 'ULTRA';
                 else name = 'UNKNOWN';
                 break;
             }
