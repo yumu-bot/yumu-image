@@ -1056,7 +1056,7 @@ const PanelEGenerate = {
 
         let name;
 
-        const difficulty_arr = (score?.difficulty_name || "").split(/\s+/)
+        const difficulty_arr = (score?.beatmap?.version || "").split(/\s+/)
 
         const difficulty = difficulty_arr[difficulty_arr.length - 1]
             .replaceAll("0", "o")
@@ -1071,8 +1071,8 @@ const PanelEGenerate = {
 
         const iidx = ["Beginner", "Normal", "Hyper", "Another", "Black Another", "Leggendaria"]
 
-        const sdvx = ["Basic", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "Exceed"]
-        const sdvx_short = ["BSC", "ADX", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "XCD"]
+        const sdvx = ["Basic", "Novice", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "Exceed"]
+        const sdvx_short = ["BSC", "NOV", "ADV", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "XCD"]
 
         /*
         const arcaea = ["Past", "Present", "Future", "Eternal", "Beyond"]
@@ -1081,12 +1081,22 @@ const PanelEGenerate = {
          */
 
         for (const d of iidx) {
-            if (d != null && difficulty.includes(d.toUpperCase())) return d.toUpperCase()
+            if (d != null && difficulty.includes(d.toUpperCase())) {
+                return {
+                    name: d.toUpperCase(),
+                    star: sr,
+                    mode: mode,
+                }
+            }
         }
 
         for (const i in sdvx) {
             if (difficulty.includes(sdvx[i].toUpperCase()) || difficulty.includes(sdvx_short[i].toUpperCase())) {
-                return sdvx_short[i].toUpperCase()
+                return {
+                    name: sdvx_short[i].toUpperCase(),
+                    star: sr,
+                    mode: mode,
+                }
             }
         }
 
