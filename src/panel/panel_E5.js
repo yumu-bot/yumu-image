@@ -1056,9 +1056,7 @@ const PanelEGenerate = {
 
         let name;
 
-        const difficulty_arr = (score?.beatmap?.version || "").split(/\s+/)
-
-        const difficulty = difficulty_arr[difficulty_arr.length - 1]
+        const difficulty = (score?.beatmap?.version || "")
             .replaceAll("0", "o")
             .replaceAll("1", "i")
             .replaceAll("3", "e")
@@ -1074,6 +1072,10 @@ const PanelEGenerate = {
         const sdvx = ["Basic", "Novice", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "Exceed"]
         const sdvx_short = ["BSC", "NOV", "ADV", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "XCD"]
 
+        const standard = ["Easy", "Normal", "Hard", "Insane", "Lunatic", "Extra", "Extreme", "Expert", "Ultra"]
+        const taiko = ["Kantan", "Futsuu", "Muzukashii", "Inner Oni", "Ura Oni", "Hell Oni", "Oni"]
+        const fruits = ["Cup", "Salad", "Platter", "Rain", "Overdose", "Deluge"]
+
         /*
         const arcaea = ["Past", "Present", "Future", "Eternal", "Beyond"]
         const arcaea_short = ["PST", "PRS", "FTR", "ETR", "BYD"]
@@ -1081,7 +1083,7 @@ const PanelEGenerate = {
          */
 
         for (const d of iidx) {
-            if (d != null && difficulty.includes(d.toUpperCase())) {
+            if (difficulty.includes(d.toUpperCase())) {
                 return {
                     name: d.toUpperCase(),
                     star: sr,
@@ -1094,6 +1096,42 @@ const PanelEGenerate = {
             if (difficulty.includes(sdvx[i].toUpperCase()) || difficulty.includes(sdvx_short[i].toUpperCase())) {
                 return {
                     name: sdvx_short[i].toUpperCase(),
+                    star: sr,
+                    mode: mode,
+                }
+            }
+        }
+
+        for (const d of standard) {
+            if (getGameMode(score.mode, 1) !== 'o') break
+
+            if (difficulty.includes(d.toUpperCase())) {
+                return {
+                    name: d.toUpperCase(),
+                    star: sr,
+                    mode: mode,
+                }
+            }
+        }
+
+        for (const d of taiko) {
+            if (getGameMode(score.mode, 1) !== 't') break
+
+            if (difficulty.includes(d.toUpperCase())) {
+                return {
+                    name: d.toUpperCase(),
+                    star: sr,
+                    mode: mode,
+                }
+            }
+        }
+
+        for (const d of fruits) {
+            if (getGameMode(score.mode, 1) !== 'c') break
+
+            if (difficulty.includes(d.toUpperCase())) {
+                return {
+                    name: d.toUpperCase(),
                     star: sr,
                     mode: mode,
                 }
