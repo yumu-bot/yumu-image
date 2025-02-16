@@ -312,15 +312,16 @@ export const getRankBG = (rank = 'F', passed = true) => {
     if (rank === 'X+' || rank === 'SS') rank = 'X';
     if (rank === 'SSH') rank = 'XH';
     if (rank === 'S+') rank = 'S';
+    if (rank === 'EX') rank = 'PF';
     return getImageFromV3(`object-score-backimage-${rank}.jpg`)
 }
 
 // 从数字获得评级。默认是获取星数的评级，也可以自定义边界或评级名字。如果想跳过某评级（比如 S+），将其所在位（比如这里是 3 号位）的数字设置为和前一位等同。SS 和 D 无法跳过。
-export const getRankFromValue = (value = 0, boundary = [9, 7, 6.5, 5.3, 4, 2.8, 2, 0.1], ranks = ['X+', 'SS', 'S+', 'S', 'A', 'B', 'C', 'D']) => {
+export const getRankFromValue = (value = 0, boundary = [10, 8, 6.5, 5.3, 4, 2.8, 2, 0.1], ranks = ['EX', 'SS', 'S+', 'S', 'A', 'B', 'C', 'D']) => {
     if (typeof value != 'number') return 'F';
 
-    if (boundary?.length < 8) boundary = [9, 7, 6.5, 5.3, 4, 2.8, 2, 0.1];
-    if (ranks?.length < 8) ranks = ['X+', 'SS', 'S+', 'S', 'A', 'B', 'C', 'D']
+    if (boundary?.length < 8) boundary = [10, 8, 6.5, 5.3, 4, 2.8, 2, 0.1];
+    if (ranks?.length < 8) ranks = ['EX', 'SS', 'S+', 'S', 'A', 'B', 'C', 'D']
 
     for (let i = 0; i < ranks.length; i++) {
         const b = boundary[i];

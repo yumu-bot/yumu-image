@@ -53,12 +53,9 @@ export async function panel_B2(data = {
     beatmap: {},
 
     map_minus: {
-        value_list: [],
-        sub_list: [],
-        abbr_list: [],
-
-        stream: [],
-        jack: [],
+        values: [],
+        bases: [],
+        abbreviates: [],
     },
 
     type: "",
@@ -69,17 +66,17 @@ export async function panel_B2(data = {
 
     const m = data?.map_minus;
 
-    const data_arr = m?.value_list || [];
-    const sub_arr = m?.sub_list || [];
-    const abbr_arr = m?.abbr_list || [];
+    const value_arr = m?.values || [];
+    const base_arr = m?.bases || [];
+    const abbr_arr = m?.abbreviates || [];
 
     const map_minus_mania = {
-        RC: data_arr[0],
-        LN: data_arr[1],
-        CO: data_arr[2],
-        PR: data_arr[3],
-        SP: data_arr[4],
-        ST: data_arr[5],
+        RC: value_arr[0],
+        LN: value_arr[1],
+        CO: value_arr[2],
+        PR: value_arr[3],
+        SP: value_arr[4],
+        ST: value_arr[5],
     }
 
     // 路径定义
@@ -99,7 +96,7 @@ export async function panel_B2(data = {
     svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Map Minus v0.7 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.5.0 DX');
+    const panel_name = getPanelNameSVG('Map Minus v0.8 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.5.0 DX');
 
     // 计算数值
     const total = m?.star || 0;
@@ -185,26 +182,26 @@ export async function panel_B2(data = {
     }
 
     svg = replaceTexts(svg, [
-        drawChart(m?.stream, sub_arr[0], 'S', 0, 0, '#39B449'),
-        drawChart(m?.jack, sub_arr[1], 'J', 170, 0, '#8DC73D'),
+        drawChart(m?.stream, base_arr[0], 'S', 0, 0, '#39B449'),
+        drawChart(m?.jack, base_arr[1], 'J', 170, 0, '#8DC73D'),
 
-        drawChart(m?.release, sub_arr[2], 'R', 0, 115, '#00A8EC'),
-        drawChart(m?.shield, sub_arr[3], 'E', 170, 115, '#0071BC'),
-        drawChart(m?.reverse_shield, sub_arr[4], 'V', 340, 115, '#0054A6'),
+        drawChart(m?.release, base_arr[2], 'R', 0, 115, '#00A8EC'),
+        drawChart(m?.shield, base_arr[3], 'E', 170, 115, '#0071BC'),
+        drawChart(m?.reverse_shield, base_arr[4], 'V', 340, 115, '#0054A6'),
 
-        drawChart(m?.bracket, sub_arr[5], 'B', 0, 230, '#FFF100'),
-        drawChart(m?.hand_lock, sub_arr[6], 'H', 170, 230, '#FFE11D'),
-        drawChart(m?.overlap, sub_arr[7], 'O', 340, 230, '#EFC72A'),
+        drawChart(m?.bracket, base_arr[5], 'B', 0, 230, '#FFF100'),
+        drawChart(m?.hand_lock, base_arr[6], 'H', 170, 230, '#FFE11D'),
+        drawChart(m?.overlap, base_arr[7], 'O', 340, 230, '#EFC72A'),
 
-        drawChart(m?.grace, sub_arr[13], 'G', 0, 345, '#FF9800'),
-        drawChart(m?.delayed_tail, sub_arr[14], 'Y', 170, 345, '#EB6100'),
+        drawChart(m?.grace, base_arr[8], 'G', 0, 345, '#FF9800'),
+        drawChart(m?.delayed_tail, base_arr[9], 'Y', 170, 345, '#EB6100'),
 
-        drawChart(m?.speed_jack, sub_arr[10], 'K', 0, 460, '#D32F2F'),
-        drawChart(m?.trill, sub_arr[11], 'I', 170, 460, '#EA68A2'),
-        drawChart(m?.burst, sub_arr[12], 'U', 340, 460, '#EB6877'),
+        drawChart(m?.speed_jack, base_arr[10], 'K', 0, 460, '#D32F2F'),
+        drawChart(m?.trill, base_arr[11], 'I', 170, 460, '#EA68A2'),
+        drawChart(m?.burst, base_arr[12], 'U', 340, 460, '#EB6877'),
 
-        drawChart(m?.rice_density, sub_arr[8], 'C', 0, 575, '#920783'),
-        drawChart(m?.ln_density, sub_arr[9], 'D', 170, 575, '#9922EE'),
+        drawChart(m?.rice_density, base_arr[13], 'C', 0, 575, '#920783'),
+        drawChart(m?.ln_density, base_arr[14], 'D', 170, 575, '#9922EE'),
 
     ], reg_right);
 

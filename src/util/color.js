@@ -519,6 +519,7 @@ export function getRankColor(rank = 'F') {
         case "PF":
         case "XH":
         case "SSH":
+        case "EX":
         case "X+":
             color = '#FAFAFA';
             break;
