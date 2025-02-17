@@ -2,7 +2,7 @@ import {
     ar2ms,
     cs2px,
     exportJPEG,
-    getDiffBG,
+    getDiffBG, getFormattedTime,
     getGameMode,
     getNowTimeStamp,
     getPanelNameSVG,
@@ -287,7 +287,7 @@ export async function panel_E(
     let delta_time;
 
     if (data?.score?.create_at_str != null) {
-        score_time = moment(data?.score?.create_at_str, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]");
+        score_time = getFormattedTime(data?.score?.create_at_str)
         delta_time = getTimeDifference(data?.score?.create_at_str)
     } else {
         //created_at 是北京时间，所以处理的时候不需要 +8
@@ -853,6 +853,7 @@ const score2StatisticsMax = (score) => {
 }
 
 //132行的方法，获取大众评分
+/*
 const score2PublicRating = (score) => {
     const ratings = score.beatmapset.ratings;
 
@@ -860,6 +861,8 @@ const score2PublicRating = (score) => {
     const rating_weight_val = ratings ? ratings.reduce((s, v, i) => s + v * i) : 0;
     return (rating_sum !== 0) ? Math.floor(rating_weight_val / rating_sum * 100) / 100 : 0;
 }
+
+ */
 
 //137行的方法，获取通过率等
 const score2PassPercents = (score) => {

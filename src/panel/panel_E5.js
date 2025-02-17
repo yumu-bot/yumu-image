@@ -22,9 +22,8 @@ import {
     getDifficultyName,
     isNumber,
     rounds,
-    round
+    round, getFormattedTime
 } from "../util/util.js";
-import moment from "moment";
 import {
     getRankBG, getScoreTypeImage,
     hasLeaderBoard
@@ -256,10 +255,10 @@ export async function panel_E5(data = {
     let delta_time;
 
     if (data?.score?.ended_at != null) {
-        score_time = moment(data?.score?.ended_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]");
+        score_time = getFormattedTime(data?.score?.ended_at)
         delta_time = getTimeDifference(data?.score?.ended_at)
     } else {
-        score_time = moment(data?.score?.started_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hour').format("YYYY-MM-DD HH:mm:ss [+8]")
+        score_time = getFormattedTime(data?.score?.started_at)
         delta_time = getTimeDifference(data?.score?.started_at)
     }
 

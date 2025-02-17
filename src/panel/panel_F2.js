@@ -1,5 +1,5 @@
 import {
-    exportJPEG,
+    exportJPEG, getFormattedTime,
     getMapBG, getMatchNameSplitted, getNowTimeStamp,
     getPanelNameSVG, implantImage,
     implantSvgBody, isNotEmptyString, readTemplate,
@@ -8,7 +8,6 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import moment from "moment";
 import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
@@ -94,7 +93,7 @@ export async function panel_F2(data = {
 
     // 面板文字
     const request_time = 'match time: ' +
-        moment(data?.stat?.start_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY/MM/DD HH:mm') + ' - in progress'
+        getFormattedTime(data?.stat?.start_time, 'YYYY/MM/DD HH:mm') + ' - in progress'
         + ' // request time: ' + getNowTimeStamp();
     const panel_name = getPanelNameSVG('Match Rounds (!ymmr)', 'MR', 'v0.5.0 DX', request_time);
 

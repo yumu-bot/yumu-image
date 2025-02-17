@@ -1452,13 +1452,25 @@ export async function getFlagPath(code = "cn", x, y, h = 30) {
 }
 
 /**
+ * 获取格式化的时间，并按东八区的形式输出
+ * @param time
+ * @param format_from
+ * @param format_to
+ * @param delta_hours
+ * @returns {string}
+ */
+export function getFormattedTime(time = '', format_to = 'YYYY-MM-DD HH:mm:ss [+8]', format_from = 'YYYY-MM-DD[T]HH:mm:ss[Z]', delta_hours = 8) {
+    return moment(time, format_from).add(delta_hours, 'hours').format(format_to);
+}
+
+
+/**
  * 获取时间差
  * @param compare
  * @param format
  * @param now 这个时间是 UTC 时间。如果你输入的时间已经是本地时间（北京时间），这里需要输入 moment();
  * @return {string}
  */
-
 export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment().subtract(8, "hours")) {
     const compare_moment = moment(compare, format);
 

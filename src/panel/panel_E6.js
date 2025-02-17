@@ -1,10 +1,26 @@
 import {
-    ar2ms, cs2px,
-    exportJPEG, getBeatMapTitlePath,
-    getDiffBG, getDifficultyName, getFileSize, getGameMode, getImageFromV3, getMapStatusImage,
-    getPanelNameSVG, implantImage, implantSvgBody, od2ms,
+    ar2ms,
+    cs2px,
+    exportJPEG,
+    getBeatMapTitlePath,
+    getDiffBG,
+    getDifficultyName,
+    getFileSize,
+    getFormattedTime,
+    getGameMode,
+    getImageFromV3,
+    getMapStatusImage,
+    getNowTimeStamp,
+    getPanelNameSVG, getTimeDifference,
+    implantImage,
+    implantSvgBody,
+    isNotEmptyString,
+    od2ms,
     readTemplate,
-    replaceText, replaceTexts, round, rounds
+    replaceText,
+    replaceTexts,
+    round,
+    rounds
 } from "../util/util.js";
 import {getRankBG, hasLeaderBoard} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
@@ -65,7 +81,17 @@ export async function panel_E6(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Map Statistics (!ymm)', 'M', 'v0.5.0 DX'), reg_index);
+    const has_ranked_date = isNotEmptyString(data?.beatmap?.beatmapset?.ranked_date)
+    const ranked_time = (has_ranked_date) ?
+        'ranked time: ' + getFormattedTime(data.beatmap.beatmapset.ranked_date) :
+        'updated time: ' + getFormattedTime(data.beatmap.last_updated)
+
+    const delta_time = (has_ranked_date) ?
+        getTimeDifference(data.beatmap.beatmapset.ranked_date) : getTimeDifference(data.beatmap.last_updated)
+
+    const request_time = ranked_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
+
+    svg = replaceText(svg, getPanelNameSVG('Map Statistics (!ymm)', 'M', 'v0.5.0 DX', request_time), reg_index);
 
     // 需要参数
     const mode = getGameMode(data?.expected?.mode, 0, data?.beatmap?.mode);
