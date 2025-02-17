@@ -1202,7 +1202,7 @@ const getModsSVG = (mods = [""], x, y, mod_w, text_h, interval) => {
     }
 
     function insertMod(mod, x, y, w, text_h) {
-        const acronym = mod?.acronym || mod.toString()
+        const acronym = mod?.acronym || ''
         const mod_color = getModColor(acronym)
         const additional = getModAdditionalInformation(mod);
 

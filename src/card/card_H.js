@@ -63,7 +63,7 @@ export async function card_H(data = {
         let offset_x = 620 - i * 20;
 
         if (isNotNullOrEmptyObject(mod)) {
-            const acronym = mod?.acronym || mod.toString()
+            const acronym = mod?.acronym || ''
             const mod_color = getModColor(acronym)
             const additional = getModAdditionalInformation(mod);
 

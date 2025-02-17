@@ -142,7 +142,7 @@ export async function card_N(data = {
     const insertMod = (mod, i, offset_x) => {
         const x = offset_x + i * 24;
 
-        const acronym = mod?.acronym || mod.toString()
+        const acronym = mod?.acronym || ''
         const mod_color = getModColor(acronym)
 
         // 模组 svg 化

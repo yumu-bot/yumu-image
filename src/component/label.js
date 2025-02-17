@@ -580,7 +580,7 @@ export async function label_C1(data = {
     const insertMod = (mod, i, offset_x) => {
         let x = offset_x + i * 10;
 
-        const acronym = mod?.acronym || mod.toString()
+        const acronym = mod?.acronym || ''
         const mod_color = getModColor(acronym)
 
         if (mod === 'NF') return ''; //不画NF的图标，因为没必要

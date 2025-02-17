@@ -122,7 +122,7 @@ export async function card_J(data = {
         let offset_x = 179 + i * 14;
         let offset_y = 69 - j * 12; //原来是 14，后面做了调整
 
-        let acronym = mod?.acronym || mod.toString()
+        let acronym = mod?.acronym || ''
 
         const mod_color = getModColor(acronym)
 
