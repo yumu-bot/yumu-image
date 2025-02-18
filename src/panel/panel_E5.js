@@ -737,7 +737,8 @@ const component_E7 = (
         fc_pp_text = Math.round(data?.perfect_pp || 0);
     }
 
-    const is_perfect = percent_type === 'SS' && (Math.round(data?.perfect_pp || 0) - Math.round(data?.pp || 0)) < 1e-4
+    const is_perfect = (percent_type === 'SS' && Math.round(percent * 100) > 100 - 1e-7)
+        || (Math.round(data?.perfect_pp || 0) - Math.round(data?.pp || 0)) < 1e-4
 
     if (is_perfect) {
         reference_pp_text = ' / PERFECT';
