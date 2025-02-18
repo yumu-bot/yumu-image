@@ -59,7 +59,7 @@ export async function card_A2(data = {
 
     const title1 = title_font.getTextPath(
         title_font.cutStringTail(data.title1, title_size, title1_maxWidth),
-        20, 46.6, title_size, 'left baseline', '#fff');
+        20, 46.6 - 1.8, title_size, 'left baseline', '#fff');
     const title2 = title2_font.getTextPath(
         title2_font.cutStringTail(data.title2, title2_size, title_maxWidth),
         20, 77.4, title2_size, 'left baseline', '#fff');
