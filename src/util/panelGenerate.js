@@ -16,7 +16,7 @@ import {
     isNotEmptyArray,
     getTimeByDHMS,
     requireNonNullElse,
-    getDifficultyName, getDiffBG, isNotEmptyString, round, rounds,
+    getDifficultyName, getDiffBG, isNotEmptyString, round, rounds, getFormattedTime,
 } from "./util.js";
 import {getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -640,12 +640,13 @@ export const PanelGenerate = {
         const isQualified = ranked === 3;
         const isRanked = hasLeaderBoard(ranked) && ! isQualified;
 
-        const title1 = s.title || 'Unknown Title';
-        const title2 = s.artist || 'Unknown Artist';
+        const title1 = s.title_unicode || 'Unknown Title';
+        const title2 = s.artist_unicode || 'Unknown Artist';
         const title3 = s.creator || 'Unknown Mapper';
         const left1 = '';
         const left2 = '#' + rank || '#0';
         const left3 = 's' + s.id || 's0';
+        /*
         const right1 = isQualified ? 'Expected:' :
             (isRanked ? 'Ranked:' :
                 'Submitted:');
@@ -653,15 +654,35 @@ export const PanelGenerate = {
         const right2 = isQualified ? getApproximateRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]') :
             (isRanked ? moment(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm") :
                 moment(submitted_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm"));
+
+         */
+
+        const right1 = isQualified ? 'Expected:' : (isRanked ? 'Ranked:' : 'Submitted:')
+
+        const right2 = (isQualified || isRanked) ? getFormattedTime(ranked_date) : getFormattedTime(submitted_date)
+
         let right3b;
         let right3m;
 
+        /*
         const days = getApproximateLeftRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]', 0);
         const hours = getApproximateLeftRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]', 1);
         const minutes = getApproximateLeftRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]', 2);
 
+         */
+
         if (isQualified) {
-            if (days > 0) {
+            const now = moment().subtract(8, 'hours')
+            const expected = moment(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]')
+
+            const days = expected.diff(now, "days")
+            const hours = expected.diff(now, "hours") % 24
+            const minutes = expected.diff(now, "minutes") % 60
+
+            if (expected.isBefore(now)) {
+                right3b = '...';
+                right3m = '';
+            } else if (days > 0) {
                 right3b = days.toString();
                 right3m = 'd' + hours + 'h';
             } else if (hours > 0) {
