@@ -110,6 +110,12 @@ export async function panel_E2(data = {
         support_level: 0,
         post_count: 244,
         follower_count: 495,
+        team: {
+            flag_url: "https://assets.ppy.sh/teams/flag/79/a383b50aec24e020947674e4d545a1fd1ac9867e2a241b8286ba8553d6d9ff22.png",
+            id: 79,
+            name: "team cool",
+            short_name: "COOL"
+        },
         statistics: {
             pp: 6196.46,
             ss: 32,

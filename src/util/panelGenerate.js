@@ -56,6 +56,8 @@ export const PanelGenerate = {
         const sub_icon1 = user?.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
 
+        const is_team_member = user.team != null
+
         const left1 = user?.statistics?.global_rank ?
             '#' + user.statistics.global_rank : (user?.rank_highest?.rank ?
                     '#' + user.rank_highest.rank + '^ (' + moment(user.rank_highest.updated_at, "X").year() + ')' : '#0'
@@ -72,8 +74,9 @@ export const PanelGenerate = {
             (user?.statistics?.level_current === 1 && user?.statistics?.level_progress === 0 ? 'NOT PLAYED' : 'AFK'));
 
         //历史记录功能！
-        const pp_d = historyUser ? Math.round((user.pp - historyUser?.statistics?.pp) * 100) / 100 : 0
-        const right1 = (pp_d > 0) ? '+' + pp_d + 'PP' : ((pp_d < 0) ? pp_d + 'PP' : '');
+        const pp_d = (historyUser != null) ? Math.round((user.pp - historyUser?.statistics?.pp) * 100) / 100 : 0
+        const right1 = (pp_d > 0) ? '+' + pp_d + 'PP' :
+            ((pp_d < 0) ? pp_d + 'PP' : (is_team_member ? '[' + user.team.short_name + ']' : ''))
 
         return {
             background,
@@ -82,6 +85,7 @@ export const PanelGenerate = {
             sub_icon2: '',
             sub_banner: '',
             country: country,
+            team_url: user?.team?.flag_url,
 
             top1: user?.username,
             left1: left1,
@@ -719,6 +723,7 @@ export const PanelGenerate = {
             right3m: right3m,
         };
 
+        /*
         function getApproximateRankedTime(date = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]') {
 
             const dateP7 = moment(date, format).add(8, 'hours').add(7, 'days');
@@ -742,6 +747,8 @@ export const PanelGenerate = {
                     return dateP7.diff(moment(), "minutes") % 60;
             }
         }
+
+         */
     },
 
     // 给panel_A5用的

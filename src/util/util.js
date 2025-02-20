@@ -95,11 +95,16 @@ export function readTemplate(path = '') {
     return fs.readFileSync(path, 'utf8');
 }
 
+/**
+ *
+ * @param path
+ * @returns {string}
+ */
 export function readFile(path = '') {
     try {
         return fs.readFileSync(path, 'binary');
     } catch (e) {
-        return undefined;
+        return '';
     }
 }
 
@@ -520,9 +525,11 @@ export async function getBanner(link, use_cache = true, default_image_path = get
  * @return {Promise<string>} 位于文件系统的绝对路径
  */
 export async function readNetImage(path = '', use_cache = true, default_image_path = getImageFromV3('beatmap-DLfailBG.jpg')) {
+    if (path == null) return default_image_path;
+
     const error = getImageFromV3('error.png');
 
-    if (!path || !path.startsWith("http")) {
+    if (!path.startsWith("http")) {
         return readFile(path);
     }
 
@@ -574,7 +581,6 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
 /**
  * @param {number | string} base
  * @param {number | string} replace
- * @param {RegExp | string} reg
  */
 export function replaceText(base = '', replace = '', reg = /.*/) {
     return base.replace(reg, replace);

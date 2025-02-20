@@ -3,7 +3,7 @@ import {
     getFlagPath,
     implantImage,
     readTemplate,
-    replaceText, replaceTexts, isASCII,
+    replaceText, replaceTexts, isASCII, readNetImage,
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 
@@ -14,7 +14,9 @@ export async function card_A1(data = {
     sub_icon1: getImageFromV3('object-card-supporter.png'),
     sub_icon2: '',
     sub_banner: '',
+
     country: null,
+    team_url: null,
 
     top1: 'Muziyami',
     top2: '',
@@ -36,6 +38,7 @@ export async function card_A1(data = {
     const reg_country_flag = /(?<=<g style="clip-path: url\(#clippath-CA1-3\);">)/;
     const reg_sub_icon1 = /(?<=<g style="clip-path: url\(#clippath-CA1-4\);">)/;
     const reg_sub_icon2 = /(?<=<g style="clip-path: url\(#clippath-CA1-5\);">)/;
+    const reg_team_flag = /(?<=<g style="clip-path: url\(#clippath-CA1-7\);">)/;
 
     // 文本定义
     const right_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
@@ -67,18 +70,22 @@ export async function card_A1(data = {
     const right2 = torus.getTextPath(data.right2, 420, 141.836, 24, "right baseline", "#fff");
     const right3 = torus.get2SizeTextPath(data.right3b, data.right3m, 60, 48, 420, 191.59, 'right baseline', '#fff');
 
-    const flagSvg = await getFlagPath(data.country, 135, 64, 44); //x +5px
+    const icon_offset = (data.team_url != null) ? 90 : 0
+
+    const flag_svg = await getFlagPath(data.country, 135, 64, 44); //x +5px
+    svg = implantImage(svg, 72, 36, 200, 72, 1,
+        await readNetImage(data.team_url, true, ''), reg_team_flag)
 
     // 替换内容
-    svg = replaceText(svg, flagSvg, reg_country_flag); //高44宽60吧
+    svg = replaceText(svg, flag_svg, reg_country_flag); //高44宽60吧
     svg = replaceTexts(svg, [top1, left1, left2, right1, right2, right3], reg_text);
     svg = replaceTexts(svg, [top1, top2, left1, left2, right1, right2, right3], reg_text);
     // 替换图片
 
     svg = implantImage(svg, 430, 210, 0, 0, 0.6, data.background, reg_background);
     svg = implantImage(svg, 100, 100, 20, 20, 1, data.avatar, reg_avatar);
-    svg = implantImage(svg, 40, 40, 200, 70, 1, data?.sub_icon1 || '', reg_sub_icon1); //x +5px
-    svg = implantImage(svg, 40, 40, 250, 70, 1, data?.sub_icon2 || '', reg_sub_icon2); //x +5px
+    svg = implantImage(svg, 40, 40, 200 + icon_offset, 70, 1, data?.sub_icon1 || '', reg_sub_icon1); //x +5px
+    svg = implantImage(svg, 40, 40, 250 + icon_offset, 70, 1, data?.sub_icon2 || '', reg_sub_icon2); //x +5px
     svg = implantImage(svg, 320, 52, 70, 68, 1, data?.sub_banner || '', reg_banner);
 
     return svg.toString();
