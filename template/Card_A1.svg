@@ -18,7 +18,7 @@
             <rect id="Banner" x="70" y="68" width="320" height="52" rx="12" ry="12" style="fill: none;"/>
         </clipPath>
         <clipPath id="clippath-CA1-7">
-            <rect id="TeamFlag" x="200" y="72" rx="5" ry = "5" width="74" height="37" style="fill: none;"/>
+            <rect id="TeamFlag" x="200" y="72" rx="5" ry = "5" width="76" height="38" style="fill: none;"/>
         </clipPath>
     </defs>
     <g id="Background">

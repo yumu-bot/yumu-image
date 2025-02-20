@@ -73,7 +73,7 @@ export async function card_A1(data = {
     const icon_offset = (data.team_url != null) ? 90 : 0
 
     const flag_svg = await getFlagPath(data.country, 135, 64, 44); //x +5px
-    svg = implantImage(svg, 74, 37, 200, 72, 1,
+    svg = implantImage(svg, 76, 38, 200, 72, 1,
         await readNetImage(data.team_url, true, ''), reg_team_flag)
 
     // 替换内容
