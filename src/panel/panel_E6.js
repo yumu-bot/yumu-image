@@ -13,7 +13,7 @@ import {
     getNowTimeStamp,
     getPanelNameSVG, getTimeDifference,
     implantImage,
-    implantSvgBody,
+    implantSvgBody, isEmptyArray,
     isNotEmptyString,
     od2ms,
     readTemplate,
@@ -1028,6 +1028,18 @@ const PanelEGenerate = {
     },
 
     score2componentE6: (b) => {
+        let creators = ''
+        const owners = b?.owners || []
+        if (isEmptyArray(owners)) {
+            creators = b?.beatmapset?.creator || ''
+        } else {
+            for (const o of owners) {
+                creators += (o?.username || ('U' + (o?.id || '?'))) + ', '
+            }
+
+            creators = creators.slice(0, -2)
+        }
+
         return {
             title: b?.beatmapset?.title || '',
             title_unicode: b?.beatmapset?.title_unicode || '',
@@ -1035,7 +1047,7 @@ const PanelEGenerate = {
             difficulty_name: getDifficultyName(b) || '',
             bid: b?.id || 0,
             sid: b?.beatmapset?.id || 0,
-            creator: b?.beatmapset?.creator || '',
+            creator: creators,
             status: b?.status || 'pending',
             is_dmca: b?.beatmapset?.availability?.more_information != null
         }

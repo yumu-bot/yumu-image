@@ -22,7 +22,7 @@ import {
     getDifficultyName,
     isNumber,
     rounds,
-    round, getFormattedTime
+    round, getFormattedTime, isEmptyArray
 } from "../util/util.js";
 import {
     getRankBG, getScoreTypeImage,
@@ -188,7 +188,42 @@ export async function panel_E5(data = {
             last_updated: '2022-09-27T12:45:10Z',
             mode_int: 0,
             passcount: 100,
-            playcount: 188
+            playcount: 188,
+            owners: [
+                {
+                    "id": 1653229,
+                    "username": "_Stan"
+                },
+                {
+                    "id": 3793196,
+                    "username": "Critical_Star"
+                },
+                {
+                    "id": 6117525,
+                    "username": "ruka"
+                },
+                {
+                    "id": 7082178,
+                    "username": "[Crz]Satori"
+                },
+                {
+                    "id": 7590894,
+                    "username": "ExNeko"
+                },
+                {
+                    "id": 10125072,
+                    "username": "U1d"
+                },
+                {
+                    "id": 10500832,
+                    "username": "[Crz]xz1z1z"
+                },
+                {
+                    "id": 13026904,
+                    "username": "tyrcs"
+                }
+            ]
+
         },
         beatmapset: {
             artist: 'MixBadGun',
@@ -1353,6 +1388,18 @@ const PanelEGenerate = {
     },
 
     score2componentE6: (score) => {
+        let creators = ''
+        const owners = score?.beatmap?.owners || []
+        if (isEmptyArray(owners)) {
+            creators = score?.beatmapset?.creator || ''
+        } else {
+            for (const o of owners) {
+                creators += (o?.username || ('U' + (o?.id || '?'))) + ', '
+            }
+
+            creators = creators.slice(0, -2)
+        }
+
         return {
             title: score?.beatmapset?.title || '',
             title_unicode: score?.beatmapset?.title_unicode || '',
@@ -1360,7 +1407,7 @@ const PanelEGenerate = {
             difficulty_name: getDifficultyName(score?.beatmap),
             bid: score?.beatmap?.id || 0,
             sid: score?.beatmapset?.id || 0,
-            creator: score?.beatmapset?.creator || '',
+            creator: creators,
             status: score?.beatmap?.status || 'pending',
             is_dmca: score?.beatmap?.beatmapset?.availability?.more_information != null
         }

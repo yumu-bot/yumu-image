@@ -1,9 +1,27 @@
 import {
-    ar2ms, cs2px,
-    exportJPEG, getAvatar, getBeatMapTitlePath, getDiffBG, getDifficultyName, getFileSize, getGameMode, getImageFromV3, getMapStatusImage, getPanelNameSVG,
-    implantImage, implantSvgBody, isBlankString, isNotEmptyArray, od2ms,
+    ar2ms,
+    cs2px,
+    exportJPEG,
+    getAvatar,
+    getBeatMapTitlePath,
+    getDiffBG,
+    getDifficultyName,
+    getFileSize,
+    getGameMode,
+    getImageFromV3,
+    getMapStatusImage,
+    getPanelNameSVG,
+    implantImage,
+    implantSvgBody,
+    isBlankString,
+    isEmptyArray,
+    isNotEmptyArray,
+    od2ms,
     readTemplate,
-    replaceText, replaceTexts, round, rounds
+    replaceText,
+    replaceTexts,
+    round,
+    rounds
 } from "../util/util.js";
 import {getRankBG, hasLeaderBoard} from "../util/star.js";
 import {card_A2} from "../card/card_A2.js";
@@ -1066,6 +1084,18 @@ const PanelEGenerate = {
     },
 
     score2componentE6: (b) => {
+        let creators = ''
+        const owners = b?.owners || []
+        if (isEmptyArray(owners)) {
+            creators = b?.beatmapset?.creator || ''
+        } else {
+            for (const o of owners) {
+                creators += (o?.username || ('U' + (o?.id || '?'))) + ', '
+            }
+
+            creators = creators.slice(0, -2)
+        }
+
         return {
             title: b?.beatmapset?.title || '',
             title_unicode: b?.beatmapset?.title_unicode || '',
@@ -1073,7 +1103,7 @@ const PanelEGenerate = {
             difficulty_name: getDifficultyName(b) || '',
             bid: b?.id || 0,
             sid: b?.beatmapset?.id || 0,
-            creator: b?.beatmapset?.creator || '',
+            creator: creators,
             status: b?.status || 'pending',
             is_dmca: b?.beatmapset?.availability?.more_information != null
         }
