@@ -34,7 +34,7 @@ import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi, torus} f
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModAdditionalInformation, getModMultiplier} from "../util/mod.js";
+import {getModAdditionalInformation, getModMultiplier, matchAnyMods} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -1089,7 +1089,7 @@ const PanelEGenerate = {
 
         const mode = score?.ruleset_id || 'osu';
 
-        let name;
+        let name
 
         const difficulty = (score?.beatmap?.version || "")
             .replaceAll("0", "o")
@@ -1117,58 +1117,61 @@ const PanelEGenerate = {
 
          */
 
-        for (const d of iidx) {
-            if (difficulty.includes(d.toUpperCase())) {
-                return {
-                    name: d.toUpperCase(),
-                    star: sr,
-                    mode: mode,
+        // 如果有会导致星数大幅变化的模组，则不走特殊匹配方式
+        if (matchAnyMods(score?.mods, ['DT', 'NC', 'HT', 'DC']) === false) {
+            for (const d of iidx) {
+                if (difficulty.includes(d.toUpperCase())) {
+                    return {
+                        name: d.toUpperCase(),
+                        star: sr,
+                        mode: mode,
+                    }
                 }
             }
-        }
 
-        for (const i in sdvx) {
-            if (difficulty.includes(sdvx[i].toUpperCase()) || difficulty.includes(sdvx_short[i].toUpperCase())) {
-                return {
-                    name: sdvx_short[i].toUpperCase(),
-                    star: sr,
-                    mode: mode,
+            for (const i in sdvx) {
+                if (difficulty.includes(sdvx[i].toUpperCase()) || difficulty.includes(sdvx_short[i].toUpperCase())) {
+                    return {
+                        name: sdvx_short[i].toUpperCase(),
+                        star: sr,
+                        mode: mode,
+                    }
                 }
             }
-        }
 
-        for (const d of standard) {
-            if (getGameMode(score.mode, 1) !== 'o') break
+            for (const d of standard) {
+                if (getGameMode(score.mode, 1) !== 'o') break
 
-            if (difficulty.includes(d.toUpperCase())) {
-                return {
-                    name: d.toUpperCase(),
-                    star: sr,
-                    mode: mode,
+                if (difficulty.includes(d.toUpperCase())) {
+                    return {
+                        name: d.toUpperCase(),
+                        star: sr,
+                        mode: mode,
+                    }
                 }
             }
-        }
 
-        for (const d of taiko) {
-            if (getGameMode(score.mode, 1) !== 't') break
+            for (const d of taiko) {
+                if (getGameMode(score.mode, 1) !== 't') break
 
-            if (difficulty.includes(d.toUpperCase())) {
-                return {
-                    name: d.toUpperCase(),
-                    star: sr,
-                    mode: mode,
+                if (difficulty.includes(d.toUpperCase())) {
+                    return {
+                        name: d.toUpperCase(),
+                        star: sr,
+                        mode: mode,
+                    }
                 }
             }
-        }
 
-        for (const d of fruits) {
-            if (getGameMode(score.mode, 1) !== 'c') break
+            for (const d of fruits) {
+                if (getGameMode(score.mode, 1) !== 'c') break
 
-            if (difficulty.includes(d.toUpperCase())) {
-                return {
-                    name: d.toUpperCase(),
-                    star: sr,
-                    mode: mode,
+                if (difficulty.includes(d.toUpperCase())) {
+                    return {
+                        name: d.toUpperCase(),
+                        star: sr,
+                        mode: mode,
+                    }
                 }
             }
         }

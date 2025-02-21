@@ -1735,7 +1735,7 @@ export function getDifficultyName(beatmap) {
 
         if (pattern.test(difficulty_text) === false) {
             const key = Math.round(beatmap.cs)
-            const remove_pattern = new RegExp("\\s*" + key + "K\\s*", "g");
+            const remove_pattern = new RegExp("[\\s\[/\\]*" + key + "K[\\s\]/\\]*", "g");
 
             difficulty_text = '[' + key + 'K] ' + difficulty_text.replace(remove_pattern, ' ').trim()
         }
