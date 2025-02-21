@@ -163,29 +163,12 @@ export async function panel_F(
 async function event2CardC(
     event = {
         id: 2400731946,
-        detail: {type: 'other', text: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)'},
-        timestamp: '2024-11-23T13:41:52Z',
-        game: {
-            id: 605697970,
-            beatmap: {},
-            beatmap_id: 794779,
-            start_time: '2024-11-23T13:41:52Z',
-            end_time: '2024-11-23T13:44:07Z',
-            mode_int: 0,
-            mods: ['NF'],
-            scores: [
-                [Object], [Object],
-                [Object], [Object],
-                [Object], [Object],
-                [Object], [Object]
-            ],
-            team_type: 'team-vs',
-            scoring_type: 'scorev2',
-            mode: 'OSU',
-            winning_team_score: 3046798,
-            winning_team: 'red',
-            is_team_vs: true
+        detail: {
+            type: 'other',
+            text: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)'
         },
+        timestamp: '2024-11-23T13:41:52Z',
+        game: {},
         type: 'Other',
         text: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)'
     }

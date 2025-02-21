@@ -751,6 +751,63 @@ export const PanelGenerate = {
          */
     },
 
+    roundInfo2CardA2: async (data) => {
+        const round = data.round
+        const is_team_vs = round.is_team_vs;
+
+        const split = getMatchNameSplitted(data?.stat?.name)
+
+        let title1
+        let title2
+
+        if (isNotEmptyString(split.team1)) {
+            title1 = split.name;
+            title2 = split.team1 + ' vs ' + split.team2;
+        } else {
+            title1 = data?.stat?.name;
+            title2 = '';
+        }
+
+        const mods = round?.mods || [];
+
+        const background = await getMapBG(round?.beatmap?.beatmapset_id);
+
+        let left1;
+
+        if (mods.length > 0) {
+            left1 = ' +';
+
+            mods.forEach(v => {
+                left1 += (v.toString() + ' ');
+            });
+
+            left1 = left1.trim();
+        }
+
+        const left2 = 'Rounds ' + ((data?.index > 80) ? ('80+') : ((data?.index || 0) + 1));
+        const left3 = 'Scores ' + (round?.scores?.length || '0')
+
+        const right2 = 'MID: ' + (data?.stat?.id || '0')
+        const right3b = is_team_vs ? 'TeamVS' : 'h2h'
+
+        return {
+            background: background,
+            map_status: '',
+
+            title1: title1,
+            title2: title2,
+            title_font: 'PuHuiTi',
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: '',
+            right2: right2,
+            right3b: right3b,
+            right3m: '',
+            isTeamVS: is_team_vs,
+        };
+    },
+
     // 给panel_A5用的
     score2CardH: async (s, identifier = 1, use_cache = null) => {
         const cache = requireNonNullElse(use_cache, hasLeaderBoard(s?.beatmap?.ranked || s?.beatmap?.status))

@@ -1,8 +1,8 @@
 import {
     exportJPEG, getFormattedTime,
-    getMapBG, getMatchNameSplitted, getNowTimeStamp,
+    getMapBG, getNowTimeStamp,
     getPanelNameSVG, implantImage,
-    implantSvgBody, isNotEmptyString, readTemplate,
+    implantSvgBody, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -186,7 +186,7 @@ export async function panel_F2(data = {}) {
     const beatmap = round?.beatmap; 
 
     // 导入比赛简介卡（A2卡
-    const f = await card_A2(await roundInfo2CardA2(data));
+    const f = await card_A2(await PanelGenerate.roundInfo2CardA2(data));
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
@@ -251,80 +251,4 @@ function implantCardA1(svg, replace, reg, row = 1, column = 1, maxColumn = 1, te
 
     svg = implantSvgBody(svg, x, y, replace, reg);
     return svg;
-}
-
-async function roundInfo2CardA2(data) {
-    const round = data.round
-    const isTeamVS = (round?.team_type === 'team-vs');
-
-    const red = round?.team_score?.red || 0;
-    const blue = round?.team_score?.blue || 0;
-
-    const split = getMatchNameSplitted(data?.stat?.name)
-
-    let title2;
-    const title1 = split.name;
-    if (isNotEmptyString(split.team1)) {
-        title2 = split.team1 + ' vs ' + split.team2;
-    } else {
-        title2 = '';
-    }
-
-    const mods = round?.mods || [];
-
-    const background = await getMapBG(round?.beatmap?.beatmapset_id);
-
-    let left1;
-
-    if (mods.length > 0) {
-        left1 = ' +';
-
-        mods.forEach(v => {
-            left1 += (v.toString() + ' ');
-        });
-
-        left1 = left1.trim();
-    }
-
-    const left2 = 'Rounds ' + ((data?.index > 80) ? ('80+') : data?.index);
-    const left3 = 'Scores' + (round?.scores?.length || '0')
-
-    const right1 = 'MID: ' + (data?.stat?.id || '0')
-
-    let right2;
-    let right3b;
-    let right3m = '';
-
-    if (round?.team_type === 'team-vs' || round?.team_type === 'tag-coop-vs') {
-
-        right2 = red + ' vs ' + blue + ' (' +  Math.abs(red - blue) + ')';
-        right3b = '';
-        right3m = round?.winning_team + ' wins';
-    } else {
-        if (isTeamVS) {
-            right2 = red + ' vs ' + blue;
-            right3b = 'draw';
-        } else {
-            right2 = 'Total ' + (round?.team_score?.total || 0);
-            right3b = 'h2h';
-        }
-    }
-
-
-    return {
-        background: background,
-        map_status: '',
-
-        title1: title1,
-        title2: title2,
-        title_font: 'PuHuiTi',
-        left1: left1,
-        left2: left2,
-        left3: left3,
-        right1: right1,
-        right2: right2,
-        right3b: right3b,
-        right3m: right3m,
-        isTeamVS: isTeamVS,
-    };
 }

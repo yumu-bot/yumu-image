@@ -250,7 +250,8 @@ export async function panel_E7(
     const players = data?.players || []
     const length = players?.length || 0
 
-    const last_round = isNotEmptyArray(match?.match?.events) ? match.match.events[match.match.events.length - 1] : {}
+    let rounds = (match.match.events || []).filter(e => {return e.game != null})
+    const last_round = isNotEmptyArray(rounds) ? rounds[rounds.length - 1] : {}
 
     const mode = getGameMode(data?.mode, 0, last_round?.mode);
 
