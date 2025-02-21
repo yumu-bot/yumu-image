@@ -171,7 +171,7 @@ export const getStableRankFromLazerScore = (score) => {
             break;
     }
 
-    const isSilver = matchAnyMods(score.mods, ['HD', 'FL', 'BL', 'CO']);
+    const isSilver = matchAnyMods(score.mods, ['HD', 'FI', 'FL', 'BL'])
     if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
 
     return rank
@@ -285,7 +285,7 @@ export const getApproximateRank = (score = {
             break;
     }
 
-    const isSilver = hasMod(getModInt(score.mods), 'HD') || hasMod(getModInt(score.mods), 'FL');
+    const isSilver = matchAnyMods(score.mods, ['HD', 'FI', 'FL', 'BL'])
     if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
 
     return rank;

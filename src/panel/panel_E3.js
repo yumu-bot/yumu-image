@@ -13,7 +13,7 @@ import {card_E3} from "../card/card_E3.js";
 import {card_E5} from "../card/card_E5.js";
 import {LABELS} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
+import {getModInt, hasAnyMod, hasMod, matchAnyMods} from "../util/mod.js";
 import {hasLeaderBoard, rankSS2X} from "../util/star.js";
 
 export async function router(req, res) {
@@ -398,7 +398,7 @@ const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = ['']) => {
         } break;
     }
 
-    const isSilver = hasMod(getModInt(mods), 'HD') || hasMod(getModInt(mods), 'FL');
+    const isSilver = matchAnyMods(mods, ['HD', 'FI', 'FL', 'BL'])
     if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
 
     return rank;

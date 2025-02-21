@@ -29,7 +29,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, torus} from "../util/font.js";
 import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModAdditionalInformation, getModInt, hasMod} from "../util/mod.js";
+import {getModAdditionalInformation, getModInt, hasMod, matchAnyMods} from "../util/mod.js";
 
 
 export async function router(req, res) {
@@ -1119,7 +1119,7 @@ const rank2rank = (rank = 'SS') => {
     }
 }
 
-const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = ['']) => {
+const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = [{acronym: ''}]) => {
     let rank = 'F';
     const hasMiss = miss > 0;
 
@@ -1217,7 +1217,7 @@ const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = ['']) => {
         } break;
     }
 
-    const isSilver = hasMod(getModInt(mods), 'HD') || hasMod(getModInt(mods), 'FL');
+    const isSilver = matchAnyMods(mods, ['HD', 'FI', 'FL', 'BL'])
     if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
 
     return rank;
