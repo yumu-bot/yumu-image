@@ -41,45 +41,7 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_F2(data = {
-    stat: {
-        name: 'test',
-        id: 114591894,
-        start_time: 1720415600,
-        end_time: null
-    },
-    round: {
-        mode: 'mania',
-        mods: [],
-        winning_team_score: 441025,
-        team_score: {total: 441025, red: 0, blue: 0},
-        winning_team: 'none',
-        id: 595346038,
-        beatmap_id: 4249702,
-        start_time: 1720416713,
-        end_time: 1720416753,
-        mod_int: 0,
-        scoring_type: 'score',
-        team_type: 'head-to-head',
-        beatmap: {
-            id: 4249702,
-            mode: 'mania',
-            status: 'ranked',
-            retry: 0,
-            fail: 0,
-            osuMode: 'MANIA',
-            beatmapset_id: 2034520,
-            difficulty_rating: 4.34,
-            total_length: 28,
-            user_id: 1192936,
-            version: '[7K] Insane',
-            beatmapset: [Object],
-            mode_int: 3
-        },
-        scores: [[Object]]
-    },
-    index: 2
-}) {
+export async function panel_F2(data = {}) {
     // 导入模板
     let svg = readTemplate('template/Panel_F2.svg');
 

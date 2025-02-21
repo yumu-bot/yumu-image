@@ -392,8 +392,8 @@ async function score2CardE3(score, calcPP) {
 
     return {
         density_arr: await getDensityArray(score.beatmap.id, score.mode, hasLeaderBoard(score?.beatmap?.ranked)),
-        retry_arr: score.beatmap.retryList || [],
-        fail_arr: score.beatmap.failList || [],
+        retry_arr: score.beatmap.retries || [],
+        fail_arr: score.beatmap.fails || [],
 
         public_rating: score?.beatmap?.beatmapset?.public_rating, // || score2PublicRating(score),
         pass_percent: pass_arr[0],
@@ -871,8 +871,8 @@ const score2PassPercents = (score) => {
     const pc = score?.beatmap?.playcount || 0;
     const pass = score?.beatmap?.passcount || 0;
 
-    const fail_sum = score?.beatmap?.failList ? score?.beatmap?.failList.reduce((s, v) => s + v) : 0;
-    const retry_sum = score?.beatmap?.retryList ? score?.beatmap?.retryList.reduce((s, v) => s + v) : 0;
+    const fail_sum = score?.beatmap?.fails ? score?.beatmap?.fails.reduce((s, v) => s + v) : 0;
+    const retry_sum = score?.beatmap?.retries ? score?.beatmap?.retries.reduce((s, v) => s + v) : 0;
     const not_pass_sum = fail_sum + retry_sum; //虚假的未通过人数
     const not_pass_real_percent = (pc !== 0) ? ((pc - pass) / pc) : 0; //真实的未通过率
 

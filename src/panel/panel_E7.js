@@ -98,8 +98,8 @@ export async function panel_E7(
                 has_leader_board: true
             },
             max_combo: 0,
-            retryList: [0],
-            failList: [0],
+            retries: [0],
+            fails: [0],
             preview_name: 'PSYQUI - Hype feat. Such (Smug Nanachi) [Insane]',
             retry: 0,
             fail: 0,
@@ -940,8 +940,8 @@ const PanelEGenerate = {
     score2componentE2: (b, density = [], rank) => {
         return {
             density_arr: density,
-            retry_arr: b?.retryList || [],
-            fail_arr: b?.failList || [],
+            retry_arr: b?.retries || [],
+            fail_arr: b?.fails || [],
 
             star: b?.difficulty_rating || 0,
 

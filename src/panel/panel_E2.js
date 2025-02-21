@@ -471,8 +471,8 @@ async function beatmap2CardE3(beatmap, rank, calcPP) {
 
     return {
         density_arr: await getDensityArray(beatmap.id, beatmap.mode, hasLeaderBoard(beatmap.ranked)),
-        retry_arr: beatmap.retryList || [],
-        fail_arr: beatmap.failList || [],
+        retry_arr: beatmap.retries || [],
+        fail_arr: beatmap.fails || [],
 
         public_rating: beatmap?.beatmapset?.public_rating, //beatmap2PublicRating(beatmap),
         pass_percent: pass_arr[0],
@@ -606,8 +606,8 @@ const beatmap2PassPercents = (beatmap) => {
     const pc = beatmap.playcount || 0;
     const pass = beatmap.passcount || 0;
 
-    const fail_sum = beatmap?.failList ? beatmap?.failList.reduce((s, v) => s + v) : 0;
-    const retry_sum = beatmap?.retryList ? beatmap?.retryList.reduce((s, v) => s + v) : 0;
+    const fail_sum = beatmap?.fails ? beatmap?.fails.reduce((s, v) => s + v) : 0;
+    const retry_sum = beatmap?.retries ? beatmap?.retries.reduce((s, v) => s + v) : 0;
     const not_pass_sum = fail_sum + retry_sum; //虚假的未通过人数
     const not_pass_real_percent = (pc !== 0) ? ((pc - pass) / pc) : 0; //真实的未通过率
 

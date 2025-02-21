@@ -155,8 +155,8 @@ export async function panel_E5(data = {
             id: 3787814,
             mode: 'osu',
             status: 'graveyard',
-            retryList: [Array],
-            failList: [Array],
+            retries: [Array],
+            fails: [Array],
             convert: false,
             ranked: -2,
             url: 'https://osu.ppy.sh/beatmaps/3787814',
@@ -1244,8 +1244,8 @@ const PanelEGenerate = {
     score2componentE2: (score, density = [], progress = 0) => {
         return {
             density_arr: density,
-            retry_arr: score?.beatmap?.retryList || [],
-            fail_arr: score?.beatmap?.failList || [],
+            retry_arr: score?.beatmap?.retries || [],
+            fail_arr: score?.beatmap?.fails || [],
 
             star: score?.beatmap?.difficulty_rating || 0,
 
