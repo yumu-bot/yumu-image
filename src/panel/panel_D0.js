@@ -20,7 +20,7 @@ import {pp2UserBG} from "../util/mascotBanner.js";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_D(data);
+        const svg = await panel_D0(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -32,7 +32,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_D(data);
+        const svg = await panel_D0(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -47,7 +47,7 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_D(data = {
+export async function panel_D0(data = {
     //A1
     user: {},
     historyUser: null,

@@ -2,7 +2,7 @@ import {
     exportJPEG, getAvatar, getFormattedTime, getImageFromV3,
     getMapBG, getNowTimeStamp,
     getPanelNameSVG, implantImage,
-    implantSvgBody, isEmptyArray, readTemplate,
+    implantSvgBody, isEmptyArray, isNotNull, readTemplate,
     replaceText, replaceTexts, round, rounds, transformSvgBody,
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
@@ -46,9 +46,10 @@ export async function router_svg(req, res) {
 export async function panel_F3(
     data = {
         stat: {
-            id: 117251598,
-            start_time: '2025-02-21T11:50:06Z',
-            name: 'test'
+            id: 59438351,
+            start_time: '2020-03-21T12:25:02Z',
+            end_time: '2020-03-21T14:03:48Z',
+            name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)'
         },
         round: {
             id: 611851443,
@@ -146,6 +147,8 @@ export async function panel_F3(
     // 导入模板
     let svg = readTemplate('template/Panel_F2.svg');
 
+    console.log(data.stat)
+
     // 路径定义
     const reg_height = '${height}'
     const reg_panelheight = '${panelheight}'
@@ -155,9 +158,10 @@ export async function panel_F3(
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PF-2\);">)/;
 
     // 面板文字
-    const request_time = 'match time: ' +
-        getFormattedTime(data?.stat?.start_time, 'YYYY/MM/DD HH:mm') + ' - in progress'
-        + ' // request time: ' + getNowTimeStamp();
+    const match_time = isNotNull(data?.stat?.end_time) ? ('match ends at: ' + getFormattedTime(data?.stat?.end_time))  :
+        ('match starts at: ' + getFormattedTime(data?.stat?.start_time) + ' - in progress')
+
+    const request_time = match_time + ' // request time: ' + getNowTimeStamp();
     const panel_name = getPanelNameSVG('Match Rounds v2 (!ymmr)', 'MR', 'v0.5.1 DX', request_time);
 
     // 插入文字
@@ -211,7 +215,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
     let svg = `   
         <defs>
         <clipPath id="clippath-CP1-1">
-            <circle cx="215" cy="215" r="150" style="fill: none;"/>
+            <circle cx="215" cy="205" r="150" style="fill: none;"/>
         </clipPath>
         <clipPath id="clippath-CP1-2">
             <rect x="0" y="0" rx="20" ry="20" width="430" height="550" style="fill: none;"/>
@@ -219,7 +223,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
         <filter id="inset-shadow-CP1-1" height="150%" width="150%" x="-25%" y="-25%" filterUnits="userSpaceOnUse">
             <feFlood flood-color="#000"/>
             <feComposite in2="SourceGraphic" operator="out"/>
-            <feMorphology operator="dilate" radius="15" />
+            <feMorphology operator="dilate" radius="10" />
             <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
             <feComposite in2="SourceGraphic" operator="atop"/>
         </filter>
@@ -232,18 +236,19 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
             <g style="clip-path: url(#clippath-CP1-2);" filter="url(#blur-CP1-1)">
             </g>
           </g>
-          <g id="Avatar_CP1">
-            <g style="clip-path: url(#clippath-CP1-1);" filter="url(#inset-shadow-CP1-1)">
+          <g id="Shadow_CP1" style="clip-path: url(#clippath-CP1-1);" filter="url(#inset-shadow-CP1-1)">
+            <circle cx="215" cy="205" r="150" style="fill: #fff;"/>
+            <g style="clip-path: url(#clippath-CP1-1);">
             </g>
           </g>
           <g id="Text_CP1">
           </g>`;
 
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-CP1-2\);" filter="url\(#blur-CP1-1\)">)/
-    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CP1-1\);" filter="url\(#inset-shadow-CP1-1\)">)/
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CP1-1\);">)/
     const reg_text = /(?<=<g id="Text_CP1">)/
 
-    svg = implantImage(svg, 300, 300, 65, 65, 1, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar)
+    svg = implantImage(svg, 300, 300, 65, 55, 1, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar)
 
     svg = implantImage(svg, 430, 550, 0, 0, 0.6, getRankBG(match_score?.rank, match_score?.match?.pass), reg_background)
 
@@ -329,8 +334,8 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
         <filter id="inset-shadow-CP2-1" height="150%" width="150%" x="-25%" y="-25%" filterUnits="userSpaceOnUse">
             <feFlood flood-color="#000"/>
             <feComposite in2="SourceGraphic" operator="out"/>
-            <feMorphology operator="dilate" radius="15" />
-            <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
+            <feMorphology operator="dilate" radius="5" />
+            <feGaussianBlur in="userSpaceOnUse" stdDeviation="5" result="blur"/>
             <feComposite in2="SourceGraphic" operator="atop"/>
         </filter>
         <filter id="blur-CP2-1" height="110%" width="110%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
@@ -338,19 +343,20 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
         </filter>
         </defs>
           <g id="Base_CP2">
-            <rect x="0" y="0" rx="20" ry="20" width="430" height="160" style="fill: #382E32;"/>
+            <rect x="0" y="0" rx="20" ry="20" width="430" height="550" style="fill: #382E32;"/>
             <g style="clip-path: url(#clippath-CP2-2);" filter="url(#blur-CP2-1)">
             </g>
           </g>
-          <g id="Avatar_CP2">
-            <g style="clip-path: url(#clippath-CP2-1);" filter="url(#inset-shadow-CP2-1)">
+          <g id="Shadow_CP2" style="clip-path: url(#clippath-CP2-1);" filter="url(#inset-shadow-CP2-1)">
+            <circle cx="80" cy="80" r="65" style="fill: #fff;"/>
+            <g style="clip-path: url(#clippath-CP2-1);">
             </g>
           </g>
           <g id="Text_CP2">
           </g>`;
 
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-CP2-2\);" filter="url\(#blur-CP2-1\)">)/
-    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CP2-1\);" filter="url\(#inset-shadow-CP2-1\)">)/
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CP2-1\);">)/
     const reg_text = /(?<=<g id="Text_CP2">)/
 
     svg = implantImage(svg, 130, 130, 15, 15, 1, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar)
@@ -592,7 +598,7 @@ async function drawH2HCard(scores = [], max_combo = 0) {
 
     for (const i in scores) {
         const s = scores[i]
-        const compare_score = scores[0].score
+        const compare_score = (i < 1) ? scores[0].score : scores[i - 1].score
 
         if (i < p1_size) {
             p1.push(await card_P1(s, max_combo, compare_score))

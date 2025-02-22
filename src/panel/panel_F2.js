@@ -2,7 +2,7 @@ import {
     exportJPEG, getFormattedTime,
     getMapBG, getNowTimeStamp,
     getPanelNameSVG, implantImage,
-    implantSvgBody, readTemplate,
+    implantSvgBody, isNotNull, readTemplate,
     replaceText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -54,9 +54,9 @@ export async function panel_F2(data = {}) {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PF-2\);">)/;
 
     // 面板文字
-    const request_time = 'match time: ' +
-        getFormattedTime(data?.stat?.start_time, 'YYYY/MM/DD HH:mm') + ' - in progress'
-        + ' // request time: ' + getNowTimeStamp();
+    const match_time = isNotNull(data?.stat?.end_time) ? ('match ends at: ' + getFormattedTime(data?.stat?.end_time))  :
+        ('match starts at: ' + getFormattedTime(data?.stat?.start_time) + ' - in progress')
+    const request_time = match_time + ' // request time: ' + getNowTimeStamp();
     const panel_name = getPanelNameSVG('Match Rounds (!ymmr)', 'MR', 'v0.5.0 DX', request_time);
 
     // 插入文字
@@ -67,56 +67,55 @@ export async function panel_F2(data = {}) {
     let background_height = 40;
 
     const round = data.round
-    const scoreArr = round.scores || [];
-    let redArr = [], blueArr = [], noneArr = [];
+    const scores = round.scores || [];
+    let reds = [], blues = [], nones = [];
 
-    scoreArr.forEach(
+    scores.forEach(
         (v) => {
             switch (v.match.team) {
                 case 'red':
-                    redArr.push(v);
+                    reds.push(v);
                     break;
                 case 'blue':
-                    blueArr.push(v);
+                    blues.push(v);
                     break;
                 default :
-                    noneArr.push(v);
+                    nones.push(v);
                     break;
             }
         }
     )
 
-    const isTeamVS = ((round?.team_type || round?.teamType) === "team-vs");
-    const totalScore = round?.team_score?.total || round?.team_score?.total || 0;
+    const total = round?.total_team_score || 0;
 
-    const player_count = scoreArr.length;
+    const player_count = scores.length;
 
-    if (isTeamVS) {
+    if (round?.is_team_vs) {
         let redA1 = [];
         let blueA1 = [];
 
-        for (const v of redArr) {
-            v.total_score = totalScore;
+        for (const v of reds) {
+            v.total_score = total;
             v.total_player = player_count;
             const f = await card_A1(await PanelGenerate.matchScore2CardA1(v));
             redA1.push(f);
         }
 
-        for (const v of blueArr) {
-            v.total_score = totalScore;
+        for (const v of blues) {
+            v.total_score = total;
             v.total_player = player_count;
             const f = await card_A1(await PanelGenerate.matchScore2CardA1(v));
             blueA1.push(f);
         }
 
         //计算高度
-        const hr4 = Math.floor(redArr.length / 2);
-        const hb4 = Math.floor(blueArr.length / 2);
+        const hr4 = Math.floor(reds.length / 2);
+        const hb4 = Math.floor(blues.length / 2);
 
         const rr = redA1.length - hr4 * 2;
         const rb = blueA1.length - hb4 * 2;
 
-        const h = Math.max(Math.ceil(redArr.length / 2), Math.ceil(blueArr.length / 2));
+        const h = Math.max(Math.ceil(reds.length / 2), Math.ceil(blues.length / 2));
         panel_height += h * 250;
         background_height += h * 250;
 
@@ -149,8 +148,8 @@ export async function panel_F2(data = {}) {
     } else {
         let noneA1 = [];
 
-        for (const v of noneArr) {
-            v.total_score = totalScore;
+        for (const v of nones) {
+            v.total_score = total;
             v.total_player = player_count;
             const f = await card_A1(await PanelGenerate.matchScore2CardA1(v));
             noneA1.push(f);

@@ -1,6 +1,6 @@
 import express from "express";
 import formidable from "express-formidable";
-import {CACHE_PATH, deleteBeatMapFromDatabase, initPath, readFile} from "./src/util/util.js";
+import {CACHE_PATH, deleteBeatMapFromDatabase, initPath} from "./src/util/util.js";
 import {router as PanelA1Router} from "./src/panel/panel_A1.js";
 import {router as PanelA2Router} from "./src/panel/panel_A2.js";
 import {router as PanelA3Router} from "./src/panel/panel_A3.js";
@@ -16,14 +16,10 @@ import {router as PanelCRouter} from "./src/panel/panel_C.js";
 import {router as PanelC2Router} from "./src/panel/panel_C2.js";
 import {router as PanelDRouter} from "./src/panel/panel_D.js";
 import {router as PanelD2Router} from "./src/panel/panel_D2.js";
-import {router as PanelERouter} from "./src/panel/panel_E.js";
-import {router as PanelE2Router} from "./src/panel/panel_E2.js";
-import {router as PanelE3Router} from "./src/panel/panel_E3.js";
 import {router as PanelE5Router} from "./src/panel/panel_E5.js";
 import {router as PanelE6Router} from "./src/panel/panel_E6.js";
 import {router as PanelE7Router} from "./src/panel/panel_E7.js";
 import {router as PanelFRouter} from "./src/panel/panel_F.js";
-import {router as PanelF2Router} from "./src/panel/panel_F2.js";
 import {router as PanelF3Router} from "./src/panel/panel_F3.js";
 import {router as PanelHRouter} from "./src/panel/panel_H.js";
 import {router as PanelJRouter} from "./src/panel/panel_J.js";
@@ -82,14 +78,10 @@ app.post('/panel_C', PanelCRouter);
 app.post('/panel_C2', PanelC2Router);
 app.post('/panel_D', PanelDRouter);
 app.post('/panel_D2', PanelD2Router);
-app.post('/panel_E', PanelERouter);
-app.post('/panel_E2', PanelE2Router);
-app.post('/panel_E3', PanelE3Router);
 app.post('/panel_E5', PanelE5Router);
 app.post('/panel_E6', PanelE6Router);
 app.post('/panel_E7', PanelE7Router);
 app.post('/panel_F', PanelFRouter);
-app.post('/panel_F2', PanelF2Router);
 app.post('/panel_F3', PanelF3Router);
 app.post('/panel_H', PanelHRouter);
 app.post('/panel_J', PanelJRouter);
@@ -137,6 +129,8 @@ app.listen(process.env.PORT, () => {
     console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n监听端口: ${process.env.PORT}\n`);
 })
 
+/*
+
 // form: data:text ... img:file
 function checkData(req, files = ['']) {
     let fs = {};
@@ -178,3 +172,5 @@ function checkJsonData(req) {
     parseImage(json);
     return json;
 }
+
+ */
