@@ -157,7 +157,7 @@ export const PanelGenerate = {
 
         const country = user?.country_code || 'CN';
 
-        const left1 = user.statistics.global_rank ? '#' + user.statistics.global_rank : '#0';
+        const left1 = user?.statistics?.global_rank ? ('#' + user.statistics.global_rank) : '#0';
         const left2 = country + ' ' + (user?.id?.toString() || '0');
         // (user.statistics.country_rank ? '#' + user.statistics.country_rank : '#-') microUser 没有country rank
 
@@ -191,6 +191,7 @@ export const PanelGenerate = {
             sub_banner: '',
 
             country: country,
+            team_url: null,
 
             top1: user?.username,
             left1: left1,
@@ -201,6 +202,39 @@ export const PanelGenerate = {
             right3b: right3b,
             right3m: right3m,
         };
+    },
+
+    microTeamMember2CardA1: async (user, is_leader = false) => {
+        const background = await getBanner(user?.cover?.url, true);
+        const avatar = await getAvatar(user?.avatar_url, true);
+
+        const sub_icon1 = (user.is_supporter) ? getImageFromV3('object-card-supporter.png') : ''
+
+        const country = user?.country_code || 'CN';
+
+        const left1 = '[' + (user?.team?.short_name || '?') + ']'
+        const right1 = '(' + getTimeDifference(user?.last_visit) + ')'
+        const left2 = is_leader ? 'leader' : 'member'
+        const right2 = 'last visit: ' + getFormattedTime(user?.last_visit, 'YYYY-MM-DD HH:mm')
+        const right3m = user.is_online === true ? 'Online' : 'Offline'
+
+        return {
+            background,
+            avatar,
+            sub_icon1: sub_icon1,
+            sub_icon2: '',
+            sub_banner: '',
+
+            country: country,
+            team_url: user?.team?.flag_url,
+
+            top1: user?.username,
+            left1: left1,
+            left2: left2,
+            right1: right1,
+            right2: right2,
+            right3m: right3m,
+        }
     },
 
 
@@ -804,7 +838,36 @@ export const PanelGenerate = {
             right2: right2,
             right3b: right3b,
             right3m: '',
-            isTeamVS: is_team_vs,
+        };
+    },
+
+    team2CardA2: async (team) => {
+        const background = await readNetImage(team.flag)
+
+        const title1 = team?.name || 'Team'
+        const title2 = '[' + (team?.abbr || '?') + ']'
+
+        const left1 = team?.application || '?'
+        const left2 = getGameMode(team?.ruleset, 2)
+        const left3 = getFormattedTime(team.formed, "YYYY-MM", "MMMM YYYY")
+
+        const right2 = 'TeamID:'
+        const right3b = (team?.id || 0).toString()
+
+        return {
+            background: background,
+            map_status: '',
+
+            title1: title1,
+            title2: title2,
+            title_font: torus,
+            left1: left1,
+            left2: left2,
+            left3: left3,
+            right1: '',
+            right2: right2,
+            right3b: right3b,
+            right3m: '',
         };
     },
 

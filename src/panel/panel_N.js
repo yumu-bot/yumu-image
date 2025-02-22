@@ -67,7 +67,7 @@ export async function panel_N(
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A1
-    const cardA2 = await card_A2(await PanelGenerate.beatMapSet2CardA2(data?.beatmapset));
+    const cardA2 = card_A2(await PanelGenerate.beatMapSet2CardA2(data?.beatmapset));
 
     // 导入O1
     const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data?.beatmapset?.user));

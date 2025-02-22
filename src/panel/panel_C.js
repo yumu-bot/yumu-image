@@ -264,7 +264,7 @@ export async function panel_C(
     svg = replaceText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    const matchInfo = await card_A2(await PanelGenerate.matchRating2CardA2(data));
+    const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(data));
 
     // 插入图片和部件（新方法
     svg = putCustomBanner(svg, reg_banner);

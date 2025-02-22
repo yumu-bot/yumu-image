@@ -240,7 +240,7 @@ export async function panel_MS(data = {
     }
 
     // 导入 A2 卡
-    const cardA2 = await card_A2(await PanelGenerate.maimaiSong2CardA2(single_song, has_deluxe, has_standard));
+    const cardA2 = card_A2(await PanelGenerate.maimaiSong2CardA2(single_song, has_deluxe, has_standard));
 
     // 插入卡片
     svg = implantSvgBody(svg, 40, 40, cardA2, reg_card_a2);

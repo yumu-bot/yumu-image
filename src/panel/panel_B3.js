@@ -341,8 +341,8 @@ export async function panel_B3(data = {
             type = 'PA+'
             panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA', 'v0.5.0 DX');
 
-            card_left = await card_A2(await PanelGenerate.beatMap2CardA2(me));
-            card_right = await card_A2(await PanelGenerate.beatMap2CardA2(other));
+            card_left = card_A2(await PanelGenerate.beatMap2CardA2(me));
+            card_right = card_A2(await PanelGenerate.beatMap2CardA2(other));
 
 
             await drawMapPlus(my, label_left, graph_left, ABBR, NAME, false);
@@ -379,7 +379,7 @@ export async function panel_B3(data = {
             type = 'PA+'
             panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA', 'v0.5.0 DX');
 
-            card_left = await card_A2(await PanelGenerate.beatMap2CardA2(me));
+            card_left = card_A2(await PanelGenerate.beatMap2CardA2(me));
 
             await drawMapPlus(my, label_left, graph_left, ABBR, NAME, false);
 

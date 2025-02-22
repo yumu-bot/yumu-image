@@ -1600,7 +1600,7 @@ const _getTimeByDHMS = (seconds = 0, has_whitespace = false) => {
  * @param spacing 卡片区域上下的距离，一般是 40
  * @return {number}
  */
-export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, bannerHeight = 330, interval = 40, spacing = 40) => {
+export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, bannerHeight = 290, interval = 40, spacing = 40) => {
     if (cardPerRow == 0) return (bannerHeight + spacing);
     const row = Math.ceil((cardCount || 0) / cardPerRow);
 

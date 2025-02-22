@@ -329,7 +329,7 @@ export async function panel_A2(data = {
         beatmap_arr[beatmap_arr.length - 1],
     );
 
-    const search_cardA2 = await card_A2(search_result);
+    const search_cardA2 = card_A2(search_result);
     svg = implantSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
 
     //导入其他卡
@@ -341,7 +341,7 @@ export async function panel_A2(data = {
 
             const m = await card_M(v);
 
-            const a2 = await card_A2(
+            const a2 = card_A2(
                 await PanelGenerate.searchMap2CardA2(v, i + 1)
             );
 
@@ -351,7 +351,7 @@ export async function panel_A2(data = {
     } else {
         //紧凑型面板
         for (let i = 0; i < result_count; i++) {
-            const a2 = await card_A2(
+            const a2 = card_A2(
                 await PanelGenerate.searchMap2CardA2(beatmap_arr[i], i + 1)
             );
 

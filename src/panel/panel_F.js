@@ -146,7 +146,7 @@ export async function panel_F(
     const background_height = panel_height - 290;
 
     for (const i in beatmap_arr) {
-        const b = await card_A2(await PanelGenerate.matchBeatMap2CardA2(beatmap_arr[i]));
+        const b = card_A2(await PanelGenerate.matchBeatMap2CardA2(beatmap_arr[i]));
         svg = implantSvgBody(svg, 40, 330 + i * 250, b, reg_card_a2);
     }
 
@@ -154,7 +154,7 @@ export async function panel_F(
     svg = replaceText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    const matchInfo = await card_A2(await PanelGenerate.matchRating2CardA2(data, beatmap_arr[0]));
+    const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(data, beatmap_arr[0]));
     svg = implantSvgBody(svg, 40, 40, matchInfo, reg_maincard);
 
     return svg.toString();

@@ -9,6 +9,7 @@ import {router as PanelA5Router} from "./src/panel/panel_A5.js";
 import {router as PanelA6Router} from "./src/panel/panel_A6.js";
 import {router as PanelA7Router} from "./src/panel/panel_A7.js";
 import {router as PanelA8Router} from "./src/panel/panel_A8.js";
+import {router as PanelA9Router} from "./src/panel/panel_A9.js";
 import {router as PanelB1Router} from "./src/panel/panel_B1.js";
 import {router as PanelB2Router} from "./src/panel/panel_B2.js";
 import {router as PanelB3Router} from "./src/panel/panel_B3.js";
@@ -27,12 +28,12 @@ import {router as PanelJ2Router} from "./src/panel/panel_J2.js";
 import {router as PanelMRouter} from "./src/panel/panel_M.js";
 import {router as PanelNRouter} from "./src/panel/panel_N.js";
 
-import {router as panelAlphaRouter} from "./src/panel/panel_Alpha.js"; //drawLine
-import {router as panelBetaRouter} from "./src/panel/panel_Beta.js"; //scoreSpecial
-import {router as panelGammaRouter} from "./src/panel/panel_Gamma.js"; //怎么，看不过去密集的设计？
-import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js"; //XinRan panel
-import {router as panelEpsilonRouter} from "./src/panel/panel_Epsilon.js"; //方便使用的面积头像
-import {router as panelZetaRouter} from "./src/panel/panel_Zeta.js";// 一个展示头像的新设计
+import {router as panelAlphaRouter} from "./src/panel/panel_Alpha.js";
+import {router as panelBetaRouter} from "./src/panel/panel_Beta.js";
+import {router as panelGammaRouter} from "./src/panel/panel_Gamma.js";
+import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js";
+import {router as panelEpsilonRouter} from "./src/panel/panel_Epsilon.js";
+import {router as panelZetaRouter} from "./src/panel/panel_Zeta.js";
 import {router as MarkdownRouter} from "./src/panel/markdown.js";
 import {router as GetMapAttrRouter} from "./src/panel/mapAttributes.js";
 
@@ -71,6 +72,7 @@ app.post('/panel_A5', PanelA5Router);
 app.post('/panel_A6', PanelA6Router);
 app.post('/panel_A7', PanelA7Router);
 app.post('/panel_A8', PanelA8Router);
+app.post('/panel_A9', PanelA9Router);
 app.post('/panel_B1', PanelB1Router);
 app.post('/panel_B2', PanelB2Router);
 app.post('/panel_B3', PanelB3Router);

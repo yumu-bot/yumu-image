@@ -7,7 +7,7 @@ import {
 } from "../util/util.js";
 import {torus, PuHuiTi} from "../util/font.js";
 
-export async function card_A2(data = {
+export function card_A2(data = {
     background: getImageFromV3('card-default.png'),
     map_status: '',
 

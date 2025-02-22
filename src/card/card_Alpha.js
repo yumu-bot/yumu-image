@@ -16,10 +16,10 @@ export async function router(req, res) {
     }
 }
 
-export async function card_Alpha(md = "", width = 600) {
+export async function card_Alpha(md = "", width = 600, height = 1080) {
     await page.setViewport({
         width: width,
-        height: 1080,
+        height: height,
         isMobile: false,
     });
     await page.goto('file://' + path);

@@ -118,7 +118,7 @@ export async function panel_A8(
         beatmap_arr[beatmap_arr.length - 1],
     );
 
-    const search_cardA2 = await card_A2(search_result);
+    const search_cardA2 = card_A2(search_result);
     svg = implantSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
 
     //导入其他卡
