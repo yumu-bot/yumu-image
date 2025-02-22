@@ -3,7 +3,7 @@ import {
     getPanelNameSVG,
     implantSvgBody,
     replaceText,
-    putCustomBanner, getPanelHeight, readNetImage, implantImage, getImageFromV3
+    putCustomBanner, getPanelHeight, readNetImage, implantImage, getImageFromV3, isNotEmptyString
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
@@ -83,6 +83,7 @@ export async function panel_A9(
         application: 'Open',
         description: 'JP<br />このteamは、まんがタイムきららおよびその姉妹誌内の作品が好きな方のためのteam(全ゲームモード対応、ランク制限なし)となっています。<br />そのため、このteamに参加リクエストを送ると大体の方はOsu!内のDMにて、私(Qleen0723)から、クイズか愛を証明してほしいと伝えます。<br />愛の証明は画像で行います。これに合格すれば加入することができます。(ただし私のようにmapperの方でまんがタイムきららおよびその姉妹誌内の作品をソースとした譜面の製作経験がある方(Ranked,Lovedかそうでないかは無関係です)<br />あるいは、Osu!に貼ってあるX(Twitter)のリンクがあり、その上資格が十分だと判断できる投稿内容があるなどの場合はこれなしで、入ることができる場合があります。)<br />なお、このteam内の方からの招待である場合はこれらの審査なしで入ることが可能です。<br />愛の証明の例<br /><a rel="nofollow" href="https://ibb.co/hx5LMgrV"><img alt="" src="https://i.ppy.sh/53417e2654fb22a4bc6c8016c8e1f67cce7646a6/68747470733a2f2f692e6962622e636f2f32303257364652642f323032352d30322d32302d3230303534372e706e67" loading="lazy" style="aspect-ratio: 1.3352; width: 1705px;" /></a><br />また、こteamでは、英語圏の方の加入も許可してます。あらかじめご了承ください。<br />ルール<br />1.まんがタイムきららおよびその姉妹誌内の作品が好きであること。複数作品でも、特定の一つの作品でも、ガチな方も、ライトな方も歓迎します。ただし、そういうのが全くない方はお断りさせていただきます。<br /><br />2.team内でのチャットは公序良俗に反しないようにお願いします。具体的には、他プレイヤーはもちろん、漫画の作者などへの誹謗中傷も禁止となっております。<br /><br />3.このルールに従わない場合かつ、明らかな悪意のあるものでない場合、一回目は私(Qleen0723)からDMにて警告とその理由を伝えます。二回目あるいは明らかな悪意がある場合は私(Qleen0723)から、kickしたことと、理由をDMにて伝えます。<br /><br />4.これらのルールは私(Qleen0723)により改変および追加される場合があります。<br /><br />EN<br />This team is for people who like Manga Time Kirara and its sister magazines.(For all game mode,All rank) Therefore, when you send a request to join this team, I (Qleen0723) will usually tell you in a DM in Osu! Proof of love will be done with a picture. If you pass this, you can join. (However, if    you are a mapper like me and have experience in creating music scores based on works in Manga Time Kirara and its sister magazines (Ranked, Loved or not is irrelevant), or if you have a link to X (Twitter) posted on Osu! X (Twitter) link posted on Osu! and you have posted enough content to qualify).Please note that if you are invited by someone in this TEAM, you can enter without these examinations.<br />Examples of Proof of Love<br /><a rel="nofollow" href="https://ibb.co/hx5LMgrV"><img alt="" src="https://i.ppy.sh/53417e2654fb22a4bc6c8016c8e1f67cce7646a6/68747470733a2f2f692e6962622e636f2f32303257364652642f323032352d30322d32302d3230303534372e706e67" loading="lazy" style="aspect-ratio: 1.3352; width: 1705px;" /></a><br />This team is Japanese main team, Please understand in advance.<br />Rules<br />1. You must be a fan of Manga Time Kirara and its sister magazines. Whether it is multiple works or one specific work, both hardcore and light-hearted people are welcome. However, we will decline those who are not like that at all.<br /><br />2. Please do not chat in the TEAM in a way that is offensive to public order and morals. Specifically, slander and libel against other players as well as comic book authors, etc. are prohibited.<br /><br />3. If you do not follow this rule and it is not obviously malicious, I (Qleen0723) will warn you and give you a reason for the warning via DM the first time. The second time, or if it is clearly malicious, I (Qleen0723) will DM you to let you know that you have been kicked and why.<br /><br />4.These rules may be changed or added by me (Qleen0723).<br /><br />5.It was Translated with DeepL.com, If feel some difficult to understand, Please tell me.'
     }) {
+    console.log(data)
 
     // 提前准备
     const members = data.users
@@ -142,23 +143,22 @@ export async function panel_A9(
     svg = implantSvgBody(svg, 40, 40, card_A2(await PanelGenerate.team2CardA2(data)), reg_main);
 
     // 介绍
+    if (isNotEmptyString(data?.description)) {
+        const markdown = data.description
+            .replaceAll(new RegExp("<\/?[\\s\\S]*?\/?>", 'g'), '') // 必须用懒惰，不然等死吧
+        const alpha = (markdown.length > 0) ? await card_Alpha(markdown, 1370, 0) : {}
 
-    const markdown = data.description
-        //.replaceAll('<br />', '\n\n')
-        .replaceAll(new RegExp("<\/?[\\s\\S]*?\/?>", 'g'), '') // 必须用懒惰，不然等死吧
+        /*
+        const image = `<image width="1410" height="${}" transform="translate(510 320)" xlink:href="${alpha.image}" style="opacity: 1" vector-effect="non-scaling-stroke"/>`
+        svg = replaceText(svg, image, reg_des)
 
-    const alpha = markdown.length > 0 ? await card_Alpha(markdown, 1370, 0) : null
+         */
 
-    /*
-    const image = `<image width="1410" height="${}" transform="translate(510 320)" xlink:href="${alpha.image}" style="opacity: 1" vector-effect="non-scaling-stroke"/>`
-    svg = replaceText(svg, image, reg_des)
-
-     */
-
-    svg = (markdown.length > 0) ?
-        implantImage(svg, 1410, Math.min(Math.round(alpha.height * 1410 / 1370), 240),
-        510, 320, 1, alpha.image, reg_des, 'xMidYMin slice')
-        : svg
+        svg = (markdown.length > 0) ?
+            implantImage(svg, 1410, Math.min(Math.round(alpha.height * 1410 / 1370), 240),
+                510, 320, 1, alpha.image, reg_des, 'xMidYMin slice')
+            : svg
+    }
 
     // 队长
     svg = implantSvgBody(svg, 40, 330, await card_A1(await PanelGenerate.microTeamMember2CardA1(leader, true)), reg_body)
