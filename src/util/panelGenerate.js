@@ -212,11 +212,13 @@ export const PanelGenerate = {
 
         const country = user?.country_code || 'CN';
 
+        const is_secret = user?.last_visit == null
+
         const left1 = '[' + (user?.team?.short_name || '?') + ']'
-        const right1 = '(' + getTimeDifference(user?.last_visit) + ')'
+        const right1 = '(' + (is_secret ? '?' : getTimeDifference(user?.last_visit)) + ')'
         const left2 = is_leader ? 'leader' : 'member'
-        const right2 = 'last visit: ' + getFormattedTime(user?.last_visit, 'YYYY-MM-DD HH:mm')
-        const right3m = user.is_online === true ? 'Online' : 'Offline'
+        const right2 = 'last visit: ' + (is_secret ? '?' : getFormattedTime(user?.last_visit, 'YYYY-MM-DD HH:mm'))
+        const right3m = (user.is_online === true) ? 'Online' : 'Offline'
 
         return {
             background,
