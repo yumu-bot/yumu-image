@@ -77,7 +77,7 @@ export function card_A2(data = {
         torus.cutStringTail(data.left3, 24, left_maxWidth, true),
         20, 191.836, left3_size, 'left baseline', '#fff');
 
-    const right1 = torus.getTextPath(data.right1, 420, 114.836, 24, 'right baseline', '#fff');
+    const right1 = torus.getTextPath(data.right1, 420, 114.836 - 2, 24, 'right baseline', '#fff');
     const right2 = torus.getTextPath(data.right2, 420, 141.836, 24, 'right baseline', '#fff');
     const right3 = torus.get2SizeTextPath(data.right3b, data.right3m,
         data?.right3b_size || 60, data?.right3m_size || 48,

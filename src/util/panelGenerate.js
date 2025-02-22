@@ -853,6 +853,7 @@ export const PanelGenerate = {
         const left2 = getGameMode(team?.ruleset, 2)
         const left3 = getFormattedTime(team.formed, "YYYY-MM", "MMMM YYYY")
 
+        const right1 = 'Member: ' + (team.users?.length || '0')
         const right2 = 'TeamID:'
         const right3b = (team?.id || 0).toString()
 
@@ -866,7 +867,7 @@ export const PanelGenerate = {
             left1: left1,
             left2: left2,
             left3: left3,
-            right1: '',
+            right1: right1,
             right2: right2,
             right3b: right3b,
             right3m: '',
