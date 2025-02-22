@@ -174,10 +174,10 @@ export async function panel_A9(
 
         const member = await card_A1(await PanelGenerate.microTeamMember2CardA1(v, false))
 
-        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 + 250 * y, member, reg_main)
+        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 + 250 * y, member, reg_body)
 
         if (v?.is_online === true) {
-            svg = implantImage(svg, 510, 290, 40 + 470 * x - 40, 330 + 250 + 250 * y - 40, getImageFromV3('backlight-green.png'), reg_main)
+            svg = implantImage(svg, 510, 290, 40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 1, getImageFromV3('backlight-green.png'), reg_body)
         }
     }
 
