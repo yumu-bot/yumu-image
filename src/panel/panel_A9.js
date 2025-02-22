@@ -174,7 +174,11 @@ export async function panel_A9(
 
         const member = await card_A1(await PanelGenerate.microTeamMember2CardA1(v, false))
 
-        svg = implantSvgBody(svg, 40 + 450 * x, 330 + 250 + 250 * y, member, reg_main);
+        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 + 250 * y, member, reg_main)
+
+        if (v?.is_online === true) {
+            svg = implantImage(svg, 510, 290, 40 + 470 * x - 40, 330 + 250 + 250 * y - 40, getImageFromV3('backlight-green.png'), reg_main)
+        }
     }
 
     // 插入图片和部件（新方法
