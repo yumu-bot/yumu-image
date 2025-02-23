@@ -271,7 +271,7 @@ export async function panel_E7(
     const banner = await getDiffBG(data?.beatmap?.id, data?.beatmap?.beatmapset?.id, 'cover', hasLeaderBoard(data?.beatmap.ranked), data?.beatmap?.beatmapset?.availability?.more_information != null);
 
     // 卡片定义
-    const cardA2 = card_A2(await PanelGenerate.matchRating2CardA2(data.match, data.beatmap));
+    const cardA2 = card_A2(await PanelGenerate.matchRating2CardA2(data.match, data.beatmap, true));
     const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.beatmap, mode));
     const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.beatmap, data.density, rank));
     const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.beatmap, data.original));

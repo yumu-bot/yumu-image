@@ -444,7 +444,7 @@ export const PanelGenerate = {
         };
     },
 
-    matchRating2CardA2: async (r = {}, beatmap = null) => {
+    matchRating2CardA2: async (r = {}, beatmap = null, is_match_start = false) => {
         const redWins = r?.team_point_map?.red || 0;
         const blueWins = r?.team_point_map?.blue || 0;
 
@@ -472,7 +472,8 @@ export const PanelGenerate = {
 
         const right1 = 'AVG.SR ' + star + '*';
         const right2 = 'MID ' + r?.match?.id || 0;
-        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) : r?.round_count.toString()
+        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) :
+            (r?.round_count + is_match_start ? 1 : 0).toString()
         const right3m = isTeamVS ? '' : 'x';
 
         return {
