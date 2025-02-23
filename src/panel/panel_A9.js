@@ -145,6 +145,7 @@ export async function panel_A9(
     // 介绍
     if (isNotEmptyString(data?.description)) {
         const markdown = data.description
+            .replaceAll("<br />", " ")
             .replaceAll(new RegExp("<\/?[\\s\\S]*?\/?>", 'g'), '') // 必须用懒惰，不然等死吧
         const alpha = (markdown.length > 0) ? await card_Alpha(markdown, 1370, 0) : {}
 
