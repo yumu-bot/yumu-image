@@ -363,7 +363,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
 
     svg = implantImage(svg, 430, 160, 0, 0, 0.6, getRankBG(match_score?.rank, match_score?.match?.pass), reg_background)
 
-    const name = poppinsBold.getTextPath(poppinsBold.cutStringTail(match_score?.user?.username, 40, 270), 160, 48, 40, 'left baseline', '#fff')
+    const name = poppinsBold.getTextPath(poppinsBold.cutStringTail(match_score?.user?.username, 36, 270), 160, 48, 36, 'left baseline', '#fff')
 
     const ranking = PanelDraw.Rect(15, 15, 40, 25, 12.5, getUserRankColor(match_score?.ranking))
         + poppinsBold.getTextPath((match_score?.ranking || 0).toString(), 35, 36, 24, 'center baseline', '#fff')
