@@ -735,7 +735,7 @@ const component_D8 = (
 const PanelDGenerate = {
     user2componentD1: (user, history_user, has_custom_panel = false, hue) => {
         const s = user.statistics
-        const h = history_user.statistics
+        const h = history_user?.statistics
 
         return {
             user: {
@@ -745,9 +745,9 @@ const PanelDGenerate = {
             },
 
             delta: {
-                play_count: getDelta(s.play_count, h.play_count),
-                play_time: getDelta(s.play_time, h.play_time),
-                total_hits: getDelta(s.total_hits, h.total_hits),
+                play_count: getDelta(s.play_count, h?.play_count),
+                play_time: getDelta(s.play_time, h?.play_time),
+                total_hits: getDelta(s.total_hits, h?.total_hits),
             },
 
             join: user?.join_date,

@@ -346,6 +346,7 @@ export function isNotEmptyArray(arr = []) {
 }
 
 /**
+ * @param str {number|string|null}
  * @return boolean
  */
 export function isNotNumber(str = '') {
