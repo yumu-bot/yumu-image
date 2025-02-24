@@ -799,7 +799,7 @@ const PanelDGenerate = {
 
     user2componentD3: (user, history_user, has_custom_panel = false, hue) => {
         const s = user.statistics
-        const h = history_user.statistics
+        const h = history_user?.statistics
 
         return {
             user: [s.ssh, s.ss, s.sh, s.s, s.a],
@@ -807,11 +807,11 @@ const PanelDGenerate = {
             sum: Math.max(1, s.ssh + s.ss + s.sh + s.s + s.a),
 
             delta: [
-                getDelta(s.ssh, h.ssh),
-                getDelta(s.ss, h.ss),
-                getDelta(s.sh, h.sh),
-                getDelta(s.s, h.s),
-                getDelta(s.a, h.a)
+                getDelta(s.ssh, h?.ssh),
+                getDelta(s.ss, h?.ss),
+                getDelta(s.sh, h?.sh),
+                getDelta(s.s, h?.s),
+                getDelta(s.a, h?.a)
             ],
 
             has_custom_panel: has_custom_panel,
@@ -913,7 +913,7 @@ const PanelDGenerate = {
 
     user2componentD8: (user, history_user, has_custom_panel = false, hue) => {
         const s = user.statistics
-        const h = history_user.statistics
+        const h = history_user?.statistics
 
         return {
             user: {
@@ -928,9 +928,9 @@ const PanelDGenerate = {
             },
 
             delta: {
-                ranked_score: getDelta(s.ranked_score, h.ranked_score),
-                total_score: getDelta(s.total_score, h.total_score),
-                maximum_combo: getDelta(s.maximum_combo, h.maximum_combo),
+                ranked_score: getDelta(s.ranked_score, h?.ranked_score),
+                total_score: getDelta(s.total_score, h?.total_score),
+                maximum_combo: getDelta(s.maximum_combo, h?.maximum_combo),
             },
 
             has_custom_panel: has_custom_panel,
