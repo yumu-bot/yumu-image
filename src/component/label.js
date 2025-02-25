@@ -1114,7 +1114,7 @@ export async function label_J1(data = {
     let mod = data.mod || '';
 
     let mod_abbr = torus.getTextPath(mod, 35, 36.795, 30, 'center baseline', '#fff');
-    let mod_fullname = torus.getTextPath(torus.cutStringTail(getModFullName(mod), 75, 135), 75 ,12.877, 18, 'left baseline', '#fff');
+    let mod_fullname = torus.getTextPath(torus.cutStringTail(getModFullName(mod), 18, 135), 75 ,12.877, 18, 'left baseline', '#fff');
     let mod_count = torus.getTextPath(data.count + 'x', 75 ,28.877, 18, 'left baseline', '#aaa');
     let pp = torus.get2SizeTextPath(
         Math.round(data.pp).toString() || '0', 'PP',

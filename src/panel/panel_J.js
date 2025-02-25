@@ -578,7 +578,7 @@ export async function panel_J(data = {
     const bp_length_max = Math.max.apply(Math, bp_length_arr);
     const bp_length_min = Math.min.apply(Math, bp_length_arr);
     const bp_length_delta = Math.min(Math.max(bp_length_max - bp_length_min, 0.1), 360); //最大六分钟
-    const start_y = 610;
+    const start_y = 610 + 10; // 下移 10
 
     let svg_rrect = '';
 
@@ -595,7 +595,7 @@ export async function panel_J(data = {
 
     const bp_length_text = torus.getTextPath(`${bp_length_max_b}:${bp_length_max_m}`,
         1050 + bp_length_arr.findIndex((v) => v === bp_length_max) * 20,
-        515 + 90 - Math.min(bp_length_max, 5) / 5 * 90, //本来是90，缩减一点
+        515 + 90 - Math.min(bp_length_max, 5) / 5 * 90 + 10, // 下移 10
         16,
         'center baseline',
         '#aaa');

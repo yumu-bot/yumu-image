@@ -152,7 +152,8 @@ export async function panel_MS(data = {
         "position": 0,
     },],
 
-    panel: "MS"
+    panel: "MS",
+    percent: "" // 0+ 100+ 101- 默认 100+
 }) {
     let svg = readTemplate('template/Panel_MS.svg');
 
