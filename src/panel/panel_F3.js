@@ -349,7 +349,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
         </filter>
         </defs>
           <g id="Base_CP2">
-            <rect x="0" y="0" rx="20" ry="20" width="430" height="550" style="fill: #382E32;"/>
+            <rect x="0" y="0" rx="20" ry="20" width="430" height="160" style="fill: #382E32;"/>
             <g style="clip-path: url(#clippath-CP2-2);" filter="url(#blur-CP2-1)">
             </g>
           </g>
