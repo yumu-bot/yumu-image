@@ -452,7 +452,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
     mods.forEach((mod, index) => {
         const x = 160 + interval * index
 
-        mods_path += getModRRectPath(mod, x, 62, 70, 40, 20, 32, poppinsBold, 30)
+        mods_path += getModRRectPath(mod, x, 64, 70, 40, 20, 32, poppinsBold, 30)
     })
 
     svg = replaceText(svg, mods_path, reg_mod)
