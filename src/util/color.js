@@ -316,9 +316,16 @@ export function getUserRankColor(rank = 0) {
     }
 }
 
-export function getModColor(Mod = '') {
+/**
+ * 获取模组颜色
+ * @param mod {string | {acronym: string}}
+ * @returns {string}
+ */
+export function getModColor(mod = '' || {acronym: ''}) {
+    if (mod?.acronym != null) mod = mod.acronym
+
     let color;
-    switch (Mod.toString().toUpperCase()) {
+    switch (mod.toString().toUpperCase()) {
         case "NF":
             color = '#0068B7';
             break;

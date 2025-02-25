@@ -1,12 +1,11 @@
 import {
-    implantImage, isNotNullOrEmptyObject, readTemplate,
+    implantImage, readTemplate,
     replaceText,
     replaceTexts
 } from "../util/util.js";
 import {torus, PuHuiTi, torusBold} from "../util/font.js";
-import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getModAdditionalInformation} from "../util/mod.js";
+import {getModPath} from "../util/mod.js";
 
 export async function card_H(data = {
     background: '',
@@ -59,22 +58,6 @@ export async function card_H(data = {
     const reg_color_left = '${color_left}';
 
     // 插入模组
-    const insertMod = (mod, i) => {
-        let offset_x = 620 - i * 20;
-
-        if (isNotNullOrEmptyObject(mod)) {
-            const acronym = mod?.acronym || ''
-            const mod_color = getModColor(acronym)
-            const additional = getModAdditionalInformation(mod);
-
-            // 模组 svg 化
-            const mod_additional_path = torus.getTextPath(additional, (offset_x + 45), 66 - 28, 16, 'center baseline', '#fff');
-            const mod_abbr_path = torus.getTextPath(acronym, (offset_x + 45), 66, 36, 'center baseline', '#fff');
-
-            return `<path transform="translate(${offset_x} 24)"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${mod_color};"/>\n${mod_abbr_path}\n${mod_additional_path}\n`;
-        } else return '';
-    }
-
     const mods_arr = data.mods_arr || [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
 
@@ -86,7 +69,8 @@ export async function card_H(data = {
     }
 
     mods_arr.forEach((mod, i) => {
-        svg = replaceText(svg, insertMod(mod, multiplier * i), reg_mod);
+        svg = replaceText(svg,
+            getModPath(mod, 620 - multiplier * i * 20, 24, 90, 42, true), reg_mod);
     });
 
     // 插入四个小标签

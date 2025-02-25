@@ -1,4 +1,7 @@
 import {getGameMode, isEmptyArray, isNumber} from "./util.js";
+import {getModColor} from "./color.js";
+import {torus} from "./font.js";
+import {PanelDraw} from "./panelDraw.js";
 
 const ModInt = {
     null: 0,
@@ -112,6 +115,63 @@ const ModBonusMANIA = {
     "AS": 0.5,
 }
 
+/**
+ * 获取标准六边形模组路径
+ * @param mod {string | {acronym: string}}
+ * @param x
+ * @param y
+ * @param width
+ * @param text_height
+ * @param is_additional
+ * @returns {string}
+ */
+export function getModPath(mod = {acronym: ""}, x = 0, y = 24, width = 90, text_height = 42, is_additional = false){
+    const mod_color = getModColor(mod);
+    const mod_abbr_path = torus.getTextPath(mod.toString(), x + (width / 2), y + text_height, 36, 'center baseline', '#fff');
+    const mod_additional = is_additional === true ? getModAdditionalInformation(mod) : ''
+    const mod_additional_path = torus.getTextPath(mod_additional, x + (width / 2), y + text_height - 28, 16, 'center baseline', '#fff');
+
+    return `<path transform="translate(${x} ${y})"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${mod_color};"/>\n` + mod_abbr_path + '\n' + mod_additional_path + '\n';
+}
+
+/**
+ * 获取圆形模组路径
+ * @param mod {string | {acronym: string}}
+ * @param cx
+ * @param cy
+ * @param r
+ * @param dont_show_nf
+ * @returns {string}
+ */
+export function getModCirclePath(mod = {acronym: ""}, cx = 0, cy = 0, r = 5, dont_show_nf = false){
+    if (dont_show_nf === true && (mod?.acronym === 'NF' || mod === 'NF')) return ''; //不画NF的图标，因为没必要
+
+    const mod_color = getModColor(mod);
+
+    return PanelDraw.Circle(cx, cy, r, mod_color);
+}
+
+/**
+ * 获取圆角矩形模组路径
+ * @param mod {string | {acronym: string}}
+ * @param x
+ * @param y
+ * @param width
+ * @param height
+ * @param r
+ * @param text_height
+ * @param font
+ * @param font_size
+ * @returns {string}
+ */
+
+export function getModRRectPath(mod = {acronym: ""}, x = 0, y = 0, width = 40, height = 20, r = Math.min(width, height) / 2, text_height = 21, font = torus, font_size = 16) {
+    const mod_color = getModColor(mod);
+    const mod_abbr_path = font.getTextPath(mod.toString(), x + (width / 2), y + text_height, font_size, 'center baseline', '#fff');
+
+    return PanelDraw.Rect(x, y, width, height, r, mod_color, 1) + mod_abbr_path
+}
+
 export function hasMod(modInt = 0, mod = '') {
     return ModInt[mod] ? (modInt & ModInt[mod]) !== 0 : false;
 }
@@ -165,7 +225,11 @@ export function hasAllMod(modInt = 0, mod = ['']) {
 }
 
 
-// 根据 lazer 模组信息，返回展示在模组上的附加信息
+/**
+ * 展示在模组上的附加信息
+ * @param mod {string | {acronym: string}}
+ * @returns {string}
+ */
 export function getModAdditionalInformation(mod = {
     acronym: '',
     settings: {

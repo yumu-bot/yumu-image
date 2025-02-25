@@ -5,10 +5,9 @@ import {
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
-import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getManiaAimingAccuracy} from "../util/compute-pp.js";
-import {getModMultiplier} from "../util/mod.js";
+import {getModMultiplier, getModPath} from "../util/mod.js";
 
 export async function card_E2(data = {
     rank: 'SS',
@@ -275,19 +274,12 @@ function getModsSVG(mods = [""], x, y, mod_w, text_h, interval) {
 
     if (length <= 2 && length > 0) {
         mods.forEach((v, i) => {
-            svg += insertMod(v, x - ((length - 1) * 2 * interval) + (2 * i * interval), y, mod_w, text_h);
+            svg += getModPath(v, x - ((length - 1) * 2 * interval) + (2 * i * interval), y, mod_w, text_h);
         });
     } else if (length > 2) {
         mods.forEach((v, i) => {
-            svg += insertMod(v, x - ((length - 1) * interval) + (i * interval), y, mod_w, text_h);
+            svg += getModPath(v, x - ((length - 1) * interval) + (i * interval), y, mod_w, text_h);
         });
-    }
-
-    function insertMod (mod, x, y, w, text_h){
-        const color = getModColor(mod);
-        const mod_abbr = torus.getTextPath(mod.toString(), x + (w / 2), y + text_h, 36, 'center baseline', '#fff');
-
-        return `<path transform="translate(${x} ${y})"  d="m70.5,4l15,20c2.667,3.556,2.667,8.444,0,12l-15,20c-1.889,2.518-4.852,4-8,4H27.5c-3.148,0-6.111-1.482-8-4l-15-20c-2.667-3.556-2.667-8.444,0-12L19.5,4C21.389,1.482,24.352,0,27.5,0h35c3.148,0,6.111,1.482,8,4Z" style="fill: ${color};"/>\n` + mod_abbr + '\n';
     }
 
     return svg;

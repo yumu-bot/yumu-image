@@ -4,7 +4,7 @@ import {
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor, hex2hsl, PanelColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getModFullName} from "../util/mod.js";
+import {getModCirclePath, getModFullName} from "../util/mod.js";
 
 export const LABELS = {
     UNDEFINED: {
@@ -577,21 +577,12 @@ export async function label_C1(data = {
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LC1-1\);">)/;
 
     //插入模组
-    const insertMod = (mod, i, offset_x) => {
-        let x = offset_x + i * 10;
-
-        const acronym = mod?.acronym || ''
-        const mod_color = getModColor(acronym)
-
-        if (mod === 'NF') return ''; //不画NF的图标，因为没必要
-        return PanelDraw.Circle(x, 90, 10, mod_color);
-    }
-
     const mods_arr = data?.mods_arr || [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
 
     mods_arr.forEach((mod, i) => {
-        svg = replaceText(svg, insertMod(mod, i, 100 - mods_arr_length * 10), reg_mod);
+        const offset_x = 100 - mods_arr_length * 10
+        svg = replaceText(svg, getModCirclePath(mod, offset_x + i * 10, 90, 10, true), reg_mod);
     });
 
     //定义文本

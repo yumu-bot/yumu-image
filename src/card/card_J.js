@@ -3,8 +3,9 @@ import {
     implantImage, replaceText, replaceTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {getModColor, getRankColor, getStarRatingColor} from "../util/color.js";
+import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {getModCirclePath} from "../util/mod.js";
 
 export async function card_J(data = {
     cover: getImageFromV3('beatmap-defaultBG.jpg'),
@@ -118,27 +119,16 @@ export async function card_J(data = {
 
     // 替换模组
 
-    const insertMod = (mod, i, j) => {
-        let offset_x = 179 + i * 14;
-        let offset_y = 69 - j * 12; //原来是 14，后面做了调整
-
-        let acronym = mod?.acronym || ''
-
-        const mod_color = getModColor(acronym)
-
-        return PanelDraw.Circle(offset_x, offset_y, 5, mod_color);
-    }
-
     const mods_arr = data.mods_arr || [{acronym: ''}]
     const length = mods_arr.length;
 
     for (let i = 0; i < length; ++i) {
         const mod = mods_arr[i]
 
-        if (i < 3){
-            svg = replaceText(svg, insertMod(mod, i, 0), reg_mod)
+        if (i < 3) {
+            svg = replaceText(svg, getModCirclePath(mod, 179 + i * 14, 69), reg_mod)
         } else {
-            svg = replaceText(svg, insertMod(mod, i - 3, 1), reg_mod)
+            svg = replaceText(svg, getModCirclePath(mod, 179 + (i - 3) * 14, 69 + 12), reg_mod)
         }
     }
 

@@ -7,9 +7,9 @@ import {
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
-import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getScoreTypeImage} from "../util/star.js";
+import {getModRRectPath} from "../util/mod.js";
 
 export async function card_N(data = {
     score: {},
@@ -139,17 +139,6 @@ export async function card_N(data = {
     }
 
     // 插入模组，因为先插的在上面，所以从左边插
-    const insertMod = (mod, i, offset_x) => {
-        const x = offset_x + i * 24;
-
-        const acronym = mod?.acronym || ''
-        const mod_color = getModColor(acronym)
-
-        // 模组 svg 化
-        const mod_abbr_path = torus.getTextPath(acronym, (x + 20), 21, 16, 'center baseline', '#fff');
-        return PanelDraw.Rect(x, 6, 40, 20, 10, mod_color) + '\n' + mod_abbr_path + '\n';
-    }
-
     const mods_arr = data.score.mods || [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
 
@@ -161,7 +150,11 @@ export async function card_N(data = {
     }
 
     mods_arr.forEach((mod, i) => {
-        svg = replaceText(svg, insertMod(mod, multiplier * i, 900 - 32 + multiplier * 24 - mods_arr_length * multiplier * 24), reg_mod);
+        const offset_x = 900 - 32 + multiplier * 24 - mods_arr_length * multiplier * 24
+
+        svg = replaceText(svg,
+            getModRRectPath(mod,
+                offset_x + multiplier * i * 24, 6, 40, 20, 10, 21), reg_mod);
     });
 
     const type = getScoreTypeImage(data?.score?.is_lazer)
