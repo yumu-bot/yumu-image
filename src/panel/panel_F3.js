@@ -136,7 +136,7 @@ export async function panel_F3(
     const match = data?.match
     const round = data?.round || {}
     const stat = match?.match?.match || {}
-    const team_point_map = match?.team_point_map || {}
+    // const team_point_map = match?.team_point_map || {}
 
     // 面板文字
     const match_time = isNotNull(stat?.end_time) ? ('match ends at: ' + getFormattedTime(stat?.end_time))  :
@@ -158,7 +158,7 @@ export async function panel_F3(
     const is_team_vs = (round.team_type === 'team-vs' || round.team_type === '')
 
     // 导入比赛简介卡（A2卡
-    const f = card_A2(data?.panel === "RR" ? await PanelGenerate.matchRating2CardA2(match, round.beatmap, false) : await PanelGenerate.roundInfo2CardA2(round, stat.name, team_point_map, stat.id, data.index));
+    const f = card_A2(await PanelGenerate.matchRating2CardA2(match, round.beatmap, false)); // await PanelGenerate.roundInfo2CardA2(round, stat.name, team_point_map, stat.id, data.index)
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡

@@ -28,7 +28,7 @@ import {
 import {getCHUNITHMRatingBG, getMaimaiCategory, getMaimaiCover, getMaimaiPlate, getMaimaiRatingBG} from "./maimai.js";
 
 //公用方法
-//把参数变成面板能读懂的数据（router
+//把参数变成面板能读懂的数据
 export const PanelGenerate = {
     // panel A7 有细微的改动，请注意
     user2CardA1: async (user, historyUser) => {
@@ -444,7 +444,7 @@ export const PanelGenerate = {
         };
     },
 
-    matchRating2CardA2: async (match = {}, beatmap = null, is_match_start = false,) => {
+    matchRating2CardA2: async (match = {}, beatmap = null, is_match_start = false) => {
         const red_wins = match?.team_point_map?.red || 0;
         const blue_wins = match?.team_point_map?.blue || 0;
 
