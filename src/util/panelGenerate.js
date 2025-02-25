@@ -474,7 +474,7 @@ export const PanelGenerate = {
         const right1 = 'AVG.SR ' + star + '*';
         const right2 = 'MID ' + stat?.id || 0;
         const right3b = is_team_vs ? ((red_wins + blue_wins <= 0) ? 'TeamVs' : (red_wins + ' : ' + blue_wins)) :
-            (match?.round_count + is_match_start ? 1 : 0).toString()
+            (match?.round_count + (is_match_start ? 1 : 0)).toString()
         const right3m = is_team_vs ? '' : 'x';
 
         return {
