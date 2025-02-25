@@ -646,14 +646,15 @@ async function drawH2HCard(scores = [], max_combo = 0) {
     let p2 = []
 
     let p1_size
+    const length = scores.length
 
-    if (scores.length <= 4) {
-        p1_size = scores.length
-    } else if (scores.length <= 6) {
+    if (length <= 4) {
+        p1_size = length
+    } else if (length <= 6) {
         p1_size = 3
-    } else if (scores.length <= 8) {
+    } else if (length <= 8) {
         p1_size = 2
-    } else if (scores.length <= 10) {
+    } else if (length <= 10) {
         p1_size = 1
     } else {
         p1_size = 0
@@ -670,8 +671,16 @@ async function drawH2HCard(scores = [], max_combo = 0) {
         }
     }
 
+    let p1_solo_offset
+    switch (length) {
+        case 1: p1_solo_offset = 960 - 430 / 2 - 40; break
+        case 2: p1_solo_offset = 960 - 430 - 60; break
+        case 3: p1_solo_offset = 960 - 430 * 3 / 2 - 80; break
+        default: p1_solo_offset = 0; break
+    }
+
     for (const i in p1) {
-        svg += transformSvgBody(470 * i, 0, p1[i])
+        svg += transformSvgBody(p1_solo_offset + 470 * i, 0, p1[i])
     }
 
     if (p1_size > 0) {
