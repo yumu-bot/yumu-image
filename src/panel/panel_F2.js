@@ -66,8 +66,13 @@ export async function panel_F2(data = {}) {
     let panel_height = 330;
     let background_height = 40;
 
-    const round = data.round
+    // 类
+    const match = data?.match
+    const round = data?.round || {}
+    const stat = match?.match?.match || {}
     const scores = round.scores || [];
+    const team_point_map = match?.team_point_map || {}
+
     let reds = [], blues = [], nones = [];
 
     scores.forEach(
@@ -185,7 +190,7 @@ export async function panel_F2(data = {}) {
     const beatmap = round?.beatmap; 
 
     // 导入比赛简介卡（A2卡
-    const f = card_A2(await PanelGenerate.roundInfo2CardA2(data));
+    const f = card_A2(await PanelGenerate.roundInfo2CardA2(round, stat.name, team_point_map, stat.id, data.index));
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡

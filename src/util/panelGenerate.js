@@ -444,19 +444,20 @@ export const PanelGenerate = {
         };
     },
 
-    matchRating2CardA2: async (r = {}, beatmap = null, is_match_start = false) => {
-        const redWins = r?.team_point_map?.red || 0;
-        const blueWins = r?.team_point_map?.blue || 0;
+    matchRating2CardA2: async (match = {}, beatmap = null, is_match_start = false,) => {
+        const red_wins = match?.team_point_map?.red || 0;
+        const blue_wins = match?.team_point_map?.blue || 0;
 
-        const isTeamVS = r?.is_team_vs;
-        const star = round(r?.average_star || 0, 2);
+        const stat = match?.match
+        const is_team_vs = match?.is_team_vs;
+        const star = round(match?.average_star || 0, 2);
 
-        const bid = r?.first_map_bid || 0
+        const bid = stat?.first_map_bid || 0
         const sid = beatmap?.beatmapset?.id || 0
-        const background = (bid !== 0) ? await getDiffBG(r?.first_map_bid, sid, 'list@2x', false)
+        const background = (bid !== 0) ? await getDiffBG(bid, sid, 'list@2x', false)
             : await getMapBG(sid, 'list@2x', hasLeaderBoard(beatmap?.ranked))
 
-        const split = getMatchNameSplitted(r?.match?.name)
+        const split = getMatchNameSplitted(stat?.name)
 
         let title2;
         const title1 = split.name;
@@ -466,15 +467,15 @@ export const PanelGenerate = {
             title2 = '';
         }
 
-        const left1 = 'Rounds ' + r?.round_count;
-        const left2 = 'Players ' + r?.player_count;
-        const left3 = 'Scores ' + r?.score_count;
+        const left1 = 'Rounds ' + match?.round_count;
+        const left2 = 'Players ' + match?.player_count;
+        const left3 = 'Scores ' + match?.score_count;
 
         const right1 = 'AVG.SR ' + star + '*';
-        const right2 = 'MID ' + r?.match?.id || 0;
-        const right3b = isTeamVS ? ((redWins + blueWins <= 0) ? 'TeamVs' : (redWins + ' : ' + blueWins)) :
-            (r?.round_count + is_match_start ? 1 : 0).toString()
-        const right3m = isTeamVS ? '' : 'x';
+        const right2 = 'MID ' + stat?.id || 0;
+        const right3b = is_team_vs ? ((red_wins + blue_wins <= 0) ? 'TeamVs' : (red_wins + ' : ' + blue_wins)) :
+            (match?.round_count + is_match_start ? 1 : 0).toString()
+        const right3m = is_team_vs ? '' : 'x';
 
         return {
             background: background,
@@ -489,7 +490,7 @@ export const PanelGenerate = {
             right2: right2,
             right3b: right3b,
             right3m: right3m,
-            isTeamVS: isTeamVS,
+            isTeamVS: is_team_vs,
         };
     },
 
@@ -788,11 +789,10 @@ export const PanelGenerate = {
          */
     },
 
-    roundInfo2CardA2: async (data) => {
-        const round = data.round
+    roundInfo2CardA2: async (round, match_name = 'Unknown', team_point_map = {}, match_id = 0, index = 0) => {
         const is_team_vs = round.is_team_vs;
 
-        const split = getMatchNameSplitted(data?.stat?.name)
+        const split = getMatchNameSplitted(match_name)
 
         let title1
         let title2
@@ -801,7 +801,7 @@ export const PanelGenerate = {
             title1 = split.name;
             title2 = split.team1 + ' vs ' + split.team2;
         } else {
-            title1 = data?.stat?.name;
+            title1 = match_name;
             title2 = '';
         }
 
@@ -821,11 +821,15 @@ export const PanelGenerate = {
             left1 = left1.trim();
         }
 
-        const left2 = 'Rounds ' + ((data?.index > 80) ? ('80+') : ((data?.index || 0) + 1));
+        const left2 = 'Rounds ' + ((index > 80) ? ('80+') : ((index || 0) + 1));
         const left3 = 'Scores ' + (round?.scores?.length || '0')
 
-        const right2 = 'MID: ' + (data?.stat?.id || '0')
-        const right3b = is_team_vs ? 'TeamVS' : 'h2h'
+        const right2 = 'MID: ' + (match_id || '0')
+
+        const red_wins = (team_point_map?.red || 0)
+        const blue_wins = (team_point_map?.blue || 0)
+
+        const right3b = is_team_vs ? (red_wins + blue_wins > 0 ? (red_wins + ' : ' + blue_wins) : 'TeamVS') : 'h2h'
 
         return {
             background: background,

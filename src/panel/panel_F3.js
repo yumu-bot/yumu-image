@@ -45,109 +45,84 @@ export async function router_svg(req, res) {
  */
 export async function panel_F3(
     data = {
-        stat: {
-            id: 59438351,
-            start_time: '2020-03-21T12:25:02Z',
-            end_time: '2020-03-21T14:03:48Z',
-            name: 'MP5S11:(肉蛋葱鸡) VS (超级聊天)'
+        match: {
+            match: {
+                match: [Object],
+                events: [Array],
+                users: [Array],
+                first_event_id: 2421331035,
+                latest_event_id: 2421353613,
+                name: 'test4',
+                id: 117301572,
+                start_time: '2025-02-25T14:49:34Z',
+                is_match_end: false
+            },
+            average_star: 3.991101208855124,
+            team_point_map: { blue: 17 },
+            is_team_vs: true,
+            round_count: 17,
+            player_count: 1,
+            first_map_bid: 4156068,
+            score_count: 17
         },
         round: {
-            id: 611851443,
-            "beatmap": {
-                "beatmapset_id": 2207100,
-                "difficulty_rating": 4.01,
-                "id": 4673486,
-                "mode": "mania",
-                "status": "ranked",
-                "total_length": 31,
-                "user_id": 23097320,
-                "version": "[4K] UwU",
-                "beatmapset": {
-                    "artist": "DJ ui_nyan",
-                    "artist_unicode": "DJういにゃん",
-                    "covers": {
-                        "cover": "https://assets.ppy.sh/beatmaps/2207100/covers/cover.jpg?1727983093",
-                        "cover@2x": "https://assets.ppy.sh/beatmaps/2207100/covers/cover@2x.jpg?1727983093",
-                        "card": "https://assets.ppy.sh/beatmaps/2207100/covers/card.jpg?1727983093",
-                        "card@2x": "https://assets.ppy.sh/beatmaps/2207100/covers/card@2x.jpg?1727983093",
-                        "list": "https://assets.ppy.sh/beatmaps/2207100/covers/list.jpg?1727983093",
-                        "list@2x": "https://assets.ppy.sh/beatmaps/2207100/covers/list@2x.jpg?1727983093",
-                        "slimcover": "https://assets.ppy.sh/beatmaps/2207100/covers/slimcover.jpg?1727983093",
-                        "slimcover@2x": "https://assets.ppy.sh/beatmaps/2207100/covers/slimcover@2x.jpg?1727983093"
-                    },
-                    "creator": "keksikosu",
-                    "favourite_count": 350,
-                    "hype": null,
-                    "id": 2207100,
-                    "nsfw": false,
-                    "offset": 0,
-                    "play_count": 167306,
-                    "preview_url": "//b.ppy.sh/preview/2207100.mp3",
-                    "source": "",
-                    "spotlight": false,
-                    "status": "ranked",
-                    "title": "Shikanoko Norinori Koshitantan",
-                    "title_unicode": "しかのこノリノリこしたんたん",
-                    "track_id": null,
-                    "user_id": 23097320,
-                    "video": false
-                }
+            id: 612178469,
+            beatmap: {
+                od: 9.4,
+                bpm: 213.25,
+                cs: 4,
+                ar: 9.4,
+                hp: 5,
+                beatmapset_id: 2112089,
+                difficulty_rating: 5.0604400634765625,
+                id: 4523375,
+                mode: 'OSU',
+                status: 'ranked',
+                total_length: 39,
+                user_id: 12315824,
+                version: "Aku's Overdose",
+                beatmapset: [Object],
+                checksum: 'f1f6a69c88ef25a2d32e733890429776',
+                max_combo: 277,
+                accuracy: 9.4,
+                convert: false,
+                count_circles: 58,
+                count_sliders: 95,
+                count_spinners: 0,
+                drain: 5,
+                hit_length: 39,
+                mode_int: 2,
+                passcount: 2691,
+                playcount: 18010,
+                preview_name: "Wire - Brazil (Vaqu) [Aku's Overdose]",
+                has_leader_board: true,
+                fails: [Array],
+                retry: 0,
+                fail: 0,
+                retries: [Array]
             },
-            beatmap_id: 2322253,
-            start_time: '2025-02-21T11:56:24Z',
-            end_time: '2025-02-21T11:57:03Z',
-            mode_int: 3,
-            scores: [{
-                accuracy: 1,
-                best_id: null,
-                created_at: "2025-02-21T12:47:05Z",
-                id: null,
-                max_combo: 416,
-                mode: "mania",
-                mode_int: 3,
-                mods: [],
-                passed: true,
-                perfect: 0,
-                pp: null,
-                rank: "X",
-                replay: false,
-                score: 995642,
-                statistics: {
-                    "count_100": 0,
-                    "count_300": 58,
-                    "count_50": 0,
-                    "count_geki": 358,
-                    "count_katu": 0,
-                    "count_miss": 0
-                },
-                type: "legacy_match_score",
-                user_id: 7003013,
-                match: {
-                    "slot": 0,
-                    "team": "none",
-                    "pass": true
-                },
-
-                user: {username: 'Muziyami'},
-                ranking: 1,
-            }],
-            team_type: 'head-to-head',
+            beatmap_id: 4523375,
+            start_time: '2025-02-25T16:52:30Z',
+            end_time: '2025-02-25T16:53:19Z',
+            mode_int: 2,
+            scores: [ [Object] ],
+            team_type: 'team-vs',
             scoring_type: 'score',
-            mode: 'MANIA',
-            winning_team_score: 995642,
-            winning_team: 'none',
-            blue_team_score: 0,
-            total_team_score: 995642,
+            mode: 'CATCH',
+            winning_team_score: 359840,
+            is_team_vs: true,
+            winning_team: 'blue',
+            blue_team_score: 359840,
             red_team_score: 0,
-            is_team_vs: false,
+            total_team_score: 359840
         },
-        index: 1
+        index: 16,
+        panel: "MR"
     }
+
 ) {
     // 导入模板
     let svg = readTemplate('template/Panel_F2.svg');
-
-    console.log(data.stat)
 
     // 路径定义
     const reg_height = '${height}'
@@ -157,22 +132,33 @@ export async function panel_F3(
     const reg_index = /(?<=<g id="Index">)/;
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PF-2\);">)/;
 
+    // 类
+    const match = data?.match
+    const round = data?.round || {}
+    const stat = match?.match?.match || {}
+    const team_point_map = match?.team_point_map || {}
+
     // 面板文字
-    const match_time = isNotNull(data?.stat?.end_time) ? ('match ends at: ' + getFormattedTime(data?.stat?.end_time))  :
-        ('match starts at: ' + getFormattedTime(data?.stat?.start_time) + ' - in progress')
+    const match_time = isNotNull(stat?.end_time) ? ('match ends at: ' + getFormattedTime(stat?.end_time))  :
+        ('match starts at: ' + getFormattedTime(stat?.start_time) + ' - in progress')
 
     const request_time = match_time + ' // request time: ' + getNowTimeStamp();
-    const panel_name = getPanelNameSVG('Match Rounds v2 (!ymmr)', 'MR', 'v0.5.1 DX', request_time);
+    let panel_name
+
+    if (data?.panel === "RR") {
+        panel_name = getPanelNameSVG('Round Results v2 (passive module)', 'RR', 'v0.5.1 DX', request_time);
+    } else {
+        panel_name = getPanelNameSVG('Match Rounds v2 (!ymmr)', 'MR', 'v0.5.1 DX', request_time);
+    }
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index)
 
     // 定义模式
-    const round = data?.round || {}
     const is_team_vs = (round.team_type === 'team-vs' || round.team_type === '')
 
     // 导入比赛简介卡（A2卡
-    const f = card_A2(await PanelGenerate.roundInfo2CardA2(data));
+    const f = card_A2(data?.panel === "RR" ? await PanelGenerate.matchRating2CardA2(match, round.beatmap, false) : await PanelGenerate.roundInfo2CardA2(round, stat.name, team_point_map, stat.id, data.index));
     svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
