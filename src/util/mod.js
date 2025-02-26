@@ -116,6 +116,15 @@ const ModBonusMANIA = {
 }
 
 /**
+ * 获取模组名称
+ * @param mod {{acronym: string}|string}
+ * @returns string
+ */
+const getModName = (mod = {acronym: ""} || "") => {
+    return mod?.acronym || mod
+}
+
+/**
  * 获取标准六边形模组路径
  * @param mod {string | {acronym: string}}
  * @param x
@@ -126,8 +135,9 @@ const ModBonusMANIA = {
  * @returns {string}
  */
 export function getModPath(mod = {acronym: ""}, x = 0, y = 24, width = 90, text_height = 42, is_additional = false){
-    const mod_color = getModColor(mod);
-    const mod_abbr_path = torus.getTextPath(mod.toString(), x + (width / 2), y + text_height, 36, 'center baseline', '#fff');
+    const mod_name = getModName(mod)
+    const mod_color = getModColor(mod_name);
+    const mod_abbr_path = torus.getTextPath(mod_name.toString(), x + (width / 2), y + text_height, 36, 'center baseline', '#fff');
     const mod_additional = is_additional === true ? getModAdditionalInformation(mod) : ''
     const mod_additional_path = torus.getTextPath(mod_additional, x + (width / 2), y + text_height - 28, 16, 'center baseline', '#fff');
 
@@ -144,9 +154,10 @@ export function getModPath(mod = {acronym: ""}, x = 0, y = 24, width = 90, text_
  * @returns {string}
  */
 export function getModCirclePath(mod = {acronym: ""}, cx = 0, cy = 0, r = 5, dont_show_nf = false){
-    if (dont_show_nf === true && (mod?.acronym === 'NF' || mod === 'NF')) return ''; //不画NF的图标，因为没必要
+    const mod_name = getModName(mod)
+    if (dont_show_nf === true && (mod_name === 'NF')) return ''; //不画NF的图标，因为没必要
 
-    const mod_color = getModColor(mod);
+    const mod_color = getModColor(mod_name);
 
     return PanelDraw.Circle(cx, cy, r, mod_color);
 }
@@ -166,8 +177,9 @@ export function getModCirclePath(mod = {acronym: ""}, cx = 0, cy = 0, r = 5, don
  */
 
 export function getModRRectPath(mod = {acronym: ""}, x = 0, y = 0, width = 40, height = 20, r = Math.min(width, height) / 2, text_height = 21, font = torus, font_size = 16) {
-    const mod_color = getModColor(mod);
-    const mod_abbr_path = font.getTextPath(mod.toString(), x + (width / 2), y + text_height, font_size, 'center baseline', '#fff');
+    const mod_name = getModName(mod)
+    const mod_color = getModColor(mod_name);
+    const mod_abbr_path = font.getTextPath(mod_name.toString(), x + (width / 2), y + text_height, font_size, 'center baseline', '#fff');
 
     return PanelDraw.Rect(x, y, width, height, r, mod_color, 1) + mod_abbr_path
 }
@@ -176,8 +188,8 @@ export function hasMod(modInt = 0, mod = '') {
     return ModInt[mod] ? (modInt & ModInt[mod]) !== 0 : false;
 }
 
-export function hasModChangedSR(mod = '') {
-    return (mod === 'DT' || mod === 'NC' || mod === 'HT' || mod === 'DC' || mod === 'HR' || mod === 'EZ' || mod === 'FL')
+export function hasModChangedSR(mod_name = '') {
+    return (mod_name === 'DT' || mod_name === 'NC' || mod_name === 'HT' || mod_name === 'DC' || mod_name === 'HR' || mod_name === 'EZ' || mod_name === 'FL')
 }
 
 export function matchMod(mod = {acronym: ''}, name = '') {
@@ -227,7 +239,7 @@ export function hasAllMod(modInt = 0, mod = ['']) {
 
 /**
  * 展示在模组上的附加信息
- * @param mod {string | {acronym: string}}
+ * @param mod {string | {acronym: string, settings: {}}}
  * @returns {string}
  */
 export function getModAdditionalInformation(mod = {
@@ -247,6 +259,7 @@ export function getModAdditionalInformation(mod = {
     }
 }) {
     const s = mod?.settings;
+    if (s == null) return ''
 
     let info = ''
 
