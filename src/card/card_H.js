@@ -70,7 +70,7 @@ export async function card_H(data = {
 
     mods_arr.forEach((mod, i) => {
         svg = replaceText(svg,
-            getModPath(mod, 620 - multiplier * i * 20, 24, 90, 42, true), reg_mod);
+            getModPath(mod.acronym, 620 - multiplier * i * 20, 24, 90, 42, true), reg_mod);
     });
 
     // 插入四个小标签
