@@ -110,8 +110,8 @@ export async function card_H(data = {
 
     const hexagon_color = is_show_hex ? (hex2hsl(data?.color_right).l >= (0.7 * 255) ? '#1c1719' : '#fff') : 'none'
 
-    const hexagon = is_show_hex ? PanelDraw.HexagonChart(hex_data, 810, 55, 45, hexagon_color, 0, 3, 3) : ''
-    const hexagon_index = is_show_hex ? PanelDraw.HexagonIndex(hex_index, 810, 55, 50, 0, hexagon_color, 'none', 20) : ''
+    const hexagon = is_show_hex ? PanelDraw.HexagonChart(hex_data, 810, 55, 45, hexagon_color, Math.PI / 3, 3, 3) : ''
+    const hexagon_index = is_show_hex ? PanelDraw.HexagonIndex(hex_index, 810, 55, 50, Math.PI / 3, hexagon_color, 'none', 20) : ''
 
     const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 8, label1_width, 20, 10, color_label1) : '';
     const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 82, label2_width, 20, 10, color_label2) : '';
