@@ -99,7 +99,7 @@ export async function panel_K(data = {
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
-    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PB-1\);">)/;
+    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PK-1\);">)/;
     const reg_body = /(?<=<g id="BodyCard">)/;
     const reg_main = /(?<=<g id="MainCard">)/;
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
