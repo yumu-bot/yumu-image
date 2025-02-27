@@ -58,12 +58,13 @@ export async function panel_K(data = {
         skill: [],
     }],
     total: 0,
-    size: 100,
 }) {
     const VALUE_NORMAL = ["RC", "LN", "CO", "PR", "SP", "ST"];
     const VALUE_MANIA = ["RC", "LN", "CO", "PR", "SP", "ST"];
 
-    const panel_height = getPanelHeight(data?.scores?.length, 110, 2, 290, 40, 40) + 1080 - 290
+    const skills = data?.scores?.length > 50 ? data?.scores.slice(0, 50) : (data?.scores || [])
+
+    const panel_height = getPanelHeight(skills.length, 110, 2, 290, 40, 40) + 1080 - 290
     const card_height = panel_height - 290
 
     let svg = `<?xml version="1.0" encoding="UTF-8"?>
@@ -126,7 +127,6 @@ export async function panel_K(data = {
 
     // H 定义
     const card_Hs = []
-    const skills = data?.scores || []
 
     for (const i in skills) {
         const k = skills[i]
