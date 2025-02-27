@@ -516,7 +516,7 @@ export function getMapStatusColor(ranked = null) {
 
 /**
  * @function 获取评级颜色
- * @return {String} 返回色彩
+ * @return {string} 返回色彩
  * @param rank 输入评级
  */
 export function getRankColor(rank = 'F') {

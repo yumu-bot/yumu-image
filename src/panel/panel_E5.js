@@ -162,7 +162,6 @@ export async function panel_E5(data = {
             url: 'https://osu.ppy.sh/beatmaps/3787814',
             retry: 0,
             fail: 27,
-            osuMode: 'OSU',
             ar: 7,
             od: 5,
             cs: 3.5,

@@ -252,7 +252,7 @@ export const PanelDraw = {
     },
 
     //六边形图，data 是 0-1，offset 是直接加在弧度上（弧度制，比如 π/3 = 60°）
-    HexagonChart: (data = [0, 0, 0, 0, 0, 0], cx = 960, cy = 600, r = 230, line_color = '#fff', offset = 0) => {
+    HexagonChart: (data = [0, 0, 0, 0, 0, 0], cx = 960, cy = 600, r = 230, line_color = '#fff', offset = 0, stroke_width = 6, cr = 10) => {
         if (data?.length < 6) return '';
 
         const PI_3 = Math.PI / 3;
@@ -265,17 +265,17 @@ export const PanelDraw = {
             const x = cx - r * Math.cos(PI_3 * i + offset) * std_data;
             const y = cy - r * Math.sin(PI_3 * i + offset) * std_data;
             line += `${x} ${y} L `;
-            circle += PanelDraw.Circle(x, y, 10, line_color);
+            circle += PanelDraw.Circle(x, y, cr, line_color);
         }
 
-        line = line.substr(0, line.length - 2);
-        const line1 = `Z" style="fill: none; stroke-width: 6; stroke: ${line_color}; opacity: 1;"/> `
-        const line2 = `Z" style="fill: ${line_color}; stroke-width: 6; stroke: none; opacity: 0.3;"/> `
+        line = line.substring(0, line.length - 2);
+        const line1 = `Z" style="fill: none; stroke-width: ${stroke_width}; stroke: ${line_color}; opacity: 1;"/> `
+        const line2 = `Z" style="fill: ${line_color}; stroke-width: ${stroke_width}; stroke: none; opacity: 0.3;"/> `
         return line + line1 + line + line2 + circle;
     },
 
     // 六边形图的标识，offset 是直接加在弧度上（弧度制，比如 π/3 = 60°），r 是中点到边点的距离，一般比 Hexagon 230 大一点 + 30
-    HexagonIndex: (data = ['A', 'B', 'C', 'D', 'E', 'F'], cx = 960, cy = 600, r = 260, offset = 0, text_color = '#fff', background_color = '#54454C') => {
+    HexagonIndex: (data = ['A', 'B', 'C', 'D', 'E', 'F'], cx = 960, cy = 600, r = 260, offset = 0, text_color = '#fff', background_color = '#54454C', size = 24) => {
         if (data?.length < 6) return '';
         const PI_3 = Math.PI / 3;
 
@@ -289,9 +289,9 @@ export const PanelDraw = {
             const x = cx - r * Math.cos(PI_3 * i + offset);
             const y = cy - r * Math.sin(PI_3 * i + offset);
 
-            const param_text = torusBold.getTextPath(value, x, y + 8, 24, 'center baseline', text_color);
+            const param_text = torusBold.getTextPath(value, x, y + 8, size, 'center baseline', text_color);
             svg = replaceText(svg, param_text, reg_text)
-            const param_width = torusBold.getTextWidth(value, 24);
+            const param_width = torusBold.getTextWidth(value, size);
             const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, background_color);
             svg = replaceText(svg, rrect, reg_rrect);
 
