@@ -108,7 +108,7 @@ export async function card_H(data = {
     const hex_data = is_show_hex ? data.hexagon_arr.map(v => Math.pow(v / 9, 0.5)) : []
     const hex_index = is_show_hex ? data.hexagon_arr.map(v => round(v, 1)) : []
 
-    const hexagon_color = is_show_hex ? (hex2hsl(data?.color_right).l >= (0.7 * 255) ? '#1c1719' : '#fff') : 'none'
+    const hexagon_color = is_show_hex ? (hex2hsl(data?.color_right).l + hex2hsl(data?.color_right).s >= 255 * 1.4 ? '#1c1719' : '#fff') : 'none'
 
     const hexagon = is_show_hex ? PanelDraw.HexagonChart(hex_data, 810, 55, 45, hexagon_color, Math.PI / 3, 3, 3) : ''
     const hexagon_index = is_show_hex ? PanelDraw.HexagonIndex(hex_index, 810, 55, 50, Math.PI / 3, hexagon_color, 'none', 20) : ''
