@@ -62,7 +62,7 @@ export async function panel_K(data = {
     const VALUE_NORMAL = ["RC", "LN", "CO", "PR", "SP", "ST"];
     const VALUE_MANIA = ["RC", "LN", "CO", "PR", "SP", "ST"];
 
-    const skills = (data?.scores || []) // data?.scores?.length > 50 ? data?.scores.slice(0, 50) :
+    const skills = data?.scores?.length > 20 ? data?.scores.slice(0, 20) : (data?.scores || [])
 
     const panel_height = getPanelHeight(skills.length, 110, 2, 290, 40, 40) + 1080 - 290
     const card_height = panel_height - 290
