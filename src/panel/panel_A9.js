@@ -153,7 +153,6 @@ export async function panel_A9(
         svg = replaceText(svg, image, reg_des)
 
          */
-        console.log(alpha.width, alpha.height);
 
         svg = (markdown.length > 0) ?
             implantImage(svg, 1410, Math.min(Math.round(alpha.height * 1410 / 1370), 240),
