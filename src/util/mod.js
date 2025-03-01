@@ -1,4 +1,4 @@
-import {getGameMode, isEmptyArray, isNumber} from "./util.js";
+import {getGameMode, isEmptyArray, isEmptyString, isNumber} from "./util.js";
 import {getModColor} from "./color.js";
 import {torus} from "./font.js";
 import {PanelDraw} from "./panelDraw.js";
@@ -136,6 +136,8 @@ const getModName = (mod = {acronym: ""} || "") => {
  */
 export function getModPath(mod = {acronym: ""}, x = 0, y = 24, width = 90, text_height = 42, is_additional = false){
     const mod_name = getModName(mod)
+    if (isEmptyString(mod_name)) return ''
+
     const mod_color = getModColor(mod_name);
     const mod_abbr_path = torus.getTextPath(mod_name.toString(), x + (width / 2), y + text_height, 36, 'center baseline', '#fff');
     const mod_additional = is_additional === true ? getModAdditionalInformation(mod) : ''
@@ -155,6 +157,8 @@ export function getModPath(mod = {acronym: ""}, x = 0, y = 24, width = 90, text_
  */
 export function getModCirclePath(mod = {acronym: ""}, cx = 0, cy = 0, r = 5, dont_show_nf = false){
     const mod_name = getModName(mod)
+    if (isEmptyString(mod_name)) return ''
+
     if (dont_show_nf === true && (mod_name === 'NF')) return ''; //不画NF的图标，因为没必要
 
     const mod_color = getModColor(mod_name);
@@ -178,6 +182,8 @@ export function getModCirclePath(mod = {acronym: ""}, cx = 0, cy = 0, r = 5, don
 
 export function getModRRectPath(mod = {acronym: ""}, x = 0, y = 0, width = 40, height = 20, r = Math.min(width, height) / 2, text_height = 21, font = torus, font_size = 16) {
     const mod_name = getModName(mod)
+    if (isEmptyString(mod_name)) return ''
+
     const mod_color = getModColor(mod_name);
     const mod_abbr_path = font.getTextPath(mod_name.toString(), x + (width / 2), y + text_height, font_size, 'center baseline', '#fff');
 

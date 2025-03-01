@@ -152,9 +152,7 @@ export async function card_N(data = {
     mods_arr.forEach((mod, i) => {
         const offset_x = 900 - 32 + multiplier * 24 - mods_arr_length * multiplier * 24
 
-        svg = replaceText(svg,
-            getModRRectPath(mod,
-                offset_x + multiplier * i * 24, 6, 40, 20, 10, 21), reg_mod);
+        svg = replaceText(svg, getModRRectPath(mod, offset_x + multiplier * i * 24, 6, 40, 20, 10, 15), reg_mod);
     });
 
     const type = getScoreTypeImage(data?.score?.is_lazer)

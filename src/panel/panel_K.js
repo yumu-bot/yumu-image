@@ -156,7 +156,7 @@ export async function panel_K(data = {
     for (let i = 0; i < 6; i++) {
         const value = data?.skill[i] || 0
 
-        const name = VALUE_NORMAL[i]
+        const name = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
         const rank = getRankFromValue(value)
         const color = getRankColor(rank)
         const background = getRankBG(rank)
@@ -181,7 +181,10 @@ export async function panel_K(data = {
 
 
     for (let j = 0; j < 6; j++) {
-        svg = implantSvgBody(svg, 40, 350 + j * 115, card_B1s[j], reg_body);
+        const card_order = [0, 4, 5, 1, 2, 3]
+        const k = card_order[j]
+
+        svg = implantSvgBody(svg, 40, 350 + j * 115, card_B1s[k], reg_body);
     }
 
     const rank_ov = getRankFromValue(data?.total);

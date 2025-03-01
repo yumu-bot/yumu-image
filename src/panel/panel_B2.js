@@ -140,7 +140,10 @@ export async function panel_B2(data = {
     svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
-        svg = implantSvgBody(svg, 40, 350 + j * 115, cardB1s[j], reg_left);
+        const card_order = [0, 4, 5, 1, 2, 3]
+        const k = card_order[j]
+
+        svg = implantSvgBody(svg, 40, 350 + j * 115, cardB1s[k], reg_left);
     }
 
     const rank_ov = getRankFromValue(total);
