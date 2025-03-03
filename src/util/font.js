@@ -6,7 +6,7 @@ const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi3.0-75SemiBold-C
 const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
 const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
 const textToSVGTorusBold = TextToSVG.loadSync("font/Torus-Bold.ttf");
-const textToSVGpoppinsBold = TextToSVG.loadSync("font/FontsFree-Net-Poppins-Bold.ttf");
+const textToSVGpoppinsBold = TextToSVG.loadSync("font/Poppins-Bold.ttf");
 const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
 const textToSVGTahomaRegular = TextToSVG.loadSync("font/ft71.ttf");
 const textToSVGTahomaBold = TextToSVG.loadSync("font/tahomabd.ttf");
@@ -124,6 +124,7 @@ function getTextPath_BerlinBold(
                 fontSize: size,
                 anchor: anchor,
                 fontFamily: "BerlinBold",
+                kerning: true,
                 attributes: {
                     fill: '#1c1719'
                 }
