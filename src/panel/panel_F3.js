@@ -310,13 +310,13 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
 
     if (mods.length === 0) mods.push("NM")
 
-    const interval = mods.length > 3 ? 42 : 84
-    const x_offset = (430 - (mods.length * interval - 84)) / 2 - 42
+    const interval = mods.length > 3 ? 45 : 90
+    const x_offset = (430 - (mods.length * interval - 6)) / 2
 
     mods.forEach((mod, index) => {
         const x = x_offset + interval * index
 
-        mods_path += getModRRectPath(mod, x, 332, 84, 40, 20, 32, poppinsBold, 30)
+        mods_path += getModRRectPath(mod, x, 332, 84, 42, 20, 32, poppinsBold, 30)
     })
 
     svg = replaceText(svg, mods_path, reg_mod)
@@ -452,7 +452,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
     mods.forEach((mod, index) => {
         const x = 160 + interval * index
 
-        mods_path += getModRRectPath(mod, x, 64, 70, 40, 20, 32, poppinsBold, 30)
+        mods_path += getModRRectPath(mod, x, 64, 70, 40, 20, 30, poppinsBold, 30)
     })
 
     svg = replaceText(svg, mods_path, reg_mod)
@@ -660,9 +660,10 @@ async function drawH2HCard(scores = [], max_combo = 0) {
         p1_size = 0
     }
 
+    const compare_score = (scores?.length > 2) ? scores[0].score : Math.max.apply(Math, scores.map(v => {return v?.score}))
+
     for (const i in scores) {
         const s = scores[i]
-        const compare_score = (i < 1) ? scores[0].score : scores[i - 1].score
 
         if (i < p1_size) {
             p1.push(await card_P1(s, max_combo, compare_score))
