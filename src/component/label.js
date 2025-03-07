@@ -1002,7 +1002,9 @@ export async function label_E(data = {
     // 文本定义
     //原来是 x=50，感觉位置怪怪的
     const title_font = data.title_font || torus;
-    const icon_title = title_font.getTextPath(data.icon_title, 56, 14.88, 18, "left baseline", "#aaa");
+
+    const title_y = isASCII(data?.icon_title) ? 14.88 : 12.88
+    const icon_title = title_font.getTextPath(data.icon_title, 56, title_y, 18, "left baseline", "#aaa");
 
     const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 36, 24, 56, 44.75 + 1.25, "left baseline", "#fff");
 
