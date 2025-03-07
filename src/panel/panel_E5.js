@@ -1129,7 +1129,7 @@ const PanelEGenerate = {
             }
 
             for (const i in sdvx) {
-                if (difficulty.includes(sdvx[i].toUpperCase()) || difficulty.includes(sdvx_short[i].toUpperCase())) {
+                if (difficulty.includes(sdvx[i].toUpperCase()) || difficulty.includes(" " + sdvx_short[i].toUpperCase())) {
                     return {
                         name: sdvx_short[i].toUpperCase(),
                         star: sr,
