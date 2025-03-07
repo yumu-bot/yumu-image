@@ -77,7 +77,7 @@ export function card_K(data = {
 
     const skill_sort = skill.sort((a, b) => b - a)
     const skill_sort_sum = skill_sort[0] * 0.5 + skill_sort[1] * 0.3 + skill_sort[2] * 0.2 + skill_sort[3] * 0.15 + skill_sort[4] * 0.1
-    const skill_sum = torusBold.getTextPath(round(skill_sort_sum, 2), 235 / 2, 68, 20, 'center baseline', '#FF9800')
+    const skill_sum = torusBold.getTextPath(round(skill_sort_sum, 2), 235 / 2, 68, 20, 'center baseline', '#FFF')
 
     svg = replaceText(svg, skill_sum, reg_overlay)
     svg = replaceTexts(svg,[star, star_rrect, rank, rank_rrect], reg_text);
