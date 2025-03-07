@@ -63,7 +63,7 @@ export async function card_B1(data = {
     }
 
     const delta_text = isNumber(data?.delta) ? torusBold.getTextPath(
-        getSign(data?.delta) + round(Math.abs(data?.delta), 2),  at_right ? 340 : 240, 66, 18, 'right baseline', getColor(data?.delta)) : ''
+        getSign(data?.delta) + round(Math.abs(data?.delta), 2),  at_right ? 340 : 240, 68, 20, 'right baseline', getColor(data?.delta)) : ''
 
     svg = replaceTexts(svg, [rank_text, number_text, delta_text], reg_text);
 
