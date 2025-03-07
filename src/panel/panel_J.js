@@ -487,7 +487,7 @@ export async function panel_J(data = {
 
     let labelJ1s = [];
 
-    for (const v of data.mods_attr) {
+    for (const v of data?.mods_attr || []) {
         const h = await label_J1({
             mod: v.index || 'None',
             count: v.map_count,
