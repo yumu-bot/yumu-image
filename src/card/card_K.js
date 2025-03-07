@@ -1,73 +1,91 @@
-import {implantImage, readNetImage, replaceText} from "../util/util.js";
-import {torus} from "../util/font.js";
+import {
+    getImageFromV3,
+    implantImage,
+    replaceText,
+    replaceTexts,
+    round
+} from "../util/util.js";
+import {torusBold} from "../util/font.js";
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {getModCirclePath} from "../util/mod.js";
 
-export async function card_K(data = {
-    map_background: "https://a.ppy.sh/",
-    star_rating: 4.35,
-    score_rank: 'D',
-    bp_ranking: 1, //感觉暂时不使用这个也可以
-    bp_pp: 369,
-    bp_remark: 'PP',// PP
-
+export function card_K(data = {
+    background: '',
+    star: 0,
+    skill: [ 3.9850707, 3.2580092, 3.869737, 1.9129845, 4.86813, 4.008765 ],
+    skill_color: '#fff',
+    mods: [{acronym: ''}],
+    rank: 'S',
 }) {
 
     // 正则
-    let reg_text = /(?<=<g id="Text">)/;
-    let reg_overlay = /(?<=<g id="Overlay">)/;
-    let reg_background = /(?<=<g style="clip-path: url\(#clippath-CK-1\);">)/;
+    const reg_text = /(?<=<g id="Text">)/;
+    const reg_hexagon = /(?<=<g id="Hexagon">)/;
+    const reg_overlay = /(?<=<g id="Overlay">)/;
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CK-1\);">)/;
 
     // 读取模板
 
     let svg = `
   <defs>
     <clipPath id="clippath-CK-1">
-      <rect width="70" height="50" rx="12" ry="12" style="fill: none;"/>
+      <rect width="235" height="118" rx="20" ry="20" style="fill: none;"/>
     </clipPath>
   </defs>
   <g id="Base">
-    <rect width="70" height="50" rx="12" ry="12" style="fill: #46393f;"/>
+    <rect width="235" height="118" rx="20" ry="20" style="fill: #46393f;"/>
   </g>
   <g id="Background">
     <g style="clip-path: url(#clippath-CK-1);">
     </g>
+  </g>
+  <g id="Hexagon">
   </g>
   <g id="Text">
   </g>
   <g id="Overlay">
   </g>`;
 
-    // 替换文字
-    // let bp_ranking = data.bp_ranking ?
-    //    torus.getTextPath(data.bp_ranking.toString(), 35, 26.795, 30, "center baseline", "#fff") : '';
+    const star_color = getStarRatingColor(data?.star)
+    const star_text_color = data?.star < 4 ? '#1c1719' : '#fff'
+    const star_rrect = PanelDraw.Rect(10, 10, 40, 20, 10, star_color)
+    const star = torusBold.getTextPath(round((data?.star || 0), 2), 30, 26, 18, 'center baseline', star_text_color)
 
-    let pp_str;
+    const rank_color = getRankColor(data?.rank)
+    const rank_text_color = data?.rank === 'X' || data?.rank === 'XH' ? '#1c1719' : '#fff'
+    const rank_rrect = PanelDraw.Rect(185, 10, 40, 20, 10, rank_color)
+    const rank = torusBold.getTextPath(data?.rank || 'F', 205, 26, 18, 'center baseline', rank_text_color)
 
-    if (typeof data?.bp_pp === 'number') {
-        pp_str = Math.floor(data?.bp_pp).toString() + (data?.bp_remark || 'PP');
-    } else {
-        pp_str = data?.bp_pp;
+    const mods = data?.mods || []
+
+    for (let i = 0; i < mods.length; ++i) {
+        const mod = mods[i]
+
+        if (i < 3) {
+            svg = replaceText(svg, getModCirclePath(mod, 10 + i * 15, 90 + 6, 6), reg_overlay)
+        } else {
+            svg = replaceText(svg, getModCirclePath(mod, 10 + (i - 3) * 15, 90 + 6 - 15, 6), reg_overlay)
+        }
     }
 
-    const bp_pp = torus.getTextPath(pp_str, 35, 45.224, 16, "center baseline", "#fff")
+    const skill = data?.skill || []
 
-    // 定义圆圈
-    const circle_sr = data.star_rating ?
-        PanelDraw.Circle(10, 10, 5, getStarRatingColor(data.star_rating)) : '';
-    const circle_rank = data.score_rank ?
-        PanelDraw.Circle(60, 10, 5, getRankColor(data.score_rank)) : '';
+    const hexagon = PanelDraw.HexagonChart(skill.map(v => Math.pow(v / 10, 0.5)), 235 / 2, 118 / 2, 45, data?.skill_color, Math.PI / 3, 3, 3)
+    const hexagon_index = PanelDraw.HexagonIndex(skill.map(v => round(v, 1)), 235 / 2, 118 / 2, 50, Math.PI / 3, data?.skill_color, 'none', 20)
+    const hexagon_background = getImageFromV3('object-hexagon.png')
 
-    // 替换模板
+    const skill_sort = skill.sort((a, b) => b - a)
+    const skill_sort_sum = skill_sort[0] * 0.5 + skill_sort[1] * 0.3 + skill_sort[2] * 0.2 + skill_sort[3] * 0.15 + skill_sort[4] * 0.1
+    const skill_sum = torusBold.getTextPath(round(skill_sort_sum, 2), 235 / 2, 68, 20, 'center baseline', '#FF9800')
 
-    // svg = replaceText(svg, bp_ranking, reg_text);
-    svg = replaceText(svg, bp_pp, reg_text);
-    svg = replaceText(svg, circle_sr, reg_overlay);
-    svg = replaceText(svg, circle_rank, reg_overlay);
+    svg = replaceText(svg, skill_sum, reg_overlay)
+    svg = replaceTexts(svg,[star, star_rrect, rank, rank_rrect], reg_text);
 
-    const bg = await readNetImage(data.map_background, true);
+    svg = replaceTexts(svg, [hexagon_index, hexagon], reg_hexagon)
+    svg = implantImage(svg, 90, 80, 72.5, 19, 1, hexagon_background, reg_hexagon)
 
-    svg = implantImage(svg,70,50,0,0,0.5, bg, reg_background);
+    svg = implantImage(svg, 235, 148, 0, 0, 0.4, data?.background, reg_background)
 
-    return svg.toString();
+    return svg.toString()
 }

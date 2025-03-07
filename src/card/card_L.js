@@ -5,7 +5,7 @@ import {
     replaceText, rounds,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {card_K} from "./card_K.js";
+import {card_I4} from "./card_I4.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_L(data = {
@@ -127,7 +127,7 @@ export async function card_L(data = {
     let cardKs = [];
 
     for (const v of data.card_K) {
-        const h = await card_K({
+        const h = await card_I4({
             map_background: v.cover,
             star_rating: v.star,
             score_rank: v.rank,

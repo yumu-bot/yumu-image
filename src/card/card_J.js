@@ -103,7 +103,7 @@ export async function card_J(data = {
         :
         torus.getTextPath('-', 300, 73.795, 30, 'right baseline', '#fff');
 
-    const rank_text_color = (data.score_rank === 'X' || data.score_rank === 'XH') ? '#000' : '#fff';
+    const rank_text_color = (data.score_rank === 'X' || data.score_rank === 'XH') ? '#1c1719' : '#fff';
     const rank = torus.getTextPath(data.score_rank, 150, 69.877, 18, "center baseline", rank_text_color);
 
     const sr = data.star_rating ? (Math.floor(data.star_rating * 10) / 10).toString() : '';

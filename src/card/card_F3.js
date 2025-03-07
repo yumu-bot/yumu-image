@@ -2,7 +2,7 @@ import {
     getMapBG, implantSvgBody, replaceText
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {card_K} from "./card_K.js";
+import {card_I4} from "./card_I4.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {hasLeaderBoard} from "../util/star.js";
 
@@ -123,7 +123,7 @@ export async function card_F3(data = {
     // 导入K卡
     let card_Ks = [];
     for (const i in data.bp) {
-        card_Ks.push(await card_K(
+        card_Ks.push(await card_I4(
             await bp2CardK(data.bp[i], parseInt(i) + 1)));
     }
 

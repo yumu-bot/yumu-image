@@ -185,8 +185,8 @@ async function chuScore2CardI(score) {
         label2: score?.mid?.toString() || '0',
 
         color_text: '#fff',
-        color_label1: too_bright ? '#000' : '#fff',
-        color_label2: too_bright ? '#000' : '#fff',
+        color_label1: too_bright ? '#1c1719' : '#fff',
+        color_label2: too_bright ? '#1c1719' : '#fff',
 
         color_left: difficulty_color,
         color_rrect1: difficulty_color,
@@ -234,8 +234,8 @@ async function chuScore2CardI2(score) {
         label2: score?.mid?.toString() || '0',
 
         color_text: '#fff',
-        color_label1: too_bright ? '#000' : '#fff',
-        color_label2: too_bright ? '#000' : '#fff',
+        color_label1: too_bright ? '#1c1719' : '#fff',
+        color_label2: too_bright ? '#1c1719' : '#fff',
 
         color_left: difficulty_color,
         color_rrect1: difficulty_color,
@@ -300,9 +300,9 @@ async function chuScore2CardI3(score = {
         label3: score?.mid?.toString() || '0',
 
         color_text: '#fff',
-        color_label1: too_bright ? '#000' : '#fff',
-        color_label2: too_bright ? '#000' : '#fff',
-        color_label3: too_bright ? '#000' : '#fff',
+        color_label1: too_bright ? '#1c1719' : '#fff',
+        color_label2: too_bright ? '#1c1719' : '#fff',
+        color_label3: too_bright ? '#1c1719' : '#fff',
 
         color_left: difficulty_color,
         color_rrect1: difficulty_color,

@@ -885,11 +885,11 @@ const PanelJGenerate = {
         for (const s of scores) {
             const star = s?.beatmap?.difficulty_rating || 0
             const star_rrect_color = getStarRatingColor(star)
-            const star_text_color = (star < 4) ? '#000' : '#fff'
+            const star_text_color = (star < 4) ? '#1c1719' : '#fff'
 
             const rank = s?.legacy_rank || 'F'
             const rank_rrect_color = getRankColor(rank)
-            const rank_text_color = (rank === 'X' || rank === 'XH') ? '#000' : '#fff';
+            const rank_text_color = (rank === 'X' || rank === 'XH') ? '#1c1719' : '#fff';
 
             const data = {
                 background: await getDiffBG(s.beatmap_id, s.beatmap.beatmapset_id,

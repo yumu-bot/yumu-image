@@ -197,9 +197,9 @@ async function maiDistribution2CardI3(dist = {
         label3: dist.score?.song_id?.toString() || '?',
 
         color_text: '#fff',
-        color_label1: too_bright ? '#000' : '#fff',
-        color_label2: too_bright ? '#000' : '#fff',
-        color_label3: too_bright ? '#000' : '#fff',
+        color_label1: too_bright ? '#1c1719' : '#fff',
+        color_label2: too_bright ? '#1c1719' : '#fff',
+        color_label3: too_bright ? '#1c1719' : '#fff',
 
         color_left: difficulty_color,
         color_rrect1: difficulty_color,

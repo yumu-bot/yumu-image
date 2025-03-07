@@ -936,7 +936,7 @@ export const PanelGenerate = {
         const star = s?.beatmap?.difficulty_rating || 0
 
         const star_color = getStarRatingColor(star)
-        const color_label12 = (star < 4) ? '#000' : '#fff'
+        const color_label12 = (star < 4) ? '#1c1719' : '#fff'
 
         return {
             background: background,
@@ -1021,6 +1021,19 @@ export const PanelGenerate = {
             }
         } else {
             return card_h
+        }
+    },
+
+    skill2CardK: async (skill = {score: {}, skill: []}) => {
+        const background = await getMapBG(skill.score.beatmapset.id, 'list', true);
+
+        return {
+            background: background,
+            star: skill?.score?.beatmap?.difficulty_rating || 0,
+            skill: skill?.skill,
+            skill_color: '#fff',
+            mods: skill?.score?.mods,
+            rank: skill?.score?.rank,
         }
     },
 

@@ -1,12 +1,11 @@
 import {
-    implantImage, isNotEmptyArray, readTemplate,
+    implantImage, readTemplate,
     replaceText,
-    replaceTexts, round
+    replaceTexts
 } from "../util/util.js";
 import {torus, PuHuiTi, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModPath} from "../util/mod.js";
-import {hex2hsl} from "../util/color.js";
 
 export async function card_H(data = {
     background: '',
@@ -29,7 +28,6 @@ export async function card_H(data = {
     label4: '',
     label5: '',
     mods_arr: [],
-    hexagon_arr: [], // 六维图
 
     color_title2: '#aaa',
     color_right: '#fff',
@@ -104,15 +102,6 @@ export async function card_H(data = {
         +
         torus.getTextPath(data?.index_l, 815, 33.672, data?.index_l_size || 24, 'center baseline', data.color_index)
 
-    const is_show_hex = isNotEmptyArray(data?.hexagon_arr)
-    const hex_data = is_show_hex ? data.hexagon_arr.map(v => Math.pow(v / 9, 0.5)) : []
-    const hex_index = is_show_hex ? data.hexagon_arr.map(v => round(v, 1)) : []
-
-    const hexagon_color = is_show_hex ? (hex2hsl(data?.color_right).l + hex2hsl(data?.color_right).s >= 255 * 1.4 ? '#1c1719' : '#fff') : 'none'
-
-    const hexagon = is_show_hex ? PanelDraw.HexagonChart(hex_data, 810, 55, 45, hexagon_color, Math.PI / 3, 3, 3) : ''
-    const hexagon_index = is_show_hex ? PanelDraw.HexagonIndex(hex_index, 810, 55, 50, Math.PI / 3, hexagon_color, 'none', 20) : ''
-
     const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 8, label1_width, 20, 10, color_label1) : '';
     const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 82, label2_width, 20, 10, color_label2) : '';
     const rrect_label3 = data.label3 ? PanelDraw.Rect(710 - label3_width, 10, label3_width, 34, 17, color_label3) : '';
@@ -125,7 +114,7 @@ export async function card_H(data = {
     svg = implantImage(svg, 45, 30, 140, 4, 1, data?.type || '', reg_label);
 
     svg = replaceTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
-    svg = replaceTexts(svg, [index, hexagon_index, hexagon], reg_text);
+    svg = replaceTexts(svg, [index], reg_text);
 
     // 计算标题的长度
     let title_max_width = 500;
