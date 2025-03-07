@@ -454,6 +454,9 @@ export async function panel_J(data = {
         '#aaa'
     )
 
+    const mods_attr = data?.mods_attr || []
+    const rank_attr = data?.rank_attr || []
+
     // 插入文字
     svg = replaceTexts(svg, [panel_name, pp_path, game_mode_path, mappers_count_path], reg_index);
 
@@ -487,7 +490,7 @@ export async function panel_J(data = {
 
     let labelJ1s = [];
 
-    for (const v of (data?.mods_attr || [])) {
+    for (const v of mods_attr) {
         const h = await label_J1({
             mod: v.index || 'None',
             count: v.map_count,
@@ -523,7 +526,7 @@ export async function panel_J(data = {
 
     let labelJ3s = [];
 
-    for (const v of (data?.rank_attr || [])) {
+    for (const v of rank_attr) {
         const h = await label_J3({
 
             ...RANK_OPTION[v.index],
@@ -604,7 +607,7 @@ export async function panel_J(data = {
 
     // 插入两个饼图
     let mod_svg = '';
-    data.mods_attr.reduce((prev, curr) => {
+    mods_attr.reduce((prev, curr) => {
         const curr_percent = prev + curr.percent;
         const color = getModColor(curr.index);
         mod_svg += PanelDraw.Pie(842, 470, 100, curr_percent, prev, color);
@@ -614,7 +617,7 @@ export async function panel_J(data = {
     mod_svg += PanelDraw.Image(842 - 70, 470 - 70, 140, 140, getImageFromV3('object-piechart-overlay2.png'), 1);
 
     let rank_svg = '';
-    data.rank_attr.reduce((prev, curr) => {
+    rank_attr.reduce((prev, curr) => {
         if (curr.index === 'FC') return 0; //排去FC
         const curr_percent = prev + curr.percent;
         const color = getRankColor(curr.index);
