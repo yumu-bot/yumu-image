@@ -164,6 +164,34 @@ export async function panel_K(data = {
     const card_B1v = []
     const card_B2s = []
 
+    const hexagons = []
+    for (let i = 0; i < 6; i++) {
+        const value = data?.skill[i] || 0
+
+        const name = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
+        const rank = getRankFromValue(value)
+        const color = getRankColor(rank)
+        const background = getRankBG(rank)
+
+        const b1_data = {
+            label: LABEL_MM[name?.toUpperCase()],
+            background: background,
+            value: value,
+            delta: is_vs ? value - data?.vs_skill[i] : null,
+            round_level: 2,
+            rank: rank,
+            color: color,
+        }
+
+        card_B1s.push(
+            await card_B1(b1_data, false)
+        )
+
+        hexagons.push(value / 10)
+    }
+
+    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
+
     if (is_vs) {
         const hexagons = []
         for (let i = 0; i < 6; i++) {
@@ -200,34 +228,6 @@ export async function panel_K(data = {
             svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1v[k], reg_body);
         }
     }
-
-    const hexagons = []
-    for (let i = 0; i < 6; i++) {
-        const value = data?.skill[i] || 0
-
-        const name = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
-        const rank = getRankFromValue(value)
-        const color = getRankColor(rank)
-        const background = getRankBG(rank)
-
-        const b1_data = {
-            label: LABEL_MM[name?.toUpperCase()],
-            background: background,
-            value: value,
-            delta: is_vs ? value - data?.vs_skill[i] : null,
-            round_level: 2,
-            rank: rank,
-            color: color,
-        }
-
-        card_B1s.push(
-            await card_B1(b1_data, false)
-        )
-
-        hexagons.push(value / 10)
-    }
-
-    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
         const card_order = [0, 5, 4, 1, 2, 3]
