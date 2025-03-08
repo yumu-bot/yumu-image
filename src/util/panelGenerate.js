@@ -1032,6 +1032,7 @@ export const PanelGenerate = {
             star: skill?.score?.beatmap?.difficulty_rating || 0,
             skill: skill?.skill,
             skill_color: '#fff',
+            hexagon_color: '#bbb',
             mods: skill?.score?.mods,
             rank: skill?.score?.rank,
         }

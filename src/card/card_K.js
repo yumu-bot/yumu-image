@@ -15,6 +15,7 @@ export function card_K(data = {
     star: 0,
     skill: [ 3.9850707, 3.2580092, 3.869737, 1.9129845, 4.86813, 4.008765 ],
     skill_color: '#fff',
+    hexagon_color: '#fff',
     mods: [{acronym: ''}],
     rank: 'S',
 }) {
@@ -71,7 +72,7 @@ export function card_K(data = {
 
     const skill = data?.skill || []
 
-    const hexagon = PanelDraw.HexagonChart(skill.map(v => Math.pow(v / 10, 0.5)), 235 / 2, 118 / 2, 45, data?.skill_color, Math.PI / 3, 3, 3)
+    const hexagon = PanelDraw.HexagonChart(skill.map(v => Math.pow(v / 10, 0.5)), 235 / 2, 118 / 2, 45, data?.hexagon_color, Math.PI / 3, 3, 3)
     const hexagon_index = PanelDraw.HexagonIndex(skill.map(v => round(v, 1)), 235 / 2, 118 / 2, 50, Math.PI / 3, data?.skill_color, 'none', 20)
     const hexagon_background = getImageFromV3('object-hexagon.png')
 
