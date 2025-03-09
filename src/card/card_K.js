@@ -64,9 +64,9 @@ export function card_K(data = {
         const mod = mods[i]
 
         if (i < 3) {
-            svg = replaceText(svg, getModCirclePath(mod, 10 + i * 15, 90 + 6, 6), reg_overlay)
+            svg = replaceText(svg, getModCirclePath(mod, 10 + 6 + i * 15, 90 + 6, 6), reg_overlay)
         } else {
-            svg = replaceText(svg, getModCirclePath(mod, 10 + (i - 3) * 15, 90 + 6 - 15, 6), reg_overlay)
+            svg = replaceText(svg, getModCirclePath(mod, 10 + 6 + (i - 3) * 15, 90 + 6 - 15, 6), reg_overlay)
         }
     }
 
