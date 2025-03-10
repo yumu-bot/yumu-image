@@ -858,7 +858,7 @@ export const PanelGenerate = {
         const left2 = 'PC: ' + Math.round(team?.play_count || 0)
         const left3 = getFormattedTime(team.formed, "YYYY-MM", "MMMM YYYY") // Open Close
 
-        const right1 = 'TeamID: ' + (team?.id || 0).toString()
+        const right1 = 'TeamID: #' + (team?.id || 0).toString()
         const right2 = 'Rank: #' + (team.rank || '0')
         const right3b = Math.round(team?.pp || 0).toString()
         const right3m = 'PP'
