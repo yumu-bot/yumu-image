@@ -54,6 +54,8 @@ export function card_A2(data = {
 
     const right3_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
     const left_maxWidth = 390 - right3_width;
+    const right2_width = torus.getTextWidth(data.right2, 24);
+    const left1_maxWidth = 390 - right2_width;
 
     // 文字定义
 
@@ -68,7 +70,7 @@ export function card_A2(data = {
         20, 107.4, title3_size, 'left baseline', '#fff');
 
     const left1 = left1_font.getTextPath(
-        torus.cutStringTail(data.left1, left1_size, left_maxWidth, true),
+        torus.cutStringTail(data.left1, left1_size, left1_maxWidth, true),
         20, 140.836, left1_size, 'left baseline', '#fff');
     const left2 = left2_font.getTextPath(
         torus.cutStringTail(data.left2, 24, left_maxWidth, true),
