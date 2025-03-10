@@ -854,7 +854,7 @@ export const PanelGenerate = {
         const title1 = team?.name || 'Team'
         const title2 = (team?.application?.toLowerCase() || '?') + ' // ' + getGameMode(team?.ruleset, 2)
 
-        const left1 = 'RKS: ' + team?.ranked_score || 0
+        const left1 = 'RKS: ' + (team?.ranked_score || 0)
         const left2 = 'PC: ' + Math.round(team?.play_count || 0)
         const left3 = getFormattedTime(team.formed, "YYYY-MM", "MMMM YYYY") // Open Close
 
