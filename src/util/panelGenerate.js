@@ -852,15 +852,16 @@ export const PanelGenerate = {
         const background = await readNetImage(team.flag)
 
         const title1 = team?.name || 'Team'
-        const title2 = '[' + (team?.abbr || '?') + ']'
+        const title2 = (team?.application?.toLowerCase() || '?') + ' // ' + getGameMode(team?.ruleset, 2)
 
-        const left1 = team?.application || '?'
-        const left2 = getGameMode(team?.ruleset, 2)
-        const left3 = getFormattedTime(team.formed, "YYYY-MM", "MMMM YYYY")
+        const left1 = 'RKS: ' + round(team?.ranked_score || 0, 0, -1)
+        const left2 = 'PC: ' + Math.round(team?.play_count || 0)
+        const left3 = getFormattedTime(team.formed, "YYYY-MM", "MMMM YYYY") // Open Close
 
-        const right1 = 'Member: ' + (team.users?.length || '0')
-        const right2 = 'TeamID:'
-        const right3b = (team?.id || 0).toString()
+        const right1 = 'TeamID: ' + (team?.id || 0).toString()
+        const right2 = 'Rank: #' + (team.rank || '0')
+        const right3b = Math.round(team?.pp || 0).toString()
+        const right3m = 'PP'
 
         return {
             background: background,
@@ -875,7 +876,7 @@ export const PanelGenerate = {
             right1: right1,
             right2: right2,
             right3b: right3b,
-            right3m: '',
+            right3m: right3m,
         };
     },
 
