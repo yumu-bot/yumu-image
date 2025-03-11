@@ -644,25 +644,26 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
  */
 export function getBadgeColor(badge_name = '') {
     const b = badge_name?.toLowerCase() || ""
-
-    if (b.match(/.*(winn(er|ing)|1st|victor(y|ious)|champion).*/g)) {
-        return '#FFF100';
-    } else if (b.match(/.*((seco|2)nd).*/g)) {
-        return '#CCC';
-    } else if (b.match(/.*((thi|3)rd).*/g)) {
-        return '#AC6A00';
-    } else if (b.match(/.*([otmc]wc)|(osu!(catch|mania|taiko)? world cup).*/g)) {
-        return '#FFF';
-    } else if (b.includes('world cup pooling')) {
+    if (b.includes('world cup pooling')) {
         return '#A086BF';
     } else if (b.includes('world cup news post')) {
         return '#5F5BA8';
+    } else if (b.includes('world cup art')) {
+        return '#8781BE';
     } else if (b.includes('mappers\' guild')) {
         return '#FF9800';
     } else if (b.includes('exemplary')) {
-        return '#000';
-    } else if (b.includes('mappers\' choice')) {
+        return '#FFF';
+    } else if (b.includes('mapper\'s choice')) {
         return '#007130';
+    } else if (b.match(/.*(winn(er|ing)|1st|victor(y|ious)|champion).*/g)) {
+        return '#FFF100';
+    } else if (b.match(/.*((seco|2)nd|top\s?2).*/g)) {
+        return '#CCC';
+    } else if (b.match(/.*((thi|3)rd|top\s?3).*/g)) {
+        return '#AC6A00';
+    } else if (b.match(/.*([otmc]wc)|(osu!(catch|mania|taiko)? world cup).*/g)) {
+        return '#666';
     } else if (b.includes('mapping')) {
         return '#00A0E9';
     } else if (b.includes('project loved')) {
@@ -682,7 +683,7 @@ export function getBadgeColor(badge_name = '') {
     } else if (b.includes('wiki')) {
         return '#B3D465';
     } else {
-        return '#666'
+        return '#1c1719'
     }
 }
 
