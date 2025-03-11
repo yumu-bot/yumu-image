@@ -36,8 +36,8 @@ export async function router_svg(req, res) {
 }
 
 /**
- * 战队信息
- * !tm
+ * 主页奖牌
+ * !bd
  * @param data
  * @return {Promise<string>}
  */

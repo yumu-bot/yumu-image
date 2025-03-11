@@ -645,11 +645,11 @@ export function getColorInSpectrum(base = 0, staffArray = [0], brightness = 0) {
 export function getBadgeColor(badge_name = '') {
     const b = badge_name?.toLowerCase() || ""
 
-    if (b.match(/.*(winn(er|ing)|1st|victor(y|ious)).*/g)) {
+    if (b.match(/.*(winn(er|ing)|1st|victor(y|ious)|champion).*/g)) {
         return '#FFF100';
-    } else if (b.includes('2nd')) {
+    } else if (b.match(/.*((seco|2)nd).*/g)) {
         return '#CCC';
-    } else if (b.includes('3rd')) {
+    } else if (b.match(/.*((thi|3)rd).*/g)) {
         return '#AC6A00';
     } else if (b.match(/.*([otmc]wc)|(osu!(catch|mania|taiko)? world cup).*/g)) {
         return '#FFF';
@@ -663,11 +663,11 @@ export function getBadgeColor(badge_name = '') {
         return '#000';
     } else if (b.includes('mappers\' choice')) {
         return '#007130';
-    } else if (b.includes('mapping contest')) {
+    } else if (b.includes('mapping')) {
         return '#00A0E9';
     } else if (b.includes('project loved')) {
         return '#EA68A2';
-    } else if (b.includes('beatmap nominators')) {
+    } else if (b.includes('beatmap nominator')) {
         return '#9922EE';
     } else if (b.includes('nomination assessment team')) {
         return '#D32F2F';
@@ -675,7 +675,7 @@ export function getBadgeColor(badge_name = '') {
         return '#FF6100';
     } else if (b.includes('global moderation team')) {
         return '#22AC38';
-    } else if (b.includes('community mentors program')) {
+    } else if (b.includes('community mentorship program')) {
         return '#0068B7';
     } else if (b.includes('beatmap spotlights')) {
         return '#593350';
