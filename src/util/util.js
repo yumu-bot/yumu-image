@@ -1491,15 +1491,35 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
     const minutes = compare_moment.diff(now, "minutes");
 
     if (Math.abs(years) > 0) {
-        return years + 'y';
+        if (Math.abs(years) > 1) {
+            return years + 'yrs';
+        } else {
+            return years + 'yr';
+        }
     } else if (Math.abs(months) > 0) {
-        return months + 'mo';
+        if (Math.abs(months) > 1) {
+            return months + 'mos';
+        } else {
+            return months + 'mo';
+        }
     } else if (Math.abs(days) > 0) {
-        return days + 'd';
+        if (Math.abs(days) > 1) {
+            return days + 'dys';
+        } else {
+            return days + 'dy';
+        }
     } else if (Math.abs(hours) > 0) {
-        return hours + 'h';
+        if (Math.abs(hours) > 1) {
+            return hours + 'hrs';
+        } else {
+            return hours + 'hr';
+        }
     } else if (Math.abs(minutes) > 0) {
-        return minutes + 'm';
+        if (Math.abs(minutes) > 1) {
+            return minutes + 'mins';
+        } else {
+            return minutes + 'min';
+        }
     } else {
         return 'now';
     }
@@ -1637,10 +1657,7 @@ export function getMatchDuration(match) {
     let str;
 
     if (match?.is_match_end) {
-        let delta = '';
-        if (start.days() != end.days()) {
-            delta = '(+' + end.diff(start, 'days') + 'days)';
-        }
+        const delta = getTimeDifference(match?.match?.end_time)
 
         str = start.format('YYYY/MM/DD HH:mm') + ' - ' + end.format('HH:mm') + delta;
     } else {

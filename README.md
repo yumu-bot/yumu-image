@@ -12,6 +12,7 @@
   - A7: 理论最好成绩 BF
   - A8: 搜索 O
   - A9: 战队 TM
+  - A10: 奖牌 BD
 - B: PPM 评分系统 PM
   - B1: PP- PM/PV
   - B2: 骂娘谱面解析 MM

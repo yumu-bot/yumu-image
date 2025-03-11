@@ -258,7 +258,7 @@ export async function panel_C(
 
     // 面板文字
     const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
-    const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra) - URMom is rated 3.0', 'RA', 'v0.5.0 DX', request_time);
+    const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'RA', 'v0.5.0 DX', request_time);
 
     // 插入文字
     svg = replaceText(svg, panel_name, reg_index);

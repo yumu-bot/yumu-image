@@ -1,4 +1,4 @@
-import {PuHuiTi, torus} from "./font.js";
+import {cutStringTail, PuHuiTi, torus} from "./font.js";
 import moment from "moment";
 import {
     getImageFromV3,
@@ -18,7 +18,7 @@ import {
     requireNonNullElse,
     getDifficultyName, getDiffBG, isNotEmptyString, round, rounds, getFormattedTime,
 } from "./util.js";
-import {getRankColor, getStarRatingColor} from "./color.js";
+import {getBadgeColor, getRankColor, getStarRatingColor} from "./color.js";
 import {
     getApproximateRank,
     getScoreTypeImage,
@@ -79,8 +79,8 @@ export const PanelGenerate = {
             ((pp_d < 0) ? pp_d + 'PP' : (is_team_member ? '[' + user.team.short_name + ']' : ''))
 
         return {
-            background,
-            avatar,
+            background: background,
+            avatar: avatar,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',
@@ -111,8 +111,8 @@ export const PanelGenerate = {
         const right3m = 'x';
 
         return {
-            background,
-            avatar,
+            background: background,
+            avatar: avatar,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',
@@ -184,8 +184,8 @@ export const PanelGenerate = {
         const right3m = isBot ? 'Bot' : (user?.statistics?.pp ? 'PP' : 'AFK');
 
         return {
-            background,
-            avatar,
+            background: background,
+            avatar: avatar,
             sub_icon1: sub_icon1,
             sub_icon2: sub_icon2,
             sub_banner: '',
@@ -221,8 +221,8 @@ export const PanelGenerate = {
         const right3m = (user.is_online === true) ? 'Online' : 'Offline'
 
         return {
-            background,
-            avatar,
+            background: background,
+            avatar: avatar,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',
@@ -284,8 +284,8 @@ export const PanelGenerate = {
         const right3m = score_number.decimal
 
         return {
-            background,
-            avatar,
+            background: background,
+            avatar: avatar,
             sub_icon1: getImageFromV3(icon_str) ,
             sub_icon2: '',
             sub_banner: '',
@@ -1022,6 +1022,52 @@ export const PanelGenerate = {
             }
         } else {
             return card_h
+        }
+    },
+
+    badge2CardH3: async (badge = {
+        "awarded_at": "2022-07-03T15:23:25+00:00",
+        "description": "osu!catch World Cup 2022 3rd Place (China)",
+        "image@2x_url": "https://assets.ppy.sh/profile-badges/cwc-2022/cwc2022-3rd@2x.png",
+        "image_url": "https://assets.ppy.sh/profile-badges/cwc-2022/cwc2022-3rd.png",
+        "url": "https://osu.ppy.sh/wiki/en/Tournaments/CWC/2022"
+    }, index = 0) => {
+        const title = badge?.description || ""
+        const image_url = isNotEmptyString(badge?.["image@2x_url"]) ? badge?.["image@2x_url"] : badge?.image_url;
+        const image = await readNetImage(image_url, true);
+
+        let title_cut = cutStringTail("torus", title, 36, 610, false);
+        let title_exceed;
+
+        if (title_cut.length === title.toString().length) {
+            title_exceed = '';
+        } else {
+            title_exceed = title.toString().substring(title_cut.length);
+        }
+
+        const index_text = index > 0 ? ('#' + index) : ''
+        const left2 = index_text + ' // award at: ' + getFormattedTime(badge?.awarded_at, 'YYYY-MM-DD HH:mm:ss +8', 'YYYY-MM-DD[T]HH:mm:ssZ') + ' (' + getTimeDifference(badge?.awarded_at, 'YYYY-MM-DD[T]HH:mm:ssZ') + ')'
+
+        const color = getBadgeColor(badge?.description)
+
+        return {
+            background: image,
+            cover: image,
+
+            title: title_cut,
+            left1: title_exceed,
+            left2: left2,
+
+            label1: '',
+            label2: '',
+
+            color_rrect: color,
+            color_title_text: '#fff',
+            color_label_rrect1: '',
+            color_label_rrect2: '',
+            color_label_text: '#fff',
+            color_left1_text: '#fff',
+            color_left2_text: '#bbb',
         }
     },
 
