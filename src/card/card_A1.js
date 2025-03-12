@@ -74,7 +74,7 @@ export async function card_A1(data = {
 
     const flag_svg = await getFlagPath(data.country, 135, 64, 44); //x +5px
     svg = implantImage(svg, 76, 38, 200, 72, 1,
-        await readNetImage(data.team_url, true, ''), reg_team_flag)
+        await readNetImage(data.team_url, true, ''), reg_team_flag, 'xMidYMid meet')
 
     // 替换内容
     svg = replaceText(svg, flag_svg, reg_country_flag); //高44宽60吧
