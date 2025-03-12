@@ -653,7 +653,7 @@ export function getBadgeColor(badge_name = '') {
     } else if (b.includes('mappers\' guild')) {
         return '#FF9800';
     } else if (b.includes('exemplary')) {
-        return '#FFF';
+        return '#12B4B1';
     } else if (b.includes('mapper\'s choice')) {
         return '#007130';
     } else if (b.match(/.*(winn(er|ing)|1st|victor(y|ious)|champion).*/g)) {
@@ -681,6 +681,8 @@ export function getBadgeColor(badge_name = '') {
     } else if (b.includes('beatmap spotlights')) {
         return '#593350';
     } else if (b.includes('wiki')) {
+        return '#BFC31F';
+    } else if (b.includes('top scorer')) {
         return '#B3D465';
     } else {
         return '#1c1719'
