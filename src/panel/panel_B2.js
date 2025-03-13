@@ -101,7 +101,7 @@ export async function panel_B2(data = {
     // 计算数值
     const delta = (m?.star || 0) - (data.beatmap?.difficulty_rating || 0);
     const total_number = rounds(delta, 2)
-    const total_path = torus.get2SizeTextPath((delta > 0 ? '+' : '') + total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', '#fff');
+    const total_path = torus.get2SizeTextPath((delta > 0 ? '+' : '') + total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', (delta >= 0 ? '#c2e5c3' : '#ffcdd2'));
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, total_path], reg_index);
