@@ -681,9 +681,11 @@ export function getBadgeColor(badge_name = '') {
     } else if (b.includes('beatmap spotlights')) {
         return '#593350';
     } else if (b.includes('wiki')) {
-        return '#BFC31F';
-    } else if (b.includes('top scorer')) {
         return '#B3D465';
+    } else if (b.includes('centurion')) {
+        return '#FFF899';
+    } else if (b.includes('top')) {
+        return '#7ECEF4';
     } else {
         return '#1c1719'
     }
