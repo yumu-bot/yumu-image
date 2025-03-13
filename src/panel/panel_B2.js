@@ -99,7 +99,8 @@ export async function panel_B2(data = {
     const panel_name = getPanelNameSVG('Map Minus v0.8 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.5.0 DX');
 
     // 计算数值
-    const delta = (m?.star || 0) - (data.beatmap?.difficulty_rating || 0);
+    const total = (m?.star || 0)
+    const delta = total - (data.beatmap?.difficulty_rating || 0);
     const total_number = rounds(delta, 2)
     const total_path = torus.get2SizeTextPath((delta > 0 ? '+' : '') + total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', (delta >= 0 ? '#c2e5c3' : '#ffcdd2'));
 
