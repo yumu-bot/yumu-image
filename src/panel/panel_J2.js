@@ -374,9 +374,11 @@ const component_J3 = (
         const x = i % x_count
         const y = Math.floor(i / x_count)
 
+        const title = (v?.index || '?').replace('X', 'SS')
+
         const label = label_J4({
-            icon_title: v?.index || '?',
-            abbr: v?.index || '?',
+            icon_title: title,
+            abbr: title,
             remark: Math.round(v?.pp_count || 0) + ' PP',
             data_b: (v?.map_count || 0).toString().padStart(3, '0'),
 

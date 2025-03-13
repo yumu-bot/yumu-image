@@ -15,7 +15,15 @@ import {
     replaceTexts,
     isNotNumber,
     getTimeDifference,
-    modifyArrayToFixedLength, isNotEmptyArray, getGameMode, isNotBlankString, isPicturePng, getTime, round, rounds,
+    modifyArrayToFixedLength,
+    isNotEmptyArray,
+    getGameMode,
+    isNotBlankString,
+    isPicturePng,
+    getTime,
+    round,
+    rounds,
+    isNotEmptyString,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_D2} from "../card/card_D2.js";
@@ -62,6 +70,13 @@ export async function panel_D2(data = {
     user: {
         profile: {
             banner: null
+        },
+
+        profile_hue: 0,
+
+        rank_highest: {
+            rank: null,
+            updated_at: null
         },
     },
 
@@ -141,7 +156,7 @@ export async function panel_D2(data = {
     const componentD4 = component_D4(PanelDGenerate.mascot2componentD4(user, getGameMode(data?.mode, 0).toLowerCase(), has_custom_mascot, hue));
 
 
-    const componentD5 = component_D5(PanelDGenerate.user2componentD5(user?.rank_history?.data || [], has_custom_panel, hue));
+    const componentD5 = component_D5(PanelDGenerate.user2componentD5(user?.rank_history?.data || [], user?.rank_highest || {}, has_custom_panel, hue));
     const componentD6 = component_D6(PanelDGenerate.user2componentD6(best_time, has_custom_panel, hue));
     const componentD7 = component_D7(PanelDGenerate.user2componentD7(user.monthly_playcounts || [{start_date: 0}], has_custom_panel, hue));
     const componentD8 = component_D8(PanelDGenerate.user2componentD8(user, history, has_custom_panel, hue));
@@ -433,6 +448,10 @@ const component_D4 = (
 const component_D5 = (
     data = {
         rank_time: [],
+        rank_highest: {
+            rank: null,
+            updated_at: null
+        },
         has_custom_panel: false,
         hue: 342,
     }
@@ -441,6 +460,8 @@ const component_D5 = (
     </g>`
 
     const reg = /(?<=<g id="Component_OD5">)/;
+
+    const has_highest = (data?.rank_highest?.rank > 0)
 
     const arr = modifyArrayToFixedLength(data.rank_time, 90, true);
 
@@ -454,16 +475,21 @@ const component_D5 = (
         ranking_nonzero_arr.push(v);
     });
 
-    const user_ranking_min = Math.min.apply(Math, ranking_nonzero_arr);
+    const user_ranking_min = Math.min.apply(Math, ranking_nonzero_arr) || 0;
 
     const user_ranking_mid = (user_ranking_max + user_ranking_min) / 2;
 
-    let day = 0
-    ranking_nonzero_arr.forEach((v, i) => {
-        if (v === user_ranking_min) {
-            day = 90 - i
-        }
-    })
+    let difference = '0d'
+
+    if (has_highest && isNotEmptyString(data?.rank_highest?.updated_at)) {
+        difference = getTimeDifference(data.rank_highest.updated_at)
+    } else {
+        ranking_nonzero_arr.forEach((v, i) => {
+            if (v === user_ranking_min) {
+                difference = (0 - (90 - i)) + 'd'
+            }
+        })
+    }
 
     const rank_axis_y_min = round(user_ranking_min, 1, -1);
     const rank_axis_y_mid = round(user_ranking_mid, 1, -1);
@@ -482,8 +508,8 @@ const component_D5 = (
     const rank_chart = PanelDraw.LineChart(ranking_nonzero_arr, user_ranking_min, user_ranking_max, 50, 155, 415, 115, '#fc2', 1, 0, 4, true); //这里min和max换位置
 
     const max = poppinsBold.getTextPath(
-        'Max: #' + (user_ranking_min || '0')
-        + ' [' + (0 - day) + 'd]',
+        'Max: #' + (has_highest ? data.rank_highest.rank : user_ranking_min)
+        + ' [' + difference + ']',
         475, 27, 18, 'right baseline', '#fff', 1
     )
 
@@ -842,9 +868,10 @@ const PanelDGenerate = {
         }
     },
 
-    user2componentD5: (rank_time = [], has_custom_panel = false, hue) => {
+    user2componentD5: (rank_time = [], rank_highest = {}, has_custom_panel = false, hue) => {
         return {
             rank_time: rank_time || [],
+            rank_highest: rank_highest || {},
             has_custom_panel: has_custom_panel,
             hue: hue,
         }
