@@ -313,9 +313,6 @@ export async function panel_E5(data = {
         case "S": {
             panel_name = getPanelNameSVG('Score (!yms)', 'S', 'v0.5.0 DX', request_time);
         } break;
-        case "BQ": {
-            panel_name = getPanelNameSVG('Best Score Query (!ymbq)', 'BQ', 'v0.5.0 DX', request_time);
-        } break;
         default: {
             panel_name = getPanelNameSVG('Excellent Score (!ymp / !ymr / !yms)', 'S', 'v0.5.0 DX', request_time);
         } break;

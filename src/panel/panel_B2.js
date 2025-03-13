@@ -99,9 +99,9 @@ export async function panel_B2(data = {
     const panel_name = getPanelNameSVG('Map Minus v0.8 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.5.0 DX');
 
     // 计算数值
-    const total = m?.star || 0;
-    const total_number = rounds(total, 2)
-    const total_path = torus.get2SizeTextPath(total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', '#fff');
+    const delta = (m?.star || 0) - (data.beatmap?.difficulty_rating || 0);
+    const total_number = rounds(delta, 2)
+    const total_path = torus.get2SizeTextPath((delta > 0 ? '+' : '') + total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', '#fff');
 
     // 插入文字
     svg = replaceTexts(svg, [panel_name, total_path], reg_index);
