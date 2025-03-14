@@ -452,10 +452,10 @@ export const PanelGenerate = {
         const is_team_vs = match?.is_team_vs;
         const star = round(match?.average_star || 0, 2);
 
-        const bid = stat?.first_map_bid || 0
-        const sid = beatmap?.beatmapset?.id || 0
-        const background = (bid !== 0) ? await getDiffBG(bid, sid, 'list@2x', false)
-            : await getMapBG(sid, 'list@2x', hasLeaderBoard(beatmap?.ranked))
+        const bid = match?.first_map_bid || 0
+        const sid = match?.first_map_sid || beatmap?.beatmapset?.id || 0
+        const background = await getDiffBG(bid, sid, 'list@2x', true, false,
+            await getMapBG(sid, 'list@2x', true))
 
         const split = getMatchNameSplitted(stat?.name)
 

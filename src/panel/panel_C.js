@@ -84,6 +84,7 @@ export async function panel_C(
             current_game_id: 310441611
         },
         team_point_map: { red: 1, blue: 1 },
+        skip_ignore_map: {skip: 2, ignore: 0},
         player_data_list: [
             {
                 player: [Object],
@@ -242,7 +243,8 @@ export async function panel_C(
         ],
         is_team_vs: true,
         average_star: 5.223287765796368,
-        first_map_bid: 2167576
+        first_map_bid: 2167576,
+        first_map_sid: 1001507
     }
 
 ) {

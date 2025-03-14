@@ -85,6 +85,7 @@ export async function panel_F(
         first_map_bid: 794779,
         is_team_vs: true,
         team_point_map: {red: 5, blue: 2},
+        skip_ignore_map: {skip: 2, ignore: 0},
         average_star: 6.1233713286263605
     }
 ) {
@@ -111,24 +112,26 @@ export async function panel_F(
     svg = putCustomBanner(svg, reg_banner);
 
     // 导入成绩卡（C卡\
-    const events = (data?.match?.events || []).filter(value => {
+    const games = (data?.match?.events || []).filter(value => {
         return isNotNull(value.game) && isNotEmptyArray(value.game.scores)
     })
 
+    const events = games.slice((data?.skip_ignore_map?.skip || 0), games.length - (data?.skip_ignore_map?.ignore || 0))
+
     const card_Cs = [];
-    let redWins = 0;
-    let blueWins = 0;
+    let red_wins_before = 0;
+    let blue_wins_before = 0;
 
     for (const v of events) {
-        if (v.winning_team === 'red') {
-            redWins++;
+        if (v?.game?.winning_team === 'red') {
+            red_wins_before++;
         }
 
-        if (v.winning_team === 'blue') {
-            blueWins++;
+        if (v?.game?.winning_team === 'blue') {
+            blue_wins_before++;
         }
 
-        card_Cs.push(await card_C(await event2CardC(v, redWins, blueWins)));
+        card_Cs.push(await card_C(await event2CardC(v, red_wins_before, blue_wins_before)));
     }
 
     for (const i in card_Cs) {
