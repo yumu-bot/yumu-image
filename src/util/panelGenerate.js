@@ -413,8 +413,12 @@ export const PanelGenerate = {
 
             if (song_id >= 1000) {
                 right3b = "(1)"
-            } else {
+            } else if (song_id >= 100) {
                 right3b = "(10)"
+            } else if (song_id >= 10) {
+                right3b = "(100)"
+            } else {
+                right3b = "(1000)"
             }
 
         } else {
