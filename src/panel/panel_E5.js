@@ -1341,8 +1341,8 @@ const PanelEGenerate = {
                 data_m: length_m,
                 data_a: '',
                 bar_progress: length_p,
-            }, {
-                ...LABELS.CS,
+            },  {
+                ...((mode === 'm') ? LABELS.KEY : LABELS.CS),
                 ...stat2label(score?.beatmap?.cs, cs2px(score?.beatmap?.cs, mode),
                     getProgress(score?.beatmap?.cs, cs_min, cs_max), original.cs, isDisplayCS),
                 bar_min: cs_min,

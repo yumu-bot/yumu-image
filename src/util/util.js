@@ -1682,14 +1682,10 @@ export function putCustomBanner(svg, reg_banner, custom, custom_opacity = 0.8) {
 
 export const cs2px = (cs, mode = 'o') => {
     switch (mode) {
-        case 'o': {
-            const osupixel = (54.4 - 4.48 * cs).toFixed(2);
-            if (osupixel.substr(-3) === '.00') return osupixel.slice(0, -3) + 'px';
-            if (osupixel.substr(-2) === '.0') return osupixel.slice(0, -2) + 'px';
-            else return osupixel + 'px';
-        }
-        case 'm': {
-            return cs.toFixed(0) + ' Keys'
+        case 'o':
+        case 'c': {
+            const osupixel = round(54.4 - 4.48 * cs, 2);
+            return osupixel + 'px';
         }
         default: {
             return '-';

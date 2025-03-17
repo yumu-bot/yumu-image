@@ -117,6 +117,15 @@ export const LABELS = {
         bar_mid: 4,
         bar_max: 6,
     },
+    KEY: {
+        icon: getImageFromV3("object-score-circlesize.png"),
+        icon_title: 'KEY',
+        color_remark: '#aaa',
+        bar_color: '#00BFF3',
+        bar_min: 2,
+        bar_mid: 4,
+        bar_max: 6,
+    },
     AR: {
         icon: getImageFromV3("object-score-approachrate.png"),
         icon_title: 'AR',

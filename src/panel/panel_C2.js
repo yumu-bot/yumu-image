@@ -171,7 +171,7 @@ async function playerData2CardH(p = {}) {
 async function seriesRating2CardA2(sr){
     const star = round(sr?.average_star || 0, 2);
 
-    const background = await getDiffBG(sr?.first_map_bid, 0, 'list@2x', true);
+    const background = await getDiffBG(sr?.first_map_bid, sr?.first_map_sid, 'list@2x', true);
 
     const title = sr?.statistics?.name || "";
     let title1, title2;
