@@ -1659,7 +1659,7 @@ export function getMatchDuration(match) {
     if (match?.is_match_end) {
         const delta = getTimeDifference(match?.match?.end_time)
 
-        str = start.format('YYYY/MM/DD HH:mm') + ' - ' + end.format('HH:mm') + delta;
+        str = start.format('YYYY/MM/DD HH:mm') + ' - ' + end.format('HH:mm') + ' (' + delta + ')';
     } else {
         str = start.format('YYYY/MM/DD HH:mm') + ' - in progress';
     }
