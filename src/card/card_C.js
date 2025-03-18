@@ -74,7 +74,7 @@ export async function card_C(data = {
     let reg_bluepoint = /(?<=<g id="BluePoint">)/;
     let reg_pluspoint = /(?<=<g id="PlusPoint">)/;
     let reg_scorebar = /(?<=<g id="ScoreBar">)/;
-    let reg_backcolor = '${backcolor}';
+    let reg_backcolor = /(?<=<g id="BackColor">)/;
     let reg_h2hfirstavatar = /(?<=<g style="clip-path: url\(#clippath-CC-1\);">)/;
 
     // 色板定义
@@ -103,10 +103,10 @@ export async function card_C(data = {
 
         //上左右得点
 
-        let red_point = '<rect width="12" height="24" rx="6" ry="6" style="fill: #C32C4A;"/>';
-        let blue_point = '<rect width="12" height="24" rx="6" ry="6" style="fill: #008FE3;"/>';
-        let red_point_plus = '<rect width="12" height="24" rx="6" ry="6" style="fill: #DC9997;"/>';
-        let blue_point_plus = '<rect width="12" height="24" rx="6" ry="6" style="fill: #91C4F1;"/>';
+        const red_point = '<rect width="12" height="24" rx="6" ry="6" style="fill: #CB3554;"/>';
+        const blue_point = '<rect width="12" height="24" rx="6" ry="6" style="fill: #009DEA;"/>';
+        const red_point_plus = '<rect width="12" height="24" rx="6" ry="6" style="fill: #D56E74;"/>';
+        const blue_point_plus = '<rect width="12" height="24" rx="6" ry="6" style="fill: #55B1EF;"/>';
 
         for (let i = 0; i < data.statistics.wins_team_red_before; i++) {
             svg = implantSvgBody(svg, 30 + 16 * i, 176, red_point, reg_redpoint);
@@ -123,13 +123,47 @@ export async function card_C(data = {
 
         //上底色、左右分数和最亮的那个得点
         if (data.statistics.is_team_red_win) {
-            svg = replaceText(svg, red_color_list[1], reg_backcolor); //其实 1 才是最正的那个颜色
+            svg = replaceText(svg, PanelDraw.GradientRect(0, 0, 1380, 210, 20, [
+                {
+                    offset: "0%",
+                    color: "#CB3554",
+                    opacity: 1,
+                }, {
+                    offset: "100%",
+                    color: "#382E32",
+                    opacity: 1,
+                },
+            ], 0.6, {
+                x1: "20%",
+                y1: "0%",
+                x2: "100%",
+                y2: "0%",
+            }), reg_backcolor)
+
+            // svg = replaceText(svg, red_color_list[1], reg_backcolor); //其实 1 才是最正的那个颜色
             red_font = torusBold;
             blue_font = torusRegular;
             svg = implantSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0), 176, red_point_plus, reg_pluspoint);
 
         } else if (data.statistics.is_team_blue_win) {
-            svg = replaceText(svg, blue_color_list[1], reg_backcolor);
+            svg = replaceText(svg, PanelDraw.GradientRect(0, 0, 1380, 210, 20, [
+                {
+                    offset: "0%",
+                    color: "#382E32",
+                    opacity: 1,
+                }, {
+                    offset: "100%",
+                    color: "#008FE3",
+                    opacity: 1,
+                },
+            ], 0.6, {
+                x1: "0%",
+                y1: "0%",
+                x2: "80%",
+                y2: "0%",
+            }), reg_backcolor)
+
+            // svg = replaceText(svg, blue_color_list[1], reg_backcolor);
             red_font = torusRegular;
             blue_font = torusBold;
             svg = implantSvgBody(svg, 1338 - 16 * Math.max((data.statistics.wins_team_blue_before - 1), 0), 176, blue_point_plus, reg_pluspoint);

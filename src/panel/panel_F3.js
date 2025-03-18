@@ -531,12 +531,46 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
     let right_score
 
     if (is_team_vs) {
-        const left_opacity = (winning_team === 'red') ? 1 : 0.4
-        const right_opacity = (winning_team === 'blue') ? 1 : 0.4
+        const left_opacity = (winning_team === 'red') ? 1 : 0.2
+        const right_opacity = (winning_team === 'blue') ? 1 : 0.2
 
-        left_rrect = PanelDraw.Rect(-40, 0, 980, 120, 20, '#E50050', left_opacity)
+        left_rrect = PanelDraw.GradientRect(-40, 0, 980, 120, 20, [
+            {
+                offset: "0%",
+                color: "#801D34",
+                opacity: 1,
+            }, {
+                offset: "100%",
+                color: "#E50050",
+                opacity: 1,
+            },
+        ], left_opacity, {
+            x1: "20%",
+            y1: "0%",
+            x2: "80%",
+            y2: "0%",
+        })
 
-        right_rrect = PanelDraw.Rect(980, 0, 980, 120, 20, '#00A0E9', right_opacity)
+        // PanelDraw.Rect(-40, 0, 980, 120, 20, '#E50050', left_opacity)
+
+        right_rrect = PanelDraw.GradientRect(980, 0, 980, 120, 20, [
+            {
+                offset: "0%",
+                color: "#00A0E9",
+                opacity: 1,
+            }, {
+                offset: "100%",
+                color: "#006899",
+                opacity: 1,
+            },
+        ], right_opacity, {
+            x1: "20%",
+            y1: "0%",
+            x2: "80%",
+            y2: "0%",
+        })
+
+        // PanelDraw.Rect(980, 0, 980, 120, 20, '#00A0E9', right_opacity)
 
         left_text = poppinsBold.getTextPath((winning_team === 'red') ? 'WIN!' : ((winning_team === null) ? 'TIE...' : 'LOSE...'),
             40, 84, 72, 'left baseline', '#fff', 0.5)
@@ -584,8 +618,41 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
         ], 1020, 85, 'left baseline')
 
     } else {
-        left_rrect = PanelDraw.Rect(-40, 0, 980, 120, 20, '#fff', 0.2)
-        right_rrect = PanelDraw.Rect(980, 0, 980, 120, 20, '#fff', 0.4)
+        left_rrect = PanelDraw.GradientRect(-40, 0, 980, 120, 20, [
+            {
+                offset: "0%",
+                color: "#ccc",
+                opacity: 1,
+            }, {
+                offset: "100%",
+                color: "#fff",
+                opacity: 1,
+            },
+        ], 0.6, {
+            x1: "20%",
+            y1: "0%",
+            x2: "80%",
+            y2: "0%",
+        })
+
+        // PanelDraw.Rect(-40, 0, 980, 120, 20, '#fff', 0.2)
+        right_rrect = PanelDraw.GradientRect(980, 0, 980, 120, 20, [
+            {
+                offset: "0%",
+                color: "#fff",
+                opacity: 1,
+            }, {
+                offset: "100%",
+                color: "#ccc",
+                opacity: 1,
+            },
+        ], 0.8, {
+            x1: "20%",
+            y1: "0%",
+            x2: "80%",
+            y2: "0%",
+        })
+            //PanelDraw.Rect(980, 0, 980, 120, 20, '#fff', 0.4)
 
         left_text = poppinsBold.getTextPath('TOTAL', 40, 84, 72, 'left baseline', '#fff', 0.5)
         right_text = poppinsBold.getTextPath('AVERAGE', 1880, 84, 72, 'right baseline', '#fff', 0.5)
