@@ -32,6 +32,7 @@ import {getCHUNITHMRatingBG, getMaimaiCategory, getMaimaiCover, getMaimaiPlate, 
 export const PanelGenerate = {
     // panel A7 有细微的改动，请注意
     user2CardA1: async (user, historyUser) => {
+        console.log(user)
         if (user == null) return {
             background: getImageFromV3('card-default.png'),
             avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
@@ -58,10 +59,10 @@ export const PanelGenerate = {
 
         const is_team_member = user.team != null
 
-        const left1 = user?.statistics?.global_rank ?
-            '#' + user.statistics.global_rank : (user?.rank_highest?.rank ?
-                    '#' + user.rank_highest.rank + '^ (' + moment(user.rank_highest.updated_at, "X").year() + ')' : '#0'
-            );
+        const left1 = user?.statistics?.global_rank ? ('#' + user.statistics.global_rank) :
+            (user?.rank_highest?.rank ?
+                '#' + user.rank_highest.rank + '^ (' + getTimeDifference(user.rank_highest.updated_at) + ')' :
+                    '#0');
         const left2 = country + (user?.statistics?.country_rank ? ('#' + user.statistics.country_rank) : '');
 
         const isBot = user?.is_bot;
