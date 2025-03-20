@@ -32,7 +32,6 @@ import {getCHUNITHMRatingBG, getMaimaiCategory, getMaimaiCover, getMaimaiPlate, 
 export const PanelGenerate = {
     // panel A7 有细微的改动，请注意
     user2CardA1: async (user, historyUser) => {
-        console.log(user)
         if (user == null) return {
             background: getImageFromV3('card-default.png'),
             avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
