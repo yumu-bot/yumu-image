@@ -22,7 +22,7 @@ import {
     getDifficultyName,
     isNumber,
     rounds,
-    round, getFormattedTime, isEmptyArray
+    round, getFormattedTime, isEmptyArray, getDifficultyIndex
 } from "../util/util.js";
 import {
     getRankBG, getScoreTypeImage,
@@ -1081,7 +1081,7 @@ const PanelEGenerate = {
     score2componentE1: (score) => {
         const sr = score?.beatmap.difficulty_rating || 0;
         const mode = score?.mode || 'osu';
-        const name = getDifficultyName(score?.beatmap?.version, sr, mode, score?.mods)
+        const name = getDifficultyIndex(score?.beatmap?.version, sr, mode, score?.mods)
 
         return {
             name: name,

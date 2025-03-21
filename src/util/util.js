@@ -1613,7 +1613,7 @@ const _getTimeByDHMS = (seconds = 0, has_whitespace = false) => {
     }
 }
 
-export function getDifficultyName(difficulty_name = '', star_rating = 0, mode = 'osu', mods = []) {
+export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode = 'osu', mods = []) {
     const m = getGameMode(mode, 1)
 
     let name

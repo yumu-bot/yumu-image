@@ -4,7 +4,7 @@ import {
     exportJPEG,
     getBeatMapTitlePath,
     getDiffBG,
-    getDifficultyName,
+    getDifficultyName, getDifficultyIndex,
     getFileSize,
     getFormattedTime,
     getGameMode,
@@ -826,7 +826,7 @@ const component_E11 = async (
 const PanelEGenerate = {
     score2componentE1: (b, mode) => {
         const sr = b?.difficulty_rating || 0;
-        const name = getDifficultyName(b?.version, sr, mode)
+        const name = getDifficultyIndex(b?.version, sr, mode)
 
         return {
             name: name,
