@@ -34,7 +34,7 @@ import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi} from "..
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModMultiplier, getModPath, matchAnyMods} from "../util/mod.js";
+import {getModMultiplier, getModPath} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -1079,159 +1079,9 @@ const component_E10P = (
 // 私有转换方式
 const PanelEGenerate = {
     score2componentE1: (score) => {
-
-        // sr 2 difficulty name
         const sr = score?.beatmap.difficulty_rating || 0;
-
-        const mode = score?.ruleset_id || 'osu';
-
-        let name
-
-        const difficulty = (score?.beatmap?.version || "")
-            .replaceAll("0", "o")
-            .replaceAll("1", "i")
-            .replaceAll("3", "e")
-            .replaceAll("4", "a")
-            .replaceAll("5", "s")
-            .replaceAll("6", "b")
-            .replaceAll("7", "t")
-            .replaceAll("9", "g")
-            .toUpperCase()
-
-        const iidx = ["Beginner", "Normal", "Hyper", "Another", "Black Another", "Leggendaria"]
-
-        const sdvx = ["Basic", "Novice", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "Exceed"]
-        const sdvx_short = ["BSC", "NOV", "ADV", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "XCD"]
-
-        const standard = ["Easy", "Normal", "Hard", "Insane", "Lunatic", "Extra", "Extreme", "Expert", "Ultra"]
-        const taiko = ["Kantan", "Futsuu", "Muzukashii", "Inner Oni", "Ura Oni", "Hell Oni", "Oni"]
-        const fruits = ["Cup", "Salad", "Platter", "Rain", "Overdose", "Deluge"]
-
-        /*
-        const arcaea = ["Past", "Present", "Future", "Eternal", "Beyond"]
-        const arcaea_short = ["PST", "PRS", "FTR", "ETR", "BYD"]
-
-         */
-
-        // 如果有会导致星数大幅变化的模组，则不走特殊匹配方式
-        if (matchAnyMods(score?.mods, ['DT', 'NC', 'HT', 'DC']) === false) {
-            for (const d of iidx) {
-                if (difficulty.includes(d.toUpperCase())) {
-                    return {
-                        name: d.toUpperCase(),
-                        star: sr,
-                        mode: mode,
-                    }
-                }
-            }
-
-            for (const i in sdvx) {
-                if (difficulty.includes(sdvx[i].toUpperCase()) || difficulty.includes(" " + sdvx_short[i].toUpperCase())) {
-                    return {
-                        name: sdvx_short[i].toUpperCase(),
-                        star: sr,
-                        mode: mode,
-                    }
-                }
-            }
-
-            for (const d of standard) {
-                if (getGameMode(score.mode, 1) !== 'o') break
-
-                if (difficulty.includes(d.toUpperCase())) {
-                    return {
-                        name: d.toUpperCase(),
-                        star: sr,
-                        mode: mode,
-                    }
-                }
-            }
-
-            for (const d of taiko) {
-                if (getGameMode(score.mode, 1) !== 't') break
-
-                if (difficulty.includes(d.toUpperCase())) {
-                    return {
-                        name: d.toUpperCase(),
-                        star: sr,
-                        mode: mode,
-                    }
-                }
-            }
-
-            for (const d of fruits) {
-                if (getGameMode(score.mode, 1) !== 'c') break
-
-                if (difficulty.includes(d.toUpperCase())) {
-                    return {
-                        name: d.toUpperCase(),
-                        star: sr,
-                        mode: mode,
-                    }
-                }
-            }
-        }
-
-        /*
-
-        for (const i in arcaea) {
-            if (difficulty.includes(arcaea[i].toUpperCase()) || difficulty.includes(arcaea_short[i].toUpperCase()) {
-                return arcaea_short[i].toUpperCase()
-            }
-        }
-
-         */
-
-        switch (getGameMode(mode, 1)) {
-            case "t": {
-                if (sr < 0.1) name = 'NEW';
-                else if (sr < 2) name = 'KANTAN';
-                else if (sr < 2.8) name = 'FUTSUU';
-                else if (sr < 4) name = 'MUZUKASHII';
-                else if (sr < 5.3) name = 'ONI';
-                else if (sr < 6.5) name = 'INNER ONI';
-                else if (sr < 8) name = 'URA ONI';
-                else if (sr >= 8) name = 'HELL ONI';
-                else name = 'UNKNOWN';
-                break;
-            }
-            case "c": {
-                if (sr < 0.1) name = 'NEW';
-                else if (sr < 1.8) name = 'CUP';
-                else if (sr < 2.5) name = 'SALAD';
-                else if (sr < 3.5) name = 'PLATTER';
-                else if (sr < 4.6) name = 'RAIN';
-                else if (sr < 6) name = 'OVERDOSE';
-                else if (sr < 8) name = 'DELUGE';
-                else if (sr >= 8) name = 'EXCEED';
-                else name = 'UNKNOWN';
-                break;
-            }
-            case "m": {
-                if (sr < 0.1) name = 'NEW';
-                else if (sr < 2) name = 'EZ';
-                else if (sr < 2.8) name = 'NM';
-                else if (sr < 4) name = 'HD';
-                else if (sr < 5.3) name = 'MX';
-                else if (sr < 6.5) name = 'SC';
-                else if (sr < 8) name = 'SHD';
-                else if (sr >= 8) name = 'EX';
-                else name = 'UNKNOWN';
-                break;
-            }
-            default: {
-                if (sr < 0.1) name = 'NEW';
-                else if (sr < 2) name = 'EASY';
-                else if (sr < 2.8) name = 'NORMAL';
-                else if (sr < 4) name = 'HARD';
-                else if (sr < 5.3) name = 'INSANE';
-                else if (sr < 6.5) name = 'EXPERT';
-                else if (sr < 8) name = 'MASTER';
-                else if (sr >= 8) name = 'ULTRA';
-                else name = 'UNKNOWN';
-                break;
-            }
-        }
+        const mode = score?.mode || 'osu';
+        const name = getDifficultyName(score?.beatmap?.version, sr, mode, score?.mods)
 
         return {
             name: name,

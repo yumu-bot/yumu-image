@@ -10,6 +10,7 @@ import {API} from "../svg-to-image/API.js";
 import JPEGProvider from '../svg-to-image/JPEGProvider.js';
 import PNGProvider from '../svg-to-image/PNGProvider.js';
 import {getRandom, getRandomBannerPath} from "./mascotBanner.js";
+import {matchAnyMods} from "./mod.js";
 
 const exportsJPEG = new API(new JPEGProvider());
 const exportsPNG = new API(new PNGProvider());
@@ -1610,6 +1611,151 @@ const _getTimeByDHMS = (seconds = 0, has_whitespace = false) => {
         b: pt_b,
         m: pt_m,
     }
+}
+
+export function getDifficultyName(difficulty_name = '', star_rating = 0, mode = 'osu', mods = []) {
+    const m = getGameMode(mode, 1)
+
+    let name
+
+    const difficulty = (difficulty_name || "")
+        .replaceAll("0", "o")
+        .replaceAll("1", "i")
+        .replaceAll("3", "e")
+        .replaceAll("4", "a")
+        .replaceAll("5", "s")
+        .replaceAll("6", "b")
+        .replaceAll("7", "t")
+        .replaceAll("9", "g")
+        .toUpperCase()
+
+    const iidx = ["Beginner", "Normal", "Hyper", "Another", "Black Another", "Leggendaria"]
+
+    const sdvx = ["Basic", "Novice", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "Exceed"]
+    const sdvx_short = ["BSC", "NOV", "ADV", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "XCD"]
+
+    const standard = ["Easy", "Normal", "Hard", "Insane", "Lunatic", "Extra", "Extreme", "Expert", "Master", "Ultra"]
+    const taiko = ["Kantan", "Futsuu", "Muzukashii", "Inner Oni", "Ura Oni", "Hell Oni", "Oni"]
+    const fruits = ["Cup", "Salad", "Platter", "Rain", "Overdose", "Deluge"]
+
+    /*
+    const arcaea = ["Past", "Present", "Future", "Eternal", "Beyond"]
+    const arcaea_short = ["PST", "PRS", "FTR", "ETR", "BYD"]
+
+     */
+
+    // 如果有会导致星数大幅变化的模组，则不走特殊匹配方式
+    if (matchAnyMods(mods, ['DT', 'NC', 'HT', 'DC']) === false) {
+        for (const d of iidx) {
+            const du = d.toUpperCase()
+
+            if (difficulty.includes(du)) {
+                return du
+            }
+        }
+
+        for (const i in sdvx) {
+            const su = sdvx[i].toUpperCase()
+            const tu = sdvx_short[i].toUpperCase()
+
+            if (difficulty.includes(su) || difficulty.includes(" " + su)) {
+                return tu
+            }
+        }
+
+        for (const d of standard) {
+            if (m !== 'o') break
+
+            const du = d.toUpperCase()
+
+            if (difficulty.includes(du)) {
+                return du
+            }
+        }
+
+        for (const d of taiko) {
+            if (m !== 't') break
+
+            const du = d.toUpperCase()
+
+            if (difficulty.includes(du)) {
+                return du
+            }
+        }
+
+        for (const d of fruits) {
+            if (m !== 'c') break
+
+            const du = d.toUpperCase()
+
+            if (difficulty.includes(du)) {
+                return du
+            }
+        }
+    }
+
+    /*
+
+    for (const i in arcaea) {
+        if (difficulty.includes(arcaea[i].toUpperCase()) || difficulty.includes(arcaea_short[i].toUpperCase()) {
+            return arcaea_short[i].toUpperCase()
+        }
+    }
+
+     */
+
+    switch (m) {
+        case "t": {
+            if (star_rating < 0.1) name = 'NEW';
+            else if (star_rating < 2) name = 'KANTAN';
+            else if (star_rating < 2.8) name = 'FUTSUU';
+            else if (star_rating < 4) name = 'MUZUKASHII';
+            else if (star_rating < 5.3) name = 'ONI';
+            else if (star_rating < 6.5) name = 'INNER ONI';
+            else if (star_rating < 8) name = 'URA ONI';
+            else if (star_rating >= 8) name = 'HELL ONI';
+            else name = 'UNKNOWN';
+            break;
+        }
+        case "c": {
+            if (star_rating < 0.1) name = 'NEW';
+            else if (star_rating < 1.8) name = 'CUP';
+            else if (star_rating < 2.5) name = 'SALAD';
+            else if (star_rating < 3.5) name = 'PLATTER';
+            else if (star_rating < 4.6) name = 'RAIN';
+            else if (star_rating < 6) name = 'OVERDOSE';
+            else if (star_rating < 8) name = 'DELUGE';
+            else if (star_rating >= 8) name = 'DELUGE';
+            else name = 'UNKNOWN';
+            break;
+        }
+        case "m": {
+            if (star_rating < 0.1) name = 'NEW';
+            else if (star_rating < 2) name = 'EZ';
+            else if (star_rating < 2.8) name = 'NM';
+            else if (star_rating < 4) name = 'HD';
+            else if (star_rating < 5.3) name = 'MX';
+            else if (star_rating < 6.5) name = 'SC';
+            else if (star_rating < 8) name = 'SHD';
+            else if (star_rating >= 8) name = 'EX';
+            else name = 'UNKNOWN';
+            break;
+        }
+        default: {
+            if (star_rating < 0.1) name = 'NEW';
+            else if (star_rating < 2) name = 'EASY';
+            else if (star_rating < 2.8) name = 'NORMAL';
+            else if (star_rating < 4) name = 'HARD';
+            else if (star_rating < 5.3) name = 'INSANE';
+            else if (star_rating < 6.5) name = 'EXPERT';
+            else if (star_rating < 8) name = 'MASTER';
+            else if (star_rating >= 8) name = 'ULTRA';
+            else name = 'UNKNOWN';
+            break;
+        }
+    }
+
+    return name
 }
 
 /**

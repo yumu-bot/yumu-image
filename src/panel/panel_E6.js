@@ -825,57 +825,8 @@ const component_E11 = async (
 // 私有转换方式
 const PanelEGenerate = {
     score2componentE1: (b, mode) => {
-        // sr 2 difficulty name
         const sr = b?.difficulty_rating || 0;
-
-        let name;
-
-        switch (getGameMode(mode, 1)) {
-            case "t": {
-                if (sr < 0.1) name = 'NEW';
-                else if (sr < 2) name = 'KANTAN';
-                else if (sr < 2.8) name = 'FUTSUU';
-                else if (sr < 4) name = 'MUZUKASHII';
-                else if (sr < 5.3) name = 'ONI';
-                else if (sr < 6.5) name = 'INNER ONI';
-                else if (sr >= 6.5) name = 'URA ONI';
-                else name = 'UNKNOWN';
-                break;
-            }
-            case "c": {
-                if (sr < 0.1) name = 'NEW';
-                else if (sr < 1.8) name = 'CUP';
-                else if (sr < 2.5) name = 'SALAD';
-                else if (sr < 3.5) name = 'PLATTER';
-                else if (sr < 4.6) name = 'RAIN';
-                else if (sr < 6) name = 'OVERDOSE';
-                else if (sr >= 6) name = 'DELUGE';
-                else name = 'UNKNOWN';
-                break;
-            }
-            case "m": {
-                if (sr < 0.1) name = 'NEW';
-                else if (sr < 2) name = 'EZ';
-                else if (sr < 2.8) name = 'NM';
-                else if (sr < 4) name = 'HD';
-                else if (sr < 5.3) name = 'MX';
-                else if (sr < 6.5) name = 'SC';
-                else if (sr >= 6.5) name = 'SHD';
-                else name = 'UNKNOWN';
-                break;
-            }
-            default: {
-                if (sr < 0.1) name = 'NEW';
-                else if (sr < 2) name = 'EASY';
-                else if (sr < 2.8) name = 'NORMAL';
-                else if (sr < 4) name = 'HARD';
-                else if (sr < 5.3) name = 'INSANE';
-                else if (sr < 6.5) name = 'EXPERT';
-                else if (sr >= 6.5) name = 'ULTRA';
-                else name = 'UNKNOWN';
-                break;
-            }
-        }
+        const name = getDifficultyName(b?.version, sr, mode)
 
         return {
             name: name,
