@@ -28,8 +28,10 @@ export function card_G(data = {
 
     main_b: '',
     main_m: '',
-    main_b_size: 60,
+    main_l: '',
+    main_b_size: 56,
     main_m_size: 36,
+    main_l_size: 24,
 
     additional_b: '',
     additional_m: '',
@@ -39,6 +41,7 @@ export function card_G(data = {
     rrect1_percent: 0,
     rrect1_color1: '',
     rrect1_color2: '',
+    rrect1_base_opacity: 0.1,
 
     // 这里太定制了
     stars: '', //dx 星星
@@ -133,7 +136,12 @@ export function card_G(data = {
         text: data?.main_m,
         size: data?.main_m_size,
         color: '#fff',
-    }], 175, 415, 'center baseline')
+    }, {
+        font: "poppinsBold",
+        text: data?.main_l,
+        size: data?.main_l_size,
+        color: '#fff',
+    }], 175, 415 + 5, 'center baseline')
 
     const additional = getMultipleTextPath([{
         font: "poppinsBold",
@@ -150,26 +158,26 @@ export function card_G(data = {
     const rrect1_top = PanelDraw.GradientRect(130, 450, 180 * (data?.rrect1_percent || 0), 10, 5, [
         {
             offset: "0%",
-            color: "#4facfe",
+            color: data?.rrect1_color1 || "#4facfe",
             opacity: 1,
         }, {
             offset: "100%",
-            color: "#00f2fe",
+            color: data?.rrect1_color2 || "#00f2fe",
             opacity: 1,
         }
         ], 1
     )
     const rrect1_base = PanelDraw.GradientRect(130, 450, 180, 10, 5, [
-            {
-                offset: "0%",
-                color: "#4facfe",
-                opacity: 1,
-            }, {
-                offset: "100%",
-                color: "#00f2fe",
-                opacity: 1,
-            }
-        ], 0.1
+        {
+            offset: "0%",
+            color: data?.rrect1_color1 || "#4facfe",
+            opacity: 1,
+        }, {
+            offset: "100%",
+            color: data?.rrect1_color2 || "#00f2fe",
+            opacity: 1,
+        }
+        ], data?.rrect1_base_opacity || 0.1
     )
 
     const base2 = PanelDraw.Rect(30, 350, 290, 120, 20, '#46393f', 1)

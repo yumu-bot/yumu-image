@@ -1,4 +1,5 @@
 import {isHexColor} from "./util.js";
+import {getModName} from "./mod.js";
 
 // Yumu Panel v0.5 颜色自定义，默认的色相全是 342（这也是巧克力面板的原色
 export const PanelColor = {
@@ -322,10 +323,10 @@ export function getUserRankColor(rank = 0) {
  * @returns {string}
  */
 export function getModColor(mod = '' || {acronym: ''}) {
-    if (mod?.acronym != null) mod = mod.acronym
+    const mod_name = getModName(mod);
 
     let color;
-    switch (mod.toString().toUpperCase()) {
+    switch (mod_name.toUpperCase()) {
         case "NF":
             color = '#0068B7';
             break;

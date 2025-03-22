@@ -341,10 +341,11 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     const difficulty = song?.ds[index]
     const diff_colors = getMaimaiDifficultyColors(index)
 
-    const achievements = rounds(score?.achievements, 4)
+    const achievements = score?.achievements?.toFixed(4) || '0.0000' // rounds(score?.achievements, 4)
 
-    const main_b = has_score ? achievements.integer : '-'
-    const main_m = has_score ? (achievements.decimal + ' %') : ''
+    const main_b = has_score ? achievements.slice(0, -3) : '-'
+    const main_m = has_score ? achievements.slice(-3) : ''
+    const main_l = has_score ? '%' : ''
 
     const rating = score?.ra || 0
     const max_rating = getMaimaiMaximumRating(difficulty)
@@ -352,10 +353,42 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     const additional_b = has_score ? rating.toString() : ''
     const additional_m = has_score ? (isMaimaiMaximumRating(rating, difficulty) ? '' : ' [' + max_rating + ']') : '[' + max_rating + ']'
 
-    const percent = rating / max_rating
+    const div = (score?.dxScore || 0) / (score?.max || 1)
+
+    let rrect1_color1
+    let rrect1_color2
+    let percent
+    let rrect1_base_opacity = 0.3
+
+    if (div >= 0.97) {
+        rrect1_color1 = '#F7B551'
+        rrect1_color2 = '#FFF45C'
+        percent = (1 - div) / 0.03
+    } else if (div >= 0.95) {
+        rrect1_color1 = '#FF554E'
+        rrect1_color2 = '#FAD129'
+        percent = (0.97 - div) / 0.02
+    } else if (div >= 0.93) {
+        rrect1_color1 = '#FF554E'
+        rrect1_color2 = '#F28D29'
+        percent = (0.95 - div) / 0.02
+    } else if (div >= 0.9) {
+        rrect1_color1 = '#F0EF47'
+        rrect1_color2 = '#26D94F'
+        percent = (0.93 - div) / 0.02
+    } else if (div >= 0.85) {
+        rrect1_color1 = '#38F8D4'
+        rrect1_color2 = '#43EB81'
+        percent = (0.9 - div) / 0.05
+    } else {
+        rrect1_color1 = '#4facfe'
+        rrect1_color2 = '#00f2fe'
+        percent = div / 0.85
+        rrect1_base_opacity = 0.1
+    }
 
     const stars = drawStars(score?.dxScore, score?.max)
-    const component = component_G1(song?.charts[index]?.notes)
+    const component = component_G1(song?.charts[index]?.notes, score?.achievements)
 
     return {
         background: background,
@@ -383,8 +416,10 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
 
         main_b: main_b,
         main_m: main_m,
-        main_b_size: 60,
+        main_l: main_l,
+        main_b_size: 56,
         main_m_size: 36,
+        main_l_size: 24,
 
         additional_b: additional_b,
         additional_m: additional_m,
@@ -392,15 +427,16 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
         additional_m_size: 14,
 
         rrect1_percent: percent,
-        rrect1_color1: '#4facfe',
-        rrect1_color2: '#00f2fe',
+        rrect1_color1: rrect1_color1,
+        rrect1_color2: rrect1_color2,
+        rrect1_base_opacity: rrect1_base_opacity,
 
         stars: stars, //dx 星星
         component: component
     }
 }
 
-const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_: 26 }) => {
+const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_: 26 }, achievements = 0) => {
     let svg = `
         <g id="Base_LG1">
         </g>
@@ -410,16 +446,22 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
         </g>
     `;
     const note = notes || []
-    const sum = ((note?.tap + note?.hold + note?.slide + note?.break_ + note?.touch) || -1)
+    // const sum = ((note?.tap + note?.hold + note?.slide + note?.break_ + note?.touch) || -1)
+    const base_score_sum = (note?.tap + 2 * note?.hold + 3 * note?.slide + 5 * note?.break_ + note?.touch) || -1
 
     const reg_base = /(?<=<g id="Base_LG1">)/
     const reg_icon = /(?<=<g id="Icon_LG1">)/
     const reg_text = /(?<=<g id="Text_LG1">)/
 
-    const dx_text = (sum > 0 ? ('DX Score: ' + sum * 3) : '-')
+    // const dx_text = (sum > 0 ? ('DX Score: ' + sum * 3) : '-')
+    // const dx = poppinsBold.getTextPath(dx_text, 280, 20, 14, 'right baseline', '#fff')
 
-    const title = poppinsBold.getTextPath('Notes', 10, 20, 14, 'left baseline', '#fff')
-    const dx = poppinsBold.getTextPath(dx_text, 280, 20, 14, 'right baseline', '#fff')
+    const title = poppinsBold.getTextPath('Notes & Tolerance', 10, 20, 14, 'left baseline', '#fff')
+
+    const equivalent_text = (achievements > 0 ?
+        ('≈ ' + getApproximateGreatString((101 - achievements) / 100 / (0.2 / base_score_sum), 1) + ' GR')
+        : '-')
+    const equivalent = poppinsBold.getTextPath(equivalent_text, 280, 20, 14, 'right baseline', '#fff')
 
     svg = implantImage(svg, 40, 25, 10 + 7, 30, 1,
         getImageFromV3('Maimai', 'object-note-tap.png'), reg_icon)
@@ -432,31 +474,50 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     svg = implantImage(svg, 40, 25, 10 + 7 + 216, 30, 1,
         getImageFromV3('Maimai', 'object-note-break.png'), reg_icon)
 
-    svg = implantImage(svg, 40, 25, 10 + 7, 100, 1,
-        getImageFromV3('Maimai', 'object-note-break-critical.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 54, 100, 1,
+    svg = implantImage(svg, 47 - 7, 25 - 6, 10 + 3 + 3.5, 95 + 3, 1,
+        getImageFromV3('Maimai', 'object-score-sp2.png'), reg_icon)
+    svg = implantImage(svg, 47, 25, 10 + 3 + 54, 95, 1,
+        getImageFromV3('Maimai', 'object-score-ss2.png'), reg_icon)
+    svg = implantImage(svg, 47, 25, 10 + 3 + 108, 95, 1,
+        getImageFromV3('Maimai', 'object-score-ssp2.png'), reg_icon)
+    svg = implantImage(svg, 47, 25, 10 + 3 + 162, 95, 1,
+        getImageFromV3('Maimai', 'object-score-sss2.png'), reg_icon)
+    svg = implantImage(svg, 47, 25, 10 + 3 + 216, 95, 1,
+        getImageFromV3('Maimai', 'object-score-sssp2.png'), reg_icon)
+
+    const s3p_loss = poppinsBold.getTextPath('<' + getApproximateGreatString((1.01 - 0.98) * base_score_sum / 0.2),
+        37, 137, 14, 'center baseline', '#fff')
+    const s3_loss = poppinsBold.getTextPath('<' + getApproximateGreatString((1.01 - 0.99) * base_score_sum / 0.2),
+        37 + 54, 137, 14, 'center baseline', '#fff')
+    const s2p_loss = poppinsBold.getTextPath('<' + getApproximateGreatString((1.01 - 0.995) * base_score_sum / 0.2),
+        37 + 108, 137, 14, 'center baseline', '#fff')
+    const s2_loss = poppinsBold.getTextPath('<' + getApproximateGreatString((1.01 - 1) * base_score_sum / 0.2),
+        37 + 162, 137, 14, 'center baseline', '#fff')
+    const sp_loss = poppinsBold.getTextPath('<' + getApproximateGreatString((1.01 - 1.005) * base_score_sum / 0.2),
+        37 + 216, 137, 14, 'center baseline', '#fff')
+
+    const break_2550_percent = (0.01 * 0.25 / note?.break_)
+    const break_2550_text = '≈  ' + getJudgeScoreString(0 - 100 * break_2550_percent)
+        + '%  ≈  ' + getApproximateGreatString(break_2550_percent / (0.2 / base_score_sum), 3)
+
+    const break_2000_percent = (1 / base_score_sum + (0.01 * 0.6 / note?.break_)) // 基础分数损失 5 倍，0.2*5=1
+    const break_2000_text = '≈  ' + getJudgeScoreString(0 - 100 * break_2000_percent)
+        + '%  ≈  ' + getApproximateGreatString(break_2000_percent / (0.2 / base_score_sum), 3)
+
+    const break_2550 = poppinsBold.getTextPath(break_2550_text,
+        62, 137 + 25, 14, 'left baseline', '#fff')
+    const break_2000 = poppinsBold.getTextPath(break_2000_text,
+        62, 137 + 55, 14, 'left baseline', '#fff')
+
+    svg = implantImage(svg, 47, 25, 10 + 3, 145, 1,
         getImageFromV3('Maimai', 'object-note-break-perfect.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 108, 100, 1,
+    svg = implantImage(svg, 47, 25, 10 + 3, 175, 1,
         getImageFromV3('Maimai', 'object-note-break-great.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 162, 100, 1,
-        getImageFromV3('Maimai', 'object-note-break-good.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 216, 100, 1,
-        getImageFromV3('Maimai', 'object-note-break-miss.png'), reg_icon)
 
-    svg = implantImage(svg, 40, 25, 10 + 7, 150, 1,
+    svg = implantImage(svg, 47, 25, 35 + Math.round(poppinsBold.getTextWidth(break_2550_text, 14)) + 30, 145, 1,
         getImageFromV3('Maimai', 'object-note-tap-great.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 162, 150, 1,
-        getImageFromV3('Maimai', 'object-note-tap-good.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 216, 150, 1,
-        getImageFromV3('Maimai', 'object-note-tap-miss.png'), reg_icon)
-
-    // 基础分：PF 500, GR 400, GD 250, MS 0, Hold x2, Slide x3, Break x5?
-    // 绝赞基础分：CP~PF2 2500, GR1 2000, GR2 1500, GR3 1250, GD 1000, MS 0,
-    // 绝赞额外分：CP 100, PF1 75, PF2 50, GR1~3 40, GD 30, MS 0,
-
-    // 换算得到的基础分损失：PF 0, GR -0.2, GD -0.5, MS -1, Hold x2, Slide x3, Break x5
-    // 换算得到的绝赞基础分损失：CP~PF2 0, GR1 -1, GR2 -2, GR3 -2.5, GD -break_great2, MS -5,
-    // 换算得到的绝赞额外分奖励：CP 1, PF1 0.75, PF2 0.5, GR1~3 0.4, GD 0.3, MS 0,
+    svg = implantImage(svg, 47, 25, 35 + Math.round(poppinsBold.getTextWidth(break_2000_text, 14)) + 30, 175, 1,
+        getImageFromV3('Maimai', 'object-note-tap-great.png'), reg_icon)
 
     const tap_count = poppinsBold.getTextPath((note?.tap || 0).toString(),
         37, 72, 14, 'center baseline', '#fff')
@@ -469,8 +530,168 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     const break_count = poppinsBold.getTextPath((note?.break_ || 0).toString(),
         37 + 216, 72, 14, 'center baseline', '#fff')
 
-    // 占比矩形
-    const width = 270 / sum
+    // 占比矩形 占鸡儿比 当前进度
+    // const width = 270 / sum
+
+    let gradient
+    if (achievements >= 100.5) {
+        gradient = [
+            {
+                offset: "0%",
+                color: "#EC6841",
+                opacity: 1,
+            },
+            {
+                offset: "20%",
+                color: "#F19149",
+                opacity: 1,
+            },
+            {
+                offset: "40%",
+                color: "#FFF45C",
+                opacity: 1,
+            },
+            {
+                offset: "60%",
+                color: "#31B16C",
+                opacity: 1,
+            },
+            {
+                offset: "80%",
+                color: "#00B7EE",
+                opacity: 1,
+            },
+            {
+                offset: "100%",
+                color: "#00f2fe",
+                opacity: 1,
+            },
+        ]
+    } else if (achievements >= 100) {
+        gradient = [
+            {
+                offset: "0%",
+                color: "#EC6841",
+                opacity: 1,
+            },
+            {
+                offset: "35%",
+                color: "#F19149",
+                opacity: 1,
+            },
+            {
+                offset: "70%",
+                color: "#FFF45C",
+                opacity: 1,
+            },
+            {
+                offset: "100%",
+                color: "#00B7EE",
+                opacity: 1,
+            },
+        ]
+    } else if (achievements >= 99) {
+        gradient = [
+            {
+                offset: "0%",
+                color: "#F7B551",
+                opacity: 1,
+            },
+            {
+                offset: "100%",
+                color: "#FFF45C",
+                opacity: 1,
+            },
+        ]
+    } else if (achievements >= 97) {
+        gradient = [
+            {
+                offset: "0%",
+                color: "#F19149",
+                opacity: 1,
+            },
+            {
+                offset: "100%",
+                color: "#F7B551",
+                opacity: 1,
+            },
+        ]
+    } else if (achievements >= 80) {
+        gradient = [
+            {
+                offset: "0%",
+                color: "#EA68A2",
+                opacity: 1,
+            },
+            {
+                offset: "100%",
+                color: "#EC6841",
+                opacity: 1,
+            },
+        ]
+    } else if (achievements >= 60) {
+        gradient = [
+            {
+                offset: "0%",
+                color: "#12B4B1",
+                opacity: 1,
+            },
+            {
+                offset: "100%",
+                color: "#00B7EE",
+                opacity: 1,
+            },
+        ]
+    } else if (achievements >= 50) {
+        gradient = [
+            {
+                offset: "0%",
+                color: "#12B4B1",
+                opacity: 1,
+            },
+            {
+                offset: "100%",
+                color: "#31B16C",
+                opacity: 1,
+            },
+        ]
+    } else {
+        gradient = [
+            {
+                offset: "0%",
+                color: "#777",
+                opacity: 1,
+            },
+            {
+                offset: "100%",
+                color: "#aaa",
+                opacity: 1,
+            },
+        ]
+    }
+
+    let rrect_width
+    if (achievements >= 100.5) {
+        rrect_width = 270 * 0.9 + 27 * (achievements - 100.5) / 0.5
+    } else if (achievements >= 100) {
+        rrect_width = 270 * 0.7 + 27 * (achievements - 100) / 0.5
+    } else if (achievements >= 99.5) {
+        rrect_width = 270 * 0.5 + 27 * (achievements - 99.5) / 0.5
+    } else if (achievements >= 99) {
+        rrect_width = 270 * 0.3 + 27 * (achievements - 99) / 0.5
+    } else if (achievements >= 98) {
+        rrect_width = 270 * 0.1 + 27 * (achievements - 98)
+    } else if (achievements > 0) {
+        rrect_width = Math.max(27 * achievements / 98, 10)
+    } else {
+        rrect_width = 0
+    }
+
+
+    const progress_rrect = achievements > 0 ? PanelDraw.GradientRect(10, 80, rrect_width, 10, 5, gradient) : ''
+    const progress_base_rrect = PanelDraw.GradientRect(10, 80, 270, 10, 5, gradient, 0.2)
+
+    /*
     const tap_rrect = PanelDraw.GradientRect(10, 80, width * ((note?.tap) || 0), 10, 5,
         [
             {
@@ -542,12 +763,25 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
         ]
     )
 
+     */
+
+    // 基础分：PF 500, GR 400, GD 250, MS 0, Hold x2, Slide x3, Break x5~
+    // 绝赞基础分：CP~PF2 2500, GR1 2000, GR2 1500, GR3 1250, GD 1000, MS 0,
+    // 绝赞额外分：CP 100, PF1 75, PF2 50, GR1~3 40, GD 30, MS 0,
+
+    // 换算得到的基础分损失：PF 0, GR -0.2, GD -0.5, MS -1, Hold x2, Slide x3, Break x5
+    // 换算得到的绝赞基础分损失：CP~PF2 0, GR1 -1, GR2 -2, GR3 -2.5, GD -break_great2, MS -5,
+    // 换算得到的绝赞额外分奖励：CP 1, PF1 0.75, PF2 0.5, GR1~3 0.4, GD 0.3, MS 0,
+
+
+    /*
+
     // 单一物件的基础分或额外分
+    // 以 100- 计算
     const base_score_sum = (note?.tap + 2 * note?.hold + 3 * note?.slide + 5 * note?.break_ + note?.touch) || -1
     const base_score = base_score_sum > 0 ? (100 / base_score_sum) : 0
     const extra_score = note?.break_ > 0 ? (1 / note?.break_) : 0
 
-    // 以百分制计算
     const break_critical = poppinsBold.getTextPath(getJudgeScoreString(extra_score),
         37, 142, 14, 'center baseline', '#fff')
     const break_perfect1 = poppinsBold.getTextPath(getJudgeScoreString(extra_score * 0.75),
@@ -581,10 +815,24 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
 
     svg = replaceTexts(svg, [tap_rrect, hold_rrect, slide_rrect, touch_rrect, break_rrect, base], reg_base)
 
+     */
+
+    const base = PanelDraw.Rect(0, 0, 290, 210, 20, '#382E32', 1)
+
+    svg = replaceTexts(svg, [title, equivalent, tap_count, hold_count, slide_count, touch_count, break_count, s3p_loss, s3_loss, s2p_loss, s2_loss, sp_loss, break_2550, break_2000], reg_text)
+
+    svg = replaceTexts(svg, [progress_rrect, progress_base_rrect, base], reg_base)
+
     return svg.toString()
 }
 
+/**
+ *
+ * @param score
+ * @returns {string}
+ */
 function getJudgeScoreString(score = 0) {
+    if (Number.isNaN(score)) return ''
     const out = (score > 0) ? '+' : ((score < 0) ? '-' : '')
 
     const score_number = rounds(Math.abs(score), 4)
@@ -592,11 +840,40 @@ function getJudgeScoreString(score = 0) {
     const large = score_number.integer
     const small = score_number.decimal
 
+    return out + large + small
+
+    /*
     if (large.startsWith('0')) {
         return out + '.' + small
     } else {
         return out + large + small
     }
+
+     */
+}
+
+/**
+ *
+ * @param score
+ * @param level
+ * @returns {string}
+ */
+function getApproximateGreatString(score = 0, level = 1) {
+    if (Number.isNaN(score)) return ''
+    const score_number = rounds(Math.abs(score), level)
+
+    const large = score_number.integer
+    const small = score_number.decimal
+
+    return large + small
+
+    /*
+    if (large.startsWith('0')) {
+        return '.' + small
+    } else {
+        return large + small
+    }
+     */
 }
 
 // 锚点在右下角

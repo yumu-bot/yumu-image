@@ -120,10 +120,10 @@ const ModBonusMANIA = {
  * @param mod {{acronym: string}|string}
  * @returns string
  */
-const getModName = (mod = {acronym: ""} || "") => {
-    if (mod instanceof String) {
+export const getModName = (mod = {acronym: ""} || "") => {
+    if (typeof mod === 'string') {
         return mod
-    } else if (mod instanceof Object) {
+    } else if (typeof mod === 'object') {
         return mod?.acronym || ''
     } else return ''
 }
@@ -186,6 +186,7 @@ export function getModCirclePath(mod = {acronym: ""}, cx = 0, cy = 0, r = 5, don
 
 export function getModRRectPath(mod = {acronym: ""}, x = 0, y = 0, width = 40, height = 20, r = Math.min(width, height) / 2, text_height = 21, font = torus, font_size = 16) {
     const mod_name = getModName(mod)
+
     if (isEmptyString(mod_name)) return ''
 
     const mod_color = getModColor(mod_name);
