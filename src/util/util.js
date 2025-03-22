@@ -1473,14 +1473,26 @@ export function getFormattedTime(time = '', format_to = 'YYYY-MM-DD HH:mm:ss [+8
 }
 
 
+
+/**
+ * 获取短版时间差
+ * @param compare 需要与 now 对比的时间
+ * @param is_short 是否采用短版输出
+ * @return {string} 时间差
+ */
+export function getTimeDifferenceShort(compare = '', is_short = true) {
+    return getTimeDifference(compare, 'YYYY-MM-DD[T]HH:mm:ss[Z]', moment().subtract(8, "hours"), is_short);
+}
+
 /**
  * 获取时间差
- * @param compare
- * @param format
+ * @param compare 需要与 now 对比的时间
+ * @param format 格式
  * @param now 这个时间是 UTC 时间。如果你输入的时间已经是本地时间（北京时间），这里需要输入 moment();
- * @return {string}
+ * @param is_short 是否采用短版输出
+ * @return {string} 时间差
  */
-export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment().subtract(8, "hours")) {
+export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment().subtract(8, "hours"), is_short = false) {
     const compare_moment = moment(compare, format);
 
     if (compare_moment == null) return '-';
@@ -1491,38 +1503,54 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
     const hours = compare_moment.diff(now, "hours");
     const minutes = compare_moment.diff(now, "minutes");
 
-    if (Math.abs(years) > 0) {
-        if (Math.abs(years) > 1) {
-            return years + 'yrs';
-        } else {
-            return years + 'yr';
-        }
-    } else if (Math.abs(months) > 0) {
-        if (Math.abs(months) > 1) {
-            return months + 'mos';
-        } else {
+    if (is_short) {
+        if (Math.abs(years) > 0) {
+            return years + 'y';
+        } else if (Math.abs(months) > 0) {
             return months + 'mo';
-        }
-    } else if (Math.abs(days) > 0) {
-        if (Math.abs(days) > 1) {
-            return days + 'dys';
+        } else if (Math.abs(days) > 0) {
+            return days + 'd';
+        } else if (Math.abs(hours) > 0) {
+            return hours + 'h';
+        } else if (Math.abs(minutes) > 0) {
+            return minutes + 'm';
         } else {
-            return days + 'dy';
-        }
-    } else if (Math.abs(hours) > 0) {
-        if (Math.abs(hours) > 1) {
-            return hours + 'hrs';
-        } else {
-            return hours + 'hr';
-        }
-    } else if (Math.abs(minutes) > 0) {
-        if (Math.abs(minutes) > 1) {
-            return minutes + 'mins';
-        } else {
-            return minutes + 'min';
+            return 'now';
         }
     } else {
-        return 'now';
+        if (Math.abs(years) > 0) {
+            if (Math.abs(years) > 1) {
+                return years + 'yrs';
+            } else {
+                return years + 'yr';
+            }
+        } else if (Math.abs(months) > 0) {
+            if (Math.abs(months) > 1) {
+                return months + 'mos';
+            } else {
+                return months + 'mo';
+            }
+        } else if (Math.abs(days) > 0) {
+            if (Math.abs(days) > 1) {
+                return days + 'dys';
+            } else {
+                return days + 'dy';
+            }
+        } else if (Math.abs(hours) > 0) {
+            if (Math.abs(hours) > 1) {
+                return hours + 'hrs';
+            } else {
+                return hours + 'hr';
+            }
+        } else if (Math.abs(minutes) > 0) {
+            if (Math.abs(minutes) > 1) {
+                return minutes + 'mins';
+            } else {
+                return minutes + 'min';
+            }
+        } else {
+            return 'now';
+        }
     }
 }
 
@@ -1803,7 +1831,7 @@ export function getMatchDuration(match) {
     let str;
 
     if (match?.is_match_end) {
-        const delta = getTimeDifference(match?.match?.end_time)
+        const delta = getTimeDifference(match?.match?.end_time, true)
 
         str = start.format('YYYY/MM/DD HH:mm') + ' - ' + end.format('HH:mm') + ' (' + delta + ')';
     } else {

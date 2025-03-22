@@ -121,7 +121,11 @@ const ModBonusMANIA = {
  * @returns string
  */
 const getModName = (mod = {acronym: ""} || "") => {
-    return mod?.acronym || mod
+    if (mod instanceof String) {
+        return mod
+    } else if (mod instanceof Object) {
+        return mod?.acronym || ''
+    } else return ''
 }
 
 /**

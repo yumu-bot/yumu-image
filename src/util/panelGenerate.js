@@ -16,7 +16,7 @@ import {
     isNotEmptyArray,
     getTimeByDHMS,
     requireNonNullElse,
-    getDifficultyName, getDiffBG, isNotEmptyString, round, rounds, getFormattedTime,
+    getDifficultyName, getDiffBG, isNotEmptyString, round, rounds, getFormattedTime, getTimeDifferenceShort,
 } from "./util.js";
 import {getBadgeColor, getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -545,6 +545,9 @@ export const PanelGenerate = {
             right2: right2,
             right3b: right3b,
             right3m: right3m,
+
+            right3b_size: 60,
+            right3m_size: 48,
         };
     },
 
@@ -892,7 +895,7 @@ export const PanelGenerate = {
         const background = await readNetImage(s?.beatmapset?.covers?.cover, cache);
         const type = getScoreTypeImage(s.is_lazer)
 
-        const time_diff = getTimeDifference(s.ended_at);
+        const time_diff = getTimeDifferenceShort(s.ended_at, true);
 
         let mods_width;
         switch (s?.mods?.length) {
@@ -1013,7 +1016,7 @@ export const PanelGenerate = {
         const card_h = await PanelGenerate.score2CardH(s, rank, true)
 
         if (is_after) {
-            const time_diff = getTimeDifference(s.ended_at);
+            const time_diff = getTimeDifferenceShort(s.ended_at, true);
             const rank_after_str = ' -> ' + rank_after;
             const difficulty_name = s.beatmap.version ?
                 torus.cutStringTail(getDifficultyName(s.beatmap), 24,
@@ -1050,7 +1053,7 @@ export const PanelGenerate = {
         }
 
         const index_text = index > 0 ? ('#' + index) : ''
-        const left2 = index_text + ' // award at: ' + getFormattedTime(badge?.awarded_at, 'YYYY-MM-DD HH:mm:ss +8', 'YYYY-MM-DD[T]HH:mm:ssZ') + ' (' + getTimeDifference(badge?.awarded_at, 'YYYY-MM-DD[T]HH:mm:ssZ') + ')'
+        const left2 = index_text + ' // award at: ' + getFormattedTime(badge?.awarded_at, 'YYYY-MM-DD HH:mm:ss +8', 'YYYY-MM-DD[T]HH:mm:ssZ') + ' (' + getTimeDifference(badge?.awarded_at, 'YYYY-MM-DD[T]HH:mm:ssZ', moment().subtract(8, "hours"), true) + ')'
 
         const color = getBadgeColor(badge?.description)
 
