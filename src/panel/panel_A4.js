@@ -66,7 +66,7 @@ export async function panel_A4(data = {
             panel_name = getPanelNameSVG('Best Scores (!ymbs)', 'BS', 'v0.5.0 DX', request_time);
         } break;
         default: {
-            getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', 'v0.5.0 DX', request_time);
+            panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', 'v0.5.0 DX', request_time);
         } break;
     }
 
