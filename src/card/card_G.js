@@ -155,7 +155,7 @@ export function card_G(data = {
         color: '#fff',
     }], 135, 445, 'left baseline')
 
-    const rrect1_top = PanelDraw.GradientRect(130, 450, 180 * (data?.rrect1_percent || 0), 10, 5, [
+    const rrect1_top = PanelDraw.GradientRect(130, 450, Math.max(180 * (data?.rrect1_percent || 0), 10), 10, 5, [
         {
             offset: "0%",
             color: data?.rrect1_color1 || "#4facfe",

@@ -687,7 +687,7 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     } else if (achievements >= 98) {
         rrect_width = 270 * 0.1 + 27 * (achievements - 98)
     } else if (achievements > 0) {
-        rrect_width = Math.max(27 * achievements / 98, 10)
+        rrect_width = Math.max(27 * (achievements - 95) / 3, 10)
     } else {
         rrect_width = 0
     }
