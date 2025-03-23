@@ -380,10 +380,15 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
         rrect1_color1 = '#38F8D4'
         rrect1_color2 = '#43EB81'
         percent = (0.9 - div) / 0.05
-    } else {
+    } else if (div > 0) {
         rrect1_color1 = '#4facfe'
         rrect1_color2 = '#00f2fe'
         percent = div / 0.85
+        rrect1_base_opacity = 0.1
+    } else {
+        rrect1_color1 = '#4facfe'
+        rrect1_color2 = '#00f2fe'
+        percent = rating / max_rating
         rrect1_base_opacity = 0.1
     }
 
