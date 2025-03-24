@@ -49,9 +49,9 @@
 ## 额外面板
 
 - Alpha 文字面板
-- Beta 一个超帅的新面板
+- Beta 一个超帅的新面板 // 但是为什么弃用了呢
 - Gamma 成绩和信息简版 IC/PC
-- Delta XinRan 比赛面板 K
+- Delta XinRan 比赛面板 KT
 - Epsilon 截图用头像 OA
 - Zeta 截图用头像 OC
 

@@ -1035,7 +1035,7 @@ const component_E10 = (
         && isNumber(data?.effective_miss_count)
         && (Math.abs(data?.effective_miss_count - Math.round(data?.effective_miss_count)) > 1e-3)
 
-    const effective_miss_text = 'effective miss: ' + round(data?.effective_miss_count || 0, 2)
+    const effective_miss_text = 'equivalent miss: ' + round(data?.effective_miss_count || 0, 2)
 
     const effective_miss = is_effective_miss_shown ?
         poppinsBold.getTextPath(
