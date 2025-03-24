@@ -1,9 +1,9 @@
 import {
     exportJPEG,
     getPanelNameSVG,
-    implantSvgBody,
-    replaceText,
-    putCustomBanner, getPanelHeight, readNetImage, implantImage, getImageFromV3, isNotEmptyString
+    setSvgBody,
+    setText,
+    setCustomBanner, getPanelHeight, readNetImage, setImage, getImageFromV3, isNotEmptyString
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
@@ -114,10 +114,10 @@ export async function panel_A9(
     const panel_name = getPanelNameSVG('Team (!ymtm)', 'TM', 'v0.5.1 DX');
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 主卡
-    svg = implantSvgBody(svg, 40, 40, card_A2(await PanelGenerate.team2CardA2(data)), reg_main);
+    svg = setSvgBody(svg, 40, 40, card_A2(await PanelGenerate.team2CardA2(data)), reg_main);
 
     // 介绍
     if (isNotEmptyString(data?.description)) {
@@ -133,15 +133,14 @@ export async function panel_A9(
          */
 
         svg = (markdown.length > 0) ?
-            implantImage(svg, 1410, Math.min(Math.round(alpha.height * 1410 / 1370), 240),
-                510, 320, 1, alpha.image, reg_des, 'xMidYMin slice')
+            setImage(svg, 510, 320, 1410, Math.min(Math.round(alpha.height * 1410 / 1370), 240), alpha.image, reg_des, 1, 'xMidYMin slice')
             : svg
     }
 
     // 队长
-    svg = implantSvgBody(svg, 40, 330, await card_A1(await PanelGenerate.microTeamMember2CardA1(leader, true)), reg_body)
+    svg = setSvgBody(svg, 40, 330, await card_A1(await PanelGenerate.microTeamMember2CardA1(leader, true)), reg_body)
 
-    svg = implantImage(svg, 510, 290, 0, 290, 1, getImageFromV3('backlight-golden.png'), reg_body)
+    svg = setImage(svg, 0, 290, 510, 290, getImageFromV3('backlight-golden.png'), reg_body, 1)
 
     // 队员
     for (const i in members) {
@@ -152,15 +151,15 @@ export async function panel_A9(
 
         const member = await card_A1(await PanelGenerate.microTeamMember2CardA1(v, false))
 
-        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 + 250 * y, member, reg_body)
+        svg = setSvgBody(svg, 40 + 470 * x, 330 + 250 + 250 * y, member, reg_body)
 
         if (v?.is_online === true) {
-            svg = implantImage(svg, 510, 290, 40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 1, getImageFromV3('backlight-green.png'), reg_body)
+            svg = setImage(svg, 40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 510, 290, getImageFromV3('backlight-green.png'), reg_body, 1)
         }
     }
 
     // 插入图片和部件（新方法
-    svg = putCustomBanner(svg, reg_banner, await readNetImage(data.banner));
+    svg = setCustomBanner(svg, reg_banner, await readNetImage(data.banner));
 
     return svg.toString();
 }

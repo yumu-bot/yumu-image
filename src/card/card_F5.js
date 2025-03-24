@@ -1,6 +1,6 @@
 import {
     maximumArrayToFixedLength, modifyArrayToFixedLength,
-    replaceText, replaceTexts, round
+    setText, setTexts, round
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -36,10 +36,10 @@ export async function card_F5(data = {
     const reg_text = /(?<=<g id="Text_CF5">)/;
 
     // 绘制 BP 图表
-    svg = replaceText(svg, getBPActivityChart(data.bp_arr), reg_bp);
+    svg = setText(svg, getBPActivityChart(data.bp_arr), reg_bp);
 
     // 绘制 Rank 图表
-    svg = replaceText(svg, getRankingChart(data.ranking_arr), reg_ranking);
+    svg = setText(svg, getRankingChart(data.ranking_arr), reg_ranking);
 
     // 导入文本
     const ranking_title = torus.getTextPath('Ranking', 15, 35.795, 30, 'left baseline', '#fff');
@@ -53,12 +53,12 @@ export async function card_F5(data = {
 
     const ranking_text = torus.get2SizeTextPath(ranking_b, ranking_m, 36, 24, 880, 44.754, 'right baseline', '#fff', '#aaa');
 
-    svg = replaceTexts(svg, [ranking_title, ranking_text], reg_text);
+    svg = setTexts(svg, [ranking_title, ranking_text], reg_text);
 
     // 导入基础矩形
     const base_rrect = PanelDraw.Rect(0, 0, 900, 335, 20, '#382e32');
 
-    svg = replaceText(svg, base_rrect, reg_base);
+    svg = setText(svg, base_rrect, reg_base);
 
     return svg;
 }

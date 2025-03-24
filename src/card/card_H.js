@@ -1,7 +1,7 @@
 import {
-    implantImage, readTemplate,
-    replaceText,
-    replaceTexts
+    setImage, readTemplate,
+    setText,
+    setTexts
 } from "../util/util.js";
 import {torus, PuHuiTi, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -69,7 +69,7 @@ export async function card_H(data = {
     }
 
     mods_arr.forEach((mod, i) => {
-        svg = replaceText(svg,
+        svg = setText(svg,
             getModPath(mod, 620 - multiplier * i * 20, 24, 90, 42, true), reg_mod);
     });
 
@@ -108,13 +108,13 @@ export async function card_H(data = {
     const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label4_width, 34, 17, color_label4) : '';
     const rrect_label5 = data.label5 ? PanelDraw.Rect(185 - label5_width, 82, label5_width, 20, 10, color_label5) : '';
 
-    svg = replaceText(svg, data?.color_right || 'none', reg_color_right);
-    svg = replaceText(svg, data?.color_left || 'none', reg_color_left);
+    svg = setText(svg, data?.color_right || 'none', reg_color_right);
+    svg = setText(svg, data?.color_left || 'none', reg_color_left);
 
-    svg = implantImage(svg, 45, 30, 140, 4, 1, data?.type || '', reg_label);
+    svg = setImage(svg, 140, 4, 45, 30, data?.type || '', reg_label, 1);
 
-    svg = replaceTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
-    svg = replaceTexts(svg, [index], reg_text);
+    svg = setTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
+    svg = setTexts(svg, [index], reg_text);
 
     // 计算标题的长度
     let title_max_width = 500;
@@ -154,11 +154,11 @@ export async function card_H(data = {
     const left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', color_left12);
 
     // 插入文字
-    svg = replaceTexts(svg, [title, title2, left1, left2], reg_text);
+    svg = setTexts(svg, [title, title2, left1, left2], reg_text);
 
     // 插入图片
-    svg = data.cover ? implantImage(svg, 176, 110, 20, 0, 1, data.cover, reg_avatar) : svg;
-    svg = data.background ? implantImage(svg,900, 110, 0, 0, 0.2, data.background, reg_background) : svg;
+    svg = data.cover ? setImage(svg, 20, 0, 176, 110, data.cover, reg_avatar, 1) : svg;
+    svg = data.background ? setImage(svg, 0, 0, 900, 110, data.background, reg_background, 0.2) : svg;
 
     return svg.toString();
 }

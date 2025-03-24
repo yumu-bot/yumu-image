@@ -1,7 +1,7 @@
 import {
-    implantImage,
-    implantSvgBody, readTemplate,
-    replaceText, replaceTexts,
+    setImage,
+    setSvgBody, readTemplate,
+    setText, setTexts,
 } from "../util/util.js";
 import {torus, torusBold, torusRegular} from "../util/font.js";
 import {label_C1, label_C3} from "../component/label.js";
@@ -109,11 +109,11 @@ export async function card_C(data = {
         const blue_point_plus = '<rect width="12" height="24" rx="6" ry="6" style="fill: #55B1EF;"/>';
 
         for (let i = 0; i < data.statistics.wins_team_red_before; i++) {
-            svg = implantSvgBody(svg, 30 + 16 * i, 176, red_point, reg_redpoint);
+            svg = setSvgBody(svg, 30 + 16 * i, 176, red_point, reg_redpoint);
         }
 
         for (let i = 0; i < data.statistics.wins_team_blue_before; i++) {
-            svg = implantSvgBody(svg, 1338 - 16 * i, 176, blue_point, reg_bluepoint);
+            svg = setSvgBody(svg, 1338 - 16 * i, 176, blue_point, reg_bluepoint);
         }
 
         // 上左右分数
@@ -123,7 +123,7 @@ export async function card_C(data = {
 
         //上底色、左右分数和最亮的那个得点
         if (data.statistics.is_team_red_win) {
-            svg = replaceText(svg, PanelDraw.GradientRect(0, 0, 1380, 210, 20, [
+            svg = setText(svg, PanelDraw.GradientRect(0, 0, 1380, 210, 20, [
                 {
                     offset: "0%",
                     color: "#CB3554",
@@ -143,10 +143,10 @@ export async function card_C(data = {
             // svg = replaceText(svg, red_color_list[1], reg_backcolor); //其实 1 才是最正的那个颜色
             red_font = torusBold;
             blue_font = torusRegular;
-            svg = implantSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0), 176, red_point_plus, reg_pluspoint);
+            svg = setSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0), 176, red_point_plus, reg_pluspoint);
 
         } else if (data.statistics.is_team_blue_win) {
-            svg = replaceText(svg, PanelDraw.GradientRect(0, 0, 1380, 210, 20, [
+            svg = setText(svg, PanelDraw.GradientRect(0, 0, 1380, 210, 20, [
                 {
                     offset: "0%",
                     color: "#382E32",
@@ -166,19 +166,19 @@ export async function card_C(data = {
             // svg = replaceText(svg, blue_color_list[1], reg_backcolor);
             red_font = torusRegular;
             blue_font = torusBold;
-            svg = implantSvgBody(svg, 1338 - 16 * Math.max((data.statistics.wins_team_blue_before - 1), 0), 176, blue_point_plus, reg_pluspoint);
+            svg = setSvgBody(svg, 1338 - 16 * Math.max((data.statistics.wins_team_blue_before - 1), 0), 176, blue_point_plus, reg_pluspoint);
 
         } else {
             red_font = torusBold;
             blue_font = torusBold;
-            svg = replaceText(svg, '#382e32', reg_backcolor);
+            svg = setText(svg, '#382e32', reg_backcolor);
         }
 
         const red_text = (red_score !== 0) ? red_font.getTextPath(red_score.toString(), mid_x - 5, 196.836, 24, 'right baseline', '#fff') : '';
         const blue_text = (blue_score !== 0) ? blue_font.getTextPath(blue_score.toString(), mid_x + 5, 196.836, 24, 'left baseline', '#fff') : '';
         const delta_text = (delta_score !== 0) ? torus.getTextPath(delta_score.toString(), mid_x, 132.877, 18, 'center baseline', '#fff') : '';
 
-        svg = replaceTexts(svg, [red_text, blue_text, delta_text], reg_text);
+        svg = setTexts(svg, [red_text, blue_text, delta_text], reg_text);
 
     } else {
         //个人赛时
@@ -198,9 +198,9 @@ export async function card_C(data = {
         //个人赛主计算
         const none_text = (total_score !== 0) ? torus.getTextPath(total_score.toString(), 670, 196.836, 24, 'center baseline', '#fff') : '';
 
-        svg = replaceText(svg, '#382e32', reg_backcolor);
-        svg = replaceText(svg, none_text, reg_text);
-        svg = implantImage(svg, 1380, 210, 0, 0, 0.2, data.none[first_index].player_avatar, reg_h2hfirstavatar);
+        svg = setText(svg, '#382e32', reg_backcolor);
+        svg = setText(svg, none_text, reg_text);
+        svg = setImage(svg, 0, 0, 1380, 210, data.none[first_index].player_avatar, reg_h2hfirstavatar, 0.2);
     }
 
     // 导入成绩
@@ -405,7 +405,7 @@ export async function card_C(data = {
                 rectSum += width;
                 rectColor = colorList[j];
                 if (data[`${team}`]) {
-                    svg = replaceText(svg,
+                    svg = setText(svg,
                         PanelDraw.Rect((!isReverse ? startX : (calculateX - width)), startY, rectSum, 30, 15, rectColor),
                         reg_scorebar);
                 }
@@ -443,7 +443,7 @@ export async function card_C(data = {
                 rectSum += width;
                 rectColor = colorList[j];
                 if (data[`${team}`]) {
-                    svg = replaceText(svg,
+                    svg = setText(svg,
                         PanelDraw.Rect((!isReverse ? startX : (calculateX - width)), startY, rectSum, 30, 15, rectColor),
                         reg_scorebar);
                 }
@@ -542,7 +542,7 @@ export async function card_C(data = {
                 isWin: isWin,
                 scoreTextColor: scoreTextColor,
         }) : '';
-        svg = implantSvgBody(svg, x, y, c1, reg_bodycard);
+        svg = setSvgBody(svg, x, y, c1, reg_bodycard);
     }
 
     /*
@@ -566,7 +566,7 @@ export async function card_C(data = {
                 avatar: data ? data.player_avatar : '',
                 isWin: isWin,
             })
-        svg = implantSvgBody(svg, x, y, c3, reg_bodycard);
+        svg = setSvgBody(svg, x, y, c3, reg_bodycard);
     }
 
     return svg.toString();

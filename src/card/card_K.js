@@ -1,8 +1,8 @@
 import {
     getImageFromV3,
-    implantImage,
-    replaceText,
-    replaceTexts,
+    setImage,
+    setText,
+    setTexts,
     round
 } from "../util/util.js";
 import {torusBold} from "../util/font.js";
@@ -64,9 +64,9 @@ export function card_K(data = {
         const mod = mods[i]
 
         if (i < 3) {
-            svg = replaceText(svg, getModCirclePath(mod, 10 + 6 + i * 15, 90 + 6, 6), reg_overlay)
+            svg = setText(svg, getModCirclePath(mod, 10 + 6 + i * 15, 90 + 6, 6), reg_overlay)
         } else {
-            svg = replaceText(svg, getModCirclePath(mod, 10 + 6 + (i - 3) * 15, 90 + 6 - 15, 6), reg_overlay)
+            svg = setText(svg, getModCirclePath(mod, 10 + 6 + (i - 3) * 15, 90 + 6 - 15, 6), reg_overlay)
         }
     }
 
@@ -80,13 +80,13 @@ export function card_K(data = {
     const skill_sort_sum = skill_sort[0] * 0.5 + skill_sort[1] * 0.3 + skill_sort[2] * 0.2 + skill_sort[3] * 0.15 + skill_sort[4] * 0.1
     const skill_sum = torusBold.getTextPath(round(skill_sort_sum, 2), 235 / 2, 68, 20, 'center baseline', '#FFF')
 
-    svg = replaceText(svg, skill_sum, reg_overlay)
-    svg = replaceTexts(svg,[star, star_rrect, rank, rank_rrect], reg_text);
+    svg = setText(svg, skill_sum, reg_overlay)
+    svg = setTexts(svg,[star, star_rrect, rank, rank_rrect], reg_text);
 
-    svg = replaceTexts(svg, [hexagon_index, hexagon], reg_hexagon)
-    svg = implantImage(svg, 90, 80, 72.5, 19, 1, hexagon_background, reg_hexagon)
+    svg = setTexts(svg, [hexagon_index, hexagon], reg_hexagon)
+    svg = setImage(svg, 72.5, 19, 90, 80, hexagon_background, reg_hexagon, 1)
 
-    svg = implantImage(svg, 235, 148, 0, 0, 0.4, data?.background, reg_background)
+    svg = setImage(svg, 0, 0, 235, 148, data?.background, reg_background, 0.4)
 
     return svg.toString()
 }

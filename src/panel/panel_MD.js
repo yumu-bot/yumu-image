@@ -1,10 +1,10 @@
 import {
     exportJPEG,
     getImageFromV3,
-    getPanelNameSVG, implantImage,
-    implantSvgBody, isNotBlankString, isNotEmptyArray,
+    getPanelNameSVG, setImage,
+    setSvgBody, isNotBlankString, isNotEmptyArray,
     readTemplate,
-    replaceText, round,
+    setText, round,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
@@ -70,7 +70,7 @@ export async function panel_MD(data = {
     // 面板文字
     const panel_name = getPanelNameSVG('Maimai Distribution (!ymmd)', 'MD', 'v0.5.0 DX');
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
     const cardA1 = await card_A1(await maimaiDistPlayer2CardA1(data.user, data.rating, data.count, data.size));
@@ -91,7 +91,7 @@ export async function panel_MD(data = {
     }
 
     // 插入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
     const sd_height = Math.ceil(card_sd.length / 5) * 150
     let dx_offset = 0 // 偏移值
@@ -101,7 +101,7 @@ export async function panel_MD(data = {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_sd[i], reg_card_i);
+        svg = setSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_sd[i], reg_card_i);
     }
 
     if (isNotEmptyArray(card_sd) && isNotEmptyArray(card_dx)) dx_offset = 20
@@ -110,18 +110,18 @@ export async function panel_MD(data = {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + sd_height + dx_offset, card_dx[i], reg_card_i);
+        svg = setSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + sd_height + dx_offset, card_dx[i], reg_card_i);
     }
 
     // 导入图片
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath("maimai"), reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 计算面板高度
     const cardHeight = sd_height + dx_height + dx_offset + 80 - 15
     const panelHeight = cardHeight + 290
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     return svg.toString()
 }

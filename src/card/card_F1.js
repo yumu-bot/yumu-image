@@ -1,8 +1,8 @@
 import {
     getGameMode,
-    implantImage,
-    replaceText,
-    replaceTexts
+    setImage,
+    setText,
+    setTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -49,7 +49,7 @@ export async function card_F1(data = {
     const mascot_name_data = getMascotName(getGameMode(data.mode, 0)) || 'pippi';
     const mascot_link = getMascotPath(mascot_name_data);
 
-    svg = implantImage(svg, 560, 710, 0, 0, 1, mascot_link, reg_mascot);
+    svg = setImage(svg, 0, 0, 560, 710, mascot_link, reg_mascot, 1);
 
     // 插入进度
     const mascot_name_width = torus.getTextWidth(mascot_name_data, 36);
@@ -93,13 +93,13 @@ export async function card_F1(data = {
     const progress_rrect = PanelDraw.Rect(20, 686, 520 * (data.level_progress || 0) / 100, 4, 2, '#FFCC22');
 
     // 导入
-    svg = replaceTexts(svg, [mascot_mark1, mascot_mark2], reg_text);
-    svg = replaceTexts(svg, [mascot_mark1_rrect, mascot_mark2_rrect, progress_rrect, progress_base], reg_rrect);
+    svg = setTexts(svg, [mascot_mark1, mascot_mark2], reg_text);
+    svg = setTexts(svg, [mascot_mark1_rrect, mascot_mark2_rrect, progress_rrect, progress_base], reg_rrect);
 
     // 导入基础矩形
     const base_rrect = PanelDraw.Rect(0, 0, 560, 710, 20, '#382e32');
 
-    svg = replaceText(svg, base_rrect, reg_base);
+    svg = setText(svg, base_rrect, reg_base);
 
     return svg;
 }

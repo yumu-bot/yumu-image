@@ -1,4 +1,4 @@
-import {getImageFromV3, implantImage, implantSvgBody, isASCII, replaceTexts} from "../util/util.js";
+import {getImageFromV3, setImage, setSvgBody, isASCII, setTexts} from "../util/util.js";
 import {BerlinBold, getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
@@ -182,21 +182,21 @@ export function card_G(data = {
 
     const base2 = PanelDraw.Rect(30, 350, 290, 120, 20, '#46393f', 1)
 
-    svg = replaceTexts(svg, [label1, label2, left, right, title, main, additional], reg_text)
-    svg = replaceTexts(svg, [label1_rrect, label2_rrect, rrect1_top, rrect1_base], reg_component)
+    svg = setTexts(svg, [label1, label2, left, right, title, main, additional], reg_text)
+    svg = setTexts(svg, [label1_rrect, label2_rrect, rrect1_top, rrect1_base], reg_component)
 
-    svg = implantImage(svg, 230, 230, 60, 60, 0.6, data?.overlay, reg_cover)
-    svg = implantImage(svg, 230, 230, 60, 60, 1, data?.cover, reg_cover)
-    svg = implantImage(svg, 90, 60, 30, 250, 1, data?.type, reg_component)
-    svg = implantImage(svg, 36, 40, 42, 424, 1, data?.icon1, reg_component)
-    svg = implantImage(svg, 36, 40, 84, 424, 1, data?.icon2, reg_component)
-    svg = implantImage(svg, 56, 30, 232, 420, 1, data?.icon3, reg_component)
+    svg = setImage(svg, 60, 60, 230, 230, data?.overlay, reg_cover, 0.6)
+    svg = setImage(svg, 60, 60, 230, 230, data?.cover, reg_cover, 1)
+    svg = setImage(svg, 30, 250, 90, 60, data?.type, reg_component, 1)
+    svg = setImage(svg, 42, 424, 36, 40, data?.icon1, reg_component, 1)
+    svg = setImage(svg, 84, 424, 36, 40, data?.icon2, reg_component, 1)
+    svg = setImage(svg, 232, 420, 56, 30, data?.icon3, reg_component, 1)
 
-    svg = replaceTexts(svg, [base1, base2], reg_base)
+    svg = setTexts(svg, [base1, base2], reg_base)
 
-    svg = implantSvgBody(svg, 310, 445, data?.stars, reg_text)
-    svg = implantSvgBody(svg, 30, 480, data?.component, reg_component)
-    svg = implantImage(svg, 350, 710, 0, 0, 0.6, data?.background, reg_background, 'xMidYMid slice', true)
+    svg = setSvgBody(svg, 310, 445, data?.stars, reg_text)
+    svg = setSvgBody(svg, 30, 480, data?.component, reg_component)
+    svg = setImage(svg, 0, 0, 350, 710, data?.background, reg_background, 0.6, 'xMidYMid slice', true)
 
     return svg.toString()
 }

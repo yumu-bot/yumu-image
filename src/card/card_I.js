@@ -1,5 +1,5 @@
 import {
-    implantImage, implantSvgBody, isASCII, replaceText, replaceTexts,
+    setImage, setSvgBody, isASCII, setText, setTexts,
 } from "../util/util.js";
 import {getMultipleTextPath, PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -126,24 +126,24 @@ export function card_I(data = {
 
     const index = getMultipleTextPath(index_arr, 420, 100, 'right baseline')
 
-    svg = replaceTexts(svg, [title, left1, left2, right, index], reg_text)
+    svg = setTexts(svg, [title, left1, left2, right, index], reg_text)
 
     // 图片和矩形
     const left_rrect = PanelDraw.Rect(0, 0, 80, 110, 20, data?.color_left || '#382e32', 1)
-    svg = replaceText(svg, left_rrect, reg_difficulty);
+    svg = setText(svg, left_rrect, reg_difficulty);
 
-    svg = implantImage(svg, 160, 110, 20, 0, 1, data?.cover, reg_cover);
+    svg = setImage(svg, 20, 0, 160, 110, data?.cover, reg_cover, 1);
 
-    svg = implantImage(svg, 290, 110, 140, 0, 0.4, data?.background, reg_background);
+    svg = setImage(svg, 140, 0, 290, 110, data?.background, reg_background, 0.4);
 
-    svg = implantImage(svg, 56, 30, 185 + 2, 75, 1, data?.rank, reg_rank);
+    svg = setImage(svg, 185 + 2, 75, 56, 30, data?.rank, reg_rank, 1);
 
-    svg = implantSvgBody(svg, 248, 86, data?.color_component1, reg_rank) //注意。这个组件的锚点在左下角
+    svg = setSvgBody(svg, 248, 86, data?.color_component1, reg_rank) //注意。这个组件的锚点在左下角
 
-    svg = implantSvgBody(svg, 248, 90, data?.color_component2, reg_rank)
+    svg = setSvgBody(svg, 248, 90, data?.color_component2, reg_rank)
 
     // 左侧覆盖部分
-    svg = implantImage(svg, 45, 30, 128, 0, 1, data?.type, reg_overlay);
+    svg = setImage(svg, 128, 0, 45, 30, data?.type, reg_overlay, 1);
 
     const label1 = torus.getTextPath(data?.label1, 50, 22, 18, 'center baseline', data?.color_label1)
     const label1_rrect = PanelDraw.Rect(30, 6, 40, 20, 10, data?.color_rrect1, 1)
@@ -154,8 +154,8 @@ export function card_I(data = {
         'center baseline', data?.color_label2)
     const label2_rrect = PanelDraw.Rect(30, 84, label2_rrect_width, 20, 10, data?.color_rrect2, 1)
 
-    svg = replaceTexts(svg, [label1, label2], reg_text)
-    svg = replaceTexts(svg, [label1_rrect, label2_rrect], reg_overlay)
+    svg = setTexts(svg, [label1, label2], reg_text)
+    svg = setTexts(svg, [label1_rrect, label2_rrect], reg_overlay)
 
     return svg.toString()
 }

@@ -1,7 +1,7 @@
 import {
     getImageFromV3,
-    implantImage, implantSvgBody, isNumber,
-    readTemplate, replaceText, replaceTexts, round, rounds
+    setImage, setSvgBody, isNumber,
+    readTemplate, setText, setTexts, round, rounds
 } from "../util/util.js";
 import {torus, torusBold} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -34,9 +34,9 @@ export async function card_B1(data = {
     const rank_x_center = at_right ? 60 : 470;
 
     //如果是右标签，则替换rect的x
-    svg = replaceText(svg, card_x, reg_rect);
+    svg = setText(svg, card_x, reg_rect);
 
-    svg = implantSvgBody(svg, card_x + 20, 22, label, reg_label);
+    svg = setSvgBody(svg, card_x + 20, 22, label, reg_label);
 
     //添加评级和值和背景
     const number = rounds(data?.value, data?.round_level)
@@ -65,11 +65,11 @@ export async function card_B1(data = {
     const delta_text = isNumber(data?.delta) ? torusBold.getTextPath(
         getSign(data?.delta) + round(Math.abs(data?.delta), 2),  at_right ? 340 : 240, 68, 20, 'right baseline', getColor(data?.delta)) : ''
 
-    svg = replaceTexts(svg, [rank_text, number_text, delta_text], reg_text);
+    svg = setTexts(svg, [rank_text, number_text, delta_text], reg_text);
 
     const reg_bg = (at_right) ? reg_bg2 : reg_bg1;
 
-    svg = implantImage(svg,390, 95, card_x, 0, 0.3, data?.background || getImageFromV3('object-score-backimage-F.jpg'), reg_bg);
+    svg = setImage(svg, card_x, 0, 390, 95, data?.background || getImageFromV3('object-score-backimage-F.jpg'), reg_bg, 0.3);
 
     return svg.toString();
 }

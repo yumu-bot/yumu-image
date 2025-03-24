@@ -2,8 +2,8 @@ import {
     exportJPEG, getImageFromV3,
     getGameMode,
     getMapBG, getPanelNameSVG,
-    implantImage,
-    implantSvgBody, readTemplate, replaceText, getMatchDuration, getNowTimeStamp, od2ms, ar2ms, cs2px, rounds,
+    setImage,
+    setSvgBody, readTemplate, setText, getMatchDuration, getNowTimeStamp, od2ms, ar2ms, cs2px, rounds,
 } from "../util/util.js";
 import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {data2Label, stat2DataM} from "./panel_E.js";
@@ -68,7 +68,7 @@ export async function panel_E3(data = {
     // 导入文字
     const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
     const panel_name = getPanelNameSVG('Match Listener - Match Start! (!ymml)', 'ST', 'v0.5.0 DX', request_time);
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 构建成绩
 
@@ -100,18 +100,18 @@ export async function panel_E3(data = {
     const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));
 
     // 导入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA2, reg_card_a1);
-    svg = implantSvgBody(svg, 0, 290, cardE1, reg_card_e1);
-    svg = implantSvgBody(svg, 880, 330, cardE5, reg_card_e2);
-    svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
+    svg = setSvgBody(svg, 40, 40, cardA2, reg_card_a1);
+    svg = setSvgBody(svg, 0, 290, cardE1, reg_card_e1);
+    svg = setSvgBody(svg, 880, 330, cardE5, reg_card_e2);
+    svg = setSvgBody(svg, 880, 770, cardE3, reg_card_e3);
 
     // 图片定义
     const background = getImageFromV3(`object-score-backimage-${rank}.jpg`);
     const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked));
 
     // 导入图片
-    svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
+    svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8);
 
     return svg.toString();
 }

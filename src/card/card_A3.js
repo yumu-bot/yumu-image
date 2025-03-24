@@ -2,10 +2,10 @@ import {
     getBeatMapTitlePath,
     getGameMode,
     getImageFromV3, getMapStatus,
-    implantImage, implantSvgBody,
+    setImage, setSvgBody,
     isNotBlankString,
     isNotEmptyArray, readNetImage,
-    replaceText, replaceTexts, round, transformSvgBody
+    setText, setTexts, round, getSvgBody
 } from "../util/util.js";
 import {extra, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -133,18 +133,18 @@ export async function card_A3(beatmapset = {}) {
         + PanelDraw.Rect(170, 0, 430, 175, 20, '#382E32', 1) // 背景图片层底板
 
     // 导入
-    svg = replaceTexts(svg, [titles.title, titles.title_unicode, artist, mapper], reg_text)
+    svg = setTexts(svg, [titles.title, titles.title_unicode, artist, mapper], reg_text)
 
-    svg = implantSvgBody(svg, 210 + 10, 175, difficulty, reg_label)
-    svg = implantSvgBody(svg, 210 + 10, 144, fav.svg, reg_label)
-    svg = implantSvgBody(svg, 210 + 10 + 10 + fav.width, 144, pc.svg, reg_label)
-    svg = implantSvgBody(svg, 600 - sid.width - 10, 144, sid.svg, reg_label)
-    svg = implantSvgBody(svg, 10, 10, status.svg, reg_label)
+    svg = setSvgBody(svg, 210 + 10, 175, difficulty, reg_label)
+    svg = setSvgBody(svg, 210 + 10, 144, fav.svg, reg_label)
+    svg = setSvgBody(svg, 210 + 10 + 10 + fav.width, 144, pc.svg, reg_label)
+    svg = setSvgBody(svg, 600 - sid.width - 10, 144, sid.svg, reg_label)
+    svg = setSvgBody(svg, 10, 10, status.svg, reg_label)
 
-    svg = implantImage(svg, 430, 175, 170, 0, 0.3, image, reg_background)
-    svg = implantImage(svg, 210, 210, 0, 0, 1, image, reg_cover)
+    svg = setImage(svg, 170, 0, 430, 175, image, reg_background, 0.3)
+    svg = setImage(svg, 0, 0, 210, 210, image, reg_cover, 1)
 
-    svg = replaceText(svg, base, reg_base)
+    svg = setText(svg, base, reg_base)
 
     return svg.toString()
 }
@@ -253,13 +253,13 @@ function drawDifficultyLabels(beatmaps = []) {
                     current_label_full_width += full_labels[i].width
 
                     const label = full_labels[i]
-                    svg += transformSvgBody(x, 5, label.svg)
+                    svg += getSvgBody(x, 5, label.svg)
                     x += (label.width + 18)
                 } else {
                     // 使用全宽会超宽，因此放弃
 
                     const label = half_labels[i]
-                    svg += transformSvgBody(x, 5, label.svg)
+                    svg += getSvgBody(x, 5, label.svg)
                     x += (label.width + 18)
                 }
 
@@ -268,7 +268,7 @@ function drawDifficultyLabels(beatmaps = []) {
                 // 正常渲染非主难度
 
                 const label = half_labels[i]
-                svg += transformSvgBody(x, 5, label.svg)
+                svg += getSvgBody(x, 5, label.svg)
                 x += (label.width + 4)
             }
         }
@@ -298,7 +298,7 @@ function drawDifficultyLabels(beatmaps = []) {
             // 是主难度
             if (top_diff_index[j] - i < 1e-6) {
                 const label = full_labels[i]
-                svg += transformSvgBody(x, 5, label.svg)
+                svg += getSvgBody(x, 5, label.svg)
                 x += (label.width + 18)
 
                 j++
@@ -306,7 +306,7 @@ function drawDifficultyLabels(beatmaps = []) {
                 // 正常渲染非主难度
 
                 const label = full_labels[i]
-                svg += transformSvgBody(x, 5, label.svg)
+                svg += getSvgBody(x, 5, label.svg)
                 x += (label.width + 4)
             }
         }
@@ -349,18 +349,18 @@ export function label_A8(data = {
         // [image] text
         width += 22
         text_middle += 22
-        svg = implantImage(svg, 18, 18, 6, 3.5, 1, data.image, reg_icon)
+        svg = setImage(svg, 6, 3.5, 18, 18, data.image, reg_icon, 1)
 
     } else if (data.has_text === true) {
         // [] text
         width += 12 // 10
         text_middle += 12
 
-        svg = replaceText(svg, PanelDraw.Rect(0, 0, 14, 25, 7, data?.color || 'none', 1), reg_icon)
+        svg = setText(svg, PanelDraw.Rect(0, 0, 14, 25, 7, data?.color || 'none', 1), reg_icon)
     } else if (data.has_text === false) {
         // []
 
-        svg = replaceText(svg, PanelDraw.Rect(0, 0, 14, 25, 7, data?.color || 'none', 1), reg_icon)
+        svg = setText(svg, PanelDraw.Rect(0, 0, 14, 25, 7, data?.color || 'none', 1), reg_icon)
 
         return {
             width: 14,
@@ -371,8 +371,8 @@ export function label_A8(data = {
     const text = torusBold.getTextPath(data?.text, text_middle, 19, 20, 'center baseline', '#fff', 1)
     const base = PanelDraw.Rect(0, 0, width, 25, 7, data?.color || 'none', 0.6)
 
-    svg = replaceText(svg, text, reg_text)
-    svg = replaceText(svg, base, reg_base)
+    svg = setText(svg, text, reg_text)
+    svg = setText(svg, base, reg_base)
 
     return {
         width: width,

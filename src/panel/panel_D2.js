@@ -2,17 +2,17 @@ import {
     exportJPEG,
     getNowTimeStamp,
     getPanelNameSVG,
-    implantImage,
-    implantSvgBody,
-    putCustomBanner,
-    replaceText,
+    setImage,
+    setSvgBody,
+    setCustomBanner,
+    setText,
     isNumber,
     getTimeByDHMSLarge,
     getTimeByDHMSSmall,
     getTimeByDHMS,
     getDiffBG,
     getImageFromV3,
-    replaceTexts,
+    setTexts,
     isNotNumber,
     getTimeDifference,
     modifyArrayToFixedLength,
@@ -162,16 +162,16 @@ export async function panel_D2(data = {
     const componentD8 = component_D8(PanelDGenerate.user2componentD8(user, history, has_custom_panel, hue));
 
     // 导入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
-    svg = implantSvgBody(svg, 40, 330, componentD1, reg_component);
-    svg = implantSvgBody(svg, 40, 620, componentD2, reg_component);
-    svg = implantSvgBody(svg, 40, 940, componentD3, reg_component);
-    svg = implantSvgBody(svg, 1390, 330, componentD5, reg_component);
-    svg = implantSvgBody(svg, 1390, 530, componentD6, reg_component);
-    svg = implantSvgBody(svg, 1390, 650, componentD7, reg_component);
-    svg = implantSvgBody(svg, 1390, 770, componentD8, reg_component);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = setSvgBody(svg, 40, 330, componentD1, reg_component);
+    svg = setSvgBody(svg, 40, 620, componentD2, reg_component);
+    svg = setSvgBody(svg, 40, 940, componentD3, reg_component);
+    svg = setSvgBody(svg, 1390, 330, componentD5, reg_component);
+    svg = setSvgBody(svg, 1390, 530, componentD6, reg_component);
+    svg = setSvgBody(svg, 1390, 650, componentD7, reg_component);
+    svg = setSvgBody(svg, 1390, 770, componentD8, reg_component);
 
-    svg = replaceText(svg, componentD4, reg_component);
+    svg = setText(svg, componentD4, reg_component);
 
     // 面板文字
     const day_str = isNumber(days) ? (days >= 2 ?
@@ -184,12 +184,12 @@ export async function panel_D2(data = {
     const panel_name = getPanelNameSVG('(Test) Waifu Information (!ymti)', 'TI', 'v0.5.0 DX', request_time);
 
     // 导入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 插入图片和部件
     const background = pp2UserBG(data.user.pp || 0);
-    svg = putCustomBanner(svg, reg_banner, data.user?.profile?.banner);
-    svg = implantImage(svg, 1920, 1080, 0, 280, 0.6, background, reg_background);
+    svg = setCustomBanner(svg, reg_banner, data.user?.profile?.banner);
+    svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 
     return svg.toString();
 }
@@ -267,9 +267,9 @@ const component_D1 = (
         hide: hide
     });
 
-    svg = implantSvgBody(svg, 20, 50, label_pc, reg)
-    svg = implantSvgBody(svg, 20, 50 + 75, label_tth, reg)
-    svg = implantSvgBody(svg, 20, 50 + 150, label_pt, reg)
+    svg = setSvgBody(svg, 20, 50, label_pc, reg)
+    svg = setSvgBody(svg, 20, 50 + 75, label_tth, reg)
+    svg = setSvgBody(svg, 20, 50 + 150, label_pt, reg)
 
     const join = poppinsBold.getTextPath('Join: ' +
         moment(data?.join, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY-MM-DD')
@@ -278,13 +278,13 @@ const component_D1 = (
         + ']',
         470, 27, 18, 'right baseline', '#fff')
 
-    svg = replaceText(svg, join, reg)
+    svg = setText(svg, join, reg)
 
     if (!hide) {
         const title = poppinsBold.getTextPath('Main Statistics', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 490, 270, 20, PanelColor.middle(data.hue), 1)
 
-        svg = replaceTexts(svg, [title, rrect], reg)
+        svg = setTexts(svg, [title, rrect], reg)
     }
 
     return svg.toString()
@@ -308,7 +308,7 @@ const component_D2 = (
         const x = i % 3
         const y = Math.floor(i / 3)
 
-        svg = implantSvgBody(svg, 10 + x * 160, 40 + y * 130,
+        svg = setSvgBody(svg, 10 + x * 160, 40 + y * 130,
             d2s[i], reg)
     }
 
@@ -316,7 +316,7 @@ const component_D2 = (
         const title = poppinsBold.getTextPath('Bests', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 490, 300, 20, PanelColor.middle(data.hue), 1)
 
-        svg = replaceTexts(svg, [title, rrect], reg)
+        svg = setTexts(svg, [title, rrect], reg)
     }
 
     return svg.toString()
@@ -376,7 +376,7 @@ const component_D3 = (
             hide: data.has_custom_panel
         })
 
-        svg = implantSvgBody(svg, x, 25, label, reg)
+        svg = setSvgBody(svg, x, 25, label, reg)
 
         // 底部颜色
         const l = (count * 460 / data?.sum)
@@ -396,14 +396,14 @@ const component_D3 = (
         const w = rrect_lengths[i]
         const c = rrect_colors[i]
 
-        svg = replaceText(svg, PanelDraw.Rect(15, 75, w, 15, 7.5, c, 1), reg)
+        svg = setText(svg, PanelDraw.Rect(15, 75, w, 15, 7.5, c, 1), reg)
     }
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Ranks', 15, 27 - 5, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 490, 100, 20, PanelColor.middle(data.hue), 1)
 
-        svg = replaceTexts(svg, [title, rrect], reg)
+        svg = setTexts(svg, [title, rrect], reg)
     }
 
     return svg.toString()
@@ -431,15 +431,15 @@ const component_D4 = (
     const reg_base = /(?<=<g id="Component_OD4_Base">)/;
 
     if (data.is_png === true) {
-        svg = replaceText(svg, PanelDraw.Rect(0, 290, 1920, 790, 20, 'none', 1), clip)
+        svg = setText(svg, PanelDraw.Rect(0, 290, 1920, 790, 20, 'none', 1), clip)
 
-        svg = implantImage(svg, 1920, 790, 0, 290, 1, data?.mascot || '', reg, 'xMidYMin meet')
+        svg = setImage(svg, 0, 290, 1920, 790, data?.mascot || '', reg, 1, 'xMidYMin meet')
     } else {
-        svg = replaceText(svg, PanelDraw.Rect(550, 330, 820, 710, 20, 'none', 1), clip)
+        svg = setText(svg, PanelDraw.Rect(550, 330, 820, 710, 20, 'none', 1), clip)
 
-        svg = implantImage(svg, 820, 710, 550, 330, 1, data?.mascot || '', reg, 'xMidYMid slice')
+        svg = setImage(svg, 550, 330, 820, 710, data?.mascot || '', reg, 1, 'xMidYMid slice')
 
-        svg = replaceText(svg, PanelDraw.Rect(550, 330, 820, 710, 20, PanelColor.middle(data.hue), 1), reg_base)
+        svg = setText(svg, PanelDraw.Rect(550, 330, 820, 710, 20, PanelColor.middle(data.hue), 1), reg_base)
     }
 
     return svg.toString()
@@ -513,13 +513,13 @@ const component_D5 = (
         475, 27, 18, 'right baseline', '#fff', 1
     )
 
-    svg = replaceTexts(svg, [max, rank_chart, rank_axis, day_axis], reg)
+    svg = setTexts(svg, [max, rank_chart, rank_axis, day_axis], reg)
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Rank History', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 490, 180, 20, PanelColor.middle(data.hue), 1)
 
-        svg = replaceTexts(svg, [title, rrect], reg)
+        svg = setTexts(svg, [title, rrect], reg)
     }
 
     return svg.toString()
@@ -569,13 +569,13 @@ const component_D6 = (
         475, 27 - 5, 18, 'right baseline', '#fff', 1
     )
 
-    svg = replaceTexts(svg, [max, best_chart, best_axis, day_axis], reg)
+    svg = setTexts(svg, [max, best_chart, best_axis, day_axis], reg)
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Bests History', 15, 27 - 5, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 490, 100, 20, PanelColor.middle(data.hue), 1)
 
-        svg = replaceTexts(svg, [title, rrect], reg)
+        svg = setTexts(svg, [title, rrect], reg)
     }
 
     return svg.toString()
@@ -622,13 +622,13 @@ const component_D7 = (
         475, 27 - 5, 18, 'right baseline', '#fff', 1
     )
 
-    svg = replaceTexts(svg, [max, pc_chart, pc_axis, month_axis], reg)
+    svg = setTexts(svg, [max, pc_chart, pc_axis, month_axis], reg)
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Play History', 15, 27 - 5, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 490, 100, 20, PanelColor.middle(data.hue), 1)
 
-        svg = replaceTexts(svg, [title, rrect], reg)
+        svg = setTexts(svg, [title, rrect], reg)
     }
 
     return svg.toString()
@@ -740,18 +740,18 @@ const component_D8 = (
         hide: hide
     });
 
-    svg = implantSvgBody(svg, 20, 50, label_pc, reg)
-    svg = implantSvgBody(svg, 250, 50, label_tth, reg)
-    svg = implantSvgBody(svg, 20, 50 + 75, label_mpc, reg)
-    svg = implantSvgBody(svg, 250, 50 + 75, label_med, reg)
-    svg = implantSvgBody(svg, 20, 50 + 150, label_mxc, reg)
-    svg = implantSvgBody(svg, 250, 50 + 150, label_fan, reg)
+    svg = setSvgBody(svg, 20, 50, label_pc, reg)
+    svg = setSvgBody(svg, 250, 50, label_tth, reg)
+    svg = setSvgBody(svg, 20, 50 + 75, label_mpc, reg)
+    svg = setSvgBody(svg, 250, 50 + 75, label_med, reg)
+    svg = setSvgBody(svg, 20, 50 + 150, label_mxc, reg)
+    svg = setSvgBody(svg, 250, 50 + 150, label_fan, reg)
 
     if (!hide) {
         const title = poppinsBold.getTextPath('Secondary Statistics', 15, 27, 18, 'left baseline', '#fff', 1)
         const rrect = PanelDraw.Rect(0, 0, 490, 270, 20, PanelColor.middle(data.hue), 1)
 
-        svg = replaceTexts(svg, [title, rrect], reg)
+        svg = setTexts(svg, [title, rrect], reg)
     }
 
     return svg.toString()

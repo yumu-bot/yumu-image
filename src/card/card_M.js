@@ -1,6 +1,6 @@
 import {
-    getDifficultyName,
-    getImageFromV3, getMapBG, implantImage, implantSvgBody, replaceText,
+    getKeyDifficulty,
+    getImageFromV3, getMapBG, setImage, setSvgBody, setText,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_M1, label_M2, label_M3} from "../component/label.js";
@@ -289,7 +289,7 @@ export async function card_M(s = {
         for (const v of s.beatmaps) {
             const f1 = await label_M1({
                 mode: v.mode,
-                difficulty_name: getDifficultyName(v),
+                difficulty_name: getKeyDifficulty(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
                 star: getImageFromV3('object-beatmap-star.png'),
@@ -310,9 +310,9 @@ export async function card_M(s = {
 
         //插入到svg中
         for (let i = 0; i < label_count; i++) {
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * i, 150, labelM1s[i], reg_label);
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 50, 10, labelM2s[i], reg_label);
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) + 5, 120, labelM3s[i], reg_label); //往右偏一点，好看，记得改相似的地方
+            svg = setSvgBody(svg, 10 + (label_width + 10) * i, 150, labelM1s[i], reg_label);
+            svg = setSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 50, 10, labelM2s[i], reg_label);
+            svg = setSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) + 5, 120, labelM3s[i], reg_label); //往右偏一点，好看，记得改相似的地方
 
         }
     } else if (label_count <= 18) {
@@ -340,7 +340,7 @@ export async function card_M(s = {
             const v = s.beatmaps[i];
             const f1c = await label_M1({
                 mode: v.mode,
-                difficulty_name: getDifficultyName(v),
+                difficulty_name: getKeyDifficulty(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
                 star: getImageFromV3('object-beatmap-star.png'),
@@ -356,7 +356,7 @@ export async function card_M(s = {
             const v = s.beatmaps[j];
             const f1r = await label_M1({
                 mode: v.mode,
-                difficulty_name: getDifficultyName(v),
+                difficulty_name: getKeyDifficulty(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_compact_remain_width,
                 star: getImageFromV3('object-beatmap-star.png'),
@@ -372,7 +372,7 @@ export async function card_M(s = {
             const v = s.beatmaps[k];
             const f1 = await label_M1({
                 mode: v.mode,
-                difficulty_name: getDifficultyName(v),
+                difficulty_name: getKeyDifficulty(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
                 star: getImageFromV3('object-beatmap-star.png'),
@@ -395,28 +395,28 @@ export async function card_M(s = {
         // 1. compact normal
         for (let ly = 0; ly < label_compact_y; ly++) {
             for (let lx = 0; lx < label_compact_x; lx++) {
-                svg = implantSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * label_compact_x], reg_label);
+                svg = setSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * label_compact_x], reg_label);
             }
         }
 
         // 2. compact remain
         for (let mx = 0; mx < label_compact_remain; mx++) {
-            svg = implantSvgBody(svg, 10 + (label_compact_remain_width + 10) * mx, 150 - 60 * label_compact_y, labelM1r[mx], reg_label);
+            svg = setSvgBody(svg, 10 + (label_compact_remain_width + 10) * mx, 150 - 60 * label_compact_y, labelM1r[mx], reg_label);
         }
 
         // 3. normal
         for (let n = 0; n < label_normal_count; n++) {
             const nx = n + label_compact_slot_count
 
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * nx, 150, labelM1s[n], reg_label);
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) - 50, 10, labelM2s[n], reg_label);
-            svg = implantSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) + 5, 120, labelM3s[n], reg_label); //往右偏一点，好看，记得改相似的地方
+            svg = setSvgBody(svg, 10 + (label_width + 10) * nx, 150, labelM1s[n], reg_label);
+            svg = setSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) - 50, 10, labelM2s[n], reg_label);
+            svg = setSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) + 5, 120, labelM3s[n], reg_label); //往右偏一点，好看，记得改相似的地方
         }
 
         //给个备注，说明这个地方有多少个diff
         const diff_count = torus.getTextPath('Total: ' + label_count + 'x', 20, 21, 18, 'left baseline', '#fff')
 
-        svg = replaceText(svg, diff_count, reg_text);
+        svg = setText(svg, diff_count, reg_text);
 
     } else {
         //只压缩前 18 个。
@@ -428,7 +428,7 @@ export async function card_M(s = {
             const v = s.beatmaps[i];
             const f1c = await label_M1({
                 mode: v.mode,
-                difficulty_name: getDifficultyName(v),
+                difficulty_name: getKeyDifficulty(v),
                 star_rating: v.difficulty_rating,
                 maxWidth: label_width,
                 star: getImageFromV3('object-beatmap-star.png'),
@@ -441,20 +441,20 @@ export async function card_M(s = {
 
         for (let ly = 0; ly < 3; ly++) {
             for (let lx = 0; lx < 6; lx++) {
-                svg = implantSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * 3], reg_label);
+                svg = setSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * 3], reg_label);
             }
         }
 
         //给个备注，说明这个地方有多少个diff
         const diff_count = torus.getTextPath('Diffs: ' + label_count + 'x', 20, 20, 18, 'left baseline', '#fff')
 
-        svg = replaceText(svg, diff_count, reg_text);
+        svg = setText(svg, diff_count, reg_text);
     }
 
     //导入背景
 
     const background = await getMapBG(s.id, 'list', hasLeaderBoard(s.ranked));
-    svg = implantImage(svg,1370,210,0,0,0.5, background, reg_background);
+    svg = setImage(svg, 0, 0, 1370, 210, background, reg_background, 0.5);
 
     return svg.toString();
 }

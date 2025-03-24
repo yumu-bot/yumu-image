@@ -1,10 +1,10 @@
 import {
     exportJPEG, getGameMode,
     getPanelNameSVG,
-    implantImage,
-    implantSvgBody,
-    readTemplate, putCustomBanner,
-    replaceText,
+    setImage,
+    setSvgBody,
+    readTemplate, setCustomBanner,
+    setText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_F1} from "../card/card_F1.js";
@@ -293,28 +293,28 @@ export async function panel_D0(data = {
     const cardF7 = await card_F7(user2CardF7(data.user, mode));
 
     // 导入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
-    svg = implantSvgBody(svg, 40, 330, cardF1, reg_card_f1);
-    svg = implantSvgBody(svg, 620, 330, cardF2, reg_card_f2);
-    svg = implantSvgBody(svg, 620, 690, cardF3, reg_card_f3);
-    svg = implantSvgBody(svg, 620, 880, cardF4, reg_card_f4);
-    svg = implantSvgBody(svg, 980, 330, cardF5, reg_card_f5);
-    svg = implantSvgBody(svg, 980, 690, cardF6, reg_card_f6);
+    svg = setSvgBody(svg, 40, 330, cardF1, reg_card_f1);
+    svg = setSvgBody(svg, 620, 330, cardF2, reg_card_f2);
+    svg = setSvgBody(svg, 620, 690, cardF3, reg_card_f3);
+    svg = setSvgBody(svg, 620, 880, cardF4, reg_card_f4);
+    svg = setSvgBody(svg, 980, 330, cardF5, reg_card_f5);
+    svg = setSvgBody(svg, 980, 690, cardF6, reg_card_f6);
 
     //F7是不需要平移的，位置由卡片决定
-    svg = implantSvgBody(svg, 0, 0, cardF7, reg_card_f7);
+    svg = setSvgBody(svg, 0, 0, cardF7, reg_card_f7);
 
     // 面板文字
     const panel_name = getPanelNameSVG('Information (!ymi)', 'I', 'v0.5.0 DX');
 
     // 导入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 插入图片和部件
     const background = pp2UserBG(data.user.pp || 0);
-    svg = putCustomBanner(svg, reg_banner, data.user?.profile?.banner);
-    svg = implantImage(svg, 1920, 1080, 0, 280, 0.6, background, reg_background);
+    svg = setCustomBanner(svg, reg_banner, data.user?.profile?.banner);
+    svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 
     return svg.toString();
 }

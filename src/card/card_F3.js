@@ -1,5 +1,5 @@
 import {
-    getMapBG, implantSvgBody, replaceText
+    getMapBG, setSvgBody, setText
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_I4} from "./card_I4.js";
@@ -128,18 +128,18 @@ export async function card_F3(data = {
     }
 
     for (const i in card_Ks) {
-        svg = implantSvgBody(svg, 15 + (i % 4 * 80), (i < 4 ? 50 : 110), card_Ks[i], reg_card_k);
+        svg = setSvgBody(svg, 15 + (i % 4 * 80), (i < 4 ? 50 : 110), card_Ks[i], reg_card_k);
     }
 
     // 导入文本
     const bp_title = torus.getTextPath('BPs', 15, 35.795, 30, 'left baseline', '#fff');
 
-    svg = replaceText(svg, bp_title, reg_text);
+    svg = setText(svg, bp_title, reg_text);
 
     // 导入基础矩形
     const base_rrect = PanelDraw.Rect(0, 0, 340, 175, 20, '#382e32');
 
-    svg = replaceText(svg, base_rrect, reg_base);
+    svg = setText(svg, base_rrect, reg_base);
 
     return svg;
 }

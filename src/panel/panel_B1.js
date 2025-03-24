@@ -2,9 +2,9 @@ import {
     exportJPEG,
     getImageFromV3,
     getGameMode, getPanelNameSVG,
-    implantImage,
-    implantSvgBody, readTemplate,
-    replaceText, replaceTexts
+    setImage,
+    setSvgBody, readTemplate,
+    setText, setTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -115,16 +115,16 @@ export async function panel_B1(data = {
     const game_mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
 
     // 画六个标识
-    svg = replaceText(svg, PanelDraw.HexagonIndex((mode === 'mania') ? VALUE_MANIA : VALUE_NORMAL), reg_hexagon);
+    svg = setText(svg, PanelDraw.HexagonIndex((mode === 'mania') ? VALUE_MANIA : VALUE_NORMAL), reg_hexagon);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
 
     // 面板文字
     const panel_name = getPanelNameSVG('PP Minus v2.4 (!ympm/!ympv)', 'PM', 'v0.5.0 DX');
 
     // 插入文字
-    svg = replaceTexts(svg, [panel_name, game_mode_path], reg_index);
+    svg = setTexts(svg, [panel_name, game_mode_path], reg_index);
 
     // 主计算
     let card_B1_lefts = [];
@@ -167,20 +167,20 @@ export async function panel_B1(data = {
         }, false));
         number_left.push(Math.min(Math.max((data.card_b_1[name] * scale_left - 0.6), 0.01) / 4 * 10, 1));
     }
-    svg = replaceText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
+    svg = setText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
-        svg = implantSvgBody(svg, 40, 350 + j * 115, card_B1_lefts[j], reg_left);
+        svg = setSvgBody(svg, 40, 350 + j * 115, card_B1_lefts[j], reg_left);
     }
 
     // 我自己的卡片
     const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[0]));
-    svg = implantSvgBody(svg, 40, 40, cardA1m, reg_maincard);
+    svg = setSvgBody(svg, 40, 40, cardA1m, reg_maincard);
 
     // 如果是vs，渲染右边的人
     if (isVS) {
         const cardA1y = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[1]));
-        svg = implantSvgBody(svg, 1450, 40, cardA1y, reg_maincard);
+        svg = setSvgBody(svg, 1450, 40, cardA1y, reg_maincard);
 
         for (const name of VALUE_NAMES) {
             if (typeof data.card_b_2[name] !== 'number') continue;
@@ -202,10 +202,10 @@ export async function panel_B1(data = {
             number_right.push(Math.min(Math.max((data.card_b_2[name] * scale_right - 0.6), 0.01) / 4 * 10, 1));
         }
 
-        svg = replaceText(svg, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
+        svg = setText(svg, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
 
         for (const j in card_B1_rights) {
-            svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
+            svg = setSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
         }
         
         const value_1 = data?.card_b_1.OVA || 0;
@@ -267,8 +267,8 @@ export async function panel_B1(data = {
             color: san_color,
         }));
     }
-    svg = implantSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
-    svg = implantSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
+    svg = setSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
+    svg = setSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
 
     //如果不是vs，则插入B3卡
     /*
@@ -281,7 +281,7 @@ export async function panel_B1(data = {
 
     // 画六边形和其他
     const hexagon = getImageFromV3('object-hexagon.png');
-    svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
+    svg = setImage(svg, 718, 384, 484, 433, hexagon, reg_hexagon, 1);
 
     return svg.toString();
 }

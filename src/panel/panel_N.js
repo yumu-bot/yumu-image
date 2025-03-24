@@ -2,11 +2,11 @@ import {
     exportJPEG, getAvatar,
     getImageFromV3,
     getPanelNameSVG,
-    implantImage,
-    implantSvgBody, isEmptyArray, readNetImage,
+    setImage,
+    setSvgBody, isEmptyArray, readNetImage,
     readTemplate,
-    replaceText,
-    replaceTexts, round, transformSvgBody
+    setText,
+    setTexts, round, getSvgBody
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -64,7 +64,7 @@ export async function panel_N(
     const panel_name = getPanelNameSVG('Nomination (!ymn)', 'N', 'v0.5.0 DX');
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A1
     const cardA2 = card_A2(await PanelGenerate.beatMapSet2CardA2(data?.beatmapset));
@@ -80,7 +80,7 @@ export async function panel_N(
     const favorite_title = torus.getTextPath('Favorites', 1630, 645, 30, 'left baseline', '#fff');
     const genre_title = torus.getTextPath('G/L', 1630, 925, 30, 'left baseline', '#fff');
 
-    svg = replaceTexts(svg, [favorite_title, tag_title, progress_title, discussion_title, guest_title, genre_title], reg_index);
+    svg = setTexts(svg, [favorite_title, tag_title, progress_title, discussion_title, guest_title, genre_title], reg_index);
 
     // 插入1号卡标签
     const total_length = data?.more?.total_length || 0;
@@ -102,8 +102,8 @@ export async function panel_N(
     const star_index = torus.getTextPath('Star', 255, 648, 24, 'center baseline', '#aaa');
     const length_index = torus.getTextPath('Length', 390, 648, 24, 'center baseline', '#aaa');
 
-    svg = replaceTexts(svg, [diff, star, length], reg_index);
-    svg = replaceTexts(svg, [diff_index, star_index, length_index], reg_index);
+    svg = setTexts(svg, [diff, star, length], reg_index);
+    svg = setTexts(svg, [diff_index, star_index, length_index], reg_index);
 
     // 插入8号卡标签
     const pack_tags = data?.beatmapset?.pack_tags || []
@@ -117,7 +117,7 @@ export async function panel_N(
 
     const stat = torus.getTextPath(stat_str, 1570, 645, 18, 'right baseline', '#aaa');
 
-    svg = replaceTexts(svg, [stat], reg_discussion);
+    svg = setTexts(svg, [stat], reg_discussion);
 
     // 导入 Tag
     const tag = getTagPanel(data?.more?.tags, 60, 940);
@@ -137,18 +137,18 @@ export async function panel_N(
     // 导入 Favorite
     const genre = getGenrePanel(data?.beatmapset?.genre, data?.beatmapset?.language);
 
-    svg = replaceText(svg, tag, reg_tag);
-    svg = replaceText(svg, guest, reg_guest);
-    svg = replaceText(svg, progress, reg_progress);
-    svg = replaceText(svg, favorite, reg_favorite);
-    svg = replaceText(svg, discussion, reg_discussion);
-    svg = replaceText(svg, genre, reg_genre);
+    svg = setText(svg, tag, reg_tag);
+    svg = setText(svg, guest, reg_guest);
+    svg = setText(svg, progress, reg_progress);
+    svg = setText(svg, favorite, reg_favorite);
+    svg = setText(svg, discussion, reg_discussion);
+    svg = setText(svg, genre, reg_genre);
 
     // 插入图片和部件（新方法
     const cover = await readNetImage(data?.beatmapset?.covers?.cover, true);
-    svg = implantImage(svg,1920, 320, 0, 0, 0.8, cover, reg_banner);
-    svg = implantSvgBody(svg, 40, 40, cardA2, reg_beatmap_A2);
-    svg = implantSvgBody(svg, 60, 350, cardO1, reg_me);
+    svg = setImage(svg, 0, 0, 1920, 320, cover, reg_banner, 0.8);
+    svg = setSvgBody(svg, 40, 40, cardA2, reg_beatmap_A2);
+    svg = setSvgBody(svg, 60, 350, cardO1, reg_me);
 
     return svg.toString();
 }
@@ -212,7 +212,7 @@ async function getGuestPanel(guest = [], x = 54, y = 745) {
         }
     }
 
-    return transformSvgBody(x, y, out);
+    return getSvgBody(x, y, out);
 }
 
 async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 490, y = 330) {
@@ -374,13 +374,13 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
     const uid = torus.getTextPath(u?.id.toString(), 50, 138, 16, 'center baseline', '#fff');
 
     //插入文本
-    svg = implantImage(svg, 100, 100, 0, 0, 1, avatar, reg_avatar);
-    svg = replaceText(svg, abbr, reg_text);
-    svg = replaceText(svg, abbr_rrect, reg_label);
-    svg = replaceText(svg, name, reg_text);
-    svg = replaceText(svg, uid, reg_text);
+    svg = setImage(svg, 0, 0, 100, 100, avatar, reg_avatar, 1);
+    svg = setText(svg, abbr, reg_text);
+    svg = setText(svg, abbr_rrect, reg_label);
+    svg = setText(svg, name, reg_text);
+    svg = setText(svg, uid, reg_text);
 
-    return transformSvgBody(x, y, svg);
+    return getSvgBody(x, y, svg);
 }
 
 async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row = 1) {
@@ -422,16 +422,16 @@ async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row
     const label_type = PanelDraw.Image(46 + name_length + 5, -2, 20, 20, getImageFromV3(`object-type-${type}.png`));
 
     //插入文本
-    svg = replaceText(svg, name, reg_text);
-    svg = replaceText(svg, diff, reg_text);
-    svg = replaceText(svg, comment, reg_text);
-    svg = replaceText(svg, label_type, reg_label);
+    svg = setText(svg, name, reg_text);
+    svg = setText(svg, diff, reg_text);
+    svg = setText(svg, comment, reg_text);
+    svg = setText(svg, label_type, reg_label);
 
     //插入图片
     const avatar = await getAvatar(u?.avatar_url, true);
-    svg = implantImage(svg, 40, 40, 0, 0, 1, avatar, reg_avatar);
+    svg = setImage(svg, 0, 0, 40, 40, avatar, reg_avatar, 1);
 
-    return transformSvgBody(x, y, svg.toString());
+    return getSvgBody(x, y, svg.toString());
 }
 
 async function label_N3(u = {}) {
@@ -457,11 +457,11 @@ async function label_N3(u = {}) {
     const label_color = PanelDraw.Circle(37.5, 37.5, 7.5, u?.profile_colour || 'none');
 
     //插入文本
-    svg = replaceText(svg, label_color, reg_label);
+    svg = setText(svg, label_color, reg_label);
 
     //插入图片
     const avatar = await getAvatar(u?.avatar_url, true);
-    svg = implantImage(svg, 45, 45, 0, 0, 1, avatar, reg_avatar);
+    svg = setImage(svg, 0, 0, 45, 45, avatar, reg_avatar, 1);
 
     return svg.toString();
 }
@@ -496,12 +496,12 @@ async function label_N4(u = {}) {
     const label_color = PanelDraw.Circle(73, 60, 10, u?.profile_colour || 'none');
 
     //插入文本
-    svg = replaceText(svg, name, reg_text);
-    svg = replaceText(svg, label_color, reg_label);
+    svg = setText(svg, name, reg_text);
+    svg = setText(svg, label_color, reg_label);
 
     //插入图片
     const avatar = await getAvatar(u?.avatar_url, true);
-    svg = implantImage(svg, 70, 70, 13, 0, 1, avatar, reg_avatar);
+    svg = setImage(svg, 13, 0, 70, 70, avatar, reg_avatar, 1);
 
     return svg.toString();
 }
@@ -525,12 +525,12 @@ function label_N6(x = 0, y = 0, type = 'genre', name = '') {
 
 
     //插入文本
-    svg = replaceText(svg, text, reg_text);
+    svg = setText(svg, text, reg_text);
 
     //插入图片
-    svg = implantImage(svg, 64, 64, 28, 0, 1, label, reg_label);
+    svg = setImage(svg, 28, 0, 64, 64, label, reg_label, 1);
 
-    return transformSvgBody(x, y, svg.toString());
+    return getSvgBody(x, y, svg.toString());
 }
 
 /**
@@ -683,7 +683,7 @@ async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_ro
         }
     }
 
-    return transformSvgBody(x, y, out.toString());
+    return getSvgBody(x, y, out.toString());
 }
 
 //细分方法

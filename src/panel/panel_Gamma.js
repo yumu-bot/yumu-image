@@ -3,14 +3,14 @@ import {
     getImageFromV3,
     getGameMode,
     getMapBG,
-    implantImage,
+    setImage,
     readTemplate,
-    replaceTexts,
+    setTexts,
     getAvatar,
     getBanner,
     getTimeByDHMS,
     getTimeDifference,
-    replaceText,
+    setText,
     isNotEmptyArray, round, rounds,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
@@ -142,7 +142,7 @@ export async function panel_Gamma(data = {
     const hexagon = getImageFromV3('object-beatmap-hexagon2.png');
 
     // 插入文字
-    svg = replaceTexts(svg, [left1, left2, left3, down1, down2, down_left1, down_left23, down_right1, down_right2, down_right3, center0, center1, center2, mode], reg_text);
+    svg = setTexts(svg, [left1, left2, left3, down1, down2, down_left1, down_left23, down_right1, down_right2, down_right3, center0, center1, center2, mode], reg_text);
 
     // 定义装饰条
     const bar1 = PanelDraw.Rect(28, 30, 2, 120, 1, '#fff', 1);
@@ -151,18 +151,18 @@ export async function panel_Gamma(data = {
         PanelDraw.Rect(210, 298, 2, 32, 1, '#fff', 1);
     const bar3 = is_sanity ? PanelDraw.Rect(28, 310, 2, 32, 1, '#fff', 1) : '';
 
-    svg = replaceTexts(svg, [bar1, bar2, bar3], reg_index);
+    svg = setTexts(svg, [bar1, bar2, bar3], reg_index);
 
     // 插入图片和部件（新方法
 
     const base = PanelDraw.Rect(0, 0, 240, 360, 0, '#2A2226', 1)
     const background_color = PanelDraw.Rect(0, 0, 240, 360, 0, data?.background_color || 'none', 0.1)
-    svg = replaceText(svg, [base, background_color], reg_background_color)
-    svg = replaceText(svg, background_color, reg_background) // 这个是用来给中间分界线处的渐变上色的
+    svg = setText(svg, [base, background_color], reg_background_color)
+    svg = setText(svg, background_color, reg_background) // 这个是用来给中间分界线处的渐变上色的
 
-    svg = implantImage(svg, 148, 160, 366, 80, 1, data.avatar, reg_avatar);
-    svg = implantImage(svg, 400, 360, 240, 0, is_score ? 1 : 0.6, data.background, reg_background);
-    svg = implantImage(svg, 148, 160, 366, 80, 1, hexagon, reg_map_hexagon);
+    svg = setImage(svg, 366, 80, 148, 160, data.avatar, reg_avatar, 1);
+    svg = setImage(svg, 240, 0, 400, 360, data.background, reg_background, is_score ? 1 : 0.6);
+    svg = setImage(svg, 366, 80, 148, 160, hexagon, reg_map_hexagon, 1);
 
     return svg.toString();
 }

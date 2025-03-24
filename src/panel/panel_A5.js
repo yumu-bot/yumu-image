@@ -1,7 +1,7 @@
 import {
-    exportJPEG, getPanelHeight, getPanelNameSVG, implantImage,
-    implantSvgBody, readTemplate,
-    replaceText,
+    exportJPEG, getPanelHeight, getPanelNameSVG, setImage,
+    setSvgBody, readTemplate,
+    setText,
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A1} from "../card/card_A1.js";
@@ -74,11 +74,11 @@ export async function panel_A5(data = {
     }
 
     // 导入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
     const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    svg = implantSvgBody(svg, 40, 40, me_card_a1, reg_me);
+    svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入H卡
     let cardHs = [];
@@ -91,7 +91,7 @@ export async function panel_A5(data = {
     }
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
 
     // 计算面板高度
     const rowTotal = Math.ceil((cardHs?.length || 0) / 2);
@@ -99,12 +99,12 @@ export async function panel_A5(data = {
     const panelHeight = getPanelHeight(cardHs?.length, 110, 2, 290, 40);
     const cardHeight = panelHeight - 290;
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     //天选之子H卡提出来
     const tianxuanzhizi = (cardHs.length % 2 === 1) ? cardHs.pop() : '';
-    svg = implantSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, tianxuanzhizi, reg_bp_list);
+    svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, tianxuanzhizi, reg_bp_list);
 
     //插入H卡
     for (let i = 0; i < cardHs.length; i++) {
@@ -114,7 +114,7 @@ export async function panel_A5(data = {
         const x = (ix === 1) ? 40 : 980;
         const y = 330 + iy * 150;
 
-        svg = implantSvgBody(svg, x, y, cardHs[i], reg_bp_list);
+        svg = setSvgBody(svg, x, y, cardHs[i], reg_bp_list);
     }
 
     return svg.toString();

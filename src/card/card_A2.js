@@ -1,9 +1,9 @@
 import {
     getImageFromV3,
     getMapStatusImage,
-    implantImage, isASCII,
+    setImage, isASCII,
     readTemplate,
-    replaceTexts,
+    setTexts,
 } from "../util/util.js";
 import {torus, PuHuiTi} from "../util/font.js";
 
@@ -89,10 +89,10 @@ export function card_A2(data = {
     const status = getMapStatusImage(data.map_status || '');
     const background = data.background || getImageFromV3('beatmap-DLfailBG.jpg');
 
-    svg = implantImage(svg, 430, 210, 0, 0, 0.6, background, reg_background);
-    svg = data.map_status ? implantImage(svg,50,50,370,10,1, status, reg_top_icons) : svg;
+    svg = setImage(svg, 0, 0, 430, 210, background, reg_background, 0.6);
+    svg = data.map_status ? setImage(svg, 370, 10, 50, 50, status, reg_top_icons, 1) : svg;
 
-    svg = replaceTexts(svg, [title1, title2, title3, right1, right2, right3, left1, left2, left3], reg_text);
+    svg = setTexts(svg, [title1, title2, title3, right1, right2, right3, left1, left2, left3], reg_text);
 
     return svg.toString();
 }

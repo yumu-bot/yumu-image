@@ -1,7 +1,7 @@
 import {
-    exportJPEG, getPanelHeight, getPanelNameSVG, implantSvgBody,
-    readTemplate, putCustomBanner,
-    replaceText,
+    exportJPEG, getPanelHeight, getPanelNameSVG, setSvgBody,
+    readTemplate, setCustomBanner,
+    setText,
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A1} from "../card/card_A1.js";
@@ -290,7 +290,7 @@ export async function panel_A7(data = {
     const panel_name = getPanelNameSVG('BP Fixed (!ymbf)', 'BF', 'v0.5.0 DX');
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
     const a1 = await PanelGenerate.user2CardA1(data?.user)
@@ -307,7 +307,7 @@ export async function panel_A7(data = {
         right3b: Math.round(theoretical_pp).toString(),
         right3m: 'PP',
     });
-    svg = implantSvgBody(svg, 40, 40, me_card_a1, reg_me);
+    svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入H卡
     let cardHs = [];
@@ -330,7 +330,7 @@ export async function panel_A7(data = {
     }
 
     // 插入图片和部件（新方法
-    svg = putCustomBanner(svg, reg_banner, data.user?.profile?.banner);
+    svg = setCustomBanner(svg, reg_banner, data.user?.profile?.banner);
 
     // 计算面板高度
     const rowTotal = (cardHs !== []) ? Math.ceil(cardHs.length / 2) : 0;
@@ -338,12 +338,12 @@ export async function panel_A7(data = {
     const panelHeight = getPanelHeight(cardHs?.length, 110, 2, 290, 40, 40);
     const cardHeight = panelHeight - 290;
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     //天选之子H卡提出来
     const tianxuanzhizi = (cardHs.length % 2 === 1) ? cardHs.pop() : '';
-    svg = implantSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, tianxuanzhizi, reg_bp_list);
+    svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, tianxuanzhizi, reg_bp_list);
 
     //插入H卡
     for (let i = 0; i < cardHs.length; i++) {
@@ -353,7 +353,7 @@ export async function panel_A7(data = {
         const x = (ix === 1) ? 40 : 980;
         const y = 330 + iy * 150;
 
-        svg = implantSvgBody(svg, x, y, cardHs[i], reg_bp_list);
+        svg = setSvgBody(svg, x, y, cardHs[i], reg_bp_list);
     }
 
     return svg.toString();

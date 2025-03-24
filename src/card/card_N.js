@@ -2,8 +2,8 @@ import {
     getImageFromV3,
     getFlagPath,
     getTimeDifference,
-    implantImage,
-    implantSvgBody, replaceText, replaceTexts, getAvatar, rounds,
+    setImage,
+    setSvgBody, setText, setTexts, getAvatar, rounds,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
@@ -130,8 +130,8 @@ export async function card_N(data = {
                 stat_y - 5, 14, 'center baseline', '#fff');
             const svg_rect = PanelDraw.Rect(stat_x + width_sum, stat_y, width, 10, 5, color);
 
-            svg = replaceText(svg, stat_text, reg_label);
-            svg = replaceText(svg, svg_rect, reg_label);
+            svg = setText(svg, stat_text, reg_label);
+            svg = setText(svg, svg_rect, reg_label);
 
             //结算
             width_sum += (width + stat_interval);
@@ -152,22 +152,22 @@ export async function card_N(data = {
     mods_arr.forEach((mod, i) => {
         const offset_x = 900 - 32 + multiplier * 24 - mods_arr_length * multiplier * 24
 
-        svg = replaceText(svg, getModRRectPath(mod, offset_x + multiplier * i * 24, 6, 40, 20, 10, 15), reg_mod);
+        svg = setText(svg, getModRRectPath(mod, offset_x + multiplier * i * 24, 6, 40, 20, 10, 15), reg_mod);
     });
 
     const type = getScoreTypeImage(data?.score?.is_lazer)
-    svg = implantImage(svg, 45, 30, 295, 30, 1, type, reg_label);
+    svg = setImage(svg, 295, 30, 45, 30, type, reg_label, 1);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, 40, 40, 15, 10, 1, rank, reg_label);
-    svg = implantImage(svg, 50, 50, 70, 6, 1, avatar, reg_avatar);
-    svg = implantImage(svg, 915, 62, 0, 0, background_opacity, background, reg_background);
-    svg = replaceTexts(svg, [name, country_date, delta_score_text, flagSvg], reg_text);
+    svg = setImage(svg, 15, 10, 40, 40, rank, reg_label, 1);
+    svg = setImage(svg, 70, 6, 50, 50, avatar, reg_avatar, 1);
+    svg = setImage(svg, 0, 0, 915, 62, background, reg_background, background_opacity);
+    svg = setTexts(svg, [name, country_date, delta_score_text, flagSvg], reg_text);
 
-    svg = implantSvgBody(svg, 350, 6, n1_acc, reg_label);
-    svg = implantSvgBody(svg, 460, 6, n1_combo, reg_label);
-    svg = implantSvgBody(svg, 570, 6, n1_pp, reg_label);
-    svg = implantSvgBody(svg, 350, 36, n1_score, reg_label);
+    svg = setSvgBody(svg, 350, 6, n1_acc, reg_label);
+    svg = setSvgBody(svg, 460, 6, n1_combo, reg_label);
+    svg = setSvgBody(svg, 570, 6, n1_pp, reg_label);
+    svg = setSvgBody(svg, 350, 36, n1_score, reg_label);
 
     return svg.toString();
 }

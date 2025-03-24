@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG,
-    implantSvgBody, readTemplate, putCustomBanner,
-    replaceText, transformSvgBody, getPanelHeight, getAvatar, getMatchDuration, getNowTimeStamp, round, rounds
+    setSvgBody, readTemplate, setCustomBanner,
+    setText, getSvgBody, getPanelHeight, getAvatar, getMatchDuration, getNowTimeStamp, round, rounds
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -263,14 +263,14 @@ export async function panel_C(
     const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'RA', 'v0.5.0 DX', request_time);
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A2卡
     const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(data));
 
     // 插入图片和部件（新方法
-    svg = putCustomBanner(svg, reg_banner);
-    svg = implantSvgBody(svg, 40, 40, matchInfo, reg_maincard);
+    svg = setCustomBanner(svg, reg_banner);
+    svg = setSvgBody(svg, 40, 40, matchInfo, reg_maincard);
 
     // 导入H卡
     let cardHs = [];
@@ -331,15 +331,15 @@ export async function panel_C(
         }
     }
 
-    svg = replaceText(svg, cardHs, reg_maincard);
+    svg = setText(svg, cardHs, reg_maincard);
 
     // 计算面板高度
 
     const panelHeight = getPanelHeight(rowTotal * 2, 110, 2, 290, 40, 40);
     const cardHeight = panelHeight - 290;
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     return svg.toString();
 }
@@ -439,6 +439,6 @@ async function drawCardH(data = {}
 
     const body = await card_H(data);
 
-    return transformSvgBody(x, y, body);
+    return getSvgBody(x, y, body);
 }
 

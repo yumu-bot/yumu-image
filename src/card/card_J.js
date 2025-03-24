@@ -1,6 +1,6 @@
 import {
     getImageFromV3,
-    implantImage, replaceText, replaceTexts,
+    setImage, setText, setTexts,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {getRankColor, getStarRatingColor} from "../util/color.js";
@@ -126,24 +126,24 @@ export async function card_J(data = {
         const mod = mods_arr[i]
 
         if (i < 3) {
-            svg = replaceText(svg, getModCirclePath(mod, 179 + i * 14, 69), reg_mod)
+            svg = setText(svg, getModCirclePath(mod, 179 + i * 14, 69), reg_mod)
         } else {
-            svg = replaceText(svg, getModCirclePath(mod, 179 + (i - 3) * 14, 69 + 12), reg_mod)
+            svg = setText(svg, getModCirclePath(mod, 179 + (i - 3) * 14, 69 + 12), reg_mod)
         }
     }
 
     // 替换模板
-    svg = replaceTexts(svg, [title, difficulty_name, line_3_right, pp, rank, star_rating], reg_text);
+    svg = setTexts(svg, [title, difficulty_name, line_3_right, pp, rank, star_rating], reg_text);
 
-    svg = replaceText(svg, rank_rrect, reg_rank)
-    svg = replaceText(svg, star_rrect, reg_overlay)
+    svg = setText(svg, rank_rrect, reg_rank)
+    svg = setText(svg, star_rrect, reg_overlay)
 
     // 替换图片
 
-    svg = implantImage(svg, 30, 20, 85, 4, 1, data?.type || '', reg_text);
+    svg = setImage(svg, 85, 4, 30, 20, data?.type || '', reg_text, 1);
 
-    svg = data.background ? implantImage(svg, 310, 80, 0, 0, 0.2, data.background, reg_background) : svg;
-    svg = data.cover ? implantImage(svg, 120, 80, 0, 0, 1, data.cover, reg_cover) : svg;
+    svg = data.background ? setImage(svg, 0, 0, 310, 80, data.background, reg_background, 0.2) : svg;
+    svg = data.cover ? setImage(svg, 0, 0, 120, 80, data.cover, reg_cover, 1) : svg;
 
     return svg.toString();
 

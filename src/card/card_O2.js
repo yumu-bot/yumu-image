@@ -1,4 +1,4 @@
-import {getMapStatusImage, implantImage, isASCII, replaceTexts} from "../util/util.js";
+import {getMapStatusImage, setImage, isASCII, setTexts} from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 
 export async function card_O2(data = {
@@ -70,13 +70,13 @@ export async function card_O2(data = {
     const right1 = torus.getTextPath(data.right1, 280, 75, 18, 'right baseline', '#fff');
     const right2 = torus.get2SizeTextPath(data.right2b, data.right2m, 48, 36, 280, 119, 'right baseline', '#fff');
 
-    svg = replaceTexts(svg, [title1, title2, left1, left2, left3, right1, right2], reg_text);
+    svg = setTexts(svg, [title1, title2, left1, left2, left3, right1, right2], reg_text);
 
     // 插入背景
     const status = getMapStatusImage(data.map_status || '');
     const background = data.background || '';
-    svg = data.map_status ? implantImage(svg, 40, 40, 244, 8, 1, status, reg_top_icons) : svg;
-    svg = implantImage(svg, 290, 130, 0, 0, 0.6, background, reg_background);
+    svg = data.map_status ? setImage(svg, 244, 8, 40, 40, status, reg_top_icons, 1) : svg;
+    svg = setImage(svg, 0, 0, 290, 130, background, reg_background, 0.6);
 
     return svg.toString();
 }

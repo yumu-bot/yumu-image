@@ -1,9 +1,9 @@
 import {
     exportJPEG,
     getPanelNameSVG,
-    implantSvgBody,
-    replaceText,
-    putCustomBanner, getPanelHeight, readNetImage
+    setSvgBody,
+    setText,
+    setCustomBanner, getPanelHeight, readNetImage
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A1} from "../card/card_A1.js";
@@ -97,10 +97,10 @@ export async function panel_A10(
     const panel_name = getPanelNameSVG('Badge (!ymbd)', 'BD', 'v0.5.2 DX');
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 主卡
-    svg = implantSvgBody(svg, 40, 40, await card_A1(await PanelGenerate.user2CardA1(user)), reg_main);
+    svg = setSvgBody(svg, 40, 40, await card_A1(await PanelGenerate.user2CardA1(user)), reg_main);
 
     // 队员
     for (const i in badges) {
@@ -111,11 +111,11 @@ export async function panel_A10(
 
         const member = await card_H3(await PanelGenerate.badge2CardH3(v, parseInt(i) + 1))
 
-        svg = implantSvgBody(svg, 40 + 940 * x, 330 + 150 * y, member, reg_body)
+        svg = setSvgBody(svg, 40 + 940 * x, 330 + 150 * y, member, reg_body)
     }
 
     // 插入图片和部件（新方法
-    svg = putCustomBanner(svg, reg_banner, await readNetImage(data.banner));
+    svg = setCustomBanner(svg, reg_banner, await readNetImage(data.banner));
 
     return svg.toString();
 }

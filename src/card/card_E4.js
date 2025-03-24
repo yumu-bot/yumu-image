@@ -1,6 +1,6 @@
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
-import {implantSvgBody, replaceText, rounds} from "../util/util.js";
+import {setSvgBody, setText, rounds} from "../util/util.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_E4(data = {
@@ -46,10 +46,10 @@ export async function card_E4(data = {
 
     const rrect = column > 0 ? PanelDraw.Rect(1880 - 40 - column * 210, 200, 40 + column * 210, 70, 20, '#382E32', 1) : '';
 
-    svg = implantSvgBody(svg, 1230, 210, label1, reg);
-    svg = implantSvgBody(svg, 1440, 210, label2, reg);
-    svg = implantSvgBody(svg, 1650, 210, label3, reg);
-    svg = replaceText(svg, rrect, reg);
+    svg = setSvgBody(svg, 1230, 210, label1, reg);
+    svg = setSvgBody(svg, 1440, 210, label2, reg);
+    svg = setSvgBody(svg, 1650, 210, label3, reg);
+    svg = setText(svg, rrect, reg);
 
     return svg;
 }

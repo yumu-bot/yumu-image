@@ -1,4 +1,4 @@
-import {replaceTexts} from "../util/util.js";
+import {setTexts} from "../util/util.js";
 import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
@@ -6,7 +6,7 @@ export async function card_O3(data = {
     title: '',
     number: 0,
     color: '#fff',
-}, reuse = false) {
+}) {
     // 读取模板
     let svg =`
           <g id="Background_CO3">
@@ -28,7 +28,7 @@ export async function card_O3(data = {
     const title = torus.getTextPath(data.title, 30, 20, 18, 'left baseline', color);
     const number = torus.getTextPath(num, 180, 22, 24, 'right baseline', color);
 
-    svg = replaceTexts(svg, [circle, title, number], reg_text);
+    svg = setTexts(svg, [circle, title, number], reg_text);
 
     return svg.toString();
 }

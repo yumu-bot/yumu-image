@@ -1,5 +1,5 @@
 import {
-    getImageFromV3, replaceText, replaceTexts, round,
+    getImageFromV3, setText, setTexts, round,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E} from "../component/label.js";
@@ -70,7 +70,7 @@ export async function card_E3(data = {
         540, 152.63, 18, "right baseline", "#aaa");
 
     // 导入文字
-    svg = replaceTexts(svg, [density, retry_fail, public_rating, percent], reg_text);
+    svg = setTexts(svg, [density, retry_fail, public_rating, percent], reg_text);
 
     // 部件定义
     // 评级或难度分布矩形的缩放，SR1为0.1倍，SR8为1倍
@@ -110,11 +110,11 @@ export async function card_E3(data = {
     const base_rrect = PanelDraw.Rect(560, 250, 420, 4, 2, '#aaa');
 
     // 导入部件
-    svg = replaceText(svg, fail_index_rrect, reg_label);
-    svg = replaceTexts(svg, [density_graph, fail_graph, retry_graph], reg_graph);
-    svg = replaceText(svg, labels, reg_label);
+    svg = setText(svg, fail_index_rrect, reg_label);
+    svg = setTexts(svg, [density_graph, fail_graph, retry_graph], reg_graph);
+    svg = setText(svg, labels, reg_label);
 
-    svg = replaceTexts(svg, [fail_rrect, retry_rrect, base_rrect], reg_label);
+    svg = setTexts(svg, [fail_rrect, retry_rrect, base_rrect], reg_label);
 
     return svg.toString();
 }

@@ -2,9 +2,9 @@ import {
     getImageFromV3,
     getGameMode,
     getMapStatusImage,
-    implantImage,
-    implantSvgBody, readNetImage,
-    replaceTexts, getDiffBG, getBeatMapTitlePath, round, rounds,
+    setImage,
+    setSvgBody, readNetImage,
+    setTexts, getDiffBG, getBeatMapTitlePath, round, rounds,
 } from "../util/util.js";
 import {extra, PuHuiTi, torus} from "../util/font.js";
 import {getStarRatingColor} from "../util/color.js";
@@ -106,18 +106,18 @@ export async function card_E1(data = {
     const artist_etc_text = torus.getTextPath(artist + mapper_and_bid, 440, 746.84, 24, "center baseline", "#fff");
 
     // 导入文字
-    svg = replaceTexts(svg, [sr_text, mode_text, favorite_count_text, play_count_text, title_text, title_unicode_text, version_text,  artist_etc_text], reg_text);
+    svg = setTexts(svg, [sr_text, mode_text, favorite_count_text, play_count_text, title_text, title_unicode_text, version_text,  artist_etc_text], reg_text);
     
     // 导入图片
-    svg = implantImage(svg, 380, 410, 250, 100, 1, cover, reg_cover);
-    svg = implantImage(svg, 420, 450, 230, 80, 1, hexagon, reg_overlay);
-    svg = implantImage(svg, 50, 50, 683, 44, 1, status, reg_status);
-    svg = implantSvgBody(svg, 746, 48, favorite_count_icon, reg_overlay);
-    svg = implantSvgBody(svg, 746, 74, play_count_icon, reg_overlay);
+    svg = setImage(svg, 250, 100, 380, 410, cover, reg_cover, 1);
+    svg = setImage(svg, 230, 80, 420, 450, hexagon, reg_overlay, 1);
+    svg = setImage(svg, 683, 44, 50, 50, status, reg_status, 1);
+    svg = setSvgBody(svg, 746, 48, favorite_count_icon, reg_overlay);
+    svg = setSvgBody(svg, 746, 74, play_count_icon, reg_overlay);
 
     //导入星数
     const star_svg = getStarSVGs(getImageFromV3('object-beatmap-star.png'), sr_b, sr_m, 40, 40);
-    svg = implantSvgBody(svg, 40, 106, star_svg, reg_star);
+    svg = setSvgBody(svg, 40, 106, star_svg, reg_star);
 
     //导出
     return svg.toString();

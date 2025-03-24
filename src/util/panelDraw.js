@@ -1,6 +1,6 @@
 //把数组变成可视化的图表
 import {torusBold} from "./font.js";
-import {isEmptyArray, isNumber, replaceText} from "./util.js";
+import {isEmptyArray, isNumber, setText} from "./util.js";
 import {hex2rgbColor} from "./color.js";
 
 export const PanelDraw = {
@@ -24,7 +24,7 @@ export const PanelDraw = {
         x2: "100%",
         y2: "0%",
     }) => {
-        const name = Math.sqrt(x * y * w * h) + (colors[0].color || '#fff')
+        const name = Math.round(Math.sqrt(x * y * w * h))  + (colors[0].color || '#fff')
 
         let out = `<g><defs>
                 <linearGradient id="grad${name}" x1="${position.x1}" y1="${position.y1}" x2="${position.x2}" y2="${position.y2}">`
@@ -290,10 +290,10 @@ export const PanelDraw = {
             const y = cy - r * Math.sin(PI_3 * i + offset);
 
             const param_text = torusBold.getTextPath(value, x, y + 8, size, 'center baseline', text_color);
-            svg = replaceText(svg, param_text, reg_text)
+            svg = setText(svg, param_text, reg_text)
             const param_width = torusBold.getTextWidth(value, size);
             const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, background_color);
-            svg = replaceText(svg, rrect, reg_rrect);
+            svg = setText(svg, rrect, reg_rrect);
 
         }
         return svg;

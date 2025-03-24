@@ -2,10 +2,10 @@ import {
     exportJPEG,
     getImageFromV3,
     getPanelNameSVG,
-    implantImage,
-    implantSvgBody, isNotEmptyArray,
+    setImage,
+    setSvgBody, isNotEmptyArray,
     readTemplate,
-    replaceText, round
+    setText, round
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_I3} from "../card/card_I3.js";
@@ -94,7 +94,7 @@ export async function panel_MA2(data = {
     }
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
     const cardA1 = await card_A1(await PanelGenerate.chunithmPlayer2CardA1(data.user));
@@ -116,7 +116,7 @@ export async function panel_MA2(data = {
 
 
     // 插入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
     const b30_height = Math.ceil(card_b30.length / 5) * 150
     let r10_offset = 0
@@ -126,7 +126,7 @@ export async function panel_MA2(data = {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_b30[i], reg_card_i);
+        svg = setSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_b30[i], reg_card_i);
     }
 
     if (isNotEmptyArray(card_b30) && isNotEmptyArray(card_r10)) r10_offset = 20
@@ -135,18 +135,18 @@ export async function panel_MA2(data = {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = implantSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + b30_height + r10_offset, card_r10[i], reg_card_i);
+        svg = setSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + b30_height + r10_offset, card_r10[i], reg_card_i);
     }
 
     // 导入图片
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath("maimai"), reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 计算面板高度
     const cardHeight = b30_height + r10_height + r10_offset + (80 - 15)
     const panelHeight = cardHeight + 290
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     return svg.toString()
 }

@@ -1,4 +1,4 @@
-import {getImageFromV3, implantImage, implantSvgBody, replaceText} from "../util/util.js";
+import {getImageFromV3, setImage, setSvgBody, setText} from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_O} from "../component/label.js";
 
@@ -41,7 +41,7 @@ export async function card_O1(data = {
     // 插入文本
     const title = torus.getTextPath(data.name, 195, 155, 36, 'center baseline', '#fff');
 
-    svg = replaceText(svg, title, reg_text);
+    svg = setText(svg, title, reg_text);
 
     // 插入标签，如果空的，给一个默认的标识
     const groups = (data.groups.length >= 1) ? data.groups : [{
@@ -61,13 +61,13 @@ export async function card_O1(data = {
         const y = 170;
 
         const labelO = await label_O(v);
-        svg = implantSvgBody(svg, x, y, labelO, reg_label);
+        svg = setSvgBody(svg, x, y, labelO, reg_label);
     }
     // 插入头像
-    svg = implantImage(svg, 100, 100, 145, 15, 1, data.avatar, reg_avatar);
+    svg = setImage(svg, 145, 15, 100, 100, data.avatar, reg_avatar, 1);
 
     // 插入背景
-    svg = implantImage(svg, 390, 210, 0, 0, 0.6, data.background, reg_background);
+    svg = setImage(svg, 0, 0, 390, 210, data.background, reg_background, 0.6);
 
     return svg.toString();
 }

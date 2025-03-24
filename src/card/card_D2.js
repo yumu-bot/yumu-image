@@ -1,6 +1,6 @@
 import {
-    implantImage,
-    replaceTexts
+    setImage,
+    setTexts
 } from "../util/util.js";
 import {getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -99,11 +99,11 @@ export async function card_D2(data = {
         }], 144, 112, 'right baseline', true
     )
 
-    svg = replaceTexts(svg,
+    svg = setTexts(svg,
         [title, left, right, bottom_left, bottom_right, left_rrect, right_rrect],
         reg_text)
 
-    svg = implantImage(svg, 150, 120, 0, 0, 0.8, data?.background || '', reg_background)
+    svg = setImage(svg, 0, 0, 150, 120, data?.background || '', reg_background, 0.8)
 
     return svg.toString()
 }

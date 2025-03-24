@@ -1,7 +1,7 @@
 import {
     getImageFromV3,
-    implantImage,
-    replaceText, replaceTexts
+    setImage,
+    setText, setTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -31,9 +31,9 @@ export async function card_F4(data = {
     const reg_text = /(?<=<g id="Text_CF4">)/;
 
     // 导入评级图片
-    svg = implantImage(svg, 31, 39, 49, 50, 1, getImageFromV3('object-score-X-small.png'), reg_grade);
-    svg = implantImage(svg, 25, 35, 157, 52, 1, getImageFromV3('object-score-S-small.png'), reg_grade);
-    svg = implantImage(svg, 30, 34, 260, 53, 1, getImageFromV3('object-score-A-small.png'), reg_grade);
+    svg = setImage(svg, 49, 50, 31, 39, getImageFromV3('object-score-X-small.png'), reg_grade, 1);
+    svg = setImage(svg, 157, 52, 25, 35, getImageFromV3('object-score-S-small.png'), reg_grade, 1);
+    svg = setImage(svg, 260, 53, 30, 34, getImageFromV3('object-score-A-small.png'), reg_grade, 1);
 
     // 导入评级的数量
     const grade_X = torus.getTextPath((data.user.ss + data.user.ssh).toString(), 65, 118.795, 30, 'center baseline', '#fff');
@@ -42,18 +42,18 @@ export async function card_F4(data = {
     const grade_XH = torus.getTextPath(`(+${data.user.ssh})`, 65, 144.877, 18, 'center baseline', '#aaa');
     const grade_SH = torus.getTextPath(`(+${data.user.sh})`, 170, 144.877, 18, 'center baseline', '#aaa');
 
-    svg = replaceTexts(svg, [grade_X, grade_S, grade_A, grade_XH, grade_SH], reg_text);
+    svg = setTexts(svg, [grade_X, grade_S, grade_A, grade_XH, grade_SH], reg_text);
 
     // 导入文本
 
     const grade_title = torus.getTextPath('Grades', 15, 35.795, 30, 'left baseline', '#fff');
 
-    svg = replaceText(svg, grade_title, reg_text);
+    svg = setText(svg, grade_title, reg_text);
 
     // 导入基础矩形
     const base_rrect = PanelDraw.Rect(0, 0, 340, 160, 20, '#382e32');
 
-    svg = replaceText(svg, base_rrect, reg_base);
+    svg = setText(svg, base_rrect, reg_base);
 
     return svg;
 }

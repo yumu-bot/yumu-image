@@ -1,7 +1,7 @@
 import {
-    implantImage,
+    setImage,
     readTemplate,
-    replaceText, replaceTexts, rounds
+    setText, setTexts, rounds
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {getColorInSpectrum, getModColor} from "../util/color.js";
@@ -156,17 +156,17 @@ export async function card_D(data = {
         'center baseline',
         '#fff')
 
-    svg = replaceTexts(svg, [text_sd1, text_sd2, text_sd3], reg_sd_text);
-    svg = replaceText(svg, sd_circle1, reg_sd_circle1);
-    svg = replaceText(svg, sd_circle2, reg_sd_circle2);
-    svg = replaceText(svg, sd_circle3, reg_sd_circle3);
+    svg = setTexts(svg, [text_sd1, text_sd2, text_sd3], reg_sd_text);
+    svg = setText(svg, sd_circle1, reg_sd_circle1);
+    svg = setText(svg, sd_circle2, reg_sd_circle2);
+    svg = setText(svg, sd_circle3, reg_sd_circle3);
 
     // 替换文字
-    svg = replaceTexts(svg, [title, title2, text_artist_and_mapper, text_info, text_mod, text_star], reg_text);
-    svg = replaceText(svg, text_mod_color, reg_mod_color);
+    svg = setTexts(svg, [title, title2, text_artist_and_mapper, text_info, text_mod, text_star], reg_text);
+    svg = setText(svg, text_mod_color, reg_mod_color);
 
     // 插入图片
-    svg = implantImage(svg, 560 ,110 ,0 ,0 , 0.4, data.background, reg_background);
+    svg = setImage(svg, 0, 0, 560, 110, data.background, reg_background, 0.4);
 
     return svg.toString();
 }

@@ -1,7 +1,7 @@
 import {
-    exportJPEG, getPanelHeight, getPanelNameSVG, implantImage,
-    implantSvgBody, readTemplate,
-    replaceText
+    exportJPEG, getPanelHeight, getPanelNameSVG, setImage,
+    setSvgBody, readTemplate,
+    setText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -123,10 +123,10 @@ export async function panel_MF(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-MA1-1\);">)/;
 
     // 插入文字
-    svg = replaceText(svg, getPanelNameSVG('Maimai Find (!ymmf)', 'MF', 'v0.5.1 DX'), reg_index);
+    svg = setText(svg, getPanelNameSVG('Maimai Find (!ymmf)', 'MF', 'v0.5.1 DX'), reg_index);
 
     // 导入图片
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath("maimai"), reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 导入A1卡
     const cardA1 = await card_A1(await PanelGenerate.maimaiPlayer2CardA1(data.user));
@@ -139,13 +139,13 @@ export async function panel_MF(data = {
     }
 
     // 插入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
     for (let i = 0; i < card_a4.length; i++) {
         const x = i % 4
         const y = Math.floor(i / 4)
 
-        svg = implantSvgBody(svg,
+        svg = setSvgBody(svg,
             40 + x * 470, 330 + y * 230, card_a4[i], reg_card_i)
     }
 
@@ -153,8 +153,8 @@ export async function panel_MF(data = {
     const panelHeight = getPanelHeight(card_a4.length, 210, 4, 290, 20, 40)
     const cardHeight = panelHeight - 290
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     return svg.toString()
 }

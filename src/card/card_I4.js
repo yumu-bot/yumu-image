@@ -1,4 +1,4 @@
-import {implantImage, readNetImage, replaceText} from "../util/util.js";
+import {setImage, readNetImage, setText} from "../util/util.js";
 import {torus} from "../util/font.js";
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -61,13 +61,13 @@ export async function card_I4(data = {
     // 替换模板
 
     // svg = replaceText(svg, bp_ranking, reg_text);
-    svg = replaceText(svg, bp_pp, reg_text);
-    svg = replaceText(svg, circle_sr, reg_overlay);
-    svg = replaceText(svg, circle_rank, reg_overlay);
+    svg = setText(svg, bp_pp, reg_text);
+    svg = setText(svg, circle_sr, reg_overlay);
+    svg = setText(svg, circle_rank, reg_overlay);
 
     const bg = await readNetImage(data.map_background, true);
 
-    svg = implantImage(svg,70,50,0,0,0.5, bg, reg_background);
+    svg = setImage(svg, 0, 0, 70, 50, bg, reg_background, 0.5);
 
     return svg.toString();
 }

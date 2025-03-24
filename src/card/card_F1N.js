@@ -2,10 +2,10 @@ import {
     getGameMode, getTimeByDHMS,
     getTimeByDHMSLarge,
     getTimeByDHMSSmall,
-    implantImage,
-    implantSvgBody,
-    replaceText,
-    replaceTexts, rounds
+    setImage,
+    setSvgBody,
+    setText,
+    setTexts, rounds
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -69,19 +69,19 @@ export async function card_F1N(data = {
     const deltas = userDelta2Labels(data);
 
     for (const i in labels) {
-        svg = implantSvgBody(svg, 0, 20 + 240 * i, labels[i], reg_text);
+        svg = setSvgBody(svg, 0, 20 + 240 * i, labels[i], reg_text);
     }
 
     for (const i in deltas) {
-        svg = implantSvgBody(svg, 0, 195 + 240 * i, deltas[i], reg_text);
+        svg = setSvgBody(svg, 0, 195 + 240 * i, deltas[i], reg_text);
     }
 
     // 获取吉祥物
     const mascot_name_data = getMascotName(getGameMode(data.mode, 0)) || 'pippi';
     const mascot_link = getMascotPath(mascot_name_data);
 
-    svg = implantImage(svg, 380, 710, 0, 0, 0.6, mascot_link, reg_glass);
-    svg = implantImage(svg, 560, 710, 360, 0, 1, mascot_link, reg_mascot);
+    svg = setImage(svg, 0, 0, 380, 710, mascot_link, reg_glass, 0.6);
+    svg = setImage(svg, 360, 0, 560, 710, mascot_link, reg_mascot, 1);
 
     // 插入进度
     const mascot_name_width = torus.getTextWidth(mascot_name_data, 36);
@@ -125,13 +125,13 @@ export async function card_F1N(data = {
     const progress_rrect = PanelDraw.Rect(380, 686, 520 * (data.level_progress || 0) / 100, 4, 2, '#FFCC22');
 
     // 导入
-    svg = replaceTexts(svg, [mascot_mark1, mascot_mark2], reg_text);
-    svg = replaceTexts(svg, [mascot_mark1_rrect, mascot_mark2_rrect, progress_rrect, progress_base], reg_rrect);
+    svg = setTexts(svg, [mascot_mark1, mascot_mark2], reg_text);
+    svg = setTexts(svg, [mascot_mark1_rrect, mascot_mark2_rrect, progress_rrect, progress_base], reg_rrect);
 
     // 导入基础矩形
     const base_rrect = PanelDraw.Rect(0, 0, 920, 710, 20, '#382e32');
 
-    svg = replaceText(svg, base_rrect, reg_base);
+    svg = setText(svg, base_rrect, reg_base);
 
     return svg;
 }

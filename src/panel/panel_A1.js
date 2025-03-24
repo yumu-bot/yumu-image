@@ -1,8 +1,8 @@
 import {
     exportJPEG, getPanelHeight, getPanelNameSVG,
-    implantSvgBody,
-    readTemplate, putCustomBanner,
-    replaceText
+    setSvgBody,
+    readTemplate, setCustomBanner,
+    setText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -217,7 +217,7 @@ export async function panel_A1(data = {
     const panel_name = getPanelNameSVG('Friends (!ymf)', 'F', 'v0.5.0 DX');
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
     const me_cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.me_card_A1));
@@ -230,23 +230,23 @@ export async function panel_A1(data = {
     }
 
     // 插入图片和部件（新方法
-    svg = putCustomBanner(svg, reg_banner, data.me_card_A1?.profile?.banner);
+    svg = setCustomBanner(svg, reg_banner, data.me_card_A1?.profile?.banner);
 
-    svg = implantSvgBody(svg, 40, 40, me_cardA1, reg_me_card_a1);
+    svg = setSvgBody(svg, 40, 40, me_cardA1, reg_me_card_a1);
 
     for (const i in friend_cardA1s) {
         const x = i % 4;
         const y = Math.floor(i / 4);
 
-        svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
+        svg = setSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
     }
 
     // 计算面板高度
     const panelHeight = getPanelHeight(friend_cardA1s?.length, 210, 4, 290, 40);
     const cardHeight = panelHeight - 290;
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     return svg.toString();
 

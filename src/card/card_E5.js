@@ -1,7 +1,7 @@
 import {getImageFromV3,
     getGameMode,
-    implantSvgBody,
-    replaceTexts, rounds
+    setSvgBody,
+    setTexts, rounds
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -75,7 +75,7 @@ export async function card_E5(data = {
         84, 60, 335, 79.43, 'left baseline', '#FFF');
 
     // 导入文字
-    svg = replaceTexts(svg, [pp_large], reg_text);
+    svg = setTexts(svg, [pp_large], reg_text);
 
     // 部件定义
     const mods = getModsSVG(data.mods, 880, 20, 90, 42, 50);
@@ -108,20 +108,20 @@ export async function card_E5(data = {
         });
 
 // 导入部件
-    svg = implantSvgBody(svg, 0, 0, mods, reg_mods);
-    svg = implantSvgBody(svg, 0, 0, rank, reg_overlay);
-    svg = implantSvgBody(svg, 0, 0, mask, reg_mask);
-    svg = implantSvgBody(svg, 0, 0, ring, reg_ring);
-    svg = implantSvgBody(svg, 0, 0, ring_index, reg_overlay);
+    svg = setSvgBody(svg, 0, 0, mods, reg_mods);
+    svg = setSvgBody(svg, 0, 0, rank, reg_overlay);
+    svg = setSvgBody(svg, 0, 0, mask, reg_mask);
+    svg = setSvgBody(svg, 0, 0, ring, reg_ring);
+    svg = setSvgBody(svg, 0, 0, ring_index, reg_overlay);
 
-    svg = implantSvgBody(svg, 0, 0, advanced, reg_advanced);
-    svg = implantSvgBody(svg, 0, 0, best, reg_overlay);
-    svg = implantSvgBody(svg, 0, 0, statisticsNC, reg_label);
-    svg = implantSvgBody(svg, 0, 0, statisticsFC, reg_label);
+    svg = setSvgBody(svg, 0, 0, advanced, reg_advanced);
+    svg = setSvgBody(svg, 0, 0, best, reg_overlay);
+    svg = setSvgBody(svg, 0, 0, statisticsNC, reg_label);
+    svg = setSvgBody(svg, 0, 0, statisticsFC, reg_label);
 
-    svg = implantSvgBody(svg, 350, 350, acc, reg_label);
-    svg = implantSvgBody(svg, 560, 350, combo, reg_label);
-    svg = implantSvgBody(svg, 770, 350, losspp, reg_label);
+    svg = setSvgBody(svg, 350, 350, acc, reg_label);
+    svg = setSvgBody(svg, 560, 350, combo, reg_label);
+    svg = setSvgBody(svg, 770, 350, losspp, reg_label);
 
     return svg.toString();
 }

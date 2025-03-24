@@ -1,9 +1,9 @@
 import {
     getImageFromV3,
-    implantImage,
-    implantSvgBody, isASCII, isNotBlankString, replaceText,
-    replaceTexts,
-    transformSvgBody
+    setImage,
+    setSvgBody, isASCII, isNotBlankString, setText,
+    setTexts,
+    getSvgBody
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {label_A8} from "./card_A3.js";
@@ -158,7 +158,7 @@ export async function card_A4(song = {
         187, 88, left2_size, 'left baseline', '#bbb'
     )
 
-    svg = replaceTexts(svg, [title, left1, left2], reg_text)
+    svg = setTexts(svg, [title, left1, left2], reg_text)
 
     const difficulty = drawDifficultyLabels(song.ds)
 
@@ -186,18 +186,18 @@ export async function card_A4(song = {
     const base = PanelDraw.Rect(0, 0, 445, 210, 20, getMaimaiVersionColor(song.basic_info.from), 0.3)
         + PanelDraw.Rect(0, 0, 445, 175, 20, '#382E32', 1) // 背景图片层底板
 
-    svg = implantSvgBody(svg, 15, 175, difficulty, reg_label)
-    svg = implantSvgBody(svg, 183, 114, genre.svg, reg_label)
-    svg = implantSvgBody(svg, 183, 144, bpm.svg, reg_label)
-    svg = implantSvgBody(svg, 445 - sid.width - 10, 144, sid.svg, reg_label)
+    svg = setSvgBody(svg, 15, 175, difficulty, reg_label)
+    svg = setSvgBody(svg, 183, 114, genre.svg, reg_label)
+    svg = setSvgBody(svg, 183, 144, bpm.svg, reg_label)
+    svg = setSvgBody(svg, 445 - sid.width - 10, 144, sid.svg, reg_label)
 
-    svg = implantImage(svg, 60, 40, 5, 5, 1, getMaimaiType(song.type), reg_label)
-    svg = implantImage(svg, 90, 45, 80, 128, 1, getMaimaiVersionBG(song.basic_info.from), reg_label)
+    svg = setImage(svg, 5, 5, 60, 40, getMaimaiType(song.type), reg_label, 1)
+    svg = setImage(svg, 80, 128, 90, 45, getMaimaiVersionBG(song.basic_info.from), reg_label, 1)
 
-    svg = implantImage(svg, 310, 175, 135, 0, 0.3, image, reg_background)
-    svg = implantImage(svg, 175, 175, 0, 0, 1, image, reg_cover)
+    svg = setImage(svg, 135, 0, 310, 175, image, reg_background, 0.3)
+    svg = setImage(svg, 0, 0, 175, 175, image, reg_cover, 1)
 
-    svg = replaceText(svg, base, reg_base)
+    svg = setText(svg, base, reg_base)
 
     return svg.toString()
 }
@@ -231,7 +231,7 @@ function drawDifficultyLabels(ds = []) {
     let x = 0
 
     for (const label of labels) {
-        svg += transformSvgBody(x, 5, label.svg)
+        svg += getSvgBody(x, 5, label.svg)
         x += (label.width + 8)
     }
 

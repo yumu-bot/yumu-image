@@ -7,11 +7,11 @@ import {
     getNowTimeStamp,
     getPanelNameSVG,
     getTimeDifference,
-    implantImage,
-    implantSvgBody,
+    setImage,
+    setSvgBody,
     od2ms,
     readTemplate,
-    replaceText, round, rounds
+    setText, round, rounds
 } from "../util/util.js";
 import {calcPerformancePoints, getDensityArray} from "../util/compute-pp.js";
 import moment from "moment";
@@ -299,7 +299,7 @@ export async function panel_E(
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Legacy Score (!ymp / !ymr / !yms)', 'S', 'v0.5.0 DX', request_time), reg_index);
+    svg = setText(svg, getPanelNameSVG('Legacy Score (!ymp / !ymr / !yms)', 'S', 'v0.5.0 DX', request_time), reg_index);
 
     // 成绩重计算
     const score_statistics = {
@@ -323,15 +323,15 @@ export async function panel_E(
     const cardE4 = await card_E4({calcPP: calcPP, statistics: score_statistics});
 
     // 导入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
-    svg = implantSvgBody(svg, 0, 290, cardE1, reg_card_e1);
-    svg = implantSvgBody(svg, 880, 330, cardE2, reg_card_e2);
-    svg = implantSvgBody(svg, 880, 770, cardE3, reg_card_e3);
-    svg = implantSvgBody(svg, 0, 0, cardE4, reg_card_e4);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = setSvgBody(svg, 0, 290, cardE1, reg_card_e1);
+    svg = setSvgBody(svg, 880, 330, cardE2, reg_card_e2);
+    svg = setSvgBody(svg, 880, 770, cardE3, reg_card_e3);
+    svg = setSvgBody(svg, 0, 0, cardE4, reg_card_e4);
 
     // 导入图片
-    svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.6, banner, reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
+    svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.6);
 
     return svg.toString();
 }

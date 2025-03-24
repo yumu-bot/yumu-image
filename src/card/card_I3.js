@@ -1,5 +1,5 @@
 import {
-    implantImage, implantSvgBody, isASCII, isNotBlankString, replaceText, replaceTexts,
+    setImage, setSvgBody, isASCII, isNotBlankString, setText, setTexts,
 } from "../util/util.js";
 import {getMultipleTextPath, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -171,18 +171,18 @@ export function card_I3(data = {
 
     const index = getMultipleTextPath(index_arr, 342, 120, 'right baseline')
 
-    svg = replaceTexts(svg, [title, title2, left1, left2, left3, index], reg_text)
+    svg = setTexts(svg, [title, title2, left1, left2, left3, index], reg_text)
 
     // 图片和矩形
     const left_rrect = PanelDraw.Rect(0, 0, 145, 130, 20, data?.color_left || '#382e32', 1)
-    svg = replaceText(svg, left_rrect, reg_difficulty);
+    svg = setText(svg, left_rrect, reg_difficulty);
 
-    svg = implantImage(svg, 130, 130, 15, 0, 1, data?.cover, reg_cover);
-    svg = implantImage(svg, 352, 130, 0, 0, 0.4, data?.background, reg_background);
-    svg = implantImage(svg, 56, 30, 154 - 2, 96, 1, data?.rank, reg_rank);
+    svg = setImage(svg, 15, 0, 130, 130, data?.cover, reg_cover, 1);
+    svg = setImage(svg, 0, 0, 352, 130, data?.background, reg_background, 0.4);
+    svg = setImage(svg, 154 - 2, 96, 56, 30, data?.rank, reg_rank, 1);
 
-    svg = implantSvgBody(svg, 290, 68, data?.component1, reg_rank) // 27 * 30
-    svg = implantSvgBody(svg, 290 + 28, 68, data?.component2, reg_rank) // 27 * 30
+    svg = setSvgBody(svg, 290, 68, data?.component1, reg_rank) // 27 * 30
+    svg = setSvgBody(svg, 290 + 28, 68, data?.component2, reg_rank) // 27 * 30
 
     // 左侧覆盖部分
     const label1_width = torusBold.getTextWidth(data?.label1, 18)
@@ -203,15 +203,15 @@ export function card_I3(data = {
         'center baseline', data?.color_label3)
     const label3_rrect = PanelDraw.Rect(135 - label3_rrect_width, 102, label3_rrect_width, 20, 10, data?.color_rrect3, 1)
 
-    svg = replaceTexts(svg, [label1, label2, label3], reg_text)
-    svg = replaceTexts(svg, [label1_rrect, label2_rrect, label3_rrect], reg_overlay)
+    svg = setTexts(svg, [label1, label2, label3], reg_text)
+    svg = setTexts(svg, [label1_rrect, label2_rrect, label3_rrect], reg_overlay)
 
     // 右侧覆盖部分
     const stars = drawStars(data?.level || 0)
 
-    svg = implantSvgBody(svg, 342, 54, stars, reg_rank)  //注意。这个组件的锚点在右上角
-    svg = implantImage(svg, 45, 30, 305, 2, 1, data?.type, reg_overlay);
-    svg = implantSvgBody(svg, 236, 54, data?.component3, reg_rank) // 105 * 15
+    svg = setSvgBody(svg, 342, 54, stars, reg_rank)  //注意。这个组件的锚点在右上角
+    svg = setImage(svg, 305, 2, 45, 30, data?.type, reg_overlay, 1);
+    svg = setSvgBody(svg, 236, 54, data?.component3, reg_rank) // 105 * 15
 
     return svg.toString()
 }

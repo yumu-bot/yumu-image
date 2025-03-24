@@ -1,8 +1,8 @@
 import {
     exportJPEG, getPanelHeight,
-    getPanelNameSVG, implantSvgBody,
-    readTemplate, putCustomBanner,
-    replaceText
+    getPanelNameSVG, setSvgBody,
+    readTemplate, setCustomBanner,
+    setText
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_M} from "../card/card_M.js";
@@ -313,7 +313,7 @@ export async function panel_A2(data = {
     const panel_name = getPanelNameSVG('Qualified Map List (!ymq)', 'Q', 'v0.5.0 DX');
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A2卡
     const beatmap_arr = data?.beatmapsets || [];
@@ -330,7 +330,7 @@ export async function panel_A2(data = {
     );
 
     const search_cardA2 = card_A2(search_result);
-    svg = implantSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
+    svg = setSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
 
     //导入其他卡
 
@@ -345,8 +345,8 @@ export async function panel_A2(data = {
                 await PanelGenerate.searchMap2CardA2(v, i + 1)
             );
 
-            svg = implantSvgBody(svg, 40, 330 + 250 * i, a2, reg_card_a2);
-            svg = implantSvgBody(svg, 510, 330 + 250 * i, m, reg_card_m);
+            svg = setSvgBody(svg, 40, 330 + 250 * i, a2, reg_card_a2);
+            svg = setSvgBody(svg, 510, 330 + 250 * i, m, reg_card_m);
         }
     } else {
         //紧凑型面板
@@ -357,12 +357,12 @@ export async function panel_A2(data = {
 
             const x = i % 4;
             const y = Math.floor(i / 4);
-            svg = implantSvgBody(svg, 40 + 470 * x, 330 + 250 * y, a2, reg_card_a2);
+            svg = setSvgBody(svg, 40 + 470 * x, 330 + 250 * y, a2, reg_card_a2);
         }
     }
 
     // 插入图片和部件（新方法
-    svg = putCustomBanner(svg, reg_banner);
+    svg = setCustomBanner(svg, reg_banner);
 
     // 计算面板高度
     const panelHeight = result_count <= 12 ?
@@ -370,7 +370,7 @@ export async function panel_A2(data = {
         getPanelHeight(result_count, 210, 4, 290, 40);
     const cardHeight = panelHeight - 290;
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
     return svg.toString();
 }

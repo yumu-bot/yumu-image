@@ -1,8 +1,8 @@
 import {
-    exportJPEG, getDifficultyName, getGameMode, getMapBG, getPanelNameSVG,
-    implantImage,
-    implantSvgBody, readTemplate,
-    replaceText, transformSvgBody
+    exportJPEG, getKeyDifficulty, getGameMode, getMapBG, getPanelNameSVG,
+    setImage,
+    setSvgBody, readTemplate,
+    setText, getSvgBody
 } from "../util/util.js";
 import {card_D} from "../card/card_D.js";
 import {getMapAttributes} from "../util/compute-pp.js";
@@ -73,7 +73,7 @@ export async function panel_H (
     const panel_name = getPanelNameSVG('Get Mappool (!ymgp)', 'GP', 'v0.5.0 DX');
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 插入主体卡片
     const pools = data.pool.mod_pools || [];
@@ -91,7 +91,7 @@ export async function panel_H (
 
     //执行上面的代码
     for (const v of cards) {
-        svg = replaceText(svg, v, reg_bodycard);
+        svg = setText(svg, v, reg_bodycard);
     }
 
     // 卡片定义
@@ -102,12 +102,12 @@ export async function panel_H (
     const panelHeight = 330 + 150 * (row - 1);
     const cardHeight = 40 + 150 * (row - 1);
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
-    svg = implantSvgBody(svg,40, 40, poolInfo, reg_maincard);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setSvgBody(svg,40, 40, poolInfo, reg_maincard);
 
     return svg.toString();
 }
@@ -143,7 +143,7 @@ async function drawCardD(b, mod = 'NM', mode = 'osu', row = 1, column = 1, maxCo
     const x = ((3 - maxColumn) * 300 + 80) + 600 * (column - 1);
     const y = 330 + 150 * (row - 1);
 
-    return transformSvgBody(x, y, await card_D(await beatmap2CardD(b, mod, mode)));
+    return getSvgBody(x, y, await card_D(await beatmap2CardD(b, mod, mode)));
 }
 
 function getRowCount(i = 0) {
@@ -247,7 +247,7 @@ async function beatmap2CardD(b, mod, mode) {
         title_unicode: b.beatmapset.title_unicode || '',
         artist: b.beatmapset.artist || '',
         mapper: b.beatmapset.creator || '',
-        difficulty: getDifficultyName(b) || '',
+        difficulty: getKeyDifficulty(b) || '',
         bid: b.id || 0,
         mod: mod,
         cs: cs,

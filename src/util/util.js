@@ -532,7 +532,11 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
     const error = getImageFromV3('error.png');
 
     if (!path.startsWith("http")) {
-        return readFile(path);
+        try {
+            return fs.readFileSync(path, 'binary');
+        } catch (e) {
+            return '';
+        }
     }
 
     if (path.endsWith('avatar-guest.png')) {
@@ -543,7 +547,7 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
     if (use_cache === true) {
-        let size;
+        let size = 0
 
         try {
             fs.accessSync(bufferPath, fs.constants.F_OK);
@@ -559,6 +563,7 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
             use_cache = false;
         }
     }
+
     let req;
     let data;
 
@@ -585,11 +590,11 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
  * @param {number | string} replace
  * @param {string | RegExp} reg
  */
-export function replaceText(base = '', replace = '', reg = /.*/) {
+export function setText(base = '', replace = '', reg = /.*/) {
     return base.replace(reg, replace);
 }
 
-export function replaceTexts(base = '', replaces = [''], reg = /.*/) {
+export function setTexts(base = '', replaces = [''], reg = /.*/) {
     if (Array.isArray(replaces)) {
         for (const v of replaces) {
             base = base.replace(reg, v);
@@ -600,7 +605,20 @@ export function replaceTexts(base = '', replaces = [''], reg = /.*/) {
     return base;
 }
 
-export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /.*/, ratio = "xMidYMid slice", rotate90 = false) {
+/**
+ * 设置图像
+ * @param base 要被放入的 svg
+ * @param x 宽度
+ * @param y 宽度
+ * @param w 宽度
+ * @param h 宽度
+ * @param image 图像链接，必填。如果是网络 URI，则需要在父类 await 一下（别这么做
+ * @param reg 正则，确定插入位置
+ * @param opacity 不透明度，一般为 1
+ * @param ratio 贴合的逻辑。一般为 xMidYMid slice/meet，前者是尽量裁切来填充空白，后者是达到要求即可
+ * @param rotate90 是否顺时针旋转 90 度
+ */
+export function setImage(base = '', x = 0, y = 0, w = 100, h = 100, image = '', reg = /.*/, opacity = 1, ratio = "xMidYMid slice", rotate90 = false) {
     let replace
 
     if (image != null) {
@@ -612,7 +630,7 @@ export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /
             style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
         } else {
             // 注意这里 h w 是反的，因为转了 90 度
-            replace = `<g transform="translate(${x} ${y}) rotate(270) translate(w)">
+            replace = `<g transform="translate(${x} ${y}) rotate(270)">
             <image width="${h}" height="${w}" xlink:href="${image}" 
             style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/> </g>`
         }
@@ -623,19 +641,23 @@ export function implantImage(base = '', w, h, x, y, opacity, image = '', reg = /
     return base.replace(reg, replace);
 }
 
-//如果不需要修改位置，用replaceText就行
-export function implantSvgBody(base = '', x = 0, y = 0, replace = '', reg = /.*/) {
+/**
+ * 如果不需要修改位置，用 setText 就行
+ */
+export function setSvgBody(base = '', x = 0, y = 0, replace = '', reg = /.*/) {
     if (x !== 0 || y !== 0) replace = `<g transform="translate(${x} ${y})">` + replace + '</g>';
     return base.replace(reg, replace);
 }
 
-//如果不需要修改位置，用replaceText就行
-export function transformSvgBody(x = 0, y = 0, body = '') {
+/**
+ * 如果不需要修改位置，用 setText 就行
+ */
+export function getSvgBody(x = 0, y = 0, body = '') {
     if (x !== 0 || y !== 0) return `<g transform="translate(${x} ${y})">` + body + '</g>';
     return body;
 }
 
-export function makeSvgBodyToSvg(svgBody = '', w, h) {
+export function svgBody2Svg(svgBody = '', w, h) {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${w} ${h}">
 ${svgBody}
@@ -1188,17 +1210,6 @@ export function getMapStatusImage(status = 0) {
 //获取现在的时间 (UTC+8)
 export function getNowTimeStamp() {
     return moment().format("YYYY-MM-DD HH:mm:ss[ +8]");
-    /*
-const t = new Date;
-    t.getFullYear() + '-' +
-    t.getMonth() + '-' +
-    t.getDay() + ' ' +
-    t.getHours() + ':' +
-    t.getMinutes() + ':' +
-    t.getSeconds() + '.' +
-    t.getMilliseconds();
-
-     */
 }
 
 /**
@@ -1363,14 +1374,14 @@ export class InsertSvgBuilder {
             let w = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
             let h = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
             let img = createImage(w, h, x, y, path);
-            this.svg = replaceText(this.svg, img, reg)
+            this.svg = setText(this.svg, img, reg)
             return this;
         }
 
         let w = parseInt(svg.match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
         let h = parseInt(svg.match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
         let path = this.f_util.saveSvgText(svg);
-        this.svg = replaceText(this.svg, createImage(w, h, x, y, path), reg);
+        this.svg = setText(this.svg, createImage(w, h, x, y, path), reg);
         return this;
     }
 
@@ -1380,7 +1391,7 @@ export class InsertSvgBuilder {
 
     insertFlagReg(flag, w, h, x, y, reg = /^/) {
         let path = this.f_util.saveSvgText(flag);
-        this.svg = replaceText(this.svg, createImage(w, h, x, y, path), reg);
+        this.svg = setText(this.svg, createImage(w, h, x, y, path), reg);
         return this;
     }
 
@@ -1391,7 +1402,7 @@ export class InsertSvgBuilder {
         } else {
             path = this.f_util.save(img);
         }
-        this.svg = replaceText(this.svg, path, reg);
+        this.svg = setText(this.svg, path, reg);
         return this;
     }
 
@@ -1846,11 +1857,11 @@ export function getMatchDuration(match) {
  * @param reg_banner
  * @param {string?} custom
  */
-export function putCustomBanner(svg, reg_banner, custom, custom_opacity = 0.8) {
+export function setCustomBanner(svg, reg_banner, custom, custom_opacity = 0.8) {
     if (custom) {
-        return implantImage(svg, 1920, 320, 0, 0, custom_opacity, custom, reg_banner);
+        return setImage(svg, 0, 0, 1920, 320, custom, reg_banner, custom_opacity);
     } else {
-        return implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+        return setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
     }
 }
 
@@ -1916,7 +1927,7 @@ export const od2ms = (od, mode = 'o') => {
 }
 
 // 添加 key 数
-export function getDifficultyName(beatmap) {
+export function getKeyDifficulty(beatmap) {
     let difficulty_text = (beatmap?.version || '').toString()
 
     if (beatmap?.mode_int === 3) {

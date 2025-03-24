@@ -1,9 +1,9 @@
 import {
     getImageFromV3,
     getFlagPath,
-    implantImage,
+    setImage,
     readTemplate,
-    replaceText, replaceTexts, isASCII, readNetImage,
+    setText, setTexts, isASCII, readNetImage,
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 
@@ -73,20 +73,19 @@ export async function card_A1(data = {
     const icon_offset = (data.team_url != null) ? 90 : 0
 
     const flag_svg = await getFlagPath(data.country, 135, 64, 44); //x +5px
-    svg = implantImage(svg, 76, 38, 200, 72, 1,
-        await readNetImage(data.team_url, true, ''), reg_team_flag, 'xMidYMid meet')
+    svg = setImage(svg, 200, 72, 76, 38, await readNetImage(data.team_url, true, ''), reg_team_flag, 1, 'xMidYMid meet')
 
     // 替换内容
-    svg = replaceText(svg, flag_svg, reg_country_flag); //高44宽60吧
-    svg = replaceTexts(svg, [top1, left1, left2, right1, right2, right3], reg_text);
-    svg = replaceTexts(svg, [top1, top2, left1, left2, right1, right2, right3], reg_text);
+    svg = setText(svg, flag_svg, reg_country_flag); //高44宽60吧
+    svg = setTexts(svg, [top1, left1, left2, right1, right2, right3], reg_text);
+    svg = setTexts(svg, [top1, top2, left1, left2, right1, right2, right3], reg_text);
     // 替换图片
 
-    svg = implantImage(svg, 430, 210, 0, 0, 0.6, data.background, reg_background);
-    svg = implantImage(svg, 100, 100, 20, 20, 1, data.avatar, reg_avatar);
-    svg = implantImage(svg, 40, 40, 200 + icon_offset, 70, 1, data?.sub_icon1 || '', reg_sub_icon1); //x +5px
-    svg = implantImage(svg, 40, 40, 250 + icon_offset, 70, 1, data?.sub_icon2 || '', reg_sub_icon2); //x +5px
-    svg = implantImage(svg, 320, 52, 70, 68, 1, data?.sub_banner || '', reg_banner);
+    svg = setImage(svg, 0, 0, 430, 210, data.background, reg_background, 0.6);
+    svg = setImage(svg, 20, 20, 100, 100, data.avatar, reg_avatar, 1);
+    svg = setImage(svg, 200 + icon_offset, 70, 40, 40, data?.sub_icon1 || '', reg_sub_icon1, 1); //x +5px
+    svg = setImage(svg, 250 + icon_offset, 70, 40, 40, data?.sub_icon2 || '', reg_sub_icon2, 1); //x +5px
+    svg = setImage(svg, 70, 68, 320, 52, data?.sub_banner || '', reg_banner, 1);
 
     return svg.toString();
 }

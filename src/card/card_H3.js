@@ -1,6 +1,6 @@
 import {
-    implantImage, isNotEmptyString, replaceText,
-    replaceTexts
+    setImage, isNotEmptyString, setText,
+    setTexts
 } from "../util/util.js";
 import {torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -80,9 +80,9 @@ export async function card_H3(data = {
 
     // 颜色定义
     const left_rrect = PanelDraw.Rect(0, 0, 60, 110, 20, data?.color_rrect || 'none', 1)
-    svg = replaceText(svg, left_rrect, reg_color)
+    svg = setText(svg, left_rrect, reg_color)
 
-    svg = replaceTexts(svg, [text_label1, text_label2, rrect_label1, rrect_label2], reg_label);
+    svg = setTexts(svg, [text_label1, text_label2, rrect_label1, rrect_label2], reg_label);
 
     // 文字定义
     const text_title = torus.cutStringTail(data.title || '', 36, 610);
@@ -94,11 +94,11 @@ export async function card_H3(data = {
     const left2 = torus.getTextPath(text_left2, 272, 96.836, 24, 'left baseline', data?.color_left2_text || '#bbb');
 
     // 插入文字
-    svg = replaceTexts(svg, [title, left1, left2], reg_text);
+    svg = setTexts(svg, [title, left1, left2], reg_text);
 
     // 插入图片
-    svg = data.cover ? implantImage(svg, 238, 110, 20, 0, 1, data.cover, reg_avatar) : svg;
-    svg = data.background ? implantImage(svg,900, 110, 0, 0, 0.2, data.background, reg_background) : svg;
+    svg = data.cover ? setImage(svg, 20, 0, 238, 110, data.cover, reg_avatar, 1) : svg;
+    svg = data.background ? setImage(svg, 0, 0, 900, 110, data.background, reg_background, 0.2) : svg;
 
     return svg.toString();
 

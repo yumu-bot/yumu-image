@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG, getTimeDifference,
-    implantImage, implantSvgBody, readTemplate,
-    replaceText, replaceTexts, round, rounds
+    setImage, setSvgBody, readTemplate,
+    setText, setTexts, round, rounds
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -177,7 +177,7 @@ export async function panel_M(data = {
     const panel_name = getPanelNameSVG('I\'m Mapper (!ymim)', 'IM', 'v0.5.0 DX');
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A1
     const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user));
@@ -191,11 +191,11 @@ export async function panel_M(data = {
         const y = 380 + Math.floor(i / 3) * 145;
 
         const cardO2 = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_popular_beatmap[i]));
-        svg = implantSvgBody(svg, x, y, cardO2, reg_popular);
+        svg = setSvgBody(svg, x, y, cardO2, reg_popular);
     }
 
     if ((data.most_popular_beatmap?.length || 0) < 1) { //摆烂机制
-        svg = implantImage(svg, 185, 185, 867.5, 410, 1, getImageFromV3('sticker_qiqi_oh.png'), reg_popular);
+        svg = setImage(svg, 867.5, 410, 185, 185, getImageFromV3('sticker_qiqi_oh.png'), reg_popular, 1);
     }
 
     // 导入一些标签
@@ -215,16 +215,16 @@ export async function panel_M(data = {
     const kudosu = round(data.user.kudosu.total || 0, 2) + ' kds';
     const kudosu_index = torus.getTextPath(kudosu, 1410, 365 - 3, 24, 'right baseline', '#aaa');
 
-    svg = replaceTexts(svg, [diff_index, length_index, popular_title, difficulty_title, length_title, genre_title, activity_title, recent_title, kudosu_index], reg_index);
+    svg = setTexts(svg, [diff_index, length_index, popular_title, difficulty_title, length_title, genre_title, activity_title, recent_title, kudosu_index], reg_index);
 
     // 导入难度
     const difficulty_arr = data?.difficulty_arr || [];
     const diff_rrect = PanelDraw.BarChart(difficulty_arr, null, 0, 1460, 380 + 145, 410, 145, 4, 4, '#E6AD59', null, 2)
-    svg = replaceText(svg, diff_rrect, reg_difficulty);
+    svg = setText(svg, diff_rrect, reg_difficulty);
 
     // 导入评价
     const length_rrect = PanelDraw.BarChart(data.length_arr, null, 0, 1460, 380 + 145 + 250, 410, 145, 4, 4, '#88BD6F', null, 2)
-    svg = replaceText(svg, length_rrect, reg_length);
+    svg = setText(svg, length_rrect, reg_length);
 
     // 导入风格饼图
     const genre_arr = data.genre || [];
@@ -251,7 +251,7 @@ export async function panel_M(data = {
 
         genre_svg += PanelDraw.Image(150 - 70, 825 - 70, 140, 140, getImageFromV3('object-piechart-overlay2.png'), 1);
 
-        svg = replaceText(svg, genre_svg, reg_genre_pie);
+        svg = setText(svg, genre_svg, reg_genre_pie);
     }
 
     // 导入曲风饼图的排序
@@ -272,19 +272,19 @@ export async function panel_M(data = {
     }
 
     let cardO3s = [];
-    cardO3s.push(await card_O3({title: 'Total', number: genre_sum, color: '#AAA'}, true));
+    cardO3s.push(await card_O3({title: 'Total', number: genre_sum, color: '#AAA'}));
     for (let i = 0; i < 10; i++) {
         cardO3s.push(await card_O3({
             title: genre_name[sortKey[i]], number: sortValue[i], color: genre_color[sortKey[i]]
-        }, true));
+        }));
     }
 
-    svg = implantSvgBody(svg, 60, 910, cardO3s.shift(), reg_genre);
+    svg = setSvgBody(svg, 60, 910, cardO3s.shift(), reg_genre);
     for (let i = 0; i < 10; i++) {
         if (i < 8) {
-            svg = implantSvgBody(svg, 260, 710 + 40 * i, cardO3s[i], reg_genre);
+            svg = setSvgBody(svg, 260, 710 + 40 * i, cardO3s[i], reg_genre);
         } else {
-            svg = implantSvgBody(svg, 60, 950 + 40 * (i - 8), cardO3s[i], reg_genre);
+            svg = setSvgBody(svg, 60, 950 + 40 * (i - 8), cardO3s[i], reg_genre);
         }
     }
 
@@ -310,11 +310,11 @@ export async function panel_M(data = {
     }
 
     for (let i = 0; i < Math.min(recent_activity.length, 7); i++) {
-        svg = implantSvgBody(svg, 510, 750 + 40 * i, cardO4s[i], reg_activity);
+        svg = setSvgBody(svg, 510, 750 + 40 * i, cardO4s[i], reg_activity);
     }
 
     if (recent_activity.length < 1) { //摆烂机制
-        svg = implantImage(svg, 185, 185, 692.5, 770, 1, getImageFromV3('sticker_qiqi_fallen.png'), reg_activity);
+        svg = setImage(svg, 692.5, 770, 185, 185, getImageFromV3('sticker_qiqi_fallen.png'), reg_activity, 1);
     }
 
     // 导入最近卡
@@ -324,8 +324,8 @@ export async function panel_M(data = {
     const cardO2h = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_recent_ranked_beatmap));
     const cardO2g = await card_O2({...O2g, title2: O2g_title2});
 
-    svg = implantSvgBody(svg, 1120, 745, cardO2h, reg_recent);
-    svg = implantSvgBody(svg, 1120, 890, cardO2g, reg_recent);
+    svg = setSvgBody(svg, 1120, 745, cardO2h, reg_recent);
+    svg = setSvgBody(svg, 1120, 890, cardO2g, reg_recent);
 
     // 插入1号卡标签
     const rank_str = data?.user?.ranked_beatmapset_count.toString() || '0';
@@ -341,8 +341,8 @@ export async function panel_M(data = {
     const pending_index = torus.getTextPath('Pending', 255, 648, 24, 'center baseline', '#aaa');
     const guest_index = torus.getTextPath('Guest', 390, 648, 24, 'center baseline', '#aaa');
 
-    svg = replaceTexts(svg, [rank, pending, guest], reg_difficulty);
-    svg = replaceTexts(svg, [rank_index, pending_index, guest_index], reg_recent);
+    svg = setTexts(svg, [rank, pending, guest], reg_difficulty);
+    svg = setTexts(svg, [rank_index, pending_index, guest_index], reg_recent);
 
     // 插入8号卡标签
     const favorite_number = rounds(data.favorite, 2)
@@ -370,13 +370,13 @@ export async function panel_M(data = {
     const loved_index = torus.getTextPath('Loved', 1665, 1012, 24, 'center baseline', '#aaa');
     const graveyard_index = torus.getTextPath('Graveyard', 1800, 1012, 24, 'center baseline', '#aaa');
 
-    svg = replaceTexts(svg, [favorite, playcount, comment, nominated, loved, graveyard], reg_activity);
-    svg = replaceTexts(svg, [favorite_index, playcount_index, comment_index, nominated_index, loved_index, graveyard_index], reg_length);
+    svg = setTexts(svg, [favorite, playcount, comment, nominated, loved, graveyard], reg_activity);
+    svg = setTexts(svg, [favorite_index, playcount_index, comment_index, nominated_index, loved_index, graveyard_index], reg_length);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_me_A1);
-    svg = implantSvgBody(svg, 60, 350, cardO1, reg_me);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_me_A1);
+    svg = setSvgBody(svg, 60, 350, cardO1, reg_me);
 
     return svg.toString();
 }

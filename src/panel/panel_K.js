@@ -1,9 +1,9 @@
 import {
     exportJPEG,
     getImageFromV3, getPanelNameSVG,
-    implantImage,
-    implantSvgBody, replaceText,
-    replaceTexts,
+    setImage,
+    setSvgBody, setText,
+    setTexts,
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
@@ -116,10 +116,10 @@ export async function panel_K(data = {
     const is_vs = data?.panel === 'KV'
 
     // 画六个标识
-    svg = replaceText(svg, PanelDraw.HexagonIndex((mode === 'mania') ? VALUE_MANIA : VALUE_NORMAL, 960, 600, 260, Math.PI / 3), reg_hexagon);
+    svg = setText(svg, PanelDraw.HexagonIndex((mode === 'mania') ? VALUE_MANIA : VALUE_NORMAL, 960, 600, 260, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
 
     // 面板文字
     const panel_name = is_vs ?
@@ -127,16 +127,16 @@ export async function panel_K(data = {
         getPanelNameSVG('Skill v4.0 (!ymk)', 'K', 'v0.5.1 DX');
 
     // 插入文字
-    svg = replaceTexts(svg, [panel_name, mode_path], reg_index);
+    svg = setTexts(svg, [panel_name, mode_path], reg_index);
 
     // A1 定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_main);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_main);
 
     // K 定义，或是 A1
     if (is_vs) {
         const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.vs_user));
-        svg = implantSvgBody(svg, 1920 - 470, 40, cardA1, reg_main);
+        svg = setSvgBody(svg, 1920 - 470, 40, cardA1, reg_main);
     } else {
         const card_Ks = []
 
@@ -154,7 +154,7 @@ export async function panel_K(data = {
             const x = i % 2
             const y = Math.floor(i / 2)
 
-            svg = implantSvgBody(svg, 1370 + x * 255, 350 + y * 138, k, reg_body)
+            svg = setSvgBody(svg, 1370 + x * 255, 350 + y * 138, k, reg_body)
         }
     }
 
@@ -190,7 +190,7 @@ export async function panel_K(data = {
         hexagons.push(value / 10)
     }
 
-    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
+    svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
     if (is_vs) {
         const hexagons = []
@@ -219,13 +219,13 @@ export async function panel_K(data = {
             hexagons.push(value / 10)
         }
 
-        svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#FF0000', Math.PI / 3), reg_hexagon);
+        svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#FF0000', Math.PI / 3), reg_hexagon);
 
         for (let j = 0; j < 6; j++) {
             const card_order = [0, 5, 4, 1, 2, 3]
             const k = card_order[j]
 
-            svg = implantSvgBody(svg, 1350, 350 + j * 115, card_B1v[k], reg_body);
+            svg = setSvgBody(svg, 1350, 350 + j * 115, card_B1v[k], reg_body);
         }
     }
 
@@ -233,7 +233,7 @@ export async function panel_K(data = {
         const card_order = [0, 5, 4, 1, 2, 3]
         const k = card_order[j]
 
-        svg = implantSvgBody(svg, 40, 350 + j * 115, card_B1s[k], reg_body);
+        svg = setSvgBody(svg, 40, 350 + j * 115, card_B1s[k], reg_body);
     }
 
     const rank_ov = getRankFromValue(data?.total);
@@ -270,12 +270,12 @@ export async function panel_K(data = {
         }));
     }
 
-    svg = implantSvgBody(svg, 630, 860, card_B2s[0], reg_body);
-    svg = implantSvgBody(svg, 970, 860, card_B2s[1], reg_body);
+    svg = setSvgBody(svg, 630, 860, card_B2s[0], reg_body);
+    svg = setSvgBody(svg, 970, 860, card_B2s[1], reg_body);
 
     // 画六边形和其他
     const hexagon = getImageFromV3('object-hexagon.png');
-    svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
+    svg = setImage(svg, 718, 384, 484, 433, hexagon, reg_hexagon, 1);
 
     return svg.toString()
 }

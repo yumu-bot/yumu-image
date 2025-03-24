@@ -1,8 +1,8 @@
 import {
     exportJPEG, getImageFromV3, getMapBG,
-    getPanelNameSVG, implantImage,
-    implantSvgBody, readTemplate,
-    replaceText, replaceTexts, getAvatar
+    getPanelNameSVG, setImage,
+    setSvgBody, readTemplate,
+    setText, setTexts, getAvatar
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -221,7 +221,7 @@ export async function panel_B3(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 画六个标识
-    svg = replaceText(svg, PanelDraw.HexagonIndex(ABBR, 960, 600, 230+30, Math.PI / 3), reg_hexagon);
+    svg = setText(svg, PanelDraw.HexagonIndex(ABBR, 960, 600, 230+30, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
 
@@ -414,45 +414,45 @@ export async function panel_B3(data = {
     }
 
     // 清算
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8);
 
     // A2定义
-    svg = implantSvgBody(svg, 40, 40, card_left, reg_maincard);
-    svg = implantSvgBody(svg, 1450, 40, card_right, reg_maincard);
+    svg = setSvgBody(svg, 40, 40, card_left, reg_maincard);
+    svg = setSvgBody(svg, 1450, 40, card_right, reg_maincard);
 
 
     if (label_left.length > 0) {
         for (let j = 0; j < 6; j++) {
-            svg = implantSvgBody(svg, 40, 350 + j * 115, label_left[j], reg_left);
+            svg = setSvgBody(svg, 40, 350 + j * 115, label_left[j], reg_left);
         }
     }
 
     if (label_right.length > 0) {
         for (let j = 0; j < 6; j++) {
-            svg = implantSvgBody(svg, 1350, 350 + j * 115, label_right[j], reg_right);
+            svg = setSvgBody(svg, 1350, 350 + j * 115, label_right[j], reg_right);
         }
     }
 
-    svg = implantSvgBody(svg, 630, 860, card_center[0], reg_center);
-    svg = implantSvgBody(svg, 970, 860, card_center[1], reg_center);
+    svg = setSvgBody(svg, 630, 860, card_center[0], reg_center);
+    svg = setSvgBody(svg, 970, 860, card_center[1], reg_center);
 
     // 插入文字
     const type_path = torus.getTextPath(type, 960, 614, 60, 'center baseline', '#fff');
-    svg = replaceTexts(svg, [panel_name, type_path], reg_index);
+    svg = setTexts(svg, [panel_name, type_path], reg_index);
 
     // 画六边形和其他
     if (graph_left.length > 0) {
-        svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(graph_left, 960, 600, 230, '#00A8EC',
+        svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(graph_left, 960, 600, 230, '#00A8EC',
             Math.PI / 3), reg_hexagon);
     }
 
     if (graph_right.length > 0) {
-        svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(graph_right, 960, 600, 230, '#FF0000',
+        svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(graph_right, 960, 600, 230, '#FF0000',
             Math.PI / 3), reg_hexagon);
     }
 
     const hexagon = getImageFromV3('object-hexagon.png');
-    svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
+    svg = setImage(svg, 718, 384, 484, 433, hexagon, reg_hexagon, 1);
 
     return svg.toString();
 }

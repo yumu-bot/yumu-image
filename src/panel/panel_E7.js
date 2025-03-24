@@ -5,21 +5,21 @@ import {
     getAvatar,
     getBeatMapTitlePath,
     getDiffBG,
-    getDifficultyName, getDifficultyIndex,
+    getKeyDifficulty, getDifficultyIndex,
     getFileSize,
     getGameMode,
     getImageFromV3,
     getMapStatusImage,
     getPanelNameSVG,
-    implantImage,
-    implantSvgBody,
+    setImage,
+    setSvgBody,
     isBlankString,
     isEmptyArray,
     isNotEmptyArray,
     od2ms,
     readTemplate,
-    replaceText,
-    replaceTexts,
+    setText,
+    setTexts,
     round,
     rounds
 } from "../util/util.js";
@@ -219,7 +219,7 @@ export async function panel_E7(
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('Match Start (passive module)', 'ST', 'v0.5.0 DX'), reg_index);
+    svg = setText(svg, getPanelNameSVG('Match Start (passive module)', 'ST', 'v0.5.0 DX'), reg_index);
 
     // 需要参数
     const match = data?.match || {}
@@ -259,25 +259,25 @@ export async function panel_E7(
     const componentE12 = component_E12(PanelEGenerate.score2componentE12(last_round, length));
     const componentE13 = await component_E13(PanelEGenerate.score2componentE13(players));
     // 导入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA2, reg_card_a1);
-    svg = implantSvgBody(svg, 40, 330, componentE1, reg_card_e1);
-    svg = implantSvgBody(svg, 40, 500, componentE2, reg_card_e1);
-    svg = implantSvgBody(svg, 40, 770, componentE3, reg_card_e1);
-    svg = implantSvgBody(svg, 550, 330, componentE4, reg_card_e2);
-    svg = implantSvgBody(svg, 1280, 330, componentE5, reg_card_e2);
-    svg = implantSvgBody(svg, 550, 880, componentE6, reg_card_e2);
-    svg = implantSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
-    svg = implantSvgBody(svg, 550, 290, componentE11, reg_card_e3);
-    svg = implantSvgBody(svg, 1390, 330, componentE12, reg_card_e3);
-    svg = implantSvgBody(svg, 1390, 600, componentE13, reg_card_e3);
+    svg = setSvgBody(svg, 40, 40, cardA2, reg_card_a1);
+    svg = setSvgBody(svg, 40, 330, componentE1, reg_card_e1);
+    svg = setSvgBody(svg, 40, 500, componentE2, reg_card_e1);
+    svg = setSvgBody(svg, 40, 770, componentE3, reg_card_e1);
+    svg = setSvgBody(svg, 550, 330, componentE4, reg_card_e2);
+    svg = setSvgBody(svg, 1280, 330, componentE5, reg_card_e2);
+    svg = setSvgBody(svg, 550, 880, componentE6, reg_card_e2);
+    svg = setSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
+    svg = setSvgBody(svg, 550, 290, componentE11, reg_card_e3);
+    svg = setSvgBody(svg, 1390, 330, componentE12, reg_card_e3);
+    svg = setSvgBody(svg, 1390, 600, componentE13, reg_card_e3);
 
     // 导入图片
-    svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
+    svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
 
     if (getFileSize(banner) / 1024 >= 500) {
-        svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner, "xMidYMin slice");
+        svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8, "xMidYMin slice");
     } else {
-        svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
+        svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8);
     }
 
     return svg.toString();
@@ -316,8 +316,8 @@ const card_E7 = async (
         torus.cutStringTail(data?.name, 18, 104)
         , 50, 100, 18, 'center baseline', data?.name_color) : ''
 
-    svg = implantImage(svg, 80, 80, 10, 0, 1, avatar, reg_avatar)
-    svg = replaceText(svg, name, reg_text)
+    svg = setImage(svg, 10, 0, 80, 80, avatar, reg_avatar, 1)
+    svg = setText(svg, name, reg_text)
 
     return svg.toString();
 }
@@ -400,8 +400,8 @@ const component_E1 = (
 
     const title = poppinsBold.getTextPath('Star Rating', 475, 28, 18, 'right baseline', '#fff')
 
-    svg = replaceText(svg, star_rrect, reg_star)
-    svg = replaceTexts(svg, [ruleset, texts, title], reg_text);
+    svg = setText(svg, star_rrect, reg_star)
+    svg = setTexts(svg, [ruleset, texts, title], reg_text);
 
     return svg;
 };
@@ -484,13 +484,13 @@ const component_E3 = (
         for (let j = 0; j < 3; j++) {
             const e5 = label_E5(labels[i + 2 * j]);
 
-            svg = implantSvgBody(svg, 15 + 235 * i, 38 + 76 * j, e5, reg_label);
+            svg = setSvgBody(svg, 15 + 235 * i, 38 + 76 * j, e5, reg_label);
         }
     }
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    svg = replaceTexts(svg, [title, rect], reg_label)
+    svg = setTexts(svg, [title, rect], reg_label)
 
     return svg;
 }
@@ -510,8 +510,8 @@ const component_E4 = (
     const reg_base = /(?<=<g id="Base_OE4">)/;
     const rect = PanelDraw.Rect(0, 0, 90, 60, 20, '#382e32', 1);
 
-    svg = implantImage(svg, 50, 50, 20, 5, 1, data?.image, reg_status);
-    svg = replaceText(svg, rect, reg_base);
+    svg = setImage(svg, 20, 5, 50, 50, data?.image, reg_status, 1);
+    svg = setText(svg, rect, reg_base);
 
     return svg;
 }
@@ -535,10 +535,10 @@ const component_E5 = (
     const fav = poppinsBold.getTextPath(round(data?.favorite, 1, -1), 78, 25, 16, 'right baseline', '#fff')
     const pc = poppinsBold.getTextPath(round(data?.playcount, 1, -1), 78, 47, 16, 'right baseline', '#fff')
 
-    svg = replaceTexts(svg, [fav, pc], reg_text);
-    svg = implantImage(svg, 18, 18, 12, 10 - 1, 1, getImageFromV3('object-beatmap-favorite.png'), reg_text);
-    svg = implantImage(svg, 18, 18, 12, 32, 1, getImageFromV3('object-beatmap-playcount.png'), reg_text);
-    svg = replaceText(svg, rect, reg_base);
+    svg = setTexts(svg, [fav, pc], reg_text);
+    svg = setImage(svg, 12, 10 - 1, 18, 18, getImageFromV3('object-beatmap-favorite.png'), reg_text, 1);
+    svg = setImage(svg, 12, 32, 18, 18, getImageFromV3('object-beatmap-playcount.png'), reg_text, 1);
+    svg = setText(svg, rect, reg_base);
 
     return svg;
 }
@@ -592,9 +592,9 @@ const component_E6 = async (
 
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
-    svg = replaceTexts(svg, [t.title, t.title_unicode, bid, creator, diff], reg_label);
-    svg = implantImage(svg, 820, 160, 0, 0, 0.4, background, reg_background);
-    svg = replaceText(svg, rect, reg_base);
+    svg = setTexts(svg, [t.title, t.title_unicode, bid, creator, diff], reg_label);
+    svg = setImage(svg, 0, 0, 820, 160, background, reg_background, 0.4);
+    svg = setText(svg, rect, reg_base);
 
     return svg;
 }
@@ -622,9 +622,9 @@ const component_E8 = (
 
     const rect = PanelDraw.Rect(0, 0, 490, 80, 20, '#382e32', 1);
 
-    svg = replaceText(svg, mods, reg_mods);
-    svg = replaceText(svg, title, reg_text);
-    svg = replaceText(svg, rect, reg_base);
+    svg = setText(svg, mods, reg_mods);
+    svg = setText(svg, title, reg_text);
+    svg = setText(svg, rect, reg_base);
 
     return svg;
 }
@@ -658,9 +658,9 @@ const component_E11 = async (
     const hexagon = getImageFromV3('object-beatmap-hexagon.png')
     const base = getImageFromV3('object-beatmap-mask.png')
 
-    svg = implantImage(svg, 420, 450, 200, 75, 1, hexagon, reg_overlay)
-    svg = implantImage(svg, 380, 410, 220, 95, 1, cover, reg_cover)
-    svg = implantImage(svg, 420, 450, 200, 75, 1, base, reg_base)
+    svg = setImage(svg, 200, 75, 420, 450, hexagon, reg_overlay, 1)
+    svg = setImage(svg, 220, 95, 380, 410, cover, reg_cover, 1)
+    svg = setImage(svg, 200, 75, 420, 450, base, reg_base, 1)
 
     return svg;
 }
@@ -781,8 +781,8 @@ const component_E12 = (
     const player_rect = PanelDraw.Rect(15, 105, width, 30, 15, "url(#grad-OE12-16)", 1);
     const player_text = poppinsBold.getTextPath(data?.player_count.toString(), 15 + width - 10, 128, 24, 'right baseline', '#fff');
 
-    svg = replaceText(svg, player_rect, reg_clip6);
-    svg = replaceTexts(svg, [texts, title, player_text], reg_text);
+    svg = setText(svg, player_rect, reg_clip6);
+    svg = setTexts(svg, [texts, title, player_text], reg_text);
 
     return svg;
 
@@ -818,7 +818,7 @@ const component_E13 = async (
                 if (k >= length) break outer;
                 const e7 = await card_E7(PanelEGenerate.player2cardE7(data.players[k], true))
 
-                svg = implantSvgBody(svg, j * 118 + 18, i * 135 + 40, e7, reg_avatar)
+                svg = setSvgBody(svg, j * 118 + 18, i * 135 + 40, e7, reg_avatar)
             }
         }
     } else {
@@ -829,15 +829,15 @@ const component_E13 = async (
                 if (k >= length) break outer;
                 const e7 = await card_E7(PanelEGenerate.player2cardE7(data.players[k], false))
 
-                svg = implantSvgBody(svg, j * 118 + 18, i * 100 + 40, e7, reg_avatar)
+                svg = setSvgBody(svg, j * 118 + 18, i * 100 + 40, e7, reg_avatar)
             }
         }
     }
 
     const rect = PanelDraw.Rect(0, 0, 490, 440, 20, '#382e32', 1);
 
-    svg = replaceText(svg, title, reg_text);
-    svg = replaceText(svg, rect, reg_base);
+    svg = setText(svg, title, reg_text);
+    svg = setText(svg, rect, reg_base);
 
     return svg.toString()
 }
@@ -1028,7 +1028,7 @@ const PanelEGenerate = {
             title: b?.beatmapset?.title || '',
             title_unicode: b?.beatmapset?.title_unicode || '',
             artist: b?.beatmapset?.artist || '',
-            difficulty_name: getDifficultyName(b) || '',
+            difficulty_name: getKeyDifficulty(b) || '',
             bid: b?.id || 0,
             sid: b?.beatmapset?.id || 0,
             creator: creators,

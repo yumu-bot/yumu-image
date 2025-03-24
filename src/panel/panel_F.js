@@ -1,10 +1,10 @@
 import {
     exportJPEG,
-    implantSvgBody,
+    setSvgBody,
     readTemplate,
-    replaceText,
+    setText,
     getPanelNameSVG,
-    putCustomBanner, getPanelHeight, getNowTimeStamp, getMatchDuration, isNotNull, isNotEmptyArray
+    setCustomBanner, getPanelHeight, getNowTimeStamp, getMatchDuration, isNotNull, isNotEmptyArray
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -106,10 +106,10 @@ export async function panel_F(
     const panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', 'v0.5.0 DX', request_time);
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 插入图片和部件（新方法
-    svg = putCustomBanner(svg, reg_banner);
+    svg = setCustomBanner(svg, reg_banner);
 
     // 导入成绩卡（C卡\
     const games = (data?.match?.events || []).filter(value => {
@@ -135,7 +135,7 @@ export async function panel_F(
     }
 
     for (const i in card_Cs) {
-        svg = implantSvgBody(svg, 510, 330 + i * 250, card_Cs[i], reg_card_c)
+        svg = setSvgBody(svg, 510, 330 + i * 250, card_Cs[i], reg_card_c)
     }
 
     //导入谱面卡 A2卡
@@ -150,15 +150,15 @@ export async function panel_F(
 
     for (const i in beatmap_arr) {
         const b = card_A2(await PanelGenerate.matchBeatMap2CardA2(beatmap_arr[i]));
-        svg = implantSvgBody(svg, 40, 330 + i * 250, b, reg_card_a2);
+        svg = setSvgBody(svg, 40, 330 + i * 250, b, reg_card_a2);
     }
 
-    svg = replaceText(svg, panel_height, reg_panelheight);
-    svg = replaceText(svg, background_height, reg_height);
+    svg = setText(svg, panel_height, reg_panelheight);
+    svg = setText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
     const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(data, beatmap_arr[0]));
-    svg = implantSvgBody(svg, 40, 40, matchInfo, reg_maincard);
+    svg = setSvgBody(svg, 40, 40, matchInfo, reg_maincard);
 
     return svg.toString();
 }

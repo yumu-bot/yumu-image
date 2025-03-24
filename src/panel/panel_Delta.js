@@ -2,9 +2,9 @@ import {
     exportPNG,
     getDiffBG,
     getImageFromV3,
-    implantImage,
-    implantSvgBody, readTemplate,
-    replaceTexts, round
+    setImage,
+    setSvgBody, readTemplate,
+    setTexts, round
 } from "../util/util.js";
 import {lineSeedSans, poppinsBold} from "../util/font.js";
 import {getMapAttributes} from "../util/compute-pp.js";
@@ -118,7 +118,7 @@ export async function panel_Delta(data = {
     const length = poppinsBold.getTextPath(length_minute_str + ':' + length_second_str, 1662.5, 820, 58, 'center baseline', '#fff');
 
     // 插入文字
-    svg = replaceTexts(svg, [round_data, title, artist, difficulty, bid, bpm, mod, star, cs, ar, od, length], reg_text);
+    svg = setTexts(svg, [round_data, title, artist, difficulty, bid, bpm, mod, star, cs, ar, od, length], reg_text);
 
     // 插入图片和部件（新方法
     const mod_rrect = PanelDraw.Rect(1360, 100, 186, 82, 0, mod_color);
@@ -130,19 +130,19 @@ export async function panel_Delta(data = {
     const length_pie = PanelDraw.Pie(1662.5, 797.5, 200,
         Math.min(length_num / 600, 1), 0, mod_color);
 
-    svg = implantSvgBody(svg, 0, 0, mod_rrect, reg_stat);
-    svg = implantSvgBody(svg, 0, 0, sr_rrect, reg_sr);
-    svg = implantSvgBody(svg, 0, 0, cs_rrect, reg_cs);
-    svg = implantSvgBody(svg, 0, 0, ar_rrect, reg_ar);
-    svg = implantSvgBody(svg, 0, 0, od_rrect, reg_od);
-    svg = implantSvgBody(svg, 0, 0, length_pie, reg_length);
+    svg = setSvgBody(svg, 0, 0, mod_rrect, reg_stat);
+    svg = setSvgBody(svg, 0, 0, sr_rrect, reg_sr);
+    svg = setSvgBody(svg, 0, 0, cs_rrect, reg_cs);
+    svg = setSvgBody(svg, 0, 0, ar_rrect, reg_ar);
+    svg = setSvgBody(svg, 0, 0, od_rrect, reg_od);
+    svg = setSvgBody(svg, 0, 0, length_pie, reg_length);
 
     const image = await getDiffBG(data.beatmap.id, data.beatmap.beatmapset.id, 'list@2x', hasLeaderBoard(data.beatmap.status),
         data?.beatmap?.beatmapset?.availability?.more_information != null);
 
-    svg = (data.hasBG === false) ? svg : implantImage(svg, 1080, 1080, -30, 0, 1, image, reg_background);
-    svg = implantImage(svg, 1920, 1080, 0, 0, 1, getImageFromV3('panel-kita.png'), reg_base);
-    svg = implantImage(svg, 153, 153, 1586, 721, 1, getImageFromV3('panel-kita-center.png'), reg_index);
+    svg = (data.hasBG === false) ? svg : setImage(svg, -30, 0, 1080, 1080, image, reg_background, 1);
+    svg = setImage(svg, 0, 0, 1920, 1080, getImageFromV3('panel-kita.png'), reg_base, 1);
+    svg = setImage(svg, 1586, 721, 153, 153, getImageFromV3('panel-kita-center.png'), reg_index, 1);
 
     return svg.toString();
 }

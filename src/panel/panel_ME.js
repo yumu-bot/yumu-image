@@ -3,12 +3,12 @@ import {
     getBeatMapTitlePath,
     getImageFromV3,
     getPanelNameSVG,
-    implantImage,
-    implantSvgBody,
+    setImage,
+    setSvgBody,
     isASCII,
     readTemplate,
-    replaceText,
-    replaceTexts, round, rounds
+    setText,
+    setTexts, round, rounds
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -225,10 +225,10 @@ export async function panel_ME(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
-    svg = replaceText(svg, getPanelNameSVG('maimai Best Performance (!ymmb)', 'MB', 'v0.5.0 DX'), reg_index);
+    svg = setText(svg, getPanelNameSVG('maimai Best Performance (!ymmb)', 'MB', 'v0.5.0 DX'), reg_index);
 
     // 评级
-    svg = implantImage(svg, 590, 590, 665, 290, 1, getImageFromV3('Maimai', `object-score-${data?.score?.rate || 'd'}.png`), reg_index);
+    svg = setImage(svg, 665, 290, 590, 590, getImageFromV3('Maimai', `object-score-${data?.score?.rate || 'd'}.png`), reg_index, 1);
 
     // 图片定义
     const background = getMaimaiRankBG(data.score.rate);
@@ -248,21 +248,21 @@ export async function panel_ME(data = {
     const cardA1 = await card_A1(await PanelGenerate.maimaiPlayer2CardA1(data.user));
 
     // 导入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
-    svg = implantSvgBody(svg, 40, 330, componentE1, reg_card_e1);
-    svg = implantSvgBody(svg, 40, 500, componentE2, reg_card_e1);
-    svg = implantSvgBody(svg, 40, 770, componentE3, reg_card_e1);
-    svg = implantSvgBody(svg, 550, 330, componentE4, reg_card_e2);
-    svg = implantSvgBody(svg, 1280, 330, componentE5, reg_card_e2);
-    svg = implantSvgBody(svg, 550, 880, componentE6, reg_card_e2);
-    svg = implantSvgBody(svg, 1390, 330, componentE7, reg_card_e3);
-    svg = implantSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
-    svg = implantSvgBody(svg, 1390, 600, componentE9, reg_card_e3);
-    svg = implantSvgBody(svg, 1390, 770, componentE10, reg_card_e3);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = setSvgBody(svg, 40, 330, componentE1, reg_card_e1);
+    svg = setSvgBody(svg, 40, 500, componentE2, reg_card_e1);
+    svg = setSvgBody(svg, 40, 770, componentE3, reg_card_e1);
+    svg = setSvgBody(svg, 550, 330, componentE4, reg_card_e2);
+    svg = setSvgBody(svg, 1280, 330, componentE5, reg_card_e2);
+    svg = setSvgBody(svg, 550, 880, componentE6, reg_card_e2);
+    svg = setSvgBody(svg, 1390, 330, componentE7, reg_card_e3);
+    svg = setSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
+    svg = setSvgBody(svg, 1390, 600, componentE9, reg_card_e3);
+    svg = setSvgBody(svg, 1390, 770, componentE10, reg_card_e3);
 
     // 导入图片
-    svg = implantImage(svg, 1920, 1080, 0, 0, 0.6, background, reg_background);
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner_blurred);
+    svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
+    svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner_blurred, 0.8);
 
 
     return svg.toString()
@@ -374,9 +374,9 @@ const component_E1 = (
 
     const title = poppinsBold.getTextPath('Difficulty', 475, 28, 18, 'right baseline', '#fff')
 
-    svg = implantImage(svg, 66, 67, 20, 20, 1, getImageFromV3('Maimai', circle_text), reg_text)
-    svg = replaceText(svg, difficulty_rrect, reg_difficulty)
-    svg = replaceTexts(svg, [texts, title], reg_text);
+    svg = setImage(svg, 20, 20, 66, 67, getImageFromV3('Maimai', circle_text), reg_text, 1)
+    svg = setText(svg, difficulty_rrect, reg_difficulty)
+    svg = setTexts(svg, [texts, title], reg_text);
 
     return svg;
 };
@@ -413,11 +413,11 @@ const component_E2 = (
 
     const title = poppinsBold.getTextPath('Version', 15, 28, 18, 'left baseline', '#fff');
 
-    svg = implantImage(svg, 370, 185, 58, 42, 1, version, reg_base)
+    svg = setImage(svg, 58, 42, 370, 185, version, reg_base, 1)
 
-    svg = replaceText(svg, PanelDraw.Rect(0, 0, 490, 250, 20, '#382e32'), reg_base);
+    svg = setText(svg, PanelDraw.Rect(0, 0, 490, 250, 20, '#382e32'), reg_base);
 
-    svg = replaceTexts(svg, [title, difficulty], reg_text);
+    svg = setTexts(svg, [title, difficulty], reg_text);
 
     return svg;
 };
@@ -464,10 +464,10 @@ const component_E3 = (
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    svg = replaceTexts(svg, [title, dist_title, combo_title, acc_title, level_title, avg_acc, dist_level], reg_text)
-    svg = replaceText(svg, dist, reg_dist)
-    svg = replaceText(svg, combo, reg_combo)
-    svg = replaceText(svg, rect, reg_base)
+    svg = setTexts(svg, [title, dist_title, combo_title, acc_title, level_title, avg_acc, dist_level], reg_text)
+    svg = setText(svg, dist, reg_dist)
+    svg = setText(svg, combo, reg_combo)
+    svg = setText(svg, rect, reg_base)
 
     return svg;
 }
@@ -488,8 +488,8 @@ const component_E4 = (
     const reg_base = /(?<=<g id="Base_OE4">)/;
     const rect = PanelDraw.Rect(0, 0, 90, 60, 20, '#382e32', 1);
 
-    svg = implantImage(svg, 50, 50, 20, 5, 1, data?.image, reg_status);
-    svg = replaceText(svg, rect, reg_base);
+    svg = setImage(svg, 20, 5, 50, 50, data?.image, reg_status, 1);
+    svg = setText(svg, rect, reg_base);
 
     return svg;
 }
@@ -514,10 +514,10 @@ const component_E5 = (
     const fav = poppinsBold.getTextPath(data?.bpm.toString(), 78, 25, 16, 'right baseline', '#fff')
     const pc = poppinsBold.getTextPath(round(data?.count, 1, -1), 78, 47, 16, 'right baseline', '#fff')
 
-    svg = replaceTexts(svg, [fav, pc], reg_text);
-    svg = implantImage(svg, 18, 16, 12, 10, 1, getImageFromV3('object-beatmap-bpm.png'), reg_text);
-    svg = implantImage(svg, 18, 18, 12, 32, 1, getImageFromV3('object-beatmap-playcount.png'), reg_text);
-    svg = replaceText(svg, rect, reg_base);
+    svg = setTexts(svg, [fav, pc], reg_text);
+    svg = setImage(svg, 12, 10, 18, 16, getImageFromV3('object-beatmap-bpm.png'), reg_text, 1);
+    svg = setImage(svg, 12, 32, 18, 18, getImageFromV3('object-beatmap-playcount.png'), reg_text, 1);
+    svg = setText(svg, rect, reg_base);
 
     return svg;
 }
@@ -571,9 +571,9 @@ const component_E6 = async (
 
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
-    svg = replaceTexts(svg, [t.title, t.title_unicode, bid, charter, diff], reg_label);
-    svg = implantImage(svg, 820, 160, 0, 0, 0.4, background, reg_background);
-    svg = replaceText(svg, rect, reg_base);
+    svg = setTexts(svg, [t.title, t.title_unicode, bid, charter, diff], reg_label);
+    svg = setImage(svg, 0, 0, 820, 160, background, reg_background, 0.4);
+    svg = setText(svg, rect, reg_base);
 
     return svg;
 }
@@ -647,9 +647,9 @@ const component_E7 = (
     // 保底 PP
     const pp_width = percent * 460;
     const pp_rect = PanelDraw.Rect(15, 105, pp_width, 30, 15, "url(#grad-OE7-12)", 1);
-    svg = replaceText(svg, pp_rect, reg_clip2);
+    svg = setText(svg, pp_rect, reg_clip2);
 
-    svg = replaceTexts(svg, [texts, title], reg_text);
+    svg = setTexts(svg, [texts, title], reg_text);
 
     return svg;
 };
@@ -690,9 +690,9 @@ const component_E8 = (
         default: sync = 'object-score-sync-solo.png'; break;
     }
 
-    svg = implantImage(svg, 225, 50, 15, 15, 1, getImageFromV3('Maimai', combo), reg_text)
-    svg = implantImage(svg, 225, 50, 250, 15, 1, getImageFromV3('Maimai', sync), reg_text)
-    svg = replaceText(svg, rect, reg_base);
+    svg = setImage(svg, 15, 15, 225, 50, getImageFromV3('Maimai', combo), reg_text, 1)
+    svg = setImage(svg, 250, 15, 225, 50, getImageFromV3('Maimai', sync), reg_text, 1)
+    svg = setText(svg, rect, reg_base);
 
     return svg;
 }
@@ -749,8 +749,8 @@ const component_E9 = (
 
     const rect = PanelDraw.Rect(0, 0, 490, 150, 20, '#382e32', 1);
 
-    svg = replaceTexts(svg, [title, title2, achievement, combo], reg_text);
-    svg = replaceText(svg, rect, reg_base);
+    svg = setTexts(svg, [title, title2, achievement, combo], reg_text);
+    svg = setText(svg, rect, reg_base);
 
     return svg;
 }
@@ -795,10 +795,10 @@ const component_E10 = (
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    svg = replaceTexts(svg, [title, dist_title, combo_title, acc_title, level_title, avg_acc, avg_dx], reg_text)
-    svg = replaceText(svg, dist, reg_dist)
-    svg = replaceText(svg, combo, reg_combo)
-    svg = replaceText(svg, rect, reg_base)
+    svg = setTexts(svg, [title, dist_title, combo_title, acc_title, level_title, avg_acc, avg_dx], reg_text)
+    svg = setText(svg, dist, reg_dist)
+    svg = setText(svg, combo, reg_combo)
+    svg = setText(svg, rect, reg_base)
 
     return svg;
 }

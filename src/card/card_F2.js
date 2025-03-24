@@ -1,6 +1,6 @@
 import {
-    getImageFromV3, getMapBG, implantImage,
-    implantSvgBody, replaceText, getDifficultyName, round
+    getImageFromV3, getMapBG, setImage,
+    setSvgBody, setText, getKeyDifficulty, round
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_J} from "./card_J.js";
@@ -129,22 +129,22 @@ export async function card_F2(data = {
     }
 
     if (card_Js < 1) {
-        svg = implantImage(svg, 185, 185, 697.5 - 620, 405 - 330, 1, getImageFromV3('sticker_qiqi_fallen.png'), reg_card_j);
+        svg = setImage(svg, 697.5 - 620, 405 - 330, 185, 185, getImageFromV3('sticker_qiqi_fallen.png'), reg_card_j, 1);
     }
 
     for (const i in card_Js) {
-        svg = implantSvgBody(svg, 15, 50 + i * 95, card_Js[i], reg_card_j);
+        svg = setSvgBody(svg, 15, 50 + i * 95, card_Js[i], reg_card_j);
     }
 
     // 导入文本
     const recent_title = torus.getTextPath('Recents', 15, 35.795, 30, 'left baseline', '#fff');
 
-    svg = replaceText(svg, recent_title, reg_text);
+    svg = setText(svg, recent_title, reg_text);
 
     // 导入基础矩形
     const base_rrect = PanelDraw.Rect(0, 0, 340, 335, 20, '#382e32');
 
-    svg = replaceText(svg, base_rrect, reg_base);
+    svg = setText(svg, base_rrect, reg_base);
 
     return svg;
 }
@@ -159,7 +159,7 @@ const score2CardJ = async (score) => {
 
         title: score.beatmapset.title || '',
         artist: score.beatmapset.artist || '',
-        difficulty_name: getDifficultyName(score.beatmap) || '',
+        difficulty_name: getKeyDifficulty(score.beatmap) || '',
         star_rating: score.beatmap.difficulty,
         score_rank: score.rank,
         accuracy: round(score.accuracy * 100, 2), //%

@@ -1,8 +1,8 @@
 import {
     exportJPEG, getImageFromV3, getGameMode, getPanelNameSVG,
-    implantImage,
-    implantSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readTemplate,
-    replaceText, replaceTexts
+    setImage,
+    setSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readTemplate,
+    setText, setTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -458,7 +458,7 @@ export async function panel_J(data = {
     const rank_attr = data?.rank_attr || []
 
     // 插入文字
-    svg = replaceTexts(svg, [panel_name, pp_path, game_mode_path, mappers_count_path], reg_index);
+    svg = setTexts(svg, [panel_name, pp_path, game_mode_path, mappers_count_path], reg_index);
 
     // A1卡构建
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.card_A1));
@@ -501,7 +501,7 @@ export async function panel_J(data = {
     }
 
     if (labelJ1s < 1) { //摆烂机制
-        svg = implantImage(svg, 185, 185, 750, 600, 1, getImageFromV3('sticker_qiqi_secretly_observing.png'), reg_label_j1);
+        svg = setImage(svg, 750, 600, 185, 185, getImageFromV3('sticker_qiqi_secretly_observing.png'), reg_label_j1, 1);
     }
 
     // 谱师标签 J2 构建
@@ -546,7 +546,7 @@ export async function panel_J(data = {
     let pp_mid = (pp_max + pp_min) / 2;
 
     const PPChart = PanelDraw.LineChart(pp_raw_arr, pp_max, pp_min, 1040, 610, 780, 215, '#FFCC22', 1, 0, 4);
-    svg = replaceText(svg, PPChart, reg_pp_graph);
+    svg = setText(svg, PPChart, reg_pp_graph);
 
     // 绘制纵坐标，注意max在下面
     let rank_axis_y_max = Math.round(pp_max);
@@ -558,7 +558,7 @@ export async function panel_J(data = {
         torus.getTextPath(rank_axis_y_mid.toString(), 1010, 509.836, 24, 'center baseline', '#fc2') +
         torus.getTextPath(rank_axis_y_min.toString(), 1010, 616.836, 24, 'center baseline', '#fc2');
 
-    svg = replaceText(svg, rank_axis, reg_pp_graph);
+    svg = setText(svg, rank_axis, reg_pp_graph);
 
     // 绘制bp长度矩形，并且获取长度的优先值。需要给这些bp扩充到100，不然比例会有问题
 
@@ -590,7 +590,7 @@ export async function panel_J(data = {
         svg_rrect += PanelDraw.Rect(1042 + 20 * i, start_y - height, 16, height, 8, color_elect_arr[i]);
     });
 
-    svg = replaceText(svg, svg_rrect, reg_rrect);
+    svg = setText(svg, svg_rrect, reg_rrect);
 
     //矩形上面的字绘制
     const bp_length_max_b = Math.floor(bp_length_max / 60).toString();
@@ -603,7 +603,7 @@ export async function panel_J(data = {
         'center baseline',
         '#aaa');
 
-    svg = replaceText(svg, bp_length_text, reg_rrect);
+    svg = setText(svg, bp_length_text, reg_rrect);
 
     // 插入两个饼图
     let mod_svg = '';
@@ -627,39 +627,39 @@ export async function panel_J(data = {
 
     rank_svg += PanelDraw.Image(1630 - 70, 815 - 70, 140, 140, getImageFromV3('object-piechart-overlay2.png'), 1);
 
-    svg = replaceText(svg, mod_svg, reg_pan_mod);
-    svg = replaceText(svg, rank_svg, reg_pan_rank);
+    svg = setText(svg, mod_svg, reg_pan_mod);
+    svg = setText(svg, rank_svg, reg_pan_rank);
 
     // 插入图片和部件（新方法
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_maincard);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_maincard);
 
     for (const i in cardJs_top) {
-        svg = implantSvgBody(svg, 55, 380 + i * 95, cardJs_top[i], reg_topbp);
+        svg = setSvgBody(svg, 55, 380 + i * 95, cardJs_top[i], reg_topbp);
     }
 
     for (const i in cardJs_last) {
-        svg = implantSvgBody(svg, 380, 380 + i * 95, cardJs_last[i], reg_lastbp);
+        svg = setSvgBody(svg, 380, 380 + i * 95, cardJs_last[i], reg_lastbp);
     }
 
     for (const i in cardLs) {
-        svg = implantSvgBody(svg, 50 + i * 305, 880, cardLs[i], reg_card_l);
+        svg = setSvgBody(svg, 50 + i * 305, 880, cardLs[i], reg_card_l);
     }
 
     for (let i = 0; i < 4; i++) {
-        svg = implantSvgBody(svg, 740, 570 + 70 * i, labelJ1s[i], reg_label_j1);
+        svg = setSvgBody(svg, 740, 570 + 70 * i, labelJ1s[i], reg_label_j1);
     }
 
     for (let i = 0; i < 2; i++) {
         for (let j = 0; j < 3; j++) {
-            svg = implantSvgBody(svg, 992 + 260 * i, 742 + 95 * j, labelJ2s[i * 3 + j], reg_label_j2);
+            svg = setSvgBody(svg, 992 + 260 * i, 742 + 95 * j, labelJ2s[i * 3 + j], reg_label_j2);
         }
     }
 
     for (let i = 0; i < 6; i++) {
         if (i < 1) { //本来是i < 2，但是没有pf评级了
-            svg = implantSvgBody(svg, 1555, 902 + 66 * i, labelJ3s[i], reg_label_j3);
+            svg = setSvgBody(svg, 1555, 902 + 66 * i, labelJ3s[i], reg_label_j3);
         } else {
-            svg = implantSvgBody(svg, 1715, 702 + 66 * (i - 1), labelJ3s[i], reg_label_j3);
+            svg = setSvgBody(svg, 1715, 702 + 66 * (i - 1), labelJ3s[i], reg_label_j3);
         }
     }
 
@@ -676,11 +676,11 @@ export async function panel_J(data = {
     const title_t5 = torus.getTextPath("Top 5 BPs", 55, 365.795, 30, 'left baseline', '#fff');
 
 
-    svg = replaceTexts(svg, [title_bpd, title_fm, title_rks, title_ms, title_l5, title_t5], reg_index)
+    svg = setTexts(svg, [title_bpd, title_fm, title_rks, title_ms, title_l5, title_t5], reg_index)
 
     const background = pp2UserBG(data.pp || 0);
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
-    svg = implantImage(svg, 1920, 1080, 0, 280, 0.6, background, reg_background);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 
     return svg;
 }

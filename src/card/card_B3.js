@@ -1,9 +1,9 @@
-import {implantImage} from "../util/util.js";
+import {setImage} from "../util/util.js";
 import {getMascotName, getMascotPath} from "../util/mascotBanner.js";
 
 export async function card_B3(data = {
     game_mode: 'osu'
-}, reuse = false) {
+}) {
     //读取面板
     let svg = `
     <defs>
@@ -24,7 +24,7 @@ export async function card_B3(data = {
     const mascot_name_data = getMascotName(data.game_mode);
     const mascot_link = getMascotPath(mascot_name_data);
 
-    svg = implantImage(svg, 530, 710, 0, 0, 1, mascot_link, reg_mascot);
+    svg = setImage(svg, 0, 0, 530, 710, mascot_link, reg_mascot, 1);
 
     return svg.toString();
 

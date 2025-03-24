@@ -3,10 +3,10 @@ import {
     getImageFromV3,
     getMapBG,
     getPanelNameSVG,
-    implantImage,
-    implantSvgBody,
-    readTemplate, replaceText,
-    replaceTexts, round, rounds
+    setImage,
+    setSvgBody,
+    readTemplate, setText,
+    setTexts, round, rounds
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
@@ -89,11 +89,11 @@ export async function panel_B2(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 画六个标识
-    svg = replaceText(svg, PanelDraw.HexagonIndex(abbr_arr.slice(0, 6), 960, 600, 260, Math.PI / 3), reg_hexagon);
+    svg = setText(svg, PanelDraw.HexagonIndex(abbr_arr.slice(0, 6), 960, 600, 260, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
     const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked));
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, banner, reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8);
 
     // 面板文字
     const panel_name = getPanelNameSVG('Map Minus v0.8 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM', 'v0.5.0 DX');
@@ -105,11 +105,11 @@ export async function panel_B2(data = {
     const total_path = torus.get2SizeTextPath((delta > 0 ? '+' : '-') + total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', (delta >= 0 ? '#c2e5c3' : '#ffcdd2'));
 
     // 插入文字
-    svg = replaceTexts(svg, [panel_name, total_path], reg_index);
+    svg = setTexts(svg, [panel_name, total_path], reg_index);
 
     // A2定义
     const cardA2 = card_A2(await PanelGenerate.beatMap2CardA2(data.beatmap));
-    svg = implantSvgBody(svg, 40, 40, cardA2, reg_maincard);
+    svg = setSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 获取卡片
     let cardB1s = [];
@@ -138,13 +138,13 @@ export async function panel_B2(data = {
         hexagons.push(map_minus_mania[abbr] / 9); //9星以上是X
     }
 
-    svg = implantSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
+    svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
     for (let j = 0; j < 6; j++) {
         const card_order = [0, 5, 4, 1, 2, 3]
         const k = card_order[j]
 
-        svg = implantSvgBody(svg, 40, 350 + j * 115, cardB1s[k], reg_left);
+        svg = setSvgBody(svg, 40, 350 + j * 115, cardB1s[k], reg_left);
     }
 
     const rank_ov = getRankFromValue(total);
@@ -168,8 +168,8 @@ export async function panel_B2(data = {
 
     //todo NaN
 
-    svg = implantSvgBody(svg, 630, 860, cardB2s[0], reg_center);
-    svg = implantSvgBody(svg, 970, 860, cardB2s[1], reg_center);
+    svg = setSvgBody(svg, 630, 860, cardB2s[0], reg_center);
+    svg = setSvgBody(svg, 970, 860, cardB2s[1], reg_center);
 
     // 插入种类（测试中）
     const type_image = getTypeImage(data?.type, data?.type_percent)
@@ -177,15 +177,15 @@ export async function panel_B2(data = {
         torus.getTextPath(Math.round(data?.type_percent * 100) + '%', 1685 + 195/2, 210 - 8, 16, 'center baseline', '#fff')
         : ''
 
-    svg = replaceText(svg, type_percent, reg_right)
-    svg = implantImage(svg, 195, 60, 1685, 210, 1, type_image, reg_right)
+    svg = setText(svg, type_percent, reg_right)
+    svg = setImage(svg, 1685, 210, 195, 60, type_image, reg_right, 1)
 
     // todo 临时的值
     function drawChart(array = [], index = 0, name = "null", x = 0, y = 0, color = '#fff') {
         return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + torus.getTextPath(name + ": " + round(index, 1), 75 + 1370 + x, -35 + 445 + y, 24, 'center baseline', '#fff')
     }
 
-    svg = replaceTexts(svg, [
+    svg = setTexts(svg, [
         drawChart(m?.stream, base_arr[0], 'S', 0, 0, '#39B449'),
         drawChart(m?.jack, base_arr[1], 'J', 170, 0, '#8DC73D'),
 
@@ -211,7 +211,7 @@ export async function panel_B2(data = {
 
     // 画六边形和其他
     const hexagon = getImageFromV3('object-hexagon.png');
-    svg = implantImage(svg, 484, 433, 718, 384, 1, hexagon, reg_hexagon);
+    svg = setImage(svg, 718, 384, 484, 433, hexagon, reg_hexagon, 1);
 
     return svg.toString();
 }

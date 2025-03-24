@@ -1,5 +1,5 @@
 import {
-    getImageFromV3, getGameMode, implantImage, replaceText, replaceTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, rounds,
+    getImageFromV3, getGameMode, setImage, setText, setTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, rounds,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor, hex2hsl, PanelColor} from "../util/color.js";
@@ -591,7 +591,7 @@ export async function label_C1(data = {
 
     mods_arr.forEach((mod, i) => {
         const offset_x = 100 - mods_arr_length * 10
-        svg = replaceText(svg, getModCirclePath(mod, offset_x + i * 10, 90, 10, true), reg_mod);
+        svg = setText(svg, getModCirclePath(mod, offset_x + i * 10, 90, 10, true), reg_mod);
     });
 
     //定义文本
@@ -610,14 +610,14 @@ export async function label_C1(data = {
     <rect x="0" y="0" width="30" height="20" rx="10" ry="10" style="fill: ${getUserRankColor(data.rank) || '#46393f'};"/>`;
 
     //插入文本
-    svg = replaceTexts(svg, [name, score, rank], reg_text);
-    svg = replaceText(svg, label_color, reg_label);
+    svg = setTexts(svg, [name, score, rank], reg_text);
+    svg = setText(svg, label_color, reg_label);
 
     //插入图片，如果输了就变灰
     const opacity = data?.isWin ? 1 : 0.3;
     const avatar = await getAvatar(data.avatar, true);
 
-    svg = implantImage(svg, 100, 100, 0, 0, opacity, avatar, reg_avatar);
+    svg = setImage(svg, 0, 0, 100, 100, avatar, reg_avatar, opacity);
 
     return svg.toString();
 }
@@ -671,15 +671,15 @@ export async function label_C2(data = {
     <rect x="30" y="16" width="20" height="14" rx="7" ry="7" style="fill: ${getUserRankColor(data.rank) || '#46393f'};"/>`;
 
     //插入文本
-    svg = replaceTexts(svg, [name, score, rank], reg_text);
-    svg = replaceText(svg, label_color, reg_label);
+    svg = setTexts(svg, [name, score, rank], reg_text);
+    svg = setText(svg, label_color, reg_label);
 
     //插入图片，如果输了就变灰
     const opacity = data?.isWin ? 1 : 0.3;
     const avatar = await getAvatar(data.avatar, true);
 
     //插入图片
-    svg = implantImage(svg, 30, 30, 0, 0, opacity, avatar, reg_avatar);
+    svg = setImage(svg, 0, 0, 30, 30, avatar, reg_avatar, opacity);
 
     return svg.toString();
 }
@@ -708,7 +708,7 @@ export async function label_C3(data = {
     const opacity = data?.isWin ? 1 : 0.3;
     const avatar = await getAvatar(data.avatar, true);
 
-    svg = implantImage(svg, 30, 30, 0, 0, opacity, avatar, reg_avatar);
+    svg = setImage(svg, 0, 0, 30, 30, avatar, reg_avatar, opacity);
 
     return svg.toString();
 }
@@ -752,9 +752,9 @@ export async function label_D1(data = {
     if (data.remark) {
         const remark_font = data.remark_font || torus;
         const remark = remark_font.getTextPath(data.remark, 210, 68.88, 18, "left baseline", data.color_remark);
-        svg = replaceText(svg, remark, reg_text);
+        svg = setText(svg, remark, reg_text);
     }
-    svg = implantImage(svg, 74, 74, 142.5, 0, 1, data.icon, reg_icon) //应该是 75
+    svg = setImage(svg, 142.5, 0, 74, 74, data.icon, reg_icon, 1) //应该是 75
 
     return svg.toString();
 }
@@ -791,14 +791,14 @@ export async function label_D2(data = {
     const abbr = torus.getTextPath(data.abbr, 420, 44.75, 24, "right baseline", "#aaa");
     const number_data = torus.get2SizeTextPath(data.data_b, data.data_m, 36, 24, 56, 44.75, "left baseline", "#fff");
 
-    svg = replaceTexts(svg, [abbr, icon_title, number_data], reg_text)
+    svg = setTexts(svg, [abbr, icon_title, number_data], reg_text)
 
     if (data.remark) {
         const remark_font = data.remark_font || torus;
         const remark = remark_font.getTextPath(data.remark, 420, 14.88, 18, "right baseline", data.color_remark);
-        svg = replaceText(svg, remark, reg_text);
+        svg = setText(svg, remark, reg_text);
     }
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+    svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
     return svg.toString();
 }
@@ -830,12 +830,11 @@ export function label_D3(data = {
     const delta = poppinsBold.getTextPath(data?.delta || '',
         42, 32 - 18, 14, 'left baseline', data?.delta_color)
 
-    svg = replaceTexts(svg, [text, delta], reg_text)
+    svg = setTexts(svg, [text, delta], reg_text)
 
     // 自设的时候只需要这两个字段
     if (data.hide !== true) {
-        svg = implantImage(svg, 40, 40, 5, 5,
-            1, data?.icon, reg_icon)
+        svg = setImage(svg, 5, 5, 40, 40, data?.icon, reg_icon, 1)
     }
 
     return svg.toString()
@@ -898,27 +897,27 @@ export function label_D4(data = {
 
     // 自设的时候只需要这一个字段
     if (data.hide === true) {
-        svg = replaceTexts(svg, [number_data], reg_text)
+        svg = setTexts(svg, [number_data], reg_text)
 
         return svg.toString()
     }
 
-    svg = replaceTexts(svg, [abbr, title, number_data], reg_text)
+    svg = setTexts(svg, [abbr, title, number_data], reg_text)
 
     if (isHexColor(data?.bar_color)) {
         const rrect = PanelDraw.Rect(60, 0, 4, 50,
             2, data.bar_color, 1)
 
-        svg = replaceText(svg, rrect, reg_icon)
+        svg = setText(svg, rrect, reg_icon)
     }
 
     if (isNotEmptyString(data?.delta)) {
         const delta = poppinsBold.getTextPath(data?.delta || '', 75, -4, 18, 'left baseline', data?.delta_color || 'none', 1)
 
-        svg = replaceText(svg, delta, reg_text)
+        svg = setText(svg, delta, reg_text)
     }
 
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+    svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
     return svg.toString();
 }
@@ -965,27 +964,27 @@ export function label_D5(data = {
 
     // 自设的时候只需要这一个字段
     if (data.hide === true) {
-        svg = replaceTexts(svg, [number_data], reg_text)
+        svg = setTexts(svg, [number_data], reg_text)
 
         return svg.toString()
     }
 
-    svg = replaceTexts(svg, [abbr, remark, number_data], reg_text)
+    svg = setTexts(svg, [abbr, remark, number_data], reg_text)
 
     if (isHexColor(data?.bar_color)) {
         const rrect = PanelDraw.Rect(60, 0, 4, 50,
             2, data.bar_color, 1)
 
-        svg = replaceText(svg, rrect, reg_icon)
+        svg = setText(svg, rrect, reg_icon)
     }
 
     if (isNotEmptyString(data?.delta)) {
         const delta = poppinsBold.getTextPath(data?.delta || '', 75, -4, 18, 'left baseline', data?.delta_color || 'none', 1)
 
-        svg = replaceText(svg, delta, reg_text)
+        svg = setText(svg, delta, reg_text)
     }
 
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+    svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
     return svg.toString();
 }
@@ -1029,9 +1028,9 @@ export async function label_E(data = {
     if (data.remark) {
         const remark_font = data.remark_font || torus;
         const remark = remark_font.getTextPath(data.remark, 200, 14.88, 18, "right baseline", data.color_remark);
-        svg = replaceText(svg, remark, reg_text);
+        svg = setText(svg, remark, reg_text);
     }
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+    svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
     return svg.toString();
 }
@@ -1095,8 +1094,8 @@ export function label_E5(data = {
     const bar = PanelDraw.Rect(61, 38, bar_width, 10, 5, data?.bar_color || '#fff')
     const bar_base = PanelDraw.Rect(61, 38, 154, 10, 5, data?.bar_color || '#fff', 0.2)
 
-    svg = replaceTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+    svg = setTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
+    svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
     return svg.toString();
 }
@@ -1129,8 +1128,8 @@ export async function label_J1(data = {
     let svg = `<g id="Mod">\n <path d="m56.357,4.496l11.865,18c2.201,3.339,2.201,7.668,0,11.007l-11.865,18c-1.85,2.807-4.987,4.496-8.349,4.496h-26.142c-3.362,0-6.499-1.689-8.349-4.496L1.651,33.504c-2.201-3.339-2.201-7.668,0-11.007L13.516,4.496C15.366,1.689,18.503,0,21.865,0h26.142c3.362,0,6.499,1.689,8.349,4.496Z" style="fill: ${mod_color};"/>\n </g>\n <g id="Text_LJ1">\n </g>`;
 
     //插入文本
-    svg = replaceTexts(svg, [mod_abbr, mod_fullname, mod_count, pp], reg_text);
-    svg = replaceText(svg, mod_color, reg_modcolor);
+    svg = setTexts(svg, [mod_abbr, mod_fullname, mod_count, pp], reg_text);
+    svg = setText(svg, mod_color, reg_modcolor);
 
     return svg.toString();
 }
@@ -1182,12 +1181,12 @@ export async function label_J2(data = {
   </g>`;
 
     //插入文本
-    svg = replaceTexts(svg, [name, count, pp], reg_text);
-    svg = replaceText(svg, index, reg_index);
+    svg = setTexts(svg, [name, count, pp], reg_text);
+    svg = setText(svg, index, reg_index);
 
     //插入图片
     const avatar = await getAvatar(data.avatar, true);
-    svg = implantImage(svg, 70, 70, 8, 8, 1, avatar, reg_avatar);
+    svg = setImage(svg, 8, 8, 70, 70, avatar, reg_avatar, 1);
 
     return svg.toString();
 }
@@ -1243,13 +1242,12 @@ export async function label_J3(data = {
     );
 
     //插入文本
-    svg = replaceText(svg, map_count, reg_text);
-    svg = replaceText(svg, pp_percentage, reg_text);
-    svg = replaceText(svg, pp_count, reg_text);
+    svg = setText(svg, map_count, reg_text);
+    svg = setText(svg, pp_percentage, reg_text);
+    svg = setText(svg, pp_count, reg_text);
 
     //插入图片
-    svg = implantImage(svg, 40, 40, 0, 0, 1,
-        data.icon || getImageFromV3('object-score-F-small.png'), reg_icon);
+    svg = setImage(svg, 0, 0, 40, 40, data.icon || getImageFromV3('object-score-F-small.png'), reg_icon, 1);
 
     return svg.toString();
 }
@@ -1296,7 +1294,7 @@ export function label_J4(data = {
         1)
     const bar_side = PanelDraw.Rect(data?.max_width - 12, 8, 4, 44, 2, data?.bar_color || '#fff', 1)
 
-    svg = replaceTexts(svg, [icon_title, number_data, remark, bar_side, bar, bar_base], reg_text)
+    svg = setTexts(svg, [icon_title, number_data, remark, bar_side, bar, bar_base], reg_text)
 
     return svg.toString();
 }
@@ -1373,8 +1371,8 @@ export function label_J5(data = {
     const bar = PanelDraw.Rect(60 + 390 * progress_before, 38, bar_width, 10, 5, data?.bar_color || '#fff')
     const bar_base = PanelDraw.Rect(60, 38, 390, 10, 5, data?.bar_color || '#fff', 0.2)
 
-    svg = replaceTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
-    svg = implantImage(svg, 50, 50, 0, 0, 1, data.icon, reg_icon)
+    svg = setTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
+    svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
     return svg.toString();
 }
@@ -1405,7 +1403,7 @@ export async function label_J6(data = {
 
     const avatar = await getAvatar(data.avatar_url, true)
 
-    svg = implantImage(svg, 55, 55, 0, 0, 1, avatar, reg_avatar)
+    svg = setImage(svg, 0, 0, 55, 55, avatar, reg_avatar, 1)
 
     const name = poppinsBold.getTextPath(
         poppinsBold.cutStringTail(data.username, 22, 160),
@@ -1422,7 +1420,7 @@ export async function label_J6(data = {
 
     const base = PanelDraw.Rect(0, 0, 55, 55, 10, PanelColor.top(hue))
 
-    svg = replaceTexts(svg, [name, index, pp_and_count, base], reg_text)
+    svg = setTexts(svg, [name, index, pp_and_count, base], reg_text)
 
     return svg.toString()
 }
@@ -1453,7 +1451,7 @@ export async function label_J7(data = {
 
     const avatar = await getAvatar(data.avatar_url, true)
 
-    svg = implantImage(svg, 85, 85, 390, 15, 1, avatar, reg_avatar)
+    svg = setImage(svg, 390, 15, 85, 85, avatar, reg_avatar, 1)
 
     const name = poppinsBold.getTextPath(
         poppinsBold.cutStringTail(data.username, 22, 325),
@@ -1507,7 +1505,7 @@ export async function label_J7(data = {
 
     const base = PanelDraw.Rect(390, 15, 85, 85, 20, PanelColor.top(hue))
 
-    svg = replaceTexts(svg, [name, index, pp, count, base], reg_text)
+    svg = setTexts(svg, [name, index, pp, count, base], reg_text)
 
     return svg.toString()
 }
@@ -1570,11 +1568,11 @@ export async function label_M1(data = {
         const uid = data.uid || 0;
         const avatar = await getAvatar(uid, false);
 
-        svg = implantImage(svg, 36, 36, 8, 7, 1, avatar, reg_avatar);
+        svg = setImage(svg, 8, 7, 36, 36, avatar, reg_avatar, 1);
     }
 
     //插入文本
-    svg = replaceTexts(svg, [diff_name_path, star_rating_path, mode_icon_path], reg_text);
+    svg = setTexts(svg, [diff_name_path, star_rating_path, mode_icon_path], reg_text);
 
     //星数
     const sr = rounds(data.star_rating, 1, 3)
@@ -1593,7 +1591,7 @@ export async function label_M1(data = {
     if (data.maxWidth <= 262 && sr_b >= 7) {
         sr_b = 7;
         sr_m_scale = 0;
-        svg = replaceText(svg, dot3, reg_icon);
+        svg = setText(svg, dot3, reg_icon);
     }
 
 
@@ -1601,22 +1599,22 @@ export async function label_M1(data = {
         let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
             <image id="M1Label${i}Star" width="18" height="18" transform="translate(${15 * (i - 1) + 90} 26)" xlink:href="${data.star}"/>
         </g>`;
-        svg = replaceText(svg, sr_b_svg, reg_icon);
+        svg = setText(svg, sr_b_svg, reg_icon);
     }
 
     const sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
         <image id="M1Label${sr_b + 1}Star" width="18" height="18" transform="translate(${15 * sr_b + 90} 26) translate(${9 * (1 - sr_m_scale)} ${9 * (1 - sr_m_scale)}) scale(${sr_m_scale})" xlink:href="${data.star}"/>
         </g>`;
 
-    svg = replaceText(svg, sr_m_svg, reg_icon);
+    svg = setText(svg, sr_m_svg, reg_icon);
 
     //插入矩形
 
     const rrect_sr_path = PanelDraw.Rect(0, 0, data.maxWidth, 50, 25, mode_icon_color, 0.15);
     const rrect_base_path = PanelDraw.Rect(0, 0, data.maxWidth, 50, 25, '#46393F');
 
-    svg = replaceText(svg, rrect_sr_path, reg_rrect);
-    svg = replaceText(svg, rrect_base_path, reg_rrect);
+    svg = setText(svg, rrect_sr_path, reg_rrect);
+    svg = setText(svg, rrect_base_path, reg_rrect);
 
     return svg.toString();
 }
@@ -1676,9 +1674,9 @@ export async function label_M2(data = {
     // const name_rrect = PanelDraw.Rect(100 - name_width / 2 - 5, 85, name_width + 10, 20, 10, host_rrect_color);
 
     //插入文本
-    svg = implantImage(svg, 100, 100, 0, 0, 1, avatar, reg_avatar);
-    svg = replaceText(svg, host_text, reg_label);
-    svg = replaceText(svg, host_rrect, reg_bid);
+    svg = setImage(svg, 0, 0, 100, 100, avatar, reg_avatar, 1);
+    svg = setText(svg, host_text, reg_label);
+    svg = setText(svg, host_rrect, reg_bid);
     // svg = replaceText(svg, name_text, reg_label);
     // svg = replaceText(svg, name_rrect, reg_rrect);
 
@@ -1728,11 +1726,11 @@ export async function label_M3(data = {
     const label3_text = torus.get2SizeTextPath(
         data.label3.data_b, data.label3.data_m, 24, 18, 30 + label3_x, 20, 'left baseline', '#fff');
 
-    svg = replaceTexts(svg, [label1_text, label2_text, label3_text], reg_text);
+    svg = setTexts(svg, [label1_text, label2_text, label3_text], reg_text);
 
-    svg = implantImage(svg, 25, 25, label1_x, 0, 1, data.label1.icon, reg_icon);
-    svg = implantImage(svg, 25, 25, label2_x, 0, 1, data.label2.icon, reg_icon);
-    svg = implantImage(svg, 25, 25, label3_x, 0, 1, data.label3.icon, reg_icon);
+    svg = setImage(svg, label1_x, 0, 25, 25, data.label1.icon, reg_icon, 1);
+    svg = setImage(svg, label2_x, 0, 25, 25, data.label2.icon, reg_icon, 1);
+    svg = setImage(svg, label3_x, 0, 25, 25, data.label3.icon, reg_icon, 1);
 
     return svg.toString();
 }
@@ -1759,8 +1757,8 @@ export async function label_N(data = {
     const label_text = torus.get2SizeTextPath(
         data.data_b, data.data_m, 22, 18, 25, 17, 'left baseline', '#fff'); // lS 18/ sS 14/ y15
 
-    svg = replaceText(svg, label_text, reg_text);
-    svg = implantImage(svg, 20, 20, 0, 0, 1, data.icon, reg_icon)
+    svg = setText(svg, label_text, reg_text);
+    svg = setImage(svg, 0, 0, 20, 20, data.icon, reg_icon, 1)
 
     return svg.toString();
 }
@@ -1790,8 +1788,8 @@ export async function label_O(data = {
     const base_rrect = PanelDraw.Rect(0, 0, 80, 28, 14, data.colour);
 
     //插入文本
-    svg = replaceText(svg, text, reg_text);
-    svg = replaceText(svg, base_rrect, reg_rrect);
+    svg = setText(svg, text, reg_text);
+    svg = setText(svg, base_rrect, reg_rrect);
 
     return svg.toString();
 }

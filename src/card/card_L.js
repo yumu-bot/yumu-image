@@ -1,8 +1,8 @@
 import {
     getImageFromV3,
-    implantImage,
-    implantSvgBody,
-    replaceText, rounds,
+    setImage,
+    setSvgBody,
+    setText, rounds,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_I4} from "./card_I4.js";
@@ -120,7 +120,7 @@ export async function card_L(data = {
             'center baseline',
             '#fff'
             )
-        svg = replaceText(svg, index, reg_text);
+        svg = setText(svg, index, reg_text);
     }
 
     // 导入K卡
@@ -138,7 +138,7 @@ export async function card_L(data = {
     }
 
     for (const i in cardKs) {
-        svg = implantSvgBody(svg, 55 + i * 80, 100, cardKs[i], reg_card_k);
+        svg = setSvgBody(svg, 55 + i * 80, 100, cardKs[i], reg_card_k);
     }
 
     // 导入不明所以的矩形
@@ -157,17 +157,17 @@ export async function card_L(data = {
         );
     }
 
-    svg = implantSvgBody(svg, 0, 0, rrect_svg, reg_rrect);
+    svg = setSvgBody(svg, 0, 0, rrect_svg, reg_rrect);
 
     // 替换文字
 
     const name = torus.getTextPath(card_name, 60, 22.836, 24, 'left baseline', '#fff');
 
-    svg = replaceText(svg, name, reg_text);
+    svg = setText(svg, name, reg_text);
 
     // 替换图片
 
-    svg = implantImage(svg, 50, 50, 0, 0, 1, card_icon, reg_label_l);
+    svg = setImage(svg, 0, 0, 50, 50, card_icon, reg_label_l, 1);
 
     return svg.toString();
 }

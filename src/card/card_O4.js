@@ -1,4 +1,4 @@
-import {getImageFromV3, getMapBG, implantImage, replaceText} from "../util/util.js";
+import {getImageFromV3, getMapBG, setImage, setText} from "../util/util.js";
 import {torus} from "../util/font.js";
 
 export async function card_O4(data = {
@@ -49,9 +49,9 @@ export async function card_O4(data = {
     const title = torus.getTextPath(title_str, 40, 20, 18, 'left baseline', color);
     const bg = await getMapBG(data?.sid, 'cover', false)
 
-    svg = implantImage(svg, 550, 30, 0, 0, 0.3, bg, reg_background);
-    svg = implantImage(svg, 30, 30, 5, 0, 1, type, reg_image);
-    svg = replaceText(svg, title, reg_text);
+    svg = setImage(svg, 0, 0, 550, 30, bg, reg_background, 0.3);
+    svg = setImage(svg, 5, 0, 30, 30, type, reg_image, 1);
+    svg = setText(svg, title, reg_text);
 
     return svg.toString();
 }

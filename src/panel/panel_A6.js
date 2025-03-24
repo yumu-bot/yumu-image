@@ -1,4 +1,4 @@
-import {exportJPEG, getPanelNameSVG, implantImage, implantSvgBody, readTemplate, replaceText,} from "../util/util.js";
+import {exportJPEG, getPanelNameSVG, setImage, setSvgBody, readTemplate, setText,} from "../util/util.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {card_Alpha} from "../card/card_Alpha.js";
 import {card_A1} from "../card/card_A1.js";
@@ -65,7 +65,7 @@ export async function panel_A6(data = {
     const alpha = await card_Alpha(markdown, data.width);
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 计算面板高度
 
@@ -83,14 +83,14 @@ export async function panel_A6(data = {
     }
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, width, height, (1920 - width) / 2, 330, 1, alpha.image, reg_alpha);
-    svg = implantImage(svg,1920, 320, 0, 0, 0.8, getRandomBannerPath(), reg_banner);
+    svg = setImage(svg, (1920 - width) / 2, 330, width, height, alpha.image, reg_alpha, 1);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
 
     // 导入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     return svg.toString();
 }

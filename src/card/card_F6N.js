@@ -1,8 +1,8 @@
 import {
-    implantSvgBody,
+    setSvgBody,
     modifyArrayToFixedLength,
-    replaceText,
-    replaceTexts, round, rounds
+    setText,
+    setTexts, round, rounds
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {label_D2, label_E, LABELS} from "../component/label.js";
@@ -54,20 +54,20 @@ export async function card_F6N(data = {
     const reg_text = /(?<=<g id="Text_CF6">)/;
 
     // 绘制 PC 图表
-    svg = replaceText(svg, getPlayCountChart(data.pc_arr), reg_pc);
+    svg = setText(svg, getPlayCountChart(data.pc_arr), reg_pc);
 
     // 绘制标签
     const labels = await userData2Labels(data);
     const deltas = userDelta2Labels(data);
 
     for (const i in labels) {
-        svg = implantSvgBody(svg,
+        svg = setSvgBody(svg,
             (i < 2) ? 20 + (i % 2) * 440 : 20 + ((i - 2) % 4) * 220,
             (i < 2) ? 65 : 145, labels[i], reg_label);
     }
 
     for (const i in deltas) {
-        svg = implantSvgBody(svg, 80 - 2 + (i % 2) * 440, 130, deltas[i], reg_label); //我也不知道为什么这里要 -2
+        svg = setSvgBody(svg, 80 - 2 + (i % 2) * 440, 130, deltas[i], reg_label); //我也不知道为什么这里要 -2
     }
 
     // 导入文本
@@ -97,12 +97,12 @@ export async function card_F6N(data = {
         'right baseline',
         '#aaa');
 
-    svg = replaceTexts(svg, [user_data_title, user_data_text, first_date, mid_date, last_date], reg_text);
+    svg = setTexts(svg, [user_data_title, user_data_text, first_date, mid_date, last_date], reg_text);
 
     // 导入基础矩形
     const base_rrect = PanelDraw.Rect(0, 0, 900, 355, 20, '#382e32');
 
-    svg = replaceText(svg, base_rrect, reg_base);
+    svg = setText(svg, base_rrect, reg_base);
 
     return svg;
 }

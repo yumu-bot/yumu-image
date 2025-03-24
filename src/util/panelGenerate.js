@@ -16,7 +16,7 @@ import {
     isNotEmptyArray,
     getTimeByDHMS,
     requireNonNullElse,
-    getDifficultyName, getDiffBG, isNotEmptyString, round, rounds, getFormattedTime, getTimeDifferenceShort,
+    getKeyDifficulty, getDiffBG, isNotEmptyString, round, rounds, getFormattedTime, getTimeDifferenceShort,
 } from "./util.js";
 import {getBadgeColor, getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -925,7 +925,7 @@ export const PanelGenerate = {
         const combo = (s.max_combo || 0) + 'x'
 
         const difficulty_name = s.beatmap.version ? torus.cutStringTail(
-            getDifficultyName(s.beatmap), 24,
+            getKeyDifficulty(s.beatmap), 24,
             500 - 10 - mods_width - torus.getTextWidth('[] -   ()' + acc + combo + time_diff, 24), true) : '';
 
         const rank = s?.legacy_rank
@@ -1019,7 +1019,7 @@ export const PanelGenerate = {
             const time_diff = getTimeDifferenceShort(s.ended_at, true);
             const rank_after_str = ' -> ' + rank_after;
             const difficulty_name = s.beatmap.version ?
-                torus.cutStringTail(getDifficultyName(s.beatmap), 24,
+                torus.cutStringTail(getKeyDifficulty(s.beatmap), 24,
                     500 - 10 - mods_width - torus.getTextWidth('[] - BP ()' + rank + rank_after_str + time_diff, 24), true)
                 : '';
 

@@ -1,9 +1,9 @@
 import {
     exportJPEG, getAvatar, getFormattedTime, getImageFromV3,
     getMapBG, getNowTimeStamp,
-    getPanelNameSVG, implantImage,
-    implantSvgBody, isEmptyArray, isNotNull, readTemplate,
-    replaceText, replaceTexts, round, rounds, transformSvgBody,
+    getPanelNameSVG, setImage,
+    setSvgBody, isEmptyArray, isNotNull, readTemplate,
+    setText, setTexts, round, rounds, getSvgBody,
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -153,21 +153,21 @@ export async function panel_F3(
     }
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index)
+    svg = setText(svg, panel_name, reg_index)
 
     // 定义模式
     const is_team_vs = (round.team_type === 'team-vs' || round.team_type === '')
 
     // 导入比赛简介卡（A2卡
     const f = card_A2(await PanelGenerate.matchRating2CardA2(match, round.beatmap, false)); // await PanelGenerate.roundInfo2CardA2(round, stat.name, team_point_map, stat.id, data.index)
-    svg = implantSvgBody(svg, 40, 40, f, reg_maincard);
+    svg = setSvgBody(svg, 40, 40, f, reg_maincard);
 
     // 导入谱面（A2卡
     const b = card_A2(await PanelGenerate.matchBeatMap2CardA2(round?.beatmap));
-    svg = implantSvgBody(svg, 1450, 40, b, reg_maincard);
+    svg = setSvgBody(svg, 1450, 40, b, reg_maincard);
 
     // 导入身体卡片
-    svg = implantSvgBody(svg, 0, 330, drawScoreBanner(round, is_team_vs), reg_bodycard)
+    svg = setSvgBody(svg, 0, 330, drawScoreBanner(round, is_team_vs), reg_bodycard)
 
     /*
     svg = implantSvgBody(svg, 40, 490, await card_P2(round.scores[0], round.beatmap.max_combo, round.scores[0].score), reg_bodycard)
@@ -181,18 +181,18 @@ export async function panel_F3(
         return s.match.team === 'blue'
     })
 
-    svg = implantSvgBody(svg, 0, 450, await drawBodyCard(is_team_vs, reds, blues, round.scores, round.beatmap.max_combo), reg_index)
+    svg = setSvgBody(svg, 0, 450, await drawBodyCard(is_team_vs, reds, blues, round.scores, round.beatmap.max_combo), reg_index)
 
     // 插入图片和部件（新方法
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8, await getMapBG(round?.beatmap.beatmapset_id, 'cover', hasLeaderBoard(round?.beatmap.beatmapset.ranked)), reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 320, await getMapBG(round?.beatmap.beatmapset_id, 'cover', hasLeaderBoard(round?.beatmap.beatmapset.ranked)), reg_banner, 0.8);
 
     const card_height = is_team_vs ?
         (Math.max(reds.length, blues.length) > 6 ?
             (Math.ceil((Math.max(reds.length, blues.length) - 6) / 2) * 195 + 790) : 790) :
         (round.scores.length > 12 ? (195 + 790) : 790)
 
-    svg = replaceText(svg, card_height + (1080 - 790), reg_panelheight);
-    svg = replaceText(svg, card_height, reg_height);
+    svg = setText(svg, card_height + (1080 - 790), reg_panelheight);
+    svg = setText(svg, card_height, reg_height);
 
     return svg.toString();
 }
@@ -238,9 +238,9 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
     const reg_text = /(?<=<g id="Text_CP1">)/
     const reg_mod = /(?<=<g id="Mod_CP1">)/
 
-    svg = implantImage(svg, 300, 300, 65, 55, 1, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar)
+    svg = setImage(svg, 65, 55, 300, 300, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar, 1)
 
-    svg = implantImage(svg, 430, 550, 0, 0, 0.6, getRankBG(match_score?.rank, match_score?.match?.pass), reg_background)
+    svg = setImage(svg, 0, 0, 430, 550, getRankBG(match_score?.rank, match_score?.match?.pass), reg_background, 0.6)
 
     const name = poppinsBold.getTextPath(poppinsBold.cutStringTail(match_score?.user?.username, 48, 430), 430 / 2, 426, 48, 'center baseline', '#fff')
 
@@ -260,7 +260,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
 
     const rank = getImageFromV3(`object-score-${match_score?.rank}2.png`)
 
-    svg = implantImage(svg, 90, 90, 330, 10, 1, rank, reg_text)
+    svg = setImage(svg, 330, 10, 90, 90, rank, reg_text, 1)
 
     const judge_data = getMatchScoreAdvancedJudge(match_score, max_combo)
 
@@ -269,7 +269,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
 
     const miss_count = poppinsBold.getTextPath(match_score?.statistics?.count_miss || 0, 366, 362, 30, 'right baseline', '#fff')
 
-    svg = implantImage(svg, 32, 32, 372, 336, 1, getImageFromV3('object-hit0.png'), reg_text)
+    svg = setImage(svg, 372, 336, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
 
     const score_score = rounds(match_score?.score || 0, -4)
 
@@ -319,9 +319,9 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
         mods_path += getModRRectPath(mod, x, 332, 84, 42, 20, 32, poppinsBold, 30)
     })
 
-    svg = replaceText(svg, mods_path, reg_mod)
+    svg = setText(svg, mods_path, reg_mod)
 
-    svg = replaceTexts(svg, [name, ranking, judge, miss_count, score, delta], reg_text)
+    svg = setTexts(svg, [name, ranking, judge, miss_count, score, delta], reg_text)
 
     return svg.toString()
 }
@@ -368,9 +368,9 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
     const reg_text = /(?<=<g id="Text_CP2">)/
     const reg_mod = /(?<=<g id="Mod_CP2">)/
 
-    svg = implantImage(svg, 130, 130, 15, 15, 1, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar)
+    svg = setImage(svg, 15, 15, 130, 130, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar, 1)
 
-    svg = implantImage(svg, 430, 160, 0, 0, 0.6, getRankBG(match_score?.rank, match_score?.match?.pass), reg_background)
+    svg = setImage(svg, 0, 0, 430, 160, getRankBG(match_score?.rank, match_score?.match?.pass), reg_background, 0.6)
 
     const name = poppinsBold.getTextPath(poppinsBold.cutStringTail(match_score?.user?.username, 36, 270), 160, 48, 36, 'left baseline', '#fff')
 
@@ -393,7 +393,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
 
     const rank = getImageFromV3(`object-score-${match_score?.rank}2.png`)
 
-    svg = implantImage(svg, 90, 90, 340, 70, 1, rank, reg_text)
+    svg = setImage(svg, 340, 70, 90, 90, rank, reg_text, 1)
 
     const judge_data = getMatchScoreAdvancedJudge(match_score, max_combo)
 
@@ -410,7 +410,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
     const miss = match_score?.statistics?.count_miss || 0
     const miss_count = poppinsBold.getTextPath(miss >= 1000 ? round(miss, 1, -1) : miss, 306, 94, 30, 'right baseline', '#fff')
 
-    svg = implantImage(svg, 32, 32, 310, 66, 1, getImageFromV3('object-hit0.png'), reg_text)
+    svg = setImage(svg, 310, 66, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
 
     const score_score = rounds(match_score?.score || 0, -4)
 
@@ -455,9 +455,9 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
         mods_path += getModRRectPath(mod, x, 64, 70, 40, 20, 30, poppinsBold, 30)
     })
 
-    svg = replaceText(svg, mods_path, reg_mod)
+    svg = setText(svg, mods_path, reg_mod)
 
-    svg = replaceTexts(svg, [name, ranking, judge, miss_count, score, delta], reg_text)
+    svg = setTexts(svg, [name, ranking, judge, miss_count, score, delta], reg_text)
 
     return svg.toString()
 }
@@ -698,10 +698,10 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
 async function drawBodyCard(is_team_vs = false, reds = [], blues = [], scores = [], max_combo) {
     if (is_team_vs) {
 
-        return transformSvgBody(510, 40, await drawVSCard(reds, blues, max_combo, false))
-            + transformSvgBody(980, 40, await drawVSCard(blues, reds, max_combo, true))
+        return getSvgBody(510, 40, await drawVSCard(reds, blues, max_combo, false))
+            + getSvgBody(980, 40, await drawVSCard(blues, reds, max_combo, true))
     } else {
-        return transformSvgBody(40, 40, await drawH2HCard(scores, max_combo))
+        return getSvgBody(40, 40, await drawH2HCard(scores, max_combo))
     }
 }
 
@@ -748,7 +748,7 @@ async function drawH2HCard(scores = [], max_combo = 0) {
     }
 
     for (const i in p1) {
-        svg += transformSvgBody(p1_solo_offset + 470 * i, 0, p1[i])
+        svg += getSvgBody(p1_solo_offset + 470 * i, 0, p1[i])
     }
 
     if (p1_size > 0) {
@@ -756,14 +756,14 @@ async function drawH2HCard(scores = [], max_combo = 0) {
             const x = i % (4 - p1_size)
             const y = Math.floor(i / (4 - p1_size))
 
-            svg += transformSvgBody(470 * (x + p1_size), 195 * y, p2[i])
+            svg += getSvgBody(470 * (x + p1_size), 195 * y, p2[i])
         }
     } else {
         for (const i in p2) {
             const x = i % 4
             const y = Math.floor(i / 4)
 
-            svg += transformSvgBody(470 * (x + p1_size), 195 * y, p2[i])
+            svg += getSvgBody(470 * (x + p1_size), 195 * y, p2[i])
         }
     }
 
@@ -803,7 +803,7 @@ async function drawVSCard(team_scores = [], enemy_scores = [], max_combo = 0, to
     const sign = (to_right === true) ? 1 : -1
 
     for (const i in p1) {
-        svg += transformSvgBody(470 * sign * i, 0, p1[i])
+        svg += getSvgBody(470 * sign * i, 0, p1[i])
     }
 
     if (p1_size === 0) {
@@ -811,11 +811,11 @@ async function drawVSCard(team_scores = [], enemy_scores = [], max_combo = 0, to
             const x = i % 2
             const y = Math.floor(i / 2)
 
-            svg += transformSvgBody(470 * sign * x, 195 * y, p2[i])
+            svg += getSvgBody(470 * sign * x, 195 * y, p2[i])
         }
     } else {
         for (const i in p2) {
-            svg += transformSvgBody(470 * sign, 195 * i, p2[i])
+            svg += getSvgBody(470 * sign, 195 * i, p2[i])
         }
     }
 

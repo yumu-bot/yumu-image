@@ -2,14 +2,14 @@ import {
     exportJPEG,
     getImageFromV3,
     getPanelNameSVG,
-    implantImage,
-    implantSvgBody,
+    setImage,
+    setSvgBody,
     isNotEmptyArray,
     isNotNull,
     isNotNullOrEmptyObject,
     readTemplate,
-    replaceText,
-    replaceTexts, rounds
+    setText,
+    setTexts, rounds
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -168,7 +168,7 @@ export async function panel_MS(data = {
 
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入 G 卡
     const songs = data?.songs || []
@@ -236,7 +236,7 @@ export async function panel_MS(data = {
     if (isNotEmptyArray(card_Gs)) {
         for (const i in card_Gs) {
             const v = card_Gs[i]
-            svg = implantSvgBody(svg, x + i * (interval + 350), 330, v, reg_card_g)
+            svg = setSvgBody(svg, x + i * (interval + 350), 330, v, reg_card_g)
         }
     }
 
@@ -244,10 +244,10 @@ export async function panel_MS(data = {
     const cardA2 = card_A2(await PanelGenerate.maimaiSong2CardA2(single_song, has_deluxe, has_standard));
 
     // 插入卡片
-    svg = implantSvgBody(svg, 40, 40, cardA2, reg_card_a2);
+    svg = setSvgBody(svg, 40, 40, cardA2, reg_card_a2);
 
     // 导入图片
-    svg = implantImage(svg, 1920, 330, 0, 0, 0.8, getRandomBannerPath("maimai", getMaimaiBannerIndex(single_song)), reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai", getMaimaiBannerIndex(single_song)), reg_banner, 0.8);
 
     return svg.toString()
 }
@@ -468,27 +468,17 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
         : '-')
     const equivalent = poppinsBold.getTextPath(equivalent_text, 280, 20, 14, 'right baseline', '#fff')
 
-    svg = implantImage(svg, 40, 25, 10 + 7, 30, 1,
-        getImageFromV3('Maimai', 'object-note-tap.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 54, 30, 1,
-        getImageFromV3('Maimai', 'object-note-hold.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 108, 30, 1,
-        getImageFromV3('Maimai', 'object-note-slide.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 162, 30, 1,
-        getImageFromV3('Maimai', 'object-note-touch.png'), reg_icon)
-    svg = implantImage(svg, 40, 25, 10 + 7 + 216, 30, 1,
-        getImageFromV3('Maimai', 'object-note-break.png'), reg_icon)
+    svg = setImage(svg, 10 + 7, 30, 40, 25, getImageFromV3('Maimai', 'object-note-tap.png'), reg_icon, 1)
+    svg = setImage(svg, 10 + 7 + 54, 30, 40, 25, getImageFromV3('Maimai', 'object-note-hold.png'), reg_icon, 1)
+    svg = setImage(svg, 10 + 7 + 108, 30, 40, 25, getImageFromV3('Maimai', 'object-note-slide.png'), reg_icon, 1)
+    svg = setImage(svg, 10 + 7 + 162, 30, 40, 25, getImageFromV3('Maimai', 'object-note-touch.png'), reg_icon, 1)
+    svg = setImage(svg, 10 + 7 + 216, 30, 40, 25, getImageFromV3('Maimai', 'object-note-break.png'), reg_icon, 1)
 
-    svg = implantImage(svg, 47 - 7, 25 - 6, 10 + 3 + 3.5, 95 + 3, 1,
-        getImageFromV3('Maimai', 'object-score-sp2.png'), reg_icon)
-    svg = implantImage(svg, 47, 25, 10 + 3 + 54, 95, 1,
-        getImageFromV3('Maimai', 'object-score-ss2.png'), reg_icon)
-    svg = implantImage(svg, 47, 25, 10 + 3 + 108, 95, 1,
-        getImageFromV3('Maimai', 'object-score-ssp2.png'), reg_icon)
-    svg = implantImage(svg, 47, 25, 10 + 3 + 162, 95, 1,
-        getImageFromV3('Maimai', 'object-score-sss2.png'), reg_icon)
-    svg = implantImage(svg, 47, 25, 10 + 3 + 216, 95, 1,
-        getImageFromV3('Maimai', 'object-score-sssp2.png'), reg_icon)
+    svg = setImage(svg, 10 + 3 + 3.5, 95 + 3, 47 - 7, 25 - 6, getImageFromV3('Maimai', 'object-score-sp2.png'), reg_icon, 1)
+    svg = setImage(svg, 10 + 3 + 54, 95, 47, 25, getImageFromV3('Maimai', 'object-score-ss2.png'), reg_icon, 1)
+    svg = setImage(svg, 10 + 3 + 108, 95, 47, 25, getImageFromV3('Maimai', 'object-score-ssp2.png'), reg_icon, 1)
+    svg = setImage(svg, 10 + 3 + 162, 95, 47, 25, getImageFromV3('Maimai', 'object-score-sss2.png'), reg_icon, 1)
+    svg = setImage(svg, 10 + 3 + 216, 95, 47, 25, getImageFromV3('Maimai', 'object-score-sssp2.png'), reg_icon, 1)
 
     const s3p_loss = poppinsBold.getTextPath('<' + getApproximateGreatString((1.01 - 0.98) * base_score_sum / 0.2),
         37, 137, 14, 'center baseline', '#fff')
@@ -514,15 +504,11 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     const break_2000 = poppinsBold.getTextPath(break_2000_text,
         62, 137 + 55, 14, 'left baseline', '#fff')
 
-    svg = implantImage(svg, 47, 25, 10 + 3, 145, 1,
-        getImageFromV3('Maimai', 'object-note-break-perfect.png'), reg_icon)
-    svg = implantImage(svg, 47, 25, 10 + 3, 175, 1,
-        getImageFromV3('Maimai', 'object-note-break-great.png'), reg_icon)
+    svg = setImage(svg, 10 + 3, 145, 47, 25, getImageFromV3('Maimai', 'object-note-break-perfect.png'), reg_icon, 1)
+    svg = setImage(svg, 10 + 3, 175, 47, 25, getImageFromV3('Maimai', 'object-note-break-great.png'), reg_icon, 1)
 
-    svg = implantImage(svg, 47, 25, 35 + Math.round(poppinsBold.getTextWidth(break_2550_text, 14)) + 30, 145, 1,
-        getImageFromV3('Maimai', 'object-note-tap-great.png'), reg_icon)
-    svg = implantImage(svg, 47, 25, 35 + Math.round(poppinsBold.getTextWidth(break_2000_text, 14)) + 30, 175, 1,
-        getImageFromV3('Maimai', 'object-note-tap-great.png'), reg_icon)
+    svg = setImage(svg, 35 + Math.round(poppinsBold.getTextWidth(break_2550_text, 14)) + 30, 145, 47, 25, getImageFromV3('Maimai', 'object-note-tap-great.png'), reg_icon, 1)
+    svg = setImage(svg, 35 + Math.round(poppinsBold.getTextWidth(break_2000_text, 14)) + 30, 175, 47, 25, getImageFromV3('Maimai', 'object-note-tap-great.png'), reg_icon, 1)
 
     const tap_count = poppinsBold.getTextPath((note?.tap || 0).toString(),
         37, 72, 14, 'center baseline', '#fff')
@@ -824,9 +810,9 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
 
     const base = PanelDraw.Rect(0, 0, 290, 210, 20, '#382E32', 1)
 
-    svg = replaceTexts(svg, [title, equivalent, tap_count, hold_count, slide_count, touch_count, break_count, s3p_loss, s3_loss, s2p_loss, s2_loss, sp_loss, break_2550, break_2000], reg_text)
+    svg = setTexts(svg, [title, equivalent, tap_count, hold_count, slide_count, touch_count, break_count, s3p_loss, s3_loss, s2p_loss, s2_loss, sp_loss, break_2550, break_2000], reg_text)
 
-    svg = replaceTexts(svg, [progress_rrect, progress_base_rrect, base], reg_base)
+    svg = setTexts(svg, [progress_rrect, progress_base_rrect, base], reg_base)
 
     return svg.toString()
 }

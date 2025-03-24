@@ -1,8 +1,8 @@
 import {
     exportJPEG, getMapBG, getPanelHeight,
     getPanelNameSVG,
-    implantSvgBody, readTemplate,
-    replaceText, implantImage
+    setSvgBody, readTemplate,
+    setText, setImage
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_N} from "../card/card_N.js";
@@ -59,12 +59,12 @@ export async function panel_A3(data = {
     const panel_name = getPanelNameSVG('Leader Board (!yml)', 'L', 'v0.5.0 DX');
 
     // 插入文字
-    svg = replaceText(svg, panel_name, reg_index);
+    svg = setText(svg, panel_name, reg_index);
 
     // 导入A2卡
     const beatmap_generated = await PanelGenerate.beatMap2CardA2(data.beatmap);
     const beatmap_a2 = card_A2(beatmap_generated);
-    svg = implantSvgBody(svg, 40, 40, beatmap_a2, reg_beatmap_a2);
+    svg = setSvgBody(svg, 40, 40, beatmap_a2, reg_beatmap_a2);
 
 
     // 导入N1卡
@@ -81,8 +81,7 @@ export async function panel_A3(data = {
     }
 
     // 插入图片和部件
-    svg = implantImage(svg, 1920, 320, 0, 0, 0.8,
-        await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked)), reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 320, await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked)), reg_banner, 0.8);
     // svg = putCustomBanner(svg, reg_banner, await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked)));
 
     // 计算面板高度
@@ -91,15 +90,15 @@ export async function panel_A3(data = {
     const panelHeight = getPanelHeight(cardN1s?.length, 62, 2, 290, 10, 40);
     const cardHeight = panelHeight - 290;
 
-    svg = replaceText(svg, panelHeight, reg_panelheight);
-    svg = replaceText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panelHeight, reg_panelheight);
+    svg = setText(svg, cardHeight, reg_cardheight);
 
     //插入N1卡
     for (let i = 0; i < cardN1s.length; i++) {
         const x = (i < rowTotal) ? 40 : 965;
         const y = (i < rowTotal) ? (330 + i * 72) : (330 + (i - rowTotal) * 72);
 
-        svg = implantSvgBody(svg, x, y, cardN1s[i], reg_list_n1);
+        svg = setSvgBody(svg, x, y, cardN1s[i], reg_list_n1);
     }
 
     return svg.toString();
