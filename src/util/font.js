@@ -215,7 +215,7 @@ function cutStringTail_BerlinBold(
  * @param largeSize {Number} 大文本尺寸
  * @param smallSize {Number} 小文本尺寸
  * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点横坐标
+ * @param y {Number} 锚点纵坐标
  * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
  * @param color {String} 十六进制颜色，#FFF
  */
@@ -350,7 +350,7 @@ function cutStringTail_TahomaRegular(
  * @param largeSize {Number} 大文本尺寸
  * @param smallSize {Number} 小文本尺寸
  * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点横坐标
+ * @param y {Number} 锚点纵坐标
  * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
  * @param color {String} 十六进制颜色，#FFF
  */
@@ -485,7 +485,7 @@ function cutStringTail_TahomaBold(
  * @param largeSize {Number} 大文本尺寸
  * @param smallSize {Number} 小文本尺寸
  * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点横坐标
+ * @param y {Number} 锚点纵坐标
  * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
  * @param color {String} 十六进制颜色，#FFF
  */
@@ -620,7 +620,7 @@ function cutStringTail_poppinsBold(
  * @param largeSize {Number} 大文本尺寸
  * @param smallSize {Number} 小文本尺寸
  * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点横坐标
+ * @param y {Number} 锚点纵坐标
  * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
  * @param color {String} 十六进制颜色，#FFF
  */
@@ -755,7 +755,7 @@ function cutStringTail_lineSeedSans(
  * @param largeSize {Number} 大文本尺寸
  * @param smallSize {Number} 小文本尺寸
  * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点横坐标
+ * @param y {Number} 锚点纵坐标
  * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
  * @param color {String} 十六进制颜色，#FFF
  */
@@ -890,7 +890,7 @@ function cutStringTail_torus(
  * @param largeSize {Number} 大文本尺寸
  * @param smallSize {Number} 小文本尺寸
  * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点横坐标
+ * @param y {Number} 锚点纵坐标
  * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
  * @param color {String} 十六进制颜色，#FFF
  * @param color2 {String} 十六进制颜色，#FFF，可不输入
@@ -1026,7 +1026,7 @@ function cutStringTail_torusBold(
  * @param largeSize {Number} 大文本尺寸
  * @param smallSize {Number} 小文本尺寸
  * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点横坐标
+ * @param y {Number} 锚点纵坐标
  * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
  * @param color {String} 十六进制颜色，#FFF
  * @param color2 {String} 十六进制颜色，#FFF，可不输入
@@ -1162,7 +1162,7 @@ function cutStringTail_torusRegular(
  * @param largeSize {Number} 大文本尺寸
  * @param smallSize {Number} 小文本尺寸
  * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点横坐标
+ * @param y {Number} 锚点纵坐标
  * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
  * @param color {String} 十六进制颜色，#FFF
  */
