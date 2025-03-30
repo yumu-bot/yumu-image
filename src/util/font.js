@@ -112,7 +112,7 @@ function getTextPath_BerlinBold(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
     shadow = false
@@ -147,7 +147,7 @@ function getTextMetrics_BerlinBold(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGBerlinBold.getMetrics(text, {
@@ -220,7 +220,7 @@ function cutStringTail_BerlinBold(
  * @param color {String} 十六进制颜色，#FFF
  */
 
-function get2SizeTextPath_BerlinBold(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+function get2SizeTextPath_BerlinBold(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
     let width_b = BerlinBold.getTextWidth(largerText, largeSize);
     let width_m = BerlinBold.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -260,7 +260,7 @@ function getTextPath_TahomaRegular(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
 ) {
@@ -282,7 +282,7 @@ function getTextMetrics_TahomaRegular(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGTahomaRegular.getMetrics(text, {
@@ -355,7 +355,7 @@ function cutStringTail_TahomaRegular(
  * @param color {String} 十六进制颜色，#FFF
  */
 
-function get2SizeTextPath_TahomaRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+function get2SizeTextPath_TahomaRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
     let width_b = TahomaRegular.getTextWidth(largerText, largeSize);
     let width_m = TahomaRegular.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -395,7 +395,7 @@ function getTextPath_TahomaBold(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
 ) {
@@ -417,7 +417,7 @@ function getTextMetrics_TahomaBold(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGTahomaBold.getMetrics(text, {
@@ -490,7 +490,7 @@ function cutStringTail_TahomaBold(
  * @param color {String} 十六进制颜色，#FFF
  */
 
-function get2SizeTextPath_TahomaBold(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+function get2SizeTextPath_TahomaBold(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
     let width_b = TahomaBold.getTextWidth(largerText, largeSize);
     let width_m = TahomaBold.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -530,7 +530,7 @@ function getTextPath_poppinsBold(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
 ) {
@@ -552,7 +552,7 @@ function getTextMetrics_poppinsBold(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGpoppinsBold.getMetrics(text, {
@@ -625,7 +625,7 @@ function cutStringTail_poppinsBold(
  * @param color {String} 十六进制颜色，#FFF
  */
 
-function get2SizeTextPath_poppinsBold(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+function get2SizeTextPath_poppinsBold(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
     let width_b = poppinsBold.getTextWidth(largerText, largeSize);
     let width_m = poppinsBold.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -665,7 +665,7 @@ function getTextPath_lineSeedSans(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
 ) {
@@ -687,7 +687,7 @@ function getTextMetrics_lineSeedSans(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGlineSeedSansBold.getMetrics(text, {
@@ -760,7 +760,7 @@ function cutStringTail_lineSeedSans(
  * @param color {String} 十六进制颜色，#FFF
  */
 
-function get2SizeTextPath_lineSeedSans(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+function get2SizeTextPath_lineSeedSans(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
     let width_b = lineSeedSans.getTextWidth(largerText, largeSize);
     let width_m = lineSeedSans.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -800,7 +800,7 @@ function getTextPath_torus(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1
 ) {
@@ -822,7 +822,7 @@ function getTextMetrics_torus(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGTorusSB.getMetrics(text, {
@@ -896,7 +896,7 @@ function cutStringTail_torus(
  * @param color2 {String} 十六进制颜色，#FFF，可不输入
  */
 
-function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x, y, anchor, color, color2 = color) {
+function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'left baseline', color = '#fff', color2 = color) {
     let width_b = torus.getTextWidth(largerText, largeSize);
     let width_m = torus.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -936,7 +936,7 @@ function getTextPath_torusBold(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1
 ) {
@@ -958,7 +958,7 @@ function getTextMetrics_torusBold(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGTorusBold.getMetrics(text, {
@@ -1032,7 +1032,7 @@ function cutStringTail_torusBold(
  * @param color2 {String} 十六进制颜色，#FFF，可不输入
  */
 
-function get2SizeTextPath_torusBold(largerText, smallerText, largeSize, smallSize, x, y, anchor, color, color2 = color) {
+function get2SizeTextPath_torusBold(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'left baseline', color = '#fff', color2 = color) {
     let width_b = torusBold.getTextWidth(largerText, largeSize);
     let width_m = torusBold.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -1072,7 +1072,7 @@ function getTextPath_torusRegular(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
 ) {
@@ -1094,7 +1094,7 @@ function getTextMetrics_torusRegular(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGTorusRegular.getMetrics(text, {
@@ -1167,7 +1167,7 @@ function cutStringTail_torusRegular(
  * @param color {String} 十六进制颜色，#FFF
  */
 
-function get2SizeTextPath_torusRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor, color) {
+function get2SizeTextPath_torusRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
     let width_b = torusRegular.getTextWidth(largerText, largeSize);
     let width_m = torusRegular.getTextWidth(smallerText, smallSize);
     let width_a = (width_b + width_m) / 2; // 全长的一半长
@@ -1207,7 +1207,7 @@ function getTextPath_PuHuiTi(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1
 ) {
@@ -1229,7 +1229,7 @@ function getTextMetrics_PuHuiTi(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGextra.getMetrics(text, {
@@ -1303,7 +1303,7 @@ function getTextPath_extra(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
 ) {
@@ -1325,7 +1325,7 @@ function getTextMetrics_extra(
     x = 0,
     y = 0,
     size = 36,
-    anchor = 'left top',
+    anchor = 'left baseline',
     fill = '#fff'
 ) {
     return textToSVGextra.getMetrics(text, {

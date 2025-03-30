@@ -440,6 +440,11 @@ export function getModFullName(abbr = 'NM') {
     }
 }
 
+/**
+ *
+ * @param {string[]|number} mods
+ * @returns {number}
+ */
 export function getModInt(mods = ['']) {
     if (Array.isArray(mods) && mods.length > 0) {
         return mods.map(v => {

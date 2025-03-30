@@ -40,6 +40,23 @@ export const PanelDraw = {
         return out
     },
 
+    /**
+     * 快速生成一个左右渐变圆角矩形
+     */
+    LinearGradientRect(x = 0, y = 0, w = 0, h = 0, r = 0, color1 = '#fff', color2 = color1, opacity = 1) {
+        return this.GradientRect(x, y, w, h, r, [
+            {
+                offset: "0%",
+                color: color1,
+                opacity: opacity,
+            }, {
+                offset: "100%",
+                color: color2,
+                opacity: opacity,
+            }
+        ])
+    },
+
     Circle: (cx = 0, cy = 0, r = 0, color = '#fff', opacity = 1) => {
         return `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill: ${color}; fill-opacity: ${opacity}"/>`;
     },

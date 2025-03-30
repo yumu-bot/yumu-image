@@ -54,6 +54,7 @@
 - Delta XinRan 比赛面板 KT
 - Epsilon 截图用头像 OA
 - Zeta 截图用头像 OC
+- Eta 千变万化 B/P/R/S
 
 ## 卡片
 

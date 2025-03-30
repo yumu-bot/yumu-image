@@ -1206,7 +1206,7 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
 }
 
 // 同 panelE 的方法，注意这里 x 是第一个 mod 的左下角
-const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) => {
+const getModsSVG = (mods = [{ acronym: '' }], x, y, mod_w, text_h, interval) => {
     let svg = '';
 
     const length = mods ? mods.length : 0;

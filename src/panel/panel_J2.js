@@ -166,16 +166,6 @@ export async function panel_J2(data = {
     let svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080">
     <defs>
-    
-        <filter id="text-shadow" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
-          <!--                  1 外描-->
-          <feMorphology radius="1" operator="dilate" in="SourceAlpha" result="filter-out"/>
-          <!--                          0 扩散-->
-          <feGaussianBlur stdDeviation="0" in="shadow" result="blurredShadow"/>
-          <!--      色彩-->
-          <feColorMatrix in="blurredShadow" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/>
-          <feBlend mode="normal" in="SourceGraphic" result="shape"/>
-        </filter>
         <clipPath id="clippath-PJ2-1">
             <rect width="1920" height="320" rx="20" ry="20" style="fill: none;"/>
         </clipPath>

@@ -131,6 +131,7 @@ export function getImageFromV3(...paths) {
  * @function 获得难度背景
  * @param {number} bid bid
  * @param {number} sid sid
+ * @return Promise<string>
  */
 export async function getDiffBG(bid, sid, cover = 'cover', use_cache = true, is_dmca = false, default_image_path = getImageFromV3('card-default.png')) {
     let path;
@@ -164,6 +165,7 @@ export async function getDiffBG(bid, sid, cover = 'cover', use_cache = true, is_
 
 /**
  * 获取图片
+ * @return Promise<string>
  */
 export async function getBGFromDatabase(bid, sid) {
     return await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
@@ -586,6 +588,7 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
 }
 
 /**
+ * 设置文字
  * @param {number | string} base
  * @param {number | string} replace
  * @param {string | RegExp} reg
@@ -594,13 +597,26 @@ export function setText(base = '', replace = '', reg = /.*/) {
     return base.replace(reg, replace);
 }
 
-export function setTexts(base = '', replaces = [''], reg = /.*/) {
+
+/**
+ * 设置文字
+ * @param {number | string} base
+ * @param {number[] | string[]} replaces
+ * @param {string | RegExp} regex
+ */
+export function setTexts(base = '', replaces = [''], regex = /.*/) {
     if (Array.isArray(replaces)) {
-        for (const v of replaces) {
-            base = base.replace(reg, v);
+        let rep = ''
+
+        for (const i in replaces) {
+            const v = replaces[replaces?.length - 1 - i]
+
+            rep += (v + '\n')
         }
+
+        base = base.replace(regex, rep);
     } else if (typeof replaces == "string") {
-        base = base.replace(reg, replaces);
+        base = base.replace(regex, replaces);
     }
     return base;
 }
@@ -1819,16 +1835,16 @@ export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, 
 }
 
 //公用方法：给面板上名字
-export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), powered = 'Yumubot') {
+export function getPanelNameSVG(name = '?? (!test)', index = '?', version = 'v0.0.0 Dev', request_time = 'request time: ' + getNowTimeStamp(), color = '#fff', powered = 'Yumubot') {
 
     // powered by Yumubot v0.5.0 DX // Score (!ymp / !ymr / !yms)
     const powered_text = torus.getTextPath(
         "powered by " + powered.toString() + " " + version.toString() + " \/\/ " + name.toString(),
-        20, 26.84, 24, "left baseline", "#fff");
+        20, 26.84, 24, "left baseline", color);
     const request_time_text = torus.getTextPath(request_time.toString(),
-        1900, 26.84, 24, "right baseline", "#fff");
+        1900, 26.84, 24, "right baseline", color);
     const index_text = torus.getTextPath(index.toString(),
-        607.5, 83.67, 48, "center baseline", "#fff");
+        607.5, 83.67, 48, "center baseline", color);
 
     //导入文字
     return (powered_text + '\n' + request_time_text + '\n' + index_text);

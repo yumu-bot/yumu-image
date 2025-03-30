@@ -330,7 +330,6 @@ export async function panel_E5(data = {
     const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked), data?.score?.beatmap?.beatmapset?.availability?.more_information != null);
 
     // 卡片定义
-
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
     const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.score));
     const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.score, data.density, data.progress));
@@ -1432,7 +1431,7 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
 }
 
 // 同 panelE 的方法，注意这里 x 是第一个 mod 的左下角
-const getModsSVG = (mods = [{ acronym: 'CL' }], x, y, mod_w, text_h, interval) => {
+const getModsSVG = (mods = [{ acronym: '' }], x, y, mod_w, text_h, interval) => {
     let svg = '';
 
     const length = mods ? mods.length : 0;

@@ -233,12 +233,12 @@ export function pp2UserBG(pp = 0, boundary = [], ranks = []) {
 //获取一个1到目标数的随机整数。如果range小于1，则返回0-1的随机小数。
 export function getRandom(range = 0) {
     if (range > 1) {
-        return Math.round((- Math.random() + 1) * (range - 1)) + 1
+        return Math.floor(Math.random() * range) + 1
         //return Math.round(parseInt(moment().format("SSS")) / 999 * (range - 1)) + 1;
     } else if (range === 1) {
         return 1;
     } else {
-        return (- Math.random() + 1)
+        return Math.random()
         //return parseInt(moment().format("SSS")) / 999;
     }
 }

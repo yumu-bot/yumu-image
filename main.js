@@ -36,6 +36,10 @@ import {router as panelGammaRouter} from "./src/panel/panel_Gamma.js";
 import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js";
 import {router as panelEpsilonRouter} from "./src/panel/panel_Epsilon.js";
 import {router as panelZetaRouter} from "./src/panel/panel_Zeta.js";
+import {router as panelEta1Router} from "./src/panel/panel_Eta1.js";
+import {router as panelEta2Router} from "./src/panel/panel_Eta2.js";
+import {router as panelEta3Router} from "./src/panel/panel_Eta3.js";
+import {router as panelEta4Router} from "./src/panel/panel_Eta4.js";
 import {router as MarkdownRouter} from "./src/panel/markdown.js";
 import {router as GetMapAttrRouter} from "./src/panel/mapAttributes.js";
 
@@ -101,6 +105,10 @@ app.post('/panel_Gamma', panelGammaRouter);
 app.post('/panel_Delta', panelDeltaRouter);
 app.post('/panel_Epsilon', panelEpsilonRouter);
 app.post('/panel_Zeta', panelZetaRouter);
+app.post('/panel_Eta1', panelEta1Router);
+app.post('/panel_Eta2', panelEta2Router);
+app.post('/panel_Eta3', panelEta3Router);
+app.post('/panel_Eta4', panelEta4Router);
 
 app.post('/panel_MA', PanelMARouter);
 app.post('/panel_MA2', PanelMA2Router);
