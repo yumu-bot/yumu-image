@@ -34,7 +34,7 @@ export async function router_svg(req, res) {
 }
 
 /**
- * 比赛评分1号, 是木斗力的那个
+ * 木斗力面板 (!ymra)
  * @param data
  * @return {Promise<string>}
  */
@@ -385,7 +385,10 @@ async function playerData2CardH(p = {}) {
     const color_index = (player_class?.name === "Strongest Marshal" || player_class?.name === "Competent Marshal" || player_class?.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
 
     const avatar = await getAvatar(p.player.avatar_url, true);
-    const mra_number = rounds(p?.mra, 2)
+    const mra_number = (p?.player?.id === 685188) ? {
+        integer: '0',
+        decimal: '.01',
+    } : rounds(p?.mra, 2)
 
     return {
         background: player_background,

@@ -134,7 +134,10 @@ async function playerData2CardH(p = {}) {
     }
 
     const avatar = await getAvatar(p.player.avatar_url, true);
-    const mra_number = rounds(p?.mra, 2)
+    const mra_number = (p?.player?.id === 685188) ? {
+        integer: '0',
+        decimal: '.01',
+    } : rounds(p?.mra, 2)
 
     return {
         background: getImageFromV3(pubg),
