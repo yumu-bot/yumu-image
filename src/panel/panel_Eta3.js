@@ -656,7 +656,7 @@ const component_Eta2 = (data = {
                 + getPadPath(data.statistics?.miss, 560, 770 + 260)
         } break;
         case 'm': {
-            judges = poppinsBold.getTextPath('GREAT', 235, 770, 40, 'left baseline', '#8DCFF4')
+            judges = poppinsBold.getTextPath('PERFECT', 235, 770, 40, 'left baseline', '#8DCFF4')
                 + poppinsBold.getTextPath('GREAT', 235, 770 + 65, 40, 'left baseline', '#79C471')
                 + poppinsBold.getTextPath('GOOD', 235, 770 + 130, 40, 'left baseline', '#FEF668')
                 + getMultipleTextPath(
