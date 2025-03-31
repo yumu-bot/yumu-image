@@ -502,8 +502,8 @@ const component_Eta2 = (data = {
 
     const mods = getModsSVG(data?.mods, 910, 626, 90, 42, 50);
 
-    const titles = poppinsBold.getTextPath('SCORE', 400, 484, 72, 'right baseline', '#fff')
-        + poppinsBold.getTextPath('ACC.', 400, 572, 48, 'right baseline', '#fff')
+    const titles = poppinsBold.getTextPath('SCORE', 400 - 40, 484, 72, 'right baseline', '#fff')
+        + poppinsBold.getTextPath('ACC.', 400 - 40, 572, 48, 'right baseline', '#fff')
         + poppinsBold.getTextPath('PP.', 650, 772, 40, 'left baseline', '#fff')
         + poppinsBold.getTextPath('COMBO', 670, 1016, 36, 'left baseline', '#fff')
 
