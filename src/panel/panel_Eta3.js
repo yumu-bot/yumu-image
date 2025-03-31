@@ -315,8 +315,6 @@ export async function panel_Eta3(data = {
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.3);
     svg = setImage(svg, 460, 290, 1920, 790, getRandomMascotTransparentPath(getMascotName(data?.score?.mode)), reg_mascot)
 
-    svg = setText(svg, result, reg_component);
-
 
     // 卡片定义
     const componentEta1 = component_Eta1(await PanelEta1Generate.score2componentEta1(data.score));
@@ -324,7 +322,7 @@ export async function panel_Eta3(data = {
 
     // 导入卡片
     svg = setSvgBody(svg, 180, 40, componentEta1, reg_component);
-    svg = setText(svg, componentEta2, reg_component);
+    svg = setTexts(svg, [componentEta2, result], reg_component);
 
     return svg.toString()
 }
@@ -393,8 +391,8 @@ const component_Eta1 = (
         + PanelDraw.Rect(1410 - 180 - 3, 112 - 40, 6, 40, 3)
         + PanelDraw.Rect(1490 - 180 - 3, 112 - 40, 6, 40, 3)
 
-    const title_text = poppinsBold.cutStringTail(data?.title, 60, 630)
-    const title2_width = 630 + 220 - poppinsBold.getTextWidth(title_text, 60);
+    const title_text = poppinsBold.cutStringTail(data?.title, 60, 530)
+    const title2_width = 530 + 220 - poppinsBold.getTextWidth(title_text, 60);
     const title2_font = isASCII(data?.title_unicode) ? poppinsBold : PuHuiTi
 
     const title = getMultipleTextPath(
