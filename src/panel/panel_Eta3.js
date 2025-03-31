@@ -717,7 +717,7 @@ const PanelEta1Generate = {
             combo: score?.max_combo,
             max_combo: score?.beatmap?.max_combo,
             accuracy: score?.accuracy,
-            score: score?.legacy_total_score,
+            score: score?.is_lazer ? (score?.total_score || 0) : (score?.legacy_total_score || 0),
 
             pp: score?.pp || 0,
             full_pp: attr?.full_pp || 0,

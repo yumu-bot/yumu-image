@@ -521,7 +521,7 @@ const PanelEta1Generate = {
 
             rank: score?.legacy_rank,
 
-            score: score?.legacy_total_score,
+            score: score?.is_lazer ? (score?.total_score || 0) : (score?.legacy_total_score || 0),
             mode: score?.mode,
             mods: score?.mods,
             statistics: score?.statistics,
