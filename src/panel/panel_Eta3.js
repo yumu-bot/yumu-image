@@ -398,7 +398,7 @@ const component_Eta1 = (
     const title = getMultipleTextPath(
         [{
             font: poppinsBold,
-            text: (data?.title || '') + ' ',
+            text: title_text + ' ',
             size: 48,
             color: '#2A2226'
         }, {

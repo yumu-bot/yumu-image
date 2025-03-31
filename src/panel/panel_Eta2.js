@@ -380,7 +380,7 @@ const component_Eta1 = (data = {
     const title = getMultipleTextPath(
         [{
             font: torus,
-            text: (data?.title || '') + ' ',
+            text: title_text + ' ',
             size: 60,
             color: '#fff'
         }, {
