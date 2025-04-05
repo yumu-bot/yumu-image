@@ -41,6 +41,7 @@ export async function router_svg(req, res) {
 export async function panel_A5(data = {
     "panel": "",
     "user": {},
+    "rank": [],
     "score": [],
 
 }) {
@@ -82,11 +83,13 @@ export async function panel_A5(data = {
 
     // 导入H卡
     let cardHs = [];
-    for (const i in data.score) {
-        const v = data.score[i];
+    for (const s in data.score) {
+        const v = data.score[s]
+        const i = data.rank[s]
+
 
         const f = await card_H(
-            await PanelGenerate.score2CardH(v, parseInt(i) + 1));
+            await PanelGenerate.score2CardH(v, i));
         cardHs.push(f);
     }
 

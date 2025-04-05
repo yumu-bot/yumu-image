@@ -50,6 +50,9 @@ export const PanelGenerate = {
         }
 
 
+        /**
+         * @type {string}
+         */
         const background = user?.profile?.card || await getBanner(user?.cover_url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
@@ -934,7 +937,7 @@ export const PanelGenerate = {
         const artist = torus.cutStringTail(s.beatmapset.artist, 24,
             500 - 10 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
 
-        const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? null : s.beatmapset.title_unicode;
+        const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? '' : (s?.beatmapset?.title_unicode || '');
         const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : round(s?.pp, 1, -1);
 
         // 这是大概的进度
@@ -945,6 +948,8 @@ export const PanelGenerate = {
 
         const star_color = getStarRatingColor(star)
         const color_label12 = (star < 4) ? '#1c1719' : '#fff'
+
+        const label2 = s?.beatmap?.id?.toString() || ''
 
         return {
             background: background,
@@ -962,7 +967,7 @@ export const PanelGenerate = {
             index_m_size: 36,
             index_l_size: 24,
             label1: round(star, 1),
-            label2: s?.beatmap?.id?.toString() || '',
+            label2: label2,
             label3: '',
             label4: '',
             label5: '#' + identifier,
