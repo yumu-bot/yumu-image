@@ -279,12 +279,12 @@ const PanelGamma = {
     },
 
     sanityVersion: async (s = {}) => {
-        const user = s?.card_A1 ? (s?.card_A1[0] || s?.card_A1) : {};
+        const user = s?.users ? (s?.users[0] || s?.users) : {};
 
         const background = await getBanner(user?.cover_url, true);
         const avatar = await getAvatar(user?.avatar_url, true);
 
-        const sanity = s?.card_b_1?.SAN || 120;
+        const sanity = (s?.my?.SAN || 1.2) * 100;
         const sanity_rank = getRankFromValue(sanity, [120, 100, 95, 90, 80, 70, 60, 0], ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X']);
         const sanity_color = getRankColor(
             getRankFromValue(sanity, [120, 100, 95, 90, 80, 70, 60, 0])

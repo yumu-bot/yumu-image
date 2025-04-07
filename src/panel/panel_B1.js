@@ -47,7 +47,7 @@ const VALUE_NAMES = ['ACC', 'PTT', 'STA', 'STB', 'PRE', 'EFT', 'STH'] // OVA 跟
 // ppm 面板
 export async function panel_B1(data = {
     // A1卡
-    card_A1: [{
+    users: [{
         background: getImageFromV3('card-default.png'),
         avatar: getImageFromV3('avatar-guest.png'),
         sub_icon1: null,
@@ -62,7 +62,7 @@ export async function panel_B1(data = {
         pp: 4396,
     }, {}],
 
-    card_b_1: {
+    my: {
         ACC: 1.1195, // 0-1
         PTT: 0.85,
         STA: 0.76,
@@ -72,7 +72,7 @@ export async function panel_B1(data = {
         OVA: 99.4, // 0-100
         SAN: 125.45, // 0-100
     },
-    card_b_2: {
+    others: {
         ACC: 0.64, // 0-1
         PTT: 0.8743,
         STA: 0.7658,
@@ -84,9 +84,9 @@ export async function panel_B1(data = {
     },
 
     //其他统计数据
-    statistics: {
-        isVS: false, //是PPMVS吗？不是则false
-        gameMode: 0, // 这里改用mode_int
+    stat: {
+        is_vs: false, //是PPMVS吗？不是则false
+        mode_int: 0, // 这里改用mode_int
     }
 
 }) {
@@ -109,8 +109,8 @@ export async function panel_B1(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 条件定义
-    const isVS = data.statistics.isVS;
-    const mode = getGameMode(data.statistics.gameMode, 0);
+    const isVS = data.stat.is_vs;
+    const mode = getGameMode(data.stat.mode_int, 0);
 
     const game_mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
 
@@ -121,7 +121,13 @@ export async function panel_B1(data = {
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('PP Minus v2.4 (!ympm/!ympv)', 'PM', 'v0.5.0 DX');
+    let panel_name
+
+    if (data?.panel === 'PM4') {
+        panel_name = getPanelNameSVG('(Test) PP Minus v4.0 (!ymtp)', 'PM', 'v0.5.2 DX');
+    } else {
+        panel_name = getPanelNameSVG('PP Minus v2.4 (!ympm/!ympv)', 'PM', 'v0.5.0 DX');
+    }
 
     // 插入文字
     svg = setTexts(svg, [panel_name, game_mode_path], reg_index);
@@ -149,9 +155,9 @@ export async function panel_B1(data = {
 
     // 获取卡片
     for (const name of VALUE_NAMES) {
-        if (typeof data?.card_b_1[name] !== 'number') continue;
+        if (typeof data?.my[name] !== 'number') continue;
 
-        const value = (data?.card_b_1[name] || 0) * 100;
+        const value = (data?.my[name] || 0) * 100;
         const rank = getRankFromValue(value, BOUNDARY)
         const color = getRankColor(rank)
         const background = getRankBG(rank);
@@ -165,7 +171,7 @@ export async function panel_B1(data = {
             color: color,
 
         }, false));
-        number_left.push(Math.min(Math.max((data.card_b_1[name] * scale_left - 0.6), 0.01) / 4 * 10, 1));
+        number_left.push(Math.min(Math.max((data.my[name] * scale_left - 0.6), 0.01) / 4 * 10, 1));
     }
     svg = setText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
@@ -174,18 +180,18 @@ export async function panel_B1(data = {
     }
 
     // 我自己的卡片
-    const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[0]));
+    const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.users[0]));
     svg = setSvgBody(svg, 40, 40, cardA1m, reg_maincard);
 
     // 如果是vs，渲染右边的人
     if (isVS) {
-        const cardA1y = await card_A1(await PanelGenerate.user2CardA1(data.card_A1[1]));
-        svg = setSvgBody(svg, 1450, 40, cardA1y, reg_maincard);
+        const cardA1o = await card_A1(await PanelGenerate.user2CardA1(data.users[1]));
+        svg = setSvgBody(svg, 1450, 40, cardA1o, reg_maincard);
 
         for (const name of VALUE_NAMES) {
-            if (typeof data.card_b_2[name] !== 'number') continue;
+            if (typeof data.others[name] !== 'number') continue;
 
-            const value = (data?.card_b_2[name] || 0) * 100;
+            const value = (data?.others[name] || 0) * 100;
             const rank = getRankFromValue(value, BOUNDARY)
             const color = getRankColor(rank)
             const background = getRankBG(rank);
@@ -199,7 +205,7 @@ export async function panel_B1(data = {
                 color: color,
 
             }, true));
-            number_right.push(Math.min(Math.max((data.card_b_2[name] * scale_right - 0.6), 0.01) / 4 * 10, 1));
+            number_right.push(Math.min(Math.max((data.others[name] * scale_right - 0.6), 0.01) / 4 * 10, 1));
         }
 
         svg = setText(svg, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
@@ -208,7 +214,7 @@ export async function panel_B1(data = {
             svg = setSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
         }
         
-        const value_1 = data?.card_b_1.OVA || 0;
+        const value_1 = (data?.my.OVA || 0) * 100;
         const rank_1 = getRankFromValue(value_1, BOUNDARY);
         const bg_1 = getRankBG(rank_1);
         const color_1 = getRankColor(rank_1);
@@ -223,7 +229,7 @@ export async function panel_B1(data = {
         }));
 
 
-        const value_2 = data?.card_b_2.OVA || 0;
+        const value_2 = (data?.others.OVA || 0) * 100;
         const rank_2 = getRankFromValue(value_2, BOUNDARY);
         const bg_2 = getRankBG(rank_2);
         const color_2 = getRankColor(rank_2);
@@ -238,7 +244,7 @@ export async function panel_B1(data = {
         }));
 
     } else {
-        const value_1 = data?.card_b_1.OVA || 0;
+        const value_1 = (data?.my.OVA || 0) * 100;
         const rank_1 = getRankFromValue(value_1, BOUNDARY);
         const bg_1 = getRankBG(rank_1);
         const color_1 = getRankColor(rank_1);
@@ -252,7 +258,7 @@ export async function panel_B1(data = {
             color: color_1,
         }));
 
-        const san_value = Math.round(data?.card_b_1.SAN || 0);
+        const san_value = Math.round(data?.my.SAN || 0) * 100;
         const san_rank = getRankFromValue(san_value, SANITY_BOUNDARY); // 用于颜色判断的 rank
         const san_bg = getRankBG(san_rank);
         const san_color = getRankColor(san_rank);
