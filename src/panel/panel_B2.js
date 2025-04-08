@@ -45,7 +45,7 @@ export async function router_svg(req, res) {
 }
 
 /**
- * 骂娘谱面某种信息面板, 不玩骂娘看不懂
+ * Skill 信息面板
  * @param data
  * @return {Promise<string>}
  */

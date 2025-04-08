@@ -109,7 +109,7 @@ export async function panel_B1(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 条件定义
-    const isVS = data.stat.is_vs;
+    const is_vs = data.stat.is_vs;
     const mode = getGameMode(data.stat.mode_int, 0);
 
     const game_mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
@@ -142,7 +142,7 @@ export async function panel_B1(data = {
     let scale_left = 1;
     let scale_right = 1;
 
-    if (isVS) {
+    if (is_vs) {
         let mePP = data.my[0].pp || 0;
         let otherPP = data.others[1].pp || 0;
 
@@ -167,6 +167,7 @@ export async function panel_B1(data = {
             background: background,
             value: value,
             round_level: 1,
+            delta: is_vs ? (value - (data?.others[name] || 0) * 100) : null,
             rank: rank,
             color: color,
 
@@ -184,7 +185,7 @@ export async function panel_B1(data = {
     svg = setSvgBody(svg, 40, 40, cardA1m, reg_maincard);
 
     // 如果是vs，渲染右边的人
-    if (isVS) {
+    if (is_vs) {
         const cardA1o = await card_A1(await PanelGenerate.user2CardA1(data.users[1]));
         svg = setSvgBody(svg, 1450, 40, cardA1o, reg_maincard);
 
@@ -200,6 +201,7 @@ export async function panel_B1(data = {
                 label: LABEL_PPM[name?.toUpperCase()],
                 background: background,
                 value: value,
+                delta: value - (data?.my[name] || 0) * 100,
                 round_level: 1,
                 rank: rank,
                 color: color,
