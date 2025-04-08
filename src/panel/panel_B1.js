@@ -143,8 +143,8 @@ export async function panel_B1(data = {
     let scale_right = 1;
 
     if (is_vs) {
-        let mePP = data.my[0].pp || 0;
-        let otherPP = data.others[1].pp || 0;
+        let mePP = data.users[0].pp || 0;
+        let otherPP = data.users[1].pp || 0;
 
         if (mePP >= otherPP && otherPP > 0) {
             scale_right = otherPP / mePP;
