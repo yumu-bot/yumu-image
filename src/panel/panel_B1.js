@@ -92,8 +92,10 @@ export async function panel_B1(data = {
 }) {
     let svg = readTemplate('template/Panel_B.svg');
 
-    const BOUNDARY = [120, 100, 95, 90, 80, 70, 60, 10];
-    const SANITY_BOUNDARY = [120, 100, 95, 90, 80, 70, 60, 0];
+    const is_pm4 = data?.panel === 'PM4'
+
+    const BOUNDARY = [is_pm4 ? 101 : 120, 100, 95, 90, 80, 70, 60, 10];
+    const SANITY_BOUNDARY = [is_pm4 ? 101 : 120, 100, 95, 90, 80, 70, 60, 0];
     const SANITY_RANKS = ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X'];
 
     const VALUE_NORMAL = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH'];
@@ -123,7 +125,7 @@ export async function panel_B1(data = {
     // 面板文字
     let panel_name
 
-    if (data?.panel === 'PM4') {
+    if (is_pm4) {
         panel_name = getPanelNameSVG('(Test) PP Minus v4.0 (!ymtp)', 'PM', 'v0.5.2 DX');
     } else {
         panel_name = getPanelNameSVG('PP Minus v2.4 (!ympm/!ympv)', 'PM', 'v0.5.0 DX');
