@@ -94,8 +94,8 @@ export async function panel_B1(data = {
 
     const is_pm4 = data?.panel === 'PM4'
 
-    const BOUNDARY = [is_pm4 ? 101 : 120, 100, 95, 90, 80, 70, 60, 10];
-    const SANITY_BOUNDARY = [is_pm4 ? 101 : 120, 100, 95, 90, 80, 70, 60, 0];
+    const BOUNDARY = [is_pm4 ? 100.8 : 120, 100, 95, 90, 80, 70, 60, 10];
+    const SANITY_BOUNDARY = [is_pm4 ? 100.8 : 120, 100, 95, 90, 80, 70, 60, 0];
     const SANITY_RANKS = ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X'];
 
     const VALUE_NORMAL = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH'];
