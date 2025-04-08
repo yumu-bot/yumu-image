@@ -143,13 +143,13 @@ export async function panel_B1(data = {
     let scale_right = 1;
 
     if (isVS) {
-        let mePP = data.card_A1[0].pp || 0;
-        let yourPP = data.card_A1[1].pp || 0;
+        let mePP = data.my[0].pp || 0;
+        let otherPP = data.others[1].pp || 0;
 
-        if (mePP >= yourPP && yourPP > 0) {
-            scale_right = yourPP / mePP;
-        } else if (mePP < yourPP && mePP > 0) {
-            scale_left = mePP / yourPP;
+        if (mePP >= otherPP && otherPP > 0) {
+            scale_right = otherPP / mePP;
+        } else if (mePP < otherPP && mePP > 0) {
+            scale_left = mePP / otherPP;
         }
     }
 
