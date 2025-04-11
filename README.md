@@ -1,3 +1,23 @@
+# 用法
+
+绘图程序默认会使用端口 `1611`。
+
+请确保端口不被其他程序占用。
+
+## Windows Bat 运行
+
+```
+chcp 65001
+
+set EXPORT_FILE=D:\ExportFileV3\
+
+yarn start
+```
+
+## Linux 运行
+
+你懂的。
+
 # 功能对应表
 
 ## 普通面板
