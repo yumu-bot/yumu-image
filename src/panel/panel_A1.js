@@ -214,7 +214,7 @@ export async function panel_A1(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA1-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Friends (!ymf)', 'F', 'v0.5.0 DX');
+    const panel_name = getPanelNameSVG('Friends (!ymf)', 'F')
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

@@ -123,8 +123,8 @@ export async function panel_K(data = {
 
     // 面板文字
     const panel_name = is_vs ?
-        getPanelNameSVG('Skill VS v4.0 (!ymkv)', 'KV', 'v0.5.1 DX') :
-        getPanelNameSVG('Skill v4.0 (!ymk)', 'K', 'v0.5.1 DX');
+        getPanelNameSVG('Skill VS v4.0 (!ymkv)', 'KV') :
+        getPanelNameSVG('Skill v4.0 (!ymk)', 'K')
 
     // 插入文字
     svg = setTexts(svg, [panel_name, mode_path], reg_index);

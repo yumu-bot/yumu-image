@@ -207,7 +207,7 @@ export async function panel_J2(data = {
     const reg_background = /(?<=<g filter="url\(#blur-PJ2-BG\)" style="clip-path: url\(#clippath-PJ2-BG\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('BP Analysis v3 (!ymba)', 'BA', 'v0.5.0 DX');
+    const panel_name = getPanelNameSVG('BP Analysis v3 (!ymba)', 'BA');
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

@@ -99,7 +99,7 @@ export async function panel_A8(
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA2-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Search Result (!ymo)', 'O', 'v0.5.0 DX');
+    const panel_name = getPanelNameSVG('Search Result (!ymo)', 'O');
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

@@ -245,7 +245,7 @@ export async function panel_B3(data = {
 
         if (isVs) {
             type = 'PX+'
-            panel_name = getPanelNameSVG('PP Plus: User VS (!ympx)', 'PX', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('PP Plus: User VS (!ympx)', 'PX');
 
             card_left = await card_A1(await PanelGenerate.user2CardA1(me));
             card_right = await card_A1(await PanelGenerate.user2CardA1(other));
@@ -289,7 +289,7 @@ export async function panel_B3(data = {
             }));
         } else {
             type = 'PP+'
-            panel_name = getPanelNameSVG('PP Plus: User (!ympp)', 'PP', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('PP Plus: User (!ympp)', 'PP');
 
             card_left = await card_A1(await PanelGenerate.user2CardA1(me));
 
@@ -339,7 +339,7 @@ export async function panel_B3(data = {
         banner = await getMapBG(me?.beatmapset?.id, 'cover', hasLeaderBoard(me?.ranked));
         if (isVs) {
             type = 'PA+'
-            panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA');
 
             card_left = card_A2(await PanelGenerate.beatMap2CardA2(me));
             card_right = card_A2(await PanelGenerate.beatMap2CardA2(other));
@@ -377,7 +377,7 @@ export async function panel_B3(data = {
             }));
         } else {
             type = 'PA+'
-            panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA');
 
             card_left = card_A2(await PanelGenerate.beatMap2CardA2(me));
 

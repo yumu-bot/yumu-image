@@ -111,7 +111,7 @@ export async function panel_A9(
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA9-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Team (!ymtm)', 'TM', 'v0.5.1 DX');
+    const panel_name = getPanelNameSVG('Team (!ymtm)', 'TM');
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

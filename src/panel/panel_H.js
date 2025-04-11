@@ -70,7 +70,7 @@ export async function panel_H (
     const reg_bodycard = /(?<=<g id="BodyCard">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Get Mappool (!ymgp)', 'GP', 'v0.5.0 DX');
+    const panel_name = getPanelNameSVG('Get Mappool (!ymgp)', 'GP');
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

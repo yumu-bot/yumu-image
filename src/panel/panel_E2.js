@@ -252,7 +252,7 @@ export async function panel_E2(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
-    svg = setText(svg, getPanelNameSVG('Map Statistics (!ymm)', 'M', 'v0.5.0 DX'), reg_index);
+    svg = setText(svg, getPanelNameSVG('Map Statistics (!ymm)', 'M'), reg_index);
 
     // 构建成绩
 

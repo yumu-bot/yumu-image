@@ -87,11 +87,11 @@ export async function panel_MA(data = {
     let panel_name
 
     if (data?.panel === 'MB') {
-        panel_name = getPanelNameSVG('Maimai Multiple Best Scores (!ymmb)', 'MB', 'v0.5.0 DX');
+        panel_name = getPanelNameSVG('Maimai Multiple Best Scores (!ymmb)', 'MB');
     } else if (data?.panel === 'MV') {
-        panel_name = getPanelNameSVG('Maimai Version Scores (!ymmv)', 'MV', 'v0.5.0 DX');
+        panel_name = getPanelNameSVG('Maimai Version Scores (!ymmv)', 'MV');
     } else {
-        panel_name = getPanelNameSVG('Maimai Multiple Scores (!ymx)', 'SS', 'v0.5.0 DX');
+        panel_name = getPanelNameSVG('Maimai Multiple Scores (!ymx)', 'SS');
     }
 
     // 插入文字

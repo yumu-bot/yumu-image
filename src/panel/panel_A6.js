@@ -1,4 +1,12 @@
-import {exportJPEG, getPanelNameSVG, setImage, setSvgBody, readTemplate, setText,} from "../util/util.js";
+import {
+    exportJPEG,
+    getPanelNameSVG,
+    setImage,
+    setSvgBody,
+    readTemplate,
+    setText,
+    getNowTimeStamp,
+} from "../util/util.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {card_Alpha} from "../card/card_Alpha.js";
 import {card_A1} from "../card/card_A1.js";
@@ -123,13 +131,15 @@ function replaceSlash(md = "") {
     }
 }
 
-function getPanelName(name = "", version = 'v0.5.0 DX'){
+function getPanelName(name = "", version = 'v0.5.2 DX'){
+    const request_time = 'request time: ' + getNowTimeStamp()
+
     switch (name) {
-        case "group": return getPanelNameSVG('Group Mode', 'GM', version);
-        case "service": return getPanelNameSVG('Service Count', 'SC', version);
-        case "switch": return getPanelNameSVG('Service Switch', 'SW', version);
-        case "wiki": return getPanelNameSVG('Wiki Page', 'W', version);
-        case "help": return getPanelNameSVG('Help Page', 'H', version);
-        default: return getPanelNameSVG('Markdown Page', 'MD', version);
+        case "group": return getPanelNameSVG('Group Mode', 'GM', request_time, version);
+        case "service": return getPanelNameSVG('Service Count', 'SC', request_time, version);
+        case "switch": return getPanelNameSVG('Service Switch', 'SW', request_time, version);
+        case "wiki": return getPanelNameSVG('Wiki Page', 'W', request_time, version);
+        case "help": return getPanelNameSVG('Help Page', 'H', request_time, version);
+        default: return getPanelNameSVG('Markdown Page', 'MD', request_time, version);
     }
 }

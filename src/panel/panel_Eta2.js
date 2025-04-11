@@ -303,7 +303,7 @@ export async function panel_Eta2(data = {
 
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
-    const panel_name = getPanelNameSVG('the Myriads of Changes (Not from Phira)', '', 'v0.6.0 MY', request_time);
+    const panel_name = getPanelNameSVG('the Myriads of Changes (Not from Phira)', '', request_time, 'v0.6.0 MY');
 
     // 导入文字
     const difficulty_text = getDiffIndex(data?.score?.beatmap?.difficulty_rating || 0) + ' SR. ' + round(data?.score?.beatmap?.difficulty_rating, 2)

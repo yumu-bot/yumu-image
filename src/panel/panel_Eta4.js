@@ -298,8 +298,7 @@ export async function panel_Eta4(data = {
 
     const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
-    const panel_name = getPanelNameSVG(
-        'the Myriads of Changes (Not from Aloic)', '', 'v0.6.0 MY', request_time, '#2A2226');
+    const panel_name = getPanelNameSVG('the Myriads of Changes (Not from Aloic)', '', request_time, 'v0.6.0 MY', '#2A2226');
 
     // 导入文字
     svg = setText(svg, panel_name, reg_index);

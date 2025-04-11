@@ -164,7 +164,7 @@ export async function panel_MS(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-MS1-1\);">)/;
 
     // 面板文字
-    let panel_name = getPanelNameSVG('Maimai Song Info (!ymms)', 'MS', 'v0.5.0 DX');
+    let panel_name = getPanelNameSVG('Maimai Song Info (!ymms)', 'MS');
 
 
     // 插入文字
@@ -209,10 +209,6 @@ export async function panel_MS(data = {
         }
     }
     const single_song = has_deluxe ? deluxe : (has_standard ? standard : null)
-
-    const is_multiple_version_score = (has_standard_score && has_deluxe_score)
-    const is_too_much_score = scores.length > 5
-    const is_too_much_chart = (has_standard && standard.ds?.length > 5) || (has_deluxe && deluxe.ds?.length > 5)
 
     let card_Gs
 
@@ -276,12 +272,6 @@ async function applySingleVersion(song = {}, scores = [{}]) {
     }
 
     return card_Gs
-
-}
-
-// 歌曲有多个版本，或者多个版本，> 5 个难度有成绩
-// 会显示最高的 5 个成绩，亦或是显示最高的几个难度
-function applyMultipleVersion(standard = {}, deluxe = {}, score = {}) {
 
 }
 

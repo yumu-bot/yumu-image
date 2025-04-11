@@ -56,7 +56,7 @@ export async function panel_A3(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA3-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Leader Board (!yml)', 'L', 'v0.5.0 DX');
+    const panel_name = getPanelNameSVG('Leader Board (!yml)', 'L')
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

@@ -287,7 +287,7 @@ export async function panel_A7(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA4-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('BP Fixed (!ymbf)', 'BF', 'v0.5.0 DX');
+    const panel_name = getPanelNameSVG('BP Fixed (!ymbf)', 'BF');
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

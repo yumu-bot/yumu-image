@@ -61,7 +61,7 @@ export async function panel_N(
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PN1-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Nomination (!ymn)', 'N', 'v0.5.0 DX');
+    const panel_name = getPanelNameSVG('Nomination (!ymn)', 'N');
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

@@ -105,7 +105,7 @@ export async function panel_D(data = {
 
     const request_time = day_str + 'request time: ' + getNowTimeStamp();
 
-    const panel_name = getPanelNameSVG('Information (!ymi)', 'I', 'v0.5.0 DX', request_time);
+    const panel_name = getPanelNameSVG('Information (!ymi)', 'I', request_time);
 
     // 导入文字
     svg = setText(svg, panel_name, reg_index);

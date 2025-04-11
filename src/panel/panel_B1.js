@@ -126,9 +126,9 @@ export async function panel_B1(data = {
     let panel_name
 
     if (is_pm4) {
-        panel_name = getPanelNameSVG('(Test) PP Minus v4.0 (!ymtp)', 'PM', 'v0.5.2 DX');
+        panel_name = getPanelNameSVG('(Test) PP Minus v4.0 (!ymtp)', 'PM');
     } else {
-        panel_name = getPanelNameSVG('PP Minus v2.4 (!ympm/!ympv)', 'PM', 'v0.5.0 DX');
+        panel_name = getPanelNameSVG('PP Minus v2.4 (!ympm/!ympv)', 'PM');
     }
 
     // 插入文字

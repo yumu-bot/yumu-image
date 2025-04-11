@@ -61,16 +61,16 @@ export async function panel_A5(data = {
 
     switch (data?.panel) {
         case "PS": {
-            panel_name = getPanelNameSVG('Passed Scores (!ymp)', 'PS', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('Passed Scores (!ymp)', 'PS')
         } break;
         case "RS": {
-            panel_name = getPanelNameSVG('Recent Scores (!ymr)', 'RS', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('Recent Scores (!ymr)', 'RS');
         } break;
         case "SS": {
-            panel_name = getPanelNameSVG('BeatMap Scores (!ymss)', 'SS', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('BeatMap Scores (!ymss)', 'SS');
         } break;
         default: {
-            panel_name = getPanelNameSVG('Multi Scores (!ymps / !ymrs)', 'SS', 'v0.5.0 DX');
+            panel_name = getPanelNameSVG('Multi Scores (!ymps / !ymrs)', 'SS');
         } break;
     }
 

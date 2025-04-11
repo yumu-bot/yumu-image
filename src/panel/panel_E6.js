@@ -91,7 +91,7 @@ export async function panel_E6(data = {
 
     const request_time = ranked_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
-    svg = setText(svg, getPanelNameSVG('Map Statistics (!ymm)', 'M', 'v0.5.0 DX', request_time), reg_index);
+    svg = setText(svg, getPanelNameSVG('Map Statistics (!ymm)', 'M', request_time), reg_index);
 
     // 需要参数
     const mode = getGameMode(data?.expected?.mode, 0, data?.beatmap?.mode);

@@ -147,9 +147,9 @@ export async function panel_F3(
     let panel_name
 
     if (data?.panel === "RR") {
-        panel_name = getPanelNameSVG('Round Results v2 (passive module)', 'RR', 'v0.5.1 DX', request_time);
+        panel_name = getPanelNameSVG('Round Results v2 (passive module)', 'RR', request_time);
     } else {
-        panel_name = getPanelNameSVG('Match Rounds v2 (!ymmr)', 'MR', 'v0.5.1 DX', request_time);
+        panel_name = getPanelNameSVG('Match Rounds v2 (!ymmr)', 'MR', request_time);
     }
 
     // 插入文字

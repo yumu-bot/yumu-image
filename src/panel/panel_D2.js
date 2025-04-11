@@ -181,7 +181,7 @@ export async function panel_D2(data = {
 
     const request_time = day_str + 'request time: ' + getNowTimeStamp();
 
-    const panel_name = getPanelNameSVG('(Test) Waifu Information (!ymti)', 'TI', 'v0.5.0 DX', request_time);
+    const panel_name = getPanelNameSVG('(Test) Waifu Information (!ymti)', 'TI', request_time);
 
     // 导入文字
     svg = setText(svg, panel_name, reg_index);

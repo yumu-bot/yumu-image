@@ -60,13 +60,13 @@ export async function panel_A4(data = {
 
     switch (data?.panel) {
         case "T": {
-            panel_name = getPanelNameSVG('Today Bests (!ymt)', 'T', 'v0.5.0 DX', request_time);
+            panel_name = getPanelNameSVG('Today Bests (!ymt)', 'T', request_time);
         } break;
         case "BS": {
-            panel_name = getPanelNameSVG('Best Scores (!ymbs)', 'BS', 'v0.5.0 DX', request_time);
+            panel_name = getPanelNameSVG('Best Scores (!ymbs)', 'BS', request_time);
         } break;
         default: {
-            panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', 'v0.5.0 DX', request_time);
+            panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', request_time);
         } break;
     }
 

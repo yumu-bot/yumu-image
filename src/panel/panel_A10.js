@@ -94,7 +94,7 @@ export async function panel_A10(
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA10-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Badge (!ymbd)', 'BD', 'v0.5.2 DX');
+    const panel_name = getPanelNameSVG('Badge (!ymbd)', 'BD');
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

@@ -225,7 +225,7 @@ export async function panel_ME(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
-    svg = setText(svg, getPanelNameSVG('maimai Best Performance (!ymmb)', 'MB', 'v0.5.0 DX'), reg_index);
+    svg = setText(svg, getPanelNameSVG('maimai Best Performance (!ymmb)', 'MB'), reg_index);
 
     // 评级
     svg = setImage(svg, 665, 290, 590, 590, getImageFromV3('Maimai', `object-score-${data?.score?.rate || 'd'}.png`), reg_index, 1);

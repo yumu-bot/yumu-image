@@ -123,7 +123,7 @@ export async function panel_MF(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-MA1-1\);">)/;
 
     // 插入文字
-    svg = setText(svg, getPanelNameSVG('Maimai Find (!ymmf)', 'MF', 'v0.5.1 DX'), reg_index);
+    svg = setText(svg, getPanelNameSVG('Maimai Find (!ymmf)', 'MF'), reg_index);
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);

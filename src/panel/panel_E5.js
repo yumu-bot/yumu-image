@@ -302,19 +302,19 @@ export async function panel_E5(data = {
 
     switch (data?.panel) {
         case "B": {
-            panel_name = getPanelNameSVG('Best Score (!ymb)', 'B', 'v0.5.0 DX', request_time);
+            panel_name = getPanelNameSVG('Best Score (!ymb)', 'B', request_time);
         } break;
         case "P": {
-            panel_name = getPanelNameSVG('Passed Score (!ymp)', 'P', 'v0.5.0 DX', request_time);
+            panel_name = getPanelNameSVG('Passed Score (!ymp)', 'P', request_time);
         } break;
         case "R": {
-            panel_name = getPanelNameSVG('Recent Score (!ymr)', 'R', 'v0.5.0 DX', request_time);
+            panel_name = getPanelNameSVG('Recent Score (!ymr)', 'R', request_time);
         } break;
         case "S": {
-            panel_name = getPanelNameSVG('Score (!yms)', 'S', 'v0.5.0 DX', request_time);
+            panel_name = getPanelNameSVG('Score (!yms)', 'S', request_time);
         } break;
         default: {
-            panel_name = getPanelNameSVG('Excellent Score (!ymp / !ymr / !yms)', 'S', 'v0.5.0 DX', request_time);
+            panel_name = getPanelNameSVG('Excellent Score (!ymp / !ymr / !yms)', 'S', request_time);
         } break;
     }
 
