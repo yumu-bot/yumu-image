@@ -9,7 +9,7 @@
 ```
 chcp 65001
 
-set EXPORT_FILE=D:\ExportFileV3\
+set EXPORT_FILE=${你解压素材库的文件路径，比如D:\ExportFileV3\}
 
 yarn start
 ```
