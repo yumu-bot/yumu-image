@@ -3,7 +3,7 @@ import {
     setText,
     setTexts
 } from "../util/util.js";
-import {torus, PuHuiTi, torusBold} from "../util/font.js";
+import {torus, PuHuiTi, torusBold, getMultipleTextPath} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModPath} from "../util/mod.js";
 
@@ -96,11 +96,21 @@ export async function card_H(data = {
     const label4 = font_l4.getTextPath(data?.label4 || '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
     const label5 = torusBold.getTextPath(data?.label5 || '', 177, 97.877, 18, 'right baseline', data?.color_label12 || '#fff');
 
-    const index = torus.get2SizeTextPath(
-        data?.index_b, data?.index_m, data?.index_b_size || 48, data?.index_m_size || 36,
-            815, 73.672, 'center baseline', data.color_index)
-        +
-        torus.getTextPath(data?.index_l, 815, 33.672, data?.index_l_size || 24, 'center baseline', data.color_index)
+    const index = getMultipleTextPath([
+        {
+            font: torusBold,
+            text: data?.index_b,
+            size: data?.index_b_size || 48,
+            color: data?.color_index || 'none',
+        }, {
+            font: torusBold,
+            text: data?.index_m,
+            size: data?.index_m_size || 36,
+            color: data?.color_index || 'none',
+        },
+    ], 815, 73.672, 'center baseline') +
+        torusBold.getTextPath(data?.index_l, 815, 33.672,
+            data?.index_l_size || 24, 'center baseline', data?.color_index || 'none')
 
     const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 8, label1_width, 20, 10, color_label1) : '';
     const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 82, label2_width, 20, 10, color_label2) : '';
