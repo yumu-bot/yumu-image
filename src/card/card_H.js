@@ -103,13 +103,13 @@ export async function card_H(data = {
             size: data?.index_b_size || 48,
             color: data?.color_index || 'none',
         }, {
-            font: torusBold,
+            font: torus,
             text: data?.index_m,
             size: data?.index_m_size || 36,
             color: data?.color_index || 'none',
         },
     ], 815, 73.672, 'center baseline') +
-        torusBold.getTextPath(data?.index_l, 815, 33.672,
+        torus.getTextPath(data?.index_l, 815, 33.672,
             data?.index_l_size || 24, 'center baseline', data?.color_index || 'none')
 
     const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 8, label1_width, 20, 10, color_label1) : '';
