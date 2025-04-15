@@ -5,8 +5,6 @@ import {
     setImage,
     setSvgBody,
     isNotEmptyArray,
-    isNotNull,
-    isNotNullOrEmptyObject,
     readTemplate,
     setText,
     setTexts, rounds
@@ -125,7 +123,7 @@ export async function panel_MS(data = {
             "release": "",
             "version": "maimai GreeN PLUS",
             "current": false
-        }
+        },
     }, {
         id: 0,
         // 第一个是 SD，第二个是 DX
@@ -153,7 +151,7 @@ export async function panel_MS(data = {
     },],
 
     panel: "MS",
-    percent: "" // 0+ 100+ 101- 默认 100+
+    version: "DX",
 }) {
     let svg = readTemplate('template/Panel_MS.svg');
 
@@ -171,58 +169,12 @@ export async function panel_MS(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入 G 卡
-    const songs = data?.songs || []
-
-    let standard = null
-    let deluxe = null
-
-    for (let o of songs) {
-        if (isNotNull(o?.type)) {
-            switch (o.type) {
-                case 'SD': {
-                    standard = o
-                    break
-                }
-                case 'DX': {
-                    deluxe = o
-                    break
-                }
-            }
-        }
-    }
-
-    const has_standard = isNotNull(standard)
-    const has_deluxe = isNotNull(deluxe)
-
+    const song = (data?.songs || [])[0]
     const scores = data?.scores || []
-    let has_standard_score = false
-    let has_deluxe_score = false
-
-    for (let s in scores) {
-        if (isNotNullOrEmptyObject(s)) {
-            if (s?.type === "DX") {
-                has_standard_score = true
-            }
-            if (s?.type === "SD") {
-                has_deluxe_score = true
-            }
-        }
-    }
-    const single_song = has_deluxe ? deluxe : (has_standard ? standard : null)
 
     let card_Gs
 
-    card_Gs = await applySingleVersion(single_song, scores)
-    // TODO 多成绩先不做
-    /*
-
-    if (is_multiple_version_score || is_too_much_score || is_too_much_chart) {
-        card_Gs = await applyMultipleVersion(standard, deluxe, scores)
-    } else {
-        card_Gs = await applySingleVersion(single_song, scores)
-    }
-
-     */
+    card_Gs = await applySingleVersion(song, scores)
 
     // 渲染卡片
     const length = card_Gs?.length || 1
@@ -237,13 +189,13 @@ export async function panel_MS(data = {
     }
 
     // 导入 A2 卡
-    const cardA2 = card_A2(await PanelGenerate.maimaiSong2CardA2(single_song, has_deluxe, has_standard));
+    const cardA2 = card_A2(await PanelGenerate.maimaiSong2CardA2(song, data?.version));
 
     // 插入卡片
     svg = setSvgBody(svg, 40, 40, cardA2, reg_card_a2);
 
     // 导入图片
-    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai", getMaimaiBannerIndex(single_song)), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai", getMaimaiBannerIndex(song)), reg_banner, 0.8);
 
     return svg.toString()
 }
@@ -353,23 +305,23 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     if (div >= 0.97) {
         rrect1_color1 = '#F7B551'
         rrect1_color2 = '#FFF45C'
-        percent = (1 - div) / 0.03
+        percent = (1 - div) / (1 - 0.97)
     } else if (div >= 0.95) {
         rrect1_color1 = '#FF554E'
         rrect1_color2 = '#FAD129'
-        percent = (0.97 - div) / 0.02
+        percent = (0.97 - div) / (0.97 - 0.95)
     } else if (div >= 0.93) {
         rrect1_color1 = '#FF554E'
         rrect1_color2 = '#F28D29'
-        percent = (0.95 - div) / 0.02
+        percent = (0.95 - div) / (0.95 - 0.93)
     } else if (div >= 0.9) {
         rrect1_color1 = '#F0EF47'
         rrect1_color2 = '#26D94F'
-        percent = (0.93 - div) / 0.02
+        percent = (0.93 - div) / (0.93 - 0.9)
     } else if (div >= 0.85) {
         rrect1_color1 = '#38F8D4'
         rrect1_color2 = '#43EB81'
-        percent = (0.9 - div) / 0.05
+        percent = (0.9 - div) / (0.9 - 0.85)
     } else if (div > 0) {
         rrect1_color1 = '#4facfe'
         rrect1_color2 = '#00f2fe'
@@ -421,7 +373,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
         additional_b_size: 24,
         additional_m_size: 14,
 
-        rrect1_percent: percent,
+        rrect1_percent: Math.min(Math.max(0, percent), 1),
         rrect1_color1: rrect1_color1,
         rrect1_color2: rrect1_color2,
         rrect1_base_opacity: rrect1_base_opacity,

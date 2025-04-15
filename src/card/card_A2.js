@@ -52,7 +52,8 @@ export function card_A2(data = {
     const title1_maxWidth = data.map_status ? 350 : 390;
     const title_maxWidth = 390;
 
-    const right3_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
+    const right3_width = torus.getTextWidth(data.right3b, data?.right3b_size || 60)
+        + torus.getTextWidth(data.right3m, data?.right3m_size || 48);
     const left_maxWidth = 390 - right3_width;
     const right2_width = torus.getTextWidth(data.right2, 24);
     const left1_maxWidth = 390 - right2_width;

@@ -384,7 +384,7 @@ export const PanelGenerate = {
         };
     },
 
-    maimaiSong2CardA2: async (song = {}, has_deluxe = false, has_standard = false) => {
+    maimaiSong2CardA2: async (song = {}, version = "ANY") => {
         const background = await getMaimaiCover(song?.id);
 
         const title1 = song?.basic_info?.title || '-'
@@ -401,7 +401,7 @@ export const PanelGenerate = {
         let right3b, right3m
         let song_id = song?.id || 0
 
-        if (has_deluxe && has_standard) {
+        if (version === "ANY") {
             if (song_id < 10000) {
                 // do nothing
             } else if (song_id >= 10000 && song_id < 100000) {
