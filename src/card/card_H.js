@@ -98,7 +98,7 @@ export async function card_H(data = {
 
     const index = getMultipleTextPath([
         {
-            font: torusBold,
+            font: torus,
             text: data?.index_b,
             size: data?.index_b_size || 48,
             color: data?.color_index || 'none',
