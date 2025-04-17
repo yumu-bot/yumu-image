@@ -262,7 +262,8 @@ async function chuScore2CardI3(score = {
     level_label: 'Expert',
     mid: 1100,
     ra: 11.82,
-    title: 'TECHNOPOLIS 2085'
+    title: 'TECHNOPOLIS 2085',
+    alias: '2085'
 }) {
     const rate = getCHUNITHMRank(score?.score || 0)
 
@@ -284,6 +285,7 @@ async function chuScore2CardI3(score = {
         level: 0,
 
         title: score?.title || '',
+        title2: score?.alias || '',
         left1: score?.artist || '',
         left2: score?.charter || '',
         left3: round(rating, 2),
