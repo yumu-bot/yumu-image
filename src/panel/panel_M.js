@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG, getTimeDifference,
     setImage, setSvgBody, readTemplate,
-    setText, setTexts, round, rounds, readNetImage
+    setText, setTexts, round, rounds
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -309,7 +309,7 @@ export async function panel_M(data = {
             approval: v.approval,
             title: v.beatmapset.title,
             time: delta_time,
-            background: await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list.jpg', false),
+            background: 'https://assets.ppy.sh/beatmaps/' + sid + '/covers/list.jpg',
         }));
     }
 

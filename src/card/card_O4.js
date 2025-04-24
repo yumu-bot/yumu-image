@@ -47,7 +47,7 @@ export async function card_O4(data = {
         : '(' + time + ') ' + operate + ' \"'  + title_cut_str + '\"';
 
     const title = torus.getTextPath(title_str, 40, 20, 18, 'left baseline', color);
-    const bg = await readNetImage(data?.background, true)
+    const bg = await readNetImage(data?.background, false)
 
     svg = setImage(svg, 0, 0, 550, 30, bg, reg_background, 0.3);
     svg = setImage(svg, 5, 0, 30, 30, type, reg_image, 1);
