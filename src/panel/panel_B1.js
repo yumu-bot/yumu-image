@@ -4,7 +4,7 @@ import {
     getGameMode, getPanelNameSVG,
     setImage,
     setSvgBody, readTemplate,
-    setText, setTexts
+    setText, setTexts, getNowTimeStamp
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -15,7 +15,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {LABEL_PPM} from "../component/label.js";
 import {getRankColor} from "../util/color.js";
-import {getRankBG, getRankFromValue} from "../util/star.js";
+import {getRankBackground, getRankFromValue} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -83,6 +83,10 @@ export async function panel_B1(data = {
         SAN: 5.45, // 0-100
     },
 
+    count: 0,
+
+    delta: 0,
+
     //其他统计数据
     stat: {
         is_vs: false, //是PPMVS吗？不是则false
@@ -126,7 +130,9 @@ export async function panel_B1(data = {
     let panel_name
 
     if (is_pm4) {
-        panel_name = getPanelNameSVG('(Test) PP Minus v4.0 (!ymtp)', 'PM');
+        const request_time = 'data count: ' + (data.count || 0) + 'x // range: +-' + (data.delta || 0) + 'PP // request time: ' + getNowTimeStamp();
+
+        panel_name = getPanelNameSVG('PP Minus v4.0 (!ymtp)', 'PM', request_time);
     } else {
         panel_name = getPanelNameSVG('PP Minus v2.4 (!ympm/!ympv)', 'PM');
     }
@@ -162,7 +168,7 @@ export async function panel_B1(data = {
         const value = (data?.my[name] || 0) * 100;
         const rank = getRankFromValue(value, BOUNDARY)
         const color = getRankColor(rank)
-        const background = getRankBG(rank);
+        const background = getRankBackground(rank);
 
         card_B1_lefts.push(await card_B1({
             label: LABEL_PPM[name?.toUpperCase()],
@@ -197,7 +203,7 @@ export async function panel_B1(data = {
             const value = (data?.others[name] || 0) * 100;
             const rank = getRankFromValue(value, BOUNDARY)
             const color = getRankColor(rank)
-            const background = getRankBG(rank);
+            const background = getRankBackground(rank);
 
             card_B1_rights.push(await card_B1({
                 label: LABEL_PPM[name?.toUpperCase()],
@@ -220,7 +226,7 @@ export async function panel_B1(data = {
         
         const value_1 = (data?.my.OVA || 0) * 100;
         const rank_1 = getRankFromValue(value_1, BOUNDARY);
-        const bg_1 = getRankBG(rank_1);
+        const bg_1 = getRankBackground(rank_1);
         const color_1 = getRankColor(rank_1);
 
         card_B2_centers.push(await card_B2({
@@ -235,7 +241,7 @@ export async function panel_B1(data = {
 
         const value_2 = (data?.others.OVA || 0) * 100;
         const rank_2 = getRankFromValue(value_2, BOUNDARY);
-        const bg_2 = getRankBG(rank_2);
+        const bg_2 = getRankBackground(rank_2);
         const color_2 = getRankColor(rank_2);
 
         card_B2_centers.push(await card_B2({
@@ -250,7 +256,7 @@ export async function panel_B1(data = {
     } else {
         const value_1 = (data?.my.OVA || 0) * 100;
         const rank_1 = getRankFromValue(value_1, BOUNDARY);
-        const bg_1 = getRankBG(rank_1);
+        const bg_1 = getRankBackground(rank_1);
         const color_1 = getRankColor(rank_1);
 
         card_B2_centers.push(await card_B2({
@@ -264,7 +270,7 @@ export async function panel_B1(data = {
 
         const san_value = Math.round(data?.my.SAN || 0) * 100;
         const san_rank = getRankFromValue(san_value, SANITY_BOUNDARY); // 用于颜色判断的 rank
-        const san_bg = getRankBG(san_rank);
+        const san_bg = getRankBackground(san_rank);
         const san_color = getRankColor(san_rank);
         const san_truly_rank = getRankFromValue(san_value, SANITY_BOUNDARY, SANITY_RANKS); // SAN 指示器
 

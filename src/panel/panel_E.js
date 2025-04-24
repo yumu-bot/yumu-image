@@ -2,7 +2,7 @@ import {
     ar2ms,
     cs2px,
     exportJPEG,
-    getDiffBG, getFormattedTime,
+    getFormattedTime,
     getGameMode,
     getNowTimeStamp,
     getPanelNameSVG,
@@ -11,7 +11,7 @@ import {
     setSvgBody,
     od2ms,
     readTemplate,
-    setText, round, rounds
+    setText, round, rounds, getDiffBackground
 } from "../util/util.js";
 import {calcPerformancePoints, getDensityArray} from "../util/compute-pp.js";
 import moment from "moment";
@@ -23,7 +23,7 @@ import {card_E3} from "../card/card_E3.js";
 import {card_E4} from "../card/card_E4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
-import {getApproximateRank, getRankBG, hasLeaderBoard} from "../util/star.js";
+import {getApproximateRank, getRankBackground, hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -312,8 +312,8 @@ export async function panel_E(
     const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, hasLeaderBoard(data.score.beatmap.ranked));
 
     // 图片定义
-    const background = getRankBG((data?.score?.rank || getApproximateRank(data?.score)));
-    const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked));
+    const background = getRankBackground((data?.score?.rank || getApproximateRank(data?.score)));
+    const banner = await getDiffBackground(data?.score, 'cover');
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));

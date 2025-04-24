@@ -2,7 +2,6 @@ import {
     exportJPEG,
     getImageFromV3,
     getGameMode,
-    getMapBG,
     setImage,
     readTemplate,
     setTexts,
@@ -11,7 +10,7 @@ import {
     getTimeByDHMS,
     getTimeDifference,
     setText,
-    isNotEmptyArray, round, rounds,
+    isNotEmptyArray, round, rounds, getMapBackground,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
 import {getRankFromValue} from "../util/star.js";
@@ -198,7 +197,7 @@ const PanelGamma = {
 
     scoreVersion: async (score) => {
         const background = getImageFromV3('object-score-backimage-' + score.rank + '.jpg');
-        const avatar = await getMapBG(score.beatmapset.id, "list", false);
+        const avatar = await getMapBackground(score, "list");
 
         /*
         // 成绩重计算

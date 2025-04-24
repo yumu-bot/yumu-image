@@ -1,15 +1,14 @@
 import {
-    exportJPEG, getImageFromV3, getMapBG,
-    getPanelNameSVG, setImage,
+    exportJPEG, getImageFromV3, getPanelNameSVG, setImage,
     setSvgBody, readTemplate,
-    setText, setTexts, getAvatar
+    setText, setTexts, getAvatar, readNetImage
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getRankBG, getRankFromValue, hasLeaderBoard} from "../util/star.js";
+import {getRankBackground, getRankFromValue} from "../util/star.js";
 import {card_B1} from "../card/card_B1.js";
 import {card_B2} from "../card/card_B2.js";
 import {LABEL_PPP} from "../component/label.js";
@@ -259,7 +258,7 @@ export async function panel_B3(data = {
             const rank_o1 = getRoman(level_o1);
 
             const fake_rank_o1 = getRankFromValue(level_o1, LV_BOUNDARY);
-            const background_o1 = getRankBG(fake_rank_o1);
+            const background_o1 = getRankBackground(fake_rank_o1);
             const color_o1 = getRankColor(fake_rank_o1);
 
             card_center.push(await card_B2({
@@ -276,7 +275,7 @@ export async function panel_B3(data = {
             const rank_o2 = getRoman(level_o2);
 
             const fake_rank_o2 = getRankFromValue(level_o2, LV_BOUNDARY);
-            const background_o2 = getRankBG(fake_rank_o2);
+            const background_o2 = getRankBackground(fake_rank_o2);
             const color_o2 = getRankColor(fake_rank_o2);
 
             card_center.push(await card_B2({
@@ -302,7 +301,7 @@ export async function panel_B3(data = {
             const rank_o1 = getRoman(level_o1)
 
             const fake_rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
-            const background_o1 = getRankBG(fake_rank_o1);
+            const background_o1 = getRankBackground(fake_rank_o1);
             const color_o1 = getRankColor(fake_rank_o1);
 
             card_center.push(await card_B2({
@@ -321,7 +320,7 @@ export async function panel_B3(data = {
             const rank_o2 = getRoman(level_o2);
 
             const fake_rank_o2 = getRankFromValue(level_o2, LV_BOUNDARY);
-            const background_o2 = getRankBG(fake_rank_o2);
+            const background_o2 = getRankBackground(fake_rank_o2);
             const color_o2 = getRankColor(fake_rank_o2);
 
             card_center.push(await card_B2({
@@ -336,7 +335,7 @@ export async function panel_B3(data = {
         }
 
     } else {
-        banner = await getMapBG(me?.beatmapset?.id, 'cover', hasLeaderBoard(me?.ranked));
+        banner = await readNetImage(me?.beatmapset?.covers?.cover, true);
         if (isVs) {
             type = 'PA+'
             panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA');
@@ -350,7 +349,7 @@ export async function panel_B3(data = {
 
             const value_o1 = me?.difficulty?.total;
             const rank_o1 = getRankFromValue(value_o1);
-            const background_o1 = getRankBG(rank_o1);
+            const background_o1 = getRankBackground(rank_o1);
             const color_o1 = getRankColor(rank_o1);
 
             card_center.push(await card_B2({
@@ -364,7 +363,7 @@ export async function panel_B3(data = {
 
             const value_o2 = others?.difficulty?.total;
             const rank_o2 = getRankFromValue(value_o2);
-            const background_o2 = getRankBG(rank_o2);
+            const background_o2 = getRankBackground(rank_o2);
             const color_o2 = getRankColor(rank_o2);
 
             card_center.push(await card_B2({
@@ -385,7 +384,7 @@ export async function panel_B3(data = {
 
             const value_o1 = my?.difficulty?.aim;
             const rank_o1 = getRankFromValue(value_o1, [7, 6, 5, 4.5, 4, 3, 2, 1]); //todo 这个是临时边界，我不知道 aim 的边界是多少
-            const background_o1 = getRankBG(rank_o1);
+            const background_o1 = getRankBackground(rank_o1);
             const color_o1 = getRankColor(rank_o1);
 
             card_center.push(await card_B2({
@@ -399,7 +398,7 @@ export async function panel_B3(data = {
 
             const value_o2 = my?.difficulty?.total;
             const rank_o2 = getRankFromValue(value_o2);
-            const background_o2 = getRankBG(rank_o2);
+            const background_o2 = getRankBackground(rank_o2);
             const color_o2 = getRankColor(rank_o2);
 
             card_center.push(await card_B2({
@@ -484,7 +483,7 @@ async function drawMapPlus(plus, label, graph, arr_abbr, arr_name, at_right = fa
 
         const rank = getRankFromValue(value, [4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5]); //这个 4 非常难拿
         const color = getRankColor(rank);
-        const background = getRankBG(rank);
+        const background = getRankBackground(rank);
 
         if (typeof value !== 'number') continue;
 
@@ -519,7 +518,7 @@ async function drawUserPlus(plus, label, graph, arr_abbr, arr_name, at_right = f
 
         const fake_rank = getRankFromValue(level, lv_boundary); //并不用于显示
         const color = getRankColor(fake_rank);
-        const background = getRankBG(fake_rank);
+        const background = getRankBackground(fake_rank);
 
         if (typeof value !== 'number') continue;
 

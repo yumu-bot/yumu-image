@@ -1,9 +1,9 @@
 import {
     exportJPEG, getImageFromV3,
     getGameMode,
-    getMapBG, getPanelNameSVG,
+    getPanelNameSVG,
     setImage,
-    setSvgBody, readTemplate, setText, od2ms, ar2ms, cs2px, rounds,
+    setSvgBody, readTemplate, setText, od2ms, ar2ms, cs2px, rounds, getMapBackground,
 } from "../util/util.js";
 import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {data2Label, stat2DataM} from "./panel_E.js";
@@ -293,7 +293,7 @@ export async function panel_E2(data = {
 
     // 图片定义
     const background = getImageFromV3('object-score-backimage-' + rank + '.jpg');
-    const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked));
+    const banner = await getMapBackground(data.beatmap, 'cover');
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);

@@ -3,7 +3,6 @@ import moment from "moment";
 import {
     getImageFromV3,
     getGameMode,
-    getMapBG,
     getMapStatus,
     getMatchNameSplitted,
     getTimeDifference,
@@ -16,7 +15,13 @@ import {
     isNotEmptyArray,
     getTimeByDHMS,
     requireNonNullElse,
-    getKeyDifficulty, getDiffBG, isNotEmptyString, round, rounds, getFormattedTime, getTimeDifferenceShort,
+    getKeyDifficulty,
+    isNotEmptyString,
+    round,
+    rounds,
+    getFormattedTime,
+    getTimeDifferenceShort,
+    getMapBackground, getDiffBackground,
 } from "./util.js";
 import {getBadgeColor, getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -459,10 +464,9 @@ export const PanelGenerate = {
         const is_team_vs = match?.is_team_vs;
         const star = round(match?.average_star || 0, 2);
 
-        const bid = match?.first_map_bid || 0
         const sid = match?.first_map_sid || beatmap?.beatmapset?.id || 0
-        const background = await getDiffBG(bid, sid, 'list@2x', true, false,
-            await getMapBG(sid, 'list@2x', true))
+        const background = beatmap != null ? await getDiffBackground(beatmap, 'list') :
+            await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list.jpg', true)
 
         const split = getMatchNameSplitted(stat?.name)
 
@@ -502,7 +506,7 @@ export const PanelGenerate = {
     },
 
     beatMap2CardA2: async (b) => {
-        const background = await getMapBG(b.beatmapset.id, 'list@2x', hasLeaderBoard(b.ranked));
+        const background = await getMapBackground(b, 'list');
         const map_status = b.status;
         const sr = rounds(b.difficulty_rating, 2)
         const title1 = b.beatmapset.title;
@@ -646,7 +650,7 @@ export const PanelGenerate = {
 
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset, last_beatmapset) => {
         const background = cursor ?
-            await getMapBG(cursor?.id, 'list@2x', true) :
+            await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor?.id + '/covers/list.jpg', true) :
             await readNetImage(first_beatmapset?.covers?.list || last_beatmapset?.covers?.list, true);
         const map_status = rule;
         const title1 = 'Search:';
@@ -817,7 +821,7 @@ export const PanelGenerate = {
 
         const mods = round?.mods || [];
 
-        const background = await getMapBG(round?.beatmap?.beatmapset_id);
+        const background = await getMapBackground(round?.beatmap);
 
         let left1;
 
@@ -1084,7 +1088,7 @@ export const PanelGenerate = {
     },
 
     skill2CardK: async (skill = {score: {}, skill: []}) => {
-        const background = await getMapBG(skill.score.beatmapset.id, 'list', true);
+        const background = await getMapBackground(skill.score, 'list');
 
         return {
             background: background,
@@ -1098,7 +1102,7 @@ export const PanelGenerate = {
     },
 
     bp2CardJ: async (bp) => {
-        const background = await getMapBG(bp.beatmapset.id, 'list@2x', hasLeaderBoard(bp.beatmap.ranked));
+        const background = await getMapBackground(bp, 'list');
 
         return {
             cover: background,
@@ -1233,7 +1237,7 @@ export const PanelGenerate = {
     beatmap2CardO2: async (s) => {
         if (!s) return '';
 
-        const background = await getMapBG(s?.id, 'list', hasLeaderBoard(s.status));
+        const background = await readNetImage(s?.covers?.list, true);
         const map_status = s?.status;
         const play_count = rounds(s?.play_count, 1)
         const title1 = s?.title_unicode || s?.title;

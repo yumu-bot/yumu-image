@@ -1,15 +1,14 @@
 import {
-    exportJPEG, getKeyDifficulty, getGameMode, getMapBG, getPanelNameSVG,
+    exportJPEG, getKeyDifficulty, getGameMode, getPanelNameSVG,
     setImage,
     setSvgBody, readTemplate,
-    setText, getSvgBody
+    setText, getSvgBody, readNetImage, getMapBackground
 } from "../util/util.js";
 import {card_D} from "../card/card_D.js";
 import {getMapAttributes} from "../util/compute-pp.js";
 import {card_A2} from "../card/card_A2.js";
 import {getModInt, hasModChangedSR} from "../util/mod.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -166,7 +165,7 @@ function hasRemain(i = 0) {
 }
 
 async function pool2cardA2(pool, mode, map_count = 0, mod_count = 0) {
-    const background = pool?.first_map_bid ? await getMapBG(pool.first_map_bid, 'cover', false) : getRandomBannerPath();
+    const background = pool?.first_map_bid ? await readNetImage('https://assets.ppy.sh/beatmaps/' + pool.first_map_bid + '/covers/cover.jpg', false) : getRandomBannerPath();
 
     const title1 = pool.name || '';
     const title3 = pool.category_list ? pool.category_list[0].category ? 'creator: ' + pool.category_list[0].category[0].creater : 'creator?' : '';
@@ -242,7 +241,7 @@ async function beatmap2CardD(b, mod, mode) {
     }
 
     return {
-        background: await getMapBG(b.beatmapset.id, 'cover', hasLeaderBoard(b.ranked)),
+        background: await getMapBackground(b, 'cover'),
         title: b.beatmapset.title || '',
         title_unicode: b.beatmapset.title_unicode || '',
         artist: b.beatmapset.artist || '',

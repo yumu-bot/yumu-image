@@ -305,7 +305,7 @@ export async function panel_M(data = {
         }
 
         cardO4s.push(await card_O4({
-            type: v.type, approval: v.approval, title: v.beatmapset.title, time: delta_time, sid: sid,
+            type: v.type, approval: v.approval, title: v.beatmapset.title, time: delta_time, background: v.beatmapset.covers.cover,
         }));
     }
 

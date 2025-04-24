@@ -10,7 +10,6 @@ import {
     getTimeByDHMSLarge,
     getTimeByDHMSSmall,
     getTimeByDHMS,
-    getDiffBG,
     getImageFromV3,
     setTexts,
     isNotNumber,
@@ -23,7 +22,7 @@ import {
     getTime,
     round,
     rounds,
-    isNotEmptyString,
+    isNotEmptyString, getDiffBackground,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_D2} from "../card/card_D2.js";
@@ -795,9 +794,7 @@ const PanelDGenerate = {
             const rank_text_color = (rank === 'X' || rank === 'XH') ? '#1c1719' : '#fff';
 
             const data = {
-                background: await getDiffBG(s.beatmap_id, s.beatmap.beatmapset_id,
-                    'list', s.ranked,
-                    (s?.beatmapset?.availability?.more_information != null)),
+                background: await getDiffBackground(s, 'list'),
                 title: Math.round(s?.pp).toString() || '0',
                 title_m: 'PP',
 

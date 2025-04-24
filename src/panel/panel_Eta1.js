@@ -8,10 +8,10 @@ import {
     setSvgBody,
     setText,
     setTexts,
-    round, getFormattedTime, isASCII, getMapBG, getAvatar, getGameMode, rounds
+    round, getFormattedTime, isASCII, getAvatar, getGameMode, rounds, getMapBackground
 } from "../util/util.js";
 import {
-    getRankBG
+    getRankBackground
 } from "../util/star.js";
 import {getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import {PanelColor} from "../util/color.js";
@@ -329,7 +329,7 @@ export async function panel_Eta1(data = {
     svg = setImage(svg, 1360, 210, 560, 560, getImageFromV3(`object-score-${rank}2.png`), reg_index, 1);
 
     // 图片定义
-    const background = getRankBG(rank, data?.score?.passed);
+    const background = getRankBackground(rank, data?.score?.passed);
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.5);
@@ -573,7 +573,7 @@ const component_Eta2 = (data = {
 const PanelEta1Generate = {
     score2componentEta1: async (score) => {
         return {
-            cover: await getMapBG(score?.beatmapset?.id, 'list@2x'),
+            cover: await getMapBackground(score, 'list'),
 
             title: score?.beatmapset?.title,
             title_unicode: score?.beatmapset?.title_unicode,

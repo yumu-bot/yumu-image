@@ -1,13 +1,13 @@
 import {
     exportJPEG, getAvatar, getFormattedTime, getImageFromV3,
-    getMapBG, getNowTimeStamp,
+    getNowTimeStamp,
     getPanelNameSVG, setImage,
     setSvgBody, isEmptyArray, isNotNull, readTemplate,
-    setText, setTexts, round, rounds, getSvgBody,
+    setText, setTexts, round, rounds, getSvgBody, getMapBackground,
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getRankBG, hasLeaderBoard} from "../util/star.js";
+import {getRankBackground} from "../util/star.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {getUserRankColor} from "../util/color.js";
@@ -184,7 +184,7 @@ export async function panel_F3(
     svg = setSvgBody(svg, 0, 450, await drawBodyCard(is_team_vs, reds, blues, round.scores, round.beatmap.max_combo), reg_index)
 
     // 插入图片和部件（新方法
-    svg = setImage(svg, 0, 0, 1920, 320, await getMapBG(round?.beatmap.beatmapset_id, 'cover', hasLeaderBoard(round?.beatmap.beatmapset.ranked)), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, await getMapBackground(round?.beatmap, 'cover'), reg_banner, 0.8);
 
     const card_height = is_team_vs ?
         (Math.max(reds.length, blues.length) > 6 ?
@@ -240,7 +240,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
 
     svg = setImage(svg, 65, 55, 300, 300, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar, 1)
 
-    svg = setImage(svg, 0, 0, 430, 550, getRankBG(match_score?.rank, match_score?.match?.pass), reg_background, 0.6)
+    svg = setImage(svg, 0, 0, 430, 550, getRankBackground(match_score?.rank, match_score?.match?.pass), reg_background, 0.6)
 
     const name = poppinsBold.getTextPath(poppinsBold.cutStringTail(match_score?.user?.username, 48, 430), 430 / 2, 426, 48, 'center baseline', '#fff')
 
@@ -370,7 +370,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
 
     svg = setImage(svg, 15, 15, 130, 130, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar, 1)
 
-    svg = setImage(svg, 0, 0, 430, 160, getRankBG(match_score?.rank, match_score?.match?.pass), reg_background, 0.6)
+    svg = setImage(svg, 0, 0, 430, 160, getRankBackground(match_score?.rank, match_score?.match?.pass), reg_background, 0.6)
 
     const name = poppinsBold.getTextPath(poppinsBold.cutStringTail(match_score?.user?.username, 36, 270), 160, 48, 36, 'left baseline', '#fff')
 

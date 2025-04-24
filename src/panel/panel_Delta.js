@@ -1,17 +1,15 @@
 import {
     exportPNG,
-    getDiffBG,
     getImageFromV3,
     setImage,
     setSvgBody, readTemplate,
-    setTexts, round
+    setTexts, round, getDiffBackground
 } from "../util/util.js";
 import {lineSeedSans, poppinsBold} from "../util/font.js";
 import {getMapAttributes} from "../util/compute-pp.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModInt} from "../util/mod.js";
-import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -137,8 +135,7 @@ export async function panel_Delta(data = {
     svg = setSvgBody(svg, 0, 0, od_rrect, reg_od);
     svg = setSvgBody(svg, 0, 0, length_pie, reg_length);
 
-    const image = await getDiffBG(data.beatmap.id, data.beatmap.beatmapset.id, 'list@2x', hasLeaderBoard(data.beatmap.status),
-        data?.beatmap?.beatmapset?.availability?.more_information != null);
+    const image = await getDiffBackground(data, 'list');
 
     svg = (data.hasBG === false) ? svg : setImage(svg, -30, 0, 1080, 1080, image, reg_background, 1);
     svg = setImage(svg, 0, 0, 1920, 1080, getImageFromV3('panel-kita.png'), reg_base, 1);

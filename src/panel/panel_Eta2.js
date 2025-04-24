@@ -7,10 +7,10 @@ import {
     setSvgBody,
     setText,
     setTexts,
-    round, getFormattedTime, isASCII, getAvatar, getGameMode, rounds, getDiffBG
+    round, getFormattedTime, isASCII, getAvatar, getGameMode, rounds, getDiffBackground
 } from "../util/util.js";
 import {
-    getRankBG, hasLeaderBoard
+    getRankBackground
 } from "../util/star.js";
 import {getMultipleTextPath, PuHuiTi, torus} from "../util/font.js";
 import {PanelColor} from "../util/color.js";
@@ -313,7 +313,7 @@ export async function panel_Eta2(data = {
     svg = setText(svg, difficulty, reg_text);
 
     // 图片定义
-    const background = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'list@2x', hasLeaderBoard(data?.score?.beatmap?.ranked), data?.score?.beatmap?.beatmapset?.availability?.more_information != null);
+    const background = await getDiffBackground(data?.score, 'list');
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
@@ -371,7 +371,7 @@ const component_Eta1 = (data = {
     const reg_text = /(?<=<g id="Text_OPETA2">)/;
     const reg_cover = /(?<=<g id="BG_OPETA2" style="clip-path: url\(#clippath-OPETA2-1\);">)/;
 
-    svg = setImage(svg, 0, 0, 1260, 630, getRankBG(data.rank), reg_cover, 0.2)
+    svg = setImage(svg, 0, 0, 1260, 630, getRankBackground(data.rank), reg_cover, 0.2)
 
     const title_text = torus.cutStringTail(data?.title, 60, 940)
     const title2_width = 940 - torus.getTextWidth(title_text, 60);

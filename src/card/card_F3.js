@@ -1,10 +1,10 @@
 import {
-    getMapBG, setSvgBody, setText
+    getMapBackground,
+    setSvgBody, setText
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_I4} from "./card_I4.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {hasLeaderBoard} from "../util/star.js";
 
 export async function card_F3(data = {
     bp: [{
@@ -148,7 +148,7 @@ const bp2CardK = async (bp, bp_ranking = 1) => {
     //随便搞个颜色，就不需要去获取一遍谱面了
 
     return {
-        map_background: await getMapBG(bp.beatmapset.id, 'list@2x', hasLeaderBoard(bp.beatmap.ranked)),
+        map_background: await getMapBackground(bp, 'list'),
         star_rating: bp?.beatmap?.difficulty_rating || 0,
         score_rank: bp?.rank || 0,
         bp_ranking: bp_ranking, //感觉暂时不使用这个也可以

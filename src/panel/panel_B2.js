@@ -1,12 +1,11 @@
 import {
     exportJPEG,
     getImageFromV3,
-    getMapBG,
     getPanelNameSVG,
     setImage,
     setSvgBody,
     readTemplate, setText,
-    setTexts, round, rounds
+    setTexts, round, rounds, getMapBackground
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
@@ -14,7 +13,7 @@ import {card_B1} from "../card/card_B1.js";
 import {card_B2} from "../card/card_B2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getRankBG, getRankFromValue, hasLeaderBoard} from "../util/star.js";
+import {getRankBackground, getRankFromValue} from "../util/star.js";
 import {getRankColor} from "../util/color.js";
 import {LABEL_MM} from "../component/label.js";
 
@@ -92,7 +91,7 @@ export async function panel_B2(data = {
     svg = setText(svg, PanelDraw.HexagonIndex(abbr_arr.slice(0, 6), 960, 600, 260, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
-    const banner = await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked));
+    const banner = await getMapBackground(data.beatmap, 'cover');
     svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8);
 
     // 面板文字
@@ -123,7 +122,7 @@ export async function panel_B2(data = {
         const value = map_minus_mania[abbr];
         const rank = getRankFromValue(value);
         const color = getRankColor(rank);
-        const background = getRankBG(rank);
+        const background = getRankBackground(rank);
 
         cardB1s.push(await card_B1({
 
@@ -149,7 +148,7 @@ export async function panel_B2(data = {
 
     const rank_ov = getRankFromValue(total);
     const color_ov = getRankColor(rank_ov);
-    const background_ov = getRankBG(rank_ov);
+    const background_ov = getRankBackground(rank_ov);
 
     cardB2s.push(await card_B2({
         label: LABEL_MM.OV,

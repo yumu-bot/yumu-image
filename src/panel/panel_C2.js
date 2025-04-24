@@ -2,7 +2,7 @@ import {
     exportJPEG, getImageFromV3, getPanelNameSVG,
     setImage,
     setSvgBody, readTemplate,
-    setText, getSvgBody, getPanelHeight, getAvatar, getDiffBG, round, rounds
+    setText, getSvgBody, getPanelHeight, getAvatar, round, rounds, readNetImage
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -171,7 +171,7 @@ async function playerData2CardH(p = {}) {
 async function seriesRating2CardA2(sr){
     const star = round(sr?.average_star || 0, 2);
 
-    const background = await getDiffBG(sr?.first_map_bid, sr?.first_map_sid, 'list@2x', true);
+    const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + sr?.first_map_sid + '/covers/list.jpg', true);
 
     const title = sr?.statistics?.name || "";
     let title1, title2;

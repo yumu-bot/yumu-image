@@ -6,9 +6,8 @@ import {
     setText,
     setTexts,
     setCustomBanner,
-    getDiffBG,
     getImageFromV3,
-    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, round
+    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, round, getDiffBackground
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -884,8 +883,7 @@ const PanelJGenerate = {
             const rank_text_color = (rank === 'X' || rank === 'XH') ? '#1c1719' : '#fff';
 
             const data = {
-                background: await getDiffBG(s.beatmap_id, s.beatmap.beatmapset_id,
-                    'list', s.ranked, false),
+                background: await getDiffBackground(s, 'list'),
                 title: Math.round(s?.pp).toString() || '0',
                 title_m: 'PP',
 

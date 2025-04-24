@@ -4,7 +4,7 @@ import {
     getMapStatusImage,
     setImage,
     setSvgBody, readNetImage,
-    setTexts, getDiffBG, getBeatMapTitlePath, round, rounds,
+    setTexts, getBeatMapTitlePath, round, rounds,
 } from "../util/util.js";
 import {extra, PuHuiTi, torus} from "../util/font.js";
 import {getStarRatingColor} from "../util/color.js";
@@ -62,8 +62,7 @@ export async function card_E1(data = {
     const hexagon = getImageFromV3('object-beatmap-hexagon.png');
     // const cover = await readNetImage(data.cover, hasLeaderBoard(data.ranked));
     // const cover = await getDiffBG(data.bid, data.sid, 'list', hasLeaderBoard(data.ranked));
-    const cover = await getDiffBG(data.bid, data.sid, "list@2x", hasLeaderBoard(data.ranked))
-        || await readNetImage(data.cover, hasLeaderBoard(data.ranked));
+    const cover = await readNetImage(data.cover, hasLeaderBoard(data.ranked));
     const status = getMapStatusImage(data.status);
 
     const favorite_count_icon = '<path d="m13,1c3,0,5,2,5,5s-5,7-6,8l-3,3-3-3C5,13,0,9,0,6,0,3.906,2,1,5,1s4,3,4,3c0,0,1-3,4-3Z" style="fill: #fff;"/>';

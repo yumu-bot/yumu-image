@@ -10,14 +10,10 @@ import {
     getFormattedTime,
     getGameMode,
     getImageFromV3,
-    getDiffBG,
     getMapStatus,
     rounds,
-    getDifficultyIndex, isNotEmptyArray, getAvatar
+    getDifficultyIndex, isNotEmptyArray, getAvatar, getDiffBackground
 } from "../util/util.js";
-import {
-    hasLeaderBoard
-} from "../util/star.js";
 import {poppinsBold, torusRegular} from "../util/font.js";
 import {getMapStatusColor} from "../util/color.js";
 import {getModPath} from "../util/mod.js";
@@ -304,7 +300,7 @@ export async function panel_Eta4(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 图片定义
-    const background = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'list@2x', hasLeaderBoard(data?.score?.beatmap?.ranked), data?.score?.beatmap?.beatmapset?.availability?.more_information != null);
+    const background = await getDiffBackground(data?.score, 'list');
 
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.5);
 

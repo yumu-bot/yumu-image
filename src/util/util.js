@@ -11,6 +11,7 @@ import JPEGProvider from '../svg-to-image/JPEGProvider.js';
 import PNGProvider from '../svg-to-image/PNGProvider.js';
 import {getRandom, getRandomBannerPath} from "./mascotBanner.js";
 import {matchAnyMods} from "./mod.js";
+import {hasLeaderBoard} from "./star.js";
 
 const exportsJPEG = new API(new JPEGProvider());
 const exportsPNG = new API(new PNGProvider());
@@ -91,121 +92,6 @@ export const exportJPEG = async (svg) => await exportsJPEG.convert(svg, {quality
 export const exportPNG = async (svg) => await exportsPNG.convert(svg);
 
 const UTF8Encoder = new TextEncoder('utf8');
-
-export function readTemplate(path = '') {
-    return fs.readFileSync(path, 'utf8');
-}
-
-/**
- *
- * @param path
- * @returns {string}
- */
-export function readFile(path = '') {
-    try {
-        return fs.readFileSync(path, 'binary');
-    } catch (e) {
-        return '';
-    }
-}
-
-/**
- * 获取来自 v3 的图片
- * @param path
- * @return {string} Buffer 图片流
- */
-export function readImageFromV3(path = '') {
-    return fs.readFileSync(getImageFromV3(path), 'binary');
-}
-
-/**
- * 获取来自 v3 的图片链接，可用于 SVG 图片插入
- * @param path
- * @return {string} 图片链接
- */
-export function getImageFromV3(...paths) {
-    return path_util.join(EXPORT_FILE_V3, ...paths);
-}
-
-/**
- * @function 获得难度背景
- * @param {number} bid bid
- * @param {number} sid sid
- * @return Promise<string>
- */
-export async function getDiffBG(bid, sid, cover = 'cover', use_cache = true, is_dmca = false, default_image_path = getImageFromV3('card-default.png')) {
-    let path;
-
-    try {
-        // data 为背景文件在文件系统中的绝对路径字符串 不是文件本身
-
-        const res = await getBGFromDatabase(bid, sid);
-        path = res.data;
-    } catch (e) {
-        if (e instanceof AxiosError) {
-            console.error("本地背景读取超时");
-        } else {
-            console.error("本地背景读取失败", e);
-        }
-        path = await getMapBG(sid, cover, use_cache, default_image_path);
-    } finally {
-        asyncBeatMapFromDatabase(bid, sid);
-
-        if (isPictureIntacted(path)) {
-            return path;
-        } else {
-            if (is_dmca === false) {
-                deleteBeatMapFromDatabase(bid);
-            }
-
-            return await getMapBG(sid, cover, use_cache, default_image_path);
-        }
-    }
-}
-
-/**
- * 获取图片
- * @return Promise<string>
- */
-export async function getBGFromDatabase(bid, sid) {
-    return await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
-        proxy: {},
-        headers: {
-            "SET_ID": sid,
-            "AuthorizationX": SUPER_KEY,
-        },
-        timeout: 1500,
-        __no_wait: true,
-    });
-}
-
-/**
- * 向服务器提交异步任务
- */
-export function asyncBeatMapFromDatabase(bid, sid) {
-    axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
-        proxy: {},
-        headers: {
-            "SET_ID": sid,
-            "AuthorizationX": SUPER_KEY,
-        }
-    }).catch(_ => {
-    })
-}
-
-
-/**
- * 向服务器提交删除谱面任务
- */
-export function deleteBeatMapFromDatabase(bid) {
-    axios.get(`http://127.0.0.1:47150/api/file/remove/bid/${bid}`, {
-        proxy: {},
-        headers: {
-            "AuthorizationX": SUPER_KEY,
-        }
-    }).catch(_ => {
-    })
-}
 
 /**
  * @return boolean
@@ -468,26 +354,173 @@ export function getFileSize(path = "") {
     return size;
 }
 
+export function readTemplate(path = '') {
+    return fs.readFileSync(path, 'utf8');
+}
 
 /**
- * 获取谱面 BG
- * @param {number} sid
- * @param {string} [cover]
- * @param {boolean} [use_cache] 是否用缓存，false 强制更新
- * @param {string} [default_image_path] 出现错误时返回的失败图
- * @return {Promise<string>} 返回位于文件系统的绝对路径
+ *
+ * @param path
+ * @returns {string}
  */
-export async function getMapBG(sid = 0, cover = 'cover', use_cache = true, default_image_path = getImageFromV3('card-default.png')) {
-    if (sid === 0 || isNotNumber(sid)) return default_image_path
+export function readFile(path = '') {
+    try {
+        return fs.readFileSync(path, 'binary');
+    } catch (e) {
+        return '';
+    }
+}
 
-    const bg = await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/' + cover + '.jpg', use_cache, default_image_path);
+/**
+ * 获取来自 v3 的图片
+ * @param path
+ * @return {string} Buffer 图片流
+ */
+export function readImageFromV3(path = '') {
+    return fs.readFileSync(getImageFromV3(path), 'binary');
+}
 
-    // 部分官网的 list@2x 分辨率特别低，尺寸小于 15 KB，比如这个图 728088 list@2x
-    if (cover === 'list@2x' && fs.statSync(bg).size <= 15 * 1024) {
-        return await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/cover.jpg', use_cache, default_image_path);
+/**
+ * 获取来自 v3 的图片链接，可用于 SVG 图片插入
+ * @param path
+ * @return {string} 图片链接
+ */
+export function getImageFromV3(...paths) {
+    return path_util.join(EXPORT_FILE_V3, ...paths);
+}
+
+/**
+ * 获取谱面背景 v5
+ * @param beatmap 也可以是 score，这两个类结构刚好一样
+ * 如果是 beatmapSet，那直接使用 readNetImage，url 输入 beatmapSet.covers.xxxxx...
+ * @param cover 封面种类，一般用 cover 和 list
+ * @returns {Promise<string>} 返回位于文件系统的绝对路径
+ */
+export async function getMapBackground(beatmap = {}, cover = 'cover') {
+    const covers = beatmap?.beatmapset?.covers || {}
+
+    const default_image_path = getImageFromV3('card-default.png')
+
+    let use_cache = hasLeaderBoard(beatmap?.beatmapset?.ranked) || hasLeaderBoard(beatmap?.beatmap?.ranked)
+
+    let url
+    if (covers != null) {
+        switch (cover.toString().toLowerCase()) {
+            case 'cover': url = covers.cover; break;
+            case 'cover@2x': url = covers['cover@2x']; break;
+            case 'silmcover': url = covers.cover; break;
+            case 'silmcover@2x': url = covers['silmcover@2x']; break;
+            case 'list': url = covers.list; break;
+            case 'list@2x': url = covers['list@2x']; break;
+            case 'card': url = covers.card; break;
+            case 'card@2x': url = covers['card@2x']; break;
+            default: if (isNumber(beatmap?.beatmapset?.id)) {
+                url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/cover.jpg'
+                use_cache = false
+            } else {
+                return default_image_path
+            }
+        }
+    } else {
+        if (isNumber(score?.beatmapset?.id)) {
+            url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/cover.jpg'
+            use_cache = false
+        } else {
+            return default_image_path
+        }
     }
 
-    return bg;
+    const background = await readNetImage(url, use_cache, default_image_path)
+
+    return background
+}
+
+
+/**
+ * 获得难度背景 v5
+ * @param score 成绩，也可以是 beatmap，这两个类结构刚好一样
+ * @param cover
+ * @returns {Promise<string>}
+ */
+export async function getDiffBackground(score = {}, cover = 'cover') {
+    let path;
+    const default_image_path = getImageFromV3('card-default.png')
+
+    const bid = score?.beatmap?.id
+    const sid = score?.beatmapset?.id
+
+    try {
+        // data 为背景文件在文件系统中的绝对路径字符串 不是文件本身
+
+        const res = await getBackgroundFromDatabase(bid, sid);
+        path = res.data;
+    } catch (e) {
+        if (e instanceof AxiosError) {
+            console.error("本地背景读取超时");
+        } else {
+            console.error("本地背景读取失败", e);
+        }
+
+        path = await getMapBackground(score, cover);
+    } finally {
+        asyncBeatMapFromDatabase(bid, sid);
+
+        if (isPictureIntacted(path)) {
+            return path;
+        } else {
+            const is_dmca = score?.beatmapset?.availability?.more_information != null
+
+            if (is_dmca === false) {
+                deleteBeatMapFromDatabase(bid);
+            }
+
+            return await getMapBackground(score, cover);
+        }
+    }
+}
+
+/**
+ * 从数据库获取谱面背景
+ * @return Promise<string>
+ */
+export async function getBackgroundFromDatabase(bid, sid) {
+    return await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
+        proxy: {},
+        headers: {
+            "SET_ID": sid,
+            "AuthorizationX": SUPER_KEY,
+        },
+        timeout: 1500,
+        __no_wait: true,
+    });
+}
+
+/**
+ * 向服务器提交异步任务
+ */
+export function asyncBeatMapFromDatabase(bid, sid) {
+    axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
+        proxy: {},
+        headers: {
+            "SET_ID": sid,
+            "AuthorizationX": SUPER_KEY,
+        }
+    }).catch(_ => {
+    })
+}
+
+
+/**
+ * 向服务器提交删除谱面任务
+ */
+export function deleteBeatMapFromDatabase(bid) {
+    axios.get(`http://127.0.0.1:47150/api/file/remove/bid/${bid}`, {
+        proxy: {},
+        headers: {
+            "AuthorizationX": SUPER_KEY,
+        }
+    }).catch(_ => {
+    })
 }
 
 /**

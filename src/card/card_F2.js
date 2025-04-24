@@ -1,11 +1,11 @@
 import {
-    getImageFromV3, getMapBG, setImage,
-    setSvgBody, setText, getKeyDifficulty, round
+    getImageFromV3, setImage,
+    setSvgBody, setText, getKeyDifficulty, round, getMapBackground
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_J} from "./card_J.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getScoreTypeImage, hasLeaderBoard} from "../util/star.js";
+import {getScoreTypeImage} from "../util/star.js";
 
 export async function card_F2(data = {
     recent: [
@@ -150,7 +150,7 @@ export async function card_F2(data = {
 }
 
 const score2CardJ = async (score) => {
-    const background = await getMapBG(score.beatmapset.id, 'cover', hasLeaderBoard(score.beatmap.ranked));
+    const background = await getMapBackground(score, 'cover');
 
     return {
         cover: background,

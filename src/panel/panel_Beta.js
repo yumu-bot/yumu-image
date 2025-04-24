@@ -1,7 +1,6 @@
 import {XMLBuilder, XMLParser} from "fast-xml-parser"
-import {exportJPEG, getAvatar, getDiffBG, readTemplate} from "../util/util.js";
+import {exportJPEG, getAvatar, getDiffBackground, readTemplate} from "../util/util.js";
 import {calcPerformancePoints} from "../util/compute-pp.js";
-import {hasLeaderBoard} from "../util/star.js";
 
 const opt = {
     preserveOrder: false,
@@ -66,8 +65,7 @@ export async function router_svg(req, res) {
  */
 export async function panel_Beta(score) {
     const avatar = await getAvatar(score?.user?.avatar_url, true);
-    const bg = await getDiffBG(score.beatmap.id, score.beatmapset.id, 'list@2x', hasLeaderBoard(score.beatmap.ranked),
-        score?.beatmap?.beatmapset?.availability?.more_information != null);
+    const bg = await getDiffBackground(score, 'list');
 
     const mode_int = score.mode_int;
     const mods = score.mods;

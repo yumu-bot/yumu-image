@@ -1,4 +1,4 @@
-import {getImageFromV3, getMapBG, setImage, setText} from "../util/util.js";
+import {getImageFromV3, readNetImage, setImage, setText} from "../util/util.js";
 import {torus} from "../util/font.js";
 
 export async function card_O4(data = {
@@ -6,7 +6,7 @@ export async function card_O4(data = {
     approval: '',
     title: '',
     time: 'now',
-    sid: 0
+    background: '',
 }) {
     // 读取模板
     let svg =`<defs>
@@ -47,7 +47,7 @@ export async function card_O4(data = {
         : '(' + time + ') ' + operate + ' \"'  + title_cut_str + '\"';
 
     const title = torus.getTextPath(title_str, 40, 20, 18, 'left baseline', color);
-    const bg = await getMapBG(data?.sid, 'cover', false)
+    const bg = await readNetImage(data?.background, true)
 
     svg = setImage(svg, 0, 0, 550, 30, bg, reg_background, 0.3);
     svg = setImage(svg, 5, 0, 30, 30, type, reg_image, 1);

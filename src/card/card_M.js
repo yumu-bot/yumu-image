@@ -1,6 +1,6 @@
 import {
     getKeyDifficulty,
-    getImageFromV3, getMapBG, setImage, setSvgBody, setText,
+    getImageFromV3, setImage, setSvgBody, setText, readNetImage,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_M1, label_M2, label_M3} from "../component/label.js";
@@ -453,7 +453,7 @@ export async function card_M(s = {
 
     //导入背景
 
-    const background = await getMapBG(s.id, 'list', hasLeaderBoard(s.ranked));
+    const background = await readNetImage(s.covers?.list, hasLeaderBoard(s.ranked));
     svg = setImage(svg, 0, 0, 1370, 210, background, reg_background, 0.5);
 
     return svg.toString();

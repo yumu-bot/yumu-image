@@ -7,10 +7,10 @@ import {
     setSvgBody,
     setText,
     setTexts,
-    round, getFormattedTime, isASCII, getGameMode, getImageFromV3, getMapBG
+    round, getFormattedTime, isASCII, getGameMode, getImageFromV3, getMapBackground
 } from "../util/util.js";
 import {
-    getRankBG
+    getRankBackground
 } from "../util/star.js";
 import {getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import {getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
@@ -309,7 +309,7 @@ export async function panel_Eta3(data = {
     const result = poppinsBold.getTextPath('RESULT', 0, 250, 300, 'left baseline', '#fff', 0.1)
 
     // 图片定义
-    const background = getRankBG(data?.score?.legacy_rank, data?.score?.passed);
+    const background = getRankBackground(data?.score?.legacy_rank, data?.score?.passed);
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.3);
@@ -697,7 +697,7 @@ const component_Eta2 = (data = {
 const PanelEta1Generate = {
     score2componentEta1: async (score) => {
         return {
-            cover: await getMapBG(score?.beatmapset?.id, 'list@2x'),
+            cover: await getMapBackground(score, 'list'),
 
             title: score?.beatmapset?.title,
             title_unicode: score?.beatmapset?.title_unicode,

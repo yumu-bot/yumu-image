@@ -1,13 +1,12 @@
 import {
-    exportJPEG, getMapBG, getPanelHeight,
+    exportJPEG, getPanelHeight,
     getPanelNameSVG,
     setSvgBody, readTemplate,
-    setText, setImage
+    setText, setImage, getMapBackground
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_N} from "../card/card_N.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -81,7 +80,7 @@ export async function panel_A3(data = {
     }
 
     // 插入图片和部件
-    svg = setImage(svg, 0, 0, 1920, 320, await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked)), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, await getMapBackground(data.beatmap, 'cover'), reg_banner, 0.8);
     // svg = putCustomBanner(svg, reg_banner, await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked)));
 
     // 计算面板高度

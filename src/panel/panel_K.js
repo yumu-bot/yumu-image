@@ -9,7 +9,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {torus} from "../util/font.js";
-import {getRankBG, getRankFromValue} from "../util/star.js";
+import {getRankBackground, getRankFromValue} from "../util/star.js";
 import {getRankColor} from "../util/color.js";
 import {card_B1} from "../card/card_B1.js";
 import {LABEL_MM} from "../component/label.js";
@@ -171,7 +171,7 @@ export async function panel_K(data = {
         const name = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
         const rank = getRankFromValue(value)
         const color = getRankColor(rank)
-        const background = getRankBG(rank)
+        const background = getRankBackground(rank)
 
         const b1_data = {
             label: LABEL_MM[name?.toUpperCase()],
@@ -200,7 +200,7 @@ export async function panel_K(data = {
             const name = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
             const rank = getRankFromValue(value)
             const color = getRankColor(rank)
-            const background = getRankBG(rank)
+            const background = getRankBackground(rank)
 
             const b1_data = {
                 label: LABEL_MM[name?.toUpperCase()],
@@ -238,7 +238,7 @@ export async function panel_K(data = {
 
     const rank_ov = getRankFromValue(data?.total);
     const color_ov = getRankColor(rank_ov);
-    const background_ov = getRankBG(rank_ov);
+    const background_ov = getRankBackground(rank_ov);
 
     card_B2s.push(await card_B2({
         label: LABEL_MM.OV,
@@ -252,7 +252,7 @@ export async function panel_K(data = {
     if (is_vs) {
         const rank_ov = getRankFromValue(data?.vs_total);
         const color_ov = getRankColor(rank_ov);
-        const background_ov = getRankBG(rank_ov);
+        const background_ov = getRankBackground(rank_ov);
 
         card_B2s.push(await card_B2({
             label: LABEL_MM.OV,

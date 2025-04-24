@@ -1,7 +1,6 @@
 import {
     exportJPEG,
     getBeatMapTitlePath,
-    getDiffBG,
     getGameMode,
     getImageFromV3,
     getMapStatusImage,
@@ -22,11 +21,10 @@ import {
     getKeyDifficulty,
     isNumber,
     rounds,
-    round, getFormattedTime, isEmptyArray, getDifficultyIndex
+    round, getFormattedTime, isEmptyArray, getDifficultyIndex, getDiffBackground
 } from "../util/util.js";
 import {
-    getRankBG, getScoreTypeImage,
-    hasLeaderBoard
+    getRankBackground, getScoreTypeImage
 } from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -326,8 +324,8 @@ export async function panel_E5(data = {
     svg = setImage(svg, 665, 290, 590, 590, getImageFromV3(`object-score-${rank}2.png`), reg_index, 1);
 
     // 图片定义
-    const background = getRankBG(rank, data?.score?.passed);
-    const banner = await getDiffBG(data?.score?.beatmap?.id, data?.score?.beatmapset?.id, 'cover', hasLeaderBoard(data.score.beatmap.ranked), data?.score?.beatmap?.beatmapset?.availability?.more_information != null);
+    const background = getRankBackground(rank, data?.score?.passed);
+    const banner = await getDiffBackground(data?.score, 'cover');
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
@@ -336,7 +334,7 @@ export async function panel_E5(data = {
     const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.score, data.original));
     const componentE4 = component_E4(PanelEGenerate.score2componentE4(data.score));
     const componentE5 = component_E5(PanelEGenerate.score2componentE5(data.score));
-    const componentE6 = await component_E6(PanelEGenerate.score2componentE6(data.score));
+    const componentE6 = component_E6(await PanelEGenerate.score2componentE6(data.score));
     const componentE7 = component_E7(PanelEGenerate.score2componentE7(data.score, data.attributes));
     const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score, is_lazer));
     const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.score));
@@ -585,7 +583,7 @@ const component_E5 = (
     return svg;
 }
 
-const component_E6 = async (
+const component_E6 = (
     data = {
         title: '',
         title_unicode: '',
@@ -594,6 +592,7 @@ const component_E6 = async (
         creator: '',
         bid: 0,
         sid: 0,
+        background: '',
         status: 'pending',
         is_dmca: false,
     }) => {
@@ -630,7 +629,7 @@ const component_E6 = async (
         20, 142, 24, 'left baseline', '#fff');
     const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 820 - 20, 142, 24, 'right baseline', '#fff');
 
-    const background = await getDiffBG(data?.bid, data?.sid, 'cover', hasLeaderBoard(data?.status), data.is_dmca);
+    const background = data?.background;
 
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
@@ -1235,7 +1234,7 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE6: (score) => {
+    score2componentE6: async (score) => {
         let creators = ''
         const owners = score?.beatmap?.owners || []
         if (isEmptyArray(owners)) {
@@ -1255,9 +1254,9 @@ const PanelEGenerate = {
             difficulty_name: getKeyDifficulty(score?.beatmap),
             bid: score?.beatmap?.id || 0,
             sid: score?.beatmapset?.id || 0,
+            background: await getDiffBackground(score, 'cover'),
             creator: creators,
             status: score?.beatmap?.status || 'pending',
-            is_dmca: score?.beatmap?.beatmapset?.availability?.more_information != null
         }
     },
 
