@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG, getTimeDifference,
     setImage, setSvgBody, readTemplate,
-    setText, setTexts, round, rounds
+    setText, setTexts, round, rounds, readNetImage
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -305,7 +305,11 @@ export async function panel_M(data = {
         }
 
         cardO4s.push(await card_O4({
-            type: v.type, approval: v.approval, title: v.beatmapset.title, time: delta_time, background: v.beatmapset.covers.cover,
+            type: v.type,
+            approval: v.approval,
+            title: v.beatmapset.title,
+            time: delta_time,
+            background: await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list.jpg', false),
         }));
     }
 
