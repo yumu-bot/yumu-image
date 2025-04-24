@@ -233,7 +233,7 @@ export async function panel_B1(data = {
             label: LABEL_PPM.OVA,
             background: bg_1,
             value: value_1,
-            round_level: -4,
+            round_level: 1,
             rank: rank_1,
             color: color_1,
         }));
@@ -263,7 +263,7 @@ export async function panel_B1(data = {
             label: LABEL_PPM.OVA,
             background: bg_1,
             value: value_1,
-            round_level: -4,
+            round_level: 1,
             rank: rank_1,
             color: color_1,
         }));
@@ -278,7 +278,7 @@ export async function panel_B1(data = {
             label: LABEL_PPM.SAN,
             background: san_bg,
             value: san_value,
-            round_level: -4,
+            round_level: 1,
             rank: san_truly_rank,
             color: san_color,
         }));
