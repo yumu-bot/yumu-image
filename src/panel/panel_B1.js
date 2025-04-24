@@ -132,9 +132,9 @@ export async function panel_B1(data = {
     if (is_pm4) {
         const request_time = 'data count: ' + (data.count || 0) + 'x // range: +-' + (data.delta || 0) + 'PP // request time: ' + getNowTimeStamp();
 
-        panel_name = getPanelNameSVG('PP Minus v4.0 (!ymtp)', 'PM', request_time);
+        panel_name = getPanelNameSVG('PP Minus v4.0 (!ympm/!ympv)', 'PM', request_time);
     } else {
-        panel_name = getPanelNameSVG('PP Minus v2.4 (!ympm/!ympv)', 'PM');
+        panel_name = getPanelNameSVG('PP Minus v2.4 Legacy (!ympl)', 'PL');
     }
 
     // 插入文字
