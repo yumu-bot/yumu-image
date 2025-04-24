@@ -1029,7 +1029,6 @@ const PanelEGenerate = {
             sid: b?.beatmapset?.id || 0,
             background: await getDiffBackground(b, 'cover'),
             creator: creators,
-            status: b?.status || 'pending',
         }
     },
 

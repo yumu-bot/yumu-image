@@ -368,7 +368,6 @@ const component_E6 = (
         bid: 0,
         sid: 0,
         background: '',
-        status: 'pending',
     }) => {
     let svg = `   <defs>
             <clipPath id="clippath-OE6-1">
@@ -784,7 +783,7 @@ const component_E10 = (
     return svg;
 }
 
-const component_E11 = async (
+const component_E11 = (
     data = {
         background: '',
     }) => {
@@ -995,7 +994,6 @@ const PanelEGenerate = {
             sid: b?.beatmapset?.id || 0,
             background: await getDiffBackground(b, 'cover'),
             creator: creators,
-            status: b?.status || 'pending',
         }
     },
 
