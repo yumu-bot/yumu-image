@@ -248,7 +248,7 @@ export async function panel_B1(data = {
             label: LABEL_PPM.OVA,
             background: bg_2,
             value: value_2,
-            round_level: -4,
+            round_level: 1,
             rank: rank_2,
             color: color_2,
         }));
@@ -268,7 +268,7 @@ export async function panel_B1(data = {
             color: color_1,
         }));
 
-        const san_value = Math.round(data?.my.SAN || 0) * 100;
+        const san_value = (data?.my.SAN || 0) * 100;
         const san_rank = getRankFromValue(san_value, SANITY_BOUNDARY); // 用于颜色判断的 rank
         const san_bg = getRankBackground(san_rank);
         const san_color = getRankColor(san_rank);
