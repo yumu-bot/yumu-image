@@ -1041,7 +1041,7 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
 
 /**
  * @function 格式化游戏模式
- * @return {String} 游戏模式
+ * @return {String|Number} 游戏模式
  * @param mode 将被格式化的游戏模式，osu taiko catch mania
  * @param level 等级，0为不变，2为全写 osu!standard，-1为获取他们的unicode字符 \uE801，1为简写 o t m c，-2 获取他们的 mode int
  */

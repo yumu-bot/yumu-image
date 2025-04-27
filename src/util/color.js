@@ -323,6 +323,8 @@ export function getUserRankColor(rank = 0) {
  * @returns {string}
  */
 export function getModColor(mod = '' || {acronym: ''}) {
+    if (mod?.color != null) return mod.color
+
     const mod_name = getModName(mod);
 
     let color;
@@ -458,6 +460,7 @@ export function getModColor(mod = '' || {acronym: ''}) {
         case "BU":
         case "SY":
         case "DP":
+        case "NR":
             color = '#EA68A2';
             break;
 
