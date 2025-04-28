@@ -31,6 +31,7 @@ import {
     rankSS2X
 } from "./star.js";
 import {getCHUNITHMRatingBG, getMaimaiCategory, getMaimaiCover, getMaimaiPlate, getMaimaiRatingBG} from "./maimai.js";
+import {getRandomBannerPath} from "./mascotBanner.js";
 
 //公用方法
 //把参数变成面板能读懂的数据
@@ -386,6 +387,66 @@ export const PanelGenerate = {
             right2:  (user?.base > 0) ? 'Rating: ' + round(user.base, 2)  + ' + ' + round(user.additional, 2) : 'Rating:',
             right3b: rating.integer,
             right3m: rating.decimal,
+        };
+    },
+
+    guestDiffer2CardA1: async (data = {
+        user: {
+            cover: {
+                url: 'https://assets.ppy.sh/user-profile-covers/416662/ab631986bb61f181551b8dbea87285874d09a920584bd5ff0250410b2b44a9a3.jpeg',
+                custom_url: 'https://assets.ppy.sh/user-profile-covers/416662/ab631986bb61f181551b8dbea87285874d09a920584bd5ff0250410b2b44a9a3.jpeg'
+            },
+            user_id: 416662,
+            avatar_url: 'https://a.ppy.sh/416662?1718654531.jpeg',
+            default_group: 'default',
+            id: 416662,
+            is_active: false,
+            is_bot: false,
+            is_deleted: false,
+            is_online: false,
+            is_supporter: false,
+            pm_friends_only: false,
+            username: 'Hollow Wings',
+            country_code: 'CN',
+            country: { code: 'CN', name: 'China' },
+            is_mutual: false,
+            statistics_rulesets: {}
+        },
+        received: 0,
+        received_ranked: 0,
+        sent: 5,
+        sent_ranked: 5,
+    }) => {
+        const user = data.user
+
+        const background = await readNetImage(user.cover.url, true, getRandomBannerPath());
+        const avatar = await getAvatar(user.avatar_url, true)
+
+
+        let sub_icon1 = ''
+
+        if (user.is_supporter) {
+            sub_icon1 = getImageFromV3('object-card-supporter.png')
+        }
+
+
+        return {
+            background: background,
+            avatar: avatar,
+            sub_icon1: sub_icon1,
+            sub_icon2: '',
+            sub_banner: '',
+            country: user.country_code,
+
+            top1: user.username,
+            top2: '',
+
+            left1: 'sent to: ' + data.sent,
+            left2: 'received from: ' + data.received,
+            right1: 'Ranked GDs:',
+            right2: '(sent [received])',
+            right3b: data?.sent_ranked || '0',
+            right3m: ' [' + (data?.received_ranked || '0') + ']',
         };
     },
 
