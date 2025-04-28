@@ -429,6 +429,14 @@ export const PanelGenerate = {
             sub_icon1 = getImageFromV3('object-card-supporter.png')
         }
 
+        let right3b = ''
+        let right3m = '-'
+
+        if ((data?.sent_ranked || 0) + (data?.received_ranked || 0) > 0) {
+            right3b = data?.sent_ranked || '0'
+            right3m = ' [' + (data?.received_ranked || '0') + ']'
+        }
+
 
         return {
             background: background,
@@ -445,8 +453,8 @@ export const PanelGenerate = {
             left2: 'received from: ' + data.received,
             right1: 'Ranked GDs:',
             right2: '(sent [received])',
-            right3b: data?.sent_ranked || '0',
-            right3m: ' [' + (data?.received_ranked || '0') + ']',
+            right3b: right3b,
+            right3m: right3m,
         };
     },
 
