@@ -16,6 +16,7 @@ export async function card_N(data = {
 
     score_rank: 1,
     compare_score: 15905693,
+    is_legacy: false,
 }) {
     // 读取模板
     let svg = `   <defs>
@@ -63,7 +64,7 @@ export async function card_N(data = {
     const name = torus.get2SizeTextPath(
         torus.cutStringTail(data.score.user.username, 26, 180, true), //最大宽度220px，给后面排名留了50px
         ' #' + data.score_rank, 26, 18, 130, 26, 'left baseline', '#fff'); //lS24 sS16 / y 24
-    const flagSvg = await getFlagPath(data.score.user.country_code, 130, 32, 20);
+    const flag_svg = await getFlagPath(data.score.user.country_code, 130, 32, 20);
 
     const score_date = getTimeDifference(data.score.ended_at);
     const background_opacity = getBGOpacity(score_date);
@@ -76,7 +77,13 @@ export async function card_N(data = {
     const acc = data.score.accuracy * 100;
     const combo = data.score.max_combo;
     const pp = Math.round(data.score.pp);
-    const score = data.score.total_score;
+
+    let score
+    if (data?.is_legacy) {
+        score = data.score.legacy_total_score
+    } else {
+        score = data.score.total_score
+    }
 
     const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
     const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 10, 36 + 17, 18, 'right baseline', '#aaa');
@@ -162,7 +169,7 @@ export async function card_N(data = {
     svg = setImage(svg, 15, 10, 40, 40, rank, reg_label, 1);
     svg = setImage(svg, 70, 6, 50, 50, avatar, reg_avatar, 1);
     svg = setImage(svg, 0, 0, 915, 62, background, reg_background, background_opacity);
-    svg = setTexts(svg, [name, country_date, delta_score_text, flagSvg], reg_text);
+    svg = setTexts(svg, [name, country_date, delta_score_text, flag_svg], reg_text);
 
     svg = setSvgBody(svg, 350, 6, n1_acc, reg_label);
     svg = setSvgBody(svg, 460, 6, n1_combo, reg_label);

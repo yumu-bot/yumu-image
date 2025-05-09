@@ -42,6 +42,7 @@ export async function panel_A3(data = {
     "beatmap": {},
     "scores": [],
     "start": 1,
+    "is_legacy": false,
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_A3.svg');
@@ -71,10 +72,21 @@ export async function panel_A3(data = {
     let cardN1s = [];
     for (const i in data.scores) {
         const i0 = Math.max((parseInt(i) - 1), 0)
+
+        const is_legacy = data?.is_legacy || false
+
+        let compare_score;
+        if (is_legacy) {
+            compare_score = data.scores[i0].legacy_total_score
+        } else {
+            compare_score = data.scores[i0].total_score
+        }
+
         const f = await card_N({
             score: data.scores[i],
             score_rank: (parseInt(i) + (data?.start || 1)) || 0,
-            compare_score: data.scores[i0].total_score,
+            compare_score: compare_score,
+            is_legacy: is_legacy
         })
 
         cardN1s.push(f);

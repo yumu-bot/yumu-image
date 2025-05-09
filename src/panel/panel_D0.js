@@ -330,19 +330,19 @@ function user2CardF1(user, mode = 'osu') {
 function user2CardF4(user, historyUser) {
     return {
         user: {
-            ssh: user.statistics.ssh,
-            ss: user.statistics.ss,
-            sh: user.statistics.sh,
-            s: user.statistics.s,
-            a: user.statistics.a,
+            count_ssh: user.statistics.count_ssh,
+            count_ss: user.statistics.count_ss,
+            count_sh: user.statistics.count_sh,
+            count_s: user.statistics.count_s,
+            count_a: user.statistics.count_a,
         },
 
         historyUser: {
-            ssh: historyUser?.statistics?.ssh,
-            ss: historyUser?.statistics?.ss,
-            sh: historyUser?.statistics?.sh,
-            s: historyUser?.statistics?.s,
-            a: historyUser?.statistics?.a,
+            count_ssh: historyUser?.statistics?.count_ssh,
+            count_ss: historyUser?.statistics?.count_ss,
+            count_sh: historyUser?.statistics?.count_sh,
+            count_s: historyUser?.statistics?.count_s,
+            count_a: historyUser?.statistics?.count_a,
         }
     };
 }

@@ -825,16 +825,16 @@ const PanelDGenerate = {
         const h = history_user?.statistics
 
         return {
-            user: [s.ssh, s.ss, s.sh, s.s, s.a],
+            user: [s.count_ssh, s.count_ss, s.count_sh, s.count_s, s.count_a],
 
-            sum: Math.max(1, s.ssh + s.ss + s.sh + s.s + s.a),
+            sum: Math.max(1, s.count_ssh + s.count_ss + s.count_sh + s.count_s + s.count_a),
 
             delta: [
-                getDelta(s.ssh, h?.ssh),
-                getDelta(s.ss, h?.ss),
-                getDelta(s.sh, h?.sh),
-                getDelta(s.s, h?.s),
-                getDelta(s.a, h?.a)
+                getDelta(s.count_ssh, h?.count_ssh),
+                getDelta(s.count_ss, h?.count_ss),
+                getDelta(s.count_sh, h?.count_sh),
+                getDelta(s.count_s, h?.count_s),
+                getDelta(s.count_a, h?.count_a)
             ],
 
             has_custom_panel: has_custom_panel,

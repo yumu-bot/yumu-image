@@ -8,11 +8,11 @@ import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_F4(data = {
     user: {
-        ssh: 0,
-        ss: 0,
-        sh: 0,
+        count_ssh: 0,
+        count_ss: 0,
+        count_sh: 0,
         s: 0,
-        a: 0,
+        count_a: 0,
     },
     historyUser: {}
 }) {
@@ -36,11 +36,11 @@ export async function card_F4(data = {
     svg = setImage(svg, 260, 53, 30, 34, getImageFromV3('object-score-A-small.png'), reg_grade, 1);
 
     // 导入评级的数量
-    const grade_X = torus.getTextPath((data.user.ss + data.user.ssh).toString(), 65, 118.795, 30, 'center baseline', '#fff');
-    const grade_S = torus.getTextPath((data.user.s + data.user.sh).toString(), 170, 118.795, 30, 'center baseline', '#fff');
-    const grade_A = torus.getTextPath(data.user.a.toString(), 275, 118.795, 30, 'center baseline', '#fff');
-    const grade_XH = torus.getTextPath(`(+${data.user.ssh})`, 65, 144.877, 18, 'center baseline', '#aaa');
-    const grade_SH = torus.getTextPath(`(+${data.user.sh})`, 170, 144.877, 18, 'center baseline', '#aaa');
+    const grade_X = torus.getTextPath((data.user.count_ss + data.user.count_ssh).toString(), 65, 118.795, 30, 'center baseline', '#fff');
+    const grade_S = torus.getTextPath((data.user.s + data.user.count_sh).toString(), 170, 118.795, 30, 'center baseline', '#fff');
+    const grade_A = torus.getTextPath(data.user.count_a.toString(), 275, 118.795, 30, 'center baseline', '#fff');
+    const grade_XH = torus.getTextPath(`(+${data.user.count_ssh})`, 65, 144.877, 18, 'center baseline', '#aaa');
+    const grade_SH = torus.getTextPath(`(+${data.user.count_sh})`, 170, 144.877, 18, 'center baseline', '#aaa');
 
     svg = setTexts(svg, [grade_X, grade_S, grade_A, grade_XH, grade_SH], reg_text);
 
