@@ -41,6 +41,7 @@ export async function router_svg(req, res) {
 export async function panel_A3(data = {
     "beatmap": {},
     "scores": [],
+    "start": 1,
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_A3.svg');
@@ -72,7 +73,7 @@ export async function panel_A3(data = {
         const i0 = Math.max((parseInt(i) - 1), 0)
         const f = await card_N({
             score: data.scores[i],
-            score_rank: parseInt(i) + 1 || 0,
+            score_rank: (parseInt(i) + (data?.start || 1)) || 0,
             compare_score: data.scores[i0].total_score,
         })
 
