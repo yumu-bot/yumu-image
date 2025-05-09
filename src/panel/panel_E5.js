@@ -311,6 +311,9 @@ export async function panel_E5(data = {
         case "S": {
             panel_name = getPanelNameSVG('Score (!yms)', 'S', request_time);
         } break;
+        case "L": {
+            panel_name = getPanelNameSVG('Leader Board (!yml)', 'L', request_time);
+        } break;
         default: {
             panel_name = getPanelNameSVG('Excellent Score (!ymp / !ymr / !yms)', 'S', request_time);
         } break;
