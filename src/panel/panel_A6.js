@@ -131,7 +131,7 @@ function replaceSlash(md = "") {
     }
 }
 
-function getPanelName(name = "", version = 'v0.5.2 DX'){
+function getPanelName(name = "", version = 'v0.5.3 DX'){
     const request_time = 'request time: ' + getNowTimeStamp()
 
     switch (name) {

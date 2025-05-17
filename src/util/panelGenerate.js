@@ -144,8 +144,6 @@ export const PanelGenerate = {
         let sub_icon1 = ''
         let sub_icon2 = ''
 
-        console.log(user)
-
         if (show_mutual) {
             if (user.is_mutual) {
                 if (user.is_supporter) {
