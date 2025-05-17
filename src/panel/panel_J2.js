@@ -556,8 +556,8 @@ const component_J5 = (
     const mods_svg = PanelDraw.BarChart(length, 0, 0, 11, 180, 798, 110, 3, 2, graph2_colors, 60, 6, null, 1, true)
 
     const b1 = poppinsBold.getTextPath('#1', 10, 170, 14, 'left baseline')
-    const b50 = poppinsBold.getTextPath('#100', 410, 170, 14, 'center baseline')
-    const b100 = poppinsBold.getTextPath('#200', 810, 170, 14, 'right baseline')
+    const b50 = poppinsBold.getTextPath('#50', 410, 170, 14, 'center baseline')
+    const b100 = poppinsBold.getTextPath('#100', 810, 170, 14, 'right baseline')
 
     // 让这两个标题在最上层，因为可能被遮挡
     if (!data.has_custom_panel) {
@@ -611,8 +611,8 @@ const component_J6 = (
         poppinsBold.getTextPath(y_min, 15, 154, 14, 'left baseline', '#fff');
 
     const position_axis = poppinsBold.getTextPath('#1', 35, 170, 14, 'left baseline', '#fff')
-        + poppinsBold.getTextPath('#50', 257.5, 170, 14, 'center baseline', '#fff')
-        + poppinsBold.getTextPath('#100', 480, 170, 14, 'right baseline', '#fff');
+        + poppinsBold.getTextPath('#100', 257.5, 170, 14, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('#200', 480, 170, 14, 'right baseline', '#fff');
 
     const rank_chart = PanelDraw.LineChart(arr, 0, 0, 50, 155, 415, 115, '#fc2', 1, 0, 4, false);
 
