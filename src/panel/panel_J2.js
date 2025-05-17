@@ -447,7 +447,7 @@ const component_J4 = (
             remark: Math.round(data?.pp_sum || 0) + ' PP',
             data_b: (data?.bests_size || 0).toString().padStart(3, '0'),
 
-            bar_progress: (data?.bests_size || 0) / 100,
+            bar_progress: (data?.bests_size || 0) / 200,
             bar_color: '#EEE',
             max_width: max_width,
             hide: data.has_custom_panel,
@@ -489,7 +489,7 @@ const component_J4 = (
     let mod_svg = '';
 
     // 这里是给 no mod 的饼
-    mod_svg += PanelDraw.Pie(200, 136, 95, 0, data.bests_size / 100, '#EEE');
+    mod_svg += PanelDraw.Pie(200, 136, 95, 0, data.bests_size / 200, '#EEE');
 
     mods.reduce((prev, curr) => {
         const curr_percent = prev + curr.percent;
@@ -556,8 +556,8 @@ const component_J5 = (
     const mods_svg = PanelDraw.BarChart(length, 0, 0, 11, 180, 798, 110, 3, 2, graph2_colors, 60, 6, null, 1, true)
 
     const b1 = poppinsBold.getTextPath('#1', 10, 170, 14, 'left baseline')
-    const b50 = poppinsBold.getTextPath('#50', 410, 170, 14, 'center baseline')
-    const b100 = poppinsBold.getTextPath('#100', 810, 170, 14, 'right baseline')
+    const b50 = poppinsBold.getTextPath('#100', 410, 170, 14, 'center baseline')
+    const b100 = poppinsBold.getTextPath('#200', 810, 170, 14, 'right baseline')
 
     // 让这两个标题在最上层，因为可能被遮挡
     if (!data.has_custom_panel) {
@@ -591,7 +591,7 @@ const component_J6 = (
 
     const reg = /(?<=<g id="Component_OJ6">)/;
 
-    const arr = modifyArrayToFixedLength(data.pp_raw_arr, 100, false);
+    const arr = modifyArrayToFixedLength(data.pp_raw_arr, 200, false);
 
     const pp_max = Math.max.apply(Math, arr);
     const pp_min = Math.min.apply(Math, arr);

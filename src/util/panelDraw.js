@@ -174,7 +174,7 @@ export const PanelDraw = {
     },
 
     //柱状图，Histogram，max 如果填 0，即用数组的最大值。max_undertake是数组的最大值小于这个值时的 保底机制
-    BarChart: (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff' || ['#fff'], max_undertake = 0, floor = 0, minColor = '#aaa', opacity = 1, is_reverse = false) => {
+    BarChart: (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff' || ['#fff'] || null, max_undertake = 0, floor = 0, minColor = '#aaa' || null, opacity = 1, is_reverse = false) => {
         if (isEmptyArray(arr)) return '';
 
         const arr_max = (isNumber(max) && max > 0) ? max :
