@@ -1,4 +1,4 @@
-import {getImageFromV3, readNetImage, setImage, setText} from "../util/util.js";
+import {getImageFromV3, isBlankString, readNetImage, setImage, setText} from "../util/util.js";
 import {torus} from "../util/font.js";
 
 export async function card_O4(data = {
@@ -30,11 +30,12 @@ export async function card_O4(data = {
     const reg_background = /(?<=<g id="Background_CO4" clip-path="url\(#clippath-CO4\)">)/;
 
     // 插入文本
-    if (!data.type) return '';
+    if (isBlankString(data.type)) return '';
 
     const type = getActivityTypeV3Path(data.type, data.approval);
     const color = getActivityTypeColor(data.type, data.approval);
     const operate = getActivityTypeOperate(data.type, data.approval);
+
     const time = data.time;
     const sid = data.sid;
     const title_song_title = data.title.substring(data.title.indexOf(' - ') + 3) || data.title;
@@ -78,15 +79,15 @@ function getActivityTypeV3Path(type = '', approval = '') {
 function getActivityTypeColor(type = '', approval = '') {
 
     switch (type) {
-        case 'beatmapsetApprove': {
+        case 'BeatmapsetApprove': {
             if (approval === 'ranked') return '#4fc3f7';
             else if (approval === 'qualified') return '#aeea00';
             else return '#4caf50';
         }
-        case 'beatmapsetDelete': return '#DB567E';
-        case 'beatmapsetRevive': return '#8964CD';
-        case 'beatmapsetUpdate': return '#ff9800';
-        case 'beatmapsetUpload': return '#ffff00';
+        case 'BeatmapsetDelete': return '#DB567E';
+        case 'BeatmapsetRevive': return '#8964CD';
+        case 'BeatmapsetUpdate': return '#ff9800';
+        case 'BeatmapsetUpload': return '#ffff00';
         default : return '#fff';
     }
 }
@@ -94,15 +95,15 @@ function getActivityTypeColor(type = '', approval = '') {
 function getActivityTypeOperate(type = '', approval = '') {
 
     switch (type) {
-        case 'beatmapsetApprove': {
+        case 'BeatmapsetApprove': {
             if (approval === 'ranked') return 'Ranked';
             else if (approval === 'qualified') return 'Qualified';
             else return 'Approved';
         }
-        case 'beatmapsetDelete': return 'Delete';
-        case 'beatmapsetRevive': return 'Revive';
-        case 'beatmapsetUpdate': return 'Update';
-        case 'beatmapsetUpload': return 'Upload';
+        case 'BeatmapsetDelete': return 'Delete';
+        case 'BeatmapsetRevive': return 'Revive';
+        case 'BeatmapsetUpdate': return 'Update';
+        case 'BeatmapsetUpload': return 'Upload';
         default : return '';
     }
 }
