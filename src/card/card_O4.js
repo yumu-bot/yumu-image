@@ -61,15 +61,15 @@ function getActivityTypeV3Path(type = '', approval = '') {
     let path = '';
 
     switch (type) {
-        case 'beatmapsetApprove': {
+        case 'BeatmapsetApprove': {
             if (approval === 'ranked') path = 'object-beatmap-ranked.png';
             else if (approval === 'qualified') path = 'object-beatmap-qualified.png';
             else return '';
         } break;
-        case 'beatmapsetDelete': path = 'object-beatmap-deleted.png'; break;
-        case 'beatmapsetRevive': path = 'object-beatmap-restored.png'; break;
-        case 'beatmapsetUpdate': path = 'object-beatmap-uploaded.png'; break;
-        case 'beatmapsetUpload': path = 'object-beatmap-submitted.png'; break;
+        case 'BeatmapsetDelete': path = 'object-beatmap-deleted.png'; break;
+        case 'BeatmapsetRevive': path = 'object-beatmap-restored.png'; break;
+        case 'BeatmapsetUpdate': path = 'object-beatmap-uploaded.png'; break;
+        case 'BeatmapsetUpload': path = 'object-beatmap-submitted.png'; break;
         default : return '';
     }
 
