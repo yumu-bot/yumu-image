@@ -159,7 +159,7 @@ export function getModPath(mod = {acronym: ""}, x = 0, y = 24, width = 90, text_
  * @param dont_show_nf
  * @returns {string}
  */
-export function getModCirclePath(mod = {acronym: ""}, cx = 0, cy = 0, r = 5, dont_show_nf = false){
+export function getModCirclePath(mod = {acronym: "", color: null}, cx = 0, cy = 0, r = 5, dont_show_nf = false){
     const mod_name = getModName(mod)
     if (isEmptyString(mod_name)) return ''
 

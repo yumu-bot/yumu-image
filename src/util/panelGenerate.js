@@ -547,11 +547,11 @@ export const PanelGenerate = {
             title2 = '';
         }
 
-        const left1 = 'Rounds ' + match?.round_count;
-        const left2 = 'Players ' + match?.player_count;
-        const left3 = 'Scores ' + match?.score_count;
+        const left1 = 'Round: ' + match?.round_count;
+        const left2 = 'Player: ' + match?.player_count;
+        const left3 = 'Score: ' + match?.score_count;
 
-        const right1 = 'AVG.SR ' + star + '*';
+        const right1 = 'Average Star ' + star + '*';
         const right2 = 'MID ' + stat?.id || 0;
         const right3b = is_team_vs ? ((red_wins + blue_wins <= 0) ? 'TeamVs' : (red_wins + ' : ' + blue_wins)) :
             (match?.round_count + (is_match_start ? 1 : 0)).toString()

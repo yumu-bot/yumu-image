@@ -201,7 +201,7 @@ async function event2CardC(
         return {
             player_name: score?.user?.username, //妈的 为什么get match不给用户名啊
             player_avatar: score?.user?.avatar_url,
-            player_score: score.score,
+            player_score: score?.score || score?.legacy_total_score,
             player_mods: score.mods,
             player_rank: score.ranking, //一局比赛里的分数排名，1v1或者team都一样
         }

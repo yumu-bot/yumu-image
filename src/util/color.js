@@ -1,4 +1,4 @@
-import {isHexColor} from "./util.js";
+import {isHexColor, isNotBlankString} from "./util.js";
 import {getModName} from "./mod.js";
 
 // Yumu Panel v0.5 颜色自定义，默认的色相全是 342（这也是巧克力面板的原色
@@ -322,8 +322,8 @@ export function getUserRankColor(rank = 0) {
  * @param mod {string | {acronym: string}}
  * @returns {string}
  */
-export function getModColor(mod = '' || {acronym: ''}) {
-    if (mod?.color != null) return mod.color
+export function getModColor(mod = '' || {acronym: '', color: null}) {
+    if (isNotBlankString(mod.color)) return mod.color
 
     const mod_name = getModName(mod);
 

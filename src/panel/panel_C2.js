@@ -2,12 +2,11 @@ import {
     exportJPEG, getImageFromV3, getPanelNameSVG,
     setImage,
     setSvgBody, readTemplate,
-    setText, getSvgBody, getPanelHeight, getAvatar, round, rounds, readNetImage
+    setText, getSvgBody, getPanelHeight, getAvatar, round, rounds, readNetImage, getNowTimeStamp, getFormattedTime
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import moment from "moment";
 import {PuHuiTi, torus} from "../util/font.js";
 
 export async function router(req, res) {
@@ -42,7 +41,6 @@ export async function router_svg(req, res) {
  */
 export async function panel_C2(data = {
     match_count: 0,
-
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');
@@ -55,7 +53,12 @@ export async function panel_C2(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PC-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Yumu Series Rating v3.5 (!ymsa)', 'SA');
+
+    const start_time = getFormattedTime(data?.statistics?.start_time, 'YYYY/MM/DD HH:mm')
+    const end_time = getFormattedTime(data?.statistics?.end_time, 'YYYY/MM/DD HH:mm')
+    const request_time = 'series duration: ' + start_time + ' - ' + end_time + ' // request time: ' + getNowTimeStamp();
+
+    const panel_name = getPanelNameSVG('Yumu Series Rating v3.5 (!ymsa)', 'SA', request_time);
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
@@ -185,16 +188,11 @@ async function seriesRating2CardA2(sr){
     }
 
     //这里的时间戳不需要 .add(8, 'hours')
-    const left1 = 'M' + sr?.match_count +
-        ' R' + sr?.round_count +
-        ' P' + sr?.player_count +
-        ' S' + sr?.score_count;
+    const left2 = 'Match: ' + sr?.match_count + ' // Round: ' + sr?.round_count
+    const left3 = 'Player: ' + sr?.player_count + ' // Score: ' + sr?.score_count
 
-    const left2 = moment(sr?.statistics?.start_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY/MM/DD HH:mm')
-    const left3 = moment(sr?.statistics?.end_time, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY/MM/DD HH:mm');
-
-    const right1 = 'SR ' + star + '*';
-    const right2 = 'Scores/Player'; // + data.matchStat.id || 0;
+    const right1 = 'Average Star ' + star + '*';
+    const right2 = 'Scores per Player'; // + data.matchStat.id || 0;
 
     const sp_number = rounds(sr?.score_count / sr?.player_count, 2)
 
@@ -208,7 +206,7 @@ async function seriesRating2CardA2(sr){
         title1: title1,
         title2: title2,
         title_font: 'PuHuiTi',
-        left1: left1,
+        left1: '',
         left2: left2,
         left3: left3,
         right1: right1,
