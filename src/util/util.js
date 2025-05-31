@@ -1867,10 +1867,11 @@ export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, 
     }
 }
 
-//公用方法：给面板上名字
-export function getPanelNameSVG(name = '?? (!test)', index = '?', request_time = 'request time: ' + getNowTimeStamp(), version = 'v0.5.3 DX', color = '#fff', powered = 'Yumubot') {
+/**
+ * 公用方法：给面板上名字
+ */
+export function getPanelNameSVG(name = '?? (!test)', index = '?', request_time = 'request time: ' + getNowTimeStamp(), version = 'v0.5.4 DX', color = '#fff', powered = 'Yumubot') {
 
-    // powered by Yumubot v0.5.2 DX // Score (!ymp / !ymr / !yms)
     const powered_text = torus.getTextPath(
         "powered by " + powered.toString() + " " + version.toString() + " \/\/ " + name.toString(),
         20, 26.84, 24, "left baseline", color);

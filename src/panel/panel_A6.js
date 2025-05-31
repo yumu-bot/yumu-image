@@ -131,15 +131,15 @@ function replaceSlash(md = "") {
     }
 }
 
-function getPanelName(name = "", version = 'v0.5.3 DX'){
+function getPanelName(name = ""){
     const request_time = 'request time: ' + getNowTimeStamp()
 
     switch (name) {
-        case "group": return getPanelNameSVG('Group Mode', 'GM', request_time, version);
-        case "service": return getPanelNameSVG('Service Count', 'SC', request_time, version);
-        case "switch": return getPanelNameSVG('Service Switch', 'SW', request_time, version);
-        case "wiki": return getPanelNameSVG('Wiki Page', 'W', request_time, version);
-        case "help": return getPanelNameSVG('Help Page', 'H', request_time, version);
-        default: return getPanelNameSVG('Markdown Page', 'MD', request_time, version);
+        case "group": return getPanelNameSVG('Group Mode', 'GM', request_time);
+        case "service": return getPanelNameSVG('Service Count', 'SC', request_time);
+        case "switch": return getPanelNameSVG('Service Switch', 'SW', request_time);
+        case "wiki": return getPanelNameSVG('Wiki Page', 'W', request_time);
+        case "help": return getPanelNameSVG('Help Page', 'H', request_time);
+        default: return getPanelNameSVG('Markdown Page', 'MD', request_time);
     }
 }

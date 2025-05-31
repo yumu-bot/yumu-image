@@ -271,7 +271,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
 
     svg = setImage(svg, 372, 336, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
 
-    const score_score = rounds(match_score?.score || 0, -4)
+    const score_score = rounds(match_score?.score || match_score?.legacy_total_score || 0, -4)
 
     const score = getMultipleTextPath([
         {
@@ -287,7 +287,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
         },
     ], 430 / 2, 490, 'center baseline')
 
-    const delta_data = getDeltaScore(match_score?.score || 0, compare_score || 0)
+    const delta_data = getDeltaScore(match_score?.score || match_score?.legacy_total_score || 0, compare_score || 0)
     const delta_score = rounds(delta_data.delta, -4)
 
     const delta = getMultipleTextPath([
@@ -727,7 +727,7 @@ async function drawH2HCard(scores = [], max_combo = 0) {
         p1_size = 0
     }
 
-    const compare_score = (scores?.length > 2) ? scores[0].score : Math.max.apply(Math, scores.map(v => {return v?.score}))
+    const compare_score = (scores?.length > 2) ? (scores[0].score || scores[0]?.legacy_total_score) : Math.max.apply(Math, scores.map(v => {return v?.score || v?.legacy_total_score || 0}))
 
     for (const i in scores) {
         const s = scores[i]
