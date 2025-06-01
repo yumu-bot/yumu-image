@@ -50,6 +50,7 @@ import {router as PanelMDRouter} from "./src/panel/panel_MD.js";
 import {router as PanelMFRouter} from "./src/panel/panel_MF.js";
 import {router as PanelMERouter} from "./src/panel/panel_ME.js";
 import {router as PanelMSRouter} from "./src/panel/panel_MS.js";
+import moment from "moment";
 
 
 initPath();
@@ -142,7 +143,7 @@ app.post('/testApi', async (req, res) => {
 })
 
 app.listen(process.env.PORT, () => {
-    console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n监听端口: ${process.env.PORT}\n`);
+    console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n当前时间：${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}\n监听端口: ${process.env.PORT}\n`);
 })
 
 /*
