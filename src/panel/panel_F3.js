@@ -267,7 +267,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
     const judge = PanelDraw.Rect(20, 332, 84, 40, 20, judge_data.color)
         + poppinsBold.getTextPath(judge_data.judge, 62, 362, 30, 'center baseline', '#fff')
 
-    const miss_count = poppinsBold.getTextPath(match_score?.statistics?.count_miss || 0, 366, 362, 30, 'right baseline', '#fff')
+    const miss_count = poppinsBold.getTextPath(match_score?.statistics?.miss || 0, 366, 362, 30, 'right baseline', '#fff')
 
     svg = setImage(svg, 372, 336, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
 
@@ -407,7 +407,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
     const judge = PanelDraw.Rect(15, 120, 50, 25, 12.5, judge_data.color)
         + poppinsBold.getTextPath(judge_data.judge, 40, 140, 22, 'center baseline', '#fff')
 
-    const miss = match_score?.statistics?.count_miss || 0
+    const miss = match_score?.statistics?.miss || 0
     const miss_count = poppinsBold.getTextPath(miss >= 1000 ? round(miss, 1, -1) : miss, 306, 94, 30, 'right baseline', '#fff')
 
     svg = setImage(svg, 310, 66, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
