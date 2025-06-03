@@ -145,7 +145,7 @@ export async function panel_F(
     });
 
 
-    const panel_height = getPanelHeight(beatmap_arr?.length, 210, 1, 330, 40, 40)
+    const panel_height = getPanelHeight(beatmap_arr?.length, 210, 1, 290, 40, 40)
     const background_height = panel_height - 290;
 
     for (const i in beatmap_arr) {
