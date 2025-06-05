@@ -77,7 +77,7 @@ export const PanelGenerate = {
         const level = user?.statistics?.level_current || 0;
         const progress = user?.statistics?.level_progress || 0;
         const acc = round(user?.statistics?.hit_accuracy, 2) || '0';
-        const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
+        const right2 = isBot ? '' : (level + progress > 0 ? (acc + '% Lv.' + level + '(' + progress + '%)') : acc + '%')
         const right3b = isBot ? 'Bot' : (user?.pp ? Math.round(user?.pp).toString() : '');
         const right3m = isBot ? '' : (user?.pp ? 'PP' :
             (user?.statistics?.level_current === 1 && user?.statistics?.level_progress === 0 ? 'NOT PLAYED' : 'AFK'));
@@ -188,7 +188,7 @@ export const PanelGenerate = {
             case "online": right1 = (user?.is_online === true) ? 'online' : 'offline'; break;
             default: right1 = ""; break;
         }
-        const right2 = isBot ? '' : (acc + '% Lv.' + level + '(' + progress + '%)');
+        const right2 = isBot ? '' : (level + progress > 0 ? (acc + '% Lv.' + level + '(' + progress + '%)') : acc + '%')
         const right3b = isBot ? '' : (user?.statistics?.pp ? Math.round(user.statistics.pp).toString() : '');
         const right3m = isBot ? 'Bot' : (user?.statistics?.pp ? 'PP' : 'AFK');
 

@@ -280,7 +280,7 @@ export async function panel_E5(data = {
     const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     const is_lazer = data?.score?.is_lazer
-    svg = setImage(svg, 1725, 220, 170, 70, getScoreTypeImage(is_lazer, 2), reg_index_plus, 1)
+    svg = setImage(svg, 1725, 220, 170, 70, getScoreTypeImage(is_lazer, 2, data?.score?.type), reg_index_plus, 1)
 
     // 面板文字
     let score_time;
