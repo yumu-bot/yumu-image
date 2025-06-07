@@ -412,7 +412,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
 
     svg = setImage(svg, 310, 66, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
 
-    const score_score = rounds(match_score?.score || 0, -4)
+    const score_score = rounds(match_score?.score || match_score?.legacy_total_score || 0, -4)
 
     const score = getMultipleTextPath([
         {
