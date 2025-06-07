@@ -428,7 +428,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
         },
     ], 160, 144, 'left baseline')
 
-    const delta_data = getDeltaScore(match_score?.score || 0, compare_score || 0)
+    const delta_data = getDeltaScore(match_score?.score || match_score?.legacy_total_score || 0, compare_score || 0)
     const delta_score = round(delta_data.delta, -4)
 
     const delta = poppinsBold.getTextPath(delta_data.sign + delta_score, 340, 114, 18, 'right baseline', delta_data.color)
@@ -469,7 +469,7 @@ function getMatchScoreAdvancedJudge(match_score = {}, max_combo = 0) {
     const is_perfect = match_score?.rank === 'X' || match_score?.rank === 'XH'
     const is_fc = (match_score?.perfect === true) || (match_score?.perfect === 1)
     const is_almost_fc = match_score.max_combo > max_combo * 0.9
-    const is_mania_fc = (match_score.mode_int === 3 && stat?.count_50 === 0 && stat?.count_100 === 0)
+    const is_mania_fc = (match_score.mode_int === 3 && stat?.meh === 0 && stat?.ok === 0)
 
     let judge
     let color
@@ -483,7 +483,7 @@ function getMatchScoreAdvancedJudge(match_score = {}, max_combo = 0) {
     } else if (is_fc) {
         judge = 'FC+'
         color = '#B3D465'
-    } else if (stat?.count_miss === 0) {
+    } else if (stat?.miss === 0) {
         if (is_almost_fc || is_mania_fc) {
             judge = 'FC'
             color = '#009944'
@@ -791,7 +791,10 @@ async function drawVSCard(team_scores = [], enemy_scores = [], max_combo = 0, to
 
     for (const i in team_scores) {
         const s = team_scores[i]
-        const compare_score = (e >= 1) ? (enemy_scores[Math.round(i / (team_scores.length - 1) * (e - 1))]?.score || 0) : 0
+
+        const compare = enemy_scores[Math.round(i / (team_scores.length - 1) * (e - 1))]
+
+        const compare_score = (e >= 1) ? (compare?.score || compare?.legacy_total_score || 0) : 0
 
         if (i < p1_size) {
             p1.push(await card_P1(s, max_combo, compare_score))
