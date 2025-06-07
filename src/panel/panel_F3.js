@@ -305,7 +305,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
     ], 430 / 2, 530, 'center baseline')
 
     const mods = (match_score?.mods || [])
-        .filter(it => it !== "NF")
+        .filter(it => it.acronym !== "NF")
     let mods_path = ''
 
     if (mods.length === 0) mods.push("NM")
@@ -434,7 +434,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
     const delta = poppinsBold.getTextPath(delta_data.sign + delta_score, 340, 114, 18, 'right baseline', delta_data.color)
 
     const mods = (match_score?.mods || [])
-        .filter(it => it !== "NF")
+        .filter(it => it.acronym !== "NF")
 
     if (mods.length === 0) mods.push("NM")
 
