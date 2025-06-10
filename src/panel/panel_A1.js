@@ -2,7 +2,7 @@ import {
     exportJPEG, getPanelHeight, getPanelNameSVG,
     setSvgBody,
     readTemplate, setCustomBanner,
-    setText
+    setText, getSvgBody
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -222,24 +222,50 @@ export async function panel_A1(data = {
     // 导入A1卡
     const me_cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.me_card_A1));
 
-    let friend_cardA1s = [];
+    const params = []
 
-    for (const i in data.friend_card_A1) {
-        const f = await card_A1(await PanelGenerate.microUser2CardA1(data.friend_card_A1[i], data?.type, true));
-        friend_cardA1s.push(f);
-    }
+    await Promise.allSettled(
+        data.friend_card_A1.map((user) => {
+            return PanelGenerate.microUser2CardA1(user, data?.type, true)
+        })
+    ).then(results => results.forEach((value) => {
+        if (value.status === "fulfilled") {
+            params.push(value.value);
+        } else {
+            params.push({});
+        }
+    }))
+
+    const friend_cardA1s = []
+
+    await Promise.allSettled(
+        params.map((param) => {
+            return card_A1(param.value)
+        })
+    ).then(results => results.forEach((value) => {
+        if (value.status === "fulfilled") {
+            friend_cardA1s.push(value.value);
+        } else {
+            friend_cardA1s.push({});
+        }
+    }))
 
     // 插入图片和部件（新方法
     svg = setCustomBanner(svg, reg_banner, data.me_card_A1?.profile?.banner);
 
     svg = setSvgBody(svg, 40, 40, me_cardA1, reg_me_card_a1);
 
+
+    let stringA1s = ''
+
     for (const i in friend_cardA1s) {
         const x = i % 4;
         const y = Math.floor(i / 4);
 
-        svg = setSvgBody(svg, 40 + 470 * x, 330 + 250 * y, friend_cardA1s[i], reg_friend_card_a1);
+        stringA1s += getSvgBody(40 + 470 * x, 330 + 250 * y, friend_cardA1s[i]);
     }
+
+    svg = setText(svg, stringA1s, reg_friend_card_a1);
 
     // 计算面板高度
     const panelHeight = getPanelHeight(friend_cardA1s?.length, 210, 4, 290, 40);

@@ -3,7 +3,7 @@ import {
     getNowTimeStamp,
     getPanelNameSVG, setImage,
     setSvgBody, isEmptyArray, isNotNull, readTemplate,
-    setText, setTexts, round, rounds, getSvgBody, getMapBackground,
+    setText, setTexts, round, rounds, getSvgBody, getMapBackground, thenPush,
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -709,6 +709,9 @@ async function drawH2HCard(scores = [], max_combo = 0) {
     if (isEmptyArray(scores)) return ''
 
     let svg = ''
+    let promise1 = []
+    let promise2 = []
+
     let p1 = []
     let p2 = []
 
@@ -733,11 +736,19 @@ async function drawH2HCard(scores = [], max_combo = 0) {
         const s = scores[i]
 
         if (i < p1_size) {
-            p1.push(await card_P1(s, max_combo, compare_score))
+            promise1.push(card_P1(s, max_combo, compare_score))
         } else {
-            p2.push(await card_P2(s, max_combo, compare_score))
+            promise2.push(card_P2(s, max_combo, compare_score))
         }
     }
+
+    await Promise.allSettled(
+        promise1
+    ).then(results => thenPush(results, p1))
+
+    await Promise.allSettled(
+        promise2
+    ).then(results => thenPush(results, p2))
 
     let p1_solo_offset
     switch (length) {

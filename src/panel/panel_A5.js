@@ -1,7 +1,7 @@
 import {
     exportJPEG, getPanelHeight, getPanelNameSVG, setImage,
     setSvgBody, readTemplate,
-    setText,
+    setText, thenPush, getSvgBody,
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A1} from "../card/card_A1.js";
@@ -82,16 +82,21 @@ export async function panel_A5(data = {
     svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入H卡
-    let cardHs = [];
-    for (const s in data.score) {
-        const v = data.score[s]
-        const i = data.rank[s]
+    const params = []
 
+    await Promise.allSettled(
+        data.score.map((v, i) => {
+            return PanelGenerate.score2CardH(v, data.rank[i], true)
+        })
+    ).then(results => thenPush(results, params))
 
-        const f = await card_H(
-            await PanelGenerate.score2CardH(v, i));
-        cardHs.push(f);
-    }
+    const cardHs = []
+
+    await Promise.allSettled(
+        params.map((param) => {
+            return card_H(param)
+        })
+    ).then(results => thenPush(results, cardHs))
 
     // 插入图片和部件（新方法
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
@@ -106,10 +111,12 @@ export async function panel_A5(data = {
     svg = setText(svg, cardHeight, reg_cardheight);
 
     //天选之子H卡提出来
-    const tianxuanzhizi = (cardHs.length % 2 === 1) ? cardHs.pop() : '';
-    svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, tianxuanzhizi, reg_bp_list);
+    const luckyDog = (cardHs.length % 2 === 1) ? cardHs.pop() : '';
+    svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, luckyDog, reg_bp_list);
 
     //插入H卡
+    let stringHs = ''
+
     for (let i = 0; i < cardHs.length; i++) {
         const ix = (i + 1) % 2;
         const iy = Math.floor(i / 2);
@@ -117,8 +124,10 @@ export async function panel_A5(data = {
         const x = (ix === 1) ? 40 : 980;
         const y = 330 + iy * 150;
 
-        svg = setSvgBody(svg, x, y, cardHs[i], reg_bp_list);
+        stringHs += getSvgBody(x, y, cardHs[i])
     }
+
+    svg = setText(svg, stringHs, reg_bp_list);
 
     return svg.toString();
 }

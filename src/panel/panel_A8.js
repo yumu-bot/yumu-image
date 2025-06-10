@@ -3,7 +3,7 @@ import {
     getPanelNameSVG,
     setSvgBody,
     setText,
-    setCustomBanner,readTemplate, getPanelHeight
+    setCustomBanner, readTemplate, getPanelHeight, thenPush, getSvgBody
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
@@ -122,16 +122,26 @@ export async function panel_A8(
     svg = setSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
 
     //导入其他卡
-    for (const i in beatmap_arr) {
-        const v = beatmap_arr[i]
+    const cardA3s = []
+
+    await Promise.allSettled(
+        beatmap_arr.map((map) => {
+            return card_A3(map)
+        })
+    ).then(results => thenPush(results, cardA3s))
+
+    let stringA3s = ''
+
+    for (const i in cardA3s) {
+        const a3 = cardA3s[i]
 
         const x = i % 3
         const y = Math.floor(i / 3)
 
-        const a3 = await card_A3(v)
-
-        svg = setSvgBody(svg, 40 + 620 * x, 330 + 230 * y, a3, reg_card_a3);
+        stringA3s += getSvgBody(40 + 620 * x, 330 + 230 * y, a3)
     }
+
+    svg = setText(svg, stringA3s, reg_card_a3)
 
     // 插入图片和部件（新方法
     svg = setCustomBanner(svg, reg_banner);

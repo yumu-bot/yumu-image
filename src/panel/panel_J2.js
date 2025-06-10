@@ -7,7 +7,7 @@ import {
     setTexts,
     setCustomBanner,
     getImageFromV3,
-    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, round, getDiffBackground
+    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, round, getDiffBackground, thenPush
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -871,6 +871,7 @@ const PanelJGenerate = {
     },
 
     scores2componentJ2: async (scores = [], has_custom_panel = false, hue) => {
+        let promiseD2s = []
         let d2s = []
 
         for (const s of scores) {
@@ -899,8 +900,12 @@ const PanelJGenerate = {
                 bottom_right: getTime(s?.beatmap?.total_length),
             }
 
-            d2s.push(await card_D2(data))
+            promiseD2s.push(card_D2(data))
         }
+0
+        await Promise.allSettled(
+            promiseD2s
+        ).then(results => thenPush(results, d2s))
 
         return {
             scores: d2s,

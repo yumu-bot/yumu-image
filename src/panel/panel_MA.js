@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG, setImage,
     setSvgBody, isNotEmptyArray, readTemplate,
-    setText
+    setText, getSvgBody, thenPush
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -104,16 +104,24 @@ export async function panel_MA(data = {
     const deluxe = data?.scores_latest || []
 
     // 导入i卡
-    let card_sd = [];
-    let card_dx = [];
+    let param_sd = [];
+    let param_dx = [];
 
-    for (const s of standard) {
-        card_sd.push(card_I3(await maiScore2CardI3(s))) ;
-    }
+    await Promise.allSettled(
+        standard.map((s) => {
+            return maiScore2CardI3(s)
+        })
+    ).then(results => thenPush(results, param_sd))
 
-    for (const s of deluxe) {
-        card_dx.push(card_I3(await maiScore2CardI3(s))) ;
-    }
+    const card_sd = param_sd.map((sd) => {return card_I3(sd)})
+
+    await Promise.allSettled(
+        deluxe.map((s) => {
+            return maiScore2CardI3(s)
+        })
+    ).then(results => thenPush(results, param_dx))
+
+    const card_dx = param_dx.map((dx) => {return card_I3(dx)})
 
     // 插入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -122,21 +130,29 @@ export async function panel_MA(data = {
     let dx_offset = 0 // 偏移值
     const dx_height = Math.ceil(card_dx.length / 5) * 150
 
+    let string_sd = ''
+
     for (const i in card_sd) {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = setSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_sd[i], reg_card_i);
+        string_sd += getSvgBody(40 + (352 + 18) * x, 330 + 150 * y, card_sd[i]);
     }
 
+    svg = setText(svg, string_sd, reg_card_i)
+
     if (isNotEmptyArray(card_sd) && isNotEmptyArray(card_dx)) dx_offset = 20
+
+    let string_dx = ''
 
     for (const i in card_dx) {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = setSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + sd_height + dx_offset, card_dx[i], reg_card_i);
+        string_dx += getSvgBody(40 + (352 + 18) * x, 330 + 150 * y + sd_height + dx_offset, card_dx[i]);
     }
+
+    svg = setText(svg, string_dx, reg_card_i)
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);

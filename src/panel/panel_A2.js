@@ -2,7 +2,7 @@ import {
     exportJPEG, getPanelHeight,
     getPanelNameSVG, setSvgBody,
     readTemplate, setCustomBanner,
-    setText
+    setText, thenPush, getSvgBody
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_M} from "../card/card_M.js";
@@ -336,6 +336,7 @@ export async function panel_A2(data = {
 
     // 如果卡片超过12张，则使用紧促型面板，并且不渲染卡片 M
     if (result_count <= 12) {
+
         for (let i = 0; i < result_count; i++) {
             const v = beatmap_arr[i]
 
@@ -350,6 +351,33 @@ export async function panel_A2(data = {
         }
     } else {
         //紧凑型面板
+
+        const beatmaps = []
+
+        for (let i = 0; i < result_count; i++) {
+            beatmaps.push(beatmap_arr[i]);
+        }
+
+        const paramA2s = []
+
+        await Promise.allSettled(
+            beatmaps.map((v, i) => {
+                return PanelGenerate.searchMap2CardA2(v, i + 1)
+            })
+        ).then(results => thenPush(results, paramA2s))
+
+        let stringA2s = ''
+
+        for (let i = 0; i < result_count; i++) {
+            const x = i % 4;
+            const y = Math.floor(i / 4);
+
+            stringA2s += getSvgBody(40 + 470 * x, 330 + 250 * y, card_A2(paramA2s[i]))
+        }
+
+        svg = setText(svg, stringA2s, reg_card_a2)
+
+        /*
         for (let i = 0; i < result_count; i++) {
             const a2 = card_A2(
                 await PanelGenerate.searchMap2CardA2(beatmap_arr[i], i + 1)
@@ -359,6 +387,8 @@ export async function panel_A2(data = {
             const y = Math.floor(i / 4);
             svg = setSvgBody(svg, 40 + 470 * x, 330 + 250 * y, a2, reg_card_a2);
         }
+
+         */
     }
 
     // 插入图片和部件（新方法

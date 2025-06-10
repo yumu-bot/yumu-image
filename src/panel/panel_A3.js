@@ -2,7 +2,7 @@ import {
     exportJPEG, getPanelHeight,
     getPanelNameSVG,
     setSvgBody, readTemplate,
-    setText, setImage, getMapBackground
+    setText, setImage, getMapBackground, thenPush, getSvgBody
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_N} from "../card/card_N.js";
@@ -69,7 +69,7 @@ export async function panel_A3(data = {
 
 
     // 导入N1卡
-    let cardN1s = [];
+    let promiseN1s = [];
     for (const i in data.scores) {
         const i0 = Math.max((parseInt(i) - 1), 0)
 
@@ -82,15 +82,19 @@ export async function panel_A3(data = {
             compare_score = data.scores[i0].total_score
         }
 
-        const f = await card_N({
+        const f = card_N({
             score: data.scores[i],
             score_rank: (parseInt(i) + (data?.start || 1)) || 0,
             compare_score: compare_score,
             is_legacy: is_legacy
         })
 
-        cardN1s.push(f);
+        promiseN1s.push(f);
     }
+
+    let cardN1s = [];
+
+    await Promise.allSettled(promiseN1s).then(results => thenPush(results, cardN1s))
 
     // 插入图片和部件
     svg = setImage(svg, 0, 0, 1920, 320, await getMapBackground(data.beatmap, 'cover'), reg_banner, 0.8);
@@ -105,13 +109,17 @@ export async function panel_A3(data = {
     svg = setText(svg, panelHeight, reg_panelheight);
     svg = setText(svg, cardHeight, reg_cardheight);
 
+    let stringN1s = ''
+
     //插入N1卡
     for (let i = 0; i < cardN1s.length; i++) {
         const x = (i < rowTotal) ? 40 : 965;
         const y = (i < rowTotal) ? (330 + i * 72) : (330 + (i - rowTotal) * 72);
 
-        svg = setSvgBody(svg, x, y, cardN1s[i], reg_list_n1);
+        stringN1s += getSvgBody(x, y, cardN1s[i])
     }
+
+    svg = setText(svg, stringN1s, reg_list_n1)
 
     return svg.toString();
 }

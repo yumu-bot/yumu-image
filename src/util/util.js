@@ -122,7 +122,6 @@ function isEmptyStringOrNotNull(str) {
         return str?.length === 0
     }
 }
-
 /**
  * @return boolean
  */
@@ -621,7 +620,7 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
 }
 
 /**
- * 设置文字
+ * 设置文字。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
  * @param {number | string} base
  * @param {number | string} replace
  * @param {string | RegExp} reg
@@ -632,7 +631,7 @@ export function setText(base = '', replace = '', reg = /.*/) {
 
 
 /**
- * 设置文字
+ * 设置文字。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
  * @param {number | string} base
  * @param {number[] | string[]} replaces
  * @param {string | RegExp} regex
@@ -655,7 +654,7 @@ export function setTexts(base = '', replaces = [''], regex = /.*/) {
 }
 
 /**
- * 设置图像
+ * 设置图像。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
  * @param base 要被放入的 svg
  * @param x 宽度
  * @param y 宽度
@@ -672,16 +671,12 @@ export function setImage(base = '', x = 0, y = 0, w = 100, h = 100, image = '', 
 
     if (image != null) {
         if (x === 0 && y === 0) {
-            replace = `<image width="${w}" height="${h}" xlink:href="${image}"
-            style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
+            replace = `<image width="${w}" height="${h}" xlink:href="${image}" style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
         } else if (rotate90 == false) {
-            replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}"
-            style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
+            replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
         } else {
             // 注意这里 h w 是反的，因为转了 90 度
-            replace = `<g transform="translate(${x} ${y}) rotate(270)">
-            <image width="${h}" height="${w}" xlink:href="${image}" 
-            style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/> </g>`
+            replace = `<g transform="translate(${x} ${y}) rotate(270)"> <image width="${h}" height="${w}" xlink:href="${image}"  style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/> </g>`
         }
     } else {
         return base;
@@ -690,7 +685,12 @@ export function setImage(base = '', x = 0, y = 0, w = 100, h = 100, image = '', 
     return base.replace(reg, replace);
 }
 
+export function getImage(x = 0, y = 0, w = 100, h = 100, image = '', opacity = 1, ratio = "xMidYMid slice") {
+    return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
+}
+
 /**
+ * 设置 svg 块。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
  * 如果不需要修改位置，用 setText 就行
  */
 export function setSvgBody(base = '', x = 0, y = 0, replace = '', reg = /.*/) {
@@ -699,7 +699,7 @@ export function setSvgBody(base = '', x = 0, y = 0, replace = '', reg = /.*/) {
 }
 
 /**
- * 如果不需要修改位置，用 setText 就行
+ * 设置 svg 块。
  */
 export function getSvgBody(x = 0, y = 0, body = '') {
     if (x !== 0 || y !== 0) return `<g transform="translate(${x} ${y})">` + body + '</g>';
@@ -1158,7 +1158,7 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
 /**
  * @function 拆分svg头尾，只保留身体，方便插入
  */
-export function getSVGBody(V3Path = '') {
+export function removeSvgHeader(V3Path = '') {
     let reg1 = '<?xml version="1.0" encoding="UTF-8"?>';
     let reg2 = /<svg?[A-Za-z0-9\"\=:./ ]*\>?/;
     let reg3 = '</svg>'
@@ -1998,4 +1998,19 @@ export function compileTemplate(path) {
     const template = readTemplate(path);
     const fnBody = "return `" + template.replace(/`/g, '\\`') + "`;";
     return new Function("obj", fnBody);
+}
+
+/**
+ * promise then 方法，将结果压入数组
+ * @param {Array<PromiseSettledResult<Awaited<Promise<Object>>>>} results
+ * @param {Array<Object>} array
+ */
+export function thenPush(results, array, default_value = {}) {
+    results.forEach((result) => {
+        if (result.status === "fulfilled") {
+            array.push(result.value);
+        } else {
+            array.push(default_value);
+        }
+    })
 }

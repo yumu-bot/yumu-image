@@ -3,12 +3,21 @@ import {
     getPanelNameSVG,
     setSvgBody,
     setText,
-    setCustomBanner, getPanelHeight, readNetImage, setImage, getImageFromV3, isNotEmptyString
+    setCustomBanner,
+    getPanelHeight,
+    readNetImage,
+    setImage,
+    getImageFromV3,
+    isNotEmptyString,
+    thenPush,
+    getSvgBody,
+    getImage
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_Alpha} from "../card/card_Alpha.js";
+import {card_A3} from "../card/card_A3.js";
 
 export async function router(req, res) {
     try {
@@ -143,6 +152,40 @@ export async function panel_A9(
     svg = setImage(svg, 0, 290, 510, 290, getImageFromV3('backlight-golden.png'), reg_body, 1)
 
     // 队员
+    const paramA1s = []
+
+    await Promise.allSettled(
+        members.map((member) => {
+            return PanelGenerate.microTeamMember2CardA1(member, false)
+        })
+    ).then(results => thenPush(results, paramA1s))
+
+
+    const cardA1s = []
+
+    await Promise.allSettled(
+        paramA1s.map((param) => {
+            return card_A1(param)
+        })
+    ).then(results => thenPush(results, cardA1s))
+
+    let stringA1s = ''
+    let imageA1s = ''
+
+    for (const i in cardA1s) {
+        const a1 = cardA1s[i]
+
+        const x = i % 4
+        const y = Math.floor(i / 4)
+
+        stringA1s += getSvgBody(40 + 470 * x, 330 + 250 + 250 * y, a1)
+        imageA1s += getImage(40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 510, 290, getImageFromV3('backlight-green.png'), 1)
+    }
+
+    svg = setText(svg, stringA1s, reg_body)
+    svg = setText(svg, imageA1s, reg_body)
+
+    /*
     for (const i in members) {
         const v = members[i]
 
@@ -157,6 +200,8 @@ export async function panel_A9(
             svg = setImage(svg, 40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 510, 290, getImageFromV3('backlight-green.png'), reg_body, 1)
         }
     }
+
+     */
 
     // 插入图片和部件（新方法
     svg = setCustomBanner(svg, reg_banner, await readNetImage(data.banner));

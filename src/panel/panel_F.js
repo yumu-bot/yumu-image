@@ -4,7 +4,7 @@ import {
     readTemplate,
     setText,
     getPanelNameSVG,
-    setCustomBanner, getPanelHeight, getNowTimeStamp, getMatchDuration, isNotNull, isNotEmptyArray
+    setCustomBanner, getPanelHeight, getNowTimeStamp, getMatchDuration, isNotNull, isNotEmptyArray, getSvgBody, thenPush
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
@@ -118,9 +118,12 @@ export async function panel_F(
 
     const events = games.slice((data?.skip_ignore_map?.skip || 0), games.length - (data?.skip_ignore_map?.ignore || 0))
 
-    const card_Cs = [];
     let red_wins_before = 0;
     let blue_wins_before = 0;
+
+    const event_Cs = []
+    const param_Cs = []
+    const card_Cs = []
 
     for (const v of events) {
         if (v?.game?.winning_team === 'red') {
@@ -131,12 +134,28 @@ export async function panel_F(
             blue_wins_before++;
         }
 
-        card_Cs.push(await card_C(await event2CardC(v, red_wins_before, blue_wins_before)));
+        event_Cs.push(event2CardC(v, red_wins_before, blue_wins_before))
+
+        // card_Cs.push(await card_C(await event2CardC(v, red_wins_before, blue_wins_before)));
     }
 
+    await Promise.allSettled(
+        event_Cs
+    ).then(results => thenPush(results, param_Cs))
+
+    await Promise.allSettled(
+        param_Cs.map((p) => {
+            return card_C(p)
+        })
+    ).then(results => thenPush(results, card_Cs))
+
+    let stringCs = ''
+
     for (const i in card_Cs) {
-        svg = setSvgBody(svg, 510, 330 + i * 250, card_Cs[i], reg_card_c)
+        stringCs += getSvgBody(510, 330 + i * 250, card_Cs[i])
     }
+
+    svg = setText(svg, stringCs, reg_card_c)
 
     //导入谱面卡 A2卡
     const beatmap_arr = [];
@@ -144,14 +163,24 @@ export async function panel_F(
         beatmap_arr.push(v?.game?.beatmap)
     });
 
+    const card_A2s = []
+
+    await Promise.allSettled(
+        beatmap_arr.map((b) => {
+            return PanelGenerate.matchBeatMap2CardA2(b)
+        })
+    ).then(results => thenPush(results, card_A2s))
+
+    let stringA2s = ''
+
+    for (const i in card_A2s) {
+        stringA2s += getSvgBody(40, 330 + i * 250, card_A2(card_A2s[i]));
+    }
+
+    svg = setText(svg, stringA2s, reg_card_a2)
 
     const panel_height = getPanelHeight(beatmap_arr?.length, 210, 1, 290, 40, 40)
     const background_height = panel_height - 290;
-
-    for (const i in beatmap_arr) {
-        const b = card_A2(await PanelGenerate.matchBeatMap2CardA2(beatmap_arr[i]));
-        svg = setSvgBody(svg, 40, 330 + i * 250, b, reg_card_a2);
-    }
 
     svg = setText(svg, panel_height, reg_panelheight);
     svg = setText(svg, background_height, reg_height);
