@@ -25,8 +25,8 @@ export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
 export const SUPER_KEY = process.env.SUPER_KEY || "";
 export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufile";
+export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
 
-const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
 const FLAG_PATH = process.env.FLAG_PATH || EXPORT_FILE_V3 + "Flags" //CACHE_PATH + "/flag";
 
 export function initPath() {
@@ -55,7 +55,16 @@ export function initPath() {
                 return axios(config);
             })
         } else if (error.code === 'ECONNABORTED' && !config.__no_wait && config.__errTime <= config.retry) {
-            console.log(`${config.method} ${config.url} timeout, re send: ${config.__errTime}`);
+            let method = ''
+            switch (config.method?.toUpperCase()) {
+                case 'GET': method = "获取"; break
+                case 'POST': method = "发布"; break
+                case 'DEL': method = "删除"; break
+                case 'PUT': method = "修改"; break
+                default: method = "操作"; break
+            }
+
+            console.log(`${method} ${config.url} 超时，重试次数：${config.__errTime}`);
             config.__errTime += 1;
             let backoff = new Promise(function (resolve) {
                 setTimeout(function () {
@@ -75,9 +84,6 @@ export function initPath() {
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(OSU_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(FLAG_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
-    console.log("主缓存目录: ", CACHE_PATH);
-    console.log("图像缓存: ", IMG_BUFFER_PATH);
-    console.log("谱面文件缓存: ", OSU_BUFFER_PATH);
 
     Number.prototype.fixed = function () {
         return fixed(this);
