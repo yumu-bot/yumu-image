@@ -383,6 +383,10 @@ export function getModColor(mod = '' || {acronym: '', color: null}) {
         case "9K":
             color = '#616161';
             break;
+        case "NR":
+        case "SR":
+            color = '#68BE8D';
+            break;
         case "RD":
             color = '#009944';
             break;
@@ -460,7 +464,6 @@ export function getModColor(mod = '' || {acronym: '', color: null}) {
         case "BU":
         case "SY":
         case "DP":
-        case "NR":
             color = '#EA68A2';
             break;
 
@@ -477,6 +480,8 @@ export function getModColor(mod = '' || {acronym: '', color: null}) {
             color = '#FF6100';
             break;
         case "TB":
+        case "SV2":
+        case "V2":
             color = '#000';
             break;
 

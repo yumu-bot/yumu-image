@@ -1,4 +1,4 @@
-import {getGameMode, isEmptyArray, isEmptyString, isNumber} from "./util.js";
+import {getGameMode, isEmptyArray, isEmptyString, isNumber, round} from "./util.js";
 import {getModColor} from "./color.js";
 import {torus} from "./font.js";
 import {PanelDraw} from "./panelDraw.js";
@@ -267,10 +267,20 @@ export function getModAdditionalInformation(mod = {
         restart: null, // 默认 false
         minimum_accuracy: null, // 如果没有那就是 0.90
         accuracy_judge_mode: null, // "1" 就是 standard，也就是当前值，如果是 null 那就是谱面理论最大
+
+        // SR
+        one_sixth_conversion: null,
+        one_third_conversion: null,
+        one_eighth_conversion: null,
+
+        // DA
+        extended_limits: null,
+        scroll_speed: null,
+        hard_rock_offsets: null,
     }
 }) {
     const s = mod?.settings;
-    if (s == null) return ''
+    if (s == null || typeof mod === "string") return ''
 
     let info = ''
 
@@ -299,6 +309,29 @@ export function getModAdditionalInformation(mod = {
             info += Math.round(s?.minimum_accuracy * 100).toString() + '%'
         } else {
             info += '90%'
+        }
+    }
+
+    if (matchMod(mod, 'SR')) {
+        if (s?.one_sixth_conversion === false) {
+            if (s?.one_eighth_conversion === true) {
+                info = '-1/8'
+            } else if (s?.one_third_conversion === true) {
+                info = '-1/3'
+            }
+
+        } else {
+            info = '-1/6'
+        }
+    }
+
+    if (matchMod(mod, 'DA')) {
+        if (s?.extended_limits === true) {
+            info = '^11'
+        } else if (isNumber(s?.scroll_speed)) {
+            info = 'v' + round(s?.scroll_speed, 1) + 'x'
+        } else if (s?.hard_rock_offsets === true) {
+            info = 'HR'
         }
     }
 
