@@ -489,7 +489,7 @@ export async function getBackgroundFromDatabase(bid, sid) {
             "SET_ID": sid,
             "AuthorizationX": SUPER_KEY,
         },
-        timeout: 1500,
+        timeout: 500,
         __no_wait: true,
     });
 }
