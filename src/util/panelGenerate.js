@@ -736,7 +736,7 @@ export const PanelGenerate = {
         const left1 = 'time duration:';
 
         const left2 = isNotNull(cursor) ? moment(parseInt(cursor.approved_date)).format("MM-DD HH:mm:ss") :
-            (isNotNull(first_beatmapset.ranked_date) ?
+            (isNotNull(first_beatmapset?.ranked_date) ?
                 moment(first_beatmapset.ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours').format("YYYY-MM-DD HH:mm") : 'null');
         const left3 = (isNotNull(last_beatmapset.ranked_date) ?
             moment(last_beatmapset.ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours').format("YYYY-MM-DD HH:mm") : 'null');

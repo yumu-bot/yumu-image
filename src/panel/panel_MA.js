@@ -1,5 +1,5 @@
 import {
-    exportJPEG, getImageFromV3, getPanelNameSVG, setImage,
+    exportJPEG, getPanelNameSVG, setImage,
     setSvgBody, isNotEmptyArray, readTemplate,
     setText, getSvgBody, thenPush
 } from "../util/util.js";
