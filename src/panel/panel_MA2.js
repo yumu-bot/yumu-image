@@ -90,7 +90,7 @@ export async function panel_MA2(data = {
     if (data?.panel === 'CB') {
         panel_name = getPanelNameSVG('CHUNITHM Multiple Best Scores (!ymcb)', 'CB');
     } else {
-        panel_name = getPanelNameSVG('CHUNITHM Multiple Scores (!ymy)', 'SS');
+        panel_name = getPanelNameSVG('CHUNITHM Multiple Scores (!ymy)', 'Y');
     }
 
     // 插入文字

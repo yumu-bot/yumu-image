@@ -6,13 +6,7 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {
-    getMaimaiCover,
-    getMaimaiDifficultyColor, getMaimaiDXStarLevel, getMaimaiMaximumRating,
-    getMaimaiRankBG,
-    getMaimaiType,
-    getMaimaiVersionBG
-} from "../util/maimai.js";
+import {getMaimaiVersionBG} from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {card_I3} from "../card/card_I3.js";
 
@@ -91,7 +85,7 @@ export async function panel_MA(data = {
     } else if (data?.panel === 'MV') {
         panel_name = getPanelNameSVG('Maimai Version Scores (!ymmv)', 'MV');
     } else {
-        panel_name = getPanelNameSVG('Maimai Multiple Scores (!ymx)', 'SS');
+        panel_name = getPanelNameSVG('Maimai Multiple Scores (!ymx)', 'X');
     }
 
     // 插入文字
@@ -109,7 +103,7 @@ export async function panel_MA(data = {
 
     await Promise.allSettled(
         standard.map((s) => {
-            return maiScore2CardI3(s)
+            return PanelGenerate.maiScore2CardI3(s)
         })
     ).then(results => thenPush(results, param_sd))
 
@@ -117,7 +111,7 @@ export async function panel_MA(data = {
 
     await Promise.allSettled(
         deluxe.map((s) => {
-            return maiScore2CardI3(s)
+            return PanelGenerate.maiScore2CardI3(s)
         })
     ).then(results => thenPush(results, param_dx))
 
@@ -318,102 +312,3 @@ async function maiScore2CardI2(score) {
 }
 
  */
-
-async function maiScore2CardI3(score = {
-    "achievements": 100.5133,
-    "ds": 10.4,
-    "dxScore": 1125,
-    "fc": "fc",
-    "fs": "sync",
-    "level": "10",
-    "level_index": 2,
-    "level_label": "Expert",
-    "ra": 234,
-    "rate": "sssp",
-    "song_id": 10319,
-    "title": "幻想のサテライト",
-    "alias": "幻想的卫星",
-    "artist": "豚乙女",
-    "charter": "mai-Star",
-    "type": "DX",
-    "max": 234,
-    "position": 0,
-}) {
-    const achievement_text = (score?.achievements || 0).toFixed(4).toString()
-
-    const rating = Math.round(score?.ra || 0)
-    const rating_max = getMaimaiMaximumRating(score?.ds)
-    const rating_max_text = (rating >= rating_max) ? (' [MAX]') : (' [' + rating_max + ']')
-
-    const too_bright = (score?.level_index || 0) === 4 || (score?.level_index || 0) === 1;
-
-    const difficulty_color = getMaimaiDifficultyColor(score?.level_index || 0)
-
-    return {
-        background: getMaimaiRankBG(score?.rate || ''),
-        cover: await getMaimaiCover(score?.song_id || 0),
-        rank: getImageFromV3('Maimai', `object-score-${score?.rate || 'd'}2.png`),
-        type: getMaimaiType(score?.type),
-        level: getMaimaiDXStarLevel(score?.dxScore, score?.max),
-
-        title: score?.title || '',
-        title2: score?.alias || '',
-        left1: score?.artist || '',
-        left2: score?.charter || '',
-        left3: rating.toString(),
-        left4: rating_max_text,
-        index_b: achievement_text.slice(0, -3),
-        index_m: achievement_text.slice(-3),
-        index_r: (score?.achievements > 0) ? '%' : '',
-        index_b_size: 32,
-        index_m_size: 20,
-        index_r_size: 18,
-        label1: score?.ds?.toString() || '?',
-        label2: score?.position >= 1 ? ('#' + score.position) : '',
-        label3: score?.song_id?.toString() || '?',
-
-        color_text: '#fff',
-        color_label1: too_bright ? '#1c1719' : '#fff',
-        color_label2: too_bright ? '#1c1719' : '#fff',
-        color_label3: too_bright ? '#1c1719' : '#fff',
-
-        color_left: difficulty_color,
-        color_rrect1: difficulty_color,
-        color_rrect2: difficulty_color,
-        color_rrect3: difficulty_color,
-
-        component1: drawCombo(score?.fc),
-        component2: drawSync(score?.fs),
-        component3: '',
-
-        left3_is_right: false,
-    }
-}
-
-function drawCombo(combo = '') {
-    let combo_image
-
-    switch (combo) {
-        case 'fc': combo_image = 'fullcombo'; break;
-        case 'fcp': combo_image = 'fullcomboplus'; break;
-        case 'ap': combo_image = 'allperfect'; break;
-        case 'app': combo_image = 'allperfectplus'; break;
-        default: combo_image = 'clear'; break;
-    }
-
-    return PanelDraw.Image(0, 0, 27, 30, getImageFromV3('Maimai', `object-icon-combo-${combo_image}.png`))
-}
-
-function drawSync(sync = '') {
-    let sync_image;
-    switch (sync) {
-        case 'sync': sync_image = 'sync'; break;
-        case 'fs': sync_image = 'fullsync'; break;
-        case 'fsp': sync_image = 'fullsyncplus'; break;
-        case 'fsd': sync_image = 'fullsyncdx'; break;
-        case 'fsdp': sync_image = 'fullsyncdxplus'; break;
-        default: sync_image = 'solo'; break;
-    }
-
-    return PanelDraw.Image(0, 0, 27, 30, getImageFromV3('Maimai', `object-icon-sync-${sync_image}.png`))
-}
