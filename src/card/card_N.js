@@ -273,10 +273,10 @@ function getStatColorArr(mode = 0) {
             stat_color_arr = ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E'];
             break;
         case 1:
-            stat_color_arr = ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E'];
+            stat_color_arr = ['#8DCEF4', '#79C471', '#ED6C9E'];
             break;
         case 2:
-            stat_color_arr = ['#8DCEF4', '#79C471', '#ED6C9E'];
+            stat_color_arr = ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E'];
             break;
         case 3:
             stat_color_arr = ['#8DCEF4', '#FEF668', '#79C471', '#5E8AC6',
