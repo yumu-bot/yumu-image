@@ -178,7 +178,10 @@ export async function panel_A9(
         const y = Math.floor(i / 4)
 
         stringA1s += getSvgBody(40 + 470 * x, 330 + 250 + 250 * y, a1)
-        imageA1s += getImage(40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 510, 290, getImageFromV3('backlight-green.png'), 1)
+
+        if (members[i]?.is_online === true) {
+            imageA1s += getImage(40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 510, 290, getImageFromV3('backlight-green.png'), 1)
+        }
     }
 
     svg = setText(svg, stringA1s, reg_body)
