@@ -1356,9 +1356,12 @@ const PanelEGenerate = {
 
          */
 
-        const rainbow_rating = (score?.total_score_without_mods != null && score.total_score_without_mods > 0) ?
-            score.total_score_without_mods / 1000000 :
-            (score?.total_score || 0) / (1000000 * getModMultiplier(score?.mods || [], score?.mode || 'osu'))
+        const rainbow_rating = (score?.total_score_without_mods > 0) ?
+            (score.total_score_without_mods / 1000000) :
+            (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods || [], score?.ruleset_id || 0))
+
+        console.log(rainbow_rating)
+        console.log(score)
 
         let rainbow_rank;
 

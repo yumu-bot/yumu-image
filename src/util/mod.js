@@ -535,7 +535,9 @@ export function getModMultiplier(mods = [{acronym: ''}], game_mode = 'o') {
     }
 
     for (const v of mods) {
-        multiplier *= modList[v?.acronym];
+        const i = modList[v?.acronym] || 1
+
+        multiplier *= i
     }
 
     return multiplier;
