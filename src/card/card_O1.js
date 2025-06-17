@@ -2,7 +2,7 @@ import {getImageFromV3, setImage, setSvgBody, setText} from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_O} from "../component/label.js";
 
-export async function card_O1(data = {
+export function card_O1(data = {
     background: getImageFromV3('card-default.png'),
     avatar: getImageFromV3('avatar-guest.png'),
 
@@ -60,7 +60,7 @@ export async function card_O1(data = {
         const x = sx + i * 90;
         const y = 170;
 
-        const labelO = await label_O(v);
+        const labelO = label_O(v);
         svg = setSvgBody(svg, x, y, labelO, reg_label);
     }
     // 插入头像

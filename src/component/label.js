@@ -1777,7 +1777,7 @@ export async function label_N(data = {
 }
 
 //IM-O-玩家牌（getUser - groups）
-export async function label_O(data = {
+export function label_O(data = {
     "colour": "#A347EB",
     "id": 28,
     "identifier": "bng",

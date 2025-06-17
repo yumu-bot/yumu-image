@@ -77,7 +77,7 @@ export async function panel_J(data = {
         "last_visit": null,
         "pm_friends_only": false,
         "mode": "OSU",
-        "unranked_beatmapset_count": 1,
+        "pending_beatmapset_count": 1,
         "ranked_beatmapset_count": 0,
         "ranked_and_approved_beatmapset_count": 0,
         "beatmap_playcounts_count": 6765,

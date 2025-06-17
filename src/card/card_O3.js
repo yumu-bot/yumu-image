@@ -2,7 +2,7 @@ import {setTexts} from "../util/util.js";
 import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function card_O3(data = {
+export function card_O3(data = {
     title: '',
     number: 0,
     color: '#fff',

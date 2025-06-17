@@ -85,7 +85,7 @@ export async function panel_E2(data = {
         nominated_beatmapset_count: 0,
         favourite_beatmapset_count: 85,
         graveyard_beatmapset_count: 116,
-        unranked_beatmapset_count: 0,
+        pending_beatmapset_count: 0,
         ranked_beatmapset_count: 4,
         ranked_and_approved_beatmapset_count: 4,
         guest_beatmapset_count: 26,

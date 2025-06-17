@@ -70,7 +70,7 @@ export async function panel_N(
     const cardA2 = card_A2(await PanelGenerate.beatMapSet2CardA2(data?.beatmapset));
 
     // 导入O1
-    const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data?.beatmapset?.user));
+    const cardO1 = card_O1(await PanelGenerate.user2CardO1(data?.beatmapset?.user));
 
     // 导入一些标签
     const guest_title = torus.getTextPath('Guest Mappers', 60, 730, 30, 'left baseline', '#fff');

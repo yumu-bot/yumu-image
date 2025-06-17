@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG, getTimeDifference,
     setImage, setSvgBody, readTemplate,
-    setText, setTexts, round, rounds
+    setText, setTexts, round, rounds, thenPush, getSvgBody
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -127,7 +127,7 @@ export async function panel_M(data = {
     genre: [0, 0, 0, 1, 0, 1, 0], //unspecified, video game, anime, rock, pop, other, novelty, hip hop, electronic, metal, classical, folk, jazz
     //搜索https://osu.ppy.sh/beatmapsets?q=creator%3D（uid）&s=any
 
-    //Get User Recent Activity，需要筛选出"type": "beatmapsetUpdate", "type": "beatmapsetRanked",类似的种类，获取100条（两页
+    //Get User Recent Activity，需要筛选出 "type": "beatmapsetUpdate", "type": "beatmapsetRanked",类似的种类，获取100条（两页
     recent_activity: [
         {
             "created_at": "2023-08-26T10:10:40+00:00",
@@ -183,16 +183,35 @@ export async function panel_M(data = {
     const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user));
 
     // 导入O1
-    const cardO1 = await card_O1(await PanelGenerate.user2CardO1(data.user));
+    const cardO1 = card_O1(await PanelGenerate.user2CardO1(data.user));
 
     // 导入O2
+
+    const params = []
+    const cardO2s = []
+
+    await Promise.allSettled(
+        data.most_popular_beatmap.map((v) => {
+            return PanelGenerate.beatmap2CardO2(v)
+        })
+    ).then(results => thenPush(results, params))
+
+    await Promise.allSettled(
+        params.map((v) => {
+            return card_O2(v)
+        })
+    ).then(results => thenPush(results, cardO2s))
+
+    let stringO2s = ''
+
     for (let i = 0; i < Math.min(data.most_popular_beatmap?.length || 0, 6); i++) {
         const x = 510 + (i % 3) * 305;
         const y = 380 + Math.floor(i / 3) * 145;
 
-        const cardO2 = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_popular_beatmap[i]));
-        svg = setSvgBody(svg, x, y, cardO2, reg_popular);
+        stringO2s += getSvgBody(x, y, cardO2s[i]);
     }
+
+    svg = setText(svg, stringO2s, reg_popular)
 
     if ((data.most_popular_beatmap?.length || 0) < 1) { //摆烂机制
         svg = setImage(svg, 867.5, 410, 185, 185, getImageFromV3('sticker_qiqi_oh.png'), reg_popular, 1);
@@ -272,58 +291,77 @@ export async function panel_M(data = {
     }
 
     let cardO3s = [];
-    cardO3s.push(await card_O3({title: 'Total', number: genre_sum, color: '#AAA'}));
+    cardO3s.push(card_O3({title: 'Total', number: genre_sum, color: '#AAA'}));
     for (let i = 0; i < 10; i++) {
-        cardO3s.push(await card_O3({
+        cardO3s.push(card_O3({
             title: genre_name[sortKey[i]], number: sortValue[i], color: genre_color[sortKey[i]]
         }));
     }
 
     svg = setSvgBody(svg, 60, 910, cardO3s.shift(), reg_genre);
+
+    let stringO3s = ''
+
     for (let i = 0; i < 10; i++) {
         if (i < 8) {
-            svg = setSvgBody(svg, 260, 710 + 40 * i, cardO3s[i], reg_genre);
+            stringO3s += getSvgBody(260, 710 + 40 * i, cardO3s[i]);
         } else {
-            svg = setSvgBody(svg, 60, 950 + 40 * (i - 8), cardO3s[i], reg_genre);
+            stringO3s += getSvgBody(60, 950 + 40 * (i - 8), cardO3s[i]);
         }
     }
+
+    svg = setText(svg, stringO3s, reg_genre)
 
     // 导入最近活动卡
     let cardO4s = [];
     const recent_activity = data.recent_activity || [];
 
+    await Promise.allSettled(
+        recent_activity.slice(0, Math.min(recent_activity.length, 7)).map((v) => {
+            const delta_time = getTimeDifference(v.created_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]', moment());
+
+            return card_O4({
+                type: v.type,
+                approval: v.approval,
+                title: v.beatmapset.title,
+                time: delta_time,
+                background: v.beatmapset?.covers?.list || ('https://assets.ppy.sh/beatmaps/' + v.beatmapset.id + '/covers/list.jpg'),
+            })
+        })
+    ).then(results => thenPush(results, cardO4s))
+
+    let stringO4s = ''
+
     for (let i = 0; i < Math.min(recent_activity.length, 7); i++) {
-        const v = recent_activity[i];
-        const delta_time = getTimeDifference(v.created_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]', moment());
-
-        let sid = v.beatmapset.id
-
-        cardO4s.push(await card_O4({
-            type: v.type,
-            approval: v.approval,
-            title: v.beatmapset.title,
-            time: delta_time,
-            background: 'https://assets.ppy.sh/beatmaps/' + sid + '/covers/list.jpg',
-        }));
+        stringO4s += getSvgBody(510, 750 + 40 * i, cardO4s[i]);
     }
 
-    for (let i = 0; i < Math.min(recent_activity.length, 7); i++) {
-        svg = setSvgBody(svg, 510, 750 + 40 * i, cardO4s[i], reg_activity);
-    }
+    svg = setText(svg, stringO4s, reg_activity)
 
     if (recent_activity.length < 1) { //摆烂机制
         svg = setImage(svg, 692.5, 770, 185, 185, getImageFromV3('sticker_qiqi_fallen.png'), reg_activity, 1);
     }
 
     // 导入最近卡
-    const O2g = await PanelGenerate.beatmap2CardO2(data.most_recent_ranked_guest_diff);
     const O2g_title2 = data.most_recent_ranked_guest_diff ? data.most_recent_ranked_guest_diff.creator + ' (' + data.most_recent_ranked_guest_diff.artist  + ')' : '';
 
-    const cardO2h = await card_O2(await PanelGenerate.beatmap2CardO2(data.most_recent_ranked_beatmap));
-    const cardO2g = await card_O2({...O2g, title2: O2g_title2});
+    const O2s = []
 
-    svg = setSvgBody(svg, 1120, 745, cardO2h, reg_recent);
-    svg = setSvgBody(svg, 1120, 890, cardO2g, reg_recent);
+    await Promise.allSettled([
+        PanelGenerate.beatmap2CardO2(data.most_recent_ranked_beatmap),
+        PanelGenerate.beatmap2CardO2(data.most_recent_ranked_guest_diff),
+    ]).then(results => thenPush(results, O2s))
+
+    const o2g = eval(O2s[1])
+
+    o2g.title2 = O2g_title2
+
+    const cardO2h = card_O2(O2s[0]);
+    const cardO2g = card_O2(o2g);
+
+    let stringO2hg = getSvgBody(1120, 745, cardO2h) + getSvgBody(1120, 890, cardO2g)
+
+    svg = setText(svg, stringO2hg, reg_recent);
 
     // 插入1号卡标签
     const rank_str = data?.user?.ranked_beatmapset_count.toString() || '0';

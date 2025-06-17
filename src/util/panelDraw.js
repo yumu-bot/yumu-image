@@ -173,7 +173,26 @@ export const PanelDraw = {
         return `<polygon points="${top} ${right} ${bottom} ${left} ${top}" style="fill: ${color}; fill-opacity: ${opacity}"/>`
     },
 
-    //柱状图，Histogram，max 如果填 0，即用数组的最大值。max_undertake是数组的最大值小于这个值时的 保底机制
+    /**
+     * 柱状图，Histogram，max 如果填 0，即用数组的最大值。max_undertake是数组的最大值小于这个值时的 保底机制
+     * @param arr
+     * @param max {number|null}
+     * @param min
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param r
+     * @param gap
+     * @param color
+     * @param max_undertake {number|null}
+     * @param floor
+     * @param minColor
+     * @param opacity
+     * @param is_reverse
+     * @returns {string}
+     * @constructor
+     */
     BarChart: (arr = [0], max = 0, min = 0, x = 900, y = 1020, w = 520, h = 90, r = 0, gap = 0, color = '#fff' || ['#fff'] || null, max_undertake = 0, floor = 0, minColor = '#aaa' || null, opacity = 1, is_reverse = false) => {
         if (isEmptyArray(arr)) return '';
 
