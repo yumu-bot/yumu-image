@@ -1,6 +1,6 @@
 import {
     getKeyDifficulty,
-    getImageFromV3, setImage, setSvgBody, setText, readNetImage,
+    getImageFromV3, setImage, setText, readNetImage, thenPush, getSvgBody,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_M1, label_M2, label_M3} from "../component/label.js";
@@ -64,6 +64,7 @@ export async function card_M(s = {
         "download_disabled": false,
         "more_information": null
     },
+    user: {},
     "beatmaps": [
         {
             "beatmapset_id": 1884753,
@@ -93,158 +94,9 @@ export async function card_M(s = {
             "ranked": 3,
             "url": "https://osu.ppy.sh/beatmaps/3880594",
             "checksum": "5ab3f382dc7601eb3a3b0b34256c5f59",
-            "max_combo": 744
+            "max_combo": 744,
+            user: {}
         },
-        {
-            "beatmapset_id": 1884753,
-            "difficulty_rating": 4.23,
-            "id": 3880863,
-            "mode": "osu",
-            "status": "qualified",
-            "total_length": 135,
-            "user_id": 7003013,
-            "version": "Insane",
-            "accuracy": 7,
-            "ar": 8.5,
-            "bpm": 168,
-            "convert": false,
-            "count_circles": 139,
-            "count_sliders": 193,
-            "count_spinners": 4,
-            "cs": 4,
-            "deleted_at": null,
-            "drain": 5,
-            "hit_length": 129,
-            "is_scoreable": true,
-            "last_updated": "2023-07-11T15:44:21Z",
-            "mode_int": 0,
-            "passcount": 66,
-            "playcount": 204,
-            "ranked": 3,
-            "url": "https://osu.ppy.sh/beatmaps/3880863",
-            "checksum": "00583b3f9e3aa112de783fc304ac3b1f",
-            "max_combo": 613
-        },
-        {
-            "beatmapset_id": 1884753,
-            "difficulty_rating": 3.32,
-            "id": 3880864,
-            "mode": "osu",
-            "status": "qualified",
-            "total_length": 135,
-            "user_id": 3766224,
-            "version": "Kobayakawa Sae's Hard",
-            "accuracy": 6,
-            "ar": 8,
-            "bpm": 168,
-            "convert": false,
-            "count_circles": 93,
-            "count_sliders": 122,
-            "count_spinners": 6,
-            "cs": 4,
-            "deleted_at": null,
-            "drain": 4,
-            "hit_length": 133,
-            "is_scoreable": true,
-            "last_updated": "2023-07-11T15:44:22Z",
-            "mode_int": 0,
-            "passcount": 51,
-            "playcount": 149,
-            "ranked": 3,
-            "url": "https://osu.ppy.sh/beatmaps/3880864",
-            "checksum": "1ad7ffb20a515eb1c803ab8288431748",
-            "max_combo": 412
-        },
-        {
-            "beatmapset_id": 1884753,
-            "difficulty_rating": 2.13,
-            "id": 3880865,
-            "mode": "osu",
-            "status": "qualified",
-            "total_length": 135,
-            "user_id": 1061213,
-            "version": "Patchouli-R's Normal",
-            "accuracy": 4,
-            "ar": 5,
-            "bpm": 168,
-            "convert": false,
-            "count_circles": 69,
-            "count_sliders": 90,
-            "count_spinners": 6,
-            "cs": 3,
-            "deleted_at": null,
-            "drain": 3,
-            "hit_length": 114,
-            "is_scoreable": true,
-            "last_updated": "2023-07-11T15:44:22Z",
-            "mode_int": 0,
-            "passcount": 45,
-            "playcount": 134,
-            "ranked": 3,
-            "url": "https://osu.ppy.sh/beatmaps/3880865",
-            "checksum": "ada93214c2e5c6585bd7064e7b985560",
-            "max_combo": 288
-        },
-        {
-            "beatmapset_id": 1884753,
-            "difficulty_rating": 1.69,
-            "id": 3881560,
-            "mode": "osu",
-            "status": "qualified",
-            "total_length": 135,
-            "user_id": 7003013,
-            "version": "Easy",
-            "accuracy": 2,
-            "ar": 3,
-            "bpm": 168,
-            "convert": false,
-            "count_circles": 52,
-            "count_sliders": 90,
-            "count_spinners": 4,
-            "cs": 2.2,
-            "deleted_at": null,
-            "drain": 2,
-            "hit_length": 127,
-            "is_scoreable": true,
-            "last_updated": "2023-07-11T15:44:23Z",
-            "mode_int": 0,
-            "passcount": 49,
-            "playcount": 135,
-            "ranked": 3,
-            "url": "https://osu.ppy.sh/beatmaps/3881560",
-            "checksum": "244d46706e662aeb86c996176b03008c",
-            "max_combo": 304
-        },
-        {
-            "beatmapset_id": 1884753,
-            "difficulty_rating": 5.95,
-            "id": 3984789,
-            "mode": "osu",
-            "status": "qualified",
-            "total_length": 135,
-            "user_id": 873961,
-            "version": "Skystar's Extra",
-            "accuracy": 9,
-            "ar": 9.2,
-            "bpm": 168,
-            "convert": false,
-            "count_circles": 208,
-            "count_sliders": 239,
-            "count_spinners": 2,
-            "cs": 4.5,
-            "deleted_at": null,
-            "drain": 6,
-            "hit_length": 133,
-            "is_scoreable": true,
-            "last_updated": "2023-07-11T15:44:23Z",
-            "mode_int": 0,
-            "passcount": 55,
-            "playcount": 257,
-            "ranked": 3,
-            "url": "https://osu.ppy.sh/beatmaps/3984789",
-            "checksum": "574fd409c942675e61b80d0bd94c3601",
-            "max_combo": 796
-        }
     ],
     "pack_tags": []
 }) {
@@ -286,35 +138,56 @@ export async function card_M(s = {
         //正常面板
         label_width = (1360 / label_count) - 10;
 
-        for (const v of s.beatmaps) {
-            const f1 = await label_M1({
-                mode: v.mode,
-                difficulty_name: getKeyDifficulty(v),
-                star_rating: v.difficulty_rating,
-                maxWidth: label_width,
-                star: getImageFromV3('object-beatmap-star.png'),
-                hasAvatar: false,
-                uid: v.user_id,
-            });
-            const f2 = await label_M2({
-                host_uid: s.user_id,
-                uid: v.user_id,
-            });
-            const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
-            const f3 = await label_M3(g3);
+        await Promise.allSettled(
+            s.beatmaps.map((v) => {
+                return label_M1({
+                    mode: v.mode,
+                    difficulty_name: getKeyDifficulty(v),
+                    star_rating: v.difficulty_rating,
+                    max_width: label_width,
+                    star: getImageFromV3('object-beatmap-star.png'),
+                    has_avatar: false,
+                    uid: v.user_id,
+                });
+            })
+        ).then(results => thenPush(results, labelM1s))
 
-            labelM1s.push(f1);
-            labelM2s.push(f2);
-            labelM3s.push(f3);
-        }
+        await Promise.allSettled(
+            s.beatmaps.map((v) => {
+                return label_M2({
+                    host_id: s.user_id,
+                    guest_id: v.user_id,
+                    avatar_url: v.user?.avatar_url,
+                });
+            })
+        ).then(results => thenPush(results, labelM2s))
+
+        let param_m3s = []
+
+        await Promise.allSettled(
+            s.beatmaps.map((v) => {
+                return PanelGenerate.searchDiff2LabelM3(v, label_width)
+            })
+        ).then(results => thenPush(results, param_m3s))
+
+        await Promise.allSettled(
+            param_m3s.map((p) => {
+                return label_M3(p)
+            })
+        ).then(results => thenPush(results, labelM3s))
 
         //插入到svg中
-        for (let i = 0; i < label_count; i++) {
-            svg = setSvgBody(svg, 10 + (label_width + 10) * i, 150, labelM1s[i], reg_label);
-            svg = setSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) - 50, 10, labelM2s[i], reg_label);
-            svg = setSvgBody(svg, 10 + (label_width + 10) * i + (label_width / 2) + 5, 120, labelM3s[i], reg_label); //往右偏一点，好看，记得改相似的地方
+        let string_ms = ''
 
+        for (let i = 0; i < label_count; i++) {
+            string_ms += (getSvgBody(10 + (label_width + 10) * i, 150, labelM1s[i])
+                + getSvgBody(10 + (label_width + 10) * i + (label_width / 2) - 50, 10, labelM2s[i])
+                + getSvgBody(10 + (label_width + 10) * i + (label_width / 2) + 5, 120, labelM3s[i]) //往右偏一点，好看，记得改相似的地方
+            )
         }
+
+        svg = setText(svg, string_ms, reg_label)
+
     } else if (label_count <= 18) {
         //紧促面板，最大不超18个，超了不管了 7 8 9 10 11 12
 
@@ -336,82 +209,108 @@ export async function card_M(s = {
 
         // 处理方法：先渲染能 compact 的，再渲染剩在堆积上的，再渲染正常卡
         // 1. compact normal
-        for (let i = 0; i < (label_compact_count - label_compact_remain); i++) {
-            const v = s.beatmaps[i];
-            const f1c = await label_M1({
-                mode: v.mode,
-                difficulty_name: getKeyDifficulty(v),
-                star_rating: v.difficulty_rating,
-                maxWidth: label_width,
-                star: getImageFromV3('object-beatmap-star.png'),
-                hasAvatar: true,
-                uid: v.user_id,
-            });
+        const beatmaps_cn = s.beatmaps.slice(0, (label_compact_count - label_compact_remain))
 
-            labelM1c.push(f1c);
-        }
+        await Promise.allSettled(
+            beatmaps_cn.map((v) => {
+                return label_M1({
+                    mode: v.mode,
+                    difficulty_name: getKeyDifficulty(v),
+                    star_rating: v.difficulty_rating,
+                    max_width: label_width,
+                    star: getImageFromV3('object-beatmap-star.png'),
+                    has_avatar: true,
+                    user_id: v.user_id,
+                    avatar_url: v.user?.avatar_url,
+                });
+            })
+        ).then(results => thenPush(results, labelM1c))
 
         // 2. compact remain
-        for (let j = (label_compact_count - label_compact_remain); j < label_compact_count; j++) {
-            const v = s.beatmaps[j];
-            const f1r = await label_M1({
-                mode: v.mode,
-                difficulty_name: getKeyDifficulty(v),
-                star_rating: v.difficulty_rating,
-                maxWidth: label_compact_remain_width,
-                star: getImageFromV3('object-beatmap-star.png'),
-                hasAvatar: true,
-                uid: v.user_id,
-            });
+        const beatmaps_cr = s.beatmaps.slice((label_compact_count - label_compact_remain), label_compact_count)
 
-            labelM1r.push(f1r);
-        }
+        await Promise.allSettled(
+            beatmaps_cr.map((v) => {
+                return label_M1({
+                    mode: v.mode,
+                    difficulty_name: getKeyDifficulty(v),
+                    star_rating: v.difficulty_rating,
+                    max_width: label_compact_remain_width,
+                    star: getImageFromV3('object-beatmap-star.png'),
+                    has_avatar: true,
+                    user_id: v.user_id,
+                    avatar_url: v.user?.avatar_url,
+                });
+            })
+        ).then(results => thenPush(results, labelM1r))
 
         // 3. normal
-        for (let k = label_compact_count; k < label_count; k++) {
-            const v = s.beatmaps[k];
-            const f1 = await label_M1({
-                mode: v.mode,
-                difficulty_name: getKeyDifficulty(v),
-                star_rating: v.difficulty_rating,
-                maxWidth: label_width,
-                star: getImageFromV3('object-beatmap-star.png'),
-                hasAvatar: false,
-                uid: v.user_id,
-            });
-            const f2 = await label_M2({
-                host_uid: s.user_id,
-                uid: v.user_id,
-            });
-            const g3 = await PanelGenerate.searchDiff2LabelM3(v, label_width);
-            const f3 = await label_M3(g3);
 
-            labelM1s.push(f1);
-            labelM2s.push(f2);
-            labelM3s.push(f3);
-        }
+        const beatmaps_nm = s.beatmaps.slice(label_compact_count, label_count)
+
+        await Promise.allSettled(
+            beatmaps_nm.map((v) => {
+                return label_M1({
+                    mode: v.mode,
+                    difficulty_name: getKeyDifficulty(v),
+                    star_rating: v.difficulty_rating,
+                    max_width: label_width,
+                    star: getImageFromV3('object-beatmap-star.png'),
+                    has_avatar: false,
+                    uid: v.user_id,
+                });
+            })
+        ).then(results => thenPush(results, labelM1s))
+
+        await Promise.allSettled(
+            beatmaps_nm.map((v) => {
+                return label_M2({
+                    host_id: s.user_id,
+                    guest_id: v.user_id,
+                    avatar_url: v.user?.avatar_url,
+                });
+            })
+        ).then(results => thenPush(results, labelM2s))
+
+        let param_m3s = []
+
+        await Promise.allSettled(
+            beatmaps_nm.map((v) => {
+                return PanelGenerate.searchDiff2LabelM3(v, label_width)
+            })
+        ).then(results => thenPush(results, param_m3s))
+
+        await Promise.allSettled(
+            param_m3s.map((p) => {
+                return label_M3(p)
+            })
+        ).then(results => thenPush(results, labelM3s))
 
         //插入到svg中
         // 1. compact normal
+        let string_ms = ''
+
         for (let ly = 0; ly < label_compact_y; ly++) {
             for (let lx = 0; lx < label_compact_x; lx++) {
-                svg = setSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * label_compact_x], reg_label);
+                string_ms += getSvgBody(10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * label_compact_x]);
             }
         }
 
         // 2. compact remain
         for (let mx = 0; mx < label_compact_remain; mx++) {
-            svg = setSvgBody(svg, 10 + (label_compact_remain_width + 10) * mx, 150 - 60 * label_compact_y, labelM1r[mx], reg_label);
+            string_ms += getSvgBody(10 + (label_compact_remain_width + 10) * mx, 150 - 60 * label_compact_y, labelM1r[mx]);
         }
 
         // 3. normal
         for (let n = 0; n < label_normal_count; n++) {
             const nx = n + label_compact_slot_count
 
-            svg = setSvgBody(svg, 10 + (label_width + 10) * nx, 150, labelM1s[n], reg_label);
-            svg = setSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) - 50, 10, labelM2s[n], reg_label);
-            svg = setSvgBody(svg, 10 + (label_width + 10) * nx + (label_width / 2) + 5, 120, labelM3s[n], reg_label); //往右偏一点，好看，记得改相似的地方
+            string_ms += getSvgBody(10 + (label_width + 10) * nx, 150, labelM1s[n]);
+            string_ms += getSvgBody(10 + (label_width + 10) * nx + (label_width / 2) - 50, 10, labelM2s[n]);
+            string_ms += getSvgBody(10 + (label_width + 10) * nx + (label_width / 2) + 5, 120, labelM3s[n]); //往右偏一点，好看，记得改相似的地方
         }
+
+        svg = setText(svg, string_ms, reg_label)
 
         //给个备注，说明这个地方有多少个diff
         const diff_count = torus.getTextPath('Total: ' + label_count + 'x', 20, 21, 18, 'left baseline', '#fff')
@@ -424,26 +323,32 @@ export async function card_M(s = {
         let labelM1c = [];
 
         // 1. compact normal
-        for (let i = 0; i < 18; i++) {
-            const v = s.beatmaps[i];
-            const f1c = await label_M1({
-                mode: v.mode,
-                difficulty_name: getKeyDifficulty(v),
-                star_rating: v.difficulty_rating,
-                maxWidth: label_width,
-                star: getImageFromV3('object-beatmap-star.png'),
-                hasAvatar: true,
-                uid: v.user_id,
-            });
+        const beatmaps_cp = s.beatmaps.slice(0, 18)
 
-            labelM1c.push(f1c);
-        }
+        await Promise.allSettled(
+            beatmaps_cp.map((v) => {
+                return label_M1({
+                    mode: v.mode,
+                    difficulty_name: getKeyDifficulty(v),
+                    star_rating: v.difficulty_rating,
+                    max_width: label_width,
+                    star: getImageFromV3('object-beatmap-star.png'),
+                    has_avatar: true,
+                    user_id: v.user_id,
+                    avatar_url: v.user?.avatar_url,
+                });
+            })
+        ).then(results => thenPush(results, labelM1c))
+
+        let string_ms = ''
 
         for (let ly = 0; ly < 3; ly++) {
             for (let lx = 0; lx < 6; lx++) {
-                svg = setSvgBody(svg, 10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * 3], reg_label);
+                string_ms += getSvgBody(10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * 3]);
             }
         }
+
+        svg = setText(svg, string_ms, reg_label)
 
         //给个备注，说明这个地方有多少个diff
         const diff_count = torus.getTextPath('Diffs: ' + label_count + 'x', 20, 20, 18, 'left baseline', '#fff')

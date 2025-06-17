@@ -1322,7 +1322,7 @@ export const PanelGenerate = {
                         data_m: rounds(beatmap.accuracy, 1).decimal,
                     },
 
-                    maxWidth: label_width,
+                    max_width: label_width,
                 };
 
             case 't' :
@@ -1346,7 +1346,7 @@ export const PanelGenerate = {
                         data_m: rounds(beatmap.drain, 1).decimal
                     },
 
-                    maxWidth: label_width,
+                    max_width: label_width,
                 };
 
             case 'c':
@@ -1370,7 +1370,7 @@ export const PanelGenerate = {
                         data_m: rounds(beatmap.drain, 1).decimal
                     },
 
-                    maxWidth: label_width,
+                    max_width: label_width,
                 };
 
             case 'm' :
@@ -1393,6 +1393,8 @@ export const PanelGenerate = {
                         data_b: rounds(beatmap.drain, 1).integer,
                         data_m: rounds(beatmap.drain, 1).decimal
                     },
+
+                    max_width: label_width,
                 };
         }
     },

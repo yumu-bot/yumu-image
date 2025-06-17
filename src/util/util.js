@@ -146,7 +146,7 @@ export function isEmptyString(str) {
  * @return boolean
  */
 export function isEmptyArray(arr) {
-    return isNull(arr) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length == 0)
+    return isNull(arr) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length === 0)
 }
 
 // {} 和 [] 不为空
@@ -536,7 +536,7 @@ export function deleteBeatMapFromDatabase(bid) {
  * @return {Promise<string>}
  */
 export async function getAvatar(link, use_cache = true, default_image_path = getImageFromV3('avatar-guest.png')) {
-    if (isBlankString(link) || link == "https://a.ppy.sh/") {
+    if (isBlankString(link) || link === "https://a.ppy.sh/") {
         return default_image_path;
     } else if (isNumber(link)) {
         return await readNetImage('https://a.ppy.sh/' + link, use_cache, default_image_path);
@@ -678,7 +678,7 @@ export function setImage(base = '', x = 0, y = 0, w = 100, h = 100, image = '', 
     if (image != null) {
         if (x === 0 && y === 0) {
             replace = `<image width="${w}" height="${h}" xlink:href="${image}" style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
-        } else if (rotate90 == false) {
+        } else if (!rotate90) {
             replace = `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
         } else {
             // 注意这里 h w 是反的，因为转了 90 度
@@ -1089,7 +1089,7 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
         return default_mode;
     }
 
-    if (modeStr == 'default') return default_mode;
+    if (modeStr === 'default') return default_mode;
 
     switch (level) {
         case -2:
@@ -1511,7 +1511,7 @@ export async function getFlagPath(code = "cn", x, y, h = 30) {
 
     //避免腾讯封掉青天白日旗
     const image = getImageFromV3('flag-TW.png')
-    if (code.toLowerCase() == "tw") {
+    if (code.toLowerCase() === "tw") {
         if (fs.existsSync(image)) {
             return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${image}"
             style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
@@ -1863,7 +1863,7 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
  * @return {number}
  */
 export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, bannerHeight = 290, interval = 40, spacing = 40) => {
-    if (cardPerRow == 0) return (bannerHeight + spacing);
+    if (cardPerRow === 0) return (bannerHeight + spacing);
     const row = Math.ceil((cardCount || 0) / cardPerRow);
 
     if (row >= 0) {

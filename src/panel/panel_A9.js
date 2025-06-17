@@ -17,7 +17,6 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_Alpha} from "../card/card_Alpha.js";
-import {card_A3} from "../card/card_A3.js";
 
 export async function router(req, res) {
     try {

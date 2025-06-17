@@ -1515,11 +1515,12 @@ export async function label_M1(data = {
     mode: 'osu',
     difficulty_name: 'Skystar\'s Tragic Love Extra',
     star_rating: 5.46,
-    maxWidth: 0,
+    max_width: 0,
     star: getImageFromV3('object-beatmap-star.png'),
 
-    hasAvatar: false,
-    uid: 7003013
+    has_avatar: false,
+    user_id: 7003013,
+    avatar_url: "",
 }) {
 
     let svg = `
@@ -1543,7 +1544,7 @@ export async function label_M1(data = {
 
     //定义文本
     const diff_name_path = torus.getTextPath(
-        torus.cutStringTail(data.difficulty_name, 18, data.maxWidth - 50 - 10, true),
+        torus.cutStringTail(data.difficulty_name, 18, data.max_width - 50 - 10, true),
         50, 20, 18, 'left baseline', '#fff');
     const sr_number = rounds(data.star_rating, 2)
     const star_rating_path = torus.get2SizeTextPath(
@@ -1562,11 +1563,16 @@ export async function label_M1(data = {
         8, 38.5, 38, 'left baseline', mode_icon_color);
 
     //如果可以放头像，那么不需要SR，改为放头像
-    if (data.hasAvatar) {
+    if (data.has_avatar) {
         mode_icon_path = '';
 
-        const uid = data.uid || 0;
-        const avatar = await getAvatar(uid, false);
+        let avatar
+
+        if (isNotEmptyString(data?.avatar_url)) {
+            avatar = await getAvatar(data.user_id, false);
+        } else {
+            avatar = await getAvatar(data?.avatar_url, true);
+        }
 
         svg = setImage(svg, 8, 7, 36, 36, avatar, reg_avatar, 1);
     }
@@ -1581,14 +1587,14 @@ export async function label_M1(data = {
     let sr_m_scale = Math.pow(sr.dec, 0.8);
 
     //超宽处理
-    const dot3 = torus.getTextPath('...',data.maxWidth - 18 ,44 ,18,'right baseline', '#BE2CFA');
+    const dot3 = torus.getTextPath('...',data.max_width - 18 ,44 ,18,'right baseline', '#BE2CFA');
 
     if (sr_b >= 10) {
         sr_b = 10;
         sr_m_scale = 0;
     }
 
-    if (data.maxWidth <= 262 && sr_b >= 7) {
+    if (data.max_width <= 262 && sr_b >= 7) {
         sr_b = 7;
         sr_m_scale = 0;
         svg = setText(svg, dot3, reg_icon);
@@ -1610,8 +1616,8 @@ export async function label_M1(data = {
 
     //插入矩形
 
-    const rrect_sr_path = PanelDraw.Rect(0, 0, data.maxWidth, 50, 25, mode_icon_color, 0.15);
-    const rrect_base_path = PanelDraw.Rect(0, 0, data.maxWidth, 50, 25, '#46393F');
+    const rrect_sr_path = PanelDraw.Rect(0, 0, data.max_width, 50, 25, mode_icon_color, 0.15);
+    const rrect_base_path = PanelDraw.Rect(0, 0, data.max_width, 50, 25, '#46393F');
 
     svg = setText(svg, rrect_sr_path, reg_rrect);
     svg = setText(svg, rrect_base_path, reg_rrect);
@@ -1621,8 +1627,9 @@ export async function label_M1(data = {
 
 //Q-M2-客串谱师标签
 export async function label_M2(data = {
-    host_uid: 873961,
-    uid: 873961,
+    host_id: 873961,
+    guest_id: 873961,
+    avatar_url: "",
 }) {
 
     //导入模板
@@ -1653,14 +1660,20 @@ export async function label_M2(data = {
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LM2\);">)/;
 
     //定义文本
-    const uid = data.uid || 0;
-    const avatar = await getAvatar(uid, false);
+    const id = data.guest_id || 0;
+
+    let avatar
+    if (isNotEmptyString(data.avatar_url)) {
+        avatar = await getAvatar(data.avatar_url, true)
+    } else {
+        avatar = await getAvatar(id, false)
+    }
 
     let host = 'G';
     let host_color = '#382E32'
     let host_rrect_color = '#B8D3E0';
 
-    if (data.host_uid === data.uid && data.uid > 0) {
+    if (data.host_id === id && id > 0) {
         host = 'H';
         host_color = '#B8D3E0';
         host_rrect_color = '#382E32';
@@ -1692,7 +1705,7 @@ export async function label_M3(data = {
     label3: {
     },
 
-    maxWidth: 650 / 3,
+    max_width: 650 / 3,
 }) {
 
     let svg = `
