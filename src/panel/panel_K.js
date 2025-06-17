@@ -50,7 +50,7 @@ export async function router_svg(req, res) {
  */
 export async function panel_K(data = {
     user: {},
-    skill: [0],
+    skill: [],
     scores: [{
         score: {},
         skill: [],
@@ -58,7 +58,7 @@ export async function panel_K(data = {
     total: 0,
 
     vs_user: {},
-    vs_skill: [0],
+    vs_skill: [],
     vs_scores: [{
         score: {},
         skill: [],

@@ -9,6 +9,7 @@ import {
 import {card_A2} from "../card/card_A2.js";
 import {card_C} from "../card/card_C.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
+import {matchAnyMods} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -45,10 +46,10 @@ export async function panel_F(
     data = {
         match: {
             match: {
-                id: 116281503,
+                id: 0,
                 start_time: '2024-11-23T13:24:27Z',
                 end_time: '2024-11-23T14:30:06Z',
-                name: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)'
+                name: ''
             },
             events: [
                 [Object], [Object]
@@ -58,7 +59,7 @@ export async function panel_F(
             ],
             first_event_id: 2400727928,
             latest_event_id: 2400743601,
-            name: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)',
+            name: '',
             id: 116281503,
             start_time: '2024-11-23T13:24:27Z',
             end_time: '2024-11-23T14:30:06Z',
@@ -85,7 +86,7 @@ export async function panel_F(
         first_map_bid: 794779,
         is_team_vs: true,
         team_point_map: {red: 5, blue: 2},
-        skip_ignore_map: {skip: 2, ignore: 0},
+        skip_ignore_map: {skip: 2, ignore: 0, easy: 0.5},
         average_star: 6.1233713286263605
     }
 ) {
@@ -134,7 +135,7 @@ export async function panel_F(
             blue_wins_before++;
         }
 
-        event_Cs.push(event2CardC(v, red_wins_before, blue_wins_before))
+        event_Cs.push(event2CardC(v, red_wins_before, blue_wins_before, data?.skip_ignore_map?.easy || 1))
 
         // card_Cs.push(await card_C(await event2CardC(v, red_wins_before, blue_wins_before)));
     }
@@ -194,24 +195,24 @@ export async function panel_F(
 
 async function event2CardC(
     event = {
-        id: 2400731946,
+        id: 0,
         detail: {
             type: 'other',
-            text: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)'
+            text: ''
         },
         timestamp: '2024-11-23T13:41:52Z',
         game: {},
-        type: 'Other',
-        text: 'FRDT: (喜欢我的话请给我钱吧) vs (我们站在桥上看风景)'
+        type: '',
+        text: ''
     }
-    , red_before = 0, blue_before = 0) {
+    , red_before = 0, blue_before = 0, easy = 1) {
     const round = event?.game || {}
     const scores = round?.scores || []
 
     let red_arr = [], blue_arr = [], none_arr = [];
 
     for (const v of scores) {
-        const f = await score2LabelC2(v);
+        const f = await score2LabelC2(v, easy);
 
         switch (v?.match?.team) {
             case 'red':
@@ -226,11 +227,17 @@ async function event2CardC(
         }
     }
 
-    async function score2LabelC2(score = {}) {
+    async function score2LabelC2(score = {}, easy = 1) {
+        let s = score?.score || score?.legacy_total_score
+
+        if (matchAnyMods(score?.mods, ["EZ"]) && easy !== 1) {
+            s = Math.round(s * easy)
+        }
+
         return {
             player_name: score?.user?.username, //妈的 为什么get match不给用户名啊
             player_avatar: score?.user?.avatar_url,
-            player_score: score?.score || score?.legacy_total_score,
+            player_score: s,
             player_mods: score.mods,
             player_rank: score.ranking, //一局比赛里的分数排名，1v1或者team都一样
         }
