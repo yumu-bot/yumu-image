@@ -6,6 +6,7 @@ import {
 import {card_H} from "../card/card_H.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
+import {torusBold} from "../util/font.js";
 
 export async function router(req, res) {
     try {
@@ -273,6 +274,9 @@ export async function panel_A7(data = {
         }
     ],
 
+    page: 1,
+    max_page: 1
+
     //ranks: []
 }) {
     // 导入模板
@@ -342,11 +346,11 @@ export async function panel_A7(data = {
     // 计算面板高度
     const rowTotal = (cardHs !== []) ? Math.ceil(cardHs.length / 2) : 0;
 
-    const panelHeight = getPanelHeight(cardHs?.length, 110, 2, 290, 40, 40);
-    const cardHeight = panelHeight - 290;
+    const panel_height = getPanelHeight(cardHs?.length, 110, 2, 290, 40, 40);
+    const card_height = panel_height - 290;
 
-    svg = setText(svg, panelHeight, reg_panelheight);
-    svg = setText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panel_height, reg_panelheight);
+    svg = setText(svg, card_height, reg_cardheight);
 
     //天选之子H卡提出来
     const luckyDog = (cardHs.length % 2 === 1) ? cardHs.pop() : '';
@@ -366,6 +370,12 @@ export async function panel_A7(data = {
     }
 
     svg = setText(svg, stringHs, reg_bp_list);
+
+    const page = torusBold.getTextPath(
+        'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6
+    )
+
+    svg = setText(svg, page, reg_bp_list)
 
     return svg.toString();
 }
