@@ -697,7 +697,6 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
 // 绘制主卡
 async function drawBodyCard(is_team_vs = false, reds = [], blues = [], scores = [], max_combo) {
     if (is_team_vs) {
-
         return getSvgBody(510, 40, await drawVSCard(reds, blues, max_combo, false))
             + getSvgBody(980, 40, await drawVSCard(blues, reds, max_combo, true))
     } else {
@@ -730,7 +729,7 @@ async function drawH2HCard(scores = [], max_combo = 0) {
         p1_size = 0
     }
 
-    const compare_score = (scores?.length > 2) ? (scores[0].score || scores[0]?.legacy_total_score) : Math.max.apply(Math, scores.map(v => {return v?.score || v?.legacy_total_score || 0}))
+    const compare_score = (scores?.length >= 2) ? (scores[0].score || scores[0]?.legacy_total_score) : Math.max.apply(Math, scores.map(v => {return v?.score || v?.legacy_total_score || 0}))
 
     for (const i in scores) {
         const s = scores[i]
@@ -803,9 +802,9 @@ async function drawVSCard(team_scores = [], enemy_scores = [], max_combo = 0, to
     for (const i in team_scores) {
         const s = team_scores[i]
 
-        const compare = enemy_scores[Math.round(i / (team_scores.length - 1) * (e - 1))]
+        const compare = (e > 1) ? enemy_scores[Math.round(i / (team_scores.length - 1) * (e - 1))] : enemy_scores[0]
 
-        const compare_score = (e >= 1) ? (compare?.score || compare?.legacy_total_score || 0) : 0
+        const compare_score = (e > 0) ? (compare?.score || compare?.legacy_total_score || 0) : 0
 
         if (i < p1_size) {
             p1.push(await card_P1(s, max_combo, compare_score))
