@@ -7,16 +7,15 @@ import {
     setTexts,
     setCustomBanner,
     getImageFromV3,
-    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, round, thenPush, getMapBackground
+    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, round, rounds
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
-import {label_J4, label_J5, label_J6, label_J7, LABELS} from "../component/label.js";
+import {label_J4, label_J6, label_J7, label_J8, LABELS} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getModColor, getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
+import {getModColor, getRankColor, PanelColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {pp2UserBG} from "../util/mascotBanner.js";
-import {card_D2} from "../card/card_D2.js";
 import {getModFullName} from "../util/mod.js";
 
 export async function router(req, res) {
@@ -265,8 +264,10 @@ const component_J1 = (
     for (const i in data.labels) {
         const v = data.labels[i]
 
-        svg = setSvgBody(svg, 20, 45 + (i * 80), v, reg)
+        svg = setSvgBody(svg, 20, 45 + (i * 85), v, reg) // 80 -> 85
     }
+
+    /*
 
     const count_base = PanelDraw.Rect(20, 368, 450, 10, 5, PanelColor.top(data.hue))
 
@@ -275,6 +276,8 @@ const component_J1 = (
     const count_lazer = PanelDraw.Rect(20, 368, Math.min(Math.max(450 * ((data.counts[0] + data.counts[1]) || 0) / 100, 10), 450), 10, 5, '#854317')
 
     svg = setTexts(svg, [count_stable, count_lazer, count_base], reg)
+
+     */
 
     if (!hide) {
         const title = poppinsBold.getTextPath('Main Statistics', 15, 27, 18, 'left baseline', '#fff', 1)
@@ -748,7 +751,7 @@ const component_J8 = async (
 // 私有转换方式
 const PanelJGenerate = {
     attr2componentJ1: (bpm_attr, length_attr, combo_attr, star_attr, client_count, has_custom_panel = false, hue) => {
-        const attr2labelJ5 = (attr = [
+        const attr2labelJ8 = (attr = [
             {
                 length: 719,
                 combo: 719,
@@ -764,54 +767,77 @@ const PanelJGenerate = {
             const mid_attr = attr[1]
             const min_attr = attr[2]
 
-            let label_const, max, data_l, min, data_b, data_m, bar_min, bar_mid, bar_max
-
-            let bar_min_text = null, bar_mid_text = null, bar_max_text = null
+            let label_const, max, min, bar_min, bar_mid, bar_max, data_min_b, data_min_m, data_mid_b, data_mid_m, data_max_b, data_max_m
 
             switch (type) {
                 case 'bpm': {
+                    const data_min = rounds(min_attr?.bpm, -3)
+                    const data_mid = rounds(mid_attr?.bpm, -3)
+                    const data_max = rounds(max_attr?.bpm, -3)
+
                     label_const = LABELS.BPM
                     min = min_attr?.bpm || 0
                     max = max_attr?.bpm || 0
-                    data_b = min
-                    data_m = max
-                    data_l = mid_attr?.bpm || 0
+                    data_min_b = data_min.integer
+                    data_min_m = data_min.decimal
+                    data_mid_b = data_mid.integer
+                    data_mid_m = data_mid.decimal
+                    data_max_b = data_max.integer
+                    data_max_m = data_max.decimal
                     bar_min = 60
                     bar_mid = 180
                     bar_max = 300
                 } break;
                 case 'length': {
+                    const data_min = getTime(min_attr?.length || 0)
+                    const data_mid = getTime(mid_attr?.length || 0)
+                    const data_max = getTime(max_attr?.length || 0)
+
                     label_const = LABELS.LENGTH
                     min = min_attr?.length || 0
                     max = max_attr?.length || 0
-                    data_b = getTime(min)
-                    data_m = getTime(max)
-                    data_l = getTime(mid_attr?.length || 0)
+                    data_min_b = data_min.minute + ':'
+                    data_min_m = data_min.seconds
+                    data_mid_b = data_mid.minute + ':'
+                    data_mid_m = data_mid.seconds
+                    data_max_b = data_max.minute + ':'
+                    data_max_m = data_max.seconds
                     bar_min = 30
                     bar_mid = 300
                     bar_max = 530
-                    bar_min_text = '0:30'
-                    bar_mid_text = '5:00'
-                    bar_max_text = '9:30'
                 } break;
                 case 'combo': {
+                    const data_min = rounds(min_attr?.combo, -3)
+                    const data_mid = rounds(mid_attr?.combo, -3)
+                    const data_max = rounds(max_attr?.combo, -3)
+
                     label_const = LABELS.COMBO
                     min = min_attr?.combo || 0
                     max = max_attr?.combo || 0
-                    data_b = min
-                    data_m = max
-                    data_l = mid_attr?.combo || 0
+                    data_min_b = data_min.integer
+                    data_min_m = data_min.decimal
+                    data_mid_b = data_mid.integer
+                    data_mid_m = data_mid.decimal
+                    data_max_b = data_max.integer
+                    data_max_m = data_max.decimal
                     bar_min = 0
                     bar_mid = 1500
                     bar_max = 3000
                 } break;
                 case 'star': {
+                    const data_min = rounds(min_attr?.star, 2)
+                    const data_mid = rounds(mid_attr?.star, 2)
+                    const data_max = rounds(max_attr?.star, 2)
+
                     label_const = LABELS.SR
                     min = min_attr?.star || 0
                     max = max_attr?.star || 0
-                    data_b = round(min, 2)
-                    data_m = round(max, 2)
-                    data_l = round(mid_attr?.star || 0, 2)
+                    data_min_b = data_min.integer
+                    data_min_m = data_min.decimal
+                    data_mid_b = data_mid.integer
+                    data_mid_m = data_mid.decimal
+                    data_max_b = data_max.integer
+                    data_max_m = data_max.decimal
                     bar_min = 0
                     bar_mid = 4.5
                     bar_max = 9
@@ -820,9 +846,12 @@ const PanelJGenerate = {
                     label_const = LABELS.UNDEFINED
                     min = 0
                     max = 0
-                    data_b = '0'
-                    data_m = '0'
-                    data_l = '0'
+                    data_min_b = '0'
+                    data_min_m = ''
+                    data_mid_b = '0'
+                    data_mid_m = ''
+                    data_max_b = '0'
+                    data_max_m = ''
                     bar_min = 0
                     bar_mid = 0
                     bar_max = 0
@@ -832,21 +861,20 @@ const PanelJGenerate = {
             const hide = has_custom_panel === true
             const remark = `#${min_attr?.ranking || '?'} - #${max_attr?.ranking || '?'} [#${mid_attr?.ranking || '?'}]`
 
-            return label_J5({
+            return label_J8({
                 ...label_const,
                 remark: remark,
-                data_b: data_b + ' -',
-                data_m: data_m,
-                data_l: '[' + data_l + ']',
-                data_b_size: 24,
-                data_m_size: 36,
-                data_l_size: 18,
+                data_min_b: data_min_b,
+                data_min_m: data_min_m,
+                data_mid_b: data_mid_b,
+                data_mid_m: data_mid_m,
+                data_max_b: data_max_b,
+                data_max_m: data_max_m,
+                data_b_size: 40,
+                data_m_size: 30,
                 bar_min: bar_min,
                 bar_mid: bar_mid,
                 bar_max: bar_max,
-                bar_min_text: bar_min_text,
-                bar_mid_text: bar_mid_text,
-                bar_max_text: bar_max_text,
                 min: min,
                 max: max,
                 hide: hide,
@@ -855,10 +883,10 @@ const PanelJGenerate = {
         }
 
         const labels = [
-            attr2labelJ5(bpm_attr, 'bpm', has_custom_panel),
-            attr2labelJ5(length_attr, 'length', has_custom_panel),
-            attr2labelJ5(combo_attr, 'combo', has_custom_panel),
-            attr2labelJ5(star_attr, 'star', has_custom_panel)
+            attr2labelJ8(bpm_attr, 'bpm', has_custom_panel),
+            attr2labelJ8(length_attr, 'length', has_custom_panel),
+            attr2labelJ8(combo_attr, 'combo', has_custom_panel),
+            attr2labelJ8(star_attr, 'star', has_custom_panel)
         ]
 
         return {
@@ -871,47 +899,7 @@ const PanelJGenerate = {
     },
 
     scores2componentJ2: async (scores = [], has_custom_panel = false, hue) => {
-        let promiseD2s = []
-        let d2s = []
-
-        for (const s of scores) {
-            const star = s?.beatmap?.difficulty_rating || 0
-            const star_rrect_color = getStarRatingColor(star)
-            const star_text_color = (star < 4) ? '#1c1719' : '#fff'
-
-            const rank = s?.legacy_rank || 'F'
-            const rank_rrect_color = getRankColor(rank)
-            const rank_text_color = (rank === 'X' || rank === 'XH') ? '#1c1719' : '#fff';
-
-            const data = {
-                background: await getMapBackground(s, 'list'),
-                title: Math.round(s?.pp).toString() || '0',
-                title_m: 'PP',
-
-                left: round(star, 2),
-                left_color: star_text_color,
-                left_rrect_color: star_rrect_color,
-
-                right: rank,
-                right_color: rank_text_color,
-                right_rrect_color: rank_rrect_color,
-
-                bottom_left: s?.beatmap_id.toString() || '0',
-                bottom_right: getTime(s?.beatmap?.total_length),
-            }
-
-            promiseD2s.push(card_D2(data))
-        }
-0
-        await Promise.allSettled(
-            promiseD2s
-        ).then(results => thenPush(results, d2s))
-
-        return {
-            scores: d2s,
-            has_custom_panel: has_custom_panel,
-            hue: hue,
-        }
+        return await PanelGenerate.score2CardD(scores, has_custom_panel, hue)
     },
 
     rank2componentJ3: (rank_attr, has_custom_panel = false, hue) => {

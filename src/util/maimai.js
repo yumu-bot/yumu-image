@@ -35,9 +35,12 @@ export async function getMaimaiCover(song_id = 0) {
 
     const song = id.toString().padStart(5, '0')
     const path = getImageFromV3('Maimai', 'Cover', `${song}.png`);
+    const path2 = getImageFromV3('Maimai', 'Cover', `${(id + 10000).toString().padStart(5, '0')}.png`);
 
     if (fs.existsSync(path)) {
         return path
+    } else if (fs.existsSync(path2)) {
+        return path2
     } else {
         return await readNetImage(`https://www.diving-fish.com/covers/${song}.png`, true, getImageFromV3('Maimai', 'Cover', '00000.png'))
     }

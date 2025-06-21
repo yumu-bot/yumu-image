@@ -21,7 +21,7 @@ import {
     rounds,
     getFormattedTime,
     getTimeDifferenceShort,
-    getMapBackground, getDiffBackground,
+    getMapBackground, getDiffBackground, getTime, thenPush,
 } from "./util.js";
 import {getBadgeColor, getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -40,6 +40,7 @@ import {
 } from "./maimai.js";
 import {getRandomBannerPath} from "./mascotBanner.js";
 import {PanelDraw} from "./panelDraw.js";
+import {card_D2} from "../card/card_D2.js";
 
 //公用方法
 //把参数变成面板能读懂的数据
@@ -969,6 +970,52 @@ export const PanelGenerate = {
             right3b: right3b,
             right3m: right3m,
         };
+    },
+
+    score2CardD: async (scores = [], has_custom_panel = false, hue = 342) => {
+        let promiseD2s = []
+        let d2s = []
+
+        for (const s of scores) {
+            const star = s?.beatmap?.difficulty_rating || 0
+            const star_rrect_color = getStarRatingColor(star)
+            const star_text_color = (star < 4) ? '#1c1719' : '#fff'
+
+            const rank = s?.legacy_rank || 'F'
+            const rank_rrect_color = getRankColor(rank)
+            const rank_text_color = (rank === 'X' || rank === 'XH') ? '#1c1719' : '#fff';
+
+            const time = getTime(s?.beatmap?.total_length)
+
+            const data = {
+                background: await getMapBackground(s, 'list'),
+                title: Math.round(s?.pp).toString() || '0',
+                title_m: 'PP',
+
+                left: round(star, 2),
+                left_color: star_text_color,
+                left_rrect_color: star_rrect_color,
+
+                right: rank,
+                right_color: rank_text_color,
+                right_rrect_color: rank_rrect_color,
+
+                bottom_left: s?.beatmap_id.toString() || '0',
+                bottom_right: time.minute + ":" + time.seconds,
+            }
+
+            promiseD2s.push(card_D2(data))
+        }
+
+        await Promise.allSettled(
+            promiseD2s
+        ).then(results => thenPush(results, d2s))
+
+        return {
+            scores: d2s,
+            has_custom_panel: has_custom_panel,
+            hue: hue,
+        }
     },
 
     // 给panel_A5用的

@@ -242,7 +242,7 @@ export const LABELS = {
     },
     SR: {
         icon: getImageFromV3("object-score-overalldifficulty.png"),
-        icon_title: 'Star Rating',
+        icon_title: 'Star',
         abbr: 'SR',
         bar_color: '#e6ad59',
     },
@@ -1508,6 +1508,127 @@ export async function label_J7(data = {
     svg = setTexts(svg, [name, index, pp, count, base], reg_text)
 
     return svg.toString()
+}
+
+
+//BA-J8-新参数标签
+export function label_J8(data = {
+    icon: '',
+    icon_title: 'Play Count',
+    remark: '#35 - #65',
+    data_min_b: '96 - ',
+    data_min_m: '96 - ',
+    data_mid_b: '267 ',
+    data_mid_m: '267 ',
+    data_max_b: '[134]',
+    data_max_m: '[134]',
+    data_b_size: 36,
+    data_m_size: 24,
+    abbr: 'PC',
+    bar_min: 0,
+    bar_mid: 0,
+    bar_max: 0,
+    min: 0,
+    max: 0,
+    bar_color: 'none',
+    hide: false,
+}) {
+    let svg = `
+        <g id="Icon_LJ8">
+        </g>
+        <g id="Text_LJ8">
+        </g>
+    `;
+
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_LJ8">)/;
+    const reg_icon = /(?<=<g id="Icon_LJ8">)/;
+
+    // 原来是 16，感觉太大了，length 会超出
+    const icon_title = poppinsBold.getTextPath(data.icon_title, 25, 65, 14, 'center baseline', '#fff');
+
+    const progress_before = Math.min(Math.max(data.min - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 0
+    const progress_after = Math.min(Math.max(data.max - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 1
+
+    const index_data = poppinsBold.getTextPath("Min", 65, 15, 18, 'left baseline', '#666')
+        + poppinsBold.getTextPath("Mid", 255, 15, 18, 'center baseline', '#666')
+        + poppinsBold.getTextPath("Max", 445, 15, 18, 'right baseline', '#666')
+
+    const number_color = (progress_after - progress_before < 0) ? '#666' : '#fff';
+    const number_data = getMultipleTextPath([{
+        font: poppinsBold,
+        text: (data.data_min_b || '0'),
+        size: data?.data_b_size || 40,
+        color: number_color,
+    }, {
+        font: poppinsBold,
+        text: (data.data_min_m || ''),
+        size: data?.data_m_size || 30,
+        color: number_color,
+    }], 65, 52, 'left baseline')
+        + getMultipleTextPath([{
+            font: poppinsBold,
+            text: (data.data_mid_b || '0'),
+            size: data?.data_b_size || 40,
+            color: number_color,
+        }, {
+            font: poppinsBold,
+            text: (data.data_mid_m || ''),
+            size: data?.data_m_size || 30,
+            color: number_color,
+        }], 255, 52, 'center baseline')
+        + getMultipleTextPath([{
+            font: poppinsBold,
+            text: (data.data_max_b || '0'),
+            size: data?.data_b_size || 40,
+            color: number_color,
+        }, {
+            font: poppinsBold,
+            text: (data.data_max_m || ''),
+            size: data?.data_m_size || 30,
+            color: number_color,
+        }], 445, 52, 'right baseline')
+
+    /*
+    const number_arr = [{
+        font: "poppinsBold",
+        text: (data?.data_b || '') + ' ',
+        size: data?.data_b_size || 36,
+        color: number_color,
+    }, {
+        font: "poppinsBold",
+        text: (data?.data_m || '') + ' ',
+        size: data?.data_m_size || 24,
+        color: number_color,
+    }, {
+        font: "poppinsBold",
+        text: (data?.data_l || ''),
+        size: data?.data_l_size || 18,
+        color: number_color,
+    }]
+
+    const number_data = getMultipleTextPath(number_arr, 60, 32 - 2, "left baseline")
+
+     */
+
+    /*
+    const remark = poppinsBold.getTextPath(data?.remark, 450, 30, 14, "right baseline", '#fff');
+
+    const bar_min = poppinsBold.getTextPath(data?.bar_min_text || data?.bar_min?.toString(), 60, 65, 14, "left baseline", '#666');
+    const bar_mid = poppinsBold.getTextPath(data?.bar_mid_text || data?.bar_mid?.toString(), 255, 65, 14, "center baseline", '#666');
+    const bar_max = poppinsBold.getTextPath(data?.bar_max_text || data?.bar_max?.toString(), 450, 65, 14, "right baseline", '#666');
+
+     */
+
+    const bar_width = Math.max(10, (progress_after - progress_before) * 390);
+
+    const bar = PanelDraw.Rect(60 + 390 * progress_before, 58, bar_width, 10, 5, data?.bar_color || '#fff')
+    const bar_base = PanelDraw.Rect(60, 58, 390, 10, 5, data?.bar_color || '#fff', 0.2)
+
+    svg = setTexts(svg, [icon_title, number_data, index_data, bar_base, bar], reg_text)
+    svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
+
+    return svg.toString();
 }
 
 //Q-M1-难度标签

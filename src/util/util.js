@@ -994,6 +994,7 @@ function unit(number = 0, pattern = 0) {
  * @param arr 需要裁剪的数组
  * @param target_length 需要的数组长度
  * @param direction 如果是真，则在前面补，如果是假，则在后面补
+ * @param empty_object {Object}
  */
 export function modifyArrayToFixedLength(arr = [0], target_length = 0, direction = true, empty_object = 0) {
     if (arr.length < target_length) {
@@ -1620,10 +1621,18 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
     }
 }
 
+/**
+ *
+ * @param seconds
+ * @returns {{minute: string, seconds: string}}
+ */
 export const getTime = (seconds = 0) => {
     const m = Math.floor(seconds / 60).toString()
     const s = (seconds % 60).toString().padStart(2, '0')
-    return m + ':' + s
+    return {
+        minute: m,
+        seconds: s,
+    }
 }
 
 /**

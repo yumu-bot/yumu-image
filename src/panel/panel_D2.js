@@ -19,19 +19,17 @@ import {
     getGameMode,
     isNotBlankString,
     isPicturePng,
-    getTime,
     round,
     rounds,
-    isNotEmptyString, getDiffBackground,
+    isNotEmptyString
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_D2} from "../card/card_D2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getMascotName, getRandomMascotTransparentPath, pp2UserBG} from "../util/mascotBanner.js";
 import {label_D3, label_D4, label_D5, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {poppinsBold} from "../util/font.js";
-import {getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
+import {PanelColor} from "../util/color.js";
 import moment from "moment";
 
 export async function router(req, res) {
@@ -782,42 +780,7 @@ const PanelDGenerate = {
     },
 
     scores2componentD2: async (scores = [], has_custom_panel = false, hue) => {
-        let d2s = []
-
-        for (const s of scores) {
-            const star = s?.beatmap?.difficulty_rating || 0
-            const star_rrect_color = getStarRatingColor(star)
-            const star_text_color = (star < 4) ? '#1c1719' : '#fff'
-
-            const rank = s?.legacy_rank || 'F'
-            const rank_rrect_color = getRankColor(rank)
-            const rank_text_color = (rank === 'X' || rank === 'XH') ? '#1c1719' : '#fff';
-
-            const data = {
-                background: await getDiffBackground(s, 'list'),
-                title: Math.round(s?.pp).toString() || '0',
-                title_m: 'PP',
-
-                left: round(star, 2),
-                left_color: star_text_color,
-                left_rrect_color: star_rrect_color,
-
-                right: rank,
-                right_color: rank_text_color,
-                right_rrect_color: rank_rrect_color,
-
-                bottom_left: s?.beatmap_id.toString() || '0',
-                bottom_right: getTime(s?.beatmap?.total_length),
-            }
-
-            d2s.push(await card_D2(data))
-        }
-
-        return {
-            scores: d2s,
-            has_custom_panel: has_custom_panel,
-            hue: hue,
-        }
+        return await PanelGenerate.score2CardD(scores, has_custom_panel, hue)
     },
 
     user2componentD3: (user, history_user, has_custom_panel = false, hue) => {
