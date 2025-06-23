@@ -354,12 +354,18 @@ export async function panel_M(data = {
 
     const o2g = eval(O2s[1])
 
-    o2g.title2 = O2g_title2
+    let cardO2g
+
+    if (o2g != null) {
+        o2g.title2 = O2g_title2
+        cardO2g = card_O2(o2g);
+    } else {
+        cardO2g = '';
+    }
 
     const cardO2h = card_O2(O2s[0]);
-    const cardO2g = card_O2(o2g);
 
-    let stringO2hg = getSvgBody(1120, 745, cardO2h) + getSvgBody(1120, 890, cardO2g)
+    const stringO2hg = getSvgBody(1120, 745, cardO2h) + getSvgBody(1120, 890, cardO2g)
 
     svg = setText(svg, stringO2hg, reg_recent);
 
