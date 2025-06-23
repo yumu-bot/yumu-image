@@ -352,18 +352,16 @@ export async function panel_M(data = {
         PanelGenerate.beatmap2CardO2(data.most_recent_ranked_guest_diff),
     ]).then(results => thenPush(results, O2s))
 
-    const o2g = eval(O2s[1])
-
-    let cardO2g
+    let o2g = eval(O2s[1])
 
     if (o2g != null) {
         o2g.title2 = O2g_title2
-        cardO2g = card_O2(o2g);
     } else {
-        cardO2g = '';
+        o2g = '';
     }
 
     const cardO2h = card_O2(O2s[0]);
+    const cardO2g = card_O2(o2g);
 
     const stringO2hg = getSvgBody(1120, 745, cardO2h) + getSvgBody(1120, 890, cardO2g)
 
