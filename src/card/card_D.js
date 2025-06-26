@@ -1,7 +1,7 @@
 import {
     setImage,
     readTemplate,
-    setText, setTexts, rounds
+    setText, setTexts, rounds, isHexColor
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {getColorInSpectrum, getModColor} from "../util/color.js";
@@ -15,6 +15,7 @@ export async function card_D(data = {
     difficulty: 'OWC HD2',
     bid: '1146381',
     mod: 'NM',
+    mod_color: null,
     cs: 4.2,
     ar: 10.3,
     od: 11,
@@ -87,7 +88,13 @@ export async function card_D(data = {
         torus.getTextPath(text_star_b, 550 - star_m_width, 96.59, 60, "right baseline", "#fff") +
         torus.getTextPath(text_star_m, 550, 96.59, 36, "right baseline", "#fff")
 
-    let text_mod_color = getModColor(data.mod);
+    let text_mod_color;
+
+    if (isHexColor(data.mod_color)) {
+        text_mod_color = data.mod_color
+    } else {
+        text_mod_color = getModColor(data.mod)
+    }
 
     // 谱面四维
     let cs_arr = [1,2,3,3.5,4,4.2,4.6,5,5.3,5.8,6.2,6.5,7];

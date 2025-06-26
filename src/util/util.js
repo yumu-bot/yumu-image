@@ -200,7 +200,7 @@ export function isNumber(num) {
  * @return boolean
  */
 export function isHexColor(str) {
-    return isNotBlankString(str) && (str?.toString()?.slice(0, 1) === '#')
+    return isNotBlankString(str) && (str?.toString()?.slice(0, 1) === '#' || str?.toString()?.toUpperCase() === "NONE")
 }
 
 // {} 和 [] 不为空

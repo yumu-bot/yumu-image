@@ -2,7 +2,7 @@ import {
     exportJPEG, getKeyDifficulty, getGameMode, getPanelNameSVG,
     setImage,
     setSvgBody, readTemplate,
-    setText, getSvgBody, readNetImage, getMapBackground, isNotEmptyArray
+    setText, getSvgBody, readNetImage, getMapBackground, isNotEmptyArray, setTexts, thenPush
 } from "../util/util.js";
 import {card_D} from "../card/card_D.js";
 import {card_A2} from "../card/card_A2.js";
@@ -87,9 +87,7 @@ export async function panel_H (
     }
 
     //执行上面的代码
-    for (const v of cards) {
-        svg = setText(svg, v, reg_bodycard);
-    }
+    svg = setTexts(svg, cards, reg_bodycard)
 
     // 卡片定义
     const mod_count = pools.length || 0;
@@ -114,33 +112,41 @@ async function drawModPool(pool = {
     mod_str: 'HD',
     beatmaps: []
 }, mode = 'osu', rowStart = 1) {
+    /**
+     *
+     * @type {[Promise<*>]}
+     */
+    let card = [];
     let data = [];
     const count = pool?.beatmaps?.length || 0;
 
     for (let j = 0; j < getFullRowCount(count); j++) {
         for (let k = 0; k < 3; k++) {
-            data.push(
-                await drawCardD(pool.beatmaps[j * 3 + k], pool.mod_str, mode, rowStart - 1 + j + 1, k + 1, 3)
+            card.push(
+                drawCardD(pool.beatmaps[j * 3 + k], pool.mod_str, pool.mod_color, mode, rowStart - 1 + j + 1, k + 1, 3)
             );
         }
     }
 
     if (hasRemain(count)) {
         for (let o = 0; o < getRemain(count); o++) {
-            data.push(
-                await drawCardD(pool.beatmaps[getFullRowCount(count) * 3 + o], pool.mod_str, mode, rowStart - 1 + getFullRowCount(count) + 1, o + 1, getRemain(count))
+            card.push(
+                drawCardD(pool.beatmaps[getFullRowCount(count) * 3 + o], pool.mod_str, pool.mod_color, mode, rowStart - 1 + getFullRowCount(count) + 1, o + 1, getRemain(count))
             );
         }
     }
 
+    await Promise.allSettled(card)
+        .then(results => thenPush(results, data))
+
     return data;
 }
 //渲染单张卡片
-async function drawCardD(b, mod = 'NM', mode = 'osu', row = 1, column = 1, maxColumn = 3) {
+async function drawCardD(b, mod = 'NM', mod_color = '666', mode = 'osu', row = 1, column = 1, maxColumn = 3) {
     const x = ((3 - maxColumn) * 300 + 80) + 600 * (column - 1);
     const y = 330 + 150 * (row - 1);
 
-    return getSvgBody(x, y, await card_D(await beatmap2CardD(b, mod, mode)));
+    return getSvgBody(x, y, await card_D(await beatmap2CardD(b, mod, mod_color, mode)));
 }
 
 function getRowCount(i = 0) {
@@ -190,7 +196,7 @@ async function pool2cardA2(pool, mode, map_count = 0, mod_count = 0) {
     };
 }
 
-async function beatmap2CardD(b, mod, mode) {
+async function beatmap2CardD(b, mod, mod_color, mode) {
     let cs = b.cs, ar = b.ar, od = b.accuracy, hp = b.drain;
 
     /**
@@ -254,6 +260,7 @@ async function beatmap2CardD(b, mod, mode) {
         difficulty: getKeyDifficulty(b) || '',
         bid: b.id || 0,
         mod: mod,
+        mod_color: mod_color,
         cs: cs,
         ar: ar,
         od: od,
