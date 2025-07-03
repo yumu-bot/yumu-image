@@ -7,7 +7,7 @@ import {
     isNotEmptyArray,
     readTemplate,
     setText,
-    setTexts, rounds
+    setTexts, floors
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -768,7 +768,7 @@ function getJudgeScoreString(score = 0) {
     if (Number.isNaN(score)) return ''
     const out = (score > 0) ? '+' : ((score < 0) ? '-' : '')
 
-    const score_number = rounds(Math.abs(score), 4)
+    const score_number = floors(Math.abs(score), 4)
 
     const large = score_number.integer
     const small = score_number.decimal
@@ -793,7 +793,7 @@ function getJudgeScoreString(score = 0) {
  */
 function getApproximateGreatString(score = 0, level = 1) {
     if (Number.isNaN(score)) return ''
-    const score_number = rounds(Math.abs(score), level)
+    const score_number = floors(Math.abs(score), level)
 
     const large = score_number.integer
     const small = score_number.decimal

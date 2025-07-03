@@ -1,7 +1,7 @@
 import {
     getImageFromV3,
     setImage, setSvgBody, isNumber,
-    readTemplate, setText, setTexts, round, rounds
+    readTemplate, setText, setTexts, floor, floors
 } from "../util/util.js";
 import {torus, torusBold} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -39,7 +39,7 @@ export async function card_B1(data = {
     svg = setSvgBody(svg, card_x + 20, 22, label, reg_label);
 
     //添加评级和值和背景
-    const number = rounds(data?.value, data?.round_level)
+    const number = floors(data?.value, data?.round_level)
     const number_b = number.integer
     const number_m = number.decimal
 
@@ -63,7 +63,7 @@ export async function card_B1(data = {
     }
 
     const delta_text = isNumber(data?.delta) ? torusBold.getTextPath(
-        getSign(data?.delta) + round(Math.abs(data?.delta), 2),  at_right ? 340 : 240, 68, 20, 'right baseline', getColor(data?.delta)) : ''
+        getSign(data?.delta) + floor(Math.abs(data?.delta), 2),  at_right ? 340 : 240, 68, 20, 'right baseline', getColor(data?.delta)) : ''
 
     svg = setTexts(svg, [rank_text, number_text, delta_text], reg_text);
 

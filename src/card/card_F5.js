@@ -1,6 +1,6 @@
 import {
     maximumArrayToFixedLength, modifyArrayToFixedLength,
-    setText, setTexts, round
+    setText, setTexts, floor
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -104,9 +104,9 @@ function getRankingChart(ranking_arr = []) {
     const user_ranking_mid = (user_ranking_max + user_ranking_min) / 2;
 
     // 绘制纵坐标，注意max在下面
-    const rank_axis_y_min = round(user_ranking_min, 1, -1);
-    const rank_axis_y_mid = round(user_ranking_mid, 1, -1);
-    const rank_axis_y_max = round(user_ranking_max, 1, -1);
+    const rank_axis_y_min = floor(user_ranking_min, 1, -1);
+    const rank_axis_y_mid = floor(user_ranking_mid, 1, -1);
+    const rank_axis_y_max = floor(user_ranking_max, 1, -1);
 
     const rank_axis =
         torus.getTextPath(rank_axis_y_min, 30, 72.836, 24, 'center baseline', '#fc2') +

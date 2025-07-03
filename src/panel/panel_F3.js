@@ -3,7 +3,7 @@ import {
     getNowTimeStamp,
     getPanelNameSVG, setImage,
     setSvgBody, isEmptyArray, isNotNull, readTemplate,
-    setText, setTexts, round, rounds, getSvgBody, getMapBackground, thenPush,
+    setText, setTexts, floor, floors, getSvgBody, getMapBackground, thenPush,
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -271,7 +271,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
 
     svg = setImage(svg, 372, 336, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
 
-    const score_score = rounds(match_score?.score || match_score?.legacy_total_score || 0, -4)
+    const score_score = floors(match_score?.score || match_score?.legacy_total_score || 0, -4)
 
     const score = getMultipleTextPath([
         {
@@ -288,7 +288,7 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
     ], 430 / 2, 490, 'center baseline')
 
     const delta_data = getDeltaScore(match_score?.score || match_score?.legacy_total_score || 0, compare_score || 0)
-    const delta_score = rounds(delta_data.delta, -4)
+    const delta_score = floors(delta_data.delta, -4)
 
     const delta = getMultipleTextPath([
         {
@@ -408,11 +408,11 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
         + poppinsBold.getTextPath(judge_data.judge, 40, 140, 22, 'center baseline', '#fff')
 
     const miss = match_score?.statistics?.miss || 0
-    const miss_count = poppinsBold.getTextPath(miss >= 1000 ? round(miss, 1, -1) : miss, 306, 94, 30, 'right baseline', '#fff')
+    const miss_count = poppinsBold.getTextPath(miss >= 1000 ? floor(miss, 1, -1) : miss, 306, 94, 30, 'right baseline', '#fff')
 
     svg = setImage(svg, 310, 66, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
 
-    const score_score = rounds(match_score?.score || match_score?.legacy_total_score || 0, -4)
+    const score_score = floors(match_score?.score || match_score?.legacy_total_score || 0, -4)
 
     const score = getMultipleTextPath([
         {
@@ -429,7 +429,7 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
     ], 160, 144, 'left baseline')
 
     const delta_data = getDeltaScore(match_score?.score || match_score?.legacy_total_score || 0, compare_score || 0)
-    const delta_score = round(delta_data.delta, -4)
+    const delta_score = floor(delta_data.delta, -4)
 
     const delta = poppinsBold.getTextPath(delta_data.sign + delta_score, 340, 114, 18, 'right baseline', delta_data.color)
 
@@ -577,7 +577,7 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
         right_text = poppinsBold.getTextPath((winning_team === 'blue') ? 'WIN!' : ((winning_team === null) ? 'TIE...' : 'LOSE...'),
             1880, 84, 72, 'right baseline', '#fff', 0.5)
 
-        const rs = rounds(round.red_team_score, -4)
+        const rs = floors(round.red_team_score, -4)
         left_score = getMultipleTextPath([
             {
                 font: poppinsBold,
@@ -597,7 +597,7 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
             },
         ], 900, 85, 'right baseline')
 
-        const bs = rounds(round.blue_team_score, -4)
+        const bs = floors(round.blue_team_score, -4)
         right_score = getMultipleTextPath([
             {
                 font: poppinsBold,
@@ -657,7 +657,7 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
         left_text = poppinsBold.getTextPath('TOTAL', 40, 84, 72, 'left baseline', '#fff', 0.5)
         right_text = poppinsBold.getTextPath('AVERAGE', 1880, 84, 72, 'right baseline', '#fff', 0.5)
 
-        const ts = rounds(round.total_team_score, -4)
+        const ts = floors(round.total_team_score, -4)
         left_score = getMultipleTextPath([
             {
                 font: poppinsBold,
@@ -672,7 +672,7 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
             },
         ], 900, 85, 'right baseline')
 
-        const as = rounds((round.total_team_score / round.scores.length) || 0, -4)
+        const as = floors((round.total_team_score / round.scores.length) || 0, -4)
         right_score = getMultipleTextPath([
             {
                 font: poppinsBold,

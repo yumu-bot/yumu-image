@@ -19,8 +19,8 @@ import {
     getGameMode,
     isNotBlankString,
     isPicturePng,
-    round,
-    rounds,
+    floor,
+    floors,
     isNotEmptyString
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
@@ -220,11 +220,11 @@ const component_D1 = (
     const hide = data.has_custom_panel
 
     // 卡片定义
-    const pc = rounds(data?.user?.play_count, -4)
+    const pc = floors(data?.user?.play_count, -4)
     const pc_b = pc.integer
     const pc_m = pc.decimal
 
-    const tth = rounds(data?.user?.total_hits, -4)
+    const tth = floors(data?.user?.total_hits, -4)
     const tth_b = tth.integer
     const tth_m = tth.decimal
 
@@ -360,7 +360,7 @@ const component_D3 = (
             text += (' ' + count)
             delta_text = ' ' + delta_text
         } else if (count >= 100000) {
-            text += round(count, 2)
+            text += floor(count, 2)
         } else {
             text += count?.toString()
         }
@@ -488,9 +488,9 @@ const component_D5 = (
         })
     }
 
-    const rank_axis_y_min = round(user_ranking_min, 1, -1);
-    const rank_axis_y_mid = round(user_ranking_mid, 1, -1);
-    const rank_axis_y_max = round(user_ranking_max, 1, -1);
+    const rank_axis_y_min = floor(user_ranking_min, 1, -1);
+    const rank_axis_y_mid = floor(user_ranking_mid, 1, -1);
+    const rank_axis_y_max = floor(user_ranking_max, 1, -1);
 
     // 绘制坐标，注意max在下面
     const rank_axis =
@@ -546,8 +546,8 @@ const component_D6 = (
         }
     })
 
-    const best_axis_y_max = round(best_max, 1, -1);
-    const best_axis_y_min = round(best_min, 1, -1);
+    const best_axis_y_max = floor(best_max, 1, -1);
+    const best_axis_y_min = floor(best_min, 1, -1);
 
     // 绘制坐标
     const best_axis =
@@ -599,8 +599,8 @@ const component_D7 = (
     const pc_max = Math.max.apply(Math, arr);
     const pc_min = 0;
 
-    const pc_axis_y_max = round(pc_max, 1, -1);
-    const pc_axis_y_min = round(pc_min, 1, -1);
+    const pc_axis_y_max = floor(pc_max, 1, -1);
+    const pc_axis_y_min = floor(pc_min, 1, -1);
 
     // 绘制坐标
     const pc_axis =
@@ -662,27 +662,27 @@ const component_D8 = (
     const hide = data.has_custom_panel
 
     // 卡片定义
-    const rks = rounds(data.user.ranked_score, 1)
+    const rks = floors(data.user.ranked_score, 1)
     const rks_b = rks.integer
     const rks_m = rks.decimal
 
-    const tts = rounds(data.user.total_score, 1)
+    const tts = floors(data.user.total_score, 1)
     const tts_b = tts.integer
     const tts_m = tts.decimal
 
-    const mpc = rounds(data.user.played_map, -4)
+    const mpc = floors(data.user.played_map, -4)
     const mpc_b = mpc.integer
     const mpc_m = mpc.decimal
 
-    const med = rounds(data.user.medal, -4)
+    const med = floors(data.user.medal, -4)
     const med_b = med.integer
     const med_m = med.decimal
 
-    const mxc = rounds(data.user.maximum_combo, -4)
+    const mxc = floors(data.user.maximum_combo, -4)
     const mxc_b = mxc.integer
     const mxc_m = mxc.decimal
 
-    const fan = rounds(data.user.follower, -4)
+    const fan = floors(data.user.follower, -4)
     const fan_b = fan.integer
     const fan_m = fan.decimal
 
@@ -954,7 +954,7 @@ const getText = (T) => {
     if (isNotNumber(T)) {
         return '0';
     } else if (T >= 100000) {
-        return getSign(T) + round(abs, 2);
+        return getSign(T) + floor(abs, 2);
     } else {
         return getSign(T) + abs;
     }

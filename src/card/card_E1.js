@@ -4,7 +4,7 @@ import {
     getMapStatusImage,
     setImage,
     setSvgBody, readNetImage,
-    setTexts, getBeatMapTitlePath, round, rounds,
+    setTexts, getBeatMapTitlePath, floor, floors,
 } from "../util/util.js";
 import {extra, PuHuiTi, torus} from "../util/font.js";
 import {getStarRatingColor} from "../util/color.js";
@@ -71,7 +71,7 @@ export async function card_E1(data = {
     // 文字定义
     const isSRLegal = (data.star >= 0 && data.star <= 20);
 
-    const sr = rounds(data.star, 1, 3)
+    const sr = floors(data.star, 1, 3)
 
     const sr_b = isSRLegal ? sr.int : 20;
     const sr_m = isSRLegal ? sr.dec : 0;
@@ -82,10 +82,10 @@ export async function card_E1(data = {
         48, 36, 160, 83.67, 'center baseline', '#fff');
     const mode_text = extra.getTextPath(getGameMode(data.mode, -1), 48, 86.24, 48, "left baseline", sr_color);
     const favorite_count_text = torus.getTextPath(
-        round((data.favourite_count), 1)
+        floor((data.favourite_count), 1)
         , 845, 63.84, 24, "right baseline", "#fff");
     const play_count_text = torus.getTextPath(
-        round((data.play_count), 1)
+        floor((data.play_count), 1)
         , 845, 90.84, 24, "right baseline", "#fff");
 
     const title = getBeatMapTitlePath("torus", "PuHuiTi", data.title, data.title_unicode, null,

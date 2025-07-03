@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG, getTimeDifference,
     setImage, setSvgBody, readTemplate,
-    setText, setTexts, round, rounds, thenPush, getSvgBody
+    setText, setTexts, floor, floors, thenPush, getSvgBody
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -231,7 +231,7 @@ export async function panel_M(data = {
         1450, 800, 18, 'left baseline', '#fff');
 
     // 导入2卡右侧的pc和fav
-    const kudosu = round(data.user.kudosu.total || 0, 2) + ' kds';
+    const kudosu = floor(data.user.kudosu.total || 0, 2) + ' kds';
     const kudosu_index = torus.getTextPath(kudosu, 1410, 365 - 3, 24, 'right baseline', '#aaa');
 
     svg = setTexts(svg, [diff_index, length_index, popular_title, difficulty_title, length_title, genre_title, activity_title, recent_title, kudosu_index], reg_index);
@@ -385,16 +385,16 @@ export async function panel_M(data = {
     svg = setTexts(svg, [rank_index, pending_index, guest_index], reg_recent);
 
     // 插入8号卡标签
-    const favorite_number = rounds(data.favorite, 2)
+    const favorite_number = floors(data.favorite, 2)
     const favorite_b_str = favorite_number.integer
     const favorite_m_str = favorite_number.decimal
-    const playcount_number = rounds(data.playcount, 1)
+    const playcount_number = floors(data.playcount, 1)
     const playcount_b_str = playcount_number.integer
     const playcount_m_str = playcount_number.decimal
-    const comment_str = round(data.user.comments_count, -4);
-    const nominated_str = round(data.user.nominated_beatmapset_count, -4);
-    const loved_str = round(data.user.loved_beatmapset_count, -4);
-    const graveyard_str = round(data.user.graveyard_beatmapset_count, -4);
+    const comment_str = floor(data.user.comments_count, -4);
+    const nominated_str = floor(data.user.nominated_beatmapset_count, -4);
+    const loved_str = floor(data.user.loved_beatmapset_count, -4);
+    const graveyard_str = floor(data.user.graveyard_beatmapset_count, -4);
 
     const favorite = torus.get2SizeTextPath(favorite_b_str, favorite_m_str, 42, 30, 1530, 882, 'center baseline', '#fff');
     const playcount = torus.get2SizeTextPath(playcount_b_str, playcount_m_str, 42, 30, 1665, 882, 'center baseline', '#fff');

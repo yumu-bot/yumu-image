@@ -1,5 +1,5 @@
 import {
-    getImageFromV3, getGameMode, setImage, setText, setTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, rounds,
+    getImageFromV3, getGameMode, setImage, setText, setTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, floors,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {getModColor, getStarRatingColor, getUserRankColor, hex2hsl, PanelColor} from "../util/color.js";
@@ -598,7 +598,7 @@ export async function label_C1(data = {
     const text_name = torusBold.cutStringTail(data.name || '', 18, data.maxWidth || 100);
     const name = torusBold.getTextPath(text_name, 50, 118.877, 18, 'center baseline', '#fff');
 
-    const score_number = rounds(data?.score || 0, -4)
+    const score_number = floors(data?.score || 0, -4)
     const score_b = score_number.integer
     const score_m = score_number.decimal
 
@@ -659,7 +659,7 @@ export async function label_C2(data = {
     const text_name = torus.cutStringTail(data.name || '', 18, data.maxWidth || 100);
     const name = torus.getTextPath(text_name, 32, 13.877, 18, 'left baseline', '#fff');
 
-    const score_number = rounds(data?.score || 0, 2)
+    const score_number = floors(data?.score || 0, 2)
     const score_b = score_number.integer
     const score_m = score_number.decimal
 
@@ -1667,7 +1667,7 @@ export async function label_M1(data = {
     const diff_name_path = torus.getTextPath(
         torus.cutStringTail(data.difficulty_name, 18, data.max_width - 50 - 10, true),
         50, 20, 18, 'left baseline', '#fff');
-    const sr_number = rounds(data.star_rating, 2)
+    const sr_number = floors(data.star_rating, 2)
     const star_rating_path = torus.get2SizeTextPath(
         sr_number.integer,
         sr_number.decimal,
@@ -1702,7 +1702,7 @@ export async function label_M1(data = {
     svg = setTexts(svg, [diff_name_path, star_rating_path, mode_icon_path], reg_text);
 
     //星数
-    const sr = rounds(data.star_rating, 1, 3)
+    const sr = floors(data.star_rating, 1, 3)
 
     let sr_b = sr.integer
     let sr_m_scale = Math.pow(sr.dec, 0.8);

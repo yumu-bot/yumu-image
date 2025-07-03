@@ -3,7 +3,7 @@ import {
     getFlagPath,
     getTimeDifference,
     setImage,
-    setSvgBody, setText, setTexts, getAvatar, rounds,
+    setSvgBody, setText, setTexts, getAvatar, floors,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
@@ -88,7 +88,7 @@ export async function card_N(data = {
     const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
     const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 10, 36 + 17, 18, 'right baseline', '#aaa');
 
-    const acc_number = rounds(acc, 2)
+    const acc_number = floors(acc, 2)
 
     const n1_acc = await label_N({
         ...LABELS.ACC2,
@@ -106,7 +106,7 @@ export async function card_N(data = {
         data_m: 'PP',
     });
 
-    const score_number = rounds(score, -4, 1)
+    const score_number = floors(score, -4, 1)
 
     const n1_score = await label_N({
         ...LABELS.SCORE2,

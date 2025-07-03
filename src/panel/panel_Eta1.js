@@ -8,7 +8,7 @@ import {
     setSvgBody,
     setText,
     setTexts,
-    round, getFormattedTime, isASCII, getAvatar, getGameMode, rounds, getMapBackground
+    floor, getFormattedTime, isASCII, getAvatar, getGameMode, floors, getMapBackground
 } from "../util/util.js";
 import {
     getRankBackground
@@ -402,11 +402,11 @@ const component_Eta1 = (
     )
 
     const difficulty_text = poppinsBold.cutStringTail(data?.difficulty_name, 48, 460)
-    const remain_text = '    BPM ' + round(data?.bpm, 2)
-        + '    CS ' + round(data?.cs, 1)
-        + '    AR ' + round(data?.ar, 1)
-        + '    OD ' + round(data?.od, 1)
-        + '    HP ' + round(data?.hp, 1)
+    const remain_text = '    BPM ' + floor(data?.bpm, 2)
+        + '    CS ' + floor(data?.cs, 1)
+        + '    AR ' + floor(data?.ar, 1)
+        + '    OD ' + floor(data?.od, 1)
+        + '    HP ' + floor(data?.hp, 1)
 
     const difficulty = getMultipleTextPath(
         [{
@@ -422,7 +422,7 @@ const component_Eta1 = (
         }], 340, 165, 'left baseline'
     )
 
-    const star = poppinsBold.getTextPath('b/' + data?.beatmap_id + '   *' + round(data.star_rating, 2), 1840 - 80, 85, 36, 'right baseline', '#aaa')
+    const star = poppinsBold.getTextPath('b/' + data?.beatmap_id + '   *' + floor(data.star_rating, 2), 1840 - 80, 85, 36, 'right baseline', '#aaa')
 
     const gg4u = poppinsBold.getTextPath('GG4U.', 1840 - 80, 165, 24, 'right baseline', '#666')
 
@@ -542,10 +542,10 @@ const component_Eta2 = (data = {
     const combo = poppinsBold.get2SizeTextPath(data?.combo?.toString(), 'x', 60, 48, 1290, 294, 'right baseline', '#fff')
     const max_combo = poppinsBold.get2SizeTextPath('/ ', data?.max_combo?.toString(), 24, 30, 1290, 332, 'right baseline', '#aaa')
 
-    const acc = rounds((data?.accuracy || 0) * 100, 2)
+    const acc = floors((data?.accuracy || 0) * 100, 2)
     const accuracy = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + '%', 60, 48, 1290, 384, 'right baseline', '#fff')
 
-    const sc = rounds(data?.score, -4)
+    const sc = floors(data?.score, -4)
     const score = poppinsBold.get2SizeTextPath(sc.integer, sc.decimal, 60, 48, 1290, 474,  'right baseline', '#fff')
 
     const advanced_judge = data.advanced_judge

@@ -5,7 +5,7 @@ import {
     setImage,
     setSvgBody, isNotEmptyArray,
     readTemplate,
-    setText, round, thenPush, getSvgBody
+    setText, floor, thenPush, getSvgBody
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_I3} from "../card/card_I3.js";
@@ -288,7 +288,7 @@ async function chuScore2CardI3(score = {
 
     const rating = score?.ra || 0
     const rating_max = (score?.ds || 0) + 2.15
-    const rating_max_text = score?.score >= 1009000 ? (' [MAX]') : (' [' + round(rating_max, 2) + ']')
+    const rating_max_text = score?.score >= 1009000 ? (' [MAX]') : (' [' + floor(rating_max, 2) + ']')
 
     const too_bright = (score?.level_index || 0) === 1;
 
@@ -303,7 +303,7 @@ async function chuScore2CardI3(score = {
         title2: score?.alias || '',
         left1: score?.artist || '',
         left2: score?.charter || '',
-        left3: round(rating, 2),
+        left3: floor(rating, 2),
         left4: rating_max_text,
 
         index_b: score_text.slice(0, -4) || '0',

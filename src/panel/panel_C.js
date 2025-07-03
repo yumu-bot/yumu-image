@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG,
     setSvgBody, readTemplate, setCustomBanner,
-    setText, getSvgBody, getPanelHeight, getAvatar, getMatchDuration, getNowTimeStamp, round, rounds
+    setText, getSvgBody, getPanelHeight, getAvatar, getMatchDuration, getNowTimeStamp, floor, floors
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -371,11 +371,11 @@ async function playerData2CardH(p = {}) {
 
     let left1;
     if (isTeamVS) {
-        left1 = round(p?.total, 2) +
+        left1 = floor(p?.total, 2) +
             ' // ' + p?.win + 'W-' + p?.lose + 'L (' +
             Math.round((p?.win / (p?.win + p?.lose)) * 100) + '%)';
     } else {
-        left1 = round(p?.total, 2) +
+        left1 = floor(p?.total, 2) +
             ' // ' + p?.win + 'W-' + (p?.win + p?.lose) + 'P';
     }
 
@@ -385,7 +385,7 @@ async function playerData2CardH(p = {}) {
     const color_index = (player_class?.name === "Strongest Marshal" || player_class?.name === "Competent Marshal" || player_class?.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
 
     const avatar = await getAvatar(p.player.avatar_url, true);
-    const mra_number = rounds(p?.mra, 2)
+    const mra_number = floors(p?.mra, 2)
 
     return {
         background: player_background,

@@ -6,12 +6,12 @@ import {
     setImage,
     setText,
     setTexts,
-    round,
+    floor,
     getFormattedTime,
     getGameMode,
     getImageFromV3,
     getMapStatus,
-    rounds,
+    floors,
     getDifficultyIndex, isNotEmptyArray, getAvatar, getDiffBackground
 } from "../util/util.js";
 import {poppinsBold, torusRegular} from "../util/font.js";
@@ -390,7 +390,7 @@ const component_Eta1 = (
         + torusRegular.getTextPath(torusRegular.cutStringTail(data?.difficulty_name, 24, 260),
             60, 278 + 22, 24, 'left baseline', '#2A2226')
         + torusRegular.get2SizeTextPath(
-            round(data?.star_rating, 2), ' / ' + getDifficultyIndex(data?.difficulty_name, data?.star_rating, data?.mode, data?.mods),
+            floor(data?.star_rating, 2), ' / ' + getDifficultyIndex(data?.difficulty_name, data?.star_rating, data?.mode, data?.mods),
             40, 24, 60, 420, 'left baseline', '#2A2226')
         + torusRegular.getTextPath(data?.beatmap_id?.toString(), 60, 510, 20, 'left baseline', '#2A2226')
 
@@ -403,7 +403,7 @@ const component_Eta1 = (
 
     const length_text = Math.floor(data?.length / 60) + ':' + (data?.length % 60).toFixed(0).padStart(2, '0');
 
-    let stats = torusRegular.getTextPath(round(data?.bpm), 60, 600, 32, 'left baseline', '#2A2226')
+    let stats = torusRegular.getTextPath(floor(data?.bpm), 60, 600, 32, 'left baseline', '#2A2226')
         + torusRegular.getTextPath(length_text, 210, 600, 32, 'left baseline', '#2A2226')
         + torusRegular.getTextPath(
             stat2text(data?.cs, data?.original?.cs), 60, 660, 32, 'left baseline', '#2A2226')
@@ -542,14 +542,14 @@ const component_Eta4 = (data = {
         + torusRegular.getTextPath('Combo', 420, 918, 40, 'left baseline', '#2A2226')
         + poppinsBold.getTextPath('Enabled Modifiers:', 1380, 900, 40, 'left baseline', '#2A2226')
 
-    const acc = rounds((data?.accuracy || 0) * 100, 2)
+    const acc = floors((data?.accuracy || 0) * 100, 2)
     const accuracy = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + '%', 72, 60, 420, 828, 'left baseline', '#2A2226')
 
     const combo = poppinsBold.get2SizeTextPath(data?.combo, 'x / ' + data?.max_combo + 'x [' + Math.round(data?.combo / data?.max_combo * 100) + '%]', 72, 48, 420, 1000, 'left baseline', '#2A2226')
 
     svg = setImage(svg, 1420, 400, 360, 360, getImageFromV3(`object-score-${data?.rank}2.png`), reg_text)
 
-    const sc = rounds(data?.score, -4, 1)
+    const sc = floors(data?.score, -4, 1)
     const score = poppinsBold.get2SizeTextPath(sc.integer, sc.decimal, 72, 60, 1600, 785, 'center baseline', '#2A2226')
 
     const mods = getModsSVG(data.mods, 1380 + 300, 930, 90, 42, 50);
@@ -666,9 +666,9 @@ const PanelEta1Generate = {
 function stat2text(stat, original, isDisplay = true) {
     const hasChanged = Math.abs(original - stat) > 0.1;
 
-    const stat_number = round(stat, 1)
+    const stat_number = floor(stat, 1)
 
-    return isDisplay ? (stat_number + (hasChanged ? (' [' + round(original, 1) + ']') : '')) : ''
+    return isDisplay ? (stat_number + (hasChanged ? (' [' + floor(original, 1) + ']') : '')) : ''
 }
 
 function getModsSVG(mods = [{ acronym: '' }], x, y, mod_w, text_h, interval) {

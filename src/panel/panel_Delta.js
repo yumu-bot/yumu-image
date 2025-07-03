@@ -3,7 +3,7 @@ import {
     getImageFromV3,
     setImage,
     setSvgBody, readTemplate,
-    setTexts, round, getDiffBackground
+    setTexts, floor, getDiffBackground
 } from "../util/util.js";
 import {lineSeedSans, poppinsBold} from "../util/font.js";
 import {getMapAttributes} from "../util/compute-pp.js";
@@ -85,10 +85,10 @@ export async function panel_Delta(data = {
     const length_minute_str = Math.floor(length_num / 60).toString();
     const length_second_str = Math.floor(length_num % 60).toString().padStart(2, '0');
     const bpm_str = Math.round(attr.bpm).toString();
-    const star_str = round(attr.stars, 2);
-    const cs_str = round(attr.cs, 1);
-    const ar_str = round(attr.ar, 1);
-    const od_str = round(attr.od, 1);
+    const star_str = floor(attr.stars, 2);
+    const cs_str = floor(attr.cs, 1);
+    const ar_str = floor(attr.ar, 1);
+    const od_str = floor(attr.od, 1);
     const round_data = lineSeedSans.getTextPath(
         lineSeedSans.cutStringTail(data.round || 'Unknown', 42, 783 - 20, true)
         , 391.5, 538, 42, 'center baseline', '#282425');

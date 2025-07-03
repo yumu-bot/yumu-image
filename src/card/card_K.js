@@ -3,7 +3,7 @@ import {
     setImage,
     setText,
     setTexts,
-    round
+    floor
 } from "../util/util.js";
 import {torusBold} from "../util/font.js";
 import {getRankColor, getStarRatingColor} from "../util/color.js";
@@ -51,7 +51,7 @@ export function card_K(data = {
     const star_color = getStarRatingColor(data?.star)
     const star_text_color = data?.star < 4 ? '#1c1719' : '#fff'
     const star_rrect = PanelDraw.Rect(10, 10, 40, 20, 10, star_color)
-    const star = torusBold.getTextPath(round((data?.star || 0), 2), 30, 26, 18, 'center baseline', star_text_color)
+    const star = torusBold.getTextPath(floor((data?.star || 0), 2), 30, 26, 18, 'center baseline', star_text_color)
 
     const rank_color = getRankColor(data?.rank)
     const rank_text_color = data?.rank === 'X' || data?.rank === 'XH' ? '#1c1719' : '#fff'
@@ -73,12 +73,12 @@ export function card_K(data = {
     const skill = data?.skill || []
 
     const hexagon = PanelDraw.HexagonChart(skill.map(v => Math.pow(v / 10, 0.5)), 235 / 2, 118 / 2, 45, data?.hexagon_color, Math.PI / 3, 3, 3)
-    const hexagon_index = PanelDraw.HexagonIndex(skill.map(v => round(v, 1)), 235 / 2, 118 / 2, 50, Math.PI / 3, data?.skill_color, 'none', 20)
+    const hexagon_index = PanelDraw.HexagonIndex(skill.map(v => floor(v, 1)), 235 / 2, 118 / 2, 50, Math.PI / 3, data?.skill_color, 'none', 20)
     const hexagon_background = getImageFromV3('object-hexagon.png')
 
     const skill_sort = skill.sort((a, b) => b - a)
     const skill_sort_sum = skill_sort[0] * 0.5 + skill_sort[1] * 0.3 + skill_sort[2] * 0.2 + skill_sort[3] * 0.15 + skill_sort[4] * 0.1
-    const skill_sum = torusBold.getTextPath(round(skill_sort_sum, 2), 235 / 2, 68, 20, 'center baseline', '#FFF')
+    const skill_sum = torusBold.getTextPath(floor(skill_sort_sum, 2), 235 / 2, 68, 20, 'center baseline', '#FFF')
 
     svg = setText(svg, skill_sum, reg_overlay)
     svg = setTexts(svg,[star, star_rrect, rank, rank_rrect], reg_text);

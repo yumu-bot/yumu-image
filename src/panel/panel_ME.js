@@ -8,7 +8,7 @@ import {
     isASCII,
     readTemplate,
     setText,
-    setTexts, round, rounds
+    setTexts, floor, floors
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -347,7 +347,7 @@ const component_E1 = (
 
      */
 
-    const difficulty = rounds(data?.difficulty, 1)
+    const difficulty = floors(data?.difficulty, 1)
 
     const text_arr = [
         {
@@ -456,10 +456,10 @@ const component_E3 = (
     const dist = PanelDraw.BarChart(data.distribution, null, 0, 15, 40 + 80, 460, 80, 2, 5, RANK_COLORS, 0.1, 0, null, 1)
     const combo = PanelDraw.BarChart(data.combo, null, 0, 310, 155 + 80, 165, 80, 2, 5, COMBO_COLORS, 0.1, 0, null, 1)
 
-    const acc = rounds(data?.achievements, 4)
+    const acc = floors(data?.achievements, 4)
     const avg_acc = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + ' %', 48, 30, 300, 190, 'right baseline', '#fff');
 
-    const level = rounds(data?.fit, 2)
+    const level = floors(data?.fit, 2)
     const dist_level = poppinsBold.get2SizeTextPath(level.integer, level.decimal, 48, 30, 300, 245, 'right baseline', '#fff');
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
@@ -512,7 +512,7 @@ const component_E5 = (
     const rect = PanelDraw.Rect(0, 0, 90, 60, 20, '#382e32', 1);
 
     const fav = poppinsBold.getTextPath(data?.bpm.toString(), 78, 25, 16, 'right baseline', '#fff')
-    const pc = poppinsBold.getTextPath(round(data?.count, 1, -1), 78, 47, 16, 'right baseline', '#fff')
+    const pc = poppinsBold.getTextPath(floor(data?.count, 1, -1), 78, 47, 16, 'right baseline', '#fff')
 
     svg = setTexts(svg, [fav, pc], reg_text);
     svg = setImage(svg, 12, 10, 18, 16, getImageFromV3('object-beatmap-bpm.png'), reg_text, 1);
@@ -718,7 +718,7 @@ const component_E9 = (
 
     const a = (data?.achievement || 0)
 
-    const achievement_number = rounds(a, 4)
+    const achievement_number = floors(a, 4)
     const achievement = getMultipleTextPath([
             {
                 font: 'poppinsBold',
@@ -788,7 +788,7 @@ const component_E10 = (
     const dist = PanelDraw.BarChart(data.distribution, null, 0, 15, 40 + 80, 460, 80, 2, 5, RANK_COLORS, 0.1, 0, null, 1)
     const combo = PanelDraw.BarChart(data.combo, null, 0, 310, 155 + 80, 165, 80, 2, 5, COMBO_COLORS, 0.1, 0, null, 1)
 
-    const acc = rounds(data?.achievements, 4)
+    const acc = floors(data?.achievements, 4)
     const avg_acc = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + ' %', 48, 30, 300, 190, 'right baseline', '#fff');
 
     const avg_dx = poppinsBold.getTextPath(Math.floor(data?.dx).toString(), 300, 245, 48, 'right baseline', '#fff');

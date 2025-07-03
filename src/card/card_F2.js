@@ -1,6 +1,6 @@
 import {
     getImageFromV3, setImage,
-    setSvgBody, setText, getKeyDifficulty, round, getMapBackground
+    setSvgBody, setText, getKeyDifficulty, floor, getMapBackground
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_J} from "./card_J.js";
@@ -162,7 +162,7 @@ const score2CardJ = async (score) => {
         difficulty_name: getKeyDifficulty(score.beatmap) || '',
         star_rating: score.beatmap.difficulty,
         score_rank: score.rank,
-        accuracy: round(score.accuracy * 100, 2), //%
+        accuracy: floor(score.accuracy * 100, 2), //%
         combo: score.max_combo, //x
         mods_arr: score.mods || [],
         pp: Math.round(score.pp) //pp

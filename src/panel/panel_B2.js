@@ -5,7 +5,7 @@ import {
     setImage,
     setSvgBody,
     readTemplate, setText,
-    setTexts, round, rounds, getMapBackground
+    setTexts, floor, floors, getMapBackground
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
@@ -100,7 +100,7 @@ export async function panel_B2(data = {
     // 计算数值
     const total = (m?.star || 0)
     const delta = total - (data.beatmap?.difficulty_rating || 0);
-    const total_number = rounds(delta, 2)
+    const total_number = floors(delta, 2)
     const total_path = torus.get2SizeTextPath((delta > 0 ? '+' : '-') + total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', (delta >= 0 ? '#c2e5c3' : '#ffcdd2'));
 
     // 插入文字
@@ -181,7 +181,7 @@ export async function panel_B2(data = {
 
     // todo 临时的值
     function drawChart(array = [], index = 0, name = "null", x = 0, y = 0, color = '#fff') {
-        return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + torus.getTextPath(name + ": " + round(index, 1), 75 + 1370 + x, -35 + 445 + y, 24, 'center baseline', '#fff')
+        return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + torus.getTextPath(name + ": " + floor(index, 1), 75 + 1370 + x, -35 + 445 + y, 24, 'center baseline', '#fff')
     }
 
     svg = setTexts(svg, [

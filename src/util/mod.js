@@ -1,4 +1,4 @@
-import {getGameMode, isEmptyArray, isEmptyString, isNumber, round} from "./util.js";
+import {getGameMode, isEmptyArray, isEmptyString, isNumber, floor} from "./util.js";
 import {getModColor} from "./color.js";
 import {torus} from "./font.js";
 import {PanelDraw} from "./panelDraw.js";
@@ -329,7 +329,7 @@ export function getModAdditionalInformation(mod = {
         if (s?.extended_limits === true) {
             info = '^11'
         } else if (isNumber(s?.scroll_speed)) {
-            info = 'v' + round(s?.scroll_speed, 1) + 'x'
+            info = 'v' + floor(s?.scroll_speed, 1) + 'x'
         } else if (s?.hard_rock_offsets === true) {
             info = 'HR'
         }

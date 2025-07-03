@@ -7,7 +7,7 @@ import {
     setTexts,
     setCustomBanner,
     getImageFromV3,
-    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, round, rounds
+    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, floor, floors
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -603,9 +603,9 @@ const component_J6 = (
             return prev + curr
         }) / arr.length) || 0
 
-    const y_max = round(pp_max, 1, -1);
-    const y_mid = round((pp_max + pp_min) / 2, 1, -1);
-    const y_min = round(pp_min, 1, -1);
+    const y_max = floor(pp_max, 1, -1);
+    const y_mid = floor((pp_max + pp_min) / 2, 1, -1);
+    const y_min = floor(pp_min, 1, -1);
 
     // 绘制坐标
     const pp_axis =
@@ -771,9 +771,9 @@ const PanelJGenerate = {
 
             switch (type) {
                 case 'bpm': {
-                    const data_min = rounds(min_attr?.bpm, -3)
-                    const data_mid = rounds(mid_attr?.bpm, -3)
-                    const data_max = rounds(max_attr?.bpm, -3)
+                    const data_min = floors(min_attr?.bpm, -3)
+                    const data_mid = floors(mid_attr?.bpm, -3)
+                    const data_max = floors(max_attr?.bpm, -3)
 
                     label_const = LABELS.BPM
                     min = min_attr?.bpm || 0
@@ -807,9 +807,9 @@ const PanelJGenerate = {
                     bar_max = 530
                 } break;
                 case 'combo': {
-                    const data_min = rounds(min_attr?.combo, -3)
-                    const data_mid = rounds(mid_attr?.combo, -3)
-                    const data_max = rounds(max_attr?.combo, -3)
+                    const data_min = floors(min_attr?.combo, -3)
+                    const data_mid = floors(mid_attr?.combo, -3)
+                    const data_max = floors(max_attr?.combo, -3)
 
                     label_const = LABELS.COMBO
                     min = min_attr?.combo || 0
@@ -825,9 +825,9 @@ const PanelJGenerate = {
                     bar_max = 3000
                 } break;
                 case 'star': {
-                    const data_min = rounds(min_attr?.star, 2)
-                    const data_mid = rounds(mid_attr?.star, 2)
-                    const data_max = rounds(max_attr?.star, 2)
+                    const data_min = floors(min_attr?.star, 2)
+                    const data_mid = floors(mid_attr?.star, 2)
+                    const data_max = floors(max_attr?.star, 2)
 
                     label_const = LABELS.SR
                     min = min_attr?.star || 0

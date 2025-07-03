@@ -7,7 +7,7 @@ import {
     setSvgBody,
     setText,
     setTexts,
-    round, getFormattedTime, isASCII, getAvatar, getGameMode, rounds, getDiffBackground
+    floor, getFormattedTime, isASCII, getAvatar, getGameMode, floors, getDiffBackground
 } from "../util/util.js";
 import {
     getRankBackground
@@ -306,7 +306,7 @@ export async function panel_Eta2(data = {
     const panel_name = getPanelNameSVG('the Myriads of Changes (Not from Phira)', '', request_time, 'v0.6.0 MY');
 
     // 导入文字
-    const difficulty_text = getDiffIndex(data?.score?.beatmap?.difficulty_rating || 0) + ' SR. ' + round(data?.score?.beatmap?.difficulty_rating, 2)
+    const difficulty_text = getDiffIndex(data?.score?.beatmap?.difficulty_rating || 0) + ' SR. ' + floor(data?.score?.beatmap?.difficulty_rating, 2)
     const difficulty = torus.getTextPath(difficulty_text, 350, 834, 40, 'left baseline', '#fff')
 
     svg = setText(svg, panel_name, reg_index);
@@ -391,7 +391,7 @@ const component_Eta1 = (data = {
         }], 310, 85, 'left baseline'
     )
 
-    const sc = rounds(data?.score || 0, -4, 1)
+    const sc = floors(data?.score || 0, -4, 1)
 
     const score = getMultipleTextPath(
         [{
@@ -406,7 +406,7 @@ const component_Eta1 = (data = {
             color: '#fff'
         }, {
             font: torus,
-            text: round((data?.accuracy || 0) * 100, 2),
+            text: floor((data?.accuracy || 0) * 100, 2),
             size: 60,
             color: '#aaa'
         }, {

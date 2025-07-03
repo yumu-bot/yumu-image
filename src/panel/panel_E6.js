@@ -18,8 +18,8 @@ import {
     readTemplate,
     setText,
     setTexts,
-    round,
-    rounds, getDiffBackground
+    floor,
+    floors, getDiffBackground
 } from "../util/util.js";
 import {getRankBackground} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
@@ -193,13 +193,13 @@ const component_E1 = (
     const text_arr = [
         {
             font: "poppinsBold",
-            text: rounds(star, 2).integer,
+            text: floors(star, 2).integer,
             size: 84,
             color: '#fff',
         },
         {
             font: "poppinsBold",
-            text: rounds(star, 2).decimal,
+            text: floors(star, 2).decimal,
             size: 48,
             color: '#fff',
         },
@@ -246,7 +246,7 @@ const component_E2 = (
 
     const pass_percent = data?.play > 0 ? Math.round(data?.pass / data?.play * 100) : 0;
 
-    const public_rating = poppinsBold.getTextPath(round(data?.public_rating, 1) + ' / 10', 475, 28, 18, 'right baseline', '#fff');
+    const public_rating = poppinsBold.getTextPath(floor(data?.public_rating, 1) + ' / 10', 475, 28, 18, 'right baseline', '#fff');
     const percent = poppinsBold.getTextPath(data?.pass + ' / ' + data?.play + ' [' + pass_percent + '%]', 475, 138, 18, 'right baseline', '#fff');
 
 
@@ -347,8 +347,8 @@ const component_E5 = (
     const reg_base = /(?<=<g id="Base_OE5">)/;
     const rect = PanelDraw.Rect(0, 0, 90, 60, 20, '#382e32', 1);
 
-    const fav = poppinsBold.getTextPath(round(data?.favorite, 1, -1), 78, 25, 16, 'right baseline', '#fff')
-    const pc = poppinsBold.getTextPath(round(data?.playcount, 1, -1), 78, 47, 16, 'right baseline', '#fff')
+    const fav = poppinsBold.getTextPath(floor(data?.favorite, 1, -1), 78, 25, 16, 'right baseline', '#fff')
+    const pc = poppinsBold.getTextPath(floor(data?.playcount, 1, -1), 78, 47, 16, 'right baseline', '#fff')
 
     svg = setTexts(svg, [fav, pc], reg_text);
     svg = setImage(svg, 12, 10 - 1, 18, 18, getImageFromV3('object-beatmap-favorite.png'), reg_text, 1);
@@ -710,12 +710,12 @@ const component_E9 = (
     const accuracy = getMultipleTextPath([
             {
                 font: 'poppinsBold',
-                text: rounds((data?.accuracy || 0) * 100, 2).integer,
+                text: floors((data?.accuracy || 0) * 100, 2).integer,
                 size: 60,
             },
             {
                 font: 'poppinsBold',
-                text: rounds((data?.accuracy || 0) * 100, 2).decimal + ' %',
+                text: floors((data?.accuracy || 0) * 100, 2).decimal + ' %',
                 size: 36
             }
         ],
@@ -850,7 +850,7 @@ const PanelEGenerate = {
     score2componentE3: (b, original) => {
         const mode = getGameMode(b.mode, 1);
 
-        const bpm = rounds(b?.bpm, 2)
+        const bpm = floors(b?.bpm, 2)
         const bpm_r = (b?.bpm > 0) ? (60000 / b?.bpm).toFixed(0) + 'ms' : '-';
         const bpm_b = bpm.integer
         const bpm_m = bpm.decimal
@@ -1174,7 +1174,7 @@ const getProgress = (x, min, max, bottom = 1 / 16) => {
 const stat2label = (stat, remark, progress, original, isDisplay) => {
     const hasChanged = Math.abs(original - stat) > 0.1;
 
-    const stat_number = rounds(stat, 1)
+    const stat_number = floors(stat, 1)
 
     const stat_b = stat_number.integer
     const stat_m = stat_number.decimal
@@ -1183,7 +1183,7 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
         remark: remark,
         data_b: stat_b,
         data_m: stat_m,
-        data_a: hasChanged ? (' [' + round(original, 1) + ']') : '',
+        data_a: hasChanged ? (' [' + floor(original, 1) + ']') : '',
         bar_progress: progress,
     }
     else return {

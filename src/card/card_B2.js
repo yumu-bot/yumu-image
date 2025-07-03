@@ -1,6 +1,6 @@
 import {
     getImageFromV3, setImage, setSvgBody,
-    readTemplate, setTexts, rounds,
+    readTemplate, setTexts, floors,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -28,7 +28,7 @@ export async function card_B2(data = {
     svg = setSvgBody(svg, 20, 15, label, reg_label);
 
     //添加评级和值和背景
-    const number = rounds(data?.value, data?.round_level)
+    const number = floors(data?.value, data?.round_level)
     const number_b = number.integer
     const number_m = number.decimal
 

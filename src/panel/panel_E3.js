@@ -3,7 +3,7 @@ import {
     getGameMode,
     getPanelNameSVG,
     setImage,
-    setSvgBody, readTemplate, setText, getMatchDuration, getNowTimeStamp, od2ms, ar2ms, cs2px, rounds, getMapBackground,
+    setSvgBody, readTemplate, setText, getMatchDuration, getNowTimeStamp, od2ms, ar2ms, cs2px, floors, getMapBackground,
 } from "../util/util.js";
 import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {data2Label, stat2DataM} from "./panel_E.js";
@@ -444,8 +444,8 @@ const beatmap2Labels = (beatmap, calcPP) => {
     }
 
     const bpm_r = (bpm > 0) ? (60000 / bpm).toFixed(0) + 'ms' : '-';
-    const bpm_b = rounds(bpm, 2).integer
-    const bpm_m = rounds(bpm, 2).decimal
+    const bpm_b = floors(bpm, 2).integer
+    const bpm_m = floors(bpm, 2).decimal
 
     const length_r = Math.floor(drain / 60) + ':' + (drain % 60).toFixed(0).padStart(2, '0');
     const length_b = Math.floor(length / 60) + ':';
@@ -466,19 +466,19 @@ const beatmap2Labels = (beatmap, calcPP) => {
     const hasHPChanged = ((mode !== 'm') && hasAnyMod(mod_int, ["EZ", "HR"]));
 
     const cs_r = cs2px(calcPP.attr.cs, mode);
-    const cs_b = rounds(calcPP.attr.cs, 1).integer;
+    const cs_b = floors(calcPP.attr.cs, 1).integer;
     const cs_m = stat2DataM(hasCSChanged, calcPP.attr.cs, beatmap.cs);
 
     const ar_r = ar2ms(calcPP.attr.ar, mode);
-    const ar_b = rounds(calcPP.attr.ar, 1).integer;
+    const ar_b = floors(calcPP.attr.ar, 1).integer;
     const ar_m = stat2DataM(hasARChanged, calcPP.attr.ar, beatmap.ar);
 
     const od_r = od2ms(calcPP.attr.od, mode);
-    const od_b = rounds(calcPP.attr.od, 1).integer;
+    const od_b = floors(calcPP.attr.od, 1).integer;
     const od_m = stat2DataM(hasODChanged, calcPP.attr.od, beatmap.accuracy);
 
     const hp_r = '-';
-    const hp_b = rounds(calcPP.attr.hp, 1).integer;
+    const hp_b = floors(calcPP.attr.hp, 1).integer;
     const hp_m = stat2DataM(hasHPChanged, calcPP.attr.hp, beatmap.drain);
 
     return [{

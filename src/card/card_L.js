@@ -2,7 +2,7 @@ import {
     getImageFromV3,
     setImage,
     setSvgBody,
-    setText, rounds,
+    setText, floors,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_I4} from "./card_I4.js";
@@ -101,7 +101,7 @@ export async function card_L(data = {
             }
 
             for (const v of index_arr) {
-                const vn = rounds(v, 2)
+                const vn = floors(v, 2)
 
                 index_b_arr.push(vn.integer);
                 index_m_arr.push(vn.decimal);

@@ -1,7 +1,7 @@
 import {
     setImage,
     readTemplate,
-    setText, setTexts, rounds, isHexColor
+    setText, setTexts, floors, isHexColor
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {getColorInSpectrum, getModColor} from "../util/color.js";
@@ -79,7 +79,7 @@ export async function card_D(data = {
     let text_mod =
         torus.getTextPath(data.mod, 500, 30.754, 36, 'center baseline', "#fff");
 
-    const star_number = rounds(data.star_rating, 1)
+    const star_number = floors(data.star_rating, 1)
 
     let text_star_b = star_number.integer
     let text_star_m = star_number.decimal + '*';

@@ -5,7 +5,7 @@ import {
     setImage, setSvgBody,
     isNotBlankString,
     isNotEmptyArray, readNetImage,
-    setText, setTexts, round, getSvgBody
+    setText, setTexts, floor, getSvgBody
 } from "../util/util.js";
 import {extra, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -102,13 +102,13 @@ export async function card_A3(beatmapset = {}) {
 
     const fav = label_A8({
         image: getImageFromV3('object-beatmap-favorite.png'),
-        text: round(beatmapset.favourite_count, 1),
+        text: floor(beatmapset.favourite_count, 1),
         color: '#1c1719',
     })
 
     const pc = label_A8({
         image: getImageFromV3('object-beatmap-playcount.png'),
-        text: round(beatmapset.play_count, 1),
+        text: floor(beatmapset.play_count, 1),
         color: '#1c1719',
     })
 
@@ -166,7 +166,7 @@ function drawDifficultyLabels(beatmaps = []) {
         return label_A8({
             image: null,
             has_text: true,
-            text: round(v.difficulty_rating, 2),
+            text: floor(v.difficulty_rating, 2),
             color: getStarRatingColor(v.difficulty_rating)
         })
     })
@@ -175,7 +175,7 @@ function drawDifficultyLabels(beatmaps = []) {
         return label_A8({
             image: null,
             has_text: false,
-            text: round(v.difficulty_rating, 2),
+            text: floor(v.difficulty_rating, 2),
             color: getStarRatingColor(v.difficulty_rating)
         })
     })

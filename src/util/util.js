@@ -722,14 +722,14 @@ ${svgBody}
 // 数字处理并显示
 
 /**
- * 第二版处理数字。如果要分开，请使用 rounds
+ * 第二版处理数字。如果要分开，请使用 floors
  * @param number 数字
  * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，负数用于特别大的数
  * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格
  * @returns {string}
  */
-export function round(number = 0, level = 0, sub_level = 0) {
-    const r = rounds(number, level, sub_level)
+export function floor(number = 0, level = 0, sub_level = 0) {
+    const r = floors(number, level, sub_level)
     return r.integer + r.decimal
 }
 
@@ -738,12 +738,14 @@ export function round(number = 0, level = 0, sub_level = 0) {
  * @param number 数字
  * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，decimal
  * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格，3 附加输出分好的整数部分和小数部分
- * @returns {{integer: string, decimal: string} | {integer: string, decimal: string, int: number, dec: number}}
+ * @returns {{integer: string, decimal: string, int: number, dec: number} | {integer: string, decimal: string}}
  */
-export function rounds(number = 0, level = 0, sub_level = 0) {
+export function floors(number = 0, level = 0, sub_level = 0) {
     if (isNotNumber(number)) return {
         integer: (number || '') + '',
         decimal: '',
+        int: 0,
+        dec: 0,
     }
 
     let int_str = ''
@@ -836,7 +838,9 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
         }
 
         let int = Math.trunc(number)
-        let dec = Math.round(Math.abs(number - int) * Math.pow(10, level)) / Math.pow(10, level)
+
+        // 这里是小数的处理方式，之前是 round
+        let dec = Math.floor(Math.abs(number - int) * Math.pow(10, level)) / Math.pow(10, level)
 
         // 1.95 ->lv.1-> 1 / 1, 因此需要进位
         if (dec >= 1 - Math.pow(10, - level)) {
@@ -1934,7 +1938,7 @@ export const cs2px = (cs, mode = 'o') => {
     switch (mode) {
         case 'o':
         case 'c': {
-            const osupixel = round(54.4 - 4.48 * cs, 2);
+            const osupixel = floor(54.4 - 4.48 * cs, 2);
             return osupixel + 'px';
         }
         default: {

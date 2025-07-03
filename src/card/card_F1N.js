@@ -5,7 +5,7 @@ import {
     setImage,
     setSvgBody,
     setText,
-    setTexts, rounds
+    setTexts, floors
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -138,10 +138,10 @@ export async function card_F1N(data = {
 
 async function userData2Labels(data) {
     // 卡片定义
-    const pc_b = rounds(data?.user?.play_count, -4).integer;
-    const pc_m = rounds(data?.user?.play_count, -4).decimal;
-    const tth_b = rounds(data?.user?.total_hits, -4).integer;
-    const tth_m = rounds(data?.user?.total_hits, -4).decimal;
+    const pc_b = floors(data?.user?.play_count, -4).integer;
+    const pc_m = floors(data?.user?.play_count, -4).decimal;
+    const tth_b = floors(data?.user?.total_hits, -4).integer;
+    const tth_m = floors(data?.user?.total_hits, -4).decimal;
     const pt_b = getTimeByDHMSLarge(data?.user?.play_time);
     const pt_m = getTimeByDHMSSmall(data?.user?.play_time);
 

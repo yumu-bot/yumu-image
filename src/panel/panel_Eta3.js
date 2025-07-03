@@ -7,7 +7,7 @@ import {
     setSvgBody,
     setText,
     setTexts,
-    round, getFormattedTime, isASCII, getGameMode, getImageFromV3, getMapBackground
+    floor, getFormattedTime, isASCII, getGameMode, getImageFromV3, getMapBackground
 } from "../util/util.js";
 import {
     getRankBackground
@@ -412,7 +412,7 @@ const component_Eta1 = (
     const di = getDiffIndex(data?.star_rating)
     const difficulty = poppinsBold.getTextPath(di, 295, 140, 36, 'center baseline', '#fff')
 
-    const sr = round(data?.star_rating, 2)
+    const sr = floor(data?.star_rating, 2)
     const star_rating = getMultipleTextPath(
         [{
             font: PuHuiTi,
@@ -524,7 +524,7 @@ const component_Eta2 = (data = {
     const accuracy = getMultipleTextPath(
         [{
             font: poppinsBold,
-            text: round((data?.accuracy || 0) * 100, 2),
+            text: floor((data?.accuracy || 0) * 100, 2),
             size: 48,
             color: '#fff'
         }, {

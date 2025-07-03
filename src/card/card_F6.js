@@ -2,7 +2,7 @@ import {
     setSvgBody,
     modifyArrayToFixedLength,
     setText,
-    setTexts, round, rounds
+    setTexts, floor, floors
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -165,24 +165,24 @@ async function userData2Labels(data) {
     const isRankedMapPCCalculated = data.user.ranked_map !== 0;
 
     // 卡片定义
-    const rks_b = rounds(data.user.ranked_score, 4).integer;
-    const rks_m = rounds(data.user.ranked_score, 4).decimal;
-    const tts_b = rounds(data.user.total_score, 4).integer;
-    const tts_m = rounds(data.user.total_score, 4).decimal;
-    const pc_b = rounds(data.user.play_count, -4).integer;
-    const pc_m = rounds(data.user.play_count, -4).decimal;
+    const rks_b = floors(data.user.ranked_score, 4).integer;
+    const rks_m = floors(data.user.ranked_score, 4).decimal;
+    const tts_b = floors(data.user.total_score, 4).integer;
+    const tts_m = floors(data.user.total_score, 4).decimal;
+    const pc_b = floors(data.user.play_count, -4).integer;
+    const pc_m = floors(data.user.play_count, -4).decimal;
 
-    const rmp_b = rounds(data.user.ranked_map, -4).integer;
-    const rmp_m = rounds(data.user.ranked_map, -4).decimal;
-    const mpc_b = rounds(data.user.played_map, -4).integer;
-    const mpc_m = rounds(data.user.played_map, -4).decimal;
+    const rmp_b = floors(data.user.ranked_map, -4).integer;
+    const rmp_m = floors(data.user.ranked_map, -4).decimal;
+    const mpc_b = floors(data.user.played_map, -4).integer;
+    const mpc_m = floors(data.user.played_map, -4).decimal;
 
-    const rep_b = rounds(data.user.rep_watched, -4).integer;
-    const rep_m = rounds(data.user.rep_watched, -4).decimal;
-    const fan_b = rounds(data.user.follower, -4).integer;
-    const fan_m = rounds(data.user.follower, -4).decimal;
-    const tth_b = rounds(data.user.total_hits, 4).integer;
-    const tth_m = rounds(data.user.total_hits, 4).decimal;
+    const rep_b = floors(data.user.rep_watched, -4).integer;
+    const rep_m = floors(data.user.rep_watched, -4).decimal;
+    const fan_b = floors(data.user.follower, -4).integer;
+    const fan_m = floors(data.user.follower, -4).decimal;
+    const tth_b = floors(data.user.total_hits, 4).integer;
+    const tth_m = floors(data.user.total_hits, 4).decimal;
 
     const label_rks =
         await label_E({...LABELS.RKS, data_b: rks_b, data_m: rks_m});
@@ -232,7 +232,7 @@ function userDelta2Labels(data) {
         if (isNaN(+T)) {
             return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
         } else {
-            const text = getSign(T) + round(Math.abs(T), 2);
+            const text = getSign(T) + floor(Math.abs(T), 2);
             return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
         }
 

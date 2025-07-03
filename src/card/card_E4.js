@@ -1,6 +1,6 @@
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
-import {setSvgBody, setText, rounds} from "../util/util.js";
+import {setSvgBody, setText, floors} from "../util/util.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_E4(data = {
@@ -64,7 +64,7 @@ async function statistics2PGRatio(calcPP, stat) {
     const ratio = nGeki / n300;
     if (nGeki >= n300) {
         if (n300 !== 0) {
-            const r = rounds(ratio, 1)
+            const r = floors(ratio, 1)
             ratio_b = r.integer
             ratio_m = r.decimal + 'x';
         } else if (nGeki !== 0) {
@@ -72,7 +72,7 @@ async function statistics2PGRatio(calcPP, stat) {
         } else ratio_b = '???';
     } else if (nGeki < n300) {
         if (nGeki !== 0) {
-            const r = rounds(ratio, 2)
+            const r = floors(ratio, 2)
             ratio_b = r.integer
             ratio_m = r.decimal + 'x';
         } else if (n300 !== 0) {

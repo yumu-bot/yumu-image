@@ -2,7 +2,7 @@ import {
     setSvgBody,
     modifyArrayToFixedLength,
     setText,
-    setTexts, round, rounds
+    setTexts, floor, floors
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {label_D2, label_E, LABELS} from "../component/label.js";
@@ -128,21 +128,21 @@ function getPlayCountChart(pc_arr = []) {
 async function userData2Labels(data) {
 
     // 卡片定义
-    const rks_a = round(data.user.ranked_score, 1);
-    const rks_b = rounds(data.user.ranked_score, -4, 2).integer;
-    const rks_m = rounds(data.user.ranked_score, -4, 2).decimal;
-    const tts_a = round(data.user.total_score, 1);
-    const tts_b = rounds(data.user.total_score, -4, 2).integer;
-    const tts_m = rounds(data.user.total_score, -4, 2).decimal;
+    const rks_a = floor(data.user.ranked_score, 1);
+    const rks_b = floors(data.user.ranked_score, -4, 2).integer;
+    const rks_m = floors(data.user.ranked_score, -4, 2).decimal;
+    const tts_a = floor(data.user.total_score, 1);
+    const tts_b = floors(data.user.total_score, -4, 2).integer;
+    const tts_m = floors(data.user.total_score, -4, 2).decimal;
 
-    const mpc_b = rounds(data.user.played_map, -4).integer;
-    const mpc_m = rounds(data.user.played_map, -4).decimal;
-    const rep_b = rounds(data.user.rep_watched, -4).integer;
-    const rep_m = rounds(data.user.rep_watched, -4).decimal;
-    const fan_b = rounds(data.user.follower, -4).integer;
-    const fan_m = rounds(data.user.follower, -4).decimal;
-    const mdl_b = rounds(data.user.medal, -4).integer;
-    const mdl_m = rounds(data.user.medal, -4).decimal;
+    const mpc_b = floors(data.user.played_map, -4).integer;
+    const mpc_m = floors(data.user.played_map, -4).decimal;
+    const rep_b = floors(data.user.rep_watched, -4).integer;
+    const rep_m = floors(data.user.rep_watched, -4).decimal;
+    const fan_b = floors(data.user.follower, -4).integer;
+    const fan_m = floors(data.user.follower, -4).decimal;
+    const mdl_b = floors(data.user.medal, -4).integer;
+    const mdl_m = floors(data.user.medal, -4).decimal;
 
     const label_rks =
         await label_D2({...LABELS.RKS, data_b: rks_b, data_m: rks_m, abbr: rks_a, remark_font: PuHuiTi});
@@ -185,7 +185,7 @@ function userDelta2Labels(data) {
         if (isNaN(+T)) {
             return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
         } else {
-            const text = getSign(T) + round(T, -4, 2); //Math.abs(T);
+            const text = getSign(T) + floor(T, -4, 2); //Math.abs(T);
             return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
         }
     }
