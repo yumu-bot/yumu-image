@@ -7,7 +7,7 @@ import {
     isNotEmptyArray,
     readTemplate,
     setText,
-    setTexts, floors
+    setTexts, floors, thenPush, getSvgBody, isASCII
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -19,7 +19,7 @@ import {
     getMaimaiType, isMaimaiMaximumRating, getMaimaiDXStarLevel, getMaimaiDXStarColor,
 } from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {poppinsBold} from "../util/font.js";
+import {poppinsBold, PuHuiTi} from "../util/font.js";
 import {card_G} from "../card/card_G.js";
 
 export async function router(req, res) {
@@ -54,6 +54,7 @@ export async function router_svg(req, res) {
  * @return {Promise<string>}
  */
 export async function panel_MS(data = {
+    user: {},
     songs: [{
         "id": "319",
         "title": "幻想のサテライト",
@@ -172,9 +173,7 @@ export async function panel_MS(data = {
     const song = (data?.songs || [])[0]
     const scores = data?.scores || []
 
-    let card_Gs
-
-    card_Gs = await applySingleVersion(song, scores)
+    const card_Gs = await applyScore(song, scores)
 
     // 渲染卡片
     const length = card_Gs?.length || 1
@@ -182,10 +181,13 @@ export async function panel_MS(data = {
     const x = (1920 + interval - (interval + 350) * length) / 2
 
     if (isNotEmptyArray(card_Gs)) {
+        let string_Gs = ''
+
         for (const i in card_Gs) {
-            const v = card_Gs[i]
-            svg = setSvgBody(svg, x + i * (interval + 350), 330, v, reg_card_g)
+            string_Gs += getSvgBody(x + i * (interval + 350), 330, card_Gs[i])
         }
+
+        svg = setText(svg, string_Gs, reg_card_g)
     }
 
     // 导入 A2 卡
@@ -197,16 +199,18 @@ export async function panel_MS(data = {
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai", getMaimaiBannerIndex(song)), reg_banner, 0.8);
 
+    svg = setText(svg, component_G2(data.user), reg_index)
+
     return svg.toString()
 }
 
 // 歌曲只有一个版本，只有一个版本有成绩
 // 成绩会补充至 5 个。以歌曲为准。
-async function applySingleVersion(song = {}, scores = [{}]) {
+async function applyScore(song = {}, scores = [{}]) {
     let card_Gs = []
+    let param_Gs = []
 
     // 统计卡片
-
     for (const i in song?.level) {
         const v = song?.ds[i]
 
@@ -218,13 +222,14 @@ async function applySingleVersion(song = {}, scores = [{}]) {
             }
         }
 
-        card_Gs.push(
-            card_G(await maiScore2CardG(song, parseInt(i), score))
-        )
+        param_Gs.push(maiScore2CardG(song, parseInt(i), score))
     }
 
-    return card_Gs
+    await Promise.allSettled(
+        param_Gs
+    ).then(results => thenPush(results, card_Gs))
 
+    return card_Gs.map((card) => {return card_G(card)})
 }
 
 async function maiScore2CardG(song = {}, index = 0, score = {}) {
@@ -755,6 +760,41 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     svg = setTexts(svg, [title, equivalent, tap_count, hold_count, slide_count, touch_count, break_count, s3p_loss, s3_loss, s2p_loss, s2_loss, sp_loss, break_2550, break_2000], reg_text)
 
     svg = setTexts(svg, [progress_rrect, progress_base_rrect, base], reg_base)
+
+    return svg.toString()
+}
+
+const component_G2 = (user = {}) => {
+    let svg = `   <defs>
+            <clipPath id="clippath-LG2-1">
+              <circle cx="1850" cy="225" r="45" style="fill: #382E32;"/>
+            </clipPath>
+        </defs>
+        <g id="Base_LG2">
+        </g>
+        <g id="Icon_LG2" style="clip-path: url(#clippath-LG2-1);">
+        </g>
+        <g id="Text_LG2">
+        </g>
+    `;
+
+    const reg_base = /(?<=<g id="Base_LG2">)/
+    const reg_icon = /(?<=<g id="Icon_LG2" style="clip-path: url\(#clippath-LG2-1\);">)/
+    const reg_text = /(?<=<g id="Text_LG2">)/
+
+    const circle = PanelDraw.Circle(1850, 225, 45, '#382E32', 1)
+
+    const avatar = getImageFromV3('Maimai', 'avatar-guest2.png')
+
+    svg = setImage(svg, 1850 - 45, 225 - 45, 90, 90, avatar, reg_icon)
+    svg = setText(svg, circle, reg_base)
+
+    const name_font = (isASCII(user?.name) ? poppinsBold : PuHuiTi)
+    const text = poppinsBold.getTextPath('Player', 1800, 193, 18, 'right baseline', '#fff') +
+        name_font.getTextPath(user.name, 1800, 225, 30, 'right baseline', '#fff') +
+        poppinsBold.getTextPath(Math.round(user?.rating || 0).toString(), 1800, 265, 40, 'right baseline', '#fff')
+
+    svg = setText(svg, text, reg_text)
 
     return svg.toString()
 }
