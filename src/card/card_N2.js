@@ -102,7 +102,13 @@ export async function card_N2(data = {
 
     let score
     if (data?.is_legacy) {
-        score = data.score.legacy_total_score
+        const l = data.score.legacy_total_score
+
+        if (l > 0) {
+            score = l
+        } else {
+            score = data.score.total_score
+        }
     } else {
         score = data.score.total_score
     }
