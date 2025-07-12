@@ -77,7 +77,13 @@ export async function panel_A3(data = {
 
         let compare_score;
         if (is_legacy) {
-            compare_score = data.scores[i0].legacy_total_score
+            const l = data.scores[i0].legacy_total_score
+
+            if (l > 0) {
+                compare_score = l
+            } else {
+                compare_score = data.scores[i0].total_score
+            }
         } else {
             compare_score = data.scores[i0].total_score
         }
