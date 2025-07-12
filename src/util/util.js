@@ -741,6 +741,18 @@ export function floor(number = 0, level = 0, sub_level = 0) {
  * @returns {{integer: string, decimal: string, int: number, dec: number} | {integer: string, decimal: string}}
  */
 export function floors(number = 0, level = 0, sub_level = 0) {
+    return floorOrRound(number, level, sub_level, false)
+}
+
+export function round(number = 0, level = 0, sub_level = 0) {
+    const r = rounds(number, level, sub_level)
+    return r.integer + r.decimal
+}
+export function rounds(number = 0, level = 0, sub_level = 0) {
+    return floorOrRound(number, level, sub_level, true)
+}
+
+function floorOrRound(number = 0, level = 0, sub_level = 0, is_round = false) {
     if (isNotNumber(number)) return {
         integer: (number || '') + '',
         decimal: '',
@@ -839,8 +851,13 @@ export function floors(number = 0, level = 0, sub_level = 0) {
 
         let int = Math.trunc(number)
 
-        // 这里是小数的处理方式，之前是 round
-        let dec = Math.floor(Math.abs(number - int) * Math.pow(10, level)) / Math.pow(10, level)
+        let dec
+
+        if (is_round) {
+            dec = Math.round(Math.abs(number - int) * Math.pow(10, level)) / Math.pow(10, level)
+        } else {
+            dec = Math.floor(Math.abs(number - int) * Math.pow(10, level)) / Math.pow(10, level)
+        }
 
         // 1.95 ->lv.1-> 1 / 1, 因此需要进位
         if (dec >= 1 - Math.pow(10, - level)) {
@@ -1548,10 +1565,10 @@ export function getFormattedTime(time = '', format_to = 'YYYY-MM-DD HH:mm:ss [+8
 /**
  * 获取短版时间差
  * @param compare 需要与 now 对比的时间
- * @param is_short 是否采用短版输出
+ * @param is_short 采用短版输出的等级，0-两字母，1-稍微缩短，2-完整
  * @return {string} 时间差
  */
-export function getTimeDifferenceShort(compare = '', is_short = true) {
+export function getTimeDifferenceShort(compare = '', is_short = 1) {
     return getTimeDifference(compare, 'YYYY-MM-DD[T]HH:mm:ss[Z]', moment().subtract(8, "hours"), is_short);
 }
 
@@ -1560,10 +1577,10 @@ export function getTimeDifferenceShort(compare = '', is_short = true) {
  * @param compare 需要与 now 对比的时间
  * @param format 格式
  * @param now 这个时间是 UTC 时间。如果你输入的时间已经是本地时间（北京时间），这里需要输入 moment();
- * @param is_short 是否采用短版输出
+ * @param is_short 采用短版输出的等级，0-两字母，1-稍微缩短，2-完整
  * @return {string} 时间差
  */
-export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment().subtract(8, "hours"), is_short = false) {
+export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment().subtract(8, "hours"), is_short = 0) {
     const compare_moment = moment(compare, format);
 
     if (compare_moment == null) return '-';
@@ -1574,21 +1591,41 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
     const hours = compare_moment.diff(now, "hours");
     const minutes = compare_moment.diff(now, "minutes");
 
-    if (is_short) {
+    if (is_short === 2) {
         if (Math.abs(years) > 0) {
-            return years + 'y';
+            if (Math.abs(years) > 1) {
+                return years + 'years';
+            } else {
+                return years + 'year';
+            }
         } else if (Math.abs(months) > 0) {
-            return months + 'mo';
+            if (Math.abs(months) > 1) {
+                return months + 'months';
+            } else {
+                return months + 'month';
+            }
         } else if (Math.abs(days) > 0) {
-            return days + 'd';
+            if (Math.abs(days) > 1) {
+                return days + 'days';
+            } else {
+                return days + 'day';
+            }
         } else if (Math.abs(hours) > 0) {
-            return hours + 'h';
+            if (Math.abs(hours) > 1) {
+                return hours + 'hours';
+            } else {
+                return hours + 'hour';
+            }
         } else if (Math.abs(minutes) > 0) {
-            return minutes + 'm';
+            if (Math.abs(minutes) > 1) {
+                return minutes + 'minutes';
+            } else {
+                return minutes + 'minute';
+            }
         } else {
             return 'now';
         }
-    } else {
+    } else if (is_short === 1) {
         if (Math.abs(years) > 0) {
             if (Math.abs(years) > 1) {
                 return years + 'yrs';
@@ -1619,6 +1656,20 @@ export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[
             } else {
                 return minutes + 'min';
             }
+        } else {
+            return 'now';
+        }
+    } else {
+        if (Math.abs(years) > 0) {
+            return years + 'y';
+        } else if (Math.abs(months) > 0) {
+            return months + 'mo';
+        } else if (Math.abs(days) > 0) {
+            return days + 'd';
+        } else if (Math.abs(hours) > 0) {
+            return hours + 'h';
+        } else if (Math.abs(minutes) > 0) {
+            return minutes + 'm';
         } else {
             return 'now';
         }
@@ -1889,7 +1940,7 @@ export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, 
 /**
  * 公用方法：给面板上名字
  */
-export function getPanelNameSVG(name = '?? (!test)', index = '?', request_time = 'request time: ' + getNowTimeStamp(), version = 'v0.6.0 RR', color = '#fff', powered = 'Yumubot') {
+export function getPanelNameSVG(name = '?? (!test)', index = '?', request_time = 'request time: ' + getNowTimeStamp(), version = 'v0.6.2 RR', color = '#fff', powered = 'Yumubot') {
 
     const powered_text = torus.getTextPath(
         "powered by " + powered.toString() + " " + version.toString() + " \/\/ " + name.toString(),

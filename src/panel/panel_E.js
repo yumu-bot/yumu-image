@@ -935,11 +935,11 @@ const score2Labels = (score, calcPP) => {
 
     const od_r = od2ms(calcPP.attr.od, mode);
     const od_b = floors(calcPP.attr.od, 1).integer;
-    const od_m = stat2DataM(hasODChanged, calcPP.attr.od, score.beatmap.accuracy);
+    const od_m = stat2DataM(hasODChanged, calcPP.attr.od, score.beatmap.od);
 
     const hp_r = '-';
     const hp_b = floors(calcPP.attr.hp, 1).integer;
-    const hp_m = stat2DataM(hasHPChanged, calcPP.attr.hp, score.beatmap.drain);
+    const hp_m = stat2DataM(hasHPChanged, calcPP.attr.hp, score.beatmap.hp);
 
     return [{
         ...LABELS.BPM,

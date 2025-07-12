@@ -8,7 +8,7 @@ import {
     setSvgBody,
     setText,
     setTexts,
-    floor, getFormattedTime, isASCII, getAvatar, getGameMode, floors, getMapBackground
+    floor, getFormattedTime, isASCII, getAvatar, getGameMode, floors, getMapBackground, rounds
 } from "../util/util.js";
 import {
     getRankBackground
@@ -542,7 +542,7 @@ const component_Eta2 = (data = {
     const combo = poppinsBold.get2SizeTextPath(data?.combo?.toString(), 'x', 60, 48, 1290, 294, 'right baseline', '#fff')
     const max_combo = poppinsBold.get2SizeTextPath('/ ', data?.max_combo?.toString(), 24, 30, 1290, 332, 'right baseline', '#aaa')
 
-    const acc = floors((data?.accuracy || 0) * 100, 2)
+    const acc = rounds((data?.accuracy || 0) * 100, 2)
     const accuracy = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + '%', 60, 48, 1290, 384, 'right baseline', '#fff')
 
     const sc = floors(data?.score, -4)

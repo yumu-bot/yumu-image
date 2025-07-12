@@ -290,7 +290,7 @@ async function maiScore2CardI2(score) {
         right: right,
         index_b: achievement_text.slice(0, -3),
         index_m: achievement_text.slice(-3),
-        index_r: (score?.achievements > 0) ? '%' : '', // 右下角左边的小字
+        index_r: '%', // 右下角左边的小字
         index_b_size: 40,
         index_m_size: 24,
         index_r_size: 18,

@@ -1,7 +1,8 @@
-import {getImageFromV3,
+import {
+    getImageFromV3,
     getGameMode,
     setSvgBody,
-    setTexts, floors
+    setTexts, floors, rounds
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -89,7 +90,7 @@ export async function card_E5(data = {
     const statisticsNC = getStatisticsRRect(data.ncStats, data.statistics_max, 400, 60, 500)
     const statisticsFC = getStatisticsSVG(data.fcStats, data.statistics_max, 400, 100, 500, 28, 12, 22.79)
 
-    const acc_number = floors(data.accuracy * 100, 2)
+    const acc_number = rounds(data.accuracy * 100, 2)
 
     const acc = await label_E({...((mode === 'm') ? LABELS.PPACC : LABELS.ACC),
         remark: (data.miss > 0) ? '-' + data.miss : '-',

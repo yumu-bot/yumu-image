@@ -1,7 +1,7 @@
 import {
     getImageFromV3,
     getGameMode,
-    setSvgBody, setTexts, floor, floors,
+    setSvgBody, setTexts, floor, floors, rounds,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
@@ -112,8 +112,8 @@ export async function card_E2(data = {
 
     const acc = await label_E({...LABELS.ACC,
         remark: data.acc_index,
-        data_b: floors(data.accuracy * 100, 1).integer,
-        data_m: floors(data.accuracy * 100, 1).decimal + '%',
+        data_b: rounds(data.accuracy * 100, 1).integer,
+        data_m: rounds(data.accuracy * 100, 1).decimal + '%',
     });
     const combo = await label_E({...LABELS.COMBO,
         remark: isFC ? 'FC' : (data.max_combo + 'x'),

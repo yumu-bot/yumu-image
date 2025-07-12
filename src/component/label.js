@@ -1897,6 +1897,33 @@ export async function label_N(data = {
     return svg.toString();
 }
 
+//MSL-N2-成绩标签
+export async function label_N2(data = {
+    icon: getImageFromV3("object-score-acc2.png"),
+    icon_title: 'ACC',
+    data_b: '98.',
+    data_m: '36%',
+}) {
+    let svg = `
+  <g id="Icon_LN2">
+  </g>
+  <g id="Text_LN2">
+  </g>`;
+
+    //正则
+    const reg_text = /(?<=<g id="Text_LN2">)/;
+    const reg_icon = /(?<=<g id="Icon_LN2">)/;
+
+    //定义文本
+    const label_text = poppinsBold.get2SizeTextPath(
+        data.data_b, data.data_m, 18, 14, 26, 17, 'left baseline', '#fff'); // lS 18/ sS 14/ y15
+
+    svg = setText(svg, label_text, reg_text);
+    svg = setImage(svg, 0, 0, 20, 20, data.icon, reg_icon, 1)
+
+    return svg.toString();
+}
+
 //IM-O-玩家牌（getUser - groups）
 export function label_O(data = {
     "colour": "#A347EB",

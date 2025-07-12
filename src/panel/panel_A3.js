@@ -5,8 +5,8 @@ import {
     setText, setImage, getMapBackground, thenPush, getSvgBody
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
-import {card_N} from "../card/card_N.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
+import {card_N2} from "../card/card_N2.js";
 
 export async function router(req, res) {
     try {
@@ -82,7 +82,7 @@ export async function panel_A3(data = {
             compare_score = data.scores[i0].total_score
         }
 
-        const f = card_N({
+        const f = card_N2({
             score: data.scores[i],
             score_rank: (parseInt(i) + (data?.start || 1)) || 0,
             compare_score: compare_score,

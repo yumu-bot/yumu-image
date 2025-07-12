@@ -21,7 +21,7 @@ import {
     floors,
     getFormattedTime,
     getTimeDifferenceShort,
-    getMapBackground, getDiffBackground, getTime, thenPush,
+    getMapBackground, getDiffBackground, getTime, thenPush, round,
 } from "./util.js";
 import {getBadgeColor, getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -599,10 +599,10 @@ export const PanelGenerate = {
         const right3m = sr.decimal + '*';
 
         function getBeatmapStats(beatmap) {
-            const cs = Math.round(beatmap.cs * 10) / 10;
-            const ar = Math.round(beatmap.ar * 10) / 10;
-            const od = Math.round(beatmap.accuracy * 10) / 10;
-            const hp = Math.round(beatmap.drain * 10) / 10;
+            const cs = round(beatmap.cs, 1);
+            const ar = round(beatmap.ar, 1);
+            const od = round(beatmap.od, 1);
+            const hp = round(beatmap.hp, 1);
 
             switch (getGameMode(beatmap.mode_int, 1)) {
                 case 'o':
@@ -1026,7 +1026,7 @@ export const PanelGenerate = {
         const background = await readNetImage(s?.beatmapset?.covers?.cover, cache);
         const type = getScoreTypeImage(s.is_lazer)
 
-        const time_diff = getTimeDifferenceShort(s.ended_at, true);
+        const time_diff = getTimeDifferenceShort(s.ended_at, 1);
 
         let mods_width;
         switch (s?.mods?.length) {
@@ -1149,7 +1149,7 @@ export const PanelGenerate = {
         const card_h = await PanelGenerate.score2CardH(s, rank, true)
 
         if (is_after) {
-            const time_diff = getTimeDifferenceShort(s.ended_at, true);
+            const time_diff = getTimeDifferenceShort(s.ended_at, 1);
             const rank_after_str = ' -> ' + rank_after;
             const difficulty_name = s.beatmap.version ?
                 torus.cutStringTail(getKeyDifficulty(s.beatmap), 24,
@@ -1318,7 +1318,7 @@ export const PanelGenerate = {
             left4: rating_max_text,
             index_b: achievement_text.slice(0, -3),
             index_m: achievement_text.slice(-3),
-            index_r: (score?.achievements > 0) ? '%' : '',
+            index_r: '%',
             index_b_size: 32,
             index_m_size: 20,
             index_r_size: 18,
@@ -1365,8 +1365,8 @@ export const PanelGenerate = {
                     label3: {
                         icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
-                        data_b: floors(beatmap.accuracy, 1).integer,
-                        data_m: floors(beatmap.accuracy, 1).decimal,
+                        data_b: floors(beatmap.od, 1).integer,
+                        data_m: floors(beatmap.od, 1).decimal,
                     },
 
                     max_width: label_width,
@@ -1377,8 +1377,8 @@ export const PanelGenerate = {
                     label1: {
                         icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
-                        data_b: floors(beatmap.accuracy, 1).integer,
-                        data_m: floors(beatmap.accuracy, 1).decimal
+                        data_b: floors(beatmap.od, 1).integer,
+                        data_m: floors(beatmap.od, 1).decimal
                     },
                     label2: {
                         icon: '',
@@ -1389,8 +1389,8 @@ export const PanelGenerate = {
                     label3: {
                         icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
-                        data_b: floors(beatmap.drain, 1).integer,
-                        data_m: floors(beatmap.drain, 1).decimal
+                        data_b: floors(beatmap.hp, 1).integer,
+                        data_m: floors(beatmap.hp, 1).decimal
                     },
 
                     max_width: label_width,
@@ -1413,8 +1413,8 @@ export const PanelGenerate = {
                     label3: {
                         icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
-                        data_b: floors(beatmap.drain, 1).integer,
-                        data_m: floors(beatmap.drain, 1).decimal
+                        data_b: floors(beatmap.hp, 1).integer,
+                        data_m: floors(beatmap.hp, 1).decimal
                     },
 
                     max_width: label_width,
@@ -1431,14 +1431,14 @@ export const PanelGenerate = {
                     label2: {
                         icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
-                        data_b: floors(beatmap.accuracy, 1).integer,
-                        data_m: floors(beatmap.accuracy, 1).decimal,
+                        data_b: floors(beatmap.od, 1).integer,
+                        data_m: floors(beatmap.od, 1).decimal,
                     },
                     label3: {
                         icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
-                        data_b: floors(beatmap.drain, 1).integer,
-                        data_m: floors(beatmap.drain, 1).decimal
+                        data_b: floors(beatmap.hp, 1).integer,
+                        data_m: floors(beatmap.hp, 1).decimal
                     },
 
                     max_width: label_width,

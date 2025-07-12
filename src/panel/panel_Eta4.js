@@ -12,7 +12,7 @@ import {
     getImageFromV3,
     getMapStatus,
     floors,
-    getDifficultyIndex, isNotEmptyArray, getAvatar, getDiffBackground
+    getDifficultyIndex, isNotEmptyArray, getAvatar, getDiffBackground, rounds
 } from "../util/util.js";
 import {poppinsBold, torusRegular} from "../util/font.js";
 import {getMapStatusColor} from "../util/color.js";
@@ -542,7 +542,7 @@ const component_Eta4 = (data = {
         + torusRegular.getTextPath('Combo', 420, 918, 40, 'left baseline', '#2A2226')
         + poppinsBold.getTextPath('Enabled Modifiers:', 1380, 900, 40, 'left baseline', '#2A2226')
 
-    const acc = floors((data?.accuracy || 0) * 100, 2)
+    const acc = rounds((data?.accuracy || 0) * 100, 2)
     const accuracy = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + '%', 72, 60, 420, 828, 'left baseline', '#2A2226')
 
     const combo = poppinsBold.get2SizeTextPath(data?.combo, 'x / ' + data?.max_combo + 'x [' + Math.round(data?.combo / data?.max_combo * 100) + '%]', 72, 48, 420, 1000, 'left baseline', '#2A2226')

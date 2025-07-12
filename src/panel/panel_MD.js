@@ -188,7 +188,7 @@ async function maiDistribution2CardI3(dist = {
         left4: ' <- ' + rating,
         index_b: achievement_text.slice(0, -3),
         index_m: achievement_text.slice(-3),
-        index_r: (dist.score?.achievements > 0) ? '%' : '',
+        index_r: '%',
         index_b_size: 32,
         index_m_size: 20,
         index_r_size: 18,

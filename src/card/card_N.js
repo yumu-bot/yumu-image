@@ -3,7 +3,7 @@ import {
     getFlagPath,
     getTimeDifference,
     setImage,
-    setSvgBody, setText, setTexts, getAvatar, floors,
+    setSvgBody, setText, setTexts, getAvatar, floors, rounds,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
@@ -88,7 +88,7 @@ export async function card_N(data = {
     const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
     const delta_score_text = torus.getTextPath(delta_score.toString(), 580 - 10, 36 + 17, 18, 'right baseline', '#aaa');
 
-    const acc_number = floors(acc, 2)
+    const acc_number = rounds(acc, 2)
 
     const n1_acc = await label_N({
         ...LABELS.ACC2,
@@ -290,7 +290,7 @@ function getBGOpacity(timeDifference = '-1d') {
     const unit = timeDifference ? timeDifference.toString().slice(-1) : '-';
     switch (unit) {
         case 'y': return 0.25;
-        case 'mo': return 0.3;
+        case 'o': return 0.3;
         case 'd': return 0.4;
         case 'h': return 0.5;
         case 'm': return 0.6;
