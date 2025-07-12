@@ -113,7 +113,7 @@ export async function card_N2(data = {
         score = data.score.total_score
     }
 
-    const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score).toString()) : '-0';
+    const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score)) : -0;
 
     const acc_number = rounds(acc, 2)
 
@@ -150,9 +150,19 @@ export async function card_N2(data = {
         color: '#fff'
     }], 834, 31, 'right baseline')
 
+    const score_width = poppinsBold.getTextWidth(delta_score + '  ', 12) + poppinsBold.getTextWidth(score, 18)
+
+    let delta_score_text
+
+    if (score_width > 146) {
+        delta_score_text = rounds(delta_score, 2)
+    } else {
+        delta_score_text = delta_score.toString()
+    }
+
     const score_text = getMultipleTextPath([{
         font: poppinsBold,
-        text: delta_score + '  ',
+        text: delta_score_text + '  ',
         size: 12,
         color: '#aaa'
     }, {

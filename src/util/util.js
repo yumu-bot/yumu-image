@@ -744,10 +744,25 @@ export function floors(number = 0, level = 0, sub_level = 0) {
     return floorOrRound(number, level, sub_level, false)
 }
 
+/**
+ * 第二版处理数字。如果要分开，请使用 rounds
+ * @param number 数字
+ * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，负数用于特别大的数
+ * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格
+ * @returns {string}
+ */
 export function round(number = 0, level = 0, sub_level = 0) {
     const r = rounds(number, level, sub_level)
     return r.integer + r.decimal
 }
+
+/**
+ * 第二版处理数字
+ * @param number 数字
+ * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，decimal
+ * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格，3 附加输出分好的整数部分和小数部分
+ * @returns {{integer: string, decimal: string, int: number, dec: number} | {integer: string, decimal: string}}
+ */
 export function rounds(number = 0, level = 0, sub_level = 0) {
     return floorOrRound(number, level, sub_level, true)
 }
