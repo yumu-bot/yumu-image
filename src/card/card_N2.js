@@ -5,7 +5,7 @@ import {
     getAvatar,
     getFlagPath, getSvgBody,
     getTimeDifferenceShort,
-    readNetImage,
+    readNetImage, round,
     rounds, setImage, setText, setTexts
 } from "../util/util.js";
 import {label_N2, LABELS} from "../component/label.js";
@@ -155,7 +155,7 @@ export async function card_N2(data = {
     let delta_score_text
 
     if (score_width > 146) {
-        delta_score_text = rounds(delta_score, 2)
+        delta_score_text = round(delta_score, 2)
     } else {
         if (Math.abs(delta_score) <= 1e-4) {
             delta_score_text = '-0'
