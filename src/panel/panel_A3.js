@@ -47,6 +47,8 @@ export async function panel_A3(data = {
     // 导入模板
     let svg = readTemplate('template/Panel_A3.svg');
 
+    const is_legacy = data?.is_legacy || false
+
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
     const reg_beatmap_a2 = /(?<=<g id="Beatmap_Card_A2">)/;
@@ -57,7 +59,13 @@ export async function panel_A3(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA3-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Leader Board (!yml)', 'L')
+    let panel_name
+
+    if (is_legacy) {
+        panel_name = getPanelNameSVG('Legacy Leader Board (!ymll)', 'LL')
+    } else {
+        panel_name = getPanelNameSVG('Leader Board (!yml)', 'L')
+    }
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
@@ -72,8 +80,6 @@ export async function panel_A3(data = {
     let promiseN1s = [];
     for (const i in data.scores) {
         const i0 = Math.max((parseInt(i) - 1), 0)
-
-        const is_legacy = data?.is_legacy || false
 
         let compare_score;
         if (is_legacy) {
