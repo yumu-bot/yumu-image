@@ -83,7 +83,7 @@ export async function panel_Epsilon(data = {
 
     const name = TahomaRegular.getTextPath(
         TahomaRegular.cutStringTail(user?.username || 'Unknown', name_size, 460, true),
-        230, 435, 60, 'center baseline', name_color
+        230, 435, name_size, 'center baseline', name_color
     );
     const country = await getFlagPath(user?.country?.code, is_supporter ? 95 : 207.5, (has_group ? 510 : 465) - 3, 30)
     const group_name = TahomaBold.getTextPath((group?.name || '').replaceAll("(Probationary)", "(Prob)"), 230, 482, 28, 'center baseline', '#000')
