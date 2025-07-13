@@ -71,8 +71,18 @@ export async function panel_Epsilon(data = {
 
     const image = await getAvatar(user?.avatar_url, true);
 
+    const name_width = TahomaRegular.getTextWidth(user?.username || 'Unknown', 60)
+
+    let name_size
+
+    if (name_width > 460) {
+        name_size = 50
+    } else {
+        name_size = 60
+    }
+
     const name = TahomaRegular.getTextPath(
-        TahomaRegular.cutStringTail(user?.username || 'Unknown', 60, 460, true),
+        TahomaRegular.cutStringTail(user?.username || 'Unknown', name_size, 460, true),
         230, 435, 60, 'center baseline', name_color
     );
     const country = await getFlagPath(user?.country?.code, is_supporter ? 95 : 207.5, (has_group ? 510 : 465) - 3, 30)
