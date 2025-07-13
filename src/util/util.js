@@ -953,28 +953,30 @@ function floorOrRound(number = 0, level = 0, sub_level = 0, is_round = false) {
 
 /**
  * 重写了获取单位的逻辑
- * @param number 数字
+ * @param num 数字
  * @param pattern 种类，0 常规，-1 缩短，1 中文语境
  * @returns {string}
  */
 function unit(number = 0, pattern = 0) {
+    const num = Math.abs(number)
+
     switch (pattern) {
         case 0: {
-            if (number < Math.pow(10, 3)) {
+            if (num < Math.pow(10, 3)) {
                 return '';
-            } else if (number < Math.pow(10, 6)) {
+            } else if (num < Math.pow(10, 6)) {
                 return 'K';
-            } else if (number < Math.pow(10, 9)) {
+            } else if (num < Math.pow(10, 9)) {
                 return 'M'; //Million
-            } else if (number < Math.pow(10, 12)) {
+            } else if (num < Math.pow(10, 12)) {
                 return 'B'; //Billion
-            } else if (number < Math.pow(10, 15)) {
+            } else if (num < Math.pow(10, 15)) {
                 return 'T'; //Trillion
-            } else if (number < Math.pow(10, 18)) {
+            } else if (num < Math.pow(10, 18)) {
                 return 'Q'; //Quadrillion
-            } else if (number < Math.pow(10, 21)) {
+            } else if (num < Math.pow(10, 21)) {
                 return 'U'; //Quintillion
-            } else if (number < Math.pow(10, 24)) {
+            } else if (num < Math.pow(10, 24)) {
                 return 'S'; //Sextillion
             } else {
                 return 'Z' //Zillion 反正很多
@@ -982,21 +984,21 @@ function unit(number = 0, pattern = 0) {
         }
 
         case -1: {
-            if (number < Math.pow(10, 3)) { //0.1K，但是数据还没到1K的位置，就给100了
+            if (num < Math.pow(10, 3)) { //0.1K，但是数据还没到1K的位置，就给100了
                 return '';
-            } else if (number < Math.pow(10, 5)) { // 1000 -> 1.0K 99 000 -> 99K 从这开始，和上面相比就要减一了
+            } else if (num < Math.pow(10, 5)) { // 1000 -> 1.0K 99 000 -> 99K 从这开始，和上面相比就要减一了
                 return 'K';
-            } else if (number < Math.pow(10, 8)) {
+            } else if (num < Math.pow(10, 8)) {
                 return 'M';
-            } else if (number < Math.pow(10, 11)) {
+            } else if (num < Math.pow(10, 11)) {
                 return 'B';
-            } else if (number < Math.pow(10, 14)) {
+            } else if (num < Math.pow(10, 14)) {
                 return 'T';
-            } else if (number < Math.pow(10, 17)) {
+            } else if (num < Math.pow(10, 17)) {
                 return 'Q';
-            } else if (number < Math.pow(10, 20)) {
+            } else if (num < Math.pow(10, 20)) {
                 return 'U';
-            } else if (number < Math.pow(10, 23)) {
+            } else if (num < Math.pow(10, 23)) {
                 return 'S';
             } else {
                 return 'Z'
@@ -1004,15 +1006,15 @@ function unit(number = 0, pattern = 0) {
         }
 
         case 1: {
-            if (number < Math.pow(10, 4)) {  //level==1->100 level==2->1000
+            if (num < Math.pow(10, 4)) {  //level==1->100 level==2->1000
                 return '';
-            } else if (number < Math.pow(10, 8)) {
+            } else if (num < Math.pow(10, 8)) {
                 return 'w'; //万
-            } else if (number < Math.pow(10, 12)) {
+            } else if (num < Math.pow(10, 12)) {
                 return 'e'; //亿
-            } else if (number < Math.pow(10, 16)) {
+            } else if (num < Math.pow(10, 16)) {
                 return 'ew'; //亿万
-            } else if (number < Math.pow(10, 20)) {
+            } else if (num < Math.pow(10, 20)) {
                 return 'ee'; //亿亿
             } else {
                 return ''
