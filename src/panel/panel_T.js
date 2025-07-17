@@ -295,6 +295,7 @@ export async function panel_T(
 
     // 插入文字和图片
 
+    console.log(data.info.start_time)
     const start_time = getFormattedTime(data?.info?.start_time, 'YYYY/MM/DD HH:mm')
     const end_time = getFormattedTime(data?.info?.end_time, 'YYYY/MM/DD HH:mm')
     const request_time = 'duration: ' + start_time + ' - ' + end_time + ' // request time: ' + getNowTimeStamp();
