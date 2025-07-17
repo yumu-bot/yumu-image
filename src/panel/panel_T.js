@@ -1,5 +1,5 @@
 import {
-    exportJPEG, floor, getAvatar, getKeyDifficulty, getMapBackground, getPanelNameSVG, getSvgBody,
+    exportJPEG, floor, getAvatar, getGameMode, getKeyDifficulty, getMapBackground, getPanelNameSVG, getSvgBody,
     readNetImage, requireNonNullElse, setImage, setSvgBody, setText,
     setTexts, thenPush
 } from "../util/util.js";
@@ -552,7 +552,7 @@ async function popularInfo2cardA2(info = {}, beatmap = {}) {
         title1: 'Popular Beatmap',
         title2: 'Group: ' + (info?.group_id || 0),
         title3: '',
-        left1: '',
+        left1: 'mode: ' + getGameMode(info?.mode, 2),
         left2: 'member count: ' + (info?.member_count || 0),
         left3: 'score count: ' + (info?.score_count || 0),
         right1: '',
