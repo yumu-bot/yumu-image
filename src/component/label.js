@@ -1656,8 +1656,10 @@ export function label_T(data = {
         is_too_short ? data.abbr : data.icon_title, 16, data?.max_width - 20 - 10
     )
 
-    const icon_title = poppinsBold.getTextPath(title_str, 8, 20, 16, 'left baseline', '#fff');
-    const number_data = poppinsBold.getTextPath(data.data_b, 8, 52, 30, "left baseline", data.bar_color)
+    const circle = PanelDraw.Circle(18, 15, 8, data.bar_color, 1)
+
+    const icon_title = poppinsBold.getTextPath(title_str, 36, 20, 16, 'left baseline', '#fff');
+    const number_data = poppinsBold.getTextPath(data.data_b, 182, 20, 16, "right baseline", data.bar_color)
 
     const progress = data?.bar_progress || 0
     const bar_width = progress === 0 ? 0 : Math.max(30, progress * data?.max_width);
@@ -1666,7 +1668,7 @@ export function label_T(data = {
     const bar_base = PanelDraw.Rect(0, 0, data?.max_width, 30, 15,
         is_dark_mode ? PanelColor.bright(data.hue) : PanelColor.top(data.hue), 1)
 
-    svg = setTexts(svg, [icon_title, number_data, bar, bar_base], reg_text)
+    svg = setTexts(svg, [circle, icon_title, number_data, bar, bar_base], reg_text)
 
     return svg.toString();
 }

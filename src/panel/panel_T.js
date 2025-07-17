@@ -10,7 +10,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {getModColor} from "../util/color.js";
+import {getModColor, getStarRatingColor, PanelColor} from "../util/color.js";
 import {label_T} from "../component/label.js";
 
 export async function router(req, res) {
@@ -311,11 +311,11 @@ export async function panel_T(
     )
 
     const componentT3 = getSvgBody(1000, 630,
-        component_T3("Mods", data.mod_attr, data.mod_max_percent)
+        component_T3(data.mod_attr, data.mod_max_percent)
     )
 
     const componentT4 = getSvgBody(1450, 630,
-        component_T4("PP", data.pp_attr, data.pp_max_percent)
+        component_T4(data.pp_attr, data.pp_max_percent)
     )
 
 
@@ -401,7 +401,7 @@ const component_T2 = async (max_retry = {
     return svg.toString()
 }
 
-const component_T3 = (title = '', attr = [], max_percent = 1) => {
+const component_T3 = (attr = [], max_percent = 1) => {
     let svg = `<g id="Component_OT3">
     </g>`
 
@@ -456,11 +456,15 @@ const component_T3 = (title = '', attr = [], max_percent = 1) => {
         string_mod_label += getSvgBody(15 + x * (max_width + 10), 245 + y * 40, label)
     }
 
-    svg = setTexts(svg, [mod_svg, string_mod_label], reg)
+    const title = poppinsBold.getTextPath('PP', 20, 32, 18, 'left baseline', '#fff')
+
+    const rrect = PanelDraw.Rect(0, 0, 430, 410, PanelColor.middle())
+
+    svg = setTexts(svg, [title, mod_svg, string_mod_label, rrect], reg)
     return svg.toString()
 }
 
-const component_T4 = (title = '', attr = [], max_percent = 1) => {
+const component_T4 = (attr = [], max_percent = 1) => {
     let svg = `<g id="Component_OT4">
     </g>`
 
@@ -529,7 +533,11 @@ const component_T4 = (title = '', attr = [], max_percent = 1) => {
         string_pp_label += getSvgBody(15 + x * (max_width + 10), 245 + y * 40, label)
     }
 
-    svg = setTexts(svg, [pp_svg, string_pp_label], reg)
+    const title = poppinsBold.getTextPath('PP', 20, 32, 18, 'left baseline', '#fff')
+
+    const rrect = PanelDraw.Rect(0, 0, 430, 410, PanelColor.middle())
+
+    svg = setTexts(svg, [title, pp_svg, string_pp_label, rrect], reg)
     return svg.toString()
 }
 
@@ -582,7 +590,7 @@ async function popularBeatmap2cardH(popular = {
         500 - 10 - torus.getTextWidth('[] -   ' + acc + combo, 24), true) : '';
 
     const color_arr = ['#FFF100', '#FF9800', '#009944', '#00A0E9', '#9922EE']
-    const star_color = color_arr[(identifier || 1) - 1]
+    const rrect_color = color_arr[(identifier || 1) - 1]
     const color_index = (identifier || 1) <= 1 ? '#2A2226' : '#fff';
 
     const artist = torus.cutStringTail(popular?.beatmap?.beatmapset?.artist, 24,
@@ -594,6 +602,7 @@ async function popularBeatmap2cardH(popular = {
     const index_l = (popular.player_count || 0).toString() + 'x'
 
     const star = popular?.beatmap?.difficulty_rating || 0
+    const star_color = getStarRatingColor(star)
     const color_label12 = (star < 4) ? '#1c1719' : '#fff'
     const label2 = popular?.beatmap?.id?.toString() || ''
 
@@ -620,7 +629,7 @@ async function popularBeatmap2cardH(popular = {
         mods_arr: [],
 
         color_title2: '#bbb',
-        color_right: star_color,
+        color_right: rrect_color,
         color_left: star_color,
         color_index: color_index,
         color_label1: star_color,
