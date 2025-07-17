@@ -456,7 +456,7 @@ const component_T3 = (attr = [], max_percent = 1) => {
         string_mod_label += getSvgBody(15 + x * (max_width + 10), 245 + y * 40, label)
     }
 
-    const title = poppinsBold.getTextPath('PP', 20, 32, 18, 'left baseline', '#fff')
+    const title = poppinsBold.getTextPath('Mods', 20, 32, 18, 'left baseline', '#fff')
 
     const rrect = PanelDraw.Rect(0, 0, 430, 410, PanelColor.middle())
 
