@@ -124,6 +124,7 @@ export async function panel_T(data = {
     </g>
 </svg>
 `
+    console.log(data)
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
     const reg_body = /(?<=<g id="Body_Card">)/;
@@ -228,6 +229,10 @@ const component_T2 = async (max_retry = {
     await Promise.allSettled([PanelGenerate.beatMap2CardA2(max_retry.beatmap), getAvatar(max_retry.user, true)])
         .then(results => thenPush(results, async))
 
+    console.log(async)
+
+    const title = poppinsBold.getTextPath('Max Retry', 20, 32, 18, 'left baseline', '#fff')
+
     const name = poppinsBold.getTextPath(max_retry.user?.username, 665, 222, 30, 'center baseline', '#fff')
 
     const tries = poppinsBold.get2SizeTextPath((max_retry.count || 0).toString(), ' tries', 30, 24, 665, 258, 'center baseline', '#fff')
@@ -235,7 +240,7 @@ const component_T2 = async (max_retry = {
     const rrect = PanelDraw.Rect(0, 0, 880, 280, 20, '#382E32')
 
     svg = setTexts(svg, [
-        getSvgBody(20, 20, async[0]), name, tries, rrect
+        getSvgBody(20, 20, async[0]), title, name, tries, rrect
     ], reg)
 
     svg = setImage(svg, 665 - 70, 120 - 70, 140, 140, async[1], reg_avatar)
