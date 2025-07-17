@@ -475,7 +475,7 @@ const component_T4 = (attr = [], max_percent = 1) => {
 
     attr.reduce((prev, curr) => {
         const curr_percent = prev + curr.percent;
-        const color = getModColor(curr.index);
+        const color = getPPColor(curr.index);
 
         pp_svg += PanelDraw.Pie(215, 126, 100, curr_percent, prev, color);
 
@@ -507,27 +507,13 @@ const component_T4 = (attr = [], max_percent = 1) => {
 
         const title = (v?.index || '?').replace('X', 'SS')
 
-        let bar_color
-
-        switch (v?.index) {
-            case "0": bar_color = '#00B7EE'; break;
-            case "50": bar_color = '#31B16C'; break;
-            case "100": bar_color = '#FFF45C'; break;
-            case "200": bar_color = '#F19149'; break;
-            case "300": bar_color = '#EC6841'; break;
-            case "400": bar_color = '#EA68A2'; break;
-            case "500": bar_color = '#AD5DA1'; break;
-            case "600": bar_color = '#5F52A0'; break;
-            default: bar_color = '#aaa'; break;
-        }
-
         const label = label_T({
             icon_title: title,
             abbr: title,
             data_b: (v?.count || 0).toString().padStart(3, '0'),
 
             bar_progress: (v?.percent || 0) / max_percent,
-            bar_color: bar_color,
+            bar_color: getPPColor(v?.index),
             max_width: max_width,
         })
 
@@ -562,6 +548,23 @@ async function popularInfo2cardA2(info = {}, beatmap = {}) {
         right3b: right3b,
         right3m: '',
     };
+}
+
+function getPPColor(index = "0") {
+    let bar_color
+    switch (index) {
+        case "0": bar_color = '#00B7EE'; break;
+        case "50": bar_color = '#31B16C'; break;
+        case "100": bar_color = '#FFF45C'; break;
+        case "200": bar_color = '#F19149'; break;
+        case "300": bar_color = '#EC6841'; break;
+        case "400": bar_color = '#EA68A2'; break;
+        case "500": bar_color = '#AD5DA1'; break;
+        case "600": bar_color = '#5F52A0'; break;
+        default: bar_color = '#aaa'; break;
+    }
+
+    return bar_color
 }
 
 async function popularBeatmap2cardH(popular = {
