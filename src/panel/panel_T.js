@@ -1,7 +1,20 @@
 import {
-    exportJPEG, floor, getAvatar, getGameMode, getKeyDifficulty, getMapBackground, getPanelNameSVG, getSvgBody,
-    readNetImage, requireNonNullElse, setImage, setSvgBody, setText,
-    setTexts, thenPush
+    exportJPEG,
+    floor,
+    getAvatar,
+    getFormattedTime,
+    getGameMode,
+    getKeyDifficulty,
+    getMapBackground, getNowTimeStamp,
+    getPanelNameSVG,
+    getSvgBody,
+    readNetImage,
+    requireNonNullElse,
+    setImage,
+    setSvgBody,
+    setText,
+    setTexts,
+    thenPush
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {poppinsBold, torus} from "../util/font.js";
@@ -105,7 +118,9 @@ export async function panel_T(
             member_count: 14,
             player_count: 4,
             score_count: 1098,
-            mode: 'DEFAULT'
+            mode: 'DEFAULT',
+            started_time: '',
+            ended_time: '',
         },
         popular: [
             {
@@ -279,7 +294,12 @@ export async function panel_T(
 
 
     // 插入文字和图片
-    const panel_name = getPanelNameSVG('Popular Beatmap (!ympu)', 'PU');
+
+    const start_time = getFormattedTime(data?.info?.started_time, 'YYYY/MM/DD HH:mm')
+    const end_time = getFormattedTime(data?.info?.ended_time, 'YYYY/MM/DD HH:mm')
+    const request_time = 'duration: ' + start_time + ' - ' + end_time + ' // request time: ' + getNowTimeStamp();
+
+    const panel_name = getPanelNameSVG('Popular Beatmap (!ympu)', 'PU', request_time);
     svg = setText(svg, panel_name, reg_index);
 
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
