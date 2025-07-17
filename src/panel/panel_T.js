@@ -393,7 +393,7 @@ const component_T2 = async (max_retry = {
     const rrect = PanelDraw.Rect(0, 0, 880, 280, 20, '#382E32')
 
     svg = setTexts(svg, [
-        getSvgBody(20, 20, async[0]), title, name, tries, rrect
+        getSvgBody(20, 20, card_A2(async[0])), title, name, tries, rrect
     ], reg)
 
     svg = setImage(svg, 665 - 70, 120 - 70, 140, 140, async[1], reg_avatar)
