@@ -49,6 +49,7 @@ export async function panel_T(data = {
         member_count: 0,
         player_count: 0,
         score_count: 0,
+        mode: 'osu'
     },
     popular: [{
         beatmap_id: 1,
@@ -155,10 +156,7 @@ export async function panel_T(data = {
 
     // 渲染
     const componentT1 = getSvgBody(40, 330,
-        component_T1({
-            populars: populars,
-            score_count: data.info.score_count
-        })
+        component_T1(populars)
     )
 
     const componentT2 = getSvgBody(1000, 330,
@@ -173,10 +171,7 @@ export async function panel_T(data = {
 
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
-const component_T1 = (data = {
-    populars: [],
-    score_count: 0,
-}) => {
+const component_T1 = (populars = []) => {
     let svg = `<g id="Component_OT1">
     </g>`
 
@@ -188,16 +183,19 @@ const component_T1 = (data = {
         const x = 20
         const y = 50 + i * 135
 
-        popular_svg += getSvgBody(x, y, data.populars[i])
+        popular_svg += getSvgBody(x, y, populars[i])
     }
 
-    const title = poppinsBold.getTextPath('Popular Beatmaps', 20, 32, 18, 'left baseline', '#fff')
+    const title = poppinsBold.getTextPath('Most Popular Beatmaps', 20, 32, 18, 'left baseline', '#fff')
 
+    /*
     const count = poppinsBold.getTextPath('Score Count: ' + (data.score_count || 0), 920, 32, 18, 'right baseline', '#fff')
+
+     */
 
     const base = PanelDraw.Rect(0, 0, 940, 710, 20, '#382E32')
 
-    svg = setTexts(svg, [popular_svg, title, count, base], reg)
+    svg = setTexts(svg, [popular_svg, title, base], reg)
 
     return svg.toString()
 }
@@ -257,12 +255,12 @@ async function popularInfo2cardA2(info = {}, beatmap = {}) {
         title2: 'Group: ' + (info?.group_id || 0),
         title3: '',
         left1: '',
-        left2: '',
-        left3: 'member count: ' + (info?.member_count || 0),
+        left2: 'member count: ' + (info?.member_count || 0),
+        left3: 'score count: ' + (info?.score_count || 0),
         right1: '',
         right2: 'player count:',
         right3b: right3b,
-        right3m: 'x',
+        right3m: '',
     };
 }
 
