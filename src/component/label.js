@@ -1659,7 +1659,7 @@ export function label_T(data = {
     const circle = PanelDraw.Circle(18, 15, 8, data.bar_color, 1)
 
     const icon_title = poppinsBold.getTextPath(title_str, 36, 20, 16, 'left baseline', '#fff');
-    const number_data = poppinsBold.getTextPath(data.data_b, 182, 20, 16, "right baseline", data.bar_color)
+    const number_data = poppinsBold.getTextPath(data.data_b, (data.max_width - 10), 20, 16, "right baseline", data.bar_color)
 
     const progress = data?.bar_progress || 0
     const bar_width = progress === 0 ? 0 : Math.max(30, progress * data?.max_width);

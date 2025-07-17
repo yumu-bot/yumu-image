@@ -393,7 +393,7 @@ const component_T2 = async (max_retry = {
     const rrect = PanelDraw.Rect(0, 0, 880, 280, 20, '#382E32')
 
     svg = setTexts(svg, [
-        getSvgBody(20, 20, card_A2(async[0])), title, name, tries, rrect
+        getSvgBody(20, 50, card_A2(async[0])), title, name, tries, rrect
     ], reg)
 
     svg = setImage(svg, 665 - 70, 120 - 70, 140, 140, async[1], reg_avatar)
@@ -458,7 +458,7 @@ const component_T3 = (attr = [], max_percent = 1) => {
 
     const title = poppinsBold.getTextPath('Mods', 20, 32, 18, 'left baseline', '#fff')
 
-    const rrect = PanelDraw.Rect(0, 0, 430, 410, PanelColor.middle())
+    const rrect = PanelDraw.Rect(0, 0, 430, 410, 20, PanelColor.middle())
 
     svg = setTexts(svg, [title, mod_svg, string_mod_label, rrect], reg)
     return svg.toString()
