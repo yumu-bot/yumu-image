@@ -10,6 +10,8 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
+import {getModColor} from "../util/color.js";
+import {label_T} from "../component/label.js";
 
 export async function router(req, res) {
     try {
@@ -43,7 +45,9 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_T(data = {
+export async function panel_T(
+    /*
+    data = {
     info: {
         group_id: 0,
         member_count: 0,
@@ -92,7 +96,150 @@ export async function panel_T(data = {
     pp_max_percent: 0.0,
 
 
-}) {
+}
+
+     */
+    data = {
+        info: {
+            group_id: 722292097,
+            member_count: 14,
+            player_count: 4,
+            score_count: 1098,
+            mode: 'DEFAULT'
+        },
+        popular: [
+            {
+                beatmap_id: 1071125,
+                count: 17,
+                accuracy: 0.8761652410030365,
+                combo: 240,
+                player_count: 2,
+                max_retry: [Object],
+                beatmap: [Object]
+            },
+            {
+                beatmap_id: 4884071,
+                count: 5,
+                accuracy: 0.8246882200241089,
+                combo: 214,
+                player_count: 2,
+                max_retry: [Object],
+                beatmap: [Object]
+            },
+            {
+                beatmap_id: 4957833,
+                count: 5,
+                accuracy: 0.9229454040527344,
+                combo: 276,
+                player_count: 2,
+                max_retry: [Object],
+                beatmap: [Object]
+            },
+            {
+                beatmap_id: 1863246,
+                count: 3,
+                accuracy: 0.9060603380203247,
+                combo: 543,
+                player_count: 2,
+                max_retry: [Object],
+                beatmap: [Object]
+            },
+            {
+                beatmap_id: 4749713,
+                count: 3,
+                accuracy: 0.9628576834996542,
+                combo: 465,
+                player_count: 2,
+                max_retry: [Object],
+                beatmap: [Object]
+            }
+        ],
+        max_retry: {
+            beatmap_id: 1620144,
+            count: 12,
+            user_id: 32452774,
+            user: {
+                cover: [Object],
+                avatar_url: 'https://a.ppy.sh/32452774?1732545143.jpeg',
+                default_group: 'default',
+                id: 32452774,
+                is_active: true,
+                is_bot: false,
+                is_deleted: false,
+                is_online: false,
+                is_supporter: true,
+                pm_friends_only: false,
+                username: 'Nana Sakura',
+                country_code: 'CN',
+                country: [Object],
+                is_mutual: false,
+                groups: [],
+                statistics_rulesets: [Object]
+            },
+            beatmap: {
+                beatmapset_id: 757146,
+                difficulty_rating: 5.73,
+                id: 1620144,
+                mode: 'OSU',
+                status: 'ranked',
+                total_length: 38,
+                user_id: 987334,
+                version: "Bonsai's BasS-TYPE",
+                beatmapset: [Object],
+                checksum: '9ccc293efc8024effc53a8f320b4371a',
+                failtimes: [Object],
+                max_combo: 162,
+                ar: 9,
+                bpm: 149.3,
+                convert: false,
+                count_circles: 162,
+                count_sliders: 0,
+                count_spinners: 0,
+                cs: 6.2,
+                hit_length: 38,
+                is_scoreable: true,
+                last_updated: '2018-04-27T22:58:26Z',
+                owners: [Array],
+                mode_int: 0,
+                passcount: 896247,
+                playcount: 2966823,
+                ranked: 1,
+                url: 'https://osu.ppy.sh/beatmaps/1620144',
+                od: 9,
+                hp: 6,
+                has_leader_board: true,
+                preview_name: "Tanaka Hirokazu - C-TYPE (Arf) [Bonsai's BasS-TYPE]",
+                retries: [Array],
+                fails: [Array],
+                retry: 548083,
+                fail: 1380228
+            }
+        },
+        mod_attr: [
+            { index: 'HD', count: 197, percent: 0.17941712204007285 },
+            { index: 'DT', count: 80, percent: 0.07285974499089254 },
+            { index: 'HR', count: 34, percent: 0.030965391621129327 },
+            { index: 'NC', count: 14, percent: 0.012750455373406194 },
+            { index: 'HT', count: 12, percent: 0.01092896174863388 },
+            { index: 'PF', count: 4, percent: 0.0036429872495446266 },
+            { index: 'TD', count: 3, percent: 0.00273224043715847 },
+            { index: 'NF', count: 2, percent: 0.0018214936247723133 },
+            { index: 'DA', count: 2, percent: 0.0018214936247723133 },
+            { index: 'BM', count: 1, percent: 0.0009107468123861566 },
+            { index: 'ST', count: 1, percent: 0.0009107468123861566 },
+            { index: 'EZ', count: 1, percent: 0.0009107468123861566 }
+        ],
+        mod_max_percent: 0.17941712204007285,
+        pp_attr: [
+            { index: '100', count: 390, percent: 0.3551912568306011 },
+            { index: '200', count: 127, percent: 0.11566484517304189 },
+            { index: '50', count: 229, percent: 0.20856102003642987 },
+            { index: '0', count: 51, percent: 0.04644808743169399 },
+            { index: '300', count: 3, percent: 0.00273224043715847 }
+        ],
+        pp_max_percent: 0.3551912568306011
+    }
+) {
 // 导入模板
     let svg = `
     <?xml version="1.0" encoding="UTF-8"?>
@@ -124,7 +271,6 @@ export async function panel_T(data = {
     </g>
 </svg>
 `
-    console.log(data)
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
     const reg_body = /(?<=<g id="Body_Card">)/;
@@ -146,8 +292,8 @@ export async function panel_T(data = {
     const popular_params = []
 
     await Promise.allSettled(
-        popular_arr.map((v) => {
-            return popularBeatmap2cardH(v)
+        popular_arr.map((v, i) => {
+            return popularBeatmap2cardH(v, i + 1, true)
         })
     ).then(results => thenPush(results, popular_params))
 
@@ -164,7 +310,16 @@ export async function panel_T(data = {
         await component_T2(data?.max_retry)
     )
 
-    svg = setTexts(svg, [componentT1, componentT2], reg_body)
+    const componentT3 = getSvgBody(1000, 630,
+        component_T3("Mods", data.mod_attr, data.mod_max_percent)
+    )
+
+    const componentT4 = getSvgBody(1450, 630,
+        component_T4("PP", data.pp_attr, data.pp_max_percent)
+    )
+
+
+    svg = setTexts(svg, [componentT1, componentT2, componentT3, componentT4], reg_body)
 
     
     return svg.toString()
@@ -226,10 +381,8 @@ const component_T2 = async (max_retry = {
 
     const async = []
 
-    await Promise.allSettled([PanelGenerate.beatMap2CardA2(max_retry.beatmap), getAvatar(max_retry.user, true)])
+    await Promise.allSettled([PanelGenerate.beatMap2CardA2(max_retry.beatmap), getAvatar(max_retry.user.avatar_url, true)])
         .then(results => thenPush(results, async))
-
-    console.log(async)
 
     const title = poppinsBold.getTextPath('Max Retry', 20, 32, 18, 'left baseline', '#fff')
 
@@ -245,6 +398,138 @@ const component_T2 = async (max_retry = {
 
     svg = setImage(svg, 665 - 70, 120 - 70, 140, 140, async[1], reg_avatar)
 
+    return svg.toString()
+}
+
+const component_T3 = (title = '', attr = [], max_percent = 1) => {
+    let svg = `<g id="Component_OT3">
+    </g>`
+
+    const reg = /(?<=<g id="Component_OT3">)/;
+
+    let mod_svg
+
+    attr.reduce((prev, curr) => {
+        const curr_percent = prev + curr.percent;
+        const color = getModColor(curr.index);
+
+        mod_svg += PanelDraw.Pie(215, 126, 100, curr_percent, prev, color);
+
+        return curr_percent;
+    }, 0)
+
+    // 绘制标签
+    let max_width
+    let x_count
+
+    if (attr.length <= 4) {
+        max_width = 400
+        x_count = 1
+    } else if (attr.length <= 8) {
+        max_width = 195
+        x_count = 2
+    } else {
+        max_width = 126.66
+        x_count = 3
+    }
+
+    let string_mod_label = '';
+
+    for (let i = 0; i < Math.min(attr.length, 8); i++) {
+        const v = attr[i]
+
+        const x = i % x_count
+        const y = Math.floor(i / x_count)
+
+        const title = (v?.index || '?').replace('X', 'SS')
+
+        const label = label_T({
+            icon_title: title,
+            abbr: title,
+            data_b: (v?.count || 0).toString().padStart(3, '0'),
+
+            bar_progress: (v?.percent || 0) / max_percent,
+            bar_color: getModColor(v?.index),
+            max_width: max_width,
+        })
+
+        string_mod_label += getSvgBody(15 + x * (max_width + 10), 245 + y * 40, label)
+    }
+
+    svg = setTexts(svg, [mod_svg, string_mod_label], reg)
+    return svg.toString()
+}
+
+const component_T4 = (title = '', attr = [], max_percent = 1) => {
+    let svg = `<g id="Component_OT4">
+    </g>`
+
+    const reg = /(?<=<g id="Component_OT4">)/;
+
+    let pp_svg
+
+    attr.reduce((prev, curr) => {
+        const curr_percent = prev + curr.percent;
+        const color = getModColor(curr.index);
+
+        pp_svg += PanelDraw.Pie(215, 126, 100, curr_percent, prev, color);
+
+        return curr_percent;
+    }, 0)
+
+    // 绘制标签
+    let max_width
+    let x_count
+
+    if (attr.length <= 4) {
+        max_width = 400
+        x_count = 1
+    } else if (attr.length <= 8) {
+        max_width = 195
+        x_count = 2
+    } else {
+        max_width = 126.66
+        x_count = 3
+    }
+
+    let string_pp_label = '';
+
+    for (let i = 0; i < Math.min(attr.length, 8); i++) {
+        const v = attr[i]
+
+        const x = i % x_count
+        const y = Math.floor(i / x_count)
+
+        const title = (v?.index || '?').replace('X', 'SS')
+
+        let bar_color
+
+        switch (v?.index) {
+            case "0": bar_color = '#00B7EE'; break;
+            case "50": bar_color = '#31B16C'; break;
+            case "100": bar_color = '#FFF45C'; break;
+            case "200": bar_color = '#F19149'; break;
+            case "300": bar_color = '#EC6841'; break;
+            case "400": bar_color = '#EA68A2'; break;
+            case "500": bar_color = '#AD5DA1'; break;
+            case "600": bar_color = '#5F52A0'; break;
+            default: bar_color = '#aaa'; break;
+        }
+
+        const label = label_T({
+            icon_title: title,
+            abbr: title,
+            data_b: (v?.count || 0).toString().padStart(3, '0'),
+
+            bar_progress: (v?.percent || 0) / max_percent,
+            bar_color: bar_color,
+            max_width: max_width,
+        })
+
+        string_pp_label += getSvgBody(15 + x * (max_width + 10), 245 + y * 40, label)
+    }
+
+    svg = setTexts(svg, [pp_svg, string_pp_label], reg)
     return svg.toString()
 }
 
@@ -286,8 +571,8 @@ async function popularBeatmap2cardH(popular = {
 }, identifier = 1, use_cache = null) {
     const cache = requireNonNullElse(use_cache, hasLeaderBoard(popular?.beatmap?.ranked || popular?.beatmap?.status))
 
-    const cover = await readNetImage(popular?.beatmapset?.covers?.list, cache);
-    const background = await readNetImage(popular?.beatmapset?.covers?.cover, cache);
+    const cover = await readNetImage(popular?.beatmap?.beatmapset?.covers?.list, cache);
+    const background = await readNetImage(popular?.beatmap?.beatmapset?.covers?.cover, cache);
 
     const acc = floor((popular?.accuracy * 100), 2) + '%'
     const combo = (popular.combo || 0) + 'x'
@@ -300,10 +585,10 @@ async function popularBeatmap2cardH(popular = {
     const star_color = color_arr[(identifier || 1) - 1]
     const color_index = (identifier || 1) <= 1 ? '#2A2226' : '#fff';
 
-    const artist = torus.cutStringTail(popular.beatmapset.artist, 24,
-        500 - 10 - torus.getTextWidth(' // ' + popular.beatmapset.creator, 24), true);
+    const artist = torus.cutStringTail(popular?.beatmap?.beatmapset?.artist, 24,
+        500 - 10 - torus.getTextWidth(' // ' + popular?.beatmap?.beatmapset?.creator, 24), true);
 
-    const title2 = (popular.beatmapset.title === popular.beatmapset.title_unicode) ? '' : (popular?.beatmapset?.title_unicode || '');
+    const title2 = (popular?.beatmap?.beatmapset?.title === popular?.beatmap?.beatmapset?.title_unicode) ? '' : (popular?.beatmap?.beatmapset?.title_unicode || '');
 
     const index_b = (popular.count || 0).toString()
     const index_l = (popular.player_count || 0).toString() + 'x'
@@ -317,9 +602,9 @@ async function popularBeatmap2cardH(popular = {
         cover: cover,
         type: '',
 
-        title: popular.beatmapset.title || '',
+        title: popular?.beatmap?.beatmapset?.title || '',
         title2: title2,
-        left1: artist + ' // ' + popular.beatmapset.creator,
+        left1: artist + ' // ' + popular?.beatmap.beatmapset?.creator,
         left2: '[' + difficulty_name + '] - ' + acc + ' ' + combo,
         index_b: index_b,
         index_m: 'PC',

@@ -1631,6 +1631,46 @@ export function label_J8(data = {
     return svg.toString();
 }
 
+// T-小标签
+export function label_T(data = {
+    icon_title: 'Hidden',
+    data_b: '024',
+    abbr: 'PC',
+
+    bar_progress: 0,
+    bar_color: 'none',
+    max_width: 195,
+}) {
+    let svg = `
+        <g id="Text_T">
+        </g>
+    `;
+
+    // 正则表达式
+    const reg_text = /(?<=<g id="Text_T">)/;
+
+    const is_too_short =  data?.max_width - poppinsBold.getTextWidth(data?.icon_title, 16) < 30
+    const is_dark_mode = (hex2hsl(data.bar_color).l <= 0.2)
+
+    const title_str = poppinsBold.cutStringTail(
+        is_too_short ? data.abbr : data.icon_title, 16, data?.max_width - 20 - 10
+    )
+
+    const icon_title = poppinsBold.getTextPath(title_str, 8, 20, 16, 'left baseline', '#fff');
+    const number_data = poppinsBold.getTextPath(data.data_b, 8, 52, 30, "left baseline", data.bar_color)
+
+    const progress = data?.bar_progress || 0
+    const bar_width = progress === 0 ? 0 : Math.max(30, progress * data?.max_width);
+
+    const bar = PanelDraw.Rect(0, 0, bar_width, 30, 15, data?.bar_color || '#fff', 0.2)
+    const bar_base = PanelDraw.Rect(0, 0, data?.max_width, 30, 15,
+        is_dark_mode ? PanelColor.bright(data.hue) : PanelColor.top(data.hue), 1)
+
+    svg = setTexts(svg, [icon_title, number_data, bar, bar_base], reg_text)
+
+    return svg.toString();
+}
+
 //Q-M1-难度标签
 export async function label_M1(data = {
     mode: 'osu',

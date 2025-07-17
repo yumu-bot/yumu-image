@@ -7,7 +7,7 @@ import {
     setTexts,
     setCustomBanner,
     getImageFromV3,
-    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, floor, floors
+    modifyArrayToFixedLength, getTime, isNotNull, isEmptyArray, floor, floors, getSvgBody
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -354,6 +354,8 @@ const component_J3 = (
         rank.shift()
     }
 
+    let string_rank_label = '';
+
     for (let i = 0; i < Math.min(rank.length, 6); i++) {
         const v = rank[i]
         /*{
@@ -381,7 +383,7 @@ const component_J3 = (
             hue: data.hue,
         })
 
-        svg = setSvgBody(svg, 10 + x * (max_width + 10), 250 + y * 70, label, reg)
+        string_rank_label += getSvgBody(10 + x * (max_width + 10), 250 + y * 70, label)
     }
 
     // 插入饼图
@@ -399,7 +401,7 @@ const component_J3 = (
 
     rank_svg += PanelDraw.Image(200 - 95, 136 - 95, 190, 190, getImageFromV3('object-piechart-overlay2.png'), 1);
 
-    svg = setText(svg, rank_svg, reg)
+    svg = setTexts(svg, [rank_svg, string_rank_label], reg)
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Ranks', 15, 27, 18, 'left baseline', '#fff', 1)
@@ -460,6 +462,8 @@ const component_J4 = (
         svg = setSvgBody(svg, 10, 250, label, reg)
     }
 
+    let string_mod_label = '';
+
     for (let i = 0; i < Math.min(mods.length, 6); i++) {
         const v = mods[i]
         /*{
@@ -485,7 +489,7 @@ const component_J4 = (
             hue: data.hue,
         })
 
-        svg = setSvgBody(svg, 10 + x * (max_width + 10), 250 + y * 70, label, reg)
+        string_mod_label += getSvgBody(10 + x * (max_width + 10), 250 + y * 70, label)
     }
 
     // 插入饼图
@@ -505,7 +509,7 @@ const component_J4 = (
 
     mod_svg += PanelDraw.Image(200 - 95, 136 - 95, 190, 190, getImageFromV3('object-piechart-overlay2.png'), 1);
 
-    svg = setText(svg, mod_svg, reg)
+    svg = setTexts(svg, [string_mod_label, mod_svg], reg)
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Mods', 15, 27, 18, 'left baseline', '#fff', 1)
