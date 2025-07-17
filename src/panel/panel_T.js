@@ -119,8 +119,8 @@ export async function panel_T(
             player_count: 4,
             score_count: 1098,
             mode: 'DEFAULT',
-            started_time: '',
-            ended_time: '',
+            start_time: '',
+            end_time: '',
         },
         popular: [
             {
@@ -295,8 +295,8 @@ export async function panel_T(
 
     // 插入文字和图片
 
-    const start_time = getFormattedTime(data?.info?.started_time, 'YYYY/MM/DD HH:mm')
-    const end_time = getFormattedTime(data?.info?.ended_time, 'YYYY/MM/DD HH:mm')
+    const start_time = getFormattedTime(data?.info?.start_time, 'YYYY/MM/DD HH:mm')
+    const end_time = getFormattedTime(data?.info?.end_time, 'YYYY/MM/DD HH:mm')
     const request_time = 'duration: ' + start_time + ' - ' + end_time + ' // request time: ' + getNowTimeStamp();
 
     const panel_name = getPanelNameSVG('Popular Beatmap (!ympu)', 'PU', request_time);
