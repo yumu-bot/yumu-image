@@ -435,7 +435,7 @@ const component_T3 = (attr = [], max_percent = 1) => {
 
     let string_mod_label = '';
 
-    for (let i = 0; i < Math.min(attr.length, 8); i++) {
+    for (let i = 0; i < Math.min(attr.length, 12); i++) {
         const v = attr[i]
 
         const x = i % x_count
@@ -459,8 +459,9 @@ const component_T3 = (attr = [], max_percent = 1) => {
     const title = poppinsBold.getTextPath('Mods', 20, 32, 18, 'left baseline', '#fff')
 
     const rrect = PanelDraw.Rect(0, 0, 430, 410, 20, PanelColor.middle())
+    const circle = PanelDraw.Circle(215, 126, 100, PanelColor.top())
 
-    svg = setTexts(svg, [title, mod_svg, string_mod_label, rrect], reg)
+    svg = setTexts(svg, [title, mod_svg, string_mod_label, circle, rrect], reg)
     return svg.toString()
 }
 
@@ -498,7 +499,7 @@ const component_T4 = (attr = [], max_percent = 1) => {
 
     let string_pp_label = '';
 
-    for (let i = 0; i < Math.min(attr.length, 8); i++) {
+    for (let i = 0; i < Math.min(attr.length, 12); i++) {
         const v = attr[i]
 
         const x = i % x_count
@@ -535,9 +536,10 @@ const component_T4 = (attr = [], max_percent = 1) => {
 
     const title = poppinsBold.getTextPath('PP', 20, 32, 18, 'left baseline', '#fff')
 
-    const rrect = PanelDraw.Rect(0, 0, 430, 410, PanelColor.middle())
+    const rrect = PanelDraw.Rect(0, 0, 430, 410, 20, PanelColor.middle())
+    const circle = PanelDraw.Circle(215, 126, 100, PanelColor.top())
 
-    svg = setTexts(svg, [title, pp_svg, string_pp_label, rrect], reg)
+    svg = setTexts(svg, [title, pp_svg, string_pp_label, circle, rrect], reg)
     return svg.toString()
 }
 

@@ -1662,7 +1662,7 @@ export function label_T(data = {
     const number_data = poppinsBold.getTextPath(data.data_b, (data.max_width - 10), 20, 16, "right baseline", data.bar_color)
 
     const progress = data?.bar_progress || 0
-    const bar_width = progress === 0 ? 0 : Math.max(30, progress * data?.max_width);
+    const bar_width = progress === 0 ? 0 : Math.max(36, progress * data?.max_width);
 
     const bar = PanelDraw.Rect(0, 0, bar_width, 30, 15, data?.bar_color || '#fff', 0.2)
     const bar_base = PanelDraw.Rect(0, 0, data?.max_width, 30, 15,
