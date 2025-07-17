@@ -441,7 +441,7 @@ const component_T3 = (attr = [], max_percent = 1) => {
         const x = i % x_count
         const y = Math.floor(i / x_count)
 
-        const title = (v?.index || '?').replace('X', 'SS')
+        const title = (v?.index || '?')
 
         const label = label_T({
             icon_title: title,
@@ -505,7 +505,7 @@ const component_T4 = (attr = [], max_percent = 1) => {
         const x = i % x_count
         const y = Math.floor(i / x_count)
 
-        const title = (v?.index || '?').replace('X', 'SS')
+        const title = getPPIndex(v?.index || '?')
 
         const label = label_T({
             icon_title: title,
@@ -548,6 +548,23 @@ async function popularInfo2cardA2(info = {}, beatmap = {}) {
         right3b: right3b,
         right3m: '',
     };
+}
+
+function getPPIndex(index = "0") {
+    let bar_index
+    switch (index) {
+        case "0": bar_index = '0-50'; break;
+        case "50": bar_index = '50-100'; break;
+        case "100": bar_index = '100-200'; break;
+        case "200": bar_index = '200-300'; break;
+        case "300": bar_index = '300-400'; break;
+        case "400": bar_index = '400-500'; break;
+        case "500": bar_index = '500-600'; break;
+        case "600": bar_index = '600+'; break;
+        default: bar_index = '?'; break;
+    }
+
+    return bar_index
 }
 
 function getPPColor(index = "0") {
