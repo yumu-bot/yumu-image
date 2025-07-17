@@ -21,7 +21,7 @@ import {
     getKeyDifficulty,
     isNumber,
     floors,
-    floor, getFormattedTime, isEmptyArray, getDifficultyIndex, getDiffBackground
+    floor, getFormattedTime, isEmptyArray, getDifficultyIndex, getDiffBackground, rounds, getSvgBody
 } from "../util/util.js";
 import {
     getRankBackground, getScoreTypeImage
@@ -526,17 +526,19 @@ const component_E3 = (
 
     const title = poppinsBold.getTextPath('Statistics', 15, 28, 18, 'left baseline', '#fff');
 
+    let string_e5s = ''
+
     for (let i = 0; i < 2; i++) {
         for (let j = 0; j < 3; j++) {
             const e5 = label_E5(labels[i + 2 * j]);
 
-            svg = setSvgBody(svg, 15 + 235 * i, 38 + 76 * j, e5, reg_label);
+            string_e5s += getSvgBody(15 + 235 * i, 38 + 76 * j, e5);
         }
     }
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    svg = setTexts(svg, [title, rect], reg_label)
+    svg = setTexts(svg, [string_e5s, title, rect], reg_label)
 
     return svg;
 }
@@ -741,7 +743,7 @@ const component_E7 = (
 
     let is_fc = data?.is_fc;
 
-    const over = 460 - poppinsBold.getTextWidth(Math.round(data?.perfect_pp || 0), 24) - 30 < (460 * fc_percent);
+    const over = 460 - poppinsBold.getTextWidth(Math.round(data?.perfect_pp || 0).toString(), 24) - 30 < (460 * fc_percent);
     if (over) is_fc = true;
 
     let reference_pp; // 参考 PP，有时是 FC PP，有时是 SS PP
@@ -1115,7 +1117,7 @@ const PanelEGenerate = {
     score2componentE3: (score, original) => {
         const mode = getGameMode(score?.ruleset_id, 1);
 
-        const bpm = floors(score?.beatmap?.bpm, 2)
+        const bpm = rounds(score?.beatmap?.bpm, 2)
         const bpm_r = (score?.beatmap?.bpm > 0) ? (60000 / score?.beatmap?.bpm).toFixed(0) + 'ms' : '-';
         const bpm_b = bpm.integer
         const bpm_m = bpm.decimal
@@ -1414,7 +1416,7 @@ const getProgress = (x, min, max, bottom = 1 / 16) => {
 const stat2label = (stat, remark, progress, original, isDisplay) => {
     const hasChanged = Math.abs(original - stat) > 0.1;
 
-    const stat_number = floors(stat, 1)
+    const stat_number = rounds(stat, 1)
 
     const stat_b = stat_number.integer
     const stat_m = stat_number.decimal

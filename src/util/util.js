@@ -247,6 +247,11 @@ export function isNotNumber(str = '') {
     return !isNumber(str)
 }
 
+/**
+ * @param obj
+ * @param obj2
+ * @returns {*}
+ */
 export function requireNonNullElse(obj, obj2) {
     if (isNull(obj)) {
         if (isNull(obj2)) {
@@ -708,8 +713,7 @@ export function setSvgBody(base = '', x = 0, y = 0, replace = '', reg = /.*/) {
  * 设置 svg 块。
  */
 export function getSvgBody(x = 0, y = 0, body = '') {
-    if (x !== 0 || y !== 0) return `<g transform="translate(${x} ${y})">` + body + '</g>';
-    return body;
+    return `<g transform="translate(${x} ${y})">` + body + '</g>';
 }
 
 export function svgBody2Svg(svgBody = '', w, h) {
@@ -2006,7 +2010,7 @@ export const cs2px = (cs, mode = 'o') => {
     switch (mode) {
         case 'o':
         case 'c': {
-            const osupixel = floor(54.4 - 4.48 * cs, 2);
+            const osupixel = round(54.4 - 4.48 * cs, 2);
             return osupixel + 'px';
         }
         default: {
@@ -2021,9 +2025,9 @@ export const ar2ms = (ar, mode = 'o') => {
         case 'c': {
             if (ar > 5) {
                 if (ar > 11) return '300ms';
-                else return Math.floor(1200 - (150 * (ar - 5))) + 'ms';
+                else return Math.round(1200 - (150 * (ar - 5))) + 'ms';
             } else {
-                return Math.floor(1800 - (120 * ar)) + 'ms';
+                return Math.round(1800 - (120 * ar)) + 'ms';
             }
         }
         default: {
@@ -2037,12 +2041,12 @@ export const od2ms = (od, mode = 'o') => {
     switch (mode) {
         case 'o': {
             if (od > 11) return '14ms';
-            ms = Math.floor(80 - (6 * od)).toString();
+            ms = Math.round(80 - (6 * od)).toString();
             break;
         }
         case 't': {
             if (od > 10) return '17ms';
-            ms = Math.floor(50 - (3 * od)).toString();
+            ms = Math.round(50 - (3 * od)).toString();
             break;
         }
         case 'c': {
@@ -2051,7 +2055,7 @@ export const od2ms = (od, mode = 'o') => {
         case 'm': {
             if (od > 11) return '31ms';
             if (od < 0) return '64ms';
-            ms = Math.floor(64 - (3 * od)).toString();
+            ms = Math.round(64 - (3 * od)).toString();
             break;
         }
         default: {

@@ -790,9 +790,9 @@ const component_G2 = (user = {}) => {
     svg = setText(svg, circle, reg_base)
 
     const name_font = (isASCII(user?.name) ? poppinsBold : PuHuiTi)
-    const text = poppinsBold.getTextPath('Player', 1800, 193, 18, 'right baseline', '#fff') +
-        name_font.getTextPath(user.name, 1800, 225, 30, 'right baseline', '#fff') +
-        poppinsBold.getTextPath(Math.round(user?.rating || 0).toString(), 1800, 265, 40, 'right baseline', '#fff')
+    const text = poppinsBold.getTextPath('Player', 1790, 193, 18, 'right baseline', '#fff') +
+        name_font.getTextPath(user.name, 1790, 225, 30, 'right baseline', '#fff') +
+        poppinsBold.getTextPath(Math.round(user?.rating || 0).toString(), 1790, 265, 40, 'right baseline', '#fff')
 
     svg = setText(svg, text, reg_text)
 

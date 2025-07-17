@@ -19,7 +19,7 @@ import {
     setText,
     setTexts,
     floor,
-    floors, getDiffBackground
+    floors, getDiffBackground, rounds
 } from "../util/util.js";
 import {getRankBackground} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
@@ -1174,7 +1174,7 @@ const getProgress = (x, min, max, bottom = 1 / 16) => {
 const stat2label = (stat, remark, progress, original, isDisplay) => {
     const hasChanged = Math.abs(original - stat) > 0.1;
 
-    const stat_number = floors(stat, 1)
+    const stat_number = rounds(stat, 1)
 
     const stat_b = stat_number.integer
     const stat_m = stat_number.decimal

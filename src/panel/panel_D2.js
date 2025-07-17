@@ -21,7 +21,7 @@ import {
     isPicturePng,
     floor,
     floors,
-    isNotEmptyString
+    isNotEmptyString, getSvgBody
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -151,8 +151,6 @@ export async function panel_D2(data = {
 
     // D4 是可能出现的看板娘
     const componentD4 = component_D4(PanelDGenerate.mascot2componentD4(user, getGameMode(data?.mode, 0).toLowerCase(), has_custom_mascot, hue));
-
-
     const componentD5 = component_D5(PanelDGenerate.user2componentD5(user?.rank_history?.data || [], user?.rank_highest || {}, has_custom_panel, hue));
     const componentD6 = component_D6(PanelDGenerate.user2componentD6(best_time, has_custom_panel, hue));
     const componentD7 = component_D7(PanelDGenerate.user2componentD7(user.monthly_playcounts || [{start_date: 0}], has_custom_panel, hue));
@@ -160,6 +158,21 @@ export async function panel_D2(data = {
 
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+
+    const string_components =
+        getSvgBody(0, 0, componentD4) +
+        getSvgBody(40, 330, componentD1) +
+        getSvgBody(40, 620, componentD2) +
+        getSvgBody(40, 940, componentD3) +
+        getSvgBody(1390, 330, componentD5) +
+        getSvgBody(1390, 530, componentD6) +
+        getSvgBody(1390, 650, componentD7) +
+        getSvgBody(1390, 770, componentD8)
+
+    svg = setText(svg, string_components, reg_component)
+
+    /*
+
     svg = setSvgBody(svg, 40, 330, componentD1, reg_component);
     svg = setSvgBody(svg, 40, 620, componentD2, reg_component);
     svg = setSvgBody(svg, 40, 940, componentD3, reg_component);
@@ -167,8 +180,10 @@ export async function panel_D2(data = {
     svg = setSvgBody(svg, 1390, 530, componentD6, reg_component);
     svg = setSvgBody(svg, 1390, 650, componentD7, reg_component);
     svg = setSvgBody(svg, 1390, 770, componentD8, reg_component);
-
     svg = setText(svg, componentD4, reg_component);
+
+     */
+
 
     // 面板文字
     const day_str = isNumber(days) ? (days >= 2 ?
