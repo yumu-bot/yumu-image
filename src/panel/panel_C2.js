@@ -1,8 +1,20 @@
 import {
-    exportJPEG, getImageFromV3, getPanelNameSVG,
+    exportJPEG,
+    getImageFromV3,
+    getPanelNameSVG,
     setImage,
-    setSvgBody, readTemplate,
-    setText, getSvgBody, getPanelHeight, getAvatar, floor, floors, readNetImage, getNowTimeStamp, getFormattedTime
+    setSvgBody,
+    readTemplate,
+    setText,
+    getSvgBody,
+    getPanelHeight,
+    getAvatar,
+    floor,
+    floors,
+    readNetImage,
+    getNowTimeStamp,
+    getFormattedTime,
+    setTexts
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
@@ -71,6 +83,10 @@ export async function panel_C2(data = {
     svg = setSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 导入H卡
+    /**
+     *
+     * @type {string[]}
+     */
     let cardHs = [];
     const players = data?.player_data_list || [];
 
@@ -86,16 +102,16 @@ export async function panel_C2(data = {
     for (let i = 0; i < dataArr.length; i += 2) {
         for (let j = 0; j < 2; j++) {
             cardHs.push(
-                await drawCardH(await playerData2CardH(dataArr[i + j]), i / 2 + 1, j + 1, 2));
+                drawCardH(await playerData2CardH(dataArr[i + j]), i / 2 + 1, j + 1, 2));
         }
     }
 
     if (luckyDog != null) {
         cardHs.push(
-            await drawCardH(await playerData2CardH(luckyDog), rowFull, 1, 1));
+            drawCardH(await playerData2CardH(luckyDog), rowFull, 1, 1));
     }
 
-    svg = setText(svg, cardHs, reg_maincard);
+    svg = setTexts(svg, cardHs, reg_maincard);
 
     // 计算面板高度
     const panelHeight = getPanelHeight(dataArr?.length, 110, 2, 290, 40, 40);
@@ -217,7 +233,8 @@ async function seriesRating2CardA2(sr){
     };
 }
 
-async function drawCardH(data = {}
+
+function drawCardH(data = {}
     , row = 1, column = 1, maxColumn = 2) {
     let x;
     let y;
@@ -235,7 +252,7 @@ async function drawCardH(data = {}
     x = x_base + 940 * (column - 1);
     y = 330 + 150 * (row - 1);
 
-    const body = await card_H(data);
+    const body = card_H(data);
 
     return getSvgBody(x, y, body);
 }

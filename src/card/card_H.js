@@ -7,7 +7,7 @@ import {torus, PuHuiTi, torusBold, getMultipleTextPath} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModPath} from "../util/mod.js";
 
-export async function card_H(data = {
+export function card_H(data = {
     background: '',
     cover: '',
     type: '',

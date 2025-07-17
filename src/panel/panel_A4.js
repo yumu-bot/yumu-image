@@ -86,13 +86,9 @@ export async function panel_A4(data = {
         })
     ).then(results => thenPush(results, params))
 
-    const cardHs = []
-
-    await Promise.allSettled(
-        params.map((param) => {
-            return card_H(param)
-        })
-    ).then(results => thenPush(results, cardHs))
+    const cardHs = params.map((param) => {
+        return card_H(param)
+    })
 
     // 插入图片和部件（新方法
     svg = setCustomBanner(svg, reg_banner, data.me?.profile?.banner);

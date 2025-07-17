@@ -1,12 +1,15 @@
 import {
-    exportJPEG, floor, getAvatar, getKeyDifficulty, getSvgBody,
-    readNetImage, requireNonNullElse, setImage,
+    exportJPEG, floor, getAvatar, getKeyDifficulty, getMapBackground, getPanelNameSVG, getSvgBody,
+    readNetImage, requireNonNullElse, setImage, setSvgBody, setText,
     setTexts, thenPush
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {poppinsBold, torus} from "../util/font.js";
 import {hasLeaderBoard} from "../util/star.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {card_H} from "../card/card_H.js";
+import {card_A2} from "../card/card_A2.js";
+import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {
@@ -77,15 +80,18 @@ export async function panel_T(data = {
         pp: 0.0,
     }],
 
+    mod_max_percent: 0.0,
+
     pp_attr: [{
         index: "0",
         count: 0,
         pp: 0.0,
     }],
 
+    pp_max_percent: 0.0,
+
 
 }) {
-    console.log(data)
 // 导入模板
     let svg = `
     <?xml version="1.0" encoding="UTF-8"?>
@@ -123,15 +129,29 @@ export async function panel_T(data = {
     const reg_main = /(?<=<g id="Main_Card">)/;
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PT-1\);">)/;
 
-    const popular_arr = data?.popular || []
 
-    const populars = []
+    // 插入文字和图片
+    const panel_name = getPanelNameSVG('Popular Beatmap (!ympu)', 'PU');
+    svg = setText(svg, panel_name, reg_index);
+
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+
+    const card_a2 = card_A2(await popularInfo2cardA2(data.info, data.max_retry?.beatmap))
+
+    svg = setSvgBody(svg, 40, 40, card_a2, reg_main)
+
+    const popular_arr = data?.popular || []
+    const popular_params = []
 
     await Promise.allSettled(
         popular_arr.map((v) => {
             return popularBeatmap2cardH(v)
         })
-    ).then(results => thenPush(results, populars))
+    ).then(results => thenPush(results, popular_params))
+
+    const populars = popular_params.map((v) => {
+        return card_H(v)
+    })
 
     // 渲染
     const componentT1 = getSvgBody(40, 330,
@@ -207,7 +227,7 @@ const component_T2 = async (max_retry = {
 
     const async = []
 
-    Promise.allSettled([PanelGenerate.beatMap2CardA2(max_retry.beatmap), getAvatar(max_retry.user, true)])
+    await Promise.allSettled([PanelGenerate.beatMap2CardA2(max_retry.beatmap), getAvatar(max_retry.user, true)])
         .then(results => thenPush(results, async))
 
     const name = poppinsBold.getTextPath(max_retry.user?.username, 665, 222, 30, 'center baseline', '#fff')
@@ -225,8 +245,25 @@ const component_T2 = async (max_retry = {
     return svg.toString()
 }
 
-async function popularInfo2cardA1(info = {}) {
+async function popularInfo2cardA2(info = {}, beatmap = {}) {
+    const background = await getMapBackground(beatmap, 'list@2x')
+    const right3b = (info?.player_count || 0).toString()
 
+    return {
+        background: background,
+        map_status: '',
+
+        title1: 'Popular Beatmap',
+        title2: 'Group: ' + (info?.group_id || 0),
+        title3: '',
+        left1: '',
+        left2: '',
+        left3: 'member count: ' + (info?.member_count || 0),
+        right1: '',
+        right2: 'player count:',
+        right3b: right3b,
+        right3m: 'x',
+    };
 }
 
 async function popularBeatmap2cardH(popular = {
@@ -248,7 +285,6 @@ async function popularBeatmap2cardH(popular = {
 
     const cover = await readNetImage(popular?.beatmapset?.covers?.list, cache);
     const background = await readNetImage(popular?.beatmapset?.covers?.cover, cache);
-
 
     const acc = floor((popular?.accuracy * 100), 2) + '%'
     const combo = (popular.combo || 0) + 'x'

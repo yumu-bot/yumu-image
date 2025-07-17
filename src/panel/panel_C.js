@@ -306,12 +306,12 @@ export async function panel_C(
         //渲染红队
         for (let i = 0; i < redArr.length; i++) {
             cardHs.push(
-                await drawCardH(await playerData2CardH(redArr[i]), i + 1, 1, 2));
+                drawCardH(await playerData2CardH(redArr[i]), i + 1, 1, 2));
         }
         //渲染蓝队
         for (let i = 0; i < blueArr.length; i++) {
             cardHs.push(
-                await drawCardH(await playerData2CardH(blueArr[i]), i + 1, 2, 2));
+                drawCardH(await playerData2CardH(blueArr[i]), i + 1, 2, 2));
         }
     } else {
         //渲染不在队伍（无队伍）
@@ -321,13 +321,13 @@ export async function panel_C(
         for (let i = 0; i < noneArr.length; i += 2) {
             for (let j = 0; j < 2; j++) {
                 cardHs.push(
-                    await drawCardH(await playerData2CardH(noneArr[i + j]), rowVS + i / 2 + 1, j + 1, 2));
+                    drawCardH(await playerData2CardH(noneArr[i + j]), rowVS + i / 2 + 1, j + 1, 2));
             }
         }
 
         if (luckyDog != null) {
             cardHs.push(
-                await drawCardH(await playerData2CardH(luckyDog), rowVS + rowFull, 1, 1));
+                drawCardH(await playerData2CardH(luckyDog), rowVS + rowFull, 1, 1));
         }
     }
 
@@ -419,7 +419,7 @@ async function playerData2CardH(p = {}) {
     };
 }
 
-async function drawCardH(data = {}
+function drawCardH(data = {}
     , row = 1, column = 1, maxColumn = 2) {
     let x;
     let y;
@@ -437,7 +437,7 @@ async function drawCardH(data = {}
     x = x_base + 940 * (column - 1);
     y = 330 + 150 * (row - 1);
 
-    const body = await card_H(data);
+    const body = card_H(data);
 
     return getSvgBody(x, y, body);
 }

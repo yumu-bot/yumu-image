@@ -322,23 +322,19 @@ export async function panel_A7(data = {
         })
     ).then(results => thenPush(results, paramHs))
 
-    const cardHs = []
+    const cardHs = paramHs.map((card_h, i) => {
+        const bp = data.scores[i]
 
-    await Promise.allSettled(
-        paramHs.map((card_h, i) => {
-            const bp = data.scores[i]
+        const deltaPP = Math.round(bp?.fc_pp - bp?.pp);
 
-            const deltaPP = Math.round(bp?.fc_pp - bp?.pp);
+        return card_H({
+            ...card_h,
 
-            return card_H({
-                ...card_h,
-
-                index_b: bp?.fc_pp > 0 ? Math.round(bp.fc_pp).toString() : '',
-                index_l: (deltaPP > 0 ? '+' : '') + deltaPP + 'PP',
-                index_l_size: 24,
-            })
+            index_b: bp?.fc_pp > 0 ? Math.round(bp.fc_pp).toString() : '',
+            index_l: (deltaPP > 0 ? '+' : '') + deltaPP + 'PP',
+            index_l_size: 24,
         })
-    ).then(results => thenPush(results, cardHs))
+    })
 
     // 插入图片和部件（新方法
     svg = setCustomBanner(svg, reg_banner, data.user?.profile?.banner);
