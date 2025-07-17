@@ -85,6 +85,7 @@ export async function panel_T(data = {
 
 
 }) {
+    console.log(data)
 // 导入模板
     let svg = `
     <?xml version="1.0" encoding="UTF-8"?>
