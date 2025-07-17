@@ -559,11 +559,11 @@ async function popularInfo2cardA2(info = {}, beatmap = {}) {
 
         title1: 'Popular Beatmap',
         title2: 'Group: ' + (info?.group_id || 0),
-        title3: 'mode: ' + getGameMode(info?.mode, 2),
+        title3: '',
         left1: 'member count: ' + (info?.member_count || 0),
         left2: 'beatmap count: ' + (info?.beatmap_count || 0),
         left3: 'score count: ' + (info?.score_count || 0),
-        right1: '',
+        right1: 'mode: ' + getGameMode(info?.mode, 2),
         right2: 'player count:',
         right3b: right3b,
         right3m: '',
