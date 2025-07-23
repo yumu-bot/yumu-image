@@ -1018,21 +1018,25 @@ const component_E10 = (
 
     const statistics = getStatisticsSVG(data.statistics, data.statistics_max, data.statistics_full, 64, 45, 360, 20, 16, 16) // 345
 
-    let ratio_text = 'MAX : 300 = ';
+    let ratio_text;
 
     if (data.ratio === Infinity) {
-        ratio_text += 'Infinity'
+        ratio_text = 'Infinity'
     } else if (data.ratio === 0) {
-        ratio_text += '0'
-    } else if (data.ratio >= 1) {
-        ratio_text += (floor(data.ratio, 1) + ' : 1')
+        ratio_text = '0'
+    } else if (data.ratio < 0.9) {
+        ratio_text = ('1 : ' + floor(1 / data.ratio, 1))
+    } else if (data.ratio <= 1) {
+        ratio_text = ('1 : ' + floor(1 / data.ratio, 2))
+    } else if (data.ratio <= 1.1) {
+        ratio_text = (floor(data.ratio, 2) + ' : 1')
     } else {
-        ratio_text += ('1 : ' + floor(1 / data.ratio, 1))
+        ratio_text = (floor(data.ratio, 1) + ' : 1')
     }
 
     const perfect_great_ratio = (getGameMode(data?.mode, 1) === 'm') ?
         poppinsBold.getTextPath(
-            ratio_text, 475, 28, 18, 'right baseline', '#fff'
+            'MAX : 300 = ' + ratio_text, 475, 28, 18, 'right baseline', '#fff'
         )
         : ''
 
