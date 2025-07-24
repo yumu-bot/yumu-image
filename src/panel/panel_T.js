@@ -631,9 +631,9 @@ async function popularBeatmap2cardH(popular = {
         getKeyDifficulty(popular.beatmap), 24,
         500 - 10 - torus.getTextWidth('[] -   ' + acc + combo, 24), true) : '';
 
-    const color_arr = ['#B7AA00', '#A0A0A0', '#AC6A00', '#46393f', '#382E32']
+    const color_arr = ['#B7AA00', '#A0A0A0', '#AC6A00', '#46393f', '#46393f']
     const rrect_color = color_arr[(identifier || 1) - 1]
-    const color_index = (identifier || 1) <= 1 ? '#2A2226' : '#fff';
+    const color_index = '#fff';
 
     const artist = torus.cutStringTail(popular?.beatmap?.beatmapset?.artist, 24,
         500 - 10 - torus.getTextWidth(' // ' + popular?.beatmap?.beatmapset?.creator, 24), true);
