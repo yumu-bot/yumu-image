@@ -170,7 +170,7 @@ export async function panel_T(
                 beatmap: [Object]
             }
         ],
-        max_retry: {
+        best_performance: {
             beatmap_id: 1620144,
             count: 12,
             user_id: 32452774,
@@ -327,7 +327,7 @@ export async function panel_T(
     )
 
     const componentT2 = getSvgBody(1000, 330,
-        await component_T2(data?.max_retry)
+        await component_T2(data?.best_performance)
     )
 
     const componentT3 = getSvgBody(1000, 630,
@@ -376,7 +376,7 @@ const component_T1 = (populars = []) => {
     return svg.toString()
 }
 
-const component_T2 = async (max_retry = {
+const component_T2 = async (best_performance = {
     beatmap_id: 0,
     count: 0,
     user_id: 0,
@@ -401,19 +401,19 @@ const component_T2 = async (max_retry = {
 
     const async = []
 
-    await Promise.allSettled([PanelGenerate.beatMap2CardA2(max_retry.beatmap), getAvatar(max_retry.user.avatar_url, true)])
+    await Promise.allSettled([PanelGenerate.beatMap2CardA2(best_performance.beatmap), getAvatar(best_performance.user.avatar_url, true)])
         .then(results => thenPush(results, async))
 
-    const title = poppinsBold.getTextPath('Max Retry', 20, 32, 18, 'left baseline', '#fff')
+    const title = poppinsBold.getTextPath('Best Performance', 20, 32, 18, 'left baseline', '#fff')
 
-    const name = poppinsBold.getTextPath(max_retry.user?.username, 665, 222, 30, 'center baseline', '#fff')
+    const name = poppinsBold.getTextPath(best_performance.user?.username, 665, 222, 30, 'center baseline', '#fff')
 
-    const tries = poppinsBold.get2SizeTextPath((max_retry.count || 0).toString(), ' tries', 30, 24, 665, 258, 'center baseline', '#fff')
+    const pp = poppinsBold.get2SizeTextPath((best_performance.count || 0).toString(), ' PP', 30, 24, 665, 258, 'center baseline', '#fff')
 
     const rrect = PanelDraw.Rect(0, 0, 880, 280, 20, '#382E32')
 
     svg = setTexts(svg, [
-        getSvgBody(20, 50, card_A2(async[0])), title, name, tries, rrect
+        getSvgBody(20, 50, card_A2(async[0])), title, name, pp, rrect
     ], reg)
 
     svg = setImage(svg, 665 - 70, 120 - 70, 140, 140, async[1], reg_avatar)
