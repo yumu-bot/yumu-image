@@ -157,11 +157,18 @@ export async function panel_MA2(data = {
     svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 计算面板高度
-    const cardHeight = b30_height + r10_height + r10_offset + (80 - 15)
-    const panelHeight = cardHeight + 290
+    let card_height
 
-    svg = setText(svg, panelHeight, reg_panelheight);
-    svg = setText(svg, cardHeight, reg_cardheight);
+    if (r10_height === 0) {
+        card_height = b30_height + r10_offset + 60 - 15
+    } else {
+        card_height = b30_height + r10_offset + r10_height + 80 - 15
+    }
+
+    const panel_height = card_height + 290
+
+    svg = setText(svg, panel_height, reg_panelheight);
+    svg = setText(svg, card_height, reg_cardheight);
 
     return svg.toString()
 }

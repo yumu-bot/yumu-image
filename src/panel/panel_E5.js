@@ -265,6 +265,8 @@ export async function panel_E5(data = {
         user: {},
     },
 
+    position: 0,
+
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_E.svg');
@@ -294,7 +296,13 @@ export async function panel_E5(data = {
         delta_time = getTimeDifference(data?.score?.started_at)
     }
 
-    const request_time = 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
+    let request_time = ''
+
+    if (data.position != null && data.position > 0) {
+        request_time += 'position: #' + data.position + ' // '
+    }
+
+    request_time += 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
 
     let panel_name
 

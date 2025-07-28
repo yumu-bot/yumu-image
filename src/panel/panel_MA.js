@@ -164,11 +164,18 @@ export async function panel_MA(data = {
     }
 
     // 计算面板高度
-    const cardHeight = sd_height + dx_offset + dx_height + 80 - 15
-    const panelHeight = cardHeight + 290
+    let card_height
 
-    svg = setText(svg, panelHeight, reg_panelheight);
-    svg = setText(svg, cardHeight, reg_cardheight);
+    if (dx_height === 0) {
+        card_height = sd_height + dx_offset + 60 - 15
+    } else {
+        card_height = sd_height + dx_offset + dx_height + 80 - 15
+    }
+
+    const panel_height = card_height + 290
+
+    svg = setText(svg, panel_height, reg_panelheight);
+    svg = setText(svg, card_height, reg_cardheight);
 
     return svg.toString()
 }
