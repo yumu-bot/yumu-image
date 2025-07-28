@@ -413,7 +413,7 @@ export async function panel_B3(data = {
     }
 
     // 清算
-    svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
 
     // A2定义
     svg = setSvgBody(svg, 40, 40, card_left, reg_maincard);

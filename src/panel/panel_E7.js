@@ -274,9 +274,9 @@ export async function panel_E7(
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
 
     if (getFileSize(banner) / 1024 >= 500) {
-        svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8, "xMidYMin slice");
+        svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8, "xMidYMin slice");
     } else {
-        svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8);
+        svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
     }
 
     return svg.toString();

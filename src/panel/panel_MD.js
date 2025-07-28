@@ -114,7 +114,7 @@ export async function panel_MD(data = {
     }
 
     // 导入图片
-    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 计算面板高度
     const cardHeight = sd_height + dx_height + dx_offset + 80 - 15

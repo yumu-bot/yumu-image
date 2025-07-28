@@ -111,7 +111,7 @@ export async function panel_E3(data = {
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
-    svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
 
     return svg.toString();
 }

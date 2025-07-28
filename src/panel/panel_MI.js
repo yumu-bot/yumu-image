@@ -99,7 +99,7 @@ export async function panel_MI(data = {
     svg = setText(svg, string_card, reg_card_i)
 
     // 导入图片
-    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 插入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);

@@ -92,7 +92,7 @@ export async function panel_B2(data = {
 
     // 插入图片和部件（新方法
     const banner = await getMapBackground(data.beatmap, 'cover');
-    svg = setImage(svg, 0, 0, 1920, 330, banner, reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
 
     // 面板文字
     const panel_name = getPanelNameSVG('Map Minus v0.8 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');

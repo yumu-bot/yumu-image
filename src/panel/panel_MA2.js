@@ -154,7 +154,7 @@ export async function panel_MA2(data = {
     svg = setText(svg, string_r10, reg_card_i);
 
     // 导入图片
-    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 计算面板高度
     let card_height

@@ -149,7 +149,7 @@ export async function panel_MA(data = {
     svg = setText(svg, string_dx, reg_card_i)
 
     // 导入图片
-    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai"), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     if (isNotEmptyArray(data.versions)) {
         const l = data.versions.length;

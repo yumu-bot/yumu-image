@@ -196,7 +196,7 @@ export async function panel_MS(data = {
     svg = setSvgBody(svg, 40, 40, cardA2, reg_card_a2);
 
     // 导入图片
-    svg = setImage(svg, 0, 0, 1920, 330, getRandomBannerPath("maimai", getMaimaiBannerIndex(song)), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai", getMaimaiBannerIndex(song)), reg_banner, 0.8);
 
     svg = setText(svg, component_G2(data.user), reg_index)
 
