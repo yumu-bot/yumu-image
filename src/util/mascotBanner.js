@@ -4,9 +4,37 @@ import {getImageFromV3} from "./util.js";
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
 const mascot_transparency_sum_arr = [2, 1, 0, 0, 1, 0, 0, 1, 0, 1];
 const defaultBannerTotal = 180; //默认 banner 数量
-const maimaiBannerTotal = 50; //maimai banner 数量
+const maimaiBannerTotal = 60; //maimai banner 数量
 const mascotBGTotal = 13; //吉祥物 BG 数量
 
+// 导入一些特殊 banner，比如 7 号是潘多拉，11号是 Splash 的改版 Shabi
+export function getMaimaiBannerIndex(song) {
+    if (song?.id === 834) {
+        return 7;
+    } else if (song?.from === "maimai でらっくす Splash" || song?.from === "maimai でらっくす Splash PLUS") {
+        return 11;
+    } else if (song?.id === 567) {
+        return 17;
+    } else if (song?.id === 417) {
+        return 28;
+    } else if (song?.id === 10734 || song?.id === 734) {
+        return 35;
+    } else if (song?.id === 11591) {
+        return 45;
+    } else if (song?.id === 11662) {
+        return 51;
+    } else if (song?.id === 11663) {
+        return 53;
+    } else if (song?.id === 844) {
+        return 54;
+    } else if (song?.id === 606) {
+        return 56;
+    } else if (song?.id === 270) {
+        return 59;
+    }
+
+    return 0;
+}
 
 /**
  * @function 随机提供游戏模式对应的吉祥物名字

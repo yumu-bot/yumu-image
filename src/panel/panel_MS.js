@@ -11,9 +11,8 @@ import {
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getRandomBannerPath} from "../util/mascotBanner.js";
+import {getMaimaiBannerIndex, getRandomBannerPath} from "../util/mascotBanner.js";
 import {
-    getMaimaiBannerIndex,
     getMaimaiCover, getMaimaiDifficultyName, getMaimaiDifficultyColors, getMaimaiMaximumRating,
     getMaimaiRankBG,
     getMaimaiType, isMaimaiMaximumRating, getMaimaiDXStarLevel, getMaimaiDXStarColor,
