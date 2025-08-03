@@ -874,18 +874,20 @@ function floorOrRound(number = 0, level = 0, sub_level = 0, is_round = false) {
 
         if (is_round) {
             dec = Math.round(Math.abs(number - int) * Math.pow(10, level)) / Math.pow(10, level)
+
+            // 1.95 ->lv.1-> 1 / 1, 因此需要进位
+            if (Math.abs(dec) >= 1 - Math.pow(10, - level)) {
+                if (int < 0) {
+                    int --
+                } else {
+                    int ++
+                }
+                dec = 0
+            }
         } else {
             dec = Math.floor(Math.abs(number - int) * Math.pow(10, level)) / Math.pow(10, level)
-        }
 
-        // 1.95 ->lv.1-> 1 / 1, 因此需要进位
-        if (dec >= 1 - Math.pow(10, - level)) {
-            if (int < 0) {
-                int --
-            } else {
-                int ++
-            }
-            dec = 0
+            // floor 不需要进位
         }
 
         int_str = int.toString()
