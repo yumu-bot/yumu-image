@@ -296,7 +296,7 @@ export async function panel_T(
 
     // 插入文字和图片
     const start_time = getFormattedTime(data?.info?.start_time, 'YYYY/MM/DD HH:mm', 'YYYY-MM-DD[T]HH:mm:ss[Z]', 0)
-    const end_time = getFormattedTime(data?.info?.end_time, 'YYYY/MM/DD HH:mm', 'YYYY-MM-DD[T]HH:mm:ss[Z], 0')
+    const end_time = getFormattedTime(data?.info?.end_time, 'YYYY/MM/DD HH:mm', 'YYYY-MM-DD[T]HH:mm:ss[Z]', 0)
     const request_time = 'duration: ' + start_time + ' - ' + end_time + ' // request time: ' + getNowTimeStamp();
 
     const panel_name = getPanelNameSVG('Popular Beatmap (!ympu)', 'PU', request_time);
