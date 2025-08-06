@@ -7,7 +7,7 @@ import {
     isNotEmptyArray,
     readTemplate,
     setText,
-    setTexts, floors, thenPush, getSvgBody, isASCII
+    setTexts, floors, thenPush, getSvgBody, isASCII, floor
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -339,7 +339,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     }
 
     const stars = drawStars(score?.dxScore, score?.max)
-    const component = component_G1(song?.charts[index]?.notes, score?.achievements)
+    const component = component_G1(song?.charts[index]?.notes, score?.achievements, score?.fc)
 
     return {
         background: background,
@@ -387,7 +387,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     }
 }
 
-const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_: 26 }, achievements = 0) => {
+const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_: 26 }, achievements = 0, fc = "") => {
     let svg = `
         <g id="Base_LG1">
         </g>
@@ -409,9 +409,24 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
 
     const title = poppinsBold.getTextPath('Notes & Tolerance', 10, 20, 14, 'left baseline', '#fff')
 
-    const equivalent_text = (achievements > 0 ?
-        ('≈ ' + getApproximateGreatString((101 - achievements) / 100 / (0.2 / base_score_sum), 1) + ' GR')
-        : '-')
+    let equivalent_text
+
+    if (fc === 'app') {
+        equivalent_text = '= AP+'
+    } else if (fc === 'ap') {
+        equivalent_text = '= ' + getApproximateGreatString((101 - achievements) / (0.25 / note?.break_), 1) + ' BREAK PF.'
+    } else if (achievements > 0) {
+        const great = getApproximateGreatString((101 - achievements) / 100 / (0.2 / base_score_sum), 1)
+
+        if (great.includes(".")) {
+            equivalent_text = '≈ ' + great + ' GR.'
+        } else {
+            equivalent_text = '= ' + great + ' GR.'
+        }
+    } else {
+        equivalent_text = '-'
+    }
+
     const equivalent = poppinsBold.getTextPath(equivalent_text, 280, 20, 14, 'right baseline', '#fff')
 
     svg = setImage(svg, 10 + 7, 30, 40, 25, getImageFromV3('Maimai', 'object-note-tap.png'), reg_icon, 1)
@@ -832,20 +847,8 @@ function getJudgeScoreString(score = 0) {
  */
 function getApproximateGreatString(score = 0, level = 1) {
     if (Number.isNaN(score)) return ''
-    const score_number = floors(Math.abs(score), level)
 
-    const large = score_number.integer
-    const small = score_number.decimal
-
-    return large + small
-
-    /*
-    if (large.startsWith('0')) {
-        return '.' + small
-    } else {
-        return large + small
-    }
-     */
+    return floor(Math.abs(score), level)
 }
 
 // 锚点在右下角
