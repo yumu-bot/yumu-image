@@ -449,7 +449,7 @@ const component_E3 = (
 
     const title = poppinsBold.getTextPath('Distribution: Lv.' + data?.difficulty, 15, 28, 18, 'left baseline', '#fff');
     const dist_title = poppinsBold.getTextPath('  D     C      B                        A                        S              SS           SSS', 15, 138, 18, 'left baseline', '#fff')
-    const combo_title = poppinsBold.getTextPath('  C    FC            AP', 310, 252, 18, 'left baseline', '#fff')
+    const combo_title = poppinsBold.getTextPath('  C    FC           AP', 310, 252, 18, 'left baseline', '#fff')
     const acc_title = poppinsBold.getTextPath('Avg. Ach.', 15, 168, 18, 'left baseline', '#fff')
     const level_title = poppinsBold.getTextPath('Dist. Level', 15, 223, 18, 'left baseline', '#fff')
 
