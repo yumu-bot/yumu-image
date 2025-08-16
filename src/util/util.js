@@ -83,6 +83,7 @@ export function initPath() {
     })
     fs.access(CACHE_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(OSU_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
+    fs.access(IMG_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(FLAG_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
 
     Number.prototype.fixed = function () {
@@ -564,6 +565,35 @@ export async function getBanner(link, use_cache = true, default_image_path = get
         return await readNetImage(link, use_cache, getImageFromV3('beatmap-DLfailBG.jpg'))
     } else {
         return await readNetImage(link, use_cache, default_image_path);
+    }
+}
+
+/**
+ * 下载图片至指定的位置
+ * @param path 网络地址
+ * @param bufferPath 存储的地址，包括文件名
+ * @param default_image_path 出错时返回的本地图片
+ * @returns {Promise<string>}
+ */
+export async function downloadImage(path = '', bufferPath = '', default_image_path = getImageFromV3('beatmap-DLfailBG.jpg')) {
+    const error = getImageFromV3('error.png');
+
+    let req;
+    let data;
+
+    try {
+        req = await axios.get(path, {responseType: 'arraybuffer'});
+        data = req.data;
+    } catch (e) {
+        console.error("download error", e);
+        return default_image_path || error;
+    }
+
+    if (req && req.status === 200) {
+        fs.writeFileSync(bufferPath, data, 'binary');
+        return bufferPath;
+    } else {
+        return default_image_path || error;
     }
 }
 

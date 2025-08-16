@@ -1,5 +1,5 @@
 import fs from "fs";
-import {getImageFromV3, isEmptyString, readNetImage} from "./util.js";
+import {downloadImage, getImageFromV3, isEmptyString} from "./util.js";
 
 /**
  *
@@ -33,7 +33,7 @@ export async function getMaimaiCover(song_id = 0) {
     } else if (fs.existsSync(path2)) {
         return path2
     } else {
-        return await readNetImage(`https://www.diving-fish.com/covers/${song}.png`, true, getImageFromV3('Maimai', 'Cover', '00000.png'))
+        return await downloadImage(`https://www.diving-fish.com/covers/${song}.png`, path, getImageFromV3('Maimai', 'Cover', '00000.png'))
     }
 }
 
@@ -464,7 +464,7 @@ export async function getCHUNITHMCover(song_id = 0) {
     if (fs.existsSync(path)) {
         return path
     } else {
-        return await readNetImage(`https://assets2.lxns.net/chunithm/jacket/${song}.png`, true, getImageFromV3('Chunithm', 'Cover', '0.png'))
+        return await downloadImage(`https://assets2.lxns.net/chunithm/jacket/${song}.png`, path, getImageFromV3('Chunithm', 'Cover', '0.png'))
     }
 }
 
