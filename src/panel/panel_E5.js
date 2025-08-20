@@ -353,7 +353,7 @@ export async function panel_E5(data = {
     const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score, is_lazer));
     const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.score));
     const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score, data.attributes, data.progress, is_lazer));
-    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score));
+    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.progress));
 
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
@@ -1359,7 +1359,7 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE10P: (score) => {
+    score2componentE10P: (score, progress) => {
         /*
         const s = score.statistics
         const m = score.maximum_statistics
@@ -1379,7 +1379,13 @@ const PanelEGenerate = {
         if (score.rank === 'X' || score.rank === 'XH') {
             rainbow_rank = 'object-score-kiwami-rainbow.png'
         } else if (rainbow_rating < 0.5 - 1e-4) {
-            rainbow_rank = 'object-score-jimaodan.png'
+            if (progress >= 0.98) {
+                // 不合格
+                rainbow_rank = 'object-score-don-disqualified.png'
+            } else {
+                // 投降
+                rainbow_rank = 'object-score-jimaodan.png'
+            }
         } else if (rainbow_rating < 0.6 - 1e-4) {
             rainbow_rank = 'object-score-iki-iron.png'
         } else if (rainbow_rating < 0.7 - 1e-4) {
@@ -1398,8 +1404,12 @@ const PanelEGenerate = {
 
         let rainbow_crown;
 
-        if (score?.passed === false) {
+        if (score?.passed !== true || score.rank === 'F') {
             rainbow_crown = 'object-score-don-failed.png'
+        } else if ((score?.statistics?.miss === 1 && score?.statistics?.ok === 0) ||
+            (score?.statistics?.miss === 0 && score?.statistics?.ok === 1)) {
+            // liaoxingyao，性歌
+            rainbow_crown = 'object-score-sei-rainbow.png'
         } else if (score?.statistics?.miss === 0) {
             if (score?.statistics?.ok === 0) {
                 rainbow_crown = 'object-score-crown-rainbow.png'
