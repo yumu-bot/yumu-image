@@ -1406,7 +1406,7 @@ const PanelEGenerate = {
 
         if (score?.passed !== true || score.rank === 'F') {
             rainbow_crown = 'object-score-don-failed.png'
-        } else if ((score?.statistics?.miss === 1 && score?.statistics?.ok === 0) ||
+        } else if ((score?.statistics?.miss === 1) ||
             (score?.statistics?.miss === 0 && score?.statistics?.ok === 1)) {
             // liaoxingyao，性歌
             rainbow_crown = 'object-score-sei-rainbow.png'
