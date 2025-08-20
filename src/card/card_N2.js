@@ -314,6 +314,7 @@ function getStatArr(score = {statistics: {
             stat_arr.push(s.large_tick_hit);
             stat_arr.push(s.small_tick_hit);
             stat_arr.push(s.miss);
+            stat_arr.push(s.small_tick_miss);
         } break;
         case 3: {
             stat_arr.push(s.perfect);
@@ -351,7 +352,8 @@ function getStatColorArr(mode = 0) {
                 '#8DCEF4',
                 '#79C471',
                 '#FEF668',
-                '#ED6C9E'
+                '#ED6C9E',
+                '#A1A1A1'
             ];
             break;
         case 3:
