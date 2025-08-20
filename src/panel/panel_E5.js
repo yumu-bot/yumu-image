@@ -1378,9 +1378,6 @@ const PanelEGenerate = {
 
         if (score.rank === 'X' || score.rank === 'XH') {
             rainbow_rank = 'object-score-kiwami-rainbow.png'
-        } else if ((score?.statistics?.miss === 1) || (score?.statistics?.miss === 0 && score?.statistics?.ok === 1)) {
-            // liaoxingyao，性歌
-            rainbow_crown = 'object-score-sei-rainbow.png'
         } else if (rainbow_rating < 0.5 - 1e-4) {
             if (progress >= 0.98) {
                 // 不合格
@@ -1389,6 +1386,9 @@ const PanelEGenerate = {
                 // 投降
                 rainbow_rank = 'object-score-jimaodan.png'
             }
+        } else if ((score?.statistics?.miss === 1) || (score?.statistics?.miss === 0 && score?.statistics?.ok === 1)) {
+            // liaoxingyao，性歌
+            rainbow_crown = 'object-score-sei-rainbow.png'
         } else if (rainbow_rating < 0.6 - 1e-4) {
             rainbow_rank = 'object-score-iki-iron.png'
         } else if (rainbow_rating < 0.7 - 1e-4) {
