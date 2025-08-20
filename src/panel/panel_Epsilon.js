@@ -86,7 +86,11 @@ export async function panel_Epsilon(data = {
         230, 435, name_size, 'center baseline', name_color
     );
     const country = await getFlagPath(user?.country?.code, is_supporter ? 95 : 207.5, (has_group ? 510 : 465) - 3, 30)
-    const group_name = TahomaBold.getTextPath((group?.name || '').replaceAll("(Probationary)", "(Prob)"), 230, 482, 28, 'center baseline', '#000')
+
+    const group_name_text = (group?.name || '')
+        .replaceAll("(Probationary)", "(Prob)")
+        .replaceAll("Nominators", "Nominator")
+    const group_name = TahomaBold.getTextPath(group_name_text, 230, 482, 28, 'center baseline', '#000')
 
     const supporter = is_supporter ? PanelDraw.Image(162, has_group ? 510 : 465, 200, 30, getImageFromV3('object-user-supporter.png')) : ''
 
