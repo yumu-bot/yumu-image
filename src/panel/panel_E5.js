@@ -32,7 +32,7 @@ import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi} from "..
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModPath} from "../util/mod.js";
+import {getModMultiplier, getModPath} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -1360,17 +1360,17 @@ const PanelEGenerate = {
     },
 
     score2componentE10P: (score, progress) => {
+        /*
         const s = score.statistics
         const m = score.maximum_statistics
 
         const rainbow_rating = ((1100 * (s?.great || 0) + 550 * (s?.ok || 0) + 100 * ((s?.small_bonus || 0) + (s?.ignore_hit || 0))) / (1100 * (m?.great || 1))) * ((score?.rank !== 'F') ? 1 : (progress || 1))
+         */
 
-        /*
+
         const rainbow_rating = (score?.total_score_without_mods > 0) ?
             (score.total_score_without_mods / 1000000) :
             (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods || [], score?.ruleset_id || 0))
-
-         */
 
         let rainbow_rank;
 
