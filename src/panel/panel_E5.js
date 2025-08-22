@@ -1386,7 +1386,8 @@ const PanelEGenerate = {
                 // 投降
                 rainbow_rank = 'object-score-jimaodan.png'
             }
-        } else if ((score?.statistics?.miss === 1) || (score?.statistics?.miss === 0 && score?.statistics?.ok === 1)) {
+        } else if (score.rank !== 'F' &&
+            ((score?.statistics?.miss === 1) || (score?.statistics?.miss === 0 && score?.statistics?.ok === 1))) {
             // liaoxingyao，性歌
             rainbow_rank = 'object-score-sei-rainbow.png'
         } else if (rainbow_rating < 0.6 - 1e-4) {
