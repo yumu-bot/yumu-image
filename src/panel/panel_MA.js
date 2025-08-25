@@ -1,7 +1,7 @@
 import {
     exportJPEG, getPanelNameSVG, setImage,
     setSvgBody, isNotEmptyArray, readTemplate,
-    setText, getSvgBody, thenPush
+    setText, getSvgBody, thenPush, getNowTimeStamp, isNotNull, floor
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -66,7 +66,17 @@ export async function panel_MA(data = {
     // 仅 b35+b15 使用
     scores_latest: [],
     versions: [''],
-    panel: "MA"
+    panel: "MA",
+
+    // 仅 MS 面板有
+    statistics: {
+        count: 50,
+        total_rating: 13130,
+        average_rating: 262.6,
+        average_achievement: 97.89379000000001,
+        average_star: 13.758
+    },
+
 }) {
     let svg = readTemplate('template/Panel_MA.svg');
 
@@ -86,7 +96,19 @@ export async function panel_MA(data = {
     } else if (data?.panel === 'MV') {
         panel_name = getPanelNameSVG('Maimai Version Scores (!ymmv)', 'MV');
     } else if (data?.panel === 'MS') {
-        panel_name = getPanelNameSVG('Maimai Scores (!ymms)', 'MS');
+        let request_time
+
+        if (isNotNull(data.statistics)) {
+            request_time = 'count: ' + data.statistics.count
+                + ' // avg. ra.: ' + floor(data.statistics.average_rating, 1)
+                + ' // avg. diff.: ' + floor(data.statistics.average_star, 2)
+                + ' // avg. ach.: ' + floor(data.statistics.average_achievement, 4)
+                + '% // request time: ' + getNowTimeStamp()
+        } else {
+            request_time = 'request time: ' + getNowTimeStamp()
+        }
+
+        panel_name = getPanelNameSVG('Maimai Scores (!ymms)', 'MS', request_time);
     } else {
         panel_name = getPanelNameSVG('Maimai Multiple Scores (!ymx)', 'X');
     }
@@ -175,7 +197,7 @@ export async function panel_MA(data = {
     svg = setText(svg, panel_height, reg_panelheight);
     svg = setText(svg, card_height, reg_cardheight);
 
-    if (data.panel === 'MS') {
+    if (data.panel === 'MS' || data.panel === 'MV') {
         const page = torusBold.getTextPath(
             'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6
         )
