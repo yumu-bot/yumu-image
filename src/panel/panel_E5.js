@@ -1367,10 +1367,17 @@ const PanelEGenerate = {
         const rainbow_rating = ((1100 * (s?.great || 0) + 550 * (s?.ok || 0) + 100 * ((s?.small_bonus || 0) + (s?.ignore_hit || 0))) / (1100 * (m?.great || 1))) * ((score?.rank !== 'F') ? 1 : (progress || 1))
          */
 
+        let rainbow_rating
 
-        const rainbow_rating = (score?.total_score_without_mods > 0) ?
-            (score.total_score_without_mods / 1000000) :
-            (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods || [], score?.ruleset_id || 0))
+        if (score.type === 'sb_score') {
+            // 对于 sb 服的分数，这里近似处理
+
+            rainbow_rating = (250000 * (score?.max_combo || 0) / (score?.beatmap?.max_combo || 1) + 750000 * Math.pow(score?.accuracy || 0, 3.6)) / 1000000
+        } else {
+            rainbow_rating = (score?.total_score_without_mods > 0) ?
+                (score.total_score_without_mods / 1000000) :
+                (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods || [], score?.ruleset_id || 0))
+        }
 
         let rainbow_rank;
 
