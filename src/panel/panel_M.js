@@ -190,8 +190,10 @@ export async function panel_M(data = {
     const params = []
     const cardO2s = []
 
+    const populars = data.most_popular_beatmap || []
+
     await Promise.allSettled(
-        data.most_popular_beatmap.map((v) => {
+        populars.map((v) => {
             return PanelGenerate.beatmap2CardO2(v)
         })
     ).then(results => thenPush(results, params))
@@ -204,7 +206,7 @@ export async function panel_M(data = {
 
     let stringO2s = ''
 
-    for (let i = 0; i < Math.min(data.most_popular_beatmap?.length || 0, 6); i++) {
+    for (let i = 0; i < Math.min(populars.length, 6); i++) {
         const x = 510 + (i % 3) * 305;
         const y = 380 + Math.floor(i / 3) * 145;
 
@@ -213,7 +215,7 @@ export async function panel_M(data = {
 
     svg = setText(svg, stringO2s, reg_popular)
 
-    if ((data.most_popular_beatmap?.length || 0) < 1) { //摆烂机制
+    if (populars.length < 1) { //摆烂机制
         svg = setImage(svg, 867.5, 410, 185, 185, getImageFromV3('sticker_qiqi_oh.png'), reg_popular, 1);
     }
 
