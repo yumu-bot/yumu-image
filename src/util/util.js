@@ -425,6 +425,7 @@ export async function getMapBackground(beatmap = {}, cover = 'cover') {
             case 'list@2x': url = covers['list@2x']; break;
             case 'card': url = covers.card; break;
             case 'card@2x': url = covers['card@2x']; break;
+            case 'raw': url = covers.list.replaceAll('list', 'raw'); break;
             default: if (isNumber(beatmap?.beatmapset?.id)) {
                 url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/cover.jpg'
                 use_cache = false
@@ -450,10 +451,9 @@ export async function getMapBackground(beatmap = {}, cover = 'cover') {
 /**
  * 获得难度背景 v5
  * @param score 成绩，也可以是 beatmap，这两个类结构刚好一样
- * @param cover
  * @returns {Promise<string>}
  */
-export async function getDiffBackground(score = {}, cover = 'cover') {
+export async function getDiffBackground(score = {}) {
     let path;
     const default_image_path = getImageFromV3('card-default.png')
 
@@ -472,7 +472,7 @@ export async function getDiffBackground(score = {}, cover = 'cover') {
             console.error("本地背景读取失败", e);
         }
 
-        path = await getMapBackground(score, cover);
+        path = await getMapBackground(score, 'raw');
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
 
@@ -485,7 +485,7 @@ export async function getDiffBackground(score = {}, cover = 'cover') {
                 deleteBeatMapFromDatabase(bid);
             }
 
-            return await getMapBackground(score, cover);
+            return await getMapBackground(score, 'raw');
         }
     }
 }
@@ -1842,8 +1842,8 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
 
     const iidx = ["Beginner", "Normal", "Hyper", "Another", "Black Another", "Leggendaria"]
 
-    const sdvx = ["Basic", "Novice", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "Exceed"]
-    const sdvx_short = ["BSC", "NOV", "ADV", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "XCD"]
+    const sdvx = ["Basic", "Novice", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "ULTIMATE", "Exceed"]
+    const sdvx_short = ["BSC", "NOV", "ADV", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "ULT", "XCD"]
 
     const standard = ["Easy", "Normal", "Hard", "Insane", "Lunatic", "Extra", "Extreme", "Expert", "Master", "Ultra"]
     const taiko = ["Kantan", "Futsuu", "Muzukashii", "Inner Oni", "Ura Oni", "Hell Oni", "Oni"]

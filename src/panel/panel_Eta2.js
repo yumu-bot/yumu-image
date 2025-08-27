@@ -313,7 +313,7 @@ export async function panel_Eta2(data = {
     svg = setText(svg, difficulty, reg_text);
 
     // 图片定义
-    const background = await getDiffBackground(data?.score, 'list');
+    const background = await getDiffBackground(data?.score);
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);

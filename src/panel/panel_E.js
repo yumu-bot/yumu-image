@@ -313,7 +313,7 @@ export async function panel_E(
 
     // 图片定义
     const background = getRankBackground((data?.score?.rank || getApproximateRank(data?.score)));
-    const banner = await getDiffBackground(data?.score, 'cover');
+    const banner = await getDiffBackground(data?.score);
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));

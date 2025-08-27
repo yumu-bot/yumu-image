@@ -65,7 +65,7 @@ export async function router_svg(req, res) {
  */
 export async function panel_Beta(score) {
     const avatar = await getAvatar(score?.user?.avatar_url, true);
-    const bg = await getDiffBackground(score, 'list');
+    const bg = await getDiffBackground(score);
 
     const mode_int = score.mode_int;
     const mods = score.mods;

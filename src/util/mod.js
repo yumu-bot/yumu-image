@@ -129,6 +129,51 @@ export const getModName = (mod = {acronym: ""} || "") => {
 }
 
 /**
+ * 绘画标准六边形模组：模组宽 90，模组文字的偏移量 42，间隔 10
+ * @param mods
+ * @param x 基准点 x
+ * @param y 基准点 y
+ * @param max_width 模组最大宽度
+ * @param align 方向，支持向左、向右、居中
+ */
+export function getModBody(mods = [{acronym: ""}], x, y, max_width = Infinity, align = 'left') {
+    const length = (mods || [])?.length || 0
+    const mod_width = 90
+    const text_height = 42
+
+    if (length === 0) return ''
+
+    const interval = Math.min(10, (max_width - length * mod_width) / (length - 1))
+
+    let lx
+
+    const total_width = Math.min(max_width, interval * (length - 1) + length * mod_width)
+
+    switch (align) {
+        case 'right': lx = x - mod_width; break;
+        case 'center': lx = x - total_width / 2; break;
+        default: lx = x
+    }
+
+    let svg = '';
+
+    mods.forEach((v, i) => {
+        let delta_x
+
+        if (align === 'right') {
+            delta_x = -i * (interval + mod_width)
+        } else {
+            delta_x = i * (interval + mod_width)
+        }
+
+        svg += getModPath(v, lx + delta_x, y, mod_width, text_height, true);
+    });
+
+    return svg;
+
+}
+
+/**
  * 获取标准六边形模组路径
  * @param mod {string | {acronym: string}}
  * @param x

@@ -543,7 +543,7 @@ export const PanelGenerate = {
         const star = floor(match?.average_star || 0, 2);
 
         const sid = match?.first_map_sid || beatmap?.beatmapset?.id || 0
-        const background = beatmap != null ? await getDiffBackground(beatmap, 'list') :
+        const background = beatmap != null ? await getDiffBackground(beatmap) :
             await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list.jpg', true)
 
         const split = getMatchNameSplitted(stat?.name)

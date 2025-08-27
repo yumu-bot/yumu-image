@@ -19,7 +19,7 @@ import {
     setText,
     setTexts,
     floor,
-    floors, getDiffBackground, rounds
+    floors, getDiffBackground, rounds, getSvgBody
 } from "../util/util.js";
 import {getRankBackground} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
@@ -76,8 +76,6 @@ export async function panel_E6(data = {
     const reg_index = /(?<=<g id="Index">)/;
     const reg_card_a1 = /(?<=<g id="Card_A1">)/;
     const reg_card_e1 = /(?<=<g id="Card_E1">)/;
-    const reg_card_e2 = /(?<=<g id="Card_E2">)/;
-    const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     // 导入文字
     const has_ranked_date = isNotEmptyString(data?.beatmap?.beatmapset?.ranked_date)
@@ -98,7 +96,7 @@ export async function panel_E6(data = {
 
     // 图片定义
     const background = getRankBackground(rank);
-    const banner = await getDiffBackground(data, 'cover');
+    const banner = await getDiffBackground(data);
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
@@ -115,18 +113,22 @@ export async function panel_E6(data = {
     const componentE11 = component_E11(await PanelEGenerate.score2componentE11(data.beatmap));
 
     // 导入卡片
-    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
-    svg = setSvgBody(svg, 40, 330, componentE1, reg_card_e1);
-    svg = setSvgBody(svg, 40, 500, componentE2, reg_card_e1);
-    svg = setSvgBody(svg, 40, 770, componentE3, reg_card_e1);
-    svg = setSvgBody(svg, 550, 330, componentE4, reg_card_e2);
-    svg = setSvgBody(svg, 1280, 330, componentE5, reg_card_e2);
-    svg = setSvgBody(svg, 550, 880, componentE6, reg_card_e2);
-    svg = setSvgBody(svg, 1390, 330, componentE7, reg_card_e3);
-    svg = setSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
-    svg = setSvgBody(svg, 1390, 600, componentE9, reg_card_e3);
-    svg = setSvgBody(svg, 1390, 770, componentE10, reg_card_e3);
-    svg = setSvgBody(svg, 550, 290, componentE11, reg_card_e3);
+    const bodyA1 = getSvgBody(40, 40, cardA1)
+    const bodyE1 = getSvgBody(40, 330, componentE1)
+    const bodyE2 = getSvgBody(40, 500, componentE2)
+    const bodyE3 = getSvgBody(40, 770, componentE3)
+    const bodyE4 = getSvgBody(550, 330, componentE4)
+    const bodyE5 = getSvgBody(1280, 330, componentE5)
+    const bodyE6 = getSvgBody(550, 880, componentE6)
+    const bodyE7 = getSvgBody(1390, 330, componentE7)
+    const bodyE8 = getSvgBody(1390, 500, componentE8)
+    const bodyE9 = getSvgBody(1390, 600, componentE9)
+    const bodyE10 = getSvgBody(1390, 770, componentE10)
+    const bodyE11 = getSvgBody(550, 290, componentE11)
+
+    svg = setText(svg, bodyA1, reg_card_a1)
+
+    svg = setTexts(svg, [bodyE1, bodyE2, bodyE3, bodyE4, bodyE5, bodyE6, bodyE7, bodyE8, bodyE9, bodyE10, bodyE11], reg_card_e1)
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
@@ -992,7 +994,7 @@ const PanelEGenerate = {
             difficulty_name: getKeyDifficulty(b) || '',
             bid: b?.id || 0,
             sid: b?.beatmapset?.id || 0,
-            background: await getDiffBackground(b, 'cover'),
+            background: await getDiffBackground(b),
             creator: creators,
         }
     },
@@ -1046,7 +1048,7 @@ const PanelEGenerate = {
 
     score2componentE11: async (b) => {
         return {
-            background: await getDiffBackground(b, 'cover'),
+            background: await getDiffBackground(b),
         }
     },
 }

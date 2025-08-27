@@ -300,7 +300,7 @@ export async function panel_Eta4(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 图片定义
-    const background = await getDiffBackground(data?.score, 'list');
+    const background = await getDiffBackground(data?.score);
 
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.5);
 

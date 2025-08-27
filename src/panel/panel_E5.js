@@ -8,7 +8,6 @@ import {
     getPanelNameSVG,
     getTimeDifference,
     setImage,
-    setSvgBody,
     readTemplate,
     setText,
     setTexts,
@@ -278,8 +277,6 @@ export async function panel_E5(data = {
     const reg_index_plus = /(?<=<g id="IndexPlus">)/;
     const reg_card_a1 = /(?<=<g id="Card_A1">)/;
     const reg_card_e1 = /(?<=<g id="Card_E1">)/;
-    const reg_card_e2 = /(?<=<g id="Card_E2">)/;
-    const reg_card_e3 = /(?<=<g id="Card_E3">)/;
 
     const is_lazer = data?.score?.is_lazer
     svg = setImage(svg, 1725, 220, 170, 70, getScoreTypeImage(is_lazer, 2, data?.score?.type), reg_index_plus, 1)
@@ -339,7 +336,7 @@ export async function panel_E5(data = {
 
     // 图片定义
     const background = getRankBackground(rank, data?.score?.passed);
-    const banner = await getDiffBackground(data?.score, 'cover');
+    const banner = await getDiffBackground(data?.score);
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
@@ -356,18 +353,22 @@ export async function panel_E5(data = {
     const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.progress));
 
     // 导入卡片
-    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
-    svg = setSvgBody(svg, 40, 330, componentE1, reg_card_e1);
-    svg = setSvgBody(svg, 40, 500, componentE2, reg_card_e1);
-    svg = setSvgBody(svg, 40, 770, componentE3, reg_card_e1);
-    svg = setSvgBody(svg, 550, 330, componentE4, reg_card_e2);
-    svg = setSvgBody(svg, 1280, 330, componentE5, reg_card_e2);
-    svg = setSvgBody(svg, 550, 880, componentE6, reg_card_e2);
-    svg = setSvgBody(svg, 1390, 330, componentE7, reg_card_e3);
-    svg = setSvgBody(svg, 1390, 500, componentE8, reg_card_e3);
-    svg = setSvgBody(svg, 1390, 600, componentE9, reg_card_e3);
-    svg = setSvgBody(svg, 1390, 770, componentE10P, reg_card_e3);
-    svg = setSvgBody(svg, 1390, 770, componentE10, reg_card_e3);
+    const bodyA1 = getSvgBody(40, 40, cardA1)
+    const bodyE1 = getSvgBody(40, 330, componentE1)
+    const bodyE2 = getSvgBody(40, 500, componentE2)
+    const bodyE3 = getSvgBody(40, 770, componentE3)
+    const bodyE4 = getSvgBody(550, 330, componentE4)
+    const bodyE5 = getSvgBody(1280, 330, componentE5)
+    const bodyE6 = getSvgBody(550, 880, componentE6)
+    const bodyE7 = getSvgBody(1390, 330, componentE7)
+    const bodyE8 = getSvgBody(1390, 500, componentE8)
+    const bodyE9 = getSvgBody(1390, 600, componentE9)
+    const bodyE10P = getSvgBody(1390, 770, componentE10P)
+    const bodyE10 = getSvgBody(1390, 770, componentE10)
+
+    svg = setText(svg, bodyA1, reg_card_a1)
+
+    svg = setTexts(svg, [bodyE1, bodyE2, bodyE3, bodyE4, bodyE5, bodyE6, bodyE7, bodyE8, bodyE9, bodyE10P, bodyE10], reg_card_e1)
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
@@ -432,16 +433,18 @@ const component_E1 = (
 
     const ruleset = extra.getTextPath(getGameMode(data.mode, -1), 20 - 2, 88 - 10, 72, 'left baseline', getStarRatingColor(star))
 
+    const star_floor = floors(star, 2)
+
     const text_arr = [
         {
             font: "poppinsBold",
-            text: floors(star, 2).integer,
+            text: star_floor.integer,
             size: 84,
             color: '#fff',
         },
         {
             font: "poppinsBold",
-            text: floors(star, 2).decimal,
+            text: star_floor.decimal,
             size: 48,
             color: '#fff',
         },
@@ -1274,7 +1277,7 @@ const PanelEGenerate = {
             difficulty_name: getKeyDifficulty(score?.beatmap),
             bid: score?.beatmap?.id || 0,
             sid: score?.beatmapset?.id || 0,
-            background: await getDiffBackground(score, 'cover'),
+            background: await getDiffBackground(score),
             creator: creators,
             status: score?.beatmap?.status || 'pending',
         }

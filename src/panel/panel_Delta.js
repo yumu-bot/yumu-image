@@ -135,7 +135,7 @@ export async function panel_Delta(data = {
     svg = setSvgBody(svg, 0, 0, od_rrect, reg_od);
     svg = setSvgBody(svg, 0, 0, length_pie, reg_length);
 
-    const image = await getDiffBackground(data, 'list');
+    const image = await getDiffBackground(data);
 
     svg = (data.hasBG === false) ? svg : setImage(svg, -30, 0, 1080, 1080, image, reg_background, 1);
     svg = setImage(svg, 0, 0, 1920, 1080, getImageFromV3('panel-kita.png'), reg_base, 1);

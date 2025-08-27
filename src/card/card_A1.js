@@ -79,8 +79,8 @@ export async function card_A1(data = {
     svg = setText(svg, flag_svg, reg_country_flag); //高44宽60吧
     svg = setTexts(svg, [top1, left1, left2, right1, right2, right3], reg_text);
     svg = setTexts(svg, [top1, top2, left1, left2, right1, right2, right3], reg_text);
-    // 替换图片
 
+    // 替换图片
     svg = setImage(svg, 0, 0, 430, 210, data.background, reg_background, 0.6);
     svg = setImage(svg, 20, 20, 100, 100, data.avatar, reg_avatar, 1);
     svg = setImage(svg, 200 + icon_offset, 70, 40, 40, data?.sub_icon1 || '', reg_sub_icon1, 1); //x +5px
