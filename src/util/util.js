@@ -1829,7 +1829,7 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
 
     let name
 
-    const difficulty = (difficulty_name || "")
+    const difficulties = (difficulty_name || "")
         .replaceAll("0", "o")
         .replaceAll("1", "i")
         .replaceAll("3", "e")
@@ -1838,7 +1838,7 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
         .replaceAll("6", "b")
         .replaceAll("7", "t")
         .replaceAll("9", "g")
-        .toUpperCase()
+        .toUpperCase().split(/\s+/)
 
     const iidx = ["Beginner", "Normal", "Hyper", "Another", "Black Another", "Leggendaria"]
 
@@ -1848,6 +1848,7 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
     const standard = ["Easy", "Normal", "Hard", "Insane", "Lunatic", "Extra", "Extreme", "Expert", "Master", "Ultra"]
     const taiko = ["Kantan", "Futsuu", "Muzukashii", "Inner Oni", "Ura Oni", "Hell Oni", "Oni"]
     const fruits = ["Cup", "Salad", "Platter", "Rain", "Overdose", "Deluge"]
+    const mania = ["EZ", "NM", "HD", "MX", "SC", "SHD"]
 
     /*
     const arcaea = ["Past", "Present", "Future", "Eternal", "Beyond"]
@@ -1860,7 +1861,7 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
         for (const d of iidx) {
             const du = d.toUpperCase()
 
-            if (difficulty.includes(du)) {
+            if (difficulties.includes(du)) {
                 return du
             }
         }
@@ -1869,7 +1870,7 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
             const su = sdvx[i].toUpperCase()
             const tu = sdvx_short[i].toUpperCase()
 
-            if (difficulty.includes(su) || difficulty.includes(" " + su)) {
+            if (difficulties.includes(su) || difficulties.includes(" " + su)) {
                 return tu
             }
         }
@@ -1879,7 +1880,7 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
 
             const du = d.toUpperCase()
 
-            if (difficulty.includes(du)) {
+            if (difficulties.includes(du)) {
                 return du
             }
         }
@@ -1889,7 +1890,7 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
 
             const du = d.toUpperCase()
 
-            if (difficulty.includes(du)) {
+            if (difficulties.includes(du)) {
                 return du
             }
         }
@@ -1899,7 +1900,17 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
 
             const du = d.toUpperCase()
 
-            if (difficulty.includes(du)) {
+            if (difficulties.includes(du)) {
+                return du
+            }
+        }
+
+        for (const d of mania) {
+            if (m !== 'm') break
+
+            const du = d.toUpperCase()
+
+            if (difficulties.includes(du)) {
                 return du
             }
         }

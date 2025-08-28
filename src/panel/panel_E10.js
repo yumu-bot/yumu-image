@@ -311,7 +311,7 @@ export async function panel_E10(data = {
 
     svg = setTexts(svg, [bodyE1, bodyE2, bodyE3, bodyE4, bodyE5, componentE6, bodyE7, bodyE8, bodyE9, bodyE10, bodyE11, copyright], reg_component)
 
-    svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.4)
+    svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6)
 
     return svg.toString()
 }
