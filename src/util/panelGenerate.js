@@ -1303,6 +1303,14 @@ export const PanelGenerate = {
             return PanelDraw.Image(0, 0, 27, 30, getImageFromV3('Maimai', `object-icon-sync-${sync_image}.png`))
         }
 
+        let difficulty
+
+        if (score?.ds <= 0) {
+            difficulty = score?.level || '?'
+        } else {
+            difficulty = score?.ds?.toString() || '?'
+        }
+
         return {
             background: getMaimaiRankBG(score?.rate || ''),
             cover: await getMaimaiCover(score?.song_id || 0),
@@ -1322,7 +1330,7 @@ export const PanelGenerate = {
             index_b_size: 32,
             index_m_size: 20,
             index_r_size: 18,
-            label1: score?.ds?.toString() || '?',
+            label1: difficulty,
             label2: score?.position >= 1 ? ('#' + score.position) : '',
             label3: score?.song_id?.toString() || '?',
 

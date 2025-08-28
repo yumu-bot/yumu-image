@@ -297,6 +297,14 @@ async function chuScore2CardI3(score = {
     const rating_max = (score?.ds || 0) + 2.15
     const rating_max_text = score?.score >= 1009000 ? (' [MAX]') : (' [' + floor(rating_max, 2) + ']')
 
+    let difficulty
+
+    if (score?.ds <= 0) {
+        difficulty = score?.level || '?'
+    } else {
+        difficulty = score?.ds?.toString() || '?'
+    }
+
     const too_bright = (score?.level_index || 0) === 1;
 
     return {
@@ -319,7 +327,7 @@ async function chuScore2CardI3(score = {
         index_b_size: 32,
         index_m_size: 20,
         index_r_size: 18,
-        label1: score?.ds?.toString() || '?',
+        label1: difficulty,
         label2: score?.position >= 1 ? ('#' + score.position) : '',
         label3: score?.mid?.toString() || '0',
 
