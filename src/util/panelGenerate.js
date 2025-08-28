@@ -21,7 +21,7 @@ import {
     floors,
     getFormattedTime,
     getTimeDifferenceShort,
-    getMapBackground, getDiffBackground, getTime, thenPush, round,
+    getMapBackground, getDiffBackground, getTime, thenPush, round, rounds,
 } from "./util.js";
 import {getBadgeColor, getRankColor, getStarRatingColor} from "./color.js";
 import {
@@ -377,7 +377,7 @@ export const PanelGenerate = {
         average: 12.65
     }) => {
         const background = getCHUNITHMRatingBG(user.rating);
-        const rating = floors(user.rating, 2)
+        const rating = rounds(user.rating, 2)
 
         return {
             background: background,
