@@ -28,7 +28,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold} from "../util/font.js";
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModPath, matchAnyMods} from "../util/mod.js";
+import {getModsBody, matchAnyMods} from "../util/mod.js";
 
 
 export async function router(req, res) {
@@ -520,7 +520,7 @@ const component_E7 = (
     let fc_pp_text;
     let percent_type;
 
-    if (getGameMode(data?.mode, 1) === 'm' && fc_percent < 0.95 && pf_percent < 0.95) {
+    if (data.mode === 'm' && fc_percent < 0.95 && pf_percent < 0.95) {
         // mania 的争取 FC 模式
         reference_pp = data?.full_pp;
 
@@ -578,7 +578,7 @@ const component_E7 = (
 
     svg = setTexts(svg, [texts, title, fc_pp], reg_text);
 
-    switch (getGameMode(data?.mode, 1)) {
+    switch (data.mode) {
         case 'o': {
             const sum = data?.aim_pp + data?.spd_pp + data?.acc_pp + data?.fl_pp || 0;
 
@@ -677,7 +677,7 @@ const component_E8 = (
     const reg_text = /(?<=<g id="Text_OE8">)/;
     const reg_base = /(?<=<g id="Base_OE8">)/;
 
-    const mods = getModsSVG(data.mods, 390, 10, 90, 42, 50); // y = 15
+    const mods = getModsBody(data.mods, 480, 10, 'right', 450); // y = 15
 
     const title = poppinsBold.getTextPath('Mods', 15, 28, 18, 'left baseline');
 
@@ -1000,9 +1000,11 @@ const PanelEGenerate = {
     },
 
     score2componentE7: (b, expected, attr, pp) => {
+        const mode = getGameMode(b?.mode, 1)
+
         const is_fc = (expected?.combo / b?.max_combo) > 0.98
-            || getGameMode(expected?.mode, 1) === 'm'
-            || getGameMode(expected?.mode, 1) === 't'
+            || mode === 'm'
+            || mode === 't'
 
         return {
             pp: attr?.pp || 0,
@@ -1017,7 +1019,7 @@ const PanelEGenerate = {
 
             is_fc: is_fc,
 
-            mode: b?.mode,
+            mode: mode,
         }
     },
 
@@ -1195,33 +1197,6 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
         data_a: '',
         bar_progress: null,
     }
-}
-
-// 同 panelE 的方法，注意这里 x 是第一个 mod 的左下角
-const getModsSVG = (mods = [{ acronym: '' }], x, y, mod_w, text_h, interval) => {
-    let svg = '';
-
-    const length = mods ? mods.length : 0;
-
-    let multiplier = 1
-
-    if (length > 0 && length <= 2) {
-        multiplier = 2
-    } else if (length > 2 && length <= 4) {
-        multiplier = 5/4
-    } else if (length > 4 && length <= 6) {
-        multiplier = 1
-    } else if (length > 6 && length <= 8) {
-        multiplier = 2/3
-    } else if (length > 8) {
-        multiplier = 7/12
-    }
-
-    mods.forEach((v, i) => {
-        svg += getModPath(v, x + (i - (length - 1)) * multiplier * interval, y, mod_w, text_h, true);
-    });
-
-    return svg;
 }
 
 const getStatMax = (pp) => {

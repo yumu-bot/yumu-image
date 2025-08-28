@@ -133,10 +133,10 @@ export const getModName = (mod = {acronym: ""} || "") => {
  * @param mods
  * @param x 基准点 x
  * @param y 基准点 y
- * @param max_width 模组最大宽度
  * @param align 方向，支持向左、向右、居中
+ * @param max_width 模组最大宽度
  */
-export function getModBody(mods = [{acronym: ""}], x, y, max_width = Infinity, align = 'left') {
+export function getModsBody(mods = [{acronym: ""}], x, y, align = 'left', max_width = Infinity) {
     const length = (mods || [])?.length || 0
     const mod_width = 90
     const text_height = 42

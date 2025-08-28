@@ -7,7 +7,7 @@ import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getManiaAimingAccuracy} from "../util/compute-pp.js";
-import {getModMultiplier, getModPath} from "../util/mod.js";
+import {getModsBody, getModMultiplier} from "../util/mod.js";
 
 export async function card_E2(data = {
     rank: 'SS',
@@ -99,7 +99,7 @@ export async function card_E2(data = {
     svg = setTexts(svg, [score, mod_multiplier], reg_text);
 
     // 部件定义
-    const mods = getModsSVG(data.mods, 880, 20, 90, 42, 50);
+    const mods = getModsBody(data.mods, 880 + 90, 20, 'right', 300);
     const rank = getRankSVG(data.rank, 100, 75);
     const mask = getMaskSVG(data.accuracy, mode, 175, 155, 230); //105 * 2
     const ring = getRingSVG(40, 20, 270, 270);
@@ -266,23 +266,6 @@ function getRankSVG(rank = 'XH', x, y) {
     }
 
     return `<image width="150" height="150" transform="translate(${x + mx} ${y})" xlink:href="${path}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`;
-}
-
-function getModsSVG(mods = [""], x, y, mod_w, text_h, interval) {
-    let svg = '';
-    const length = mods ? mods.length : 0;
-
-    if (length <= 2 && length > 0) {
-        mods.forEach((v, i) => {
-            svg += getModPath(v, x - ((length - 1) * 2 * interval) + (2 * i * interval), y, mod_w, text_h);
-        });
-    } else if (length > 2) {
-        mods.forEach((v, i) => {
-            svg += getModPath(v, x - ((length - 1) * interval) + (i * interval), y, mod_w, text_h);
-        });
-    }
-
-    return svg;
 }
 
 function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, font_h) {

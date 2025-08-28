@@ -31,7 +31,7 @@ import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi} from "..
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModMultiplier, getModPath} from "../util/mod.js";
+import {getModsBody, getModMultiplier} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -612,8 +612,6 @@ const component_E6 = (
         bid: 0,
         sid: 0,
         background: '',
-        status: 'pending',
-        is_dmca: false,
     }) => {
     let svg = `   <defs>
             <clipPath id="clippath-OE6-1">
@@ -764,7 +762,7 @@ const component_E7 = (
     let fc_pp_text;
     let percent_type;
 
-    if (getGameMode(data?.mode, 1) === 'm' && fc_percent < 0.95 && pf_percent < 0.95) {
+    if (data.mode === 'm' && fc_percent < 0.95 && pf_percent < 0.95) {
         // mania 的争取 FC 模式
         reference_pp = data?.full_pp;
 
@@ -822,7 +820,7 @@ const component_E7 = (
 
     svg = setTexts(svg, [texts, title, fc_pp], reg_text);
 
-    switch (getGameMode(data?.mode, 1)) {
+    switch (data.mode) {
         case 'o': {
             const sum = data?.aim_pp + data?.spd_pp + data?.acc_pp + data?.fl_pp || 0;
 
@@ -922,16 +920,22 @@ const component_E8 = (
     const reg_text = /(?<=<g id="Text_OE8">)/;
     const reg_base = /(?<=<g id="Base_OE8">)/;
 
-    const mods = getModsSVG(data.mods, 390, 10, 90, 42, 50); // y = 15
+    const score_data = floors(data?.score, -4, (data?.mods.length <= 4) ? 1 : 0)
+
+    const score_width = poppinsBold.getTextWidth(score_data.integer, 56) + poppinsBold.getTextWidth(score_data.decimal, 36)
+
+    const mods = getModsBody(data.mods, 480, 10, 'right', 450 - score_width); // y = 15
+
+
     const score = getMultipleTextPath([
             {
                 font: 'poppinsBold',
-                text: floors(data?.score, -4, (data?.mods.length <= 4) ? 1 : 0).integer,
+                text: score_data.integer,
                 size: 56,
             },
             {
                 font: 'poppinsBold',
-                text: floors(data?.score, -4, (data?.mods.length <= 4) ? 1 : 0).decimal,
+                text: score_data.decimal,
                 size: 36,
             }
         ],
@@ -1279,14 +1283,15 @@ const PanelEGenerate = {
             sid: score?.beatmapset?.id || 0,
             background: await getDiffBackground(score),
             creator: creators,
-            status: score?.beatmap?.status || 'pending',
         }
     },
 
     score2componentE7: (score, attr) => {
+        const mode = getGameMode(score?.ruleset_id, 1)
+
         const is_fc = (score?.max_combo / score?.beatmap?.max_combo) > 0.98
-            || getGameMode(score?.ruleset_id, 1) === 'm'
-            || getGameMode(score?.ruleset_id, 1) === 't'
+            || mode === 'm'
+            || mode === 't'
 
         return {
             pp: score?.pp || 0,
@@ -1301,7 +1306,7 @@ const PanelEGenerate = {
 
             is_fc: is_fc,
 
-            mode: score?.ruleset_id,
+            mode: mode,
         }
     },
 
@@ -1466,34 +1471,6 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
         bar_progress: null,
     }
 }
-
-// 同 panelE 的方法，注意这里 x 是第一个 mod 的左下角
-const getModsSVG = (mods = [{ acronym: '' }], x, y, mod_w, text_h, interval) => {
-    let svg = '';
-
-    const length = mods ? mods.length : 0;
-
-    let multiplier = 1
-
-    if (length > 0 && length <= 2) {
-        multiplier = 2
-    } else if (length > 2 && length <= 4) {
-        multiplier = 5/4
-    } else if (length > 4 && length <= 6) {
-        multiplier = 1
-    } else if (length > 6 && length <= 8) {
-        multiplier = 2/3
-    } else if (length > 8) {
-        multiplier = 7/12
-    }
-
-    mods.forEach((v, i) => {
-        svg += getModPath(v, x + (i - (length - 1)) * multiplier * interval, y, mod_w, text_h, true);
-    });
-
-    return svg;
-}
-
 
 //老面板的newJudge
 const score2Statistics = (statistics, mode, is_lazer = false) => {

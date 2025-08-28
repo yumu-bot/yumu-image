@@ -1993,7 +1993,7 @@ export const getPanelHeight = (cardCount = 0, cardHeight = 110, cardPerRow = 2, 
 /**
  * 公用方法：给面板上名字
  */
-export function getPanelNameSVG(name = '?? (!test)', index = '?', request_time = 'request time: ' + getNowTimeStamp(), version = 'v0.6.2 RR', color = '#fff', powered = 'Yumubot') {
+export function getPanelNameSVG(name = '?? (!test)', index = '?', request_time = 'request time: ' + getNowTimeStamp(), version = 'v0.6.3 RR', color = '#fff', powered = 'Yumubot') {
 
     const powered_text = torus.getTextPath(
         "powered by " + powered.toString() + " " + version.toString() + " \/\/ " + name.toString(),

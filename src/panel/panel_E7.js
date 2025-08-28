@@ -29,7 +29,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {extra, getMultipleTextPath, poppinsBold, torus} from "../util/font.js";
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModPath} from "../util/mod.js";
+import {getModsBody} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -619,7 +619,7 @@ const component_E8 = (
     const reg_text = /(?<=<g id="Text_OE8">)/;
     const reg_base = /(?<=<g id="Base_OE8">)/;
 
-    const mods = getModsSVG(data.mods, 390, 10, 90, 42, 50); // y = 15
+    const mods = getModsBody(data.mods, 480, 10, 'right', 450); // y = 15
 
     const title = poppinsBold.getTextPath('Mods', 15, 28, 18, 'left baseline');
 
@@ -1138,22 +1138,4 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
         data_a: '',
         bar_progress: null,
     }
-}
-
-// 同 panelE 的方法，注意这里 x 是第一个 mod 的左下角
-const getModsSVG = (mods = [""], x, y, mod_w, text_h, interval) => {
-    let svg = '';
-    const length = mods ? mods.length : 0;
-
-    if (length <= 2 && length > 0) {
-        mods.forEach((v, i) => {
-            svg += getModPath(v, x - ((length - 1) * 2 * interval) + (2 * i * interval), y, mod_w, text_h, true);
-        });
-    } else if (length > 2) {
-        mods.forEach((v, i) => {
-            svg += getModPath(v, x - ((length - 1) * interval) + (i * interval), y, mod_w, text_h, true);
-        });
-    }
-
-    return svg;
 }

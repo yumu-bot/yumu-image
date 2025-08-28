@@ -14,7 +14,7 @@ import {
 } from "../util/star.js";
 import {getMultipleTextPath, PuHuiTi, torus} from "../util/font.js";
 import {PanelColor} from "../util/color.js";
-import {getModPath} from "../util/mod.js";
+import {getModsBody} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -418,7 +418,7 @@ const component_Eta1 = (data = {
     )
 
     const mode = torus.getTextPath(getGameMode(data?.mode, 2), 310, 280, 36, 'left baseline')
-    const mods = getModsSVG(data.mods, 1130, 535, 90, 42, 50);
+    const mods = getModsBody(data.mods, 1130 + 90, 535, 'left', 'right');
 
     let judges
 
@@ -558,30 +558,4 @@ function getDiffIndex(star_rating = 0) {
     else index = '??';
 
     return index
-}
-
-function getModsSVG(mods = [{ acronym: '' }], x, y, mod_w, text_h, interval) {
-    let svg = '';
-
-    const length = mods ? mods.length : 0;
-
-    let multiplier = 1
-
-    if (length > 0 && length <= 2) {
-        multiplier = 2
-    } else if (length > 2 && length <= 4) {
-        multiplier = 5/4
-    } else if (length > 4 && length <= 6) {
-        multiplier = 1
-    } else if (length > 6 && length <= 8) {
-        multiplier = 2/3
-    } else if (length > 8) {
-        multiplier = 7/12
-    }
-
-    mods.forEach((v, i) => {
-        svg += getModPath(v, x + (i - (length - 1)) * multiplier * interval, y, mod_w, text_h, true);
-    });
-
-    return svg;
 }

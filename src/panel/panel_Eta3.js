@@ -14,7 +14,7 @@ import {
 } from "../util/star.js";
 import {getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import {getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
-import {getModPath} from "../util/mod.js";
+import {getModsBody} from "../util/mod.js";
 import {getMascotName, getRandomMascotTransparentPath} from "../util/mascotBanner.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
@@ -500,7 +500,7 @@ const component_Eta2 = (data = {
 
     const mode = getGameMode(data?.mode, 1)
 
-    const mods = getModsSVG(data?.mods, 910, 626, 90, 42, 50);
+    const mods = getModsBody(data?.mods, 910 + 90, 626, 'right', 300);
 
     const titles = poppinsBold.getTextPath('SCORE', 400 - 40, 484, 72, 'right baseline', '#fff')
         + poppinsBold.getTextPath('ACC.', 400 - 40, 572, 48, 'right baseline', '#fff')
@@ -827,30 +827,4 @@ function padStart(number = 0, digit = 8) {
     }
 
     return pad
-}
-
-function getModsSVG(mods = [{ acronym: '' }], x, y, mod_w, text_h, interval) {
-    let svg = '';
-
-    const length = mods ? mods.length : 0;
-
-    let multiplier = 1
-
-    if (length > 0 && length <= 2) {
-        multiplier = 2
-    } else if (length > 2 && length <= 4) {
-        multiplier = 5/4
-    } else if (length > 4 && length <= 6) {
-        multiplier = 1
-    } else if (length > 6 && length <= 8) {
-        multiplier = 2/3
-    } else if (length > 8) {
-        multiplier = 7/12
-    }
-
-    mods.forEach((v, i) => {
-        svg += getModPath(v, x + (i - (length - 1)) * multiplier * interval, y, mod_w, text_h, true);
-    });
-
-    return svg;
 }

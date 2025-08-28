@@ -16,7 +16,7 @@ import {
 } from "../util/util.js";
 import {poppinsBold, torusRegular} from "../util/font.js";
 import {getMapStatusColor} from "../util/color.js";
-import {getModPath} from "../util/mod.js";
+import {getModsBody} from "../util/mod.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function router(req, res) {
@@ -552,7 +552,7 @@ const component_Eta4 = (data = {
     const sc = floors(data?.score, -4, 1)
     const score = poppinsBold.get2SizeTextPath(sc.integer, sc.decimal, 72, 60, 1600, 785, 'center baseline', '#2A2226')
 
-    const mods = getModsSVG(data.mods, 1380 + 300, 930, 90, 42, 50);
+    const mods = getModsBody(data.mods, 1380 + 300 + 90, 930, 'right', 300);
 
     const line = PanelDraw.Rect(1200, 300, 660, 1, 0, '#2A2226')
 
@@ -669,32 +669,6 @@ function stat2text(stat, original, isDisplay = true) {
     const stat_number = floor(stat, 1)
 
     return isDisplay ? (stat_number + (hasChanged ? (' [' + floor(original, 1) + ']') : '')) : ''
-}
-
-function getModsSVG(mods = [{ acronym: '' }], x, y, mod_w, text_h, interval) {
-    let svg = '';
-
-    const length = mods ? mods.length : 0;
-
-    let multiplier = 1
-
-    if (length > 0 && length <= 2) {
-        multiplier = 2
-    } else if (length > 2 && length <= 4) {
-        multiplier = 5/4
-    } else if (length > 4 && length <= 6) {
-        multiplier = 1
-    } else if (length > 6 && length <= 8) {
-        multiplier = 2/3
-    } else if (length > 8) {
-        multiplier = 7/12
-    }
-
-    mods.forEach((v, i) => {
-        svg += getModPath(v, x + (i - (length - 1)) * multiplier * interval, y, mod_w, text_h, true);
-    });
-
-    return svg;
 }
 
 function getJudge(x, y, number, name, color) {
