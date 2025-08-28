@@ -5,7 +5,7 @@ import {
     setImage,
     setSvgBody, isNotEmptyArray,
     readTemplate,
-    setText, floor, thenPush, getSvgBody
+    setText, thenPush, getSvgBody, round
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_I3} from "../card/card_I3.js";
@@ -295,7 +295,7 @@ async function chuScore2CardI3(score = {
 
     const rating = score?.ra || 0
     const rating_max = (score?.ds || 0) + 2.15
-    const rating_max_text = score?.score >= 1009000 ? (' [MAX]') : (' [' + floor(rating_max, 2) + ']')
+    const rating_max_text = score?.score >= 1009000 ? (' [MAX]') : (' [' + round(rating_max, 2) + ']')
 
     let difficulty
 
@@ -318,7 +318,7 @@ async function chuScore2CardI3(score = {
         title2: score?.alias || '',
         left1: score?.artist || '',
         left2: score?.charter || '',
-        left3: floor(rating, 2),
+        left3: round(rating, 2),
         left4: rating_max_text,
 
         index_b: score_text.slice(0, -4) || '0',

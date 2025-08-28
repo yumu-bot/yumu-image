@@ -511,16 +511,20 @@ export function getCHUNITHMRankBG(score = 0) {
 export function getCHUNITHMRating(score = 0, difficulty = 0) {
     if (typeof score != "number") return 0
 
-    if (score >= 1009000) return difficulty + 2.15
-    else if (score >= 1007500) return difficulty + 2 + Math.floor((score - 1007500) / 100) * 0.01
-    else if (score >= 1005000) return difficulty + 1.5 + Math.floor((score - 1005000) / 50) * 0.01
-    else if (score >= 1000000) return difficulty + 1 + Math.floor((score - 1000000) / 100) * 0.01
-    else if (score >= 975000) return difficulty + Math.floor((score - 975000) / 250) * 0.01
-    else if (score >= 925000) return Math.max(difficulty - 3, 0)
-    else if (score >= 900000) return Math.max(difficulty - 5, 0)
-    else if (score >= 800000) return Math.max(difficulty - 5, 0) / 2
-    else if (score >= 500000) return 0
-    else return 0
+    let rating
+
+    if (score >= 1009000) rating = difficulty + 2.15
+    else if (score >= 1007500) rating = difficulty + 2 + 0.15 * (score - 1007500) / (1009000 - 1007500)
+    else if (score >= 1005000) rating = difficulty + 1.5 + 0.5 * (score - 1005000) / (1007500 - 1005000)
+    else if (score >= 1000000) rating = difficulty + 1 + 0.5 * (score - 1000000) / (1005000 - 1000000)
+    else if (score >= 975000) rating = difficulty + (score - 975000) / (1000000 - 975000)
+    else if (score >= 925000) rating = difficulty - 3 + (score - 925000) / (975000 - 925000)
+    else if (score >= 900000) rating = difficulty - 5 + 2 * (score - 900000) / (925000 - 900000)
+    else if (score >= 800000) rating = (difficulty - 5) * (0.5 + 0.5 * (score - 800000) / (900000 - 800000))
+    else if (score >= 500000) rating = (difficulty - 5) * (0.5 * (score - 500000) / (800000 - 500000))
+    else rating = 0
+
+    return Math.floor(Math.max(rating, 0) * 100) / 100
 }
 
 export function getCHUNITHMRank(score = 0) {
