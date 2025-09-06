@@ -414,10 +414,19 @@ export async function getMapBackground(beatmap = {}, cover = 'cover') {
 
     let use_cache = hasLeaderBoard(beatmap?.beatmapset?.ranked) || hasLeaderBoard(beatmap?.beatmap?.ranked)
 
+    let type
+
+    const cl = cover.toString().toLowerCase().trim()
+
+    switch (cl) {
+        case 'cover', 'cover@2x', 'silmcover', 'silmcover@2x', 'list', 'list@2x', 'card', 'card@2x', 'raw': type = cl; break;
+        default: type = 'cover'; break;
+    }
+
     let url
 
     if (isNotNullOrEmptyObject(covers)) {
-        switch (cover.toString().toLowerCase()) {
+        switch (type) {
             case 'cover': url = covers.cover; break;
             case 'cover@2x': url = covers['cover@2x']; break;
             case 'silmcover': url = covers.cover; break;
@@ -433,17 +442,12 @@ export async function getMapBackground(beatmap = {}, cover = 'cover') {
                 use_cache = false
             }; break;
 
-            default: if (isNumber(beatmap?.beatmapset?.id)) {
-                url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/' + cover.toString().toLowerCase() + '.jpg'
-                use_cache = false
-            } else {
-                return default_image_path
-            }; break;
+            default: return default_image_path
         }
     } else {
-        if (isNumber(score?.beatmapset?.id)) {
-            url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/cover.jpg'
-            use_cache = false
+        if (isNumber(beatmap?.beatmapset?.id)) {
+            url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/' + type + '.jpg'
+            use_cache = true
         } else {
             return default_image_path
         }
