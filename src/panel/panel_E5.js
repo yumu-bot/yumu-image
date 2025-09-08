@@ -1389,7 +1389,7 @@ const PanelEGenerate = {
 
         let rainbow_rank;
 
-        if (score.rank === 'X' || score.rank === 'XH') {
+        if (score.legacy_rank === 'X' || score.legacy_rank === 'XH') {
             rainbow_rank = 'object-score-kiwami-rainbow.png'
         } else if (rainbow_rating < 0.5 - 1e-4) {
             if (progress >= 0.98) {
@@ -1399,7 +1399,7 @@ const PanelEGenerate = {
                 // 投降
                 rainbow_rank = 'object-score-jimaodan.png'
             }
-        } else if (score.rank !== 'F' &&
+        } else if (score.legacy_rank !== 'F' &&
             ((score?.statistics?.miss === 1) || (score?.statistics?.miss === 0 && score?.statistics?.ok === 1))) {
             // liaoxingyao，性歌
             rainbow_rank = 'object-score-sei-rainbow.png'
@@ -1421,7 +1421,7 @@ const PanelEGenerate = {
 
         let rainbow_crown;
 
-        if (score?.passed !== true || score.rank === 'F') {
+        if (score?.passed !== true || score.legacy_rank === 'F') {
             rainbow_crown = 'object-score-don-failed.png'
         } else if (score?.statistics?.miss === 0) {
             if (score?.statistics?.ok === 0) {
