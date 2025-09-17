@@ -5,7 +5,7 @@ import {
 } from "../util/util.js";
 import {torus, PuHuiTi, torusBold, getMultipleTextPath} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getModPath} from "../util/mod.js";
+import {drawLazerMods} from "../util/mod.js";
 
 export function card_H(data = {
     background: '',
@@ -59,6 +59,15 @@ export function card_H(data = {
 
     // 插入模组
     const mods_arr = data.mods_arr || [{acronym: ''}]
+
+    // 160 刚好可以展示单模组，并且收起多模组
+    const mods_data =
+        drawLazerMods(mods_arr, 710, 24, 60, 160, 'right', 6, true)
+
+    svg = setText(svg, mods_data.svg, reg_mod);
+
+    /*
+    const mods_arr = data.mods_arr || [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
 
     let multiplier
@@ -72,6 +81,8 @@ export function card_H(data = {
         svg = setText(svg,
             getModPath(mod, 620 - multiplier * i * 20, 24, 90, 42, true), reg_mod);
     });
+
+     */
 
     // 插入四个小标签
     const color_title2 = data.color_title2 || 'none';
@@ -129,8 +140,9 @@ export function card_H(data = {
     // 计算标题的长度
     let title_max_width = 500;
     let left_max_width = 500;
-    let mods_width;
+    let mods_width = mods_data.width + 10;
 
+    /*
     switch (mods_arr_length) {
         case 0: mods_width = 0; break;
         case 1: mods_width = 100; break;
@@ -140,6 +152,8 @@ export function card_H(data = {
         case 5: mods_width = 180; break;
         default: mods_width = 180;
     }
+
+     */
 
     title_max_width -= (Math.max(mods_width, label3_width - 10)); //一般来说就第三个标签最长了
     left_max_width -= mods_width;

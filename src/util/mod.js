@@ -182,12 +182,12 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
     // 只展开含有设置的模组，不含设置的模组重叠
     const half_width = getLazerModWidth(mods_has_settings.length, 235, scale, interval)
         + getLazerModWidth(mods_no_settings.length, 135, scale, interval - 135 * scale / 2)
-        + getLazerModInterval(mods_has_settings, mods_no_settings, interval - 135 * scale / 2)
+        + getLazerModInterval(mods_has_settings, mods_no_settings, interval)
 
     // 只展开含有设置的模组，不含设置的模组最小重叠
     const minimum_width = getLazerModWidth(mods_has_settings.length, 235, scale, interval)
-        + getLazerModWidth(mods_no_settings.length, 135, scale, interval - 135 * scale)
-        + getLazerModInterval(mods_has_settings, mods_no_settings, interval - 135 * scale)
+        + getLazerModWidth(mods_no_settings.length, 135, scale, interval - 135 * scale * 3 / 4)
+        + getLazerModInterval(mods_has_settings, mods_no_settings, interval)
 
     let total_width
     let lx
@@ -227,14 +227,15 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
 
         is_expanded = false
         is_additional = allow_expand
-        no_settings_offset = interval
+        no_settings_offset = interval + (135 * 3 / 4) * scale
         has_settings_offset = interval + 235 * scale
     } else {
         total_width = max_width
 
         is_expanded = false
         is_additional = false
-        no_settings_offset = (max_width - 135 * scale * mods_sorted.length) / (mods_sorted.length - 1)
+        no_settings_offset = Math.max((max_width + interval - 135 * scale) / (mods_sorted.length), 4)
+        //(max_width - 135 * scale * mods_sorted.length) / (mods_sorted.length - 1)
         has_settings_offset = no_settings_offset
     }
 
@@ -266,7 +267,6 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
             }
         }
 
-
         svg += getLazerModPath(v, lx + delta_x, y, height, is_additional, is_expanded);
     });
 
@@ -274,7 +274,7 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
 
     return {
         svg: svg,
-        width: total_width,
+        width: Math.abs(x - (lx + delta_x)),
     }
 }
 
