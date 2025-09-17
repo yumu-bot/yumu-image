@@ -5,7 +5,6 @@ import {
     setImage,
     setSvgBody, readTemplate, setText, od2ms, ar2ms, cs2px, floors, getMapBackground,
 } from "../util/util.js";
-import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {data2Label, stat2DataM} from "./panel_E.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_E1} from "../card/card_E1.js";
@@ -14,7 +13,6 @@ import {card_E5} from "../card/card_E5.js";
 import {LABELS} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod, matchAnyMods} from "../util/mod.js";
-import {hasLeaderBoard} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -265,7 +263,7 @@ export async function panel_E2(data = {
     }
     const mode = getGameMode(data?.expected?.mode, 0, data?.beatmap?.mode);
 
-    const calcTotal = await calcMap(bid, stat, mode, hasLeaderBoard(data.beatmap.ranked));
+    const calcTotal = {}
     const calcPP = calcTotal[0];
 
     let calcNC = [];
@@ -470,7 +468,7 @@ async function beatmap2CardE3(beatmap, rank, calcPP) {
     const pass_arr = beatmap2PassPercents(beatmap);
 
     return {
-        density_arr: await getDensityArray(beatmap.id, beatmap.mode, hasLeaderBoard(beatmap.ranked)),
+        density_arr: [],
         retry_arr: beatmap.retries || [],
         fail_arr: beatmap.fails || [],
 

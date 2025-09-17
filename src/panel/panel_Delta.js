@@ -6,7 +6,6 @@ import {
     setTexts, floor, getDiffBackground
 } from "../util/util.js";
 import {lineSeedSans, poppinsBold} from "../util/font.js";
-import {getMapAttributes} from "../util/compute-pp.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModInt} from "../util/mod.js";
@@ -77,7 +76,7 @@ export async function panel_Delta(data = {
     let mod_int = getModInt([mod_str]);
 
     const id = data.beatmap.id || 0;
-    const attr = await getMapAttributes(id, mod_int);
+    const attr = {} // await getMapAttributes(id, mod_int);
 
     const length_num = (mod_str === 'DT') ? (data.beatmap.total_length / 1.5) :
         ((mod_str === 'EZ') ? (data.beatmap.total_length * 1.5) : data.beatmap.total_length);

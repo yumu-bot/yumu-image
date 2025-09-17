@@ -14,7 +14,7 @@ import {
 } from "../util/star.js";
 import {getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import {getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
-import {getModsBody} from "../util/mod.js";
+import {drawLazerMods} from "../util/mod.js";
 import {getMascotName, getRandomMascotTransparentPath} from "../util/mascotBanner.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
@@ -500,7 +500,8 @@ const component_Eta2 = (data = {
 
     const mode = getGameMode(data?.mode, 1)
 
-    const mods = getModsBody(data?.mods, 910 + 90, 626, 'right', 300);
+    // const mods = getModsBody(data?.mods, 910 + 90, 626, 'right', 300);
+    const mods = drawLazerMods(data?.mods, 1000, 620, 70, 1000, 'right', 6, true).svg
 
     const titles = poppinsBold.getTextPath('SCORE', 400 - 40, 484, 72, 'right baseline', '#fff')
         + poppinsBold.getTextPath('ACC.', 400 - 40, 572, 48, 'right baseline', '#fff')

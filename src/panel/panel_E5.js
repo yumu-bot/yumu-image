@@ -31,7 +31,7 @@ import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi} from "..
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModsBody, getModMultiplier} from "../util/mod.js";
+import {getModMultiplier, drawLazerMods} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -924,8 +924,8 @@ const component_E8 = (
 
     const score_width = poppinsBold.getTextWidth(score_data.integer, 56) + poppinsBold.getTextWidth(score_data.decimal, 36)
 
-    const mods = getModsBody(data.mods, 480, 10, 'right', 450 - score_width); // y = 15
-
+    // const mods = getModsBody(data.mods, 480, 10, 'right', 450 - score_width); // y = 15
+    const mods = drawLazerMods(data.mods, 480, 4, 70, 450 - score_width, 'right', 6, true).svg
 
     const score = getMultipleTextPath([
             {

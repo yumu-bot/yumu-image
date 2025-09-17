@@ -14,7 +14,7 @@ import {
 } from "../util/star.js";
 import {getMultipleTextPath, PuHuiTi, torus} from "../util/font.js";
 import {PanelColor} from "../util/color.js";
-import {getModsBody} from "../util/mod.js";
+import {drawLazerMods} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -418,7 +418,7 @@ const component_Eta1 = (data = {
     )
 
     const mode = torus.getTextPath(getGameMode(data?.mode, 2), 310, 280, 36, 'left baseline')
-    const mods = getModsBody(data.mods, 1130 + 90, 535, 'left', 'right');
+    const mods = drawLazerMods(data.mods, 1130 + 90, 535 - 6, 70, 470, 'left', 6).svg;
 
     let judges
 

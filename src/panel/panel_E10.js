@@ -20,7 +20,7 @@ import {extra, getMultipleTextPath, getTextWidth, poppinsBold} from "../util/fon
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {LABELS} from "../component/label.js";
-import {getModsBody} from "../util/mod.js";
+import {drawLazerMods} from "../util/mod.js";
 import {getRankBackground} from "../util/star.js";
 
 export async function router(req, res) {
@@ -580,7 +580,7 @@ const component_E6 = (
         data.bottom, 960, 205, 48, 'center baseline', '#fff'
     )
 
-    const mods = getModsBody(data.mods, 960, 260, 'center', 350)
+    const mods = drawLazerMods(data.mods, 960, 260 - 6, 70, 350, 'center', 6, true).svg //getModsBody(data.mods, 960, 260, 'center', 350)
 
     // 评级
     const rank = data?.rank

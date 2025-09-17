@@ -1,13 +1,12 @@
 import {
     getImageFromV3,
     getGameMode,
-    setSvgBody, setTexts, floor, floors, rounds,
+    setSvgBody, setTexts, floor, floors, rounds, getManiaAimingAccuracy,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getManiaAimingAccuracy} from "../util/compute-pp.js";
-import {getModsBody, getModMultiplier} from "../util/mod.js";
+import {getModMultiplier, drawLazerMods} from "../util/mod.js";
 
 export async function card_E2(data = {
     rank: 'SS',
@@ -99,7 +98,7 @@ export async function card_E2(data = {
     svg = setTexts(svg, [score, mod_multiplier], reg_text);
 
     // 部件定义
-    const mods = getModsBody(data.mods, 880 + 90, 20, 'right', 300);
+    const mods = drawLazerMods(data.mods, 880 + 90, 20 - 6, 70, 300, 'right', 6, true).svg;
     const rank = getRankSVG(data.rank, 100, 75);
     const mask = getMaskSVG(data.accuracy, mode, 175, 155, 230); //105 * 2
     const ring = getRingSVG(40, 20, 270, 270);

@@ -1,6 +1,5 @@
 import {XMLBuilder, XMLParser} from "fast-xml-parser"
 import {exportJPEG, getAvatar, getDiffBackground, readTemplate} from "../util/util.js";
-import {calcPerformancePoints} from "../util/compute-pp.js";
 
 const opt = {
     preserveOrder: false,
@@ -85,11 +84,14 @@ export async function panel_Beta(score) {
 
     {// pp all
         const ppShowLine = getSvgById(svg, "pp-show");
-        let ppData = await calcPerformancePoints(bid, {
+        let ppData = {}
+        /*
+        await calcPerformancePoints(bid, {
             ...statistics,
             combo,
             mods,
         }, mode_int);
+        */
         const now = ppData.pp / ppData.perfect_pp;
         const full = ppData.full_pp / ppData.perfect_pp;
         if (pp < 1) pp = ppData.pp;

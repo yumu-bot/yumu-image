@@ -562,6 +562,25 @@ export const PanelGenerate = {
 
         const right1 = 'Average Star ' + star + '*';
         const right2 = 'MID ' + stat?.id || 0;
+
+        if (match.is_skipping === true) {
+            return {
+                background: background,
+                map_status: '',
+
+                title1: title1,
+                title2: title2,
+                left1: left1,
+                left2: left2,
+                left3: left3,
+                right1: right1,
+                right2: right2,
+                right3b: '',
+                right3m: 'Warm Up',
+                isTeamVS: is_team_vs,
+            };
+        }
+
         const right3b = is_team_vs ? ((red_wins + blue_wins <= 0) ? 'TeamVs' : (red_wins + ' : ' + blue_wins)) :
             (match?.round_count + (is_match_start ? 1 : 0)).toString()
         const right3m = is_team_vs ? '' : 'x';

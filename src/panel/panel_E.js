@@ -13,7 +13,6 @@ import {
     readTemplate,
     setText, floor, floors, getDiffBackground
 } from "../util/util.js";
-import {calcPerformancePoints, getDensityArray} from "../util/compute-pp.js";
 import moment from "moment";
 import {LABELS} from "../component/label.js";
 import {card_A1} from "../card/card_A1.js";
@@ -23,7 +22,7 @@ import {card_E3} from "../card/card_E3.js";
 import {card_E4} from "../card/card_E4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
-import {getApproximateRank, getRankBackground, hasLeaderBoard} from "../util/star.js";
+import {getApproximateRank, getRankBackground} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -309,7 +308,8 @@ export async function panel_E(
         accuracy: data.score.accuracy,
     }
 
-    const calcPP = await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, hasLeaderBoard(data.score.beatmap.ranked));
+    const calcPP = {}
+        //await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, hasLeaderBoard(data.score.beatmap.ranked));
 
     // 图片定义
     const background = getRankBackground((data?.score?.rank || getApproximateRank(data?.score)));
@@ -391,7 +391,7 @@ async function score2CardE3(score, calcPP) {
     const score_progress = (score.rank === 'F') ? calcPP.score_progress : 1;
 
     return {
-        density_arr: await getDensityArray(score.beatmap.id, score.mode, hasLeaderBoard(score?.beatmap?.ranked)),
+        density_arr: [],
         retry_arr: score.beatmap.retries || [],
         fail_arr: score.beatmap.fails || [],
 

@@ -10,7 +10,7 @@ import {
 } from "../util/util.js";
 import {label_N2, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getModRRectPath} from "../util/mod.js";
+import {drawLazerMods} from "../util/mod.js";
 
 export async function card_N2(data = {
     score: {},
@@ -81,6 +81,8 @@ export async function card_N2(data = {
 
     const cover = await readNetImage(user.cover?.url, true)
 
+    const time_difference = getTimeDifferenceShort(data.score.ended_at, 2)
+
     const name = getMultipleTextPath([{
         font: poppinsBold,
         text: (user?.username || '') + '  ',
@@ -88,10 +90,13 @@ export async function card_N2(data = {
         color: '#fff'
     }, {
         font: poppinsBold,
-        text: '[' + getTimeDifferenceShort(data.score.ended_at, 2) + ']',
+        text: '[' + time_difference + ']',
         size: 14,
         color: '#fff'
     }], 176, 26, 'left baseline')
+
+    const name_width = poppinsBold.getTextWidth((user?.username || '') + '  ', 24)
+        + poppinsBold.getTextWidth('[' + time_difference + ']', 14)
 
     const flag_svg = await getFlagPath(user.country_code, 138, 8 - 2, 20)
 
@@ -210,6 +215,7 @@ export async function card_N2(data = {
     }
 
     // 插入模组，因为先插的在上面，所以从左边插
+    /*
     let mods_svg = ''
     const mods_arr = data.score.mods || [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
@@ -226,6 +232,10 @@ export async function card_N2(data = {
 
         mods_svg += getModRRectPath(mod, offset_x + multiplier * i * 24, 6, 40, 20, 10, 15)
     });
+
+     */
+    const mods_arr = data.score.mods || [{acronym: ''}]
+    const mods_svg = drawLazerMods(mods_arr, 915 - 235, 3, 25, 510 - name_width, 'right', 4, true).svg
 
     const rank_rrect = PanelDraw.Rect(810, 0, 105, 62, 20, rank_color)
     const version_rrect = PanelDraw.Rect(0, 0, 65 + 62, 62, 20, data?.score?.is_lazer ? "#FF9800" : "#00A0E9")

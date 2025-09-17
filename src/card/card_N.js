@@ -9,7 +9,7 @@ import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getScoreTypeImage} from "../util/star.js";
-import {getModRRectPath} from "../util/mod.js";
+import {drawLazerMods} from "../util/mod.js";
 
 export async function card_N(data = {
     score: {},
@@ -145,6 +145,7 @@ export async function card_N(data = {
         }
     }
 
+    /*
     // 插入模组，因为先插的在上面，所以从左边插
     const mods_arr = data.score.mods || [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
@@ -161,6 +162,10 @@ export async function card_N(data = {
 
         svg = setText(svg, getModRRectPath(mod, offset_x + multiplier * i * 24, 6, 40, 20, 10, 15), reg_mod);
     });
+
+     */
+    const mods_arr = data.score.mods || [{acronym: ''}]
+    const mods_svg = drawLazerMods(mods_arr, 900, 3, 25, 240, 'right', 4, true).svg
 
     const type = getScoreTypeImage(data?.score?.is_lazer)
     svg = setImage(svg, 295, 30, 45, 30, type, reg_label, 1);

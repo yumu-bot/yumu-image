@@ -85,31 +85,47 @@ export function hex2rgb(hex = '#AAAAAA') {
 export function hex2hsl(hex = '#AAAAAA') {
     const rgb = hex2rgb(hex)
 
-    const rgb_max = Math.max(rgb.r, rgb.g, rgb.b)
-    const rgb_min = Math.min(rgb.r, rgb.g, rgb.b)
+    const r = rgb.r / 255
+    const g = rgb.g / 255
+    const b = rgb.b / 255
+
+    const rgb_max = Math.max(r, g, b)
+    const rgb_min = Math.min(r, g, b)
     const delta = rgb_max - rgb_min
 
     const lightness = (rgb_max + rgb_min) / 2.0
     
     let hue
     let saturation
-    
-    const del_R = (((rgb_max - rgb.r) / 6.0) + (delta / 2.0)) / delta;
-    const del_G = (((rgb_max - rgb.g) / 6.0) + (delta / 2.0)) / delta;
-    const del_B = (((rgb_max - rgb.b) / 6.0) + (delta / 2.0)) / delta;
 
-    if (lightness < 0.5) {
-        saturation = delta / (rgb_max + rgb_min);
+    if (delta <= 1e-4) {
+        //Windows下S值为0时，H值始终为160（2/3*240）
+        hue = 0;
+        saturation = 0;
     } else {
-        saturation = delta / (2 - rgb_max - rgb_min);
+        if (lightness < 0.5) {
+            saturation = delta / (rgb_max + rgb_min);
+        } else {
+            saturation = delta / (2 - rgb_max - rgb_min);
+        }
+
+        const del_R = (((rgb_max - r) / 6.0) + (delta / 2.0)) / delta;
+        const del_G = (((rgb_max - g) / 6.0) + (delta / 2.0)) / delta;
+        const del_B = (((rgb_max - b) / 6.0) + (delta / 2.0)) / delta;
+
+        if (r === rgb_max) {
+            hue = del_B - del_G;
+        }
+        else if (g === rgb_max) {
+            hue = (1.0 / 3.0) + del_R - del_B;
+        }
+        else if (b === rgb_max) {
+            hue = (2.0 / 3.0) + del_G - del_R;
+        }
+
+        if (hue < 0) hue += 1;
+        if (hue > 1) hue -= 1;
     }
-
-    if (rgb.r === rgb_max) hue = del_B - del_G;
-    else if (rgb.g === rgb_max) hue = (1.0 / 3.0) + del_R - del_B;
-    else if (rgb.b === rgb_max) hue = (2.0 / 3.0) + del_G - del_R;
-
-    if (hue < 0) hue += 1;
-    if (hue > 1) hue -= 1;
 
     return {
         h: hue, s: saturation, l: lightness
@@ -117,51 +133,43 @@ export function hex2hsl(hex = '#AAAAAA') {
 }
 
 export function hsl2hex(hue = 0, saturation = 0, lightness = 0) {
+    let r, g, b, var1, var2
 
-    // Normalize hue to be in the range [0, 6]
-    const h = clamp(hue, 360, 0) / 60
+        if (saturation === 0) {
+            r = lightness * 255.0;
+            g = lightness * 255.0;
+            b = lightness * 255.0;
+        } else {
+            if (lightness < 0.5) {
+                var2 = lightness * (1 + saturation);
+            } else {
+                var2 = (lightness + saturation) - (saturation * lightness);
+            }
 
-    // Calculate chroma (C), a measure of the color intensity
-    const chroma = (1 - Math.abs(2 * clamp01(lightness) - 1)) * clamp01(saturation)
-    const x = chroma * (1 - Math.abs(h % 2 - 1))
-    const m = Math.max(clamp01(lightness) - chroma / 2, 0)
+            var1 = 2.0 * lightness - var2;
 
-    // Initialize rgb values
-    let r = 0, g = 0, b = 0
+            r = 255.0 * Hue2RGB(var1, var2, hue + (1.0 / 3.0));
+            g = 255.0 * Hue2RGB(var1, var2, hue);
+            b = 255.0 * Hue2RGB(var1, var2, hue - (1.0 / 3.0));
+        }
 
-    // Determine the RGB components based on the hue sector
-    if (0 <= h && h < 1) {
-        r = chroma
-        g = x
-        b = 0
-    } else if (1 <= h && h < 2) {
-        r = x
-        g = chroma
-        b = 0
-    } else if (2 <= h && h < 3) {
-        r = 0
-        g = chroma
-        b = x
-    } else if (3 <= h && h < 4) {
-        r = 0
-        g = x
-        b = chroma
-    } else if (4 <= h && h < 5) {
-        r = x
-        g = 0
-        b = chroma
-    } else if (5 <= h && h <= 6) {
-        r = chroma
-        g = 0
-        b = x
-    }
 
     // Add m to each component to match the desired lightness
-    const r_hex = Math.round((r + m) * 255).toString(16).padStart(2, '0')
-    const g_hex = Math.round((g + m) * 255).toString(16).padStart(2, '0')
-    const b_hex = Math.round((b + m) * 255).toString(16).padStart(2, '0')
+    const r_hex = Math.round(r).toString(16).padStart(2, '0')
+    const g_hex = Math.round(g).toString(16).padStart(2, '0')
+    const b_hex = Math.round(b).toString(16).padStart(2, '0')
 
     return '#' + r_hex + g_hex + b_hex
+}
+
+function Hue2RGB(v1, v2, vH)
+{
+    if (vH < 0) vH += 1;
+    if (vH > 1) vH -= 1;
+    if (6.0 * vH < 1) return v1 + (v2 - v1) * 6.0 * vH;
+    if (2.0 * vH < 1) return v2;
+    if (3.0 * vH < 2) return v1 + (v2 - v1) * ((2.0 / 3.0) - vH) * 6.0;
+    return (v1);
 }
 
 export function getStarRatingColor(SR = 0) {

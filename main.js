@@ -44,7 +44,6 @@ import {router as panelEta2Router} from "./src/panel/panel_Eta2.js";
 import {router as panelEta3Router} from "./src/panel/panel_Eta3.js";
 import {router as panelEta4Router} from "./src/panel/panel_Eta4.js";
 import {router as MarkdownRouter} from "./src/panel/markdown.js";
-import {router as GetMapAttrRouter} from "./src/panel/mapAttributes.js";
 
 import {router as PanelMARouter} from "./src/panel/panel_MA.js";
 import {router as PanelMA2Router} from "./src/panel/panel_MA2.js";
@@ -127,7 +126,7 @@ app.post('/panel_MI', PanelMIRouter);
 app.post('/panel_MS', PanelMSRouter);
 
 app.post('/md', MarkdownRouter);
-app.post('/attr', GetMapAttrRouter);
+// app.post('/attr', GetMapAttrRouter);
 
 app.post('/del', (req, res) => {
     try {

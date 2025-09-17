@@ -28,7 +28,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold} from "../util/font.js";
 import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModsBody, matchAnyMods} from "../util/mod.js";
+import {drawLazerMods, matchAnyMods} from "../util/mod.js";
 
 
 export async function router(req, res) {
@@ -677,7 +677,7 @@ const component_E8 = (
     const reg_text = /(?<=<g id="Text_OE8">)/;
     const reg_base = /(?<=<g id="Base_OE8">)/;
 
-    const mods = getModsBody(data.mods, 480, 10, 'right', 450); // y = 15
+    const mods = drawLazerMods(data.mods, 480, 4, 70, 450, 'right', 8, true).svg
 
     const title = poppinsBold.getTextPath('Mods', 15, 28, 18, 'left baseline');
 

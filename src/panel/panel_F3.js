@@ -11,7 +11,7 @@ import {getRankBackground} from "../util/star.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {getUserRankColor} from "../util/color.js";
-import {getModRRectPath} from "../util/mod.js";
+import {drawLazerMods} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -306,6 +306,10 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
 
     const mods = (match_score?.mods || [])
         .filter(it => it.acronym !== "NF")
+
+    const mods_path = drawLazerMods(mods, 430 / 2, 332 - 4, 46, 230, 'center', 5, true).svg
+
+    /*
     let mods_path = ''
 
     if (mods.length === 0) mods.push("NM")
@@ -318,6 +322,8 @@ async function card_P1(match_score = {}, max_combo = 0, compare_score = 0) {
 
         mods_path += getModRRectPath(mod, x, 332, 84, 42, 20, 32, poppinsBold, 30)
     })
+
+     */
 
     svg = setText(svg, mods_path, reg_mod)
 
@@ -438,14 +444,10 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
 
     if (mods.length === 0) mods.push("NM")
 
-    let mods_path = ''
+    const mods_path = drawLazerMods(mods, 160, 70 - 6, 40, 110, 'left', 5, false).svg
 
     /*
-    mods.forEach((mod, index) => {
-        const x = 25 + 15 * index
-        mods_path += getModCirclePath(mod, x, 135, 10, true)
-    })
-     */
+    let mods_path = ''
 
     const interval = mods.length > 2 ? 20 : 30
 
@@ -454,6 +456,8 @@ async function card_P2(match_score = {}, max_combo = 0, compare_score = 0) {
 
         mods_path += getModRRectPath(mod, x, 64, 70, 40, 20, 30, poppinsBold, 30)
     })
+
+     */
 
     svg = setText(svg, mods_path, reg_mod)
 

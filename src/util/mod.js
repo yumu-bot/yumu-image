@@ -1,7 +1,17 @@
-import {getGameMode, isEmptyArray, isEmptyString, isNumber, floor} from "./util.js";
-import {getModColor} from "./color.js";
-import {torus} from "./font.js";
+import {
+    getGameMode,
+    isEmptyArray,
+    isEmptyString,
+    isNumber,
+    floor,
+    getImageFromV3,
+    rounds,
+    floors, isNotEmptyArray
+} from "./util.js";
+import {getModColor, hex2hsl, hsl2hex} from "./color.js";
+import {torus, torusBold} from "./font.js";
 import {PanelDraw} from "./panelDraw.js";
+import moment from "moment";
 
 const ModInt = {
     null: 0,
@@ -129,6 +139,373 @@ export const getModName = (mod = {acronym: ""} || "") => {
 }
 
 /**
+ * 新版绘制标准六边形模组：模组宽 135px 或 235px（含有额外信息），会根据高度来缩放（默认 100px）
+ * @param mods 必须是 LazerMod 类，含有模组颜色等信息
+ * @param x
+ * @param y 如果是从之前的模组绘制转来，这里在 height = 70 的情况下需要 -6
+ * @param height 默认 100。如果是从之前的模组绘制转来，这里填 70
+ * @param max_width 最大宽度，会影响模组缩小的方式
+ * @param align 对齐方式，可输入 left、right、center
+ * @param interval 间隔，默认为 8
+ * @param allow_expand 如果为真，则会在模组含有扩展属性，并且宽度足够的时候展示它。如果为假，则不会展示扩展属性
+ * @return {{svg: string, width: number}}
+ */
+export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expand = true) {
+    if (isEmptyArray(mods)) return {
+        svg: '',
+        width: 0,
+    }
+
+    const scale = height / 100
+
+    const mods_has_settings = []
+    const mods_no_settings = []
+
+    mods.forEach((mod) => {
+        if (mod?.settings != null) {
+            mods_has_settings.push(mod)
+        } else {
+            mods_no_settings.push(mod)
+        }
+    })
+
+    const mods_sorted = mods_has_settings.concat(mods_no_settings)
+
+    // 完全展开，不含设置的模组显示模组名
+    const full_width = getLazerModWidth(mods_sorted.length, 235, scale, interval)
+
+    // 只展开含有设置的模组，不含设置的模组不展开
+    const standard_width = getLazerModWidth(mods_has_settings.length, 235, scale, interval)
+        + getLazerModWidth(mods_no_settings.length, 135, scale, interval)
+        + getLazerModInterval(mods_has_settings, mods_no_settings, interval)
+
+    // 只展开含有设置的模组，不含设置的模组重叠
+    const half_width = getLazerModWidth(mods_has_settings.length, 235, scale, interval)
+        + getLazerModWidth(mods_no_settings.length, 135, scale, interval - 135 * scale / 2)
+        + getLazerModInterval(mods_has_settings, mods_no_settings, interval - 135 * scale / 2)
+
+    // 只展开含有设置的模组，不含设置的模组最小重叠
+    const minimum_width = getLazerModWidth(mods_has_settings.length, 235, scale, interval)
+        + getLazerModWidth(mods_no_settings.length, 135, scale, interval - 135 * scale)
+        + getLazerModInterval(mods_has_settings, mods_no_settings, interval - 135 * scale)
+
+    let total_width
+    let lx
+
+    // 展示默认属性或者模组名
+    let is_expanded
+
+    // 只展示默认属性
+    let is_additional
+
+    let no_settings_offset
+    let has_settings_offset
+
+    if (full_width <= max_width) {
+        total_width = full_width
+
+        is_expanded = allow_expand
+        is_additional = allow_expand
+        no_settings_offset = interval + 235 * scale
+        has_settings_offset = interval + 235 * scale
+    } else if (standard_width <= max_width) {
+        total_width = standard_width
+
+        is_expanded = false
+        is_additional = allow_expand
+        no_settings_offset = interval + 135 * scale
+        has_settings_offset = interval + 235 * scale
+    } else if (half_width <= max_width) {
+        total_width = half_width
+
+        is_expanded = false
+        is_additional = allow_expand
+        no_settings_offset = interval + (135 / 2) * scale
+        has_settings_offset = interval + 235 * scale
+    } else if (minimum_width <= max_width && isNotEmptyArray(mods_has_settings)) {
+        total_width = minimum_width
+
+        is_expanded = false
+        is_additional = allow_expand
+        no_settings_offset = interval
+        has_settings_offset = interval + 235 * scale
+    } else {
+        total_width = max_width
+
+        is_expanded = false
+        is_additional = false
+        no_settings_offset = (max_width - 135 * scale * mods_sorted.length) / (mods_sorted.length - 1)
+        has_settings_offset = no_settings_offset
+    }
+
+    switch (align) {
+        case 'right': lx = x - scale * (((is_additional && isNotEmptyArray(mods_has_settings)) || is_expanded) ? 235 : 135); break;
+        case 'center': lx = x - total_width / 2; break;
+        default: lx = x
+    }
+
+    let svg = '';
+
+    let delta_x = 0
+
+    mods_sorted.forEach((v, i) => {
+
+        if (i === 0) {
+            delta_x = 0
+        } else if (is_expanded || (is_additional && v?.settings != null)) {
+            if (align === 'right') {
+                delta_x -= has_settings_offset
+            } else {
+                delta_x += has_settings_offset
+            }
+        } else {
+            if (align === 'right') {
+                delta_x -= no_settings_offset
+            } else {
+                delta_x += no_settings_offset
+            }
+        }
+
+
+        svg += getLazerModPath(v, lx + delta_x, y, height, is_additional, is_expanded);
+    });
+
+    // console.log(svg)
+
+    return {
+        svg: svg,
+        width: total_width,
+    }
+}
+
+function getLazerModWidth(count = 0, mod_width = 135, scale = 1, interval = 8) {
+    return Math.max(count * (mod_width * scale + interval) - interval, 0)
+}
+
+function getLazerModInterval(mods1 = [], mods2 = [], interval = 8) {
+    if (isNotEmptyArray(mods1) && isNotEmptyArray(mods2)) {
+        return interval
+    } else {
+        return 0
+    }
+}
+
+function getLazerModPath(mod = {
+    acronym: "",
+    color: "",
+    settings: null,
+}, x = 0, y = 0, height = 100, is_additional = true, is_expanded = true) {
+    const scale = height / 100
+
+    const mod_name = mod?.acronym || 'NM'
+    const mod_color = mod?.color || getModColor(mod_name)
+
+    // 避免重名
+    const index = mod_name + Math.floor(Math.random() * 1000000) + moment().toDate().getMilliseconds()
+
+    const hsl = hex2hsl(mod_color)
+
+    const is_dark = hsl.l <= 0.3
+
+    let line_color;
+    let background_color;
+
+    if (is_dark) {
+        line_color = hsl2hex(hsl.h, hsl.s, 0.1)
+        background_color = '#fff'
+    } else {
+        line_color = hsl2hex(hsl.h, hsl.s, Math.max(hsl.l, 0.7))
+        background_color = hsl2hex(hsl.h, hsl.s, 0.2)
+    }
+
+    const has_settings = mod.settings != null
+
+    // def 这里放图标和字体
+
+    const def_settings = (has_settings) ? getMaskFromImage(91 * scale, 2 * scale, 40 * scale, 28 * scale,
+            getImageFromV3('Mods', 'at.png'), `mask-M-Settings-${index}`)
+        : ''
+
+    // y 本来是 8
+    const def_icon = getMaskFromImage(7.5 * scale, 10 * scale, 120 * scale, 84 * scale,
+        getImageFromV3('Mods', mod_name?.toLowerCase() + '.png'), `mask-M-Icon-${index}`)
+
+    const def_mod_base = getMaskFromImage(0, 3 * scale, 135 * scale, 97 * scale,
+        getImageFromV3('Mods', 'mod-icon.png'), `mask-M-Base-${index}`)
+
+    let def_mod_name
+    let def_mod_extender
+
+    const show_extender = (is_expanded || (is_additional && has_settings))
+
+    if (is_expanded) {
+        if (has_settings) {
+            def_mod_name = getMaskFromPath(getLazerModAdditionalPath(getLazerModAdditional(mod), "#fff", scale), `mask-M-Name-${index}`)
+        } else {
+            def_mod_name = getMaskFromPath(getLazerModNamePath(mod_name, "#fff", scale),
+                `mask-M-Name-${index}`)
+        }
+    } else if (has_settings && is_additional) {
+        def_mod_name = getMaskFromPath(getLazerModAdditionalPath(getLazerModAdditional(mod), "#fff", scale), `mask-M-Name-${index}`)
+    } else {
+        def_mod_name = ''
+    }
+
+    if (show_extender) {
+        def_mod_extender = getMaskFromImage(100 * scale, 17 * scale, 135 * scale, 68 * scale,
+            getImageFromV3('Mods', 'mod-icon-extender.png'), `mask-M-Extender-${index}`
+        )
+    } else {
+        def_mod_extender = ''
+    }
+
+    // g 这里放色块
+    const color_settings = PanelDraw.Rect(91 * scale, 2 * scale, 40 * scale, 28 * scale, 0, line_color, 1)
+    const color_icon = PanelDraw.Rect(7.5 * scale, 8 * scale, 120 * scale, 84 * scale, 0, background_color, 1)
+    const color_mod_base = PanelDraw.Rect(0, 3 * scale, 135 * scale, 97 * scale, 0, line_color, 1)
+    const color_mod_name = show_extender ?
+        PanelDraw.Rect(130 * scale, 0, 105 * scale, 100 * scale, 0, line_color, 1)
+        : ''
+    const color_mod_extender = show_extender ?
+        PanelDraw.Rect(100 * scale, 17 * scale, 135 * scale, 68 * scale, 0, background_color, 1)
+        : ''
+
+    const settings_base = (has_settings) ?
+        PanelDraw.Circle((95 + 16) * scale, 16 * scale, 16 * scale, background_color)
+        : ''
+
+    // 拼合 svg
+
+    let body = `<defs>`
+        + def_settings
+        + def_icon
+        + def_mod_base
+        + def_mod_name
+        + def_mod_extender
+        + `</defs>`
+        + `<g id="Extender_M_${index}" mask="url(#mask-M-Extender-${index})">` + (show_extender ? color_mod_extender : '') + '</g>'
+        + `<g id="Name_M_${index}" mask="url(#mask-M-Name-${index})">` + (show_extender ? color_mod_name : '') + '</g>'
+        + `<g id="Base_M_${index}" mask="url(#mask-M-Base-${index})">` + color_mod_base + '</g>'
+        + `<g id="Icon_M_${index}" mask="url(#mask-M-Icon-${index})">` + color_icon + '</g>'
+        + `<g id="Settings_Base_M_${index}">` + settings_base + '</g>'
+        + `<g id="Settings_M_${index}" mask="url(#mask-M-Settings-${index})">` + ((has_settings) ? color_settings : '') + '</g>'
+
+    return `<g id="Mod_${index}" transform="translate(${x} ${y})">` + body + '</g>';
+    
+    function getMaskFromImage(x, y, w, h, link = '', mask = 'mask') {
+        return `
+        <mask id="${mask}">
+            <image x="${x}" y="${y}" width="${w}" height="${h}" xlink:href="${link}"/> 
+        </mask>
+    `
+    }
+
+    function getMaskFromPath(path = '', mask = 'mask') {
+        return `
+        <mask id="${mask}">
+            ${path}
+        </mask>
+    `
+    }
+
+    function getLazerModAdditionalPath(additional = {
+        large: '',
+        small: '',
+    }, color = '#fff', scale = 1) {
+        return torusBold.get2SizeTextPath(
+            additional.large, additional.small,
+            48 * scale, 30 * scale, 178 * scale, 66 * scale, 'center baseline', color)
+    }
+
+    function getLazerModNamePath(name = 'NM', color = '#fff', scale = 1) {
+        return torusBold.getTextPath(
+            name, 178 * scale, 66 * scale, 48 * scale, 'center baseline', color)
+    }
+}
+
+/**
+ *
+ * @param mod
+ * @return {{large: string, small: string}}
+ */
+function getLazerModAdditional(mod = {}) {
+    const s = mod?.settings;
+
+    if (s == null || typeof mod === "string") return {
+        large: mod?.acronym?.toString() || mod?.toString() || '',
+        small: '',
+    }
+
+    let large = ''
+    let small = ''
+
+    if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(s?.speed_change)) {
+        const r = rounds(s.speed_change, 2)
+
+        large = r.integer
+        small = r.decimal + 'x'
+    } else if (matchAnyMod(mod, ['WU', 'WD']) && isNumber(s?.final_rate)) {
+        const r = rounds(s.final_rate, 2)
+
+        large = r.integer
+        small = r.decimal + 'x'
+    } else if (matchMod(mod, 'EZ') && isNumber(s?.extra_lives)) {
+        large = s.extra_lives
+        small = '+'
+    } else if (matchMod(mod, 'AS') && isNumber(s?.initial_rate)) {
+        const r = rounds(s.initial_rate, 2)
+
+        large = r.integer
+        small = r.decimal + 'x'
+    } else if (matchMod(mod, 'AC')) {
+        if (s?.accuracy_judge_mode === "1") {
+            large += '>'
+        }
+
+        if (isNumber(s?.minimum_accuracy)) {
+            large += Math.round(s?.minimum_accuracy * 100).toString()
+        } else {
+            large += '90'
+        }
+        small = '%'
+    } else if (matchMod(mod, 'SR')) {
+        if (s?.one_sixth_conversion === false) {
+            if (s?.one_eighth_conversion === true) {
+                large = '-1'
+                small = '/8'
+            } else if (s?.one_third_conversion === true) {
+                large = '-1'
+                small = '/3'
+            }
+
+        } else {
+            large = '-1'
+            small = '/6'
+        }
+    } else if (matchMod(mod, 'DA')) {
+        if (s?.extended_limits === true) {
+            large += '<>'
+        } else if (isNumber(s?.scroll_speed)) {
+            const f = floors(s?.scroll_speed, 1)
+
+            large = 'v' + f.integer
+            small = f.decimal+ 'x'
+        } else if (s?.hard_rock_offsets === true) {
+            large = 'HR'
+        }
+    } else {
+        large = mod?.acronym?.toString() || mod?.toString() || ''
+        small = ''
+    }
+
+    return {
+        large: large,
+        small: small,
+    }
+}
+
+/**
+ * **已经弃用**<br>
  * 绘画标准六边形模组：模组宽 90，模组文字的偏移量 42，间隔 10
  * @param mods
  * @param x 基准点 x
@@ -216,6 +593,7 @@ export function getModCirclePath(mod = {acronym: "", color: null}, cx = 0, cy = 
 }
 
 /**
+ * **已经弃用**<br>
  * 获取圆角矩形模组路径
  * @param mod {string | {acronym: string}}
  * @param x
@@ -337,11 +715,11 @@ export function getModAdditionalInformation(mod = {
         info = s?.final_rate?.toString() + 'x'
     }
 
-    if (matchMod(mod, 'AS') && isNumber(s?.extra_lives)) {
+    if (matchMod(mod, 'EZ') && isNumber(s?.extra_lives)) {
         info = s?.extra_lives?.toString() + '+'
     }
 
-    if (matchMod(mod, 'EZ') && isNumber(s?.initial_rate)) {
+    if (matchMod(mod, 'AS') && isNumber(s?.initial_rate)) {
         info = s?.initial_rate?.toString() + 'x'
     }
 

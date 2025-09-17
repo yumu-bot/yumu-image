@@ -16,7 +16,7 @@ import {
 } from "../util/util.js";
 import {poppinsBold, torusRegular} from "../util/font.js";
 import {getMapStatusColor} from "../util/color.js";
-import {getModsBody} from "../util/mod.js";
+import {drawLazerMods} from "../util/mod.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function router(req, res) {
@@ -552,7 +552,8 @@ const component_Eta4 = (data = {
     const sc = floors(data?.score, -4, 1)
     const score = poppinsBold.get2SizeTextPath(sc.integer, sc.decimal, 72, 60, 1600, 785, 'center baseline', '#2A2226')
 
-    const mods = getModsBody(data.mods, 1380 + 300 + 90, 930, 'right', 300);
+    // const mods = getModsBody(data.mods, 1380 + 300 + 90, 930, 'right', 300);
+    const mods = drawLazerMods(data.mods, 1380 + 300 + 90, 930 - 6, 70, 530, 'right', 6, true).svg
 
     const line = PanelDraw.Rect(1200, 300, 660, 1, 0, '#2A2226')
 

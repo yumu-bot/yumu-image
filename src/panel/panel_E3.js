@@ -5,7 +5,6 @@ import {
     setImage,
     setSvgBody, readTemplate, setText, getMatchDuration, getNowTimeStamp, od2ms, ar2ms, cs2px, floors, getMapBackground,
 } from "../util/util.js";
-import {calcMap, getDensityArray} from "../util/compute-pp.js";
 import {data2Label, stat2DataM} from "./panel_E.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_E1} from "../card/card_E1.js";
@@ -14,7 +13,7 @@ import {card_E5} from "../card/card_E5.js";
 import {LABELS} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod, matchAnyMods} from "../util/mod.js";
-import {hasLeaderBoard, rankSS2X} from "../util/star.js";
+import {rankSS2X} from "../util/star.js";
 
 export async function router(req, res) {
     try {
@@ -81,7 +80,7 @@ export async function panel_E3(data = {
     }
     const mode = data.expected.mode || data.beatmap.mode || 'osu';
 
-    const calcTotal = await calcMap(bid, stat, mode, hasLeaderBoard(data.beatmap.ranked));
+    const calcTotal = {}
     const calcPP = calcTotal[0];
 
     let calcNC = [];
@@ -284,7 +283,7 @@ async function beatmap2CardE3(beatmap, rank, calcPP) {
     const pass_arr = beatmap2PassPercents(beatmap);
 
     return {
-        density_arr: await getDensityArray(beatmap.id, beatmap.mode, hasLeaderBoard(beatmap.ranked)),
+        density_arr: [],
         retry_arr: beatmap.retries || [],
         fail_arr: beatmap.fails || [],
 
