@@ -307,14 +307,12 @@ function getLazerModPath(mod = {
 
     const is_dark = hsl.l <= 0.3
 
-    let line_color;
+    const line_color = mod_color;
     let background_color;
 
     if (is_dark) {
-        line_color = hsl2hex(hsl.h, hsl.s, 0.1)
-        background_color = '#fff'
+        background_color = hsl2hex(hsl.h, hsl.s, 0.8)
     } else {
-        line_color = hsl2hex(hsl.h, hsl.s, Math.max(hsl.l, 0.7))
         background_color = hsl2hex(hsl.h, hsl.s, 0.2)
     }
 
@@ -414,12 +412,12 @@ function getLazerModPath(mod = {
     }, color = '#fff', scale = 1) {
         return torusBold.get2SizeTextPath(
             additional.large, additional.small,
-            48 * scale, 30 * scale, 178 * scale, 66 * scale, 'center baseline', color)
+            48 * scale, 30 * scale, 176 * scale, 66 * scale, 'center baseline', color)
     }
 
     function getLazerModNamePath(name = 'NM', color = '#fff', scale = 1) {
         return torusBold.getTextPath(
-            name, 178 * scale, 66 * scale, 48 * scale, 'center baseline', color)
+            name, 176 * scale, 66 * scale, 48 * scale, 'center baseline', color)
     }
 }
 
@@ -574,20 +572,20 @@ export function getModPath(mod = {acronym: ""}, x = 0, y = 24, width = 90, text_
 
 /**
  * 获取圆形模组路径
- * @param mod {string | {acronym: string}}
+ * @param mod {{acronym: string, color: string} | string}
  * @param cx
  * @param cy
  * @param r
  * @param dont_show_nf
  * @returns {string}
  */
-export function getModCirclePath(mod = {acronym: "", color: null}, cx = 0, cy = 0, r = 5, dont_show_nf = false){
+export function getModCirclePath(mod = {acronym: "", color: ''}, cx = 0, cy = 0, r = 5, dont_show_nf = false){
     const mod_name = getModName(mod)
     if (isEmptyString(mod_name)) return ''
 
     if (dont_show_nf === true && (mod_name === 'NF')) return ''; //不画NF的图标，因为没必要
 
-    const mod_color = getModColor(mod_name);
+    let mod_color = mod?.color || getModColor(mod_name);
 
     return PanelDraw.Circle(cx, cy, r, mod_color);
 }
