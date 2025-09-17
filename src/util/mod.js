@@ -307,12 +307,14 @@ function getLazerModPath(mod = {
 
     const is_dark = hsl.l <= 0.3
 
-    const line_color = mod_color;
+    let line_color;
     let background_color;
 
     if (is_dark) {
-        background_color = hsl2hex(hsl.h, hsl.s, 0.8)
+        line_color = hsl2hex(hsl.h, hsl.s, 0.1)
+        background_color = hsl2hex(hsl.h, hsl.s, 0.9)
     } else {
+        line_color = hsl2hex(hsl.h, hsl.s, Math.max(hsl.l, 0.5))
         background_color = hsl2hex(hsl.h, hsl.s, 0.2)
     }
 
