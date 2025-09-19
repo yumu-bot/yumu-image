@@ -628,7 +628,7 @@ const component_E7 = (data = {
                 <rect id="SR_Base" x="15" y="125" width="470" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
             <clipPath id="clippath-OE7-6">
-                <rect id="SR_Base" x="15" y="125" width="470" height="30" rx="40" ry="40" style="fill: none;"/>
+                <rect id="SR_Base" x="15" y="125" width="470" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
             <clipPath id="clippath-OE7-7">
                 <rect id="BG_Base" x="0" y="0" width="500" height="230" rx="40" ry="40" style="fill: none;"/>
