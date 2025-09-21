@@ -458,16 +458,19 @@ function getLazerModAdditional(mod = {}) {
         large = r.integer
         small = r.decimal + 'x'
     } else if (matchMod(mod, 'AC')) {
-        if (s?.accuracy_judge_mode === "1") {
-            large += '>'
-        }
 
         if (isNumber(s?.minimum_accuracy)) {
             large += Math.round(s?.minimum_accuracy * 100).toString()
         } else {
             large += '90'
         }
-        small = '%'
+
+        if (s?.accuracy_judge_mode === "1") {
+            small = '^'
+        } else {
+            small = '%'
+        }
+
     } else if (matchMod(mod, 'SR')) {
         if (s?.one_sixth_conversion === false) {
             if (s?.one_eighth_conversion === true) {
@@ -917,6 +920,8 @@ export function addMod(modInt = 0, mod = '') {
     return ModInt[mod] ? modInt | ModInt[mod] : modInt;
 }
 
+/*
+
 export function getAllMod(modInt) {
     let mods = [];
     for (const [mod, i] of Object.entries(ModInt)) {
@@ -926,6 +931,8 @@ export function getAllMod(modInt) {
     }
     return mods;
 }
+
+ */
 
 export function delMod(modInt = 0, mod = '') {
     return ModInt[mod] ? modInt & ~ModInt[mod] : modInt;
