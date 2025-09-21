@@ -62,7 +62,7 @@ export function card_H(data = {
 
     // 160 刚好可以展示单模组，并且收起多模组
     const mods_data =
-        drawLazerMods(mods_arr, 710, 24, 60, 160, 'right', 6, true)
+        drawLazerMods(mods_arr, 710, 24, 60, 160, 'right', 6, true, false)
 
     svg = setText(svg, mods_data.svg, reg_mod);
 

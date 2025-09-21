@@ -147,10 +147,11 @@ export const getModName = (mod = {acronym: ""} || "") => {
  * @param max_width 最大宽度，会影响模组缩小的方式
  * @param align 对齐方式，可输入 left、right、center
  * @param interval 间隔，默认为 8
- * @param allow_expand 如果为真，则会在模组含有扩展属性，并且宽度足够的时候展示它。如果为假，则不会展示扩展属性
+ * @param allow_expanded 如果为真，则会在模组含有扩展属性，并且宽度足够的时候展示它。如果为假，则不会尝试展示扩展属性
+ * @param allow_name 如果为真，则会在模组不含扩展属性，并且宽度足够的时候展示名称。如果为假，则不会尝试展示名称
  * @return {{svg: string, width: number}}
  */
-export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expand = true) {
+export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expanded = true, allow_name = true) {
     if (isEmptyArray(mods)) return {
         svg: '',
         width: 0,
@@ -174,73 +175,84 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
     // 完全展开，不含设置的模组显示模组名
     const full_width = getLazerModWidth(mods_sorted.length, 235, scale, interval)
 
-    // 只展开含有设置的模组，不含设置的模组不展开
+    // 只展开含有设置的模组，不含设置的模组不显示模组名
     const standard_width = getLazerModWidth(mods_has_settings.length, 235, scale, interval)
         + getLazerModWidth(mods_no_settings.length, 135, scale, interval)
-        + getLazerModInterval(mods_has_settings, mods_no_settings, interval)
+        + getLazerModInterval(mods_has_settings, mods_no_settings, scale, interval)
 
-    // 只展开含有设置的模组，不含设置的模组重叠
+    // 只展开含有设置的模组，不含设置的模组不显示模组名并重叠
     const half_width = getLazerModWidth(mods_has_settings.length, 235, scale, interval)
         + getLazerModWidth(mods_no_settings.length, 135, scale, interval - 135 * scale / 2)
-        + getLazerModInterval(mods_has_settings, mods_no_settings, interval)
+        + getLazerModInterval(mods_has_settings, mods_no_settings, scale, 235 * scale - (interval - 135 * scale / 2))
 
-    // 只展开含有设置的模组，不含设置的模组最小重叠
+    // 只展开含有设置的模组，不含设置的模组不显示模组名并最小重叠
     const minimum_width = getLazerModWidth(mods_has_settings.length, 235, scale, interval)
         + getLazerModWidth(mods_no_settings.length, 135, scale, interval - 135 * scale * 3 / 4)
-        + getLazerModInterval(mods_has_settings, mods_no_settings, interval)
+        + getLazerModInterval(mods_has_settings, mods_no_settings, scale, 235 * scale - (interval - 135 * scale * 3 / 4))
 
     let total_width
     let lx
 
-    // 展示默认属性或者模组名
+    // 展示默认属性
     let is_expanded
 
-    // 只展示默认属性
-    let is_additional
+    // 展示模组名
+    let is_name
+
+    // 展示压缩过后的模组名
+    let is_side_name
 
     let no_settings_offset
     let has_settings_offset
 
-    if (full_width <= max_width) {
+    // 有含有属性的模组
+    const has_expanded_mod = isNotEmptyArray(mods_has_settings)
+
+    if (full_width <= max_width && allow_name === true) {
         total_width = full_width
 
-        is_expanded = allow_expand
-        is_additional = allow_expand
+        is_expanded = allow_expanded
+        is_name = true
+        is_side_name = false
         no_settings_offset = interval + 235 * scale
         has_settings_offset = interval + 235 * scale
     } else if (standard_width <= max_width) {
         total_width = standard_width
 
-        is_expanded = false
-        is_additional = allow_expand
+        is_expanded = allow_expanded
+        is_name = false
+        is_side_name = false
         no_settings_offset = interval + 135 * scale
         has_settings_offset = interval + 235 * scale
     } else if (half_width <= max_width) {
         total_width = half_width
 
-        is_expanded = false
-        is_additional = allow_expand
+        is_expanded = allow_expanded
+        is_name = false
+        is_side_name = true
         no_settings_offset = interval + (135 / 2) * scale
         has_settings_offset = interval + 235 * scale
-    } else if (minimum_width <= max_width && isNotEmptyArray(mods_has_settings)) {
+    } else if (minimum_width <= max_width && has_expanded_mod) {
         total_width = minimum_width
 
-        is_expanded = false
-        is_additional = allow_expand
+        is_expanded = allow_expanded
+        is_name = false
+        is_side_name = true
         no_settings_offset = interval + (135 * 3 / 4) * scale
         has_settings_offset = interval + 235 * scale
     } else {
         total_width = max_width
 
         is_expanded = false
-        is_additional = false
+        is_name = false
+        is_side_name = true
         no_settings_offset = Math.max((max_width + interval - 135 * scale) / (mods_sorted.length), 4)
         //(max_width - 135 * scale * mods_sorted.length) / (mods_sorted.length - 1)
         has_settings_offset = no_settings_offset
     }
 
     switch (align) {
-        case 'right': lx = x - scale * (((is_additional && isNotEmptyArray(mods_has_settings)) || is_expanded) ? 235 : 135); break;
+        case 'right': lx = x - scale * (((is_expanded && has_expanded_mod) || is_name) ? 235 : 135); break;
         case 'center': lx = x - total_width / 2; break;
         default: lx = x
     }
@@ -251,9 +263,14 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
 
     mods_sorted.forEach((v, i) => {
 
+        // 最上面的模组不需要显示名称，因为必然能看清图标
+        if (i === mods_sorted.length - 1) {
+            is_side_name = false
+        }
+
         if (i === 0) {
             delta_x = 0
-        } else if (is_expanded || (is_additional && v?.settings != null)) {
+        } else if (is_name || (is_expanded && v?.settings != null)) {
             if (align === 'right') {
                 delta_x -= has_settings_offset
             } else {
@@ -267,7 +284,7 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
             }
         }
 
-        svg += getLazerModPath(v, lx + delta_x, y, height, is_additional, is_expanded);
+        svg += getLazerModPath(v, lx + delta_x, y, height, is_expanded, is_name, is_side_name);
     });
 
     // console.log(svg)
@@ -282,19 +299,31 @@ function getLazerModWidth(count = 0, mod_width = 135, scale = 1, interval = 8) {
     return Math.max(count * (mod_width * scale + interval) - interval, 0)
 }
 
-function getLazerModInterval(mods1 = [], mods2 = [], interval = 8) {
+function getLazerModInterval(mods1 = [], mods2 = [], scale = 1, interval = 8) {
     if (isNotEmptyArray(mods1) && isNotEmptyArray(mods2)) {
-        return interval
+        return scale * interval
     } else {
         return 0
     }
 }
 
+/**
+ *
+ * 新版绘制标准六边形模组：模组宽 135px 或 235px（含有额外信息），会根据高度来缩放（默认 100px）
+ * @param mod 必须是 LazerMod 类，含有模组颜色等信息
+ * @param x
+ * @param y 如果是从之前的模组绘制转来，这里在 height = 70 的情况下需要 -6
+ * @param height 默认 100。如果是从之前的模组绘制转来，这里填 70
+ * @param allow_expanded 如果为真，则会在模组含有扩展属性，并且宽度足够的时候展示它。如果为假，则不会尝试展示扩展属性
+ * @param allow_name 如果为真，则会在模组不含扩展属性，并且宽度足够的时候展示名称。如果为假，则不会尝试展示名称
+ * @param allow_side_name 如果为真，则会在以上都为假时，尝试在模组右下角显示名称。
+ * @return {string}
+ */
 function getLazerModPath(mod = {
     acronym: "",
     color: "",
     settings: null,
-}, x = 0, y = 0, height = 100, is_additional = true, is_expanded = true) {
+}, x = 0, y = 0, height = 100, allow_expanded = true, allow_name = true, allow_side_name = false) {
     const scale = height / 100
 
     const mod_name = mod?.acronym || 'NM'
@@ -336,19 +365,16 @@ function getLazerModPath(mod = {
     let def_mod_name
     let def_mod_extender
 
-    const show_extender = (is_expanded || (is_additional && has_settings))
+    let show_extender = true
 
-    if (is_expanded) {
-        if (has_settings) {
-            def_mod_name = getMaskFromPath(getLazerModAdditionalPath(getLazerModAdditional(mod), "#fff", scale), `mask-M-Name-${index}`)
-        } else {
-            def_mod_name = getMaskFromPath(getLazerModNamePath(mod_name, "#fff", scale),
-                `mask-M-Name-${index}`)
-        }
-    } else if (has_settings && is_additional) {
+    if (allow_expanded && has_settings) {
         def_mod_name = getMaskFromPath(getLazerModAdditionalPath(getLazerModAdditional(mod), "#fff", scale), `mask-M-Name-${index}`)
+    } else if (allow_name) {
+        def_mod_name = getMaskFromPath(getLazerModNamePath(mod_name, "#fff", scale),
+            `mask-M-Name-${index}`)
     } else {
         def_mod_name = ''
+        show_extender = false
     }
 
     if (show_extender) {
@@ -374,6 +400,10 @@ function getLazerModPath(mod = {
         PanelDraw.Circle((95 + 16) * scale, 16 * scale, 16 * scale, background_color)
         : ''
 
+    const side_name = (!show_extender && allow_side_name) ? `<g transform="rotate(-60 ${92 * scale} ${72 * scale})">`
+        + torusBold.getTextPath(mod?.acronym || '', 92 * scale, 72 * scale, 20 * scale, 'left top', background_color)
+        + '</g>' : ''
+
     // 拼合 svg
 
     let body = `<defs>`
@@ -388,6 +418,7 @@ function getLazerModPath(mod = {
         + `<g id="Base_M_${index}" mask="url(#mask-M-Base-${index})">` + color_mod_base + '</g>'
         + `<g id="Icon_M_${index}" mask="url(#mask-M-Icon-${index})">` + color_icon + '</g>'
         + `<g id="Settings_Base_M_${index}">` + settings_base + '</g>'
+        + `<g id="Side_Name_M_${index}">` + side_name + '</g>'
         + `<g id="Settings_M_${index}" mask="url(#mask-M-Settings-${index})">` + ((has_settings) ? color_settings : '') + '</g>'
 
     return `<g id="Mod_${index}" transform="translate(${x} ${y})">` + body + '</g>';
@@ -466,7 +497,7 @@ function getLazerModAdditional(mod = {}) {
         }
 
         if (s?.accuracy_judge_mode === "1") {
-            small = '^'
+            small = '+'
         } else {
             small = '%'
         }
