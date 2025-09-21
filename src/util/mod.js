@@ -229,7 +229,7 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
 
         is_expanded = allow_expanded
         is_name = false
-        is_side_name = true
+        is_side_name = false
         no_settings_offset = interval + (135 / 2) * scale
         has_settings_offset = interval + 235 * scale
     } else if (minimum_width <= max_width && has_expanded_mod) {
