@@ -379,8 +379,8 @@ async function card_U1(
         270, 360, 30, 'left baseline'
     )
 
-    const pp = torusBold.get2SizeTextPath(
-        Math.round(user?.pp || 0).toString(), ' PP', 72, 48, 230, 442, 'center baseline'
+    const pp = torusBold.get2SizeTextPath(Math.round(user?.pp || 0).toString(), ' PP',
+        72, 48, 230 + 5, 442, 'center baseline'
     )
 
     const label_following = label_U1({
