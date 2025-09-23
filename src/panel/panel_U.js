@@ -5,7 +5,7 @@ import {
     getGameMode,
     getImage,
     getImageFromV3, getPanelNameSVG, getSvgBody,
-    getTimeDifference, setImage, setSvgBody, setText, setTexts, thenPush
+    getTimeDifference, isEmptyString, setImage, setSvgBody, setText, setTexts, thenPush
 } from "../util/util.js";
 import {extra, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -65,7 +65,6 @@ export async function panel_U(
         }
     }
 ) {
-    console.log(data)
 // 导入模板
     let svg = `
     <?xml version="1.0" encoding="UTF-8"?>
@@ -82,17 +81,17 @@ export async function panel_U(
         </filter>
         <linearGradient id="linear-PU-1" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1" />
-            <stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:rgb(255,255,255);stop-opacity:0" />
         </linearGradient>
         <linearGradient id="linear-PU-2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:rgb(0,0,0);stop-opacity:1" />
+            <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:0" />
             <stop offset="100%" style="stop-color:rgb(255,255,255);stop-opacity:1" />
         </linearGradient>
         <mask id="mask-PU-1">
-            <rect width="1220" height="790" rx="20" ry="20" fill="url(#linear-PU-1)"/>
+            <rect y="290" width="1220" height="790" rx="20" ry="20" fill="url(#linear-PU-1)"/>
         </mask>
         <mask id="mask-PU-2">
-            <rect x="700" width="1220" height="790" rx="20" ry="20" fill="url(#linear-PU-2)"/>
+            <rect x="700" y="290" width="1220" height="790" rx="20" ry="20" fill="url(#linear-PU-2)"/>
         </mask>
     </defs>
     <g id="Banner">
@@ -111,6 +110,8 @@ export async function panel_U(
         <g id="Background_Right" mask="url(#mask-PU-2)">
         </g>
         <g id="Background_Silk">
+        </g>
+        <g id="Background_Pippi">
         </g>
     </g>
     <g id="Main_Card">
@@ -134,6 +135,7 @@ export async function panel_U(
     const reg_background_left = /(?<=<g id="Background_Left" mask="url\(#mask-PU-1\)">)/;
     const reg_background_right = /(?<=<g id="Background_Right" mask="url\(#mask-PU-2\)">)/;
     const reg_background_silk = /(?<=<g id="Background_Silk">)/;
+    const reg_background_pippi = /(?<=<g id="Background_Pippi">)/;
     
     const stat = data.statistics
 
@@ -158,7 +160,7 @@ export async function panel_U(
             getImageFromV3('online-background-silk.png'))
 
         mutual_pippi = getImage(
-            (1920 - 528) / 2, 1920 - 750, 528, 750,
+            (1920 - 528) / 2, 1080 - 750, 528, 750,
             getImageFromV3('online-supporter-pippi.png'))
 
         center_label = getSvgBody(760, 960, label_U2({
@@ -211,14 +213,14 @@ export async function panel_U(
             left_background = getImageFromV3('object-score-backimage-A.jpg')
         } else if (stat.is_following === false) {
             left_image = getImageFromV3('online-not-found.png')
-            left_color1 = '#507DA0'
-            left_color2 = '#253A4B'
+            left_color1 = '#22DCFD'
+            left_color2 = '#5865B9'
             left_text = 'Not Following'
-            left_background = getImageFromV3('object-score-backimage-SH.jpg')
+            left_background = getImageFromV3('object-score-backimage-B.jpg')
         } else {
             left_image = getImageFromV3('online-avatar-guest.png')
-            left_color1 = '#54454C'
-            left_color2 = '#382E32'
+            left_color1 = '#507DA0'
+            left_color2 = '#253A4B'
             left_text = 'Unknown'
             left_text_color = '#aaa'
             left_background = getImageFromV3('object-score-backimage-F.jpg')
@@ -242,14 +244,14 @@ export async function panel_U(
             right_background = getImageFromV3('object-score-backimage-A.jpg')
         } else if (stat.is_followed === false) {
             right_image = getImageFromV3('online-not-found.png')
-            right_color1 = '#507DA0'
-            right_color2 = '#253A4B'
+            right_color1 = '#22DCFD'
+            right_color2 = '#5865B9'
             right_text = 'Not Following'
-            right_background = getImageFromV3('object-score-backimage-SH.jpg')
+            right_background = getImageFromV3('object-score-backimage-B.jpg')
         } else {
             right_image = getImageFromV3('online-avatar-guest.png')
-            right_color1 = '#54454C'
-            right_color2 = '#382E32'
+            right_color1 = '#507DA0'
+            right_color2 = '#253A4B'
             right_text = 'Unknown'
             right_text_color = '#aaa'
             right_background = getImageFromV3('object-score-backimage-F.jpg')
@@ -274,8 +276,6 @@ export async function panel_U(
 
     const card_a1 = await card_A1(await PanelGenerate.user2CardA1(null, null))
 
-    svg = setSvgBody(svg, 40, 40, card_a1, reg_main)
-
     let u1s = []
 
     await Promise.allSettled(
@@ -285,16 +285,24 @@ export async function panel_U(
         ]
     ).then(results => thenPush(results, u1s))
 
+    const background_left = isEmptyString(left_background) ? '' : getImage(0, 290, 1920, 790, left_background)
+    const background_right = isEmptyString(right_background) ? '' : getImage(0, 290, 1920, 790, right_background)
+
+    svg = setText(svg, background_silk, reg_background_silk)
+    svg = setText(svg, mutual_pippi, reg_background_pippi)
+
+    svg = setSvgBody(svg, 40, 40, card_a1, reg_main)
+
     svg = setText(svg, background_blur, reg_background_blur)
-    svg = setText(svg, left_background, reg_background_left)
-    svg = setText(svg, right_background, reg_background_right)
-    svg = setText(svg, background_silk + mutual_pippi, reg_background_silk)
+    svg = setText(svg, background_left, reg_background_left)
+    svg = setText(svg, background_right, reg_background_right)
+
     svg = setTexts(svg, [
         getSvgBody(40, 330, u1s[0]),
         getSvgBody(1420, 330, u1s[1]),
         center_label, left_label, right_label
     ], reg_body)
-    
+
     return svg.toString()
 }
 
@@ -364,7 +372,7 @@ async function card_U1(
         190, 360, 30, 'right baseline'
     )
 
-    const country_flag = await getFlagPath(user.country?.code, 200, 320, 44)
+    const country_flag = await getFlagPath(user.country?.code,  200 + 5, 320, 44)
 
     const country_rank = torusBold.getTextPath(
         '#' + (user?.country_rank || '0'),
@@ -412,7 +420,7 @@ async function card_U1(
     })
 
     const label_pm_allowed = label_U1({
-        icon: getImageFromV3('Icons', 'collections.png'),
+        icon: getImageFromV3('Icons', 'chat.png'),
 
         title: 'DM',
         large: allow_private_message ? 'ON' : 'OFF',
@@ -429,7 +437,7 @@ async function card_U1(
         + getSvgBody(240, 630, label_pm_allowed)
 
     // 构建
-    svg = setImage(svg, 0, 0, 460, 710, background, reg_background, 0.4)
+    svg = setImage(svg, 0, 0, 460, 710, background, reg_background, 0.6)
     svg = setImage(svg, 130, 40, 200, 200, avatar, reg_avatar)
     svg = setText(svg, labels, reg_label)
     svg = setTexts(svg, [mode_icon, supporter_icon], reg_icon)
@@ -463,16 +471,16 @@ function label_U1(data = {
         offset: '100%',
         color: data?.color2,
         opacity: 1,
-    }], 0.4, {
+    }], 0.6, {
         x1: '0%', y1: '40%', x2: '100%', y2: '60%'
     })
 
-    const icon_background = PanelDraw.Circle(10 + 22, 8 + 22, 22, '#54454C', 1)
+    const icon_background = PanelDraw.Circle(31, 30, 22, '#54454C', 1)
 
-    const title = torusBold.getTextPath(data?.title || '', 60, 20, 18, 'left baseline')
+    const title = torusBold.getTextPath(data?.title || '', 60, 22, 18, 'left baseline')
 
     const value = torusBold.get2SizeTextPath(
-        data?.large || '', data?.small || '', 40, 30, width - 20, 45, 'right baseline'
+        data?.large || '', data?.small || '', 40, 30, width - 20, 44, 'right baseline'
     )
 
     const svg = '<g>' + base + rrect + value + title + icon_background + icon + '</g>'
@@ -503,15 +511,24 @@ function label_U2(data = {
         offset: '100%',
         color: data?.color2,
         opacity: 1,
-    }], 0.4, {
+    }], 1, {
         x1: '0%', y1: '40%', x2: '100%', y2: '60%'
     })
 
     const text = torusBold.getTextPath(data?.text || '', data?.center || '200', 56, 48, 'center baseline', data?.text_color || '#fff')
 
-    const direction = data?.towards_right ? '1' : '-1'
+    let direction
+    let x
 
-    const image = data?.image ? `<image width="400" height="370" transform="translate(0 -370) scale(${direction}, 1)" xlink:href="${data?.image}" style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>` : ''
+    if (data?.towards_right) {
+        direction = '1'
+        x = 0
+    } else {
+        direction = '-1'
+        x = -400
+    }
+
+    const image = data?.image ? `<image width="400" height="370" transform="scale(${direction}, 1) translate(${x} -370)" xlink:href="${data?.image}" style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>` : ''
 
     const svg = '<g>' + base + rrect + text + image + '</g>'
 
