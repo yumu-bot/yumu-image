@@ -153,7 +153,7 @@ export async function panel_U(
         // mutual 模式
         background_blur = getImage(
             0, 290, 1920, 1080 - 290,
-            getImageFromV3('object-score-backimage-S.jpg'))
+            getImageFromV3('object-score-backimage-S.jpg'), 0.6)
 
         background_silk = getImage(
             0, 474, 1920, 388,
@@ -285,8 +285,8 @@ export async function panel_U(
         ]
     ).then(results => thenPush(results, u1s))
 
-    const background_left = isEmptyString(left_background) ? '' : getImage(0, 290, 1920, 790, left_background)
-    const background_right = isEmptyString(right_background) ? '' : getImage(0, 290, 1920, 790, right_background)
+    const background_left = isEmptyString(left_background) ? '' : getImage(0, 290, 1920, 790, left_background, 0.6)
+    const background_right = isEmptyString(right_background) ? '' : getImage(0, 290, 1920, 790, right_background, 0.6)
 
     svg = setText(svg, background_silk, reg_background_silk)
     svg = setText(svg, mutual_pippi, reg_background_pippi)
