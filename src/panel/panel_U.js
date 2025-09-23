@@ -65,6 +65,7 @@ export async function panel_U(
         }
     }
 ) {
+    console.log(data)
 // 导入模板
     let svg = `
     <?xml version="1.0" encoding="UTF-8"?>
@@ -74,7 +75,7 @@ export async function panel_U(
             <rect width="1920" height="320" rx="20" ry="20" style="fill: none;"/>
         </clipPath>
         <clipPath id="clippath-PU-2">
-            <rect x="0" y="290" width="1920" height="790" rx="40" ry="40" style="fill: none;"/>
+            <rect x="0" y="290" width="1920" height="790" rx="20" ry="20" style="fill: none;"/>
         </clipPath>
         <filter id="blur-PU-1" height="120%" width="120%" x="-10%" y="-10%" filterUnits="userSpaceOnUse">
             <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
@@ -88,10 +89,10 @@ export async function panel_U(
             <stop offset="100%" style="stop-color:rgb(255,255,255);stop-opacity:1" />
         </linearGradient>
         <mask id="mask-PU-1">
-            <rect width="1220" height="790" rx="40" ry="40" fill="url(#linear-PU-1)"/>
+            <rect width="1220" height="790" rx="20" ry="20" fill="url(#linear-PU-1)"/>
         </mask>
         <mask id="mask-PU-2">
-            <rect x="700" width="1220" height="790" rx="40" ry="40" fill="url(#linear-PU-2)"/>
+            <rect x="700" width="1220" height="790" rx="20" ry="20" fill="url(#linear-PU-2)"/>
         </mask>
     </defs>
     <g id="Banner">
@@ -291,7 +292,7 @@ export async function panel_U(
     svg = setTexts(svg, [
         getSvgBody(40, 330, u1s[0]),
         getSvgBody(1420, 330, u1s[1]),
-        left_label, right_label, center_label
+        center_label, left_label, right_label
     ], reg_body)
     
     return svg.toString()
@@ -363,11 +364,11 @@ async function card_U1(
         190, 360, 30, 'right baseline'
     )
 
-    const country_flag = await getFlagPath(user.country, 200, 320, 44)
+    const country_flag = await getFlagPath(user.country?.code, 200, 320, 44)
 
     const country_rank = torusBold.getTextPath(
         '#' + (user?.country_rank || '0'),
-        270, 360, 30, 'right baseline'
+        270, 360, 30, 'left baseline'
     )
 
     const pp = torusBold.get2SizeTextPath(
@@ -425,11 +426,11 @@ async function card_U1(
     const labels = getSvgBody(20, 470, label_following)
         + getSvgBody(20, 550, label_follower)
         + getSvgBody(20, 630, label_bind)
-        + getSvgBody(240, 470, label_pm_allowed)
+        + getSvgBody(240, 630, label_pm_allowed)
 
     // 构建
-    svg = setImage(svg, 0, 0, 460, 710, background, reg_background)
-    svg = setImage(svg, 130, 40, 100, 100, avatar, reg_avatar)
+    svg = setImage(svg, 0, 0, 460, 710, background, reg_background, 0.4)
+    svg = setImage(svg, 130, 40, 200, 200, avatar, reg_avatar)
     svg = setText(svg, labels, reg_label)
     svg = setTexts(svg, [mode_icon, supporter_icon], reg_icon)
     svg = setTexts(svg, [pp, name, country_rank, global_rank, country_flag], reg_text)
@@ -466,7 +467,7 @@ function label_U1(data = {
         x1: '0%', y1: '40%', x2: '100%', y2: '60%'
     })
 
-    const icon_background = PanelDraw.Circle(10, 8, 22, '#54454C', 1)
+    const icon_background = PanelDraw.Circle(10 + 22, 8 + 22, 22, '#54454C', 1)
 
     const title = torusBold.getTextPath(data?.title || '', 60, 20, 18, 'left baseline')
 
