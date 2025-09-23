@@ -235,7 +235,7 @@ export async function card_N2(data = {
 
      */
     const mods_arr = data.score.mods || [{acronym: ''}]
-    const mods_svg = drawLazerMods(mods_arr, 915 - 235, 3, 25, 510 - name_width, 'right', 4, true).svg
+    const mods_svg = drawLazerMods(mods_arr, 685, 3, 25, 510 - name_width, 'right', 4, true).svg
 
     const rank_rrect = PanelDraw.Rect(810, 0, 105, 62, 20, rank_color)
     const version_rrect = PanelDraw.Rect(0, 0, 65 + 62, 62, 20, data?.score?.is_lazer ? "#FF9800" : "#00A0E9")
