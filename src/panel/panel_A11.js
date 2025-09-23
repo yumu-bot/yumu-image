@@ -65,7 +65,7 @@ export async function panel_A11(data = {
                 username: 'Hollow Wings',
                 country_code: 'CN',
                 country: { code: 'CN', name: 'China' },
-                is_mutual: false,
+                is_following: false,
                 statistics_rulesets: {}
             },
             received: 0,

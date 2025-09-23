@@ -32,6 +32,7 @@ import {router as PanelKRouter} from "./src/panel/panel_K.js";
 import {router as PanelMRouter} from "./src/panel/panel_M.js";
 import {router as PanelNRouter} from "./src/panel/panel_N.js";
 import {router as PanelTRouter} from "./src/panel/panel_T.js";
+import {router as PanelURouter} from "./src/panel/panel_U.js";
 
 import {router as panelAlphaRouter} from "./src/panel/panel_Alpha.js";
 import {router as panelBetaRouter} from "./src/panel/panel_Beta.js";
@@ -105,6 +106,7 @@ app.post('/panel_K', PanelKRouter);
 app.post('/panel_M', PanelMRouter);
 app.post('/panel_N', PanelNRouter);
 app.post('/panel_T', PanelTRouter);
+app.post('/panel_U', PanelURouter);
 
 app.post('/panel_Alpha', panelAlphaRouter);
 app.post('/panel_Beta', panelBetaRouter);

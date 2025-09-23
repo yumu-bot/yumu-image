@@ -673,9 +673,10 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
 
 /**
  * 设置文字。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
- * @param {number | string} base
- * @param {number | string} replace
+ * @param {string} base
+ * @param {string} replace
  * @param {string | RegExp} reg
+ * @return {string}
  */
 export function setText(base = '', replace = '', reg = /.*/) {
     return base.replace(reg, replace);
@@ -684,9 +685,10 @@ export function setText(base = '', replace = '', reg = /.*/) {
 
 /**
  * 设置文字。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
- * @param {number | string} base
+ * @param {string} base
  * @param {number[] | string[]} replaces
  * @param {string | RegExp} regex
+ * @return {string}
  */
 export function setTexts(base = '', replaces = [''], regex = /.*/) {
     if (Array.isArray(replaces)) {

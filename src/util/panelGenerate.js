@@ -46,6 +46,12 @@ import {card_D2} from "../card/card_D2.js";
 //把参数变成面板能读懂的数据
 export const PanelGenerate = {
     // panel A7 有细微的改动，请注意
+
+    /**
+     *
+     * @param {{} | null} user
+     * @param historyUser
+     */
     user2CardA1: async (user, historyUser) => {
         if (user == null) return {
             background: getImageFromV3('card-default.png'),
@@ -154,7 +160,7 @@ export const PanelGenerate = {
         let sub_icon2 = ''
 
         if (show_mutual) {
-            if (user.is_mutual) {
+            if (user.is_following) {
                 if (user.is_supporter) {
                     sub_icon1 = getImageFromV3('object-card-supporter.png')
                     sub_icon2 = getImageFromV3('object-card-mutual.png')

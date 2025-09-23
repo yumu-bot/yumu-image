@@ -61,6 +61,7 @@ yarn start
 - M: 谱师信息 IM
 - N：提名流程 N
 - T：流行谱面 PU
+- U：最佳朋友 F
 -
 - MA: 舞萌最好成绩 X/MB
 - MA2: 中二最好成绩 Y/CB
