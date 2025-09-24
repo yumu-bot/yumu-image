@@ -7,7 +7,7 @@ import {
     getImageFromV3, getPanelNameSVG, getSvgBody,
     getTimeDifference, isEmptyString, setImage, setSvgBody, setText, setTexts, thenPush
 } from "../util/util.js";
-import {extra, torusBold} from "../util/font.js";
+import {extra, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -360,27 +360,28 @@ async function card_U1(
 
     const supporter_icon = (user?.is_supporter) ? getImage(460 - 70, 30, 40, 40, getImageFromV3('object-card-supporter.png')) : ''
 
-    const name = torusBold.getTextPath(
-        torusBold.cutStringTail(user?.username, 60, 460 - 10),
+    const name = torus.getTextPath(
+        torus.cutStringTail(user?.username, 60, 460 - 10),
         230, 300, 60, 'center baseline')
 
-    const global_rank = torusBold.getTextPath(
-        user?.statistics?.global_rank ? ('#' + user.statistics.global_rank) :
-            (user?.rank_highest?.rank ?
-                '#' + user.rank_highest.rank + '^ (' + getTimeDifference(user.rank_highest.updated_at) + ')' :
-                '#0'),
-        190, 360, 30, 'right baseline'
-    )
+    const global_rank_text = user?.statistics?.global_rank ?
+        ('#' + user.statistics.global_rank) :
+        (user?.rank_highest?.rank ?
+            '#' + user.rank_highest.rank + '^' :
+            '#0')
+
+    const country_rank_text = user?.statistics?.global_rank ?
+        ('#' + (user?.country_rank || '0')) :
+        '(' + getTimeDifference(user.rank_highest.updated_at) + ')'
+
+    const global_rank = torusBold.getTextPath(global_rank_text, 190, 360, 30, 'right baseline')
 
     const country_flag = await getFlagPath(user.country?.code,  200 + 5, 320, 44)
 
-    const country_rank = torusBold.getTextPath(
-        '#' + (user?.country_rank || '0'),
-        270, 360, 30, 'left baseline'
-    )
+    const country_rank = torusBold.getTextPath(country_rank_text, 270, 360, 30, 'left baseline')
 
-    const pp = torusBold.get2SizeTextPath(Math.round(user?.pp || 0).toString(), ' PP',
-        72, 48, 230 + 5, 442, 'center baseline'
+    const pp = torus.get2SizeTextPath(Math.round(user?.pp || 0).toString(), ' PP',
+        72, 48, 230 + 5, 440, 'center baseline'
     )
 
     const label_following = label_U1({
