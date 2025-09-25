@@ -101,7 +101,7 @@ export async function panel_MD(data = {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = setSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y, card_sd[i], reg_card_i);
+        svg = setSvgBody(svg, 40 + (352 + 20) * x, 330 + 150 * y, card_sd[i], reg_card_i);
     }
 
     if (isNotEmptyArray(card_sd) && isNotEmptyArray(card_dx)) dx_offset = 20
@@ -110,7 +110,7 @@ export async function panel_MD(data = {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        svg = setSvgBody(svg, 40 + (352 + 18) * x, 330 + 150 * y + sd_height + dx_offset, card_dx[i], reg_card_i);
+        svg = setSvgBody(svg, 40 + (352 + 20) * x, 330 + 150 * y + sd_height + dx_offset, card_dx[i], reg_card_i);
     }
 
     // 导入图片

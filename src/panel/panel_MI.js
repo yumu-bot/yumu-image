@@ -93,7 +93,7 @@ export async function panel_MI(data = {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_card += getSvgBody(40 + (352 + 18) * x, 330 + 150 * y, cards[i]);
+        string_card += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y, cards[i]);
     }
 
     svg = setText(svg, string_card, reg_card_i)

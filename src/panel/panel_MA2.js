@@ -135,7 +135,7 @@ export async function panel_MA2(data = {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_b30 += getSvgBody(40 + (352 + 18) * x, 330 + 150 * y, card_b30[i]);
+        string_b30 += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y, card_b30[i]);
     }
 
     svg = setText(svg, string_b30, reg_card_i);
@@ -148,7 +148,7 @@ export async function panel_MA2(data = {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_r10 += getSvgBody(40 + (352 + 18) * x, 330 + 150 * y + b30_height + r10_offset, card_r10[i]);
+        string_r10 += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y + b30_height + r10_offset, card_r10[i]);
     }
 
     svg = setText(svg, string_r10, reg_card_i);

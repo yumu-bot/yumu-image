@@ -674,12 +674,12 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
 /**
  * 设置文字。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
  * @param {string} base
- * @param {string} replace
+ * @param {string | number} replace
  * @param {string | RegExp} reg
  * @return {string}
  */
 export function setText(base = '', replace = '', reg = /.*/) {
-    return base.replace(reg, replace);
+    return base.replace(reg, replace?.toString());
 }
 
 
@@ -697,7 +697,7 @@ export function setTexts(base = '', replaces = [''], regex = /.*/) {
         for (const i in replaces) {
             const v = replaces[replaces?.length - 1 - i]
 
-            rep += (v + '\n')
+            rep += (v?.toString() + '\n')
         }
 
         base = base.replace(regex, rep);
