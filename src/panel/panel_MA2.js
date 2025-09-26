@@ -71,6 +71,8 @@ export async function panel_MA2(data = {
 
     // 仅 b35+b15 使用
     scores_latest: [],
+    scores_selection: [],
+
     versions: [''],
     panel: "CB"
 }) {
@@ -101,10 +103,12 @@ export async function panel_MA2(data = {
 
     const standard = data?.scores || []
     const deluxe = data?.scores_latest || []
+    const select = data?.scores_selection || []
 
     // 导入i卡
     let param_b30 = [];
-    let param_r10 = [];
+    let param_n20 = [];
+    let param_s10 = [];
 
     await Promise.allSettled(
         standard.map((s) => {
@@ -118,16 +122,26 @@ export async function panel_MA2(data = {
         deluxe.map((s) => {
             return chuScore2CardI3(s)
         })
-    ).then(results => thenPush(results, param_r10))
+    ).then(results => thenPush(results, param_n20))
 
-    const card_r10 = param_r10.map((dx) => {return card_I3(dx)})
+    const card_n20 = param_n20.map((dx) => {return card_I3(dx)})
+
+    await Promise.allSettled(
+        select.map((s) => {
+            return chuScore2CardI3(s)
+        })
+    ).then(results => thenPush(results, param_s10))
+
+    const card_s10 = param_s10.map((se) => {return card_I3(se)})
 
     // 插入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
     const b30_height = Math.ceil(card_b30.length / 5) * 150
-    let r10_offset = 0
-    const r10_height = Math.ceil(card_r10.length / 5) * 150
+    const n20_height = Math.ceil(card_n20.length / 5) * 150
+    const s10_height = Math.ceil(card_s10.length / 5) * 150
+    let bn_offset = 0
+    let ns_offset = 0
 
     let string_b30 = ''
 
@@ -140,18 +154,35 @@ export async function panel_MA2(data = {
 
     svg = setText(svg, string_b30, reg_card_i);
 
-    if (isNotEmptyArray(card_b30) && isNotEmptyArray(card_r10)) r10_offset = 20
+    if (isNotEmptyArray(card_b30) && isNotEmptyArray(card_n20)) {
+        bn_offset = 20
+    }
 
-    let string_r10 = ''
+    if ((isNotEmptyArray(card_b30) || isNotEmptyArray(card_n20)) && isNotEmptyArray(card_s10)) {
+        ns_offset = 20
+    }
 
-    for (const i in card_r10) {
+    let string_n20 = ''
+
+    for (const i in card_n20) {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_r10 += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y + b30_height + r10_offset, card_r10[i]);
+        string_n20 += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y + b30_height + bn_offset, card_n20[i]);
     }
 
-    svg = setText(svg, string_r10, reg_card_i);
+    svg = setText(svg, string_n20, reg_card_i);
+
+    let string_s10 = ''
+
+    for (const i in card_s10) {
+        const x = i % 5;
+        const y = Math.floor(i / 5);
+
+        string_s10 += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y + b30_height + bn_offset + n20_height + ns_offset, card_s10[i]);
+    }
+
+    svg = setText(svg, string_s10, reg_card_i);
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
@@ -159,10 +190,18 @@ export async function panel_MA2(data = {
     // 计算面板高度
     let card_height
 
-    if (r10_height === 0) {
-        card_height = b30_height + r10_offset + 60 - 15
+    if (n20_height === 0) {
+        if (s10_height === 0) {
+            card_height = b30_height + bn_offset + 60 - 15
+        } else {
+            card_height = b30_height + bn_offset + s10_height + 80 - 15
+        }
     } else {
-        card_height = b30_height + r10_offset + r10_height + 80 - 15
+        if (s10_height === 0) {
+            card_height = b30_height + bn_offset + n20_height + 80 - 15
+        } else {
+            card_height = b30_height + bn_offset + n20_height + s10_height + 100 - 15
+        }
     }
 
     const panel_height = card_height + 290
