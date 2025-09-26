@@ -1649,8 +1649,6 @@ export function getTimeDifferenceShort(compare = '', is_short = 1) {
 export function getTimeDifference(compare = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', now = moment().subtract(8, "hours"), is_short = 0) {
     const compare_moment = moment(compare, format);
 
-    console.log(compare, format, now, is_short)
-
     if (compare_moment == null) return '-';
 
     const years = compare_moment.diff(now, "years");
