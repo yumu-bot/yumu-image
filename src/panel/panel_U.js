@@ -312,6 +312,7 @@ async function card_U1(
     is_bind = false,
     following = 0,
 ) {
+
     // 读取模板
     let svg = `   <defs>
             <clipPath id="clippath-CU1-1">
@@ -356,7 +357,7 @@ async function card_U1(
     const background = user?.profile?.card || await getBanner(user?.cover_url, true);
     const avatar = await getAvatar(user?.avatar_url)
 
-    const mode_icon = extra.getTextMetrics(getGameMode(user?.mode, -1), 30, 68, 40, 'left baseline', '#fff')
+    const mode_icon = extra.getTextPath(getGameMode(user?.mode, -1), 30, 68 - 2, 40, 'left baseline', '#fff')
 
     const supporter_icon = (user?.is_supporter) ? getImage(460 - 70, 30, 40, 40, getImageFromV3('object-card-supporter.png')) : ''
 
@@ -364,15 +365,20 @@ async function card_U1(
         torus.cutStringTail(user?.username, 60, 460 - 10),
         230, 300, 60, 'center baseline')
 
-    const global_rank_text = user?.statistics?.global_rank ?
+    const has_global_rank = user?.statistics?.global_rank != null
+    const has_rank_highest = user?.rank_highest?.updated_at != null
+
+    const global_rank_text = has_global_rank ?
         ('#' + user.statistics.global_rank) :
-        (user?.rank_highest?.rank ?
-            '#' + user.rank_highest.rank + '^' :
+        (has_rank_highest ?
+            ('#' + user.rank_highest.rank + '^') :
             '#0')
 
-    const country_rank_text = user?.statistics?.global_rank ?
-        ('#' + (user?.country_rank || '0')) :
-        '(' + getTimeDifference(user.rank_highest.updated_at) + ')'
+    const country_rank_text = has_global_rank ?
+        ('#' + (user?.statistics?.country_rank || '0')) :
+        (has_rank_highest ?
+            ('(' + getTimeDifference(user?.rank_highest?.updated_at) + ')') :
+            '#0')
 
     const global_rank = torusBold.getTextPath(global_rank_text, 190, 360, 30, 'right baseline')
 
