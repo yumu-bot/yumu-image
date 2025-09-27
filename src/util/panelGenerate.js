@@ -53,7 +53,7 @@ export const PanelGenerate = {
      * @param historyUser
      */
     user2CardA1: async (user, historyUser) => {
-        if (user == null) return {
+        if (isNullOrEmptyObject(user)) return {
             background: getImageFromV3('card-default.png'),
             avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
             sub_icon1: '',
@@ -326,7 +326,24 @@ export const PanelGenerate = {
     },
 
     maimaiPlayer2CardA1: async (user) => {
-        const background = getMaimaiRatingBG(user.rating);
+        if (isNullOrEmptyObject(user)) return {
+            background: getImageFromV3('card-default.png'),
+            avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
+            sub_icon1: '',
+            sub_icon2: '',
+            sub_banner: '',
+            country: 'CN',
+
+            top1: 'YumuBot',
+            left1: '#0',
+            left2: 'CN#0',
+            right1: '',
+            right2: '',
+            right3b: 'Bot',
+            right3m: '',
+        }
+
+        const background = getMaimaiRatingBG(user?.rating);
 
         let dan
         const dan_arr = ['初', '二', '三', '四', '五', '六', '七', '八', '九', '十']

@@ -327,6 +327,7 @@ export function label_A8(data = {
     has_text: true, // true：没图片的时候，显示字段。有图片的时候默认显示字段
     text: '',
     color: 'none',
+    is_highlight: true,
 }) {
     let svg = `
         <g id="Base_LA8">
@@ -345,6 +346,15 @@ export function label_A8(data = {
     let width = text_width + 16
     let text_middle = width / 2
 
+    let opacity = 1
+    let text_opacity = 1
+    let base_opacity = 0.6
+    if (data.is_highlight === false) {
+        opacity = 0.2
+        text_opacity = 0.4
+        base_opacity = 0.2
+    }
+
     if (isNotBlankString(data.image)) {
         // [image] text
         width += 22
@@ -356,11 +366,11 @@ export function label_A8(data = {
         width += 12 // 10
         text_middle += 12
 
-        svg = setText(svg, PanelDraw.Rect(0, 0, 14, 25, 7, data?.color || 'none', 1), reg_icon)
+        svg = setText(svg, PanelDraw.Rect(0, 0, 14, 25, 7, data?.color || 'none', opacity), reg_icon)
     } else if (data.has_text === false) {
         // []
 
-        svg = setText(svg, PanelDraw.Rect(0, 0, 14, 25, 7, data?.color || 'none', 1), reg_icon)
+        svg = setText(svg, PanelDraw.Rect(0, 0, 14, 25, 7, data?.color || 'none', opacity), reg_icon)
 
         return {
             width: 14,
@@ -368,8 +378,8 @@ export function label_A8(data = {
         }
     }
 
-    const text = torusBold.getTextPath(data?.text, text_middle, 19, 20, 'center baseline', '#fff', 1)
-    const base = PanelDraw.Rect(0, 0, width, 25, 7, data?.color || 'none', 0.6)
+    const text = torusBold.getTextPath(data?.text, text_middle, 19, 20, 'center baseline', '#fff', text_opacity)
+    const base = PanelDraw.Rect(0, 0, width, 25, 7, data?.color || 'none', base_opacity)
 
     svg = setText(svg, text, reg_text)
     svg = setText(svg, base, reg_base)

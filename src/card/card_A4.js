@@ -3,7 +3,7 @@ import {
     setImage,
     setSvgBody, isASCII, isNotBlankString, setText,
     setTexts,
-    getSvgBody
+    getSvgBody, isNotEmptyArray
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {label_A8} from "./card_A3.js";
@@ -84,7 +84,8 @@ export async function card_A4(song = {
         "from": "maimai",
         "is_new": false
     },
-    "alias": "爱歌"
+    "alias": "爱歌",
+    "highlight": [0, 1],
 }) {
     // 读取模板
     let svg = `   <defs>
@@ -150,17 +151,17 @@ export async function card_A4(song = {
 
     const left1 = left1_font.getTextPath(
         left1_font.cutStringTail(left1_str, left1_size, 255),
-        187, 62, left1_size, 'left baseline', '#bbb'
+        187, 64, left1_size, 'left baseline', '#bbb'
     )
 
     const left2 = left2_font.getTextPath(
         left2_font.cutStringTail(left2_str, left2_size, 255),
-        187, 88, left2_size, 'left baseline', '#bbb'
+        187, 90, left2_size, 'left baseline', '#bbb'
     )
 
     svg = setTexts(svg, [title, left1, left2], reg_text)
 
-    const difficulty = drawDifficultyLabels(song.ds)
+    const difficulty = drawDifficultyLabels(song.ds, song.highlight)
 
     const image = await getMaimaiCover(parseInt(song.id))
 
@@ -202,8 +203,9 @@ export async function card_A4(song = {
     return svg.toString()
 }
 
-function drawDifficultyLabels(ds = []) {
-    const color_plate = ['#7CC576', '#FFF568', '#F26D7D', '#A864A8', '#FAD7F7']
+function drawDifficultyLabels(ds = [], highlight = []) {
+    const color_plate = ['#7CC576', '#FFF568', '#F26D7D', '#A864A8',
+        '#FAD7F7']
 
     let labels = []
     let svg = ''
@@ -219,11 +221,21 @@ function drawDifficultyLabels(ds = []) {
         }))
     } else {
         for (let i = 0; i < ds.length; i++) {
+            let is_highlight
+
+            if (isNotEmptyArray(highlight)) {
+                is_highlight = highlight.findIndex((num) => num === i) >= 0
+            } else {
+                is_highlight = true
+            }
+
+
             labels.push(label_A8({
                 image: null,
                 has_text: true,
                 text: ds[i],
                 color: color_plate[i],
+                is_highlight: is_highlight,
             }))
         }
     }

@@ -13,13 +13,8 @@ export async function getMaimaiCover(song_id = 0) {
         id = 0;
     } else if (song_id === 1235) {
         id = 11235; // 这是水鱼的 bug，不关我们的事
-    } else if (song_id > 10000 && song_id < 11000) {
-        id = song_id - 10000;
-    } else if (song_id > 100000) {
-        id = song_id;
-
-        id %= 10000
-        id += 10000
+    } else if (song_id > 10000) {
+        id = song_id % 10000;
     } else {
         id = song_id;
     }
@@ -33,7 +28,12 @@ export async function getMaimaiCover(song_id = 0) {
     } else if (fs.existsSync(path2)) {
         return path2
     } else {
-        return await downloadImage(`https://www.diving-fish.com/covers/${song}.png`, path, getImageFromV3('Maimai', 'Cover', '00000.png'))
+        const lxns = `https://assets2.lxns.net/maimai/jacket/${id}.png`
+        // const divingfish = `https://www.diving-fish.com/covers/${song}.png`
+
+        console.log(lxns, path)
+
+        return await downloadImage(lxns, path, getImageFromV3('Maimai', 'Cover', '00000.png'))
     }
 }
 
@@ -274,22 +274,25 @@ export function getMaimaiVersionColor(version = '') {
             return '#C69C6E'
         case "maimai でらっくす":
         case "maimai でらっくす PLUS":
-            return '#FFEB42'
+            return '#11B6F9'
         case "maimai でらっくす Splash":
         case "maimai でらっくす Splash PLUS":
-            return '#67C1A9'
+            return '#79DDB4'
         case "maimai でらっくす UNiVERSE":
         case "maimai でらっくす UNiVERSE PLUS":
-            return '#00BFF3'
+            return '#40BEFA'
         case "maimai でらっくす FESTiVAL":
         case "maimai でらっくす FESTiVAL PLUS":
-            return '#BD87F7'
+            return '#C59EFE'
         case "maimai でらっくす BUDDiES":
         case "maimai でらっくす BUDDiES PLUS":
-            return '#5574B9'
+            return '#FFCD43'
         case "maimai でらっくす PRiSM":
         case "maimai でらっくす PRiSM PLUS":
-            return '#F1A3BB'
+            return '#7DFDDD'
+        case "maimai でらっくす CiRCLE":
+        case "maimai でらっくす CiRCLE PLUS":
+            return '#FF43B5'
         default:
             return ''
     }

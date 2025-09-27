@@ -1,12 +1,13 @@
 import {
     exportJPEG, getPanelHeight, getPanelNameSVG, setImage,
     setSvgBody, readTemplate,
-    setText
+    setText, getSvgBody, setTexts, getNowTimeStamp
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {card_A4} from "../card/card_A4.js";
+import {torusBold} from "../util/font.js";
 
 export async function router(req, res) {
     try {
@@ -109,8 +110,10 @@ export async function panel_MF(data = {
             "from": "maimai",
             "is_new": false
         },
-        "alias": "爱歌"
+        "alias": "爱歌",
+        "highlight": [0, 1]
     },],
+    count: 0,
 }) {
     let svg = readTemplate('template/Panel_MA.svg')
 
@@ -123,7 +126,8 @@ export async function panel_MF(data = {
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-MA1-1\);">)/;
 
     // 插入文字
-    svg = setText(svg, getPanelNameSVG('Maimai Find (!ymmf)', 'MF'), reg_index);
+    const request_time = 'results count: ' + (data?.count || 0 )+ ' // request time: ' + getNowTimeStamp();
+    svg = setText(svg, getPanelNameSVG('Maimai Find v2 (!ymmf)', 'MF', request_time), reg_index);
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
@@ -141,20 +145,27 @@ export async function panel_MF(data = {
     // 插入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
+    let string_a4s = ''
+
     for (let i = 0; i < card_a4.length; i++) {
         const x = i % 4
         const y = Math.floor(i / 4)
 
-        svg = setSvgBody(svg,
-            40 + x * 470, 330 + y * 230, card_a4[i], reg_card_i)
+        string_a4s += getSvgBody(40 + x * 470, 330 + y * 230, card_a4[i])
     }
 
     // 计算面板高度
-    const panelHeight = getPanelHeight(card_a4.length, 210, 4, 290, 20, 40)
-    const cardHeight = panelHeight - 290
+    const panel_height = getPanelHeight(card_a4.length, 210, 4, 290, 20, 40)
+    const card_height = panel_height - 290
 
-    svg = setText(svg, panelHeight, reg_panelheight);
-    svg = setText(svg, cardHeight, reg_cardheight);
+    const page = torusBold.getTextPath(
+        'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6
+    )
+
+    svg = setTexts(svg, [string_a4s, page], reg_card_i)
+
+    svg = setText(svg, panel_height, reg_panelheight);
+    svg = setText(svg, card_height, reg_cardheight);
 
     return svg.toString()
 }
