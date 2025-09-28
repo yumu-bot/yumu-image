@@ -1072,6 +1072,7 @@ export const PanelGenerate = {
         const time_diff = getTimeDifferenceShort(s.ended_at, 0);
 
         let mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
+
         /*
         switch (s?.mods?.length) {
             case 0:

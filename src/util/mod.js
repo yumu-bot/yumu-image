@@ -138,7 +138,7 @@ export const getModName = (mod = {acronym: ""} || "") => {
     } else return ''
 }
 
-export function getLazerModsWidth(mods = [{acronym: ""}], height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expanded = true, allow_name = true) {
+export function getLazerModsWidth(mods = [], height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expanded = true, allow_name = true) {
     return drawLazerMods(mods, 0, 0, height, max_width, align, interval, allow_expanded, allow_name, true).width
 }
 
@@ -156,7 +156,7 @@ export function getLazerModsWidth(mods = [{acronym: ""}], height = 100, max_widt
  * @param only_width 如果为真，则只会返回有效的宽度。
  * @return {{svg: string, width: number}}
  */
-export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expanded = true, allow_name = true, only_width = false) {
+export function drawLazerMods(mods = [], x = 0, y = 0, height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expanded = true, allow_name = true, only_width = false) {
     if (isEmptyArray(mods)) return {
         svg: '',
         width: 0,
@@ -262,13 +262,6 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
         default: lx = x
     }
 
-    if (only_width) {
-        return {
-            svg: '',
-            width: Math.abs(x - (lx + delta_x)),
-        }
-    }
-
     let svg = '';
 
     let delta_x = 0
@@ -296,14 +289,14 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
             }
         }
 
-        svg += getLazerModPath(v, lx + delta_x, y, height, is_expanded, is_name, is_side_name);
+        if (!only_width) {
+            svg += getLazerModPath(v, lx + delta_x, y, height, is_expanded, is_name, is_side_name);
+        }
     });
-
-    // console.log(svg)
 
     return {
         svg: svg,
-        width: Math.abs(x - (lx + delta_x)),
+        width: total_width,
     }
 }
 
