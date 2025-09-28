@@ -1078,20 +1078,8 @@ export const PanelGenerate = {
             case 1:
                 mods_width = 100;
                 break;
-            case 2:
-                mods_width = 140;
-                break;
-            case 3:
-                mods_width = 140;
-                break;
-            case 4:
-                mods_width = 160;
-                break;
-            case 5:
-                mods_width = 180;
-                break;
             default:
-                mods_width = 0;
+                mods_width = 160;
         }
 
         const acc = floor((s?.legacy_accuracy * 100), 2) + '%'
