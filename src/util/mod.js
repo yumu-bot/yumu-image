@@ -138,6 +138,10 @@ export const getModName = (mod = {acronym: ""} || "") => {
     } else return ''
 }
 
+export function getLazerModsWidth(mods = [{acronym: ""}], height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expanded = true, allow_name = true) {
+    return drawLazerMods(mods, 0, 0, height, max_width, align, interval, allow_expanded, allow_name, true).width
+}
+
 /**
  * 新版绘制标准六边形模组：模组宽 135px 或 235px（含有额外信息），会根据高度来缩放（默认 100px）
  * @param mods 必须是 LazerMod 类，含有模组颜色等信息
@@ -149,9 +153,10 @@ export const getModName = (mod = {acronym: ""} || "") => {
  * @param interval 间隔，默认为 8
  * @param allow_expanded 如果为真，则会在模组含有扩展属性，并且宽度足够的时候展示它。如果为假，则不会尝试展示扩展属性
  * @param allow_name 如果为真，则会在模组不含扩展属性，并且宽度足够的时候展示名称。如果为假，则不会尝试展示名称
+ * @param only_width 如果为真，则只会返回有效的宽度。
  * @return {{svg: string, width: number}}
  */
-export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expanded = true, allow_name = true) {
+export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100, max_width = Infinity, align = 'left', interval = 8, allow_expanded = true, allow_name = true, only_width = false) {
     if (isEmptyArray(mods)) return {
         svg: '',
         width: 0,
@@ -255,6 +260,13 @@ export function drawLazerMods(mods = [{acronym: ""}], x = 0, y = 0, height = 100
         case 'right': lx = x - scale * (((is_expanded && has_expanded_mod) || is_name) ? 235 : 135); break;
         case 'center': lx = x - total_width / 2; break;
         default: lx = x
+    }
+
+    if (only_width) {
+        return {
+            svg: '',
+            width: Math.abs(x - (lx + delta_x)),
+        }
     }
 
     let svg = '';

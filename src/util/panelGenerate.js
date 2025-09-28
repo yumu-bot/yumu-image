@@ -41,6 +41,7 @@ import {
 import {getRandomBannerPath} from "./mascotBanner.js";
 import {PanelDraw} from "./panelDraw.js";
 import {card_D2} from "../card/card_D2.js";
+import {getLazerModsWidth} from "./mod.js";
 
 //公用方法
 //把参数变成面板能读懂的数据
@@ -1070,7 +1071,8 @@ export const PanelGenerate = {
 
         const time_diff = getTimeDifferenceShort(s.ended_at, 0);
 
-        let mods_width;
+        let mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
+        /*
         switch (s?.mods?.length) {
             case 0:
                 mods_width = 0;
@@ -1081,6 +1083,8 @@ export const PanelGenerate = {
             default:
                 mods_width = 160;
         }
+
+         */
 
         const acc = floor((s?.legacy_accuracy * 100), 2) + '%'
         const combo = (s.max_combo || 0) + 'x'
@@ -1150,7 +1154,9 @@ export const PanelGenerate = {
 
     // panel A7 有细微的改动，请注意
     fixedBestScore2CardH: async (s, rank = 1, rank_after = null) => {
-        let mods_width
+        let mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
+
+        /*
         switch (s?.mods?.length) {
             case 0:
                 mods_width = 0;
@@ -1161,6 +1167,8 @@ export const PanelGenerate = {
             default:
                 mods_width = 160;
         }
+
+         */
 
         const is_after = (typeof rank_after == "number")
 
