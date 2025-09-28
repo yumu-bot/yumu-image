@@ -2128,11 +2128,12 @@ export function getKeyDifficulty(beatmap) {
     let difficulty_text = (beatmap?.version || '').toString()
 
     if (beatmap?.mode_int === 3) {
-        const pattern = /^\[\d+K].*/g
+        const start_pattern = /^[\s\[/\\_\-]*(\d+\s?k)(ey)?[\s\]/\\_\-]*.*/gi
 
-        if (pattern.test(difficulty_text) === false) {
+        if (start_pattern.test(difficulty_text) === false) {
             const key = Math.round(beatmap.cs)
-            const remove_pattern = new RegExp("[\\s\[/\\]*" + key + "K[\\s\]/\\]*", "g");
+            const remove_pattern =
+                new RegExp("[\\s\\[/\\\\_-]*" + key + "k\\s?(ey)?[\\s\]/\\\\_-]*", "gi");
 
             difficulty_text = '[' + key + 'K] ' + difficulty_text.replace(remove_pattern, ' ').trim()
         }

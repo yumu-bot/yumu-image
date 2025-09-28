@@ -1068,7 +1068,7 @@ export const PanelGenerate = {
         const background = await readNetImage(s?.beatmapset?.covers?.cover, cache);
         const type = getScoreTypeImage(s.is_lazer)
 
-        const time_diff = getTimeDifferenceShort(s.ended_at, 1);
+        const time_diff = getTimeDifferenceShort(s.ended_at, 0);
 
         let mods_width;
         switch (s?.mods?.length) {
@@ -1162,7 +1162,7 @@ export const PanelGenerate = {
 
     // panel A7 有细微的改动，请注意
     fixedBestScore2CardH: async (s, rank = 1, rank_after = null) => {
-        let mods_width;
+        let mods_width
         switch (s?.mods?.length) {
             case 0:
                 mods_width = 0;
@@ -1170,20 +1170,8 @@ export const PanelGenerate = {
             case 1:
                 mods_width = 100;
                 break;
-            case 2:
-                mods_width = 140;
-                break;
-            case 3:
-                mods_width = 140;
-                break;
-            case 4:
-                mods_width = 160;
-                break;
-            case 5:
-                mods_width = 180;
-                break;
             default:
-                mods_width = 0;
+                mods_width = 160;
         }
 
         const is_after = (typeof rank_after == "number")
@@ -1191,7 +1179,7 @@ export const PanelGenerate = {
         const card_h = await PanelGenerate.score2CardH(s, rank, true)
 
         if (is_after) {
-            const time_diff = getTimeDifferenceShort(s.ended_at, 1);
+            const time_diff = getTimeDifferenceShort(s.ended_at, 0);
             const rank_after_str = ' -> ' + rank_after;
             const difficulty_name = s.beatmap.version ?
                 torus.cutStringTail(getKeyDifficulty(s.beatmap), 24,

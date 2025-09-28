@@ -134,13 +134,10 @@ export function card_H(data = {
 
     svg = setImage(svg, 140, 4, 45, 30, data?.type || '', reg_label, 1);
 
-    svg = setTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
-    svg = setTexts(svg, [index], reg_text);
-
     // 计算标题的长度
     let title_max_width = 500;
     let left_max_width = 500;
-    let mods_width = mods_data.width + 10;
+    let mods_width = mods_data.width;
 
     /*
     switch (mods_arr_length) {
@@ -178,7 +175,9 @@ export function card_H(data = {
     const left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', color_left12);
 
     // 插入文字
-    svg = setTexts(svg, [title, title2, left1, left2], reg_text);
+    svg = setTexts(svg, [title, title2, left1, left2, index], reg_text);
+
+    svg = setTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
 
     // 插入图片
     svg = data.cover ? setImage(svg, 20, 0, 176, 110, data.cover, reg_avatar, 1) : svg;
