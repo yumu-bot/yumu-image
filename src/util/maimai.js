@@ -274,13 +274,13 @@ export function getMaimaiVersionColor(version = '') {
             return '#C69C6E'
         case "maimai でらっくす":
         case "maimai でらっくす PLUS":
-            return '#11B6F9'
+            return '#7ECEF4'
         case "maimai でらっくす Splash":
         case "maimai でらっくす Splash PLUS":
             return '#79DDB4'
         case "maimai でらっくす UNiVERSE":
         case "maimai でらっくす UNiVERSE PLUS":
-            return '#40BEFA'
+            return '#00A0E9'
         case "maimai でらっくす FESTiVAL":
         case "maimai でらっくす FESTiVAL PLUS":
             return '#C59EFE'
