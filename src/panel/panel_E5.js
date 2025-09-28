@@ -296,7 +296,9 @@ export async function panel_E5(data = {
     let request_time = ''
 
     if (data.position != null && data.position > 0) {
-        request_time += 'position: #' + data.position + ' // '
+        if (!(data.position === 1 && (data?.panel === 'P') || (data?.panel === 'R'))) {
+            request_time += 'position: #' + data.position + ' // '
+        }
     }
 
     request_time += 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
