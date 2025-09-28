@@ -186,9 +186,13 @@ export async function panel_B2(data = {
 
     // 插入种类（测试中）
     const type_image = '' // getTypeImage(data?.type, data?.type_percent)
-    const type_percent = data?.type_percent > 0 ?
+    const type_percent = ''
+        /*
+        data?.type_percent > 0 ?
         torus.getTextPath(Math.round(data?.type_percent * 100) + '%', 1685 + 195/2, 210 - 8, 16, 'center baseline', '#fff')
         : ''
+
+         */
 
     svg = setText(svg, type_percent, reg_right)
     svg = setImage(svg, 1685, 210, 195, 60, type_image, reg_right, 1)
