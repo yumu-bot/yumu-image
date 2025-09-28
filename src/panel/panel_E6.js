@@ -96,7 +96,7 @@ export async function panel_E6(data = {
 
     // 图片定义
     const background = getRankBackground(rank);
-    const banner = await getDiffBackground(data);
+    const banner = await getDiffBackground(data.beatmap);
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
