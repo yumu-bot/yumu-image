@@ -5,9 +5,9 @@ import {
     setImage,
     setSvgBody,
     readTemplate, setText,
-    setTexts, floor, floors, getMapBackground
+    setTexts, floor, floors, getMapBackground, getSvgBody
 } from "../util/util.js";
-import {torus} from "../util/font.js";
+import {PuHuiTi, torus} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_B1} from "../card/card_B1.js";
 import {card_B2} from "../card/card_B2.js";
@@ -100,8 +100,8 @@ export async function panel_B2(data = {
     // 计算数值
     const total = (m?.star || 0)
     const delta = total - (data.beatmap?.difficulty_rating || 0);
-    const total_number = floors(delta, 2)
-    const total_path = torus.get2SizeTextPath((delta > 0 ? '+' : '-') + total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', (delta >= 0 ? '#c2e5c3' : '#ffcdd2'));
+    const total_number = floors(total, 2)
+    const total_path = torus.get2SizeTextPath(total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', '#fff')//(delta >= 0 ? '#c2e5c3' : '#ffcdd2'));
 
     // 插入文字
     svg = setTexts(svg, [panel_name, total_path], reg_index);
@@ -139,21 +139,35 @@ export async function panel_B2(data = {
 
     svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
+    let string_b1s = ''
+
     for (let j = 0; j < 6; j++) {
         const card_order = [0, 5, 4, 1, 2, 3]
         const k = card_order[j]
 
-        svg = setSvgBody(svg, 40, 350 + j * 115, cardB1s[k], reg_left);
+        string_b1s += getSvgBody(40, 350 + j * 115, cardB1s[k])
+
+        // svg = setSvgBody(svg, 40, 350 + j * 115, cardB1s[k], reg_left);
     }
+
+    svg = setText(svg, string_b1s, reg_left)
 
     const rank_ov = getRankFromValue(total);
     const color_ov = getRankColor(rank_ov);
     const background_ov = getRankBackground(rank_ov);
 
     cardB2s.push(await card_B2({
-        label: LABEL_MM.OV,
+        label: {
+            icon: getImageFromV3("object-score-aimpp.png"),
+            icon_title: '差值',
+            remark: 'Delta',
+            data_b: 'D',
+            data_m: '',
+            color_remark: '#aaa',
+            title_font: PuHuiTi,
+        },
         background: background_ov,
-        value: total,
+        value: delta, //total,
         round_level: 2,
         rank: rank_ov,
         color: color_ov,
@@ -171,7 +185,7 @@ export async function panel_B2(data = {
     svg = setSvgBody(svg, 970, 860, cardB2s[1], reg_center);
 
     // 插入种类（测试中）
-    const type_image = getTypeImage(data?.type, data?.type_percent)
+    const type_image = '' // getTypeImage(data?.type, data?.type_percent)
     const type_percent = data?.type_percent > 0 ?
         torus.getTextPath(Math.round(data?.type_percent * 100) + '%', 1685 + 195/2, 210 - 8, 16, 'center baseline', '#fff')
         : ''
