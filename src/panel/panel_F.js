@@ -256,7 +256,7 @@ async function event2CardC(
             wins_team_blue_before: blue_before,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
         red: red_arr,
-        blue: blue_arr,
+        cyan: blue_arr,
         none: none_arr,
     }
 }

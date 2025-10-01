@@ -42,19 +42,38 @@ export const PanelDraw = {
 
     /**
      * 快速生成一个左右渐变圆角矩形
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param r
+     * @param colors 颜色数组，数量应大于等于 2 个
+     * @param opacity
+     * @return {string}
+     * @constructor
      */
-    LinearGradientRect(x = 0, y = 0, w = 0, h = 0, r = 0, color1 = '#fff', color2 = color1, opacity = 1) {
-        return this.GradientRect(x, y, w, h, r, [
-            {
-                offset: "0%",
-                color: color1,
-                opacity: opacity,
-            }, {
-                offset: "100%",
-                color: color2,
-                opacity: opacity,
+    LinearGradientRect: (x = 0, y = 0, w = 0, h = 0, r = 0, colors = ['#fff'], opacity = 1) => {
+        const color_array = []
+
+        if (Array.isArray(colors) && colors?.length > 1) {
+            for (const i in colors) {
+                // 前后 10% 留空
+                const pos = 10 + Math.round(i / (colors.length - 1) * 80)
+
+                const color = {
+                    offset: pos + "%",
+                    color: colors[i],
+                    opacity: 1,
+                }
+
+                color_array.push(color)
             }
-        ])
+        } else {
+            return PanelDraw.Rect(x, y, w, h, r, colors?.[0] ?? '#fff', opacity)
+        }
+
+
+        return PanelDraw.GradientRect(x, y, w, h, r, color_array, opacity)
     },
 
     Circle: (cx = 0, cy = 0, r = 0, color = '#fff', opacity = 1) => {

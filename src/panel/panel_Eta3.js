@@ -13,7 +13,7 @@ import {
     getRankBackground
 } from "../util/star.js";
 import {getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
-import {getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
+import {colorArray, getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
 import {drawLazerMods} from "../util/mod.js";
 import {getMascotName, getRandomMascotTransparentPath} from "../util/mascotBanner.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -569,7 +569,7 @@ const component_Eta2 = (data = {
     let pp_title = ''
     let pp_value = ''
     let pp_progress = PanelDraw.LinearGradientRect(670, 915, 290,
-        40, 20, '#FCAC46', '#FEDC45')
+        40, 20, colorArray.yellow)
 
     switch (mode) {
         case 'o': {
@@ -585,10 +585,11 @@ const component_Eta2 = (data = {
 
             pp_progress =
                 PanelDraw.LinearGradientRect(670, 915, 290,
-                    40, 20, '#FCAC46', '#FEDC45')
-                + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.aim_pp + data?.spd_pp) / pp_sum * 290), 40, 20, '#5EDC5B', '#CAF881')
+                    40, 20, colorArray.yellow)
+                + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.aim_pp + data?.spd_pp) / pp_sum * 290),
+                    40, 20, colorArray.green)
                 + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.aim_pp) / pp_sum * 290),
-                    40, 20, '#4FACFE', '#00F2FE')
+                    40, 20, colorArray.cyan)
 
         } break;
 
@@ -603,9 +604,9 @@ const component_Eta2 = (data = {
 
             pp_progress =
                 PanelDraw.LinearGradientRect(670, 915, 290,
-                    40, 20, '#FCAC46', '#FEDC45')
+                    40, 20, colorArray.yellow)
                 + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.diff_pp) / pp_sum * 290),
-                    40, 20, '#5EDC5B', '#CAF881')
+                    40, 20, colorArray.green)
         } break;
 
         case 'm': {
@@ -614,7 +615,7 @@ const component_Eta2 = (data = {
             pp_value = poppinsBold.getTextPath(Math.round(data?.diff_pp).toString(), 960 - 20, 947, 30, 'right baseline')
 
             pp_progress = PanelDraw.LinearGradientRect(670, 915, 290,
-                    40, 20, '#FCAC46', '#FEDC45')
+                    40, 20, colorArray.yellow)
         } break;
     }
 

@@ -333,6 +333,13 @@ export const getRankFromValue = (value = 0, boundary = [10, 8, 6.5, 5.3, 4, 2.8,
     return 'F';
 }
 
+/**
+ *
+ * @param is_lazer
+ * @param version {number | string}
+ * @param score_type
+ * @return {string}
+ */
 export function getScoreTypeImage(is_lazer, version = '', score_type) {
     if (score_type === "sb_score") return getImageFromV3('object-type-ppysb' + version + '.png');
 

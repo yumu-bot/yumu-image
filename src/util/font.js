@@ -63,7 +63,7 @@ export function getMultipleTextPath(array = [{
 
         const font = v.font;
         const text = v.text;
-        const size = v?.size || 24;
+        const size = v?.size ?? 24;
         const color = v?.color || '#fff';
 
         switch (anchor) {
@@ -83,7 +83,7 @@ export function getMultipleTextPath(array = [{
             }
             case "right baseline": {
                 if (shadow !== false) {
-                    out += getTextPath(font, text, x - total_width + w + 2, y + 2, size, "left baseline", "left baseline", '#1c1719');
+                    out += getTextPath(font, text, x - total_width + w + 2, y + 2, size, "left baseline", '#1c1719');
                 }
                 out += getTextPath(font, text, x - total_width + w, y, size, "left baseline", color);
                 break;

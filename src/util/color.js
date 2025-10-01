@@ -1,6 +1,25 @@
 import {isHexColor, isNotBlankString} from "./util.js";
 import {getModName} from "./mod.js";
 
+// 颜色数组，方便生成带有色彩渐变属性的图块
+export const colorArray = {
+    orange: ['#FF544F', '#FAD126'],
+    yellow: ['#FCAC46', '#FEDC45'],
+    green: ['#5EDC5B', '#CAF881'],
+    red: ['#F86F64', '#FD5392'],
+
+    // 这个是深蓝，如果要选天蓝色，请改成 cyan
+    blue: ['#7776FF', '#4FACFE'],
+
+    cyan: ['#4FACFE', '#00F2FE'],
+    magenta: ['#B6359C', '#EF0A6A'],
+    purple: ['#7776FF', '#AE2CF1'],
+
+    gray: ['#aaa', '#ccc'],
+    rainbow: ['#EC6841', '#F19149', '#FFF45C',
+        '#31B16C', '#00B7EE', '#00F2FE'],
+}
+
 // Yumu Panel v0.5 颜色自定义，默认的色相全是 342（这也是巧克力面板的原色
 export const PanelColor = {
     // 基层，一般看不到这个颜色

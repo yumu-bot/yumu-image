@@ -28,7 +28,7 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi} from "../util/font.js";
-import {getRankColor, getStarRatingColor} from "../util/color.js";
+import {colorArray, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
 import {getModMultiplier, drawLazerMods} from "../util/mod.js";
@@ -1351,7 +1351,7 @@ const PanelEGenerate = {
 
         return {
             statistics: score2Statistics(score.statistics, score.ruleset_id, is_lazer),
-            statistics_max: score2StatisticsMax(score.maximum_statistics, score.statistics, score.ruleset_id, is_lazer, progress),
+            statistics_max: score2StatisticsMax(score.maximum_statistics, score.statistics, score.ruleset_id, is_lazer),
 
             // 仅限 standard, taiko 使用
             effective_miss_count: attr?.effective_miss_count,
@@ -1488,49 +1488,49 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: '100',
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: '50',
                     stat: s.meh,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {
                     index: '0',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 }, {}, {}, {}, {
                     index: 'TICK',
                     stat: s.large_tick_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: 'END',
                     stat: s.slider_tail_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.blue,
                 }, {}, {
                     index: 'O+',
                     stat: s.large_bonus,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.orange,
                 }, {
                     index: 'O?',
                     stat: s.small_bonus,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 });
                 break;
             }
@@ -1541,37 +1541,37 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: '150',
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: '0',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 }, {}, {}, {}, {}, {}, {}, {
                     index: 'O+',
                     stat: s.large_bonus,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: '==',
                     stat: s.small_bonus,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {
                     index: '()',
                     stat: s.ignore_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#A1A1A1',
+                    rrect_color: colorArray.gray,
                 });
                 break;
             }
@@ -1582,37 +1582,37 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: '100',
                     stat: s.large_tick_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: '50',
                     stat: s.small_tick_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {}, {
                     index: '0',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 }, {}, {}, {}, {
                     index: 'MD',
                     stat: s.small_tick_miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#A1A1A1',
+                    rrect_color: colorArray.gray,
                 }, {}, {}, {
                     index: 'BNN',
                     stat: s.large_bonus,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 });
                 break;
             }
@@ -1623,37 +1623,37 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.perfect,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.rainbow,
                 }, {
                     index: '300',
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {
                     index: '200',
                     stat: s.good,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: '100',
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#5E8AC6',
+                    rrect_color: colorArray.blue,
                 }, {
                     index: '50',
                     stat: s.meh,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#A1A1A1',
+                    rrect_color: colorArray.gray,
                 }, {
                     index: '0',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 });
                 break;
             }
@@ -1666,25 +1666,25 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: '100',
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: '50',
                     stat: s.meh,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {}, {
                     index: '0',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 });
                 break;
             }
@@ -1695,19 +1695,19 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: '150',
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: '0',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 });
                 break;
             }
@@ -1718,31 +1718,31 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: '100',
                     stat: s.large_tick_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: '50',
                     stat: s.small_tick_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {}, {
                     index: '0',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 }, {
                     index: 'MD',
                     stat: s.small_tick_miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#A1A1A1',
+                    rrect_color: colorArray.gray,
                 });
                 break;
             }
@@ -1753,37 +1753,37 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.perfect,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.rainbow,
                 }, {
                     index: '300',
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {
                     index: '200',
                     stat: s.good,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: '100',
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#5E8AC6',
+                    rrect_color: colorArray.blue,
                 }, {
                     index: '50',
                     stat: s.meh,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#A1A1A1',
+                    rrect_color: colorArray.gray,
                 }, {
                     index: '0',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 });
                 break;
             }
@@ -1885,13 +1885,22 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
 
         if (v.stat > 0) {
             const rect_width = w * v.stat / m;
-            svg += PanelDraw.Rect(x, rrect_y, Math.max(rect_width, height), height, height / 2, color);
+
+            if (Array.isArray(color)) {
+                svg += PanelDraw.LinearGradientRect(x, rrect_y, Math.max(rect_width, height), height, height / 2, color);
+            } else {
+                svg += PanelDraw.Rect(x, rrect_y, Math.max(rect_width, height), height, height / 2, color);
+            }
         }
 
         const f = (w * full_statistics[i] / m)
         const back_rrect_width = isNumber(f) ? Math.min(f, w) : w
 
-        svg += PanelDraw.Rect(x, rrect_y, back_rrect_width, height, height / 2, color, 0.1);
+        if (Array.isArray(color)) {
+            svg += PanelDraw.LinearGradientRect(x, rrect_y, back_rrect_width, height, height / 2, color, 0.1);
+        } else {
+            svg += PanelDraw.Rect(x, rrect_y, back_rrect_width, height, height / 2, color, 0.1);
+        }
     }
 
     // Deluxe
@@ -1924,10 +1933,21 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
 
             if (v.stat > 0) {
                 const rect_width = deluxe_width * v.stat / m;
-                svg += PanelDraw.Rect(deluxe_x, rrect_y, Math.max(rect_width, height), height, height / 2, color, 0.4); // 这些附加数据不要太亮
+                // 这些附加数据不要太亮
+
+                if (Array.isArray(color)) {
+                    svg += PanelDraw.LinearGradientRect(deluxe_x, rrect_y, Math.max(rect_width, height), height, height / 2, color, 0.4);
+                } else {
+                    svg += PanelDraw.Rect(deluxe_x, rrect_y, Math.max(rect_width, height), height, height / 2, color, 0.4);
+                }
             }
 
-            svg += PanelDraw.Rect(deluxe_x, rrect_y, deluxe_width, height, height / 2, color, 0.1);
+            if (Array.isArray(color)) {
+                svg += PanelDraw.LinearGradientRect(deluxe_x, rrect_y, deluxe_width, height, height / 2, color, 0.1);
+            } else {
+                svg += PanelDraw.Rect(deluxe_x, rrect_y, deluxe_width, height, height / 2, color, 0.1);
+            }
+
         }
     }
 

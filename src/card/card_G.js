@@ -1,6 +1,7 @@
 import {getImageFromV3, setImage, setSvgBody, isASCII, setTexts} from "../util/util.js";
 import {BerlinBold, getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {colorArray} from "../util/color.js";
 
 export function card_G(data = {
     background: getImageFromV3('card-default.png'),
@@ -85,32 +86,14 @@ export function card_G(data = {
 
     // 导入文字
     const label1_width = BerlinBold.getTextWidth(data?.label1, 36)
-    const label1_rrect = PanelDraw.GradientRect(20, 20, label1_width + 40, 50, 25, [
-            {
-                offset: "0%",
-                color: data?.label1_color1,
-                opacity: 1,
-            }, {
-                offset: "100%",
-                color: data?.label1_color2,
-                opacity: 1,
-            }
-        ]
+    const label1_rrect = PanelDraw.LinearGradientRect(20, 20, label1_width + 40, 50, 25,
+        [data?.label1_color1, data?.label1_color2]
     )
     const label1 = BerlinBold.getTextPath(data?.label1, 20 + (label1_width + 40) / 2, 56, 36, 'center baseline', '#fff', 1, true)
 
     const label2_width = BerlinBold.getTextWidth(data?.label2, 48)
-    const label2_rrect = PanelDraw.GradientRect(310 - label2_width - 40, 255, label2_width + 40, 50, 25, [
-            {
-                offset: "0%",
-                color: data?.label2_color1,
-                opacity: 1,
-            }, {
-                offset: "100%",
-                color: data?.label2_color2,
-                opacity: 1,
-            }
-        ]
+    const label2_rrect = PanelDraw.LinearGradientRect(310 - label2_width - 40, 255, label2_width + 40, 50, 25,
+        [data?.label2_color1, data?.label2_color2]
     )
     const label2 = BerlinBold.getTextPath(data?.label2, 310 - (label2_width + 40) / 2, 290, 48, 'center baseline', '#fff', 1, true)
 
@@ -155,30 +138,10 @@ export function card_G(data = {
         color: '#fff',
     }], 135, 445, 'left baseline')
 
-    const rrect1_top = data?.rrect1_percent > 0 ? PanelDraw.GradientRect(130, 450, Math.max(180 * (data?.rrect1_percent || 0), 10), 10, 5, [
-        {
-            offset: "0%",
-            color: data?.rrect1_color1 || "#4facfe",
-            opacity: 1,
-        }, {
-            offset: "100%",
-            color: data?.rrect1_color2 || "#00f2fe",
-            opacity: 1,
-        }
-        ], 1
-    ) : ''
-    const rrect1_base = PanelDraw.GradientRect(130, 450, 180, 10, 5, [
-        {
-            offset: "0%",
-            color: data?.rrect1_color1 || "#4facfe",
-            opacity: 1,
-        }, {
-            offset: "100%",
-            color: data?.rrect1_color2 || "#00f2fe",
-            opacity: 1,
-        }
-        ], data?.rrect1_base_opacity || 0.1
-    )
+    const rrect1_top = data?.rrect1_percent > 0 ?
+        PanelDraw.LinearGradientRect(130, 450, Math.max(180 * (data?.rrect1_percent || 0), 10), 10, 5, colorArray.cyan)
+        : ''
+    const rrect1_base = PanelDraw.LinearGradientRect(130, 450, 180, 10, 5, colorArray.cyan)
 
     const base2 = PanelDraw.Rect(30, 350, 290, 120, 20, '#46393f', 1)
 
