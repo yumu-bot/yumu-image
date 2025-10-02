@@ -241,7 +241,7 @@ export async function panel_E7(
 
     // 图片定义
     const background = getRankBackground(rank);
-    const banner = await getDiffBackground(data);
+    const banner = await getDiffBackground(data.beatmap);
 
     // 卡片定义
     const cardA2 = card_A2(await PanelGenerate.matchRating2CardA2(data.match, data.beatmap, true));
