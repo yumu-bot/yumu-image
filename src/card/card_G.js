@@ -141,7 +141,8 @@ export function card_G(data = {
     const rrect1_top = data?.rrect1_percent > 0 ?
         PanelDraw.LinearGradientRect(130, 450, Math.max(180 * (data?.rrect1_percent || 0), 10), 10, 5, colorArray.cyan)
         : ''
-    const rrect1_base = PanelDraw.LinearGradientRect(130, 450, 180, 10, 5, colorArray.cyan)
+    const rrect1_base = PanelDraw.LinearGradientRect(130, 450, 180, 10, 5, colorArray.cyan,
+        data?.rrect1_base_opacity || 0.1)
 
     const base2 = PanelDraw.Rect(30, 350, 290, 120, 20, '#46393f', 1)
 
