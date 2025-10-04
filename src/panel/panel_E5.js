@@ -796,26 +796,86 @@ const component_E7 = (
 
     const fc_pp = poppinsBold.getTextPath(fc_pp_text, 475 - 15, 128, 24, 'right baseline', '#fff')
 
-    const text_arr = [
-        {
-            font: "poppinsBold",
-            text: Math.round(data?.pp || 0).toString(),
-            size: 84,
-            color: '#fff',
-        },
-        {
-            font: "poppinsBold",
-            text: ' PP',
-            size: 48,
-            color: '#fff',
-        },
-        {
-            font: "poppinsBold",
-            text: reference_pp_text,
-            size: 24,
-            color: '#fff',
-        },
-    ]
+    const pp_text = Math.round(data?.pp || 0).toString()
+
+    const max_width = poppinsBold.getTextWidth(pp_text, 84)
+        + poppinsBold.getTextWidth(' PP', 48)
+        + poppinsBold.getTextWidth(reference_pp_text, 24)
+
+    let text_arr
+
+    if (max_width <= 440) {
+        text_arr = [
+            {
+                font: "poppinsBold",
+                text: pp_text,
+                size: 84,
+                color: '#fff',
+            },
+            {
+                font: "poppinsBold",
+                text: ' PP',
+                size: 48,
+                color: '#fff',
+            },
+            {
+                font: "poppinsBold",
+                text: reference_pp_text,
+                size: 24,
+                color: '#fff',
+            },
+        ]
+    } else {
+        const pp_round = rounds(data?.pp || 0, -4)
+
+        const mid_width = poppinsBold.getTextWidth(pp_round.integer, 84)
+            + poppinsBold.getTextWidth(pp_round.decimal + ' PP', 48)
+            + poppinsBold.getTextWidth(reference_pp_text, 24)
+
+        if (mid_width <= 440) {
+            text_arr = [
+                {
+                    font: "poppinsBold",
+                    text: pp_round.integer,
+                    size: 84,
+                    color: '#fff',
+                },
+                {
+                    font: "poppinsBold",
+                    text: pp_round.decimal + ' PP',
+                    size: 48,
+                    color: '#fff',
+                },
+                {
+                    font: "poppinsBold",
+                    text: reference_pp_text,
+                    size: 24,
+                    color: '#fff',
+                },
+            ]
+        } else {
+            text_arr = [
+                {
+                    font: "poppinsBold",
+                    text: pp_round.integer,
+                    size: 48,
+                    color: '#fff',
+                },
+                {
+                    font: "poppinsBold",
+                    text: pp_round.decimal + ' PP',
+                    size: 48,
+                    color: '#fff',
+                },
+                {
+                    font: "poppinsBold",
+                    text: reference_pp_text,
+                    size: 24,
+                    color: '#fff',
+                },
+            ]
+        }
+    }
 
     const texts = getMultipleTextPath(text_arr, 20, 88, "left baseline");
     const title = poppinsBold.getTextPath('Performance Points', 475, 28, 18, 'right baseline', '#fff')

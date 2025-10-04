@@ -1364,10 +1364,10 @@ function getFontName(font = torus) {
     else return font?.toString()
 }
 
-export /**
+/**
  * @return {number}
  */
-function getTextWidth(font = "torus", text = '', size = 24) {
+export function getTextWidth(font = "torus", text = '', size = 24) {
     const name = getFontName(font)
 
     if (name === "torus") return torus.getTextWidth(text, size);
