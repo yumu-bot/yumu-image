@@ -20,7 +20,7 @@ import {
     getKeyDifficulty,
     isNumber,
     floors,
-    floor, getFormattedTime, isEmptyArray, getDifficultyIndex, getDiffBackground, rounds, getSvgBody
+    floor, getFormattedTime, isEmptyArray, getDifficultyIndex, getDiffBackground, rounds, getSvgBody, round
 } from "../util/util.js";
 import {
     getRankBackground, getScoreTypeImage
@@ -854,6 +854,8 @@ const component_E7 = (
                 },
             ]
         } else {
+            const reference_pp_round = round(Math.round(reference_pp), 2, -1)
+
             text_arr = [
                 {
                     font: "poppinsBold",
@@ -869,7 +871,7 @@ const component_E7 = (
                 },
                 {
                     font: "poppinsBold",
-                    text: reference_pp_text,
+                    text: ' / ' + reference_pp_round + ' ' + percent_type ,
                     size: 24,
                     color: '#fff',
                 },
