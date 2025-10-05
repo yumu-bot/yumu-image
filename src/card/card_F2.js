@@ -157,14 +157,14 @@ const score2CardJ = async (score) => {
         background: background,
         type: getScoreTypeImage(score.is_lazer),
 
-        title: score.beatmapset.title || '',
-        artist: score.beatmapset.artist || '',
-        difficulty_name: getKeyDifficulty(score.beatmap) || '',
+        title: score.beatmapset.title ?? '',
+        artist: score.beatmapset.artist ?? '',
+        difficulty_name: getKeyDifficulty(score.beatmap) ?? '',
         star_rating: score.beatmap.difficulty,
         score_rank: score.rank,
         accuracy: floor(score.accuracy * 100, 2), //%
         combo: score.max_combo, //x
-        mods_arr: score.mods || [],
+        mods_arr: score.mods ?? [],
         pp: Math.round(score.pp) //pp
     }
 }

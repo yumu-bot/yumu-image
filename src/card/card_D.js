@@ -41,13 +41,13 @@ export async function card_D(data = {
 
     // 文字定义
 
-    const title_width = torus.getTextWidth(data.title || '', 36);
+    const title_width = torus.getTextWidth(data.title ?? '', 36);
     const title2_width = 415 - title_width - 10;
 
     const font_t2 = (data.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
 
     const text_title2 = (data.title_unicode && (data.title !== data.title_unicode) && title2_width > 0)
-        ? font_t2.cutStringTail(data.title_unicode || '', 18, title2_width, true) : '';
+        ? font_t2.cutStringTail(data.title_unicode ?? '', 18, title2_width, true) : '';
 
     const title =
         torus.getTextPath(

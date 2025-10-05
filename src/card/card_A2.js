@@ -87,7 +87,7 @@ export function card_A2(data = {
         420, 191.59, 'right baseline', '#fff');
 
     // 插入谱面状态
-    const status = getMapStatusImage(data.map_status || '');
+    const status = getMapStatusImage(data.map_status ?? '');
     const background = data.background || getImageFromV3('beatmap-DLfailBG.jpg');
 
     svg = setImage(svg, 0, 0, 430, 210, background, reg_background, 0.6);

@@ -128,12 +128,12 @@ export async function card_A4(song = {
     let left2_str
 
     if (isNotBlankString(song.alias)) {
-        title_str = song?.basic_info?.title || ''
+        title_str = song?.basic_info?.title ?? ''
         left1_str = song.alias
-        left2_str = song?.basic_info?.artist || ''
+        left2_str = song?.basic_info?.artist ?? ''
     } else {
-        title_str = song?.basic_info?.title || ''
-        left1_str = song?.basic_info?.artist || ''
+        title_str = song?.basic_info?.title ?? ''
+        left1_str = song?.basic_info?.artist ?? ''
     }
 
     const title_font = isASCII(title_str) ? torus : PuHuiTi

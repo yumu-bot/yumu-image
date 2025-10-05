@@ -232,8 +232,8 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, fo
         const index_text_x = x - 14;
         const stat_text_x = x + w + 12;
 
-        const index = (v.index === 0) ? '0' : (v.index || '');
-        const stat = (v.stat === 0) ? '0' : (v.stat || '');
+        const index = (v.index ?? '')
+        const stat = (v.stat ?? '')
 
         const color = v.rrect_color;
 

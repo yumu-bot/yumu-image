@@ -65,11 +65,11 @@ export async function card_A3(beatmapset = {}) {
      */
 
     const titles = getBeatMapTitlePath("torus", "PuHuiTi",
-        beatmapset?.title || '', beatmapset?.title_unicode || '', null,
+        beatmapset?.title ?? '', beatmapset?.title_unicode || '', null,
         225, 40 - 2, 70 - 2, 36, 18, 390 - 20, 'left baseline', '#fff', '#aaa');
 
     const artist = torus.getTextPath(
-        torus.cutStringTail(beatmapset?.artist || '', 24, 390 - 20),
+        torus.cutStringTail(beatmapset?.artist ?? '', 24, 390 - 20),
         225, 100, 24, 'left baseline', '#ccc'
     )
 
@@ -87,7 +87,7 @@ export async function card_A3(beatmapset = {}) {
 
     const mapper_arr = Array.from(mapper_map.values())
 
-    let mappers = beatmapset?.creator || ''
+    let mappers = beatmapset?.creator ?? ''
 
     if (isNotEmptyArray(mapper_arr)) {
         mappers += ' (' + mapper_arr.join(', ') + ')'

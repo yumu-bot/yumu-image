@@ -83,9 +83,9 @@ export async function card_A1(data = {
     // 替换图片
     svg = setImage(svg, 0, 0, 430, 210, data.background, reg_background, 0.6);
     svg = setImage(svg, 20, 20, 100, 100, data.avatar, reg_avatar, 1);
-    svg = setImage(svg, 200 + icon_offset, 70, 40, 40, data?.sub_icon1 || '', reg_sub_icon1, 1); //x +5px
-    svg = setImage(svg, 250 + icon_offset, 70, 40, 40, data?.sub_icon2 || '', reg_sub_icon2, 1); //x +5px
-    svg = setImage(svg, 70, 68, 320, 52, data?.sub_banner || '', reg_banner, 1);
+    svg = setImage(svg, 200 + icon_offset, 70, 40, 40, data?.sub_icon1 ?? '', reg_sub_icon1, 1); //x +5px
+    svg = setImage(svg, 250 + icon_offset, 70, 40, 40, data?.sub_icon2 ?? '', reg_sub_icon2, 1); //x +5px
+    svg = setImage(svg, 70, 68, 320, 52, data?.sub_banner ?? '', reg_banner, 1);
 
     return svg.toString();
 }

@@ -45,24 +45,24 @@ export async function card_D2(data = {
     const title = getMultipleTextPath(
         [{
             font: poppinsBold,
-            text: data?.title || '',
+            text: data?.title ?? '',
             size: 40,
             color: '#fff'
         }, {
             font: poppinsBold,
-            text: data?.title_m || '',
+            text: data?.title_m ?? '',
             size: 30,
             color: '#fff'
         }], 75, 77, 'center baseline', true
     )
 
-    const left_width = poppinsBold.getTextWidth(data?.left || '', 16)
+    const left_width = poppinsBold.getTextWidth(data?.left ?? '', 16)
     const left_rrect_width = Math.max(48, left_width + 20)
 
     const left = getMultipleTextPath(
         [{
             font: poppinsBold,
-            text: data?.left || '',
+            text: data?.left ?? '',
             size: 16,
             color: data?.left_color || '#fff'
         }], 6 + (left_rrect_width) / 2, 22, 'center baseline'
@@ -73,7 +73,7 @@ export async function card_D2(data = {
     const right = getMultipleTextPath(
         [{
             font: poppinsBold,
-            text: data?.right || '',
+            text: data?.right ?? '',
             size: 16,
             color: data?.right_color || '#fff'
         }], 120, 22, 'center baseline'
@@ -84,7 +84,7 @@ export async function card_D2(data = {
     const bottom_left = getMultipleTextPath(
         [{
             font: poppinsBold,
-            text: data?.bottom_left || '',
+            text: data?.bottom_left ?? '',
             size: 14,
             color: '#fff'
         }], 6, 112, 'left baseline', true
@@ -93,7 +93,7 @@ export async function card_D2(data = {
     const bottom_right = getMultipleTextPath(
         [{
             font: poppinsBold,
-            text: data?.bottom_right || '',
+            text: data?.bottom_right ?? '',
             size: 14,
             color: '#fff'
         }], 144, 112, 'right baseline', true
@@ -103,7 +103,7 @@ export async function card_D2(data = {
         [title, left, right, bottom_left, bottom_right, left_rrect, right_rrect],
         reg_text)
 
-    svg = setImage(svg, 0, 0, 150, 120, data?.background || '', reg_background, 0.8)
+    svg = setImage(svg, 0, 0, 150, 120, data?.background ?? '', reg_background, 0.8)
 
     return svg.toString()
 }

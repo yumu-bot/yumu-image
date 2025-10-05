@@ -99,8 +99,8 @@ export async function card_E1(data = {
             torus.cutStringTail(data.version, 36, 860),
             440, 714.75, 36, "center baseline", "#fff");
 
-    const mapper_and_bid = ' // ' + (data.creator || '?') + ' // b' + (data.bid || 0)
-    const artist = torus.cutStringTail(data.artist || '', 24,
+    const mapper_and_bid = ' // ' + (data.creator ?? '?') + ' // b' + (data.bid || 0)
+    const artist = torus.cutStringTail(data.artist ?? '', 24,
         860 - torus.getTextWidth(mapper_and_bid, 24), true);
     const artist_etc_text = torus.getTextPath(artist + mapper_and_bid, 440, 746.84, 24, "center baseline", "#fff");
 

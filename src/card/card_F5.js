@@ -47,8 +47,8 @@ export async function card_F5(data = {
     const ranking_b = '#' + (data?.global_rank ? data.global_rank : (data?.highest_rank ? (data.highest_rank + '^') : '0'));
     const ranking_m =
         (data?.global_rank ?
-                ' ' + (data?.country || '') + ' #' + (data?.country_rank || '0') :
-                ' (' + (moment(data?.highest_date, "X").format("YYYY/MM/DD") || '?') + ') ' + (data?.country || '')
+                ' ' + (data?.country ?? '') + ' #' + (data?.country_rank ?? '0') :
+                ' (' + (moment(data?.highest_date, "X").format("YYYY/MM/DD") ?? '?') + ') ' + (data?.country ?? '')
         );
 
     const ranking_text = torus.get2SizeTextPath(ranking_b, ranking_m, 36, 24, 880, 44.754, 'right baseline', '#fff', '#aaa');

@@ -533,11 +533,11 @@ export async function card_C(data = {
 
     async function implantRoundLabelC1(data, x, y, maxWidth, isWin, scoreTextColor) {
         const c1 = data ? await label_C1({
-                avatar: data.player_avatar || '',
-                name: data.player_name || 'Unknown',
+                avatar: data.player_avatar ?? '',
+                name: data.player_name ?? 'Unknown',
                 mods_arr: data.player_mods || [{ acronym: '', color: 'none' } ],
-                score: data.player_score || '',
-                rank: data.player_rank || '',
+                score: data.player_score ?? '',
+                rank: data.player_rank ?? '',
                 maxWidth: maxWidth,
                 isWin: isWin,
                 scoreTextColor: scoreTextColor,
