@@ -227,20 +227,22 @@ export async function panel_J2(data = {
 
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
-    svg = setSvgBody(svg, 40, 330, componentJ1, reg_component);
-    svg = setSvgBody(svg, 40, 740, componentJ2, reg_component);
-    svg = setSvgBody(svg, 550, 330, componentJ3, reg_component);
-    svg = setSvgBody(svg, 970, 330, componentJ4, reg_component);
-    svg = setSvgBody(svg, 550, 740, componentJ5, reg_component);
-    svg = setSvgBody(svg, 1390, 330, componentJ6, reg_component);
-    svg = setSvgBody(svg, 1390, 530, componentJ7, reg_component);
-    svg = setSvgBody(svg, 1390, 740, componentJ8, reg_component);
+
+    const bodyJ1 = getSvgBody(40, 330, componentJ1)
+    const bodyJ2 = getSvgBody(40, 740, componentJ2)
+    const bodyJ3 = getSvgBody(550, 330, componentJ3)
+    const bodyJ4 = getSvgBody(970, 330, componentJ4)
+    const bodyJ5 = getSvgBody(550, 740, componentJ5)
+    const bodyJ6 = getSvgBody(1390, 330, componentJ6)
+    const bodyJ7 = getSvgBody(1390, 530, componentJ7)
+    const bodyJ8 = getSvgBody(1390, 740, componentJ8)
 
     // 插入图片和部件
     const background = pp2UserBG(user.pp || 0);
     svg = setCustomBanner(svg, reg_banner, user?.profile?.banner);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 
+    svg = setTexts(svg, [bodyJ1, bodyJ2, bodyJ3, bodyJ4, bodyJ5, bodyJ6, bodyJ7, bodyJ8], reg_component);
 
     return svg.toString()
 }

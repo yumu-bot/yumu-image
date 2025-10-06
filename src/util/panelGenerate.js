@@ -962,7 +962,7 @@ export const PanelGenerate = {
         const right2 = 'MID: ' + (match_id || '0')
 
         const red_wins = (team_point_map?.red || 0)
-        const blue_wins = (team_point_map?.cyan || 0)
+        const blue_wins = (team_point_map?.blue || 0)
 
         const right3b = is_team_vs ? (red_wins + blue_wins > 0 ? (red_wins + ' : ' + blue_wins) : 'TeamVS') : 'h2h'
 

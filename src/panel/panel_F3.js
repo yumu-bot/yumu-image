@@ -2,7 +2,7 @@ import {
     exportJPEG, getAvatar, getFormattedTime, getImageFromV3,
     getNowTimeStamp,
     getPanelNameSVG, setImage,
-    setSvgBody, isEmptyArray, isNotNull, readTemplate,
+    isEmptyArray, isNotNull, readTemplate,
     setText, setTexts, floor, floors, getSvgBody, getMapBackground, thenPush,
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
@@ -44,7 +44,7 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_F3(
+async function panel_F3(
     data = {
         match: {
             match: {
@@ -159,20 +159,21 @@ export async function panel_F3(
     const is_team_vs = (round.team_type === 'team-vs' || round.team_type === '')
 
     // 导入比赛简介卡（A2卡
-    const f = card_A2(await PanelGenerate.matchRating2CardA2(match, round.beatmap, false)); // await PanelGenerate.roundInfo2CardA2(round, stat.name, team_point_map, stat.id, data.index)
-    svg = setSvgBody(svg, 40, 40, f, reg_maincard);
+    const f = card_A2(await PanelGenerate.matchRating2CardA2(match, round.beatmap, false));
+
+    const info_svg = getSvgBody(40, 40, f)
 
     // 导入谱面（A2卡
     const b = card_A2(await PanelGenerate.matchBeatMap2CardA2(round?.beatmap));
-    svg = setSvgBody(svg, 1450, 40, b, reg_maincard);
+
+    const beatmap_svg = getSvgBody(1450, 40, b);
+
+    svg = setTexts(svg, [info_svg, beatmap_svg], reg_maincard)
 
     // 导入身体卡片
-    svg = setSvgBody(svg, 0, 330, drawScoreBanner(round, is_team_vs), reg_bodycard)
+    const score_banner = drawScoreBanner(round, is_team_vs)
 
-    /*
-    svg = implantSvgBody(svg, 40, 490, await card_P2(round.scores[0], round.beatmap.max_combo, round.scores[0].score), reg_bodycard)
-
-     */
+    const score_banner_svg = getSvgBody(0, 330, score_banner)
 
     const reds = round.scores.filter(s => {
         return s.match.team === 'red'
@@ -181,7 +182,11 @@ export async function panel_F3(
         return s.match.team === 'blue'
     })
 
-    svg = setSvgBody(svg, 0, 450, await drawBodyCard(is_team_vs, reds, blues, round.scores, round.beatmap.max_combo), reg_index)
+    const body_card = await drawBodyCard(is_team_vs, reds, blues, round.scores, round.beatmap.max_combo)
+
+    const body_card_svg = getSvgBody(0, 450, body_card)
+
+    svg = setTexts(svg, [score_banner_svg, body_card_svg], reg_bodycard)
 
     // 插入图片和部件（新方法
     svg = setImage(svg, 0, 0, 1920, 320, await getMapBackground(round?.beatmap, 'cover'), reg_banner, 0.8);

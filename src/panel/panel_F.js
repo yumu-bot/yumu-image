@@ -117,6 +117,8 @@ export async function panel_F(
         return isNotNull(value.game) && isNotEmptyArray(value.game.scores)
     })
 
+    // console.log(games[2].game.scores);
+
     const events = games.slice((data?.skip_ignore_map?.skip || 0), games.length - (data?.skip_ignore_map?.ignore || 0))
 
     let red_wins_before = 0;
@@ -256,7 +258,7 @@ async function event2CardC(
             wins_team_blue_before: blue_before,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
         },
         red: red_arr,
-        cyan: blue_arr,
+        blue: blue_arr,
         none: none_arr,
     }
 }

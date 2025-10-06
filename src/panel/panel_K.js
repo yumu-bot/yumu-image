@@ -1,6 +1,6 @@
 import {
     exportJPEG,
-    getImageFromV3, getPanelNameSVG,
+    getImageFromV3, getPanelNameSVG, getSvgBody,
     setImage,
     setSvgBody, setText,
     setTexts,
@@ -133,6 +133,8 @@ export async function panel_K(data = {
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
     svg = setSvgBody(svg, 40, 40, cardA1, reg_main);
 
+    let string_body = ''
+
     // K 定义，或是 A1
     if (is_vs) {
         const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.vs_user));
@@ -154,7 +156,7 @@ export async function panel_K(data = {
             const x = i % 2
             const y = Math.floor(i / 2)
 
-            svg = setSvgBody(svg, 1370 + x * 255, 350 + y * 138, k, reg_body)
+            string_body += getSvgBody(1370 + x * 255, 350 + y * 138, k)
         }
     }
 
@@ -225,7 +227,7 @@ export async function panel_K(data = {
             const card_order = [0, 5, 4, 1, 2, 3]
             const k = card_order[j]
 
-            svg = setSvgBody(svg, 1350, 350 + j * 115, card_B1v[k], reg_body);
+            string_body += getSvgBody(1350, 350 + j * 115, card_B1v[k]);
         }
     }
 
@@ -233,7 +235,7 @@ export async function panel_K(data = {
         const card_order = [0, 5, 4, 1, 2, 3]
         const k = card_order[j]
 
-        svg = setSvgBody(svg, 40, 350 + j * 115, card_B1s[k], reg_body);
+        string_body += getSvgBody(40, 350 + j * 115, card_B1s[k]);
     }
 
     const rank_ov = getRankFromValue(data?.total);
@@ -270,8 +272,9 @@ export async function panel_K(data = {
         }));
     }
 
-    svg = setSvgBody(svg, 630, 860, card_B2s[0], reg_body);
-    svg = setSvgBody(svg, 970, 860, card_B2s[1], reg_body);
+    string_body += getSvgBody(630, 860, card_B2s[0]) + getSvgBody(970, 860, card_B2s[1])
+
+    svg = setText(svg, string_body, reg_body)
 
     // 画六边形和其他
     const hexagon = getImageFromV3('object-hexagon.png');

@@ -436,7 +436,10 @@ export async function getMapBackground(beatmap = {}, cover = 'cover') {
             case 'card': url = covers.card; break;
             case 'card@2x': url = covers['card@2x']; break;
             case 'raw': if (covers?.list != null) {
-                url = covers.list.replaceAll('list', 'raw'); break;
+                url = covers.list
+                    .replaceAll('@2x', '')
+                    .replaceAll('list', 'raw');
+                break;
             } else {
                 url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/raw.jpg'
                 use_cache = false

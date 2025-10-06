@@ -7,7 +7,7 @@ import {
     isNotEmptyArray,
     readTemplate,
     setText,
-    setTexts, floors, thenPush, getSvgBody, isASCII, floor
+    setTexts, floors, thenPush, getSvgBody, isASCII, floor, getImage
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -429,17 +429,17 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
 
     const equivalent = poppinsBold.getTextPath(equivalent_text, 280, 20, 14, 'right baseline', '#fff')
 
-    svg = setImage(svg, 10 + 7, 30, 40, 25, getImageFromV3('Maimai', 'object-note-tap.png'), reg_icon, 1)
-    svg = setImage(svg, 10 + 7 + 54, 30, 40, 25, getImageFromV3('Maimai', 'object-note-hold.png'), reg_icon, 1)
-    svg = setImage(svg, 10 + 7 + 108, 30, 40, 25, getImageFromV3('Maimai', 'object-note-slide.png'), reg_icon, 1)
-    svg = setImage(svg, 10 + 7 + 162, 30, 40, 25, getImageFromV3('Maimai', 'object-note-touch.png'), reg_icon, 1)
-    svg = setImage(svg, 10 + 7 + 216, 30, 40, 25, getImageFromV3('Maimai', 'object-note-break.png'), reg_icon, 1)
+    const tap_image = getImage(10 + 7, 30, 40, 25, getImageFromV3('Maimai', 'object-note-tap.png'))
+    const hold_image = getImage(10 + 7 + 54, 30, 40, 25, getImageFromV3('Maimai', 'object-note-hold.png'))
+    const slide_image = getImage(10 + 7 + 108, 30, 40, 25, getImageFromV3('Maimai', 'object-note-slide.png'))
+    const touch_image = getImage(10 + 7 + 162, 30, 40, 25, getImageFromV3('Maimai', 'object-note-touch.png'))
+    const break_image = getImage(10 + 7 + 216, 30, 40, 25, getImageFromV3('Maimai', 'object-note-break.png'))
 
-    svg = setImage(svg, 10 + 3 + 3.5, 95 + 3, 47 - 7, 25 - 6, getImageFromV3('Maimai', 'object-score-sp2.png'), reg_icon, 1)
-    svg = setImage(svg, 10 + 3 + 54, 95, 47, 25, getImageFromV3('Maimai', 'object-score-ss2.png'), reg_icon, 1)
-    svg = setImage(svg, 10 + 3 + 108, 95, 47, 25, getImageFromV3('Maimai', 'object-score-ssp2.png'), reg_icon, 1)
-    svg = setImage(svg, 10 + 3 + 162, 95, 47, 25, getImageFromV3('Maimai', 'object-score-sss2.png'), reg_icon, 1)
-    svg = setImage(svg, 10 + 3 + 216, 95, 47, 25, getImageFromV3('Maimai', 'object-score-sssp2.png'), reg_icon, 1)
+    const sp_image = getImage(10 + 3 + 3.5, 95 + 3, 47 - 7, 25 - 6, getImageFromV3('Maimai', 'object-score-sp2.png'))
+    const s2_image = getImage(10 + 3 + 54, 95, 47, 25, getImageFromV3('Maimai', 'object-score-ss2.png'))
+    const s2p_image = getImage(10 + 3 + 108, 95, 47, 25, getImageFromV3('Maimai', 'object-score-ssp2.png'))
+    const s3_image = getImage(10 + 3 + 162, 95, 47, 25, getImageFromV3('Maimai', 'object-score-sss2.png'))
+    const s3p_image = getImage(10 + 3 + 216, 95, 47, 25, getImageFromV3('Maimai', 'object-score-sssp2.png'))
 
     const s3p_loss = poppinsBold.getTextPath('<' + getApproximateGreatString((1.01 - 0.98) * base_score_sum / 0.2),
         37, 137, 14, 'center baseline', '#fff')
@@ -465,11 +465,16 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     const break_2000 = poppinsBold.getTextPath(break_2000_text,
         62, 137 + 55, 14, 'left baseline', '#fff')
 
-    svg = setImage(svg, 10 + 3, 145, 47, 25, getImageFromV3('Maimai', 'object-note-break-perfect.png'), reg_icon, 1)
-    svg = setImage(svg, 10 + 3, 175, 47, 25, getImageFromV3('Maimai', 'object-note-break-great.png'), reg_icon, 1)
+    const break_pf_image = getImage(10 + 3, 145, 47, 25, getImageFromV3('Maimai', 'object-note-break-perfect.png'))
+    const break_gr_image = getImage(10 + 3, 175, 47, 25, getImageFromV3('Maimai', 'object-note-break-great.png'))
 
-    svg = setImage(svg, 35 + Math.round(poppinsBold.getTextWidth(break_2550_text, 14)) + 30, 145, 47, 25, getImageFromV3('Maimai', 'object-note-tap-great.png'), reg_icon, 1)
-    svg = setImage(svg, 35 + Math.round(poppinsBold.getTextWidth(break_2000_text, 14)) + 30, 175, 47, 25, getImageFromV3('Maimai', 'object-note-tap-great.png'), reg_icon, 1)
+    const tap_gr1_image = getImage(35 + Math.round(poppinsBold.getTextWidth(break_2550_text, 14)) + 30, 145, 47, 25, getImageFromV3('Maimai', 'object-note-tap-great.png'))
+    const tap_gr2_image = getImage(35 + Math.round(poppinsBold.getTextWidth(break_2000_text, 14)) + 30, 175, 47, 25, getImageFromV3('Maimai', 'object-note-tap-great.png'))
+
+    svg = setTexts(svg, [tap_image, hold_image, slide_image, touch_image, break_image,
+        sp_image, s2_image, s2p_image, s3_image, s3p_image,
+        break_pf_image, break_gr_image, tap_gr1_image, tap_gr2_image
+    ], reg_icon)
 
     const tap_count = poppinsBold.getTextPath((note?.tap || 0).toString(),
         37, 72, 14, 'center baseline', '#fff')

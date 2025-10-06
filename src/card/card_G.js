@@ -1,4 +1,4 @@
-import {getImageFromV3, setImage, setSvgBody, isASCII, setTexts} from "../util/util.js";
+import {getImageFromV3, setImage, setSvgBody, isASCII, setTexts, isNotEmptyString, getImage} from "../util/util.js";
 import {BerlinBold, getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {colorArray} from "../util/color.js";
@@ -107,7 +107,6 @@ export function card_G(data = {
             270 - right_font.getTextWidth(data?.left, right_size)),
         305, 325, right_size, 'right baseline', '#fff')
 
-    //
     const title = poppinsBold.getTextPath(data?.title, 310, 370, 14, 'right baseline', '#fff')
     const main = getMultipleTextPath([{
         font: "poppinsBold",
@@ -138,29 +137,39 @@ export function card_G(data = {
         color: '#fff',
     }], 135, 445, 'left baseline')
 
+    const color_array = (isNotEmptyString(data?.rrect1_color1) && isNotEmptyString(data?.rrect1_color2)) ?
+        [data?.rrect1_color1, data?.rrect1_color2] :
+        colorArray.cyan
+
     const rrect1_top = data?.rrect1_percent > 0 ?
-        PanelDraw.LinearGradientRect(130, 450, Math.max(180 * (data?.rrect1_percent || 0), 10), 10, 5, colorArray.cyan)
+        PanelDraw.LinearGradientRect(130, 450, Math.max(180 * (data?.rrect1_percent || 0), 10), 10, 5, color_array)
         : ''
-    const rrect1_base = PanelDraw.LinearGradientRect(130, 450, 180, 10, 5, colorArray.cyan,
+    const rrect1_base = PanelDraw.LinearGradientRect(130, 450, 180, 10, 5, color_array,
         data?.rrect1_base_opacity || 0.1)
 
     const base2 = PanelDraw.Rect(30, 350, 290, 120, 20, '#46393f', 1)
 
-    svg = setTexts(svg, [label1, label2, left, right, title, main, additional], reg_text)
-    svg = setTexts(svg, [label1_rrect, label2_rrect, rrect1_top, rrect1_base], reg_component)
-
-    svg = setImage(svg, 60, 60, 230, 230, data?.overlay, reg_cover, 0.6)
-    svg = setImage(svg, 60, 60, 230, 230, data?.cover, reg_cover, 1)
-    svg = setImage(svg, 30, 250, 90, 60, data?.type, reg_component, 1)
-    svg = setImage(svg, 42, 424, 36, 40, data?.icon1, reg_component, 1)
-    svg = setImage(svg, 84, 424, 36, 40, data?.icon2, reg_component, 1)
-    svg = setImage(svg, 232, 420, 56, 30, data?.icon3, reg_component, 1)
-
-    svg = setTexts(svg, [base1, base2], reg_base)
-
+    svg = setImage(svg, 0, 0, 350, 710, data?.background, reg_background, 0.6, 'xMidYMid slice', true)
     svg = setSvgBody(svg, 310, 445, data?.stars, reg_text)
     svg = setSvgBody(svg, 30, 480, data?.component, reg_component)
-    svg = setImage(svg, 0, 0, 350, 710, data?.background, reg_background, 0.6, 'xMidYMid slice', true)
+
+    svg = setTexts(svg, [label1, label2, left, right, title, main, additional], reg_text)
+
+    const overlay_image = getImage(60, 60, 230, 230, data?.overlay, 0.6)
+    const cover_image = getImage(60, 60, 230, 230, data?.cover)
+
+    svg = setTexts(svg, [overlay_image, cover_image], reg_cover)
+
+    const type_image = getImage(30, 250, 90, 60, data?.type)
+    const icon1_image = getImage(42, 424, 36, 40, data?.icon1)
+    const icon2_image = getImage(84, 424, 36, 40, data?.icon2)
+    const icon3_image = getImage(232, 420, 56, 30, data?.icon3)
+
+    svg = setTexts(svg, [label1_rrect, label2_rrect, rrect1_top, rrect1_base,
+        type_image, icon1_image, icon2_image, icon3_image
+    ], reg_component)
+
+    svg = setTexts(svg, [base1, base2], reg_base)
 
     return svg.toString()
 }
