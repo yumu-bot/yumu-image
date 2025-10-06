@@ -804,7 +804,7 @@ const component_E7 = (
 
     let text_arr
 
-    if (max_width <= 440) {
+    if (max_width <= 465) {
         text_arr = [
             {
                 font: "poppinsBold",
@@ -832,7 +832,7 @@ const component_E7 = (
             + poppinsBold.getTextWidth(pp_round.decimal + ' PP', 48)
             + poppinsBold.getTextWidth(reference_pp_text, 24)
 
-        if (mid_width <= 440) {
+        if (mid_width <= 465) {
             text_arr = [
                 {
                     font: "poppinsBold",
@@ -860,7 +860,7 @@ const component_E7 = (
                 {
                     font: "poppinsBold",
                     text: pp_round.integer,
-                    size: 48,
+                    size: 84,
                     color: '#fff',
                 },
                 {
