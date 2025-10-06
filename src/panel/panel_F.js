@@ -117,8 +117,6 @@ export async function panel_F(
         return isNotNull(value.game) && isNotEmptyArray(value.game.scores)
     })
 
-    // console.log(games[2].game.scores);
-
     const events = games.slice((data?.skip_ignore_map?.skip || 0), games.length - (data?.skip_ignore_map?.ignore || 0))
 
     let red_wins_before = 0;
