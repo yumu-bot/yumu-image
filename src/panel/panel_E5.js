@@ -1385,14 +1385,21 @@ const PanelEGenerate = {
         /**
          * @type {number}
          */
-        const max_combo = ((score.ruleset_id === 3) ?
-            score?.maximum_statistics?.perfect + (score?.maximum_statistics?.legacy_combo_increase || 0) :
-            score?.beatmap?.max_combo) || 0
+        let max_combo;
+
+        if (score?.ruleset_id === 3) {
+            max_combo = (score?.maximum_statistics?.perfect ?? 0) + (score?.maximum_statistics?.legacy_combo_increase ?? 0)
+        } else if (score.beatmap.convert === true && score?.ruleset_id === 2) {
+            // 老 bug，standard 转 catch 的谱面，转盘会被当成 1 个连击，但其实没有连击
+            max_combo = (score?.beatmap?.max_combo ?? 0) - (score?.beatmap?.count_spinners ?? 0)
+        } else {
+            max_combo = (score?.beatmap?.max_combo ?? 0)
+        }
 
         return {
             accuracy: score?.legacy_accuracy,
             combo: score?.max_combo || 0,
-            max_combo: max_combo || 0,
+            max_combo: max_combo,
         }
     },
 
