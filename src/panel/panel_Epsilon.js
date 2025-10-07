@@ -66,12 +66,12 @@ export async function panel_Epsilon(data = {
 
     const is_supporter = user.supporter === true
 
-    const group = has_group ? user.groups[0] : null
+    const group = user?.groups?.[0]
     const name_color = group?.colour || '#000'
 
     const image = await getAvatar(user?.avatar_url, true);
 
-    const name_width = TahomaRegular.getTextWidth(user?.username || 'Unknown', 60)
+    const name_width = TahomaRegular.getTextWidth(user?.username ?? 'Unknown', 60)
 
     let name_size
 
@@ -82,12 +82,12 @@ export async function panel_Epsilon(data = {
     }
 
     const name = TahomaRegular.getTextPath(
-        TahomaRegular.cutStringTail(user?.username || 'Unknown', name_size, 460, true),
+        TahomaRegular.cutStringTail(user?.username ?? 'Unknown', name_size, 460, true),
         230, 435, name_size, 'center baseline', name_color
     );
-    const country = await getFlagPath(user?.country?.code, is_supporter ? 95 : 207.5, (has_group ? 510 : 465) - 3, 30)
+    const country = await getFlagPath(user?.country_code ?? user?.country?.code, is_supporter ? 95 : 207.5, (has_group ? 510 : 465) - 3, 30)
 
-    const group_name_text = (group?.name || '')
+    const group_name_text = (group?.name ?? '')
         .replaceAll("(Probationary)", "(Prob)")
         .replaceAll("Nominators", "Nominator")
     const group_name = TahomaBold.getTextPath(group_name_text, 230, 482, 28, 'center baseline', '#000')
