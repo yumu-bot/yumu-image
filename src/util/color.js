@@ -3,9 +3,16 @@ import {getModName} from "./mod.js";
 
 // 颜色数组，方便生成带有色彩渐变属性的图块
 export const colorArray = {
+    deep_orange: ['#EA68A2', '#EC6841'],
+
     orange: ['#FF544F', '#FAD126'],
+
+    // 更加有氛围感的橘黄色
+    amber: ['#F19149', '#F7B551'],
     yellow: ['#FCAC46', '#FEDC45'],
     green: ['#5EDC5B', '#CAF881'],
+    indigo: ['#12B4B1', '#00B7EE'],
+    turquoise: ['#12B4B1', '#31B16C'],
     red: ['#F86F64', '#FD5392'],
 
     // 这个是深蓝，如果要选天蓝色，请改成 cyan
@@ -15,9 +22,12 @@ export const colorArray = {
     magenta: ['#B6359C', '#EF0A6A'],
     purple: ['#7776FF', '#AE2CF1'],
 
+    deep_gray: ['#777', '#aaa'],
     gray: ['#aaa', '#ccc'],
     rainbow: ['#EC6841', '#F19149', '#FFF45C',
         '#31B16C', '#00B7EE', '#00F2FE'],
+
+    iridescent: ['#EC6841', '#F19149', '#FFF45C', '#00B7EE'],
 }
 
 // Yumu Panel v0.5 颜色自定义，默认的色相全是 342（这也是巧克力面板的原色

@@ -99,7 +99,7 @@ export async function panel_MA2(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const cardA1 = await card_A1(await PanelGenerate.chunithmPlayer2CardA1(data.user));
+    const cardA1 = await card_A1(await PanelGenerate.chuPlayer2CardA1(data.user));
 
     const standard = data?.scores || []
     const deluxe = data?.scores_latest || []

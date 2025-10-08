@@ -72,7 +72,7 @@ export async function panel_MI(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const cardA1 = await card_A1(await PanelGenerate.maimaiPlayer2CardA1(data.user));
+    const cardA1 = await card_A1(await PanelGenerate.maiPlayer2CardA1(data.user));
 
     const scores = data?.score || []
 

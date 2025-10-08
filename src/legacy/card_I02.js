@@ -6,7 +6,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiDXStarColor} from "../util/maimai.js";
 
 // maimai / CHUNITHM 多成绩面板
-export function card_I2(data = {
+export function card_I02(data = {
     background: '',
     cover: '',
     rank: '',

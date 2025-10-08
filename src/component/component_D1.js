@@ -9,7 +9,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {getMascotName, getMascotPath} from "../util/mascotBanner.js";
 
 
-export async function card_F1(data = {
+export async function component_D1(data = {
     mode: 'osu',
     level_current: 90,
     level_progress: 24,

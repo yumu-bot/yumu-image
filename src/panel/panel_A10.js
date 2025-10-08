@@ -7,7 +7,7 @@ import {
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_H3} from "../card/card_H3.js";
+import {card_C2} from "../card/card_C2.js";
 
 export async function router(req, res) {
     try {
@@ -109,7 +109,7 @@ export async function panel_A10(
         const x = i % 2
         const y = Math.floor(i / 2)
 
-        const member = await card_H3(await PanelGenerate.badge2CardH3(v, parseInt(i) + 1))
+        const member = await card_C2(await PanelGenerate.badge2CardC2(v, parseInt(i) + 1))
 
         svg = setSvgBody(svg, 40 + 940 * x, 330 + 150 * y, member, reg_body)
     }

@@ -1,7 +1,7 @@
 import {getMapStatusImage, setImage, isASCII, setTexts} from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 
-export function card_O2(data = {
+export function component_IM2(data = {
     background: '',
     map_status: '',
 

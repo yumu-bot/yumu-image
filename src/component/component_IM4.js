@@ -1,7 +1,7 @@
 import {getImageFromV3, isBlankString, readNetImage, setImage, setText} from "../util/util.js";
 import {torus} from "../util/font.js";
 
-export async function card_O4(data = {
+export async function component_IM4(data = {
     type: '',
     approval: '',
     title: '',

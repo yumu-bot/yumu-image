@@ -3,7 +3,7 @@ import {BerlinBold, getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/fon
 import {PanelDraw} from "../util/panelDraw.js";
 import {colorArray} from "../util/color.js";
 
-export function card_G(data = {
+export function card_MS(data = {
     background: getImageFromV3('card-default.png'),
     cover: getImageFromV3('Maimai', 'Cover', '00000.png'),
     overlay: '', // 覆盖层

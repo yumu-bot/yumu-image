@@ -16,7 +16,7 @@ import {
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_Alpha} from "../card/card_Alpha.js";
+import {component_MD} from "../component/component_MD.js";
 
 export async function router(req, res) {
     try {
@@ -132,7 +132,7 @@ export async function panel_A9(
         const markdown = data.description
             .replaceAll("<br />", " ")
             .replaceAll(new RegExp("<\/?[\\s\\S]*?\/?>", 'g'), '') // 必须用懒惰，不然等死吧
-        const alpha = (markdown.length > 0) ? await card_Alpha(markdown, 1370, 0) : {}
+        const alpha = (markdown.length > 0) ? await component_MD(markdown, 1370, 0) : {}
 
         /*
         const image = `<image width="1410" height="${}" transform="translate(510 320)" xlink:href="${alpha.image}" style="opacity: 1" vector-effect="non-scaling-stroke"/>`

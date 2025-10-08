@@ -6,7 +6,7 @@ import {
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {card_N2} from "../card/card_N2.js";
+import {card_A4} from "../card/card_A4.js";
 
 export async function router(req, res) {
     try {
@@ -71,7 +71,7 @@ export async function panel_A3(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A2卡
-    const beatmap_generated = await PanelGenerate.beatMap2CardA2(data.beatmap);
+    const beatmap_generated = await PanelGenerate.beatmap2CardA2(data.beatmap);
     const beatmap_a2 = card_A2(beatmap_generated);
     svg = setSvgBody(svg, 40, 40, beatmap_a2, reg_beatmap_a2);
 
@@ -94,7 +94,7 @@ export async function panel_A3(data = {
             compare_score = data.scores[i0].total_score
         }
 
-        const f = card_N2({
+        const f = card_A4({
             score: data.scores[i],
             score_rank: (parseInt(i) + (data?.start || 1)) || 0,
             compare_score: compare_score,

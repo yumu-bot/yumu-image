@@ -1589,37 +1589,6 @@ export function label_J8(data = {
             color: number_color,
         }], 445, 52, 'right baseline')
 
-    /*
-    const number_arr = [{
-        font: "poppinsBold",
-        text: (data?.data_b || '') + ' ',
-        size: data?.data_b_size || 36,
-        color: number_color,
-    }, {
-        font: "poppinsBold",
-        text: (data?.data_m || '') + ' ',
-        size: data?.data_m_size || 24,
-        color: number_color,
-    }, {
-        font: "poppinsBold",
-        text: (data?.data_l || ''),
-        size: data?.data_l_size || 18,
-        color: number_color,
-    }]
-
-    const number_data = getMultipleTextPath(number_arr, 60, 32 - 2, "left baseline")
-
-     */
-
-    /*
-    const remark = poppinsBold.getTextPath(data?.remark, 450, 30, 14, "right baseline", '#fff');
-
-    const bar_min = poppinsBold.getTextPath(data?.bar_min_text || data?.bar_min?.toString(), 60, 65, 14, "left baseline", '#666');
-    const bar_mid = poppinsBold.getTextPath(data?.bar_mid_text || data?.bar_mid?.toString(), 255, 65, 14, "center baseline", '#666');
-    const bar_max = poppinsBold.getTextPath(data?.bar_max_text || data?.bar_max?.toString(), 450, 65, 14, "right baseline", '#666');
-
-     */
-
     const bar_width = Math.max(10, (progress_after - progress_before) * 390);
 
     const bar = PanelDraw.Rect(60 + 390 * progress_before, 58, bar_width, 10, 5, data?.bar_color || '#fff')

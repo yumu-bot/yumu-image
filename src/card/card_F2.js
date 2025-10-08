@@ -1,170 +1,134 @@
-import {
-    getImageFromV3, setImage,
-    setSvgBody, setText, getKeyDifficulty, floor, getMapBackground
-} from "../util/util.js";
-import {torus} from "../util/font.js";
-import {card_J} from "./card_J.js";
+import {floors, getAvatar, getImageFromV3, setImage, setText, setTexts} from "../util/util.js";
+import {getRankBackground} from "../util/star.js";
+import {getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getScoreTypeImage} from "../util/star.js";
+import {getUserRankColor} from "../util/color.js";
+import {drawLazerMods} from "../util/mod.js";
 
-export async function card_F2(data = {
-    recent: [
-        {
-            accuracy: 0.9242601246105919,
-            mods: [ 'HD' ],
-            passed: true,
-            perfect: false,
-            pp: 15.7001,
-            rank: 'B',
-            replay: true,
-            score: 2647816,
-            statistics: {
-                count_50: 5,
-                count_100: 70,
-                count_300: 767,
-                count_geki: 149,
-                count_katu: 49,
-                count_miss: 14
-            },
-            user: {
-                id: 9794030,
-                avatar: 'https://a.ppy.sh/9794030?1689442698.jpeg',
-                pm_only: false,
-                avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
-                default_group: 'default',
-                is_active: true,
-                is_bot: false,
-                is_deleted: false,
-                is_online: false,
-                is_supporter: false,
-                last_visit: [Array],
-                pm_friends_only: false,
-                username: 'SIyuyuko',
-                country_code: 'CN'
-            },
-            best_id: 4518169991,
-            max_combo: 207,
-            user_id: 9794030,
-            created_at: [ 2023, 10, 8, 13, 11, 20 ],
-            id: 23509231244,
-            mode: 'OSU',
-            mode_int: 0,
-            beatmap: {
-                id: 4044160,
-                mode: 'osu',
-                status: 'ranked',
-                version: "Calvaria's Another",
-                ar: 9,
-                cs: 5,
-                bpm: 110,
-                convert: false,
-                passcount: 160,
-                playcount: 1306,
-                ranked: 1,
-                url: 'https://osu.ppy.sh/beatmaps/4044160',
-                beatMapFailedCount: 0,
-                beatMapRetryCount: 0,
-                beatMapRating: 0,
-                beatmapset_id: 1751172,
-                difficulty_rating: 5.1,
-                mode_int: 0,
-                total_length: 229,
-                hit_length: 203,
-                user_id: 12381096,
-                accuracy: 8,
-                drain: 5,
-                is_scoreable: true,
-                last_updated: '2023-09-15T03:11:55Z',
-                checksum: '6eb6623607646fd874f63ffe1bbe0329',
-                count_sliders: 429,
-                count_spinners: 0,
-                count_circles: 427
-            },
-            beatmapset: {
-                video: false,
-                fromDatabases: false,
-                mapperUID: 11839745,
-                sid: 1751172,
-                mapperName: 'VoiceCore',
-                ranked: true,
-                rating: 0,
-                id: 1751172,
-                user_id: 11839745,
-                artist: "Snail's House",
-                artist_unicode: "Snail's House",
-                title: 'Biscuit Funk',
-                title_unicode: 'Biscuit Funk',
-                creator: 'VoiceCore',
-                favourite_count: 60,
-                nsfw: false,
-                play_count: 12245,
-                preview_url: '//b.ppy.sh/preview/1751172.mp3',
-                source: '',
-                status: 'ranked',
-                covers: [Object],
-                spotlight: false
-            },
-            create_at_str: '2023-10-08T13:11:20Z'
-        },
-    ],
-}) {
+export async function card_F2(match_score = {}, max_combo = 0, compare_score = 0) {
     // 读取模板
-    let svg = `
-          <g id="Base_CF2">
+    let svg = `   
+        <defs>
+        <clipPath id="clippath-CP1-1">
+            <circle cx="215" cy="205" r="150" style="fill: none;"/>
+        </clipPath>
+        <clipPath id="clippath-CP1-2">
+            <rect x="0" y="0" rx="20" ry="20" width="430" height="550" style="fill: none;"/>
+        </clipPath>
+        <filter id="inset-shadow-CP1-1" height="150%" width="150%" x="-25%" y="-25%" filterUnits="userSpaceOnUse">
+            <feFlood flood-color="#000"/>
+            <feComposite in2="SourceGraphic" operator="out"/>
+            <feMorphology operator="dilate" radius="10" />
+            <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
+            <feComposite in2="SourceGraphic" operator="atop"/>
+        </filter>
+        <filter id="blur-CP1-1" height="110%" width="110%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
+            <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
+        </filter>
+        </defs>
+          <g id="Base_CP1">
+            <rect x="0" y="0" rx="20" ry="20" width="430" height="550" style="fill: #382E32;"/>
+            <g style="clip-path: url(#clippath-CP1-2);" filter="url(#blur-CP1-1)">
+            </g>
           </g>
-          <g id="Card_J">
+          <g id="Shadow_CP1" style="clip-path: url(#clippath-CP1-1);" filter="url(#inset-shadow-CP1-1)">
+            <circle cx="215" cy="205" r="150" style="fill: #fff;"/>
+            <g style="clip-path: url(#clippath-CP1-1);">
+            </g>
           </g>
-          <g id="Text_CF2">
+          <g id="Mod_CP1">
+          </g>
+          <g id="Text_CP1">
           </g>`;
 
-    // 路径定义
-    const reg_base = /(?<=<g id="Base_CF2">)/;
-    const reg_card_j = /(?<=<g id="Card_J">)/;
-    const reg_text = /(?<=<g id="Text_CF2">)/;
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CP1-2\);" filter="url\(#blur-CP1-1\)">)/
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CP1-1\);">)/
+    const reg_text = /(?<=<g id="Text_CP1">)/
+    const reg_mod = /(?<=<g id="Mod_CP1">)/
 
-    // 导入J卡
-    let card_Js = [];
-    for (const j of data.recent) {
-        card_Js.push(await card_J(await score2CardJ(j)));
-    }
+    svg = setImage(svg, 65, 55, 300, 300, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar, 1)
 
-    if (card_Js < 1) {
-        svg = setImage(svg, 697.5 - 620, 405 - 330, 185, 185, getImageFromV3('sticker_qiqi_fallen.png'), reg_card_j, 1);
-    }
+    svg = setImage(svg, 0, 0, 430, 550, getRankBackground(match_score?.rank, match_score?.match?.pass), reg_background, 0.6)
 
-    for (const i in card_Js) {
-        svg = setSvgBody(svg, 15, 50 + i * 95, card_Js[i], reg_card_j);
-    }
+    const name = poppinsBold.getTextPath(poppinsBold.cutStringTail(match_score?.user?.username, 48, 430), 430 / 2, 426, 48, 'center baseline', '#fff')
 
-    // 导入文本
-    const recent_title = torus.getTextPath('Recents', 15, 35.795, 30, 'left baseline', '#fff');
+    const ranking = PanelDraw.Rect(20, 26, 84, 48, 20, getUserRankColor(match_score?.ranking))
+        + getMultipleTextPath([{
+            font: poppinsBold,
+            text: (match_score?.ranking || 0).toString(),
+            size: 40,
+            color: '#fff',
+        }, {
+            font: poppinsBold,
+            text: getOrdinal(match_score?.ranking || 0),
+            size: 30,
+            color: '#fff',
+        },
+        ], 62, 64, 'center baseline')
 
-    svg = setText(svg, recent_title, reg_text);
+    const rank = getImageFromV3(`object-score-${match_score?.rank}2.png`)
 
-    // 导入基础矩形
-    const base_rrect = PanelDraw.Rect(0, 0, 340, 335, 20, '#382e32');
+    svg = setImage(svg, 330, 10, 90, 90, rank, reg_text, 1)
 
-    svg = setText(svg, base_rrect, reg_base);
+    const judge_data = getMatchScoreAdvancedJudge(match_score, max_combo)
 
-    return svg;
+    const judge = PanelDraw.Rect(20, 332, 84, 40, 20, judge_data.color)
+        + poppinsBold.getTextPath(judge_data.judge, 62, 362, 30, 'center baseline', '#fff')
+
+    const miss_count = poppinsBold.getTextPath(match_score?.statistics?.miss || 0, 366, 362, 30, 'right baseline', '#fff')
+
+    svg = setImage(svg, 372, 336, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
+
+    const score_score = floors(match_score?.score || match_score?.legacy_total_score || 0, -4)
+
+    const score = getMultipleTextPath([
+        {
+            font: poppinsBold,
+            text: score_score.integer,
+            size: 56,
+            color: '#fff',
+        }, {
+            font: poppinsBold,
+            text: score_score.decimal,
+            size: 40,
+            color: '#fff',
+        },
+    ], 430 / 2, 490, 'center baseline')
+
+    const delta_data = getDeltaScore(match_score?.score || match_score?.legacy_total_score || 0, compare_score || 0)
+    const delta_score = floors(delta_data.delta, -4)
+
+    const delta = getMultipleTextPath([
+        {
+            font: poppinsBold,
+            text: delta_data.sign + delta_score.integer,
+            size: 30,
+            color: delta_data.color,
+        }, {
+            font: poppinsBold,
+            text: delta_score.decimal,
+            size: 24,
+            color: delta_data.color,
+        },
+    ], 430 / 2, 530, 'center baseline')
+
+    const mods = (match_score?.mods || [])
+        .filter(it => it.acronym !== "NF")
+
+    const mods_path = drawLazerMods(mods, 430 / 2, 332 - 4, 46, 230, 'center', 5, true).svg
+
+    svg = setText(svg, mods_path, reg_mod)
+
+    svg = setTexts(svg, [name, ranking, judge, miss_count, score, delta], reg_text)
+
+    return svg.toString()
 }
 
-const score2CardJ = async (score) => {
-    const background = await getMapBackground(score, 'cover');
 
+function getDeltaScore(score = 0, compare = 0) {
     return {
-        cover: background,
-        background: background,
-        type: getScoreTypeImage(score.is_lazer),
-
-        title: score.beatmapset.title ?? '',
-        artist: score.beatmapset.artist ?? '',
-        difficulty_name: getKeyDifficulty(score.beatmap) ?? '',
-        star_rating: score.beatmap.difficulty,
-        score_rank: score.rank,
-        accuracy: floor(score.accuracy * 100, 2), //%
-        combo: score.max_combo, //x
-        mods_arr: score.mods ?? [],
-        pp: Math.round(score.pp) //pp
+        sign: (score < compare) ? '-' : '+',
+        delta: Math.abs(score - compare),
+        color: (score < compare) ? '#ffcdd2' : '#c2e5c3',
     }
 }

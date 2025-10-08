@@ -1,190 +1,179 @@
 import {
-    setImage, readTemplate,
-    setText,
-    setTexts, isASCII, isNotEmptyString
+    setImage,
+    readTemplate,
+    setText, setTexts, floors, isHexColor
 } from "../util/util.js";
-import {torus, PuHuiTi, torusBold, getMultipleTextPath} from "../util/font.js";
-import {PanelDraw} from "../util/panelDraw.js";
-import {drawLazerMods} from "../util/mod.js";
+import {PuHuiTi, torus} from "../util/font.js";
+import {getColorInSpectrum, getModColor} from "../util/color.js";
 
-export function card_H(data = {
+export async function card_H(data = {
     background: '',
-    cover: '',
-    type: '',
+    title: 'Xin Mei Sang Zui Jiu',
+    title_unicode: '新妹桑醉酒',
+    artist: 'Fushimi Rio',
+    mapper: 'Fia',
+    difficulty: 'OWC HD2',
+    bid: '1146381',
+    mod: 'NM',
+    mod_color: null,
+    cs: 4.2,
+    ar: 10.3,
+    od: 11,
+    hp: 6,
+    star_rating: 8.88,
+    mode_int: 0,
 
-    title: '',
-    title2: '',
-    left1: '',
-    left2: '',
-    index_b: '',
-    index_m: '',
-    index_l: '', // 小字
-    index_b_size: 48,
-    index_m_size: 36,
-    index_l_size: 24,
-    label1: '',
-    label2: '',
-    label3: '',
-    label4: '',
-    label5: '',
-    mods_arr: [],
-
-    color_title2: '#aaa',
-    color_right: '#fff',
-    color_left: '#fff',
-    color_index: '#fff',
-    color_label1: '',
-    color_label2: '',
-    color_label3: '',
-    color_label4: '',
-    color_label5: '',
-    color_label12: '#fff',
-    color_left12: '#fff',
-
-    font_title2: 'torus',
-    font_label4: 'torus',
+    font_title2: 'PuHuiTi'
 
 }) {
-    // 读取模板
-    let svg = readTemplate('template/Card_H.svg');
+    //读取面板
+    let svg = readTemplate("template/Card_D.svg");
 
     // 路径定义
-    const reg_text = /(?<=<g id="Text">)/;
-    const reg_mod = /(?<=<g id="Mods">)/;
-    const reg_label = /(?<=<g id="Label">)/;
-    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CH-1\);">)/;
-    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CH-2\);">)/;
-    const reg_color_right = '${color_right}';
-    const reg_color_left = '${color_left}';
+    let reg_text = /(?<=<g id="Text">)/
+    let reg_background = /(?<=<g style="clip-path: url\(#clippath-CD-1\);">)/
+    let reg_mod_color = '${mod_color}';
+    let reg_sd_text = /(?<=<g id="SDText">)/
 
-    // 插入模组
-    const mods_arr = data.mods_arr || [{acronym: ''}]
-
-    // 160 刚好可以展示单模组，并且收起多模组
-    const mods_data =
-        drawLazerMods(mods_arr, 710, 24, 60, 160, 'right', 6, true, false)
-
-    svg = setText(svg, mods_data.svg, reg_mod);
-
-    /*
-    const mods_arr = data.mods_arr || [{acronym: ''}]
-    const mods_arr_length = mods_arr.length;
-
-    let multiplier
-    if (mods_arr_length <= 2 && mods_arr_length > 0) {
-        multiplier = 2
-    } else if (mods_arr_length > 2) {
-        multiplier = 1
-    }
-
-    mods_arr.forEach((mod, i) => {
-        svg = setText(svg,
-            getModPath(mod, 620 - multiplier * i * 20, 24, 90, 42, true), reg_mod);
-    });
-
-     */
-
-    // 插入四个小标签
-    const color_title2 = data.color_title2 ?? 'none';
-    const color_label1 = data.color_label1 ?? 'none';
-    const color_label2 = data.color_label2 ?? 'none';
-    const color_label3 = data.color_label3 ?? 'none';
-    const color_label4 = data.color_label4 ?? 'none';
-    const color_label5 = data.color_label5 ?? 'none';
-
-    const font_l4 = (data?.font_label4 === 'PuHuiTi') ? PuHuiTi : torus;
-    const font_t2 = (data?.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
-
-    const label1_width = torus.getTextWidth(data?.label1 ?? '', 18) + 16;
-    const label2_width = torus.getTextWidth(data?.label2 ?? '', 18) + 16;
-    const label3_width = torus.getTextWidth(data?.label3 ?? '', 24) + 30;
-    const label4_width = font_l4.getTextWidth(data?.label4 ?? '', 24) + 30;
-    const label5_width = torus.getTextWidth(data?.label5 ?? '', 18) + 16;
-
-    const label1 = torusBold.getTextPath(data?.label1 ?? '', 38, 23.877, 18, 'left baseline', data?.color_label12 || '#fff');
-    const label2 = torusBold.getTextPath(data?.label2 ?? '', 38, 97.877, 18, 'left baseline', data?.color_label12 || '#fff');
-    const label3 = torus.getTextPath(data?.label3 ?? '', 710 - label3_width / 2, 34.836, 24, 'center baseline', '#fff');
-    const label4 = font_l4.getTextPath(data?.label4 ?? '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
-    const label5 = torusBold.getTextPath(data?.label5 ?? '', 177, 97.877, 18, 'right baseline', data?.color_label12 || '#fff');
-
-    const index = getMultipleTextPath([
-        {
-            font: torus,
-            text: data?.index_b,
-            size: data?.index_b_size || 48,
-            color: data?.color_index || 'none',
-        }, {
-            font: torus,
-            text: data?.index_m,
-            size: data?.index_m_size || 36,
-            color: data?.color_index || 'none',
-        },
-    ], 815, 73.672, 'center baseline') +
-        torus.getTextPath(data?.index_l, 815, 33.672,
-            data?.index_l_size || 24, 'center baseline', data?.color_index || 'none')
-
-    const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 8, label1_width, 20, 10, color_label1) : '';
-    const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 82, label2_width, 20, 10, color_label2) : '';
-    const rrect_label3 = data.label3 ? PanelDraw.Rect(710 - label3_width, 10, label3_width, 34, 17, color_label3) : '';
-    const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label4_width, 34, 17, color_label4) : '';
-    const rrect_label5 = data.label5 ? PanelDraw.Rect(185 - label5_width, 82, label5_width, 20, 10, color_label5) : '';
-
-    svg = setText(svg, data?.color_right || 'none', reg_color_right);
-    svg = setText(svg, data?.color_left || 'none', reg_color_left);
-
-    svg = setImage(svg, 140, 4, 45, 30, data?.type || '', reg_label, 1);
-
-    // 计算标题的长度
-    let title_max_width = 500;
-    let left_max_width = 500;
-    let mods_width = mods_data.width;
-
-    title_max_width -= (Math.max(mods_width, label3_width - 10)); //一般来说就第三个标签最长了
-    left_max_width -= mods_width;
-
-    let str_title = data.title ?? ''
-    let str_title2 = data.title2 ?? ''
-
-    const is_title_not_equal = data.title !== data.title2
-
-    const is_title2_prefix_not_ascii = isNotEmptyString(str_title2) && !isASCII(str_title2.substring(0, 3))
-
-    let title_width = Math.min(title_max_width, torus.getTextWidth(str_title, 36));
-    let title2_width = title_max_width - title_width - 10;
-
-    const title2_prefix_width = font_t2.getTextWidth(str_title2.substring(0, 3) + '...', 18);
-
-    if (is_title_not_equal && is_title2_prefix_not_ascii && title2_width < title2_prefix_width) {
-        title_width = title_max_width - title2_prefix_width - 20;
-        title2_width = title2_prefix_width + 10
-    }
+    let reg_sd_circle1 = '${sd_circle1}';
+    let reg_sd_circle2 = '${sd_circle2}';
+    let reg_sd_circle3 = '${sd_circle3}';
 
     // 文字定义
-    const color_left12 = data.color_left12 ?? '#fff';
 
-    const text_title = torus.cutStringTail(str_title, 36, title_width);
-    title_width = torus.getTextWidth(text_title, 36)
+    const title_width = torus.getTextWidth(data.title ?? '', 36);
+    const title2_width = 415 - title_width - 10;
 
-    const text_left1 = torus.cutStringTail(data.left1 ?? '', 24, left_max_width);
-    const text_left2 = torus.cutStringTail(data.left2 ?? '', 24, left_max_width);
+    const font_t2 = (data.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
 
-    const text_title2 = (is_title_not_equal && title2_width > 0)
-        ? font_t2.cutStringTail(str_title2, 18, title2_width, true) : '';
+    const text_title2 = (data.title_unicode && (data.title !== data.title_unicode) && title2_width > 0)
+        ? font_t2.cutStringTail(data.title_unicode ?? '', 18, title2_width, true) : '';
 
-    const title = torus.getTextPath(text_title, 210, 34.754, 36, 'left baseline', '#fff');
-    const title2 = font_t2.getTextPath(text_title2, 210 + 10 + title_width,
-        (data.font_title2 === 'PuHuiTi') ? 33 : 34.754, 18, 'left baseline', color_title2);
-    const left1 = torus.getTextPath(text_left1, 210, 66.836, 24, 'left baseline', color_left12);
-    const left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', color_left12);
+    const title =
+        torus.getTextPath(
+            torus.cutStringTail(data.title,36,420),
+            20, 33.754, 36, 'left baseline', "#fff");
+    const title2 =
+        font_t2.getTextPath(text_title2, 20 + 10 + title_width,
+        (data.font_title2 === 'PuHuiTi') ? 32 : 33.754, 18, 'left baseline', "#bbb");
 
-    // 插入文字
-    svg = setTexts(svg, [title, title2, left1, left2, index], reg_text);
+    let mapper = data.mapper;
+    let artist = torus.cutStringTail(
+        data.artist,
+        24,
+        360 - torus.getTextWidth(' // ' + mapper, 24))
 
-    svg = setTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
+    let text_artist_and_mapper =
+        torus.getTextPath(artist + ' // ' + mapper,20, 65.836, 24, 'left baseline', "#bbb");
+
+    let bid = data.bid || 0;
+    let difficulty_name =
+        torus.cutStringTail(data.difficulty,
+            24,
+            360 - torus.getTextWidth('[] - b' + bid, 24));
+
+    let info = '[' + difficulty_name + '] - b' + bid;
+    let text_info =
+        torus.getTextPath(info, 20, 96.836, 24, 'left baseline', "#bbb");
+
+    let text_mod =
+        torus.getTextPath(data.mod, 500, 30.754, 36, 'center baseline', "#fff");
+
+    const star_number = floors(data.star_rating, 1)
+
+    let text_star_b = star_number.integer
+    let text_star_m = star_number.decimal + '*';
+    let star_m_width = torus.getTextWidth(text_star_m,36);
+    let text_star =
+        torus.getTextPath(text_star_b, 550 - star_m_width, 96.59, 60, "right baseline", "#fff") +
+        torus.getTextPath(text_star_m, 550, 96.59, 36, "right baseline", "#fff")
+
+    let text_mod_color;
+
+    if (isHexColor(data.mod_color)) {
+        text_mod_color = data.mod_color
+    } else {
+        text_mod_color = getModColor(data.mod)
+    }
+
+    // 谱面四维
+    let cs_arr = [1,2,3,3.5,4,4.2,4.6,5,5.3,5.8,6.2,6.5,7];
+    let ar_arr = [4,6,8,8.5,9,9.3,9.7,10,10.1,10.3,10.5,10.8,11];
+    let od_arr = [3,5,7,7.5,8,8.3,8.7,9,9.1,9.6,10,10.5,11];
+    let hp_arr = [1,2,3,4,5,6,7,8,8.6,9.3,10,10.5,11];
+    let cs_color = getColorInSpectrum(data.cs, cs_arr, 1);
+    let ar_color = getColorInSpectrum(data.ar, ar_arr, 1);
+    let od_color = getColorInSpectrum(data.od, od_arr, 1);
+    let hp_color = getColorInSpectrum(data.hp, hp_arr, 1);
+    let sd_name1 = '';
+    let sd_name2 = '';
+    let sd_name3 = '';
+    let sd_circle1 = 'none';
+    let sd_circle2 = 'none';
+    let sd_circle3 = 'none';
+
+    switch (data.mode_int) {
+        case 0 : {
+            sd_name1 = 'CS';
+            sd_name2 = 'AR';
+            sd_name3 = 'OD';
+            sd_circle1 = cs_color;
+            sd_circle2 = ar_color;
+            sd_circle3 = od_color;
+        } break;
+        case 1 :{
+            sd_name1 = 'OD';
+            sd_name2 = 'HP';
+            sd_circle1 = od_color;
+            sd_circle2 = hp_color;
+        } break;
+        case 2 : {
+            sd_name1 = 'CS';
+            sd_name2 = 'AR';
+            sd_name3 = 'HP';
+            sd_circle1 = cs_color;
+            sd_circle2 = ar_color;
+            sd_circle3 = hp_color;
+        } break;
+        case 3 : {
+            sd_name2 = 'OD';
+            sd_name3 = 'HP';
+            sd_circle2 = od_color;
+            sd_circle3 = hp_color;
+        } break;
+    }
+
+    //这里所有物件均向左平移 5px了
+    let text_sd1 = torus.getTextPath(sd_name1,
+        385.5,
+        77.571,
+        14,
+        'center baseline',
+        '#fff')
+    let text_sd2 = torus.getTextPath(sd_name2,
+        406.5,
+        77.571,
+        14,
+        'center baseline',
+        '#fff')
+    let text_sd3 = torus.getTextPath(sd_name3,
+        427.5,
+        77.571,
+        14,
+        'center baseline',
+        '#fff')
+
+    svg = setTexts(svg, [text_sd1, text_sd2, text_sd3], reg_sd_text);
+    svg = setText(svg, sd_circle1, reg_sd_circle1);
+    svg = setText(svg, sd_circle2, reg_sd_circle2);
+    svg = setText(svg, sd_circle3, reg_sd_circle3);
+
+    // 替换文字
+    svg = setTexts(svg, [title, title2, text_artist_and_mapper, text_info, text_mod, text_star], reg_text);
+    svg = setText(svg, text_mod_color, reg_mod_color);
 
     // 插入图片
-    svg = data.cover ? setImage(svg, 20, 0, 176, 110, data.cover, reg_avatar, 1) : svg;
-    svg = data.background ? setImage(svg, 0, 0, 900, 110, data.background, reg_background, 0.2) : svg;
+    svg = setImage(svg, 0, 0, 560, 110, data.background, reg_background, 0.4);
 
     return svg.toString();
 }

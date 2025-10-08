@@ -7,7 +7,7 @@ import {
     setCustomBanner, getPanelHeight, getNowTimeStamp, getMatchDuration, isNotNull, isNotEmptyArray, getSvgBody, thenPush
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
-import {card_C} from "../card/card_C.js";
+import {card_F} from "../card/card_F.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {matchAnyMods} from "../util/mod.js";
 
@@ -146,7 +146,7 @@ export async function panel_F(
 
     await Promise.allSettled(
         param_Cs.map((p) => {
-            return card_C(p)
+            return card_F(p)
         })
     ).then(results => thenPush(results, card_Cs))
 

@@ -159,31 +159,18 @@ export async function panel_D2(data = {
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
-    const string_components =
-        getSvgBody(0, 0, componentD4) +
-        getSvgBody(40, 330, componentD1) +
-        getSvgBody(40, 620, componentD2) +
-        getSvgBody(40, 940, componentD3) +
-        getSvgBody(1390, 330, componentD5) +
-        getSvgBody(1390, 530, componentD6) +
-        getSvgBody(1390, 650, componentD7) +
-        getSvgBody(1390, 770, componentD8)
+    const string_components = [
+        getSvgBody(0, 0, componentD4),
+        getSvgBody(40, 330, componentD1),
+        getSvgBody(40, 620, componentD2),
+        getSvgBody(40, 940, componentD3),
+        getSvgBody(1390, 330, componentD5),
+        getSvgBody(1390, 530, componentD6),
+        getSvgBody(1390, 650, componentD7),
+        getSvgBody(1390, 770, componentD8),
+    ]
 
-    svg = setText(svg, string_components, reg_component)
-
-    /*
-
-    svg = setSvgBody(svg, 40, 330, componentD1, reg_component);
-    svg = setSvgBody(svg, 40, 620, componentD2, reg_component);
-    svg = setSvgBody(svg, 40, 940, componentD3, reg_component);
-    svg = setSvgBody(svg, 1390, 330, componentD5, reg_component);
-    svg = setSvgBody(svg, 1390, 530, componentD6, reg_component);
-    svg = setSvgBody(svg, 1390, 650, componentD7, reg_component);
-    svg = setSvgBody(svg, 1390, 770, componentD8, reg_component);
-    svg = setText(svg, componentD4, reg_component);
-
-     */
-
+    svg = setTexts(svg, string_components, reg_component)
 
     // 面板文字
     const day_str = isNumber(days) ? (days >= 2 ?
@@ -279,9 +266,9 @@ const component_D1 = (
         hide: hide
     });
 
-    svg = setSvgBody(svg, 20, 50, label_pc, reg)
-    svg = setSvgBody(svg, 20, 50 + 75, label_tth, reg)
-    svg = setSvgBody(svg, 20, 50 + 150, label_pt, reg)
+    const pc_body = getSvgBody(20, 50, label_pc)
+    const tth_body = getSvgBody(20, 50 + 75, label_tth)
+    const pt_body = getSvgBody(20, 50 + 150, label_pt)
 
     const join = poppinsBold.getTextPath('Join: ' +
         moment(data?.join, 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY-MM-DD')
@@ -290,7 +277,7 @@ const component_D1 = (
         + ']',
         470, 27, 18, 'right baseline', '#fff')
 
-    svg = setText(svg, join, reg)
+    svg = setTexts(svg, [pc_body, tth_body, pt_body, join], reg)
 
     if (!hide) {
         const title = poppinsBold.getTextPath('Main Statistics', 15, 27, 18, 'left baseline', '#fff', 1)
@@ -316,13 +303,16 @@ const component_D2 = (
 
     const d2s = data?.scores || []
 
+    let string_d2s = ''
+
     for (let i = 0; i < d2s.length; i++) {
         const x = i % 3
         const y = Math.floor(i / 3)
 
-        svg = setSvgBody(svg, 10 + x * 160, 40 + y * 130,
-            d2s[i], reg)
+        string_d2s += getSvgBody(10 + x * 160, 40 + y * 130, d2s[i])
     }
+
+    svg = setText(svg, string_d2s, reg)
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Bests', 15, 27, 18, 'left baseline', '#fff', 1)
@@ -795,7 +785,7 @@ const PanelDGenerate = {
     },
 
     scores2componentD2: async (scores = [], has_custom_panel = false, hue) => {
-        return await PanelGenerate.score2CardD(scores, has_custom_panel, hue)
+        return await PanelGenerate.score2CardH2(scores, has_custom_panel, hue)
     },
 
     user2componentD3: (user, history_user, has_custom_panel = false, hue) => {

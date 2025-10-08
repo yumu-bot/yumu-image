@@ -6,7 +6,7 @@ import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import moment from "moment";
 
-export async function card_F5(data = {
+export async function component_D5(data = {
     mode: "osu",
     country: 'CN',
     country_rank: 1234,

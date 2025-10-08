@@ -5,7 +5,7 @@ import {
     setText, thenPush, getSvgBody
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
-import {card_M} from "../card/card_M.js";
+import {card_A5} from "../card/card_A5.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 
 export async function router(req, res) {
@@ -340,7 +340,7 @@ export async function panel_A2(data = {
         for (let i = 0; i < result_count; i++) {
             const v = beatmap_arr[i]
 
-            const m = await card_M(v);
+            const m = await card_A5(v);
 
             const a2 = card_A2(
                 await PanelGenerate.searchMap2CardA2(v, i + 1)

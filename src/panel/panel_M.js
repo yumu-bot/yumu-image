@@ -5,10 +5,10 @@ import {
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_O1} from "../card/card_O1.js";
-import {card_O2} from "../card/card_O2.js";
-import {card_O3} from "../card/card_O3.js";
-import {card_O4} from "../card/card_O4.js";
+import {component_IM1} from "../component/component_IM1.js";
+import {component_IM2} from "../component/component_IM2.js";
+import {component_IM3} from "../component/component_IM3.js";
+import {component_IM4} from "../component/component_IM4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
@@ -183,7 +183,7 @@ export async function panel_M(data = {
     const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user));
 
     // 导入O1
-    const cardO1 = card_O1(await PanelGenerate.user2CardO1(data.user));
+    const cardO1 = component_IM1(await PanelGenerate.user2CardO1(data.user));
 
     // 导入O2
 
@@ -194,13 +194,13 @@ export async function panel_M(data = {
 
     await Promise.allSettled(
         populars.map((v) => {
-            return PanelGenerate.beatmap2CardO2(v)
+            return PanelGenerate.beatmap2ComponentIM(v)
         })
     ).then(results => thenPush(results, params))
 
     await Promise.allSettled(
         params.map((v) => {
-            return card_O2(v)
+            return component_IM2(v)
         })
     ).then(results => thenPush(results, cardO2s))
 
@@ -293,9 +293,9 @@ export async function panel_M(data = {
     }
 
     let cardO3s = [];
-    cardO3s.push(card_O3({title: 'Total', number: genre_sum, color: '#AAA'}));
+    cardO3s.push(component_IM3({title: 'Total', number: genre_sum, color: '#AAA'}));
     for (let i = 0; i < 10; i++) {
-        cardO3s.push(card_O3({
+        cardO3s.push(component_IM3({
             title: genre_name[sortKey[i]], number: sortValue[i], color: genre_color[sortKey[i]]
         }));
     }
@@ -322,7 +322,7 @@ export async function panel_M(data = {
         recent_activity.slice(0, Math.min(recent_activity.length, 7)).map((v) => {
             const delta_time = getTimeDifference(v.created_at, 'YYYY-MM-DD[T]HH:mm:ss[Z]', moment());
 
-            return card_O4({
+            return component_IM4({
                 type: v.type,
                 approval: v.approval,
                 title: v.beatmapset.title,
@@ -350,8 +350,8 @@ export async function panel_M(data = {
     const O2s = []
 
     await Promise.allSettled([
-        PanelGenerate.beatmap2CardO2(data.most_recent_ranked_beatmap),
-        PanelGenerate.beatmap2CardO2(data.most_recent_ranked_guest_diff),
+        PanelGenerate.beatmap2ComponentIM(data.most_recent_ranked_beatmap),
+        PanelGenerate.beatmap2ComponentIM(data.most_recent_ranked_guest_diff),
     ]).then(results => thenPush(results, O2s))
 
     let o2g = eval(O2s[1])
@@ -362,8 +362,8 @@ export async function panel_M(data = {
         o2g = '';
     }
 
-    const cardO2h = card_O2(O2s[0]);
-    const cardO2g = card_O2(o2g);
+    const cardO2h = component_IM2(O2s[0]);
+    const cardO2g = component_IM2(o2g);
 
     const stringO2hg = getSvgBody(1120, 745, cardO2h) + getSvgBody(1120, 890, cardO2g)
 

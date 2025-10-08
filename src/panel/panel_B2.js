@@ -107,7 +107,7 @@ export async function panel_B2(data = {
     svg = setTexts(svg, [panel_name, total_path], reg_index);
 
     // A2定义
-    const cardA2 = card_A2(await PanelGenerate.beatMap2CardA2(data.beatmap));
+    const cardA2 = card_A2(await PanelGenerate.beatmap2CardA2(data.beatmap));
     svg = setSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 获取卡片

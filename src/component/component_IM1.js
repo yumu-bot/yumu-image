@@ -1,8 +1,8 @@
 import {getImageFromV3, setImage, setSvgBody, setText} from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_O} from "../component/label.js";
+import {label_O} from "./label.js";
 
-export function card_O1(data = {
+export function component_IM1(data = {
     background: getImageFromV3('card-default.png'),
     avatar: getImageFromV3('avatar-guest.png'),
 

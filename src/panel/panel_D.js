@@ -6,11 +6,11 @@ import {
     readTemplate, setCustomBanner,
     setText, isNumber,
 } from "../util/util.js";
-import {card_F1N} from "../card/card_F1N.js";
+import {component_D1N} from "../component/component_D1N.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_F5} from "../card/card_F5.js";
-import {card_F6N} from "../card/card_F6N.js";
-import {card_F7} from "../card/card_F7.js";
+import {component_D5} from "../component/component_D5.js";
+import {component_D6N} from "../component/component_D6N.js";
+import {component_D7} from "../component/component_D7.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {pp2UserBG} from "../util/mascotBanner.js";
 
@@ -82,10 +82,10 @@ export async function panel_D(data = {
 
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser));
 
-    const cardF5 = await card_F5(user2CardF5(data.user, mode, data["bp-times"]));
-    const cardF6N = await card_F6N(user2CardF6N(data.user, data.historyUser, mode, data.bonus_pp));
-    const cardF7 = await card_F7(user2CardF7(data.user, mode));
-    const cardF1N = await card_F1N(user2CardF1N(data.user, data.historyUser, mode));
+    const cardF5 = await component_D5(user2CardF5(data.user, mode, data["bp-times"]));
+    const cardF6N = await component_D6N(user2CardF6N(data.user, data.historyUser, mode, data.bonus_pp));
+    const cardF7 = await component_D7(user2CardF7(data.user, mode));
+    const cardF1N = await component_D1N(user2CardF1N(data.user, data.historyUser, mode));
 
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);

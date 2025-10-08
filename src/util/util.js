@@ -12,6 +12,7 @@ import PNGProvider from '../svg-to-image/PNGProvider.js';
 import {getRandom, getRandomBannerPath} from "./mascotBanner.js";
 import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
+import {PanelDraw} from "./panelDraw.js";
 
 const exportsJPEG = new API(new JPEGProvider());
 const exportsPNG = new API(new PNGProvider());
@@ -742,8 +743,19 @@ export function setImage(base = '', x = 0, y = 0, w = 100, h = 100, image = '', 
     return base.replace(reg, replace);
 }
 
+/**
+ * 也可以用 PanelDraw 的 Image
+ * @param x
+ * @param y
+ * @param w
+ * @param h
+ * @param image
+ * @param opacity
+ * @param ratio
+ * @return {string}
+ */
 export function getImage(x = 0, y = 0, w = 100, h = 100, image = '', opacity = 1, ratio = "xMidYMid slice") {
-    return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: ${opacity}" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`
+    return PanelDraw.Image(x, y, w, h, image, opacity, ratio);
 }
 
 /**

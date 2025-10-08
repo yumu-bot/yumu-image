@@ -1,573 +1,190 @@
 import {
-    setImage,
-    setSvgBody, readTemplate,
-    setText, setTexts,
+    setImage, readTemplate,
+    setText,
+    setTexts, isASCII, isNotEmptyString
 } from "../util/util.js";
-import {torus, torusBold, torusRegular} from "../util/font.js";
-import {label_C1, label_C3} from "../component/label.js";
+import {torus, PuHuiTi, torusBold, getMultipleTextPath} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {drawLazerMods} from "../util/mod.js";
 
-export async function card_C(data = {
-    statistics: {
-        is_team_vs: true, // TFF表示平局，当然，这个很少见
-        is_team_red_win: true, //如果不是team vs，这个值默认false
-        is_team_blue_win: true, //如果不是team vs，这个值默认false
-        score_team_red: 1144770,
-        score_team_blue: 1146381,
-        score_total: 2567413,
-        wins_team_red_before: 5, //这局之前红赢了几局？从0开始，不是 team vs 默认0
-        wins_team_blue_before: 5,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
-    },
-    red: [{
-        player_name: 'na-gi', //妈的 为什么get match不给用户名啊
-        player_avatar: '',
-        player_score: 464277,
-        player_mods: [],
-        player_rank: 1, //一局比赛里的分数排名，1v1或者team都一样
-    }, {
-        player_name: '- Rainbow -',
-        player_avatar: '',
-        player_score: 412096,
-        player_mods: [],
-        player_rank: 2
-    }, {
-        player_name: 'Guozi on osu',
-        player_avatar: '',
-        player_score: 268397,
-        player_mods: [],
-        player_rank: 6,
-    }],
-    blue: [{
-        player_name: 'Greystrip_VoV',
-        player_avatar: '',
-        player_score: 403437,
-        player_mods: ['HD'],
-        player_rank: 3,
-    }, {
-        player_name: 'Mars New',
-        player_avatar: '',
-        player_score: 371937,
-        player_mods: [],
-        player_rank: 4,
-    }, {
-        player_name: 'No Rank',
-        player_avatar: '',
-        player_score: 371007,
-        player_mods: [],
-        player_rank: 5,
-    }],
-    none: [{
-        player_name: 'No Rank',
-        player_avatar: '',
-        player_score: 371007,
-        player_mods: [],
-        player_rank: 1,
-    }]
+export function card_C(data = {
+    background: '',
+    cover: '',
+    type: '',
+
+    title: '',
+    title2: '',
+    left1: '',
+    left2: '',
+    index_b: '',
+    index_m: '',
+    index_l: '', // 小字
+    index_b_size: 48,
+    index_m_size: 36,
+    index_l_size: 24,
+    label1: '',
+    label2: '',
+    label3: '',
+    label4: '',
+    label5: '',
+    mods_arr: [],
+
+    color_title2: '#aaa',
+    color_right: '#fff',
+    color_left: '#fff',
+    color_index: '#fff',
+    color_label1: '',
+    color_label2: '',
+    color_label3: '',
+    color_label4: '',
+    color_label5: '',
+    color_label12: '#fff',
+    color_left12: '#fff',
+
+    font_title2: 'torus',
+    font_label4: 'torus',
+
 }) {
-    //读取面板
-    let svg = readTemplate("template/Card_C.svg");
+    // 读取模板
+    let svg = readTemplate('template/Card_H.svg');
 
     // 路径定义
-    let reg_text = /(?<=<g id="Text">)/;
-    let reg_bodycard = /(?<=<g id="BodyCard">)/;
-    let reg_redpoint = /(?<=<g id="RedPoint">)/;
-    let reg_bluepoint = /(?<=<g id="BluePoint">)/;
-    let reg_pluspoint = /(?<=<g id="PlusPoint">)/;
-    let reg_scorebar = /(?<=<g id="ScoreBar">)/;
-    let reg_backcolor = /(?<=<g id="BackColor">)/;
-    let reg_h2hfirstavatar = /(?<=<g style="clip-path: url\(#clippath-CC-1\);">)/;
-
-    // 色板定义
-    const red_color_list = ['#D56E74', '#CB3554', '#801D34', '#601025',
-        '#61003F', '#811554', '#CA2C82', '#D46DA1',
-        '#925C9F', '#792984', '#4F1056', '#3B0041',
-        '#110043', '#1D105A', '#302787', '#59509E']
-    const blue_color_list = ['#55B1EF', '#009DEA', '#006899', '#004E74',
-        '#002D59', '#0D3F75', '#1B62B2', '#587EC2',
-        '#5867AF', '#28479B', '#182B66', '#0B1C4D',
-        '#110043', '#1D105A', '#302787', '#59509E']
-    const none_color_list = ['#fff', '#aaa', '#ccc', '#888',
-        '#eee', '#999', '#bbb', '#777',
-        '#fff', '#aaa', '#ccc', '#888',
-        '#eee', '#999', '#bbb', '#777']
-
-    const isTeamVs = data.statistics.is_team_vs; //none特供
-    const red_score = data.statistics.score_team_red || 0;
-    const blue_score = data.statistics.score_team_blue || 0;
-    const total_score = data.statistics.score_total;
-    const delta_score = isTeamVs ? Math.abs(red_score - blue_score) : 0;
-
-    // 渲染文字和底板
-    // 组队赛时
-    if (isTeamVs) {
-
-        //上左右得点
-
-        const red_point = '<rect width="12" height="24" rx="6" ry="6" style="fill: #CB3554;"/>';
-        const blue_point = '<rect width="12" height="24" rx="6" ry="6" style="fill: #009DEA;"/>';
-        const red_point_plus = '<rect width="12" height="24" rx="6" ry="6" style="fill: #D56E74;"/>';
-        const blue_point_plus = '<rect width="12" height="24" rx="6" ry="6" style="fill: #55B1EF;"/>';
-
-        for (let i = 0; i < data.statistics.wins_team_red_before; i++) {
-            svg = setSvgBody(svg, 30 + 16 * i, 176, red_point, reg_redpoint);
-        }
-
-        for (let i = 0; i < data.statistics.wins_team_blue_before; i++) {
-            svg = setSvgBody(svg, 1338 - 16 * i, 176, blue_point, reg_bluepoint);
-        }
-
-        // 上左右分数
-        const mid_x = isTeamVs ? Math.min(Math.max((red_score / total_score * 1330), 400), 930) + 20 + 5 : 0;
-        let red_font;
-        let blue_font;
-
-        //上底色、左右分数和最亮的那个得点
-        if (data.statistics.is_team_red_win) {
-            svg = setText(svg, PanelDraw.GradientRect(0, 0, 1380, 210, 20, [
-                {
-                    offset: "0%",
-                    color: "#CB3554",
-                    opacity: 1,
-                }, {
-                    offset: "100%",
-                    color: "#382E32",
-                    opacity: 1,
-                },
-            ], 0.6, {
-                x1: "20%",
-                y1: "0%",
-                x2: "100%",
-                y2: "0%",
-            }), reg_backcolor)
-
-            // svg = replaceText(svg, red_color_list[1], reg_backcolor); //其实 1 才是最正的那个颜色
-            red_font = torusBold;
-            blue_font = torusRegular;
-            svg = setSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0), 176, red_point_plus, reg_pluspoint);
-
-        } else if (data.statistics.is_team_blue_win) {
-            svg = setText(svg, PanelDraw.GradientRect(0, 0, 1380, 210, 20, [
-                {
-                    offset: "0%",
-                    color: "#382E32",
-                    opacity: 1,
-                }, {
-                    offset: "100%",
-                    color: "#008FE3",
-                    opacity: 1,
-                },
-            ], 0.6, {
-                x1: "0%",
-                y1: "0%",
-                x2: "80%",
-                y2: "0%",
-            }), reg_backcolor)
-
-            // svg = replaceText(svg, blue_color_list[1], reg_backcolor);
-            red_font = torusRegular;
-            blue_font = torusBold;
-            svg = setSvgBody(svg, 1338 - 16 * Math.max((data.statistics.wins_team_blue_before - 1), 0), 176, blue_point_plus, reg_pluspoint);
-
-        } else {
-            red_font = torusBold;
-            blue_font = torusBold;
-            svg = setText(svg, '#382e32', reg_backcolor);
-        }
-
-        const red_text = (red_score !== 0) ? red_font.getTextPath(red_score.toString(), mid_x - 5, 196.836, 24, 'right baseline', '#fff') : '';
-        const blue_text = (blue_score !== 0) ? blue_font.getTextPath(blue_score.toString(), mid_x + 5, 196.836, 24, 'left baseline', '#fff') : '';
-        const delta_text = (delta_score !== 0) ? torus.getTextPath(delta_score.toString(), mid_x, 132.877, 18, 'center baseline', '#fff') : '';
-
-        svg = setTexts(svg, [red_text, blue_text, delta_text], reg_text);
-
-    } else {
-        //个人赛时
-
-        //个人赛取最大值，因为此时第一号并不一定是第一名
-        let first_index = 0;
-        let first_score = 0;
-        const none_arr = data?.none || [{player_score: 0}];
-
-        none_arr.forEach((v, i) => {
-            if (v?.player_score >= first_score) {
-                first_score = v?.player_score ;
-                first_index = i;
-            }
-        })
-
-        //个人赛主计算
-        const none_text = (total_score !== 0) ? torus.getTextPath(total_score.toString(), 670, 196.836, 24, 'center baseline', '#fff') : '';
-
-        svg = setText(svg, '#382e32', reg_backcolor);
-        svg = setText(svg, none_text, reg_text);
-        svg = setImage(svg, 0, 0, 1380, 210, data.none[first_index].player_avatar, reg_h2hfirstavatar, 0.2);
-    }
-
-    // 导入成绩
-    let red_score_arr = [];
-    let blue_score_arr = [];
-    let none_score_arr = [];
-
-    if (data.red) {
-        for (let i = 0; i < data.red.length; i++) {
-            red_score_arr.push(data.red[i].player_score);
-        }
-    }
-    if (data.blue) {
-        for (let i = 0; i < data.blue.length; i++) {
-            blue_score_arr.push(data.blue[i].player_score);
-        }
-    }
-    if (data.none) {
-        for (let i = 0; i < data.none.length; i++) {
-            none_score_arr.push(data.none[i].player_score);
-        }
-    }
-
-
-    // 计算长度
-    let red_width_arr;
-    let blue_width_arr;
-    let none_width_arr;
-
-    //主分支
-    const red_length = data?.red?.length || 0;
-    const blue_length = data?.blue?.length || 0;
-    const none_length = data?.none?.length || 0;
-
-    if ((isTeamVs && (red_length + blue_length) <= 8) || (!isTeamVs && none_length <= 8)) { //data.statistics
-        if (isTeamVs) {
-            red_width_arr = getTeamVsWidthArray(data, 'red', true);
-            blue_width_arr = getTeamVsWidthArray(data, 'blue', true);
-            if (red_width_arr !== []) {
-                await implantCardC(data, 'red', delta_score, red_score_arr, red_width_arr, true);
-            }
-            if (blue_width_arr !== []) {
-                await implantCardC(data, 'blue', delta_score, blue_score_arr, blue_width_arr, true);
-            }
-        } else {
-            none_width_arr = getTeamVsWidthArray(data, 'none', true);
-            if (none_width_arr !== []) {
-                await implantCardC(data, 'none', 0, none_score_arr, none_width_arr, true);
-            }
-        }
-    } else {
-        //特殊分支，比较麻烦，还需要针对超短的数据
-        if (isTeamVs) {
-            red_width_arr = getTeamVsWidthArray(data, 'red', false);
-            blue_width_arr = getTeamVsWidthArray(data, 'blue', false);
-            if (red_width_arr !== []) {
-                await implantCardC(data, 'red', delta_score, red_score_arr, red_width_arr, false);
-            }
-            if (blue_width_arr !== []) {
-                await implantCardC(data, 'blue', delta_score, blue_score_arr, blue_width_arr, false);
-            }
-        } else {
-            none_width_arr = getTeamVsWidthArray(data, 'none', false);
-            if (none_width_arr !== []) {
-                await implantCardC(data, 'none', 0, none_score_arr, none_width_arr, false);
-            }
-        }
-    }
-
-    // 导入卡片的主函数
-    async function implantCardC(data, team = 'none', delta_score = 0, teamScoreArr = [0], teamWidthArr = [0], isLess4 = true) {
-
-        let startX;
-        let startY = 140; //分数条上沿
-        let direction; //正数表示从左往右渲染
-        let isReverse; //下面的分数矩形是否该反向渲染，蓝队和1v1是右对齐
-        let colorList; //颜色表
-        let isWin; //是否获胜，1v1默认true
-        let scoreTextColor; //分数的数字颜色，如果是 none，则使用1c色
-
-        //获取赋值方向和初始坐标
-        switch (team.toLowerCase()) {
-            case 'blue':
-                direction = -1;
-                isReverse = true;
-                startX = 1360;
-                colorList = blue_color_list;
-                isWin = data.statistics.is_team_blue_win;
-                scoreTextColor = '#fff';
-                break;
-            case 'red':
-                direction = 1;
-                isReverse = false;
-                startX = 20;
-                colorList = red_color_list;
-                isWin = data.statistics.is_team_red_win;
-                scoreTextColor = '#fff';
-                break;
-            case 'none':
-                direction = -1;
-                isReverse = true;
-                startX = 1360;
-                colorList = none_color_list;
-                isWin = true;
-                scoreTextColor = '#1C1719';
-                break;
-        }
-
-        const less = countLessMinWidth(teamWidthArr, 100);
-
-        if (isLess4) {
-            //主调用
-            await implantMain (delta_score);
-
-        } else if (less === 0) {
-            await implantMain (delta_score);
-
-        } else if (less <= 12) {
-            //特殊调用：需要使用 label F2 / F3
-            await implantSpecial (less);
-        } else {
-            return '';
-        }
-
-        //特殊调用
-        async function implantSpecial (less = 0) {
-
-            let calculateX = startX;
-            let rectSum = 0;
-            let rectColor = '';
-
-            //画分数低于最低值的选手
-            /*
-            if (less <= 4) {
-                //比较小的F2
-                for (let i = teamWidthArr.length - less; i < teamWidthArr.length; i++) {
-                    let j = teamScoreArr.length - 1 - i; //取反，实际上是从小到大用
-                    let k = i - (teamWidthArr.length - less) + 1;//从 1 开始
-
-                    if (data[`${team}`]) {
-                        await implantRoundLabelF2(
-                            data[`${team}`][j],
-                            isReverse ? startX - 100 : startX,
-                            startY - 35 * k, //从 1 开始
-                            isWin);
-                    }
-                }
-            } else
-                */
-                if (less <= 12) {
-                //最小的 F3
-                for (let i = 0; i < less / 4; i++) {
-                    // i 是横坐标，最大只能有 3 个 i
-                    for (let j = 0; j <= 3; j++) {
-                        // j 是纵坐标，0-3
-                        let k = teamWidthArr.length - less + (i * 4 + j);
-                        let width = teamWidthArr[k];
-
-                        if (data[`${team}`][k]) {
-                            await implantRoundLabelC3(
-                                data[`${team}`][k],
-                                !isReverse ? startX + 34 * i : startX - 30 - 34 * i,
-                                startY - 35 - 34 * j, //从 1 开始
-                                isWin);
-                            //结算
-                            calculateX += width * direction; //red 往右，是加起来， none，blue 往左
-                        }
-                    }
-                }
-            }
-
-            //结算一次，把位置空出来
-            //calculateX += 100 * direction; //red 往右，是加起来， none，blue 往左
-
-            //画分数高于最低值的选手
-            for (let i = 0; i < (teamWidthArr.length - less); i++) {
-                const j = teamScoreArr.length - less - 1 - i; //取反，实际上是从小到大用
-                const width = teamWidthArr[j];
-
-                if (data[`${team}`]) {
-                    await implantRoundLabelC1(
-                        data[`${team}`][j],
-                        calculateX + (width * direction / 2 - 50),
-                        startY - 130,
-                        Math.max(100, width),
-                        isWin,
-                        scoreTextColor);
-                }
-
-                //结算
-                calculateX += width * direction; //red 往右，是加起来， none，blue 往左
-            }
-
-            calculateX = startX; //画矩形的calculateX归0
-
-            //画矩形
-            for (let i = 0; i < teamWidthArr.length; i++) {
-                let j = teamScoreArr.length - 1 - i; //取反，实际上是从小到大用
-                let width = teamWidthArr[j];
-
-                //画矩形
-                rectSum += width;
-                rectColor = colorList[j];
-                if (data[`${team}`]) {
-                    svg = setText(svg,
-                        PanelDraw.Rect((!isReverse ? startX : (calculateX - width)), startY, rectSum, 30, 15, rectColor),
-                        reg_scorebar);
-                }
-
-                //结算
-                calculateX += width * direction; //red 往右，是加起来， none，blue 往左
-            }
-        }
-
-        //主调用，也是一般的调用方法
-        async function implantMain (delta_score = 0) {
-            let calculateX = startX;
-            let rectSum = 0;
-            let rectColor = '';
-
-            for (let i = 0; i < teamWidthArr.length; i++) {
-                const j = teamScoreArr.length - 1 - i; //以前叫startAssign + push * i
-                const width = teamWidthArr[j];
-
-                // 这是防止差值分数左右两边的名字挡住，+10是留的缝隙，只对分数最高（数组最前）的有效
-                const delta_score_width = (j.valueOf() === 0 && data.statistics.is_team_vs) ? (torus.getTextWidth(delta_score.toString(), 18) - 10 + 10) : 0;
-
-                // 画F标签
-                if (data[`${team}`]) {
-                    await implantRoundLabelC1(
-                        data[`${team}`][j],
-                        calculateX + (width * direction / 2 - 50),
-                        startY - 130,
-                        Math.max(100, width - delta_score_width),
-                        isWin,
-                        scoreTextColor);
-                }
-
-                //画矩形
-                rectSum += width;
-                rectColor = colorList[j];
-                if (data[`${team}`]) {
-                    svg = setText(svg,
-                        PanelDraw.Rect((!isReverse ? startX : (calculateX - width)), startY, rectSum, 30, 15, rectColor),
-                        reg_scorebar);
-                }
-
-                //结算
-                calculateX += width * direction; //red 往右，是加起来， none，blue 往左
-            }
-        }
-
-        //计算小于额定宽度的选手的数量
-        function countLessMinWidth(teamWidthArr = [0], minWidth = 0) {
-            let count = 0;
-
-            teamWidthArr.forEach(v => {
-                if (v < minWidth) {
-                    count ++;
-                }
-            })
-
-            return count;
-        }
-    }
-
-    //计算每个队内选手应该获得的宽度
-    function getTeamVsWidthArray(data, team = 'none', isLess4 = true) {
-        const isTeamVs = data?.statistics?.is_team_vs;
-        const total_score = data?.statistics?.score_total;
-
-        let teamMinWidth;
-        let playerMinWidth;
-
-        if (!data[team]) return [];
-
-        let team_width_arr = [];
-        let team_score;
-
-        //team vs以及1v1的最窄间距限制
-        if (isTeamVs) {
-            if (isLess4) {
-                team_score = data.statistics[`score_team_${team}`];
-                teamMinWidth = 400;
-                playerMinWidth = 100;
-            } else {
-                team_score = data.statistics[`score_team_${team}`];
-                teamMinWidth = 20;
-                playerMinWidth = 20;
-            }
-        } else {
-            if (isLess4 && data[team]?.length > 2) {
-                team_score = total_score;
-                teamMinWidth = 0;
-                playerMinWidth = 100;
-            } else {
-                team_score = total_score;
-                teamMinWidth = 0;
-                playerMinWidth = 0;
-            }
-        }
-
-        //获取分数，从小到大排列
-        let team_score_arr = [];
-        for (const i of data[team]) {
-            team_score_arr.unshift(i.player_score);
-        }
-
-        //获取每个人需要的宽度、用于计算的值
-        let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, teamMinWidth), 1330 - teamMinWidth);
-        let team_score_calc = team_score;
-
-        for (const i of team_score_arr) {
-            let width = team_width_calc * i / team_score_calc
-            //常规的限宽分支。如果人数少于2那也不能进。
-            if (width < playerMinWidth) { //原来是100
-                team_width_arr.unshift(playerMinWidth);
-                team_width_calc -= playerMinWidth;
-                team_score_calc -= i;
-            } else {
-                //特殊分支和常规的不限宽分支
-                team_width_arr.unshift(width);
-            }
-        }
-        return team_width_arr;
-    }
-
-
-    // 插入F1 - F3标签的功能函数
-
-    async function implantRoundLabelC1(data, x, y, maxWidth, isWin, scoreTextColor) {
-        const c1 = data ? await label_C1({
-                avatar: data.player_avatar ?? '',
-                name: data.player_name ?? 'Unknown',
-                mods_arr: data.player_mods || [{ acronym: '', color: 'none' } ],
-                score: data.player_score ?? '',
-                rank: data.player_rank ?? '',
-                maxWidth: maxWidth,
-                isWin: isWin,
-                scoreTextColor: scoreTextColor,
-        }) : '';
-        svg = setSvgBody(svg, x, y, c1, reg_bodycard);
-    }
+    const reg_text = /(?<=<g id="Text">)/;
+    const reg_mod = /(?<=<g id="Mods">)/;
+    const reg_label = /(?<=<g id="Label">)/;
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CH-1\);">)/;
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CH-2\);">)/;
+    const reg_color_right = '${color_right}';
+    const reg_color_left = '${color_left}';
+
+    // 插入模组
+    const mods_arr = data.mods_arr || [{acronym: ''}]
+
+    // 160 刚好可以展示单模组，并且收起多模组
+    const mods_data =
+        drawLazerMods(mods_arr, 710, 24, 60, 160, 'right', 6, true, false)
+
+    svg = setText(svg, mods_data.svg, reg_mod);
 
     /*
-    async function implantRoundLabelF2(object, x, y, isWin, scoreTextColor) {
-        const label_F2_impl =
-            await label_F2({
-                avatar: object ? object.player_avatar : '',
-                name: object ? object.player_name : 'Unknown',
-                rank: object ? object.player_rank : '',
-                isWin: isWin,
-                scoreTextColor: scoreTextColor,
-            })
-        svg = implantSvgBody(svg, x, y, label_F2_impl, reg_bodycard);
+    const mods_arr = data.mods_arr || [{acronym: ''}]
+    const mods_arr_length = mods_arr.length;
+
+    let multiplier
+    if (mods_arr_length <= 2 && mods_arr_length > 0) {
+        multiplier = 2
+    } else if (mods_arr_length > 2) {
+        multiplier = 1
     }
+
+    mods_arr.forEach((mod, i) => {
+        svg = setText(svg,
+            getModPath(mod, 620 - multiplier * i * 20, 24, 90, 42, true), reg_mod);
+    });
 
      */
 
+    // 插入四个小标签
+    const color_title2 = data.color_title2 ?? 'none';
+    const color_label1 = data.color_label1 ?? 'none';
+    const color_label2 = data.color_label2 ?? 'none';
+    const color_label3 = data.color_label3 ?? 'none';
+    const color_label4 = data.color_label4 ?? 'none';
+    const color_label5 = data.color_label5 ?? 'none';
 
-    async function implantRoundLabelC3(data, x, y, isWin) {
-        const c3 = await label_C3({
-                avatar: data ? data.player_avatar : '',
-                isWin: isWin,
-            })
-        svg = setSvgBody(svg, x, y, c3, reg_bodycard);
+    const font_l4 = (data?.font_label4 === 'PuHuiTi') ? PuHuiTi : torus;
+    const font_t2 = (data?.font_title2 === 'PuHuiTi') ? PuHuiTi : torus;
+
+    const label1_width = torus.getTextWidth(data?.label1 ?? '', 18) + 16;
+    const label2_width = torus.getTextWidth(data?.label2 ?? '', 18) + 16;
+    const label3_width = torus.getTextWidth(data?.label3 ?? '', 24) + 30;
+    const label4_width = font_l4.getTextWidth(data?.label4 ?? '', 24) + 30;
+    const label5_width = torus.getTextWidth(data?.label5 ?? '', 18) + 16;
+
+    const label1 = torusBold.getTextPath(data?.label1 ?? '', 38, 23.877, 18, 'left baseline', data?.color_label12 || '#fff');
+    const label2 = torusBold.getTextPath(data?.label2 ?? '', 38, 97.877, 18, 'left baseline', data?.color_label12 || '#fff');
+    const label3 = torus.getTextPath(data?.label3 ?? '', 710 - label3_width / 2, 34.836, 24, 'center baseline', '#fff');
+    const label4 = font_l4.getTextPath(data?.label4 ?? '', 710 - label4_width / 2, 78.572, 24, 'center baseline', '#fff');
+    const label5 = torusBold.getTextPath(data?.label5 ?? '', 177, 97.877, 18, 'right baseline', data?.color_label12 || '#fff');
+
+    const index = getMultipleTextPath([
+        {
+            font: torus,
+            text: data?.index_b,
+            size: data?.index_b_size || 48,
+            color: data?.color_index || 'none',
+        }, {
+            font: torus,
+            text: data?.index_m,
+            size: data?.index_m_size || 36,
+            color: data?.color_index || 'none',
+        },
+    ], 815, 73.672, 'center baseline') +
+        torus.getTextPath(data?.index_l, 815, 33.672,
+            data?.index_l_size || 24, 'center baseline', data?.color_index || 'none')
+
+    const rrect_label1 = data.label1 ? PanelDraw.Rect(30, 8, label1_width, 20, 10, color_label1) : '';
+    const rrect_label2 = data.label2 ? PanelDraw.Rect(30, 82, label2_width, 20, 10, color_label2) : '';
+    const rrect_label3 = data.label3 ? PanelDraw.Rect(710 - label3_width, 10, label3_width, 34, 17, color_label3) : '';
+    const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label4_width, 34, 17, color_label4) : '';
+    const rrect_label5 = data.label5 ? PanelDraw.Rect(185 - label5_width, 82, label5_width, 20, 10, color_label5) : '';
+
+    svg = setText(svg, data?.color_right || 'none', reg_color_right);
+    svg = setText(svg, data?.color_left || 'none', reg_color_left);
+
+    svg = setImage(svg, 140, 4, 45, 30, data?.type || '', reg_label, 1);
+
+    // 计算标题的长度
+    let title_max_width = 500;
+    let left_max_width = 500;
+    let mods_width = mods_data.width;
+
+    title_max_width -= (Math.max(mods_width, label3_width - 10)); //一般来说就第三个标签最长了
+    left_max_width -= mods_width;
+
+    let str_title = data.title ?? ''
+    let str_title2 = data.title2 ?? ''
+
+    const is_title_not_equal = data.title !== data.title2
+
+    const is_title2_prefix_not_ascii = isNotEmptyString(str_title2) && !isASCII(str_title2.substring(0, 3))
+
+    let title_width = Math.min(title_max_width, torus.getTextWidth(str_title, 36));
+    let title2_width = title_max_width - title_width - 10;
+
+    const title2_prefix_width = font_t2.getTextWidth(str_title2.substring(0, 3) + '...', 18);
+
+    if (is_title_not_equal && is_title2_prefix_not_ascii && title2_width < title2_prefix_width) {
+        title_width = title_max_width - title2_prefix_width - 20;
+        title2_width = title2_prefix_width + 10
     }
+
+    // 文字定义
+    const color_left12 = data.color_left12 ?? '#fff';
+
+    const text_title = torus.cutStringTail(str_title, 36, title_width);
+    title_width = torus.getTextWidth(text_title, 36)
+
+    const text_left1 = torus.cutStringTail(data.left1 ?? '', 24, left_max_width);
+    const text_left2 = torus.cutStringTail(data.left2 ?? '', 24, left_max_width);
+
+    const text_title2 = (is_title_not_equal && title2_width > 0)
+        ? font_t2.cutStringTail(str_title2, 18, title2_width, true) : '';
+
+    const title = torus.getTextPath(text_title, 210, 34.754, 36, 'left baseline', '#fff');
+    const title2 = font_t2.getTextPath(text_title2, 210 + 10 + title_width,
+        (data.font_title2 === 'PuHuiTi') ? 33 : 34.754, 18, 'left baseline', color_title2);
+    const left1 = torus.getTextPath(text_left1, 210, 66.836, 24, 'left baseline', color_left12);
+    const left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', color_left12);
+
+    // 插入文字
+    svg = setTexts(svg, [title, title2, left1, left2, index], reg_text);
+
+    svg = setTexts(svg, [label1, label2, label3, label4, label5, rrect_label1, rrect_label2, rrect_label3, rrect_label4, rrect_label5], reg_label);
+
+    // 插入图片
+    svg = data.cover ? setImage(svg, 20, 0, 176, 110, data.cover, reg_avatar, 1) : svg;
+    svg = data.background ? setImage(svg, 0, 0, 900, 110, data.background, reg_background, 0.2) : svg;
 
     return svg.toString();
 }

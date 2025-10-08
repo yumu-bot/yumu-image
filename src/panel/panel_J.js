@@ -6,8 +6,8 @@ import {
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_J} from "../card/card_J.js";
-import {card_L} from "../card/card_L.js";
+import {card_D} from "../card/card_D.js";
+import {component_J} from "../component/component_J.js";
 import {label_J1, label_J2, label_J3, RANK_OPTION} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModColor, getRankColor} from "../util/color.js";
@@ -468,21 +468,21 @@ export async function panel_J(data = {
     let cardJs_last = [];
 
     for (const i in data.bpTop5) {
-        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpTop5[i]));
+        const h = await card_D(await PanelGenerate.bp2ComponentJ(data.bpTop5[i]));
         cardJs_top.push(h);
     }
 
     for (const i in data.bpLast5) {
-        const h = await card_J(await PanelGenerate.bp2CardJ(data.bpLast5[i]));
+        const h = await card_D(await PanelGenerate.bp2ComponentJ(data.bpLast5[i]));
         cardJs_last.push(h);
     }
 
     // L卡构建
     let cardLs = [];
 
-    const L1 = await card_L({name: 'Length', card_K: data.bpLength});
-    const L2 = await card_L({name: 'Combo', card_K: data.bpCombo});
-    const L3 = await card_L({name: 'Star Rating', card_K: data.bpSR});
+    const L1 = await component_J({name: 'Length', card_K: data.bpLength});
+    const L2 = await component_J({name: 'Combo', card_K: data.bpCombo});
+    const L3 = await component_J({name: 'Star Rating', card_K: data.bpSR});
 
     cardLs.push(L1, L2, L3);
 

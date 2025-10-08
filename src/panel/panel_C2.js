@@ -16,7 +16,7 @@ import {
     getFormattedTime,
     setTexts
 } from "../util/util.js";
-import {card_H} from "../card/card_H.js";
+import {card_C} from "../card/card_C.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PuHuiTi, torus} from "../util/font.js";
@@ -252,7 +252,7 @@ function drawCardH(data = {}
     x = x_base + 940 * (column - 1);
     y = 330 + 150 * (row - 1);
 
-    const body = card_H(data);
+    const body = card_C(data);
 
     return getSvgBody(x, y, body);
 }

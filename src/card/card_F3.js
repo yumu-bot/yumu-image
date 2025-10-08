@@ -1,158 +1,208 @@
-import {
-    getMapBackground,
-    setSvgBody, setText
-} from "../util/util.js";
-import {torus} from "../util/font.js";
-import {card_I4} from "./card_I4.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {getMultipleTextPath, poppinsBold} from "../util/font.js";
+import {floor, floors, getAvatar, getImageFromV3, setImage, setText, setTexts} from "../util/util.js";
+import {getRankBackground} from "../util/star.js";
+import {getUserRankColor} from "../util/color.js";
+import {drawLazerMods} from "../util/mod.js";
 
-export async function card_F3(data = {
-    bp: [{
-        accuracy: 0.9983416252072969,
-        mods: [ 'HD' ],
-        passed: true,
-        perfect: true,
-        pp: 245.363,
-        rank: 'SH',
-        replay: true,
-        score: 7625753,
-        statistics: {
-            count_50: 0,
-            count_100: 1,
-            count_300: 401,
-            count_geki: 114,
-            count_katu: 1,
-            count_miss: 0
-        },
-        user: {
-            id: 9794030,
-            avatar: 'https://a.ppy.sh/9794030?1689442698.jpeg',
-            pm_only: false,
-            avatar_url: 'https://a.ppy.sh/9794030?1689442698.jpeg',
-            default_group: 'default',
-            is_active: true,
-            is_bot: false,
-            is_deleted: false,
-            is_online: false,
-            is_supporter: false,
-            last_visit: [Array],
-            pm_friends_only: false,
-            username: 'SIyuyuko',
-            country_code: 'CN'
-        },
-        weight: { percentage: 69.83373, pp: 171.34613 },
-        best_id: 4280526255,
-        max_combo: 600,
-        user_id: 9794030,
-        created_at: [ 2022, 9, 27, 12, 1, 36 ],
-        id: 4280526255,
-        mode: 'OSU',
-        mode_int: 0,
-        beatmap: {
-            id: 1982050,
-            mode: 'osu',
-            status: 'ranked',
-            version: "Kaguya_Sama's Extra",
-            ar: 9.5,
-            cs: 4,
-            bpm: 108,
-            convert: false,
-            passcount: 12285,
-            playcount: 59715,
-            ranked: 1,
-            url: 'https://osu.ppy.sh/beatmaps/1982050',
-            beatMapFailedCount: 0,
-            beatMapRetryCount: 0,
-            beatMapRating: 0,
-            beatmapset_id: 318425,
-            difficulty_rating: 5.55,
-            mode_int: 0,
-            total_length: 102,
-            hit_length: 102,
-            user_id: 9326064,
-            accuracy: 8.8,
-            drain: 5.5,
-            is_scoreable: true,
-            last_updated: '2019-04-06T18:48:01Z',
-            checksum: '546572114dec84e7dbbdddda45a03fa9',
-            count_sliders: 183,
-            count_spinners: 0,
-            count_circles: 219
-        },
-        beatmapset: {
-            video: true,
-            fromDatabases: false,
-            mapperUID: 2732340,
-            sid: 318425,
-            mapperName: 'Taeyang',
-            ranked: true,
-            rating: 0,
-            id: 318425,
-            user_id: 2732340,
-            artist: 'Forte Escape',
-            artist_unicode: 'Forte Escape',
-            title: 'Ask to Wind',
-            title_unicode: '바람에게 부탁해',
-            creator: 'Taeyang',
-            favourite_count: 144,
-            nsfw: false,
-            play_count: 314154,
-            preview_url: '//b.ppy.sh/preview/318425.mp3',
-            source: 'DJMAX',
-            status: 'ranked',
-            covers: [Object],
-            spotlight: false
-        },
-        create_at_str: '2022-09-27T12:01:36Z'
-    }]
-}) {
+export async function card_F3(match_score = {}, max_combo = 0, compare_score = 0) {
     // 读取模板
-    let svg = `
-          <g id="Base_CF3">
+    let svg = `   
+        <defs>
+        <clipPath id="clippath-CP2-1">
+            <circle cx="80" cy="80" r="65" style="fill: none;"/>
+        </clipPath>
+        <clipPath id="clippath-CP2-2">
+            <rect x="0" y="0" rx="20" ry="20" width="430" height="160" style="fill: none;"/>
+        </clipPath>
+        <filter id="inset-shadow-CP2-1" height="150%" width="150%" x="-25%" y="-25%" filterUnits="userSpaceOnUse">
+            <feFlood flood-color="#000"/>
+            <feComposite in2="SourceGraphic" operator="out"/>
+            <feMorphology operator="dilate" radius="5" />
+            <feGaussianBlur in="userSpaceOnUse" stdDeviation="5" result="blur"/>
+            <feComposite in2="SourceGraphic" operator="atop"/>
+        </filter>
+        <filter id="blur-CP2-1" height="110%" width="110%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
+            <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
+        </filter>
+        </defs>
+          <g id="Base_CP2">
+            <rect x="0" y="0" rx="20" ry="20" width="430" height="160" style="fill: #382E32;"/>
+            <g style="clip-path: url(#clippath-CP2-2);" filter="url(#blur-CP2-1)">
+            </g>
           </g>
-          <g id="Card_K">
+          <g id="Shadow_CP2" style="clip-path: url(#clippath-CP2-1);" filter="url(#inset-shadow-CP2-1)">
+            <circle cx="80" cy="80" r="65" style="fill: #fff;"/>
+            <g style="clip-path: url(#clippath-CP2-1);">
+            </g>
           </g>
-          <g id="Text_CF3">
+          <g id="Mod_CP2">
+          </g>
+          <g id="Text_CP2">
           </g>`;
 
-    // 路径定义
-    const reg_base = /(?<=<g id="Base_CF3">)/;
-    const reg_card_k = /(?<=<g id="Card_K">)/;
-    const reg_text = /(?<=<g id="Text_CF3">)/;
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CP2-2\);" filter="url\(#blur-CP2-1\)">)/
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CP2-1\);">)/
+    const reg_text = /(?<=<g id="Text_CP2">)/
+    const reg_mod = /(?<=<g id="Mod_CP2">)/
 
-    // 导入K卡
-    let card_Ks = [];
-    for (const i in data.bp) {
-        card_Ks.push(await card_I4(
-            await bp2CardK(data.bp[i], parseInt(i) + 1)));
-    }
+    svg = setImage(svg, 15, 15, 130, 130, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar, 1)
 
-    for (const i in card_Ks) {
-        svg = setSvgBody(svg, 15 + (i % 4 * 80), (i < 4 ? 50 : 110), card_Ks[i], reg_card_k);
-    }
+    svg = setImage(svg, 0, 0, 430, 160, getRankBackground(match_score?.rank, match_score?.match?.pass), reg_background, 0.6)
 
-    // 导入文本
-    const bp_title = torus.getTextPath('BPs', 15, 35.795, 30, 'left baseline', '#fff');
+    const name = poppinsBold.getTextPath(poppinsBold.cutStringTail(match_score?.user?.username, 36, 270), 160, 48, 36, 'left baseline', '#fff')
 
-    svg = setText(svg, bp_title, reg_text);
+    const ranking = PanelDraw.Rect(15, 15, 50, 25, 12.5, getUserRankColor(match_score?.ranking))
+        + getMultipleTextPath(
+            [{
+                font: poppinsBold,
+                text: (match_score?.ranking || 0).toString(),
+                size: 24,
+                color: '#fff'
+            }, {
+                font: poppinsBold,
+                text: getOrdinal(match_score?.ranking || 0),
+                size: 16,
+                color: '#fff'
+            }
+            ],
+            40, 36, 'center baseline'
+        )
 
-    // 导入基础矩形
-    const base_rrect = PanelDraw.Rect(0, 0, 340, 175, 20, '#382e32');
+    const rank = getImageFromV3(`object-score-${match_score?.rank}2.png`)
 
-    svg = setText(svg, base_rrect, reg_base);
+    svg = setImage(svg, 340, 70, 90, 90, rank, reg_text, 1)
 
-    return svg;
+    const judge_data = getMatchScoreAdvancedJudge(match_score, max_combo)
+
+    /*
+
+    const judge = PanelDraw.Rect(160, 62, 84, 40, 20, judge_data.color)
+        + poppinsBold.getTextPath(judge_data.judge, 202, 94, 30, 'center baseline', '#fff')
+
+     */
+
+    const judge = PanelDraw.Rect(15, 120, 50, 25, 12.5, judge_data.color)
+        + poppinsBold.getTextPath(judge_data.judge, 40, 140, 22, 'center baseline', '#fff')
+
+    const miss = match_score?.statistics?.miss || 0
+    const miss_count = poppinsBold.getTextPath(miss >= 1000 ? floor(miss, 1, -1) : miss, 306, 94, 30, 'right baseline', '#fff')
+
+    svg = setImage(svg, 310, 66, 32, 32, getImageFromV3('object-hit0.png'), reg_text, 1)
+
+    const score_score = floors(match_score?.score || match_score?.legacy_total_score || 0, -4)
+
+    const score = getMultipleTextPath([
+        {
+            font: poppinsBold,
+            text: score_score.integer,
+            size: 40,
+            color: '#fff',
+        }, {
+            font: poppinsBold,
+            text: score_score.decimal,
+            size: 30,
+            color: '#fff',
+        },
+    ], 160, 144, 'left baseline')
+
+    const delta_data = getDeltaScore(match_score?.score || match_score?.legacy_total_score || 0, compare_score || 0)
+    const delta_score = floor(delta_data.delta, -4)
+
+    const delta = poppinsBold.getTextPath(delta_data.sign + delta_score, 340, 114, 18, 'right baseline', delta_data.color)
+
+    const mods = (match_score?.mods || [])
+        .filter(it => it.acronym !== "NF")
+
+    if (mods.length === 0) mods.push("NM")
+
+    const mods_path = drawLazerMods(mods, 160, 70 - 6, 40, 110, 'left', 5, false).svg
+
+    /*
+    let mods_path = ''
+
+    const interval = mods.length > 2 ? 20 : 30
+
+    mods.forEach((mod, index) => {
+        const x = 160 + interval * index
+
+        mods_path += getModRRectPath(mod, x, 64, 70, 40, 20, 30, poppinsBold, 30)
+    })
+
+     */
+
+    svg = setText(svg, mods_path, reg_mod)
+
+    svg = setTexts(svg, [name, ranking, judge, miss_count, score, delta], reg_text)
+
+    return svg.toString()
 }
 
-const bp2CardK = async (bp, bp_ranking = 1) => {
-    //随便搞个颜色，就不需要去获取一遍谱面了
+function getDeltaScore(score = 0, compare = 0) {
+    return {
+        sign: (score < compare) ? '-' : '+',
+        delta: Math.abs(score - compare),
+        color: (score < compare) ? '#ffcdd2' : '#c2e5c3',
+    }
+}
+
+function getMatchScoreAdvancedJudge(match_score = {}, max_combo = 0) {
+    const stat = match_score?.statistics || {}
+
+    const is_perfect = match_score?.rank === 'X' || match_score?.rank === 'XH'
+    const is_fc = (match_score?.perfect === true) || (match_score?.perfect === 1)
+    const is_almost_fc = match_score.max_combo > max_combo * 0.9
+    const is_mania_fc = (match_score.mode_int === 3 && stat?.meh === 0 && stat?.ok === 0)
+
+    let judge
+    let color
+
+    if (match_score.rank === 'F') {
+        judge = 'L'
+        color = '#9E040D'
+    } else if (is_perfect) {
+        judge = 'PF'
+        color = '#FF9800'
+    } else if (is_fc) {
+        judge = 'FC+'
+        color = '#B3D465'
+    } else if (stat?.miss === 0) {
+        if (is_almost_fc || is_mania_fc) {
+            judge = 'FC'
+            color = '#009944'
+        } else {
+            judge = 'FC-'
+            color = '#B7AB00'
+        }
+    } else if (is_almost_fc || is_mania_fc) {
+        judge = 'C+'
+        color = '#00A1E9'
+    } else {
+        judge = 'C'
+        color = '#0068B7'
+    }
 
     return {
-        map_background: await getMapBackground(bp, 'list'),
-        star_rating: bp?.beatmap?.difficulty_rating || 0,
-        score_rank: bp?.rank || 0,
-        bp_ranking: bp_ranking, //感觉暂时不使用这个也可以
-        bp_pp: bp?.pp || 0,
-        bp_remark: 'PP',// PP
+        judge: judge,
+        color: color
+    }
+}
+
+/**
+ * 获取序数词
+ * @param number
+ * @returns {string}
+ */
+function getOrdinal(number = 1) {
+    switch (number) {
+        case 11: case 12: case 13: return 'th'
+        default: {
+            switch (number % 10) {
+                case 1: return 'st'
+                case 2: return 'nd'
+                case 3: return 'rd'
+                default: return 'th'
+            }
+        }
     }
 }

@@ -4,24 +4,30 @@ import {
     setText,
     setTexts, floor, floors
 } from "../util/util.js";
-import {PuHuiTi, torus} from "../util/font.js";
-import {label_D2, label_E, LABELS} from "../component/label.js";
+import {torus} from "../util/font.js";
+import {label_E, LABELS} from "./label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function card_F6N(data = {
+export async function component_D6(data = {
     user: {
         ranked_score: 0,
         total_score: 0,
+        play_count: 0,
+        play_time: 0,
         played_map: 0,
         ranked_map: 0,
         rep_watched: 0,
         follower: 0,
-        medal: 0,
+        total_hits: 0,
     },
 
     delta: {
         ranked_score: 0,
         total_score: 0,
+        play_count: 0,
+        play_time: 0,
+
+        total_hits: 0,
     },
 
     pc_arr: [],
@@ -62,12 +68,14 @@ export async function card_F6N(data = {
 
     for (const i in labels) {
         svg = setSvgBody(svg,
-            (i < 2) ? 20 + (i % 2) * 440 : 20 + ((i - 2) % 4) * 220,
-            (i < 2) ? 65 : 145, labels[i], reg_label);
+            20 + (i % 4) * 220,
+            (i < 4) ? 65 : 145, labels[i], reg_label);
     }
 
     for (const i in deltas) {
-        svg = setSvgBody(svg, 80 - 2 + (i % 2) * 440, 130, deltas[i], reg_label); //我也不知道为什么这里要 -2
+        svg = setSvgBody(svg,
+        80 - 2 + (i % 4) * 220,
+            (i < 4) ? 130 : 210, deltas[i], reg_label); //我也不知道为什么这里要 -2
     }
 
     // 导入文本
@@ -112,8 +120,7 @@ function getPlayCountChart(pc_arr = []) {
 
     const user_pc_activity_max = Math.max.apply(Math, arr);
 
-    const pc_activity_text = torus.getTextPath(
-        user_pc_activity_max > 0 ? user_pc_activity_max + 'PC' : '',
+    const pc_activity_text = torus.getTextPath(`${user_pc_activity_max}PC`,
         30 + arr.findIndex((item) => item === user_pc_activity_max) * 20,
         215 + 90 - (user_pc_activity_max / Math.max(1000, user_pc_activity_max)) * 90,
         16,
@@ -126,56 +133,96 @@ function getPlayCountChart(pc_arr = []) {
 }
 
 async function userData2Labels(data) {
+    // play_time 格式化
+    let pt_b = '';
+    let pt_m = '';
+
+    if (data?.user?.play_time) {
+        const t = data.user.play_time;
+
+        const days = Math.floor(t / 86400);
+        const hours = Math.floor((t - 86400 * days) / 3600);
+        const minutes = Math.floor((t - 86400 * days - 3600 * hours) / 60);
+
+        if (days > 0) {
+            pt_b = days.toString();
+            pt_m = 'd' + hours + 'h' + minutes + 'm';
+        } else if (hours > 0) {
+            pt_b = hours.toString();
+            pt_m = 'h' + minutes + 'm';
+        } else if (minutes > 0) {
+            pt_b = minutes.toString();
+            pt_m = 'm';
+        } else if (hours > -1) {
+            pt_b = '0';
+            pt_m = 'm';
+        } else {
+            pt_b = '-';
+            pt_m = '';
+        }
+    }
+
+    const isRankedMapPCCalculated = data.user.ranked_map !== 0;
 
     // 卡片定义
-    const rks_a = floor(data.user.ranked_score, 1);
-    const rks_b = floors(data.user.ranked_score, -4, 2).integer;
-    const rks_m = floors(data.user.ranked_score, -4, 2).decimal;
-    const tts_a = floor(data.user.total_score, 1);
-    const tts_b = floors(data.user.total_score, -4, 2).integer;
-    const tts_m = floors(data.user.total_score, -4, 2).decimal;
+    const rks_b = floors(data.user.ranked_score, 4).integer;
+    const rks_m = floors(data.user.ranked_score, 4).decimal;
+    const tts_b = floors(data.user.total_score, 4).integer;
+    const tts_m = floors(data.user.total_score, 4).decimal;
+    const pc_b = floors(data.user.play_count, -4).integer;
+    const pc_m = floors(data.user.play_count, -4).decimal;
 
+    const rmp_b = floors(data.user.ranked_map, -4).integer;
+    const rmp_m = floors(data.user.ranked_map, -4).decimal;
     const mpc_b = floors(data.user.played_map, -4).integer;
     const mpc_m = floors(data.user.played_map, -4).decimal;
+
     const rep_b = floors(data.user.rep_watched, -4).integer;
     const rep_m = floors(data.user.rep_watched, -4).decimal;
     const fan_b = floors(data.user.follower, -4).integer;
     const fan_m = floors(data.user.follower, -4).decimal;
-    const mdl_b = floors(data.user.medal, -4).integer;
-    const mdl_m = floors(data.user.medal, -4).decimal;
+    const tth_b = floors(data.user.total_hits, 4).integer;
+    const tth_m = floors(data.user.total_hits, 4).decimal;
 
     const label_rks =
-        await label_D2({...LABELS.RKS, data_b: rks_b, data_m: rks_m, abbr: rks_a, remark_font: PuHuiTi});
+        await label_E({...LABELS.RKS, data_b: rks_b, data_m: rks_m});
     const label_tts =
-        await label_D2({...LABELS.TTS, data_b: tts_b, data_m: tts_m, abbr: tts_a, remark_font: PuHuiTi});
+        await label_E({...LABELS.TTS, data_b: tts_b, data_m: tts_m});
+    const label_pc =
+        await label_E({...LABELS.PC, data_b: pc_b, data_m: pc_m});
+    const label_pt =
+        await label_E({...LABELS.PT, data_b: pt_b, data_m: pt_m});
 
-    const label_mpl =
-        await label_E({...LABELS.MPC, data_b: mpc_b, data_m: mpc_m, remark_font: PuHuiTi});
+    const label_mpl = isRankedMapPCCalculated ?
+        await label_E({...LABELS.RMP, data_b: rmp_b, data_m: rmp_m}) :
+        await label_E({...LABELS.MPC, data_b: mpc_b, data_m: mpc_m})
+    ;
     const label_rep =
-        await label_E({...LABELS.REP, data_b: rep_b, data_m: rep_m, remark_font: PuHuiTi});
+        await label_E({...LABELS.REP, data_b: rep_b, data_m: rep_m});
     const label_fan =
-        await label_E({...LABELS.FAN, data_b: fan_b, data_m: fan_m, remark_font: PuHuiTi});
-    const label_mdl =
-        await label_E({...LABELS.MED, data_b: mdl_b, data_m: mdl_m, remark_font: PuHuiTi});
+        await label_E({...LABELS.FAN, data_b: fan_b, data_m: fan_m});
+    const label_tth =
+        await label_E({...LABELS.TTH, data_b: tth_b, data_m: tth_m});
 
     let arr = [];
-    arr.push(label_rks, label_tts, label_mpl, label_rep, label_fan, label_mdl);
+    arr.push(label_rks, label_tts, label_pc, label_pt,label_mpl, label_rep, label_fan, label_tth);
 
     return arr;
 }
 
 function userDelta2Labels(data) {
+    
     const getSign = (T) => {
         if (typeof T === 'number') {
             return (T > 0) ? '+' : ((T < 0) ? '-': '');
         } else return '';
     }
-
+    
     const getColor = (T) => {
         const increase = '#c2e5c3'; //'#93D02E';
         const decrease = '#ffcdd2'; // '#DE6055';
         const none = 'none';
-
+        
         if (typeof T === 'number') {
             return (T > 0) ? increase : ((T < 0) ? decrease: none);
         } else return '';
@@ -185,21 +232,58 @@ function userDelta2Labels(data) {
         if (isNaN(+T)) {
             return torus.getTextPath(T, 0, 0, 18, 'left baseline', getColor(1)) ;
         } else {
-            const text = getSign(T) + floor(T, -4, 2); //Math.abs(T);
+            const text = getSign(T) + floor(Math.abs(T), 2);
             return torus.getTextPath(text, 0, 0, 18, 'left baseline', getColor(T)) ;
         }
+
     }
+
 
     const rks = data?.delta?.ranked_score || 0;
     const tts = data?.delta?.total_score || 0;
+    const pc = data?.delta?.play_count || 0;
+    const pt = data?.delta?.play_time || 0;
+    const tth = data?.delta?.total_hits || 0;
 
-    if (data?.delta?.ranked_score === 0) {
-        return new Array(2).fill("");
+    if (pt === 0) {
+        return new Array(8).fill("");
     }
 
+    let pt_h = '';
+    if (data?.delta?.play_time || data?.delta?.play_time === 0) {
+        let pt_b = getSign(pt);
+        let pt_m;
+
+        const days = Math.floor(Math.abs(pt) / 86400);
+        const hours = Math.floor((Math.abs(pt) - 86400 * days) / 3600);
+        const minutes = Math.floor((Math.abs(pt) - 86400 * days - 3600 * hours) / 60);
+
+        if (days > 0) {
+            pt_b += days.toString();
+            pt_m = 'd' + hours + 'h' + minutes + 'm';
+        } else if (hours > 0) {
+            pt_b += hours.toString();
+            pt_m = 'h' + minutes + 'm';
+        } else if (minutes > 0) {
+            pt_b += minutes.toString();
+            pt_m = 'm';
+        } else if (hours > -1) {
+            pt_b += '0';
+            pt_m = 'm';
+        } else {
+            pt_b = '-';
+            pt_m = '';
+        }
+        pt_h = pt_b + pt_m;
+    }
+
+    const n = ""; //没法做的差值
     let arr = [];
-    for (const x of [rks, tts]) {
-        arr.push(getPath(x));
+    for (const x of [rks, tts, pc, pt_h, 0, 0, 0, tth]) {
+        if (x)
+            arr.push(getPath(x));
+        else
+            arr.push(n);
     }
     return arr;
 }

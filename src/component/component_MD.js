@@ -7,7 +7,7 @@ const path = `${process.cwd()}/template/Card_Alpha/index.html`;
 
 export async function router(req, res) {
     try {
-        const data = await card_Alpha(req.fields.md || "# Error: no value", req.fields.width || 600);
+        const data = await component_MD(req.fields.md || "# Error: no value", req.fields.width || 600);
         res.set('Content-Type', 'image/jpeg');
         res.send(data);
     } catch (e) {
@@ -16,7 +16,7 @@ export async function router(req, res) {
     }
 }
 
-export async function card_Alpha(md = "", width = 600, height = 1080) {
+export async function component_MD(md = "", width = 600, height = 1080) {
     await page.setViewport({
         width: width,
         height: height,

@@ -10,10 +10,10 @@ import {
 import {PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMascotName, getMascotPath} from "../util/mascotBanner.js";
-import {label_D1, LABELS} from "../component/label.js";
+import {label_D1, LABELS} from "./label.js";
 
 
-export async function card_F1N(data = {
+export async function component_D1N(data = {
     user: {
         play_count: 0,
         play_time: 0,

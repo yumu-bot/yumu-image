@@ -4,14 +4,27 @@ import {isEmptyArray, isNumber, setText} from "./util.js";
 import {hex2rgbColor} from "./color.js";
 
 export const PanelDraw = {
-    Image: (x = 0, y = 0, w = 100, h = 100, link = '', opacity = 1) => {
-        return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${link}" style="opacity: ${opacity};" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`;
+    Image: (x = 0, y = 0, w = 100, h = 100, link = '', opacity = 1, ratio = "xMidYMid slice") => {
+        return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${link}" style="opacity: ${opacity};" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`;
     },
 
     Rect: (x = 0, y = 0, w = 0, h = 0, r = 0, color = '#fff', opacity = 1) => {
         return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" style="fill: ${color}; fill-opacity: ${opacity}"/>`;
     },
 
+    /**
+     * 如果你不需要精细调整颜色，请使用 LinearGradientRect
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param r
+     * @param colors
+     * @param opacity
+     * @param position
+     * @return {string}
+     * @constructor
+     */
     GradientRect: (x = 0, y = 0, w = 0, h = 0, r = 0, colors = [
         {
             offset: "0%",
@@ -41,18 +54,20 @@ export const PanelDraw = {
     },
 
     /**
-     * 快速生成一个左右渐变圆角矩形
+     * 快速生成一个左右渐变圆角矩形，前后 10% 使用首尾的颜色
      * @param x
      * @param y
      * @param w
      * @param h
      * @param r
      * @param colors 颜色数组，数量应大于等于 2 个
-     * @param opacity
+     * @param opacity 透明度，默认为 1
+     * @param position_x 传播方向默认从左到右，就是 0 100
+     * @param position_y 传播方向默认从左到右，就是 0 0
      * @return {string}
      * @constructor
      */
-    LinearGradientRect: (x = 0, y = 0, w = 0, h = 0, r = 0, colors = ['#fff'], opacity = 1) => {
+    LinearGradientRect: (x = 0, y = 0, w = 0, h = 0, r = 0, colors = ['#fff'], opacity = 1, position_x = [0, 100], position_y = [0, 0]) => {
         const color_array = []
 
         if (Array.isArray(colors) && colors?.length > 1) {
@@ -72,8 +87,14 @@ export const PanelDraw = {
             return PanelDraw.Rect(x, y, w, h, r, colors?.[0] ?? '#fff', opacity)
         }
 
+        const position = {
+            x1: `${position_x?.[0] ?? 0}%`,
+            y1: `${position_y?.[0] ?? 0}%`,
+            x2: `${position_x?.[1] ?? 100}%`,
+            y2: `${position_y?.[1] ?? 0}%`,
+        }
 
-        return PanelDraw.GradientRect(x, y, w, h, r, color_array, opacity)
+        return PanelDraw.GradientRect(x, y, w, h, r, color_array, opacity, position)
     },
 
     Circle: (cx = 0, cy = 0, r = 0, color = '#fff', opacity = 1) => {

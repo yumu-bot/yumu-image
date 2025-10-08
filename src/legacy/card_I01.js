@@ -5,7 +5,7 @@ import {getMultipleTextPath, PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 // maimai / CHUNITHM 多成绩面板
-export function card_I(data = {
+export function card_I01(data = {
     background: '',
     cover: '',
     rank: '',

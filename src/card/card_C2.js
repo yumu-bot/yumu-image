@@ -5,7 +5,7 @@ import {
 import {torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function card_H3(data = {
+export async function card_C2(data = {
     background: '',
     cover: '',
 

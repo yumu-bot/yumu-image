@@ -245,7 +245,7 @@ export async function panel_ME(data = {
     const componentE10 = component_E10(PanelMEGenerate.score2componentE10(data.chart));
 
     // 卡片定义
-    const cardA1 = await card_A1(await PanelGenerate.maimaiPlayer2CardA1(data.user));
+    const cardA1 = await card_A1(await PanelGenerate.maiPlayer2CardA1(data.user));
 
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);

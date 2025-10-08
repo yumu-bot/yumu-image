@@ -7,9 +7,9 @@ import {
 } from "../util/util.js";
 import {data2Label, stat2DataM} from "./panel_E.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_E1} from "../card/card_E1.js";
-import {card_E3} from "../card/card_E3.js";
-import {card_E5} from "../card/card_E5.js";
+import {component_E1} from "../component/component_E1.js";
+import {component_E3} from "../component/component_E3.js";
+import {component_E5} from "../component/component_E5.js";
 import {LABELS} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod, matchAnyMods} from "../util/mod.js";
@@ -279,9 +279,9 @@ export async function panel_E2(data = {
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    const cardE1 = await card_E1(await beatmap2CardE1(data.beatmap, mode, calcPP));
-    const cardE5 = await card_E5(await expect2CardE5(data.expected, rank, mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
-    const cardE3 = await card_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));
+    const cardE1 = await component_E1(await beatmap2CardE1(data.beatmap, mode, calcPP));
+    const cardE5 = await component_E5(await expect2CardE5(data.expected, rank, mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
+    const cardE3 = await component_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));
 
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);

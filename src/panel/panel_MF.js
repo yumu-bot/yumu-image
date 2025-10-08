@@ -6,7 +6,7 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {card_A4} from "../card/card_A4.js";
+import {card_MF} from "../card/card_MF.js";
 import {torusBold} from "../util/font.js";
 
 export async function router(req, res) {
@@ -133,13 +133,13 @@ export async function panel_MF(data = {
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 导入A1卡
-    const cardA1 = await card_A1(await PanelGenerate.maimaiPlayer2CardA1(data.user));
+    const cardA1 = await card_A1(await PanelGenerate.maiPlayer2CardA1(data.user));
 
     // 导入A4卡
     const card_a4 = []
 
     for (const s of data.songs) {
-        card_a4.push(await card_A4(s))
+        card_a4.push(await card_MF(s))
     }
 
     // 插入卡片

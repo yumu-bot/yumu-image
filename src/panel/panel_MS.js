@@ -19,7 +19,8 @@ import {
 } from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {poppinsBold, PuHuiTi} from "../util/font.js";
-import {card_G} from "../card/card_G.js";
+import {card_MS} from "../card/card_MS.js";
+import {colorArray} from "../util/color.js";
 
 export async function router(req, res) {
     try {
@@ -190,7 +191,7 @@ export async function panel_MS(data = {
     }
 
     // 导入 A2 卡
-    const cardA2 = card_A2(await PanelGenerate.maimaiSong2CardA2(song, data?.version));
+    const cardA2 = card_A2(await PanelGenerate.maiSong2CardA2(song, data?.version));
 
     // 插入卡片
     svg = setSvgBody(svg, 40, 40, cardA2, reg_card_a2);
@@ -228,7 +229,7 @@ async function applyScore(song = {}, scores = [{}]) {
         param_Gs
     ).then(results => thenPush(results, card_Gs))
 
-    return card_Gs.map((card) => {return card_G(card)})
+    return card_Gs.map((card) => {return card_MS(card)})
 }
 
 async function maiScore2CardG(song = {}, index = 0, score = {}) {
@@ -490,141 +491,23 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     // 占比矩形 占鸡儿比 当前进度
     // const width = 270 / sum
 
-    let gradient
+    let colors
     if (achievements >= 100.5) {
-        gradient = [
-            {
-                offset: "0%",
-                color: "#EC6841",
-                opacity: 1,
-            },
-            {
-                offset: "20%",
-                color: "#F19149",
-                opacity: 1,
-            },
-            {
-                offset: "40%",
-                color: "#FFF45C",
-                opacity: 1,
-            },
-            {
-                offset: "60%",
-                color: "#31B16C",
-                opacity: 1,
-            },
-            {
-                offset: "80%",
-                color: "#00B7EE",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#00f2fe",
-                opacity: 1,
-            },
-        ]
+        colors = colorArray.rainbow
     } else if (achievements >= 100) {
-        gradient = [
-            {
-                offset: "0%",
-                color: "#EC6841",
-                opacity: 1,
-            },
-            {
-                offset: "35%",
-                color: "#F19149",
-                opacity: 1,
-            },
-            {
-                offset: "70%",
-                color: "#FFF45C",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#00B7EE",
-                opacity: 1,
-            },
-        ]
+        colors = colorArray.iridescent
     } else if (achievements >= 99) {
-        gradient = [
-            {
-                offset: "0%",
-                color: "#F7B551",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#FFF45C",
-                opacity: 1,
-            },
-        ]
+        colors = colorArray.yellow
     } else if (achievements >= 97) {
-        gradient = [
-            {
-                offset: "0%",
-                color: "#F19149",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#F7B551",
-                opacity: 1,
-            },
-        ]
+        colors = colorArray.amber
     } else if (achievements >= 80) {
-        gradient = [
-            {
-                offset: "0%",
-                color: "#EA68A2",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#EC6841",
-                opacity: 1,
-            },
-        ]
+        colors = colorArray.deep_orange
     } else if (achievements >= 60) {
-        gradient = [
-            {
-                offset: "0%",
-                color: "#12B4B1",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#00B7EE",
-                opacity: 1,
-            },
-        ]
+        colors = colorArray.indigo
     } else if (achievements >= 50) {
-        gradient = [
-            {
-                offset: "0%",
-                color: "#12B4B1",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#31B16C",
-                opacity: 1,
-            },
-        ]
+        colors = colorArray.turquoise
     } else {
-        gradient = [
-            {
-                offset: "0%",
-                color: "#777",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#aaa",
-                opacity: 1,
-            },
-        ]
+        colors = colorArray.deep_gray
     }
 
     let rrect_width
@@ -644,83 +527,8 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
         rrect_width = 0
     }
 
-
-    const progress_rrect = achievements > 0 ? PanelDraw.GradientRect(10, 80, rrect_width, 10, 5, gradient) : ''
-    const progress_base_rrect = PanelDraw.GradientRect(10, 80, 270, 10, 5, gradient, 0.2)
-
-    /*
-    const tap_rrect = PanelDraw.GradientRect(10, 80, width * ((note?.tap) || 0), 10, 5,
-        [
-            {
-                offset: "0%",
-                color: "#ea68a2",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#eb6877",
-                opacity: 1,
-            }
-        ]
-    )
-    const hold_rrect = PanelDraw.GradientRect(10, 80, width * ((note?.tap + note?.hold) || 0), 10, 5,
-        [
-            {
-                offset: "0%",
-                color: "#ff9800",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#fff100",
-                opacity: 1,
-            }
-        ]
-    )
-    const slide_rrect = PanelDraw.GradientRect(10, 80, width * ((note?.tap + note?.hold + note?.slide) || 0), 10, 5,
-        [
-            {
-                offset: "0%",
-                color: "#0068b7",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#00a0e9",
-                opacity: 1,
-            },
-        ]
-    )
-    const touch_rrect = PanelDraw.GradientRect(10, 80, width * ((note?.tap + note?.hold + note?.slide + note?.touch) || 0), 10, 5,
-        [
-            {
-                offset: "0%",
-                color: "#00a0e9",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#82d7fc",
-                opacity: 1,
-            },
-        ]
-    )
-    const break_rrect = PanelDraw.GradientRect(10, 80, 270, 10, 5,
-        [
-            {
-                offset: "0%",
-                color: "#fff100",
-                opacity: 1,
-            },
-            {
-                offset: "100%",
-                color: "#ff9800",
-                opacity: 1,
-            }
-        ]
-    )
-
-     */
+    const progress_rrect = achievements > 0 ? PanelDraw.LinearGradientRect(10, 80, rrect_width, 10, 5, colors) : ''
+    const progress_base_rrect = PanelDraw.LinearGradientRect(10, 80, 270, 10, 5, colors, 0.2)
 
     // 基础分：PF 500, GR 400, GD 250, MS 0, Hold x2, Slide x3, Break x5~
     // 绝赞基础分：CP~PF2 2500, GR1 2000, GR2 1500, GR3 1250, GD 1000, MS 0,

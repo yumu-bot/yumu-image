@@ -20,7 +20,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {poppinsBold, torus} from "../util/font.js";
 import {hasLeaderBoard} from "../util/star.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {card_H} from "../card/card_H.js";
+import {card_C} from "../card/card_C.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {getModColor, getStarRatingColor, PanelColor} from "../util/color.js";
@@ -318,7 +318,7 @@ export async function panel_T(
     ).then(results => thenPush(results, popular_params))
 
     const populars = popular_params.map((v) => {
-        return card_H(v)
+        return card_C(v)
     })
 
     // 渲染
@@ -401,7 +401,7 @@ const component_T2 = async (best_performance = {
 
     const async = []
 
-    await Promise.allSettled([PanelGenerate.beatMap2CardA2(best_performance.beatmap), getAvatar(best_performance.user.avatar_url, true)])
+    await Promise.allSettled([PanelGenerate.beatmap2CardA2(best_performance.beatmap), getAvatar(best_performance.user.avatar_url, true)])
         .then(results => thenPush(results, async))
 
     const title = poppinsBold.getTextPath('Best Performance', 20, 32, 18, 'left baseline', '#fff')

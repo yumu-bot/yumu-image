@@ -7,7 +7,7 @@ import {label_M1, label_M2, label_M3} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {hasLeaderBoard} from "../util/star.js";
 
-export async function card_M(s = {
+export async function card_A5(s = {
     "artist": "HOYO-MiX",
     "artist_unicode": "HOYO-MiX",
     "covers": {

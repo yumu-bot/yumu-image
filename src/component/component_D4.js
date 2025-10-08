@@ -6,7 +6,7 @@ import {
 import {torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function card_F4(data = {
+export async function component_D4(data = {
     user: {
         count_ssh: 0,
         count_ss: 0,

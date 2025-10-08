@@ -11,7 +11,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {getScoreTypeImage} from "../util/star.js";
 import {drawLazerMods} from "../util/mod.js";
 
-export async function card_N(data = {
+export async function card_A04(data = {
     score: {},
 
     score_rank: 1,

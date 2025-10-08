@@ -144,7 +144,7 @@ export async function panel_A11(data = {
         const x = i % 4
         const y = Math.floor(i / 4)
 
-        const member = await card_A1(await PanelGenerate.guestDiffer2CardA1(v))
+        const member = await card_A1(await PanelGenerate.guest2CardA1(v))
 
         svg = setSvgBody(svg, 40 + 470 * x, 330 + 250 * y, member, reg_body)
     }

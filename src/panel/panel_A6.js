@@ -8,7 +8,7 @@ import {
     getNowTimeStamp,
 } from "../util/util.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {card_Alpha} from "../card/card_Alpha.js";
+import {component_MD} from "../component/component_MD.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 
@@ -70,7 +70,7 @@ export async function panel_A6(data = {
 
     const markdown = reLocateExportFile(originalMarkdown);
 
-    const alpha = await card_Alpha(markdown, data.width);
+    const alpha = await component_MD(markdown, data.width);
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

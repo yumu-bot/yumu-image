@@ -1,47 +1,39 @@
 import {
     getImageFromV3,
     getGameMode,
-    setSvgBody, setTexts, floor, floors, rounds, getManiaAimingAccuracy,
+    setSvgBody,
+    setTexts, floors, rounds
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {label_E, LABELS} from "../component/label.js";
+import {label_E, LABELS} from "./label.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getModMultiplier, drawLazerMods} from "../util/mod.js";
+import {drawLazerMods} from "../util/mod.js";
 
-export async function card_E2(data = {
-    rank: 'SS',
-    mods: ["DT", "NF"],
-    score: 2274671,
-    accuracy: 0.9836,
-    combo: 5724,
-    pp: 1919,
-    mode: 'OSU',
+export async function component_E5(data = {
+    rank: 'F',
+    mods: [],
+    accuracy: 0.98,
+    combo: 0,
+    pp: 0,
+    full_pp: 0,
+    max_pp: 0,
+    mode: 'osu',
+    miss: 0,
 
-    advanced_judge: 'nomiss', //进阶评级，也就是面板圆环下面那个玩意
-    acc_index: '~ S',
-    max_combo: 5724,
-    full_pp: 810,
-    max_pp: 1919,
-    statistics: [{
-        index: '300',
-        stat: 9999,
+    advanced_judge: 'played',
+
+    ncStats: [{
+        index: '100',
+        stat: 1054.6,
         index_color: '#fff',
         stat_color: '#fff',
         rrect_color: '#8DCFF4',
-    }, {
-        index: '100',
-        stat: 9999,
-        index_color: '#fff',
-        stat_color: '#fff',
-        rrect_color: '#79C471',
     }],
+    fcStats: [],
     statistics_max: 9999,
 
     isFC: true,
     isPF: true,
-    isBest: true,
-    isLegacy: true,
-
 }) {
     // 读取模板
     let svg = `   <defs>
@@ -77,25 +69,14 @@ export async function card_E2(data = {
     // 预设值定义
     const mode = getGameMode(data.mode, 1);
     const isFC = data.isFC;
-    const isPF = data.isPF;
 
     // 文字定义
-    const score_b = floors(data.score, -4, 1).integer
-    const score_m = floors(data.score, -4, 1).decimal
-
-    const score = torus.get2SizeTextPath(score_b, score_m, 84, 60, 335, 79.43, 'left baseline', '#FFF');
-
-    const multiplier = getModMultiplier(data.mods, data.mode);
-
-    const modsCount = data?.mods?.length || 0;
-    const multiplier_maxWidth = 630 - ((modsCount > 2) ? 50 * modsCount - 10 : 100 * modsCount - 10) - torus.getTextWidth(score_b, 84) - torus.getTextWidth(score_m, 60) - 10;
-
-    const mod_multiplier = torus.getTextPath(
-        multiplier === 1 ? "" : torus.cutStringTail(floor(multiplier, 2) + "x", 24, multiplier_maxWidth),
-        335 + torus.getTextWidth(score_b, 84) + torus.getTextWidth(score_m, 60) + 10, 79.43, 24, 'left baseline', '#FFF')
+    const pp_number = floors(data.pp, 1)
+    const pp_large = torus.get2SizeTextPath(pp_number.integer, pp_number.decimal + 'PP',
+        84, 60, 335, 79.43, 'left baseline', '#FFF');
 
     // 导入文字
-    svg = setTexts(svg, [score, mod_multiplier], reg_text);
+    svg = setTexts(svg, [pp_large], reg_text);
 
     // 部件定义
     const mods = drawLazerMods(data.mods, 880 + 90, 20 - 6, 70, 300, 'right', 6, true).svg;
@@ -105,37 +86,29 @@ export async function card_E2(data = {
     const ring_index = getRingIndexSVG(mode, 70, 50, 210, 210);
 
     const advanced = getAdvancedJudgeSVG(data.advanced_judge, 20, 310)
-    const best = getPersonalBestSVG(data.isBest, 20, 20);
-    const type = getScoreTypeSVG(data.isLegacy, 20, 250);
-    const statistics = getStatisticsSVG(data.statistics, data.statistics_max, 400, 100, 500, 28, 12, 22.79)
+    const best = '';
+    const statisticsNC = getStatisticsRRect(data.ncStats, data.statistics_max, 400, 60, 500)
+    const statisticsFC = getStatisticsSVG(data.fcStats, data.statistics_max, 400, 100, 500, 28, 12, 22.79)
 
-    const acc = await label_E({...LABELS.ACC,
-        remark: data.acc_index,
-        data_b: rounds(data.accuracy * 100, 1).integer,
-        data_m: rounds(data.accuracy * 100, 1).decimal + '%',
+    const acc_number = rounds(data.accuracy * 100, 2)
+
+    const acc = await label_E({...((mode === 'm') ? LABELS.PPACC : LABELS.ACC),
+        remark: (data.miss > 0) ? '-' + data.miss : '-',
+        data_b: acc_number.integer,
+        data_m: acc_number.decimal + '%',
     });
     const combo = await label_E({...LABELS.COMBO,
         remark: isFC ? 'FC' : (data.max_combo + 'x'),
         data_b: data.combo ? data.combo.toString() : '0',
         data_m: 'x',
     });
-    const pp = (mode === 'm') ? (
-        await label_E({
-            ...LABELS.PP,
-            remark: isPF ? 'Max' : (isFC ? (data.max_pp <= 100000 ? 'SS ' + Math.round(data.max_pp) : 'SS Inf.') :
-                (data.full_pp <= 100000 ? (getManiaAimingAccuracy(data.accuracy) * 100) + '% ' + Math.round(data.full_pp): (getManiaAimingAccuracy(data.accuracy) * 100) + '% Inf.')),
-            data_b: data.pp ? (data.pp <= 100000 ? Math.round(data.pp).toString() : 'Inf.') : '0',
-            data_m: '',
-        })
-    ) : (
-        await label_E({...LABELS.PP,
-            remark: isPF ? 'Max' : (isFC ? (data.max_pp <= 100000 ? 'SS ' + Math.round(data.max_pp) : 'SS Inf.') : (data.full_pp <= 100000 ? 'FC ' + Math.round(data.full_pp) : 'FC Inf.')),
-            data_b: data.pp ? (data.pp <= 100000 ? Math.round(data.pp).toString() : 'Inf.') : '0',
-            data_m: '',
-        })
-    );
+    const losspp = await label_E({...LABELS.LOSSPP,
+            remark: (data.max_pp > 0) ? (Math.round(data.pp / data.max_pp * 100) - 100) + '%' : '-%',
+            data_b: Math.round(data.pp - data.max_pp).toString(),
+            data_m: 'PP',
+        });
 
-    // 导入部件
+// 导入部件
     svg = setSvgBody(svg, 0, 0, mods, reg_mods);
     svg = setSvgBody(svg, 0, 0, rank, reg_overlay);
     svg = setSvgBody(svg, 0, 0, mask, reg_mask);
@@ -144,30 +117,14 @@ export async function card_E2(data = {
 
     svg = setSvgBody(svg, 0, 0, advanced, reg_advanced);
     svg = setSvgBody(svg, 0, 0, best, reg_overlay);
-    svg = setSvgBody(svg, 0, 0, type, reg_overlay);
-    svg = setSvgBody(svg, 0, 0, statistics, reg_label);
+    svg = setSvgBody(svg, 0, 0, statisticsNC, reg_label);
+    svg = setSvgBody(svg, 0, 0, statisticsFC, reg_label);
 
     svg = setSvgBody(svg, 350, 350, acc, reg_label);
     svg = setSvgBody(svg, 560, 350, combo, reg_label);
-    svg = setSvgBody(svg, 770, 350, pp, reg_label);
+    svg = setSvgBody(svg, 770, 350, losspp, reg_label);
 
     return svg.toString();
-}
-
-//顺便把左上角的 personal best 加了
-function getPersonalBestSVG(isBest, x, y) {
-    const best_link = (isBest) ? '' : 'default';
-    const image = getImageFromV3(`object-score-personalbest${best_link}.png`);
-
-    return `<image width="40" height="40" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
-}
-
-//顺便把左上角的 personal best 加了
-function getScoreTypeSVG(isLegacy, x, y) {
-    const best_link = (isLegacy) ? 'default' : '';
-    const image = getImageFromV3(`object-score-legacy${best_link}.png`);
-
-    return `<image width="40" height="40" transform="translate(${x} ${y})" xlink:href="${image}" style="opacity: 1;" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>`
 }
 
 // 成绩分类（中间四个照片）
@@ -202,6 +159,20 @@ function getAdvancedJudgeSVG(advanced_judge = 'played', x, y) {
     return svg;
 }
 
+function getRingIndexSVG(mode = 'o', x, y, w, h) {
+    let ring_name;
+    switch (mode) {
+        case 't':
+        case 'm': ring_name = 'taikomania'; break;
+        case 'c': ring_name = 'catch'; break;
+        default: ring_name = 'osu'; break;
+    }
+
+    const ring = getImageFromV3(`object-score-coloredcircle-${ring_name}.png`);
+
+    return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${ring}"/>`;
+}
+
 function getRingSVG(x, y, w, h) {
     const index = getImageFromV3('object-score-coloredring.png');
     return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${index}"/>`;
@@ -229,20 +200,6 @@ function getMaskSVG(percent = 0, mode = 'o', mx = 0, my = 0, r = 0) {
     }
 
     return `\n<polygon id="Mask" points="${mx} ${my} ${mx} ${my - r} ${assists}${control}${mx} ${my}" style="fill: none;"/>`;
-}
-
-function getRingIndexSVG(mode = 'o', x, y, w, h) {
-    let ring_name;
-    switch (mode) {
-        case 't':
-        case 'm': ring_name = 'taikomania'; break;
-        case 'c': ring_name = 'catch'; break;
-        default: ring_name = 'osu'; break;
-    }
-
-    const ring = getImageFromV3(`object-score-coloredcircle-${ring_name}.png`);
-
-    return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${ring}"/>`;
 }
 
 function getRankSVG(rank = 'XH', x, y) {
@@ -275,8 +232,8 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, fo
         const index_text_x = x - 14;
         const stat_text_x = x + w + 12;
 
-        const index = v.index ?? '';
-        const stat = v.stat ?? '';
+        const index = (v.index ?? '')
+        const stat = (v.stat ?? '')
 
         const color = v.rrect_color;
 
@@ -298,6 +255,20 @@ function getStatisticsSVG(stat = [], stat_max = 0, x, y, w, height, interval, fo
         }
 
          */
+    });
+
+    return svg;
+}
+
+function getStatisticsRRect(stat = [], stat_max = 0, x, y, w) {
+    let svg = '';
+
+    stat.forEach((v, i) => {
+        const color = v.rrect_color;
+        if (v.stat > 0) {
+            const rect_width = w * v.stat / stat_max;
+            svg += PanelDraw.Rect(x, y + 40 * (i + 1), Math.max(rect_width, 20), 28, 10, color);
+        }
     });
 
     return svg;

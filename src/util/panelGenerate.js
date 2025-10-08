@@ -25,10 +25,8 @@ import {
 } from "./util.js";
 import {getBadgeColor, getRankColor, getStarRatingColor} from "./color.js";
 import {
-    getApproximateRank,
     getScoreTypeImage,
     hasLeaderBoard,
-    rankSS2X
 } from "./star.js";
 import {
     getCHUNITHMRatingBG,
@@ -40,7 +38,7 @@ import {
 } from "./maimai.js";
 import {getRandomBannerPath} from "./mascotBanner.js";
 import {PanelDraw} from "./panelDraw.js";
-import {card_D2} from "../card/card_D2.js";
+import {card_H2} from "../card/card_H2.js";
 import {getLazerModsWidth} from "./mod.js";
 
 //公用方法
@@ -264,8 +262,7 @@ export const PanelGenerate = {
         }
     },
 
-
-    //panel F2 用的转换
+    /*
     matchScore2CardA1: async (score) => {
         if (isNullOrEmptyObject(score)) return '';
 
@@ -326,7 +323,9 @@ export const PanelGenerate = {
         };
     },
 
-    maimaiPlayer2CardA1: async (user) => {
+     */
+
+    maiPlayer2CardA1: async (user) => {
         if (isNullOrEmptyObject(user)) return {
             background: getImageFromV3('card-default.png'),
             avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
@@ -392,7 +391,7 @@ export const PanelGenerate = {
         };
     },
 
-    chunithmPlayer2CardA1: async (user = {
+    chuPlayer2CardA1: async (user = {
         name: 'Muz',
         probername: 'Muziya',
         rating: 12.51,
@@ -423,7 +422,7 @@ export const PanelGenerate = {
         };
     },
 
-    guestDiffer2CardA1: async (data = {
+    guest2CardA1: async (data = {
         user: {
             cover: {
                 url: 'https://assets.ppy.sh/user-profile-covers/416662/ab631986bb61f181551b8dbea87285874d09a920584bd5ff0250410b2b44a9a3.jpeg',
@@ -491,7 +490,7 @@ export const PanelGenerate = {
         };
     },
 
-    maimaiSong2CardA2: async (song = {}, version = "ANY") => {
+    maiSong2CardA2: async (song = {}, version = "ANY") => {
         const background = await getMaimaiCover(song?.id);
 
         const title1 = song?.basic_info?.title || '-'
@@ -626,7 +625,7 @@ export const PanelGenerate = {
         };
     },
 
-    beatMap2CardA2: async (b) => {
+    beatmap2CardA2: async (b) => {
         const background = await getMapBackground(b, 'list');
         const map_status = b.status;
         const sr = floors(b.difficulty_rating, 2)
@@ -823,16 +822,6 @@ export const PanelGenerate = {
         const left1 = '';
         const left2 = '#' + rank || '#0';
         const left3 = 's' + s.id || 's0';
-        /*
-        const right1 = isQualified ? 'Expected:' :
-            (isRanked ? 'Ranked:' :
-                'Submitted:');
-
-        const right2 = isQualified ? getApproximateRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]') :
-            (isRanked ? moment(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm") :
-                moment(submitted_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').utcOffset(960).format("YYYY-MM-DD HH:mm"));
-
-         */
 
         const right1 = isQualified ? 'Expected:' : (isRanked ? 'Ranked:' : 'Submitted:')
 
@@ -840,13 +829,6 @@ export const PanelGenerate = {
 
         let right3b;
         let right3m;
-
-        /*
-        const days = getApproximateLeftRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]', 0);
-        const hours = getApproximateLeftRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]', 1);
-        const minutes = getApproximateLeftRankedTime(ranked_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]', 2);
-
-         */
 
         if (isQualified) {
             const now = moment().subtract(8, 'hours')
@@ -895,35 +877,9 @@ export const PanelGenerate = {
             right3b: right3b,
             right3m: right3m,
         };
-
-        /*
-        function getApproximateRankedTime(date = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]') {
-
-            const dateP7 = moment(date, format).add(8, 'hours').add(7, 'days');
-            const dateP7m20 = moment(date, format).add(8, 'hours').add(7, 'days').add(20, 'minutes');
-
-            return dateP7.format("YYYY-MM-DD HH:mm")
-                + ' ~ '
-                + dateP7m20.format("HH:mm")
-                + ' +8'
-        }
-
-        function getApproximateLeftRankedTime(date = '', format = 'YYYY-MM-DD[T]HH:mm:ss[Z]', whichData = 0) {
-            const dateP7 = moment(date, format).add(8, 'hours').add(7, 'days');
-
-            switch (whichData) {
-                case 0:
-                    return dateP7.diff(moment(), "days");
-                case 1:
-                    return dateP7.diff(moment(), "hours") % 24;
-                case 2:
-                    return dateP7.diff(moment(), "minutes") % 60;
-            }
-        }
-
-         */
     },
 
+    /*
     roundInfo2CardA2: async (round, match_name = 'Unknown', team_point_map = {}, match_id = 0, index = 0) => {
         const is_team_vs = round.is_team_vs;
 
@@ -983,6 +939,8 @@ export const PanelGenerate = {
         };
     },
 
+     */
+
     team2CardA2: async (team) => {
         const background = await readNetImage(team.flag)
 
@@ -1015,9 +973,16 @@ export const PanelGenerate = {
         };
     },
 
-    score2CardD: async (scores = [], has_custom_panel = false, hue = 342) => {
-        let promiseD2s = []
-        let d2s = []
+    /**
+     * 注意，这个方法直接返回生成好的 card_H2
+     * @param scores
+     * @param has_custom_panel
+     * @param hue
+     * @return {Promise<{scores: *[], has_custom_panel: boolean, hue: number}>}
+     */
+    score2CardH2: async (scores = [], has_custom_panel = false, hue = 342) => {
+        let promiseHs = []
+        let h2s = []
 
         for (const s of scores) {
             const star = s?.beatmap?.difficulty_rating || 0
@@ -1047,22 +1012,21 @@ export const PanelGenerate = {
                 bottom_right: time.minute + ":" + time.seconds,
             }
 
-            promiseD2s.push(card_D2(data))
+            promiseHs.push(card_H2(data))
         }
 
         await Promise.allSettled(
-            promiseD2s
-        ).then(results => thenPush(results, d2s))
+            promiseHs
+        ).then(results => thenPush(results, h2s))
 
         return {
-            scores: d2s,
+            scores: h2s,
             has_custom_panel: has_custom_panel,
             hue: hue,
         }
     },
 
-    // 给panel_A5用的
-    score2CardH: async (s, identifier = 1, use_cache = null) => {
+    score2CardC: async (s, identifier = 1, use_cache = null) => {
         const cache = requireNonNullElse(use_cache, hasLeaderBoard(s?.beatmap?.ranked || s?.beatmap?.status))
 
         const cover = await readNetImage(s?.beatmapset?.covers?.list, cache);
@@ -1153,8 +1117,7 @@ export const PanelGenerate = {
         }
     },
 
-    // panel A7 有细微的改动，请注意
-    fixedBestScore2CardH: async (s, rank = 1, rank_after = null) => {
+    fixedBestScore2CardC: async (s, rank = 1, rank_after = null) => {
         let mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
 
         /*
@@ -1173,7 +1136,7 @@ export const PanelGenerate = {
 
         const is_after = (typeof rank_after == "number")
 
-        const card_h = await PanelGenerate.score2CardH(s, rank, true)
+        const card_h = await PanelGenerate.score2CardC(s, rank, true)
 
         if (is_after) {
             const time_diff = getTimeDifferenceShort(s.ended_at, 0);
@@ -1192,7 +1155,7 @@ export const PanelGenerate = {
         }
     },
 
-    badge2CardH3: async (badge = {
+    badge2CardC2: async (badge = {
         "awarded_at": "2022-07-03T15:23:25+00:00",
         "description": "osu!catch World Cup 2022 3rd Place (China)",
         "image@2x_url": "https://assets.ppy.sh/profile-badges/cwc-2022/cwc2022-3rd@2x.png",
@@ -1252,7 +1215,7 @@ export const PanelGenerate = {
         }
     },
 
-    bp2CardJ: async (bp) => {
+    bp2ComponentJ: async (bp) => {
         const background = await getMapBackground(bp, 'list');
 
         return {
@@ -1494,7 +1457,7 @@ export const PanelGenerate = {
         };
     },
 
-    beatmap2CardO2: async (s) => {
+    beatmap2ComponentIM: async (s) => {
         if (!s) return '';
 
         const background = await readNetImage(s?.covers?.list, true);

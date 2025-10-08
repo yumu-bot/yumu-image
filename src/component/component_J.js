@@ -5,10 +5,10 @@ import {
     setText, floors,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {card_I4} from "./card_I4.js";
+import {card_D2} from "../card/card_D2.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function card_L(data = {
+export async function component_J(data = {
     name: 'Length', //Length, Combo, SR
     card_K: [ //第一个是最大值，第二个是中值（不是平均值），第三个是最小值。如果bp不足2个，中值和最小值留null，如果bp不足3个，中值留null
         {
@@ -127,7 +127,7 @@ export async function card_L(data = {
     let cardKs = [];
 
     for (const v of data.card_K) {
-        const h = await card_I4({
+        const h = await card_D2({
             map_background: v.cover,
             star_rating: v.star,
             score_rank: v.rank,

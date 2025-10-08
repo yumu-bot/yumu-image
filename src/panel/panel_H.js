@@ -4,7 +4,7 @@ import {
     setSvgBody, readTemplate,
     setText, getSvgBody, readNetImage, getMapBackground, isNotEmptyArray, setTexts, thenPush
 } from "../util/util.js";
-import {card_D} from "../card/card_D.js";
+import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 
@@ -146,7 +146,7 @@ async function drawCardD(b, mod = 'NM', mod_color = '666', mode = 'osu', row = 1
     const x = ((3 - maxColumn) * 300 + 80) + 600 * (column - 1);
     const y = 330 + 150 * (row - 1);
 
-    return getSvgBody(x, y, await card_D(await beatmap2CardD(b, mod, mod_color, mode)));
+    return getSvgBody(x, y, await card_H(await beatmap2CardD(b, mod, mod_color, mode)));
 }
 
 function getRowCount(i = 0) {

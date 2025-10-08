@@ -3,7 +3,7 @@ import {
     readTemplate, setCustomBanner,
     setText, thenPush, getSvgBody,
 } from "../util/util.js";
-import {card_H} from "../card/card_H.js";
+import {card_C} from "../card/card_C.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {torusBold} from "../util/font.js";
@@ -318,7 +318,7 @@ export async function panel_A7(data = {
 
     await Promise.allSettled(
         data.scores.map((bp) => {
-            return PanelGenerate.fixedBestScore2CardH(bp, bp?.index, bp?.index_after)
+            return PanelGenerate.fixedBestScore2CardC(bp, bp?.index, bp?.index_after)
         })
     ).then(results => thenPush(results, paramHs))
 
@@ -327,7 +327,7 @@ export async function panel_A7(data = {
 
         const deltaPP = Math.round(bp?.fc_pp - bp?.pp);
 
-        return card_H({
+        return card_C({
             ...card_h,
 
             index_b: bp?.fc_pp > 0 ? Math.round(bp.fc_pp).toString() : '',

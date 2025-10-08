@@ -263,11 +263,13 @@ const component_J1 = (
 
     const hide = data.has_custom_panel
 
-    for (const i in data.labels) {
-        const v = data.labels[i]
+    let string_labels = ''
 
-        svg = setSvgBody(svg, 20, 45 + (i * 85), v, reg) // 80 -> 85
+    for (const i in data.labels) {
+        string_labels += getSvgBody(20, 45 + (i * 85), data.labels[i]) // 80 -> 85
     }
+
+    svg = setText(svg, string_labels, reg)
 
     /*
 
@@ -305,12 +307,16 @@ const component_J2 = (
 
     const d2s = data?.scores || []
 
+    let string_d2s = ''
+
     for (let i = 0; i < d2s.length; i++) {
         const x = i % 3
         const y = Math.floor(i / 3)
 
-        svg = setSvgBody(svg, 10 + x * 160, 40 + y * 130, d2s[i], reg)
+        string_d2s += getSvgBody(10 + x * 160, 40 + y * 130, d2s[i])
     }
+
+    svg = setText(svg, string_d2s, reg)
 
     if (!data.has_custom_panel) {
         const title = poppinsBold.getTextPath('Bests', 15, 27, 18, 'left baseline', '#fff', 1)
@@ -905,7 +911,7 @@ const PanelJGenerate = {
     },
 
     scores2componentJ2: async (scores = [], has_custom_panel = false, hue) => {
-        return await PanelGenerate.score2CardD(scores, has_custom_panel, hue)
+        return await PanelGenerate.score2CardH2(scores, has_custom_panel, hue)
     },
 
     rank2componentJ3: (rank_attr, has_custom_panel = false, hue) => {

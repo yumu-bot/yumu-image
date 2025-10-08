@@ -1,9 +1,9 @@
 import {torus} from "../util/font.js";
-import {label_E, LABELS} from "../component/label.js";
+import {label_E, LABELS} from "./label.js";
 import {setSvgBody, setText, floors} from "../util/util.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function card_E4(data = {
+export async function component_E4(data = {
     calcPP: {
 
     },

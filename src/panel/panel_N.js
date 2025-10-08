@@ -10,7 +10,7 @@ import {
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {card_O1} from "../card/card_O1.js";
+import {component_IM1} from "../component/component_IM1.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
@@ -70,7 +70,7 @@ export async function panel_N(
     const cardA2 = card_A2(await PanelGenerate.beatMapSet2CardA2(data?.beatmapset));
 
     // 导入O1
-    const cardO1 = card_O1(await PanelGenerate.user2CardO1(data?.beatmapset?.user));
+    const cardO1 = component_IM1(await PanelGenerate.user2CardO1(data?.beatmapset?.user));
 
     // 导入一些标签
     const guest_title = torus.getTextPath('Guest Mappers', 60, 730, 30, 'left baseline', '#fff');

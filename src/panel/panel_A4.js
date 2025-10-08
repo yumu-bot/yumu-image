@@ -3,7 +3,7 @@ import {
     readTemplate, setCustomBanner,
     setText, getNowTimeStamp, getSvgBody, thenPush,
 } from "../util/util.js";
-import {card_H} from "../card/card_H.js";
+import {card_C} from "../card/card_C.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 
@@ -82,12 +82,12 @@ export async function panel_A4(data = {
 
     await Promise.allSettled(
         data.scores.map((v, i) => {
-            return PanelGenerate.score2CardH(v, data.rank[i], true)
+            return PanelGenerate.score2CardC(v, data.rank[i], true)
         })
     ).then(results => thenPush(results, params))
 
     const cardHs = params.map((param) => {
-        return card_H(param)
+        return card_C(param)
     })
 
     // 插入图片和部件（新方法

@@ -10,7 +10,7 @@ import {extra, PuHuiTi, torus} from "../util/font.js";
 import {getStarRatingColor} from "../util/color.js";
 import {hasLeaderBoard} from "../util/star.js";
 
-export async function card_E1(data = {
+export async function component_E1(data = {
     ranked: 1,
     mode: 'OSU',
     star: 1.7,

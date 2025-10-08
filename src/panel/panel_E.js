@@ -16,10 +16,10 @@ import {
 import moment from "moment";
 import {LABELS} from "../component/label.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_E1} from "../card/card_E1.js";
-import {card_E2} from "../card/card_E2.js";
-import {card_E3} from "../card/card_E3.js";
-import {card_E4} from "../card/card_E4.js";
+import {component_E1} from "../component/component_E1.js";
+import {component_E2} from "../component/component_E2.js";
+import {component_E3} from "../component/component_E3.js";
+import {component_E4} from "../component/component_E4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
 import {getApproximateRank, getRankBackground} from "../util/star.js";
@@ -317,10 +317,10 @@ export async function panel_E(
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    const cardE1 = await card_E1(score2CardE1(data.score, calcPP));
-    const cardE2 = await card_E2(score2CardE2(data.score, calcPP));
-    const cardE3 = await card_E3(await score2CardE3(data.score, calcPP));
-    const cardE4 = await card_E4({calcPP: calcPP, statistics: score_statistics});
+    const cardE1 = await component_E1(score2CardE1(data.score, calcPP));
+    const cardE2 = await component_E2(score2CardE2(data.score, calcPP));
+    const cardE3 = await component_E3(await score2CardE3(data.score, calcPP));
+    const cardE4 = await component_E4({calcPP: calcPP, statistics: score_statistics});
 
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);

@@ -7,13 +7,13 @@ import {
     setText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_F1} from "../card/card_F1.js";
-import {card_F2} from "../card/card_F2.js";
-import {card_F3} from "../card/card_F3.js";
-import {card_F4} from "../card/card_F4.js";
-import {card_F5} from "../card/card_F5.js";
-import {card_F6} from "../card/card_F6.js";
-import {card_F7} from "../card/card_F7.js";
+import {component_D1} from "../component/component_D1.js";
+import {component_D2} from "../component/component_D2.js";
+import {component_D3} from "../component/component_D3.js";
+import {component_D4} from "../component/component_D4.js";
+import {component_D5} from "../component/component_D5.js";
+import {component_D6} from "../component/component_D6.js";
+import {component_D7} from "../component/component_D7.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {pp2UserBG} from "../util/mascotBanner.js";
 
@@ -284,13 +284,13 @@ export async function panel_D0(data = {
 
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser));
 
-    const cardF1 = await card_F1(user2CardF1(data.user, mode));
-    const cardF2 = await card_F2({recent: data["re-list"]});
-    const cardF3 = await card_F3({bp: data["bp-list"]});
-    const cardF4 = await card_F4(user2CardF4(data.user));
-    const cardF5 = await card_F5(user2CardF5(data.user, mode, data["bp-time"]));
-    const cardF6 = await card_F6(user2CardF6(data.user, data.historyUser, mode, data.bonus_pp, data.ranked_map_play_count));
-    const cardF7 = await card_F7(user2CardF7(data.user, mode));
+    const cardF1 = await component_D1(user2CardF1(data.user, mode));
+    const cardF2 = await component_D2({recent: data["re-list"]});
+    const cardF3 = await component_D3({bp: data["bp-list"]});
+    const cardF4 = await component_D4(user2CardF4(data.user));
+    const cardF5 = await component_D5(user2CardF5(data.user, mode, data["bp-time"]));
+    const cardF6 = await component_D6(user2CardF6(data.user, data.historyUser, mode, data.bonus_pp, data.ranked_map_play_count));
+    const cardF7 = await component_D7(user2CardF7(data.user, mode));
 
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
