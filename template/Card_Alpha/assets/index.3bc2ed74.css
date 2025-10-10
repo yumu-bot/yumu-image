@@ -1041,13 +1041,13 @@ font-size 原来是 16
 
 @font-face {
     font-family: Torus;
-    src: url(./font/Torus-SemiBold.ttf)
+    src: url(../../../font/Torus-SemiBold.ttf)
 }
 
 
 @font-face {
     font-family: alibaba;
-    src: url(./font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.2.ttf)
+    src: url(../../../font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.3.ttf)
 }
 
 * {
