@@ -1041,7 +1041,10 @@ font-size 原来是 16
 
 @font-face {
     font-family: Torus;
-    src: url(../../../font/Torus-SemiBold.ttf)
+    src: url(../../../font/Torus-SemiBold.ttf);
+    unicode-range: U+000-5FF, U+1E00-1FFF, U+2000-206F, U+2070-209F,
+    U+20A0-20CF, U+2100-214F, U+2150-218F, U+2190-21FF, U+2200-22FF,
+    U+25A0-25FF, U+2600-26FF, U+2C60-2C7F, U+2E00-2E7F, U+3000-303F, U+4E00-9FFF, U+AC00-D7AF;
 }
 
 
@@ -1049,6 +1052,14 @@ font-size 原来是 16
     font-family: alibaba;
     src: url(../../../font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.3.ttf)
 }
+
+@font-face {
+    font-family: "Noto Color Emoji";
+    src: local("Noto Color Emoji");
+    unicode-range: U+1F000-1FAFF, U+FE00-FE0F, U+E0100-E01EF;
+}
+
+
 
 * {
     font-family: Torus, alibaba, "Apple Color Emoji", sans-serif, serif, "Segoe UI Emoji", "Noto Color Emoji"
