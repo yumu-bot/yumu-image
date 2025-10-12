@@ -519,7 +519,7 @@ export async function card_F(data = {
         const c1 = data ? await label_C1({
                 avatar: data.player_avatar ?? '',
                 name: data.player_name ?? 'Unknown',
-                mods_arr: data.player_mods ?? [{ acronym: '', color: 'none' } ],
+                mods_arr: data.player_mods,
                 score: data.player_score ?? '',
                 rank: data.player_rank ?? '',
                 maxWidth: maxWidth,

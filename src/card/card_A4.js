@@ -215,26 +215,8 @@ export async function card_A4(data = {
     }
 
     // 插入模组，因为先插的在上面，所以从左边插
-    /*
-    let mods_svg = ''
-    const mods_arr = data.score.mods ?? [{acronym: ''}]
-    const mods_arr_length = mods_arr.length;
+    const mods_arr = data.score.mods
 
-    let multiplier
-    if (mods_arr_length <= 5 && mods_arr_length > 0) {
-        multiplier = 2
-    } else if (mods_arr_length > 5) {
-        multiplier = 1
-    }
-
-    mods_arr.forEach((mod, i) => {
-        const offset_x = 915 - 235 - 32 + multiplier * 24 - mods_arr_length * multiplier * 24
-
-        mods_svg += getModRRectPath(mod, offset_x + multiplier * i * 24, 6, 40, 20, 10, 15)
-    });
-
-     */
-    const mods_arr = data.score.mods ?? [{acronym: ''}]
     const mods_svg = drawLazerMods(mods_arr, 685, 3, 25, 510 - name_width, 'right', 4, true).svg
 
     const rank_rrect = PanelDraw.Rect(810, 0, 105, 62, 20, rank_color)

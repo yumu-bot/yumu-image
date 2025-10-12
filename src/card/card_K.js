@@ -16,7 +16,7 @@ export function card_K(data = {
     skill: [ 3.9850707, 3.2580092, 3.869737, 1.9129845, 4.86813, 4.008765 ],
     skill_color: '#fff',
     hexagon_color: '#fff',
-    mods: [{acronym: ''}],
+    mods: [],
     rank: 'S',
 }) {
 

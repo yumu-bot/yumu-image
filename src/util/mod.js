@@ -144,7 +144,7 @@ export function getLazerModsWidth(mods = [], height = 100, max_width = Infinity,
 
 /**
  * 新版绘制标准六边形模组：模组宽 135px 或 235px（含有额外信息），会根据高度来缩放（默认 100px）
- * @param mods 必须是 LazerMod 类，含有模组颜色等信息
+ * @param mods 必须是 LazerMod 类，含有模组颜色等信息。注意，如果传入 [ { acronym: '' } ]，会识别为 NM。
  * @param x
  * @param y 如果是从之前的模组绘制转来，这里在 height = 70 的情况下需要 -6
  * @param height 默认 100。如果是从之前的模组绘制转来，这里填 70

@@ -1064,7 +1064,7 @@ const rank2rank = (rank = 'SS') => {
     }
 }
 
-const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = [{acronym: ''}]) => {
+const getApproximateRankSP = (acc = 1, miss = 0, mode = 'osu', mods = []) => {
     let rank = 'F';
     const hasMiss = miss > 0;
 

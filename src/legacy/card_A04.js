@@ -164,7 +164,7 @@ export async function card_A04(data = {
     });
 
      */
-    const mods_arr = data.score.mods ?? [{acronym: ''}]
+    const mods_arr = data.score.mods
     const mods_svg = drawLazerMods(mods_arr, 900, 3, 25, 240, 'right', 4, true).svg
 
     const type = getScoreTypeImage(data?.score?.is_lazer)

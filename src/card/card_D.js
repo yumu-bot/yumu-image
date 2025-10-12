@@ -119,7 +119,7 @@ export async function card_D(data = {
 
     // 替换模组
 
-    const mods_arr = data.mods_arr || [{acronym: ''}]
+    const mods_arr = data.mods_arr
     const length = mods_arr.length;
 
     for (let i = 0; i < length; ++i) {

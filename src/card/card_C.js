@@ -58,7 +58,7 @@ export function card_C(data = {
     const reg_color_left = '${color_left}';
 
     // 插入模组
-    const mods_arr = data.mods_arr || [{acronym: ''}]
+    const mods_arr = data.mods_arr
 
     // 160 刚好可以展示单模组，并且收起多模组
     const mods_data =
