@@ -217,7 +217,7 @@ export async function card_A4(data = {
     // 插入模组，因为先插的在上面，所以从左边插
     /*
     let mods_svg = ''
-    const mods_arr = data.score.mods || [{acronym: ''}]
+    const mods_arr = data.score.mods ?? [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
 
     let multiplier
@@ -234,7 +234,7 @@ export async function card_A4(data = {
     });
 
      */
-    const mods_arr = data.score.mods || [{acronym: ''}]
+    const mods_arr = data.score.mods ?? [{acronym: ''}]
     const mods_svg = drawLazerMods(mods_arr, 685, 3, 25, 510 - name_width, 'right', 4, true).svg
 
     const rank_rrect = PanelDraw.Rect(810, 0, 105, 62, 20, rank_color)

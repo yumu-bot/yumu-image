@@ -1143,7 +1143,7 @@ const PanelEGenerate = {
         return {
             top: top,
             bottom: bottom,
-            mods: score?.mods || [],
+            mods: score?.mods ?? [],
             rank: score?.legacy_rank || 'F',
         }
     },

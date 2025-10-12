@@ -211,7 +211,7 @@ const PanelGamma = {
 
          */
 
-        const mods_arr = score.mods || [];
+        const mods_arr = score.mods ?? [];
         let mod_str = '';
 
         if (isNotEmptyArray(mods_arr)) {

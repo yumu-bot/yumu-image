@@ -1613,14 +1613,21 @@ export async function getFlagPath(code = "cn", x, y, h = 30) {
     if (typeof code != 'string') return '';
 
     //避免腾讯封掉青天白日旗
-    const image = getImageFromV3('flag-TW.png')
     if (code.toLowerCase() === "tw") {
+        const image = getImageFromV3('flag-TW.png')
+
         if (fs.existsSync(image)) {
             return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${image}"
             style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
         } else {
             code = "cn"
         }
+    } else if (code.toLowerCase() === "xx") {
+        // 这不是 svg 文件，这个是 png 文件
+        const xx_image = getImageFromV3('Flags', 'XX')
+
+        return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${xx_image}"
+            style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
     }
 
     const svg = await getFlagSvg(code);

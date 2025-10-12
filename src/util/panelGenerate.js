@@ -277,7 +277,7 @@ export const PanelGenerate = {
         const combo = score?.max_combo || score?.max_combo || 0
         const combo_str = combo > 0 ? (combo + 'x') : ''
 
-        const mods_arr = score?.mods || [];
+        const mods_arr = score?.mods ?? [];
         const rank = rankSS2X(getApproximateRank(score, true));
         const bg_str = 'object-score-backimage-' + rank + '.jpg';
         const icon_str = (!score.match.team || score.match.team === 'none') ? 'object-card-headtohead.png'
@@ -896,7 +896,7 @@ export const PanelGenerate = {
             title2 = '';
         }
 
-        const mods = round?.mods || [];
+        const mods = round?.mods ?? [];
 
         const background = await getMapBackground(round?.beatmap);
 
@@ -1098,7 +1098,7 @@ export const PanelGenerate = {
             label3: '',
             label4: '',
             label5: '#' + identifier,
-            mods_arr: s.mods || [],
+            mods_arr: s.mods ?? [],
 
             color_title2: '#bbb',
             color_right: getRankColor(s?.legacy_rank),
@@ -1230,7 +1230,7 @@ export const PanelGenerate = {
             score_rank: bp.rank || 'F',
             accuracy: Math.round(bp.accuracy * 10000) / 100 || 0, //%
             combo: bp.max_combo || 0, //x
-            mods_arr: bp.mods || [],
+            mods_arr: bp.mods ?? [],
             pp: Math.round(bp.pp) || 0 //pp
         }
     },

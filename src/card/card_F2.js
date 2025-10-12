@@ -9,42 +9,42 @@ export async function card_F2(match_score = {}, max_combo = 0, compare_score = 0
     // 读取模板
     let svg = `   
         <defs>
-        <clipPath id="clippath-CP1-1">
+        <clipPath id="clippath-CF1-1">
             <circle cx="215" cy="205" r="150" style="fill: none;"/>
         </clipPath>
-        <clipPath id="clippath-CP1-2">
+        <clipPath id="clippath-CF1-2">
             <rect x="0" y="0" rx="20" ry="20" width="430" height="550" style="fill: none;"/>
         </clipPath>
-        <filter id="inset-shadow-CP1-1" height="150%" width="150%" x="-25%" y="-25%" filterUnits="userSpaceOnUse">
+        <filter id="inset-shadow-CF1-1" height="150%" width="150%" x="-25%" y="-25%" filterUnits="userSpaceOnUse">
             <feFlood flood-color="#000"/>
             <feComposite in2="SourceGraphic" operator="out"/>
             <feMorphology operator="dilate" radius="10" />
             <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
             <feComposite in2="SourceGraphic" operator="atop"/>
         </filter>
-        <filter id="blur-CP1-1" height="110%" width="110%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
+        <filter id="blur-CF1-1" height="110%" width="110%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
             <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
         </filter>
         </defs>
-          <g id="Base_CP1">
+          <g id="Base_CF1">
             <rect x="0" y="0" rx="20" ry="20" width="430" height="550" style="fill: #382E32;"/>
-            <g style="clip-path: url(#clippath-CP1-2);" filter="url(#blur-CP1-1)">
+            <g style="clip-path: url(#clippath-CF1-2);" filter="url(#blur-CF1-1)">
             </g>
           </g>
-          <g id="Shadow_CP1" style="clip-path: url(#clippath-CP1-1);" filter="url(#inset-shadow-CP1-1)">
+          <g id="Shadow_CF1" style="clip-path: url(#clippath-CF1-1);" filter="url(#inset-shadow-CF1-1)">
             <circle cx="215" cy="205" r="150" style="fill: #fff;"/>
-            <g style="clip-path: url(#clippath-CP1-1);">
+            <g style="clip-path: url(#clippath-CF1-1);">
             </g>
           </g>
-          <g id="Mod_CP1">
+          <g id="Mod_CF1">
           </g>
-          <g id="Text_CP1">
+          <g id="Text_CF1">
           </g>`;
 
-    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CP1-2\);" filter="url\(#blur-CP1-1\)">)/
-    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CP1-1\);">)/
-    const reg_text = /(?<=<g id="Text_CP1">)/
-    const reg_mod = /(?<=<g id="Mod_CP1">)/
+    const reg_background = /(?<=<g style="clip-path: url\(#clippath-CF1-2\);" filter="url\(#blur-CF1-1\)">)/
+    const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CF1-1\);">)/
+    const reg_text = /(?<=<g id="Text_CF1">)/
+    const reg_mod = /(?<=<g id="Mod_CF1">)/
 
     svg = setImage(svg, 65, 55, 300, 300, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar, 1)
 
@@ -112,7 +112,7 @@ export async function card_F2(match_score = {}, max_combo = 0, compare_score = 0
         },
     ], 430 / 2, 530, 'center baseline')
 
-    const mods = (match_score?.mods || [])
+    const mods = (match_score?.mods ?? [])
         .filter(it => it.acronym !== "NF")
 
     const mods_path = drawLazerMods(mods, 430 / 2, 332 - 4, 46, 230, 'center', 5, true).svg
@@ -124,11 +124,72 @@ export async function card_F2(match_score = {}, max_combo = 0, compare_score = 0
     return svg.toString()
 }
 
+function getMatchScoreAdvancedJudge(match_score = {}, max_combo = 0) {
+    const stat = match_score?.statistics || {}
+
+    const is_perfect = match_score?.rank === 'X' || match_score?.rank === 'XH'
+    const is_fc = (match_score?.perfect === true) || (match_score?.perfect === 1)
+    const is_almost_fc = match_score.max_combo > max_combo * 0.9
+    const is_mania_fc = (match_score.mode_int === 3 && stat?.meh === 0 && stat?.ok === 0)
+
+    let judge
+    let color
+
+    if (match_score.rank === 'F') {
+        judge = 'L'
+        color = '#9E040D'
+    } else if (is_perfect) {
+        judge = 'PF'
+        color = '#FF9800'
+    } else if (is_fc) {
+        judge = 'FC+'
+        color = '#B3D465'
+    } else if (stat?.miss === 0) {
+        if (is_almost_fc || is_mania_fc) {
+            judge = 'FC'
+            color = '#009944'
+        } else {
+            judge = 'FC-'
+            color = '#B7AB00'
+        }
+    } else if (is_almost_fc || is_mania_fc) {
+        judge = 'C+'
+        color = '#00A1E9'
+    } else {
+        judge = 'C'
+        color = '#0068B7'
+    }
+
+    return {
+        judge: judge,
+        color: color
+    }
+}
+
 
 function getDeltaScore(score = 0, compare = 0) {
     return {
         sign: (score < compare) ? '-' : '+',
         delta: Math.abs(score - compare),
         color: (score < compare) ? '#ffcdd2' : '#c2e5c3',
+    }
+}
+
+/**
+ * 获取序数词
+ * @param number
+ * @returns {string}
+ */
+function getOrdinal(number = 1) {
+    switch (number) {
+        case 11: case 12: case 13: return 'th'
+        default: {
+            switch (number % 10) {
+                case 1: return 'st'
+                case 2: return 'nd'
+                case 3: return 'rd'
+                default: return 'th'
+            }
+        }
     }
 }

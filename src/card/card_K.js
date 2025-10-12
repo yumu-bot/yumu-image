@@ -58,7 +58,7 @@ export function card_K(data = {
     const rank_rrect = PanelDraw.Rect(185, 10, 40, 20, 10, rank_color)
     const rank = torusBold.getTextPath(data?.rank || 'F', 205, 26, 18, 'center baseline', rank_text_color)
 
-    const mods = data?.mods || []
+    const mods = data?.mods ?? []
 
     for (let i = 0; i < mods.length; ++i) {
         const mod = mods[i]

@@ -66,24 +66,6 @@ export function card_C(data = {
 
     svg = setText(svg, mods_data.svg, reg_mod);
 
-    /*
-    const mods_arr = data.mods_arr || [{acronym: ''}]
-    const mods_arr_length = mods_arr.length;
-
-    let multiplier
-    if (mods_arr_length <= 2 && mods_arr_length > 0) {
-        multiplier = 2
-    } else if (mods_arr_length > 2) {
-        multiplier = 1
-    }
-
-    mods_arr.forEach((mod, i) => {
-        svg = setText(svg,
-            getModPath(mod, 620 - multiplier * i * 20, 24, 90, 42, true), reg_mod);
-    });
-
-     */
-
     // 插入四个小标签
     const color_title2 = data.color_title2 ?? 'none';
     const color_label1 = data.color_label1 ?? 'none';

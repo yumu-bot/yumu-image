@@ -147,7 +147,7 @@ export async function card_A04(data = {
 
     /*
     // 插入模组，因为先插的在上面，所以从左边插
-    const mods_arr = data.score.mods || [{acronym: ''}]
+    const mods_arr = data.score.mods ?? [{acronym: ''}]
     const mods_arr_length = mods_arr.length;
 
     let multiplier
@@ -164,7 +164,7 @@ export async function card_A04(data = {
     });
 
      */
-    const mods_arr = data.score.mods || [{acronym: ''}]
+    const mods_arr = data.score.mods ?? [{acronym: ''}]
     const mods_svg = drawLazerMods(mods_arr, 900, 3, 25, 240, 'right', 4, true).svg
 
     const type = getScoreTypeImage(data?.score?.is_lazer)

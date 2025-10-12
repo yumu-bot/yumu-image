@@ -364,7 +364,7 @@ function score2CardE2(score, calcPP) {
 
     return {
         rank: score.rank || 'F',
-        mods: score.mods || [],
+        mods: score.mods ?? [],
         score: scoreStr,
         accuracy: score.accuracy || 0,
         combo: score.max_combo || 0,

@@ -258,7 +258,7 @@ export async function panel_E2(data = {
     const stat = {
         acc: data?.expected?.accuracy * 100 || 100,
         combo: data?.expected?.combo || data.beatmap.max_combo,
-        mods: data?.expected?.mods || [],
+        mods: data?.expected?.mods ?? [],
         nMisses: data?.expected?.miss || 0,
     }
     const mode = getGameMode(data?.expected?.mode, 0, data?.beatmap?.mode);
@@ -326,7 +326,7 @@ async function expect2CardE5(expected, rank = 'F', mode = 'osu', max_combo = 0, 
     return {
         rank: rank || 'F',
         mode: mode,
-        mods: expected.mods || [],
+        mods: expected.mods ?? [],
         accuracy: expected.accuracy || 0,
         combo: expected.combo || max_combo,
         pp: calcPP.pp.pp || 0,

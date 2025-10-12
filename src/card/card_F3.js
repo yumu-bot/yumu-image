@@ -111,7 +111,7 @@ export async function card_F3(match_score = {}, max_combo = 0, compare_score = 0
 
     const delta = poppinsBold.getTextPath(delta_data.sign + delta_score, 340, 114, 18, 'right baseline', delta_data.color)
 
-    const mods = (match_score?.mods || [])
+    const mods = (match_score?.mods ?? [])
         .filter(it => it.acronym !== "NF")
 
     if (mods.length === 0) mods.push("NM")

@@ -1377,7 +1377,7 @@ const PanelEGenerate = {
     score2componentE8: (score, is_lazer = false) => {
         return {
             score: is_lazer ? (score?.total_score || 0) : (score?.legacy_total_score || 0),
-            mods: score?.mods || [],
+            mods: score?.mods ?? [],
         }
     },
 
@@ -1455,7 +1455,7 @@ const PanelEGenerate = {
         } else {
             rainbow_rating = (score?.total_score_without_mods > 0) ?
                 (score.total_score_without_mods / 1000000) :
-                (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods || [], score?.ruleset_id || 0))
+                (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods ?? [], score?.ruleset_id || 0))
         }
 
         let rainbow_rank;
