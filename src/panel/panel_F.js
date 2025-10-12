@@ -110,7 +110,7 @@ export async function panel_F(
     svg = setText(svg, panel_name, reg_index);
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, reg_banner);
+    svg = setCustomBanner(svg, null, reg_banner);
 
     // 导入成绩卡（C卡\
     const games = (data?.match?.events || []).filter(value => {

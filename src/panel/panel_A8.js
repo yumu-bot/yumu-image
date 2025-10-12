@@ -144,7 +144,7 @@ export async function panel_A8(
     svg = setText(svg, stringA3s, reg_card_a3)
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, reg_banner);
+    svg = setCustomBanner(svg, null, reg_banner);
 
     // 计算面板高度
     const panelHeight = getPanelHeight(result_count, 210, 3, 290, 20);

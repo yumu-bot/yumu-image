@@ -239,7 +239,7 @@ export async function panel_A1(data = {
     ).then(results => thenPush(results, friend_cardA1s))
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, reg_banner, data.me_card_A1?.profile?.banner);
+    svg = setCustomBanner(svg, data.me_card_A1?.profile?.banner, reg_banner);
 
     svg = setSvgBody(svg, 40, 40, me_cardA1, reg_me_card_a1);
 

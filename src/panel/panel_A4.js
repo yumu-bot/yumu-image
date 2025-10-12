@@ -91,7 +91,7 @@ export async function panel_A4(data = {
     })
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, reg_banner, data.me?.profile?.banner);
+    svg = setCustomBanner(svg, data.me?.profile?.banner, reg_banner);
 
     // 计算面板高度
     const rowTotal = (cardHs !== []) ? Math.ceil(cardHs.length / 2) : 0;

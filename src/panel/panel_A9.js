@@ -206,7 +206,7 @@ export async function panel_A9(
      */
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, reg_banner, await readNetImage(data.banner));
+    svg = setCustomBanner(svg, await readNetImage(data.banner), reg_banner);
 
     return svg.toString();
 }

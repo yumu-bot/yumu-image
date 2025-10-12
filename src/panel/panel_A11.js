@@ -1,11 +1,11 @@
 import {
     exportJPEG,
     getPanelHeight,
-    getPanelNameSVG,
+    getPanelNameSVG, getSvgBody,
     readNetImage,
     setCustomBanner,
     setSvgBody,
-    setText
+    setText, thenPush
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -138,19 +138,37 @@ export async function panel_A11(data = {
     svg = setSvgBody(svg, 40, 40, await card_A1(await PanelGenerate.mapper2CardA1(user)), reg_main);
 
     // 队员
-    for (const i in guests) {
-        const v = guests[i]
+    const paramA1s = []
+
+    await Promise.allSettled(
+        guests.map((guest) => {
+            return PanelGenerate.guest2CardA1(guest)
+        })
+    ).then(results => thenPush(results, paramA1s))
+
+    const cardA1s = []
+
+    await Promise.allSettled(
+        paramA1s.map((param) => {
+            return card_A1(param)
+        })
+    ).then(results => thenPush(results, cardA1s))
+
+    let stringA1s = ''
+
+    for (const i in cardA1s) {
+        const a1 = cardA1s[i]
 
         const x = i % 4
         const y = Math.floor(i / 4)
 
-        const member = await card_A1(await PanelGenerate.guest2CardA1(v))
-
-        svg = setSvgBody(svg, 40 + 470 * x, 330 + 250 * y, member, reg_body)
+        stringA1s += getSvgBody(40 + 470 * x, 330 + 250 * y, a1)
     }
 
+    svg = setText(svg, stringA1s, reg_body)
+
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, reg_banner, await readNetImage(user.banner));
+    svg = setCustomBanner(svg, await readNetImage(user.banner), reg_banner);
 
     return svg.toString()
 }

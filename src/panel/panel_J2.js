@@ -239,7 +239,7 @@ export async function panel_J2(data = {
 
     // 插入图片和部件
     const background = pp2UserBG(user.pp || 0);
-    svg = setCustomBanner(svg, reg_banner, user?.profile?.banner);
+    svg = setCustomBanner(svg, user?.profile?.banner, reg_banner);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 
     svg = setTexts(svg, [bodyJ1, bodyJ2, bodyJ3, bodyJ4, bodyJ5, bodyJ6, bodyJ7, bodyJ8], reg_component);

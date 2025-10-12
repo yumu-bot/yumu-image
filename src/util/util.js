@@ -2066,10 +2066,10 @@ export function getMatchDuration(match) {
 
 /**
  * @param svg
+ * @param {string | null} custom
  * @param reg_banner
- * @param {string?} custom
  */
-export function setCustomBanner(svg, reg_banner, custom, custom_opacity = 0.8) {
+export function setCustomBanner(svg, custom = null, reg_banner, custom_opacity = 0.8) {
     if (custom) {
         return setImage(svg, 0, 0, 1920, 320, custom, reg_banner, custom_opacity);
     } else {

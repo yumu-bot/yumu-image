@@ -786,7 +786,7 @@ font-size 原来是 16
 
 .markdown-body pre code, .markdown-body pre tt {
     display: inline;
-    max-width: auto;
+    max-width: none; // auto
     padding: 0;
     margin: 0;
     overflow: visible;
@@ -981,7 +981,7 @@ font-size 原来是 16
 .markdown-body g-emoji {
     display: inline-block;
     min-width: 1ch;
-    font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", Segoe UI Symbol;
+    font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, serif;
     font-size: 1em;
     font-style: normal !important;
     font-weight: var(--base-text-weight-normal, 400);
@@ -1059,6 +1059,10 @@ font-size 原来是 16
     unicode-range: U+1F000-1FAFF, U+FE00-FE0F, U+E0100-E01EF;
 }
 
+:root {
+    --base-text-weight-semibold: 30;
+    --base-text-weight-normal: 30;
+}
 
 
 * {

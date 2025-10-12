@@ -269,7 +269,7 @@ export async function panel_C(
     const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(data));
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, reg_banner);
+    svg = setCustomBanner(svg, null, reg_banner);
     svg = setSvgBody(svg, 40, 40, matchInfo, reg_maincard);
 
     // 导入H卡

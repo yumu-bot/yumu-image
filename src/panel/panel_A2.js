@@ -392,7 +392,7 @@ export async function panel_A2(data = {
     }
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, reg_banner);
+    svg = setCustomBanner(svg, null, reg_banner);
 
     // 计算面板高度
     const panelHeight = result_count <= 12 ?

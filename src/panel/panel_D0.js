@@ -313,7 +313,7 @@ export async function panel_D0(data = {
 
     // 插入图片和部件
     const background = pp2UserBG(data.user.pp || 0);
-    svg = setCustomBanner(svg, reg_banner, data.user?.profile?.banner);
+    svg = setCustomBanner(svg, data.user?.profile?.banner, reg_banner);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 
     return svg.toString();

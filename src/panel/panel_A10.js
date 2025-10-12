@@ -3,7 +3,7 @@ import {
     getPanelNameSVG,
     setSvgBody,
     setText,
-    setCustomBanner, getPanelHeight, readNetImage
+    setCustomBanner, getPanelHeight, readNetImage, getSvgBody
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A1} from "../card/card_A1.js";
@@ -102,20 +102,25 @@ export async function panel_A10(
     // 主卡
     svg = setSvgBody(svg, 40, 40, await card_A1(await PanelGenerate.user2CardA1(user)), reg_main);
 
-    // 队员
+    // 牌子
+
+    let string_c2s = ''
+
     for (const i in badges) {
         const v = badges[i]
 
         const x = i % 2
         const y = Math.floor(i / 2)
 
-        const member = await card_C2(await PanelGenerate.badge2CardC2(v, parseInt(i) + 1))
+        const member = card_C2(await PanelGenerate.badge2CardC2(v, parseInt(i) + 1))
 
-        svg = setSvgBody(svg, 40 + 940 * x, 330 + 150 * y, member, reg_body)
+        string_c2s += getSvgBody(40 + 940 * x, 330 + 150 * y, member)
     }
 
+    svg = setText(svg, string_c2s, reg_body)
+
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, reg_banner, await readNetImage(data.banner));
+    svg = setCustomBanner(svg, await readNetImage(data.banner), reg_banner);
 
     return svg.toString();
 }
