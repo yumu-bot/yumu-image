@@ -1563,7 +1563,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.green,
+                    rrect_color: colorArray.light_green,
                 }, {
                     index: '50',
                     stat: s.meh,
@@ -1616,7 +1616,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.green,
+                    rrect_color: colorArray.light_green,
                 }, {
                     index: '0',
                     stat: s.miss,
@@ -1657,7 +1657,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.large_tick_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.green,
+                    rrect_color: colorArray.light_green,
                 }, {
                     index: '50',
                     stat: s.small_tick_hit,
@@ -1704,7 +1704,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.good,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.green,
+                    rrect_color: colorArray.light_green,
                 }, {
                     index: '100',
                     stat: s.ok,
@@ -1741,7 +1741,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.green,
+                    rrect_color: colorArray.light_green,
                 }, {
                     index: '50',
                     stat: s.meh,
@@ -1770,7 +1770,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.green,
+                    rrect_color: colorArray.light_green,
                 }, {
                     index: '0',
                     stat: s.miss,
@@ -1793,7 +1793,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.large_tick_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.green,
+                    rrect_color: colorArray.light_green,
                 }, {
                     index: '50',
                     stat: s.small_tick_hit,
@@ -1834,7 +1834,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.good,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.green,
+                    rrect_color: colorArray.light_green,
                 }, {
                     index: '100',
                     stat: s.ok,

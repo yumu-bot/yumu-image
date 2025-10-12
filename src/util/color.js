@@ -3,27 +3,56 @@ import {getModName} from "./mod.js";
 
 // 颜色数组，方便生成带有色彩渐变属性的图块
 export const colorArray = {
-    deep_orange: ['#EA68A2', '#EC6841'],
+    // 红色的反
+    reverse_red: ['#EA68A2', '#EC6841'],
 
+    // 对比强烈的橘黄色
     orange: ['#FF544F', '#FAD126'],
 
     // 更加有氛围感的橘黄色
-    amber: ['#F19149', '#F7B551'],
+    amber: ['#EC6841', '#FF9800'],
+
+    // 平常的黄色
     yellow: ['#FCAC46', '#FEDC45'],
-    green: ['#5EDC5B', '#CAF881'],
+
+    // 亮黄色
+    light_yellow: ['#FCBC46', '#FFFF00'],
+
+    // 亮绿色 / 草绿色
+    light_green: ['#5EDC5B', '#CAF881'],
+
+    // 普通的绿色
+    green: ['#12B4B1', '#31B16C'],
+
+    // 靛蓝色，介于蓝绿之间
     indigo: ['#12B4B1', '#00B7EE'],
-    turquoise: ['#12B4B1', '#31B16C'],
+
+    // 粉红色
     red: ['#F86F64', '#FD5392'],
 
-    // 这个是深蓝，如果要选天蓝色，请改成 cyan
+    // 深红色，正红色
+    deep_red: ['#8A1538', '#D32F2F'],
+
+    // 这个是海蓝，如果要选天蓝色，请改成 cyan
     blue: ['#7776FF', '#4FACFE'],
 
-    cyan: ['#4FACFE', '#00F2FE'],
-    magenta: ['#B6359C', '#EF0A6A'],
-    purple: ['#7776FF', '#AE2CF1'],
+    // 深蓝色
+    deep_blue: ['#1D2088', '#0068B7'],
 
-    deep_gray: ['#777', '#aaa'],
-    gray: ['#aaa', '#ccc'],
+    // 亮蓝色
+    cyan: ['#4FACFE', '#00F2FE'],
+
+    // 玫红色
+    magenta: ['#B6359C', '#EF0A6A'],
+
+    // 紫色
+    purple: ['#F772D1', '#C872F2'],
+
+    reverse_purple: ['#9F56CB', '#F988E7'],
+
+    deep_gray: ['#666', '#999'],
+    gray: ['#999', '#ccc'],
+    white: ['#bbb', '#fafafa'],
     rainbow: ['#EC6841', '#F19149', '#FFF45C',
         '#31B16C', '#00B7EE', '#00F2FE'],
 
@@ -201,7 +230,51 @@ function Hue2RGB(v1, v2, vH)
     return (v1);
 }
 
-export function getStarRatingColor(SR = 0) {
+
+/**
+ * 颜色扩展。
+ */
+export function getCompetitorColors(color) {
+    let cs;
+
+    switch (color) {
+        case "#FFF100": cs = colorArray.light_yellow; break;
+        case "#FF9800": cs = colorArray.amber; break;
+        case "#22AC38": cs = colorArray.green; break;
+        case "#B3D465": cs = colorArray.light_green; break;
+        case "#0068B7": cs = colorArray.deep_blue; break;
+        case "#BDBDBD": cs = colorArray.gray; break;
+        case "#00A0E9": cs = colorArray.blue; break;
+        case "#9922EE": cs = colorArray.purple; break;
+        case "#E4007F": cs = colorArray.magenta; break;
+        case "#EB6877": cs = colorArray.red; break;
+        case "#D32F2F": cs = colorArray.deep_red; break;
+        default: cs = colorArray.deep_gray; break;
+    }
+
+    return cs;
+}
+
+/**
+ *
+ * @param star
+ * @return {[string, string]}
+ */
+export function getStarRatingColors(star = 0) {
+    if (star - 0.15 < 0.15 || star - 0.15 > 9) {
+        let mid = getStarRatingColor(star)
+
+        return [mid, mid]
+    }
+
+
+    let start = getStarRatingColor(star - 0.15);
+    let end = getStarRatingColor(star + 0.15);
+
+    return [start, end];
+}
+
+export function getStarRatingColor(star = 0) {
     let color;
     let r0 = 0;
     let g0 = 0;
@@ -214,7 +287,7 @@ export function getStarRatingColor(SR = 0) {
     const gamma = 2.2; //伽马值
 
 
-    if (SR < 1.25) {
+    if (star < 1.25) {
         r0 = 66;
         g0 = 144;
         b0 = 251;
@@ -224,7 +297,7 @@ export function getStarRatingColor(SR = 0) {
         bottom = 0.1;
         top = 1.25;
 
-    } else if (SR < 2) {
+    } else if (star < 2) {
         r0 = 79;
         g0 = 192;
         b0 = 255;
@@ -234,7 +307,7 @@ export function getStarRatingColor(SR = 0) {
         bottom = 1.25;
         top = 2;
 
-    } else if (SR < 2.5) {
+    } else if (star < 2.5) {
         r0 = 79;
         g0 = 255;
         b0 = 213;
@@ -244,7 +317,7 @@ export function getStarRatingColor(SR = 0) {
         bottom = 2;
         top = 2.5;
 
-    } else if (SR < 3.3) {
+    } else if (star < 3.3) {
         r0 = 124;
         g0 = 255;
         b0 = 79;
@@ -254,7 +327,7 @@ export function getStarRatingColor(SR = 0) {
         bottom = 2.5;
         top = 3.3;
 
-    } else if (SR < 4.2) {
+    } else if (star < 4.2) {
         r0 = 246;
         g0 = 240;
         b0 = 92;
@@ -264,7 +337,7 @@ export function getStarRatingColor(SR = 0) {
         bottom = 3.3;
         top = 4.2;
 
-    } else if (SR < 4.9) {
+    } else if (star < 4.9) {
         r0 = 255;
         g0 = 104;
         b0 = 104;
@@ -274,7 +347,7 @@ export function getStarRatingColor(SR = 0) {
         bottom = 4.2;
         top = 4.9;
 
-    } else if (SR < 5.8) {
+    } else if (star < 5.8) {
         r0 = 255;
         g0 = 78;
         b0 = 111;
@@ -284,7 +357,7 @@ export function getStarRatingColor(SR = 0) {
         bottom = 4.9;
         top = 5.8;
 
-    } else if (SR < 6.7) {
+    } else if (star < 6.7) {
         r0 = 198;
         g0 = 69;
         b0 = 184;
@@ -294,7 +367,7 @@ export function getStarRatingColor(SR = 0) {
         bottom = 5.8;
         top = 6.7;
 
-    } else if (SR < 7.7) {
+    } else if (star < 7.7) {
         r0 = 101;
         g0 = 99;
         b0 = 222;
@@ -304,7 +377,7 @@ export function getStarRatingColor(SR = 0) {
         bottom = 6.7;
         top = 7.7;
 
-    } else if (SR < 9) {
+    } else if (star < 9) {
         r0 = 24;
         g0 = 21;
         b0 = 142;
@@ -315,7 +388,7 @@ export function getStarRatingColor(SR = 0) {
         top = 9;
     }
 
-    const s = (SR - bottom) / (top - bottom);
+    const s = (star - bottom) / (top - bottom);
 
     // https://zhuanlan.zhihu.com/p/37800433/ 伽马的作用
 
@@ -331,9 +404,9 @@ export function getStarRatingColor(SR = 0) {
 
     color = '#' + rHex + gHex + bHex;
 
-    if (SR < 0.1) {
+    if (star < 0.1) {
         color = '#AAAAAA';
-    } else if (SR >= 9) {
+    } else if (star >= 9) {
         color = '#000';
     }
 
@@ -557,6 +630,48 @@ export function getMapStatusColor(ranked = null) {
         case 3: return hsl2hex(200, 1, 0.7)
         case 4: return hsl2hex(333, 1, 0.7)
         default: return 'none'
+    }
+}
+
+/**
+ * 获取评级颜色组，后一个颜色更亮更鲜艳（主色）
+ * @param rank
+ * @return {[string, string]}
+ */
+export function getRankColors(rank = 'F') {
+    if (typeof rank !== 'string') return ['none', 'none'];
+
+    switch (rank.toString().toUpperCase()) {
+        case "PF":
+        case "XH":
+        case "SSH":
+        case "EX":
+        case "X+":
+            return colorArray.white
+        case "X":
+        case "SS":
+            return colorArray.light_yellow
+        case "SH":
+            return colorArray.gray
+        case "SP":
+        case "S+":
+            return colorArray.orange // S+
+        case "S":
+            return colorArray.amber
+        case "A":
+            return colorArray.green
+        case "B":
+            return colorArray.blue
+        case "C":
+            return colorArray.purple
+        case "D":
+            return colorArray.red
+        case "F":
+            return colorArray.deep_gray
+        case "FC":
+            return colorArray.cyan
+        default:
+            return ['none', 'none'];
     }
 }
 

@@ -1,11 +1,11 @@
 import {
-    setImage, readTemplate,
-    setText,
+    setImage, setText,
     setTexts, isASCII, isNotEmptyString
 } from "../util/util.js";
 import {torus, PuHuiTi, torusBold, getMultipleTextPath} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {drawLazerMods} from "../util/mod.js";
+import {PanelColor} from "../util/color.js";
 
 export function card_C(data = {
     background: '',
@@ -46,7 +46,39 @@ export function card_C(data = {
 
 }) {
     // 读取模板
-    let svg = readTemplate('template/Card_H.svg');
+    let svg = `
+      <defs>
+    <clipPath id="clippath-CH-1">
+      <rect x="160" y="0" width="570" height="110" rx="20" ry="20" style="fill: none;"/>
+    </clipPath>
+    <clipPath id="clippath-CH-2">
+      <rect x="20" y="0" width="176" height="110" rx="20" ry="20" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <g id="Base">
+    <rect width="900" height="110" rx="20" ry="20" style="fill: #382e32;"/>
+  </g>
+  <g id="Color">
+  </g>
+  <g id="Background">
+  <rect x="160" y="0" width="570" height="110" rx="20" ry="20" style="fill: #382e32;"/>
+    <g style="clip-path: url(#clippath-CH-1);">
+    </g>
+  </g>
+  <g id="Index">
+  </g>
+  <g id="Avatar">
+  <rect x="20" y="0" width="176" height="110" rx="20" ry="20" style="fill: #382e32;"/>
+    <g style="clip-path: url(#clippath-CH-2);">
+    </g>
+  </g>
+  <g id="Mods">
+    </g>
+  <g id="Text">
+  </g>
+  <g id="Label">
+  </g>
+`
 
     // 路径定义
     const reg_text = /(?<=<g id="Text">)/;
@@ -54,8 +86,7 @@ export function card_C(data = {
     const reg_label = /(?<=<g id="Label">)/;
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-CH-1\);">)/;
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CH-2\);">)/;
-    const reg_color_right = '${color_right}';
-    const reg_color_left = '${color_left}';
+    const reg_color = /(?<=<g id="Color">)/;
 
     // 插入模组
     const mods_arr = data.mods_arr
@@ -111,8 +142,28 @@ export function card_C(data = {
     const rrect_label4 = data.label4 ? PanelDraw.Rect(710 - label4_width, 54, label4_width, 34, 17, color_label4) : '';
     const rrect_label5 = data.label5 ? PanelDraw.Rect(185 - label5_width, 82, label5_width, 20, 10, color_label5) : '';
 
-    svg = setText(svg, data?.color_right || 'none', reg_color_right);
-    svg = setText(svg, data?.color_left || 'none', reg_color_left);
+    let rrect_left
+    let rrect_right
+
+    if (Array.isArray(data?.color_left)) {
+        rrect_left = PanelDraw.LinearGradientRect(0, 0, 60, 110, 20, data?.color_left,
+            1, [40, 60], [0, 100])
+    } else if (isNotEmptyString(data?.color_left)) {
+        rrect_left = PanelDraw.Rect(0, 0, 60, 110, 20, data?.color_left, 1)
+    } else {
+        rrect_left = PanelDraw.Rect(0, 0, 60, 110, 20, PanelColor.top(342), 1)
+    }
+
+    if (Array.isArray(data?.color_right)) {
+        rrect_right = PanelDraw.LinearGradientRect(680, 0, 220, 110, 20, data?.color_right,
+            1, [0, 100], [20, 80])
+    } else if (isNotEmptyString(data?.color_right)) {
+        rrect_right = PanelDraw.Rect(680, 0, 220, 110, 20, data?.color_right, 1)
+    } else {
+        rrect_right = PanelDraw.Rect(680, 0, 220, 110, 20, PanelColor.top(342), 1)
+    }
+
+    svg = setTexts(svg, [rrect_left, rrect_right], reg_color);
 
     svg = setImage(svg, 140, 4, 45, 30, data?.type || '', reg_label, 1);
 

@@ -123,7 +123,7 @@ export async function panel_F(
     let blue_wins_before = 0;
 
     const event_Cs = []
-    const param_Cs = []
+    const param_Fs = []
     const card_Cs = []
 
     for (const v of events) {
@@ -135,17 +135,17 @@ export async function panel_F(
             blue_wins_before++;
         }
 
-        event_Cs.push(event2CardC(v, red_wins_before, blue_wins_before, data?.skip_ignore_map?.easy || 1))
+        event_Cs.push(event2CardF(v, red_wins_before, blue_wins_before, data?.skip_ignore_map?.easy || 1))
 
         // card_Cs.push(await card_C(await event2CardC(v, red_wins_before, blue_wins_before)));
     }
 
     await Promise.allSettled(
         event_Cs
-    ).then(results => thenPush(results, param_Cs))
+    ).then(results => thenPush(results, param_Fs))
 
     await Promise.allSettled(
-        param_Cs.map((p) => {
+        param_Fs.map((p) => {
             return card_F(p)
         })
     ).then(results => thenPush(results, card_Cs))
@@ -193,7 +193,7 @@ export async function panel_F(
     return svg.toString();
 }
 
-async function event2CardC(
+async function event2CardF(
     event = {
         id: 0,
         detail: {
@@ -212,7 +212,7 @@ async function event2CardC(
     let red_arr = [], blue_arr = [], none_arr = [];
 
     for (const v of scores) {
-        const f = await score2LabelC2(v, easy);
+        const f = await score2LabelF2(v, easy);
 
         switch (v?.match?.team) {
             case 'red':
@@ -227,7 +227,7 @@ async function event2CardC(
         }
     }
 
-    async function score2LabelC2(score = {}, easy = 1) {
+    async function score2LabelF2(score = {}, easy = 1) {
         let s = score?.score || score?.legacy_total_score
 
         if (matchAnyMods(score?.mods, ["EZ"]) && easy !== 1) {

@@ -112,9 +112,9 @@ export async function panel_A10(
         const x = i % 2
         const y = Math.floor(i / 2)
 
-        const member = card_C2(await PanelGenerate.badge2CardC2(v, parseInt(i) + 1))
+        const badge = card_C2(await PanelGenerate.badge2CardC2(v, parseInt(i) + 1))
 
-        string_c2s += getSvgBody(40 + 940 * x, 330 + 150 * y, member)
+        string_c2s += getSvgBody(40 + 940 * x, 330 + 150 * y, badge)
     }
 
     svg = setText(svg, string_c2s, reg_body)

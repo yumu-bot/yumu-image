@@ -501,11 +501,11 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
     } else if (achievements >= 97) {
         colors = colorArray.amber
     } else if (achievements >= 80) {
-        colors = colorArray.deep_orange
+        colors = colorArray.reverse_red
     } else if (achievements >= 60) {
         colors = colorArray.indigo
     } else if (achievements >= 50) {
-        colors = colorArray.turquoise
+        colors = colorArray.green
     } else {
         colors = colorArray.deep_gray
     }

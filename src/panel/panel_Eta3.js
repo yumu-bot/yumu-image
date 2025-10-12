@@ -587,7 +587,7 @@ const component_Eta2 = (data = {
                 PanelDraw.LinearGradientRect(670, 915, 290,
                     40, 20, colorArray.yellow)
                 + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.aim_pp + data?.spd_pp) / pp_sum * 290),
-                    40, 20, colorArray.green)
+                    40, 20, colorArray.light_green)
                 + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.aim_pp) / pp_sum * 290),
                     40, 20, colorArray.cyan)
 
@@ -606,7 +606,7 @@ const component_Eta2 = (data = {
                 PanelDraw.LinearGradientRect(670, 915, 290,
                     40, 20, colorArray.yellow)
                 + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.diff_pp) / pp_sum * 290),
-                    40, 20, colorArray.green)
+                    40, 20, colorArray.light_green)
         } break;
 
         case 'm': {

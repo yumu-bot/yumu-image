@@ -6,6 +6,7 @@ import {
 import {card_C} from "../card/card_C.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
+import {colorArray, getCompetitorColors} from "../util/color.js";
 
 export async function router(req, res) {
     try {
@@ -351,17 +352,17 @@ async function playerData2CardH(p = {}) {
 
     switch (p?.team) {
         case 'red':
-            team_color = '#D32F2F';
+            team_color = colorArray.red // '#D32F2F';
             player_background = getImageFromV3('card-red.png');
             isTeamVS = true;
             break;
         case 'blue':
-            team_color = '#00A0E9';
+            team_color = colorArray.blue // '#00A0E9';
             player_background = getImageFromV3('card-blue.png');
             isTeamVS = true;
             break;
         default:
-            team_color = '#aaa';
+            team_color = colorArray.gray // '#aaa';
             player_background = getImageFromV3('card-gray.png');
             isTeamVS = false;
             break;
@@ -383,6 +384,7 @@ async function playerData2CardH(p = {}) {
 
     const player_class = p?.player_class;
     const color_index = (player_class?.name === "Strongest Marshal" || player_class?.name === "Competent Marshal" || player_class?.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
+    const colors = getCompetitorColors(player_class.color)
 
     const avatar = await getAvatar(p.player.avatar_url, true);
     const mra_number = floors(p?.mra, 2)
@@ -405,7 +407,7 @@ async function playerData2CardH(p = {}) {
         mods_arr: [],
 
         color_title2: '#aaa',
-        color_right: player_class?.color,
+        color_right: colors,
         color_left: team_color,
         color_index: color_index,
         color_label1: '',

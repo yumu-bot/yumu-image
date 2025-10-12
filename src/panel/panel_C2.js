@@ -20,6 +20,7 @@ import {card_C} from "../card/card_C.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PuHuiTi, torus} from "../util/font.js";
+import {getCompetitorColors} from "../util/color.js";
 
 export async function router(req, res) {
     try {
@@ -136,27 +137,14 @@ async function playerData2CardH(p = {}) {
     const player_class = p.player_class;
     const color_index = (player_class.name === "Strongest Marshal" || player_class.name === "Competent Marshal" || player_class.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
 
-    let pubg;
-    switch (player_class.color) {
-        case "#FFF100": pubg = 'object-score-backimage-X.jpg'; break;
-        case "#FF9800": pubg = 'object-score-backimage-S.jpg'; break;
-        case "#22AC38": pubg = 'object-score-backimage-A.jpg'; break;
-        case "#B3D465": pubg = 'object-score-backimage-A.jpg'; break;
-        case "#0068B7": pubg = 'object-score-backimage-B.jpg'; break;
-        case "#BDBDBD": pubg = 'object-score-backimage-XH.jpg'; break;
-        case "#00A0E9": pubg = 'object-score-backimage-B.jpg'; break;
-        case "#9922EE": pubg = 'object-score-backimage-C.jpg'; break;
-        case "#E4007F": pubg = 'object-score-backimage-C.jpg'; break;
-        case "#EB6877": pubg = 'object-score-backimage-D.jpg'; break;
-        case "#D32F2F": pubg = 'object-score-backimage-D.jpg'; break;
-        default: pubg = 'object-score-backimage-F.jpg'; break;
-    }
+    const background = getCompetitorBackground(player_class.color)
+    const colors = getCompetitorColors(player_class.color)
 
     const avatar = await getAvatar(p.player.avatar_url, true);
     const mra_number = floors(p?.mra, 2)
 
     return {
-        background: getImageFromV3(pubg),
+        background: background,
         cover: avatar,
         title: p?.player?.username || 'UID:' + p.player.id,
         title2: p?.player?.country?.country_code || '',
@@ -173,8 +161,8 @@ async function playerData2CardH(p = {}) {
         mods_arr: [],
 
         color_title2: '#aaa',
-        color_right: player_class?.color,
-        color_left: player_class?.color,
+        color_right: colors,
+        color_left: colors,
         color_index: color_index,
         color_label1: '',
         color_label2: '',
@@ -233,7 +221,6 @@ async function seriesRating2CardA2(sr){
     };
 }
 
-
 function drawCardH(data = {}
     , row = 1, column = 1, maxColumn = 2) {
     let x;
@@ -255,5 +242,26 @@ function drawCardH(data = {}
     const body = card_C(data);
 
     return getSvgBody(x, y, body);
+}
+
+function getCompetitorBackground(color) {
+    let bg;
+
+    switch (color) {
+        case "#FFF100": bg = 'object-score-backimage-X.jpg'; break;
+        case "#FF9800": bg = 'object-score-backimage-S.jpg'; break;
+        case "#22AC38": bg = 'object-score-backimage-A.jpg'; break;
+        case "#B3D465": bg = 'object-score-backimage-A.jpg'; break;
+        case "#0068B7": bg = 'object-score-backimage-B.jpg'; break;
+        case "#BDBDBD": bg = 'object-score-backimage-XH.jpg'; break;
+        case "#00A0E9": bg = 'object-score-backimage-B.jpg'; break;
+        case "#9922EE": bg = 'object-score-backimage-C.jpg'; break;
+        case "#E4007F": bg = 'object-score-backimage-C.jpg'; break;
+        case "#EB6877": bg = 'object-score-backimage-D.jpg'; break;
+        case "#D32F2F": bg = 'object-score-backimage-D.jpg'; break;
+        default: bg = 'object-score-backimage-F.jpg'; break;
+    }
+
+    return getImageFromV3(bg);
 }
 

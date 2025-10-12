@@ -23,7 +23,7 @@ import {
     getTimeDifferenceShort,
     getMapBackground, getDiffBackground, getTime, thenPush, round, rounds,
 } from "./util.js";
-import {getBadgeColor, getRankColor, getStarRatingColor} from "./color.js";
+import {getBadgeColor, getRankColor, getRankColors, getStarRatingColor, getStarRatingColors} from "./color.js";
 import {
     getScoreTypeImage,
     hasLeaderBoard,
@@ -879,68 +879,6 @@ export const PanelGenerate = {
         };
     },
 
-    /*
-    roundInfo2CardA2: async (round, match_name = 'Unknown', team_point_map = {}, match_id = 0, index = 0) => {
-        const is_team_vs = round.is_team_vs;
-
-        const split = getMatchNameSplitted(match_name)
-
-        let title1
-        let title2
-
-        if (isNotEmptyString(split.team1)) {
-            title1 = split.name;
-            title2 = split.team1 + ' vs ' + split.team2;
-        } else {
-            title1 = match_name;
-            title2 = '';
-        }
-
-        const mods = round?.mods ?? [];
-
-        const background = await getMapBackground(round?.beatmap);
-
-        let left1;
-
-        if (mods.length > 0) {
-            left1 = ' +';
-
-            mods.forEach(v => {
-                left1 += (v.toString() + ' ');
-            });
-
-            left1 = left1.trim();
-        }
-
-        const left2 = 'Rounds ' + ((index > 80) ? ('80+') : ((index || 0) + 1));
-        const left3 = 'Scores ' + (round?.scores?.length || '0')
-
-        const right2 = 'MID: ' + (match_id || '0')
-
-        const red_wins = (team_point_map?.red || 0)
-        const blue_wins = (team_point_map?.blue || 0)
-
-        const right3b = is_team_vs ? (red_wins + blue_wins > 0 ? (red_wins + ' : ' + blue_wins) : 'TeamVS') : 'h2h'
-
-        return {
-            background: background,
-            map_status: '',
-
-            title1: title1,
-            title2: title2,
-            title_font: 'PuHuiTi',
-            left1: left1,
-            left2: left2,
-            left3: left3,
-            right1: '',
-            right2: right2,
-            right3b: right3b,
-            right3m: '',
-        };
-    },
-
-     */
-
     team2CardA2: async (team) => {
         const background = await readNetImage(team.flag)
 
@@ -1037,20 +975,6 @@ export const PanelGenerate = {
 
         let mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
 
-        /*
-        switch (s?.mods?.length) {
-            case 0:
-                mods_width = 0;
-                break;
-            case 1:
-                mods_width = 100;
-                break;
-            default:
-                mods_width = 160;
-        }
-
-         */
-
         const acc = floor((s?.legacy_accuracy * 100), 2) + '%'
         const combo = (s.max_combo || 0) + 'x'
 
@@ -1069,11 +993,13 @@ export const PanelGenerate = {
 
         // 这是大概的进度
         const approximate_progress = (s?.total_hit > 0) ? (s?.score_hit / s?.total_hit) : 1
-        const index_l = (s?.passed === false || s?.legacy_rank === 'F') ? Math.round(approximate_progress * 100) + '%' : ''
+        const index_l = (s?.passed === false || rank === 'F') ? Math.round(approximate_progress * 100) + '%' : ''
 
         const star = s?.beatmap?.difficulty_rating || 0
-
         const star_color = getStarRatingColor(star)
+        const star2_color = getStarRatingColors(star)
+        const rank2_color = getRankColors(rank)
+
         const color_label12 = (star < 4) ? '#1c1719' : '#fff'
 
         const label2 = s?.beatmap?.id?.toString() || ''
@@ -1101,8 +1027,8 @@ export const PanelGenerate = {
             mods_arr: s.mods ?? [],
 
             color_title2: '#bbb',
-            color_right: getRankColor(s?.legacy_rank),
-            color_left: star_color,
+            color_right: rank2_color,
+            color_left: star2_color,
             color_index: color_index,
             color_label1: star_color,
             color_label2: star_color,
@@ -1136,7 +1062,7 @@ export const PanelGenerate = {
 
         const is_after = (typeof rank_after == "number")
 
-        const card_h = await PanelGenerate.score2CardC(s, rank, true)
+        const card_c = await PanelGenerate.score2CardC(s, rank, true)
 
         if (is_after) {
             const time_diff = getTimeDifferenceShort(s.ended_at, 0);
@@ -1147,11 +1073,11 @@ export const PanelGenerate = {
                 : '';
 
             return {
-                ...card_h,
+                ...card_c,
                 left2: '[' + difficulty_name + '] - BP' + rank + rank_after_str + ' (' + time_diff + ')',
             }
         } else {
-            return card_h
+            return card_c
         }
     },
 
