@@ -238,13 +238,13 @@ export function getCompetitorColors(color) {
     let cs;
 
     switch (color) {
-        case "#FFF100": cs = colorArray.light_yellow; break;
-        case "#FF9800": cs = colorArray.amber; break;
-        case "#22AC38": cs = colorArray.green; break;
-        case "#B3D465": cs = colorArray.light_green; break;
+        case "#FFF100": cs = colorArray.light_yellow.toReversed(); break;
+        case "#FF9800": cs = colorArray.amber.toReversed(); break;
+        case "#22AC38": cs = colorArray.green.toReversed(); break;
+        case "#B3D465": cs = colorArray.light_green.toReversed(); break;
         case "#0068B7": cs = colorArray.deep_blue; break;
-        case "#BDBDBD": cs = colorArray.gray; break;
-        case "#00A0E9": cs = colorArray.blue; break;
+        case "#BDBDBD": cs = colorArray.gray.toReversed(); break;
+        case "#00A0E9": cs = colorArray.blue.toReversed(); break;
         case "#9922EE": cs = colorArray.purple; break;
         case "#E4007F": cs = colorArray.magenta; break;
         case "#EB6877": cs = colorArray.red; break;
@@ -661,7 +661,7 @@ export function getRankColors(rank = 'F') {
         case "A":
             return colorArray.green
         case "B":
-            return colorArray.blue
+            return colorArray.blue.toReversed()
         case "C":
             return colorArray.purple
         case "D":
