@@ -3,7 +3,10 @@ import path from "path";
 
 const path_util = path;
 
-const browser = await puppeteer.launch({args: ["--disable-web-security", "--disable-features=IsolateOrigins", "--disable-site-isolation-trials"]});
+const browser = await puppeteer.launch({
+    args: ["--disable-web-security", "--disable-features=IsolateOrigins", "--disable-site-isolation-trials"],
+    headless: 'new',
+});
 const page = await browser.newPage();
 
 const template_path = `${process.cwd()}/template/Card_Alpha`;

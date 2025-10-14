@@ -1,6 +1,9 @@
 import puppeteer from "puppeteer";
 
-const browser = await puppeteer.launch({args: ["--disable-web-security", "--disable-features=IsolateOrigins", "--disable-site-isolation-trials"]});
+const browser = await puppeteer.launch({
+    args: ["--disable-web-security", "--disable-features=IsolateOrigins", "--disable-site-isolation-trials"],
+    headless: 'new',
+});
 const page = await browser.newPage();
 
 const path = `${process.cwd()}/template/markDownTemplate/index.html`;
