@@ -16,7 +16,7 @@ export const colorArray = {
     yellow: ['#FCAC46', '#FEDC45'],
 
     // 亮黄色
-    light_yellow: ['#FCBC46', '#FFFF00'],
+    light_yellow: ['#FFC86B', '#FFFF00'],
 
     // 亮绿色 / 草绿色
     light_green: ['#5EDC5B', '#CAF881'],
@@ -52,7 +52,7 @@ export const colorArray = {
 
     deep_gray: ['#666', '#999'],
     gray: ['#999', '#ccc'],
-    white: ['#bbb', '#fafafa'],
+    white: ['#ccc', '#fafafa'],
     rainbow: ['#EC6841', '#F19149', '#FFF45C',
         '#31B16C', '#00B7EE', '#00F2FE'],
 
@@ -647,17 +647,17 @@ export function getRankColors(rank = 'F') {
         case "SSH":
         case "EX":
         case "X+":
-            return colorArray.white
+            return colorArray.white.toReversed()
         case "X":
         case "SS":
-            return colorArray.light_yellow
+            return colorArray.light_yellow.toReversed()
         case "SH":
-            return colorArray.gray
+            return colorArray.gray.toReversed()
         case "SP":
         case "S+":
-            return colorArray.orange // S+
+            return colorArray.orange.toReversed() // S+
         case "S":
-            return colorArray.amber
+            return colorArray.amber.toReversed()
         case "A":
             return colorArray.green
         case "B":
@@ -665,11 +665,11 @@ export function getRankColors(rank = 'F') {
         case "C":
             return colorArray.purple
         case "D":
-            return colorArray.red
+            return colorArray.red.toReversed()
         case "F":
-            return colorArray.deep_gray
+            return colorArray.deep_gray.toReversed()
         case "FC":
-            return colorArray.cyan
+            return colorArray.cyan.toReversed()
         default:
             return ['none', 'none'];
     }
