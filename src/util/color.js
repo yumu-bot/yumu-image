@@ -249,7 +249,7 @@ export function getCompetitorColors(color) {
         case "#E4007F": cs = colorArray.magenta; break;
         case "#EB6877": cs = colorArray.red; break;
         case "#D32F2F": cs = colorArray.deep_red; break;
-        default: cs = colorArray.deep_gray; break;
+        default: cs = colorArray.deep_gray.toReversed(); break;
     }
 
     return cs;
@@ -665,7 +665,7 @@ export function getRankColors(rank = 'F') {
         case "C":
             return colorArray.purple
         case "D":
-            return colorArray.red.toReversed()
+            return colorArray.red
         case "F":
             return colorArray.deep_gray.toReversed()
         case "FC":
