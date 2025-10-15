@@ -17,6 +17,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_A1} from "../card/card_A1.js";
 import {component_MD} from "../component/component_MD.js";
+import {torusBold} from "../util/font.js";
 
 export async function router(req, res) {
     try {
@@ -52,27 +53,33 @@ export async function router_svg(req, res) {
  */
 export async function panel_A9(
     data = {
-        id: 2789,
-        name: 'sana',
-        abbr: 'sana',
-        formed: 'February 2025',
-        banner: 'https://assets.ppy.sh/teams/header/2789/25c711a5e9a294035cab85a020f27db99156120d68fe982a1c274a069e66878d.jpeg',
-        flag: 'https://assets.ppy.sh/teams/flag/2789/b4c19754b39eeebab2ff7dc3b809450293227248ce41cf46bef2ef172739d917.gif',
-        users: [],
-        ruleset: 'OSU',
-        application: 'Open',
-        rank: 5276,
-        pp: 5689,
-        ranked_score: 10003720968,
-        play_count: 29348,
-        members: 1,
-        description: 'sana yuki'
+        team: {
+            id: 2789,
+            name: 'sana',
+            abbr: 'sana',
+            formed: 'February 2025',
+            banner: 'https://assets.ppy.sh/teams/header/2789/25c711a5e9a294035cab85a020f27db99156120d68fe982a1c274a069e66878d.jpeg',
+            flag: 'https://assets.ppy.sh/teams/flag/2789/b4c19754b39eeebab2ff7dc3b809450293227248ce41cf46bef2ef172739d917.gif',
+            users: [],
+            ruleset: 'OSU',
+            application: 'Open',
+            available: 0,
+            rank: 5276,
+            pp: 5689,
+            ranked_score: 10003720968,
+            play_count: 29348,
+            members: 1,
+            description: 'sana yuki'
+        },
+        page: 1,
+        max_page: 1,
     }
 ) {
 
     // 提前准备
-    const members = data.users
-    const leader = members.shift()
+    const team = data.team
+    const members = team.users.slice(1, 1 + (data.page ?? 1) * 48)
+    const leader = team.users?.[0]
 
     // 计算面板高度
     const panel_height = getPanelHeight(members.length, 210, 4, 290, 40, 40) + 250
@@ -124,12 +131,18 @@ export async function panel_A9(
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
 
+    const page = torusBold.getTextPath(
+        'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6
+    )
+
+    svg = setText(svg, page, reg_body)
+
     // 主卡
-    svg = setSvgBody(svg, 40, 40, card_A2(await PanelGenerate.team2CardA2(data)), reg_main);
+    svg = setSvgBody(svg, 40, 40, card_A2(await PanelGenerate.team2CardA2(team)), reg_main);
 
     // 介绍
-    if (isNotEmptyString(data?.description)) {
-        const markdown = data.description
+    if (isNotEmptyString(team?.description)) {
+        const markdown = team.description
             .replaceAll("<br />", " ")
             .replaceAll(new RegExp("<\/?[\\s\\S]*?\/?>", 'g'), '') // 必须用懒惰，不然等死吧
         const alpha = (markdown.length > 0) ? await component_MD(markdown, 1370, 0) : {}
@@ -206,7 +219,7 @@ export async function panel_A9(
      */
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, await readNetImage(data.banner), reg_banner);
+    svg = setCustomBanner(svg, await readNetImage(team.banner), reg_banner);
 
     return svg.toString();
 }

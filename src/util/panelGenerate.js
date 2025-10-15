@@ -886,11 +886,12 @@ export const PanelGenerate = {
         const background = await readNetImage(team.flag)
 
         const title1 = team?.name || 'Team'
-        const title2 = (team?.application?.toLowerCase() || '?') + ' // ' + getGameMode(team?.ruleset, 2)
+        const title2 = getGameMode(team?.ruleset, 2) + ' // ' + (team?.application?.toLowerCase() || '?') + ' // ' + (team?.available || 0)
+        + ' Spots'
 
-        const left1 = 'RKS: ' + (team?.ranked_score || 0)
+        const left1 = 'RKS: ' + round(team?.ranked_score || 0, -4)
         const left2 = 'PC: ' + Math.round(team?.play_count || 0)
-        const left3 = getFormattedTime(team.formed, "YYYY-MM", "MMMM YYYY") // Open Close
+        const left3 = getFormattedTime(team.formed, "YYYY-MM") // Open Close
 
         const right1 = 'TeamID: #' + (team?.id || 0).toString()
         const right2 = 'Rank: #' + (team.rank || '0')
@@ -1105,7 +1106,7 @@ export const PanelGenerate = {
         }
 
         const index_text = index > 0 ? ('#' + index) : ''
-        const left2 = index_text + ' // award at: ' + getFormattedTime(badge?.awarded_at, 'YYYY-MM-DD HH:mm:ss +8', 'YYYY-MM-DD[T]HH:mm:ssZ') + ' (' + getTimeDifference(badge?.awarded_at, 'YYYY-MM-DD[T]HH:mm:ssZ', moment().subtract(8, "hours"), true) + ')'
+        const left2 = index_text + ' // award at: ' + getFormattedTime(badge?.awarded_at, 'YYYY-MM-DD HH:mm:ss +8', 'YYYY-MM-DD[T]HH:mm:ssZ') + ' (' + getTimeDifference(badge?.awarded_at, 'YYYY-MM-DD[T]HH:mm:ssZ', moment().subtract(8, "hours"), 1) + ')'
 
         const color = getBadgeColor(badge?.description)
 
