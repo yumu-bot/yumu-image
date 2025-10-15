@@ -5,7 +5,7 @@ import {
     setImage,
     setSvgBody, isNotEmptyArray,
     readTemplate,
-    setText, thenPush, getSvgBody, round
+    setText, thenPush, getSvgBody, round, rounds
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_I3} from "../card/card_I3.js";
@@ -328,7 +328,7 @@ async function chuScore2CardI3(score = {
 }) {
     const rate = getCHUNITHMRank(score?.score || 0)
 
-    const score_text = (score?.score || 0).toString()
+    const score_round = rounds(score?.score || 0, -4, 0)
 
     const difficulty_color = getCHUNITHMDifficultyColor(score?.level_index)
 
@@ -360,8 +360,8 @@ async function chuScore2CardI3(score = {
         left3: round(rating, 2),
         left4: rating_max_text,
 
-        index_b: score_text.slice(0, -4) || '0',
-        index_m: score_text.slice(-4) || '0000',
+        index_b: score_round.integer,
+        index_m: score_round.decimal,
         index_l: '',
         index_b_size: 32,
         index_m_size: 20,
