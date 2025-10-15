@@ -117,7 +117,7 @@ export async function panel_E3(data = {
 
 async function beatmap2CardE1(beatmap, mode, calcPP) {
     return {
-        ranked: beatmap?.ranked || 0,
+        ranked: beatmap?.ranked ?? 0,
         mode: mode || 'osu',
         star: calcPP.attr.stars || 0,
         cover: beatmap.beatmapset.covers["list@2x"],

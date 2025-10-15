@@ -338,7 +338,7 @@ export async function panel_E(
 
 function score2CardE1(score, calcPP) {
     return {
-        ranked: score?.beatmap?.ranked || 0,
+        ranked: score?.beatmap?.ranked ?? 0,
         mode: score?.mode || 'osu',
         star: calcPP.attr.stars || 0,
         cover: score?.beatmapset?.covers['list@2x'],

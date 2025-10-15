@@ -808,13 +808,16 @@ export const PanelGenerate = {
     searchMap2CardA2: async (s, rank) => {
         const ranked_date = s.ranked_date || '';
         const submitted_date = s.submitted_date || '';
-        const ranked = s?.ranked || -2;
+        const ranked = s?.ranked ?? -2;
 
-        const background = await readNetImage(s?.covers['list@2x'], hasLeaderBoard(ranked));
+        const has_leaderboard = hasLeaderBoard(ranked)
+
+        const background = await readNetImage(s?.covers['list@2x'], has_leaderboard);
+
         const map_status = s?.status || 'graveyard';
 
         const isQualified = ranked === 3;
-        const isRanked = hasLeaderBoard(ranked) && ! isQualified;
+        const isRanked = has_leaderboard && ! isQualified;
 
         const title1 = s.title_unicode || 'Unknown Title';
         const title2 = s.artist_unicode || 'Unknown Artist';
@@ -965,7 +968,7 @@ export const PanelGenerate = {
     },
 
     score2CardC: async (s, identifier = 1, use_cache = null) => {
-        const cache = requireNonNullElse(use_cache, hasLeaderBoard(s?.beatmap?.ranked || s?.beatmap?.status))
+        const cache = requireNonNullElse(use_cache, hasLeaderBoard(s?.beatmap?.ranked ?? s?.beatmap?.status))
 
         const cover = await readNetImage(s?.beatmapset?.covers?.list, cache);
         const background = await readNetImage(s?.beatmapset?.covers?.cover, cache);

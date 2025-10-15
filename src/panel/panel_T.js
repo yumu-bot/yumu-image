@@ -619,7 +619,7 @@ async function popularBeatmap2cardH(popular = {
     },
     beatmap: {}
 }, identifier = 1, use_cache = null) {
-    const cache = requireNonNullElse(use_cache, hasLeaderBoard(popular?.beatmap?.ranked || popular?.beatmap?.status))
+    const cache = requireNonNullElse(use_cache, hasLeaderBoard(popular?.beatmap?.ranked ?? popular?.beatmap?.status))
 
     const cover = await readNetImage(popular?.beatmap?.beatmapset?.covers?.list, cache);
     const background = await readNetImage(popular?.beatmap?.beatmapset?.covers?.cover, cache);
