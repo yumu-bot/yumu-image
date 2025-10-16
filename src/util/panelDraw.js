@@ -13,6 +13,23 @@ export const PanelDraw = {
     },
 
     /**
+     * 注意，描边作用于外部
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param r
+     * @param stroke_color
+     * @param opacity
+     * @param stroke_width
+     * @return {String}
+     * @constructor
+     */
+    StrokeRect: (x = 0, y = 0, w = 0, h = 0, r = 0, stroke_color = '#fff', opacity = 1, stroke_width = 1) => {
+        return `<rect x="${x - stroke_width / 2}" y="${y - stroke_width / 2}" width="${w + stroke_width}" height="${h + stroke_width}" rx="${r + stroke_width}" ry="${r}" style="fill: none; stroke: ${stroke_color}; stroke-width: ${stroke_width}; stroke-opacity: ${opacity}"/>`;
+    },
+
+    /**
      * 如果你不需要精细调整颜色，请使用 LinearGradientRect
      * @param x
      * @param y
