@@ -32,7 +32,7 @@ export async function router_svg(req, res) {
 }
 
 /**
- * 头像, 面积贴图专用
+ * 怀旧头像，2013 年左右的 osu 内卡片
  * @param data
  * @return {Promise<string>}
  */
@@ -88,7 +88,15 @@ export async function panel_Epsilon2(data = {
 
     const name = getShadowPath(name_text, 90, 22, 20)
 
-    const pp_score_text = 'pp: ' + Math.round(user?.pp ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' Score:' + round(user?.statistics?.total_score, 1, -1).toLowerCase()
+    let pp_text
+
+    if (user?.pp > 0) {
+        pp_text = 'pp: ' + Math.round(user?.pp ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' '
+    } else {
+        pp_text = ''
+    }
+
+    const pp_score_text = pp_text + 'Score:' + round(user?.statistics?.total_score, 1, -1).toLowerCase()
 
     const pp_score = getShadowPath(pp_score_text, 89, 40, 14)
 
@@ -104,9 +112,9 @@ export async function panel_Epsilon2(data = {
 
     const lv_stroke = PanelDraw.StrokeRect(127, 70, 195, 7, 3.5, '#fff', 1, 1)
 
-    const mode = PanelDraw.Image(291, 9, 33, 33, getGameModePath(user?.mode), 0.2)
+    const mode = PanelDraw.Image(291, 9, 33, 33, getGameModePath(user?.mode), 0.3)
 
-    const rank = TahomaRegular.getTextPath('#' + (user?.statistics?.global_rank ?? 0), 324, 66, 48, 'right baseline', '#fff', 0.2)
+    const rank = TahomaRegular.getTextPath('#' + (user?.statistics?.global_rank ?? 0), 324, 66, 48, 'right baseline', '#fff', 0.3)
 
     const background = PanelDraw.Image(0, 0, 332, 87, await getBanner(user?.cover_url), 0.6)
 
