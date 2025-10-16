@@ -533,7 +533,7 @@ function getLazerModAdditional(mod = {}) {
             large = 'HR'
         }
     } else {
-        large = mod?.acronym?.toString() || mod?.toString() || ''
+        large = 'DA'
         small = ''
     }
 
