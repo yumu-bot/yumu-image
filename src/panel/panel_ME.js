@@ -453,7 +453,7 @@ const component_E3 = (
         + poppinsBold.getTextPath('B', 96, 138, 18, 'center baseline', '#fff')
         + poppinsBold.getTextPath('A', 195, 138, 18, 'center baseline', '#fff')
         + poppinsBold.getTextPath('S', 294, 138, 18, 'center baseline', '#fff')
-        + poppinsBold.getTextPath('SS', 360, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('SS', 361, 138, 18, 'center baseline', '#fff')
         + poppinsBold.getTextPath('SSS', 428, 138, 18, 'center baseline', '#fff')
 
     const combo_title = poppinsBold.getTextPath('C', 327, 252, 18, 'center baseline', '#fff')
@@ -464,7 +464,7 @@ const component_E3 = (
     const level_title = poppinsBold.getTextPath('Dist. Level', 15, 223, 18, 'left baseline', '#fff')
 
     const dist = PanelDraw.BarChart(data.distribution, null, 0, 15, 40 + 80, 460, 80, 2, 4, RANK_COLORS, 0.1, 0, null, 1)
-    const combo = PanelDraw.BarChart(data.combo, null, 0, 313, 155 + 80, 160, 80, 2, 4, COMBO_COLORS, 0.1, 0, null, 1)
+    const combo = PanelDraw.BarChart(data.combo, null, 0, 313, 155 + 80, 162, 80, 2, 4, COMBO_COLORS, 0.1, 0, null, 1)
 
     const acc = floors(data?.achievements, 4)
     const avg_acc = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + ' %', 48, 30, 300, 190, 'right baseline', '#fff');
@@ -816,7 +816,7 @@ const component_E10 = (
         + poppinsBold.getTextPath('B', 96, 138, 18, 'center baseline', '#fff')
         + poppinsBold.getTextPath('A', 195, 138, 18, 'center baseline', '#fff')
         + poppinsBold.getTextPath('S', 294, 138, 18, 'center baseline', '#fff')
-        + poppinsBold.getTextPath('SS', 360, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('SS', 361, 138, 18, 'center baseline', '#fff')
         + poppinsBold.getTextPath('SSS', 428, 138, 18, 'center baseline', '#fff')
 
     const combo_title = poppinsBold.getTextPath('C', 327, 252, 18, 'center baseline', '#fff')
@@ -827,7 +827,7 @@ const component_E10 = (
     const level_title = poppinsBold.getTextPath('Avg. DX Score', 15, 223, 18, 'left baseline', '#fff')
 
     const dist = PanelDraw.BarChart(data.distribution, null, 0, 15, 40 + 80, 460, 80, 2, 4, RANK_COLORS, 0.1, 0, null, 1)
-    const combo = PanelDraw.BarChart(data.combo, null, 0, 313, 155 + 80, 160, 80, 2, 4, COMBO_COLORS, 0.1, 0, null, 1)
+    const combo = PanelDraw.BarChart(data.combo, null, 0, 313, 155 + 80, 162, 80, 2, 4, COMBO_COLORS, 0.1, 0, null, 1)
 
     const acc = floors(data?.achievements, 4)
     const avg_acc = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + ' %', 48, 30, 300, 190, 'right baseline', '#fff');
