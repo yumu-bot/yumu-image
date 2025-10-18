@@ -8,7 +8,7 @@ import {
     isASCII,
     readTemplate,
     setText,
-    setTexts, floor, floors
+    setTexts, floor, floors, getSign, rounds
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -235,7 +235,7 @@ export async function panel_ME(data = {
     const banner = await getMaimaiCover(data.song.id);
     const componentE1 = component_E1(PanelMEGenerate.score2componentE1(data.score));
     const componentE2 = component_E2(PanelMEGenerate.score2componentE2(data.song));
-    const componentE3 = component_E3(PanelMEGenerate.score2componentE3(data.diff, data.score.level, data.chart.fit_diff));
+    const componentE3 = component_E3(PanelMEGenerate.score2componentE3(data.score, data.diff, data.score.level, data.chart.fit_diff));
     const componentE4 = component_E4(PanelMEGenerate.score2componentE4(data.score.type));
     const componentE5 = component_E5(PanelMEGenerate.score2componentE5(data.song.basic_info.bpm, data.chart.cnt));
     const componentE6 = await component_E6(PanelMEGenerate.score2componentE6(data.song, data.score.level_index));
@@ -347,7 +347,7 @@ const component_E1 = (
 
      */
 
-    const difficulty = floors(data?.difficulty, 1)
+    const difficulty = rounds(data?.difficulty, 1)
 
     const text_arr = [
         {
@@ -424,7 +424,7 @@ const component_E2 = (
 
 const component_E3 = (
     data = {
-
+        star: 0,
         difficulty: '0',
         distribution: [0],
         combo: [0],
@@ -448,8 +448,18 @@ const component_E3 = (
     const reg_base = /(?<=<g id="Base_OE3">)/;
 
     const title = poppinsBold.getTextPath('Distribution: Lv.' + data?.difficulty, 15, 28, 18, 'left baseline', '#fff');
-    const dist_title = poppinsBold.getTextPath('  D     C      B                        A                        S              SS           SSS', 15, 138, 18, 'left baseline', '#fff')
-    const combo_title = poppinsBold.getTextPath('  C    FC           AP', 310, 252, 18, 'left baseline', '#fff')
+    const dist_title = poppinsBold.getTextPath('D', 29, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('C', 63, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('B', 96, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('A', 195, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('S', 294, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('SS', 360, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('SSS', 428, 138, 18, 'center baseline', '#fff')
+
+    const combo_title = poppinsBold.getTextPath('C', 327, 252, 18, 'left baseline', '#fff')
+        + poppinsBold.getTextPath('FC', 361, 252, 18, 'left baseline', '#fff')
+        + poppinsBold.getTextPath('AP', 428, 252, 18, 'left baseline', '#fff')
+
     const acc_title = poppinsBold.getTextPath('Avg. Ach.', 15, 168, 18, 'left baseline', '#fff')
     const level_title = poppinsBold.getTextPath('Dist. Level', 15, 223, 18, 'left baseline', '#fff')
 
@@ -459,8 +469,28 @@ const component_E3 = (
     const acc = floors(data?.achievements, 4)
     const avg_acc = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + ' %', 48, 30, 300, 190, 'right baseline', '#fff');
 
-    const level = floors(data?.fit, 2)
-    const dist_level = poppinsBold.get2SizeTextPath(level.integer, level.decimal, 48, 30, 300, 245, 'right baseline', '#fff');
+    const d = (data?.fit ?? 0) - (data?.star ?? 0)
+    const delta = (data?.fit > 0) ? (' (' + getSign(d) + floor(d, 2) + ')') : ''
+
+    const level = rounds(data?.fit, 2)
+    const dist_level = getMultipleTextPath(
+        [{
+            font: poppinsBold,
+            text: level.integer,
+            size: 48,
+            color: '#fff'
+        }, {
+            font: poppinsBold,
+            text: level.decimal,
+            size: 30,
+            color: '#fff'
+        }, {
+            font: poppinsBold,
+            text: delta,
+            size: 20,
+            color: '#fff'
+        }], 300, 245, 'right baseline'
+    )
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
@@ -620,9 +650,9 @@ const component_E7 = (
     const percent = max > 0 ? data.rating / max : 100
 
     if (is_perfect) {
-        reference_pp_text = ' / PERFECT';
+        reference_pp_text = ' / MAX RATING';
     } else {
-        reference_pp_text = ' / ' + max + ' Rating [' + Math.round(percent * 100) + '%]';
+        reference_pp_text = ' / ' + max + ' RATING [' + Math.round(percent * 100) + '%]';
     }
 
     const text_arr = [
@@ -780,8 +810,19 @@ const component_E10 = (
     const reg_base = /(?<=<g id="Base_OE10">)/;
 
     const title = poppinsBold.getTextPath('Distribution: this song', 15, 28, 18, 'left baseline', '#fff');
-    const dist_title = poppinsBold.getTextPath('  D     C      B                        A                        S              SS           SSS', 15, 138, 18, 'left baseline', '#fff')
-    const combo_title = poppinsBold.getTextPath('  C    FC            AP', 310, 252, 18, 'left baseline', '#fff')
+
+    const dist_title = poppinsBold.getTextPath('D', 29, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('C', 63, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('B', 96, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('A', 195, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('S', 294, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('SS', 360, 138, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('SSS', 428, 138, 18, 'center baseline', '#fff')
+
+    const combo_title = poppinsBold.getTextPath('C', 327, 252, 18, 'left baseline', '#fff')
+        + poppinsBold.getTextPath('FC', 361, 252, 18, 'left baseline', '#fff')
+        + poppinsBold.getTextPath('AP', 428, 252, 18, 'left baseline', '#fff')
+
     const acc_title = poppinsBold.getTextPath('Avg. Ach.', 15, 168, 18, 'left baseline', '#fff')
     const level_title = poppinsBold.getTextPath('Avg. DX Score', 15, 223, 18, 'left baseline', '#fff')
 
@@ -819,8 +860,9 @@ const PanelMEGenerate = {
         }
     },
 
-    score2componentE3: (diff, difficulty = '', fit = 0.0) => {
+    score2componentE3: (score, diff, difficulty = '', fit = 0.0) => {
         return {
+            star: score.ds,
             difficulty: difficulty,
             distribution: diff.dist,
             combo: diff.fc_dist,

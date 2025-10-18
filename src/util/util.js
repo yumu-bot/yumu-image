@@ -2295,3 +2295,15 @@ export function ManiaAimingAccuracy2Stats(aimingAcc = 1, stat = {
     }
 
 }
+
+export function getSign(number = 0) {
+    if (typeof number !== 'number') {
+        return ''
+    }
+
+    if (number === -0) return ''
+
+    if (number > 0) return '+'
+    else if (number < 0) return '-'
+    else return ''
+}
