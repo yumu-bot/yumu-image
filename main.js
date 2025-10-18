@@ -55,10 +55,20 @@ import {router as PanelMERouter} from "./src/panel/panel_ME.js";
 import {router as PanelMIRouter} from "./src/panel/panel_MI.js";
 import {router as PanelMSRouter} from "./src/panel/panel_MS.js";
 import moment from "moment";
-
+import puppeteer from "puppeteer";
 
 initPath();
 //这里放测试代码
+
+// 覆盖默认的 launch 方法
+const originalLaunch = puppeteer.launch;
+puppeteer.launch = function(options = {}) {
+    const newOptions = {
+        ...options,
+        headless: options.headless === undefined ? 'new' : options.headless
+    };
+    return originalLaunch.call(this, newOptions);
+};
 
 const app = express();
 
