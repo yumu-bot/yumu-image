@@ -256,7 +256,7 @@ export const PanelDraw = {
         const arr_max = (isNumber(max) && max > 0) ? max :
             (isNumber(max_undertake) ? Math.max(Math.max.apply(Math, arr), max_undertake) : Math.max.apply(Math, arr));
         const arr_min = (isNumber(min) && min > 0) ? min : Math.min.apply(Math, arr);
-        const step = w / arr.length; //如果是100个，一步好像刚好5.2px
+        const step = (w + gap) / arr.length; //如果是100个，一步好像刚好5.2px
         const width = step - gap; //实际宽度
         let rect_svg = '<g>';
 

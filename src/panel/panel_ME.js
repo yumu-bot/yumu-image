@@ -456,9 +456,9 @@ const component_E3 = (
         + poppinsBold.getTextPath('SS', 360, 138, 18, 'center baseline', '#fff')
         + poppinsBold.getTextPath('SSS', 428, 138, 18, 'center baseline', '#fff')
 
-    const combo_title = poppinsBold.getTextPath('C', 327, 252, 18, 'left baseline', '#fff')
-        + poppinsBold.getTextPath('FC', 361, 252, 18, 'left baseline', '#fff')
-        + poppinsBold.getTextPath('AP', 428, 252, 18, 'left baseline', '#fff')
+    const combo_title = poppinsBold.getTextPath('C', 327, 252, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('FC', 361, 252, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('AP', 428, 252, 18, 'center baseline', '#fff')
 
     const acc_title = poppinsBold.getTextPath('Avg. Ach.', 15, 168, 18, 'left baseline', '#fff')
     const level_title = poppinsBold.getTextPath('Dist. Level', 15, 223, 18, 'left baseline', '#fff')
@@ -819,9 +819,9 @@ const component_E10 = (
         + poppinsBold.getTextPath('SS', 360, 138, 18, 'center baseline', '#fff')
         + poppinsBold.getTextPath('SSS', 428, 138, 18, 'center baseline', '#fff')
 
-    const combo_title = poppinsBold.getTextPath('C', 327, 252, 18, 'left baseline', '#fff')
-        + poppinsBold.getTextPath('FC', 361, 252, 18, 'left baseline', '#fff')
-        + poppinsBold.getTextPath('AP', 428, 252, 18, 'left baseline', '#fff')
+    const combo_title = poppinsBold.getTextPath('C', 327, 252, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('FC', 361, 252, 18, 'center baseline', '#fff')
+        + poppinsBold.getTextPath('AP', 428, 252, 18, 'center baseline', '#fff')
 
     const acc_title = poppinsBold.getTextPath('Avg. Ach.', 15, 168, 18, 'left baseline', '#fff')
     const level_title = poppinsBold.getTextPath('Avg. DX Score', 15, 223, 18, 'left baseline', '#fff')
