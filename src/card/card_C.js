@@ -180,7 +180,7 @@ export function card_C(data = {
 
     const is_title_not_equal = data.title !== data.title2
 
-    const is_title2_prefix_not_ascii = isNotEmptyString(str_title2) && !isASCII(str_title2.substring(0, 3))
+    const is_title2_prefix_not_ascii = isNotEmptyString(str_title2) && !isASCII(str_title2.substring(0, 4))
 
     let title_width = Math.min(title_max_width, torus.getTextWidth(str_title, 36));
     let title2_width = title_max_width - title_width - 10;
