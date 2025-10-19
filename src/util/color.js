@@ -240,15 +240,15 @@ export function getCompetitorColors(color) {
     switch (color) {
         case "#FFF100": cs = colorArray.light_yellow.toReversed(); break;
         case "#FF9800": cs = colorArray.amber.toReversed(); break;
-        case "#22AC38": cs = colorArray.green.toReversed(); break;
+        case "#22AC38": cs = colorArray.green; break;
         case "#B3D465": cs = colorArray.light_green.toReversed(); break;
-        case "#0068B7": cs = colorArray.deep_blue; break;
+        case "#0068B7": cs = colorArray.deep_blue.toReversed(); break;
         case "#BDBDBD": cs = colorArray.gray.toReversed(); break;
-        case "#00A0E9": cs = colorArray.blue.toReversed(); break;
+        case "#00A0E9": cs = colorArray.blue; break;
         case "#9922EE": cs = colorArray.purple; break;
-        case "#E4007F": cs = colorArray.magenta; break;
+        case "#E4007F": cs = colorArray.magenta.toReversed(); break;
         case "#EB6877": cs = colorArray.red; break;
-        case "#D32F2F": cs = colorArray.deep_red; break;
+        case "#D32F2F": cs = colorArray.deep_red.toReversed(); break;
         default: cs = colorArray.deep_gray.toReversed(); break;
     }
 
