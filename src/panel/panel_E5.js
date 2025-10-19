@@ -1575,7 +1575,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.red,
+                    rrect_color: colorArray.pink,
                 }, {}, {}, {}, {
                     index: 'TICK',
                     stat: s.large_tick_hit,
@@ -1622,7 +1622,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.red,
+                    rrect_color: colorArray.pink,
                 }, {}, {}, {}, {}, {}, {}, {
                     index: 'O+',
                     stat: s.large_bonus,
@@ -1669,7 +1669,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.red,
+                    rrect_color: colorArray.pink,
                 }, {}, {}, {}, {
                     index: 'MD',
                     stat: s.small_tick_miss,
@@ -1722,7 +1722,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.red,
+                    rrect_color: colorArray.pink,
                 });
                 break;
             }
@@ -1753,7 +1753,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.red,
+                    rrect_color: colorArray.pink,
                 });
                 break;
             }
@@ -1776,7 +1776,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.red,
+                    rrect_color: colorArray.pink,
                 });
                 break;
             }
@@ -1805,7 +1805,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.red,
+                    rrect_color: colorArray.pink,
                 }, {
                     index: 'MD',
                     stat: s.small_tick_miss,
@@ -1852,7 +1852,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: colorArray.red,
+                    rrect_color: colorArray.pink,
                 });
                 break;
             }
