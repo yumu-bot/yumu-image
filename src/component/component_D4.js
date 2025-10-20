@@ -1,5 +1,5 @@
 import {
-    getImageFromV3,
+    getImageFromV3Cache,
     setImage,
     setText, setTexts
 } from "../util/util.js";
@@ -31,9 +31,9 @@ export async function component_D4(data = {
     const reg_text = /(?<=<g id="Text_CF4">)/;
 
     // 导入评级图片
-    svg = setImage(svg, 49, 50, 31, 39, getImageFromV3('object-score-X-small.png'), reg_grade, 1);
-    svg = setImage(svg, 157, 52, 25, 35, getImageFromV3('object-score-S-small.png'), reg_grade, 1);
-    svg = setImage(svg, 260, 53, 30, 34, getImageFromV3('object-score-A-small.png'), reg_grade, 1);
+    svg = setImage(svg, 49, 50, 31, 39, getImageFromV3Cache('object-score-X-small.png'), reg_grade, 1);
+    svg = setImage(svg, 157, 52, 25, 35, getImageFromV3Cache('object-score-S-small.png'), reg_grade, 1);
+    svg = setImage(svg, 260, 53, 30, 34, getImageFromV3Cache('object-score-A-small.png'), reg_grade, 1);
 
     // 导入评级的数量
     const grade_X = torus.getTextPath((data.user.count_ss + data.user.count_ssh).toString(), 65, 118.795, 30, 'center baseline', '#fff');

@@ -1,5 +1,5 @@
 import {getModInt, hasMod, matchAnyMods} from "./mod.js";
-import {getGameMode, getImageFromV3} from "./util.js";
+import {getGameMode, getImageFromV3, getImageFromV3Cache} from "./util.js";
 
 //SS和X的转换
 export const rankSS2X = (rank = 'SS') => {
@@ -341,14 +341,16 @@ export const getRankFromValue = (value = 0, boundary = [10, 8, 6.5, 5.3, 4, 2.8,
  * @return {string}
  */
 export function getScoreTypeImage(is_lazer, version = '', score_type) {
-    if (score_type === "sb_score") return getImageFromV3('object-type-ppysb' + version + '.png');
+    if (score_type === "sb_score") {
+        return getImageFromV3Cache('object-type-ppysb' + version + '.png');
+    }
 
     switch (is_lazer) {
         case null:
             return ''
         case true:
-            return getImageFromV3('object-type-lazer' + version + '.png');
+            return getImageFromV3Cache('object-type-lazer' + version + '.png');
         case false:
-            return getImageFromV3('object-type-stable' + version + '.png');
+            return getImageFromV3Cache('object-type-stable' + version + '.png');
     }
 }

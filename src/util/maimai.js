@@ -1,5 +1,5 @@
 import fs from "fs";
-import {downloadImage, getImageFromV3, isEmptyString} from "./util.js";
+import {downloadImage, getImageFromV3, getImageFromV3Cache, isEmptyString} from "./util.js";
 
 /**
  *
@@ -150,9 +150,9 @@ export function getMaimaiRatingBG(rating = 0) {
 export function getMaimaiType(type = '') {
     switch (type) {
         case 'DX':
-            return getImageFromV3('Maimai', 'object-type-deluxe.png');
+            return getImageFromV3Cache('Maimai', 'object-type-deluxe.png');
         case 'SD':
-            return getImageFromV3('Maimai', 'object-type-standard.png');
+            return getImageFromV3Cache('Maimai', 'object-type-standard.png');
         default :
             return '';
     }

@@ -10,7 +10,6 @@ import {
     getTimeByDHMSLarge,
     getTimeByDHMSSmall,
     getTimeByDHMS,
-    getImageFromV3,
     setTexts,
     isNotNumber,
     getTimeDifference,
@@ -21,7 +20,7 @@ import {
     isPicturePng,
     floor,
     floors,
-    isNotEmptyString, getSvgBody
+    isNotEmptyString, getSvgBody, getImageFromV3Cache
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -349,7 +348,7 @@ const component_D3 = (
         const delta = data.delta[i]
         const x = 15 + i * 90
 
-        const icon = getImageFromV3('object-score-' + rank + '-small.png')
+        const icon = getImageFromV3Cache('object-score-' + rank + '-small.png')
 
         let text;
         let delta_text = getText(delta);

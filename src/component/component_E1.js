@@ -4,7 +4,7 @@ import {
     getMapStatusImage,
     setImage,
     setSvgBody, readNetImage,
-    setTexts, getBeatMapTitlePath, floor, floors,
+    setTexts, getBeatMapTitlePath, floor, floors, getImageFromV3Cache,
 } from "../util/util.js";
 import {extra, PuHuiTi, torus} from "../util/font.js";
 import {getStarRatingColor} from "../util/color.js";
@@ -115,7 +115,7 @@ export async function component_E1(data = {
     svg = setSvgBody(svg, 746, 74, play_count_icon, reg_overlay);
 
     //导入星数
-    const star_svg = getStarSVGs(getImageFromV3('object-beatmap-star.png'), sr_b, sr_m, 40, 40);
+    const star_svg = getStarSVGs(getImageFromV3Cache('object-beatmap-star.png'), sr_b, sr_m, 40, 40);
     svg = setSvgBody(svg, 40, 106, star_svg, reg_star);
 
     //导出

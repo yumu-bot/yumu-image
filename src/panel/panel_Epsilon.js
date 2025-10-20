@@ -1,6 +1,6 @@
 import {
     exportJPEG, getAvatar, getFlagPath, getImageFromV3,
-    setImage, isNotEmptyArray, setTexts
+    setImage, isNotEmptyArray, setTexts, getImageFromV3Cache
 } from "../util/util.js";
 import {TahomaBold, TahomaRegular} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -92,7 +92,7 @@ export async function panel_Epsilon(data = {
         .replaceAll("Nominators", "Nominator")
     const group_name = TahomaBold.getTextPath(group_name_text, 230, 482, 28, 'center baseline', '#000')
 
-    const supporter = is_supporter ? PanelDraw.Image(162, has_group ? 510 : 465, 200, 30, getImageFromV3('object-user-supporter.png')) : ''
+    const supporter = is_supporter ? PanelDraw.Image(162, has_group ? 510 : 465, 200, 30, getImageFromV3Cache('object-user-supporter.png')) : ''
 
     svg = setImage(svg, 0, 0, 460, 460, getImageFromV3('panel-oldavatar.png'), reg_background, 1);
     svg = setImage(svg, 70, 40, 320, 320, image, reg_avatar, 1);

@@ -4,9 +4,8 @@ import {
     isEmptyString,
     isNumber,
     floor,
-    getImageFromV3,
     rounds,
-    floors, isNotEmptyArray
+    floors, isNotEmptyArray, getImageFromV3Cache
 } from "./util.js";
 import {getModColor, hex2hsl, hsl2hex} from "./color.js";
 import {torus, torusBold} from "./font.js";
@@ -357,15 +356,15 @@ function getLazerModPath(mod = {
     // def 这里放图标和字体
 
     const def_settings = (has_settings) ? getMaskFromImage(91 * scale, 2 * scale, 40 * scale, 28 * scale,
-            getImageFromV3('Mods', 'at.png'), `mask-M-Settings-${index}`)
+            getImageFromV3Cache('Mods', 'at.png'), `mask-M-Settings-${index}`)
         : ''
 
     // y 本来是 8
     const def_icon = getMaskFromImage(7.5 * scale, 10 * scale, 120 * scale, 84 * scale,
-        getImageFromV3('Mods', mod_name?.toLowerCase() + '.png'), `mask-M-Icon-${index}`)
+        getImageFromV3Cache('Mods', mod_name?.toLowerCase() + '.png'), `mask-M-Icon-${index}`)
 
     const def_mod_base = getMaskFromImage(0, 3 * scale, 135 * scale, 97 * scale,
-        getImageFromV3('Mods', 'mod-icon.png'), `mask-M-Base-${index}`)
+        getImageFromV3Cache('Mods', 'mod-icon.png'), `mask-M-Base-${index}`)
 
     let def_mod_name
     let def_mod_extender
@@ -384,7 +383,7 @@ function getLazerModPath(mod = {
 
     if (show_extender) {
         def_mod_extender = getMaskFromImage(100 * scale, 17 * scale, 135 * scale, 68 * scale,
-            getImageFromV3('Mods', 'mod-icon-extender.png'), `mask-M-Extender-${index}`
+            getImageFromV3Cache('Mods', 'mod-icon-extender.png'), `mask-M-Extender-${index}`
         )
     } else {
         def_mod_extender = ''

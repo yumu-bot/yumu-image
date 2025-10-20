@@ -1,9 +1,8 @@
 import {
-    getImageFromV3,
     setImage,
     setSvgBody, isASCII, isNotBlankString, setText,
     setTexts,
-    getSvgBody, isNotEmptyArray
+    getSvgBody, isNotEmptyArray, getImageFromV3Cache
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {label_A8} from "./card_A3.js";
@@ -166,13 +165,13 @@ export async function card_MF(song = {
     const image = await getMaimaiCover(parseInt(song.id))
 
     const genre = label_A8({
-        image: getImageFromV3('object-beatmap-favorite.png'),
+        image: getImageFromV3Cache('object-beatmap-favorite.png'),
         text: getMaimaiCategory(song.basic_info.genre),
         color: '#1c1719',
     })
 
     const bpm = label_A8({
-        image: getImageFromV3('object-beatmap-playcount.png'),
+        image: getImageFromV3Cache('object-beatmap-playcount.png'),
         text: Math.round(song.basic_info.bpm).toString(),
         color: '#1c1719',
     })

@@ -19,7 +19,7 @@ import {
     setText,
     setTexts,
     floor,
-    floors, getDiffBackground, rounds, getSvgBody
+    floors, getDiffBackground, rounds, getSvgBody, getImageFromV3Cache
 } from "../util/util.js";
 import {getRankBackground} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
@@ -353,8 +353,8 @@ const component_E5 = (
     const pc = poppinsBold.getTextPath(floor(data?.playcount, 1, -1), 78, 47, 16, 'right baseline', '#fff')
 
     svg = setTexts(svg, [fav, pc], reg_text);
-    svg = setImage(svg, 12, 10 - 1, 18, 18, getImageFromV3('object-beatmap-favorite.png'), reg_text, 1);
-    svg = setImage(svg, 12, 32, 18, 18, getImageFromV3('object-beatmap-playcount.png'), reg_text, 1);
+    svg = setImage(svg, 12, 10 - 1, 18, 18, getImageFromV3Cache('object-beatmap-favorite.png'), reg_text, 1);
+    svg = setImage(svg, 12, 32, 18, 18, getImageFromV3Cache('object-beatmap-playcount.png'), reg_text, 1);
     svg = setText(svg, rect, reg_base);
 
     return svg;

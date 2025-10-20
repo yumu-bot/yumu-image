@@ -1,5 +1,5 @@
 import {
-    getImageFromV3, setText, setTexts, floor,
+    setText, setTexts, floor, getImageFromV3Cache,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_E} from "./label.js";
@@ -17,14 +17,14 @@ export async function component_E3(data = {
     fail_percent: 2,
 
     labels: [{
-        icon: getImageFromV3("object-score-beatsperminute.png"),
+        icon: getImageFromV3Cache("object-score-beatsperminute.png"),
         icon_title: 'BPM',
         color_remark: '#aaa',
         remark: '-1.64%',
         data_b: '98',
         data_m: '.36%',
     },{
-        icon: getImageFromV3("object-score-beatsperminute.png"),
+        icon: getImageFromV3Cache("object-score-beatsperminute.png"),
         icon_title: 'BPM',
         color_remark: '#aaa',
         remark: '7:27',

@@ -416,17 +416,32 @@ export function readFile(path = '', options = 'binary') {
 }
 
 /**
- * 获取来自 v3 的图片
- * @param path
+ * 获取来自 v3 的图片流
+ * @param paths
  * @return {string} Buffer 图片流
  */
-export function readImageFromV3(path = '') {
-    return fs.readFileSync(getImageFromV3(path), 'binary');
+export function readBufferFromV3(...paths) {
+    const gi = path_util.join(EXPORT_FILE_V3, ...paths)
+
+    return readFileWithCache(gi, 'binary');
+}
+
+/**
+ * 获取来自 v3 的图片并缓存。返回的是 base64。
+ * - 这对于小图片来说很有效。但如果对于较大的图片，还不如让浏览器自己去读取。
+ * @param paths
+ * @return {string} Base64 图片流，可直接插入 svg
+ */
+export function getImageFromV3Cache(...paths) {
+    const gi = path_util.join(EXPORT_FILE_V3, ...paths)
+    const cf = readFileWithCache(gi, 'binary')
+
+    return binary2Base64Text(cf);
 }
 
 /**
  * 获取来自 v3 的图片链接，可用于 SVG 图片插入
- * @param path
+ * @param paths
  * @return {string} 图片链接
  */
 export function getImageFromV3(...paths) {
@@ -443,7 +458,7 @@ export function getImageFromV3(...paths) {
 export async function getMapBackground(beatmap = {}, cover = 'cover') {
     const covers = beatmap?.beatmapset?.covers || {}
 
-    const default_image_path = getImageFromV3('card-default.png')
+    const default_image_path = getImageFromV3Cache('card-default.png')
 
     let use_cache = hasLeaderBoard(beatmap?.beatmapset?.ranked) || hasLeaderBoard(beatmap?.beatmap?.ranked)
 
@@ -502,7 +517,7 @@ export async function getMapBackground(beatmap = {}, cover = 'cover') {
  */
 export async function getDiffBackground(score = {}) {
     let path;
-    const default_image_path = getImageFromV3('card-default.png')
+    const default_image_path = getImageFromV3Cache('card-default.png')
 
     const bid = score?.beatmap?.id
     const sid = score?.beatmapset?.id
@@ -662,7 +677,7 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
     }
 
     if (path.endsWith('avatar-guest.png')) {
-        return getImageFromV3('avatar-guest.png');
+        return getImageFromV3Cache('avatar-guest.png');
     }
 
     const bufferName = MD5.copy().update(path).digest('hex');
@@ -708,14 +723,71 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
 }
 
 /**
+ * 在搜索字符串的末尾位置插入
+ * @param {string} base 模板
+ * @param {string} replace 要插入的内容
+ * @param {string} search 要查找的内容
+ * @return {string}
+ */
+function insertAfter(base, insert, search) {
+    const index = base.indexOf(search);
+    if (index === -1) return base;
+
+    const insertPosition = index + search.length;
+    return base.substring(0, insertPosition) + insert + base.substring(insertPosition);
+}
+
+/**
+ * 升级后的 replace 方法
+ * - 这样能尽量少地使用正则匹配大量字符
+ * - 这里是插入在“要查找的内容”之后（如果输入的正则是零宽正向回顾断言，(?<=）
+ * @param {string} base 模板
+ * @param {string | number} replace 要插入的内容
+ * @param {string | RegExp} search 要查找的内容
+ * @return {string}
+ */
+function replaceAfter(base = '', insert, search) {
+    const ins = insert?.toString()
+    const sea = search.toString()
+    const reg_has_assert = /\(\?<=(.+)\)/
+
+    if (search instanceof RegExp) {
+        // 处理正则表达式的情况
+        if (sea.includes('(?<=')) {
+            // 提取回顾断言中的实际内容
+            const match = sea.match(reg_has_assert);
+
+            if (match) {
+                const real_search_content = match[1];
+                const real_search = real_search_content
+                    .replace(/\\"/g, '"')        // 还原双引号
+                    .replace(/\\\(/g, '(')       // 还原左括号
+                    .replace(/\\\)/g, ')')       // 还原右括号
+                    .replace(/\\\\/g, '\\');     // 还原反斜杠
+
+                return insertAfter(base, ins, real_search);
+            }
+        }
+        // 其他正则情况使用原生的 replace
+        return base.replace(search, ins);
+    } else if (sea.startsWith('${')) {
+        // 需要替换的字符串情况
+        return base.replace(search, ins);
+    } else {
+        // 字符串情况
+        return insertAfter(base, ins, search);
+    }
+}
+
+/**
  * 设置文字。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
  * @param {string} base
  * @param {string | number} replace
- * @param {string | RegExp} reg
+ * @param {string | RegExp} regex
  * @return {string}
  */
-export function setText(base = '', replace = '', reg = /.*/) {
-    return base.replace(reg, replace?.toString());
+export function setText(base = '', replace = '', regex = /.*/) {
+    return replaceAfter(base, replace, regex);
 }
 
 
@@ -736,9 +808,9 @@ export function setTexts(base = '', replaces = [''], regex = /.*/) {
             rep += (v?.toString() + '\n')
         }
 
-        base = base.replace(regex, rep);
+        return replaceAfter(base, rep, regex);
     } else if (typeof replaces == "string") {
-        base = base.replace(regex, replaces);
+        return replaceAfter(base, replaces, regex);
     }
     return base;
 }
@@ -751,12 +823,12 @@ export function setTexts(base = '', replaces = [''], regex = /.*/) {
  * @param w 宽度
  * @param h 宽度
  * @param image 图像链接，必填。如果是网络 URI，则需要在父类 await 一下（别这么做
- * @param reg 正则，确定插入位置
+ * @param regex 正则，确定插入位置
  * @param opacity 不透明度，一般为 1
  * @param ratio 贴合的逻辑。一般为 xMidYMid slice/meet，前者是尽量裁切来填充空白，后者是达到要求即可
  * @param rotate90 是否顺时针旋转 90 度
  */
-export function setImage(base = '', x = 0, y = 0, w = 100, h = 100, image = '', reg = /.*/, opacity = 1, ratio = "xMidYMid slice", rotate90 = false) {
+export function setImage(base = '', x = 0, y = 0, w = 100, h = 100, image = '', regex = /.*/, opacity = 1, ratio = "xMidYMid slice", rotate90 = false) {
     let replace
 
     if (image != null) {
@@ -772,7 +844,7 @@ export function setImage(base = '', x = 0, y = 0, w = 100, h = 100, image = '', 
         return base;
     }
 
-    return base.replace(reg, replace);
+    return replaceAfter(base, replace, regex);
 }
 
 /**
@@ -1646,7 +1718,7 @@ export async function getFlagPath(code = "cn", x, y, h = 30) {
 
     //避免腾讯封掉青天白日旗
     if (code.toLowerCase() === "tw") {
-        const image = getImageFromV3('flag-TW.png')
+        const image = getImageFromV3Cache('flag-TW.png')
 
         if (fs.existsSync(image)) {
             return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${image}"
@@ -1656,13 +1728,23 @@ export async function getFlagPath(code = "cn", x, y, h = 30) {
         }
     } else if (code.toLowerCase() === "xx") {
         // 这不是 svg 文件，这个是 png 文件
-        const xx_image = getImageFromV3('Flags', 'XX')
+        const xx_image = getImageFromV3Cache('Flags', 'XX')
 
         return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${xx_image}"
             style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
     }
 
+    const flag_path = `${FLAG_PATH}/${code}`
+
+    const cached = fileCache.get(flag_path);
+    if (cached) {
+        return cached;
+    }
+
     const svg = await getFlagSvg(code);
+
+    fileCache.set(flag_path, svg);
+
     const len = svg.length;
     const scale = h / 30;
     return `<g transform="translate(${x} ${y}) scale(${scale})">` + svg.substring(60, len - 6) + '</g>';

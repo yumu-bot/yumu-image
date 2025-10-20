@@ -1,11 +1,11 @@
 import {
     getBeatMapTitlePath,
     getGameMode,
-    getImageFromV3, getMapStatus,
+    getMapStatus,
     setImage, setSvgBody,
     isNotBlankString,
     isNotEmptyArray, readNetImage,
-    setText, setTexts, floor, getSvgBody
+    setText, setTexts, floor, getSvgBody, getImageFromV3Cache
 } from "../util/util.js";
 import {extra, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -101,13 +101,13 @@ export async function card_A3(beatmapset = {}) {
     const image = await readNetImage(beatmapset.covers["list@2x"], hasLeaderBoard(beatmapset.ranked))
 
     const fav = label_A8({
-        image: getImageFromV3('object-beatmap-favorite.png'),
+        image: getImageFromV3Cache('object-beatmap-favorite.png'),
         text: floor(beatmapset.favourite_count, 1),
         color: '#1c1719',
     })
 
     const pc = label_A8({
-        image: getImageFromV3('object-beatmap-playcount.png'),
+        image: getImageFromV3Cache('object-beatmap-playcount.png'),
         text: floor(beatmapset.play_count, 1),
         color: '#1c1719',
     })
