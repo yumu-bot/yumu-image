@@ -1,4 +1,4 @@
-class FileCache {
+export class FileCache {
     constructor() {
         this.cache = new Map();
         this.expiredTime = 24 * 60 * 60 * 1000; // 一天默认缓存时间
@@ -45,5 +45,3 @@ class FileCache {
         }
     }
 }
-
-export default FileCache;
