@@ -629,7 +629,7 @@ async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_ro
     for (const d of discussion) {
         let u = null;
         for (const us of user) {
-            if (us.id === d.uid) {
+            if (us.id === d.user_id) {
                 u = us;
                 break;
             }
