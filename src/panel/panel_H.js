@@ -141,6 +141,7 @@ async function drawModPool(pool = {
 
     return data;
 }
+
 //渲染单张卡片
 async function drawCardD(b, mod = 'NM', mod_color = '666', mode = 'osu', row = 1, column = 1, maxColumn = 3) {
     const x = ((3 - maxColumn) * 300 + 80) + 600 * (column - 1);

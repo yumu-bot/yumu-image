@@ -114,9 +114,9 @@ export async function card_F3(match_score = {}, max_combo = 0, compare_score = 0
     const mods = (match_score?.mods ?? [])
         .filter(it => it.acronym !== "NF")
 
-    if (mods.length === 0) mods.push("NM")
+    // if (mods.length === 0) mods.push("NM")
 
-    const mods_path = drawLazerMods(mods, 160, 70 - 6, 40, 110, 'left', 5, false).svg
+    const mods_path = drawLazerMods(mods, 160, 70 - 6, 40, 110, 'left', 5, false, false).svg
 
     /*
     let mods_path = ''

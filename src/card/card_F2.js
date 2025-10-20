@@ -115,7 +115,7 @@ export async function card_F2(match_score = {}, max_combo = 0, compare_score = 0
     const mods = (match_score?.mods ?? [])
         .filter(it => it.acronym !== "NF")
 
-    const mods_path = drawLazerMods(mods, 430 / 2, 332 - 4, 46, 230, 'center', 5, true).svg
+    const mods_path = drawLazerMods(mods, 430 / 2, 332 - 4, 46, 160, 'center', 5, false, false).svg
 
     svg = setText(svg, mods_path, reg_mod)
 

@@ -13,6 +13,7 @@ import {getRandom, getRandomBannerPath} from "./mascotBanner.js";
 import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
+import FileCache from "./fileCache.js";
 
 const exportsJPEG = new API(new JPEGProvider());
 const exportsPNG = new API(new PNGProvider());
@@ -366,18 +367,49 @@ export function getFileSize(path = "") {
     return size;
 }
 
-export function readTemplate(path = '') {
-    return fs.readFileSync(path, 'utf8');
+// 使用示例
+const fileCache = new FileCache();
+
+// 缓存文件读取结果
+function readFileWithCache(filePath, options = 'binary', expire = 24 * 60 * 60 * 1000) {
+    // 先检查缓存
+    const cached = fileCache.get(filePath);
+    if (cached) {
+        return cached;
+    }
+
+    // 缓存不存在，读取文件
+    const data = readFile(filePath, options); // 假设的读取文件函数
+
+    // 缓存文件内容，设置1小时过期
+    try {
+        fileCache.set(filePath, data, expire);
+    } catch (e) {
+        console.log(`保存缓存文件出现错误: ${e}`)
+    }
+
+    return data;
+}
+
+/**
+ * 优化读取模板的方法：存入缓存，读写更高效
+ * @param path
+ * @param options
+ * @return {*|string}
+ */
+export function readTemplate(path = '', options = 'utf8') {
+    return readFileWithCache(path, options, 24 * 60 * 60 * 1000);
 }
 
 /**
  *
  * @param path
+ * @param options 可输入 binary, utf8
  * @returns {string}
  */
-export function readFile(path = '') {
+export function readFile(path = '', options = 'binary') {
     try {
-        return fs.readFileSync(path, 'binary');
+        return fs.readFileSync(path, options);
     } catch (e) {
         return '';
     }

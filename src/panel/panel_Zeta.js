@@ -1,7 +1,5 @@
 import {compileTemplate, exportJPEG, getAvatar, readNetImage} from "../util/util.js";
 
-const userAvatarCardTemplate = compileTemplate("template/test/User_Avatar_Card.svg");
-
 export async function router(req, res) {
     try {
         const data = req.fields || {};
@@ -25,5 +23,8 @@ export async function router(req, res) {
 async function panel_Zeta(data) {
     data.avatar = await getAvatar(data.avatar);
     data.banner = await readNetImage(data.banner);
+
+    const userAvatarCardTemplate = compileTemplate("template/test/User_Avatar_Card.svg");
+
     return userAvatarCardTemplate(data);
 }
