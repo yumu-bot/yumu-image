@@ -30,8 +30,11 @@ export const colorArray = {
     // 粉红色
     pink: ['#F86F64', '#FD5392'],
 
+    // 红色，正红色
+    red: ['#FD5392', '#D32F2F'],
+
     // 深红色，正红色
-    red: ['#8A1538', '#D32F2F'],
+    deep_red: ['#8A1538', '#D32F2F'],
 
     // 这个是海蓝，如果要选天蓝色，请改成 cyan
     blue: ['#7776FF', '#4FACFE'],
@@ -246,7 +249,7 @@ export function getCompetitorColors(color) {
         case "#9922EE": cs = colorArray.purple; break;
         case "#E4007F": cs = colorArray.magenta.toReversed(); break;
         case "#EB6877": cs = colorArray.pink; break;
-        case "#D32F2F": cs = colorArray.red.toReversed(); break;
+        case "#D32F2F": cs = colorArray.red; break;
         default: cs = colorArray.deep_gray.toReversed(); break;
     }
 

@@ -352,7 +352,7 @@ async function playerData2CardH(p = {}) {
 
     switch (p?.team) {
         case 'red':
-            team_color = colorArray.pink // '#D32F2F';
+            team_color = colorArray.red // '#D32F2F';
             player_background = getImageFromV3('card-red.png');
             isTeamVS = true;
             break;
