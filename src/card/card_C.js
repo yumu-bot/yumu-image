@@ -189,14 +189,16 @@ export function card_C(data = {
 
     if (is_title_not_equal && is_title2_prefix_not_ascii && title2_width < title2_prefix_width) {
         title_width = title_max_width - title2_prefix_width - 20;
-        title2_width = title2_prefix_width + 10
     }
 
     // 文字定义
     const color_left12 = data.color_left12 ?? '#fff';
 
     const text_title = torus.cutStringTail(str_title, 36, title_width);
+
+    // 权衡后的宽度
     title_width = torus.getTextWidth(text_title, 36)
+    title2_width = title_max_width - title_width - 10
 
     const text_left1 = torus.cutStringTail(data.left1 ?? '', 24, left_max_width);
     const text_left2 = torus.cutStringTail(data.left2 ?? '', 24, left_max_width);
