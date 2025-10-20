@@ -1734,16 +1734,7 @@ export async function getFlagPath(code = "cn", x, y, h = 30) {
             style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
     }
 
-    const flag_path = `${FLAG_PATH}/${code}`
-
-    const cached = fileCache.get(flag_path);
-    if (cached) {
-        return cached;
-    }
-
     const svg = await getFlagSvg(code);
-
-    fileCache.set(flag_path, svg);
 
     const len = svg.length;
     const scale = h / 30;
