@@ -794,7 +794,7 @@ export function setText(base = '', replace = '', regex = /.*/) {
 /**
  * 设置文字。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
  * @param {string} base
- * @param {number[] | string[]} replaces
+ * @param {number[] | string[]} replaces 注意，越靠后图层越靠下
  * @param {string | RegExp} regex
  * @return {string}
  */

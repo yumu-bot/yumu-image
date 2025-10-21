@@ -159,7 +159,6 @@ export async function panel_D2(data = {
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
     const string_components = [
-        getSvgBody(0, 0, componentD4),
         getSvgBody(40, 330, componentD1),
         getSvgBody(40, 620, componentD2),
         getSvgBody(40, 940, componentD3),
@@ -167,6 +166,7 @@ export async function panel_D2(data = {
         getSvgBody(1390, 530, componentD6),
         getSvgBody(1390, 650, componentD7),
         getSvgBody(1390, 770, componentD8),
+        getSvgBody(0, 0, componentD4),
     ]
 
     svg = setTexts(svg, string_components, reg_component)
