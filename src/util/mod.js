@@ -475,12 +475,12 @@ function getLazerModAdditional(mod = {}) {
     let small = ''
 
     if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(s?.speed_change)) {
-        const r = rounds(s.speed_change, 2)
+        const r = rounds(s.speed_change, 2, -2)
 
         large = r.integer
         small = r.decimal + 'x'
     } else if (matchAnyMod(mod, ['WU', 'WD']) && isNumber(s?.final_rate)) {
-        const r = rounds(s.final_rate, 2)
+        const r = rounds(s.final_rate, 2, -2)
 
         large = r.integer
         small = r.decimal + 'x'
@@ -488,7 +488,7 @@ function getLazerModAdditional(mod = {}) {
         large = s.extra_lives
         small = '+'
     } else if (matchMod(mod, 'AS') && isNumber(s?.initial_rate)) {
-        const r = rounds(s.initial_rate, 2)
+        const r = rounds(s.initial_rate, 2, -2)
 
         large = r.integer
         small = r.decimal + 'x'
@@ -524,7 +524,7 @@ function getLazerModAdditional(mod = {}) {
         if (s?.extended_limits === true) {
             large += '<>'
         } else if (isNumber(s?.scroll_speed)) {
-            const f = floors(s?.scroll_speed, 1)
+            const f = floors(s?.scroll_speed, 1, -2)
 
             large = 'v' + f.integer
             small = f.decimal+ 'x'

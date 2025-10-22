@@ -891,7 +891,13 @@ ${svgBody}
  * 第二版处理数字。如果要分开，请使用 floors
  * @param number 数字
  * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，负数用于特别大的数
- * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格
+ * @param sub_level 不同的分支等级
+ * - 0 无变化，
+ * - -1 尽可能缩短，
+ * - -2 在 0-1 区间时，不显示整数的 0
+ * - 1 补足 7 位
+ * - 2 留空格
+ * - 3 附加输出分好的整数部分和小数部分，
  * @returns {string}
  */
 export function floor(number = 0, level = 0, sub_level = 0) {
@@ -903,7 +909,13 @@ export function floor(number = 0, level = 0, sub_level = 0) {
  * 第二版处理数字
  * @param number 数字
  * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，decimal
- * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格，3 附加输出分好的整数部分和小数部分
+ * @param sub_level 不同的分支等级
+ * - 0 无变化，
+ * - -1 尽可能缩短，
+ * - -2 在 0-1 区间时，不显示整数的 0
+ * - 1 补足 7 位
+ * - 2 留空格
+ * - 3 附加输出分好的整数部分和小数部分，
  * @returns {{integer: string, decimal: string, int: number, dec: number} | {integer: string, decimal: string}}
  */
 export function floors(number = 0, level = 0, sub_level = 0) {
@@ -914,7 +926,13 @@ export function floors(number = 0, level = 0, sub_level = 0) {
  * 第二版处理数字。如果要分开，请使用 rounds
  * @param number 数字
  * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，负数用于特别大的数
- * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格
+ * @param sub_level 不同的分支等级
+ * - 0 无变化，
+ * - -1 尽可能缩短，
+ * - -2 在 0-1 区间时，不显示整数的 0
+ * - 1 补足 7 位
+ * - 2 留空格
+ * - 3 附加输出分好的整数部分和小数部分，
  * @returns {string}
  */
 export function round(number = 0, level = 0, sub_level = 0) {
@@ -926,7 +944,13 @@ export function round(number = 0, level = 0, sub_level = 0) {
  * 第二版处理数字
  * @param number 数字
  * @param level 保留的位数，如果是负数，则是按多少位分割。正数用于小数，decimal
- * @param sub_level 不同的分支等级，0 无变化，-1 尽可能缩短，1 补足 7 位，2 留空格，3 附加输出分好的整数部分和小数部分
+ * @param sub_level 不同的分支等级
+ * - 0 无变化，
+ * - -1 尽可能缩短，
+ * - -2 在 0-1 区间时，不显示整数的 0
+ * - 1 补足 7 位
+ * - 2 留空格
+ * - 3 附加输出分好的整数部分和小数部分，
  * @returns {{integer: string, decimal: string, int: number, dec: number} | {integer: string, decimal: string}}
  */
 export function rounds(number = 0, level = 0, sub_level = 0) {
@@ -1052,18 +1076,33 @@ function floorOrRound(number = 0, level = 0, sub_level = 0, is_round = false) {
             // floor 不需要进位
         }
 
-        int_str = int.toString()
-        dec_str = dec.toString().slice(2, 2 + level)
+        if (int !== 0 || sub_level !== -2) {
+            int_str = int.toString()
+            dec_str = dec.toString().slice(2, 2 + level)
 
-        while (dec_str.length > 0 && dec_str.charAt(dec_str.length - 1) === '0') {
-            dec_str.slice(0, dec_str.length - 1)
-        }
+            while (dec_str.length > 0 && dec_str.charAt(dec_str.length - 1) === '0') {
+                dec_str.slice(0, dec_str.length - 1)
+            }
 
-        if (dec_str.length > 0) {
-            int_str += '.'
-            dec_str += u
+            if (dec_str.length > 0) {
+                int_str += '.'
+                dec_str += u
+            } else {
+                dec_str = u
+            }
         } else {
-            dec_str = u
+            int_str = dec.toString().slice(2, 2 + level)
+            dec_str = ''
+
+            while (int_str.length > 0 && int_str.charAt(int_str.length - 1) === '0') {
+                int_str.slice(0, int_str.length - 1)
+            }
+
+            if (int_str.length > 0) {
+                int_str = '.' + int_str
+            }
+
+            dec_str += u
         }
     } else {
         const str = (sub_level === 1) ? Math.floor(number).toString().padStart(7, '0') : Math.floor(number).toString()
