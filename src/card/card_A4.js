@@ -1,7 +1,6 @@
 import {getMultipleTextPath, poppinsBold, torus, torusBold} from "../util/font.js";
 import {colorArray, getRankColors} from "../util/color.js";
 import {
-    floors,
     getAvatar,
     getFlagPath, getSvgBody,
     getTimeDifferenceShort,
@@ -108,7 +107,7 @@ export async function card_A4(data = {
     // 导入N1标签
     const acc = data.score.accuracy * 100;
     const combo = data.score.max_combo;
-    const pp = floors(data.score.pp, 0)
+    const pp = Math.round(data.score.pp ?? 0)
 
     let score
     if (data?.is_legacy) {
