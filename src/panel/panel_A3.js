@@ -39,6 +39,7 @@ export async function router_svg(req, res) {
  * @return {Promise<string>}
  */
 export async function panel_A3(data = {
+    "user": null,
     "beatmap": {},
     "scores": [],
     "start": 1,
@@ -75,9 +76,13 @@ export async function panel_A3(data = {
     const beatmap_a2 = card_A2(beatmap_generated);
     svg = setSvgBody(svg, 40, 40, beatmap_a2, reg_beatmap_a2);
 
+    /**
+     * @type {number}
+     */
+    const bind = data?.user?.user_id ?? 0
 
     // 导入N1卡
-    let promiseN1s = [];
+    let promise_a4s = [];
     for (const i in data.scores) {
         const i0 = Math.max((parseInt(i) - 1), 0)
 
@@ -95,44 +100,44 @@ export async function panel_A3(data = {
         }
 
         const f = card_A4({
+            bind: bind,
             score: data.scores[i],
-            score_rank: (parseInt(i) + (data?.start || 1)) || 0,
+            score_rank: (parseInt(i) + (data?.start ?? 1)) ?? 0,
             compare_score: compare_score,
             is_legacy: is_legacy
         })
 
-        promiseN1s.push(f);
+        promise_a4s.push(f);
     }
 
-    let cardN1s = [];
+    let cardA4s = [];
 
-    await Promise.allSettled(promiseN1s)
-        .then(results => thenPush(results, cardN1s))
+    await Promise.allSettled(promise_a4s)
+        .then(results => thenPush(results, cardA4s))
 
     // 插入图片和部件
     svg = setImage(svg, 0, 0, 1920, 320, await getMapBackground(data.beatmap, 'cover'), reg_banner, 0.8);
-    // svg = putCustomBanner(svg, reg_banner, await getMapBG(data.beatmap.beatmapset.id, 'cover', hasLeaderBoard(data.beatmap.ranked)));
 
     // 计算面板高度
-    const rowTotal = Math.ceil((cardN1s?.length || 0) / 2);
+    const row_total = Math.ceil((cardA4s?.length || 0) / 2);
 
-    const panelHeight = getPanelHeight(cardN1s?.length, 62, 2, 290, 10, 40);
-    const cardHeight = panelHeight - 290;
+    const panel_height = getPanelHeight(cardA4s?.length, 62, 2, 290, 10, 40);
+    const card_height = panel_height - 290;
 
-    svg = setText(svg, panelHeight, reg_panelheight);
-    svg = setText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panel_height, reg_panelheight);
+    svg = setText(svg, card_height, reg_cardheight);
 
-    let stringN1s = ''
+    let string_a4s = ''
 
     //插入N1卡
-    for (let i = 0; i < cardN1s.length; i++) {
-        const x = (i < rowTotal) ? 40 : 965;
-        const y = (i < rowTotal) ? (330 + i * 72) : (330 + (i - rowTotal) * 72);
+    for (let i = 0; i < cardA4s.length; i++) {
+        const x = (i < row_total) ? 40 : 965;
+        const y = (i < row_total) ? (330 + i * 72) : (330 + (i - row_total) * 72);
 
-        stringN1s += getSvgBody(x, y, cardN1s[i])
+        string_a4s += getSvgBody(x, y, cardA4s[i])
     }
 
-    svg = setText(svg, stringN1s, reg_list_n1)
+    svg = setText(svg, string_a4s, reg_list_n1)
 
     return svg.toString();
 }

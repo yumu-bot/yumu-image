@@ -1,18 +1,20 @@
 import {getMultipleTextPath, poppinsBold, torus, torusBold} from "../util/font.js";
-import {getRankColor} from "../util/color.js";
+import {colorArray, getRankColors} from "../util/color.js";
 import {
     floors,
     getAvatar,
     getFlagPath, getSvgBody,
     getTimeDifferenceShort,
-    readNetImage, round,
+    round,
     rounds, setImage, setText, setTexts
 } from "../util/util.js";
 import {label_N2, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {drawLazerMods} from "../util/mod.js";
+import {getRankBackground} from "../util/star.js";
 
 export async function card_A4(data = {
+    bind: 0,
     score: {},
 
     score_rank: 1,
@@ -62,24 +64,27 @@ export async function card_A4(data = {
     //导入背景和头像
     const user = data.score.user || {}
 
+    /**
+     * @type {string[]}
+     */
     const ranks = data.score.rank
         ?.replaceAll("X", "SS")
         ?.replaceAll("H", "")
-        ?.split("") || [];
+        ?.split("") ?? [];
     let rank
 
     if (ranks.length === 2) {
-        rank = torusBold.getTextPath(ranks[0].toString(), 884 - 8, 44, 40, 'center baseline', "#2A2226", 1) +
-            torusBold.getTextPath(ranks[1].toString(), 884 + 8, 44, 40, 'center baseline', "#2A2226", 0.8)
+        rank = torusBold.getTextPath(ranks[0], 884 - 8, 44, 40, 'center baseline', "#2A2226", 1) +
+            torusBold.getTextPath(ranks[1], 884 + 8, 44, 40, 'center baseline', "#2A2226", 0.8)
     } else {
-        rank = torusBold.getTextPath(ranks[0]?.toString() || 'F', 884, 44, 40, 'center baseline', "#2A2226", 1)
+        rank = torusBold.getTextPath(ranks[0]?.toString() ?? 'F', 884, 44, 40, 'center baseline', "#2A2226", 1)
     }
 
-    const rank_color = getRankColor(data.score.rank);
+    const rank_colors = getRankColors(data.score.rank);
 
     const avatar = await getAvatar(user.avatar_url, true);
 
-    const cover = await readNetImage(user.cover?.url, true)
+    const cover = getRankBackground(data.score.rank, data.score.passed)
 
     const time_difference = getTimeDifferenceShort(data.score.ended_at, 2)
 
@@ -181,7 +186,25 @@ export async function card_A4(data = {
         color: '#aaa'
     }], 834, 53, 'right baseline')
 
-    const ranking = poppinsBold.getTextPath(data.score_rank, 32 + 2, 38, 20, 'center baseline', "#fff")
+    let ranking_color
+    let version_colors
+
+    if (data.bind != null && data.bind === data.score.user_id) {
+        ranking_color = '#2A2226'
+        if (data?.score?.is_lazer) {
+            version_colors = colorArray.light_yellow.toReversed()
+        } else {
+            version_colors = colorArray.cyan.toReversed()
+        }
+    } else if (data?.score?.is_lazer) {
+        ranking_color = '#FFF'
+        version_colors = colorArray.amber.toReversed()
+    } else {
+        ranking_color = '#FFF'
+        version_colors = colorArray.blue.toReversed()
+    }
+
+    const ranking = poppinsBold.getTextPath(data.score_rank, 32 + 2, 38, 20, 'center baseline', ranking_color)
 
     // 导入评价，x和y是矩形的左上角
     let stat_svg = ''
@@ -217,10 +240,13 @@ export async function card_A4(data = {
     // 插入模组，因为先插的在上面，所以从左边插
     const mods_arr = data.score.mods
 
-    const mods_svg = drawLazerMods(mods_arr, 685, 3, 25, 510 - name_width, 'right', 4, true).svg
+    const mods_svg = drawLazerMods(mods_arr, 690, 3, 25, 510 - name_width, 'right', 4, true).svg
 
-    const rank_rrect = PanelDraw.Rect(810, 0, 105, 62, 20, rank_color)
-    const version_rrect = PanelDraw.Rect(0, 0, 65 + 62, 62, 20, data?.score?.is_lazer ? "#FF9800" : "#00A0E9")
+    const rank_rrect = PanelDraw.LinearGradientRect(810, 0, 105, 62, 20,
+        rank_colors, 1, [0, 100], [20, 80])
+
+    const version_rrect = PanelDraw.LinearGradientRect(0, 0, 65 + 62, 62, 20,
+        version_colors, 1, [0, 100], [20, 80])
 
     svg = setImage(svg, 65, 0, 62, 62, avatar, reg_avatar)
     svg = setImage(svg, 65, 0, 790, 62, cover, reg_background, 0.2)
