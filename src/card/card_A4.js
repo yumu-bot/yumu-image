@@ -149,12 +149,12 @@ export async function card_A4(data = {
 
     const pp_text = getMultipleTextPath([{
         font: poppinsBold,
-        text: pp.integer,
+        text: pp,
         size: 28,
         color: '#fff'
     }, {
         font: poppinsBold,
-        text: pp.decimal + ' PP',
+        text: ' PP',
         size: 20,
         color: '#fff'
     }], 834, 31, 'right baseline')
