@@ -114,7 +114,14 @@ export async function panel_Epsilon2(data = {
 
     const mode = PanelDraw.Image(291, 9, 33, 33, getGameModePath(user?.mode), 0.3)
 
-    const rank = TahomaRegular.getTextPath('#' + (user?.statistics?.global_rank ?? 0), 324, 66, 48, 'right baseline', '#fff', 0.3)
+    let rank_color
+    if ((user?.statistics?.global_rank ?? 1001) <= 1000) {
+        rank_color = '#ffff00'
+    } else {
+        rank_color = '#fff'
+    }
+
+    const rank = TahomaRegular.getTextPath('#' + (user?.statistics?.global_rank ?? 0), 324, 66, 48, 'right baseline', rank_color, 0.3)
 
     const background = PanelDraw.Image(0, 0, 332, 87, await getBanner(user?.cover_url), 0.6)
 
