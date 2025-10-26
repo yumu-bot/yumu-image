@@ -32,9 +32,13 @@ yarn start
   - A5: 多成绩 PS/RS
   - A6: 帮助和维基 MD/H/W
   - A7: 理论最好成绩 BF
-  - A8: 搜索 O
+  - A8: ~~搜索 O~~
   - A9: 战队 TM
   - A10: 奖牌 BD
+  - A11: 客串谱师 GD
+  - A12: 最多游玩 E
+  - A13: 探索谱面 E
+  - A14: 玩家谱面 E
 - B: PPM 评分系统 PM
   - B1: PP- PM/PV
   - B2: 骂娘谱面解析 MM

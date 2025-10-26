@@ -2,7 +2,7 @@ import {
     getBeatMapTitlePath,
     getGameMode,
     getMapStatus,
-    setImage, setSvgBody,
+    setImage,
     isNotBlankString,
     isNotEmptyArray, readNetImage,
     setText, setTexts, floor, getSvgBody, getImageFromV3Cache
@@ -119,27 +119,31 @@ export async function card_A3(beatmapset = {}) {
         color: '#1c1719',
     })
 
+    const color = getMapStatusColor(beatmapset.ranked)
+
     const status = label_A8({
         image: null,
         has_text: null,
         text: getMapStatus(beatmapset.ranked).toUpperCase(),
-        color: getMapStatusColor(beatmapset.ranked),
+        color: color,
     })
 
     const difficulty = drawDifficultyLabels(beatmapset.beatmaps)
 
     const base = PanelDraw.Rect(0, 0, 600, 210, 20, '#382E32', 1)
-        + PanelDraw.Rect(0, 0, 600, 210, 20, getMapStatusColor(beatmapset.ranked), 0.3)
+        + PanelDraw.Rect(0, 0, 600, 210, 20, color, 0.3)
         + PanelDraw.Rect(170, 0, 430, 175, 20, '#382E32', 1) // 背景图片层底板
 
     // 导入
     svg = setTexts(svg, [titles.title, titles.title_unicode, artist, mapper], reg_text)
 
-    svg = setSvgBody(svg, 210 + 10, 175, difficulty, reg_label)
-    svg = setSvgBody(svg, 210 + 10, 144, fav.svg, reg_label)
-    svg = setSvgBody(svg, 210 + 10 + 10 + fav.width, 144, pc.svg, reg_label)
-    svg = setSvgBody(svg, 600 - sid.width - 10, 144, sid.svg, reg_label)
-    svg = setSvgBody(svg, 10, 10, status.svg, reg_label)
+    const diff_svg = getSvgBody(210 + 10, 175, difficulty)
+    const fav_svg = getSvgBody(210 + 10, 144, fav.svg)
+    const pc_svg = getSvgBody(210 + 10 + 10 + fav.width, 144, pc.svg)
+    const sid_svg = getSvgBody(600 - sid.width - 10, 144, sid.svg)
+    const status_svg = getSvgBody(10, 10, status.svg)
+
+    svg = setTexts(svg, [diff_svg, fav_svg, pc_svg, sid_svg, status_svg], reg_label)
 
     svg = setImage(svg, 170, 0, 430, 175, image, reg_background, 0.3)
     svg = setImage(svg, 0, 0, 210, 210, image, reg_cover, 1)

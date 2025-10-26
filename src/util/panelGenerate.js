@@ -22,7 +22,14 @@ import {
     getTimeDifferenceShort,
     getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3Cache,
 } from "./util.js";
-import {getBadgeColor, getRankColor, getRankColors, getStarRatingColor, getStarRatingColors} from "./color.js";
+import {
+    colorArray,
+    getBadgeColor,
+    getRankColor,
+    getRankColors,
+    getStarRatingColor,
+    getStarRatingColors
+} from "./color.js";
 import {
     getScoreTypeImage,
     hasLeaderBoard,
@@ -1049,20 +1056,6 @@ export const PanelGenerate = {
     fixedBestScore2CardC: async (s, rank = 1, rank_after = null) => {
         let mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
 
-        /*
-        switch (s?.mods?.length) {
-            case 0:
-                mods_width = 0;
-                break;
-            case 1:
-                mods_width = 100;
-                break;
-            default:
-                mods_width = 160;
-        }
-
-         */
-
         const is_after = (typeof rank_after == "number")
 
         const card_c = await PanelGenerate.score2CardC(s, rank, true)
@@ -1081,6 +1074,102 @@ export const PanelGenerate = {
             }
         } else {
             return card_c
+        }
+    },
+
+    mostPlayed2CardC: async (mp, identifier = 1) => {
+        const cache = hasLeaderBoard(mp?.status)
+
+        const cover = await readNetImage(mp?.beatmapset?.covers?.list, cache);
+        const background = await readNetImage(mp?.beatmapset?.covers?.cover, cache);
+
+        const difficulty_name = mp.version ? torus.cutStringTail(
+            getKeyDifficulty(mp), 24,
+            500 - 10, true) : '';
+
+        const artist = torus.cutStringTail(mp.beatmapset.artist, 24,
+            500 - 10, true);
+
+        const title2 = (mp.beatmapset.title === mp.beatmapset.title_unicode) ? '' : (mp?.beatmapset?.title_unicode || '');
+
+        let color_index = '#fff'
+        let rank2_color
+
+        const pc = mp.current_user_playcount ?? 0
+
+        if (pc > 1000) {
+            color_index = '#2A2226'
+            rank2_color = colorArray.rainbow.toReversed()
+        } else if (pc > 500) {
+            rank2_color = colorArray.light_yellow.toReversed()
+        } else if (pc > 300) {
+            rank2_color = colorArray.amber.toReversed()
+        } else if (pc > 200) {
+            rank2_color = colorArray.light_green.toReversed()
+        } else if (pc > 100) {
+            rank2_color = colorArray.green
+        } else if (pc > 75) {
+            rank2_color = colorArray.blue.toReversed()
+        } else if (pc > 50) {
+            rank2_color = colorArray.deep_blue.toReversed()
+        } else if (pc > 40) {
+            rank2_color = colorArray.purple
+        } else if (pc > 30) {
+            rank2_color = colorArray.magenta.toReversed()
+        } else if (pc > 20) {
+            rank2_color = colorArray.pink
+        } else if (pc > 10) {
+            rank2_color = colorArray.red
+        } else {
+            rank2_color = colorArray.deep_gray.toReversed()
+        }
+
+        const mode = ' (' + (mp?.mode ?? 'osu') + ')'
+
+        const star = mp?.difficulty_rating || 0
+        const star_color = getStarRatingColor(star)
+        const star2_color = getStarRatingColors(star)
+
+        const color_label12 = (star < 4) ? '#1c1719' : '#fff'
+
+        const label2 = mp?.id?.toString() || ''
+
+        return {
+            background: background,
+            cover: cover,
+            type: '',
+
+            title: mp.beatmapset.title || '',
+            title2: title2,
+            left1: artist + ' // ' + mp.beatmapset.creator,
+            left2: '[' + difficulty_name + ']' + mode,
+            index_b: pc,
+            index_m: '',
+            index_l: 'PC',
+            index_b_size: 48,
+            index_m_size: 36,
+            index_l_size: 24,
+            label1: floor(star, 1),
+            label2: label2,
+            label3: '',
+            label4: '',
+            label5: '#' + identifier,
+            mods_arr: [],
+
+            color_title2: '#bbb',
+            color_right: rank2_color,
+            color_left: star2_color,
+            color_index: color_index,
+            color_label1: star_color,
+            color_label2: star_color,
+            color_label3: '',
+            color_label4: '',
+            color_label5: star_color,
+            color_label12: color_label12,
+            color_left12: '#bbb',
+
+            font_title2: 'PuHuiTi',
+            font_label4: 'torus',
         }
     },
 

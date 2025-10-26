@@ -6,13 +6,14 @@ import {
     setCustomBanner, readTemplate, getPanelHeight, thenPush, getSvgBody
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {card_A2} from "../card/card_A2.js";
 import {card_A3} from "../card/card_A3.js";
+import {card_A1} from "../card/card_A1.js";
+import {torusBold} from "../util/font.js";
 
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_A8(data);
+        const svg = await panel_A13(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -25,7 +26,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_A8(data);
+        const svg = await panel_A13(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -36,13 +37,14 @@ export async function router_svg(req, res) {
 }
 
 /**
- * 搜索谱面
- * !o
+ * 玩家谱面
+ * !e:f
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_A8(
+export async function panel_A13(
     data = {
+        "user": {},
         beatmapsets: [{
             offset: 0,
             source: 'beatmania IIDX',
@@ -81,11 +83,8 @@ export async function panel_A8(
             public_rating: 0,
             preview_name: 'Seiryu - Critical Crystal (SanadaYukimura) [376340]'
         },],
-        total: 2715,
-        cursor_string: 'eyJfc2NvcmUiOjIyOS4zOTAwOCwiaWQiOjE0MDc0NDd9',
-        cursor: {id: 1407447},
-        search: {sort: 'relevance_desc', g: 0, l: 0},
-        result_count: 50,
+        "page": 1,
+        "max_page": 1,
     }
 ) {
     // 导入模板
@@ -99,41 +98,31 @@ export async function panel_A8(
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA2-1\);">)/;
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Search Result (!ymo)', 'O');
+    const panel_name = getPanelNameSVG('My Beatmapsets (!yme)', 'E');
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A2卡
     const beatmap_arr = data?.beatmapsets || [];
-    const result_count = Math.min(data?.result_count || 0, beatmap_arr?.length || 0);
+    const result_count = beatmap_arr?.length ?? 3;
 
-    const search_result = await PanelGenerate.searchResult2CardA2(
-        data.total,
-        data.cursor,
-        data.search,
-        result_count,
-        data.rule || 'Qualified',
-        beatmap_arr[0],
-        beatmap_arr[beatmap_arr.length - 1],
-    );
-
-    const search_cardA2 = card_A2(search_result);
-    svg = setSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
+    const user_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    svg = setSvgBody(svg, 40, 40, user_a1, reg_search_a2);
 
     //导入其他卡
-    const cardA3s = []
+    const card_a3s = []
 
     await Promise.allSettled(
         beatmap_arr.map((map) => {
             return card_A3(map)
         })
-    ).then(results => thenPush(results, cardA3s))
+    ).then(results => thenPush(results, card_a3s))
 
     let string_a3s = ''
 
-    for (const i in cardA3s) {
-        const a3 = cardA3s[i]
+    for (const i in card_a3s) {
+        const a3 = card_a3s[i]
 
         const x = i % 3
         const y = Math.floor(i / 3)
@@ -152,5 +141,12 @@ export async function panel_A8(
 
     svg = setText(svg, panel_height, reg_panelheight);
     svg = setText(svg, card_height, reg_cardheight);
+
+    const page = torusBold.getTextPath(
+        'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6
+    )
+
+    svg = setText(svg, page, reg_card_a3)
+
     return svg.toString();
 }

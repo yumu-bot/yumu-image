@@ -194,23 +194,27 @@ export function hex2hsl(hex = '#AAAAAA') {
 export function hsl2hex(hue = 0, saturation = 0, lightness = 0) {
     let r, g, b, var1, var2
 
-        if (saturation === 0) {
-            r = lightness * 255.0;
-            g = lightness * 255.0;
-            b = lightness * 255.0;
+    if (hue > 1) {
+        hue = hue / 255;
+    }
+
+    if (saturation === 0) {
+        r = lightness * 255.0;
+        g = lightness * 255.0;
+        b = lightness * 255.0;
+    } else {
+        if (lightness < 0.5) {
+            var2 = lightness * (1 + saturation);
         } else {
-            if (lightness < 0.5) {
-                var2 = lightness * (1 + saturation);
-            } else {
-                var2 = (lightness + saturation) - (saturation * lightness);
-            }
-
-            var1 = 2.0 * lightness - var2;
-
-            r = 255.0 * Hue2RGB(var1, var2, hue + (1.0 / 3.0));
-            g = 255.0 * Hue2RGB(var1, var2, hue);
-            b = 255.0 * Hue2RGB(var1, var2, hue - (1.0 / 3.0));
+            var2 = (lightness + saturation) - (saturation * lightness);
         }
+
+        var1 = 2.0 * lightness - var2;
+
+        r = 255.0 * Hue2RGB(var1, var2, hue + (1.0 / 3.0));
+        g = 255.0 * Hue2RGB(var1, var2, hue);
+        b = 255.0 * Hue2RGB(var1, var2, hue - (1.0 / 3.0));
+    }
 
 
     // Add m to each component to match the desired lightness
@@ -245,7 +249,7 @@ export function getCompetitorColors(color) {
         case "#B3D465": cs = colorArray.light_green.toReversed(); break;
         case "#0068B7": cs = colorArray.deep_blue.toReversed(); break;
         case "#BDBDBD": cs = colorArray.gray.toReversed(); break;
-        case "#00A0E9": cs = colorArray.blue; break;
+        case "#00A0E9": cs = colorArray.blue.toReversed(); break;
         case "#9922EE": cs = colorArray.purple; break;
         case "#E4007F": cs = colorArray.magenta.toReversed(); break;
         case "#EB6877": cs = colorArray.pink; break;
