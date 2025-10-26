@@ -530,9 +530,12 @@ function getLazerModAdditional(mod = {}) {
             small = f.decimal+ 'x'
         } else if (s?.hard_rock_offsets === true) {
             large = 'HR'
+        } else {
+            large = 'DA'
+            small = ''
         }
     } else {
-        large = 'DA'
+        large = mod?.acronym ?? mod.toString()
         small = ''
     }
 
