@@ -193,12 +193,12 @@ function drawDifficultyLabels(beatmaps = []) {
     let ruleset_current = -1
     let x = 10
 
-    const half_labels_width = half_labels.reduce((prev, curr) => {
-        return prev + curr.width + 10
-    }, 0)
-    const full_labels_width = full_labels.reduce((prev, curr) => {
-        return prev + curr.width + 10
-    }, 0)
+    const half_labels_width = Math.max(half_labels.reduce((prev, curr) => {
+        return prev + curr.width + 4
+    }, 0) - 4, 0)
+    const full_labels_width = Math.max(full_labels.reduce((prev, curr) => {
+        return prev + curr.width + 4
+    }, 0) - 4, 0)
 
     if (half_labels_width + (ruleset_count * 40) > max_width) {
         // 第三
@@ -230,7 +230,7 @@ function drawDifficultyLabels(beatmaps = []) {
         // 尝试找出主难度的位置
         const top_diff_index = []
         for (const k of Array.from(ruleset_set)) {
-            top_diff_index.push(findLastIndex(ruleset_arr, (v) => Math.abs(v - k) < 1e-6))
+            top_diff_index.push(ruleset_arr.findLastIndex((v) => Math.abs(v - k) < 1e-6))
         }
         // 第二
 
@@ -281,7 +281,7 @@ function drawDifficultyLabels(beatmaps = []) {
         // 尝试找出主难度的位置
         const top_diff_index = []
         for (const k of Array.from(ruleset_set)) {
-            top_diff_index.push(findLastIndex(ruleset_arr, (v) => Math.abs(v - k) < 1e-6))
+            top_diff_index.push(ruleset_arr.findLastIndex((v) => Math.abs(v - k) < 1e-6))
         }
 
         // 第一
@@ -392,14 +392,4 @@ export function label_A8(data = {
         width: width,
         svg: svg,
     }
-}
-
-function findLastIndex(array = [], predicate = () => {}) {
-    let index = array.length;
-    while (index--) {
-        if (predicate(array[index])) {
-            return index;
-        }
-    }
-    return -1; // 如果没有找到匹配项，返回-1
 }

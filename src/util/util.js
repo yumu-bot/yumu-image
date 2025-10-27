@@ -331,7 +331,7 @@ export function isPictureIntacted(path = '') {
 
     const isJPG = f.startsWith('\xff\xD8') && f.endsWith('\xff\xD9')
     const isPNG = f.startsWith('\x89\x50\x4E\x47\x0D\x0A\x1A\x0A') && f.endsWith('\x49\x45\x4e\x44\xae\x42\x60\x82')
-    const isGIF = (f.startsWith('\x47\x49\x46\x38\x39\x61') || f.startsWith('\x47\x49\x46\x38\x37\x61')) && f.endsWith('\x00\x3B')
+    const isGIF = f.endsWith('\x00\x3B') && (f.startsWith('\x47\x49\x46\x38\x39\x61') || f.startsWith('\x47\x49\x46\x38\x37\x61'))
     const isWEBP = f.startsWith('\x52\x49\x46\x46')
     const isBMP = f.startsWith('\x42\x4D')
 

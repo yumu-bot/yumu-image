@@ -37,8 +37,8 @@ export async function router_svg(req, res) {
 }
 
 /**
- * 搜索谱面
- * !o
+ * 探索谱面
+ * !e
  * @param data
  * @return {Promise<string>}
  */
