@@ -468,7 +468,7 @@ export async function getMapBackground(beatmap = {}, cover = 'cover') {
     const cl = cover.toString().toLowerCase().trim()
 
     switch (cl) {
-        case 'cover', 'cover@2x', 'silmcover', 'silmcover@2x', 'list', 'list@2x', 'card', 'card@2x', 'raw': type = cl; break;
+        case 'cover', 'cover@2x', 'silmcover', 'silmcover@2x', 'list', 'list@2x', 'card', 'card@2x', 'raw', 'fullsize' : type = cl; break;
         default: type = 'cover'; break;
     }
 
@@ -484,19 +484,19 @@ export async function getMapBackground(beatmap = {}, cover = 'cover') {
             case 'list@2x': url = covers['list@2x']; break;
             case 'card': url = covers.card; break;
             case 'card@2x': url = covers['card@2x']; break;
-            case 'raw': covers.cover; break;
-                /*
-                if (covers?.list != null) {
+            case 'raw', 'fullsize': {
+                if (covers.fullsize != null) {
+                    url = covers.fullsize
+                } else if (covers?.list != null) {
                     url = covers.list
                         .replaceAll('@2x', '')
-                        .replaceAll('list', 'raw');
+                        .replaceAll('list', 'fullsize');
                     break;
                 } else {
-                    url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/raw.jpg'
+                    url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/fullsize.jpg'
                     use_cache = false
                 }; break;
-
-                 */
+            }
 
             default: return default_image_path
         }
@@ -539,7 +539,7 @@ export async function getDiffBackground(score = {}) {
             console.error("本地背景读取失败", e);
         }
 
-        path = await getMapBackground(score, 'raw');
+        path = await getMapBackground(score, 'fullsize');
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
 
@@ -552,7 +552,7 @@ export async function getDiffBackground(score = {}) {
                 deleteBeatMapFromDatabase(bid);
             }
 
-            return await getMapBackground(score, 'raw');
+            return await getMapBackground(score, 'fullsize');
         }
     }
 }

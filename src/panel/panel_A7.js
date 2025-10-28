@@ -258,7 +258,8 @@ export async function panel_A7(data = {
                     "list" : "https://assets.ppy.sh/beatmaps/1456709/covers/list.jpg?1623290934",
                     "list@2x" : "https://assets.ppy.sh/beatmaps/1456709/covers/list@2x.jpg?1623290934",
                     "slimcover" : "https://assets.ppy.sh/beatmaps/1456709/covers/slimcover.jpg?1623290934",
-                    "slimcover@2x" : "https://assets.ppy.sh/beatmaps/1456709/covers/slimcover@2x.jpg?1623290934"
+                    "slimcover@2x" : "https://assets.ppy.sh/beatmaps/1456709/covers/slimcover@2x.jpg?1623290934",
+                    "fullsize" : "https://assets.ppy.sh/beatmaps/1456709/covers/fullsize.jpg?1623290934",
                 },
                 "ratings" : null,
                 "spotlight" : false,
