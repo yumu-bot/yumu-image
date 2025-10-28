@@ -450,6 +450,7 @@ export function getImageFromV3(...paths) {
 
 /**
  * 获取谱面背景 v5
+ * - TODO raw 失效，等待更好的解决方案
  * @param beatmap 也可以是 score，这两个类结构刚好一样
  * 如果是 beatmapSet，那直接使用 readNetImage，url 输入 beatmapSet.covers.xxxxx...
  * @param cover 封面种类，一般用 cover 和 list
@@ -483,15 +484,19 @@ export async function getMapBackground(beatmap = {}, cover = 'cover') {
             case 'list@2x': url = covers['list@2x']; break;
             case 'card': url = covers.card; break;
             case 'card@2x': url = covers['card@2x']; break;
-            case 'raw': if (covers?.list != null) {
-                url = covers.list
-                    .replaceAll('@2x', '')
-                    .replaceAll('list', 'raw');
-                break;
-            } else {
-                url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/raw.jpg'
-                use_cache = false
-            }; break;
+            case 'raw': covers.cover; break;
+                /*
+                if (covers?.list != null) {
+                    url = covers.list
+                        .replaceAll('@2x', '')
+                        .replaceAll('list', 'raw');
+                    break;
+                } else {
+                    url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/raw.jpg'
+                    use_cache = false
+                }; break;
+
+                 */
 
             default: return default_image_path
         }
