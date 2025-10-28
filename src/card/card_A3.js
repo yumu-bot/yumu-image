@@ -367,7 +367,7 @@ export function label_A8(data = {
 
     } else if (data.has_text === true) {
         // [] text
-        width += 12 // 10
+        width += 12
         text_middle += 12
 
         svg = setText(svg, PanelDraw.Rect(0, 0, 14, 25, 7, data?.color || 'none', opacity), reg_icon)
