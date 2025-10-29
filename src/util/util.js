@@ -452,10 +452,10 @@ export function getImageFromV3(...paths) {
  * 获取谱面背景 v5
  * @param beatmap 也可以是 score，这两个类结构刚好一样
  * 如果是 beatmapSet，那直接使用 readNetImage，url 输入 beatmapSet.covers.xxxxx...
- * @param cover 封面种类，一般用 cover 和 list
+ * @param cover_type 封面种类，一般用 cover 和 list
  * @returns {Promise<string>} 返回位于文件系统的绝对路径
  */
-export async function getMapBackground(beatmap = {}, cover = 'cover' || 'list') {
+export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'list') {
     const covers = beatmap?.beatmapset?.covers || {}
 
     const default_image_path = getImageFromV3Cache('card-default.png')
@@ -464,7 +464,7 @@ export async function getMapBackground(beatmap = {}, cover = 'cover' || 'list') 
 
     let type
 
-    const cl = cover.toString().toLowerCase().trim()
+    const cl = cover_type.toString().toLowerCase().trim()
 
     switch (cl) {
         case 'cover', 'cover@2x', 'silmcover', 'silmcover@2x', 'list', 'list@2x', 'card', 'card@2x', 'raw', 'fullsize' : type = cl; break;
@@ -517,14 +517,23 @@ export async function getMapBackground(beatmap = {}, cover = 'cover' || 'list') 
 /**
  * 获得难度背景 v5
  * @param score 成绩，也可以是 beatmap，这两个类结构刚好一样
+ * @param must_full 如果为真，则会在失败时，尝试获取 fullsize 的图片
  * @returns {Promise<string>}
  */
-export async function getDiffBackground(score = {}) {
+export async function getDiffBackground(score = {}, must_full = false) {
     let path;
     const default_image_path = getImageFromV3Cache('card-default.png')
 
     const bid = score?.beatmap?.id
     const sid = score?.beatmapset?.id
+
+    let cover_type
+
+    if (!must_full) {
+        cover_type = 'cover'
+    } else {
+        cover_type = 'fullsize'
+    }
 
     try {
         // data 为背景文件在文件系统中的绝对路径字符串 不是文件本身
@@ -538,7 +547,7 @@ export async function getDiffBackground(score = {}) {
             console.error("本地背景读取失败", e);
         }
 
-        path = await getMapBackground(score, 'cover');
+        path = await getMapBackground(score, cover_type);
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
 
@@ -551,7 +560,7 @@ export async function getDiffBackground(score = {}) {
                 deleteBeatMapFromDatabase(bid);
             }
 
-            return await getMapBackground(score, 'cover');
+            return await getMapBackground(score, cover_type);
         }
     }
 }

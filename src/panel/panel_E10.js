@@ -273,7 +273,7 @@ export async function panel_E10(data = {
     const reg_component = /(?<=<g id="Component">)/;
     const reg_background = /(?<=<g id="Background">)/;
 
-    const background = await getDiffBackground(data.score)
+    const background = await getDiffBackground(data.score, true)
 
     const componentE1 = await component_E1(await PanelEGenerate.user2componentE1(data.user))
     const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.score))
