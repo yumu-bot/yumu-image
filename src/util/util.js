@@ -450,13 +450,12 @@ export function getImageFromV3(...paths) {
 
 /**
  * 获取谱面背景 v5
- * - TODO raw 失效，等待更好的解决方案
  * @param beatmap 也可以是 score，这两个类结构刚好一样
  * 如果是 beatmapSet，那直接使用 readNetImage，url 输入 beatmapSet.covers.xxxxx...
  * @param cover 封面种类，一般用 cover 和 list
  * @returns {Promise<string>} 返回位于文件系统的绝对路径
  */
-export async function getMapBackground(beatmap = {}, cover = 'cover') {
+export async function getMapBackground(beatmap = {}, cover = 'cover' || 'list') {
     const covers = beatmap?.beatmapset?.covers || {}
 
     const default_image_path = getImageFromV3Cache('card-default.png')
@@ -539,7 +538,7 @@ export async function getDiffBackground(score = {}) {
             console.error("本地背景读取失败", e);
         }
 
-        path = await getMapBackground(score, 'fullsize');
+        path = await getMapBackground(score, 'cover');
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
 
@@ -552,7 +551,7 @@ export async function getDiffBackground(score = {}) {
                 deleteBeatMapFromDatabase(bid);
             }
 
-            return await getMapBackground(score, 'fullsize');
+            return await getMapBackground(score, 'cover');
         }
     }
 }
