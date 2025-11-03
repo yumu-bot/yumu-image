@@ -793,6 +793,21 @@ function replaceAfter(base = '', insert, search) {
 }
 
 /**
+ * 注意，后放的在前面渲染，显示上会靠后
+ * @param texts
+ * @return {string}
+ */
+export function getTexts(texts = []) {
+    let t = ''
+
+    for (const text of texts.reverse()) {
+        t += text
+    }
+
+    return t
+}
+
+/**
  * 设置文字。注意这个方法有性能损失，请尽量避免大量操作，尽量一次完成
  * @param {string} base
  * @param {string | number} replace
@@ -891,7 +906,7 @@ export function getSvgBody(x = 0, y = 0, body = '') {
     return `<g transform="translate(${x} ${y})">` + body + '</g>';
 }
 
-export function getSvg(svgBody = '', w, h) {
+export function getSvg(svgBody = '', w = 1920, h = 1080) {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${w} ${h}">
 ${svgBody}

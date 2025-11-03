@@ -149,8 +149,10 @@ export const PanelDraw = {
         </g>`;
     },
 
-    Polygon: (x = 0, y = 0, controls = '', ex = 0, ey = 0, color = '#fff', opacity = 1) => {
-        return `<polygon points="${x} ${y} ${controls} ${ex} ${ey}" style="fill: ${color}; fill-opacity: ${opacity}"/>`
+    Polygon: (points = [0, 0, 0, 0], color = '#fff', opacity = 1) => {
+        const cs = points.join(' ')
+
+        return `<polygon points="${cs}" style="fill: ${color}; fill-opacity: ${opacity}"/>`
     },
 
     /**
@@ -326,7 +328,13 @@ export const PanelDraw = {
 
             if (i < (arr.length - 1)) {
                 // 贝塞尔曲线的控制点位置
-                const control_point = `${lineto_x + step / 2} ${lineto_y} `
+                const next = arr[i + 1]
+
+                const next_height = (delta > 0) ? ((next - arr_min) / (arr_max - arr_min) * h) : 0;
+                const next_x = x + step * (i + 1);
+                const next_y = (next === 0 && is0toMin) ? y : y - next_height;
+
+                const control_point = `${lineto_x + (next_x - lineto_x) * 0.2} ${lineto_y + (next_y - lineto_y) * 0.2} `
 
                 path_svg += control_point
                 area_svg += control_point
@@ -412,41 +420,58 @@ export const PanelDraw = {
         svg += '</g>'
         return svg.toString()
     },
-}
 
-export const RainbowRect = PanelDraw.GradientRect(510, 40, 195, 60, 15, [
-    {
-        offset: "0%",
-        color: "#d56e74",
-        opacity: 1,
-    },{
-        offset: "14%",
-        color: "#dd8d52",
-        opacity: 1,
-    },{
-        offset: "28%",
-        color: "#fff767",
-        opacity: 1,
-    },{
-        offset: "42%",
-        color: "#88bd6f",
-        opacity: 1,
-    },{
-        offset: "57%",
-        color: "#55b1ef",
-        opacity: 1,
-    },{
-        offset: "71%",
-        color: "#59509e",
-        opacity: 1,
-    },{
-        offset: "86%",
-        color: "#925c9f",
-        opacity: 1,
-    }
-], 0.4, {
-    x1: "0%",
-    y1: "45%",
-    x2: "100%",
-    y2: "55%",
-})
+    /**
+     * 从左往右。从上往下绘制正方形的矩阵
+     * @param x 左上角
+     * @param y 左上角
+     * @param w
+     * @param h
+     * @param stat
+     * @param data 数据
+     * @param color
+     * @param data_max_min 最大值小于这个值时，会被钳住
+     * @param opacity
+     * @constructor
+     */
+    RectMatrix(x = 0, y = 0, w = 0, h = 0, stat = {
+        width: 1,
+        height: 1,
+        row: 3,
+        column: 4,
+    }, data = [0], color = {
+        hue: 342,
+        saturation: 0.8,
+        lightness_min: 0.2,
+        lightness_max: 1.0,
+    }, data_max_min = 300, opacity = 1) {
+        const max = Math.max(data_max_min, Math.max.apply(Math, data))
+
+        const x_interval = ((w - stat.column * stat.width) / (stat.column - 1)) ?? 0
+        const y_interval = ((h - stat.row * stat.height) / (stat.row - 1)) ?? 0
+
+        const length = data.length
+
+        let squares = ''
+
+        for (let i = 0; i < stat.column; i++) {
+            const rx = i * (x_interval + stat.width)
+
+            for (let j = 0; j < stat.row; j++) {
+                const ry = j * (y_interval + stat.height)
+
+                const d = data[Math.min(i * stat.row + j, length - 1)]
+
+                const p = Math.pow(d / max, 0.75) ?? 0
+
+                const l = color.lightness_min + p * (color.lightness_max - color.lightness_min)
+
+                squares += this.Rect(x + rx, y + ry, stat.width, stat.height, 0,
+                    `hsl(${color.hue}, ${color.saturation * 100}%, ${l * 100}%)`, opacity
+                )
+            }
+        }
+
+        return squares
+    },
+}

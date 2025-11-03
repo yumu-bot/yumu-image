@@ -44,7 +44,7 @@ import {
 } from "./maimai.js";
 import {getRandomBannerPath} from "./mascotBanner.js";
 import {PanelDraw} from "./panelDraw.js";
-import {card_H2} from "../card/card_H2.js";
+import {card_D2} from "../card/card_D2.js";
 import {getLazerModsWidth} from "./mod.js";
 
 //公用方法
@@ -922,13 +922,10 @@ export const PanelGenerate = {
     },
 
     /**
-     * 注意，这个方法直接返回生成好的 card_H2
      * @param scores
-     * @param has_custom_panel
-     * @param hue
-     * @return {Promise<{scores: *[], has_custom_panel: boolean, hue: number}>}
+     * @return {Promise<{scores: []}>}
      */
-    score2CardH2: async (scores = [], has_custom_panel = false, hue = 342) => {
+    score2CardD2: async (scores = []) => {
         let promiseHs = []
         let h2s = []
 
@@ -960,18 +957,14 @@ export const PanelGenerate = {
                 bottom_right: time.minute + ":" + time.seconds,
             }
 
-            promiseHs.push(card_H2(data))
+            promiseHs.push(card_D2(data))
         }
 
         await Promise.allSettled(
             promiseHs
         ).then(results => thenPush(results, h2s))
 
-        return {
-            scores: h2s,
-            has_custom_panel: has_custom_panel,
-            hue: hue,
-        }
+        return h2s
     },
 
     score2CardC: async (s, identifier = 1, use_cache = null) => {

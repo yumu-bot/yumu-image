@@ -4,7 +4,7 @@ import {
     setText, floors, getImageFromV3Cache,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {card_D2} from "../card/card_D2.js";
+import {card_D0} from "../card/card_D0.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function component_J(data = {
@@ -126,7 +126,7 @@ export async function component_J(data = {
     let cardKs = [];
 
     for (const v of data.card_K) {
-        const h = await card_D2({
+        const h = await card_D0({
             map_background: v.cover,
             star_rating: v.star,
             score_rank: v.rank,

@@ -1,5 +1,6 @@
 import moment from "moment";
 import {getImageFromV3} from "./util.js";
+import mascot_data from '../config/mascot.json' with { type: 'json' };
 
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
 const mascot_transparency_sum_arr = [2, 1, 0, 0, 1, 0, 0, 1, 0, 1];
@@ -34,6 +35,32 @@ export function getMaimaiBannerIndex(song) {
     }
 
     return 0;
+}
+
+/**
+ * 用来根据老版本的吉祥物获取横幅版的吉祥物，返回内有 y 需要往上挪
+ * @param mode
+ * @param window_height
+ * @return {{mascot: string, y: number}}
+ */
+export function getMascotBanner(
+    mode = 'osu',
+    window_height = 140
+) {
+    const mascot_name = getMascotName(mode)
+    const index = getMascotIndex(mascot_name)
+
+    // const w = 560
+    const h = 710
+
+    const offset = Math.max(0, Math.min((mascot_data?.[mascot_name]?.[index - 1] ?? 50) / 100, 1));
+
+    const y = Math.max(0, Math.min(offset * h, h - window_height))
+
+    return {
+        mascot: getImageFromV3('Mascots', `${mascot_name}_${index}.png`),
+        y: -y
+    }
 }
 
 /**
@@ -116,13 +143,18 @@ export function getMascotName(mode = 'osu') {
 /**
  * @function 提供吉祥物名字对应的链接
  * @return {String} 返回吉祥物链接
- * @param mascotname 吉祥物名字
+ * @param mascot_name 吉祥物名字
  */
-export function getMascotPath(mascotname = 'pippi') {
-    let i;
-    let path;
+export function getMascotPath(mascot_name = 'pippi') {
+    let index = getMascotIndex(mascot_name);
 
-    switch (mascotname) {
+    return getImageFromV3('Mascots', `${mascot_name}_${index}.png`);
+}
+
+function getMascotIndex(mascot_name = 'pippi') {
+    let i;
+
+    switch (mascot_name) {
         case 'pippi':
             i = 0;
             break;
@@ -154,9 +186,8 @@ export function getMascotPath(mascotname = 'pippi') {
             i = 9;
             break;
     }
-    path = getRandom(Math.max(1, mascot_pic_sum_arr[i]));
 
-    return getImageFromV3('Mascots', `${mascotname}_${path}.png`);
+    return getRandom(Math.max(1, mascot_pic_sum_arr[i]));
 }
 
 /**

@@ -3,7 +3,7 @@ import {
     setSvgBody, setText
 } from "../util/util.js";
 import {torus} from "../util/font.js";
-import {card_D2} from "../card/card_D2.js";
+import {card_D0} from "../card/card_D0.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function component_D3(data = {
@@ -123,7 +123,7 @@ export async function component_D3(data = {
     // 导入K卡
     let card_Ks = [];
     for (const i in data.bp) {
-        card_Ks.push(await card_D2(
+        card_Ks.push(await card_D0(
             await bp2CardK(data.bp[i], parseInt(i) + 1)));
     }
 

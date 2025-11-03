@@ -911,7 +911,11 @@ const PanelJGenerate = {
     },
 
     scores2componentJ2: async (scores = [], has_custom_panel = false, hue) => {
-        return await PanelGenerate.score2CardH2(scores, has_custom_panel, hue)
+        return {
+            scores: await PanelGenerate.score2CardD2(scores),
+            has_custom_panel: has_custom_panel,
+            hue: hue,
+        }
     },
 
     rank2componentJ3: (rank_attr, has_custom_panel = false, hue) => {
