@@ -763,7 +763,7 @@ const component_D7 = (
                 ) + ']',
             size: 24,
             color: '#ccc'
-        }], 130, 134, 'left baseline'
+        }], 140, 134, 'left baseline'
     )
 
 
@@ -842,7 +842,7 @@ const component_D7 = (
             divisor: 1_000_000,
             history: history?.statistics?.ranked_score ?? 0,
 
-            colors: colorArray.purple,
+            colors: colorArray.purple.toReversed(),
 
             background_color: top,
             icon_background_color: middle,
@@ -968,7 +968,7 @@ const component_D7 = (
 
         highest_icon = getImage(25, 55, 100, 100, getImageFromV3('Icons', 'ranking.png'))
 
-        highest_title = poppinsBold.getTextPath('Highest Rank', 130, 86, 24, 'left baseline', '#ccc')
+        highest_title = poppinsBold.getTextPath('Highest Rank', 140, 86, 24, 'left baseline', '#ccc')
 
         rrect = PanelDraw.Rect(0, 0, 1330, 540, 20, PanelColor.middle(hue))
     }
@@ -1007,7 +1007,7 @@ function label_D6(
             400, 18 + (1 - data.percent) * 78,
             15, data.percent > 0 ? Math.max(data.percent * 78, 15) : 0,
             7.5,
-            data.colors ?? colorArray.deep_gray, 1, [0, 0], [20, 80])
+            data.colors ?? colorArray.deep_gray, 1, [0, 0], [80, 20])
         :
         PanelDraw.LinearGradientRect(
             400, 18,
