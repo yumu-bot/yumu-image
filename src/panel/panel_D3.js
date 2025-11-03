@@ -812,7 +812,7 @@ const component_D7 = (
             divisor: 1000,
             history: history?.total_hits ?? 0,
 
-            colors: colorArray.yellow,
+            colors: colorArray.light_yellow,
 
             background_color: overlay,
             icon_background_color: top,
