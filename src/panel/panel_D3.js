@@ -271,10 +271,9 @@ export async function panel_D3(
     const componentD7 = component_D7({
         highest_rank: highest_rank,
         statistics: user.statistics,
-        history: history.statistics,
+        history: history?.statistics,
         top_percent: percentiles,
         achievements_count: user.user_achievements_count ?? 0,
-        replays_watched_counts: (user.replays_watched_counts?? []).length,
         beatmap_playcounts_count: user.beatmap_playcounts_count ?? 0,
         mode: getGameMode(user.mode, 0)
     }, has_custom_panel, hue)
@@ -721,7 +720,6 @@ const component_D7 = (
         top_percent: {},
 
         achievements_count: 0,
-        replays_watched_counts: 0,
         beatmap_playcounts_count: 0,
 
         mode: 'osu'
@@ -776,7 +774,7 @@ const component_D7 = (
     const rks_text = rounds(stat.ranked_score ?? 0, -4)
     const tts_text = rounds(stat.total_score ?? 0, -4)
     const bpc_text = rounds(data.beatmap_playcounts_count ?? 0, -4)
-    const rwc_text = rounds(data.replays_watched_counts ?? 0, -4)
+    const rwc_text = rounds(stat.replays_watched_by_others ?? 0, -4)
     const mxc_text = rounds(stat.maximum_combo ?? 0, -4)
 
 
@@ -898,9 +896,9 @@ const component_D7 = (
             text_b: rwc_text.integer,
             text_m: rwc_text.decimal,
 
-            value: data.replays_watched_counts ?? 0,
+            value: stat.replays_watched_by_others ?? 0,
             divisor: 1,
-            history: history?.statistics?.replays_watched_counts ?? 0,
+            history: history?.statistics?.replays_watched_by_others ?? 0,
 
             colors: colorArray.yellow,
 
