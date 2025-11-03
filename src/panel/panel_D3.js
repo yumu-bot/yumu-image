@@ -370,7 +370,7 @@ const component_D1 = (
 
         let delta = -5
 
-        if ((interval.end <= 14 || interval.end >= 82) && percent <= 0.2) {
+        if ((interval.end <= 14 || interval.end >= 60) && percent <= 0.2) {
             delta = 20
         }
 
