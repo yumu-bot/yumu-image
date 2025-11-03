@@ -1005,7 +1005,7 @@ function label_D6(
     const percent_rrect = (data.percent >= 0) ?
         PanelDraw.LinearGradientRect(
             400, 18 + (1 - data.percent) * 78,
-            15, data.percent * 78,
+            15, data.percent > 0 ? Math.max(data.percent * 78, 15) : 0,
             7.5,
             data.colors ?? colorArray.deep_gray, 1, [0, 0], [20, 80])
         :
