@@ -872,7 +872,7 @@ const component_D7 = (
             divisor: 1,
             history: 0,
 
-            colors: colorArray.gray,
+            colors: colorArray.gray.toReversed(),
 
             background_color: top,
             icon_background_color: middle,
