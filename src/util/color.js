@@ -195,7 +195,7 @@ export function hsl2hex(hue = 0, saturation = 0, lightness = 0) {
     let r, g, b, var1, var2
 
     if (hue > 1) {
-        hue = hue / 255;
+        hue = hue / 360;
     }
 
     if (saturation === 0) {

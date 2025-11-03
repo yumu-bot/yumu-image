@@ -254,7 +254,7 @@ export async function panel_Eta1(data = {
 
 }) {
     const user = data?.user
-    const hue = user?.profile_hue || 342
+    const hue = user?.profile_hue ?? 342
 
     // 导入模板
     let svg = `<?xml version="1.0" encoding="UTF-8"?>

@@ -95,7 +95,7 @@ export async function panel_D2(data = {
     const days = data?.history_days
     const best_time = data?.best_time || []
 
-    const hue = user?.profile_hue || 342
+    const hue = user?.profile_hue ?? 342
 
     let svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080">

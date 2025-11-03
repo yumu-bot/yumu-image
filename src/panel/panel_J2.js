@@ -140,7 +140,7 @@ export async function panel_J2(data = {
     const user = data?.user
     const bests = data?.bests
 
-    const hue = user?.profile_hue || 342
+    const hue = user?.profile_hue ?? 342
 
     const favorite_mappers = data?.favorite_mappers
     const pp_raw_arr = data?.pp_raw_arr || []
