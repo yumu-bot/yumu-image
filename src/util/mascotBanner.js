@@ -55,7 +55,7 @@ export function getMascotBanner(
 
     const offset = Math.max(0, Math.min((mascot_data?.[mascot_name]?.[index - 1] ?? 50) / 100, 1));
 
-    const y = Math.max(0, Math.min(offset * h, h - window_height))
+    const y = Math.max(0, offset * h - (window_height / 2))
 
     return {
         mascot: getImageFromV3('Mascots', `${mascot_name}_${index}.png`),
