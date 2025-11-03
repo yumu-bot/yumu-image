@@ -306,7 +306,7 @@ export async function panel_D0(data = {
     svg = setSvgBody(svg, 0, 0, cardF7, reg_card_f7);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Information (!ymi)', 'I');
+    const panel_name = getPanelNameSVG('(Legacy) Information v2 (!ymi)', 'IL');
 
     // 导入文字
     svg = setText(svg, panel_name, reg_index);

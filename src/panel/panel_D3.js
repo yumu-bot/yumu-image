@@ -302,7 +302,7 @@ export async function panel_D3(
 
     const request_time = day_str + 'request time: ' + getNowTimeStamp();
 
-    const panel_name = getPanelNameSVG('Information v4 (!ymi)', 'I', request_time);
+    const panel_name = getPanelNameSVG('Information v5 (!ymi)', 'I', request_time);
 
     // 导入文字
     svg = setText(svg, panel_name, reg_index);
