@@ -24,7 +24,7 @@ import {
 } from "./util.js";
 import {
     colorArray,
-    getBadgeColor,
+    getBadgeColor, getGlobalRankPercentColor,
     getRankColor,
     getRankColors,
     getStarRatingColor,
@@ -87,6 +87,8 @@ export const PanelGenerate = {
 
         const is_team_member = user.team != null
 
+        let left1_colors = getGlobalRankPercentColor(user?.statistics?.global_rank, user?.statistics?.global_rank_percent)
+
         const left1 = user?.statistics?.global_rank ? ('#' + user.statistics.global_rank) :
             (user?.rank_highest?.rank ?
                 '#' + user.rank_highest.rank + '^ (' + getTimeDifference(user.rank_highest.updated_at) + ')' :
@@ -118,6 +120,7 @@ export const PanelGenerate = {
 
             top1: user?.username,
             left1: left1,
+            left1_colors: left1_colors,
             left2: left2,
             right1: right1,
             right2: right2,

@@ -1,6 +1,6 @@
 //把数组变成可视化的图表
 import {torusBold} from "./font.js";
-import {isEmptyArray, isNumber, setText} from "./util.js";
+import {getRandomString, isEmptyArray, isNumber, setText} from "./util.js";
 import {hex2rgbColor} from "./color.js";
 
 export const PanelDraw = {
@@ -37,8 +37,8 @@ export const PanelDraw = {
      * @param h
      * @param r
      * @param colors
-     * @param opacity
      * @param position
+     * @param opacity
      * @return {string}
      * @constructor
      */
@@ -48,13 +48,15 @@ export const PanelDraw = {
             color: "#FFF",
             opacity: 1,
         }
-    ], opacity = 1, position = {
+    ], position = {
         x1: "0%",
         y1: "0%",
         x2: "100%",
         y2: "0%",
-    }) => {
-        const name = Math.round(Math.sqrt(x * y * w * h))  + (colors[0].color || '#fff')
+    }, opacity = 1) => {
+        // const name = Math.round(Math.sqrt(x * y * w * h))  + (colors[0].color || '#fff')
+
+        const name = getRandomString(6)
 
         let out = `<g><defs>
                 <linearGradient id="grad${name}" x1="${position.x1}" y1="${position.y1}" x2="${position.x2}" y2="${position.y2}">`
@@ -111,7 +113,7 @@ export const PanelDraw = {
             y2: `${position_y?.[1] ?? 0}%`,
         }
 
-        return PanelDraw.GradientRect(x, y, w, h, r, color_array, opacity, position)
+        return PanelDraw.GradientRect(x, y, w, h, r, color_array, position, opacity)
     },
 
     Circle: (cx = 0, cy = 0, r = 0, color = '#fff', opacity = 1) => {

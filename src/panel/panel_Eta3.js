@@ -442,15 +442,15 @@ const component_Eta1 = (
         offset: "55%",
         color: "#7FCEF4",
         opacity: 1,
-    },{
+    }, {
         offset: "70%",
         color: "#7FC269",
         opacity: 1,
-    },{
+    }, {
         offset: "85%",
         color: "#F7B551",
         opacity: 1,
-    },{
+    }, {
         offset: "100%",
         color: "#FFFF00",
         opacity: 1,

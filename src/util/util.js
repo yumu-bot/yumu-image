@@ -2479,3 +2479,16 @@ export function getSign(number = 0) {
     else if (number < 0) return '-'
     else return ''
 }
+
+// 使用加密安全的随机数生成器
+export function getRandomString(length = 6) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+    const randomValues = new Uint32Array(length);
+    crypto.getRandomValues(randomValues);
+
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars[randomValues[i] % chars.length];
+    }
+    return result;
+}

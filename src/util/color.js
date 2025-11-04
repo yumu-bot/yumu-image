@@ -3,8 +3,23 @@ import {getModName} from "./mod.js";
 
 // 颜色数组，方便生成带有色彩渐变属性的图块
 export const colorArray = {
-    // 红色的反
-    reverse_red: ['#EA68A2', '#EC6841'],
+
+    // https://github.com/ppy/osu/blob/645d27bb3245e6324e203412963940b584eee34c/osu.Game/Graphics/OsuColour.cs#L234
+    iron: ['#BAB3AB', '#DDD'],
+
+    bronze: ['#855C47', '#B88F7A'],
+
+    silver: ['#A3A3C2', '#E0E0EB'],
+
+    gold: ['#E0C952', '#F0E4A8'],
+
+    platinum: ['#52E0DF', '#A8F0EF'],
+
+    rhodium: ['#A0CF96', '#D9F8D3'],
+
+    radiant: ['#ED82FF', '#97DCFF'],
+
+    lustrous: ['#ED82FF', '#FFE600'],
 
     // 对比强烈的橘黄色
     orange: ['#FF544F', '#FAD126'],
@@ -429,6 +444,28 @@ export function getUserRankColor(rank = 0) {
             return '#AC6A00'; //季军
         default:
             return '#46393f';
+    }
+}
+
+export function getGlobalRankPercentColor(rank = 1, percent = 0) {
+    if (rank <= 100 && rank >= 1) {
+        return colorArray.lustrous
+    } else if (percent < 0.0005) {
+        return colorArray.radiant
+    } else if (percent < 0.0025) {
+        return colorArray.rhodium
+    } else if (percent < 0.005) {
+        return colorArray.platinum
+    } else if (percent < 0.025) {
+        return colorArray.gold
+    } else if (percent < 0.05) {
+        return colorArray.silver
+    } else if (percent < 0.25) {
+        return colorArray.bronze
+    } else if (percent < 0.5) {
+        return colorArray.iron
+    } else {
+        return colorArray.deep_gray
     }
 }
 

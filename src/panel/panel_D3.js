@@ -119,7 +119,8 @@ export async function panel_D3(
             total_score: 0,
             beatmap_playcount: 0,
             replays_watched: 0,
-            maximum_combo: 0
+            maximum_combo: 0,
+            achievements_count: 0,
         },
         history_day: 1,
         history_user: {
@@ -133,6 +134,7 @@ export async function panel_D3(
             total_hits: 9219039,
             level_current: 100,
             global_rank: 46822,
+            global_rank_percent: 0.014071457229195374,
             statistics: {
                 pp: 6381.16,
                 count_ss: 34,
@@ -425,8 +427,13 @@ const component_D2 = (
     const current = poppinsBold.getTextPath(
         ((data?.level_progress ?? 0)) + '%', 95, 82, 18, 'left baseline', '#fff')
 
+    /*
     const top = poppinsBold.getTextPath(
         'Top ' + (round(100 - (data?.top_percent ?? 0) * 100, 2)) + '%', 480, 82, 18, 'right baseline', '#aaa')
+
+     */
+
+    const top = ''
 
     let title = ''
     let image = ''
@@ -755,15 +762,14 @@ const component_D7 = (
             color: '#fff'
         }, {
             font: poppinsBold,
-            text: '     [' +
+            text: '  [' +
                 getTimeDifference(data.highest_rank.time, 'YYYY-MM-DD[T]HH:mm:ss[Z]',
                     moment().subtract(8, "hours"), 2
                 ) + ']',
             size: 24,
             color: '#ccc'
-        }], 140, 134, 'left baseline'
+        }], 140, 136, 'left baseline'
     )
-
 
     const overlay = PanelColor.overlay(hue)
     const top = PanelColor.top(hue)
@@ -776,7 +782,6 @@ const component_D7 = (
     const bpc_text = rounds(data.beatmap_playcounts_count ?? 0, -4)
     const rwc_text = rounds(stat.replays_watched_by_others ?? 0, -4)
     const mxc_text = rounds(stat.maximum_combo ?? 0, -4)
-
 
     /**
      *
@@ -862,7 +867,7 @@ const component_D7 = (
         }, {
             icon: getImageFromV3('Icons', 'crown.png'),
             title: 'Medals',
-            percent: -1,
+            percent: percent.achievements_count ?? 0,
             text_b: (data.achievements_count ?? 0).toString(),
             text_m: '',
 
@@ -890,7 +895,7 @@ const component_D7 = (
             background_color: top,
             icon_background_color: middle,
         }, {
-            icon: getImageFromV3('Icons', 'crown.png'),
+            icon: getImageFromV3('Icons', 'graphics.png'),
             title: 'Replays Watched',
             percent: percent.replays_watched ?? 0,
             text_b: rwc_text.integer,
@@ -900,7 +905,7 @@ const component_D7 = (
             divisor: 1,
             history: history?.statistics?.replays_watched_by_others ?? 0,
 
-            colors: colorArray.yellow,
+            colors: colorArray.orange,
 
             background_color: top,
             icon_background_color: middle,
@@ -966,7 +971,7 @@ const component_D7 = (
 
         highest_icon = getImage(25, 55, 100, 100, getImageFromV3('Icons', 'ranking.png'))
 
-        highest_title = poppinsBold.getTextPath('Highest Rank', 140, 86, 24, 'left baseline', '#ccc')
+        highest_title = poppinsBold.getTextPath('Highest Rank', 140, 84, 24, 'left baseline', '#ccc')
 
         rrect = PanelDraw.Rect(0, 0, 1330, 540, 20, PanelColor.middle(hue))
     }

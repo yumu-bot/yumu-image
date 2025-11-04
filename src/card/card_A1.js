@@ -1,12 +1,15 @@
 import {
-    getImageFromV3,
     getFlagPath,
-    setImage,
+    getImageFromV3, getRandomString,
+    isASCII,
+    readNetImage,
     readTemplate,
-    setText, setTexts, isASCII, readNetImage,
+    setImage,
+    setText,
+    setTexts,
 } from "../util/util.js";
-import {PuHuiTi, torus} from "../util/font.js";
-
+import {PuHuiTi, torus, torusBold} from "../util/font.js";
+import {colorArray} from "../util/color.js";
 
 export async function card_A1(data = {
     background: getImageFromV3('card-default.png'),
@@ -26,6 +29,8 @@ export async function card_A1(data = {
     right2: '98.7% Lv.93(24%)',
     right3b: '4396',
     right3m: 'PP',
+
+    left1_colors: colorArray.white
 }) {
     // 读取模板
     let svg = readTemplate('template/Card_A1.svg');
@@ -39,13 +44,14 @@ export async function card_A1(data = {
     const reg_sub_icon1 = /(?<=<g style="clip-path: url\(#clippath-CA1-4\);">)/;
     const reg_sub_icon2 = /(?<=<g style="clip-path: url\(#clippath-CA1-5\);">)/;
     const reg_team_flag = /(?<=<g style="clip-path: url\(#clippath-CA1-7\);">)/;
+    const reg_defs = /(?<=<defs>)/;
 
     // 文本定义
     const right_width = torus.getTextWidth(data.right3b, 60) + torus.getTextWidth(data.right3m, 48);
 
     const font_top1 = isASCII(data.top1) ? torus : PuHuiTi
     const font_top2 = isASCII(data.top2) ? torus : PuHuiTi
-    const font_left1 = isASCII(data.left1) ? torus : PuHuiTi
+    let font_left1 = isASCII(data.left1) ? torus : PuHuiTi
     const font_left2 = isASCII(data.left2) ? torus : PuHuiTi
     const size_left1 = isASCII(data.left1) ? 24 : 22
     const size_left2 = isASCII(data.left2) ? 24 : 22
@@ -61,9 +67,31 @@ export async function card_A1(data = {
         top1_size -= 4;
     }
 
+    let left1_colors
+
+    if (Array.isArray(data.left1_colors) && data.left1_colors?.length > 1) {
+        if (font_left1 === torus) {
+            font_left1 = torusBold
+        }
+        left1_colors = data.left1_colors
+    } else {
+        left1_colors = ['#fff', '#fff'];
+    }
+
+    const gradient_name = getRandomString(6)
+
+    const gradient = `
+        <linearGradient id="radial_grad_CA1-1-${gradient_name}" x1="60%" y1="90%" x2="40%" y2="10%">
+            <stop offset="0%" stop-color="${left1_colors[0]}" />
+            <stop offset="100%" stop-color="${left1_colors[1]}" />
+        </linearGradient>
+`
+
+    svg = setText(svg, gradient, reg_defs)
+
     const top1 = font_top1.getTextPath(font_top1.cutStringTail(data.top1, top1_size, 290), 130, 53.672, top1_size, "left baseline", "#fff");
     const top2 = font_top2.getTextPath(font_top2.cutStringTail(data.top2, 24, 290), 130, 85.836, 24, "left baseline", "#fff");
-    const left1 = font_left1.getTextPath(font_left1.cutStringTail(data.left1, size_left1, 390 - right_width), 20, 165.836, size_left1, "left baseline", "#fff");
+    const left1 = font_left1.getTextPath(font_left1.cutStringTail(data.left1, size_left1, 390 - right_width), 20, 165.836, size_left1, "left baseline", `url(#radial_grad_CA1-1-${gradient_name})`);
     const left2 = font_left2.getTextPath(font_left2.cutStringTail(data.left2, size_left2, 390 - right_width), 20, 191.836, size_left2, "left baseline", "#fff");
 
     const right1 = torus.getTextPath(data.right1, 420, 114.836 - 2, 24, 'right baseline', '#fff');
