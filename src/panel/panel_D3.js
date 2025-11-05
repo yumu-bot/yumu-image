@@ -371,8 +371,8 @@ const component_D1 = (
 
         let delta = -5
 
-        if ((interval.end <= 14 || interval.end >= 60) && percent <= 0.2) {
-            delta = 20
+        if ((interval.end <= 14 || interval.end >= 64) && percent <= 0.2) {
+            delta = 25
         }
 
         const y = 30 + (percent * 90) + delta
