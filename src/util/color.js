@@ -447,22 +447,22 @@ export function getUserRankColor(rank = 0) {
     }
 }
 
-export function getGlobalRankPercentColor(rank = 1, percent = 0) {
-    if (rank <= 100 && rank >= 1) {
+export function getGlobalRankPercentColor(global_rank = 1, global_rank_percent = 0) {
+    if (global_rank <= 100 && global_rank >= 1) {
         return colorArray.lustrous
-    } else if (percent < 0.0005) {
+    } else if (global_rank_percent < 0.0005) {
         return colorArray.radiant
-    } else if (percent < 0.0025) {
+    } else if (global_rank_percent < 0.0025) {
         return colorArray.rhodium
-    } else if (percent < 0.005) {
+    } else if (global_rank_percent < 0.005) {
         return colorArray.platinum
-    } else if (percent < 0.025) {
+    } else if (global_rank_percent < 0.025) {
         return colorArray.gold
-    } else if (percent < 0.05) {
+    } else if (global_rank_percent < 0.05) {
         return colorArray.silver
-    } else if (percent < 0.25) {
+    } else if (global_rank_percent < 0.25) {
         return colorArray.bronze
-    } else if (percent < 0.5) {
+    } else if (global_rank_percent < 0.5) {
         return colorArray.iron
     } else {
         return colorArray.deep_gray

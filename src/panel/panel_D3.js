@@ -12,7 +12,7 @@ import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMultipleTextPath, poppinsBold} from "../util/font.js";
-import {getMascotBanner, getMascotName, pp2UserBG} from "../util/mascotBanner.js";
+import {getGlobalRankPercentBG, getMascotBanner, getMascotName} from "../util/mascotBanner.js";
 import {label_D3} from "../component/label.js";
 import moment from "moment";
 
@@ -309,9 +309,12 @@ export async function panel_D3(
     svg = setText(svg, panel_name, reg_index);
 
     // 插入图片和部件
-    const background = pp2UserBG(data.user.pp || 0);
+    const background = getGlobalRankPercentBG(
+        data?.user?.global_rank,
+        data?.user?.global_rank_percent ?? ((data?.user?.global_rank ?? 0) / 1000)
+    );
     svg = setCustomBanner(svg, data.user?.profile?.banner, reg_banner);
-    svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
+    svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.4);
 
     return svg.toString();
 }

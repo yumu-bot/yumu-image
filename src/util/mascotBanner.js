@@ -270,6 +270,38 @@ export function getRandomMascotTransparentPath(mascot_name = 'pippi') {
     return getImageFromV3('Mascots', 'Transparent', `${name}_${path}.png`)
 }
 
+/**
+ * 通过玩家全球排行和百分比获取背景图片
+ * @param global_rank
+ * @param global_rank_percent
+ * @return {string}
+ */
+export function getGlobalRankPercentBG(global_rank = 0, global_rank_percent = 1.0) {
+    let rank
+
+    if (global_rank <= 100 && global_rank >= 1) {
+        rank = 'PF'
+    } else if (global_rank_percent < 0.0005) {
+        rank = 'SSS'
+    } else if (global_rank_percent < 0.0025) {
+        rank = 'A'
+    } else if (global_rank_percent < 0.005) {
+        rank = 'B'
+    } else if (global_rank_percent < 0.025) {
+        rank = 'X'
+    } else if (global_rank_percent < 0.05) {
+        rank = 'XH'
+    } else if (global_rank_percent < 0.25) {
+        rank = 'SP'
+    } else if (global_rank_percent < 0.5) {
+        rank = 'SH'
+    } else {
+        rank = 'F'
+    }
+
+    return getImageFromV3(`object-score-backimage-${rank}.jpg`);
+}
+
 //通过 PP 获取玩家颜色（的背景图！pp2Rank，最后一个是默认的
 export function pp2UserBG(pp = 0, boundary = [], ranks = []) {
     if (boundary == null || boundary.length < 8) boundary = [15000, 10000, 8000, 6000, 4000, 3000, 2000, 1000]
