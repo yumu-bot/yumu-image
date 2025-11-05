@@ -15,7 +15,7 @@ import {label_J4, label_J6, label_J7, label_J8, LABELS} from "../component/label
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModColor, getRankColor, PanelColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getGlobalRankPercentBG} from "../util/mascotBanner.js";
+import {getGlobalRankPercentBGFromUser} from "../util/mascotBanner.js";
 import {getModFullName} from "../util/mod.js";
 
 export async function router(req, res) {
@@ -238,7 +238,7 @@ export async function panel_J2(data = {
     const bodyJ8 = getSvgBody(1390, 740, componentJ8)
 
     // 插入图片和部件
-    const background = getGlobalRankPercentBG(user?.global_rank, user?.global_rank_percent);
+    const background = getGlobalRankPercentBGFromUser(user);
     svg = setCustomBanner(svg, user?.profile?.banner, reg_banner);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 

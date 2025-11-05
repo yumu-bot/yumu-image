@@ -25,7 +25,7 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {
-    getGlobalRankPercentBG,
+    getGlobalRankPercentBGFromUser,
     getMascotName,
     getRandomMascotTransparentPath
 } from "../util/mascotBanner.js";
@@ -189,7 +189,7 @@ export async function panel_D2(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 插入图片和部件
-    const background = getGlobalRankPercentBG(data?.user?.global_rank, data?.user?.global_rank_percent);
+    const background = getGlobalRankPercentBGFromUser(data?.user);
     svg = setCustomBanner(svg, data.user?.profile?.banner, reg_banner);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 

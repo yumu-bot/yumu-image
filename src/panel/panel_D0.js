@@ -15,7 +15,7 @@ import {component_D5} from "../component/component_D5.js";
 import {component_D6} from "../component/component_D6.js";
 import {component_D7} from "../component/component_D7.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getGlobalRankPercentBG} from "../util/mascotBanner.js";
+import {getGlobalRankPercentBGFromUser} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {
@@ -312,7 +312,7 @@ export async function panel_D0(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 插入图片和部件
-    const background = getGlobalRankPercentBG(data?.user?.global_rank, data?.user?.global_rank_percent);
+    const background = getGlobalRankPercentBGFromUser(data?.user);
     svg = setCustomBanner(svg, data.user?.profile?.banner, reg_banner);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.4);
 

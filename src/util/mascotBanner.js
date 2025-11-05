@@ -272,11 +272,23 @@ export function getRandomMascotTransparentPath(mascot_name = 'pippi') {
 
 /**
  * 通过玩家全球排行和百分比获取背景图片
+ * @param user OsuUser
+ * @return {string}
+ */
+export function getGlobalRankPercentBGFromUser(user = {}) {
+    return getGlobalRankPercentBG(
+        user?.statistics?.global_rank,
+        user?.statistics?.global_rank_percent ?? ((user?.statistics?.global_rank ?? 0) / 1000)
+    )
+}
+
+/**
+ * 通过玩家全球排行和百分比获取背景图片
  * @param global_rank
  * @param global_rank_percent
  * @return {string}
  */
-export function getGlobalRankPercentBG(global_rank = 0, global_rank_percent = 1.0) {
+function getGlobalRankPercentBG(global_rank = 0, global_rank_percent = 1.0) {
     let rank
 
     if (global_rank <= 100 && global_rank >= 1) {
