@@ -273,7 +273,7 @@ export async function panel_D3(
     const componentD7 = component_D7({
         highest_rank: highest_rank,
         statistics: user.statistics,
-        history: history?.statistics,
+        history: history,
         top_percent: percentiles,
         achievements_count: user.user_achievements_count ?? 0,
         beatmap_playcounts_count: user.beatmap_playcounts_count ?? 0,
@@ -737,7 +737,9 @@ const component_D7 = (
     const hide = has_custom_panel
     const percent = data?.top_percent ?? {}
     const stat = data.statistics
-    const history = data.history
+
+    const history = data?.history ?? {}
+    const history_statistics = history?.statistics
 
     let title = ''
     let image = ''
@@ -798,7 +800,7 @@ const component_D7 = (
 
             value: stat.play_count ?? 0,
             divisor: 1000,
-            history: history?.play_count ?? 0,
+            history: history_statistics?.play_count ?? 0,
 
             colors: colorArray.cyan,
 
@@ -813,7 +815,7 @@ const component_D7 = (
 
             value: stat.total_hits ?? 0,
             divisor: 1000,
-            history: history?.total_hits ?? 0,
+            history: history_statistics?.total_hits ?? 0,
 
             colors: colorArray.light_yellow,
 
@@ -828,7 +830,7 @@ const component_D7 = (
 
             value: stat.play_time ?? 0,
             divisor: 3600,
-            history: history?.play_time ?? 0,
+            history: history_statistics?.play_time ?? 0,
 
             colors: colorArray.light_green,
 
@@ -843,7 +845,7 @@ const component_D7 = (
 
             value: stat.ranked_score ?? 0,
             divisor: 1_000_000,
-            history: history?.statistics?.ranked_score ?? 0,
+            history: history_statistics?.ranked_score ?? 0,
 
             colors: colorArray.purple.toReversed(),
 
@@ -858,7 +860,7 @@ const component_D7 = (
 
             value: stat.total_score ?? 0,
             divisor: 1_000_000,
-            history: history?.statistics?.total_score ?? 0,
+            history: history_statistics?.total_score ?? 0,
 
             colors: colorArray.pink,
 
@@ -873,7 +875,7 @@ const component_D7 = (
 
             value: data.achievements_count ?? 0,
             divisor: 1,
-            history: 0,
+            history: history?.achievements_count ?? 0,
 
             colors: colorArray.gray,
 
@@ -888,7 +890,7 @@ const component_D7 = (
 
             value: data.beatmap_playcounts_count ?? 0,
             divisor: 1,
-            history: 0,
+            history: history?.beatmap_playcounts_count ?? 0,
 
             colors: colorArray.green,
 
@@ -901,7 +903,7 @@ const component_D7 = (
             text_b: rwc_text.integer,
             text_m: rwc_text.decimal,
 
-            value: stat.replays_watched_by_others ?? 0,
+            value: history_statistics.replays_watched_by_others ?? 0,
             divisor: 1,
             history: history?.statistics?.replays_watched_by_others ?? 0,
 
@@ -918,7 +920,7 @@ const component_D7 = (
 
             value: stat.maximum_combo ?? 0,
             divisor: 1,
-            history: history?.maximum_combo ?? 0,
+            history: history_statistics?.maximum_combo ?? 0,
 
             colors: colorArray.blue,
 
