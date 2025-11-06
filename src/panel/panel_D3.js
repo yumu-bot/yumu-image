@@ -907,9 +907,9 @@ const component_D7 = (
             text_b: rwc_text.integer,
             text_m: rwc_text.decimal,
 
-            value: history_statistics.replays_watched_by_others ?? 0,
+            value: stat?.replays_watched_by_others ?? 0,
             divisor: 1,
-            history: history?.statistics?.replays_watched_by_others ?? 0,
+            history: history_statistics?.replays_watched_by_others ?? 0,
 
             colors: colorArray.orange,
 
@@ -922,7 +922,7 @@ const component_D7 = (
             text_b: mxc_text.integer,
             text_m: mxc_text.decimal,
 
-            value: stat.maximum_combo ?? 0,
+            value: stat?.maximum_combo ?? 0,
             divisor: 1,
             history: history_statistics?.maximum_combo ?? 0,
 

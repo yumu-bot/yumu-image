@@ -276,10 +276,11 @@ export function getRandomMascotTransparentPath(mascot_name = 'pippi') {
  * @return {string}
  */
 export function getGlobalRankPercentBGFromUser(user = {}) {
-    return getGlobalRankPercentBG(
-        user?.statistics?.global_rank,
-        user?.statistics?.global_rank_percent ?? ((user?.statistics?.global_rank ?? 0) / 1000)
-    )
+    const rank = (user?.statistics?.global_rank ?? 0)
+
+    const percent = user?.statistics?.global_rank_percent ?? (rank / 1000)
+
+    return getGlobalRankPercentBG(rank, percent)
 }
 
 /**
