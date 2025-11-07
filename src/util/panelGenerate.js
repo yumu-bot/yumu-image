@@ -405,8 +405,8 @@ export const PanelGenerate = {
 
             const background = getMaimaiRatingBG(stat?.page_rating);
 
-            const left1 = 'count: ' + stat?.count;
-            const left2 = 'total: ' + stat?.total_rating;
+            const left1 = 'count: ' + (stat?.count ?? 0);
+            const left2 = 'total: ' + (stat?.total_rating ?? 0);
 
             const percent = Math.round((stat?.page_rating / user.rating * 100) ?? 0) + '%'
 
@@ -424,8 +424,8 @@ export const PanelGenerate = {
                 left1: left1,
                 left2: left2,
                 right1: '',
-                right2: 'Rating: ' + user.rating + ' (' + percent +')',
-                right3b: stat.page_rating,
+                right2: 'Rating: ' + (user?.rating ?? 0) + ' (' + percent +')',
+                right3b: stat?.page_rating ?? 0,
                 right3m: '',
             }
         }

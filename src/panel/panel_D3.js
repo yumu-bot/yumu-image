@@ -911,7 +911,7 @@ const component_D7 = (
             divisor: 1,
             history: history_statistics?.replays_watched_by_others ?? 0,
 
-            colors: colorArray.orange,
+            colors: colorArray.magenta,
 
             background_color: top,
             icon_background_color: middle,
