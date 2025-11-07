@@ -1,6 +1,6 @@
 //把数组变成可视化的图表
 import {torusBold} from "./font.js";
-import {getRandomString, isEmptyArray, isNumber, setText} from "./util.js";
+import {getRandomString, getTexts, isEmptyArray, isNumber, round, setText} from "./util.js";
 import {hex2rgbColor} from "./color.js";
 
 export const PanelDraw = {
@@ -293,8 +293,8 @@ export const PanelDraw = {
      * @param min 如果填 0，即用数组的最小值
      * @param x 图像左下角 x
      * @param y 图像左下角 y
-     * @param w
-     * @param h
+     * @param width
+     * @param height
      * @param color 折线颜色
      * @param path_opacity 折线透明度
      * @param area_opacity 区域透明度
@@ -303,14 +303,19 @@ export const PanelDraw = {
      * @return {string}
      * @constructor
      */
-    LineChart: (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3, is0toMin = false) => {
+    LineChart: (
+        arr = [0], max = 0, min = 0,
+        x = 0, y = 0, width = 520, height = 90,
+        color = '#fff', path_opacity = 1, area_opacity = 0, stroke_width = 3,
+        is0toMin = false
+    ) => {
         if (isEmptyArray(arr) || arr?.length < 1) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
         const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;
         const delta = Math.abs(arr_max - arr_min);
-        const step = w / (arr.length - 1);
+        const step = width / (arr.length - 1);
 
-        const initial = (delta > 0) ? ((arr[0] - arr_min) / (arr_max - arr_min) * h) : 0;
+        const initial = (delta > 0) ? ((arr[0] - arr_min) / (arr_max - arr_min) * height) : 0;
 
         let path_svg = `<svg> <path d="M ${x} ${y - initial} S `;
         let area_svg = path_svg;
@@ -318,9 +323,9 @@ export const PanelDraw = {
         for (let i = 1; i < arr.length; i++) {
             const v = arr[i]
 
-            const height = (delta > 0) ? ((v - arr_min) / (arr_max - arr_min) * h) : 0;
+            const h = (delta > 0) ? ((v - arr_min) / (arr_max - arr_min) * height) : 0;
             const lineto_x = x + step * i;
-            const lineto_y = (v === 0 && is0toMin) ? y : y - height; //如果数值为 0，则画在最小值的地方
+            const lineto_y = (v === 0 && is0toMin) ? y : y - h; //如果数值为 0，则画在最小值的地方
 
             // 图像点位置
             const position_point = `${lineto_x} ${lineto_y} `
@@ -349,9 +354,138 @@ export const PanelDraw = {
 
 
         path_svg += `" style="fill: none; stroke: ${color}; opacity: ${path_opacity}; stroke-miterlimit: 10; stroke-width: ${stroke_width}px;"/> </svg>`
-        area_svg += `L ${x + w} ${y} L ${x} ${y} Z" style="fill: ${color}; stroke: none; fill-opacity: ${area_opacity};"/> </svg>`
+        area_svg += `L ${x + width} ${y} L ${x} ${y} Z" style="fill: ${color}; stroke: none; fill-opacity: ${area_opacity};"/> </svg>`
 
         return (path_svg + area_svg).toString();
+    },
+
+    /**
+     * 进阶版的绘图
+     * @param arr
+     * @param arr_x
+     * @param arr_param
+     * @param grid_param
+     * @return {string}
+     * @constructor
+     */
+    LineChartGrid: (
+        arr = [0],
+        arr_x = [0],
+        arr_param = {
+            x: 0,
+            y: 0,
+            width: 520,
+            height: 90,
+            color: '#fc2',
+            path_opacity: 1,
+            area_opacity: 1,
+            stroke_width: 4,
+            is0toMin: false,
+        },
+
+        grid_param = {
+            y_axis_x_offset: -10,
+            y_axis_y_offset: -4,
+            y_axis_font_size: 18,
+
+            x_axis_y_offset: 20,
+            x_axis_font_size: 18,
+
+            color: '#fff',
+            stroke_width: 1,
+            grid_opacity: 0.2,
+        },
+    ) => {
+        const ap = arr_param
+
+        const arr_max = Math.max.apply(Math, arr);
+        const arr_min = Math.min.apply(Math, arr);
+
+        const margin = {
+            top: ap.y,
+            right: ap.x + ap.width,
+            bottom: ap.y + ap.height,
+            left: ap.x
+        };
+
+        const delta = Math.max(arr_max - arr_min, 0);
+
+        // 自动计算合适的参考线间隔（整百、整十等）
+        function calculateReferenceInterval() {
+            const magnitude = Math.pow(10, Math.floor(Math.log10(delta)));
+
+            // 根据数据范围选择合适的间隔
+            if (delta / magnitude >= 5) {
+                return magnitude; // 例如: 1000, 100, 10
+            } else if (delta / magnitude >= 2) {
+                return magnitude / 2; // 例如: 500, 50, 5
+            } else {
+                return magnitude / 5; // 例如: 200, 20, 2
+            }
+        }
+
+        // 计算Y轴范围（扩展到合适的参考线位置）
+        function calculateYRange() {
+            const interval = calculateReferenceInterval();
+            const y_min = Math.floor(arr_min / interval) * interval;
+            const y_max = Math.ceil(arr_max / interval) * interval;
+            return { y_min: y_min, y_max: y_max, interval: interval };
+        }
+
+        const { y_min, y_max, interval } = calculateYRange();
+        const scaled_delta = Math.max(y_max - y_min, 0);
+        const scale = (scaled_delta / delta) ?? 1;
+
+        // 生成智能参考线（基于数据范围的整数值）
+        function generateReferenceLines() {
+            const lines = [];
+            const referenceCount = Math.floor(delta / interval) + 1;
+
+            for (let i = 0; i < referenceCount; i++) {
+                const value = y_min + i * interval;
+                const y = margin.bottom - (value - y_min) * ap.height / scaled_delta;
+
+                // 水平参考线
+                lines.push(
+                    `<line x1="${margin.left}" y1="${y}" x2="${margin.right}" y2="${y}" ` +
+                    `stroke="${grid_param.color}" stroke-width="${grid_param.stroke_width}" stroke-dasharray="5,5" />`
+                );
+
+                // Y轴标签
+                lines.push(
+                    `<text x="${margin.left + grid_param.y_axis_x_offset}" y="${y + grid_param.y_axis_y_offset}" font-family="poppinBold" text-anchor="end" font-size="${grid_param.size}" fill="${grid_param.color}">` +
+                    `${round(value, 1, -1)}</text>`
+                );
+            }
+
+            return lines.join('');
+        }
+
+        // 生成X轴标签
+        function generateXAxisLabels() {
+            return arr_x.map((value, index) => {
+                const x = margin.left + index * (ap.width / Math.max(1, arr_x?.length - 1) ?? 1);
+                const y = margin.bottom + grid_param.x_axis_y_offset;
+
+                return `<text x="${x}" y="${y}" text-anchor="middle" font-size="${grid_param.x_axis_font_size}" fill="${grid_param.color}">${value}</text>`;
+            }).join('');
+        }
+
+
+        const axis = `
+        
+    <line x1="${margin.left}" y1="${margin.bottom}" x2="${margin.right}" y2="${margin.bottom}" stroke="${grid_param.color}" stroke-width="${grid_param.stroke_width}" stroke-opacity="${grid_param.grid_opacity}" />
+    <line x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${margin.bottom}" stroke="${grid_param.color}" stroke-width="${grid_param.stroke_width}" stroke-opacity="${grid_param.grid_opacity}" />
+`
+
+        const line_chart = this.LineChart(
+            arr, arr_max, arr_min, ap.x, ap.y + ap.height * (1 - scale) / 2,
+            ap.width, ap.height * scale,
+            ap.color, ap.path_opacity, ap.area_opacity, ap.stroke_width, ap.is0toMin
+        );
+
+        return getTexts([line_chart, axis, generateXAxisLabels(), generateReferenceLines()])
+
     },
 
     //六边形图，data 是 0-1，offset 是直接加在弧度上（弧度制，比如 π/3 = 60°）

@@ -334,7 +334,7 @@ export const PanelGenerate = {
 
      */
 
-    maiPlayer2CardA1: async (user) => {
+    maiPlayer2CardA1: async (user, statistics = null) => {
         if (isNullOrEmptyObject(user)) return {
             background: getImageFromV3Cache('card-default.png'),
             avatar: getImageFromV3Cache('sticker_qiqi_secretly_observing.png'),
@@ -352,8 +352,6 @@ export const PanelGenerate = {
             right3m: '',
         }
 
-        const background = getMaimaiRatingBG(user?.rating);
-
         let dan
         const dan_arr = ['初', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
@@ -364,40 +362,73 @@ export const PanelGenerate = {
         else if (user.dan === 22) dan = '裏皆伝'
         else dan = ''
 
-        let top2;
-        let left1;
-        let sub_banner;
+        if (statistics == null) {
 
-        const plate_image = getMaimaiPlate(user.platename)
+            const background = getMaimaiRatingBG(user?.rating);
 
-        if (isNotBlankString(plate_image)) {
-            top2 = ''
-            left1 = user.probername
-            sub_banner = plate_image
+            const plate_image = getMaimaiPlate(user.platename)
+
+            let top2;
+            let left1;
+            let sub_banner;
+
+            if (isNotBlankString(plate_image)) {
+                top2 = ''
+                left1 = user.probername
+                sub_banner = plate_image
+            } else {
+                top2 = user.probername
+                left1 = ''
+                sub_banner = ''
+            }
+
+            return {
+                background: background,
+                avatar: getImageFromV3Cache('Maimai', 'avatar-guest.png'),
+                sub_icon1: '',
+                sub_icon2: '',
+                sub_banner: sub_banner,
+                country: null,
+
+                top1: user.name,
+                top2: top2,
+
+                left1: left1,
+                left2: dan,
+                right1: '',
+                right2:  (user?.base > 0) ? 'Rating: ' + user.base  + ' + ' + user.additional : 'Rating:',
+                right3b: user.rating,
+                right3m: '',
+            }
         } else {
-            top2 = user.probername
-            left1 = ''
-            sub_banner = ''
+            const stat = statistics
+
+            const background = getMaimaiRatingBG(stat?.page_rating);
+
+            const left1 = 'count: ' + stat?.count;
+            const left2 = 'total: ' + stat?.total_rating;
+
+            const percent = Math.round((stat?.page_rating / user.rating * 100) ?? 0) + '%'
+
+            return {
+                background: background,
+                avatar: getImageFromV3Cache('Maimai', 'avatar-guest.png'),
+                sub_icon1: '',
+                sub_icon2: '',
+                sub_banner: '',
+                country: null,
+
+                top1: user.name,
+                top2: user.probername,
+
+                left1: left1,
+                left2: left2,
+                right1: '',
+                right2: 'Rating: ' + user.rating + '(' + percent +')',
+                right3b: stat.page_rating,
+                right3m: '',
+            }
         }
-
-        return {
-            background: background,
-            avatar: getImageFromV3Cache('Maimai', 'avatar-guest.png'),
-            sub_icon1: '',
-            sub_icon2: '',
-            sub_banner: sub_banner,
-            country: null,
-
-            top1: user.name,
-            top2: top2,
-
-            left1: left1,
-            left2: dan,
-            right1: '',
-            right2:  (user?.base > 0) ? 'Rating: ' + user.base  + ' + ' + user.additional : 'Rating:',
-            right3b: user.rating,
-            right3m: '',
-        };
     },
 
     chuPlayer2CardA1: async (user = {

@@ -1,63 +1,7 @@
 import express from "express";
 import formidable from "express-formidable";
 import {CACHE_PATH, deleteBeatMapFromDatabase, initPath, OSU_BUFFER_PATH, IMG_BUFFER_PATH} from "./src/util/util.js";
-import {router as PanelA1Router} from "./src/panel/panel_A1.js";
-import {router as PanelA2Router} from "./src/panel/panel_A2.js";
-import {router as PanelA3Router} from "./src/panel/panel_A3.js";
-import {router as PanelA4Router} from "./src/panel/panel_A4.js";
-import {router as PanelA5Router} from "./src/panel/panel_A5.js";
-import {router as PanelA6Router} from "./src/panel/panel_A6.js";
-import {router as PanelA7Router} from "./src/panel/panel_A7.js";
-import {router as PanelA8Router} from "./src/panel/panel_A8.js";
-import {router as PanelA9Router} from "./src/panel/panel_A9.js";
-import {router as PanelA10Router} from "./src/panel/panel_A10.js";
-import {router as PanelA11Router} from "./src/panel/panel_A11.js";
-import {router as PanelA12Router} from "./src/panel/panel_A12.js";
-import {router as PanelA13Router} from "./src/panel/panel_A13.js";
-import {router as PanelA14Router} from "./src/panel/panel_A14.js";
-import {router as PanelB1Router} from "./src/panel/panel_B1.js";
-import {router as PanelB2Router} from "./src/panel/panel_B2.js";
-import {router as PanelB3Router} from "./src/panel/panel_B3.js";
-import {router as PanelCRouter} from "./src/panel/panel_C.js";
-import {router as PanelC2Router} from "./src/panel/panel_C2.js";
-import {router as PanelDRouter} from "./src/panel/panel_D.js";
-import {router as PanelD2Router} from "./src/panel/panel_D2.js";
-import {router as PanelD3Router} from "./src/panel/panel_D3.js";
-import {router as PanelE5Router} from "./src/panel/panel_E5.js";
-import {router as PanelE6Router} from "./src/panel/panel_E6.js";
-import {router as PanelE7Router} from "./src/panel/panel_E7.js";
-import {router as PanelE10Router} from "./src/panel/panel_E10.js";
-import {router as PanelFRouter} from "./src/panel/panel_F.js";
-import {router as PanelF3Router} from "./src/panel/panel_F3.js";
-import {router as PanelHRouter} from "./src/panel/panel_H.js";
-import {router as PanelJRouter} from "./src/panel/panel_J.js";
-import {router as PanelJ2Router} from "./src/panel/panel_J2.js";
-import {router as PanelKRouter} from "./src/panel/panel_K.js";
-import {router as PanelMRouter} from "./src/panel/panel_M.js";
-import {router as PanelNRouter} from "./src/panel/panel_N.js";
-import {router as PanelTRouter} from "./src/panel/panel_T.js";
-import {router as PanelURouter} from "./src/panel/panel_U.js";
-
-import {router as panelAlphaRouter} from "./src/panel/panel_Alpha.js";
-import {router as panelBetaRouter} from "./src/panel/panel_Beta.js";
-import {router as panelGammaRouter} from "./src/panel/panel_Gamma.js";
-import {router as panelDeltaRouter} from "./src/panel/panel_Delta.js";
-import {router as panelEpsilonRouter} from "./src/panel/panel_Epsilon.js";
-import {router as panelEpsilon2Router} from "./src/panel/panel_Epsilon2.js";
-import {router as panelZetaRouter} from "./src/panel/panel_Zeta.js";
-import {router as panelEta1Router} from "./src/panel/panel_Eta1.js";
-import {router as panelEta2Router} from "./src/panel/panel_Eta2.js";
-import {router as panelEta3Router} from "./src/panel/panel_Eta3.js";
-import {router as panelEta4Router} from "./src/panel/panel_Eta4.js";
 import {router as MarkdownRouter} from "./src/panel/markdown.js";
-
-import {router as PanelMARouter} from "./src/panel/panel_MA.js";
-import {router as PanelMA2Router} from "./src/panel/panel_MA2.js";
-import {router as PanelMDRouter} from "./src/panel/panel_MD.js";
-import {router as PanelMFRouter} from "./src/panel/panel_MF.js";
-import {router as PanelMERouter} from "./src/panel/panel_ME.js";
-import {router as PanelMIRouter} from "./src/panel/panel_MI.js";
-import {router as PanelMSRouter} from "./src/panel/panel_MS.js";
 import moment from "moment";
 import puppeteer from "puppeteer";
 
@@ -88,64 +32,7 @@ app.post('*', (req, res, next) => {
     next();
 })
 
-//**************************************************** panel ****************************
-
-app.post('/panel_A1', PanelA1Router);
-app.post('/panel_A2', PanelA2Router);
-app.post('/panel_A3', PanelA3Router);
-app.post('/panel_A4', PanelA4Router);
-app.post('/panel_A5', PanelA5Router);
-app.post('/panel_A6', PanelA6Router);
-app.post('/panel_A7', PanelA7Router);
-app.post('/panel_A8', PanelA8Router);
-app.post('/panel_A9', PanelA9Router);
-app.post('/panel_A10', PanelA10Router);
-app.post('/panel_A11', PanelA11Router);
-app.post('/panel_A12', PanelA12Router);
-app.post('/panel_A13', PanelA13Router);
-app.post('/panel_A14', PanelA14Router);
-app.post('/panel_B1', PanelB1Router);
-app.post('/panel_B2', PanelB2Router);
-app.post('/panel_B3', PanelB3Router);
-app.post('/panel_C', PanelCRouter);
-app.post('/panel_C2', PanelC2Router);
-app.post('/panel_D', PanelDRouter);
-app.post('/panel_D2', PanelD2Router);
-app.post('/panel_D3', PanelD3Router);
-app.post('/panel_E5', PanelE5Router);
-app.post('/panel_E6', PanelE6Router);
-app.post('/panel_E7', PanelE7Router);
-app.post('/panel_E10', PanelE10Router);
-app.post('/panel_F', PanelFRouter);
-app.post('/panel_F3', PanelF3Router);
-app.post('/panel_H', PanelHRouter);
-app.post('/panel_J', PanelJRouter);
-app.post('/panel_J2', PanelJ2Router);
-app.post('/panel_K', PanelKRouter);
-app.post('/panel_M', PanelMRouter);
-app.post('/panel_N', PanelNRouter);
-app.post('/panel_T', PanelTRouter);
-app.post('/panel_U', PanelURouter);
-
-app.post('/panel_Alpha', panelAlphaRouter);
-app.post('/panel_Beta', panelBetaRouter);
-app.post('/panel_Gamma', panelGammaRouter);
-app.post('/panel_Delta', panelDeltaRouter);
-app.post('/panel_Epsilon', panelEpsilonRouter);
-app.post('/panel_Epsilon2', panelEpsilon2Router);
-app.post('/panel_Zeta', panelZetaRouter);
-app.post('/panel_Eta1', panelEta1Router);
-app.post('/panel_Eta2', panelEta2Router);
-app.post('/panel_Eta3', panelEta3Router);
-app.post('/panel_Eta4', panelEta4Router);
-
-app.post('/panel_MA', PanelMARouter);
-app.post('/panel_MA2', PanelMA2Router);
-app.post('/panel_MD', PanelMDRouter);
-app.post('/panel_MF', PanelMFRouter);
-app.post('/panel_ME', PanelMERouter);
-app.post('/panel_MI', PanelMIRouter);
-app.post('/panel_MS', PanelMSRouter);
+// panel
 
 app.post('/md', MarkdownRouter);
 // app.post('/attr', GetMapAttrRouter);
@@ -169,55 +56,49 @@ app.post('/testApi', async (req, res) => {
     });
 })
 
+// 定义所有面板后缀
+const panelSuffixes = [
+    'A1', 'A2', 'A3', 'A4', 'A5',
+    'A6', 'A7', 'A8', 'A9', 'A10',
+    'A11', 'A12', 'A13', 'A14',
+    'B1', 'B2', 'B3',
+    'C', 'C2',
+    'D', 'D2', 'D3',
+    'E5', 'E6', 'E7', 'E10',
+    'F', 'F3',
+    'H',
+    'J', 'J2',
+    'K', 'M', 'N', 'T', 'U',
+    'Alpha', 'Beta', 'Gamma', 'Delta',
+    'Epsilon', 'Epsilon2', 'Zeta',
+    'Eta1', 'Eta2', 'Eta3', 'Eta4',
+    'MA', 'MA2', 'MD', 'MF', 'ME', 'MI', 'MS'
+];
+
+// 批量导入和注册
+panelSuffixes.forEach(suffix => {
+    import(`./src/panel/panel_${suffix}.js`)
+        .then(module => {
+            app.post(`/panel_${suffix}`, module.router);
+        })
+        .catch(error => {
+            console.error(`Failed to load panel_${suffix}:`, error);
+        });
+});
+
+panelSuffixes.forEach(suffix => {
+    import(`./src/panel/panel_${suffix}.js`)
+        .then(module => {
+            app.post(`/panel_${suffix}/svg`, module.router_svg);
+        })
+        .catch(error => {
+            console.error(`Failed to load panel_${suffix}:`, error);
+        });
+});
+
 app.listen(process.env.PORT, () => {
     console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n当前时间：${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}\n监听端口: ${process.env.PORT}\n`);
     console.log("主缓存目录: ", CACHE_PATH);
     console.log("图像缓存: ", IMG_BUFFER_PATH);
     console.log("谱面文件缓存: ", OSU_BUFFER_PATH);
 })
-
-/*
-
-// form: data:text ... img:file
-function checkData(req, files = ['']) {
-    let fs = {};
-    for (const file of files) {
-        if (req.files[file]) {
-            fs[file] = readFile(req.files[file].path);
-        }
-    }
-    return {
-        ...req.fields, ...fs,
-    };
-}
-
-
-//  form data: json text{ xxx: xxx, img:"img:xxx"} img: file xxx
-const IMAGE_FLAG_START = "img:";
-
-function checkJsonData(req) {
-    const parseImage = (obj) => {
-        for (const [key, val] of Object.entries(obj)) {
-            switch (typeof val) {
-                case "string": {
-                    if (val.startsWith(IMAGE_FLAG_START)) {
-                        let f_name = val.substring(IMAGE_FLAG_START.length);
-                        if (!req.files[f_name]) throw Error(`"${f_name}" in ${key} is not file upload`);
-                        obj[key] = req.files[f_name].path;
-                    }
-                }
-                    break;
-                case "object": {
-                    parseImage(val);
-                }
-                    break;
-            }
-        }
-    }
-
-    let json = JSON.parse(req.fields['json']);
-    parseImage(json);
-    return json;
-}
-
- */

@@ -2492,3 +2492,42 @@ export function getRandomString(length = 6) {
     }
     return result;
 }
+
+/**
+ *
+ * 用于绘制上下表格
+ * @param arr
+ * @return {{lower: number, upper: number, lower_index: number, upper_index: number}}
+ */
+export function findClosestHundredsWithinBounds(arr) {
+    if (!Array.isArray(arr) || !arr.length) return {
+        lower: 0,
+        upper: 100,
+        lower_index: 0,
+        upper_index: 1
+    };
+
+    const min = Math.min(...arr);
+    const max = Math.max(...arr);
+    const delta = max - min;
+
+    const lower = Math.ceil(min / 100) * 100;
+
+    let upper = Math.floor(max / 100) * 100;
+
+    // 确保 upper >= lower + 100
+    if (upper <= lower) {
+        upper = lower + 100;
+    }
+
+    // 计算归一化索引 (0-1 范围)
+    const lower_index = delta > 0 ? Math.max(0, (lower - min) / delta) : 0;
+    const upper_index = delta > 0 ? Math.min(1, (upper - min) / delta) : 1;
+
+    return {
+        lower: lower,
+        upper: upper,
+        lower_index: lower_index,
+        upper_index: upper_index,
+    };
+}

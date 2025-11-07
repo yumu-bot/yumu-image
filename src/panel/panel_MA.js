@@ -72,6 +72,7 @@ export async function panel_MA(data = {
     statistics: {
         count: 50,
         total_rating: 13130,
+        page_rating: 13314,
         average_rating: 262.6,
         average_achievement: 97.89379000000001,
         average_star: 13.758
@@ -99,8 +100,7 @@ export async function panel_MA(data = {
         let request_time
 
         if (isNotNull(data.statistics)) {
-            request_time = 'count: ' + data.statistics.count
-                + ' // avg. ra.: ' + floor(data.statistics.average_rating, 1)
+            request_time = 'avg. ra.: ' + floor(data.statistics.average_rating, 1)
                 + ' // avg. diff.: ' + floor(data.statistics.average_star, 2)
                 + ' // avg. ach.: ' + floor(data.statistics.average_achievement, 4)
                 + '% // request time: ' + getNowTimeStamp()
@@ -117,7 +117,7 @@ export async function panel_MA(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const cardA1 = await card_A1(await PanelGenerate.maiPlayer2CardA1(data.user));
+    const cardA1 = await card_A1(await PanelGenerate.maiPlayer2CardA1(data.user, data?.statistics));
 
     const standard = data?.scores || []
     const deluxe = data?.scores_latest || []
