@@ -424,7 +424,7 @@ export const PanelGenerate = {
                 left1: left1,
                 left2: left2,
                 right1: '',
-                right2: 'Rating: ' + user.rating + '(' + percent +')',
+                right2: 'Rating: ' + user.rating + ' (' + percent +')',
                 right3b: stat.page_rating,
                 right3m: '',
             }
