@@ -293,8 +293,8 @@ export const PanelDraw = {
      * @param min 如果填 0，即用数组的最小值
      * @param x 图像左下角 x
      * @param y 图像左下角 y
-     * @param width
-     * @param height
+     * @param w
+     * @param h
      * @param color 折线颜色
      * @param path_opacity 折线透明度
      * @param area_opacity 区域透明度
@@ -303,19 +303,14 @@ export const PanelDraw = {
      * @return {string}
      * @constructor
      */
-    LineChart: (
-        arr = [0], max = 0, min = 0,
-        x = 0, y = 0, width = 520, height = 90,
-        color = '#fff', path_opacity = 1, area_opacity = 0, stroke_width = 3,
-        is0toMin = false
-    ) => {
+    LineChart: (arr = [0], max = 0, min = 0, x = 900, y = 900, w = 520, h = 90, color, path_opacity = 1, area_opacity = 0, stroke_width = 3, is0toMin = false) => {
         if (isEmptyArray(arr) || arr?.length < 1) return '';
         const arr_max = (max === 0) ? Math.max.apply(Math, arr) : max;
         const arr_min = (min === 0) ? Math.min.apply(Math, arr) : min;
         const delta = Math.abs(arr_max - arr_min);
-        const step = width / (arr.length - 1);
+        const step = w / (arr.length - 1);
 
-        const initial = (delta > 0) ? ((arr[0] - arr_min) / (arr_max - arr_min) * height) : 0;
+        const initial = (delta > 0) ? ((arr[0] - arr_min) / (arr_max - arr_min) * h) : 0;
 
         let path_svg = `<svg> <path d="M ${x} ${y - initial} S `;
         let area_svg = path_svg;
@@ -323,9 +318,9 @@ export const PanelDraw = {
         for (let i = 1; i < arr.length; i++) {
             const v = arr[i]
 
-            const h = (delta > 0) ? ((v - arr_min) / (arr_max - arr_min) * height) : 0;
+            const height = (delta > 0) ? ((v - arr_min) / (arr_max - arr_min) * h) : 0;
             const lineto_x = x + step * i;
-            const lineto_y = (v === 0 && is0toMin) ? y : y - h; //如果数值为 0，则画在最小值的地方
+            const lineto_y = (v === 0 && is0toMin) ? y : y - height; //如果数值为 0，则画在最小值的地方
 
             // 图像点位置
             const position_point = `${lineto_x} ${lineto_y} `
@@ -354,7 +349,7 @@ export const PanelDraw = {
 
 
         path_svg += `" style="fill: none; stroke: ${color}; opacity: ${path_opacity}; stroke-miterlimit: 10; stroke-width: ${stroke_width}px;"/> </svg>`
-        area_svg += `L ${x + width} ${y} L ${x} ${y} Z" style="fill: ${color}; stroke: none; fill-opacity: ${area_opacity};"/> </svg>`
+        area_svg += `L ${x + w} ${y} L ${x} ${y} Z" style="fill: ${color}; stroke: none; fill-opacity: ${area_opacity};"/> </svg>`
 
         return (path_svg + area_svg).toString();
     },
