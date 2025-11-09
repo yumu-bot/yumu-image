@@ -200,14 +200,41 @@ export function getRandomBannerPath(type = "default", index = 0) {
     }
 
     if (type === "maimai") {
-        const i = index || getRandom(maimaiBannerTotal)
+        const i = index || getWeightedRandom(maimaiBannerTotal)
         return getImageFromV3('Banner', `d${i}.png`);
     } else {
-        const i = index || getRandom(defaultBannerTotal)
+        const i = index || getWeightedRandom(defaultBannerTotal)
         return getImageFromV3('Banner', `b${i}.png`);
     }
-
 }
+
+function getWeightedRandom(max = 1, first_weight = 1, last_weight = 2) {
+    // 计算总权重 (b1权重=1, b180权重=2, 线性递增)
+    const total_weight = (first_weight + last_weight) * max / 2;
+
+    // 生成随机数
+    const random_value = Math.random() * total_weight;
+
+    // 找到对应的编号
+    let cumulative_weight = 0;
+    for (let i = 1; i <= max; i++) {
+        // 计算当前编号的权重 (从1线性增加到2)
+        const weight = 1 + (i - 1) / (max - 1);
+        cumulative_weight += weight;
+
+        if (random_value <= cumulative_weight) {
+            return i;
+        }
+    }
+
+    // 如果由于浮点数精度问题没有返回，返回最大值
+    return max;
+}
+
+// 使用示例
+    console.log(weightedRandomBackground()); // 输出如: "b45"
+    console.log(weightedRandomBackground()); // 输出如: "b167"
+    console.log(weightedRandomBackground()); // 输出如: "b89"
 
 /**
  * @function 获取随机的吉祥物背景路径
@@ -334,10 +361,14 @@ export function pp2UserBG(pp = 0, boundary = [], ranks = []) {
     return getImageFromV3(`object-score-backimage-${rank}.jpg`);
 }
 
-//获取一个1到目标数的随机整数。如果range小于1，则返回0-1的随机小数。
+/**
+ * 获取一个1到目标数的随机整数。如果range小于1，则返回0-1的随机小数。
+ * @param range
+ * @return {number}
+ */
 export function getRandom(range = 0) {
     if (range > 1) {
-        return Math.floor(Math.random() * range) + 1
+        return Math.floor(Math.random() * range ?? 1) + 1
         //return Math.round(parseInt(moment().format("SSS")) / 999 * (range - 1)) + 1;
     } else if (range === 1) {
         return 1;
