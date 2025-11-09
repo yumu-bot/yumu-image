@@ -4,7 +4,7 @@ import mascot_data from '../config/mascot.json' with { type: 'json' };
 
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
 const mascot_transparency_sum_arr = [2, 1, 0, 0, 1, 0, 0, 1, 0, 1];
-const defaultBannerTotal = 180; //默认 banner 数量
+const defaultBannerTotal = 190; //默认 banner 数量
 const maimaiBannerTotal = 60; //maimai banner 数量
 const mascotBGTotal = 13; //吉祥物 BG 数量
 
