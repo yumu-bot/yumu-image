@@ -231,11 +231,6 @@ function getWeightedRandom(max = 1, first_weight = 1, last_weight = 2) {
     return max;
 }
 
-// 使用示例
-    console.log(weightedRandomBackground()); // 输出如: "b45"
-    console.log(weightedRandomBackground()); // 输出如: "b167"
-    console.log(weightedRandomBackground()); // 输出如: "b89"
-
 /**
  * @function 获取随机的吉祥物背景路径
  * @return {String} 返回吉祥物背景路径
