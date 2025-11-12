@@ -115,7 +115,10 @@ function getTextPath_BerlinBold(
     anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
-    shadow = false
+    shadow = false,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return ((shadow === false) ? '' :
             textToSVGBerlinBold.getPath((text + ""), {
@@ -137,7 +140,10 @@ function getTextPath_BerlinBold(
         fontFamily: "BerlinBold",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }
@@ -263,6 +269,9 @@ function getTextPath_TahomaRegular(
     anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return textToSVGTahomaRegular.getPath((text + ""), {
         x: x,
@@ -272,7 +281,10 @@ function getTextPath_TahomaRegular(
         fontFamily: "TahomaRegular",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }
@@ -398,6 +410,9 @@ function getTextPath_TahomaBold(
     anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return textToSVGTahomaBold.getPath((text + ""), {
         x: x,
@@ -407,7 +422,10 @@ function getTextPath_TahomaBold(
         fontFamily: "TahomaBold",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }
@@ -533,6 +551,9 @@ function getTextPath_poppinsBold(
     anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return textToSVGpoppinsBold.getPath((text + ""), {
         x: x,
@@ -542,7 +563,10 @@ function getTextPath_poppinsBold(
         fontFamily: "poppinsBold",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }
@@ -668,6 +692,9 @@ function getTextPath_lineSeedSans(
     anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return textToSVGlineSeedSansBold.getPath((text + ""), {
         x: x,
@@ -677,7 +704,10 @@ function getTextPath_lineSeedSans(
         fontFamily: "lineSeedSans",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }
@@ -802,7 +832,10 @@ function getTextPath_torus(
     size = 36,
     anchor = 'left baseline',
     fill = '#fff',
-    opacity = 1
+    opacity = 1,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return textToSVGTorusSB.getPath((text + ""), {
         x: x,
@@ -812,7 +845,10 @@ function getTextPath_torus(
         fontFamily: "Torus",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }
@@ -938,7 +974,10 @@ function getTextPath_torusBold(
     size = 36,
     anchor = 'left baseline',
     fill = '#fff',
-    opacity = 1
+    opacity = 1,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return textToSVGTorusBold.getPath((text + ""), {
         x: x,
@@ -948,7 +987,10 @@ function getTextPath_torusBold(
         fontFamily: "TorusBold",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }
@@ -1075,6 +1117,9 @@ function getTextPath_torusRegular(
     anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return textToSVGTorusRegular.getPath((text + ""), {
         x: x,
@@ -1084,7 +1129,10 @@ function getTextPath_torusRegular(
         fontFamily: "TorusRegular",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }
@@ -1209,7 +1257,10 @@ function getTextPath_PuHuiTi(
     size = 36,
     anchor = 'left baseline',
     fill = '#fff',
-    opacity = 1
+    opacity = 1,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return textToSVGPuHuiTi.getPath((text + ""), {
         x: x,
@@ -1219,7 +1270,10 @@ function getTextPath_PuHuiTi(
         fontFamily: "PuHuiTi",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }
@@ -1306,6 +1360,9 @@ function getTextPath_extra(
     anchor = 'left baseline',
     fill = '#fff',
     opacity = 1,
+    stroke = 'none',
+    stroke_width = 0,
+    stroke_opacity = 1,
 ) {
     return textToSVGextra.getPath((text + ""), {
         x: x,
@@ -1315,7 +1372,10 @@ function getTextPath_extra(
         fontFamily: "extra",
         attributes: {
             "fill": fill,
-            "fill-opacity": opacity
+            "fill-opacity": opacity,
+            "stroke": stroke,
+            "stroke-width": stroke_width,
+            "stroke-opacity": stroke_opacity,
         }
     })
 }

@@ -30,7 +30,9 @@ export async function card_A1(data = {
     right3b: '4396',
     right3m: 'PP',
 
-    left1_colors: colorArray.white
+    left1_colors: colorArray.white,
+    left1_stroke: 'none',
+    left1_stroke_width: 1,
 }) {
     // 读取模板
     let svg = readTemplate('template/Card_A1.svg');
@@ -91,7 +93,7 @@ export async function card_A1(data = {
 
     const top1 = font_top1.getTextPath(font_top1.cutStringTail(data.top1, top1_size, 290), 130, 53.672, top1_size, "left baseline", "#fff");
     const top2 = font_top2.getTextPath(font_top2.cutStringTail(data.top2, 24, 290), 130, 85.836, 24, "left baseline", "#fff");
-    const left1 = font_left1.getTextPath(font_left1.cutStringTail(data.left1, size_left1, 390 - right_width), 20, 165.836, size_left1, "left baseline", `url(#radial_grad_CA1-1-${gradient_name})`);
+    const left1 = font_left1.getTextPath(font_left1.cutStringTail(data.left1, size_left1, 390 - right_width), 20, 165.836, size_left1, "left baseline", `url(#radial_grad_CA1-1-${gradient_name})`, 1, data?.left1_stroke, data?.left1_stroke_width);
     const left2 = font_left2.getTextPath(font_left2.cutStringTail(data.left2, size_left2, 390 - right_width), 20, 191.836, size_left2, "left baseline", "#fff");
 
     const right1 = torus.getTextPath(data.right1, 420, 114.836 - 2, 24, 'right baseline', '#fff');

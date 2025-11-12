@@ -121,6 +121,8 @@ export const PanelGenerate = {
             top1: user?.username,
             left1: left1,
             left1_colors: left1_colors,
+            left1_stroke: '#fff',
+            left1_stroke_width: 1,
             left2: left2,
             right1: right1,
             right2: right2,
