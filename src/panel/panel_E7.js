@@ -1038,7 +1038,7 @@ const PanelEGenerate = {
 
     score2componentE8: (mods) => {
         return {
-            mods: mods || [],
+            mods: mods,
         }
     },
 
