@@ -1003,10 +1003,10 @@ export const PanelGenerate = {
         return h2s
     },
 
-    score2CardC: async (s, identifier = 1, use_cache = null) => {
+    score2CardC: async (s, identifier = 1, use_cache = null, load_cover = true) => {
         const cache = requireNonNullElse(use_cache, hasLeaderBoard(s?.beatmap?.ranked ?? s?.beatmap?.status))
 
-        const cover = await readNetImage(s?.beatmapset?.covers?.list, cache);
+        const cover = load_cover ? await readNetImage(s?.beatmapset?.covers?.list, cache) : '';
         const background = await readNetImage(s?.beatmapset?.covers?.cover, cache);
         const type = getScoreTypeImage(s.is_lazer)
 
@@ -1089,15 +1089,18 @@ export const PanelGenerate = {
         const mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
 
         const artist = torus.cutStringTail(s.beatmapset.artist, 24,
-            500 - 10 - mods_width - torus.getTextWidth(' // ' + s.user.username, 24), true);
+            500 - 10 - mods_width - torus.getTextWidth(' // ' + s?.user?.username, 24), true);
 
-        const left1 = artist + ' // ' + s.user.username
+        const left1 = artist + ' // ' + s?.user?.username
 
-        const card_C = await PanelGenerate.score2CardC(s, identifier, use_cache)
+        const cover = await getAvatar(s?.user?.avatar_url, true);
+
+        const card_C = await PanelGenerate.score2CardC(s, identifier, use_cache, false)
 
         return {
             ...card_C,
             left1: left1,
+            cover: cover,
         };
     },
 
