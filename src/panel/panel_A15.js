@@ -1,16 +1,21 @@
 import {
-    exportJPEG, getPanelHeight, getPanelNameSVG, setSvgBody,
+    exportJPEG,
+    getNowTimeStamp, getPanelHeight, getPanelNameSVG,
+    getSvgBody,
     readTemplate, setCustomBanner,
-    setText, getNowTimeStamp, getSvgBody, thenPush,
+    setSvgBody,
+    setText, setTexts,
+    thenPush
 } from "../util/util.js";
-import {card_C} from "../card/card_C.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
+import {card_C} from "../card/card_C.js";
+import {torusBold} from "../util/font.js";
 
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_A4(data);
+        const svg = await panel_A15(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -19,10 +24,11 @@ export async function router(req, res) {
     }
     res.end();
 }
+
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_A4(data);
+        const svg = await panel_A15(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -33,16 +39,17 @@ export async function router_svg(req, res) {
 }
 
 /**
- * bp/tbp 多成绩面板
+ * 探索谱面
+ * !e
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_A4(data = {
-    "user": {},
-    "scores": [],
-    "rank": [1,3,4,5,6],
-    "panel": "",
-}) {
+export async function panel_A15(
+    data = {
+
+    }
+) {
+
     // 导入模板
     let svg = readTemplate('template/Panel_A4.svg');
 
@@ -57,36 +64,24 @@ export async function panel_A4(data = {
     const scores = data.scores ?? []
 
     // 面板文字
-    let panel_name
-
-    // 面板文字
     const request_time = 'scores count: ' + scores.length + ' // request time: ' + getNowTimeStamp();
 
-    switch (data?.panel) {
-        case "T": {
-            panel_name = getPanelNameSVG('Today Bests (!ymt)', 'T', request_time);
-        } break;
-        case "BS": {
-            panel_name = getPanelNameSVG('Best Scores (!ymbs)', 'BS', request_time);
-        } break;
-        default: {
-            panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', request_time);
-        } break;
-    }
-
     // 插入文字
-    svg = setText(svg, panel_name, reg_index);
+    svg = setText(svg, getPanelNameSVG('Top plays (!ymtp)', 'TP', request_time), reg_index);
 
     // 导入A1卡
-    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(null));
     svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入C卡
     const params = []
 
+    const first_rank = data?.first_score_rank ?? 1
+
+
     await Promise.allSettled(
         scores.map((v, i) => {
-            return PanelGenerate.score2CardC(v, data.rank?.[i], true)
+            return PanelGenerate.topScore2CardC(v, first_rank + i, true)
         })
     ).then(results => thenPush(results, params))
 
@@ -123,7 +118,13 @@ export async function panel_A4(data = {
         string_Cs += getSvgBody(x, y, card_Cs[i])
     }
 
-    svg = setText(svg, string_Cs, reg_bp_list);
+    const page = torusBold.getTextPath(
+        'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6
+    )
+
+    svg = setTexts(svg, [string_Cs, page], reg_bp_list);
 
     return svg.toString();
+
+
 }

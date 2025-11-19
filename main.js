@@ -47,7 +47,7 @@ app.post('/del', (req, res) => {
     res.status(200).send({status: 'ok'})
 });
 
-app.post('/testApi', async (req, res) => {
+app.post('/panel_test', async (req, res) => {
     console.log(req.fields)
     res.set('Content-Type', 'application/json');
     res.status(200);
@@ -60,7 +60,7 @@ app.post('/testApi', async (req, res) => {
 const panelSuffixes = [
     'A1', 'A2', 'A3', 'A4', 'A5',
     'A6', 'A7', 'A8', 'A9', 'A10',
-    'A11', 'A12', 'A13', 'A14',
+    'A11', 'A12', 'A13', 'A14', 'A15',
     'B1', 'B2', 'B3',
     'C', 'C2',
     'D', 'D2', 'D3',
@@ -86,6 +86,7 @@ panelSuffixes.forEach(suffix => {
         });
 });
 
+// 也注册了 svg
 panelSuffixes.forEach(suffix => {
     import(`./src/panel/panel_${suffix}.js`)
         .then(module => {

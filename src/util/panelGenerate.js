@@ -1012,7 +1012,7 @@ export const PanelGenerate = {
 
         const time_diff = getTimeDifferenceShort(s.ended_at, 0);
 
-        let mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
+        const mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
 
         const acc = floor((s?.legacy_accuracy * 100), 2) + '%'
         const combo = (s.max_combo || 0) + 'x'
@@ -1043,6 +1043,9 @@ export const PanelGenerate = {
 
         const label2 = s?.beatmap?.id?.toString() || ''
 
+        const left1 = artist + ' // ' + s.beatmapset.creator
+        const left2 = '[' + difficulty_name + '] - ' + acc + ' ' + combo + ' (' + time_diff + ')'
+
         return {
             background: background,
             cover: cover,
@@ -1050,8 +1053,8 @@ export const PanelGenerate = {
 
             title: s.beatmapset.title || '',
             title2: title2,
-            left1: artist + ' // ' + s.beatmapset.creator,
-            left2: '[' + difficulty_name + '] - ' + acc + ' ' + combo + ' (' + time_diff + ')',
+            left1: left1,
+            left2: left2,
             index_b: index_b,
             index_m: 'PP',
             index_l: index_l,
@@ -1080,6 +1083,22 @@ export const PanelGenerate = {
             font_title2: 'PuHuiTi',
             font_label4: 'torus',
         }
+    },
+
+    topScore2CardC: async (s, identifier = 1, use_cache = null) => {
+        const mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
+
+        const artist = torus.cutStringTail(s.beatmapset.artist, 24,
+            500 - 10 - mods_width - torus.getTextWidth(' // ' + s.user.username, 24), true);
+
+        const left1 = artist + ' // ' + s.user.username
+
+        const card_C = await PanelGenerate.score2CardC(s, identifier, use_cache)
+
+        return {
+            ...card_C,
+            left1: left1,
+        };
     },
 
     fixedBestScore2CardC: async (s, rank = 1, rank_after = null) => {
