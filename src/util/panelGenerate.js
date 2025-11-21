@@ -959,7 +959,7 @@ export const PanelGenerate = {
 
     /**
      * @param scores
-     * @return {Promise<{scores: []}>}
+     * @return {Promise<*[]>}
      */
     score2CardD2: async (scores = []) => {
         let promiseHs = []

@@ -39,6 +39,7 @@ export async function router_svg(req, res) {
  */
 export async function panel_A4(data = {
     "user": {},
+    "history_user": null,
     "scores": [],
     "rank": [1,3,4,5,6],
     "panel": "",
@@ -78,7 +79,7 @@ export async function panel_A4(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data?.history_user));
     svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入C卡

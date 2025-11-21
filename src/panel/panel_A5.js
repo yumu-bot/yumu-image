@@ -41,10 +41,12 @@ export async function router_svg(req, res) {
 export async function panel_A5(data = {
     "panel": "",
     "user": {},
+    "history_user": null,
     "rank": [],
     "score": [],
 
 }) {
+
     // 导入模板
     let svg = readTemplate('template/Panel_A4.svg');
 
@@ -78,7 +80,7 @@ export async function panel_A5(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data?.history_user));
     svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入H卡
@@ -90,7 +92,7 @@ export async function panel_A5(data = {
         })
     ).then(results => thenPush(results, params))
 
-    const cardHs = params.map((param) => {
+    const card_Cs = params.map((param) => {
         return card_C(param)
     })
 
@@ -98,29 +100,29 @@ export async function panel_A5(data = {
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
 
     // 计算面板高度
-    const rowTotal = Math.ceil((cardHs?.length || 0) / 2);
+    const rowTotal = Math.ceil((card_Cs?.length || 0) / 2);
 
-    const panelHeight = getPanelHeight(cardHs?.length, 110, 2, 290, 40);
-    const cardHeight = panelHeight - 290;
+    const panel_height = getPanelHeight(card_Cs?.length, 110, 2, 290, 40);
+    const card_height = panel_height - 290;
 
-    svg = setText(svg, panelHeight, reg_panelheight);
-    svg = setText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panel_height, reg_panelheight);
+    svg = setText(svg, card_height, reg_cardheight);
 
     //天选之子H卡提出来
-    const luckyDog = (cardHs.length % 2 === 1) ? cardHs.pop() : '';
+    const luckyDog = (card_Cs.length % 2 === 1) ? card_Cs.pop() : '';
     svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, luckyDog, reg_bp_list);
 
     //插入H卡
     let stringHs = ''
 
-    for (let i = 0; i < cardHs.length; i++) {
+    for (let i = 0; i < card_Cs.length; i++) {
         const ix = (i + 1) % 2;
         const iy = Math.floor(i / 2);
 
         const x = (ix === 1) ? 40 : 980;
         const y = 330 + iy * 150;
 
-        stringHs += getSvgBody(x, y, cardHs[i])
+        stringHs += getSvgBody(x, y, card_Cs[i])
     }
 
     svg = setText(svg, stringHs, reg_bp_list);
