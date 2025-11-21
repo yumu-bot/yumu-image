@@ -93,7 +93,13 @@ export async function card_A1(data = {
 
     const top1 = font_top1.getTextPath(font_top1.cutStringTail(data.top1, top1_size, 290), 130, 53.672, top1_size, "left baseline", "#fff");
     const top2 = font_top2.getTextPath(font_top2.cutStringTail(data.top2, 24, 290), 130, 85.836, 24, "left baseline", "#fff");
-    const left1 = font_left1.getTextPath(font_left1.cutStringTail(data.left1, size_left1, 390 - right_width), 20, 165.836, size_left1, "left baseline", `url(#radial_grad_CA1-1-${gradient_name})`, 1, data?.left1_stroke, data?.left1_stroke_width);
+
+    const left_cut_text = font_left1.cutStringTail(data.left1, size_left1, 390 - right_width)
+
+    const left1_base = font_left1.getTextPath(left_cut_text, 20, 165.836, size_left1, "left baseline", data?.left1_stroke, 1, data?.left1_stroke, data?.left1_stroke_width);
+
+    const left1_top = font_left1.getTextPath(left_cut_text, 20, 165.836, size_left1, "left baseline", `url(#radial_grad_CA1-1-${gradient_name})`, 1)
+
     const left2 = font_left2.getTextPath(font_left2.cutStringTail(data.left2, size_left2, 390 - right_width), 20, 191.836, size_left2, "left baseline", "#fff");
 
     const right1 = torus.getTextPath(data.right1, 420, 114.836 - 2, 24, 'right baseline', '#fff');
@@ -107,8 +113,8 @@ export async function card_A1(data = {
 
     // 替换内容
     svg = setText(svg, flag_svg, reg_country_flag); //高44宽60吧
-    svg = setTexts(svg, [top1, left1, left2, right1, right2, right3], reg_text);
-    svg = setTexts(svg, [top1, top2, left1, left2, right1, right2, right3], reg_text);
+    svg = setTexts(svg, [top1, left1_top, left1_base, left2, right1, right2, right3], reg_text);
+    svg = setTexts(svg, [top1, top2, left1_base, left2, right1, right2, right3], reg_text);
 
     // 替换图片
     svg = setImage(svg, 0, 0, 430, 210, data.background, reg_background, 0.6);
