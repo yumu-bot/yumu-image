@@ -1433,7 +1433,7 @@ export const PanelGenerate = {
 
         const title2_width = title2_font.getTextWidth(title2, title2_size)
 
-        const artist_max_width = 185 - 10 - torus.getTextWidth(' // ' + s.beatmapset.creator, 16) - title2_width
+        const artist_max_width = 185 - torus.getTextWidth(' // ' + s.beatmapset.creator, 16) - title2_width
 
         const artist = torus.cutStringTail(s.beatmapset.artist, 16, artist_max_width, true);
 
