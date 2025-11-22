@@ -404,37 +404,7 @@ export function getOsuDXRatingStar(stat = {}, stat_max = {}, mode = 'o') {
     const div = dx / dx_max;
 
     switch (mode) {
-        case "o": {
-            if (div >= 0.9975) {
-                return 5
-            } else if (div >= 0.995) {
-                return 4
-            } else if (div >= 0.99) {
-                return 3
-            } else if (div >= 0.97) {
-                return 2
-            } else if (div >= 0.95) {
-                return 1
-            } else {
-                return 0
-            }
-        }
-        case "t": {
-            if (div >= 0.99) {
-                return 5
-            } else if (div >= 0.98) {
-                return 4
-            } else if (div >= 0.97) {
-                return 3
-            } else if (div >= 0.96) {
-                return 2
-            } else if (div >= 0.95) {
-                return 1
-            } else {
-                return 0
-            }
-        }
-        case "c": {
+        case "o": case "t": case "c": {
             if (div >= 0.9975) {
                 return 5
             } else if (div >= 0.995) {
