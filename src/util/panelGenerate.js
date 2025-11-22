@@ -13,14 +13,13 @@ import {
     isNotNull,
     isNotEmptyArray,
     getTimeByDHMS,
-    requireNonNullElse,
     getKeyDifficulty,
     isNotEmptyString,
     floor,
     floors,
     getFormattedTime,
     getTimeDifferenceShort,
-    getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3Cache,
+    getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3Cache, isASCII,
 } from "./util.js";
 import {
     colorArray,
@@ -31,8 +30,10 @@ import {
     getStarRatingColors
 } from "./color.js";
 import {
+    getOsuDXRatingStar,
+    getRankBackgroundForI4,
     getScoreTypeImage,
-    hasLeaderBoard,
+    hasLeaderBoard, rankSS2X,
 } from "./star.js";
 import {
     getCHUNITHMRatingBG,
@@ -1003,11 +1004,11 @@ export const PanelGenerate = {
         return h2s
     },
 
-    score2CardC: async (s, identifier = 1, use_cache = null, load_cover = true) => {
-        const cache = requireNonNullElse(use_cache, hasLeaderBoard(s?.beatmap?.ranked ?? s?.beatmap?.status))
+    score2CardC: async (s, identifier = 1, load_cover = true) => {
+        const use_cache = hasLeaderBoard(s?.beatmap?.ranked ?? s?.beatmap?.status)
 
-        const cover = load_cover ? await readNetImage(s?.beatmapset?.covers?.list, cache) : '';
-        const background = await readNetImage(s?.beatmapset?.covers?.cover, cache);
+        const cover = load_cover ? await readNetImage(s?.beatmapset?.covers?.list, use_cache) : '';
+        const background = await readNetImage(s?.beatmapset?.covers?.cover, use_cache);
         const type = getScoreTypeImage(s.is_lazer)
 
         const time_diff = getTimeDifferenceShort(s.ended_at, 0);
@@ -1085,7 +1086,7 @@ export const PanelGenerate = {
         }
     },
 
-    topScore2CardC: async (s, identifier = 1, use_cache = null) => {
+    topScore2CardC: async (s, identifier = 1) => {
         const mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
 
         const artist = torus.cutStringTail(s.beatmapset.artist, 24,
@@ -1095,7 +1096,7 @@ export const PanelGenerate = {
 
         const cover = await getAvatar(s?.user?.avatar_url, true);
 
-        const card_C = await PanelGenerate.score2CardC(s, identifier, use_cache, false)
+        const card_C = await PanelGenerate.score2CardC(s, identifier, false)
 
         return {
             ...card_C,
@@ -1109,7 +1110,7 @@ export const PanelGenerate = {
 
         const is_after = (typeof rank_after == "number")
 
-        const card_c = await PanelGenerate.score2CardC(s, rank, true)
+        const card_c = await PanelGenerate.score2CardC(s, rank)
 
         if (is_after) {
             const time_diff = getTimeDifferenceShort(s.ended_at, 0);
@@ -1408,6 +1409,79 @@ export const PanelGenerate = {
             component3: '',
 
             left3_is_right: false,
+        }
+    },
+
+    score2CardI4: async (s, identifier = 1) => {
+        const use_cache = hasLeaderBoard(s?.beatmap?.ranked ?? s?.beatmap?.status)
+
+        const cover = await readNetImage(s?.beatmapset?.covers?.list, use_cache)
+        const background = getRankBackgroundForI4(s?.legacy_rank, s?.passed);
+        const type = getScoreTypeImage(s.is_lazer)
+
+        const acc = floors((s?.legacy_accuracy * 100), 2)
+        const combo = (s.max_combo || 0) + 'x'
+
+        const rank = getImageFromV3Cache('object-score-' + rankSS2X(s?.legacy_rank) + '-small2.png')
+
+        const title2_original_text = (s.beatmapset.title === s.beatmapset.title_unicode) ? '' : (s?.beatmapset?.title_unicode ?? '');
+
+        const title2_font = isASCII(title2_original_text) ? torus : PuHuiTi;
+        const title2_size = isASCII(title2_original_text) ? 16 : 14;
+
+        const title2 = title2_font.cutStringTail(title2_original_text, title2_size, 65);
+
+        const title2_width = title2_font.getTextWidth(title2, title2_size)
+
+        const artist_max_width = 185 - 10 - torus.getTextWidth(' // ' + s.beatmapset.creator, 16) - title2_width
+
+        const artist = torus.cutStringTail(s.beatmapset.artist, 16, artist_max_width, true);
+
+        const left1 = artist + ' // ' + (s?.beatmapset?.creator ?? '')
+        const left2 = s?.beatmap.version
+        const left3 = acc.integer
+        const left4 = acc.decimal + '% ' + combo
+
+        const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : floor(s?.pp, 1, -1);
+
+        const star = s?.beatmap?.difficulty_rating || 0
+        const star_color = getStarRatingColor(star)
+
+        const color_label12 = (star < 4) ? '#1c1719' : '#fff'
+
+        const label2 = '#' + identifier
+
+        const level = getOsuDXRatingStar(s.statistics, s.maximum_statistics, getGameMode(s.mode, 1))
+        return {
+            background: background,
+            cover: cover,
+            rank: rank,
+            type: type,
+            level: level,  // 星星数量
+
+            title: s.beatmapset.title || '',
+            title2: title2, // 外号
+            left1: left1,
+            left2: left2,
+            left3: left3, // 大号字
+            left4: left4, // 小号字
+            index_b: index_b,
+            index_m: 'PP',
+            index_b_size: 32,
+            index_m_size: 20,
+            label1: floor(star, 1),
+            label2: label2,
+
+            color_text: '#fff',
+            color_label1: color_label12,
+            color_label2: color_label12,
+
+            color_left: star_color,
+            color_rrect1: star_color,
+            color_rrect2: star_color,
+
+            mods: s?.mods, // mod
+
         }
     },
 

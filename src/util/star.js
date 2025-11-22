@@ -308,12 +308,25 @@ export const hasLeaderBoard = (ranked) => {
 
 // 获取评级背景。把 S+ 和 X+ 统一一下。
 export const getRankBackground = (rank = 'F', passed = true) => {
-    if (passed === false) rank = 'F';
-    if (rank === 'X+' || rank === 'SS') rank = 'X';
-    if (rank === 'SSH') rank = 'XH';
-    if (rank === 'S+') rank = 'S';
-    if (rank === 'EX') rank = 'PF';
-    return getImageFromV3(`object-score-backimage-${rank}.jpg`)
+    let convert = rank
+    if (passed === false) convert = 'F';
+    if (rank === 'X+' || rank === 'SS') convert = 'X';
+    if (rank === 'SSH') convert = 'XH';
+    if (rank === 'S+') convert = 'S';
+    if (rank === 'EX') convert = 'PF';
+
+    return getImageFromV3(`object-score-backimage-${convert}.jpg`)
+}
+
+export const getRankBackgroundForI4 = (rank = 'F', passed = true) => {
+    let convert = rank
+    if (passed === false) convert = 'F';
+    if (rank === 'X+' || rank === 'EX' || rank === 'X' || rank === 'SS') convert = 'SSS';
+    if (rank === 'SSH' || rank === 'XH') convert = 'PF';
+    if (rank === 'S+') convert = 'S';
+    if (rank === 'S') convert = 'X';
+
+    return getImageFromV3(`object-score-backimage-${convert}.jpg`)
 }
 
 // 从数字获得评级。默认是获取星数的评级，也可以自定义边界或评级名字。如果想跳过某评级（比如 S+），将其所在位（比如这里是 3 号位）的数字设置为和前一位等同。SS 和 D 无法跳过。
@@ -352,5 +365,104 @@ export function getScoreTypeImage(is_lazer, version = '', score_type) {
             return getImageFromV3Cache('object-type-lazer' + version + '.png');
         case false:
             return getImageFromV3Cache('object-type-stable' + version + '.png');
+    }
+}
+
+/**
+ * 一个类似于 maimai DX 星级的东西
+ * @param stat
+ * @param stat_max
+ * @param mode
+ * @return {number}
+ */
+export function getOsuDXRatingStar(stat = {}, stat_max = {}, mode = 'o') {
+    let dx_max = 0
+    let dx = 0
+
+    switch (mode) {
+        case "o": {
+            dx = stat.great * 3 + stat.ok + stat.meh * 0.5
+            dx_max = stat_max.great * 3
+        } break;
+        case "t": {
+            dx = stat.great * 3 + stat.ok * 1.5
+            dx_max = stat_max.great * 3
+        } break;
+        case "c": {
+            dx = stat.small_tick_hit * 3 + stat.large_tick_hit * 2 + stat.great
+            dx_max = stat_max.small_tick_hit * 3 + stat_max.large_tick_hit * 2 + stat_max.great
+        } break;
+        case "m": {
+            dx = stat.perfect * 3 + stat.great * 2 + stat.good
+
+            dx_max = stat_max.perfect * 3
+        } break;
+    }
+
+    if (dx_max === 0) return 0
+
+    const div = dx / dx_max;
+
+    switch (mode) {
+        case "o": {
+            if (div >= 0.9975) {
+                return 5
+            } else if (div >= 0.995) {
+                return 4
+            } else if (div >= 0.99) {
+                return 3
+            } else if (div >= 0.97) {
+                return 2
+            } else if (div >= 0.95) {
+                return 1
+            } else {
+                return 0
+            }
+        }
+        case "t": {
+            if (div >= 0.99) {
+                return 5
+            } else if (div >= 0.98) {
+                return 4
+            } else if (div >= 0.97) {
+                return 3
+            } else if (div >= 0.96) {
+                return 2
+            } else if (div >= 0.95) {
+                return 1
+            } else {
+                return 0
+            }
+        }
+        case "c": {
+            if (div >= 0.9975) {
+                return 5
+            } else if (div >= 0.995) {
+                return 4
+            } else if (div >= 0.99) {
+                return 3
+            } else if (div >= 0.97) {
+                return 2
+            } else if (div >= 0.95) {
+                return 1
+            } else {
+                return 0
+            }
+        }
+        case "m": {
+            if (div >= 0.97) {
+                return 5
+            } else if (div >= 0.95) {
+                return 4
+            } else if (div >= 0.93) {
+                return 3
+            } else if (div >= 0.9) {
+                return 2
+            } else if (div >= 0.85) {
+                return 1
+            } else {
+                return 0
+            }
+        }
     }
 }
