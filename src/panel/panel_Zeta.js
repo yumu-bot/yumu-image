@@ -1,4 +1,6 @@
 import {compileTemplate, exportJPEG, getAvatar, readNetImage} from "../util/util.js";
+import {call_core} from "../../color/wasm_wrapper.js"
+import {readFileSync} from "fs";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
@@ -35,7 +37,9 @@ export async function router_svg(req, res) {
 async function panel_Zeta(data) {
     data.avatar = await getAvatar(data.avatar);
     data.banner = await readNetImage(data.banner);
-
+    const banner_data = readFileSync(data.banner);
+    const color = call_core(new Uint8Array(banner_data), 5);
+    data.color = color[0].to_hex();
     const userAvatarCardTemplate = compileTemplate("template/test/User_Avatar_Card.svg");
 
     return userAvatarCardTemplate(data);
