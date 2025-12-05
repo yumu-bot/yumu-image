@@ -447,8 +447,12 @@ export function getUserRankColor(rank = 0) {
     }
 }
 
-export function getGlobalRankPercentColor(global_rank = 1, global_rank_percent = 0) {
-    if (global_rank <= 100 && global_rank >= 1) {
+export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent = 0) {
+    if (global_rank <= 0 && global_rank_percent <= 0) {
+        return colorArray.deep_gray
+    }
+
+    if (global_rank <= 100) {
         return colorArray.lustrous
     } else if (global_rank_percent < 0.0005) {
         return colorArray.radiant

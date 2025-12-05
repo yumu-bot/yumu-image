@@ -97,13 +97,18 @@ export const PanelGenerate = {
         const left2 = country + (user?.statistics?.country_rank ? ('#' + user.statistics.country_rank) : '');
 
         const isBot = user?.is_bot;
+        const isNotPlayed = user?.statistics?.level_current === 1 && user?.statistics?.level_progress === 0
+        const hasEstimated = user?.estimate_pp > 0
+
         const level = user?.statistics?.level_current || 0;
         const progress = user?.statistics?.level_progress || 0;
         const acc = floor(user?.statistics?.hit_accuracy, 2) || '0';
-        const right2 = isBot ? '' : (level + progress > 0 ? (acc + '% Lv.' + level + '(' + progress + '%)') : acc + '%')
-        const right3b = isBot ? 'Bot' : (user?.pp ? Math.round(user?.pp).toString() : '');
+        const right2 = isBot ? '' : (isNotPlayed ? (acc + '%') : (acc + '% Lv.' + level + '(' + progress + '%)'))
+        const right3b = isBot ? 'Bot' : (user?.pp ? Math.round(user?.pp).toString() :
+            (hasEstimated ? (Math.round(user?.estimate_pp).toString()) : ''));
         const right3m = isBot ? '' : (user?.pp ? 'PP' :
-            (user?.statistics?.level_current === 1 && user?.statistics?.level_progress === 0 ? 'NOT PLAYED' : 'AFK'));
+            (isNotPlayed ? 'NOT PLAYED' :
+                (hasEstimated ? '?' : 'AFK')));
 
         //历史记录功能！
         const pp_d = (historyUser != null) ? Math.round((user.pp - historyUser?.statistics?.pp) * 100) / 100 : 0
