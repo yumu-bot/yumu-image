@@ -1,0 +1,11 @@
+{
+  "name": "wasm-wrapper",
+  "version": "0.1.0",
+  "files": [
+    "wasm_wrapper_bg.wasm",
+    "wasm_wrapper.js",
+    "wasm_wrapper.d.ts"
+  ],
+  "main": "wasm_wrapper.js",
+  "types": "wasm_wrapper.d.ts"
+}
