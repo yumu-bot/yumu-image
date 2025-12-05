@@ -71,7 +71,7 @@ const panelSuffixes = [
     'K', 'M', 'N', 'T', 'U',
     'Alpha', 'Beta', 'Gamma', 'Delta',
     'Epsilon', 'Epsilon2', 'Zeta',
-    'Eta1', 'Eta2', 'Eta3', 'Eta4',
+    'Eta1', 'Eta2', 'Eta3', 'Eta4', 'Theta',
     'MA', 'MA2', 'MD', 'MF', 'ME', 'MI', 'MS'
 ];
 

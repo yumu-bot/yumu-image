@@ -84,6 +84,7 @@ yarn start
 - Epsilon 截图用头像 OA
 - Zeta 截图用头像 OC
 - Eta 千变万化 B/P/R/S
+- Theta 图表面板 CT
 
 ## 卡片
 

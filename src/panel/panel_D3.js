@@ -281,6 +281,7 @@ export async function panel_D3(
         top_percent: percentiles,
         achievements_count: user.user_achievements_count ?? 0,
         beatmap_playcounts_count: user.beatmap_playcounts_count ?? 0,
+        matchmaking_rating: user.matchmaking_rating ?? 0,
         mode: getGameMode(user.mode, 0)
     }, has_custom_panel, hue)
 
@@ -292,8 +293,8 @@ export async function panel_D3(
         getSvgBody(40, 500, componentD2),
         getSvgBody(40, 620, componentD3),
         getSvgBody(40, 935, componentD4),
-        getSvgBody(1460, 330, componentD5),
-        getSvgBody(1680, 330, componentD6),
+        getSvgBody(1450, 330, componentD5),
+        getSvgBody(1675, 330, componentD6),
         getSvgBody(550, 500, componentD7),
     ]
 
@@ -341,9 +342,11 @@ const component_D1 = (
         poppinsBold.getTextPath(ranking_y_middle, 25, (48 + 128) / 2, 14, 'center baseline', '#fc2') +
         poppinsBold.getTextPath(ranking_y_bottom, 25, 128, 14, 'center baseline', '#fc2');
 
+    const chart_width = 1330
+
     const rank_chart = PanelDraw.LineChart(
         ranking, stat.top, stat.bottom,
-        45, 35 + 90, 1340, 90, '#ffcc22', 1, 0.2, 4, true)
+        45, 35 + 90, chart_width, 90, '#ffcc22', 1, 0.2, 4, true)
 
     let x_axis = ''
 
@@ -358,7 +361,7 @@ const component_D1 = (
             anchor = 'left baseline'
         }
 
-        const x = 1385 - 1340 * i / 9
+        const x = 1375 - chart_width * i / 9
 
         x_axis += poppinsBold.getTextPath('-' + (i * 10) + suffix, x, 144, 16, anchor, '#aaa')
     }
@@ -368,7 +371,7 @@ const component_D1 = (
     const intervals = stat?.intervals ?? []
 
     for (const interval of intervals) {
-        const x = 45 + 1340 * interval.end / 90
+        const x = 45 + chart_width * interval.end / 90
 
         const stat_now = ranking[interval.end]
         const percent = (stat_now - stat.top) / (stat.bottom - stat.top) ?? 0
@@ -388,7 +391,7 @@ const component_D1 = (
 
     const improvement_svg = poppinsBold.getTextPath(
         'Improvement In 90 days: +' + stat.improvement ?? 0,
-        1390, 25, 18, 'right baseline', '#fff')
+        1390 - 15, 25, 18, 'right baseline', '#fff')
 
     let title = ''
     let image = ''
@@ -400,7 +403,7 @@ const component_D1 = (
         image = getImage(10, 4, 30, 30,
             getImageFromV3('Icons', 'changelog-a.png'))
 
-        rrect = PanelDraw.Rect(0, 0, 1400, 150, 20, PanelColor.middle(hue))
+        rrect = PanelDraw.Rect(0, 0, 1390, 150, 20, PanelColor.middle(hue))
     }
 
     return '<g>' + getTexts([improvement, improvement_svg, rank_chart, x_axis, y_axis, title, image, rrect]) + '</g>'
@@ -622,7 +625,7 @@ const component_D5 = (
     const hide = has_custom_panel
 
     const matrix = PanelDraw.RectMatrix(
-        11, 33, 178, 94, {
+        11 + 5, 33, 178, 94, {
             width: 10, height: 10, row: 7, column: 13
         }, best_arr.count ?? [], {
             hue: 207, saturation: 0.77, lightness_min: 0.2, lightness_max: 0.8
@@ -630,26 +633,26 @@ const component_D5 = (
     )
 
     const x_axis = poppinsBold.getTextPath(
-        best_arr.week0, 189, 144, 16, 'right baseline', '#aaa'
+        best_arr.week0, 189 + 5, 144, 16, 'right baseline', '#aaa'
     ) + poppinsBold.getTextPath(
-        best_arr.week4, 133, 144, 16, 'right baseline', '#aaa'
+        best_arr.week4, 133 + 5, 144, 16, 'right baseline', '#aaa'
     ) + poppinsBold.getTextPath(
-        best_arr.week8, 77, 144, 16, 'right baseline', '#aaa'
+        best_arr.week8, 77 + 5, 144, 16, 'right baseline', '#aaa'
     )
 
     const max = poppinsBold.getTextPath(
-        'MAX: +' + (best_arr.max ?? 0), 189, 15, 12, 'right baseline', '#aaa'
+        'MAX: +' + (best_arr.max ?? 0), 189 + 5, 15, 12, 'right baseline', '#aaa'
     ) + poppinsBold.getTextPath(
-        (best_arr.time ?? '-'), 189, 28, 12, 'right baseline', '#aaa'
+        (best_arr.time ?? '-'), 189 + 5, 28, 12, 'right baseline', '#aaa'
     )
 
     let title = ''
     let rrect = ''
 
     if (!hide) {
-        title = poppinsBold.getTextPath('BP', 10, 25, 18, 'left baseline', '#fff')
+        title = poppinsBold.getTextPath('BP', 10 + 5, 25, 18, 'left baseline', '#fff')
 
-        rrect = PanelDraw.Rect(0, 0, 200, 150, 20, PanelColor.middle(hue))
+        rrect = PanelDraw.Rect(0, 0, 210, 150, 20, PanelColor.middle(hue))
     }
 
     return '<g>' + getTexts([x_axis, max, matrix, title, rrect]) + '</g>'
@@ -680,7 +683,7 @@ const component_D6 = (
     const quarter_offset = (playcount_arr.quarter ?? 1) - 1
 
     const matrix = PanelDraw.RectMatrix(
-        11, 33, 178, 94, {
+        11 + 5, 33, 178, 94, {
             width: 10, height: 28, row: 3, column: 13
         }, playcount_arr.count ?? [], {
             hue: 90, saturation: 0.4, lightness_min: 0.2, lightness_max: 0.8
@@ -688,32 +691,32 @@ const component_D6 = (
     )
 
     let x_axis = poppinsBold.getTextPath(
-        playcount_arr.year0, Math.min(179 - quarter_offset * 14, 170), 144, 16, 'left baseline', '#aaa'
+        playcount_arr.year0, Math.min(179 - quarter_offset * 14, 170) + 5, 144, 16, 'left baseline', '#aaa'
     ) + poppinsBold.getTextPath(
-        playcount_arr.year1, 123 - quarter_offset * 14, 144, 16, 'left baseline', '#aaa'
+        playcount_arr.year1, 123 - quarter_offset * 14 + 5, 144, 16, 'left baseline', '#aaa'
     ) + poppinsBold.getTextPath(
-        playcount_arr.year2, 67 - quarter_offset * 14, 144, 16, 'left baseline', '#aaa'
+        playcount_arr.year2, 67 - quarter_offset * 14 + 5, 144, 16, 'left baseline', '#aaa'
     )
 
     if (quarter_offset === 0) {
         x_axis += poppinsBold.getTextPath(
-            playcount_arr.year3, 10, 144, 16, 'left baseline', '#aaa'
+            playcount_arr.year3, 10 + 5, 144, 16, 'left baseline', '#aaa'
         )
     }
 
     const max = poppinsBold.getTextPath(
-        'MAX: ' + (playcount_arr.max ?? 0), 189, 15, 12, 'right baseline', '#aaa'
+        'MAX: ' + (playcount_arr.max ?? 0), 189 + 5, 15, 12, 'right baseline', '#aaa'
     ) + poppinsBold.getTextPath(
-        (playcount_arr.time ?? '-'), 189, 28, 12, 'right baseline', '#aaa'
+        (playcount_arr.time ?? '-'), 189 + 5, 28, 12, 'right baseline', '#aaa'
     )
 
     let title = ''
     let rrect = ''
 
     if (!hide) {
-        title = poppinsBold.getTextPath('PC', 10, 25, 18, 'left baseline', '#fff')
+        title = poppinsBold.getTextPath('PC', 10 + 5, 25, 18, 'left baseline', '#fff')
 
-        rrect = PanelDraw.Rect(0, 0, 200, 150, 20, PanelColor.middle(hue))
+        rrect = PanelDraw.Rect(0, 0, 210, 150, 20, PanelColor.middle(hue))
     }
 
     return '<g>' + getTexts([x_axis, max, matrix, title, rrect]) + '</g>'
@@ -733,7 +736,8 @@ const component_D7 = (
         achievements_count: 0,
         beatmap_playcounts_count: 0,
 
-        mode: 'osu'
+        matchmaking_rating: 0,
+        mode: 'osu',
     },
     has_custom_panel = false,
     hue = 342
@@ -744,6 +748,9 @@ const component_D7 = (
 
     const history = data?.history ?? {}
     const history_statistics = history?.statistics
+
+    const elo = data.matchmaking_rating > 0 ?
+        poppinsBold.getTextPath('Matchmaking Rating: ' + (data?.matchmaking_rating ?? 0), 1315, 25, 18, 'right baseline', '#fff') : ''
 
     let title = ''
     let image = ''
@@ -954,7 +961,7 @@ const component_D7 = (
 
         const mascot_name_text = getMascotName(data.mode)
 
-        mascot_name = poppinsBold.getTextPath(mascot_name_text, 1320, 62, 18, 'right baseline', '#fff')
+        mascot_name = poppinsBold.getTextPath(mascot_name_text, 1315, 62, 18, 'right baseline', '#fff')
 
         const mascot_data = getMascotBanner(data.mode, 140)
 
@@ -982,7 +989,7 @@ const component_D7 = (
         rrect = PanelDraw.Rect(0, 0, 1330, 540, 20, PanelColor.middle(hue))
     }
 
-    return '<g>' + getTexts([label_strings, highest_rank, highest_icon, highest_title, mascot_name, mascot, title, image, mascot_rect, rrect]) + '</g>'
+    return '<g>' + getTexts([label_strings, highest_rank, highest_icon, highest_title, mascot_name, mascot, title, elo, image, mascot_rect, rrect]) + '</g>'
 }
 
 
