@@ -1817,7 +1817,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat_color: '#fff',
                     rrect_color: colorArray.pink,
                 }, {
-                    index: 'MD',
+                    index: 'ML',
                     stat: s.small_tick_miss,
                     index_color: '#fff',
                     stat_color: '#fff',
