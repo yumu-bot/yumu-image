@@ -1551,8 +1551,10 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
 
     let stats = [];
 
+    const m = getGameMode(mode, 1)
+
     if (is_lazer) {
-        switch (getGameMode(mode, 1)) {
+        switch (m) {
             case 'o': {
                 stats.push({
                     index: '300',
@@ -1666,19 +1668,25 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     index_color: '#fff',
                     stat_color: '#fff',
                     rrect_color: colorArray.yellow,
-                }, {}, {
-                    index: '0',
-                    stat: s.miss,
+                }, {}, {}, {}, {}, {
+                    index: 'MF',
+                    stat: s.miss - s.large_tick_miss,
                     index_color: '#fff',
                     stat_color: '#fff',
                     rrect_color: colorArray.pink,
-                }, {}, {}, {}, {
-                    index: 'MD',
+                }, {
+                    index: 'ML',
                     stat: s.small_tick_miss,
                     index_color: '#fff',
                     stat_color: '#fff',
                     rrect_color: colorArray.gray,
-                }, {}, {}, {
+                }, {}, {
+                    index: 'MD',
+                    stat: s.large_tick_miss,
+                    index_color: '#fff',
+                    stat_color: '#fff',
+                    rrect_color: colorArray.deep_red,
+                }, {
                     index: 'BNN',
                     stat: s.large_bonus,
                     index_color: '#fff',
@@ -1730,7 +1738,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
             }
         }
     } else {
-        switch (getGameMode(mode, 1)) {
+        switch (m) {
             case 'o': {
                 stats.push({
                     index: '300',
@@ -1869,10 +1877,11 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
 const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false) => {
     const m = max_statistics
     const s = statistics
+    const mo = getGameMode(mode, 1)
 
     if (is_lazer) {
         // Deluxe
-        switch (getGameMode(mode, 1)) {
+        switch (mo) {
             case 'o': {
                 const max = m.great
                 const tick = m.large_tick_hit
@@ -1893,10 +1902,12 @@ const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false)
             }
             case 'c': {
                 const max = Math.max(m.great, m.large_tick_hit, m.small_tick_hit)
+                const fruit = Math.max(m.great - m.large_tick_hit, 0)
+                const drop = m.large_tick_hit
                 const droplet = m.small_tick_hit
                 const banana = m.large_bonus
-                return [max, max, max, 0, max, 0,
-                    0, 0, droplet, 0, 0, banana]
+                return [max, max, max, 0, 0, 0,
+                    0, fruit, droplet, 0, drop, banana]
             }
             case 'm': {
                 const max = Math.max((s.great + s.perfect), s.good, s.ok, s.meh, s.miss)
@@ -1905,7 +1916,7 @@ const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false)
         }
     } else {
         // Standard
-        switch (getGameMode(mode, 1)) {
+        switch (mo) {
             case 'o': {
                 const max = m.great
                 return [max, max, max, 0, max]
