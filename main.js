@@ -97,8 +97,10 @@ panelSuffixes.forEach(suffix => {
         });
 });
 
-app.listen(process.env.PORT, () => {
-    console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n当前时间：${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}\n监听端口: ${process.env.PORT}\n`);
+const port = process.env.PORT ?? 1611
+
+app.listen(port, () => {
+    console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n当前时间：${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}\n监听端口: ${port}\n`);
     console.log("主缓存目录: ", CACHE_PATH);
     console.log("图像缓存: ", IMG_BUFFER_PATH);
     console.log("谱面文件缓存: ", OSU_BUFFER_PATH);
