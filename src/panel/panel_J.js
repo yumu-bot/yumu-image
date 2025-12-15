@@ -238,7 +238,7 @@ export async function panel_J(data = {
                 "hit_length": 398,
                 "user_id": 4610047,
                 "accuracy": 9,
-                "drain": 6.2,
+                "hp": 6.2,
                 "max_combo": null,
                 "is_scoreable": true,
                 "last_updated": "2017-02-01T14:38:47Z",

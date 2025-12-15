@@ -37,7 +37,7 @@ export const colorArray = {
     light_green: ['#5EDC5B', '#CAF881'],
 
     // 普通的绿色
-    green: ['#12B4B1', '#31B16C'],
+    green: ['#31B16C', '#12B4B1'],
 
     // 靛蓝色，介于蓝绿之间
     indigo: ['#12B4B1', '#00B7EE'],
@@ -46,7 +46,7 @@ export const colorArray = {
     pink: ['#F86F64', '#FD5392'],
 
     // 红色，正红色
-    red: ['#FD5392', '#D32F2F'],
+    red: ['#D32F2F', '#FD5392'],
 
     // 深红色，正红色
     deep_red: ['#8A1538', '#D32F2F'],
@@ -64,7 +64,7 @@ export const colorArray = {
     magenta: ['#B6359C', '#EF0A6A'],
 
     // 紫色
-    purple: ['#F772D1', '#C872F2'],
+    purple: ['#9922EE', '#F772D1'], //#C872F2
 
     deep_gray: ['#666', '#999'],
     gray: ['#999', '#ccc'],
@@ -265,7 +265,7 @@ export function getCompetitorColors(color) {
         case "#0068B7": cs = colorArray.deep_blue.toReversed(); break;
         case "#BDBDBD": cs = colorArray.gray.toReversed(); break;
         case "#00A0E9": cs = colorArray.blue.toReversed(); break;
-        case "#9922EE": cs = colorArray.purple; break;
+        case "#9922EE": cs = colorArray.purple.toReversed(); break;
         case "#E4007F": cs = colorArray.magenta.toReversed(); break;
         case "#EB6877": cs = colorArray.pink; break;
         case "#D32F2F": cs = colorArray.red; break;

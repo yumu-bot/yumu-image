@@ -84,7 +84,7 @@ export async function card_A5(s = {
             "count_spinners": 2,
             "cs": 4.2,
             "deleted_at": null,
-            "drain": 5.5,
+            "hp": 5.5,
             "hit_length": 133,
             "is_scoreable": true,
             "last_updated": "2023-07-11T15:44:20Z",

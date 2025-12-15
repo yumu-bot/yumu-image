@@ -858,7 +858,7 @@ const component_D7 = (
             divisor: 1_000_000,
             history: history_statistics?.ranked_score ?? 0,
 
-            colors: colorArray.purple.toReversed(),
+            colors: colorArray.purple,
 
             background_color: top,
             icon_background_color: middle,

@@ -198,11 +198,12 @@ async function pool2cardA2(pool, mode, map_count = 0, mod_count = 0) {
 }
 
 async function beatmap2CardD(b, mod, mod_color, mode) {
-    let cs = b.cs, ar = b.ar, od = b.accuracy, hp = b.drain;
+    let cs = b.cs, ar = b.ar, od = b.od, hp = b.hp;
 
     /**
      * @type {Number}
      */
+
     const mode_int = getGameMode(mode, -2);
 
     /*

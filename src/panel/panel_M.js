@@ -105,7 +105,7 @@ export async function panel_M(data = {
                 "hit_length": 235,
                 "user_id": 17064371,
                 "accuracy": 8.5,
-                "drain": 5.0,
+                "hp": 5.0,
                 "max_combo": 1300,
                 "is_scoreable": false,
                 "last_updated": "2023-08-04T13:58:57Z",

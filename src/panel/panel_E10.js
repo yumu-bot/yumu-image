@@ -17,7 +17,7 @@ import {
     setTexts
 } from "../util/util.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold} from "../util/font.js";
-import {getRankColor, getStarRatingColor} from "../util/color.js";
+import {colorArray, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {LABELS} from "../component/label.js";
 import {drawLazerMods} from "../util/mod.js";
@@ -152,7 +152,6 @@ export async function panel_E10(data = {
             od: 5,
             cs: 3.5,
             bpm: 185,
-            beatMapID: 3787814,
             hp: 4,
             previewName: 'MixBadGun - NMDB to the Black World (Muziyami) [H*rd]',
             beatmapset_id: 1844042,
@@ -163,11 +162,9 @@ export async function panel_E10(data = {
             beatmapset: [Object],
             checksum: 'a681f568d6b66a2b770d3a1fe76ddece',
             max_combo: 194,
-            accuracy: 5,
             count_circles: 47,
             count_sliders: 68,
             count_spinners: 1,
-            drain: 4,
             hit_length: 37,
             is_scoreable: false,
             last_updated: '2022-09-27T12:45:10Z',
@@ -1017,6 +1014,7 @@ const PanelEGenerate = {
 
         const bpm = {
             ...LABELS.BPM,
+            bar_color: colorArray.purple,
             data_b: bpm_data,
             data_m: '',
         }
@@ -1030,6 +1028,7 @@ const PanelEGenerate = {
 
         const length = {
             ...LABELS.LENGTH,
+            bar_color: colorArray.magenta,
             data_b: length_b,
             data_m: length_m,
         }
@@ -1038,6 +1037,7 @@ const PanelEGenerate = {
 
         const cs = {
             ...(mode === 'm' ? LABELS.KEY : LABELS.CS),
+            bar_color: colorArray.blue,
             data_b: cs_data.integer,
             data_m: cs_data.decimal,
         }
@@ -1046,6 +1046,7 @@ const PanelEGenerate = {
 
         const ar = {
             ...LABELS.AR,
+            bar_color: colorArray.green,
             data_b: ar_data.integer,
             data_m: ar_data.decimal,
         }
@@ -1054,6 +1055,7 @@ const PanelEGenerate = {
 
         const od = {
             ...LABELS.OD,
+            bar_color: colorArray.yellow,
             data_b: od_data.integer,
             data_m: od_data.decimal,
         }
@@ -1062,6 +1064,7 @@ const PanelEGenerate = {
 
         const hp = {
             ...LABELS.HP,
+            bar_color: colorArray.red,
             data_b: hp_data.integer,
             data_m: hp_data.decimal,
         }
@@ -1191,25 +1194,25 @@ const PanelEGenerate = {
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: 'OK',
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: 'MH',
                     stat: s.meh,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {
                     index: 'MS',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 });
                 break;
             }
@@ -1220,19 +1223,19 @@ const PanelEGenerate = {
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: 'OK',
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: 'MS',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 });
                 break;
             }
@@ -1243,31 +1246,31 @@ const PanelEGenerate = {
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: 'M',
                     stat: s.large_tick_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: 'S',
                     stat: s.small_tick_hit,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {
                     index: 'MS',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 }, {
                     index: 'MD',
                     stat: s.small_tick_miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#A1A1A1',
+                    rrect_color: colorArray.gray,
                 });
                 break;
             }
@@ -1278,37 +1281,37 @@ const PanelEGenerate = {
                     stat: s.perfect,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#8DCFF4',
+                    rrect_color: colorArray.cyan,
                 }, {
                     index: 'GR',
                     stat: s.great,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#FEF668',
+                    rrect_color: colorArray.yellow,
                 }, {
                     index: 'GD',
                     stat: s.good,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#79C471',
+                    rrect_color: colorArray.green,
                 }, {
                     index: 'OK',
                     stat: s.ok,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#5E8AC6',
+                    rrect_color: colorArray.blue,
                 }, {
                     index: 'MH',
                     stat: s.meh,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#A1A1A1',
+                    rrect_color: colorArray.gray,
                 }, {
                     index: 'MS',
                     stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
-                    rrect_color: '#ED6C9E',
+                    rrect_color: colorArray.red,
                 });
                 break;
             }
@@ -1378,13 +1381,19 @@ const label_E10S = (data = {
 
     max_stat: 1,
 }) => {
+    const is_linear_radiant = Array.isArray(data?.rrect_color)
+
     const base = PanelDraw.Rect(0, 0, 315, 40, 20, '#382E32')
 
     const percent = data?.stat / (data?.max_stat || 1)
 
-    const progress = PanelDraw.Rect((315 - 80) * (1 - percent), 0, (315 - 80) * percent + 80, 40, 20, data?.rrect_color, 0.4)
+    const progress = is_linear_radiant ?
+        PanelDraw.LinearGradientRect((315 - 80) * (1 - percent), 0, (315 - 80) * percent + 80, 40, 20, data?.rrect_color?.toReversed(), 0.4)
+        : PanelDraw.Rect((315 - 80) * (1 - percent), 0, (315 - 80) * percent + 80, 40, 20, data?.rrect_color, 0.4)
 
-    const top = PanelDraw.Rect(315 - 80, 0, 80, 40, 20, data?.rrect_color, 1)
+    const top = is_linear_radiant ?
+        PanelDraw.LinearGradientRect(315 - 80, 0, 80, 40, 20, data?.rrect_color?.toReversed(), 1)
+        : PanelDraw.Rect(315 - 80, 0, 80, 40, 20, data?.rrect_color, 1)
 
     const index = poppinsBold.getTextPath(data?.index, 315 - 40, 30, 30, 'center baseline', data?.index_color)
 
@@ -1401,14 +1410,20 @@ const label_E10D = (data = {
     is_display: false,
 }) => {
     let svg = '<g id="Label_E10D">'
+    const is_linear_radiant = Array.isArray(data?.bar_color)
+    const is_not_display = data?.is_display === false
 
     svg += PanelDraw.Rect(0, 0, 150, 40, 20, '#382E32')
 
-    svg += PanelDraw.Rect(0, 0, 150, 40, 20, data.bar_color, data?.is_display === false ? 0 : 0.2)
+    svg += is_linear_radiant ?
+        PanelDraw.LinearGradientRect(0, 0, 150, 40, 20, data.bar_color, is_not_display ? 0 : 0.2)
+        : PanelDraw.Rect(0, 0, 150, 40, 20, data.bar_color, is_not_display ? 0 : 0.2)
 
-    svg += PanelDraw.Rect(0, 0, 80, 40, 20, data.bar_color, data?.is_display === false ? 0.2 : 1)
+    svg += is_linear_radiant ?
+        PanelDraw.LinearGradientRect(0, 0, 80, 40, 20, data.bar_color, is_not_display ? 0.2 : 1)
+        : PanelDraw.Rect(0, 0, 80, 40, 20, data.bar_color, is_not_display ? 0.2 : 1)
 
-    const text_color = data?.is_display === false ? '#aaa' : '#fff'
+    const text_color = is_not_display ? '#aaa' : '#fff'
 
     const texts = poppinsBold.getTextPath(
         data?.abbr || data?.icon_title, 40, 30, 30, 'center baseline', text_color
