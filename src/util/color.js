@@ -37,7 +37,7 @@ export const colorArray = {
     light_green: ['#5EDC5B', '#CAF881'],
 
     // 普通的绿色
-    green: ['#31B16C', '#12B4B1'],
+    green: ['#12B4B1', '#31B16C'],
 
     // 靛蓝色，介于蓝绿之间
     indigo: ['#12B4B1', '#00B7EE'],
