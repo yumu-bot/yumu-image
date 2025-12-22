@@ -37,7 +37,7 @@ export const colorArray = {
     light_green: ['#5EDC5B', '#CAF881'],
 
     // 普通的绿色
-    green: ['#12B4B1', '#31B16C'],
+    green: ['#31B16C', '#12B4B1'],
 
     // 靛蓝色，介于蓝绿之间
     indigo: ['#12B4B1', '#00B7EE'],
@@ -258,21 +258,21 @@ export function getCompetitorColors(color) {
     let cs;
 
     switch (color) {
-        case "#FFF100": cs = colorArray.light_yellow.toReversed(); break;
-        case "#FF9800": cs = colorArray.amber.toReversed(); break;
+        case "#FFF100": cs = colorArray.light_yellow; break;
+        case "#FF9800": cs = colorArray.amber; break;
         case "#22AC38": cs = colorArray.green; break;
-        case "#B3D465": cs = colorArray.light_green.toReversed(); break;
-        case "#0068B7": cs = colorArray.deep_blue.toReversed(); break;
-        case "#BDBDBD": cs = colorArray.gray.toReversed(); break;
-        case "#00A0E9": cs = colorArray.blue.toReversed(); break;
-        case "#9922EE": cs = colorArray.purple.toReversed(); break;
-        case "#E4007F": cs = colorArray.magenta.toReversed(); break;
+        case "#B3D465": cs = colorArray.light_green; break;
+        case "#0068B7": cs = colorArray.deep_blue; break;
+        case "#BDBDBD": cs = colorArray.gray; break;
+        case "#00A0E9": cs = colorArray.blue; break;
+        case "#9922EE": cs = colorArray.purple; break;
+        case "#E4007F": cs = colorArray.magenta; break;
         case "#EB6877": cs = colorArray.pink; break;
         case "#D32F2F": cs = colorArray.red; break;
-        default: cs = colorArray.deep_gray.toReversed(); break;
+        default: cs = colorArray.deep_gray; break;
     }
 
-    return cs;
+    return cs.toReversed();
 }
 
 /**
