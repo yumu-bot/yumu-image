@@ -687,38 +687,53 @@ export function getMapStatusColor(ranked = null) {
 export function getRankColors(rank = 'F') {
     if (typeof rank !== 'string') return ['none', 'none'];
 
+    let colors
+
     switch (rank.toString().toUpperCase()) {
         case "PF":
         case "XH":
         case "SSH":
         case "EX":
         case "X+":
-            return colorArray.white.toReversed()
+            colors = colorArray.white
+            break;
         case "X":
         case "SS":
-            return colorArray.light_yellow.toReversed()
+            colors = colorArray.light_yellow
+            break;
         case "SH":
-            return colorArray.gray.toReversed()
+            colors = colorArray.gray
+            break;
         case "SP":
         case "S+":
-            return colorArray.orange.toReversed() // S+
+            colors = colorArray.orange // S+
+            break;
         case "S":
-            return colorArray.amber.toReversed()
+            colors = colorArray.amber
+            break;
         case "A":
-            return colorArray.green
+            colors = colorArray.green
+            break;
         case "B":
-            return colorArray.blue.toReversed()
+            colors = colorArray.blue
+            break;
         case "C":
-            return colorArray.purple
+            colors = colorArray.purple
+            break;
         case "D":
-            return colorArray.red
+            colors = colorArray.red
+            break;
         case "F":
-            return colorArray.deep_gray.toReversed()
+            colors = colorArray.deep_gray
+            break;
         case "FC":
-            return colorArray.cyan.toReversed()
+            colors = colorArray.cyan
+            break;
         default:
-            return ['none', 'none'];
+            colors = ['none', 'none'];
     }
+
+    return colors.toReversed()
 }
 
 /**
