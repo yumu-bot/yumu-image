@@ -1156,29 +1156,29 @@ export const PanelGenerate = {
 
         if (pc > 1000) {
             color_index = '#2A2226'
-            rank2_color = colorArray.rainbow.toReversed()
+            rank2_color = colorArray.rainbow
         } else if (pc > 500) {
-            rank2_color = colorArray.light_yellow.toReversed()
+            rank2_color = colorArray.light_yellow
         } else if (pc > 300) {
-            rank2_color = colorArray.amber.toReversed()
+            rank2_color = colorArray.amber
         } else if (pc > 200) {
-            rank2_color = colorArray.light_green.toReversed()
+            rank2_color = colorArray.light_green
         } else if (pc > 100) {
             rank2_color = colorArray.green
         } else if (pc > 75) {
-            rank2_color = colorArray.blue.toReversed()
+            rank2_color = colorArray.blue
         } else if (pc > 50) {
-            rank2_color = colorArray.deep_blue.toReversed()
+            rank2_color = colorArray.deep_blue
         } else if (pc > 40) {
             rank2_color = colorArray.purple
         } else if (pc > 30) {
-            rank2_color = colorArray.magenta.toReversed()
+            rank2_color = colorArray.magenta
         } else if (pc > 20) {
             rank2_color = colorArray.pink
         } else if (pc > 10) {
             rank2_color = colorArray.red
         } else {
-            rank2_color = colorArray.deep_gray.toReversed()
+            rank2_color = colorArray.deep_gray
         }
 
         const mode = ' (' + (mp?.mode ?? 'osu') + ')'
@@ -1214,7 +1214,7 @@ export const PanelGenerate = {
             mods_arr: [],
 
             color_title2: '#bbb',
-            color_right: rank2_color,
+            color_right: rank2_color.toReversed(),
             color_left: star2_color,
             color_index: color_index,
             color_label1: star_color,

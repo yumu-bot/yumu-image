@@ -493,8 +493,12 @@ const component_E2 = (
 
     const pass_percent = data?.play > 0 ? Math.round(data?.pass / data?.play * 100) : 0;
 
-    const public_rating = poppinsBold.getTextPath(floor(data?.public_rating, 1) + ' / 10', 475, 28, 18, 'right baseline', '#fff');
-    const percent = poppinsBold.getTextPath(data?.pass + ' / ' + data?.play + ' [' + pass_percent + '%]', 475, 138, 18, 'right baseline', '#fff');
+    const public_rating = poppinsBold.getTextPath(
+        'Rating: ' + floor(data?.public_rating, 1) + ' / 10',
+        475, 28, 18, 'right baseline', '#fff');
+    const percent = poppinsBold.getTextPath(
+        'P & T: ' + (data?.pass ?? 0) + ' / ' + (data?.play ?? 0) + ' [' + pass_percent + '%]',
+        475, 138, 18, 'right baseline', '#fff');
 
 
     // 评级或难度分布矩形的缩放，SR1为0.1倍，SR8为1倍
@@ -528,6 +532,7 @@ const component_E2 = (
 const component_E3 = (
     data = {
         labels: [],
+        index: '',
     }) => {
     let svg = `
         <g id="Labels_OE3">
@@ -538,6 +543,8 @@ const component_E3 = (
     const reg_label = /(?<=<g id="Labels_OE3">)/;
 
     const title = poppinsBold.getTextPath('Statistics', 15, 28, 18, 'left baseline', '#fff');
+
+    const index = poppinsBold.getTextPath(data?.index ?? '', 475, 28, 18, 'right baseline', '#fff')
 
     let string_e5s = ''
 
@@ -551,7 +558,7 @@ const component_E3 = (
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    svg = setTexts(svg, [string_e5s, title, rect], reg_label)
+    svg = setTexts(svg, [string_e5s, title, index, rect], reg_label)
 
     return svg;
 }
@@ -1228,7 +1235,17 @@ const PanelEGenerate = {
         let hp_mid = 6;
         let hp_max = 8;
 
+        let index = ''
+        const circles = score.beatmap?.count_circles ?? 0
+        const sliders = score.beatmap?.count_sliders ?? 0
+
+        const percent = Math.round((circles / (circles + sliders) * 100) ?? 0)
+
         switch (mode) {
+            case 'o': {
+                index = `CR & SL: ${circles} / ${sliders} [${percent}%]`
+            } break;
+
             case 't' : {
                 cs_min = 0;
                 cs_mid = 0;
@@ -1261,6 +1278,7 @@ const PanelEGenerate = {
                 hp_mid = 8;
                 hp_max = 9;
                 isDisplayAR = false;
+                index = `RC & LN: ${circles} / ${sliders} [${percent}%]`
             }
                 break;
         }
@@ -1308,7 +1326,9 @@ const PanelEGenerate = {
                 bar_min: hp_min,
                 bar_mid: hp_mid,
                 bar_max: hp_max,
-            }]
+            }],
+
+            index: index
         };
     },
 
