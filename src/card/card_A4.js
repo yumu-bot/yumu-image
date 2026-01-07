@@ -89,7 +89,7 @@ export async function card_A4(data = {
 
     const name = getMultipleTextPath([{
         font: poppinsBold,
-        text: (user?.username || '') + '  ',
+        text: (user?.username ?? '') + '  ',
         size: 24,
         color: '#fff'
     }, {

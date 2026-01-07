@@ -110,12 +110,12 @@ export function card_I3(data = {
     const left4_font = isASCII(data?.left4) ? torus : PuHuiTi;
 
     // 优先显示 title2
-    let title2_width = title2_font.getTextWidth(data?.title2 || '', title2_size)
-    let left1_width = Math.min(left1_font.getTextWidth(data?.left1 || '', title_size), 207 - 20 - title2_width - 10 + 4)
+    let title2_width = title2_font.getTextWidth(data?.title2 ?? '', title2_size)
+    let left1_width = Math.min(left1_font.getTextWidth(data?.left1 ?? '', title_size), 207 - 20 - title2_width - 10 + 4)
 
     // 副标题太长也不行
     if (title2_width > 207 - 20 - 50 - 10 + 4) {
-        left1_width = Math.min(left1_font.getTextWidth(data?.left1 || '', title_size), 207 - 20 - 50 - 10 + 4)
+        left1_width = Math.min(left1_font.getTextWidth(data?.left1 ?? '', title_size), 207 - 20 - 50 - 10 + 4)
         title2_width = 207 - 20 - 50 - left1_width - 10 + 4
     }
 
@@ -123,13 +123,13 @@ export function card_I3(data = {
     const left2_width = 207 - 20 - (isNotBlankString(data?.component3) ? 105 : 0) - 16 * (data?.level || 0) + 4
 
     const title = title_font.getTextPath(
-        title_font.cutStringTail(data?.title || '', title_size, title_width), 157 - 2, 26, title_size, 'left baseline', '#fff')
+        title_font.cutStringTail(data?.title ?? '', title_size, title_width), 157 - 2, 26, title_size, 'left baseline', '#fff')
     const title2 = title2_font.getTextPath(
-        title2_font.cutStringTail(data?.title2 || '', title2_size, title2_width), 342, 46, title2_size, 'right baseline', '#bbb')
+        title2_font.cutStringTail(data?.title2 ?? '', title2_size, title2_width), 342, 46, title2_size, 'right baseline', '#bbb')
     const left1 = left1_font.getTextPath(
-        left1_font.cutStringTail(data?.left1 || '', left1_size, left1_width), 157 - 2, 46, left1_size, 'left baseline', '#fff')
+        left1_font.cutStringTail(data?.left1 ?? '', left1_size, left1_width), 157 - 2, 46, left1_size, 'left baseline', '#fff')
     const left2 = left2_font.getTextPath(
-        left2_font.cutStringTail(data?.left2 || '', left2_size, left2_width), 157 - 2, 66, left2_size, 'left baseline', '#fff')
+        left2_font.cutStringTail(data?.left2 ?? '', left2_size, left2_width), 157 - 2, 66, left2_size, 'left baseline', '#fff')
     const left34_arr = [
         {
             font: left3_font,

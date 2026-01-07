@@ -138,7 +138,7 @@ export async function card_MF(song = {
     const title_font = isASCII(title_str) ? torus : PuHuiTi
     const left1_font = isASCII(left1_str) ? torus : PuHuiTi
     const left2_font = isASCII(left2_str) ? torus : PuHuiTi
-    
+
     const title_size = isASCII(title_str) ? 26 : 24
     const left1_size = isASCII(left1_str) ? 20 : 18
     const left2_size = isASCII(left2_str) ? 20 : 18
@@ -160,7 +160,7 @@ export async function card_MF(song = {
 
     svg = setTexts(svg, [title, left1, left2], reg_text)
 
-    const difficulty = drawDifficultyLabels(song.ds, song.highlight)
+    const difficulty = drawDifficultyLabels(song.ds, song.level, song.highlight)
 
     const image = await getMaimaiCover(parseInt(song.id))
 
@@ -202,20 +202,19 @@ export async function card_MF(song = {
     return svg.toString()
 }
 
-function drawDifficultyLabels(ds = [], highlight = []) {
+function drawDifficultyLabels(ds = [], level = [], highlight = []) {
     const color_plate = ['#7CC576', '#FFF568', '#F26D7D', '#A864A8',
         '#FAD7F7']
 
     let labels = []
     let svg = ''
 
-    if (ds.length === 1) {
+    if (ds.length < 4) {
         // 宴会场
-
         labels.push(label_A8({
             image: null,
             has_text: true,
-            text: ds[0],
+            text: level[0],
             color: '#F06EA9'
         }))
     } else {

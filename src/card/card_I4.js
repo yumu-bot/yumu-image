@@ -101,17 +101,17 @@ export function card_I4(data = {
     const left4_font = isASCII(data?.left4) ? torus : PuHuiTi;
 
     // 优先显示 title2
-    let title2_width = title2_font.getTextWidth(data?.title2 || '', title2_size)
-    let left1_width = Math.min(left1_font.getTextWidth(data?.left1 || '', title_size), 207 - 20 - title2_width - 10 + 4)
+    let title2_width = title2_font.getTextWidth(data?.title2 ?? '', title2_size)
+    let left1_width = Math.min(left1_font.getTextWidth(data?.left1 ?? '', title_size), 207 - 20 - title2_width - 10 + 4)
 
     // 副标题太长也不行
     if (title2_width > 207 - 20 - 50 - 10 + 4) {
-        left1_width = Math.min(left1_font.getTextWidth(data?.left1 || '', title_size), 207 - 20 - 50 - 10 + 4)
+        left1_width = Math.min(left1_font.getTextWidth(data?.left1 ?? '', title_size), 207 - 20 - 50 - 10 + 4)
         title2_width = 207 - 20 - 50 - left1_width - 10 + 4
     }
 
     const title_width = 207 - 20 - (isNotBlankString(data?.type) ? 35 : 0) + 4
-    const left2_width = 207 - 20 - 16 * (data?.level || 0) + 4
+    const left2_width = 207 - 20 - 16 * (data?.level ?? 0) + 4
 
     const title = title_font.getTextPath(
         title_font.cutStringTail(data?.title || '', title_size, title_width), 157 - 2, 26, title_size, 'left baseline', '#fff')

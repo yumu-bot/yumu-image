@@ -69,11 +69,11 @@ export function card_C2(data = {
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-CH3-2\);">)/;
 
     // 插入小标签
-    const label1_width = torus.getTextWidth(data?.label1 || '', 18) + 16;
-    const label2_width = torus.getTextWidth(data?.label2 || '', 18) + 16;
+    const label1_width = torus.getTextWidth(data?.label1 ?? '', 18) + 16;
+    const label2_width = torus.getTextWidth(data?.label2 ?? '', 18) + 16;
 
-    const text_label1 = torusBold.getTextPath(data?.label1 || '', 38, 23.877, 18, 'left baseline', data?.color_label_text || '#fff');
-    const text_label2 = torusBold.getTextPath(data?.label2 || '', 38, 97.877, 18, 'left baseline', data?.color_label_text || '#fff');
+    const text_label1 = torusBold.getTextPath(data?.label1 ?? '', 38, 23.877, 18, 'left baseline', data?.color_label_text || '#fff');
+    const text_label2 = torusBold.getTextPath(data?.label2 ?? '', 38, 97.877, 18, 'left baseline', data?.color_label_text || '#fff');
 
     const rrect_label1 = isNotEmptyString(data.label1) ? PanelDraw.Rect(30, 8, label1_width, 20, 10, data.color_label_rrect1 || 'none') : '';
     const rrect_label2 = isNotEmptyString(data.label2) ? PanelDraw.Rect(30, 82, label2_width, 20, 10, data.color_label_rrect2 || 'none') : '';

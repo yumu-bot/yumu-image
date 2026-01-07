@@ -68,8 +68,8 @@ export async function card_D(data = {
     </g>`;
 
     // 定义文字
-    const text_title = torus.cutStringTail(data.title || '', 18, 170);
-    // let text_map_artist = torus.cutStringTail(data.map_artist || '', 14, 170);
+    const text_title = torus.cutStringTail(data.title ?? '', 18, 170);
+    // let text_map_artist = torus.cutStringTail(data.map_artist ?? '', 14, 170);
     const text_pp = data.pp;
 
     // 替换文字
@@ -85,7 +85,7 @@ export async function card_D(data = {
     const line_3_right =
         torus.getTextPath(line_3_right_text, 300, 47.571, 14, "right baseline", "#fff");
 
-    const text_difficulty_name = torus.cutStringTail('[' + data.difficulty_name + ']' || '',
+    const text_difficulty_name = torus.cutStringTail('[' + data.difficulty_name + ']' ?? '',
         14,
         170);
     /*
@@ -140,7 +140,7 @@ export async function card_D(data = {
 
     // 替换图片
 
-    svg = setImage(svg, 85, 4, 30, 20, data?.type || '', reg_text, 1);
+    svg = setImage(svg, 85, 4, 30, 20, data?.type ?? '', reg_text, 1);
 
     svg = data.background ? setImage(svg, 0, 0, 310, 80, data.background, reg_background, 0.2) : svg;
     svg = data.cover ? setImage(svg, 0, 0, 120, 80, data.cover, reg_cover, 1) : svg;

@@ -65,7 +65,7 @@ export async function card_A3(beatmapset = {}) {
      */
 
     const titles = getBeatMapTitlePath("torus", "PuHuiTi",
-        beatmapset?.title ?? '', beatmapset?.title_unicode || '', null,
+        beatmapset?.title ?? '', beatmapset?.title_unicode ?? '', null,
         225, 40 - 2, 70 - 2, 36, 18, 390 - 20, 'left baseline', '#fff', '#aaa');
 
     const artist = torus.getTextPath(
@@ -346,7 +346,7 @@ export function label_A8(data = {
     const reg_text = /(?<=<g id="Text_LA8">)/;
     const reg_icon = /(?<=<g id="Icon_LA8">)/;
 
-    const text_width = torusBold.getTextWidth(data?.text || '', 20)
+    const text_width = torusBold.getTextWidth(data?.text ?? '', 20)
     let width = text_width + 16
     let text_middle = width / 2
 
