@@ -783,7 +783,7 @@ const component_E7 = (
 
         percent = pf_percent;
         if (data.mode === 'm') {
-            percent_type = 'MAX'
+            percent_type = 'PF'
         } else {
             percent_type = 'SS'
         }
