@@ -782,7 +782,11 @@ const component_E7 = (
         reference_pp = data?.perfect_pp;
 
         percent = pf_percent;
-        percent_type = 'SS'
+        if (data.mode === 'm') {
+            percent_type = 'MAX'
+        } else {
+            percent_type = 'SS'
+        }
         fc_pp_text = '';
     } else {
         reference_pp = data?.full_pp;
