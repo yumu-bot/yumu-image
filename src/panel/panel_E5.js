@@ -1229,7 +1229,7 @@ const PanelEGenerate = {
         const circles = score.beatmap?.count_circles ?? 0
         const sliders = score.beatmap?.count_sliders ?? 0
 
-        const ratio = getRatioString(circles / (circles + sliders))
+        const ratio = getRatioString(circles / sliders)
 
         switch (mode) {
             case 'o': {
