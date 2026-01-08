@@ -5,7 +5,7 @@ import axios, {AxiosError} from "axios";
 import https from "https";
 import path from "path";
 import moment from "moment";
-import {cutStringTail, getTextPath, PuHuiTi, torus} from "./font.js";
+import {cutStringTail, getTextPath, poppinsBold, PuHuiTi, torus} from "./font.js";
 import {API} from "../svg-to-image/API.js";
 import JPEGProvider from '../svg-to-image/JPEGProvider.js';
 import PNGProvider from '../svg-to-image/PNGProvider.js';
@@ -1262,6 +1262,36 @@ function unit(number = 0, pattern = 0) {
         default:
             return ''
     }
+}
+
+export function getRatioString(ratio = 0) {
+    // Handle non-numeric or special cases first
+    if (typeof ratio !== 'number' || Number.isNaN(ratio) || ratio === 0) {
+        return '0';
+    }
+
+    if (!Number.isFinite(ratio)) {
+        return 'Infinity';
+    }
+
+    // Ensure positive ratio for consistent formatting
+    const isNegative = ratio < 0;
+    const absRatio = Math.abs(ratio);
+
+    let ratioText;
+
+    if (absRatio < 0.9) {
+        ratioText = `1 : ${floor(1 / absRatio, 1)}`;
+    } else if (absRatio <= 1) {
+        ratioText = `1 : ${floor(1 / absRatio, 2)}`;
+    } else if (absRatio <= 1.1) {
+        ratioText = `${floor(absRatio, 2)} : 1`;
+    } else {
+        ratioText = `${floor(absRatio, 1)} : 1`;
+    }
+
+    // Add minus sign for negative ratios
+    return isNegative ? `-${ratioText}` : ratioText;
 }
 
 /**

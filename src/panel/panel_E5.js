@@ -21,7 +21,7 @@ import {
     isNumber,
     floors,
     floor, getFormattedTime, isEmptyArray, getDifficultyIndex, getDiffBackground, rounds, getSvgBody, round,
-    getImageFromV3Cache
+    getImageFromV3Cache, getRatioString
 } from "../util/util.js";
 import {
     getRankBackground, getScoreTypeImage
@@ -1108,21 +1108,7 @@ const component_E10 = (
 
     const statistics = getStatisticsSVG(data.statistics, data.statistics_max, data.statistics_full, 64, 45, 360, 20, 16, 16) // 345
 
-    let ratio_text;
-
-    if (data.ratio === Infinity) {
-        ratio_text = 'Infinity'
-    } else if (data.ratio === 0) {
-        ratio_text = '0'
-    } else if (data.ratio < 0.9) {
-        ratio_text = ('1 : ' + floor(1 / data.ratio, 1))
-    } else if (data.ratio <= 1) {
-        ratio_text = ('1 : ' + floor(1 / data.ratio, 2))
-    } else if (data.ratio <= 1.1) {
-        ratio_text = (floor(data.ratio, 2) + ' : 1')
-    } else {
-        ratio_text = (floor(data.ratio, 1) + ' : 1')
-    }
+    let ratio_text = getRatioString(data.ratio);
 
     const perfect_great_ratio = (getGameMode(data?.mode, 1) === 'm') ?
         poppinsBold.getTextPath(
@@ -1243,11 +1229,11 @@ const PanelEGenerate = {
         const circles = score.beatmap?.count_circles ?? 0
         const sliders = score.beatmap?.count_sliders ?? 0
 
-        const percent = Math.round((circles / (circles + sliders) * 100) ?? 0)
+        const ratio = getRatioString(circles / (circles + sliders))
 
         switch (mode) {
             case 'o': {
-                index = `CR & SL: ${circles} / ${sliders} [${percent}%]`
+                index = `CR & SL: ${circles} / ${sliders} [${ratio}]`
             } break;
 
             case 't' : {
@@ -1282,7 +1268,7 @@ const PanelEGenerate = {
                 hp_mid = 8;
                 hp_max = 9;
                 isDisplayAR = false;
-                index = `RC & LN: ${circles} / ${sliders} [${percent}%]`
+                index = `RC & LN: ${circles} / ${sliders} [${ratio}]`
             }
                 break;
         }
