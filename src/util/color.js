@@ -43,7 +43,7 @@ export const colorArray = {
     indigo: ['#12B4B1', '#00B7EE'],
 
     // 粉红色
-    pink: ['#F86F64', '#FD5392'],
+    pink: ['#F54869', '#FBA37E'],
 
     // 红色，正红色
     red: ['#D32F2F', '#FD5392'],

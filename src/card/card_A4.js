@@ -191,19 +191,19 @@ export async function card_A4(data = {
     if (data.bind != null && data.bind === data.score.user_id) {
         ranking_color = '#2A2226'
         if (data?.score?.is_lazer) {
-            version_colors = colorArray.light_yellow.toReversed()
+            version_colors = colorArray.light_yellow
         } else {
-            version_colors = colorArray.cyan.toReversed()
+            version_colors = colorArray.cyan
         }
     } else if (data?.score?.is_lazer) {
         ranking_color = '#FFF'
-        version_colors = colorArray.amber.toReversed()
+        version_colors = colorArray.amber
     } else {
         ranking_color = '#FFF'
-        version_colors = colorArray.blue.toReversed()
+        version_colors = colorArray.blue
     }
 
-    const ranking = poppinsBold.getTextPath(data.score_rank, 32 + 2, 38, 20, 'center baseline', ranking_color)
+    const ranking = poppinsBold.getTextPath(data.score_rank, 32 + 2, 38, 20, 'center baseline', ranking_color.toReversed())
 
     // 导入评价，x和y是矩形的左上角
     let stat_svg = ''

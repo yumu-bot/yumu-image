@@ -8,7 +8,7 @@ import {
     setText,
     setTexts,
 } from "../util/util.js";
-import {PuHuiTi, torus, torusBold} from "../util/font.js";
+import {PuHuiTi, torus} from "../util/font.js";
 import {colorArray} from "../util/color.js";
 
 export async function card_A1(data = {
@@ -53,7 +53,7 @@ export async function card_A1(data = {
 
     const font_top1 = isASCII(data.top1) ? torus : PuHuiTi
     const font_top2 = isASCII(data.top2) ? torus : PuHuiTi
-    let font_left1 = isASCII(data.left1) ? torus : PuHuiTi
+    const font_left1 = isASCII(data.left1) ? torus : PuHuiTi
     const font_left2 = isASCII(data.left2) ? torus : PuHuiTi
     const size_left1 = isASCII(data.left1) ? 24 : 22
     const size_left2 = isASCII(data.left2) ? 24 : 22
@@ -72,9 +72,6 @@ export async function card_A1(data = {
     let left1_colors
 
     if (Array.isArray(data.left1_colors) && data.left1_colors?.length > 1) {
-        if (font_left1 === torus) {
-            font_left1 = torusBold
-        }
         left1_colors = data.left1_colors
     } else {
         left1_colors = ['#fff', '#fff'];
