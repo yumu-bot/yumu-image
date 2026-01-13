@@ -27,10 +27,12 @@ export async function getMaimaiCover(song_id = 0) {
         return path
     } else if (fs.existsSync(path2)) {
         return path2
-    } else {
+    } else if (id > 0) {
         const lxns = `https://assets2.lxns.net/maimai/jacket/${id}.png`
 
         return await downloadImage(lxns, path, getImageFromV3('Maimai', 'Cover', '00000.png'))
+    } else {
+        return getImageFromV3('Maimai', 'Cover', '00000.png')
     }
 }
 
@@ -463,8 +465,10 @@ export async function getCHUNITHMCover(song_id = 0) {
 
     if (fs.existsSync(path)) {
         return path
-    } else {
+    } else if (song_id > 0) {
         return await downloadImage(`https://assets2.lxns.net/chunithm/jacket/${song}.png`, path, getImageFromV3('Chunithm', 'Cover', '0.png'))
+    } else {
+        return getImageFromV3('Chunithm', 'Cover', '0.png')
     }
 }
 
