@@ -73,6 +73,10 @@ export const colorArray = {
         '#7CFF4F', '#4FFFD5', '#00F2FE'],
 
     iridescent: ['#FF4E6F', '#FF6868', '#F6F05C', '#00F2FE'],
+
+    dark_red: ['#4A0B1E', '#6E1818'],
+    dark_blue: ['#0E1045', '#004275'],
+    dark_gray: ['#4D4D4D', '#737373']
 }
 
 // Yumu Panel v0.5 颜色自定义，默认的色相全是 342（这也是巧克力面板的原色

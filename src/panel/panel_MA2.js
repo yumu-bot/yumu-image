@@ -5,7 +5,7 @@ import {
     setImage,
     setSvgBody, isNotEmptyArray,
     readTemplate,
-    setText, thenPush, getSvgBody, round, rounds
+    setText, thenPush, getSvgBody, round, rounds, setTexts
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_I3} from "../card/card_I3.js";
@@ -16,6 +16,8 @@ import {
     getCHUNITHMRankBG, getCHUNITHMDifficultyColor,
 } from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {torusBold} from "../util/font.js";
+import {colorArray} from "../util/color.js";
 
 export async function router(req, res) {
     try {
@@ -137,9 +139,10 @@ export async function panel_MA2(data = {
     // 插入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
-    const b30_height = Math.ceil(card_b30.length / 5) * 150
-    const n20_height = Math.ceil(card_n20.length / 5) * 150
-    const s10_height = Math.ceil(card_s10.length / 5) * 150
+    const b30_height = Math.max(Math.ceil(card_b30.length / 5) * 150 - 20, 0)
+    const n20_height = Math.max(Math.ceil(card_n20.length / 5) * 150 - 20, 0)
+    const s10_height = Math.max(Math.ceil(card_s10.length / 5) * 150 - 20, 0)
+
     let bn_offset = 0
     let ns_offset = 0
 
@@ -155,11 +158,11 @@ export async function panel_MA2(data = {
     svg = setText(svg, string_b30, reg_card_i);
 
     if (isNotEmptyArray(card_b30) && isNotEmptyArray(card_n20)) {
-        bn_offset = 20
+        bn_offset = 80
     }
 
     if ((isNotEmptyArray(card_b30) || isNotEmptyArray(card_n20)) && isNotEmptyArray(card_s10)) {
-        ns_offset = 20
+        ns_offset = 80
     }
 
     let string_n20 = ''
@@ -188,21 +191,41 @@ export async function panel_MA2(data = {
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 计算面板高度
-    let card_height
+    let card_height = b30_height + bn_offset + n20_height + ns_offset + s10_height + 80
 
-    if (n20_height === 0) {
-        if (s10_height === 0) {
-            card_height = b30_height + bn_offset + 60 - 15
-        } else {
-            card_height = b30_height + bn_offset + s10_height + 80 - 15
-        }
-    } else {
-        if (s10_height === 0) {
-            card_height = b30_height + bn_offset + n20_height + 80 - 15
-        } else {
-            card_height = b30_height + bn_offset + n20_height + s10_height + 100 - 15
-        }
+    let b30_title = ''
+    let b30_rrect = ''
+    let n20_title = ''
+    let n20_rrect = ''
+    let s10_title = ''
+    let s10_rrect = ''
+
+    if (b30_height > 0) {
+        b30_title = torusBold.getTextPath('Best 30', 960, 290 + 40 - 15,
+            18, 'center baseline')
+        b30_rrect = PanelDraw.LinearGradientRect(0, 290, 1920, card_height, 20,
+            colorArray.dark_blue,
+            1, [100, 0], [80, 20])
     }
+
+    if (n20_height > 0) {
+        n20_title = torusBold.getTextPath('New 20', 960, 290 + 40 + b30_height + bn_offset - 15,
+            18, 'center baseline')
+        n20_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + b30_height + bn_offset - 40, 1920, n20_height + ns_offset + s10_height + 80, 20, colorArray.dark_red,
+            1, [100, 0], [80, 20])
+    }
+
+    if (s10_height > 0) {
+        s10_title = torusBold.getTextPath('Selection 10', 960,
+            290 + 40 + b30_height + bn_offset + n20_height + ns_offset - 15,
+            18, 'center baseline')
+        s10_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + b30_height + bn_offset + n20_height + ns_offset - 40, 1920, s10_height + 80, 20, colorArray.dark_gray,
+            1, [100, 0], [80, 20])
+    }
+
+    console.log(b30_height, n20_height, s10_height)
+
+    svg = setTexts(svg, [b30_title, n20_title, s10_title, s10_rrect, n20_rrect, b30_rrect], reg_card_i)
 
     const panel_height = card_height + 290
 

@@ -1,7 +1,7 @@
 import {
     exportJPEG, getPanelNameSVG, setImage,
     setSvgBody, isNotEmptyArray, readTemplate,
-    setText, getSvgBody, thenPush, getNowTimeStamp, isNotNull, floor
+    setText, getSvgBody, thenPush, getNowTimeStamp, isNotNull, floor, setTexts
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -10,6 +10,7 @@ import {getMaimaiVersionBG} from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {card_I3} from "../card/card_I3.js";
 import {torusBold} from "../util/font.js";
+import {colorArray} from "../util/color.js";
 
 export async function router(req, res) {
     try {
@@ -161,7 +162,7 @@ export async function panel_MA(data = {
 
     let dx_offset = 0 // 偏移值
     if (isNotEmptyArray(card_sd) && isNotEmptyArray(card_dx)) {
-        dx_offset = 40
+        dx_offset = 80
     }
 
     let string_dx = ''
@@ -178,6 +179,7 @@ export async function panel_MA(data = {
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
+    // MV 部分功能
     if (isNotEmptyArray(data.versions)) {
         const l = data.versions.length;
         const x = Math.min(l, 5);
@@ -190,9 +192,33 @@ export async function panel_MA(data = {
         svg = setText(svg, PanelDraw.Rect(1920 - 40 - 20 - 270 * l, 140, 270 * l + 20, 130, 20, '#382e32', 1), reg_index)
     }
 
+
     // 计算面板高度
     const card_height = sd_height + dx_offset + dx_height + 80
     const panel_height = card_height + 290
+
+    let sd_title = ''
+    let sd_rrect = ''
+    let dx_title = ''
+    let dx_rrect = ''
+
+    if (sd_height > 0) {
+        sd_title = torusBold.getTextPath('Best 35', 960, 290 + 40 - 15,
+            18, 'center baseline')
+        sd_rrect = PanelDraw.LinearGradientRect(0, 290, 1920, card_height,
+            20, colorArray.dark_blue,
+            1, [100, 0], [80, 20])
+    }
+
+    if (dx_height > 0) {
+        dx_title = torusBold.getTextPath('New 15', 960, 290 + 40 + sd_height + dx_offset - 15,
+            18, 'center baseline')
+        dx_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + sd_height + dx_offset - 40, 1920, dx_height + 80,
+            20, colorArray.dark_red,
+            1, [100, 0], [80, 20])
+    }
+
+    svg = setTexts(svg, [dx_title, sd_title, dx_rrect, sd_rrect], reg_card_i)
 
     svg = setText(svg, panel_height, reg_panelheight);
     svg = setText(svg, card_height, reg_cardheight);
