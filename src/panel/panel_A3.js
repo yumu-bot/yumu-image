@@ -99,7 +99,7 @@ export async function panel_A3(data = {
             compare_score = data.scores[i0].total_score
         }
 
-        const f = card_A4({
+        const promise_a4 = card_A4({
             bind: bind,
             score: data.scores[i],
             score_rank: (parseInt(i) + (data?.start ?? 1)) ?? 0,
@@ -107,7 +107,7 @@ export async function panel_A3(data = {
             is_legacy: is_legacy
         })
 
-        promise_a4s.push(f);
+        promise_a4s.push(promise_a4);
     }
 
     let cardA4s = [];

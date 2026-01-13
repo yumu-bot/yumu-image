@@ -203,7 +203,7 @@ export async function card_A4(data = {
         version_colors = colorArray.blue
     }
 
-    const ranking = poppinsBold.getTextPath(data.score_rank, 32 + 2, 38, 20, 'center baseline', ranking_color.toReversed())
+    const ranking = poppinsBold.getTextPath(data.score_rank, 32 + 2, 38, 20, 'center baseline', ranking_color)
 
     // 导入评价，x和y是矩形的左上角
     let stat_svg = ''
@@ -245,7 +245,7 @@ export async function card_A4(data = {
         rank_colors, 1, [0, 100], [20, 80])
 
     const version_rrect = PanelDraw.LinearGradientRect(0, 0, 65 + 62, 62, 20,
-        version_colors, 1, [0, 100], [20, 80])
+        version_colors, 1, [100, 0], [80, 20])
 
     svg = setImage(svg, 65, 0, 62, 62, avatar, reg_avatar)
     svg = setImage(svg, 65, 0, 790, 62, cover, reg_background, 0.2)
