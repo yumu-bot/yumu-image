@@ -4,34 +4,40 @@ import mascot_data from '../config/mascot.json' with { type: 'json' };
 
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
 const mascot_transparency_sum_arr = [2, 1, 0, 0, 1, 0, 0, 1, 0, 1];
-const defaultBannerTotal = 190; //默认 banner 数量
-const maimaiBannerTotal = 60; //maimai banner 数量
+const defaultBannerTotal = 200; //默认 banner 数量
+const maimaiBannerTotal = 70; //maimai banner 数量
 const mascotBGTotal = 13; //吉祥物 BG 数量
 
 // 导入一些特殊 banner，比如 7 号是潘多拉，11号是 Splash 的改版 Shabi
 export function getMaimaiBannerIndex(song) {
-    if (song?.id === 834) {
-        return 7;
-    } else if (song?.from === "maimai でらっくす Splash" || song?.from === "maimai でらっくす Splash PLUS") {
+    if (!song) return 0;
+
+    const BANNER_MAP = {
+        834: 7,
+        567: 17,
+        417: 28,
+        10734: 35,
+        734: 35,
+        11591: 45,
+        11662: 51,
+        11663: 53,
+        844: 54,
+        606: 56,
+        270: 59,
+        11355: 62,
+        11512: 69,
+        11629: 70,
+    };
+
+    // 优先检查特定ID
+    if (song.id && BANNER_MAP[song.id] !== undefined) {
+        return BANNER_MAP[song.id];
+    }
+
+    // 然后检查from字段
+    if (song.from === "maimai でらっくす Splash" ||
+        song.from === "maimai でらっくす Splash PLUS") {
         return 11;
-    } else if (song?.id === 567) {
-        return 17;
-    } else if (song?.id === 417) {
-        return 28;
-    } else if (song?.id === 10734 || song?.id === 734) {
-        return 35;
-    } else if (song?.id === 11591) {
-        return 45;
-    } else if (song?.id === 11662) {
-        return 51;
-    } else if (song?.id === 11663) {
-        return 53;
-    } else if (song?.id === 844) {
-        return 54;
-    } else if (song?.id === 606) {
-        return 56;
-    } else if (song?.id === 270) {
-        return 59;
     }
 
     return 0;
@@ -208,26 +214,28 @@ export function getRandomBannerPath(type = "default", index = 0) {
     }
 }
 
-function getWeightedRandom(max = 1, first_weight = 1, last_weight = 2) {
-    // 计算总权重 (b1权重=1, b180权重=2, 线性递增)
+function getWeightedRandom(max = 1, first_weight = 1, last_weight = 3) {
+    // 处理特殊情况：如果 max 为 1，直接返回 1
+    if (max <= 1) return 1;
+
+    // 计算总权重 (等差数列求和公式)
     const total_weight = (first_weight + last_weight) * max / 2;
 
     // 生成随机数
-    const random_value = Math.random() * total_weight;
+    let random_value = Math.random() * total_weight;
 
     // 找到对应的编号
-    let cumulative_weight = 0;
     for (let i = 1; i <= max; i++) {
-        // 计算当前编号的权重 (从1线性增加到2)
-        const weight = 1 + (i - 1) / (max - 1);
-        cumulative_weight += weight;
+        // 动态计算当前项的权重：线性插值公式
+        // weight = a + (i-1) * d, 其中 d = (last - first) / (max - 1)
+        const weight = first_weight + (i - 1) * (last_weight - first_weight) / (max - 1);
 
-        if (random_value <= cumulative_weight) {
+        random_value -= weight;
+        if (random_value <= 0) {
             return i;
         }
     }
 
-    // 如果由于浮点数精度问题没有返回，返回最大值
     return max;
 }
 
