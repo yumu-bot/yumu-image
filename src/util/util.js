@@ -15,7 +15,7 @@ import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
 import FileCache from './fileCache.js';
 
-const VERSION = 'v0.7.3'
+const VERSION = 'v0.7.4'
 const VERSION_CODE = 'GM'
 
 const exportsJPEG = new API(new JPEGProvider());
