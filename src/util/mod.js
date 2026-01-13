@@ -251,7 +251,6 @@ export function drawLazerMods(mods = [], x = 0, y = 0, height = 100, max_width =
         is_name = false
         is_side_name = true
         no_settings_offset = Math.max((max_width + interval - 135 * scale) / (mods_sorted.length), 4)
-        //(max_width - 135 * scale * mods_sorted.length) / (mods_sorted.length - 1)
         has_settings_offset = no_settings_offset
     }
 

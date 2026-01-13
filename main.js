@@ -86,7 +86,7 @@ panelSuffixes.forEach(suffix => {
         });
 });
 
-// 也注册了 svg
+// 注册 svg
 panelSuffixes.forEach(suffix => {
     import(`./src/panel/panel_${suffix}.js`)
         .then(module => {

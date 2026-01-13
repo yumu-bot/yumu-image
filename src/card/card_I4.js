@@ -166,7 +166,7 @@ export function card_I4(data = {
     svg = setImage(svg, 154 - 2, 96, 56, 30, data?.rank, reg_rank, 1);
 
     const mods = drawLazerMods(data?.mods,
-        342, 70, 24, 60, 'right', 8, true, true, false)
+        342, 70, 24, 60, 'right', 8, false, false, false)
 
     // 左侧覆盖部分
     const label1_width = torusBold.getTextWidth(data?.label1, 18)

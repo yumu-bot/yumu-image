@@ -11,7 +11,7 @@ import {colorArray, PanelColor} from "../util/color.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getMultipleTextPath, poppinsBold} from "../util/font.js";
+import {extra, getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {
     getGlobalRankPercentBGFromUser,
     getMascotBanner,
@@ -762,6 +762,9 @@ const component_D7 = (
     let highest_icon = ''
     let highest_title = ''
 
+
+    const mode_icon = extra.getTextPath(getGameMode(data.mode, -1), 140, 138, 40, 'left baseline')
+
     const highest_rank = getMultipleTextPath(
         [{
             font: poppinsBold,
@@ -781,7 +784,7 @@ const component_D7 = (
                 ) + ']',
             size: 24,
             color: '#ccc'
-        }], 140, 136, 'left baseline'
+        }], 195, 136, 'left baseline'
     )
 
     const overlay = PanelColor.overlay(hue)
@@ -989,7 +992,7 @@ const component_D7 = (
         rrect = PanelDraw.Rect(0, 0, 1330, 540, 20, PanelColor.middle(hue))
     }
 
-    return '<g>' + getTexts([label_strings, highest_rank, highest_icon, highest_title, mascot_name, mascot, title, elo, image, mascot_rect, rrect]) + '</g>'
+    return '<g>' + getTexts([label_strings, mode_icon, highest_rank, highest_icon, highest_title, mascot_name, mascot, title, elo, image, mascot_rect, rrect]) + '</g>'
 }
 
 

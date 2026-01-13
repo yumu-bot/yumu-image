@@ -14,6 +14,8 @@ set EXPORT_FILE=${你解压素材库的文件路径，比如 D:\ExportFileV3\}
 yarn start
 ```
 
+npm start 也行。
+
 ## Linux 运行
 
 可以使用 PM2 运行。
@@ -112,6 +114,7 @@ yarn start
 - H: 图池系统 MP (H) 的谱面卡片
 - I: 
   - I3: 用于舞萌最好成绩 X/Y (MA) 面板的卡片
+  - I4: 用于 osu! 大量成绩的小卡片 (A4/A5)
     - I01, I02: 旧版，已经弃用
 - J: 
 - K: 用于 K (K) 面板的卡片
