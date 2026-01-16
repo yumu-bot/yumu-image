@@ -187,7 +187,7 @@ function progress2CardMV(progress = {
 },) {
     return {
         left1_text: (progress.song_id ?? 0).toString(),
-        left2_text: floor((progress.star ?? 0), 1),
+        left2_text: (progress.star ?? 0).toString(),
 
         left1_colors: (progress.song_id >= 10000) ? colorArray.amber : colorArray.deep_blue,
         left2_colors: colorArray.purple,
