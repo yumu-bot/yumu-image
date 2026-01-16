@@ -1,11 +1,21 @@
 class FileCache {
-    constructor() {
+    constructor(maxSize = 50) {
         this.cache = new Map();
-        this.expiredTime = 24 * 60 * 60 * 1000; // 一天默认缓存时间
+        this.expiredTime = 24 * 60 * 60 * 1000; // 默认 1 天
+        this.maxSize = maxSize; // 最大缓存条目数
     }
 
     // 设置缓存
     set(key, data, expired = this.expiredTime) {
+        // 如果已存在，先删除，确保新值插入到 Map 的末尾（代表最新使用）
+        if (this.cache.has(key)) {
+            this.cache.delete(key);
+        } else if (this.cache.size >= this.maxSize) {
+            // 如果超出容量，删除 Map 中的第一个元素（最旧的）
+            const firstKey = this.cache.keys().next().value;
+            this.cache.delete(firstKey);
+        }
+
         const expiry = Date.now() + expired;
         this.cache.set(key, { data, expiry });
         return true;
@@ -21,6 +31,11 @@ class FileCache {
             this.cache.delete(key);
             return null;
         }
+
+        // --- LRU 核心操作 ---
+        // 重新插入，将其标记为“最新访问”
+        this.cache.delete(key);
+        this.cache.set(key, item);
 
         return item.data;
     }

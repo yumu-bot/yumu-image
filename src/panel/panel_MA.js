@@ -6,7 +6,6 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {getMaimaiVersionBG} from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {card_I3} from "../card/card_I3.js";
 import {torusBold} from "../util/font.js";
@@ -95,8 +94,8 @@ export async function panel_MA(data = {
 
     if (data?.panel === 'MB') {
         panel_name = getPanelNameSVG('Maimai Multiple Best Scores (!ymmb)', 'MB');
-    } else if (data?.panel === 'MV') {
-        panel_name = getPanelNameSVG('Maimai Version Scores (!ymmv)', 'MV');
+    // } else if (data?.panel === 'MV') {
+    //     panel_name = getPanelNameSVG('Maimai Version Scores (!ymmv)', 'MV');
     } else if (data?.panel === 'MS') {
         let request_time
 
@@ -180,17 +179,17 @@ export async function panel_MA(data = {
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // MV 部分功能
-    if (isNotEmptyArray(data.versions)) {
-        const l = data.versions.length;
-        const x = Math.min(l, 5);
-
-        for (let i = 0; i < x; i++) {
-            const v = data.versions[x - i - 1] // 反向获取
-            svg = setImage(svg, 1920 - 40 - 10 - 260 - 270 * i, 140, 260, 130, getMaimaiVersionBG(v), reg_index, 1);
-        }
-
-        svg = setText(svg, PanelDraw.Rect(1920 - 40 - 20 - 270 * l, 140, 270 * l + 20, 130, 20, '#382e32', 1), reg_index)
-    }
+    // if (isNotEmptyArray(data.versions)) {
+    //     const l = data.versions.length;
+    //     const x = Math.min(l, 5);
+    //
+    //     for (let i = 0; i < x; i++) {
+    //         const v = data.versions[x - i - 1] // 反向获取
+    //         svg = setImage(svg, 1920 - 40 - 10 - 260 - 270 * i, 140, 260, 130, getMaimaiVersionBG(v), reg_index, 1);
+    //     }
+    //
+    //     svg = setText(svg, PanelDraw.Rect(1920 - 40 - 20 - 270 * l, 140, 270 * l + 20, 130, 20, '#382e32', 1), reg_index)
+    // }
 
 
     // 计算面板高度
@@ -202,7 +201,7 @@ export async function panel_MA(data = {
     let dx_title = ''
     let dx_rrect = ''
 
-    if (sd_height > 0) {
+    if (sd_height > 0 && data?.panel === 'MB') {
         sd_title = torusBold.getTextPath('Best 35', 960, 290 + 40 - 15,
             18, 'center baseline')
         sd_rrect = PanelDraw.LinearGradientRect(0, 290, 1920, card_height,
@@ -210,7 +209,7 @@ export async function panel_MA(data = {
             1, [100, 0], [80, 20])
     }
 
-    if (dx_height > 0) {
+    if (dx_height > 0 && data?.panel === 'MB') {
         dx_title = torusBold.getTextPath('New 15', 960, 290 + 40 + sd_height + dx_offset - 15,
             18, 'center baseline')
         dx_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + sd_height + dx_offset - 40, 1920, dx_height + 80,

@@ -99,7 +99,7 @@ export function getMaimaiRankBG(rank) {
             out = 'object-score-backimage-F.jpg';
             break;
         default:
-            out = 'object-score-backimage-SH.jpg';
+            out = 'object-score-backimage-F.jpg';
             break;
     }
 

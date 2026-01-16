@@ -565,7 +565,7 @@ export const PanelDraw = {
      * @param opacity
      * @constructor
      */
-    RectMatrix(x = 0, y = 0, w = 0, h = 0, stat = {
+    RectMatrix: (x = 0, y = 0, w = 0, h = 0, stat = {
         width: 1,
         height: 1,
         row: 3,
@@ -575,7 +575,7 @@ export const PanelDraw = {
         saturation: 0.8,
         lightness_min: 0.2,
         lightness_max: 1.0,
-    }, data_max_min = 300, opacity = 1) {
+    }, data_max_min = 300, opacity = 1) => {
         const max = Math.max(data_max_min, Math.max.apply(Math, data))
 
         const x_interval = ((w - stat.column * stat.width) / (stat.column - 1)) ?? 0
@@ -605,4 +605,97 @@ export const PanelDraw = {
 
         return squares
     },
+
+    /**
+     * 生成全圆润（含接缝圆角）的内凹形状
+     * - type 有 concave 凹 和 convex 凸。
+     * - convex 下，w 和 h 无效
+     */
+    RectCorner: (x, y, width, height, r = 20, notchConfig = {
+        topLeft: {
+            type: 'convex', w: 0, h: 0
+        },
+        topRight: {
+            type: 'convex', w: 0, h: 0
+        },
+        bottomLeft: {
+            type: 'convex', w: 0, h: 0
+        },
+        bottomRight: {
+            type: 'convex', w: 0, h: 0
+        }
+    }, fill = "skyblue") => {
+        // 确保半径不冲突 (w/h 需 >= 2r)
+        const cfg = {
+            tl: { type: 'convex', w: 0, h: 0, ...notchConfig.topLeft },
+            tr: { type: 'convex', w: 0, h: 0, ...notchConfig.topRight },
+            br: { type: 'convex', w: 0, h: 0, ...notchConfig.bottomRight },
+            bl: { type: 'convex', w: 0, h: 0, ...notchConfig.bottomLeft }
+        };
+
+        let p = [];
+
+        // --- 1. Top-Left 角 ---
+        if (cfg.tl.type === 'concave') {
+            // 顺时针顺序：从左侧边向上 -> 入缺口 -> 缺口深处 -> 出缺口到顶边
+            p.push(`M ${x + cfg.tl.w + r},${y}`); // 路径起点：TL缺口结束点
+        } else {
+            p.push(`M ${x + r},${y}`);
+        }
+
+        // --- 2. Top-Right 角 ---
+        if (cfg.tr.type === 'concave') {
+            p.push(`L ${x + width - cfg.tr.w - r},${y}`); // 到达顶部接缝
+            p.push(`A ${r},${r} 0 0 1 ${x + width - cfg.tr.w},${y + r}`);
+            p.push(`L ${x + width - cfg.tr.w},${y + cfg.tr.h - r}`);
+            p.push(`A ${r},${r} 0 0 0 ${x + width - cfg.tr.w + r},${y + cfg.tr.h}`);
+            p.push(`L ${x + width - r},${y + cfg.tr.h}`);
+            p.push(`A ${r},${r} 0 0 1 ${x + width},${y + cfg.tr.h + r}`);
+        } else {
+            p.push(`L ${x + width - r},${y}`);
+            p.push(`A ${r},${r} 0 0 1 ${x + width},${y + r}`);
+        }
+
+        // --- 3. Bottom-Right 角 ---
+        if (cfg.br.type === 'concave') {
+            p.push(`L ${x + width},${y + height - cfg.br.h - r}`); // 到达右侧接缝
+            p.push(`A ${r},${r} 0 0 1 ${x + width - r},${y + height - cfg.br.h}`); // 入缺口 (顺:1)
+            p.push(`L ${x + width - cfg.br.w + r},${y + height - cfg.br.h}`);
+            p.push(`A ${r},${r} 0 0 0 ${x + width - cfg.br.w},${y + height - cfg.br.h + r}`); // 深处 (顺:1)
+            p.push(`L ${x + width - cfg.br.w},${y + height - r}`);
+            p.push(`A ${r},${r} 0 0 1 ${x + width - cfg.br.w - r},${y + height}`); // 出缺口 (逆:0)
+        } else {
+            p.push(`L ${x + width},${y + height - r}`);
+            p.push(`A ${r},${r} 0 0 1 ${x + width - r},${y + height}`);
+        }
+
+        // --- 4. Bottom-Left 角 ---
+        if (cfg.bl.type === 'concave') {
+            p.push(`L ${x + cfg.bl.w + r},${y + height}`); // 到达底部接缝
+            p.push(`A ${r},${r} 0 0 1 ${x + cfg.bl.w},${y + height - r}`);
+            p.push(`L ${x + cfg.bl.w},${y + height - cfg.bl.h + r}`);
+            p.push(`A ${r},${r} 0 0 0 ${x + cfg.bl.w - r},${y + height - cfg.bl.h}`);
+            p.push(`L ${x + r},${y + height - cfg.bl.h}`);
+            p.push(`A ${r},${r} 0 0 1 ${x},${y + height - cfg.bl.h - r}`);
+        } else {
+            p.push(`L ${x + r},${y + height}`);
+            p.push(`A ${r},${r} 0 0 1 ${x},${y + height - r}`);
+        }
+
+        // --- 5. Top-Left 角 (闭合处理) ---
+        if (cfg.tl.type === 'concave') {
+            p.push(`L ${x},${y + cfg.tl.h + r}`); // 到达左侧接缝
+            p.push(`A ${r},${r} 0 0 1 ${x + r},${y + cfg.tl.h}`);
+            p.push(`L ${x + cfg.tl.w - r},${y + cfg.tl.h}`);
+            p.push(`A ${r},${r} 0 0 0 ${x + cfg.tl.w},${y + cfg.tl.h - r}`);
+            p.push(`L ${x + cfg.tl.w},${y + r}`);
+            p.push(`A ${r},${r} 0 0 1 ${x + cfg.tl.w + r},${y}`);
+        } else {
+            p.push(`L ${x},${y + r}`);
+            p.push(`A ${r},${r} 0 0 1 ${x + r},${y}`);
+        }
+
+        const d = p.join(" ");
+        return `<path d="${d} Z" fill="${fill}" stroke="black" stroke-width="2" />`;
+    }
 }
