@@ -289,7 +289,7 @@ async function card_MV(data = {
 
     let completed_opacity
     if (data.completed === true) {
-        completed_opacity = 0.4
+        completed_opacity = 0.2
     } else {
         completed_opacity = 1
     }
