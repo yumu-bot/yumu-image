@@ -57,11 +57,11 @@ export async function panel_MV(
             additional: 0
         },
         plate_list: [
-            {star: '15'},
-            {star: '14+', progress: [Array]},
-            {star: '14', progress: [Array]},
-            {star: '13+', progress: [Array]},
-            {star: '13', progress: [
+            {star: '15', count: 0, finished: 0 },
+            { star: '14+', count: 9, finished: 9, progress: [Array] },
+            { star: '14', count: 20, finished: 20, progress: [Array] },
+            { star: '13+', count: 25, finished: 25, progress: [Array] },
+            {star: '13', count: 42, finished: 42, progress: [
                     {
                         title: 'Shooting Shower～DANCE TIME(シンディ)～',
                         song_id: 11570,
@@ -91,10 +91,13 @@ export async function panel_MV(
                     },
 
                 ]},
-            {star: '12+', progress: [Array]}
+            { star: '12+', count: 29, finished: 29, progress: [Array] },
+            { star: '12-', count: 367, finished: 89 }
+
         ],
-        count: 117,
-        finished: 24
+        count: 492,
+        finished: 214
+
     }
 ) {
 

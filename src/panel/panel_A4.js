@@ -72,6 +72,10 @@ export async function panel_A4(data = {
         case "BS": {
             panel_name = getPanelNameSVG('Best Scores (!ymbs)', 'BS', request_time);
         } break;
+        case "MR": {
+            const request_time2 = 'matchID: ' + (data?.match ?? 0) + ' // request time: ' + getNowTimeStamp();
+            panel_name = getPanelNameSVG('Match Recent Scores (!ymmr)', 'MR', request_time2);
+        } break;
         default: {
             panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', request_time);
         } break;

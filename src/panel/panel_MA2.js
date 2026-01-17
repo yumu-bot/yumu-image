@@ -223,8 +223,6 @@ export async function panel_MA2(data = {
             1, [100, 0], [80, 20])
     }
 
-    console.log(b30_height, n20_height, s10_height)
-
     svg = setTexts(svg, [b30_title, n20_title, s10_title, s10_rrect, n20_rrect, b30_rrect], reg_card_i)
 
     const panel_height = card_height + 290

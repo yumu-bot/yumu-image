@@ -324,6 +324,10 @@ export async function panel_E5(data = {
         case "T": {
             panel_name = getPanelNameSVG('Today Bests (!ymt)', 'T', request_time);
         } break;
+        case "MR": {
+            const request_time2 = 'matchID: ' + (data?.match ?? 0) + ' // request time: ' + getNowTimeStamp();
+            panel_name = getPanelNameSVG('Match Recent Score (!ymmr)', 'MR', request_time2);
+        } break;
         default: {
             panel_name = getPanelNameSVG('Excellent Score (!ymp / !ymr / !yms)', 'S', request_time);
         } break;
