@@ -93,10 +93,8 @@ export async function panel_MV(
                 ]},
             {star: '12+', progress: [Array]}
         ],
-        chart_count: [
-            528, 0, 12, 16,
-            38, 37, 19
-        ]
+        count: 117,
+        finished: 24
     }
 ) {
 

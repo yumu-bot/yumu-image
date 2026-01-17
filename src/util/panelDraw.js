@@ -597,7 +597,7 @@ export const PanelDraw = {
 
                 const l = color.lightness_min + p * (color.lightness_max - color.lightness_min)
 
-                squares += this.Rect(x + rx, y + ry, stat.width, stat.height, 0,
+                squares += PanelDraw.Rect(x + rx, y + ry, stat.width, stat.height, 0,
                     `hsl(${color.hue}, ${color.saturation * 100}%, ${l * 100}%)`, opacity
                 )
             }
