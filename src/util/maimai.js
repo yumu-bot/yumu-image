@@ -1,5 +1,6 @@
 import fs from "fs";
 import {downloadImage, getImageFromV3, getImageFromV3Cache, isEmptyString} from "./util.js";
+import {colorArray} from "./color.js";
 
 /**
  *
@@ -415,46 +416,23 @@ export function getMaimaiDifficultyColor(index = 0) {
 
 
 export function getMaimaiDifficultyColors(index = 0) {
-    let color1
-    let color2
+    const colors = [
+        colorArray.green,
+        colorArray.yellow,
+        colorArray.red,
+        colorArray.purple,
+        colorArray.sakura,
+        colorArray.magenta
 
-    switch (index) {
-        case 0: {
-            color1 = '#009944'
-            color2 = '#109900'
-            break
-        }
-        case 1: {
-            color1 = '#fff100'
-            color2 = '#ffbb00'
-            break
-        }
-        case 2: {
-            color1 = '#f44336'
-            color2 = '#f43681'
-            break
-        }
-        case 3: {
-            color1 = '#9922ee'
-            color2 = '#cc22ee'
-            break
-        }
-        case 4: {
-            color1 = '#f7d8fe'
-            color2 = '#fed8ec'
-            break
-        }
-        default: {
-            color1 = '#d46da1'
-            color2 = '#d46d60'
-            break
-        }
-    }
+        // ['#009944', '#109900'],
+        // ['#fff100', '#ffbb00'],
+        // ['#f44336', '#f43681'],
+        // ['#9922ee', '#cc22ee'],
+        // ['#f7d8fe', '#fed8ec'],
+        // ['#d46da1', '#d46d60'] // 默认颜色
+    ]
 
-    return {
-        color1: color1,
-        color2: color2,
-    }
+    return colors[index] || colors[5]
 }
 
 

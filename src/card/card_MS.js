@@ -14,13 +14,11 @@ export function card_MS(data = {
 
     label1: '',
     label1_size: 36,
-    label1_color1: '',
-    label1_color2: '',
+    label1_colors: ['none', 'none'],
 
     label2: '',
     label2_size: 48,
-    label2_color1: '',
-    label2_color2: '',
+    label2_colors: ['none', 'none'],
 
     left: '',
     right: '',
@@ -87,13 +85,13 @@ export function card_MS(data = {
     // 导入文字
     const label1_width = BerlinBold.getTextWidth(data?.label1, 36)
     const label1_rrect = PanelDraw.LinearGradientRect(20, 20, label1_width + 40, 50, 25,
-        [data?.label1_color1, data?.label1_color2]
+        data.label1_colors, 1, [100, 0], [80, 20]
     )
     const label1 = BerlinBold.getTextPath(data?.label1, 20 + (label1_width + 40) / 2, 56, 36, 'center baseline', '#fff', 1, true)
 
     const label2_width = BerlinBold.getTextWidth(data?.label2, 48)
     const label2_rrect = PanelDraw.LinearGradientRect(310 - label2_width - 40, 255, label2_width + 40, 50, 25,
-        [data?.label2_color1, data?.label2_color2]
+        data.label2_colors, 1, [100, 0], [80, 20]
     )
     const label2 = BerlinBold.getTextPath(data?.label2, 310 - (label2_width + 40) / 2, 290, 48, 'center baseline', '#fff', 1, true)
 

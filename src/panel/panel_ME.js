@@ -271,6 +271,7 @@ export async function panel_ME(data = {
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
 const component_E1 = (
     data = {
+        index: 0,
         label: 'Expert',
         difficulty: 10.4,
     }) => {
@@ -312,42 +313,25 @@ const component_E1 = (
 
     let circle_text
 
-    switch (data?.label.toUpperCase()) {
-        case "RE:MASTER" :
+    switch (data?.index) {
+        case 4 :
             circle_text = 'object-score-difficulty-remaster.png';
             break;
-        case "MASTER" :
+        case 3 :
             circle_text = 'object-score-difficulty-master.png';
             break;
-        case "EXPERT" :
+        case 2 :
             circle_text = 'object-score-difficulty-expert.png';
             break;
-        case "ADVANCED" :
+        case 1 :
             circle_text = 'object-score-difficulty-advanced.png';
             break;
-        case "BASIC" :
+        default :
             circle_text = 'object-score-difficulty-basic.png';
             break;
     }
 
-    /*
-    let level = data?.level || '0'
-    const difficulty_b = Math.floor(data?.difficulty || 0);
-    let difficulty_m
-
-    if (level.endsWith('+?')) {
-        difficulty_m = '+?'
-    } else if (level.endsWith('+')) {
-        difficulty_m = '+'
-    } else if (level.endsWith('?')) {
-        difficulty_m = '?'
-    } else {
-        difficulty_m = '';
-    }
-
-     */
-
-    const difficulty = rounds(data?.difficulty, 1)
+    const difficulty = (data?.difficulty ?? 0).toString()
 
     const text_arr = [
         {
@@ -848,6 +832,7 @@ const PanelMEGenerate = {
     score2componentE1: (score) => {
 
         return {
+            index: score.level_index,
             label: score.level_label,
             difficulty: score.ds,
         }

@@ -353,13 +353,11 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
 
         label1: difficulty_name,
         label1_size: 36,
-        label1_color1: diff_colors.color1,
-        label1_color2: diff_colors.color2,
+        label1_colors: diff_colors,
 
         label2: difficulty,
         label2_size: 48,
-        label2_color1: diff_colors.color1,
-        label2_color2: diff_colors.color2,
+        label2_colors: diff_colors,
 
         left: 'Charter:',
         right: song?.charts[index]?.charter || '-',

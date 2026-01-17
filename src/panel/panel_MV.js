@@ -1,6 +1,5 @@
 import {
-    exportJPEG, floor,
-    getImageFromV3,
+    exportJPEG, getImageFromV3,
     getPanelNameSVG, getSvgBody, isASCII, isNotBlankString,
     readTemplate,
     setImage,
@@ -14,7 +13,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import { PuHuiTi, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getMaimaiCover, getMaimaiRankBG} from "../util/maimai.js";
+import {getMaimaiCover, getMaimaiDifficultyColors, getMaimaiRankBG} from "../util/maimai.js";
 
 export async function router(req, res) {
     try {
@@ -161,6 +160,7 @@ function progress2CardMV(progress = {
     title: 'Shooting Shower～DANCE TIME(シンディ)～',
     song_id: 11570,
     star: 13,
+    index: 3,
     score: {
         independent_id: 115703,
         achievements: 100.7895,
@@ -190,7 +190,7 @@ function progress2CardMV(progress = {
         left2_text: (progress.star ?? 0).toString(),
 
         left1_colors: (progress.song_id >= 10000) ? colorArray.amber : colorArray.deep_blue,
-        left2_colors: colorArray.purple,
+        left2_colors: getMaimaiDifficultyColors(progress.index),
 
         title_text: progress.title ?? '',
         song_id: progress.song_id,
