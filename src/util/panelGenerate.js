@@ -1033,7 +1033,7 @@ export const PanelGenerate = {
         const artist = torus.cutStringTail(s.beatmapset.artist, 24,
             500 - 10 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
 
-        const title2 = (s.beatmapset.title === s.beatmapset.title_unicode) ? '' : (s?.beatmapset?.title_unicode || '');
+        const title2 = (s?.beatmapset?.title === s?.beatmapset?.title_unicode) ? '' : (s?.beatmapset?.title_unicode || '');
         const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : floor(s?.pp, 1, -1);
 
         // 这是大概的进度
@@ -1049,15 +1049,26 @@ export const PanelGenerate = {
 
         const label2 = s?.beatmap?.id?.toString() || ''
 
-        const left1 = artist + ' // ' + s.beatmapset.creator
-        const left2 = '[' + difficulty_name + '] - ' + acc + ' ' + combo + ' (' + time_diff + ')'
+        let left1
+        let left2
+        let title
+
+        if (s.beatmapset?.creator != null && star > 0) {
+            title = s?.beatmapset?.title ?? ''
+            left1 = artist + ' // ' + (s.beatmapset?.creator ?? '')
+            left2 = '[' + difficulty_name + '] - ' + acc + ' ' + combo + ' (' + time_diff + ')'
+        } else {
+            title = 'Deleted Beatmap'
+            left1 = ''
+            left2 = acc + ' ' + combo + ' (' + time_diff + ')'
+        }
 
         return {
             background: background,
             cover: cover,
             type: type,
 
-            title: s.beatmapset.title || '',
+            title: title,
             title2: title2,
             left1: left1,
             left2: left2,
