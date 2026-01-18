@@ -693,21 +693,6 @@ const component_E7 = (
             <clipPath id="clippath-OE7-1">
                 <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
-            <clipPath id="clippath-OE7-2">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-OE7-3">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-OE7-4">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-OE7-5">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
-            <clipPath id="clippath-OE7-6">
-                <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
-            </clipPath>
             <linearGradient id="grad-OE7-12" x1="0%" y1="50%" x2="100%" y2="50%">
                 <stop offset="0%" style="stop-color:rgb(79,172,254); stop-opacity:1" />
                 <stop offset="100%" style="stop-color:rgb(0,242,254); stop-opacity:1" />
@@ -734,19 +719,19 @@ const component_E7 = (
             <rect id="Star" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: url(#grad-OE7-12); fill-opacity: 0.2"/>
           </g>
           <g id="Rect_OE7">
-            <g id="Clip_OE7-6" style="clip-path: url(#clippath-OE7-6);">
+            <g id="Clip_OE7-6" style="clip-path: url(#clippath-OE7-1);">
             
             </g>
-            <g id="Clip_OE7-5" style="clip-path: url(#clippath-OE7-5);">
+            <g id="Clip_OE7-5" style="clip-path: url(#clippath-OE7-1);">
             
             </g>
-            <g id="Clip_OE7-4" style="clip-path: url(#clippath-OE7-4);">
+            <g id="Clip_OE7-4" style="clip-path: url(#clippath-OE7-1);">
             
             </g>
-            <g id="Clip_OE7-3" style="clip-path: url(#clippath-OE7-3);">
+            <g id="Clip_OE7-3" style="clip-path: url(#clippath-OE7-1);">
             
             </g>
-            <g id="Clip_OE7-2" style="clip-path: url(#clippath-OE7-2);">
+            <g id="Clip_OE7-2" style="clip-path: url(#clippath-OE7-1);">
             
             </g>
           </g>
@@ -754,11 +739,11 @@ const component_E7 = (
           </g>`;
 
     const reg_text = /(?<=<g id="Text_OE7">)/;
-    const reg_clip2 = /(?<=<g id="Clip_OE7-2" style="clip-path: url\(#clippath-OE7-2\);">)/;
-    const reg_clip3 = /(?<=<g id="Clip_OE7-3" style="clip-path: url\(#clippath-OE7-3\);">)/;
-    const reg_clip4 = /(?<=<g id="Clip_OE7-4" style="clip-path: url\(#clippath-OE7-4\);">)/;
-    const reg_clip5 = /(?<=<g id="Clip_OE7-5" style="clip-path: url\(#clippath-OE7-5\);">)/;
-    const reg_clip6 = /(?<=<g id="Clip_OE7-6" style="clip-path: url\(#clippath-OE7-6\);">)/; //181,100,217 | 238,96,156
+    const reg_clip2 = /(?<=<g id="Clip_OE7-2" style="clip-path: url\(#clippath-OE7-1\);">)/;
+    const reg_clip3 = /(?<=<g id="Clip_OE7-3" style="clip-path: url\(#clippath-OE7-1\);">)/;
+    const reg_clip4 = /(?<=<g id="Clip_OE7-4" style="clip-path: url\(#clippath-OE7-1\);">)/;
+    const reg_clip5 = /(?<=<g id="Clip_OE7-5" style="clip-path: url\(#clippath-OE7-1\);">)/;
+    const reg_clip6 = /(?<=<g id="Clip_OE7-6" style="clip-path: url\(#clippath-OE7-1\);">)/; //181,100,217 | 238,96,156
 
     const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 1;
     const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 1;
