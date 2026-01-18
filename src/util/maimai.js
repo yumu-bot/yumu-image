@@ -108,10 +108,10 @@ export function getMaimaiRankBG(rank) {
 }
 
 // 图片推荐尺寸：320 * 52，左侧有 50 px 的头像框
-export function getMaimaiPlate(platename = "") {
-    if (isEmptyString(platename)) return ''
+export function getMaimaiPlateLegacy(plate_name = "") {
+    if (isEmptyString(plate_name)) return ''
 
-    const path = getImageFromV3("Maimai", "Plate", platename + ".png")
+    const path = getImageFromV3("Maimai", "Plate", plate_name + ".png")
     const default_path = getImageFromV3("Maimai", "Plate", "default.png")
     const base_path = getImageFromV3("Maimai", "Plate", "0.png")
 
@@ -121,6 +121,24 @@ export function getMaimaiPlate(platename = "") {
         return default_path
     } else {
         return base_path
+    }
+}
+
+//图片推荐尺寸：720 * 116，左侧有 110 px 的头像框
+export async function getMaimaiPlate(plate_id = 0) {
+    if (plate_id == null || plate_id === 0) {
+        return ''
+    }
+
+    const path = getImageFromV3('Maimai', 'Plate', `${plate_id}.png`);
+    const default_path = getImageFromV3('Maimai', 'Plate', '0.png')
+
+    if (fs.existsSync(path)) {
+        return path
+    } else if (plate_id > 0) {
+        return await downloadImage(`https://assets2.lxns.net/maimai/plate/${plate_id}.png`, path, default_path)
+    } else {
+        return default_path
     }
 }
 

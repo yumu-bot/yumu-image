@@ -56,6 +56,7 @@ export async function panel_MV(
             base: 0,
             additional: 0
         },
+        plate: 1,
         plate_list: [
             {star: '15', count: 0, finished: 0 },
             { star: '14+', count: 9, finished: 9, progress: [Array] },
@@ -95,9 +96,10 @@ export async function panel_MV(
             { star: '12-', count: 367, finished: 89 }
 
         ],
-        count: 492,
-        finished: 214
-
+        count_15: 492,
+        finished_15: 214,
+        count_12: 367,
+        finished_12: 89,
     }
 ) {
 
@@ -119,6 +121,8 @@ export async function panel_MV(
     // 导入A1卡
     const cardA1 = await card_A1(await PanelGenerate.maiPlayer2CardA1(data.user));
 
+    const plate = await getMaimaiCover(data?.plate)
+
     // 插入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
 
@@ -126,23 +130,41 @@ export async function panel_MV(
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 临时
-    let card_mv = [];
+    let data_mv = [];
 
-    const param_progress = data?.plate_list.flatMap(item => item.progress || []);
+    const param_progress = data?.plate_list.flatMap(item => {
+        // 解构：把 progress 拿出来，剩下的属性存在 rest 变量里
+        const { progress, ...rest } = item;
+
+        return (progress || []).map(pg => ({
+            ...rest,       // 这里只有 star 等其他属性，没有原 progress 数组了
+            progress: pg
+        }));
+    }) || [];
 
     await Promise.allSettled(
-        param_progress.map((pg) => {return card_MV(progress2CardMV(pg))})
-    ).then(results => thenPush(results, card_mv))
+        param_progress.map((param) => {
+            const { progress, ...rest } = param;
 
-    const mv_height = Math.max(Math.ceil(card_mv.length / 12) * 146 - 20, 0)
+            // 立即启动异步任务，不使用 await 阻塞
+            // 通过 .then() 在任务完成后，将之前保留的属性(rest)和结果合并
+            return card_MV(progress2CardMV(progress))
+                .then(card_mv => ({
+                    ...rest,
+                    data: card_mv
+                }));
+        })
+    ).then(results => thenPush(results, data_mv))
+
+    const mv_height = Math.max(Math.ceil(data_mv.length / 12) * 146 - 20, 0)
 
     let string_sd = ''
 
-    for (const i in card_mv) {
+    for (const i in data_mv) {
         const x = i % 12;
         const y = Math.floor(i / 12);
 
-        string_sd += getSvgBody(40 + (135 + 20) * x, 330 + 146 * y, card_mv[i]);
+        string_sd += getSvgBody(40 + (135 + 20) * x, 330 + 146 * y, data_mv[i].data);
     }
 
     // 计算面板高度
@@ -203,6 +225,16 @@ function progress2CardMV(progress = {
         required: progress.required,
         completed: progress.completed,
     }
+}
+
+async function label_MV(data = {
+    plate: '',
+    count_15: 0,
+    finished_15: 0,
+    count_12: 0,
+    finished_12: 0,
+}){
+
 }
 
 async function card_MV(data = {

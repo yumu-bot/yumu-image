@@ -39,8 +39,8 @@ import {
     getCHUNITHMRatingBG,
     getMaimaiCategory,
     getMaimaiCover, getMaimaiDifficultyColor, getMaimaiDXStarLevel,
-    getMaimaiMaximumRating,
-    getMaimaiPlate, getMaimaiRankBG,
+    getMaimaiMaximumRating, getMaimaiPlate,
+    getMaimaiRankBG,
     getMaimaiRatingBG, getMaimaiType
 } from "./maimai.js";
 import {getRandomBannerPath} from "./mascotBanner.js";
@@ -374,7 +374,7 @@ export const PanelGenerate = {
 
             const background = getMaimaiRatingBG(user?.rating);
 
-            const plate_image = getMaimaiPlate(user.platename)
+            const plate_image = await getMaimaiPlate(user.plate_id)
 
             let top2;
             let left1;

@@ -167,7 +167,7 @@ export async function panel_ME(data = {
         "rating": 16384,
         "base": 6247,
         "additional": 704,
-        "platename": ""
+        "plate_id": 0
     },
     chart: {
         cnt: 40548,

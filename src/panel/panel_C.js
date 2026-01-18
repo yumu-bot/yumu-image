@@ -307,12 +307,12 @@ export async function panel_C(
         //渲染红队
         for (let i = 0; i < redArr.length; i++) {
             cardHs.push(
-                drawCardH(await playerData2CardH(redArr[i]), i + 1, 1, 2));
+                drawCardH(await playerData2CardC(redArr[i]), i + 1, 1, 2));
         }
         //渲染蓝队
         for (let i = 0; i < blueArr.length; i++) {
             cardHs.push(
-                drawCardH(await playerData2CardH(blueArr[i]), i + 1, 2, 2));
+                drawCardH(await playerData2CardC(blueArr[i]), i + 1, 2, 2));
         }
     } else {
         //渲染不在队伍（无队伍）
@@ -322,13 +322,13 @@ export async function panel_C(
         for (let i = 0; i < noneArr.length; i += 2) {
             for (let j = 0; j < 2; j++) {
                 cardHs.push(
-                    drawCardH(await playerData2CardH(noneArr[i + j]), rowVS + i / 2 + 1, j + 1, 2));
+                    drawCardH(await playerData2CardC(noneArr[i + j]), rowVS + i / 2 + 1, j + 1, 2));
             }
         }
 
         if (luckyDog != null) {
             cardHs.push(
-                drawCardH(await playerData2CardH(luckyDog), rowVS + rowFull, 1, 1));
+                drawCardH(await playerData2CardC(luckyDog), rowVS + rowFull, 1, 1));
         }
     }
 
@@ -345,7 +345,7 @@ export async function panel_C(
     return svg.toString();
 }
 
-async function playerData2CardH(p = {}) {
+async function playerData2CardC(p = {}) {
     let team_color;
     let player_background;
     let isTeamVS;
@@ -408,7 +408,7 @@ async function playerData2CardH(p = {}) {
 
         color_title2: '#aaa',
         color_right: colors,
-        color_left: team_color,
+        color_left: team_color.toReversed(),
         color_index: color_index,
         color_label1: '',
         color_label2: '',

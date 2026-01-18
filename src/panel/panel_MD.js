@@ -260,7 +260,7 @@ const maimaiDistPlayer2CardA1 = async (user, dist_rating, count, size) => {
     let left1;
     let sub_banner;
 
-    const plate_image = getMaimaiPlate(user.platename)
+    const plate_image = await getMaimaiPlate(user.plate_id)
 
     if (isNotBlankString(plate_image)) {
         top2 = ''
