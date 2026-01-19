@@ -67,7 +67,7 @@ export const colorArray = {
     cyan: ['#4FACFE', '#00F2FE'],
 
     // 玫红色
-    magenta: ['#B6359C', '#EF0A6A'],
+    magenta: ['#C6267D', '#EF0A6A'], //#B6359C
 
     // 紫色
     purple: ['#9922EE', '#F772D1'], //#C872F2
