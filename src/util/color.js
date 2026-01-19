@@ -45,6 +45,9 @@ export const colorArray = {
     // 粉红色
     pink: ['#F54869', '#FBA37E'],
 
+    // 桃色
+    peach: ['#F990AB', '#F9BDBE'],
+
     // 樱花色
     sakura: ['#fed8ec', '#f7d8fe'],
 

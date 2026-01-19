@@ -607,45 +607,47 @@ export const PanelDraw = {
     },
 
     /**
-     * 生成全圆润（含接缝圆角）的内凹形状
-     * - type 有 concave 凹 和 convex 凸。
-     * - convex 下，w 和 h 无效
+     * 快速生成一个可以削去四个角，并保持圆角的渐变矩形。
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param r
+     * @param notches
+     * @param colors
+     * @param opacity
+     * @param position_x
+     * @param position_y
      */
-    RectCorner: (x, y, width, height, r = 20, notchConfig = {
-        topLeft: {
-            type: 'convex', w: 0, h: 0
-        },
-        topRight: {
-            type: 'convex', w: 0, h: 0
-        },
-        bottomLeft: {
-            type: 'convex', w: 0, h: 0
-        },
-        bottomRight: {
-            type: 'convex', w: 0, h: 0
-        }
-    }, fill = "skyblue") => {
-        // 确保半径不冲突 (w/h 需 >= 2r)
+    RectCornerGradient: (x1, y1, x2, y2, r = 20, notches = {}, colors = ['#fff'], opacity = 1, position_x = [0, 100], position_y = [0, 0]) => {
+        // 自动计算宽和高
+        const width = Math.abs(x2 - x1);
+        const height = Math.abs(y2 - y1);
+        const x = Math.min(x1, x2);
+        const y = Math.min(y1, y2);
+
         const cfg = {
-            tl: { type: 'convex', w: 0, h: 0, ...notchConfig.topLeft },
-            tr: { type: 'convex', w: 0, h: 0, ...notchConfig.topRight },
-            br: { type: 'convex', w: 0, h: 0, ...notchConfig.bottomRight },
-            bl: { type: 'convex', w: 0, h: 0, ...notchConfig.bottomLeft }
+            tl: { type: 'convex', w: 0, h: 0, ...notches.top_left },
+            tr: { type: 'convex', w: 0, h: 0, ...notches.top_right },
+            br: { type: 'convex', w: 0, h: 0, ...notches.bottom_right },
+            bl: { type: 'convex', w: 0, h: 0, ...notches.bottom_left }
         };
+
+        // 生成唯一的渐变 ID，防止页面上有多个组件时 ID 冲突
+        const gradientID = `grad_${getRandomString()}`;
 
         let p = [];
 
-        // --- 1. Top-Left 角 ---
+        // --- 路径绘制逻辑 (继承您原有的逻辑并修正) ---
         if (cfg.tl.type === 'concave') {
-            // 顺时针顺序：从左侧边向上 -> 入缺口 -> 缺口深处 -> 出缺口到顶边
-            p.push(`M ${x + cfg.tl.w + r},${y}`); // 路径起点：TL缺口结束点
+            p.push(`M ${x + cfg.tl.w + r},${y}`);
         } else {
             p.push(`M ${x + r},${y}`);
         }
 
         // --- 2. Top-Right 角 ---
         if (cfg.tr.type === 'concave') {
-            p.push(`L ${x + width - cfg.tr.w - r},${y}`); // 到达顶部接缝
+            p.push(`L ${x + width - cfg.tr.w - r},${y}`);
             p.push(`A ${r},${r} 0 0 1 ${x + width - cfg.tr.w},${y + r}`);
             p.push(`L ${x + width - cfg.tr.w},${y + cfg.tr.h - r}`);
             p.push(`A ${r},${r} 0 0 0 ${x + width - cfg.tr.w + r},${y + cfg.tr.h}`);
@@ -696,6 +698,18 @@ export const PanelDraw = {
         }
 
         const d = p.join(" ");
-        return `<path d="${d} Z" fill="${fill}" stroke="black" stroke-width="2" />`;
+
+        // 返回包含定义和路径的字符串
+        return `
+        <g>
+        <defs>
+            <linearGradient id="${gradientID}" x1="${position_x[0]}%" y1="${position_y[0]}%" x2="${position_x[1]}%" y2="${position_y[1]}%">
+                <stop offset="0%" style="stop-color:${colors[0]};stop-opacity:${opacity}" />
+                <stop offset="100%" style="stop-color:${colors[1]};stop-opacity:${opacity}" />
+            </linearGradient>
+        </defs>
+        <path d="${d} Z" fill="url(#${gradientID})"/>
+        </g>
+    `;
     }
 }

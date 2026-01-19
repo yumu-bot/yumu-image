@@ -10,7 +10,7 @@ import {colorArray} from "../util/color.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {poppinsBold, PuHuiTi, torusBold} from "../util/font.js";
+import {BerlinBold, poppinsBold, PuHuiTi, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiCover, getMaimaiDifficultyColors, getMaimaiPlate, getMaimaiRankBG} from "../util/maimai.js";
 
@@ -57,7 +57,7 @@ export async function panel_MV(
         },
         plate: 1,
         plate_list: [
-            {star: '15', count: 0, finished: 0 },
+            { star: '15', count: 0, finished: 0 },
             { star: '14+', count: 9, finished: 9, progress: [Array] },
             { star: '14', count: 20, finished: 20, progress: [Array] },
             { star: '13+', count: 25, finished: 25, progress: [Array] },
@@ -101,7 +101,6 @@ export async function panel_MV(
         finished_12: 89,
     }
 ) {
-
     let svg = readTemplate('template/Panel_MA.svg');
 
     // 路径定义
@@ -140,48 +139,100 @@ export async function panel_MV(
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
 
     // 临时
+    const plate_list = data?.plate_list || []
+
     let data_mv = [];
 
-    const param_progress = data?.plate_list.flatMap(item => {
-        // 解构：把 progress 拿出来，剩下的属性存在 rest 变量里
-        const { progress, ...rest } = item;
-
-        return (progress || []).map(pg => ({
-            ...rest,       // 这里只有 star 等其他属性，没有原 progress 数组了
-            progress: pg
-        }));
-    }) || [];
+    const param_progress = plate_list
+        .filter(item =>
+            item.progress &&
+            Array.isArray(item.progress) &&
+            item.progress.length > 0)
+        .flatMap(item => item.progress);
 
     await Promise.allSettled(
         param_progress.map((param) => {
-            const { progress, ...rest } = param;
-
-            // 立即启动异步任务，不使用 await 阻塞
-            // 通过 .then() 在任务完成后，将之前保留的属性(rest)和结果合并
-            return card_MV(progress2CardMV(progress))
-                .then(card_mv => ({
-                    ...rest,
-                    data: card_mv
-                }));
+            return card_MV(progress2CardMV(param))
         })
     ).then(results => thenPush(results, data_mv))
 
-    const mv_height = Math.max(Math.ceil(data_mv.length / 12) * 146 - 20, 0)
+    // 假设 offsets = [0, 2, 3]
+    // 含义：跳过 -> 空位 -> 放置 2 个卡片 -> 空位 -> 放置 3 个卡片
+    let offsets = data?.plate_list.map(item => item?.count ?? 0) || [];
+    let offsets_info = data?.plate_list.map(item => {
+        const { progress, ...rest } = item;
 
-    let string_sd = ''
+        return {
+            ...rest
+        }
+    })
 
-    for (const i in data_mv) {
+    let mix_pool = [];
+    let data_pool = [...data_mv]; // 复制一份数据池，方便剪切
+
+    // 遍历所有的 offsets 和对应的 info
+    offsets.forEach((count, index) => {
+        if (count === 0) return;
+
+        mix_pool.push({
+            isGap: true,
+            info: offsets_info[index] // 直接把 info 存进去，渲染时更方便
+        });
+
+        if (count > data_pool.length) {
+            return;
+        }
+
+        const splice = data_pool.splice(0, count)
+
+        mix_pool.push(...splice)
+    });
+
+    // 4. 如果 offsets 跑完了，池子里还有剩下的（虽然按逻辑不应该有），也补上去
+    if (data_pool.length > 0) {
+        mix_pool.push(...data_pool);
+    }
+
+    // --- 渲染逻辑 ---
+    const final_length = mix_pool.length;
+    const mv_height = Math.max(Math.ceil(final_length / 12) * 146 - 20, 0);
+
+    let string_sd = '';
+    let base_sd = '';
+
+    mix_pool.forEach((item, i) => {
         const x = i % 12;
         const y = Math.floor(i / 12);
 
-        string_sd += getSvgBody(40 + (135 + 20) * x, 330 + 146 * y, data_mv[i].data);
-    }
+        // 检查是否是我们标记的“空位”对象
+        if (item && item.isGap) {
+            const info = item.info
+
+            let end_index
+            if (info.star !== "12-") {
+                end_index = i + info.count
+            } else {
+                end_index = i
+            }
+
+            const colors = getLevelColor(info.star);
+
+            const area = drawArea(i, end_index, colors, 0.6);
+            const label = getSvgBody(40 + (135 + 20) * x, 330 + 146 * y, label_MV({ ...info, colors: colors }));
+
+
+            base_sd += (area + label);
+        } else if (item !== null) {
+            // 正常渲染卡片
+            string_sd += getSvgBody(40 + (135 + 20) * x, 330 + 146 * y, item);
+        }
+    });
 
     // 计算面板高度
     const card_height = mv_height + 80
     const panel_height = card_height + 290
 
-    svg = setTexts(svg, [string_sd], reg_card_i)
+    svg = setTexts(svg, [string_sd, base_sd], reg_card_i)
 
     svg = setText(svg, panel_height, reg_panelheight);
     svg = setText(svg, card_height, reg_cardheight);
@@ -381,6 +432,130 @@ function component_MV(data = {
     return svg
 }
 
+/**
+ *
+ * @param start_index 当前所在的位置，从 0 开始
+ * @param end_index 结束所在的位置，从 0 开始
+ * @param colors 颜色，要求后一个亮度更高一点
+ * @param opacity
+ * @param position_x
+ * @param position_y
+ */
+function drawArea(start_index, end_index, colors = ['none'], opacity = 1, position_x = [100, 0], position_y = [80, 20]) {
+    if (start_index > end_index) {
+        return ''
+    }
+
+    const r = 15
+
+    const global_x = 40
+    const global_y = 330
+
+    const step_x = 135 + 20
+    const step_y = 126 + 20
+
+    const start_x = start_index % 12
+    const start_y = Math.floor(start_index / 12)
+
+    const end_x = end_index % 12
+    const end_y = Math.floor(end_index / 12)
+
+    const x = global_x + start_x * step_x - 10
+    const y = global_y + start_y * step_y - 10
+
+    const x2 = global_x + (end_x + 1) * step_x - 10
+    const y2 = global_y + (end_y + 1) * step_y - 10
+
+    if ((start_x === 0 && end_x === 11) || (start_y === end_y)) {
+        // 同一层
+        const w = step_x * (end_x - start_x + 1)
+        const h = step_y * (end_y - start_y + 1)
+
+        return PanelDraw.LinearGradientRect(x, y, w, h, r, colors, opacity, position_x, position_y)
+    } else if (start_x === 0) {
+        // 只有右下角缺
+        const notches = {
+            bottom_right: {
+                type: 'concave', w: (11 - end_x) * step_x, h: step_y
+            }
+        }
+
+        const x2p = global_x + 11 * step_x + 145
+
+        return PanelDraw.RectCornerGradient(x, y, x2p, y2, r, notches, colors, opacity, position_x, position_y)
+    } else if (end_x === 11) {
+        // 只有左上角缺
+        const notches = {
+            top_left: {
+                type: 'concave', w: (start_x) * step_x, h: step_y
+            }
+        }
+
+        const xp = global_x - 10
+
+        return PanelDraw.RectCornerGradient(xp, y, x2, y2, r, notches, colors, opacity, position_x, position_y)
+    } else {
+        // 左上右下都缺
+
+        const notches = {
+            top_left: {
+                type: 'concave', w: (start_x) * step_x, h: step_y
+            },
+
+            bottom_right: {
+                type: 'concave', w: (11 - end_x) * step_x, h: step_y
+            }
+        }
+
+        const xp = global_x - 10
+
+        const x2p = global_x + 12 * step_x - 10
+
+        return PanelDraw.RectCornerGradient(xp, y, x2p, y2, r, notches, colors, opacity, position_x, position_y)
+    }
+}
+
+function label_MV(data = {
+    star: '15', count: 0, finished: 0, colors: ['none']
+}) {
+
+    // 模板
+    let svg = `<g id="Base-LV">
+        <rect x="10" y="10" width="115" height="106" rx="10" ry="10" style="fill: #46393F;"/>
+    </g>
+    <g id="Background-LV">
+        <rect x="108" y="20" width="10" height="85" rx="5" ry="5" style="fill: #54454C;"/>
+    </g>
+    <g id="Text-LV">
+    </g>`
+
+    // 正则
+    const reg_text = /(?<=<g id="Text-LV">)/;
+    const reg_background = /(?<=<g id="Background-LV">)/;
+
+    const level_text = (data?.star ?? '??')
+    const level = BerlinBold.getTextPath(level_text, 64 + 1, 50 + 1, 48, 'center baseline', '#1C1719', 1) +
+        BerlinBold.getTextPath(level_text, 64, 50, 48, 'center baseline', '#fff', 1)
+
+    const ratio_text = (data?.finished ?? 0) + ' / ' + (data?.count ?? 0)
+    const ratio = poppinsBold.getTextPath(ratio_text, 64 + 1, 80 + 1, 16, 'center baseline', '#1C1719') + poppinsBold.getTextPath(ratio_text, 64, 80, 16, 'center baseline', '#fff')
+
+    const percent_value = ((data?.finished ?? 0) / (data?.count ?? 0)) ?? 0
+    const percent_text = Math.round(100 * percent_value).toString() + '%'
+    const percent = poppinsBold.getTextPath(percent_text, 64 + 1, 104 + 1, 16, 'center baseline', '#1C1719') + poppinsBold.getTextPath(percent_text, 64, 104, 16, 'center baseline', '#fff')
+
+    const percent_colors = getProgressColor(percent_value)
+    const percent_rrect = PanelDraw.LinearGradientRect(108, 20 + 85 - percent_value * 85, 10, percent_value * 85, 5, percent_colors, 1,
+        [50, 50], [100, 0])
+
+    const background_rrect = PanelDraw.LinearGradientRect(10, 10, 115, 106, 10, data?.colors, 0.8,
+        [100, 0], [80, 20])
+
+    svg = setText(svg, background_rrect, reg_background)
+    svg = setTexts(svg, [level, ratio, percent, percent_rrect], reg_text)
+
+    return svg
+}
 
 async function card_MV(data = {
     left1_text: '',
@@ -582,6 +757,28 @@ function getProgressColor(percent = 0, default_color = colorArray.gray) {
 
     for (let i = thresholds.length - 1; i >= 0; i--) {
         if (percent >= thresholds[i]) {
+            return values[i];
+        }
+    }
+
+    return default_color;
+}
+
+
+function getLevelColor(level = '15', default_color = colorArray.green) {
+    const thresholds = ['15', '14+', '14', '13+', '13', '12+', '12-'];
+    const values = [
+        colorArray.sakura,
+        colorArray.peach,
+        colorArray.purple,
+        colorArray.magenta,
+        colorArray.red,
+        colorArray.amber,
+        colorArray.yellow
+    ];
+
+    for (let i = thresholds.length - 1; i >= 0; i--) {
+        if (level === thresholds[i]) {
             return values[i];
         }
     }
