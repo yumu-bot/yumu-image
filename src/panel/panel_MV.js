@@ -276,6 +276,8 @@ function progress2CardMV(progress = {
         left1_colors: (progress.song_id >= 10000) ? colorArray.amber : colorArray.deep_blue,
         left2_colors: getMaimaiDifficultyColors(progress.index),
 
+        left2_text_color: progress.index >= 4 ? '#1C1719' : '#fff',
+
         title_text: progress.title ?? '',
         song_id: progress.song_id,
 
@@ -564,6 +566,8 @@ async function card_MV(data = {
     left1_colors: colorArray.blue,
     left2_colors: colorArray.blue,
 
+    left2_text_color: '#fff',
+
     song_id: 0,
 
     title_text: '',
@@ -632,7 +636,7 @@ async function card_MV(data = {
     const left2_width = torusBold.getTextWidth(data?.left2_text, 16)
     const left2_rrect_width = Math.max(40, left2_width + 10)
     const left2 = torusBold.getTextPath(data?.left2_text, -5 + (left2_rrect_width / 2), 35, 16,
-        'center baseline', '#fff')
+        'center baseline', data?.left2_text_color || '#fff')
     const left2_rrect = PanelDraw.LinearGradientRect(-5, 20, left2_rrect_width, 20, 10, data?.left2_colors, 1,
         [100, 0], [80, 20])
 
