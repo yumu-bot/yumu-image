@@ -217,7 +217,7 @@ export async function panel_MV(
 
             const colors = getLevelColor(info.star);
 
-            const area = drawArea(i, end_index, colors, 0.6);
+            const area = drawArea(i, end_index, colors, 0.4);
             const label = getSvgBody(40 + (135 + 20) * x, 330 + 146 * y, label_MV({ ...info, colors: colors }));
 
 
