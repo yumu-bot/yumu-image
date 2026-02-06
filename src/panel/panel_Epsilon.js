@@ -67,8 +67,6 @@ export async function panel_Epsilon(data = {
 
     const is_supporter = user.supporter === true
 
-    console.log(user)
-
     const group = user?.groups?.[0]
 
     const image = await getAvatar(user?.avatar_url, true);
