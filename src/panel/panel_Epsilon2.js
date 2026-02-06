@@ -1,8 +1,8 @@
 import {
     exportJPEG, getAvatar, getImageFromV3,
-    setTexts, round, getGameMode, getBanner, setText
+    setTexts, round, getGameMode, getBanner, setText, isASCII
 } from "../util/util.js";
-import {TahomaRegular} from "../util/font.js";
+import {PuHuiTi, TahomaRegular} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function router(req, res) {
@@ -84,9 +84,17 @@ export async function panel_Epsilon2(data = {
 
     const avatar_overlay = PanelDraw.StrokeRect(5, 6, 75, 75, 0, '#B0F1BB', 1, 1)
 
-    const name_text = TahomaRegular.cutStringTail(user?.username ?? 'Unknown', 20, 235, true)
+    const name_text = user?.username ?? 'Unknown'
 
-    const name = getShadowPath(name_text, 90, 22, 20)
+    const is_ascii = isASCII(name_text)
+
+    const name_font = (is_ascii) ? TahomaRegular : PuHuiTi
+
+    let name_size = (is_ascii) ? 20 : 18
+
+    const name_cut = name_font.cutStringTail(name_text, name_size, 235, true)
+
+    const name = getShadowPath(name_font, name_cut, 90, 22, name_size)
 
     let pp_text
 
@@ -98,15 +106,15 @@ export async function panel_Epsilon2(data = {
 
     const pp_score_text = pp_text + 'Score:' + round(user?.statistics?.total_score, 1, -1).toLowerCase()
 
-    const pp_score = getShadowPath(pp_score_text, 89, 40, 14)
+    const pp_score = getShadowPath(TahomaRegular, pp_score_text, 89, 40, 14)
 
     const acc_text = 'Accuracy:' + round((user?.accuracy ?? 0), 2) + '%'
 
-    const acc = getShadowPath(acc_text, 88, 56, 14)
+    const acc = getShadowPath(TahomaRegular, acc_text, 88, 56, 14)
 
     const lv_text = 'Lv' + (user?.level_current ?? 0)
 
-    const lv = getShadowPath(lv_text, 89, 72, 14)
+    const lv = getShadowPath(TahomaRegular, lv_text, 89, 72, 14)
 
     const lv_progress = PanelDraw.Rect(127, 70, 195 * ((user?.level_progress ?? 0) / 100), 7, 0, '#B0F1BB')
 
@@ -148,7 +156,7 @@ function getGameModePath(mode) {
     return getImageFromV3(path)
 }
 
-function getShadowPath(text, x, y, size, anchor = 'left baseline', fill = '#fff', fill2 = '#000') {
-    return TahomaRegular.getTextPath(text, x + 1, y + 1, size, anchor, fill2) +
-        TahomaRegular.getTextPath(text, x, y, size, anchor, fill)
+function getShadowPath(font, text, x, y, size, anchor = 'left baseline', fill = '#fff', fill2 = '#000') {
+    return font.getTextPath(text, x + 1, y + 1, size, anchor, fill2) +
+        font.getTextPath(text, x, y, size, anchor, fill)
 }
