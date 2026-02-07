@@ -539,7 +539,7 @@ export const PanelGenerate = {
     },
 
     maiSong2CardA2: async (song = {}, version = "ANY") => {
-        const background = await getMaimaiCover(song?.id);
+        const background = await getMaimaiCover(song?.song_id);
 
         const title1 = song?.basic_info?.title || '-'
         const title2 = song?.basic_info?.artist || '-'
@@ -553,19 +553,11 @@ export const PanelGenerate = {
         const right1 = song?.basic_info?.bpm ? ('BPM ' + song?.basic_info?.bpm.toString()) : ''
 
         let right3b, right3m
-        let song_id = song?.id || 0
+        let song_id = song?.song_id || 0
 
         if (version === "ANY") {
-            if (song_id < 10000) {
-                // do nothing
-            } else if (song_id >= 10000 && song_id < 100000) {
-                song_id -= 10000
-            } else if (song_id >= 100000 && song_id < 110000) {
-                song_id -= 110000
-            } else if (song_id >= 110000 && song_id < 120000) {
-                song_id -= 120000
-            } else if (song_id >= 120000 && song_id < 130000) {
-                song_id -= 130000
+            if (song_id >= 10000) {
+                song_id %= 10000
             }
 
             if (song_id >= 1000) {

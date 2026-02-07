@@ -232,7 +232,7 @@ export async function panel_ME(data = {
 
     // 图片定义
     const background = getMaimaiRankBG(data.score.rate);
-    const banner = await getMaimaiCover(data.song.id);
+    const banner = await getMaimaiCover(data.song.song_id);
     const componentE1 = component_E1(PanelMEGenerate.score2componentE1(data.score));
     const componentE2 = component_E2(PanelMEGenerate.score2componentE2(data.song));
     const componentE3 = component_E3(PanelMEGenerate.score2componentE3(data.score, data.diff, data.score.level, data.chart.fit_diff));
@@ -581,7 +581,7 @@ const component_E6 = async (
         20, 142, 24, 'left baseline', '#fff');
     const bid = poppinsBold.getTextPath((data?.id || 0).toString(), 820 - 20, 142, 24, 'right baseline', '#fff');
 
-    const background = await getMaimaiCover(data?.id);
+    const background = await getMaimaiCover(data?.song_id);
 
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 

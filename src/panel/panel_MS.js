@@ -236,7 +236,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     const has_score = score?.ra > 0
 
     const background = getMaimaiRankBG(score?.rate || 'd')
-    const cover = await getMaimaiCover(song?.id || 0)
+    const cover = await getMaimaiCover(song?.song_id || 0)
     const overlay = score?.rate === "sssp" ? getImageFromV3('avatar-foil.png') : ''
 
     const type = getMaimaiType(song?.type)

@@ -162,7 +162,7 @@ export async function card_MF(song = {
 
     const difficulty = drawDifficultyLabels(song.ds, song.level, song.highlight)
 
-    const image = await getMaimaiCover(parseInt(song.id))
+    const image = await getMaimaiCover(song.song_id)
 
     const genre = label_A8({
         image: getImageFromV3Cache('object-beatmap-favorite.png'),

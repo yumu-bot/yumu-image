@@ -1,5 +1,5 @@
 import fs from "fs";
-import {downloadImage, getImageFromV3, getImageFromV3Cache, isEmptyString} from "./util.js";
+import {downloadImage, downloadImageWithPuppeteer, getImageFromV3, getImageFromV3Cache, isEmptyString} from "./util.js";
 import {colorArray} from "./color.js";
 
 /**
@@ -8,30 +8,28 @@ import {colorArray} from "./color.js";
  * @returns {Promise<string>}
  */
 export async function getMaimaiCover(song_id = 0) {
-    let id;
+    let raw_id;
+    let path_id;
 
-    if (song_id == null) {
-        id = 0;
-    } else if (song_id === 1235) {
-        id = 11235; // 这是水鱼的 bug，不关我们的事
-    } else if (song_id > 10000) {
-        id = song_id % 10000;
+    if (song_id == null || !Number.isInteger(song_id)) {
+        raw_id = 0;
+        path_id = '00000'
+    } else if (song_id >= 10000) {
+        raw_id = song_id % 10000
+        path_id = (raw_id + 10000).toString()
     } else {
-        id = song_id;
+        raw_id = song_id
+        path_id = song_id.toString().padStart(5, '0')
     }
 
-    const song = id.toString().padStart(5, '0')
-    const path = getImageFromV3('Maimai', 'Cover', `${song}.png`);
-    const path2 = getImageFromV3('Maimai', 'Cover', `${((id % 10000) + 10000).toString().padStart(5, '0')}.png`);
+    const path = getImageFromV3('Maimai', 'Cover', `${path_id}.png`);
 
     if (fs.existsSync(path)) {
         return path
-    } else if (fs.existsSync(path2)) {
-        return path2
-    } else if (id > 0) {
-        const lxns = `https://assets2.lxns.net/maimai/jacket/${id}.png`
+    } else if (raw_id > 0) {
+        const lxns = `https://assets2.lxns.net/maimai/jacket/${raw_id}.png`
 
-        return await downloadImage(lxns, path, getImageFromV3('Maimai', 'Cover', '00000.png'))
+        return await downloadImageWithPuppeteer(lxns, path, getImageFromV3('Maimai', 'Cover', '00000.png'))
     } else {
         return getImageFromV3('Maimai', 'Cover', '00000.png')
     }
@@ -453,8 +451,6 @@ export function getMaimaiDifficultyColors(index = 0) {
     return colors[index] || colors[5]
 }
 
-
-
 export async function getCHUNITHMCover(song_id = 0) {
     const song = song_id.toString()
     const path = getImageFromV3('Chunithm', 'Cover', `${song}.png`);
@@ -462,7 +458,7 @@ export async function getCHUNITHMCover(song_id = 0) {
     if (fs.existsSync(path)) {
         return path
     } else if (song_id > 0) {
-        return await downloadImage(`https://assets2.lxns.net/chunithm/jacket/${song}.png`, path, getImageFromV3('Chunithm', 'Cover', '0.png'))
+        return await downloadImageWithPuppeteer(`https://assets2.lxns.net/chunithm/jacket/${song}.png`, path, getImageFromV3('Chunithm', 'Cover', '0.png'))
     } else {
         return getImageFromV3('Chunithm', 'Cover', '0.png')
     }

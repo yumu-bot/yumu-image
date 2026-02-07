@@ -14,6 +14,7 @@ import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
 import FileCache from './fileCache.js';
+import puppeteer from "puppeteer";
 
 const VERSION = 'v0.7.4'
 const VERSION_CODE = 'GM'
@@ -647,6 +648,69 @@ export async function getBanner(link, use_cache = true, default_image_path = get
 }
 
 /**
+ * 获取或初始化浏览器实例
+ */
+async function getBrowserInstance() {
+    if (!globalBrowser || !globalBrowser.connected) {
+        globalBrowser = await puppeteer.launch({
+            headless: "new",
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+        });
+    }
+    return globalBrowser;
+}
+
+/**
+ * 除非 axios 用不了，否则就别用 puppeteer 开浏览器下（真的很重）
+ * @param url
+ * @param bufferPath
+ * @param defaultImagePath
+ * @returns {Promise<*|string>}
+ */
+export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePath = getImageFromV3('error.png')) {
+    let page;
+    try {
+        const browser = await getBrowserInstance();
+        page = await browser.newPage();
+
+        // 设置较小的视口减少资源消耗
+        await page.setViewport({ width: 100, height: 100 });
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+        let imageBuffer = null;
+
+        // 拦截响应
+        page.on('response', async (response) => {
+            if (response.url() === url) {
+                const contentType = response.headers()['content-type'];
+                // 确保响应是图片格式，避免拿到反爬的 HTML
+                if (contentType && contentType.startsWith('image/')) {
+                    imageBuffer = await response.buffer();
+                }
+            }
+        });
+
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+
+        if (imageBuffer) {
+            const dir = path.dirname(bufferPath);
+            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+            fs.writeFileSync(bufferPath, imageBuffer);
+            return bufferPath;
+        }
+
+        throw new Error('捕获失败：可能是因为未通过 JS 挑战或 URL 不匹配');
+
+    } catch (e) {
+        console.error(`[Puppeteer Error] ${url}:`, e.message);
+        return defaultImagePath;
+    } finally {
+        if (page) await page.close(); // 只关闭标签页，不关闭浏览器
+    }
+}
+
+/**
  * 下载图片至指定的位置
  * @param path 网络地址
  * @param bufferPath 存储的地址，包括文件名
@@ -660,15 +724,27 @@ export async function downloadImage(path = '', bufferPath = '', default_image_pa
     let data;
 
     try {
-        req = await axios.get(path, {responseType: 'arraybuffer'});
+        req = await axios.get(path, {
+            responseType: 'arraybuffer',
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Referer': 'https://www.google.com'
+            }
+        });
+
         data = req.data;
     } catch (e) {
         console.error("download error", e);
         return default_image_path || error;
     }
 
+    if (data.slice(0, 10).toString().includes('<')) {
+        console.error("Caught by Anti-Bot: Received HTML instead of Image");
+        return default_image_path || error;
+    }
+
     if (req && req.status === 200) {
-        fs.writeFileSync(bufferPath, data, 'binary');
+        fs.writeFileSync(bufferPath, data);
         return bufferPath;
     } else {
         return default_image_path || error;
