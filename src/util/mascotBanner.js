@@ -34,8 +34,8 @@ export function getMaimaiBannerIndex(song) {
     };
 
     // 优先检查特定ID
-    if (song.id && BANNER_MAP[song.id] !== undefined) {
-        return BANNER_MAP[song.id];
+    if (song.song_id && BANNER_MAP[song.song_id] !== undefined) {
+        return BANNER_MAP[song.song_id];
     }
 
     // 然后检查from字段

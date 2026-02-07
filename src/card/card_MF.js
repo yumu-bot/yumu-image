@@ -179,7 +179,7 @@ export async function card_MF(song = {
     const sid = label_A8({
         image: null,
         has_text: null,
-        text: song.id,
+        text: song.song_id,
         color: '#1c1719',
     })
 

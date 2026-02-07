@@ -874,7 +874,7 @@ const PanelMEGenerate = {
             title: song.basic_info.title,
             artist: song.basic_info.artist,
             charter: song.charts[index].charter,
-            id: song.id,
+            id: song.song_id,
             category: getMaimaiCategory(song?.basic_info?.genre),
         }
     },
