@@ -647,6 +647,8 @@ export async function getBanner(link, use_cache = true, default_image_path = get
     }
 }
 
+let globalBrowser = null
+
 /**
  * 获取或初始化浏览器实例
  */
