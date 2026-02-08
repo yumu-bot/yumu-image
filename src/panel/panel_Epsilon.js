@@ -43,9 +43,9 @@ export async function panel_Epsilon(data = {
     const user = data?.user
 
     // 计算高度
-    const has_group = isNotEmptyArray(user.groups)
+    const has_group_or_title = isNotEmptyArray(user.groups) || user?.title != null
 
-    const height = has_group ? 560 : 515 // 460
+    const height = has_group_or_title ? 560 : 515 // 460
 
     // 导入模板
     let svg = `<?xml version="1.0" encoding="UTF-8"?> <svg xmlns="http://www.w3.org/2000/svg" width="460" height="${height}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 460 ${height}">
@@ -89,7 +89,7 @@ export async function panel_Epsilon(data = {
         name_font.cutStringTail(name_text, name_size, 460, true),
         230, 435, name_size, 'center baseline', '#000'
     );
-    const country = await getFlagPath(user?.country_code ?? user?.country?.code, is_supporter ? 95 : 207.5, (has_group ? 510 : 465) - 3, 30)
+    const country = await getFlagPath(user?.country_code ?? user?.country?.code, is_supporter ? 95 : 207.5, (has_group_or_title ? 510 : 465) - 3, 30)
 
     const group_name_color = group?.colour || '#000'
 
@@ -112,7 +112,7 @@ export async function panel_Epsilon(data = {
         TahomaBold.getTextPath(group_name_text, 230 + 1, 482 + 1, 28, 'center baseline', '#000')
         : ''
 
-    const supporter = is_supporter ? PanelDraw.Image(162, has_group ? 510 : 465, 200, 30, getImageFromV3Cache('object-user-supporter.png')) : ''
+    const supporter = is_supporter ? PanelDraw.Image(162, has_group_or_title ? 510 : 465, 200, 30, getImageFromV3Cache('object-user-supporter.png')) : ''
 
     svg = setImage(svg, 0, 0, 460, 460, getImageFromV3('panel-oldavatar.png'), reg_background, 1);
     svg = setImage(svg, 70, 40, 320, 320, image, reg_avatar, 1);
