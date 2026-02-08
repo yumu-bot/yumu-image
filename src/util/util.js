@@ -15,6 +15,7 @@ import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
 import FileCache from './fileCache.js';
 import puppeteer from "puppeteer";
+import { EventEmitter } from 'events';
 
 const VERSION = 'v0.7.4'
 const VERSION_CODE = 'GM'
@@ -34,6 +35,8 @@ export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufi
 export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
 
 const FLAG_PATH = process.env.FLAG_PATH || EXPORT_FILE_V3 + "Flags" //CACHE_PATH + "/flag";
+
+EventEmitter.defaultMaxListeners = 50;
 
 export function initPath() {
     axios.defaults.timeout = 4000;// 2000
@@ -649,15 +652,24 @@ export async function getBanner(link, use_cache = true, default_image_path = get
 
 let globalBrowser = null
 
-/**
- * 获取或初始化浏览器实例
- */
+let browserPromise = null; // 用来锁定初始化过程
+
 async function getBrowserInstance() {
+    // 如果已经有正在启动中的浏览器，直接返回那个 Promise
+    if (browserPromise) return browserPromise;
+
     if (!globalBrowser || !globalBrowser.connected) {
-        globalBrowser = await puppeteer.launch({
-            headless: "new",
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-        });
+        browserPromise = (async () => {
+            console.log('正在启动唯一浏览器实例...');
+            const browser = await puppeteer.launch({
+                headless: "new",
+                args: ['--no-sandbox', '--disable-dev-shm-usage']
+            });
+            globalBrowser = browser;
+            browserPromise = null; // 初始化完成后清空锁
+            return browser;
+        })();
+        return browserPromise;
     }
     return globalBrowser;
 }

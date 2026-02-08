@@ -1,6 +1,17 @@
 import moment from "moment";
 import {getImageFromV3} from "./util.js";
-import mascot_data from '../config/mascot.json' with { type: 'json' };
+
+import { readFileSync } from 'fs';
+import { URL } from 'url';
+
+// 1. 获取相对于当前文件的正确路径
+// new URL(...) 会根据当前文件的位置自动解析相对路径
+const mascotConfigUrl = new URL('../config/mascot.json', import.meta.url);
+
+// 2. 读取文件内容并解析 JSON
+const mascot_data = JSON.parse(readFileSync(mascotConfigUrl, 'utf-8'));
+
+// export default mascot_data;
 
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
 const mascot_transparency_sum_arr = [2, 1, 0, 0, 1, 0, 0, 1, 0, 1];
