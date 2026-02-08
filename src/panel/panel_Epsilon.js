@@ -96,12 +96,15 @@ export async function panel_Epsilon(data = {
     let group_name_text
 
     if (user?.title != null) {
-        group_name_text = user?.title
+        // 多头衔只取最上面那个
+        group_name_text = user?.title?.split(' / ')?.[0]
     } else {
         group_name_text = (group?.name ?? '')
             .replaceAll("(Probationary)", "(Prob)")
             .replaceAll("Nominators", "Nominator")
     }
+
+    group_name_text = TahomaBold.cutStringTail(group_name_text, 28, 200)
 
     const group_name = TahomaBold.getTextPath(group_name_text, 230, 482, 28, 'center baseline', group_name_color)
 
