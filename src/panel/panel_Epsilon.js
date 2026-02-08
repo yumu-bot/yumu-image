@@ -104,7 +104,7 @@ export async function panel_Epsilon(data = {
             .replaceAll("Nominators", "Nominator")
     }
 
-    group_name_text = TahomaBold.cutStringTail(group_name_text, 28, 200)
+    group_name_text = TahomaBold.cutStringTail(group_name_text, 28, 460)
 
     const group_name = TahomaBold.getTextPath(group_name_text, 230, 482, 28, 'center baseline', group_name_color)
 
