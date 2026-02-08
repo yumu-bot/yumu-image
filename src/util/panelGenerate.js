@@ -1039,7 +1039,7 @@ export const PanelGenerate = {
 
         const color_label12 = (star < 4) ? '#1c1719' : '#fff'
 
-        const label2 = s?.beatmap?.id?.toString() || ''
+        const label2 = s?.beatmap_id?.toString() ?? s?.beatmap?.id?.toString() ?? ''
 
         let left1
         let left2
