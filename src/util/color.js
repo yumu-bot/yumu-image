@@ -305,142 +305,46 @@ export function getStarRatingColors(star = 0) {
 }
 
 export function getStarRatingColor(star = 0) {
-    let color;
-    let r0 = 0;
-    let g0 = 0;
-    let b0 = 0;
-    let r1 = 0;
-    let b1 = 0;
-    let g1 = 0;
-    let bottom;
-    let top;
-    const gamma = 2.2; //伽马值
+    if (star < 0.1) return '#AAAAAA';
+    if (star >= 9) return '#000000';
 
+    const GAMMA = 2.2;
 
-    if (star < 1.25) {
-        r0 = 66;
-        g0 = 144;
-        b0 = 251;
-        r1 = 79;
-        g1 = 192;
-        b1 = 255;
-        bottom = 0.1;
-        top = 1.25;
+    // 配置表：[阈值, R, G, B]
+    const stops = [
+        [0.1,  66,  144, 251],
+        [1.25, 79,  192, 255],
+        [2,    79,  255, 213],
+        [2.5,  124, 255, 79],
+        [3.3,  246, 240, 92],
+        [4.2,  255, 104, 104],
+        [4.9,  255, 78,  111],
+        [5.8,  198, 69,  184],
+        [6.7,  101, 99,  222],
+        [7.7,  24,  21,  142],
+        [9,    0,   0,   0]
+    ];
 
-    } else if (star < 2) {
-        r0 = 79;
-        g0 = 192;
-        b0 = 255;
-        r1 = 79;
-        g1 = 255;
-        b1 = 213;
-        bottom = 1.25;
-        top = 2;
+    // 1. 找到当前 star 落在哪个区间
+    let i = stops.findIndex(stop => star < stop[0]);
+    if (i === -1) i = stops.length - 1;
 
-    } else if (star < 2.5) {
-        r0 = 79;
-        g0 = 255;
-        b0 = 213;
-        r1 = 124;
-        g1 = 255;
-        b1 = 79;
-        bottom = 2;
-        top = 2.5;
+    const [bottom, r0, g0, b0] = stops[i - 1];
+    const [top, r1, g1, b1] = stops[i];
 
-    } else if (star < 3.3) {
-        r0 = 124;
-        g0 = 255;
-        b0 = 79;
-        r1 = 246;
-        g1 = 240;
-        b1 = 92;
-        bottom = 2.5;
-        top = 3.3;
-
-    } else if (star < 4.2) {
-        r0 = 246;
-        g0 = 240;
-        b0 = 92;
-        r1 = 255;
-        g1 = 104;
-        b1 = 104;
-        bottom = 3.3;
-        top = 4.2;
-
-    } else if (star < 4.9) {
-        r0 = 255;
-        g0 = 104;
-        b0 = 104;
-        r1 = 255;
-        g1 = 78;
-        b1 = 111;
-        bottom = 4.2;
-        top = 4.9;
-
-    } else if (star < 5.8) {
-        r0 = 255;
-        g0 = 78;
-        b0 = 111;
-        r1 = 198;
-        g1 = 69;
-        b1 = 184;
-        bottom = 4.9;
-        top = 5.8;
-
-    } else if (star < 6.7) {
-        r0 = 198;
-        g0 = 69;
-        b0 = 184;
-        r1 = 101;
-        g1 = 99;
-        b1 = 222;
-        bottom = 5.8;
-        top = 6.7;
-
-    } else if (star < 7.7) {
-        r0 = 101;
-        g0 = 99;
-        b0 = 222;
-        r1 = 24;
-        g1 = 21;
-        b1 = 142;
-        bottom = 6.7;
-        top = 7.7;
-
-    } else if (star < 9) {
-        r0 = 24;
-        g0 = 21;
-        b0 = 142;
-        r1 = 0;
-        g1 = 0;
-        b1 = 0;
-        bottom = 7.7;
-        top = 9;
-    }
-
+    // 2. 计算插值比例
     const s = (star - bottom) / (top - bottom);
 
-    // https://zhuanlan.zhihu.com/p/37800433/ 伽马的作用
+    // 3. 伽马校正插值函数
+    const interpolate = (c0, c1) => {
+        const val = Math.pow(
+            (1 - s) * Math.pow(c0, GAMMA) + s * Math.pow(c1, GAMMA),
+            1 / GAMMA
+        );
+        return Math.round(val).toString(16).padStart(2, '0');
+    };
 
-    const color2Hex = (c0 = 0, c1 = 0, s = 0) => {
-        return clamp(
-            Math.round(Math.pow((1 - s) * Math.pow(c0, gamma) + s * Math.pow(c1, gamma), 1 / gamma)
-        ), 255, 0).toString(16).padStart(2, '0');
-    }
-
-    const gHex = color2Hex(g0, g1, s);
-    const bHex = color2Hex(b0, b1, s);
-    const rHex = color2Hex(r0, r1, s);
-
-    color = '#' + rHex + gHex + bHex;
-
-    if (star < 0.1) {
-        color = '#AAAAAA';
-    } else if (star >= 9) {
-        color = '#000';
-    }
-
-    return color;
+    return `#${interpolate(r0, r1)}${interpolate(g0, g1)}${interpolate(b0, b1)}`;
 }
 
 //获取玩家名次的背景色，给一二三名赋予特殊的颜色

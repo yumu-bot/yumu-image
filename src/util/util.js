@@ -17,7 +17,7 @@ import FileCache from './fileCache.js';
 import puppeteer from "puppeteer";
 import { EventEmitter } from 'events';
 
-const VERSION = 'v0.7.4'
+const VERSION = 'v0.7.5'
 const VERSION_CODE = 'GM'
 
 const exportsJPEG = new API(new JPEGProvider());
