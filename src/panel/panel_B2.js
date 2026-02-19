@@ -95,7 +95,7 @@ export async function panel_B2(data = {
     svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Map Minus v0.8 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
+    const panel_name = getPanelNameSVG('Map Minus v6 Pre - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
 
     // 计算数值
     const total = (m?.star || 0)
