@@ -52,10 +52,12 @@ export async function panel_B2(data = {
     beatmap: {},
 
     map_minus: {
-        values: [],
+        skills: [],
         bases: [],
         abbreviates: [],
     },
+
+    rating: 0.0,
 
     type: "",
     type_percent: 0.7,
@@ -65,7 +67,7 @@ export async function panel_B2(data = {
 
     const m = data?.map_minus;
 
-    const value_arr = m?.values || [];
+    const value_arr = m?.skills || [];
     const base_arr = m?.bases || [];
     const abbr_arr = m?.abbreviates || [];
 
@@ -98,7 +100,7 @@ export async function panel_B2(data = {
     const panel_name = getPanelNameSVG('Map Minus v6 Pre - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
 
     // 计算数值
-    const total = (m?.star || 0)
+    const total = (m?.rating || 0)
     const delta = total - (data.beatmap?.difficulty_rating || 0);
     const total_number = floors(total, 2)
     const total_path = torus.get2SizeTextPath(total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', '#fff')//(delta >= 0 ? '#c2e5c3' : '#ffcdd2'));
@@ -204,25 +206,25 @@ export async function panel_B2(data = {
 
     svg = setTexts(svg, [
         drawChart(m?.stream, base_arr[0], 'S', 0, 0, '#39B449'),
-        drawChart(m?.jack, base_arr[1], 'J', 170, 0, '#8DC73D'),
+        drawChart(m?.bracket, base_arr[1], 'B', 170, 0, '#8DC73D'),
+        drawChart(m?.jack, base_arr[5], 'J', 0, 230, '#C2D92F'),
 
         drawChart(m?.release, base_arr[2], 'R', 0, 115, '#00A8EC'),
         drawChart(m?.shield, base_arr[3], 'E', 170, 115, '#0071BC'),
         drawChart(m?.reverse_shield, base_arr[4], 'V', 340, 115, '#0054A6'),
 
-        drawChart(m?.bracket, base_arr[5], 'B', 0, 230, '#FFF100'),
-        drawChart(m?.hand_lock, base_arr[6], 'H', 170, 230, '#FFE11D'),
+        drawChart(m?.hand_lock, base_arr[6], 'H', 170, 230, '#FFF100'),
         drawChart(m?.overlap, base_arr[7], 'O', 340, 230, '#EFC72A'),
 
         drawChart(m?.grace, base_arr[8], 'G', 0, 345, '#FF9800'),
         drawChart(m?.delayed_tail, base_arr[9], 'Y', 170, 345, '#EB6100'),
 
-        drawChart(m?.speed_jack, base_arr[10], 'K', 0, 460, '#D32F2F'),
+        drawChart(m?.chord, base_arr[10], 'C', 0, 460, '#D32F2F'),
         drawChart(m?.trill, base_arr[11], 'I', 170, 460, '#EA68A2'),
         drawChart(m?.burst, base_arr[12], 'U', 340, 460, '#EB6877'),
 
-        drawChart(m?.rice_density, base_arr[13], 'C', 0, 575, '#920783'),
-        drawChart(m?.ln_density, base_arr[14], 'D', 170, 575, '#9922EE'),
+        drawChart(m?.fatigue, base_arr[13], 'F', 0, 575, '#920783'),
+        //drawChart(m?.ln_density, base_arr[14], 'D', 170, 575, '#9922EE'),
 
     ], reg_right);
 
@@ -231,79 +233,4 @@ export async function panel_B2(data = {
     svg = setImage(svg, 718, 384, 484, 433, hexagon, reg_hexagon, 1);
 
     return svg.toString();
-}
-
-function getTypeImage(type = "DEFAULT", type_percent = 1) {
-    let image = ''
-
-    if (type_percent < 0.3) {
-        type = "DEFAULT"
-    }
-
-    switch (type.toString().toUpperCase()) {
-        case "EASY_JUMP_TRILL":
-        case "HARD_JUMP_TRILL":
-            image = 'jump_trill'
-            break
-        case "JACK":
-        case "HARD_JACK":
-            image = 'jack'
-            break
-        case "SPEED_STREAM":
-            image = 'speed_stream'
-            break
-        case "STAMINA_RICE":
-            image = 'stamina'
-            break
-        case "EASY_COORDINATE":
-        case "HARD_COORDINATE":
-            image = 'coordinate'
-            break
-        case "EASY_RELEASE":
-        case "HARD_RELEASE":
-            image = 'release'
-            break
-        case "EASY_STREAM":
-        case "HARD_STREAM":
-            image = 'stream'
-            break
-        case "EASY_HYBRID":
-        case "HARD_HYBRID":
-            image = 'hybrid'
-            break
-        case "SHORT_LN":
-            image = 'short_long_note'
-            break
-        case "IRREGULAR_LN":
-            image = 'irregular_release'
-            break
-        case "SINGLE_LINE":
-            image = 'single_track'
-            break
-        case "OVERESTIMATED_SR":
-            image = 'easy'
-            break
-        case "UNDERESTIMATED_SR":
-            image = 'extreme'
-            break
-        case "CLASSIC":
-            image = 'rice'
-            break
-        case "MODERN":
-            image = 'long_note'
-            break
-        case "BURST":
-            image = 'burst'
-            break
-        case "AWMRONE":
-            image = 'awmrone'
-            break
-        case "DEFAULT":
-            image = 'default'
-            break
-        default:
-            return ''
-    }
-
-    return getImageFromV3('Mods', image + '.png')
 }
