@@ -181,7 +181,7 @@ export async function card_A04(data = {
     svg = setSvgBody(svg, 570, 6, n1_pp, reg_label);
     svg = setSvgBody(svg, 350, 36, n1_score, reg_label);
 
-    return svg.toString();
+    return svg;
 }
 function getStatWidthArr (stat_sum = 1, stat_arr = [], minWidth = 10, fullWidth = 325, interval = 5) {
     let stat_width_arr = [];

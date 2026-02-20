@@ -157,6 +157,6 @@ export function card_I01(data = {
     svg = setTexts(svg, [label1, label2], reg_text)
     svg = setTexts(svg, [label1_rrect, label2_rrect], reg_overlay)
 
-    return svg.toString()
+    return svg
 }
 

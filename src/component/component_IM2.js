@@ -78,5 +78,5 @@ export function component_IM2(data = {
     svg = data.map_status ? setImage(svg, 244, 8, 40, 40, status, reg_top_icons, 1) : svg;
     svg = setImage(svg, 0, 0, 290, 130, background, reg_background, 0.6);
 
-    return svg.toString();
+    return svg;
 }

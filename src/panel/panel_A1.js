@@ -262,7 +262,7 @@ export async function panel_A1(data = {
     svg = setText(svg, panelHeight, reg_panelheight);
     svg = setText(svg, cardHeight, reg_cardheight);
 
-    return svg.toString();
+    return svg;
 
 }
 /*

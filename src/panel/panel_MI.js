@@ -120,5 +120,5 @@ export async function panel_MI(data = {
 
     svg = setText(svg, page, reg_card_i)
 
-    return svg.toString()
+    return svg
 }

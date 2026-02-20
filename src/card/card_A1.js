@@ -120,5 +120,5 @@ export async function card_A1(data = {
     svg = setImage(svg, 250 + icon_offset, 70, 40, 40, data?.sub_icon2 ?? '', reg_sub_icon2, 1); //x +5px
     svg = setImage(svg, 70, 68, 320, 52, data?.sub_banner ?? '', reg_banner, 1);
 
-    return svg.toString();
+    return svg;
 }

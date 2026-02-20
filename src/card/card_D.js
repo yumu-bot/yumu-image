@@ -145,6 +145,6 @@ export async function card_D(data = {
     svg = data.background ? setImage(svg, 0, 0, 310, 80, data.background, reg_background, 0.2) : svg;
     svg = data.cover ? setImage(svg, 0, 0, 120, 80, data.cover, reg_cover, 1) : svg;
 
-    return svg.toString();
+    return svg;
 
 }

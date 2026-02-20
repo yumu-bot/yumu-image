@@ -78,7 +78,7 @@ export const colorArray = {
     rainbow: ['#C645B8', '#FF4E6F', '#FF6868', '#F6F05C',
         '#7CFF4F', '#4FFFD5', '#00F2FE'],
 
-    iridescent: ['#FF4E6F', '#FF6868', '#F6F05C', '#00F2FE'],
+    iridescent: ['#FF4E6F', '#F6F05C', '#7CFF4F', '#00F2FE'],
 
     dark_red: ['#4A0B1E', '#6E1818'],
     dark_blue: ['#0E1045', '#004275'],

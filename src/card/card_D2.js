@@ -105,5 +105,5 @@ export async function card_D2(data = {
 
     svg = setImage(svg, 0, 0, 150, 120, data?.background ?? '', reg_background, 0.8)
 
-    return svg.toString()
+    return svg
 }

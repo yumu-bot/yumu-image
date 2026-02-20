@@ -201,7 +201,7 @@ export async function panel_MS(data = {
 
     svg = setText(svg, component_G2(data.user), reg_index)
 
-    return svg.toString()
+    return svg
 }
 
 // 歌曲只有一个版本，只有一个版本有成绩
@@ -586,7 +586,7 @@ const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_
 
     svg = setTexts(svg, [progress_rrect, progress_base_rrect, base], reg_base)
 
-    return svg.toString()
+    return svg
 }
 
 const component_G2 = (user = {}) => {
@@ -621,7 +621,7 @@ const component_G2 = (user = {}) => {
 
     svg = setText(svg, text, reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 /**

@@ -310,7 +310,7 @@ export async function panel_E10(data = {
 
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6)
 
-    return svg.toString()
+    return svg
 }
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
@@ -398,7 +398,7 @@ const component_E1 = async (
     svg = setText(svg, flag_svg, reg_country_flag);
     svg = setImage(svg, 405, 84, 76, 38, team, reg_team_flag, 1, 'xMidYMid meet')
 
-    return svg.toString();
+    return svg;
 }
 
 const component_E2 = (
@@ -446,7 +446,7 @@ const component_E2 = (
 
     svg = setTexts(svg, [ruleset, texts, rrect], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 const component_E3 = (
@@ -482,7 +482,7 @@ const component_E3 = (
 
     svg = setTexts(svg, [status_text, rating_text, rrect], reg_text)
 
-    return svg.toString();
+    return svg;
 }
 
 const component_E4 = (
@@ -527,7 +527,7 @@ const component_E4 = (
 
     svg = setTexts(svg, [density, fail, retry, rrect], reg_text)
 
-    return svg.toString();
+    return svg;
 }
 
 const component_E5 = (
@@ -553,7 +553,7 @@ const component_E5 = (
 
     svg = setText(svg, labels, reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 const component_E6 = (
@@ -586,7 +586,7 @@ const component_E6 = (
 
     svg = setTexts(svg, [texts, mods], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 const component_E7 = (data = {
@@ -774,7 +774,7 @@ const component_E7 = (data = {
 
     svg = setImage(svg, 0, 0, 500, 230, background, reg_bg, 0.4)
 
-    return svg.toString()
+    return svg
 
 
     // 在有值的时候最低是 min_width，没有值则是 0
@@ -826,7 +826,7 @@ const component_E8 = (
 
     svg = setTexts(svg, [text, rrect], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 const component_E9 = (
@@ -851,7 +851,7 @@ const component_E9 = (
 
     svg = setTexts(svg, [text, rrect], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 const component_E10 = (
@@ -882,7 +882,7 @@ const component_E10 = (
         ))
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_E11 = (
@@ -942,7 +942,7 @@ const component_E11 = (
     svg = setImage(svg, 0, 0, 1370, 220, background, reg_background, 0.6);
     svg = setText(svg, rect, reg_base);
 
-    return svg.toString()
+    return svg
 }
 
 
@@ -1431,6 +1431,6 @@ const label_E10D = (data = {
 
     svg += texts
 
-    return svg.toString() + '</g>'
+    return svg + '</g>'
 }
 

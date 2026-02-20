@@ -170,5 +170,5 @@ export async function panel_A11(data = {
     // 插入图片和部件（新方法
     svg = setCustomBanner(svg, await readNetImage(user.banner), reg_banner);
 
-    return svg.toString()
+    return svg
 }

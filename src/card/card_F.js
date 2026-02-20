@@ -553,5 +553,5 @@ export async function card_F(data = {
         svg = setSvgBody(svg, x, y, c3, reg_bodycard);
     }
 
-    return svg.toString();
+    return svg;
 }

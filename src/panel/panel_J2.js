@@ -244,7 +244,7 @@ export async function panel_J2(data = {
 
     svg = setTexts(svg, [bodyJ1, bodyJ2, bodyJ3, bodyJ4, bodyJ5, bodyJ6, bodyJ7, bodyJ8], reg_component);
 
-    return svg.toString()
+    return svg
 }
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
@@ -290,7 +290,7 @@ const component_J1 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_J2 = (
@@ -325,7 +325,7 @@ const component_J2 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_J3 = (
@@ -418,7 +418,7 @@ const component_J3 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_J4 = (
@@ -526,7 +526,7 @@ const component_J4 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_J5 = (
@@ -591,7 +591,7 @@ const component_J5 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_J6 = (
@@ -646,7 +646,7 @@ const component_J6 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_J7 = (
@@ -710,7 +710,7 @@ const component_J7 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_J8 = async (
@@ -757,7 +757,7 @@ const component_J8 = async (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 // 私有转换方式

@@ -190,7 +190,7 @@ export async function panel_F(
     const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(data, beatmap_arr[0]));
     svg = setSvgBody(svg, 40, 40, matchInfo, reg_maincard);
 
-    return svg.toString();
+    return svg;
 }
 
 async function event2CardF(

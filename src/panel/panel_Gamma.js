@@ -163,7 +163,7 @@ export async function panel_Gamma(data = {
     svg = setImage(svg, 240, 0, 400, 360, data.background, reg_background, is_score ? 1 : 0.6);
     svg = setImage(svg, 366, 80, 148, 160, hexagon, reg_map_hexagon, 1);
 
-    return svg.toString();
+    return svg;
 }
 
 const PanelGamma = {

@@ -175,5 +175,5 @@ export async function panel_A4(data = {
     }
 
 
-    return svg.toString();
+    return svg;
 }

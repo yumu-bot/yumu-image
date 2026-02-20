@@ -385,7 +385,7 @@ export async function panel_E5(data = {
         svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
     }
 
-    return svg.toString();
+    return svg;
 }
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
@@ -1147,7 +1147,7 @@ const component_E10P = (
     svg = isNotBlankString(data?.rainbow_rank) ?
         setImage(svg, 140, 160, 100, 100, getImageFromV3(data?.rainbow_crown), reg_crown, 1) : svg
 
-    return svg.toString();
+    return svg;
 }
 
 

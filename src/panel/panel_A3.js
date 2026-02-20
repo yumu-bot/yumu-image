@@ -139,5 +139,5 @@ export async function panel_A3(data = {
 
     svg = setText(svg, string_a4s, reg_list_n1)
 
-    return svg.toString();
+    return svg;
 }

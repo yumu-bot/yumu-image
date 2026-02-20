@@ -283,7 +283,7 @@ export async function panel_E7(
         svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
     }
 
-    return svg.toString();
+    return svg;
 }
 
 
@@ -322,7 +322,7 @@ const card_E7 = async (
     svg = setImage(svg, 10, 0, 80, 80, avatar, reg_avatar, 1)
     svg = setText(svg, name, reg_text)
 
-    return svg.toString();
+    return svg;
 }
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
@@ -839,7 +839,7 @@ const component_E13 = async (
     svg = setText(svg, title, reg_text);
     svg = setText(svg, rect, reg_base);
 
-    return svg.toString()
+    return svg
 }
 
 // 私有转换方式

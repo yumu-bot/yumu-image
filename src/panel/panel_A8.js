@@ -152,5 +152,5 @@ export async function panel_A8(
 
     svg = setText(svg, panel_height, reg_panelheight);
     svg = setText(svg, card_height, reg_cardheight);
-    return svg.toString();
+    return svg;
 }

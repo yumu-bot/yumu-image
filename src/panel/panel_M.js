@@ -420,7 +420,7 @@ export async function panel_M(data = {
     svg = setSvgBody(svg, 40, 40, cardA1, reg_me_A1);
     svg = setSvgBody(svg, 60, 350, cardO1, reg_me);
 
-    return svg.toString();
+    return svg;
 }
 
 function getPendingSlot(isSupporter = false, ranked = 0) {

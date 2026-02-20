@@ -14,6 +14,7 @@ export function card_K(data = {
     background: '',
     star: 0,
     skill: [ 3.9850707, 3.2580092, 3.869737, 1.9129845, 4.86813, 4.008765 ],
+    skill_sum: 0,
     skill_color: '#fff',
     hexagon_color: '#fff',
     mods: [],
@@ -76,8 +77,7 @@ export function card_K(data = {
     const hexagon_index = PanelDraw.HexagonIndex(skill.map(v => floor(v, 1)), 235 / 2, 118 / 2, 50, Math.PI / 3, data?.skill_color, 'none', 20)
     const hexagon_background = getImageFromV3('object-hexagon.png')
 
-    const skill_sort = skill.sort((a, b) => b - a)
-    const skill_sort_sum = skill_sort[0] * 0.5 + skill_sort[1] * 0.3 + skill_sort[2] * 0.2 + skill_sort[3] * 0.15 + skill_sort[4] * 0.1
+    const skill_sort_sum = data.skill_sum ?? 0
     const skill_sum = torusBold.getTextPath(floor(skill_sort_sum, 2), 235 / 2, 68, 20, 'center baseline', '#FFF')
 
     svg = setText(svg, skill_sum, reg_overlay)
@@ -88,5 +88,5 @@ export function card_K(data = {
 
     svg = setImage(svg, 0, 0, 235, 148, data?.background, reg_background, 0.4)
 
-    return svg.toString()
+    return svg
 }

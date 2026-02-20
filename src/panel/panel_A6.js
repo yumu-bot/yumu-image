@@ -109,7 +109,7 @@ export async function panel_A6(data = {
     svg = setText(svg, panelHeight, reg_panelheight);
     svg = setText(svg, cardHeight, reg_cardheight);
 
-    return svg.toString();
+    return svg;
 }
 
 function getPanelName(name = ""){

@@ -453,7 +453,7 @@ export async function panel_B3(data = {
     const hexagon = getImageFromV3('object-hexagon.png');
     svg = setImage(svg, 718, 384, 484, 433, hexagon, reg_hexagon, 1);
 
-    return svg.toString();
+    return svg;
 }
 
 const getRoman = (level = 0) => {

@@ -104,7 +104,7 @@ export async function panel_H (
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
     svg = setSvgBody(svg,40, 40, poolInfo, reg_maincard);
 
-    return svg.toString();
+    return svg;
 }
 
 async function drawModPool(pool = {

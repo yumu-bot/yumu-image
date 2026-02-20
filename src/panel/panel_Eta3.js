@@ -324,7 +324,7 @@ export async function panel_Eta3(data = {
     svg = setSvgBody(svg, 180, 40, componentEta1, reg_component);
     svg = setTexts(svg, [componentEta2, result], reg_component);
 
-    return svg.toString()
+    return svg
 }
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
@@ -464,7 +464,7 @@ const component_Eta1 = (
     svg = setText(svg, progress, reg_progress)
     svg = setText(svg, progress_base, reg_progress_base)
 
-    return svg.toString()
+    return svg
 }
 
 
@@ -692,7 +692,7 @@ const component_Eta2 = (data = {
     svg = setText(svg, rrects, reg_base)
 
 
-    return svg.toString()
+    return svg
 }
 
 // 私有转换方式

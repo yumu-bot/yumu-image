@@ -7,15 +7,15 @@ import {
     readTemplate, setText,
     setTexts, floor, floors, getMapBackground, getSvgBody
 } from "../util/util.js";
-import {PuHuiTi, torus} from "../util/font.js";
+import {poppinsBold} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
-import {card_B1} from "../card/card_B1.js";
-import {card_B2} from "../card/card_B2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getRankBackground, getRankFromValue} from "../util/star.js";
-import {getRankColor} from "../util/color.js";
+import {getRankFromValue} from "../util/star.js";
+import {getRankColors} from "../util/color.js";
 import {LABEL_MM} from "../component/label.js";
+import {card_B6} from "../card/card_B6.js";
+import {card_B7} from "../card/card_B7.js";
 
 export async function router(req, res) {
     try {
@@ -58,6 +58,10 @@ export async function panel_B2(data = {
     },
 
     rating: 0.0,
+    dan: {
+        "reform_level": "2",
+        "reform_grade": "10+",
+    },
 
     type: "",
     type_percent: 0.7,
@@ -67,9 +71,9 @@ export async function panel_B2(data = {
 
     const m = data?.map_minus;
 
-    const value_arr = m?.skills || [];
-    const base_arr = m?.bases || [];
-    const abbr_arr = m?.abbreviates || [];
+    const value_arr = m?.skills ?? m.values ?? [];
+    const base_arr = m?.bases ?? [];
+    const abbr_arr = m?.abbreviates ?? [];
 
     const map_minus_mania = {
         RC: value_arr[0],
@@ -97,13 +101,13 @@ export async function panel_B2(data = {
     svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Map Minus v6 Pre - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
+    const panel_name = getPanelNameSVG('Map Minus v6.0 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
 
     // 计算数值
-    const total = (m?.rating || 0)
-    const delta = total - (data.beatmap?.difficulty_rating || 0);
+    const total = (m?.rating ?? m?.stars ?? 0)
     const total_number = floors(total, 2)
-    const total_path = torus.get2SizeTextPath(total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', '#fff')//(delta >= 0 ? '#c2e5c3' : '#ffcdd2'));
+    const total_path = poppinsBold.get2SizeTextPath(total_number.integer, total_number.decimal, 60, 36, 960, 614, 'center baseline', '#fff')
+
 
     // 插入文字
     svg = setTexts(svg, [panel_name, total_path], reg_index);
@@ -113,117 +117,102 @@ export async function panel_B2(data = {
     svg = setSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 获取卡片
-    let cardB1s = [];
+    let cardB6s = [];
     let hexagons = [];
-    let cardB2s = [];
+    let cardB7s = [];
 
     for (let i = 0; i < 6; i++) {
         const abbr = abbr_arr[i];
-        if (typeof map_minus_mania[abbr] !== 'number') continue;
+        if (typeof map_minus_mania[abbr] !== 'number') {
+            cardB6s.push('')
+            continue;
+        }
 
         const value = map_minus_mania[abbr];
         const rank = getRankFromValue(value);
-        const color = getRankColor(rank);
-        const background = getRankBackground(rank);
+        const icon_colors = getRankColors(rank);
 
-        cardB1s.push(await card_B1({
-
-            label: LABEL_MM[abbr],
-            background: background,
+        cardB6s.push(card_B6({
+            ...LABEL_MM[abbr],
             value: value,
-            round_level: 2,
-            rank: rank,
-            color: color,
-
+            icon_colors: icon_colors,
+            round_level: 2
         }, false));
         hexagons.push(map_minus_mania[abbr] / 9); //9星以上是X
     }
 
     svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
-    let string_b1s = ''
+    let string_b6s = ''
 
     for (let j = 0; j < 6; j++) {
         const card_order = [0, 5, 4, 1, 2, 3]
         const k = card_order[j]
 
-        string_b1s += getSvgBody(40, 350 + j * 115, cardB1s[k])
+        string_b6s += getSvgBody(40, 340 + j * 115, cardB6s[k])
 
-        // svg = setSvgBody(svg, 40, 350 + j * 115, cardB1s[k], reg_left);
     }
 
-    svg = setText(svg, string_b1s, reg_left)
+    svg = setText(svg, string_b6s, reg_left)
 
     const rank_ov = getRankFromValue(total);
-    const color_ov = getRankColor(rank_ov);
-    const background_ov = getRankBackground(rank_ov);
+    const colors_ov = getRankColors(rank_ov);
 
-    cardB2s.push(await card_B2({
-        label: {
-            icon: getImageFromV3("object-score-aimpp.png"),
-            icon_title: '差值',
-            remark: 'Delta',
-            data_b: 'D',
-            data_m: '',
-            color_remark: '#aaa',
-            title_font: PuHuiTi,
-        },
-        background: background_ov,
-        value: delta, //total,
-        round_level: 2,
-        rank: rank_ov,
-        color: color_ov,
+    cardB7s.push(card_B7({
+        ...LABEL_MM.DN,
+        value: m.dan?.reform_level,
+        data_b: m.dan?.reform_grade,
+        data_m: '',
+        max: 15,
+        icon_colors: colors_ov,
+        round_level: 2
     }));
 
-    cardB2s.push(await card_B2({
-        label: LABEL_MM.SV,
-        value: 'NaN',
+    cardB7s.push(card_B7({
+        ...LABEL_MM.SV,
+        icon_colors: colors_ov,
+        value: 0,
+        data_b: '-',
+        data_m: '',
         round_level: 2,
-    }));
+    }, true));
 
     //todo NaN
 
-    svg = setSvgBody(svg, 630, 860, cardB2s[0], reg_center);
-    svg = setSvgBody(svg, 970, 860, cardB2s[1], reg_center);
+    svg = setSvgBody(svg, 630, 890, cardB7s[0], reg_center);
+    svg = setSvgBody(svg, 970, 890, cardB7s[1], reg_center);
 
     // 插入种类（测试中）
-    const type_image = '' // getTypeImage(data?.type, data?.type_percent)
+    const type_image = ''
     const type_percent = ''
-        /*
-        data?.type_percent > 0 ?
-        torus.getTextPath(Math.round(data?.type_percent * 100) + '%', 1685 + 195/2, 210 - 8, 16, 'center baseline', '#fff')
-        : ''
-
-         */
 
     svg = setText(svg, type_percent, reg_right)
     svg = setImage(svg, 1685, 210, 195, 60, type_image, reg_right, 1)
 
     // todo 临时的值
     function drawChart(array = [], index = 0, name = "null", x = 0, y = 0, color = '#fff') {
-        return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + torus.getTextPath(name + ": " + floor(index, 1), 75 + 1370 + x, -35 + 445 + y, 24, 'center baseline', '#fff')
+        return PanelDraw.LineChart(array, 0, 0, 1370 + x, 445 + y, 150, 95, color, 0.7, 0.2, 3) + poppinsBold.getTextPath(name + ": " + floor(index, 1), 75 + 1370 + x, -35 + 445 + y, 24, 'center baseline', '#fff')
     }
 
     svg = setTexts(svg, [
         drawChart(m?.stream, base_arr[0], 'S', 0, 0, '#39B449'),
         drawChart(m?.bracket, base_arr[1], 'B', 170, 0, '#8DC73D'),
-        drawChart(m?.jack, base_arr[5], 'J', 0, 230, '#C2D92F'),
+        drawChart(m?.jack, base_arr[2], 'J', 340, 0, '#C2D92F'),
 
-        drawChart(m?.release, base_arr[2], 'R', 0, 115, '#00A8EC'),
-        drawChart(m?.shield, base_arr[3], 'E', 170, 115, '#0071BC'),
-        drawChart(m?.reverse_shield, base_arr[4], 'V', 340, 115, '#0054A6'),
+        drawChart(m?.release, base_arr[3], 'R', 0, 115, '#00A8EC'),
+        drawChart(m?.shield, base_arr[4], 'E', 170, 115, '#0071BC'),
+        drawChart(m?.reverse_shield, base_arr[5], 'V', 340, 115, '#0054A6'),
 
-        drawChart(m?.hand_lock, base_arr[6], 'H', 170, 230, '#FFF100'),
-        drawChart(m?.overlap, base_arr[7], 'O', 340, 230, '#EFC72A'),
+        drawChart(m?.hand_lock, base_arr[6], 'H', 0, 230, '#FFF100'),
+        drawChart(m?.overlap, base_arr[7], 'O', 170, 230, '#EFC72A'),
 
         drawChart(m?.grace, base_arr[8], 'G', 0, 345, '#FF9800'),
         drawChart(m?.delayed_tail, base_arr[9], 'Y', 170, 345, '#EB6100'),
 
-        drawChart(m?.chord, base_arr[10], 'C', 0, 460, '#D32F2F'),
-        drawChart(m?.trill, base_arr[11], 'I', 170, 460, '#EA68A2'),
-        drawChart(m?.burst, base_arr[12], 'U', 340, 460, '#EB6877'),
+        drawChart(m?.trill, base_arr[10], 'T', 0, 460, '#D32F2F'),
+        drawChart(m?.burst, base_arr[11], 'U', 170, 460, '#EB6877'),
 
-        drawChart(m?.fatigue, base_arr[13], 'F', 0, 575, '#920783'),
+        drawChart(m?.fatigue, base_arr[12], 'F', 0, 575, '#920783'),
         //drawChart(m?.ln_density, base_arr[14], 'D', 170, 575, '#9922EE'),
 
     ], reg_right);
@@ -232,5 +221,5 @@ export async function panel_B2(data = {
     const hexagon = getImageFromV3('object-hexagon.png');
     svg = setImage(svg, 718, 384, 484, 433, hexagon, reg_hexagon, 1);
 
-    return svg.toString();
+    return svg;
 }

@@ -190,7 +190,7 @@ export function card_I4(data = {
     svg = setSvgBody(svg, 342, 54, stars, reg_rank)  //注意。这个组件的锚点在右上角
     svg = setImage(svg, 300, 4, 45, 30, data?.type, reg_overlay, 1);
 
-    return svg.toString()
+    return svg
 }
 
 function drawStars(level = 0) {

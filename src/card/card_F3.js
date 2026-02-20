@@ -135,7 +135,7 @@ export async function card_F3(match_score = {}, max_combo = 0, compare_score = 0
 
     svg = setTexts(svg, [name, ranking, judge, miss_count, score, delta], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 function getDeltaScore(score = 0, compare = 0) {

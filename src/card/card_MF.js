@@ -199,7 +199,7 @@ export async function card_MF(song = {
 
     svg = setText(svg, base, reg_base)
 
-    return svg.toString()
+    return svg
 }
 
 function drawDifficultyLabels(ds = [], level = [], highlight = []) {
@@ -245,5 +245,5 @@ function drawDifficultyLabels(ds = [], level = [], highlight = []) {
         x += (label.width + 8)
     }
 
-    return svg.toString()
+    return svg
 }

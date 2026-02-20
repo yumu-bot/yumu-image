@@ -193,7 +193,7 @@ export async function panel_D2(data = {
     svg = setCustomBanner(svg, data.user?.profile?.banner, reg_banner);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 
-    return svg.toString();
+    return svg;
 }
 
 
@@ -289,7 +289,7 @@ const component_D1 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_D2 = (
@@ -324,7 +324,7 @@ const component_D2 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_D3 = (
@@ -411,7 +411,7 @@ const component_D3 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_D4 = (
@@ -447,7 +447,7 @@ const component_D4 = (
         svg = setText(svg, PanelDraw.Rect(550, 330, 820, 710, 20, PanelColor.middle(data.hue), 1), reg_base)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_D5 = (
@@ -527,7 +527,7 @@ const component_D5 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_D6 = (
@@ -583,7 +583,7 @@ const component_D6 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_D7 = (
@@ -636,7 +636,7 @@ const component_D7 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 const component_D8 = (
@@ -759,7 +759,7 @@ const component_D8 = (
         svg = setTexts(svg, [title, rrect], reg)
     }
 
-    return svg.toString()
+    return svg
 }
 
 // 私有转换方式

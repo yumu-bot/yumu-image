@@ -69,5 +69,5 @@ export function component_IM1(data = {
     // 插入背景
     svg = setImage(svg, 0, 0, 390, 210, data.background, reg_background, 0.6);
 
-    return svg.toString();
+    return svg;
 }

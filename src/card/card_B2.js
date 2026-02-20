@@ -39,5 +39,5 @@ export async function card_B2(data = {
     svg = setTexts(svg, [rank_text, number_text], reg_text);
     svg = setImage(svg, 0, 0, 320, 160, data?.background || getImageFromV3('object-score-backimage-F.jpg'), reg_background, 0.3);
 
-    return svg.toString();
+    return svg;
 }

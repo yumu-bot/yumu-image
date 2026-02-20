@@ -507,7 +507,7 @@ export const PanelDraw = {
     },
 
     // 六边形图的标识，offset 是直接加在弧度上（弧度制，比如 π/3 = 60°），r 是中点到边点的距离，一般比 Hexagon 230 大一点 + 30
-    HexagonIndex: (data = ['A', 'B', 'C', 'D', 'E', 'F'], cx = 960, cy = 600, r = 260, offset = 0, text_color = '#fff', background_color = '#54454C', size = 24) => {
+    HexagonIndex: (data = ['A', 'B', 'C', 'D', 'E', 'F'], cx = 960, cy = 600, r = 260, offset = 0, text_color = '#fff', background_color = '#54454C', size = 24, font = torusBold) => {
         if (data?.length < 6) return '';
         const PI_3 = Math.PI / 3;
 
@@ -521,9 +521,9 @@ export const PanelDraw = {
             const x = cx - r * Math.cos(PI_3 * i + offset);
             const y = cy - r * Math.sin(PI_3 * i + offset);
 
-            const param_text = torusBold.getTextPath(value, x, y + 8, size, 'center baseline', text_color);
+            const param_text = font.getTextPath(value, x, y + 8, size, 'center baseline', text_color);
             svg = setText(svg, param_text, reg_text)
-            const param_width = torusBold.getTextWidth(value, size);
+            const param_width = font.getTextWidth(value, size);
             const rrect = PanelDraw.Rect(x - param_width / 2 - 20, y - 15, param_width + 40, 30, 15, background_color);
             svg = setText(svg, rrect, reg_rrect);
 
@@ -549,7 +549,7 @@ export const PanelDraw = {
         }
 
         svg += '</g>'
-        return svg.toString()
+        return svg
     },
 
     /**

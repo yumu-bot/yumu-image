@@ -198,7 +198,7 @@ async function panel_F3(
     svg = setText(svg, card_height + (1080 - 790), reg_panelheight);
     svg = setText(svg, card_height, reg_height);
 
-    return svg.toString();
+    return svg;
 }
 
 // 绘制横幅
@@ -326,7 +326,7 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
 
     svg += ('<g>' + (base_rrect + left_rrect + right_rrect + left_score + right_score + left_text + right_text) + '</g>')
 
-    return svg.toString()
+    return svg
 }
 
 // 绘制主卡
@@ -412,7 +412,7 @@ async function drawH2HCard(scores = [], max_combo = 0) {
         }
     }
 
-    return svg.toString()
+    return svg
 }
 
 async function drawVSCard(team_scores = [], enemy_scores = [], max_combo = 0, to_right = true) {
@@ -467,5 +467,5 @@ async function drawVSCard(team_scores = [], enemy_scores = [], max_combo = 0, to
         }
     }
 
-    return svg.toString()
+    return svg
 }

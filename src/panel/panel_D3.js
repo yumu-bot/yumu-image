@@ -318,7 +318,7 @@ export async function panel_D3(
     svg = setCustomBanner(svg, data.user?.profile?.banner, reg_banner);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.4);
 
-    return svg.toString();
+    return svg;
 }
 
 const component_D1 = (

@@ -179,7 +179,7 @@ export function card_I02(data = {
     svg = setImage(svg, 385, 4, 45, 30, data?.type, reg_overlay, 1);
     svg = setSvgBody(svg, 316, 32, data?.component3, reg_rank) // 105 * 15
 
-    return svg.toString()
+    return svg
 }
 
 function drawStars(level = 0) {

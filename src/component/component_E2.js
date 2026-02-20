@@ -151,7 +151,7 @@ export async function component_E2(data = {
     svg = setSvgBody(svg, 560, 350, combo, reg_label);
     svg = setSvgBody(svg, 770, 350, pp, reg_label);
 
-    return svg.toString();
+    return svg;
 }
 
 //顺便把左上角的 personal best 加了

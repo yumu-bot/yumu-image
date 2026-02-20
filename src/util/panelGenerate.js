@@ -1286,6 +1286,7 @@ export const PanelGenerate = {
             background: background,
             star: skill?.score?.beatmap?.difficulty_rating || 0,
             skill: skill?.skill,
+            skill_sum: skill?.skill_sum ?? 0,
             skill_color: '#fff',
             hexagon_color: '#bbb',
             mods: skill?.score?.mods,

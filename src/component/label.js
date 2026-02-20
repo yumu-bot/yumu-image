@@ -1,9 +1,9 @@
 import {
     getGameMode, setImage, setText, setTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, floors,
-    getImageFromV3Cache,
+    getImageFromV3Cache, readBufferFromV3,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
-import {getModColor, getStarRatingColor, getUserRankColor, hex2hsl, PanelColor} from "../util/color.js";
+import {colorArray, getModColor, getStarRatingColor, getUserRankColor, hex2hsl, PanelColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModCirclePath, getModFullName} from "../util/mod.js";
 
@@ -330,78 +330,190 @@ export const LABEL_PPP = {
 export const LABEL_MM = {
 
     RC: {
-        icon: getImageFromV3Cache("object-score-rice.png"),
-        icon_title: '米',
-        remark: 'Rice',
-        data_b: 'RC',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
+        icon: readBufferFromV3('Icons', 'bowl-rice-solid-full.svg'),
+        title: 'RC',
+        left_1: 'Rice',
+        left_2: '米',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.green,
     },
     LN: {
-        icon: getImageFromV3Cache("object-score-longnote.png"),
-        icon_title: '面',
-        remark: 'Long Note',
-        data_b: 'LN',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
+        icon: readBufferFromV3('Icons', 'chart-simple-solid-full.svg'),
+        title: 'LN',
+        left_1: 'Long Note',
+        left_2: '面',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.blue,
     },
     CO: {
-        icon: getImageFromV3Cache("object-score-circlesize.png"),
-        icon_title: '协调',
-        remark: 'Coordinate',
-        data_b: 'CO',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
+        icon: readBufferFromV3('Icons', 'hand-spock-solid-full.svg'),
+        title: 'CO',
+        left_1: 'Coordinate',
+        left_2: '协调',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.yellow,
     },
     ST: {
-        icon: getImageFromV3Cache("object-score-healthpoint.png"),
-        icon_title: '耐力',
-        remark: 'Stamina',
-        data_b: 'ST',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
+        icon: readBufferFromV3('Icons', 'heart-circle-bolt-solid-full.svg'),
+        title: 'ST',
+        left_1: 'Stamina',
+        left_2: '耐力',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.amber,
     },
     SP: {
-        icon: getImageFromV3Cache("object-score-max.png"),
-        icon_title: '速度',
-        remark: 'Speed',
-        data_b: 'SP',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
+        icon: readBufferFromV3('Icons', 'gauge-high-solid-full.svg'),
+        title: 'SP',
+        left_1: 'Speed',
+        left_2: '速度',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.red,
     },
     PR: {
-        icon: getImageFromV3Cache("object-score-overalldifficulty.png"),
-        icon_title: '彩率',
-        remark: 'Precision',
-        data_b: 'PR',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
+        icon: readBufferFromV3('Icons', 'bullseye-solid-full.svg'),
+        title: 'PR',
+        left_1: 'Precision',
+        left_2: '彩率',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.purple,
     },
     SV: {
-        icon: getImageFromV3Cache("object-score-beatsperminute.png"),
-        icon_title: '变速',
-        remark: 'S.Variation',
-        data_b: 'SV',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
+        icon: readBufferFromV3('Icons', 'spiral-solid-full.svg'),
+        title: 'SV',
+        left_1: 'S.Variation',
+        left_2: '变速',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.pink,
     },
-    OV: {
-        icon: getImageFromV3Cache("object-score-aimpp.png"),
-        icon_title: '综合',
-        remark: 'Overall',
-        data_b: 'OV',
-        data_m: '',
-        color_remark: '#aaa',
-        title_font: PuHuiTi,
+    DN: {
+        icon: readBufferFromV3('Icons', 'school-solid-full.svg'),
+        title: 'DN',
+        left_1: 'Dan Level',
+        left_2: '段位',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.sakura,
     },
 
+}
+
+export const LABEL_PPM6 = {
+    ACC: {
+        icon: readBufferFromV3('Icons', 'arrows-to-dot-solid-full.svg'),
+        title: 'ACC',
+        left_1: 'Accuracy',
+        left_2: '准度',
+        min: 60,
+        limit: 100,
+        max: 101,
+        colors: colorArray.green,
+    },
+    PTT: {
+        icon: readBufferFromV3('Icons', 'arrow-trend-up-solid-full.svg'),
+        title: 'PTT',
+        left_1: 'Potential',
+        left_2: '潜力',
+        min: 60,
+        limit: 100,
+        max: 101,
+        colors: colorArray.blue,
+    },
+    STA: {
+        icon: readBufferFromV3('Icons', 'heart-circle-bolt-solid-full.svg'),
+        title: 'STA',
+        left_1: 'Stamina',
+        left_2: '耐力',
+        min: 60,
+        limit: 100,
+        max: 101,
+        colors: colorArray.yellow,
+    },
+    STB: {
+        icon: readBufferFromV3('Icons', 'anchor-solid-full.svg'),
+        title: 'STB',
+        left_1: 'Stability',
+        left_2: '稳定',
+        min: 60,
+        limit: 100,
+        max: 101,
+        colors: colorArray.amber,
+    },
+    PRE: {
+        icon: readBufferFromV3('Icons', 'bullseye-solid-full.svg'),
+        title: 'PRE',
+        left_1: 'Precision',
+        left_2: '彩率',
+        min: 60,
+        limit: 100,
+        max: 101,
+        colors: colorArray.purple,
+    },
+    EFT: {
+        icon: readBufferFromV3('Icons', 'street-view-solid-full.svg'),
+        title: 'EFT',
+        left_1: 'Effort',
+        left_2: '肝力',
+        min: 60,
+        limit: 100,
+        max: 101,
+        colors: colorArray.red,
+    },
+    STH: {
+        icon: readBufferFromV3('Icons', 'weight-hanging-solid-full.svg'),
+        title: 'STR',
+        left_1: 'Strength',
+        left_2: '强度',
+        min: 60,
+        limit: 100,
+        max: 101,
+        colors: colorArray.purple,
+    },
+    OVA: {
+        icon: readBufferFromV3('Icons', 'clipboard-list-solid-full.svg'),
+        title: 'ALL',
+        left_1: 'Overall',
+        left_2: '综合',
+        min: 60,
+        limit: 100,
+        max: 101,
+        colors: colorArray.sakura,
+    },
+    OII: {
+        icon: readBufferFromV3('Icons', 'dna-solid-full.svg'),
+        title: 'OII',
+        left_1: 'O. Improvement I.',
+        left_2: '成长指数',
+        min: 0,
+        limit: 3,
+        max: 6,
+        colors: colorArray.pink,
+    },
+
+    SAN: {
+        icon: readBufferFromV3('Icons', 'dna-solid-full.svg'),
+        title: 'SAN',
+        left_1: 'Sanity',
+        left_2: '理智',
+        min: 0,
+        limit: 100,
+        max: 120,
+        colors: colorArray.pink,
+    },
 }
 
 export const LABEL_PPM = {
@@ -620,7 +732,7 @@ export async function label_C1(data = {
 
     svg = setImage(svg, 0, 0, 100, 100, avatar, reg_avatar, opacity);
 
-    return svg.toString();
+    return svg;
 }
 
 export async function label_C2(data = {
@@ -682,7 +794,7 @@ export async function label_C2(data = {
     //插入图片
     svg = setImage(svg, 0, 0, 30, 30, avatar, reg_avatar, opacity);
 
-    return svg.toString();
+    return svg;
 }
 
 export async function label_C3(data = {
@@ -711,7 +823,7 @@ export async function label_C3(data = {
 
     svg = setImage(svg, 0, 0, 30, 30, avatar, reg_avatar, opacity);
 
-    return svg.toString();
+    return svg;
 }
 
 
@@ -757,7 +869,7 @@ export async function label_D1(data = {
     }
     svg = setImage(svg, 142.5, 0, 74, 74, data.icon, reg_icon, 1) //应该是 75
 
-    return svg.toString();
+    return svg;
 }
 
 /**
@@ -801,7 +913,7 @@ export async function label_D2(data = {
     }
     svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
-    return svg.toString();
+    return svg;
 }
 /**
  * panel D 在 0.5.0 升级的 label（放在左下角），归类为 label_D3
@@ -838,7 +950,7 @@ export function label_D3(data = {
         svg = setImage(svg, 5, 5, 40, 40, data?.icon, reg_icon, 1)
     }
 
-    return svg.toString()
+    return svg
 }
 
 /**
@@ -900,7 +1012,7 @@ export function label_D4(data = {
     if (data.hide === true) {
         svg = setTexts(svg, [number_data], reg_text)
 
-        return svg.toString()
+        return svg
     }
 
     svg = setTexts(svg, [abbr, title, number_data], reg_text)
@@ -920,7 +1032,7 @@ export function label_D4(data = {
 
     svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
-    return svg.toString();
+    return svg;
 }
 
 /**
@@ -967,7 +1079,7 @@ export function label_D5(data = {
     if (data.hide === true) {
         svg = setTexts(svg, [number_data], reg_text)
 
-        return svg.toString()
+        return svg
     }
 
     svg = setTexts(svg, [abbr, remark, number_data], reg_text)
@@ -987,7 +1099,7 @@ export function label_D5(data = {
 
     svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
-    return svg.toString();
+    return svg;
 }
 
 /**
@@ -1033,7 +1145,7 @@ export async function label_E(data = {
     }
     svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
-    return svg.toString();
+    return svg;
 }
 
 export function label_E5(data = {
@@ -1098,7 +1210,7 @@ export function label_E5(data = {
     svg = setTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
     svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
-    return svg.toString();
+    return svg;
 }
 
 //BPA-J1-Mod标签
@@ -1132,7 +1244,7 @@ export async function label_J1(data = {
     svg = setTexts(svg, [mod_abbr, mod_fullname, mod_count, pp], reg_text);
     svg = setText(svg, mod_color, reg_modcolor);
 
-    return svg.toString();
+    return svg;
 }
 
 //BPA-J2-谱师标签
@@ -1189,7 +1301,7 @@ export async function label_J2(data = {
     const avatar = await getAvatar(data.avatar, true);
     svg = setImage(svg, 8, 8, 70, 70, avatar, reg_avatar, 1);
 
-    return svg.toString();
+    return svg;
 }
 
 
@@ -1250,7 +1362,7 @@ export async function label_J3(data = {
     //插入图片
     svg = setImage(svg, 0, 0, 40, 40, data.icon || getImageFromV3Cache('object-score-F-small.png'), reg_icon, 1);
 
-    return svg.toString();
+    return svg;
 }
 
 //BA-J4-模组评级标签
@@ -1297,7 +1409,7 @@ export function label_J4(data = {
 
     svg = setTexts(svg, [icon_title, number_data, remark, bar_side, bar, bar_base], reg_text)
 
-    return svg.toString();
+    return svg;
 }
 
 //BA-J5-参数标签
@@ -1375,7 +1487,7 @@ export function label_J5(data = {
     svg = setTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
     svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
-    return svg.toString();
+    return svg;
 }
 
 //BPA-J6-新谱师标签
@@ -1423,7 +1535,7 @@ export async function label_J6(data = {
 
     svg = setTexts(svg, [name, index, pp_and_count, base], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 //BPA-J7-新谱师标签（第一
@@ -1508,7 +1620,7 @@ export async function label_J7(data = {
 
     svg = setTexts(svg, [name, index, pp, count, base], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 
@@ -1598,7 +1710,7 @@ export function label_J8(data = {
     svg = setTexts(svg, [icon_title, number_data, index_data, bar_base, bar], reg_text)
     svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
 
-    return svg.toString();
+    return svg;
 }
 
 // T-小标签
@@ -1640,7 +1752,7 @@ export function label_T(data = {
 
     svg = setTexts(svg, [circle, icon_title, number_data, bar, bar_base], reg_text)
 
-    return svg.toString();
+    return svg;
 }
 
 //Q-M1-难度标签
@@ -1755,7 +1867,7 @@ export async function label_M1(data = {
     svg = setText(svg, rrect_sr_path, reg_rrect);
     svg = setText(svg, rrect_base_path, reg_rrect);
 
-    return svg.toString();
+    return svg;
 }
 
 //Q-M2-客串谱师标签
@@ -1826,7 +1938,7 @@ export async function label_M2(data = {
     // svg = replaceText(svg, name_text, reg_label);
     // svg = replaceText(svg, name_rrect, reg_rrect);
 
-    return svg.toString();
+    return svg;
 }
 
 //Q-M3-四维标签
@@ -1878,7 +1990,7 @@ export async function label_M3(data = {
     svg = setImage(svg, label2_x, 0, 25, 25, data.label2.icon, reg_icon, 1);
     svg = setImage(svg, label3_x, 0, 25, 25, data.label3.icon, reg_icon, 1);
 
-    return svg.toString();
+    return svg;
 }
 
 
@@ -1906,7 +2018,7 @@ export async function label_N(data = {
     svg = setText(svg, label_text, reg_text);
     svg = setImage(svg, 0, 0, 20, 20, data.icon, reg_icon, 1)
 
-    return svg.toString();
+    return svg;
 }
 
 //MSL-N2-成绩标签
@@ -1933,7 +2045,7 @@ export async function label_N2(data = {
     svg = setText(svg, label_text, reg_text);
     svg = setImage(svg, 0, 0, 20, 20, data.icon, reg_icon, 1)
 
-    return svg.toString();
+    return svg;
 }
 
 //IM-O-玩家牌（getUser - groups）
@@ -1964,5 +2076,5 @@ export function label_O(data = {
     svg = setText(svg, text, reg_text);
     svg = setText(svg, base_rrect, reg_rrect);
 
-    return svg.toString();
+    return svg;
 }

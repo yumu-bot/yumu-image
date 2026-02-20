@@ -303,7 +303,7 @@ export async function panel_U(
         center_label, left_label, right_label
     ], reg_body)
 
-    return svg.toString()
+    return svg
 }
 
 async function card_U1(
@@ -450,7 +450,7 @@ async function card_U1(
     svg = setTexts(svg, [mode_icon, supporter_icon], reg_icon)
     svg = setTexts(svg, [pp, name, country_rank, global_rank, country_flag], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 function label_U1(data = {
@@ -485,7 +485,7 @@ function label_U1(data = {
 
     const svg = '<g>' + base + rrect + value + title + icon_background + icon + '</g>'
 
-    return svg.toString()
+    return svg
 }
 
 
@@ -525,5 +525,5 @@ function label_U2(data = {
 
     const svg = '<g>' + base + rrect + text + image + '</g>'
 
-    return svg.toString()
+    return svg
 }

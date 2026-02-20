@@ -230,7 +230,7 @@ export async function panel_MA(data = {
         svg = setText(svg, page, reg_card_i)
     }
 
-    return svg.toString()
+    return svg
 }
 
 /*

@@ -1,6 +1,6 @@
 import {
     exportJPEG,
-    getImageFromV3, getPanelNameSVG, getSvgBody,
+    getImageFromV3, getPanelNameSVG, getSvgBody, rounds,
     setImage,
     setSvgBody, setText,
     setTexts,
@@ -8,14 +8,14 @@ import {
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {torus} from "../util/font.js";
-import {getRankBackground, getRankFromValue} from "../util/star.js";
-import {getRankColor} from "../util/color.js";
-import {card_B1} from "../card/card_B1.js";
+import {poppinsBold} from "../util/font.js";
+import {getRankFromValue} from "../util/star.js";
+import {getRankColors} from "../util/color.js";
 import {LABEL_MM} from "../component/label.js";
-import {card_B2} from "../card/card_B2.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_K} from "../card/card_K.js";
+import {card_B6} from "../card/card_B6.js";
+import {card_B7} from "../card/card_B7.js";
 
 export async function router(req, res) {
     try {
@@ -44,7 +44,7 @@ export async function router_svg(req, res) {
 }
 
 /**
- * 技巧分析
+ * USER SKILL 技巧分析
  * @param data
  * @return {Promise<string>}
  */
@@ -56,6 +56,7 @@ export async function panel_K(data = {
         skill: [],
     }],
     total: 0,
+    dan: {},
 
     vs_user: {},
     vs_skill: [],
@@ -64,6 +65,7 @@ export async function panel_K(data = {
         skill: [],
     }],
     vs_total: 0,
+    vs_dan: {},
 
     panel: "KV",
 }) {
@@ -112,8 +114,16 @@ export async function panel_K(data = {
 
     // 条件定义
     const mode = 'mania'
-    const mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
     const is_vs = data?.panel === 'KV'
+    let middle
+
+    let overall = rounds(data.total, 2)
+
+    if (is_vs) {
+        middle = poppinsBold.getTextPath('KV', 960, 614, 60, 'center baseline', '#fff');
+    } else {
+        middle = poppinsBold.get2SizeTextPath(overall.integer, overall.decimal, 60, 48, 960, 614, 'center baseline', '#fff');
+    }
 
     // 画六个标识
     svg = setText(svg, PanelDraw.HexagonIndex((mode === 'mania') ? VALUE_MANIA : VALUE_NORMAL, 960, 600, 260, Math.PI / 3), reg_hexagon);
@@ -123,11 +133,11 @@ export async function panel_K(data = {
 
     // 面板文字
     const panel_name = is_vs ?
-        getPanelNameSVG('Skill VS v4.0 (!ymkv)', 'KV') :
-        getPanelNameSVG('Skill v4.0 (!ymk)', 'K')
+        getPanelNameSVG('Skill VS v6.0 (!ymkv)', 'KV') :
+        getPanelNameSVG('Skill v6.0 (!ymk)', 'K')
 
     // 插入文字
-    svg = setTexts(svg, [panel_name, mode_path], reg_index);
+    svg = setTexts(svg, [panel_name, middle], reg_index);
 
     // A1 定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
@@ -145,8 +155,8 @@ export async function panel_K(data = {
         for (const i in skills) {
             const k = skills[i]
 
-            const s2h = await PanelGenerate.skill2CardK(k)
-            const ck = card_K(s2h)
+            const s2k = await PanelGenerate.skill2CardK(k)
+            const ck = card_K(s2k)
 
             card_Ks.push(ck)
         }
@@ -162,32 +172,25 @@ export async function panel_K(data = {
 
     // B 卡片
 
-    const card_B1s = []
-    const card_B1v = []
-    const card_B2s = []
+    const card_B6s = []
+    const card_B6v = []
+    const card_B7s = []
 
     const hexagons = []
     for (let i = 0; i < 6; i++) {
         const value = data?.skill[i] || 0
 
-        const name = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
+        const abbr = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
         const rank = getRankFromValue(value)
-        const color = getRankColor(rank)
-        const background = getRankBackground(rank)
+        const icon_colors = getRankColors(rank)
 
-        const b1_data = {
-            label: LABEL_MM[name?.toUpperCase()],
-            background: background,
+        card_B6s.push(card_B6({
+            ...LABEL_MM[abbr],
             value: value,
             delta: is_vs ? value - data?.vs_skill[i] : null,
-            round_level: 2,
-            rank: rank,
-            color: color,
-        }
-
-        card_B1s.push(
-            await card_B1(b1_data, false)
-        )
+            icon_colors: icon_colors,
+            round_level: 2
+        }, false));
 
         hexagons.push(value / 10)
     }
@@ -199,24 +202,17 @@ export async function panel_K(data = {
         for (let i = 0; i < 6; i++) {
             const value = data?.vs_skill[i] || 0
 
-            const name = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
-            const rank = getRankFromValue(value)
-            const color = getRankColor(rank)
-            const background = getRankBackground(rank)
+            const abbr = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
+            const vs_rank = getRankFromValue(value)
+            const icon_colors = getRankColors(vs_rank)
 
-            const b1_data = {
-                label: LABEL_MM[name?.toUpperCase()],
-                background: background,
+            card_B6v.push(card_B6({
+                ...LABEL_MM[abbr],
                 value: value,
-                delta: value - data?.skill[i] ,
-                round_level: 2,
-                rank: rank,
-                color: color,
-            }
-
-            card_B1v.push(
-                await card_B1(b1_data, true)
-            )
+                delta: is_vs ? value - data?.vs_skill[i] : null,
+                icon_colors: icon_colors,
+                round_level: 2
+            }, true));
 
             hexagons.push(value / 10)
         }
@@ -227,7 +223,7 @@ export async function panel_K(data = {
             const card_order = [0, 5, 4, 1, 2, 3]
             const k = card_order[j]
 
-            string_body += getSvgBody(1350, 350 + j * 115, card_B1v[k]);
+            string_body += getSvgBody(1350, 340 + j * 115, card_B6v[k]);
         }
     }
 
@@ -235,44 +231,47 @@ export async function panel_K(data = {
         const card_order = [0, 5, 4, 1, 2, 3]
         const k = card_order[j]
 
-        string_body += getSvgBody(40, 350 + j * 115, card_B1s[k]);
+        string_body += getSvgBody(40, 340 + j * 115, card_B6s[k]);
     }
 
-    const rank_ov = getRankFromValue(data?.total);
-    const color_ov = getRankColor(rank_ov);
-    const background_ov = getRankBackground(rank_ov);
+    const rank_dn = getRankFromValue(data?.total);
+    const colors_dn = getRankColors(rank_dn);
 
-    card_B2s.push(await card_B2({
-        label: LABEL_MM.OV,
-        background: background_ov,
-        value: data?.total,
-        round_level: 2,
-        rank: rank_ov,
-        color: color_ov,
+    card_B7s.push(card_B7({
+        ...LABEL_MM.DN,
+        value: data.dan?.reform_level,
+        data_b: data.dan?.reform_grade,
+        data_m: '',
+        max: 15,
+        icon_colors: colors_dn,
+        round_level: 2
     }));
 
     if (is_vs) {
-        const rank_ov = getRankFromValue(data?.vs_total);
-        const color_ov = getRankColor(rank_ov);
-        const background_ov = getRankBackground(rank_ov);
+        const rank_dv = getRankFromValue(data?.vs_total);
+        const colors_dv = getRankColors(rank_dv);
 
-        card_B2s.push(await card_B2({
-            label: LABEL_MM.OV,
-            background: background_ov,
-            value: data?.vs_total,
-            round_level: 2,
-            rank: rank_ov,
-            color: color_ov,
-        }));
+        card_B7s.push(card_B7({
+            ...LABEL_MM.DN,
+            value: data.vs_dan?.reform_level,
+            data_b: data.vs_dan?.reform_grade,
+            data_m: '',
+            max: 15,
+            icon_colors: colors_dv,
+            round_level: 2
+        }, true));
     } else {
-        card_B2s.push(await card_B2({
-            label: LABEL_MM.SV,
-            value: 'NaN',
+        card_B7s.push(card_B7({
+            ...LABEL_MM.SV,
+            icon_colors: colors_dn,
+            value: 0,
+            data_b: '-',
+            data_m: '',
             round_level: 2,
-        }));
+        }, true));
     }
 
-    string_body += getSvgBody(630, 860, card_B2s[0]) + getSvgBody(970, 860, card_B2s[1])
+    string_body += getSvgBody(630, 890, card_B7s[0]) + getSvgBody(970, 890, card_B7s[1])
 
     svg = setText(svg, string_body, reg_body)
 
@@ -280,5 +279,5 @@ export async function panel_K(data = {
     const hexagon = getImageFromV3('object-hexagon.png');
     svg = setImage(svg, 718, 384, 484, 433, hexagon, reg_hexagon, 1);
 
-    return svg.toString()
+    return svg
 }

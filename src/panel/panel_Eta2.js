@@ -329,7 +329,7 @@ export async function panel_Eta2(data = {
     svg = setSvgBody(svg, 330, 225, componentEta1, reg_component);
     svg = setText(svg, componentEta2, reg_component);
 
-    return svg.toString()
+    return svg
 }
 
 
@@ -479,7 +479,7 @@ const component_Eta1 = (data = {
 
     svg = setTexts(svg, [title, score, mode, mods, judges, combo, pp], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 const component_Eta2 = (data = {
@@ -508,7 +508,7 @@ const component_Eta2 = (data = {
     svg = setImage(svg, 1752, 60, 128, 128, data?.avatar, reg_avatar)
     svg = setTexts(svg, [name, pp], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 

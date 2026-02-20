@@ -26,6 +26,6 @@ export async function card_B3(data = {
 
     svg = setImage(svg, 0, 0, 530, 710, mascot_link, reg_mascot, 1);
 
-    return svg.toString();
+    return svg;
 
 }

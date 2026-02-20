@@ -999,11 +999,20 @@ export function getSvgBody(x = 0, y = 0, body = '') {
     return `<g transform="translate(${x} ${y})">` + body + '</g>';
 }
 
-export function getSvg(svgBody = '', w = 1920, h = 1080) {
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${w} ${h}">
-${svgBody}
+export function getSvg(body = '', x = 0, y = 0, w = 1920, h = 1080, fill = 'white', viewbox_w = w, viewbox_h = h) {
+    if (isEmptyString(body)) {
+        return ''
+    }
+
+    return `<svg x="${x}" y="${y}" width="${w}" height="${h}" style="fill: ${fill};" viewBox="0 0 ${viewbox_w} ${viewbox_h}">
+${body}
 </svg>`;
+}
+
+export function getBody(svg = '') {
+    const contentMatch = svg.match(/<svg[^>]*>([\s\S]*?)<\/svg>/i);
+
+    return contentMatch ? contentMatch[1].toString() : "";
 }
 
 // 数字处理并显示

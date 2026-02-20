@@ -342,7 +342,7 @@ export async function panel_Eta1(data = {
     svg = setSvgBody(svg, 40, 40, componentEta1, reg_component);
     svg = setSvgBody(svg, 40, 290, componentEta2, reg_component);
 
-    return svg.toString()
+    return svg
 }
 
 
@@ -428,7 +428,7 @@ const component_Eta1 = (
 
     svg = setTexts(svg, [title, difficulty, star, gg4u], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 const component_Eta2 = (data = {
@@ -565,7 +565,7 @@ const component_Eta2 = (data = {
         + PanelDraw.Rect(730 - 40, 794 - 290, 600, 6, 3, '#666', 0.5)
 
     svg = setTexts(svg, [titles, judges, rrects, combo, max_combo, accuracy, score, status, pp, pp_compare], reg_text)
-    return svg.toString()
+    return svg
 }
 
 

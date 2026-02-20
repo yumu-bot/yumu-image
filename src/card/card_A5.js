@@ -361,5 +361,5 @@ export async function card_A5(s = {
     const background = await readNetImage(s.covers?.list, hasLeaderBoard(s.ranked));
     svg = setImage(svg, 0, 0, 1370, 210, background, reg_background, 0.5);
 
-    return svg.toString();
+    return svg;
 }

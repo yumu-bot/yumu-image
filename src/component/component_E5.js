@@ -124,7 +124,7 @@ export async function component_E5(data = {
     svg = setSvgBody(svg, 560, 350, combo, reg_label);
     svg = setSvgBody(svg, 770, 350, losspp, reg_label);
 
-    return svg.toString();
+    return svg;
 }
 
 // 成绩分类（中间四个照片）

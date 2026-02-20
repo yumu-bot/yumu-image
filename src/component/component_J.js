@@ -168,5 +168,5 @@ export async function component_J(data = {
 
     svg = setImage(svg, 0, 0, 50, 50, card_icon, reg_label_l, 1);
 
-    return svg.toString();
+    return svg;
 }

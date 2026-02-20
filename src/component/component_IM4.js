@@ -54,7 +54,7 @@ export async function component_IM4(data = {
     svg = setImage(svg, 5, 0, 30, 30, type, reg_image, 1);
     svg = setText(svg, title, reg_text);
 
-    return svg.toString();
+    return svg;
 }
 
 function getActivityTypeV3Path(type = '', approval = '') {

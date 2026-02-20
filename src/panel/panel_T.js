@@ -342,7 +342,7 @@ export async function panel_T(
     svg = setTexts(svg, [componentT1, componentT2, componentT3, componentT4], reg_body)
 
     
-    return svg.toString()
+    return svg
 }
 
 
@@ -373,7 +373,7 @@ const component_T1 = (populars = []) => {
 
     svg = setTexts(svg, [popular_svg, title, base], reg)
 
-    return svg.toString()
+    return svg
 }
 
 const component_T2 = async (best_performance = {
@@ -418,7 +418,7 @@ const component_T2 = async (best_performance = {
 
     svg = setImage(svg, 665 - 70, 120 - 70, 140, 140, async[1], reg_avatar)
 
-    return svg.toString()
+    return svg
 }
 
 const component_T3 = (attr = [], max_percent = 1) => {
@@ -482,7 +482,7 @@ const component_T3 = (attr = [], max_percent = 1) => {
     const circle = PanelDraw.Circle(215, 126, 100, PanelColor.top())
 
     svg = setTexts(svg, [title, mod_svg, string_mod_label, circle, rrect], reg)
-    return svg.toString()
+    return svg
 }
 
 const component_T4 = (attr = [], max_percent = 1) => {
@@ -546,7 +546,7 @@ const component_T4 = (attr = [], max_percent = 1) => {
     const circle = PanelDraw.Circle(215, 126, 100, PanelColor.top())
 
     svg = setTexts(svg, [title, pp_svg, string_pp_label, circle, rrect], reg)
-    return svg.toString()
+    return svg
 }
 
 async function popularInfo2cardA2(info = {}, beatmap = {}) {

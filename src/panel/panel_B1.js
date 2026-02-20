@@ -4,18 +4,18 @@ import {
     getGameMode, getPanelNameSVG,
     setImage,
     setSvgBody, readTemplate,
-    setText, setTexts, getNowTimeStamp
+    setText, setTexts, getNowTimeStamp, getSvgBody
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
-import {card_B1} from "../card/card_B1.js";
-import {card_B2} from "../card/card_B2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {LABEL_PPM} from "../component/label.js";
-import {getRankColor} from "../util/color.js";
-import {getRankBackground, getRankFromValue} from "../util/star.js";
+import {LABEL_PPM6} from "../component/label.js";
+import {getRankColors} from "../util/color.js";
+import {getRankFromValue} from "../util/star.js";
+import {card_B6} from "../card/card_B6.js";
+import {card_B7} from "../card/card_B7.js";
 
 export async function router(req, res) {
     try {
@@ -72,6 +72,9 @@ export async function panel_B1(data = {
         OVA: 99.4, // 0-100
         SAN: 125.45, // 0-100
     },
+
+    my_oii: 0.0,
+
     others: {
         ACC: 0.64, // 0-1
         PTT: 0.8743,
@@ -101,6 +104,8 @@ export async function panel_B1(data = {
     const BOUNDARY = [is_pm4 ? 100.8 : 120, 100, 95, 90, 80, 70, 60, 10];
     const SANITY_BOUNDARY = [is_pm4 ? 100.8 : 120, 100, 95, 90, 80, 70, 60, 0];
     const SANITY_RANKS = ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X'];
+    const OII_BOUNDARY = [0, 0.5, 1, 1.5, 2, 3, 4, 5].toReversed();
+    // const OII_RANKS = ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X'].toReversed();
 
     const VALUE_NORMAL = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH'];
     const VALUE_MANIA = ['ACC', 'PTT', 'STA', 'PRE', 'EFT', 'STH'];
@@ -132,7 +137,7 @@ export async function panel_B1(data = {
     if (is_pm4) {
         const request_time = 'data count: ' + (data.count || 0) + 'x // range: +-' + (data.delta || 0) + 'PP // request time: ' + getNowTimeStamp();
 
-        panel_name = getPanelNameSVG('PP Minus v4.0 (!ympm/!ympv)', 'PM', request_time);
+        panel_name = getPanelNameSVG('PP Minus v4.5 (!ympm/!ympv)', 'PM', request_time);
     } else {
         panel_name = getPanelNameSVG('PP Minus v2.4 Legacy (!ympl)', 'PL');
     }
@@ -143,7 +148,7 @@ export async function panel_B1(data = {
     // 主计算
     let card_B1_lefts = [];
     let card_B1_rights = [];
-    let card_B2_centers = [];
+    let card_B7_centers = [];
 
     let number_left = [];
     let number_right = [];
@@ -153,40 +158,43 @@ export async function panel_B1(data = {
     if (is_vs) {
         let mePP = data.users[0].pp || 0;
         let otherPP = data.users[1].pp || 0;
+        const smoothing = 0.6; // 调节这个值，越小越接近1
 
-        if (mePP >= otherPP && otherPP > 0) {
-            scale_right = otherPP / mePP;
-        } else if (mePP < otherPP && mePP > 0) {
-            scale_left = mePP / otherPP;
+        if (mePP >= otherPP && mePP > 0) {
+            scale_right = Math.pow(otherPP / mePP, smoothing);
+        } else if (otherPP > 0) {
+            scale_left = Math.pow(mePP / otherPP, smoothing);
         }
     }
 
     // 获取卡片
-    for (const name of VALUE_NAMES) {
-        if (typeof data?.my[name] !== 'number') continue;
+    for (const abbr of VALUE_NAMES) {
+        if (typeof data?.my[abbr] !== 'number') continue;
 
-        const value = (data?.my[name] || 0) * 100;
+        const value = (data?.my[abbr] ?? 0) * 100;
         const rank = getRankFromValue(value, BOUNDARY)
-        const color = getRankColor(rank)
-        const background = getRankBackground(rank);
+        const icon_colors = getRankColors(rank)
 
-        card_B1_lefts.push(await card_B1({
-            label: LABEL_PPM[name?.toUpperCase()],
-            background: background,
+        card_B1_lefts.push(card_B6({
+            ...LABEL_PPM6[abbr],
+
             value: value,
+            icon_colors: icon_colors,
             round_level: 1,
-            delta: is_vs ? (value - (data?.others[name] || 0) * 100) : null,
-            rank: rank,
-            color: color,
-
+            max: (is_pm4) ? 101 : 120,
         }, false));
-        number_left.push(Math.min(Math.max((data.my[name] * scale_left - 0.6), 0.01) / 4 * 10, 1));
+
+        number_left.push(Math.min(Math.max((data.my[abbr] * scale_left - 0.6), 0.01) / 4 * 10, 1));
     }
     svg = setText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
+    let string_b1s = ''
+
     for (let j = 0; j < 6; j++) {
-        svg = setSvgBody(svg, 40, 350 + j * 115, card_B1_lefts[j], reg_left);
+        string_b1s += getSvgBody(40, 340 + j * 115, card_B1_lefts[j]);
     }
+
+    svg = setText(svg, string_b1s, reg_left)
 
     // 我自己的卡片
     const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.users[0]));
@@ -197,107 +205,118 @@ export async function panel_B1(data = {
         const cardA1o = await card_A1(await PanelGenerate.user2CardA1(data.users[1]));
         svg = setSvgBody(svg, 1450, 40, cardA1o, reg_maincard);
 
-        for (const name of VALUE_NAMES) {
-            if (typeof data.others[name] !== 'number') continue;
+        for (const abbr of VALUE_NAMES) {
+            if (typeof data.others[abbr] !== 'number') continue;
 
-            const value = (data?.others[name] || 0) * 100;
+            const value = (data?.others[abbr] || 0) * 100;
             const rank = getRankFromValue(value, BOUNDARY)
-            const color = getRankColor(rank)
-            const background = getRankBackground(rank);
+            const icon_colors = getRankColors(rank)
 
-            card_B1_rights.push(await card_B1({
-                label: LABEL_PPM[name?.toUpperCase()],
-                background: background,
+            card_B1_rights.push(card_B6({
+                ...LABEL_PPM6[abbr],
+
                 value: value,
-                delta: value - (data?.my[name] || 0) * 100,
+                icon_colors: icon_colors,
                 round_level: 1,
-                rank: rank,
-                color: color,
-
+                max: (is_pm4) ? 101 : 120,
             }, true));
-            number_right.push(Math.min(Math.max((data.others[name] * scale_right - 0.6), 0.01) / 4 * 10, 1));
+
+            number_right.push(Math.min(Math.max((data.others[abbr] * scale_right - 0.6), 0.01) / 4 * 10, 1));
         }
 
         svg = setText(svg, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
 
-        for (const j in card_B1_rights) {
-            svg = setSvgBody(svg, 1350, 350 + j * 115, card_B1_rights[j], reg_right)
+
+        let string_b1v = ''
+
+        for (let j = 0; j < 6; j++) {
+            string_b1v += getSvgBody(1350, 340 + j * 115, card_B1_rights[j]);
         }
+
+        svg = setText(svg, string_b1v, reg_right)
         
         const value_1 = (data?.my.OVA || 0) * 100;
         const rank_1 = getRankFromValue(value_1, BOUNDARY);
-        const bg_1 = getRankBackground(rank_1);
-        const color_1 = getRankColor(rank_1);
+        const icon_colors_1 = getRankColors(rank_1);
 
-        card_B2_centers.push(await card_B2({
-            label: LABEL_PPM.OVA,
-            background: bg_1,
+        card_B7_centers.push(card_B7({
+            ...LABEL_PPM6.OVA,
+
             value: value_1,
+            icon_colors: icon_colors_1,
             round_level: 1,
-            rank: rank_1,
-            color: color_1,
+            max: (is_pm4) ? 101 : 120,
         }));
-
 
         const value_2 = (data?.others.OVA || 0) * 100;
         const rank_2 = getRankFromValue(value_2, BOUNDARY);
-        const bg_2 = getRankBackground(rank_2);
-        const color_2 = getRankColor(rank_2);
+        const icon_colors_2 = getRankColors(rank_2);
 
-        card_B2_centers.push(await card_B2({
-            label: LABEL_PPM.OVA,
-            background: bg_2,
+        card_B7_centers.push(card_B7({
+            ...LABEL_PPM6.OVA,
+
             value: value_2,
+            icon_colors: icon_colors_2,
             round_level: 1,
-            rank: rank_2,
-            color: color_2,
-        }));
+            max: (is_pm4) ? 101 : 120,
+        }, true));
 
     } else {
         const value_1 = (data?.my.OVA || 0) * 100;
         const rank_1 = getRankFromValue(value_1, BOUNDARY);
-        const bg_1 = getRankBackground(rank_1);
-        const color_1 = getRankColor(rank_1);
+        const icon_colors_1 = getRankColors(rank_1);
 
-        card_B2_centers.push(await card_B2({
-            label: LABEL_PPM.OVA,
-            background: bg_1,
+        card_B7_centers.push(card_B7({
+            ...LABEL_PPM6.OVA,
+
             value: value_1,
+            icon_colors: icon_colors_1,
             round_level: 1,
-            rank: rank_1,
-            color: color_1,
+            max: (is_pm4) ? 101 : 120,
         }));
 
-        const san_value = (data?.my.SAN || 0) * 100;
-        const san_rank = getRankFromValue(san_value, SANITY_BOUNDARY); // 用于颜色判断的 rank
-        const san_bg = getRankBackground(san_rank);
-        const san_color = getRankColor(san_rank);
-        const san_truly_rank = getRankFromValue(san_value, SANITY_BOUNDARY, SANITY_RANKS); // SAN 指示器
+        if (is_pm4) {
+            const oii = (data?.my_oii || 0);
+            const oii_rank = getRankFromValue(oii, OII_BOUNDARY); // 用于颜色判断的 rank
+            const oii_colors = getRankColors(oii_rank);
+            // const oii_real_rank = getRankFromValue(oii, OII_BOUNDARY, OII_RANKS); // SAN 指示器
 
-        card_B2_centers.push(await card_B2({
-            label: LABEL_PPM.SAN,
-            background: san_bg,
-            value: san_value,
-            round_level: 1,
-            rank: san_truly_rank,
-            color: san_color,
-        }));
+            card_B7_centers.push(card_B7({
+                ...LABEL_PPM6.OII,
+
+                value: oii,
+                // data_b: oii_real_rank,
+                // data_m: '',
+                round_level: 1,
+                icon_colors: oii_colors,
+            }, true));
+        } else {
+            // 兼容 PPM2
+            const san_value = (data?.my.SAN || 0) * 100;
+            const san_rank = getRankFromValue(san_value, SANITY_BOUNDARY); // 用于颜色判断的 rank
+            const san_colors = getRankColors(san_rank);
+            const san_truly_rank = getRankFromValue(san_value, SANITY_BOUNDARY, SANITY_RANKS); // SAN 指示器
+
+            card_B7_centers.push(card_B7({
+                ...LABEL_PPM6.SAN,
+
+
+                value: san_value,
+                data_b: san_truly_rank,
+                data_m: '',
+                round_level: 0,
+                icon_colors: san_colors,
+            }, true));
+        }
+
     }
-    svg = setSvgBody(svg, 630, 860, card_B2_centers[0], reg_center);
-    svg = setSvgBody(svg, 970, 860, card_B2_centers[1], reg_center);
 
-    //如果不是vs，则插入B3卡
-    /*
-    if (!isVS) {
-        const cardB3 = await card_B3({game_mode: mode}, true);
-        svg = implantSvgBody(svg, 1350, 330, cardB3, reg_right);
-    }
-
-     */
+    svg = setSvgBody(svg, 630, 890, card_B7_centers[0], reg_center);
+    svg = setSvgBody(svg, 970, 890, card_B7_centers[1], reg_center);
 
     // 画六边形和其他
     const hexagon = getImageFromV3('object-hexagon.png');
     svg = setImage(svg, 718, 384, 484, 433, hexagon, reg_hexagon, 1);
 
-    return svg.toString();
+    return svg;
 }

@@ -118,5 +118,5 @@ export async function panel_Epsilon(data = {
     svg = setImage(svg, 70, 40, 320, 320, image, reg_avatar, 1);
     svg = setTexts(svg, [name, country, group_name, group_name_shadow, supporter], reg_text);
 
-    return svg.toString();
+    return svg;
 }

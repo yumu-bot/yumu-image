@@ -95,5 +95,5 @@ export function card_A2(data = {
 
     svg = setTexts(svg, [title1, title2, title3, right1, right2, right3, left1, left2, left3], reg_text);
 
-    return svg.toString();
+    return svg;
 }

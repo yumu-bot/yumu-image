@@ -314,7 +314,7 @@ export async function panel_Eta4(data = {
     // 导入卡片
     svg = setTexts(svg, [componentEta1, componentEta2, componentEta3, componentEta4], reg_component);
 
-    return svg.toString()
+    return svg
 
 }
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
@@ -424,7 +424,7 @@ const component_Eta1 = (
     svg = setTexts(svg, [titles, infos, status, stats], reg_text)
     svg = setText(svg, lines, reg_line)
 
-    return svg.toString()
+    return svg
 }
 
 const component_Eta2 = (data = {
@@ -462,7 +462,7 @@ const component_Eta2 = (data = {
     svg = setImage(svg, 420, 60, 160, 160, data?.avatar, reg_avatar)
     svg = setTexts(svg, [titles, lines, name, score_time, full_pp], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 const component_Eta3 = (data = {
@@ -516,7 +516,7 @@ const component_Eta3 = (data = {
 
     svg = setTexts(svg, [pps, line, pp_title, pp_value], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 
@@ -589,7 +589,7 @@ const component_Eta4 = (data = {
 
     svg = setTexts(svg, [titles, line, score, mods, accuracy, combo, judges], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 // 私有转换方式

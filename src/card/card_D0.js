@@ -69,5 +69,5 @@ export async function card_D0(data = {
 
     svg = setImage(svg, 0, 0, 70, 50, bg, reg_background, 0.5);
 
-    return svg.toString();
+    return svg;
 }

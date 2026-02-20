@@ -123,7 +123,7 @@ export async function panel_MD(data = {
     svg = setText(svg, panelHeight, reg_panelheight);
     svg = setText(svg, cardHeight, reg_cardheight);
 
-    return svg.toString()
+    return svg
 }
 
 async function maiDistribution2CardI3(dist = {

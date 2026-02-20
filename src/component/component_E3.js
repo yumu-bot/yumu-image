@@ -116,5 +116,5 @@ export async function component_E3(data = {
 
     svg = setTexts(svg, [fail_rrect, retry_rrect, base_rrect], reg_label);
 
-    return svg.toString();
+    return svg;
 }

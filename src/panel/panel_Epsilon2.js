@@ -140,7 +140,7 @@ export async function panel_Epsilon2(data = {
     svg = setTexts(svg, [avatar_overlay, lv_stroke], reg_overlay)
     svg = setTexts(svg, [name, pp_score, acc, lv, mode, rank], reg_text)
 
-    return svg.toString();
+    return svg;
 }
 
 function getGameModePath(mode) {

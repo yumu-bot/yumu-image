@@ -30,5 +30,5 @@ export function component_IM3(data = {
 
     svg = setTexts(svg, [circle, title, number], reg_text);
 
-    return svg.toString();
+    return svg;
 }

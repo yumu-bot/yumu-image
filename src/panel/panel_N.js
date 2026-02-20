@@ -150,7 +150,7 @@ export async function panel_N(
     svg = setSvgBody(svg, 40, 40, cardA2, reg_beatmap_A2);
     svg = setSvgBody(svg, 60, 350, cardO1, reg_me);
 
-    return svg.toString();
+    return svg;
 }
 
 function getTagPanel(tags = [""], x, y, size = 18, color = '#3399CC', max_width = 390, max_row = 4) {
@@ -463,7 +463,7 @@ async function label_N3(u = {}) {
     const avatar = await getAvatar(u?.avatar_url, true);
     svg = setImage(svg, 0, 0, 45, 45, avatar, reg_avatar, 1);
 
-    return svg.toString();
+    return svg;
 }
 
 async function label_N4(u = {}) {
@@ -503,7 +503,7 @@ async function label_N4(u = {}) {
     const avatar = await getAvatar(u?.avatar_url, true);
     svg = setImage(svg, 13, 0, 70, 70, avatar, reg_avatar, 1);
 
-    return svg.toString();
+    return svg;
 }
 
 function label_N6(x = 0, y = 0, type = 'genre', name = '') {

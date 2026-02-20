@@ -100,6 +100,6 @@ export function card_C2(data = {
     svg = data.cover ? setImage(svg, 20, 0, 238, 110, data.cover, reg_avatar, 1) : svg;
     svg = data.background ? setImage(svg, 0, 0, 900, 110, data.background, reg_background, 0.2) : svg;
 
-    return svg.toString();
+    return svg;
 
 }

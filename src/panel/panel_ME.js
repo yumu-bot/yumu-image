@@ -265,7 +265,7 @@ export async function panel_ME(data = {
     svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner_blurred, 0.8);
 
 
-    return svg.toString()
+    return svg
 }
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域

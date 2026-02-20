@@ -169,5 +169,5 @@ export function card_MS(data = {
 
     svg = setTexts(svg, [base1, base2], reg_base)
 
-    return svg.toString()
+    return svg
 }

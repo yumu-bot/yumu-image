@@ -150,7 +150,7 @@ export async function card_A3(beatmapset = {}) {
 
     svg = setText(svg, base, reg_base)
 
-    return svg.toString()
+    return svg
 }
 
 /** 绘制谱面难度标签
@@ -318,7 +318,7 @@ function drawDifficultyLabels(beatmaps = []) {
 
     svg += '</g>'
 
-    return svg.toString()
+    return svg
 }
 
 /**

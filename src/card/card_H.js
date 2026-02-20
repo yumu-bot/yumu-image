@@ -175,5 +175,5 @@ export async function card_H(data = {
     // 插入图片
     svg = setImage(svg, 0, 0, 560, 110, data.background, reg_background, 0.4);
 
-    return svg.toString();
+    return svg;
 }

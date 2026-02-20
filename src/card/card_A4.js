@@ -254,7 +254,7 @@ export async function card_A4(data = {
     svg = setTexts(svg, [rank_rrect, version_rrect], reg_rank)
     svg = setTexts(svg, [name, flag_svg, n2_combo, n2_acc, pp_text, score_text, ranking, rank], reg_text)
 
-    return svg.toString()
+    return svg
 }
 
 function getStatWidthArr(stat_sum = 1, stat_arr = [], minWidth = 10, fullWidth = 325, interval = 5) {

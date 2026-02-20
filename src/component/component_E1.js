@@ -119,7 +119,7 @@ export async function component_E1(data = {
     svg = setSvgBody(svg, 40, 106, star_svg, reg_star);
 
     //导出
-    return svg.toString();
+    return svg;
 }
 
 function getStarSVGs(star_path = '', sr_b = 0, sr_m = 0, w = 40, h = 40) {
