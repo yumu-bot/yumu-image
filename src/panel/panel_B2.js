@@ -156,7 +156,7 @@ export async function panel_B2(data = {
 
     svg = setText(svg, string_b6s, reg_left)
 
-    const rank_ov = getRankFromValue(total);
+    const rank_ov = getRankFromValue(m.dan?.reform_level);
     const colors_ov = getRankColors(rank_ov);
 
     cardB7s.push(card_B7({
@@ -169,13 +169,17 @@ export async function panel_B2(data = {
         round_level: 0
     }));
 
+    const rank_ln = getRankFromValue(m.dan?.ln_level);
+    const colors_ln = getRankColors(rank_ln);
+
     cardB7s.push(card_B7({
-        ...LABEL_MM.SV,
-        icon_colors: colors_ov,
-        value: 0,
-        data_b: '-',
+        ...LABEL_MM.LD,
+        value: m.dan?.ln_level,
+        data_b: m.dan?.lv_grade,
         data_m: '',
-        round_level: 2,
+        max: 14,
+        icon_colors: colors_ln,
+        round_level: 0,
     }, true));
 
     //todo NaN
