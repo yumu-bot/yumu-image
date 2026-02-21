@@ -200,21 +200,20 @@ export async function panel_B2(data = {
         drawChart(m?.bracket, base_arr[1], 'B', 170, 0, '#8DC73D'),
         drawChart(m?.jack, base_arr[2], 'J', 340, 0, '#C2D92F'),
 
-        drawChart(m?.release, base_arr[3], 'R', 0, 115, '#00A8EC'),
-        drawChart(m?.shield, base_arr[4], 'E', 170, 115, '#0071BC'),
-        drawChart(m?.reverse_shield, base_arr[5], 'V', 340, 115, '#0054A6'),
+        drawChart(m?.fatigue, base_arr[3], 'F', 0, 115, '#920783'),
 
-        drawChart(m?.hand_lock, base_arr[6], 'H', 0, 230, '#FFF100'),
-        drawChart(m?.overlap, base_arr[7], 'O', 170, 230, '#EFC72A'),
+        drawChart(m?.trill, base_arr[4], 'T', 0, 230, '#D32F2F'),
+        drawChart(m?.burst, base_arr[5], 'U', 170, 230, '#EB6877'),
 
-        drawChart(m?.grace, base_arr[8], 'G', 0, 345, '#FF9800'),
-        drawChart(m?.delayed_tail, base_arr[9], 'Y', 170, 345, '#EB6100'),
+        drawChart(m?.release, base_arr[6], 'R', 0, 345, '#00A8EC'),
+        drawChart(m?.shield, base_arr[7], 'E', 170, 345, '#0071BC'),
+        drawChart(m?.reverse_shield, base_arr[8], 'V', 340, 345, '#0054A6'),
 
-        drawChart(m?.trill, base_arr[10], 'T', 0, 460, '#D32F2F'),
-        drawChart(m?.burst, base_arr[11], 'U', 170, 460, '#EB6877'),
+        drawChart(m?.hand_lock, base_arr[9], 'H', 0, 460, '#FFF100'),
+        drawChart(m?.overlap, base_arr[10], 'O', 170, 460, '#EFC72A'),
 
-        drawChart(m?.fatigue, base_arr[12], 'F', 0, 575, '#920783'),
-        //drawChart(m?.ln_density, base_arr[14], 'D', 170, 575, '#9922EE'),
+        drawChart(m?.grace, base_arr[11], 'G', 0, 575, '#FF9800'),
+        drawChart(m?.delayed_tail, base_arr[12], 'Y', 170, 575, '#EB6100'),
 
     ], reg_right);
 
