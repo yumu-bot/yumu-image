@@ -417,7 +417,7 @@ export const LABEL_MM = {
         left_2: '常规段',
         min: 0,
         limit: 10,
-        max: 20,
+        max: 18,
         colors: colorArray.light_green,
     },
 
@@ -428,7 +428,7 @@ export const LABEL_MM = {
         left_2: '长键段',
         min: 0,
         limit: 10,
-        max: 20,
+        max: 14,
         colors: colorArray.cyan,
     },
 

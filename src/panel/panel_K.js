@@ -242,7 +242,6 @@ export async function panel_K(data = {
         value: data.dan?.reform_level,
         data_b: data.dan?.reform_grade,
         data_m: '',
-        max: 15,
         icon_colors: colors_dn,
         round_level: 0
     }));
@@ -256,7 +255,6 @@ export async function panel_K(data = {
             value: data.vs_dan?.reform_level,
             data_b: data.vs_dan?.reform_grade,
             data_m: '',
-            max: 15,
             icon_colors: colors_dv,
             round_level: 2
         }, true));

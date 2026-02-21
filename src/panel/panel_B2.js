@@ -164,7 +164,6 @@ export async function panel_B2(data = {
         value: m.dan?.reform_level,
         data_b: m.dan?.reform_grade,
         data_m: '',
-        max: 15,
         icon_colors: colors_ov,
         round_level: 0
     }));
@@ -177,7 +176,6 @@ export async function panel_B2(data = {
         value: m.dan?.ln_level,
         data_b: m.dan?.ln_grade,
         data_m: '',
-        max: 14,
         icon_colors: colors_ln,
         round_level: 0,
     }, true));
