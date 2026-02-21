@@ -61,6 +61,8 @@ export async function panel_B2(data = {
     dan: {
         "reform_level": "2",
         "reform_grade": "10+",
+        "ln_level": "2",
+        "ln_grade": "10+",
     },
 
     type: "",
@@ -77,12 +79,14 @@ export async function panel_B2(data = {
 
     const map_minus_mania = {
         RC: value_arr[0],
-        LN: value_arr[1],
-        CO: value_arr[2],
-        PR: value_arr[3],
-        SP: value_arr[4],
-        ST: value_arr[5],
+        ST: value_arr[1],
+        SP: value_arr[2],
+        LN: value_arr[3],
+        CO: value_arr[4],
+        PR: value_arr[5],
     }
+
+    const show_arr = ['RC', 'LN', 'CO', 'PR', 'SP', 'ST']
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
@@ -94,14 +98,14 @@ export async function panel_B2(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 画六个标识
-    svg = setText(svg, PanelDraw.HexagonIndex(abbr_arr.slice(0, 6), 960, 600, 260, Math.PI / 3), reg_hexagon);
+    svg = setText(svg, PanelDraw.HexagonIndex(show_arr, 960, 600, 260, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
     const banner = await getMapBackground(data.beatmap, 'cover');
     svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
 
     // 面板文字
-    const panel_name = getPanelNameSVG('Map Minus v6.0 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
+    const panel_name = getPanelNameSVG('Map Minus v6.1 - Entering \'Firmament Castle \"Velier\"\' ~ 0.6x \"Perfect Snap\" (!ymmm)', 'MM');
 
     // 计算数值
     const total = (m?.rating ?? m?.stars ?? 0)
@@ -118,7 +122,7 @@ export async function panel_B2(data = {
 
     // 获取卡片
     let cardB6s = [];
-    let hexagons = [];
+    let hexagons;
     let cardB7s = [];
 
     for (let i = 0; i < 6; i++) {
@@ -138,19 +142,16 @@ export async function panel_B2(data = {
             icon_colors: icon_colors,
             round_level: 2
         }, false));
-        hexagons.push(map_minus_mania[abbr] / 9); //9星以上是X
     }
+
+    hexagons = show_arr.map(name => {return map_minus_mania[name] / 9})
 
     svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
     let string_b6s = ''
 
     for (let j = 0; j < 6; j++) {
-        const card_order = [0, 5, 4, 1, 2, 3]
-        const k = card_order[j]
-
-        string_b6s += getSvgBody(40, 340 + j * 115, cardB6s[k])
-
+        string_b6s += getSvgBody(40, 340 + j * 115, cardB6s[j])
     }
 
     svg = setText(svg, string_b6s, reg_left)
@@ -159,13 +160,13 @@ export async function panel_B2(data = {
     const colors_ov = getRankColors(rank_ov);
 
     cardB7s.push(card_B7({
-        ...LABEL_MM.DN,
+        ...LABEL_MM.RD,
         value: m.dan?.reform_level,
         data_b: m.dan?.reform_grade,
         data_m: '',
         max: 15,
         icon_colors: colors_ov,
-        round_level: 2
+        round_level: 0
     }));
 
     cardB7s.push(card_B7({

@@ -133,8 +133,8 @@ export async function panel_K(data = {
 
     // 面板文字
     const panel_name = is_vs ?
-        getPanelNameSVG('Skill VS v6.0 (!ymkv)', 'KV') :
-        getPanelNameSVG('Skill v6.0 (!ymk)', 'K')
+        getPanelNameSVG('Skill VS v6.1 (!ymkv)', 'KV') :
+        getPanelNameSVG('Skill v6.1 (!ymk)', 'K')
 
     // 插入文字
     svg = setTexts(svg, [panel_name, middle], reg_index);
@@ -234,17 +234,17 @@ export async function panel_K(data = {
         string_body += getSvgBody(40, 340 + j * 115, card_B6s[k]);
     }
 
-    const rank_dn = getRankFromValue(data?.total);
+    const rank_dn = getRankFromValue(data.dan?.reform_level);
     const colors_dn = getRankColors(rank_dn);
 
     card_B7s.push(card_B7({
-        ...LABEL_MM.DN,
+        ...LABEL_MM.RD,
         value: data.dan?.reform_level,
         data_b: data.dan?.reform_grade,
         data_m: '',
         max: 15,
         icon_colors: colors_dn,
-        round_level: 2
+        round_level: 0
     }));
 
     if (is_vs) {
@@ -261,13 +261,17 @@ export async function panel_K(data = {
             round_level: 2
         }, true));
     } else {
+        const rank_ln = getRankFromValue(data.dan?.ln_level);
+        const colors_ln = getRankColors(rank_ln);
+
         card_B7s.push(card_B7({
-            ...LABEL_MM.SV,
-            icon_colors: colors_dn,
-            value: 0,
-            data_b: '-',
+            ...LABEL_MM.LD,
+            value: data.dan?.ln_level,
+            data_b: data.dan?.ln_grade,
             data_m: '',
-            round_level: 2,
+            max: 14,
+            icon_colors: colors_ln,
+            round_level: 0
         }, true));
     }
 

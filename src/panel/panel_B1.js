@@ -139,7 +139,7 @@ export async function panel_B1(data = {
 
         panel_name = getPanelNameSVG('PP Minus v4.5 (!ympm/!ympv)', 'PM', request_time);
     } else {
-        panel_name = getPanelNameSVG('PP Minus v2.4 Legacy (!ympl)', 'PL');
+        panel_name = getPanelNameSVG('PP Minus v2.5 Legacy (!ympl)', 'PL');
     }
 
     // 插入文字

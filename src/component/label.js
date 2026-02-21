@@ -410,6 +410,28 @@ export const LABEL_MM = {
         colors: colorArray.sakura,
     },
 
+    RD: {
+        icon: readBufferFromV3('Icons', 'school-solid-full.svg'),
+        title: 'RD',
+        left_1: 'Reform Dan',
+        left_2: '常规段',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.light_green,
+    },
+
+    LD: {
+        icon: readBufferFromV3('Icons', 'school-solid-full.svg'),
+        title: 'LD',
+        left_1: 'Ln Dan',
+        left_2: '长键段',
+        min: 0,
+        limit: 10,
+        max: 20,
+        colors: colorArray.cyan,
+    },
+
 }
 
 export const LABEL_PPM6 = {

@@ -1012,7 +1012,7 @@ ${body}
 export function getBody(svg = '') {
     const contentMatch = svg.match(/<svg[^>]*>([\s\S]*?)<\/svg>/i);
 
-    return contentMatch ? contentMatch[1].toString() : "";
+    return contentMatch ? contentMatch[1].toString() : "<path></path>>";
 }
 
 // 数字处理并显示
