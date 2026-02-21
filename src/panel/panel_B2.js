@@ -175,7 +175,7 @@ export async function panel_B2(data = {
     cardB7s.push(card_B7({
         ...LABEL_MM.LD,
         value: m.dan?.ln_level,
-        data_b: m.dan?.lv_grade,
+        data_b: m.dan?.ln_grade,
         data_m: '',
         max: 14,
         icon_colors: colors_ln,
