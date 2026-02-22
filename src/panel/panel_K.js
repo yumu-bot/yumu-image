@@ -72,6 +72,13 @@ export async function panel_K(data = {
     const VALUE_NORMAL = ["RC", "LN", "CO", "PR", "SP", "ST"];
     const VALUE_MANIA = ["RC", "LN", "CO", "PR", "SP", "ST"];
 
+    const MAPPER = {
+        "reform": LABEL_MM.RF,
+        "underjoy": LABEL_MM.UJ,
+        "regular": LABEL_MM.RG,
+        "ln": LABEL_MM.JL,
+    }
+
     const skills = data?.scores?.length > 10 ? data?.scores.slice(0, 10) : (data?.scores || [])
 
     let svg = `<?xml version="1.0" encoding="UTF-8"?>
@@ -234,43 +241,92 @@ export async function panel_K(data = {
         string_body += getSvgBody(40, 340 + j * 115, card_B6s[k]);
     }
 
-    const rank_dn = getRankFromValue(data.dan?.reform_level);
-    const colors_dn = getRankColors(rank_dn);
-
-    card_B7s.push(card_B7({
-        ...LABEL_MM.RD,
-        value: data.dan?.reform_level,
-        data_b: data.dan?.reform_grade,
-        data_m: '',
-        icon_colors: colors_dn,
-        round_level: 0
-    }));
-
     if (is_vs) {
-        const rank_dv = getRankFromValue(data?.vs_total);
-        const colors_dv = getRankColors(rank_dv);
+        const my_dan = Object.values(data?.dan || {}).reduce((max, curr) => {
+            return (curr?.level ?? -1) > (max.level ?? -1) ? curr : max;
+        }, { level: 0, grade: "-" });
+
+        let my_dan_level = my_dan.level
+        let my_dan_grade = my_dan.grade
+        let my_dan_label =  MAPPER[my_dan.name] ?? LABEL_MM.DN
+
+        const rank_my = getRankFromValue(my_dan_level);
+        const colors_my = getRankColors(rank_my);
 
         card_B7s.push(card_B7({
-            ...LABEL_MM.DN,
-            value: data.vs_dan?.reform_level,
-            data_b: data.vs_dan?.reform_grade,
+            ...my_dan_label,
+            value: my_dan_level,
+            data_b: my_dan_grade,
             data_m: '',
-            icon_colors: colors_dv,
-            round_level: 2
+            icon_colors: colors_my,
+            round_level: 0
+        }));
+
+        const other_dan = Object.values(data?.vs_dan || {}).reduce((max, curr) => {
+            return (curr?.level ?? -1) > (max.level ?? -1) ? curr : max;
+        }, { level: 0, grade: "-" });
+
+        let other_dan_level = other_dan.level
+        let other_dan_grade = other_dan.grade
+        let other_dan_label =  MAPPER[other_dan.name] ?? LABEL_MM.DN
+
+        const rank_other = getRankFromValue(other_dan_level);
+        const colors_other = getRankColors(rank_other);
+
+        card_B7s.push(card_B7({
+            ...other_dan_label,
+            value: other_dan_level,
+            data_b: other_dan_grade,
+            data_m: '',
+            icon_colors: colors_other,
+            round_level: 0
         }, true));
     } else {
-        const rank_ln = getRankFromValue(data.dan?.ln_level);
+        let dan_rc
+        let dan_rc_label
+
+        if (data?.dan?.reform != null) {
+            dan_rc = data?.dan?.reform;
+            dan_rc_label = LABEL_MM.RF
+        } else {
+            dan_rc = data?.dan?.regular;
+            dan_rc_label = LABEL_MM.RG
+        }
+
+        const rank_rc = getRankFromValue(dan_rc?.level);
+        const colors_ov = getRankColors(rank_rc);
+
+        card_B7s.push(card_B7({
+            ...dan_rc_label,
+            value: dan_rc?.level,
+            data_b: dan_rc?.grade,
+            data_m: '',
+            icon_colors: colors_ov,
+            round_level: 0
+        }));
+
+        let dan_ln
+        let dan_ln_label
+
+        if (data?.dan?.underjoy != null) {
+            dan_ln = data?.dan?.underjoy;
+            dan_ln_label = LABEL_MM.UJ
+        } else {
+            dan_ln = data?.dan?.ln;
+            dan_ln_label = LABEL_MM.JL
+        }
+
+        const rank_ln = getRankFromValue(dan_ln?.level);
         const colors_ln = getRankColors(rank_ln);
 
         card_B7s.push(card_B7({
-            ...LABEL_MM.LD,
-            value: data.dan?.ln_level,
-            data_b: data.dan?.ln_grade,
+            ...dan_ln_label,
+            value: dan_ln?.level,
+            data_b: dan_ln?.grade,
             data_m: '',
-            max: 14,
             icon_colors: colors_ln,
             round_level: 0
-        }, true));
+        }));
     }
 
     string_body += getSvgBody(630, 890, card_B7s[0]) + getSvgBody(970, 890, card_B7s[1])

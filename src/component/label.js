@@ -399,6 +399,7 @@ export const LABEL_MM = {
         max: 20,
         colors: colorArray.pink,
     },
+
     DN: {
         icon: readBufferFromV3('Icons', 'school-solid-full.svg'),
         title: 'DN',
@@ -410,9 +411,9 @@ export const LABEL_MM = {
         colors: colorArray.sakura,
     },
 
-    RD: {
+    RF: {
         icon: readBufferFromV3('Icons', 'school-solid-full.svg'),
-        title: 'RD',
+        title: 'RF',
         left_1: 'Reform Dan',
         left_2: '常规段',
         min: 0,
@@ -421,10 +422,32 @@ export const LABEL_MM = {
         colors: colorArray.light_green,
     },
 
-    LD: {
-        icon: readBufferFromV3('Icons', 'school-solid-full.svg'),
-        title: 'LD',
-        left_1: 'Ln Dan',
+    UJ: {
+        icon: readBufferFromV3('Icons', 'face-grin-squint-regular-full.svg'),
+        title: 'UJ',
+        left_1: 'Underjoy Dan',
+        left_2: '长键段',
+        min: 0,
+        limit: 10,
+        max: 13,
+        colors: colorArray.cyan,
+    },
+
+    RG: {
+        icon: readBufferFromV3('Icons', 'water-solid-full.svg'),
+        title: 'RG',
+        left_1: 'Jinjin\'s Regular Dan',
+        left_2: '常规段',
+        min: 0,
+        limit: 10,
+        max: 14,
+        colors: colorArray.light_green,
+    },
+
+    JL: {
+        icon: readBufferFromV3('Icons', 'water-ladder-solid-full.svg'),
+        title: 'JL',
+        left_1: 'Jinjin\'s Ln Dan',
         left_2: '长键段',
         min: 0,
         limit: 10,

@@ -59,10 +59,13 @@ export async function panel_B2(data = {
 
     rating: 0.0,
     dan: {
-        "reform_level": "2",
-        "reform_grade": "10+",
-        "ln_level": "2",
-        "ln_grade": "10+",
+        reform: {
+            level: 2,
+            grade: "-",
+        },
+        underjoy: {},
+        regular: {},
+        ln: {},
     },
 
     type: "",
@@ -156,31 +159,51 @@ export async function panel_B2(data = {
 
     svg = setText(svg, string_b6s, reg_left)
 
-    const rank_ov = getRankFromValue(m.dan?.reform_level);
-    const colors_ov = getRankColors(rank_ov);
+    let dan_rc
+    let dan_rc_label
+
+    if (m?.dan?.reform != null) {
+        dan_rc = m?.dan?.reform;
+        dan_rc_label = LABEL_MM.RF
+    } else {
+        dan_rc = m?.dan?.regular;
+        dan_rc_label = LABEL_MM.RG
+    }
+
+    const rank_rc = getRankFromValue(dan_rc?.level);
+    const colors_ov = getRankColors(rank_rc);
 
     cardB7s.push(card_B7({
-        ...LABEL_MM.RD,
-        value: m.dan?.reform_level,
-        data_b: m.dan?.reform_grade,
+        ...dan_rc_label,
+        value: dan_rc?.level,
+        data_b: dan_rc?.grade,
         data_m: '',
         icon_colors: colors_ov,
         round_level: 0
     }));
 
-    const rank_ln = getRankFromValue(m.dan?.ln_level);
+    let dan_ln
+    let dan_ln_label
+
+    if (m?.dan?.underjoy != null) {
+        dan_ln = m?.dan?.underjoy;
+        dan_ln_label = LABEL_MM.UJ
+    } else {
+        dan_ln = m?.dan?.ln;
+        dan_ln_label = LABEL_MM.JL
+    }
+
+    const rank_ln = getRankFromValue(dan_ln.level);
     const colors_ln = getRankColors(rank_ln);
 
     cardB7s.push(card_B7({
-        ...LABEL_MM.LD,
-        value: m.dan?.ln_level,
-        data_b: m.dan?.ln_grade,
+        ...dan_ln_label,
+        value: dan_ln.level,
+        data_b: dan_ln.grade,
         data_m: '',
         icon_colors: colors_ln,
         round_level: 0,
     }, true));
-
-    //todo NaN
 
     svg = setSvgBody(svg, 630, 890, cardB7s[0], reg_center);
     svg = setSvgBody(svg, 970, 890, cardB7s[1], reg_center);
