@@ -326,7 +326,7 @@ export async function panel_K(data = {
             data_m: '',
             icon_colors: colors_ln,
             round_level: 0
-        }));
+        }, true));
     }
 
     string_body += getSvgBody(630, 890, card_B7s[0]) + getSvgBody(970, 890, card_B7s[1])
