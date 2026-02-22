@@ -71,10 +71,25 @@ export function card_K(data = {
         }
     }
 
-    const skill = data?.skill || []
+    const value_arr = data?.skill || []
 
-    const hexagon = PanelDraw.HexagonChart(skill.map(v => Math.pow(v / 10, 0.5)), 235 / 2, 118 / 2, 45, data?.hexagon_color, Math.PI / 3, 3, 3)
-    const hexagon_index = PanelDraw.HexagonIndex(skill.map(v => floor(v, 1)), 235 / 2, 118 / 2, 50, Math.PI / 3, data?.skill_color, 'none', 20)
+    const skills = {
+        RC: value_arr[0],
+        ST: value_arr[1],
+        SP: value_arr[2],
+        LN: value_arr[3],
+        CO: value_arr[4],
+        PR: value_arr[5],
+    }
+
+    const show_arr = ['RC', 'LN', 'CO', 'PR', 'SP', 'ST']
+
+    const charts = show_arr.map(name => {return Math.pow(skills[name] / 10, 0.5)})
+
+    const values = show_arr.map(name => {return floor(skills[name], 1)})
+
+    const hexagon = PanelDraw.HexagonChart(charts, 235 / 2, 118 / 2, 45, data?.hexagon_color, Math.PI / 3, 3, 3)
+    const hexagon_index = PanelDraw.HexagonIndex(values, 235 / 2, 118 / 2, 50, Math.PI / 3, data?.skill_color, 'none', 20)
     const hexagon_background = getImageFromV3('object-hexagon.png')
 
     const skill_sort_sum = data.skill_sum ?? 0
