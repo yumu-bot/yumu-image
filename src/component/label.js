@@ -496,7 +496,7 @@ export const LABEL_PPM6 = {
         min: 60,
         limit: 100,
         max: 101,
-        colors: colorArray.amber,
+        colors: colorArray.purple,
     },
     PRE: {
         icon: readBufferFromV3('Icons', 'bullseye-solid-full.svg'),
@@ -526,7 +526,7 @@ export const LABEL_PPM6 = {
         min: 60,
         limit: 100,
         max: 101,
-        colors: colorArray.purple,
+        colors: colorArray.amber,
     },
     OVA: {
         icon: readBufferFromV3('Icons', 'clipboard-list-solid-full.svg'),
