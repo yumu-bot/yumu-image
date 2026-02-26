@@ -72,6 +72,8 @@ export async function panel_K(data = {
     panel: "KV",
 }) {
 
+    const DEFAULT_ABBR = ["RC", "ST", "SP", "LN", "CO", "PR", "SV"]
+
     const MAPPER = {
         "reform": LABEL_MM.RF,
         "underjoy": LABEL_MM.UJ,
@@ -147,7 +149,7 @@ export async function panel_K(data = {
 
     const value_map = {};
 
-    (data?.abbreviates || []).forEach((key, index) => {
+    (data?.abbreviates || DEFAULT_ABBR).forEach((key, index) => {
         value_map[key] = data?.skill[index] ?? 0;
     });
 
@@ -203,7 +205,7 @@ export async function panel_K(data = {
 
     const vs_value_map = {};
 
-    (data?.abbreviates || []).forEach((key, index) => {
+    (data?.abbreviates || DEFAULT_ABBR).forEach((key, index) => {
         vs_value_map[key] = data?.vs_skill[index] ?? 0;
     });
 
