@@ -1,6 +1,6 @@
 {
-  "name": "nowbot-img",
-  "version": "1.0.0",
+  "name": "yumu-image",
+  "version": "0.7.5",
   "main": "index.js",
   "license": "MIT",
   "type": "module",

@@ -1,5 +1,5 @@
 import {
-    exportJPEG,
+    exportJPEG, getGameMode,
     getImageFromV3, getPanelNameSVG, getSvgBody, rounds,
     setImage,
     setSvgBody, setText,
@@ -51,6 +51,7 @@ export async function router_svg(req, res) {
 export async function panel_K(data = {
     user: {},
     skill: [],
+    abbreviates: [],
     scores: [{
         score: {},
         skill: [],
@@ -60,6 +61,7 @@ export async function panel_K(data = {
 
     vs_user: {},
     vs_skill: [],
+    vs_abbreviates: [],
     vs_scores: [{
         score: {},
         skill: [],
@@ -69,8 +71,6 @@ export async function panel_K(data = {
 
     panel: "KV",
 }) {
-    const VALUE_NORMAL = ["RC", "LN", "CO", "PR", "SP", "ST"];
-    const VALUE_MANIA = ["RC", "LN", "CO", "PR", "SP", "ST"];
 
     const MAPPER = {
         "reform": LABEL_MM.RF,
@@ -132,8 +132,30 @@ export async function panel_K(data = {
         middle = poppinsBold.get2SizeTextPath(overall.integer, overall.decimal, 60, 48, 960, 614, 'center baseline', '#fff');
     }
 
+    // 重新排序
+
+    let hexagon_order
+    let label_order
+
+    if (getGameMode(mode, 1) === 'm') {
+        hexagon_order = ["RC", "LN", "CO", "PR", "SP", "ST"];
+        label_order = ["RC", "ST", "SP", "LN", "CO", "PR"];
+    } else {
+        hexagon_order = ["RC", "LN", "CO", "PR", "SP", "ST"];
+        label_order = ["RC", "LN", "CO", "PR", "SP", "ST"];
+    }
+
+    const value_map = {};
+
+    (data?.abbreviates || []).forEach((key, index) => {
+        value_map[key] = data?.skill[index] ?? 0;
+    });
+
+    const hexagon_values = hexagon_order.map(key => value_map[key] / 10);
+    const values = label_order.map(key => value_map[key]);
+
     // 画六个标识
-    svg = setText(svg, PanelDraw.HexagonIndex((mode === 'mania') ? VALUE_MANIA : VALUE_NORMAL, 960, 600, 260, Math.PI / 3), reg_hexagon);
+    svg = setText(svg, PanelDraw.HexagonIndex(hexagon_order, 960, 600, 260, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
@@ -179,66 +201,63 @@ export async function panel_K(data = {
 
     // B 卡片
 
+    const vs_value_map = {};
+
+    (data?.abbreviates || []).forEach((key, index) => {
+        vs_value_map[key] = data?.vs_skill[index] ?? 0;
+    });
+
+    const vs_hexagon_values = hexagon_order.map(key => vs_value_map[key] / 10);
+    const vs_values = label_order.map(key => vs_value_map[key]);
+
     const card_B6s = []
     const card_B6v = []
     const card_B7s = []
 
-    const hexagons = []
     for (let i = 0; i < 6; i++) {
-        const value = data?.skill[i] || 0
+        const value = values[i]
 
-        const abbr = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
+        const abbr = label_order[i]
         const rank = getRankFromValue(value)
         const icon_colors = getRankColors(rank)
 
         card_B6s.push(card_B6({
             ...LABEL_MM[abbr],
             value: value,
-            delta: is_vs ? value - data?.vs_skill[i] : null,
+            delta: is_vs ? value - (vs_values[i] ?? 0) : null,
             icon_colors: icon_colors,
             round_level: 2
         }, false));
-
-        hexagons.push(value / 10)
     }
 
-    svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
+    svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagon_values, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
     if (is_vs) {
-        const hexagons = []
         for (let i = 0; i < 6; i++) {
-            const value = data?.vs_skill[i] || 0
+            const value = vs_values[i] ?? 0
 
-            const abbr = (mode === 'mania') ? VALUE_MANIA[i] : VALUE_NORMAL[i]
+            const abbr = label_order[i]
             const vs_rank = getRankFromValue(value)
             const icon_colors = getRankColors(vs_rank)
 
             card_B6v.push(card_B6({
                 ...LABEL_MM[abbr],
                 value: value,
-                delta: is_vs ? value - data?.vs_skill[i] : null,
+                delta: is_vs ? value - (values[i] ?? 0) : null,
                 icon_colors: icon_colors,
                 round_level: 2
             }, true));
-
-            hexagons.push(value / 10)
         }
 
-        svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#FF0000', Math.PI / 3), reg_hexagon);
+        svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(vs_hexagon_values, 960, 600, 230, '#FF0000', Math.PI / 3), reg_hexagon);
 
         for (let j = 0; j < 6; j++) {
-            const card_order = [0, 5, 4, 1, 2, 3]
-            const k = card_order[j]
-
-            string_body += getSvgBody(1350, 340 + j * 115, card_B6v[k]);
+            string_body += getSvgBody(1350, 340 + j * 115, card_B6v[j]);
         }
     }
 
     for (let j = 0; j < 6; j++) {
-        const card_order = [0, 5, 4, 1, 2, 3]
-        const k = card_order[j]
-
-        string_body += getSvgBody(40, 340 + j * 115, card_B6s[k]);
+        string_body += getSvgBody(40, 340 + j * 115, card_B6s[j]);
     }
 
     if (is_vs) {
