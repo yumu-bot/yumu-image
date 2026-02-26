@@ -149,8 +149,12 @@ export async function panel_K(data = {
 
     const value_map = {};
 
-    (data?.abbreviates || DEFAULT_ABBR).forEach((key, index) => {
-        value_map[key] = data?.skill[index] ?? 0;
+    const abbr_list = data?.abbreviates ?? DEFAULT_ABBR;
+
+    const skill_list = data?.skill || [];
+
+    abbr_list.forEach((key, index) => {
+        value_map[key] = skill_list[index] ?? 0;
     });
 
     const hexagon_values = hexagon_order.map(key => value_map[key] / 10);
@@ -205,8 +209,10 @@ export async function panel_K(data = {
 
     const vs_value_map = {};
 
-    (data?.abbreviates || DEFAULT_ABBR).forEach((key, index) => {
-        vs_value_map[key] = data?.vs_skill[index] ?? 0;
+    const vs_skill_list = data?.vs_skill || [];
+
+    abbr_list.forEach((key, index) => {
+        vs_value_map[key] = vs_skill_list[index] ?? 0;
     });
 
     const vs_hexagon_values = hexagon_order.map(key => vs_value_map[key] / 10);
