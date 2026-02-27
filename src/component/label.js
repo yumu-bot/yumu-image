@@ -436,7 +436,7 @@ export const LABEL_MM = {
     RG: {
         icon: readBufferFromV3('Icons', 'water-solid-full.svg'),
         title: 'RG',
-        left_1: 'J...\'s Regular Dan',
+        left_1: 'J.\'s Regular Dan',
         left_2: '常规段',
         min: 0,
         limit: 10,
