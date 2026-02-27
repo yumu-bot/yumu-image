@@ -5,7 +5,7 @@ import axios, {AxiosError} from "axios";
 import https from "https";
 import path from "path";
 import moment from "moment";
-import {cutStringTail, getTextPath, poppinsBold, PuHuiTi, torus} from "./font.js";
+import {cutStringTail, getTextPath, PuHuiTi, torus} from "./font.js";
 import {API} from "../svg-to-image/API.js";
 import JPEGProvider from '../svg-to-image/JPEGProvider.js';
 import PNGProvider from '../svg-to-image/PNGProvider.js';
@@ -15,7 +15,7 @@ import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
 import FileCache from './fileCache.js';
 import puppeteer from "puppeteer";
-import { EventEmitter } from 'events';
+import {EventEmitter} from 'events';
 
 const VERSION = 'v0.7.5'
 const VERSION_CODE = 'GM'
@@ -34,7 +34,15 @@ export const SUPER_KEY = process.env.SUPER_KEY || "";
 export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufile";
 export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
 
-const FLAG_PATH = process.env.FLAG_PATH || EXPORT_FILE_V3 + "Flags" //CACHE_PATH + "/flag";
+let FLAG_PATH
+
+if (process.env.FLAG_PATH != null) {
+    FLAG_PATH = process.env.FLAG_PATH
+} else if (process.env.EXPORT_FILE != null) {
+    FLAG_PATH = EXPORT_FILE_V3 + "Flags"
+} else {
+    FLAG_PATH = CACHE_PATH + "/flag";
+}
 
 EventEmitter.defaultMaxListeners = 50;
 
@@ -64,7 +72,7 @@ export function initPath() {
                 return axios(config);
             })
         } else if (error.code === 'ECONNABORTED' && !config.__no_wait && config.__errTime <= config.retry) {
-            let method = ''
+            let method
             switch (config.method?.toUpperCase()) {
                 case 'GET': method = "获取"; break
                 case 'POST': method = "发布"; break
@@ -273,7 +281,7 @@ export function requireNonNullElse(obj, obj2) {
 /**
  * 根据谱面罗马音和原文，返回方便展示的字形
  * @param font
- * @param fon2
+ * @param font2
  * @param title
  * @param title_unicode
  * @param size
@@ -474,7 +482,9 @@ export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'li
     const cl = cover_type.toString().toLowerCase().trim()
 
     switch (cl) {
-        case 'cover', 'cover@2x', 'silmcover', 'silmcover@2x', 'list', 'list@2x', 'card', 'card@2x', 'raw', 'fullsize' : type = cl; break;
+        case 'cover', 'cover@2x', 'silmcover', 'silmcover@2x', 'list', 'list@2x', 'card', 'card@2x', 'raw', 'fullsize': {
+            type = cl;
+        } break;
         default: type = 'cover'; break;
     }
 
@@ -501,7 +511,7 @@ export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'li
                 } else {
                     url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/fullsize.jpg'
                     use_cache = false
-                }; break;
+                } break;
             }
 
             default: return default_image_path
@@ -557,18 +567,18 @@ export async function getDiffBackground(score = {}, must_full = false) {
         path = await getMapBackground(score, cover_type);
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
+    }
 
-        if (isPictureIntacted(path)) {
-            return path;
-        } else {
-            const is_dmca = score?.beatmapset?.availability?.more_information != null
+    if (isPictureIntacted(path)) {
+        return path;
+    } else {
+        const is_dmca = score?.beatmapset?.availability?.more_information != null
 
-            if (is_dmca === false) {
-                deleteBeatMapFromDatabase(bid);
-            }
-
-            return await getMapBackground(score, cover_type);
+        if (is_dmca === false) {
+            deleteBeatMapFromDatabase(bid);
         }
+
+        return await getMapBackground(score, cover_type);
     }
 }
 
@@ -1012,7 +1022,7 @@ ${body}
 export function getBody(svg = '') {
     const contentMatch = svg.match(/<svg[^>]*>([\s\S]*?)<\/svg>/i);
 
-    return contentMatch ? contentMatch[1].toString() : "<path></path>>";
+    return contentMatch ? contentMatch[1].toString() : '<path d=";"></path>';
 }
 
 // 数字处理并显示
@@ -1095,8 +1105,8 @@ function floorOrRound(number = 0, level = 0, sub_level = 0, is_round = false) {
         dec: 0,
     }
 
-    let int_str = ''
-    let dec_str = ''
+    let int_str
+    let dec_str
 
     // 尽可能缩短
     if (sub_level === -1) {
@@ -1260,7 +1270,7 @@ function floorOrRound(number = 0, level = 0, sub_level = 0, is_round = false) {
             let space_str = "";
 
             for (const i in dec_str) {
-                if (i % 4 == 0) {
+                if (i % 4 === 0) {
                     space_str += " ";
                 }
 
@@ -1456,6 +1466,7 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
  * @return {String|Number} 游戏模式
  * @param mode 将被格式化的游戏模式，osu taiko catch mania
  * @param level 等级，0为不变，2为全写 osu!standard，-1为获取他们的unicode字符 \uE801，1为简写 o t m c，-2 获取他们的 mode int
+ * @param default_mode
  */
 export function getGameMode(mode = '', level = 0, default_mode = 'default') {
     let modeStr;
@@ -1513,7 +1524,6 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
                 default:
                     return 0;
             }
-            break;
         case -1:
             switch (modeStr) {
                 case 'osu':
@@ -1529,7 +1539,6 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
                 default:
                     return '';
             }
-            break;
         case 1:
             switch (modeStr) {
                 case 'osu':
@@ -1545,7 +1554,6 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
                 default:
                     return '?';
             }
-            break;
         case 2:
             switch (modeStr) {
                 case 'osu':
@@ -1561,7 +1569,6 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
                 default:
                     return 'default';
             }
-            break;
         default:
             return modeStr;
     }
@@ -1572,15 +1579,13 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
  */
 export function removeSvgHeader(V3Path = '') {
     let reg1 = '<?xml version="1.0" encoding="UTF-8"?>';
-    let reg2 = /<svg?[A-Za-z0-9\"\=:./ ]*\>?/;
+    let reg2 = /<svg?[A-Za-z0-9"=:.\/ ]*>?/;
     let reg3 = '</svg>'
 
-    var data = fs.readFileSync(V3Path, "utf-8")
+    return fs.readFileSync(V3Path, "utf-8")
         .replace(reg1, '')
         .replace(reg2, '')
         .replace(reg3, '');
-
-    return data;
 }
 
 /**
@@ -1615,7 +1620,7 @@ export function getMapStatus(ranked = 0) {
  * @param {number, String} status 谱面状态，可以是数字可以是字符串
  */
 export function getMapStatusImage(status = 0) {
-    let path = '';
+    let path;
 
     if (typeof status === 'number') {
         switch (status) {
