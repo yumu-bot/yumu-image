@@ -419,7 +419,7 @@ export const LABEL_MM = {
         min: 0,
         limit: 10,
         max: 18,
-        colors: colorArray.light_green,
+        colors: colorArray.rhodium,
     },
 
     UJ: {
@@ -430,7 +430,7 @@ export const LABEL_MM = {
         min: 0,
         limit: 10,
         max: 13,
-        colors: colorArray.cyan,
+        colors: colorArray.platinum,
     },
 
     RG: {
@@ -441,7 +441,7 @@ export const LABEL_MM = {
         min: 0,
         limit: 10,
         max: 14,
-        colors: colorArray.light_green,
+        colors: colorArray.rhodium,
     },
 
     JL: {
@@ -452,7 +452,7 @@ export const LABEL_MM = {
         min: 0,
         limit: 10,
         max: 14,
-        colors: colorArray.cyan,
+        colors: colorArray.platinum,
     },
 
 }

@@ -126,12 +126,17 @@ export async function panel_K(data = {
     const is_vs = data?.panel === 'KV'
     let middle
 
-    let overall = rounds(data.total, 2)
-
     if (is_vs) {
-        middle = poppinsBold.getTextPath('KV', 960, 614, 60, 'center baseline', '#fff');
+
+        let overall = rounds((data?.total - data?.vs_total) || 0, 2)
+
+        middle = poppinsBold.get2SizeTextPath(overall.integer, overall.decimal,
+            60, 48, 960, 614, 'center baseline', '#fff');
     } else {
-        middle = poppinsBold.get2SizeTextPath(overall.integer, overall.decimal, 60, 48, 960, 614, 'center baseline', '#fff');
+        let overall = rounds(data.total, 2)
+
+        middle = poppinsBold.get2SizeTextPath(overall.integer, overall.decimal,
+            60, 48, 960, 614, 'center baseline', '#fff');
     }
 
     // 重新排序

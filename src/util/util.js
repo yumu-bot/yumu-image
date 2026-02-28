@@ -39,7 +39,7 @@ let FLAG_PATH
 if (process.env.FLAG_PATH != null) {
     FLAG_PATH = process.env.FLAG_PATH
 } else if (process.env.EXPORT_FILE != null) {
-    FLAG_PATH = EXPORT_FILE_V3 + "Flags"
+    FLAG_PATH = EXPORT_FILE_V3 + "/Flags"
 } else {
     FLAG_PATH = CACHE_PATH + "/flag";
 }
@@ -287,7 +287,7 @@ export function requireNonNullElse(obj, obj2) {
  * @param size
  * @param size2
  * @param maximum_width
- * @return {title: ..., title_unicode: ...,}
+ * @return
  */
 export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '', title_unicode = '', artist = null, x = 0, y = 0, y2 = 0, size = 36, size2 = 24, maximum_width = 780, anchor = "center baseline", color = "#fff", color2 = color) {
 
@@ -1097,16 +1097,20 @@ export function rounds(number = 0, level = 0, sub_level = 0) {
     return floorOrRound(number, level, sub_level, true)
 }
 
-function floorOrRound(number = 0, level = 0, sub_level = 0, is_round = false) {
-    if (isNotNumber(number)) return {
-        integer: (number || '') + '',
+function floorOrRound(input = 0, level = 0, sub_level = 0, is_round = false) {
+    if (isNotNumber(input)) return {
+        integer: (input || '') + '',
         decimal: '',
         int: 0,
         dec: 0,
     }
 
-    let int_str
-    let dec_str
+    // 1. 提取符号
+    const sign = input < 0 ? '-' : '';
+    let number = Math.abs(input);
+
+    let int_str;
+    let dec_str;
 
     // 尽可能缩短
     if (sub_level === -1) {
@@ -1231,7 +1235,7 @@ function floorOrRound(number = 0, level = 0, sub_level = 0, is_round = false) {
                 dec_str = u
             }
         } else {
-            int_str = dec.toString().slice(2, 2 + level)
+            int_str = sign + '.' + dec.toString().slice(2, 2 + level)
             dec_str = ''
 
             while (int_str.length > 0 && int_str.charAt(int_str.length - 1) === '0') {
@@ -1279,20 +1283,20 @@ function floorOrRound(number = 0, level = 0, sub_level = 0, is_round = false) {
 
             dec_str = space_str
         }
-
     }
+
+    const final_sign = (int_str === '0' && (dec_str === '' || /^0+$/.test(dec_str))) ? '' : sign;
 
     if (sub_level === 3) {
         return {
-            integer: int_str,
+            integer: final_sign + int_str,
             decimal: dec_str,
-
-            int: parseInt(int_str, 10),
-            dec: parseFloat('0.' + dec_str),
+            int: parseInt(final_sign + int_str, 10),
+            dec: parseFloat('0.' + dec_str), // 小数部分通常不带符号
         }
     } else {
         return {
-            integer: int_str,
+            integer: final_sign + int_str,
             decimal: dec_str,
         }
     }
