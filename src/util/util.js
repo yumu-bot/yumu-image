@@ -112,11 +112,7 @@ export function initPath() {
 
 // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
 
-export function exportJPEG(svg) {
-
-}
-
-export const exportJPEGLegacyy = async (svg) => await exportsJPEG.convert(svg, {quality: 100});
+export const exportJPEG = async (svg) => await exportsJPEG.convert(svg, {quality: 100});
 export const exportPNG = async (svg) => await exportsPNG.convert(svg);
 
 const UTF8Encoder = new TextEncoder('utf8');
