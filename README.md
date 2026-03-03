@@ -46,7 +46,7 @@ npm start 也行。
   - B1: PP- PM/PV
   - B2: 骂娘谱面解析 MM
   - B3: PP+ PP/PA/PX
-  - B4: PP- 的第四版设计 PM
+  - K: 即现在的 K/KV
 - C: MRA 斗力系统 RA (严格意义上说这也符合 A 类面板的标准，但是没纳入进去)
   - C2: SRA 斗力系统 SA
 - D: 个人信息 IL

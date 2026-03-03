@@ -42,8 +42,6 @@ export async function router_svg(req, res) {
     res.end();
 }
 
-const VALUE_NAMES = ['ACC', 'PTT', 'STA', 'STB', 'PRE', 'EFT', 'STH'] // OVA 跟 SAN 单独处理
-
 // ppm 面板
 export async function panel_B1(data = {
     // A1卡
@@ -105,10 +103,18 @@ export async function panel_B1(data = {
     const SANITY_BOUNDARY = [is_pm4 ? 100.8 : 120, 100, 95, 90, 80, 70, 60, 0];
     const SANITY_RANKS = ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X'];
     const OII_BOUNDARY = [0, 0.5, 1, 1.5, 2, 3, 4, 5].toReversed();
-    // const OII_RANKS = ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X'].toReversed();
 
-    const VALUE_NORMAL = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH'];
-    const VALUE_MANIA = ['ACC', 'PTT', 'STA', 'PRE', 'EFT', 'STH'];
+    let order
+
+    // 条件定义
+    const is_vs = data.stat.is_vs;
+    const mode = getGameMode(data.stat.mode_int, 0);
+
+    if (mode === 'mania') {
+        order = ['ACC', 'PTT', 'STA', 'PRE', 'EFT', 'STH']
+    } else {
+        order = ['ACC', 'PTT', 'STA', 'STB', 'EFT', 'STH']
+    }
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
@@ -119,14 +125,10 @@ export async function panel_B1(data = {
     const reg_maincard = /(?<=<g id="MainCard">)/;
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
-    // 条件定义
-    const is_vs = data.stat.is_vs;
-    const mode = getGameMode(data.stat.mode_int, 0);
-
     const game_mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
 
     // 画六个标识
-    svg = setText(svg, PanelDraw.HexagonIndex((mode === 'mania') ? VALUE_MANIA : VALUE_NORMAL), reg_hexagon);
+    svg = setText(svg, PanelDraw.HexagonIndex(order, 960,  600, 260, 0), reg_hexagon);
 
     // 插入图片和部件（新方法
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
@@ -167,11 +169,17 @@ export async function panel_B1(data = {
         }
     }
 
-    // 获取卡片
-    for (const abbr of VALUE_NAMES) {
-        if (typeof data?.my[abbr] !== 'number') continue;
+    const value_map = data?.my || []
+    const vs_value_map = data?.others || []
 
-        const value = (data?.my[abbr] ?? 0) * 100;
+    const values = order.map(key => value_map[key]);
+    const vs_values = order.map(key => vs_value_map[key]);
+
+    // 获取卡片
+    for (let i = 0; i < 6; i++) {
+        const abbr = order[i]
+
+        const value = (values[i] ?? 0) * 100;
         const rank = getRankFromValue(value, BOUNDARY)
         const icon_colors = getRankColors(rank)
 
@@ -179,6 +187,7 @@ export async function panel_B1(data = {
             ...LABEL_PPM6[abbr],
 
             value: value,
+            delta: is_vs ? (value - (vs_values[i] ?? 0) * 100) : null,
             icon_colors: icon_colors,
             round_level: 1,
             max: (is_pm4) ? 101 : 120,
@@ -205,10 +214,10 @@ export async function panel_B1(data = {
         const cardA1o = await card_A1(await PanelGenerate.user2CardA1(data.users[1]));
         svg = setSvgBody(svg, 1450, 40, cardA1o, reg_maincard);
 
-        for (const abbr of VALUE_NAMES) {
-            if (typeof data.others[abbr] !== 'number') continue;
+        for (let i = 0; i < 6; i++) {
+            const abbr = order[i]
 
-            const value = (data?.others[abbr] || 0) * 100;
+            const value = (vs_values[i] ?? 0) * 100;
             const rank = getRankFromValue(value, BOUNDARY)
             const icon_colors = getRankColors(rank)
 
@@ -216,6 +225,7 @@ export async function panel_B1(data = {
                 ...LABEL_PPM6[abbr],
 
                 value: value,
+                delta: is_vs ? (value - (values[i] ?? 0) * 100) : null,
                 icon_colors: icon_colors,
                 round_level: 1,
                 max: (is_pm4) ? 101 : 120,
@@ -299,7 +309,6 @@ export async function panel_B1(data = {
 
             card_B7_centers.push(card_B7({
                 ...LABEL_PPM6.SAN,
-
 
                 value: san_value,
                 data_b: san_truly_rank,

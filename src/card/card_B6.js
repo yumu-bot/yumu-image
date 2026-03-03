@@ -164,7 +164,7 @@ export function card_B6(data = {
     )
 
     const bar_red = PanelDraw.LinearGradientRect(
-        bar_red_x, 70, red_width, 30, 15, colorArray.deep_red, 1, bar_position_x, [55, 45]
+        bar_red_x, 70, red_width, 30, 15, colorArray.dark_red, 1, bar_position_x, [55, 45]
     )
 
     const bar_green = PanelDraw.LinearGradientRect(
