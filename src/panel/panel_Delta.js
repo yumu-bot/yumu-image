@@ -1,9 +1,8 @@
 import {
-    exportPNG,
     getImageFromV3,
     setImage,
     setSvgBody, readTemplate,
-    setTexts, floor, getDiffBackground
+    setTexts, floor, getDiffBackground, exportJPEG
 } from "../util/util.js";
 import {lineSeedSans, poppinsBold} from "../util/font.js";
 import {getModColor} from "../util/color.js";
@@ -14,8 +13,8 @@ export async function router(req, res) {
     try {
         const data = req.fields || {};
         const svg = await panel_Delta(data);
-        res.set('Content-Type', 'image/png');
-        res.send(await exportPNG(svg));
+        res.set('Content-Type', 'image/jpeg');
+        res.send(await exportJPEG(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

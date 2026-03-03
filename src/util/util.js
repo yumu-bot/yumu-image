@@ -112,7 +112,11 @@ export function initPath() {
 
 // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
 
-export const exportJPEG = async (svg) => await exportsJPEG.convert(svg, {quality: 100});
+export function exportJPEG(svg) {
+
+}
+
+export const exportJPEGLegacyy = async (svg) => await exportsJPEG.convert(svg, {quality: 100});
 export const exportPNG = async (svg) => await exportsPNG.convert(svg);
 
 const UTF8Encoder = new TextEncoder('utf8');
@@ -123,7 +127,7 @@ const UTF8Encoder = new TextEncoder('utf8');
 function isBlankStringOrNotNull(str) {
     if (typeof str !== "string") {
         try {
-            str.toString().trim()?.length === 0
+            return str.toString().trim()?.length === 0
         } catch (e) {
             return false
         }
@@ -138,7 +142,7 @@ function isBlankStringOrNotNull(str) {
 function isEmptyStringOrNotNull(str) {
     if (typeof str !== "string") {
         try {
-            str.toString()?.length === 0
+            return str.toString()?.length === 0
         } catch (e) {
             return false
         }
