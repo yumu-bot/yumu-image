@@ -1,18 +1,18 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG, setImage,
     setSvgBody, readTemplate,
-    setText, setTexts, getAvatar, readNetImage
+    setText, setTexts, getAvatar, readNetImage, getSvgBody
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {getRankBackground, getRankFromValue} from "../util/star.js";
-import {card_B1} from "../card/card_B1.js";
-import {card_B2} from "../card/card_B2.js";
+import {getRankFromValue} from "../util/star.js";
 import {LABEL_PPP} from "../component/label.js";
-import {getRankColor} from "../util/color.js";
+import {getRankColor, getRankColors} from "../util/color.js";
+import {card_B6} from "../card/card_B6.js";
+import {card_B7} from "../card/card_B7.js";
 
 export async function router(req, res) {
     try {
@@ -190,15 +190,8 @@ export async function panel_B3(data = {
 }) {
     let svg = readTemplate('template/Panel_B.svg');
 
-    const ABBR = ['JMP', 'FLW', 'ACC', 'STA', 'SPD', 'PRE']; //决定顺序
-    const NAME = {
-        JMP: 'jumpAim',
-        FLW: 'flowAim',
-        PRE: 'precision',
-        SPD: 'speed',
-        STA: 'stamina',
-        ACC: 'accuracy',
-    };
+    const abbr = ['JMP', 'FLW', 'ACC', 'STA', 'SPD', 'PRE']; //决定顺序
+    const order = ['jumpAim', 'flowAim', 'precision', 'speed', 'stamina', 'accuracy', 'aim', 'total']
 
     const LV_BOUNDARY = [11, 9, 7, 5, 3, 1, 0.75, 0.25];
 
@@ -210,6 +203,9 @@ export async function panel_B3(data = {
     const other = data?.other || [];
     const others = data?.others || [];
 
+    const values = order.map(key => my[key]);
+    const vs_values = order.map(key => others[key]);
+
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PB-1\);">)/;
@@ -220,7 +216,7 @@ export async function panel_B3(data = {
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     // 画六个标识
-    svg = setText(svg, PanelDraw.HexagonIndex(ABBR, 960, 600, 230+30, Math.PI / 3), reg_hexagon);
+    svg = setText(svg, PanelDraw.HexagonIndex(abbr, 960, 600, 230+30, Math.PI / 3), reg_hexagon);
 
     // 插入图片和部件（新方法
 
@@ -238,9 +234,11 @@ export async function panel_B3(data = {
     let graph_right = [];
     let card_center = [];
 
-
     if (isUser) {
         banner = await getAvatar(data?.me?.cover_url, true);
+
+        const levels = my?.advanced_stats?.index ?? []
+        const vs_levels = others?.advanced_stats?.index ?? []
 
         if (isVs) {
             type = 'PX+'
@@ -249,50 +247,51 @@ export async function panel_B3(data = {
             card_left = await card_A1(await PanelGenerate.user2CardA1(me));
             card_right = await card_A1(await PanelGenerate.user2CardA1(other));
 
-            await drawUserPlus(my, label_left, graph_left, ABBR, NAME, false);
-            await drawUserPlus(others, label_right, graph_right, ABBR, NAME, true);
+            drawUserPlus(label_left, values, vs_values, levels, graph_left, abbr, false);
+            drawUserPlus(label_right, vs_values, values, vs_levels, graph_right, abbr, true);
 
             const value_o1 = my?.performance?.total;
-
             const level_o1 = my?.advanced_stats?.advanced;
+
             const rank_o1 = getRoman(level_o1);
-
             const fake_rank_o1 = getRankFromValue(level_o1, LV_BOUNDARY);
-            const background_o1 = getRankBackground(fake_rank_o1);
-            const color_o1 = getRankColor(fake_rank_o1);
+            const icon_colors_o1 = getRankColors(fake_rank_o1);
 
-            card_center.push(await card_B2({
-                label: LABEL_PPP.OVA,
-                background: background_o1,
+            card_center.push(card_B7({
+                ...LABEL_PPP.OVA,
+
                 value: value_o1,
+                data_b: rank_o1,
+                data_m: '',
+                delta: null,
+                icon_colors: icon_colors_o1,
                 round_level: -2,
-                rank: rank_o1,
-                color: color_o1,
             }));
 
             const value_o2 = others?.performance?.total;
             const level_o2 = others?.advanced_stats?.advanced;
+
             const rank_o2 = getRoman(level_o2);
-
             const fake_rank_o2 = getRankFromValue(level_o2, LV_BOUNDARY);
-            const background_o2 = getRankBackground(fake_rank_o2);
-            const color_o2 = getRankColor(fake_rank_o2);
+            const icon_colors_o2 = getRankColors(fake_rank_o2);
 
-            card_center.push(await card_B2({
-                label: LABEL_PPP.OVA,
-                background: background_o2,
+            card_center.push(card_B7({
+                ...LABEL_PPP.OVA,
+
                 value: value_o2,
+                data_b: rank_o2,
+                data_m: '',
+                delta: null,
+                icon_colors: icon_colors_o2,
                 round_level: -2,
-                rank: rank_o2,
-                color: color_o2,
-            }));
+            }, true));
         } else {
             type = 'PP+'
             panel_name = getPanelNameSVG('PP Plus: User (!ympp)', 'PP');
 
             card_left = await card_A1(await PanelGenerate.user2CardA1(me));
 
-            await drawUserPlus(my, label_left, graph_left, ABBR, NAME, false);
+            drawUserPlus(label_left, values, [], levels, graph_left, abbr, false);
 
             const value_o1 = my?.performance?.aim;
             //const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
@@ -301,37 +300,36 @@ export async function panel_B3(data = {
             const rank_o1 = getRoman(level_o1)
 
             const fake_rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
-            const background_o1 = getRankBackground(fake_rank_o1);
-            const color_o1 = getRankColor(fake_rank_o1);
+            const icon_colors_o1 = getRankColor(fake_rank_o1);
 
-            card_center.push(await card_B2({
-                label: LABEL_PPP.AIM,
-                background: background_o1,
+            card_center.push(card_B7({
+                ...LABEL_PPP.AIM,
+
                 value: value_o1,
+                data_b: rank_o1,
+                data_m: '',
+                delta: null,
+                icon_colors: icon_colors_o1,
                 round_level: -2,
-                rank: rank_o1,
-                color: color_o1,
             }));
-
 
             const value_o2 = my?.performance?.total;
-
             const level_o2 = my?.advanced_stats?.advanced;
+
             const rank_o2 = getRoman(level_o2);
-
             const fake_rank_o2 = getRankFromValue(level_o2, LV_BOUNDARY);
-            const background_o2 = getRankBackground(fake_rank_o2);
-            const color_o2 = getRankColor(fake_rank_o2);
+            const icon_colors_o2 = getRankColors(fake_rank_o2);
 
-            card_center.push(await card_B2({
-                label: LABEL_PPP.OVA,
-                background: background_o2,
+            card_center.push(card_B7({
+                ...LABEL_PPP.OVA,
+
                 value: value_o2,
+                data_b: rank_o2,
+                data_m: '',
+                delta: null,
+                icon_colors: icon_colors_o2,
                 round_level: -2,
-                rank: rank_o2,
-                color: color_o2,
-            }));
-
+            }, true));
         }
 
     } else {
@@ -343,72 +341,77 @@ export async function panel_B3(data = {
             card_left = card_A2(await PanelGenerate.beatmap2CardA2(me));
             card_right = card_A2(await PanelGenerate.beatmap2CardA2(other));
 
-
-            await drawMapPlus(my, label_left, graph_left, ABBR, NAME, false);
-            await drawMapPlus(others, label_right, graph_right, ABBR, NAME, true);
+            drawMapPlus(label_left, values, vs_values, graph_left, abbr, false);
+            drawMapPlus(label_right, vs_values, values, graph_right, abbr, true);
 
             const value_o1 = me?.difficulty?.total;
             const rank_o1 = getRankFromValue(value_o1);
-            const background_o1 = getRankBackground(rank_o1);
-            const color_o1 = getRankColor(rank_o1);
+            const icon_colors_o1 = getRankColors(rank_o1);
 
-            card_center.push(await card_B2({
-                label: LABEL_PPP.OVA,
-                background: background_o1,
+            card_center.push(card_B7({
+                ...LABEL_PPP.OVA,
+
                 value: value_o1,
-                round_level: 2,
-                rank: rank_o1,
-                color: color_o1,
+                data_b: rank_o1,
+                data_m: '',
+                delta: null,
+                icon_colors: icon_colors_o1,
+                round_level: -2,
             }));
 
             const value_o2 = others?.difficulty?.total;
             const rank_o2 = getRankFromValue(value_o2);
-            const background_o2 = getRankBackground(rank_o2);
-            const color_o2 = getRankColor(rank_o2);
+            const icon_colors_o2 = getRankColor(rank_o2);
 
-            card_center.push(await card_B2({
-                label: LABEL_PPP.OVA,
-                background: background_o2,
+            card_center.push(card_B7({
+                ...LABEL_PPP.OVA,
+
                 value: value_o2,
-                round_level: 2,
-                rank: rank_o2,
-                color: color_o2,
-            }));
+                data_b: rank_o2,
+                data_m: '',
+                delta: null,
+                icon_colors: icon_colors_o2,
+                round_level: -2,
+            }, true));
         } else {
             type = 'PA+'
             panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA');
 
             card_left = card_A2(await PanelGenerate.beatmap2CardA2(me));
 
-            await drawMapPlus(my, label_left, graph_left, ABBR, NAME, false);
+            drawMapPlus(label_left, my, [], graph_left, abbr, false);
 
             const value_o1 = my?.difficulty?.aim;
-            const rank_o1 = getRankFromValue(value_o1, [7, 6, 5, 4.5, 4, 3, 2, 1]); //todo 这个是临时边界，我不知道 aim 的边界是多少
-            const background_o1 = getRankBackground(rank_o1);
-            const color_o1 = getRankColor(rank_o1);
 
-            card_center.push(await card_B2({
-                label: LABEL_PPP.AIM,
-                background: background_o1,
+            //todo 这个是临时边界，我不知道 aim 的边界是多少
+            const rank_o1 = getRankFromValue(value_o1, [7, 6, 5, 4.5, 4, 3, 2, 1]); 
+            const icon_colors_o1 = getRankColors(rank_o1);
+
+            card_center.push(card_B7({
+                ...LABEL_PPP.AIM,
+
                 value: value_o1,
-                round_level: 2,
-                rank: rank_o1,
-                color: color_o1,
+                data_b: rank_o1,
+                data_m: '',
+                delta: null,
+                icon_colors: icon_colors_o1,
+                round_level: -2,
             }));
 
             const value_o2 = my?.difficulty?.total;
             const rank_o2 = getRankFromValue(value_o2);
-            const background_o2 = getRankBackground(rank_o2);
-            const color_o2 = getRankColor(rank_o2);
+            const icon_colors_o2 = getRankColor(rank_o2);
 
-            card_center.push(await card_B2({
-                label: LABEL_PPP.OVA,
-                background: background_o2,
+            card_center.push(card_B7({
+                ...LABEL_PPP.OVA,
+
                 value: value_o2,
-                round_level: 2,
-                rank: rank_o2,
-                color: color_o2,
-            }));
+                data_b: rank_o2,
+                data_m: '',
+                delta: null,
+                icon_colors: icon_colors_o2,
+                round_level: -2,
+            }, true));
         }
     }
 
@@ -416,24 +419,30 @@ export async function panel_B3(data = {
     svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
 
     // A2定义
-    svg = setSvgBody(svg, 40, 40, card_left, reg_maincard);
-    svg = setSvgBody(svg, 1450, 40, card_right, reg_maincard);
-
+    
+    
+    svg = setTexts(svg, [
+        getSvgBody(40, 40, card_left), getSvgBody(1450, 40, card_right)
+    ], reg_maincard)
+    
+    let strings = ''
 
     if (label_left.length > 0) {
         for (let j = 0; j < 6; j++) {
-            svg = setSvgBody(svg, 40, 350 + j * 115, label_left[j], reg_left);
+            strings += getSvgBody(40, 350 + j * 115, label_left[j]);
         }
     }
 
     if (label_right.length > 0) {
         for (let j = 0; j < 6; j++) {
-            svg = setSvgBody(svg, 1350, 350 + j * 115, label_right[j], reg_right);
+            strings += getSvgBody(40, 350 + j * 115, label_right[j]);
         }
     }
 
-    svg = setSvgBody(svg, 630, 860, card_center[0], reg_center);
-    svg = setSvgBody(svg, 970, 860, card_center[1], reg_center);
+    strings += getSvgBody(630, 860, card_center[0]);
+    strings += getSvgBody(970, 860, card_center[1]);
+    
+    svg = setText(svg, strings, reg_center)
 
     // 插入文字
     const type_path = torus.getTextPath(type, 960, 614, 60, 'center baseline', '#fff');
@@ -475,26 +484,29 @@ const getRoman = (level = 0) => {
     }
 }
 
-async function drawMapPlus(plus, label, graph, arr_abbr, arr_name, at_right = false) {
+function drawMapPlus(svgs, values, vs_values = null, graph, abbr_arr, at_right = false) {
     for (let i = 0; i < 6; i++) {
-        const abbr = arr_abbr[i]; //STA
-        const name = arr_name[abbr]; //Stamina
-        const value = plus?.difficulty[name]; //1234
+        const abbr = abbr_arr[i]; //STA
+        const value = values[i]; //1234
+        const vs_value = vs_values?.[i];
 
         const rank = getRankFromValue(value, [4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5]); //这个 4 非常难拿
-        const color = getRankColor(rank);
-        const background = getRankBackground(rank);
+        const colors = getRankColors(rank);
 
         if (typeof value !== 'number') continue;
 
-        label.push(
-            await card_B1({
-                label: LABEL_PPP[abbr],
-                background: background,
+        svgs.push(
+            card_B6({
+                ...LABEL_PPP[abbr],
+
                 value: value,
+                delta: (vs_value == null) ? null : (value - vs_value),
+                icon_colors: colors,
                 round_level: 2,
-                rank: rank,
-                color: color,
+
+                // pp+ / map 的这个范围要变一下
+                limit: 4,
+                max: 6,
             }, at_right)
         );
 
@@ -502,35 +514,36 @@ async function drawMapPlus(plus, label, graph, arr_abbr, arr_name, at_right = fa
     }
 }
 
-async function drawUserPlus(plus, label, graph, arr_abbr, arr_name, at_right = false) {
+
+function drawUserPlus(svgs, values, vs_values = [], levels = [], graph, abbr_arr, at_right = false) {
     // 用于算假 rank 的边界值
     const lv_boundary = [11, 9, 7, 5, 3, 1, 0.75, 0.25];
 
     const GRAPH_MAX = [5800, 1400, 3200, 2800, 3800, 1200]
 
     for (let i = 0; i < 6; i++) {
-        const abbr = arr_abbr[i]; //STA
-        const name = arr_name[abbr]; //Stamina
-        const value = plus?.performance[name]; //1234
+        const abbr = abbr_arr[i]; //STA
+        const value = values[i]; //1234
+        const vs_value = vs_values?.[i]; //1234
 
-        const level = plus?.advanced_stats?.index[i]; //lv.10
+        const level = levels[i]; //lv.10 plus?.advanced_stats?.index
         const rank = getRoman(level); //I
 
         const fake_rank = getRankFromValue(level, lv_boundary); //并不用于显示
-        const color = getRankColor(fake_rank);
-        const background = getRankBackground(fake_rank);
+        const colors = getRankColors(fake_rank);
 
         if (typeof value !== 'number') continue;
 
-        label.push(
-            await card_B1({
-                label: LABEL_PPP[abbr],
-                background: background,
+        svgs.push(
+            card_B6({
+                ...LABEL_PPP[abbr],
+
                 value: value,
+                data_b: rank,
+                data_m: '',
+                delta: (vs_value == null) ? null : (value - vs_value),
+                icon_colors: colors,
                 round_level: -2,
-                rank: rank,
-                color: color,
-                rank_size: (rank.startsWith('.') ? 48 : 60) //百分比太大了！
             }, at_right)
         );
 
