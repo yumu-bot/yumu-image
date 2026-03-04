@@ -3,14 +3,14 @@ import {
     setSvgBody, readTemplate,
     setText, setTexts, getAvatar, readNetImage, getSvgBody
 } from "../util/util.js";
-import {torus} from "../util/font.js";
+import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getRankFromValue} from "../util/star.js";
 import {LABEL_PPP} from "../component/label.js";
-import {getRankColor, getRankColors} from "../util/color.js";
+import {getRankColors} from "../util/color.js";
 import {card_B6} from "../card/card_B6.js";
 import {card_B7} from "../card/card_B7.js";
 
@@ -143,40 +143,41 @@ export async function panel_B3(data = {
 
     my: {
         accuracy: 1,
-        combo: 956,
+        combo: 1262,
         difficulty: {
-            jumpAim: 2.057429815359158,
-            flowAim: 1.3343698283241225,
-            aim: 2.082723073148153,
-            precision: 1.193626673055268,
-            speed: 2.295319821384985,
-            stamina: 1.7423563404156794,
-            accuracy: 1.0466624054636704,
-            total: 4.423171865176093
+            aim: 2.5893139691873612,
+            jumpAim: 2.5561198653273594,
+            flowAim: 1.7806138374568112,
+            precision: 1.4476463407191265,
+            speed: 2.566741460425864,
+            stamina: 2.1842094599076107,
+            accuracy: 1.0963124015083454,
+            total: 5.197077817930671
         },
         performance: {
-            jumpAim: 33.055684811958265,
-            flowAim: 9.017781576662994,
-            aim: 34.28985561056539,
-            precision: 6.454708242741545,
-            speed: 43.24087594391863,
-            stamina: 18.91366977015664,
-            accuracy: 50.00175442319033,
-            total: 129.40998690547733
+            aim: 66.6830048361386,
+            jumpAim: 64.15118235921257,
+            flowAim: 21.685540474949214,
+            precision: 11.653287181305863,
+            speed: 62.68444474927959,
+            stamina: 38.62746939239551,
+            accuracy: 83.23758239899928,
+            total: 215.6514393154375
         },
         skill: {
-            jumpAim: 33.96563157211957,
-            flowAim: 9.266020304016731,
-            aim: 35.2337762462058,
-            precision: 6.632391472923614,
-            speed: 47.16221874374648,
-            stamina: 20.62887514360274,
-            accuracy: 4.471821737893736,
-            total: 337.4939954788446
+            aim: 67.7046893899496,
+            jumpAim: 65.13407556095385,
+            flowAim: 22.01779577446283,
+            precision: 11.831833177298709,
+            speed: 65.94942060212585,
+            stamina: 40.639415981811204,
+            accuracy: 5.138869483771203,
+            total: 547.4472345275411
         },
 
         advanced_stats: {}
     },
+
 
     other: {
 
@@ -190,8 +191,10 @@ export async function panel_B3(data = {
 }) {
     let svg = readTemplate('template/Panel_B.svg');
 
-    const abbr = ['JMP', 'FLW', 'ACC', 'STA', 'SPD', 'PRE']; //决定顺序
+    const abbr = ['JUMP', 'FLOW', 'ACC', 'STA', 'SPD', 'PRE']; //决定顺序
+
     const order = ['jumpAim', 'flowAim', 'precision', 'speed', 'stamina', 'accuracy', 'aim', 'total']
+    const display_order = ['jumpAim', 'flowAim', 'accuracy', 'stamina', 'speed', 'precision', 'aim', 'total']
 
     const LV_BOUNDARY = [11, 9, 7, 5, 3, 1, 0.75, 0.25];
 
@@ -202,9 +205,6 @@ export async function panel_B3(data = {
     const my = data?.my || [];
     const other = data?.other || [];
     const others = data?.others || [];
-
-    const values = order.map(key => my[key]);
-    const vs_values = order.map(key => others[key]);
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
@@ -230,9 +230,10 @@ export async function panel_B3(data = {
 
     let label_left = [];
     let label_right = [];
-    let graph_left = [];
+    let graph_left;
     let graph_right = [];
     let card_center = [];
+
 
     if (isUser) {
         banner = await getAvatar(data?.me?.cover_url, true);
@@ -240,15 +241,26 @@ export async function panel_B3(data = {
         const levels = my?.advanced_stats?.index ?? []
         const vs_levels = others?.advanced_stats?.index ?? []
 
+        const values = order.map(key => my?.performance?.[key]);
+        const vs_values = order.map(key => others?.performance?.[key]);
+
+        const GRAPH_MAX = [5800, 1400, 3200, 2800, 3800, 1200]
+
+        graph_left = display_order.map((key, index) =>
+            Math.pow(my?.performance?.[key] / GRAPH_MAX[index], 0.8));
+
         if (isVs) {
+            graph_right = display_order.map((key, index) =>
+                Math.pow(others?.performance?.[key] / GRAPH_MAX[index], 0.8));
+
             type = 'PX+'
             panel_name = getPanelNameSVG('PP Plus: User VS (!ympx)', 'PX');
 
             card_left = await card_A1(await PanelGenerate.user2CardA1(me));
             card_right = await card_A1(await PanelGenerate.user2CardA1(other));
 
-            drawUserPlus(label_left, values, vs_values, levels, graph_left, abbr, false);
-            drawUserPlus(label_right, vs_values, values, vs_levels, graph_right, abbr, true);
+            drawUserPlus(label_left, values, vs_values, levels, abbr, false);
+            drawUserPlus(label_right, vs_values, values, vs_levels, abbr, true);
 
             const value_o1 = my?.performance?.total;
             const level_o1 = my?.advanced_stats?.advanced;
@@ -265,7 +277,7 @@ export async function panel_B3(data = {
                 data_m: '',
                 delta: null,
                 icon_colors: icon_colors_o1,
-                round_level: -2,
+                round_level: -6,
             }));
 
             const value_o2 = others?.performance?.total;
@@ -283,7 +295,7 @@ export async function panel_B3(data = {
                 data_m: '',
                 delta: null,
                 icon_colors: icon_colors_o2,
-                round_level: -2,
+                round_level: -6,
             }, true));
         } else {
             type = 'PP+'
@@ -291,7 +303,7 @@ export async function panel_B3(data = {
 
             card_left = await card_A1(await PanelGenerate.user2CardA1(me));
 
-            drawUserPlus(label_left, values, [], levels, graph_left, abbr, false);
+            drawUserPlus(label_left, values, [], levels, abbr, false);
 
             const value_o1 = my?.performance?.aim;
             //const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
@@ -300,17 +312,15 @@ export async function panel_B3(data = {
             const rank_o1 = getRoman(level_o1)
 
             const fake_rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
-            const icon_colors_o1 = getRankColor(fake_rank_o1);
+            const icon_colors_o1 = getRankColors(fake_rank_o1);
 
             card_center.push(card_B7({
                 ...LABEL_PPP.AIM,
 
                 value: value_o1,
-                data_b: rank_o1,
-                data_m: '',
                 delta: null,
                 icon_colors: icon_colors_o1,
-                round_level: -2,
+                round_level: -6,
             }));
 
             const value_o2 = my?.performance?.total;
@@ -324,27 +334,36 @@ export async function panel_B3(data = {
                 ...LABEL_PPP.OVA,
 
                 value: value_o2,
-                data_b: rank_o2,
-                data_m: '',
                 delta: null,
                 icon_colors: icon_colors_o2,
-                round_level: -2,
+                round_level: -6,
             }, true));
         }
 
     } else {
+
+        graph_left = display_order.map(key =>
+            Math.pow(my?.difficulty?.[key] / 5, 0.8));
+
+        const values = order.map(key => my?.difficulty?.[key]);
+        const vs_values = order.map(key => others?.difficulty?.[key]);
+
         banner = await readNetImage(me?.beatmapset?.covers?.cover, true);
+
         if (isVs) {
+            graph_right = display_order.map(key =>
+                Math.pow(others?.difficulty?.[key] / 5, 0.8));
+
             type = 'PA+'
             panel_name = getPanelNameSVG('PP Plus: BeatMap (!ympa)', 'PA');
 
             card_left = card_A2(await PanelGenerate.beatmap2CardA2(me));
             card_right = card_A2(await PanelGenerate.beatmap2CardA2(other));
 
-            drawMapPlus(label_left, values, vs_values, graph_left, abbr, false);
-            drawMapPlus(label_right, vs_values, values, graph_right, abbr, true);
+            drawMapPlus(label_left, values, vs_values, abbr, false);
+            drawMapPlus(label_right, vs_values, values, abbr, true);
 
-            const value_o1 = me?.difficulty?.total;
+            const value_o1 = my?.difficulty?.total ?? 0;
             const rank_o1 = getRankFromValue(value_o1);
             const icon_colors_o1 = getRankColors(rank_o1);
 
@@ -352,26 +371,28 @@ export async function panel_B3(data = {
                 ...LABEL_PPP.OVA,
 
                 value: value_o1,
-                data_b: rank_o1,
-                data_m: '',
                 delta: null,
+
+                limit: 10,
+                max: 15,
                 icon_colors: icon_colors_o1,
-                round_level: -2,
+                round_level: 2,
             }));
 
             const value_o2 = others?.difficulty?.total;
             const rank_o2 = getRankFromValue(value_o2);
-            const icon_colors_o2 = getRankColor(rank_o2);
+            const icon_colors_o2 = getRankColors(rank_o2);
 
             card_center.push(card_B7({
                 ...LABEL_PPP.OVA,
 
                 value: value_o2,
-                data_b: rank_o2,
-                data_m: '',
                 delta: null,
+
+                limit: 10,
+                max: 15,
                 icon_colors: icon_colors_o2,
-                round_level: -2,
+                round_level: 2,
             }, true));
         } else {
             type = 'PA+'
@@ -379,11 +400,10 @@ export async function panel_B3(data = {
 
             card_left = card_A2(await PanelGenerate.beatmap2CardA2(me));
 
-            drawMapPlus(label_left, my, [], graph_left, abbr, false);
+            drawMapPlus(label_left, values, [], abbr, false);
 
             const value_o1 = my?.difficulty?.aim;
 
-            //todo 这个是临时边界，我不知道 aim 的边界是多少
             const rank_o1 = getRankFromValue(value_o1, [7, 6, 5, 4.5, 4, 3, 2, 1]); 
             const icon_colors_o1 = getRankColors(rank_o1);
 
@@ -391,26 +411,29 @@ export async function panel_B3(data = {
                 ...LABEL_PPP.AIM,
 
                 value: value_o1,
-                data_b: rank_o1,
-                data_m: '',
                 delta: null,
+
+                limit: 8,
+                max: 12,
                 icon_colors: icon_colors_o1,
-                round_level: -2,
+                round_level: 2,
             }));
 
             const value_o2 = my?.difficulty?.total;
+
             const rank_o2 = getRankFromValue(value_o2);
-            const icon_colors_o2 = getRankColor(rank_o2);
+            const icon_colors_o2 = getRankColors(rank_o2);
 
             card_center.push(card_B7({
                 ...LABEL_PPP.OVA,
 
                 value: value_o2,
-                data_b: rank_o2,
-                data_m: '',
                 delta: null,
+
+                limit: 10,
+                max: 15,
                 icon_colors: icon_colors_o2,
-                round_level: -2,
+                round_level: 2,
             }, true));
         }
     }
@@ -429,23 +452,23 @@ export async function panel_B3(data = {
 
     if (label_left.length > 0) {
         for (let j = 0; j < 6; j++) {
-            strings += getSvgBody(40, 350 + j * 115, label_left[j]);
+            strings += getSvgBody(40, 340 + j * 115, label_left[j]);
         }
     }
 
     if (label_right.length > 0) {
         for (let j = 0; j < 6; j++) {
-            strings += getSvgBody(40, 350 + j * 115, label_right[j]);
+            strings += getSvgBody(1350, 340 + j * 115, label_right[j]);
         }
     }
 
-    strings += getSvgBody(630, 860, card_center[0]);
-    strings += getSvgBody(970, 860, card_center[1]);
+    strings += getSvgBody(630, 890, card_center[0]);
+    strings += getSvgBody(970, 890, card_center[1]);
     
     svg = setText(svg, strings, reg_center)
 
     // 插入文字
-    const type_path = torus.getTextPath(type, 960, 614, 60, 'center baseline', '#fff');
+    const type_path = poppinsBold.getTextPath(type, 960, 614, 60, 'center baseline', '#fff');
     svg = setTexts(svg, [panel_name, type_path], reg_index);
 
     // 画六边形和其他
@@ -484,7 +507,7 @@ const getRoman = (level = 0) => {
     }
 }
 
-function drawMapPlus(svgs, values, vs_values = null, graph, abbr_arr, at_right = false) {
+function drawMapPlus(svgs, values, vs_values = null, abbr_arr, at_right = false) {
     for (let i = 0; i < 6; i++) {
         const abbr = abbr_arr[i]; //STA
         const value = values[i]; //1234
@@ -505,28 +528,24 @@ function drawMapPlus(svgs, values, vs_values = null, graph, abbr_arr, at_right =
                 round_level: 2,
 
                 // pp+ / map 的这个范围要变一下
-                limit: 4,
-                max: 6,
+                limit: 6,
+                max: 10,
             }, at_right)
         );
-
-        graph.push(Math.pow(value / 4, 0.8));
     }
 }
 
 
-function drawUserPlus(svgs, values, vs_values = [], levels = [], graph, abbr_arr, at_right = false) {
+function drawUserPlus(svgs, values, vs_values = [], levels = [], abbr_arr, at_right = false) {
     // 用于算假 rank 的边界值
     const lv_boundary = [11, 9, 7, 5, 3, 1, 0.75, 0.25];
-
-    const GRAPH_MAX = [5800, 1400, 3200, 2800, 3800, 1200]
 
     for (let i = 0; i < 6; i++) {
         const abbr = abbr_arr[i]; //STA
         const value = values[i]; //1234
         const vs_value = vs_values?.[i]; //1234
 
-        const level = levels[i]; //lv.10 plus?.advanced_stats?.index
+        const level = levels[i]; //lv.10
         const rank = getRoman(level); //I
 
         const fake_rank = getRankFromValue(level, lv_boundary); //并不用于显示
@@ -539,14 +558,12 @@ function drawUserPlus(svgs, values, vs_values = [], levels = [], graph, abbr_arr
                 ...LABEL_PPP[abbr],
 
                 value: value,
-                data_b: rank,
-                data_m: '',
+                data_b: (vs_value == null) ? null : rank,
+                data_m: (vs_value == null) ? null : '',
                 delta: (vs_value == null) ? null : (value - vs_value),
                 icon_colors: colors,
-                round_level: -2,
+                round_level: -6,
             }, at_right)
         );
-
-        graph.push(Math.pow(value / GRAPH_MAX[i], 0.8));
     }
 }

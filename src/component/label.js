@@ -252,24 +252,24 @@ export const LABELS = {
 export const LABEL_PPP = {
     // pp+ 的
 
-    JMP: {
+    JUMP: {
         icon: readBufferFromV3('Icons', 'road-barrier-solid-full.svg'),
         title: 'JP',
         left_1: 'Jump',
         left_2: '跳',
         min: 0,
-        limit: 6900,
-        max: 6900 * 2,
+        limit: 5800,
+        max: 5800 * 2,
         colors: colorArray.green,
     },
-    FLW: {
+    FLOW: {
         icon: readBufferFromV3('Icons', 'wind-solid-full.svg'),
         title: 'FL',
         left_1: 'Flow',
         left_2: '串',
         min: 0,
-        limit: 4400,
-        max: 4400 * 2,
+        limit: 1400,
+        max: 1400 * 2,
         colors: colorArray.blue,
     },
     PRE: {
@@ -278,8 +278,8 @@ export const LABEL_PPP = {
         left_1: 'Precision',
         left_2: '小圈',
         min: 0,
-        limit: 3050,
-        max: 3050 * 2,
+        limit: 3200,
+        max: 3200 * 2,
         colors: colorArray.yellow,
     },
     SPD: {
@@ -288,8 +288,8 @@ export const LABEL_PPP = {
         left_1: 'Speed',
         left_2: '速度',
         min: 0,
-        limit: 3600,
-        max: 3600 * 2,
+        limit: 2800,
+        max: 2800 * 2,
         colors: colorArray.amber,
     },
     STA: {
@@ -298,8 +298,8 @@ export const LABEL_PPP = {
         left_1: 'Stamina',
         left_2: '耐力',
         min: 0,
-        limit: 3050,
-        max: 3050 * 2,
+        limit: 3800,
+        max: 3800 * 2,
         colors: colorArray.red,
     },
     ACC: {
@@ -308,8 +308,8 @@ export const LABEL_PPP = {
         left_1: 'Accuracy',
         left_2: '准度',
         min: 0,
-        limit: 4400,
-        max: 4400 * 2,
+        limit: 1200,
+        max: 1200 * 2,
         colors: colorArray.purple,
     },
     OVA: {
@@ -317,19 +317,19 @@ export const LABEL_PPP = {
         title: 'ALL',
         left_1: 'Overall',
         left_2: '综合',
-        min: 60,
-        limit: 4400,
-        max: 4400 * 2,
+        min: 0,
+        limit: 10000,
+        max: 15000,
         colors: colorArray.sakura,
     },
     AIM: {
         icon: readBufferFromV3('Icons', 'marker-solid-full.svg'),
-        title: 'AM',
+        title: 'AIM',
         left_1: 'Aim',
         left_2: '移动',
         min: 0,
-        limit: 6900,
-        max: 6900 * 2,
+        limit: 5800,
+        max: 5800 * 2,
         colors: colorArray.pink,
     },
 }
