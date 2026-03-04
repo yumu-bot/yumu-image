@@ -202,7 +202,7 @@ export function card_B6(data = {
     }
 
     const delta_value = delta !== 0 ? poppinsBold.getTextPath(
-        delta_sign + round(delta, 2), delta_x, 54, 18, delta_anchor, delta_color
+        delta_sign + round(delta, data?.round_level ?? 2), delta_x, 54, 18, delta_anchor, delta_color
     ) : ''
 
     svg = setTexts(svg, [title, left1, left2, value, delta_value], reg_text)

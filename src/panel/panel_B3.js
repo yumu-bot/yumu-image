@@ -1,7 +1,7 @@
 import {
     exportJPEG, getImageFromV3, getPanelNameSVG, setImage,
     setSvgBody, readTemplate,
-    setText, setTexts, getAvatar, readNetImage, getSvgBody
+    setText, setTexts, getAvatar, readNetImage, getSvgBody, getNowTimeStamp, getTimeByDHMS
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -299,11 +299,22 @@ export async function panel_B3(data = {
             }, true));
         } else {
             type = 'PP+'
-            panel_name = getPanelNameSVG('PP Plus: User (!ympp)', 'PP');
+
+            let request_time
+            const before_values = order.map(key => others?.difficulty?.[key]);
+
+            if (my?.combo > 0) {
+                // 这个是小时
+                request_time = getTimeByDHMS(my?.combo * 60);
+            } else {
+                request_time = 'request time: ' + getNowTimeStamp()
+            }
+
+            panel_name = getPanelNameSVG('PP Plus: User (!ympp)', 'PP', request_time);
 
             card_left = await card_A1(await PanelGenerate.user2CardA1(me));
 
-            drawUserPlus(label_left, values, [], levels, abbr, false);
+            drawUserPlus(label_left, values, before_values, levels, abbr, false);
 
             const value_o1 = my?.performance?.aim;
             //const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
