@@ -193,8 +193,8 @@ export async function panel_B3(data = {
 
     const abbr = ['JUMP', 'FLOW', 'ACC', 'STA', 'SPD', 'PRE']; //决定顺序
 
-    const order = ['jumpAim', 'flowAim', 'precision', 'speed', 'stamina', 'accuracy', 'aim', 'total']
-    const display_order = ['jumpAim', 'flowAim', 'accuracy', 'stamina', 'speed', 'precision', 'aim', 'total']
+    // const raw_order = ['jumpAim', 'flowAim', 'precision', 'speed', 'stamina', 'accuracy', 'aim', 'total']
+    const order = ['jumpAim', 'flowAim', 'accuracy', 'stamina', 'speed', 'precision', 'aim', 'total']
 
     const LV_BOUNDARY = [11, 9, 7, 5, 3, 1, 0.75, 0.25];
 
@@ -246,11 +246,11 @@ export async function panel_B3(data = {
 
         const GRAPH_MAX = [5800, 1400, 3200, 2800, 3800, 1200]
 
-        graph_left = display_order.map((key, index) =>
+        graph_left = order.map((key, index) =>
             Math.pow(my?.performance?.[key] / GRAPH_MAX[index], 0.8));
 
         if (isVs) {
-            graph_right = display_order.map((key, index) =>
+            graph_right = order.map((key, index) =>
                 Math.pow(others?.performance?.[key] / GRAPH_MAX[index], 0.8));
 
             type = 'PX+'
@@ -342,7 +342,7 @@ export async function panel_B3(data = {
 
     } else {
 
-        graph_left = display_order.map(key =>
+        graph_left = order.map(key =>
             Math.pow(my?.difficulty?.[key] / 5, 0.8));
 
         const values = order.map(key => my?.difficulty?.[key]);
@@ -351,7 +351,7 @@ export async function panel_B3(data = {
         banner = await readNetImage(me?.beatmapset?.covers?.cover, true);
 
         if (isVs) {
-            graph_right = display_order.map(key =>
+            graph_right = order.map(key =>
                 Math.pow(others?.difficulty?.[key] / 5, 0.8));
 
             type = 'PA+'
@@ -404,7 +404,7 @@ export async function panel_B3(data = {
 
             const value_o1 = my?.difficulty?.aim;
 
-            const rank_o1 = getRankFromValue(value_o1, [7, 6, 5, 4.5, 4, 3, 2, 1]); 
+            const rank_o1 = getRankFromValue(value_o1, [7, 6, 5, 4.5, 4, 3, 2, 1]);
             const icon_colors_o1 = getRankColors(rank_o1);
 
             card_center.push(card_B7({
