@@ -44,6 +44,9 @@ if (process.env.FLAG_PATH != null) {
     FLAG_PATH = CACHE_PATH + "/flag";
 }
 
+/**
+ * @type {Promise<Browser>}
+ */
 let browserPromise = null;
 
 export async function getBrowserInstance() {

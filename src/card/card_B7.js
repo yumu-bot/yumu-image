@@ -43,7 +43,7 @@ export function card_B7(data = {
     let raw_width
 
     if (is_limit_break) {
-        base_opacity = 0.6
+        base_opacity = 0.8
         bar_colors = data.limit_break_colors ?? colorArray.radiant
         raw_width = (data.value - data.limit) / (data.max - data.limit) * 320
     } else {
