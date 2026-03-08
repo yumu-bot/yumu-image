@@ -758,7 +758,7 @@ export async function downloadImage(path = '', bufferPath = '', default_image_pa
 
         data = req.data;
     } catch (e) {
-        console.error("download error", e);
+        console.error("download error", e.message);
         return default_image_path || error;
     }
 
@@ -825,7 +825,7 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
             req = await axios.get(path, {responseType: 'arraybuffer'});
             data = req.data;
         } catch (e) {
-            console.error("download error", e);
+            console.error("download error", e.message);
             return default_image_path || error;
         }
     }

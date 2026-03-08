@@ -386,7 +386,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     }
 }
 
-const component_G1 = (notes = { tap: 472, hold: 65, slide: 69, touch: 26, break_: 26 }, achievements = 0, fc = "") => {
+const component_G1 = (notes = { tap: 0, hold: 0, slide: 0, touch: 0, break_: 1 }, achievements = 0, fc = "") => {
     let svg = `
         <g id="Base_LG1">
         </g>
