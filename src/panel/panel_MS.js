@@ -340,6 +340,9 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     }
 
     const stars = drawStars(score?.dxScore, score?.max)
+
+    console.log(song.charts)
+
     const component = component_G1(song?.charts[index]?.notes, score?.achievements, score?.fc)
 
     return {
@@ -386,7 +389,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     }
 }
 
-const component_G1 = (notes = { tap: 0, hold: 0, slide: 0, touch: 0, break_: 1 }, achievements = 0, fc = "") => {
+const component_G1 = (notes = [], achievements = 0, fc = "") => {
     let svg = `
         <g id="Base_LG1">
         </g>
@@ -395,7 +398,15 @@ const component_G1 = (notes = { tap: 0, hold: 0, slide: 0, touch: 0, break_: 1 }
         <g id="Text_LG1">
         </g>
     `;
-    const note = notes || []
+
+    const note = {
+        tap: notes?.[0],
+        hold: notes?.[1],
+        slide: notes?.[2],
+        touch: notes?.[3],
+        break_: notes?.[4],
+    }
+
     // const sum = ((note?.tap + note?.hold + note?.slide + note?.break_ + note?.touch) || -1)
     const base_score_sum = (note?.tap + 2 * note?.hold + 3 * note?.slide + 5 * note?.break_ + note?.touch) || -1
 
