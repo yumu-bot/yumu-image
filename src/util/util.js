@@ -44,6 +44,43 @@ if (process.env.FLAG_PATH != null) {
     FLAG_PATH = CACHE_PATH + "/flag";
 }
 
+let browserPromise = null;
+
+export async function getBrowserInstance() {
+    // 1. 如果已经有 Promise 了，直接返回（无论它是 pending 还是 resolved）
+    if (browserPromise) {
+        const b = await browserPromise;
+
+        if (b.isConnected()) {
+            return b;
+        }
+
+        // 如果断开了，清空准备重启
+        browserPromise = null;
+    }
+
+    // 2. 关键：同步赋值！不要在 launch 前加 await
+    // 这样下一个请求进来时，browserPromise 已经不是 null 了
+    console.log('正在启动/重启唯一浏览器实例...');
+
+    browserPromise = puppeteer.launch({
+        headless: "new",
+        args: [
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-setuid-sandbox',
+            '--no-zygote',
+            '--disable-web-security',
+            '--allow-file-access-from-files',
+        ]
+    }).catch(err => {
+        browserPromise = null;
+        throw err;
+    });
+
+    return browserPromise;
+}
+
 EventEmitter.defaultMaxListeners = 50;
 
 export function initPath() {
@@ -659,46 +696,6 @@ export async function getBanner(link, use_cache = true, default_image_path = get
         return await readNetImage(link, use_cache, default_image_path);
     }
 }
-
-
-let browserPromise = null;
-
-export async function getBrowserInstance() {
-    // 1. 如果 Promise 存在且正在运行/已成功，直接复用
-    if (browserPromise) {
-        try {
-            const b = await browserPromise;
-            if (b.connected) return b;
-            // 如果连接断开了，清除 Promise 准备重启
-            browserPromise = null;
-        } catch (e) {
-            browserPromise = null;
-        }
-    }
-
-    // 2. 启动浏览器并缓存这个 Promise
-    console.log('正在启动/重启唯一浏览器实例...');
-    browserPromise = puppeteer.launch({
-        headless: "new",
-        args: [
-            '--no-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-setuid-sandbox',
-            '--no-zygote' // 减少内存占用
-        ]
-    }).catch(err => {
-        browserPromise = null; // 启动失败必须清除，否则下次调用还是报错
-        throw err;
-    });
-
-    return browserPromise;
-}
-// 1. 浏览器作为全局单例启动
-
-/**
- * @type {Browser}
- */
-const browser = await getBrowserInstance()
 
 
 /**

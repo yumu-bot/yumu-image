@@ -1,6 +1,7 @@
-import puppeteer from "puppeteer";
-import path from "path";
+
 import {getBrowserInstance} from "../util/util.js";
+import { pathToFileURL } from 'url';
+import path from 'path';
 
 const path_util = path;
 
@@ -68,7 +69,24 @@ export async function component_MD(markdown = "", width = 1080, height = 600, ma
         md = markdown
     }
 
-    await page.goto('file://' + template_path + "/index.html");
+    const fullPath = path.resolve(template_path, "index.html");
+    const fileUrl = pathToFileURL(fullPath).href;
+
+    await page.goto(fileUrl, {
+        waitUntil: 'networkidle0',
+        timeout: 30000
+    });
+
+    try {
+        await page.waitForFunction(() => typeof window.setStr === 'function', {
+            timeout: 5000 // 给它 5 秒钟初始化
+        });
+    } catch (e) {
+        // 如果超时，打印一下 window 到底有哪些属性，方便排查
+        const keys = await page.evaluate(() => Object.keys(window).filter(k => k.includes('set')));
+        throw new Error(`等待 setStr 超时。当前 window 上的相关属性: ${keys.join(', ')}`);
+    }
+
     await page.evaluate(([markdownStr]) => {
         window.setStr(markdownStr);
     }, [md]);
