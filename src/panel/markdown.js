@@ -1,10 +1,5 @@
 import puppeteer from "puppeteer";
-
-const browser = await puppeteer.launch({
-    args: ["--disable-web-security", "--disable-features=IsolateOrigins", "--disable-site-isolation-trials"],
-    headless: "new",
-});
-const page = await browser.newPage();
+import {getBrowserInstance} from "../util/util.js";
 
 const path = `${process.cwd()}/template/markDownTemplate/index.html`;
 
@@ -26,6 +21,8 @@ export async function router(req, res) {
  * @return {Promise<{image: Buffer, width:number, height:number}>}
  */
 export async function Markdown(md = "", width = 600) {
+    let browser = await getBrowserInstance()
+    let page = await browser.newPage();
 
     await page.setViewport({
         width: width,

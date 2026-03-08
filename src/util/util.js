@@ -660,29 +660,46 @@ export async function getBanner(link, use_cache = true, default_image_path = get
     }
 }
 
-let globalBrowser = null
 
-let browserPromise = null; // 用来锁定初始化过程
+let browserPromise = null;
 
-async function getBrowserInstance() {
-    // 如果已经有正在启动中的浏览器，直接返回那个 Promise
-    if (browserPromise) return browserPromise;
-
-    if (!globalBrowser || !globalBrowser.connected) {
-        browserPromise = (async () => {
-            console.log('正在启动唯一浏览器实例...');
-            const browser = await puppeteer.launch({
-                headless: "new",
-                args: ['--no-sandbox', '--disable-dev-shm-usage']
-            });
-            globalBrowser = browser;
-            browserPromise = null; // 初始化完成后清空锁
-            return browser;
-        })();
-        return browserPromise;
+export async function getBrowserInstance() {
+    // 1. 如果 Promise 存在且正在运行/已成功，直接复用
+    if (browserPromise) {
+        try {
+            const b = await browserPromise;
+            if (b.connected) return b;
+            // 如果连接断开了，清除 Promise 准备重启
+            browserPromise = null;
+        } catch (e) {
+            browserPromise = null;
+        }
     }
-    return globalBrowser;
+
+    // 2. 启动浏览器并缓存这个 Promise
+    console.log('正在启动/重启唯一浏览器实例...');
+    browserPromise = puppeteer.launch({
+        headless: "new",
+        args: [
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-setuid-sandbox',
+            '--no-zygote' // 减少内存占用
+        ]
+    }).catch(err => {
+        browserPromise = null; // 启动失败必须清除，否则下次调用还是报错
+        throw err;
+    });
+
+    return browserPromise;
 }
+// 1. 浏览器作为全局单例启动
+
+/**
+ * @type {Browser}
+ */
+const browser = await getBrowserInstance()
+
 
 /**
  * 除非 axios 用不了，否则就别用 puppeteer 开浏览器下（真的很重）
@@ -753,7 +770,8 @@ export async function downloadImage(path = '', bufferPath = '', default_image_pa
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Referer': 'https://www.google.com'
-            }
+            },
+            timeout: 10000
         });
 
         data = req.data;
@@ -822,7 +840,7 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
 
     if (use_cache === false) {
         try {
-            req = await axios.get(path, {responseType: 'arraybuffer'});
+            req = await axios.get(path, {responseType: 'arraybuffer', timeout: 10000});
             data = req.data;
         } catch (e) {
             console.error("download error", e.message);
