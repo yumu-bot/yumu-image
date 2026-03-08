@@ -341,8 +341,6 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
 
     const stars = drawStars(score?.dxScore, score?.max)
 
-    console.log(song.charts)
-
     const component = component_G1(song?.charts[index]?.notes, score?.achievements, score?.fc)
 
     return {
