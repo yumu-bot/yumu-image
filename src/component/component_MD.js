@@ -1,6 +1,5 @@
-
 import {getBrowserInstance} from "../util/util.js";
-import { pathToFileURL } from 'url';
+import {pathToFileURL} from 'url';
 import path from 'path';
 
 const path_util = path;
@@ -56,61 +55,67 @@ export async function component_MD(markdown = "", width = 1080, height = 600, ma
     let browser = await getBrowserInstance()
     let page = await browser.newPage();
 
-    await page.setViewport({
-        width: width,
-        height: height,
-        isMobile: false,
-    });
-
-    let md
-    if (markdown_dir) {
-        md = resolveMarkdownImages(markdown, markdown_dir, template_path)
-    } else {
-        md = markdown
-    }
-
-    const fullPath = path.resolve(template_path, "index.html");
-    const fileUrl = pathToFileURL(fullPath).href;
-
-    await page.goto(fileUrl, {
-        waitUntil: 'networkidle0',
-        timeout: 30000
-    });
-
     try {
-        await page.waitForFunction(() => typeof window.setStr === 'function', {
-            timeout: 5000 // 给它 5 秒钟初始化
+        await page.setViewport({
+            width: width,
+            height: height,
+            isMobile: false,
         });
-    } catch (e) {
-        // 如果超时，打印一下 window 到底有哪些属性，方便排查
-        const keys = await page.evaluate(() => Object.keys(window).filter(k => k.includes('set')));
-        throw new Error(`等待 setStr 超时。当前 window 上的相关属性: ${keys.join(', ')}`);
+
+        let md
+        if (markdown_dir) {
+            md = resolveMarkdownImages(markdown, markdown_dir, template_path)
+        } else {
+            md = markdown
+        }
+
+        const fullPath = path.resolve(template_path, "index.html");
+        const fileUrl = pathToFileURL(fullPath).href;
+
+        await page.goto(fileUrl, {
+            waitUntil: 'networkidle0',
+            timeout: 30000
+        });
+
+        try {
+            await page.waitForFunction(() => typeof window.setStr === 'function', {
+                timeout: 5000 // 给它 5 秒钟初始化
+            });
+        } catch (e) {
+            // 如果超时，打印一下 window 到底有哪些属性，方便排查
+            const keys = await page.evaluate(() => Object.keys(window).filter(k => k.includes('set')));
+            throw new Error(`等待 setStr 超时。当前 window 上的相关属性: ${keys.join(', ')}`);
+        }
+
+        await page.evaluate(([markdownStr]) => {
+            window.setStr(markdownStr);
+        }, [md]);
+
+        // 等待网络空闲，确保所有资源加载完成
+        await page.waitForNetworkIdle();
+
+        await page.waitForSelector('article', {
+            timeout: 2000
+        });
+
+        const body = await page.$('body');
+        const box = await body.boundingBox()
+        const buffer = await body.screenshot({type: "png", omitBackground: false, encoding: 'base64'});
+
+        await page.evaluate(() => {
+            window.setStr(null);
+        });
+
+        return {
+            image: 'data:image/png;base64,' + buffer,
+            width: box.width,
+            height: box.height,
+        };
+    } finally {
+        if (page) {
+            await page.close().catch(e => console.error('组件 MD：关闭页面失败:', e.message));
+        }
     }
-
-    await page.evaluate(([markdownStr]) => {
-        window.setStr(markdownStr);
-    }, [md]);
-
-    // 等待网络空闲，确保所有资源加载完成
-    await page.waitForNetworkIdle();
-
-    await page.waitForSelector('article', {
-        timeout: 2000
-    });
-
-    const body = await page.$('body');
-    const box = await body.boundingBox()
-    const buffer = await body.screenshot({type: "png", omitBackground: false, encoding: 'base64'});
-
-    await page.evaluate(() => {
-        window.setStr(null);
-    });
-
-    return {
-        image: 'data:image/png;base64,' + buffer,
-        width: box.width,
-        height: box.height,
-    };
 
 }
 

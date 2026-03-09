@@ -46,8 +46,7 @@ if (process.env.FLAG_PATH != null) {
 
 /**
  * @type {Promise<Browser>}
- */
-let browserPromise = null;
+ */let browserPromise = null;
 
 export async function getBrowserInstance() {
     // 1. 如果已经有 Promise 了，直接返回（无论它是 pending 还是 resolved）
@@ -55,10 +54,22 @@ export async function getBrowserInstance() {
         const b = await browserPromise;
 
         if (b.isConnected()) {
+            const pages = await b.pages();
+            if (pages.length > 10) {
+                console.warn(`检测到异常页面数: ${pages.length}，正在强制清理...`);
+
+                await pages.forEach((p) => {
+                    p.close().catch(e => console.error('关闭页面失败:', e));
+                })
+            }
+
             return b;
+        } else {
+            await b.close().catch(e => {
+                console.error("单例浏览器：关闭失败：", e);
+            })
         }
 
-        // 如果断开了，清空准备重启
         browserPromise = null;
     }
 
@@ -83,6 +94,7 @@ export async function getBrowserInstance() {
 
     return browserPromise;
 }
+
 
 EventEmitter.defaultMaxListeners = 50;
 
@@ -741,13 +753,15 @@ export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePa
             return bufferPath;
         }
 
-        throw new Error('捕获失败：可能是因为未通过 JS 挑战或 URL 不匹配');
-
+        console.warn('捕获失败：可能是因为未通过 JS 挑战或 URL 不匹配');
+        return defaultImagePath;
     } catch (e) {
         console.error(`[Puppeteer Error] ${url}:`, e.message);
         return defaultImagePath;
     } finally {
-        if (page) await page.close(); // 只关闭标签页，不关闭浏览器
+        if (page) {
+            await page.close().catch(e => console.error('浏览器下图：关闭页面失败:', e.message));
+        }
     }
 }
 
