@@ -146,14 +146,12 @@ export async function panel_MA2(data = {
     let bn_offset = 0
     let ns_offset = 0
 
-    let string_b30 = ''
-
-    for (const i in card_b30) {
+    let string_b30 = card_b30.map((s, i) => {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_b30 += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y, card_b30[i]);
-    }
+        return getSvgBody(40 + (352 + 20) * x, 330 + 150 * y, card_b30[i])
+    }).join('\n')
 
     svg = setText(svg, string_b30, reg_card_i);
 
@@ -165,25 +163,29 @@ export async function panel_MA2(data = {
         ns_offset = 80
     }
 
-    let string_n20 = ''
-
-    for (const i in card_n20) {
+    const string_n20 = card_n20.map((card, i) => {
+        // 这里的 i 自动是 Number 类型
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_n20 += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y + b30_height + bn_offset, card_n20[i]);
-    }
+        const posX = 40 + (352 + 20) * x;
+        const posY = 330 + 150 * y + b30_height + bn_offset;
+
+        return getSvgBody(posX, posY, card);
+    }).join('\n');
 
     svg = setText(svg, string_n20, reg_card_i);
 
-    let string_s10 = ''
-
-    for (const i in card_s10) {
+    // 处理 card_s10
+    const string_s10 = card_s10.map((card, i) => {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_s10 += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y + b30_height + bn_offset + n20_height + ns_offset, card_s10[i]);
-    }
+        const posX = 40 + (352 + 20) * x;
+        const posY = 330 + 150 * y + b30_height + bn_offset + n20_height + ns_offset;
+
+        return getSvgBody(posX, posY, card);
+    }).join('\n');
 
     svg = setText(svg, string_s10, reg_card_i);
 

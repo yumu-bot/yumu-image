@@ -353,14 +353,15 @@ const component_T1 = (populars = []) => {
 
     const reg = /(?<=<g id="Component_OT1">)/;
 
-    let popular_svg = ''
+    const popular_svg = populars
+        .slice(0, 5)
+        .map((item, i) => {
+            const x = 20;
+            const y = 50 + i * 135;
 
-    for (let i = 0; i < 5; i++) {
-        const x = 20
-        const y = 50 + i * 135
-
-        popular_svg += getSvgBody(x, y, populars[i])
-    }
+            return getSvgBody(x, y, item);
+        })
+        .join('\n');
 
     const title = poppinsBold.getTextPath('Most Popular Beatmaps', 20, 32, 18, 'left baseline', '#fff')
 

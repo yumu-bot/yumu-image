@@ -104,18 +104,17 @@ export async function panel_A10(
 
     // 牌子
 
-    let string_c2s = ''
+    const badgePromises = badges.map(async (v, i) => {
+        const x = i % 2;
+        const y = Math.floor(i / 2);
 
-    for (const i in badges) {
-        const v = badges[i]
+        const badgeData = await PanelGenerate.badge2CardC2(v, i + 1);
+        const badge = card_C2(badgeData);
 
-        const x = i % 2
-        const y = Math.floor(i / 2)
+        return getSvgBody(40 + 940 * x, 330 + 150 * y, badge);
+    });
 
-        const badge = card_C2(await PanelGenerate.badge2CardC2(v, parseInt(i) + 1))
-
-        string_c2s += getSvgBody(40 + 940 * x, 330 + 150 * y, badge)
-    }
+    const string_c2s = (await Promise.all(badgePromises)).join('\n');
 
     svg = setText(svg, string_c2s, reg_body)
 

@@ -172,51 +172,34 @@ const UTF8Encoder = new TextEncoder('utf8');
 /**
  * @return boolean
  */
-function isBlankStringOrNotNull(str) {
-    if (typeof str !== "string") {
-        try {
-            return str.toString().trim()?.length === 0
-        } catch (e) {
-            return false
-        }
-    } else {
-        return str?.trim()?.length === 0
+export function isBlankString(val) {
+    if (val == null) return true;
+
+    if (typeof val === 'string') {
+        return val.length === 0;
     }
+
+    return String(val).length === 0;
 }
 
 /**
  * @return boolean
  */
-function isEmptyStringOrNotNull(str) {
-    if (typeof str !== "string") {
-        try {
-            return str.toString()?.length === 0
-        } catch (e) {
-            return false
-        }
-    } else {
-        return str?.length === 0
-    }
-}
-/**
- * @return boolean
- */
-export function isBlankString(str) {
-    return isNull(str) || isBlankStringOrNotNull(str)
-}
+export function isEmptyString(val) {
+    if (val == null) return true;
 
-/**
- * @return boolean
- */
-export function isEmptyString(str) {
-    return isNull(str) || isEmptyStringOrNotNull(str)
+    if (typeof val === 'string') {
+        return val.trim().length === 0;
+    }
+
+    return String(val).trim().length === 0;
 }
 
 /**
  * @return boolean
  */
 export function isEmptyArray(arr) {
-    return isNull(arr) || !(Array.isArray(arr)) || (Array.isArray(arr) && arr?.length === 0)
+    return !Array.isArray(arr) || arr.length === 0;
 }
 
 // {} 和 [] 不为空
@@ -224,7 +207,7 @@ export function isEmptyArray(arr) {
  * @return boolean
  */
 export function isNull(object) {
-    return (object === null) || (object === undefined) || (typeof object === "undefined")
+    return object == null;
 }
 
 /**
@@ -237,18 +220,33 @@ export function isNullOrEmptyObject(object) {
 /**
  * @return boolean
  */
-export function isEmptyObject(object) {
-    return Object?.keys(object)?.length === 0
+export function isEmptyObject(obj) {
+    return obj != null &&
+        typeof obj === 'object' &&
+        Object.keys(obj).length === 0;
 }
 
 /**
  * @return boolean
  */
-export function isASCII(str = '') {
-    if (isBlankString(str)) return false
+/**
+ * 判断字符串是否仅包含 ASCII 字符
+ * @param {any} str
+ * @returns {boolean}
+ */
+export function isASCII(str) {
+    // 确保输入是字符串且不为空
+    if (typeof str !== 'string' || str.length === 0) return false;
 
-    const pattern = /^[\x00-\x7F]+$/; // ASCII范围的Unicode编码
-    return pattern.test(str);
+    for (let i = 0; i < str.length; i++) {
+        // ASCII 码点范围是 0 - 127
+        // 直接检查字符编码是否超过 382 (0x17E)
+        // 这个是 torus 支持的编码范围
+        if (str.charCodeAt(i) > 382) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**

@@ -240,10 +240,12 @@ function drawDifficultyLabels(ds = [], level = [], highlight = []) {
 
     let x = 0
 
+    const body = []
+
     for (const label of labels) {
-        svg += getSvgBody(x, 5, label.svg)
+        body.push(getSvgBody(x, 5, label.svg))
         x += (label.width + 8)
     }
 
-    return svg
+    return svg + body
 }

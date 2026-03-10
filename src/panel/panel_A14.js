@@ -136,16 +136,15 @@ export async function panel_A14(
         })
     ).then(results => thenPush(results, cardA3s))
 
-    let string_a3s = ''
+    const string_a3s = cardA3s.map((a3, i) => {
+        const x = i % 3;
+        const y = Math.floor(i / 3);
 
-    for (const i in cardA3s) {
-        const a3 = cardA3s[i]
+        const posX = 40 + 620 * x;
+        const posY = 330 + 230 * y;
 
-        const x = i % 3
-        const y = Math.floor(i / 3)
-
-        string_a3s += getSvgBody(40 + 620 * x, 330 + 230 * y, a3)
-    }
+        return getSvgBody(posX, posY, a3);
+    }).join('\n');
 
     svg = setText(svg, string_a3s, reg_card_a3)
 

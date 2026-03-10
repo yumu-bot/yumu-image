@@ -243,15 +243,18 @@ export async function panel_A1(data = {
 
     svg = setSvgBody(svg, 40, 40, me_cardA1, reg_me_card_a1);
 
+    const stringA1s = friend_cardA1s
+        .map((card, i) => {
+            // i 在这里是纯正的数字，计算更高效
+            const x = i % 4;
+            const y = Math.floor(i / 4);
 
-    let stringA1s = ''
+            // 这里的坐标计算逻辑保持清晰
+            const posX = 40 + 470 * x;
+            const posY = 330 + 250 * y;
 
-    for (const i in friend_cardA1s) {
-        const x = i % 4;
-        const y = Math.floor(i / 4);
-
-        stringA1s += getSvgBody(40 + 470 * x, 330 + 250 * y, friend_cardA1s[i]);
-    }
+            return getSvgBody(posX, posY, card);
+        }).join('\n');
 
     svg = setText(svg, stringA1s, reg_friend_card_a1);
 

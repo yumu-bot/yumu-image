@@ -181,13 +181,11 @@ export async function panel_MS(data = {
     const x = (1920 + interval - (interval + 350) * length) / 2
 
     if (isNotEmptyArray(card_Gs)) {
-        let string_Gs = ''
+        const string_Gs = card_Gs.map((s, i) => {
+            return getSvgBody(x + i * (interval + 350), 330, s)
+        }).join('\n');
 
-        for (const i in card_Gs) {
-            string_Gs += getSvgBody(x + i * (interval + 350), 330, card_Gs[i])
-        }
-
-        svg = setText(svg, string_Gs, reg_card_g)
+        svg = setText(svg, string_Gs.join('\n'), reg_card_g)
     }
 
     // 导入 A2 卡

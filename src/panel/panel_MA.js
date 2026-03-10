@@ -148,14 +148,12 @@ export async function panel_MA(data = {
     const sd_height = Math.max(Math.ceil(card_sd.length / 5) * 150 - 20, 0)
     const dx_height = Math.max(Math.ceil(card_dx.length / 5) * 150 - 20, 0)
 
-    let string_sd = ''
-
-    for (const i in card_sd) {
+    let string_sd = card_sd.map((s, i) => {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_sd += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y, card_sd[i]);
-    }
+        return getSvgBody(40 + (352 + 20) * x, 330 + 150 * y, s);
+    }).join('\n');
 
     svg = setText(svg, string_sd, reg_card_i)
 
@@ -164,14 +162,12 @@ export async function panel_MA(data = {
         dx_offset = 80
     }
 
-    let string_dx = ''
-
-    for (const i in card_dx) {
+    let string_dx = card_dx.map((s, i) => {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_dx += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y + sd_height + dx_offset, card_dx[i]);
-    }
+        return getSvgBody(40 + (352 + 20) * x, 330 + 150 * y + sd_height + dx_offset, s);
+    }).join('\n');
 
     svg = setText(svg, string_dx, reg_card_i)
 

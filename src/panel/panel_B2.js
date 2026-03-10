@@ -151,11 +151,15 @@ export async function panel_B2(data = {
 
     svg = setSvgBody(svg, 0, 0, PanelDraw.HexagonChart(hexagons, 960, 600, 230, '#00A8EC', Math.PI / 3), reg_hexagon);
 
-    let string_b6s = ''
+    const string_b6s = cardB6s
+        .slice(0, 6)
+        .map((card, j) => {
+            const posX = 40;
+            const posY = 340 + j * 115;
 
-    for (let j = 0; j < 6; j++) {
-        string_b6s += getSvgBody(40, 340 + j * 115, cardB6s[j])
-    }
+            return getSvgBody(posX, posY, card);
+        })
+        .join('\n');
 
     svg = setText(svg, string_b6s, reg_left)
 

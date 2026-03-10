@@ -127,15 +127,14 @@ export async function panel_A3(data = {
     svg = setText(svg, panel_height, reg_panelheight);
     svg = setText(svg, card_height, reg_cardheight);
 
-    let string_a4s = ''
+    const string_a4s = cardA4s.map((a4, i) => {
+        const isFirstColumn = i < row_total;
 
-    //插入N1卡
-    for (let i = 0; i < cardA4s.length; i++) {
-        const x = (i < row_total) ? 40 : 965;
-        const y = (i < row_total) ? (330 + i * 72) : (330 + (i - row_total) * 72);
+        const x = isFirstColumn ? 40 : 965;
+        const y = 330 + (isFirstColumn ? i : i - row_total) * 72;
 
-        string_a4s += getSvgBody(x, y, cardA4s[i])
-    }
+        return getSvgBody(x, y, a4);
+    }).join('\n');
 
     svg = setText(svg, string_a4s, reg_list_n1)
 

@@ -150,11 +150,9 @@ export async function panel_F(
         })
     ).then(results => thenPush(results, card_Cs))
 
-    let stringCs = ''
-
-    for (const i in card_Cs) {
-        stringCs += getSvgBody(510, 330 + i * 250, card_Cs[i])
-    }
+    const stringCs = card_Cs
+        .map((card, i) => getSvgBody(510, 330 + i * 250, card))
+        .join('\n');
 
     svg = setText(svg, stringCs, reg_card_c)
 
@@ -172,11 +170,12 @@ export async function panel_F(
         })
     ).then(results => thenPush(results, card_A2s))
 
-    let stringA2s = ''
+    const stringA2s = card_A2s.map((data, i) => {
+        const posX = 40;
+        const posY = 330 + i * 250;
 
-    for (const i in card_A2s) {
-        stringA2s += getSvgBody(40, 330 + i * 250, card_A2(card_A2s[i]));
-    }
+        return getSvgBody(posX, posY, card_A2(data));
+    }).join('\n');
 
     svg = setText(svg, stringA2s, reg_card_a2)
 

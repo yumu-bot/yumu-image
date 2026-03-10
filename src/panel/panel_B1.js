@@ -197,11 +197,15 @@ export async function panel_B1(data = {
     }
     svg = setText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
-    let string_b1s = ''
+    const string_b1s = card_B1_lefts
+        .slice(0, 6)
+        .map((card, j) => {
+            const posX = 40;
+            const posY = 340 + j * 115;
 
-    for (let j = 0; j < 6; j++) {
-        string_b1s += getSvgBody(40, 340 + j * 115, card_B1_lefts[j]);
-    }
+            return getSvgBody(posX, posY, card);
+        })
+        .join('\n');
 
     svg = setText(svg, string_b1s, reg_left)
 
@@ -237,13 +241,18 @@ export async function panel_B1(data = {
         svg = setText(svg, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);
 
 
-        let string_b1v = ''
+        const string_b1v = card_B1_rights
+            .slice(0, 6)
+            .map((card, j) => {
+                // j 确定为数字，计算垂直偏移
+                const x = 1350;
+                const y = 340 + j * 115;
 
-        for (let j = 0; j < 6; j++) {
-            string_b1v += getSvgBody(1350, 340 + j * 115, card_B1_rights[j]);
-        }
+                return getSvgBody(x, y, card);
+            })
+            .join('\n');
 
-        svg = setText(svg, string_b1v, reg_right)
+        svg = setText(svg, string_b1v, reg_right);
         
         const value_1 = (data?.my.OVA || 0) * 100;
         const rank_1 = getRankFromValue(value_1, BOUNDARY);

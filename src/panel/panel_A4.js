@@ -99,7 +99,7 @@ export async function panel_A4(data = {
             })
         ).then(results => thenPush(results, params))
 
-        const card_I4s = params.map((param) => {
+        const card_I4s = params.map((param, index) => {
             return card_I4(param)
         })
 
@@ -116,19 +116,20 @@ export async function panel_A4(data = {
         svg = setText(svg, card_height, reg_cardheight);
 
         //插入C卡
-        let string_I4s = ''
-
-        for (let i = 0; i < card_I4s.length; i++) {
+        const string_I4s = card_I4s.map((card, i) => {
+            // i 确定为数字，计算网格索引
             const ix = i % 5;
             const iy = Math.floor(i / 5);
 
+            // 计算坐标：水平间距 372，垂直间距 145
             const x = 40 + ix * 372;
             const y = 330 + iy * 145;
 
-            string_I4s += getSvgBody(x, y, card_I4s[i])
-        }
+            return getSvgBody(x, y, card);
+        }).join('\n');
 
         svg = setText(svg, string_I4s, reg_bp_list);
+
     } else {
         const params = []
 

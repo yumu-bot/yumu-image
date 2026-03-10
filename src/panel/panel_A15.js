@@ -106,17 +106,15 @@ export async function panel_A15(
     svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, luckyDog, reg_bp_list);
 
     //插入C卡
-    let string_Cs = ''
-
-    for (let i = 0; i < card_Cs.length; i++) {
+    const string_Cs = card_Cs.map((card, i) => {
         const ix = (i + 1) % 2;
         const iy = Math.floor(i / 2);
 
         const x = (ix === 1) ? 40 : 980;
         const y = 330 + iy * 150;
 
-        string_Cs += getSvgBody(x, y, card_Cs[i])
-    }
+        return getSvgBody(x, y, card);
+    }).join('\n');
 
     const page = torusBold.getTextPath(
         'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6

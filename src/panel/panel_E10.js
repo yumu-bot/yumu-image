@@ -542,16 +542,16 @@ const component_E5 = (
 
     const reg_text = /(?<=<g id="Text_OE5">)/;
 
-    let labels = ''
+    let labels = []
 
     for (let i = 0; i < data.labels.length; i++) {
         const x = 165 * (i % 2)
         const y = 55 * Math.floor(i / 2)
 
-        labels += getSvgBody(x, y, label_E10D(data.labels[i]))
+        labels.push(getSvgBody(x, y, label_E10D(data.labels[i])))
     }
 
-    svg = setText(svg, labels, reg_text)
+    svg = setText(svg, labels.join('\n'), reg_text)
 
     return svg
 }
@@ -863,26 +863,24 @@ const component_E10 = (
         mode: 'o',
     }
 ) => {
+    const stats = data?.statistics || [];
+    const maxStats = data?.max_statistics || [];
 
-    let svg = ''
+    return stats
+        .map((v, i) => {
+            // 如果 v 为空，直接返回 null
+            if (v == null) return null;
 
-    for (let i = 0; i < data?.statistics?.length; i++) {
-        const v = data?.statistics[i]
-        const m = data?.max_statistics[i]
+            const m = maxStats[i];
+            const y = 50 * i;
 
-        if (v == null) continue
-
-        const y = 50 * i
-
-        svg += getSvgBody(0, y,
-            label_E10S({
+            return getSvgBody(0, y, label_E10S({
                 ...v,
                 max_stat: m
-            }
-        ))
-    }
-
-    return svg
+            }));
+        })
+        .filter(item => item !== null) // 剔除掉为 null 的项
+        .join('\n');
 }
 
 const component_E11 = (

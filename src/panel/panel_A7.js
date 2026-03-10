@@ -353,18 +353,15 @@ export async function panel_A7(data = {
     const luckyDog = (cardHs.length % 2 === 1) ? cardHs.pop() : '';
     svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, luckyDog, reg_bp_list);
 
-    //插入H卡
-    let stringHs = ''
-
-    for (let i = 0; i < cardHs.length; i++) {
+    const stringHs = cardHs.map((card, i) => {
         const ix = (i + 1) % 2;
         const iy = Math.floor(i / 2);
 
         const x = (ix === 1) ? 40 : 980;
         const y = 330 + iy * 150;
 
-        stringHs += getSvgBody(x, y, cardHs[i])
-    }
+        return getSvgBody(x, y, card);
+    }).join('\n');
 
     svg = setText(svg, stringHs, reg_bp_list);
 

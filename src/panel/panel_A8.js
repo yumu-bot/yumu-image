@@ -130,16 +130,17 @@ export async function panel_A8(
         })
     ).then(results => thenPush(results, cardA3s))
 
-    let string_a3s = ''
+    const string_a3s = cardA3s.map((a3, i) => {
+        // i 在 map 中严格为 Number 类型，计算更直接
+        const x = i % 3;
+        const y = Math.floor(i / 3);
 
-    for (const i in cardA3s) {
-        const a3 = cardA3s[i]
+        // 计算坐标：3列布局，横向间距 620，纵向间距 230
+        const posX = 40 + 620 * x;
+        const posY = 330 + 230 * y;
 
-        const x = i % 3
-        const y = Math.floor(i / 3)
-
-        string_a3s += getSvgBody(40 + 620 * x, 330 + 230 * y, a3)
-    }
+        return getSvgBody(posX, posY, a3);
+    }).join('\n');
 
     svg = setText(svg, string_a3s, reg_card_a3)
 

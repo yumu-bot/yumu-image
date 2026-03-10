@@ -364,19 +364,19 @@ export async function panel_A2(data = {
             })
         ).then(results => thenPush(results, paramA5s))
 
-        let string_a2s = ''
-        let string_a5s = ''
+        let string_a2s = []
+        let string_a5s = []
 
         for (let i = 0; i < result_count; i++) {
             const a2 = paramA2s[i]
             const a5 = paramA5s[i]
 
-            string_a2s += getSvgBody(40, 330 + 250 * i, card_A2(a2));
-            string_a5s += getSvgBody(510, 330 + 250 * i, a5);
+            string_a2s.push(getSvgBody(40, 330 + 250 * i, card_A2(a2)))
+            string_a5s.push(getSvgBody(510, 330 + 250 * i, a5))
         }
 
-        svg = setText(svg, string_a2s, reg_card_a2)
-        svg = setText(svg, string_a5s, reg_card_a5)
+        svg = setText(svg, string_a2s.join('\n'), reg_card_a2)
+        svg = setText(svg, string_a5s.join('\n'), reg_card_a5)
     } else {
         //紧凑型面板
 
@@ -390,16 +390,16 @@ export async function panel_A2(data = {
             })
         ).then(results => thenPush(results, paramA2s))
 
-        let string_a2s = ''
+        let string_a2s = []
 
         for (let i = 0; i < result_count; i++) {
             const x = i % 4;
             const y = Math.floor(i / 4);
 
-            string_a2s += getSvgBody(40 + 470 * x, 330 + 250 * y, card_A2(paramA2s[i]))
+            string_a2s.push(getSvgBody(40 + 470 * x, 330 + 250 * y, card_A2(paramA2s[i])))
         }
 
-        svg = setText(svg, string_a2s, reg_card_a2)
+        svg = setText(svg, string_a2s.join('\n'), reg_card_a2)
     }
 
     // 计算面板高度

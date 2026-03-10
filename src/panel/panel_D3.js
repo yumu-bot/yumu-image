@@ -473,15 +473,15 @@ const component_D3 = (
 
     const d2s = data.bests
 
-    let string_d2s = ''
-    let rrect_d2s = ''
+    let string_d2s = []
+    // let rrect_d2s = []
 
     for (let i = 0; i < d2s.length; i++) {
         const x = i % 3
         const y = Math.floor(i / 3)
 
-        string_d2s += getSvgBody(10 + x * 160, 35 + y * 130, d2s[i])
-        rrect_d2s += PanelDraw.Rect(10 + x * 160, 35 + y * 130, 150, 120, 10, PanelColor.top(hue))
+        string_d2s.push(getSvgBody(10 + x * 160, 35 + y * 130, d2s[i]))
+        // rrect_d2s.push(PanelDraw.Rect(10 + x * 160, 35 + y * 130, 150, 120, 10, PanelColor.top(hue)))
     }
 
     const pp_text = Math.round(data.best_pp ?? 0) + ' PP [' + round(data.bonus_pp ?? 0, 3) + ' Bonus PP]'
@@ -503,7 +503,7 @@ const component_D3 = (
         rrect = PanelDraw.Rect(0, 0, 490, 295, 20, PanelColor.middle(hue))
     }
 
-    return '<g>' + getTexts([pp, string_d2s, title, image, rrect]) + '</g>'
+    return '<g>' + getTexts([pp, string_d2s.join('\n'), title, image, rrect]) + '</g>'
 }
 
 const component_D4 = (
@@ -513,7 +513,7 @@ const component_D4 = (
 ) => {
     const hide = has_custom_panel
 
-    let rank_body = ''
+    let rank_body = []
 
     let length = 0;
 
@@ -555,7 +555,7 @@ const component_D4 = (
             hide: data.has_custom_panel
         })
 
-        rank_body += getSvgBody(x, 25, label)
+        rank_body.push(getSvgBody(x, 25, label))
 
         // 底部颜色
         const l = (count * 460 / data?.sum)
@@ -597,7 +597,7 @@ const component_D4 = (
         rrect = PanelDraw.Rect(0, 0, 490, 105, 20, PanelColor.middle(hue))
     }
 
-    return '<g>' + getTexts([top, rank_body, rrects, base_rrect, title, image, rrect]) + '</g>'
+    return '<g>' + getTexts([top, rank_body.join('\n'), rrects, base_rrect, title, image, rrect]) + '</g>'
 }
 
 const component_D5 = (
@@ -945,14 +945,14 @@ const component_D7 = (
 
     const labels = params.map(it => label_D6(it, has_custom_panel))
 
-    let label_strings = ''
+    let label_strings = []
 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             const x = 10 + j * 440
             const y = 168 + i * 124
 
-            label_strings += getSvgBody(x, y, labels[i * 3 + j])
+            label_strings.push(getSvgBody(x, y, labels[i * 3 + j]))
         }
     }
 
@@ -992,7 +992,7 @@ const component_D7 = (
         rrect = PanelDraw.Rect(0, 0, 1330, 540, 20, PanelColor.middle(hue))
     }
 
-    return '<g>' + getTexts([label_strings, mode_icon, highest_rank, highest_icon, highest_title, mascot_name, mascot, title, elo, image, mascot_rect, rrect]) + '</g>'
+    return '<g>' + getTexts([label_strings.join('\n'), mode_icon, highest_rank, highest_icon, highest_title, mascot_name, mascot, title, elo, image, mascot_rect, rrect]) + '</g>'
 }
 
 

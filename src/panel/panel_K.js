@@ -201,13 +201,18 @@ export async function panel_K(data = {
             card_Ks.push(ck)
         }
 
-        for (const i in card_Ks) {
-            const k = card_Ks[i]
-            const x = i % 2
-            const y = Math.floor(i / 2)
+        const string_Ks = card_Ks.map((k, i) => {
+            // i 严格为数字，直接参与数学运算
+            const x = i % 2;
+            const y = Math.floor(i / 2);
 
-            string_body += getSvgBody(1370 + x * 255, 350 + y * 138, k)
-        }
+            const posX = 1370 + x * 255;
+            const posY = 350 + y * 138;
+
+            return getSvgBody(posX, posY, k);
+        }).join('\n');
+
+        string_body += string_Ks;
     }
 
     // B 卡片

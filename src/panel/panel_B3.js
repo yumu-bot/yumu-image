@@ -458,23 +458,21 @@ export async function panel_B3(data = {
     svg = setTexts(svg, [
         getSvgBody(40, 40, card_left), getSvgBody(1450, 40, card_right)
     ], reg_maincard)
-    
-    let strings = ''
 
-    if (label_left.length > 0) {
-        for (let j = 0; j < 6; j++) {
-            strings += getSvgBody(40, 340 + j * 115, label_left[j]);
-        }
-    }
+    // 处理左侧
+    const leftPart = (label_left || [])
+        .slice(0, 6)
+        .map((item, j) => getSvgBody(40, 340 + j * 115, item));
 
-    if (label_right.length > 0) {
-        for (let j = 0; j < 6; j++) {
-            strings += getSvgBody(1350, 340 + j * 115, label_right[j]);
-        }
-    }
+    // 处理右侧
+    const rightPart = (label_right || [])
+        .slice(0, 6)
+        .map((item, j) => getSvgBody(1350, 340 + j * 115, item));
 
-    strings += getSvgBody(630, 890, card_center[0]);
-    strings += getSvgBody(970, 890, card_center[1]);
+    // 合并所有片段并转为字符串
+    const strings = [...leftPart, ...rightPart,
+        getSvgBody(630, 890, card_center[0]), getSvgBody(970, 890, card_center[1])
+    ].join('\n');
     
     svg = setText(svg, strings, reg_center)
 

@@ -87,14 +87,15 @@ export async function panel_MI(data = {
 
     const cards = params.map((sd) => {return card_I3(sd)})
 
-    let string_card = ''
-
-    for (const i in cards) {
+    const string_card = cards.map((card, i) => {
         const x = i % 5;
         const y = Math.floor(i / 5);
 
-        string_card += getSvgBody(40 + (352 + 20) * x, 330 + 150 * y, cards[i]);
-    }
+        const posX = 40 + 372 * x;
+        const posY = 330 + 150 * y;
+
+        return getSvgBody(posX, posY, card);
+    }).join('\n');
 
     svg = setText(svg, string_card, reg_card_i)
 

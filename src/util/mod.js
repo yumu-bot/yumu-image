@@ -287,9 +287,13 @@ export function drawLazerMods(mods = [], x = 0, y = 0, height = 100, max_width =
             }
         }
 
+        const mods = []
+
         if (!only_width) {
-            svg += getLazerModPath(v, lx + delta_x, y, height, is_expanded, is_name, is_side_name);
+            mods.push(getLazerModPath(v, lx + delta_x, y, height, is_expanded, is_name, is_side_name))
         }
+
+        svg += mods.join('\n')
     });
 
     return {

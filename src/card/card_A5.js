@@ -288,29 +288,29 @@ export async function card_A5(s = {
 
         //插入到svg中
         // 1. compact normal
-        let string_ms = ''
+        let string_ms = []
 
         for (let ly = 0; ly < label_compact_y; ly++) {
             for (let lx = 0; lx < label_compact_x; lx++) {
-                string_ms += getSvgBody(10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * label_compact_x]);
+                string_ms.push(getSvgBody(10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * label_compact_x]))
             }
         }
 
         // 2. compact remain
         for (let mx = 0; mx < label_compact_remain; mx++) {
-            string_ms += getSvgBody(10 + (label_compact_remain_width + 10) * mx, 150 - 60 * label_compact_y, labelM1r[mx]);
+            string_ms.push(getSvgBody(10 + (label_compact_remain_width + 10) * mx, 150 - 60 * label_compact_y, labelM1r[mx]))
         }
 
         // 3. normal
         for (let n = 0; n < label_normal_count; n++) {
             const nx = n + label_compact_slot_count
 
-            string_ms += getSvgBody(10 + (label_width + 10) * nx, 150, labelM1s[n]);
-            string_ms += getSvgBody(10 + (label_width + 10) * nx + (label_width / 2) - 50, 10, labelM2s[n]);
-            string_ms += getSvgBody(10 + (label_width + 10) * nx + (label_width / 2) + 5, 120, labelM3s[n]); //往右偏一点，好看，记得改相似的地方
+            string_ms.push(getSvgBody(10 + (label_width + 10) * nx, 150, labelM1s[n]))
+            string_ms.push(getSvgBody(10 + (label_width + 10) * nx + (label_width / 2) - 50, 10, labelM2s[n]))
+            string_ms.push(getSvgBody(10 + (label_width + 10) * nx + (label_width / 2) + 5, 120, labelM3s[n])) //往右偏一点，好看，记得改相似的地方
         }
 
-        svg = setText(svg, string_ms, reg_label)
+        svg = setText(svg, string_ms.join('\n'), reg_label)
 
         //给个备注，说明这个地方有多少个diff
         const diff_count = torus.getTextPath('Total: ' + label_count + 'x', 20, 21, 18, 'left baseline', '#fff')
@@ -340,15 +340,15 @@ export async function card_A5(s = {
             })
         ).then(results => thenPush(results, labelM1c))
 
-        let string_ms = ''
+        let string_ms = []
 
         for (let ly = 0; ly < 3; ly++) {
             for (let lx = 0; lx < 6; lx++) {
-                string_ms += getSvgBody(10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * 3]);
+                string_ms.push(getSvgBody(10 + (label_width + 10) * lx, 150 - 60 * ly, labelM1c[lx + ly * 3]))
             }
         }
 
-        svg = setText(svg, string_ms, reg_label)
+        svg = setText(svg, string_ms.join('\n'), reg_label)
 
         //给个备注，说明这个地方有多少个diff
         const diff_count = torus.getTextPath('Diffs: ' + label_count + 'x', 20, 20, 18, 'left baseline', '#fff')

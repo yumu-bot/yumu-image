@@ -102,7 +102,7 @@ export async function panel_A12(
     svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, luckyDog, reg_most_list);
 
     //插入H卡
-    let stringHs = ''
+    let string_Hs = []
 
     for (let i = 0; i < card_cs.length; i++) {
         const ix = (i + 1) % 2;
@@ -111,10 +111,10 @@ export async function panel_A12(
         const x = (ix === 1) ? 40 : 980;
         const y = 330 + iy * 150;
 
-        stringHs += getSvgBody(x, y, card_cs[i])
+        string_Hs.push(getSvgBody(x, y, card_cs[i]))
     }
 
-    svg = setText(svg, stringHs, reg_most_list);
+    svg = setText(svg, string_Hs.join('\n'), reg_most_list);
 
     const page = torusBold.getTextPath(
         'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6
