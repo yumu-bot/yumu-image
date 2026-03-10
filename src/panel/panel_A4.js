@@ -159,7 +159,7 @@ export async function panel_A4(data = {
         svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, luckyDog, reg_bp_list);
 
         //插入C卡
-        let string_Cs = ''
+        let string_Cs = []
 
         for (let i = 0; i < card_Cs.length; i++) {
             const ix = (i + 1) % 2;
@@ -168,10 +168,10 @@ export async function panel_A4(data = {
             const x = (ix === 1) ? 40 : 980;
             const y = 330 + iy * 150;
 
-            string_Cs += getSvgBody(x, y, card_Cs[i])
+            string_Cs.push(getSvgBody(x, y, card_Cs[i]))
         }
 
-        svg = setText(svg, string_Cs, reg_bp_list);
+        svg = setText(svg, string_Cs.join('\n'), reg_bp_list);
     }
 
 

@@ -11,10 +11,15 @@ import {card_I4} from "../card/card_I4.js";
 
 export async function router(req, res) {
     try {
+        console.time("A5");
         const data = req.fields || {};
         const svg = await panel_A5(data);
+        console.timeEnd("A5");
+        console.time("image");
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
+
+        console.timeEnd("image");
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
@@ -118,7 +123,7 @@ export async function panel_A5(data = {
         svg = setText(svg, card_height, reg_cardheight);
 
         //插入C卡
-        let string_I4s = ''
+        let string_I4s = []
 
         for (let i = 0; i < card_I4s.length; i++) {
             const ix = i % 5;
@@ -127,10 +132,10 @@ export async function panel_A5(data = {
             const x = 40 + ix * 372;
             const y = 330 + iy * 145;
 
-            string_I4s += getSvgBody(x, y, card_I4s[i])
+            string_I4s.push(getSvgBody(x, y, card_I4s[i]))
         }
 
-        svg = setText(svg, string_I4s, reg_bp_list);
+        svg = setText(svg, string_I4s.join('\n'), reg_bp_list);
     } else {
         const params = []
 
@@ -161,7 +166,7 @@ export async function panel_A5(data = {
         svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, luckyDog, reg_bp_list);
 
         //插入C卡
-        let string_Cs = ''
+        let string_Cs = []
 
         for (let i = 0; i < card_Cs.length; i++) {
             const ix = (i + 1) % 2;
@@ -170,10 +175,10 @@ export async function panel_A5(data = {
             const x = (ix === 1) ? 40 : 980;
             const y = 330 + iy * 150;
 
-            string_Cs += getSvgBody(x, y, card_Cs[i])
+            string_Cs.push(getSvgBody(x, y, card_Cs[i]))
         }
 
-        svg = setText(svg, string_Cs, reg_bp_list);
+        svg = setText(svg, string_Cs.join('\n'), reg_bp_list);
     }
 
     return svg;

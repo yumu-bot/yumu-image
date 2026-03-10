@@ -162,7 +162,6 @@ export async function card_A3(beatmapset = {}) {
  */
 function drawDifficultyLabels(beatmaps = []) {
 
-    let svg = '<g id="Difficulty_A8"> \n';
 
     const max_width = 390 - 10 //忽略了左侧 10 px 的最大宽度
 
@@ -200,6 +199,8 @@ function drawDifficultyLabels(beatmaps = []) {
         return prev + curr.width + 4
     }, 0) - 4, 0)
 
+    let card_arr = []
+
     if (half_labels_width + (ruleset_count * 40) > max_width) {
         // 第三
         for (const i in ruleset_arr) {
@@ -210,7 +211,7 @@ function drawDifficultyLabels(beatmaps = []) {
 
                 const diff_icon = extra.getTextPath(getGameMode(mode, -1),
                     x - 8, 32 - 4, 30, 'left baseline', '#fff', 1)
-                svg += diff_icon
+                card_arr.push(diff_icon)
                 x += 28
 
                 const count = ruleset_arr.filter(v => {
@@ -220,7 +221,7 @@ function drawDifficultyLabels(beatmaps = []) {
                 const count_width = torusBold.getTextWidth(count.toString(), 20)
                 const count_text = torusBold.getTextPath(count.toString(), x, 24, 20, 'left baseline', '#fff', 1)
 
-                svg += count_text
+                card_arr.push(count_text)
                 x += (18 + count_width)
             }
         }
@@ -243,7 +244,7 @@ function drawDifficultyLabels(beatmaps = []) {
 
                 const diff_icon = extra.getTextPath(getGameMode(mode, -1),
                     x - 8, 32 - 4, 30, 'left baseline', '#fff', 1)
-                svg += diff_icon
+                card_arr.push(diff_icon)
                 x += 28
             }
 
@@ -257,13 +258,13 @@ function drawDifficultyLabels(beatmaps = []) {
                     current_label_full_width += full_labels[i].width
 
                     const label = full_labels[i]
-                    svg += getSvgBody(x, 5, label.svg)
+                    card_arr.push(getSvgBody(x, 5, label.svg))
                     x += (label.width + 18)
                 } else {
                     // 使用全宽会超宽，因此放弃
 
                     const label = half_labels[i]
-                    svg += getSvgBody(x, 5, label.svg)
+                    card_arr.push(getSvgBody(x, 5, label.svg))
                     x += (label.width + 18)
                 }
 
@@ -272,7 +273,7 @@ function drawDifficultyLabels(beatmaps = []) {
                 // 正常渲染非主难度
 
                 const label = half_labels[i]
-                svg += getSvgBody(x, 5, label.svg)
+                card_arr.push(getSvgBody(x, 5, label.svg))
                 x += (label.width + 4)
             }
         }
@@ -295,14 +296,14 @@ function drawDifficultyLabels(beatmaps = []) {
 
                 const diff_icon = extra.getTextPath(getGameMode(mode, -1),
                     x - 8, 32 - 4, 30, 'left baseline', '#fff', 1)
-                svg += diff_icon
+                card_arr.push(diff_icon)
                 x += 28
             }
 
             // 是主难度
             if (top_diff_index[j] - i < 1e-6) {
                 const label = full_labels[i]
-                svg += getSvgBody(x, 5, label.svg)
+                card_arr.push(getSvgBody(x, 5, label.svg))
                 x += (label.width + 18)
 
                 j++
@@ -310,15 +311,13 @@ function drawDifficultyLabels(beatmaps = []) {
                 // 正常渲染非主难度
 
                 const label = full_labels[i]
-                svg += getSvgBody(x, 5, label.svg)
+                card_arr.push(getSvgBody(x, 5, label.svg))
                 x += (label.width + 4)
             }
         }
     }
 
-    svg += '</g>'
-
-    return svg
+    return '<g id="Difficulty_A8"> \n' + card_arr.join('\n') + '</g>'
 }
 
 /**
