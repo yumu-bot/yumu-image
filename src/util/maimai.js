@@ -161,7 +161,8 @@ export function getMaimaiRatingBG(rating = 0) {
     else if (rating < 14000) background = 'object-score-backimage-SH.jpg'
     else if (rating < 14500) background = 'object-score-backimage-X.jpg'
     else if (rating < 15000) background = 'object-score-backimage-XH.jpg'
-    else background = 'object-score-backimage-PF.jpg'
+    else if (rating < 16000) background = 'object-score-backimage-PF.jpg'
+    else background = 'object-score-backimage-PP.jpg'
 
     return getImageFromV3(background);
 }
@@ -469,6 +470,8 @@ export function getCHUNITHMRankBG(score = 0) {
 
     switch (getCHUNITHMRank(score)) {
         case 'sssp':
+            out = 'object-score-backimage-PP.jpg';
+            break;
         case 'sss':
             out = 'object-score-backimage-PF.jpg';
             break;
@@ -552,7 +555,8 @@ export function getCHUNITHMRatingBG(rating = 0) {
     else if (rating < 14.5) background = 'object-score-backimage-SH.jpg'
     else if (rating < 15.25) background = 'object-score-backimage-X.jpg'
     else if (rating < 16) background = 'object-score-backimage-XH.jpg'
-    else background = 'object-score-backimage-PF.jpg'
+    else if (rating < 17) background = 'object-score-backimage-PF.jpg'
+    else background = 'object-score-backimage-PP.jpg'
 
     return getImageFromV3(background);
 }
