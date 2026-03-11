@@ -99,7 +99,7 @@ export async function panel_A4(data = {
             })
         ).then(results => thenPush(results, params))
 
-        const card_I4s = params.map((param, index) => {
+        const card_I4s = params.map((param) => {
             return card_I4(param)
         })
 

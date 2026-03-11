@@ -1020,6 +1020,8 @@ export function setImage(base = '', x = 0, y = 0, w = 100, h = 100, image = '', 
  * @return {string}
  */
 export function getImage(x = 0, y = 0, w = 100, h = 100, image = '', opacity = 1, ratio = "xMidYMid slice") {
+    if (!image) return '';
+
     return PanelDraw.Image(x, y, w, h, image, opacity, ratio);
 }
 
