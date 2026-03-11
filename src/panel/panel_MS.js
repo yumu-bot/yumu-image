@@ -185,7 +185,7 @@ export async function panel_MS(data = {
             return getSvgBody(x + i * (interval + 350), 330, s)
         }).join('\n');
 
-        svg = setText(svg, string_Gs.join('\n'), reg_card_g)
+        svg = setText(svg, string_Gs, reg_card_g)
     }
 
     // 导入 A2 卡
