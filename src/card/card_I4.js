@@ -3,6 +3,7 @@ import {getMultipleTextPath, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiDXStarColor} from "../util/maimai.js";
 import {drawLazerMods} from "../util/mod.js";
+import {colorArray, PanelColor} from "../util/color.js";
 
 // 【优化2】将纯静态的 SVG 头部/定义提取到函数外部，避免每次调用重复创建字符串
 const SVG_DEFS = `
@@ -16,9 +17,6 @@ const SVG_DEFS = `
     <clipPath id="clippath-CI4-3">
          <rect x="15" width="130" height="130" rx="20" ry="20" style="fill: none;"/>
     </clipPath>
-        <filter id="blur-CI4-BG" height="130%" width="130%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
-            <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
-        </filter>
     </defs>
     <g id="Base-CI4">
         <rect width="352" height="130" rx="20" ry="20" style="fill: #46393f;"/>
@@ -27,14 +25,15 @@ const SVG_DEFS = `
 `;
 
 export function card_I4(data = {}) {
-    // 【优化3】使用对象解构并赋予默认值，避免代码中大量出现耗时的 data?.xxx 判断
     const {
-        background = '', cover = '', rank = '', type = '', level = 0,
+        // background = '',
+        cover = '', rank = '', type = '', level = 0,
         title = '', title2 = '', left1 = '', left2 = '', left3 = '', left4 = '',
         index_b = '', index_m = '', index_b_size = 32, index_m_size = 20,
         label1 = '', label2 = '',
         color_text = '#fff', color_label1 = 'none', color_label2 = 'none',
         color_left = '#382e32', color_rrect1 = 'none', color_rrect2 = 'none',
+        color_backgrounds = colorArray.gray,
         mods = [], left3_is_right = false
     } = data;
 
@@ -104,11 +103,15 @@ export function card_I4(data = {}) {
 
     const stars_path = drawStars(level);
 
+    const background_rrect = PanelDraw.LinearGradientRect(
+        0, 0, 350, 130, 20, color_backgrounds, 0.4, [80, 20], [100, 0]
+    )
+
     return `
     ${SVG_DEFS}
     <g id="Background-CI4">
-        <g filter="url(#blur-CI4-BG)" style="clip-path: url(#clippath-CI4-1);">
-            ${getImage(0, 0, 352, 130, background, 0.4)}
+        <g>
+            ${background_rrect}
         </g>
     </g>
     <g id="Difficulty-CI4">

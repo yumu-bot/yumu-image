@@ -1425,7 +1425,8 @@ export const PanelGenerate = {
         const use_cache = hasLeaderBoard(s?.beatmap?.ranked ?? s?.beatmap?.status)
 
         const cover = await readNetImage(s?.beatmapset?.covers?.list, use_cache)
-        const background = getRankBackgroundForI4(s?.legacy_rank, s?.passed);
+        // const background = getRankBackgroundForI4(s?.legacy_rank, s?.passed);
+        const rank_color = getRankColors(s?.legacy_rank)
         const type = getScoreTypeImage(s.is_lazer)
 
         const acc = floors((s?.legacy_accuracy * 100), 2)
@@ -1462,7 +1463,7 @@ export const PanelGenerate = {
 
         const level = getOsuDXRatingStar(s.statistics, s.maximum_statistics, getGameMode(s.mode, 1))
         return {
-            background: background,
+            // background: background,
             cover: cover,
             rank: rank,
             type: type,
@@ -1488,6 +1489,8 @@ export const PanelGenerate = {
             color_left: star_color,
             color_rrect1: star_color,
             color_rrect2: star_color,
+
+            color_backgrounds: rank_color,
 
             mods: s?.mods, // mod
 
