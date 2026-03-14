@@ -11,15 +11,10 @@ import {card_I4} from "../card/card_I4.js";
 
 export async function router(req, res) {
     try {
-        console.time("A5");
         const data = req.fields || {};
         const svg = await panel_A5(data);
-        console.timeEnd("A5");
-        console.time("image");
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
-
-        console.timeEnd("image");
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
