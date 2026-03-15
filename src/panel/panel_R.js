@@ -34,6 +34,7 @@ import {
     getTagCategoryColor
 } from "../util/color.js";
 import {label_E5, LABELS} from "../component/label.js";
+import {drawLazerMods} from "../util/mod.js";
 
 export async function router(req, res) {
     try {
@@ -232,7 +233,7 @@ async function panel_R(data = {
     // 2. 将结果存入 Map 供后续 O(1) 查询
     const avatarMap = new Map(avatarData);
 
-    const body_R1 = component_R1(background);
+    const body_R1 = component_R1(background, expected.mods);
 
     const body_R2 = component_R2(set?.user?.username, host_avatar, set?.genre_id, set?.language_id, set?.source, set?.tags, set?.related_tags);
 
@@ -259,7 +260,7 @@ async function panel_R(data = {
     return svg
 }
 
-const component_R1 = (background) => {
+const component_R1 = (background, mods = []) => {
     const polygon = PanelDraw.RoundedPolygon([{x: -30, y: 40}, {x: 848, y: 40}, {x: 786, y: 400}, {
         x: -30,
         y: 400
@@ -268,6 +269,8 @@ const component_R1 = (background) => {
     const shadowed = PanelDraw.Shadow(polygon, 10, 10, 5, '#1c1719', 0.2)
 
     const image = getImage(0, 40, 850, 360, background)
+
+    const mod_svg = drawLazerMods(mods, 770, 320, 70, 750, 'right', 8, true, true)
 
     return `
     <g>
@@ -281,6 +284,9 @@ const component_R1 = (background) => {
 </g>
 <g id="Background" style="clip-path: url(#clippath-OR-1)">
     ${image}
+</g>
+<g>
+    ${mod_svg.svg}
 </g>
 </g>
     `
