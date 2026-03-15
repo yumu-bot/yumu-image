@@ -6,7 +6,7 @@ import {
     setSvgBody, isEmptyArray, readNetImage,
     readTemplate,
     setText,
-    setTexts, floor, getSvgBody
+    setTexts, floor, getSvgBody, getGenre, getLanguage
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -313,8 +313,11 @@ async function getFavoritePanel(fav = [], x = 1620, y = 660) {
 }
 
 function getGenrePanel(genre, language) {
-    const g = label_N6(1625, 940, 'genre', genre?.name);
-    const l = label_N6(1745, 940, 'language', language?.name);
+    const gg = getGenre(genre?.id)
+    const lg = getLanguage(language?.id)
+
+    const g = label_N6(1625, 940, 'genre', gg);
+    const l = label_N6(1745, 940, 'language', lg);
     return g + l;
 }
 

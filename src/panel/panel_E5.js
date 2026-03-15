@@ -20,8 +20,16 @@ import {
     getKeyDifficulty,
     isNumber,
     floors,
-    floor, getFormattedTime, isEmptyArray, getDifficultyIndex, getDiffBackground, rounds, getSvgBody, round,
-    getImageFromV3Cache, getRatioString
+    floor,
+    getFormattedTime,
+    isEmptyArray,
+    getDifficultyIndex,
+    getDiffBackground,
+    rounds,
+    getSvgBody,
+    round,
+    getImageFromV3Cache,
+    getRatioString
 } from "../util/util.js";
 import {
     getRankBackground, getScoreTypeImage
@@ -67,14 +75,9 @@ export async function router_svg(req, res) {
  */
 // E面板升级计划
 export async function panel_E5(data = {
-    panel: "",
-    user: {},
-    history_user: null,
+    panel: "", user: {}, history_user: null,
 
-    density: {},
-    progress: 1,
-    original: {},
-    attributes: {
+    density: {}, progress: 1, original: {}, attributes: {
         effective_miss_count: 1.0078382838283828,
         pp: 201.40540077771928,
         pp_acc: 51.6400779167333,
@@ -135,8 +138,7 @@ export async function panel_E5(data = {
         rank: 'A',
         type: 'solo_score',
         user_id: 7003013,
-        accuracy: 0.924724,
-        // 这个是否为空可以判断成绩的种类
+        accuracy: 0.924724, // 这个是否为空可以判断成绩的种类
         build_id: 7739,
         ended_at: '2024-10-19T08:02:52Z',
         is_perfect_combo: false,
@@ -185,40 +187,23 @@ export async function panel_E5(data = {
             mode_int: 0,
             passcount: 100,
             playcount: 188,
-            owners: [
-                {
-                    "id": 1653229,
-                    "username": "_Stan"
-                },
-                {
-                    "id": 3793196,
-                    "username": "Critical_Star"
-                },
-                {
-                    "id": 6117525,
-                    "username": "ruka"
-                },
-                {
-                    "id": 7082178,
-                    "username": "[Crz]Satori"
-                },
-                {
-                    "id": 7590894,
-                    "username": "ExNeko"
-                },
-                {
-                    "id": 10125072,
-                    "username": "U1d"
-                },
-                {
-                    "id": 10500832,
-                    "username": "[Crz]xz1z1z"
-                },
-                {
-                    "id": 13026904,
-                    "username": "tyrcs"
-                }
-            ]
+            owners: [{
+                "id": 1653229, "username": "_Stan"
+            }, {
+                "id": 3793196, "username": "Critical_Star"
+            }, {
+                "id": 6117525, "username": "ruka"
+            }, {
+                "id": 7082178, "username": "[Crz]Satori"
+            }, {
+                "id": 7590894, "username": "ExNeko"
+            }, {
+                "id": 10125072, "username": "U1d"
+            }, {
+                "id": 10500832, "username": "[Crz]xz1z1z"
+            }, {
+                "id": 13026904, "username": "tyrcs"
+            }]
 
         },
         beatmapset: {
@@ -267,138 +252,107 @@ export async function panel_E5(data = {
     position: 0,
 
 }) {
-    // 导入模板
-    let svg = readTemplate('template/Panel_E.svg');
+    // 1. 对象解构与默认值处理
+    const {
+        score = {},
+        user = {},
+        history_user = null,
+        density = {},
+        progress = 1,
+        original = {},
+        attributes = {},
+        position = 0,
+        panel: panelType
+    } = data;
 
-    // 路径定义
-    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/;
-    const reg_background = /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BG\);">)/;
-    const reg_index = /(?<=<g id="Index">)/;
-    const reg_index_plus = /(?<=<g id="IndexPlus">)/;
-    const reg_card_a1 = /(?<=<g id="Card_A1">)/;
-    const reg_card_e1 = /(?<=<g id="Card_E1">)/;
+    const {ended_at, started_at, legacy_rank: rank, passed, is_lazer, type: scoreType} = score;
 
-    const is_lazer = data?.score?.is_lazer
-    svg = setImage(svg, 1725, 220, 170, 70, getScoreTypeImage(is_lazer, 2, data?.score?.type), reg_index_plus, 1)
+    // 2. 并行异步任务：模板读取、背景获取、用户卡片数据准备
+    const [svgTemplate, banner, cardA1Data] = await Promise.all([readTemplate('template/Panel_E.svg'), getDiffBackground(score), PanelGenerate.user2CardA1(user, history_user)]);
 
-    // 面板文字
-    let score_time;
-    let delta_time;
+    // 3. 时间逻辑简化
+    const timeBase = ended_at || started_at;
+    const score_time = getFormattedTime(timeBase);
+    const delta_time = getTimeDifference(timeBase);
 
-    if (data?.score?.ended_at != null) {
-        score_time = getFormattedTime(data?.score?.ended_at)
-        delta_time = getTimeDifference(data?.score?.ended_at)
+    let request_info = (position > 0 && !(position === 1 && (panelType === 'P' || panelType === 'R'))) ? `position: #${position} // ` : '';
+    request_info += `score time: ${score_time} (${delta_time}) // request time: ${getNowTimeStamp()}`;
+
+    // 4. 面板名称映射表 (取代 switch)
+    const panelNameMap = {
+        'B': ['Best Score (!ymb)', 'B'],
+        'P': ['Passed Score (!ymp)', 'P'],
+        'R': ['Recent Score (!ymr)', 'R'],
+        'S': ['Score (!yms)', 'S'],
+        'L': ['Leader Board (!yml)', 'L'],
+        'T': ['Today Bests (!ymt)', 'T'],
+    };
+
+    let panel_name_svg;
+    if (panelType === 'MR') {
+        const mrTime = `matchID: ${data.match || 0} // request time: ${getNowTimeStamp()}`;
+        panel_name_svg = getPanelNameSVG('Match Recent Score (!ymmr)', 'MR', mrTime);
     } else {
-        score_time = getFormattedTime(data?.score?.started_at)
-        delta_time = getTimeDifference(data?.score?.started_at)
+        const [title, sign] = panelNameMap[panelType] || ['Excellent Score (!ymp / !ymr / !yms)', 'S'];
+        panel_name_svg = getPanelNameSVG(title, sign, request_info);
     }
 
-    let request_time = ''
+    // 5. 并行生成复杂的卡片内容
+    const cardA1 = await card_A1(cardA1Data);
 
-    if (data.position != null && data.position > 0) {
-        if (!(data.position === 1 && (data?.panel === 'P') || (data?.panel === 'R'))) {
-            request_time += 'position: #' + data.position + ' // '
-        }
-    }
+    // 组件内容生成
+    const components = [
+        getSvgBody(40, 40, cardA1),
+        getSvgBody(40, 330, component_E1(PanelEGenerate.score2componentE1(score))),
+        getSvgBody(40, 500, component_E2(PanelEGenerate.score2componentE2(score, density, progress))),
+        getSvgBody(40, 770, component_E3(PanelEGenerate.score2componentE3(score, original))),
+        getSvgBody(550, 330, component_E4(PanelEGenerate.score2componentE4(score))),
+        getSvgBody(1280, 330, component_E5(PanelEGenerate.score2componentE5(score))),
+        getSvgBody(550, 880, component_E6(PanelEGenerate.score2componentE6(score, banner))),
+        getSvgBody(1390, 330, component_E7(PanelEGenerate.score2componentE7(score, attributes))),
+        getSvgBody(1390, 500, component_E8(PanelEGenerate.score2componentE8(score, is_lazer))),
+        getSvgBody(1390, 600, component_E9(PanelEGenerate.score2componentE9(score))),
+        getSvgBody(1390, 770, component_E10P(PanelEGenerate.score2componentE10P(score, progress))),
+        getSvgBody(1390, 770, component_E10(PanelEGenerate.score2componentE10(score, attributes, progress, is_lazer)))
+    ];
 
-    request_time += 'score time: ' + score_time + ' (' + delta_time + ') // request time: ' + getNowTimeStamp();
+    // 6. 批量注入 SVG
+    let svg = svgTemplate;
+    const regs = {
+        index_plus: /(?<=<g id="Index_Plus">)/,
+        index: /(?<=<g id="Index">)/,
+        background: /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BG\);">)/,
+        banner: /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/,
+        card_a1: /(?<=<g id="Card_A1">)/,
+        card_e1: /(?<=<g id="Card_E1">)/
+    };
 
-    let panel_name
+    // 注入装饰图片和文字
+    svg = setImage(svg, 1725, 220, 170, 70, getScoreTypeImage(is_lazer, 2, scoreType), regs.index_plus, 1);
+    svg = setText(svg, panel_name_svg, regs.index);
+    svg = setImage(svg, 665, 290, 590, 590, getImageFromV3(`object-score-${rank}2.png`), regs.index, 1);
 
-    switch (data?.panel) {
-        case "B": {
-            panel_name = getPanelNameSVG('Best Score (!ymb)', 'B', request_time);
-        } break;
-        case "P": {
-            panel_name = getPanelNameSVG('Passed Score (!ymp)', 'P', request_time);
-        } break;
-        case "R": {
-            panel_name = getPanelNameSVG('Recent Score (!ymr)', 'R', request_time);
-        } break;
-        case "S": {
-            panel_name = getPanelNameSVG('Score (!yms)', 'S', request_time);
-        } break;
-        case "L": {
-            panel_name = getPanelNameSVG('Leader Board (!yml)', 'L', request_time);
-        } break;
-        case "T": {
-            panel_name = getPanelNameSVG('Today Bests (!ymt)', 'T', request_time);
-        } break;
-        case "MR": {
-            const request_time2 = 'matchID: ' + (data?.match ?? 0) + ' // request time: ' + getNowTimeStamp();
-            panel_name = getPanelNameSVG('Match Recent Score (!ymmr)', 'MR', request_time2);
-        } break;
-        default: {
-            panel_name = getPanelNameSVG('Excellent Score (!ymp / !ymr / !yms)', 'S', request_time);
-        } break;
-    }
+    // 注入主背景
+    svg = setImage(svg, 0, 0, 1920, 1080, getRankBackground(rank, passed), regs.background, 0.6);
 
-    // 导入文字
-    svg = setText(svg, panel_name, reg_index);
+    // 注入 Banner
+    const isLargeBanner = getFileSize(banner) / 1024 >= 500;
+    svg = setImage(svg, 0, 0, 1920, 320, banner, regs.banner, 0.8, isLargeBanner ? "xMidYMin slice" : undefined);
 
-    // 评级
-    const rank = data?.score?.legacy_rank
-    svg = setImage(svg, 665, 290, 590, 590, getImageFromV3(`object-score-${rank}2.png`), reg_index, 1);
-
-    // 图片定义
-    const background = getRankBackground(rank, data?.score?.passed);
-    const banner = await getDiffBackground(data?.score);
-
-    // 卡片定义
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.history_user));
-    const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.score));
-    const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.score, data.density, data.progress));
-    const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.score, data.original));
-    const componentE4 = component_E4(PanelEGenerate.score2componentE4(data.score));
-    const componentE5 = component_E5(PanelEGenerate.score2componentE5(data.score));
-    const componentE6 = component_E6(await PanelEGenerate.score2componentE6(data.score));
-    const componentE7 = component_E7(PanelEGenerate.score2componentE7(data.score, data.attributes));
-    const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.score, is_lazer));
-    const componentE9 = component_E9(PanelEGenerate.score2componentE9(data.score));
-    const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score, data.attributes, data.progress, is_lazer));
-    const componentE10P = component_E10P(PanelEGenerate.score2componentE10P(data.score, data.progress));
-
-    // 导入卡片
-    const bodyA1 = getSvgBody(40, 40, cardA1)
-    const bodyE1 = getSvgBody(40, 330, componentE1)
-    const bodyE2 = getSvgBody(40, 500, componentE2)
-    const bodyE3 = getSvgBody(40, 770, componentE3)
-    const bodyE4 = getSvgBody(550, 330, componentE4)
-    const bodyE5 = getSvgBody(1280, 330, componentE5)
-    const bodyE6 = getSvgBody(550, 880, componentE6)
-    const bodyE7 = getSvgBody(1390, 330, componentE7)
-    const bodyE8 = getSvgBody(1390, 500, componentE8)
-    const bodyE9 = getSvgBody(1390, 600, componentE9)
-    const bodyE10P = getSvgBody(1390, 770, componentE10P)
-    const bodyE10 = getSvgBody(1390, 770, componentE10)
-
-    svg = setText(svg, bodyA1, reg_card_a1)
-
-    svg = setTexts(svg, [bodyE1, bodyE2, bodyE3, bodyE4, bodyE5, bodyE6, bodyE7, bodyE8, bodyE9, bodyE10P, bodyE10], reg_card_e1)
-
-    // 导入图片
-    svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
-
-    if (getFileSize(banner) / 1024 >= 500) {
-        svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8, "xMidYMin slice");
-    } else {
-        svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
-    }
+    // 批量注入所有组件内容 (一次性处理多个 body 字符串)
+    svg = setText(svg, components[0], regs.card_a1);
+    svg = setTexts(svg, components.slice(1), regs.card_e1);
 
     return svg;
 }
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
-const component_E1 = (
-    data = {
-        name: '',
-        star: 0,
-        mode: ''
-    }) => {
+const component_E1 = (data = {
+    name: '', star: 0, mode: ''
+}) => {
 
     // 读取模板
-    let svg =
-        `   <defs>
+    let svg = `   <defs>
             <clipPath id="clippath-OE1-1">
                 <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
@@ -441,26 +395,13 @@ const component_E1 = (
 
     const star_floor = floors(star, 2)
 
-    const text_arr = [
-        {
-            font: "poppinsBold",
-            text: star_floor.integer,
-            size: 84,
-            color: '#fff',
-        },
-        {
-            font: "poppinsBold",
-            text: star_floor.decimal,
-            size: 48,
-            color: '#fff',
-        },
-        {
-            font: "poppinsBold",
-            text: ' / ' + data?.name,
-            size: 24,
-            color: '#fff',
-        },
-    ]
+    const text_arr = [{
+        font: "poppinsBold", text: star_floor.integer, size: 84, color: '#fff',
+    }, {
+        font: "poppinsBold", text: star_floor.decimal, size: 48, color: '#fff',
+    }, {
+        font: "poppinsBold", text: ' / ' + data?.name, size: 24, color: '#fff',
+    },]
 
     const texts = getMultipleTextPath(text_arr, 105, 88, "left baseline");
 
@@ -472,72 +413,42 @@ const component_E1 = (
     return svg;
 };
 
-const component_E2 = (
-    data = {
-        density_arr: [],
-        retry_arr: [],
-        fail_arr: [],
+const component_E2 = (data = {}) => {
+    const {
+        density_arr = [], retry_arr = [], fail_arr = [],
+        public_rating = 0, star = 0, pass = 0, play = 0, progress = 1, color = '#fff'
+    } = data;
 
-        public_rating: 0,
-        star: 0,
+    const pass_percent = play > 0 ? Math.round(pass / play * 100) : 0;
 
-        pass: 0,
-        play: 0,
-        progress: 1,
-
-        color: '#fff'
-    }) => {
-
-    let svg = '';
-
-    svg += PanelDraw.Rect(0, 0, 490, 250, 20, '#382e32');
-
-    const title1 = poppinsBold.getTextPath('Density', 15, 28, 18, 'left baseline', '#fff');
-    const title2 = poppinsBold.getTextPath('Retry & Fail', 15, 138, 18, 'left baseline', '#fff');
-
-    const pass_percent = data?.play > 0 ? Math.round(data?.pass / data?.play * 100) : 0;
-
-    const public_rating = poppinsBold.getTextPath(
-        'Rating: ' + floor(data?.public_rating, 1) + ' / 10',
-        475, 28, 18, 'right baseline', '#fff');
-    const percent = poppinsBold.getTextPath(
-        'P & T: ' + (data?.pass ?? 0) + ' / ' + (data?.play ?? 0) + ' [' + pass_percent + '%]',
-        475, 138, 18, 'right baseline', '#fff');
-
-
-    // 评级或难度分布矩形的缩放，SR1为0.1倍，SR8为1倍
+    // 计算缩放比例
     let density_scale = 1;
-    if (data.star <= 1) {
-        density_scale = 0.1;
-    } else if (data.star <= 8) {
-        density_scale = Math.sqrt(((data.star - 1) / 7 * 0.9) + 0.1); //类似对数增长，比如4.5星高度就是原来的 0.707 倍
-    }
+    if (star <= 1) density_scale = 0.1;
+    else if (star <= 8) density_scale = Math.sqrt(((star - 1) / 7 * 0.9) + 0.1);
 
-    const density_arr_max = Math.max.apply(Math, data.density_arr) / density_scale;
-    const density = PanelDraw.LineChart(data.density_arr, density_arr_max, 0, 15, 115, 460, 80, data.color, 1, 0.4, 3);
+    // 使用 ... 展开运算符获取最大值
+    const density_max = (density_arr.length ? Math.max(...density_arr) : 0) / density_scale;
 
-    const fail_index = data.progress < 1 ? PanelDraw.Rect(20 + (457 * data.progress) + 1.5, 35, 3, 80, 1.5, '#ed6c9e') : '';
+    const rf_arr = fail_arr.map((v, i) => v + (retry_arr[i] || 0));
+    const rf_max = rf_arr.length ? Math.max(...rf_arr) : 0;
 
-    //中下的失败率重试率图像
-    const rf_arr = data.fail_arr ? data.fail_arr.map(function (v, i) {
-        return v + data.retry_arr[i];
-    }) : [];
-    const rf_max = Math.max.apply(Math, rf_arr);
-    const retry = PanelDraw.BarChart(rf_arr, rf_max, 0,
-        15, 235, 460, 80, 2, 0, '#f6d659');
-    const fail = PanelDraw.BarChart(data.fail_arr, rf_max, 0,
-        15, 235, 460, 80, 2, 0, '#ed6c9e');
-
-    svg += (density + retry + fail + fail_index + title1 + title2 + public_rating + percent);
-
-    return svg;
+    // 组合 SVG 字符串
+    return `
+        ${PanelDraw.Rect(0, 0, 490, 250, 20, '#382e32')}
+        ${poppinsBold.getTextPath('Density', 15, 28, 18, 'left baseline', '#fff')}
+        ${poppinsBold.getTextPath('Retry & Fail', 15, 138, 18, 'left baseline', '#fff')}
+        ${poppinsBold.getTextPath(`Rating: ${floor(public_rating, 1)} / 10`, 475, 28, 'right baseline', '#fff')}
+        ${poppinsBold.getTextPath(`P & T: ${pass} / ${play} [${pass_percent}%]`, 475, 138, 'right baseline', '#fff')}
+        ${PanelDraw.LineChart(density_arr, density_max, 0, 15, 115, 460, 80, color, 1, 0.4, 3)}
+        ${progress < 1 ? PanelDraw.Rect(20 + (457 * progress) + 1.5, 35, 3, 80, 1.5, '#ed6c9e') : ''}
+        ${PanelDraw.BarChart(rf_arr, rf_max, 0, 15, 235, 460, 80, 2, 0, '#f6d659')}
+        ${PanelDraw.BarChart(fail_arr, rf_max, 0, 15, 235, 460, 80, 2, 0, '#ed6c9e')}
+    `;
 };
 
-const component_E3 = (
-    data = {
-        labels: [],
-        index: '',
-    }) => {
+const component_E3 = (data = {
+    labels: [], index: '',
+}) => {
     let svg = `
         <g id="Labels_OE3">
         </g>
@@ -550,27 +461,22 @@ const component_E3 = (
 
     const index = poppinsBold.getTextPath(data?.index ?? '', 475, 28, 18, 'right baseline', '#fff')
 
-    let string_e5s = ''
-
-    for (let i = 0; i < 2; i++) {
-        for (let j = 0; j < 3; j++) {
-            const e5 = label_E5(labels[i + 2 * j]);
-
-            string_e5s += getSvgBody(15 + 235 * i, 38 + 76 * j, e5);
-        }
-    }
+    const string_e5s = labels.slice(0, 6).map((label, i) => {
+        const x = 15 + 235 * (i % 2);
+        const y = 38 + 76 * Math.floor(i / 2);
+        return getSvgBody(x, y, label_E5(label));
+    }).join('');
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    svg = setTexts(svg, [string_e5s, title, index, rect], reg_label)
+    svg = setTexts(svg, [string_e5s, title, index, rect], reg_label);
 
     return svg;
 }
 
-const component_E4 = (
-    data = {
-        image: '',
-    }) => {
+const component_E4 = (data = {
+    image: '',
+}) => {
     let svg = `
         <g id="Base_OE4">
         </g>
@@ -588,11 +494,9 @@ const component_E4 = (
     return svg;
 }
 
-const component_E5 = (
-    data = {
-        favorite: 0,
-        playcount: 0,
-    }) => {
+const component_E5 = (data = {
+    favorite: 0, playcount: 0,
+}) => {
     let svg = `
         <g id="Base_OE5">
         </g>
@@ -615,17 +519,9 @@ const component_E5 = (
     return svg;
 }
 
-const component_E6 = (
-    data = {
-        title: '',
-        title_unicode: '',
-        artist: '',
-        difficulty_name: '',
-        creator: '',
-        bid: 0,
-        sid: 0,
-        background: '',
-    }) => {
+const component_E6 = (data = {
+    title: '', title_unicode: '', artist: '', difficulty_name: '', creator: '', bid: 0, sid: 0, background: '',
+}) => {
     let svg = `   <defs>
             <clipPath id="clippath-OE6-1">
                 <rect id="BG_Base" x="0" y="0" width="820" height="160" rx="20" ry="20" style="fill: none;"/>
@@ -643,20 +539,12 @@ const component_E6 = (
     const reg_background = /(?<=<g id="Background_OE6" style="clip-path: url\(#clippath-OE6-1\);">)/;
     const reg_base = /(?<=<g id="Base_OE6">)/;
 
-    const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi",
-        data?.title || '', data?.title_unicode || '', data?.artist || '', 820 / 2, 55, 98, 48, 24, 820 - 20);
+    const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi", data?.title || '', data?.title_unicode || '', data?.artist || '', 820 / 2, 55, 98, 48, 24, 820 - 20);
 
-    const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30,
-        820 - 40 - 10
-        - 2 * Math.max(
-            poppinsBold.getTextWidth(poppinsBold.cutStringTail(data?.creator || '', 24, 240, true), 24),
-            poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)
-        ), true)
+    const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30, 820 - 40 - 10 - 2 * Math.max(poppinsBold.getTextWidth(poppinsBold.cutStringTail(data?.creator || '', 24, 240, true), 24), poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)), true)
 
     const diff = poppinsBold.getTextPath(diff_text, 820 / 2, 142, 30, 'center baseline', '#fff');
-    const creator = poppinsBold.getTextPath(
-        poppinsBold.cutStringTail(data?.creator || '', 24, 240, true),
-        20, 142, 24, 'left baseline', '#fff');
+    const creator = poppinsBold.getTextPath(poppinsBold.cutStringTail(data?.creator || '', 24, 240, true), 20, 142, 24, 'left baseline', '#fff');
     const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 820 - 20, 142, 24, 'right baseline', '#fff');
 
     const background = data?.background;
@@ -670,26 +558,18 @@ const component_E6 = (
     return svg;
 }
 
-const component_E7 = (
-    data = {
-        pp: 0,
-        full_pp: 0,
-        perfect_pp: 0,
+const component_E7 = (data = {
+    pp: 0, full_pp: 0, perfect_pp: 0,
 
-        aim_pp: 0,
-        spd_pp: 0,
-        acc_pp: 0,
-        fl_pp: 0,
-        diff_pp: 0,
+    aim_pp: 0, spd_pp: 0, acc_pp: 0, fl_pp: 0, diff_pp: 0,
 
-        is_fc: true,
+    is_fc: true,
 
-        mode: 'osu',
-    }) => {
+    mode: 'osu',
+}) => {
 
     // 读取模板
-    let svg =
-        `   <defs>
+    let svg = `   <defs>
             <clipPath id="clippath-OE7-1">
                 <rect id="SR_Base" x="15" y="105" width="460" height="30" rx="15" ry="15" style="fill: none;"/>
             </clipPath>
@@ -785,8 +665,7 @@ const component_E7 = (
         fc_pp_text = Math.round(data?.perfect_pp || 0);
     }
 
-    const is_perfect = (percent_type === 'SS' && Math.round(percent * 100) > 100 - 1e-7)
-        || (Math.round(data?.perfect_pp || 0) - Math.round(data?.pp || 0)) < 1e-4
+    const is_perfect = (percent_type === 'SS' && Math.round(percent * 100) > 100 - 1e-7) || (Math.round(data?.perfect_pp || 0) - Math.round(data?.pp || 0)) < 1e-4
 
     if (is_perfect) {
         reference_pp_text = ' / PERFECT';
@@ -798,84 +677,41 @@ const component_E7 = (
 
     const pp_text = Math.round(data?.pp || 0).toString()
 
-    const max_width = poppinsBold.getTextWidth(pp_text, 84)
-        + poppinsBold.getTextWidth(' PP', 48)
-        + poppinsBold.getTextWidth(reference_pp_text, 24)
+    const max_width = poppinsBold.getTextWidth(pp_text, 84) + poppinsBold.getTextWidth(' PP', 48) + poppinsBold.getTextWidth(reference_pp_text, 24)
 
     let text_arr
 
     if (max_width <= 465) {
-        text_arr = [
-            {
-                font: "poppinsBold",
-                text: pp_text,
-                size: 84,
-                color: '#fff',
-            },
-            {
-                font: "poppinsBold",
-                text: ' PP',
-                size: 48,
-                color: '#fff',
-            },
-            {
-                font: "poppinsBold",
-                text: reference_pp_text,
-                size: 24,
-                color: '#fff',
-            },
-        ]
+        text_arr = [{
+            font: "poppinsBold", text: pp_text, size: 84, color: '#fff',
+        }, {
+            font: "poppinsBold", text: ' PP', size: 48, color: '#fff',
+        }, {
+            font: "poppinsBold", text: reference_pp_text, size: 24, color: '#fff',
+        },]
     } else {
         const pp_round = rounds(data?.pp || 0, -4)
 
-        const mid_width = poppinsBold.getTextWidth(pp_round.integer, 84)
-            + poppinsBold.getTextWidth(pp_round.decimal + ' PP', 48)
-            + poppinsBold.getTextWidth(reference_pp_text, 24)
+        const mid_width = poppinsBold.getTextWidth(pp_round.integer, 84) + poppinsBold.getTextWidth(pp_round.decimal + ' PP', 48) + poppinsBold.getTextWidth(reference_pp_text, 24)
 
         if (mid_width <= 465) {
-            text_arr = [
-                {
-                    font: "poppinsBold",
-                    text: pp_round.integer,
-                    size: 84,
-                    color: '#fff',
-                },
-                {
-                    font: "poppinsBold",
-                    text: pp_round.decimal + ' PP',
-                    size: 48,
-                    color: '#fff',
-                },
-                {
-                    font: "poppinsBold",
-                    text: reference_pp_text,
-                    size: 24,
-                    color: '#fff',
-                },
-            ]
+            text_arr = [{
+                font: "poppinsBold", text: pp_round.integer, size: 84, color: '#fff',
+            }, {
+                font: "poppinsBold", text: pp_round.decimal + ' PP', size: 48, color: '#fff',
+            }, {
+                font: "poppinsBold", text: reference_pp_text, size: 24, color: '#fff',
+            },]
         } else {
             const reference_pp_round = round(Math.round(reference_pp), 2, -1)
 
-            text_arr = [
-                {
-                    font: "poppinsBold",
-                    text: pp_round.integer,
-                    size: 84,
-                    color: '#fff',
-                },
-                {
-                    font: "poppinsBold",
-                    text: pp_round.decimal + ' PP',
-                    size: 48,
-                    color: '#fff',
-                },
-                {
-                    font: "poppinsBold",
-                    text: ' / ' + reference_pp_round + ' ' + percent_type ,
-                    size: 24,
-                    color: '#fff',
-                },
-            ]
+            text_arr = [{
+                font: "poppinsBold", text: pp_round.integer, size: 84, color: '#fff',
+            }, {
+                font: "poppinsBold", text: pp_round.decimal + ' PP', size: 48, color: '#fff',
+            }, {
+                font: "poppinsBold", text: ' / ' + reference_pp_round + ' ' + percent_type, size: 24, color: '#fff',
+            },]
         }
     }
 
@@ -950,9 +786,7 @@ const component_E7 = (
         const shown = isTextShown('poppinsBold', child_pp, size, width, interval);
         const slight = isTextSlightlyWider('poppinsBold', child_pp, size, width, interval);
 
-        return shown ?
-            poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - interval, y, size, 'right baseline', '#382c32') :
-            (slight ? poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - (1 / 2 * width), y, size, 'center baseline', '#382c32') : '');
+        return shown ? poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - interval, y, size, 'right baseline', '#382c32') : (slight ? poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - (1 / 2 * width), y, size, 'center baseline', '#382c32') : '');
     }
 
     // 宽度大于最大宽 + 2x 间距
@@ -962,15 +796,13 @@ const component_E7 = (
 
     // 宽度大于最大宽 - 1/2x 间距
     function isTextSlightlyWider(font = 'poppinsBold', pp = 0, size = 24, width = 0, interval = 0) {
-        return typeof pp === "number" && width > 0 && (width + 1/2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
+        return typeof pp === "number" && width > 0 && (width + 1 / 2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
     }
 };
 
-const component_E8 = (
-    data = {
-        score: 0,
-        mods: [],
-    }) => {
+const component_E8 = (data = {
+    score: 0, mods: [],
+}) => {
     let svg = `
         <g id="Base_OE8">
         </g>
@@ -991,19 +823,11 @@ const component_E8 = (
     // const mods = getModsBody(data.mods, 480, 10, 'right', 450 - score_width); // y = 15
     const mods = drawLazerMods(data.mods, 480, 4, 70, 450 - score_width, 'right', 6, true).svg
 
-    const score = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: score_data.integer,
-                size: 56,
-            },
-            {
-                font: 'poppinsBold',
-                text: score_data.decimal,
-                size: 36,
-            }
-        ],
-        20, 62, 'left baseline')
+    const score = getMultipleTextPath([{
+        font: 'poppinsBold', text: score_data.integer, size: 56,
+    }, {
+        font: 'poppinsBold', text: score_data.decimal, size: 36,
+    }], 20, 62, 'left baseline')
 
     const title = (data?.mods.length > 0) ? '' : poppinsBold.getTextPath('Score', 475, 28, 18, 'right baseline');
 
@@ -1016,12 +840,9 @@ const component_E8 = (
     return svg;
 }
 
-const component_E9 = (
-    data = {
-        accuracy: 0,
-        combo: 0,
-        max_combo: 0,
-    }) => {
+const component_E9 = (data = {
+    accuracy: 0, combo: 0, max_combo: 0,
+}) => {
     let svg = `
         <g id="Base_OE9">
         </g>
@@ -1035,33 +856,17 @@ const component_E9 = (
     const title = poppinsBold.getTextPath('Accuracy', 15, 28, 18, 'left baseline', '#fff');
     const title2 = poppinsBold.getTextPath('Combo', 15, 98, 18, 'left baseline', '#fff');
 
-    const accuracy = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: floors((data?.accuracy || 0) * 100, 2).integer,
-                size: 60,
-            },
-            {
-                font: 'poppinsBold',
-                text: floors((data?.accuracy || 0) * 100, 2).decimal + ' %',
-                size: 36
-            }
-        ],
-        470, 62, 'right baseline')
+    const accuracy = getMultipleTextPath([{
+        font: 'poppinsBold', text: floors((data?.accuracy || 0) * 100, 2).integer, size: 60,
+    }, {
+        font: 'poppinsBold', text: floors((data?.accuracy || 0) * 100, 2).decimal + ' %', size: 36
+    }], 470, 62, 'right baseline')
 
-    const combo = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: data?.combo || 0,
-                size: 60,
-            },
-            {
-                font: 'poppinsBold',
-                text: ' / ' + data?.max_combo || 0,
-                size: 36,
-            }
-        ],
-        470, 132, 'right baseline')
+    const combo = getMultipleTextPath([{
+        font: 'poppinsBold', text: data?.combo || 0, size: 60,
+    }, {
+        font: 'poppinsBold', text: ' / ' + data?.max_combo || 0, size: 36,
+    }], 470, 132, 'right baseline')
 
     const rect = PanelDraw.Rect(0, 0, 490, 150, 20, '#382e32', 1);
 
@@ -1071,16 +876,11 @@ const component_E9 = (
     return svg;
 }
 
-const component_E10 = (
-    data = {
-        statistics: [],
-        statistics_max: [],
-        statistics_full: [],
+const component_E10 = (data = {
+    statistics: [], statistics_max: [], statistics_full: [],
 
-        effective_miss_count: 0,
-        ratio: 0,
-        mode: '',
-    }) => {
+    effective_miss_count: 0, ratio: 0, mode: '',
+}) => {
     let svg = `
         <g id="Base_OE10">
         </g>
@@ -1099,24 +899,13 @@ const component_E10 = (
 
     let ratio_text = getRatioString(data.ratio);
 
-    const perfect_great_ratio = (getGameMode(data?.mode, 1) === 'm') ?
-        poppinsBold.getTextPath(
-            'MAX : 300 = ' + ratio_text, 475, 28, 18, 'right baseline', '#fff'
-        )
-        : ''
+    const perfect_great_ratio = (getGameMode(data?.mode, 1) === 'm') ? poppinsBold.getTextPath('MAX : 300 = ' + ratio_text, 475, 28, 18, 'right baseline', '#fff') : ''
 
-    const is_effective_miss_shown =
-        (getGameMode(data?.mode, 1) === 'o' || getGameMode(data?.mode, 1) === 't')
-        && isNumber(data?.effective_miss_count)
-        && (Math.abs(data?.effective_miss_count - Math.round(data?.effective_miss_count)) > 1e-3)
+    const is_effective_miss_shown = (getGameMode(data?.mode, 1) === 'o' || getGameMode(data?.mode, 1) === 't') && isNumber(data?.effective_miss_count) && (Math.abs(data?.effective_miss_count - Math.round(data?.effective_miss_count)) > 1e-3)
 
     const effective_miss_text = 'equivalent miss: ' + floor(data?.effective_miss_count || 0, 2)
 
-    const effective_miss = is_effective_miss_shown ?
-        poppinsBold.getTextPath(
-            effective_miss_text, 475, 28, 18, 'right baseline', '#fff'
-        )
-        : ''
+    const effective_miss = is_effective_miss_shown ? poppinsBold.getTextPath(effective_miss_text, 475, 28, 18, 'right baseline', '#fff') : ''
 
     svg = setTexts(svg, [title, statistics, perfect_great_ratio, effective_miss], reg_text);
     svg = setText(svg, rect, reg_base);
@@ -1124,12 +913,9 @@ const component_E10 = (
     return svg;
 }
 
-const component_E10P = (
-    data = {
-        mode: '',
-        rainbow_rank: '',
-        rainbow_crown: ''
-    }) => {
+const component_E10P = (data = {
+    mode: '', rainbow_rank: '', rainbow_crown: ''
+}) => {
     let svg = `
         <g id="Crown_OE11">
         </g>
@@ -1141,11 +927,8 @@ const component_E10P = (
     const reg_rank = /(?<=<g id="Rank_OE11">)/;
     const reg_crown = /(?<=<g id="Crown_OE11">)/;
 
-    svg = isNotBlankString(data?.rainbow_rank) ?
-        setImage(svg, 20, 160, 100, 100, getImageFromV3(data?.rainbow_rank), reg_rank, 1) :
-        setImage(svg, 20, 160, 100, 100, getImageFromV3(data?.rainbow_crown), reg_crown, 1)
-    svg = isNotBlankString(data?.rainbow_rank) ?
-        setImage(svg, 140, 160, 100, 100, getImageFromV3(data?.rainbow_crown), reg_crown, 1) : svg
+    svg = isNotBlankString(data?.rainbow_rank) ? setImage(svg, 20, 160, 100, 100, getImageFromV3(data?.rainbow_rank), reg_rank, 1) : setImage(svg, 20, 160, 100, 100, getImageFromV3(data?.rainbow_crown), reg_crown, 1)
+    svg = isNotBlankString(data?.rainbow_rank) ? setImage(svg, 140, 160, 100, 100, getImageFromV3(data?.rainbow_crown), reg_crown, 1) : svg
 
     return svg;
 }
@@ -1159,25 +942,19 @@ const PanelEGenerate = {
         const name = getDifficultyIndex(score?.beatmap?.version, sr, mode, score?.mods)
 
         return {
-            name: name,
-            star: sr,
-            mode: mode,
+            name: name, star: sr, mode: mode,
         }
     },
 
     score2componentE2: (score, density = [], progress = 0) => {
         return {
-            density_arr: density,
-            retry_arr: score?.beatmap?.retries || [],
-            fail_arr: score?.beatmap?.fails || [],
+            density_arr: density, retry_arr: score?.beatmap?.retries || [], fail_arr: score?.beatmap?.fails || [],
 
             star: score?.beatmap?.difficulty_rating || 0,
 
             public_rating: score?.beatmap?.beatmapset?.public_rating,
 
-            pass: score?.beatmap?.passcount || 0,
-            play: score?.beatmap?.playcount || 0,
-            progress: progress,
+            pass: score?.beatmap?.passcount || 0, play: score?.beatmap?.playcount || 0, progress: progress,
 
             color: getRankColor(score.legacy_rank),
         }
@@ -1223,7 +1000,8 @@ const PanelEGenerate = {
         switch (mode) {
             case 'o': {
                 index = `CR & SL: ${circles} / ${sliders} [${ratio}]`
-            } break;
+            }
+                break;
 
             case 't' : {
                 cs_min = 0;
@@ -1264,12 +1042,7 @@ const PanelEGenerate = {
 
         return {
             labels: [{
-                ...LABELS.BPM,
-                remark: bpm_r,
-                data_b: bpm_b,
-                data_m: bpm_m,
-                data_a: '',
-                bar_progress: bpm_p,
+                ...LABELS.BPM, remark: bpm_r, data_b: bpm_b, data_m: bpm_m, data_a: '', bar_progress: bpm_p,
             }, {
                 ...LABELS.LENGTH,
                 remark: length_r,
@@ -1277,31 +1050,23 @@ const PanelEGenerate = {
                 data_m: length_m,
                 data_a: '',
                 bar_progress: length_p,
-            },  {
-                ...((mode === 'm') ? LABELS.KEY : LABELS.CS),
-                ...stat2label(score?.beatmap?.cs, cs2px(score?.beatmap?.cs, mode),
-                    getProgress(score?.beatmap?.cs, cs_min, cs_max), original?.cs ?? 0, isDisplayCS),
+            }, {
+                ...((mode === 'm') ? LABELS.KEY : LABELS.CS), ...stat2label(score?.beatmap?.cs, cs2px(score?.beatmap?.cs, mode), getProgress(score?.beatmap?.cs, cs_min, cs_max), original?.cs ?? 0, isDisplayCS),
                 bar_min: cs_min,
                 bar_mid: cs_mid,
                 bar_max: cs_max,
             }, {
-                ...LABELS.AR,
-                ...stat2label(score?.beatmap?.ar, ar2ms(score?.beatmap?.ar, mode),
-                    getProgress(score?.beatmap?.ar, ar_min, ar_max), original?.ar ?? 0, isDisplayAR),
+                ...LABELS.AR, ...stat2label(score?.beatmap?.ar, ar2ms(score?.beatmap?.ar, mode), getProgress(score?.beatmap?.ar, ar_min, ar_max), original?.ar ?? 0, isDisplayAR),
                 bar_min: ar_min,
                 bar_mid: ar_mid,
                 bar_max: ar_max,
             }, {
-                ...LABELS.OD,
-                ...stat2label(score?.beatmap?.od, od2ms(score?.beatmap?.od, mode),
-                    getProgress(score?.beatmap?.od, od_min, od_max), original?.od ?? 0, isDisplayOD),
+                ...LABELS.OD, ...stat2label(score?.beatmap?.od, od2ms(score?.beatmap?.od, mode), getProgress(score?.beatmap?.od, od_min, od_max), original?.od ?? 0, isDisplayOD),
                 bar_min: od_min,
                 bar_mid: od_mid,
                 bar_max: od_max,
             }, {
-                ...LABELS.HP,
-                ...stat2label(score?.beatmap?.hp, '-',
-                    getProgress(score?.beatmap?.hp, hp_min, hp_max), original?.hp ?? 0, true),
+                ...LABELS.HP, ...stat2label(score?.beatmap?.hp, '-', getProgress(score?.beatmap?.hp, hp_min, hp_max), original?.hp ?? 0, true),
                 bar_min: hp_min,
                 bar_mid: hp_mid,
                 bar_max: hp_max,
@@ -1319,12 +1084,11 @@ const PanelEGenerate = {
 
     score2componentE5: (score) => {
         return {
-            favorite: score?.beatmapset?.favourite_count || 0,
-            playcount: score?.beatmapset?.play_count || 0,
+            favorite: score?.beatmapset?.favourite_count || 0, playcount: score?.beatmapset?.play_count || 0,
         }
     },
 
-    score2componentE6: async (score) => {
+    score2componentE6: (score, background) => {
         let creators = ''
         const owners = score?.beatmap?.owners || []
         if (isEmptyArray(owners)) {
@@ -1344,7 +1108,7 @@ const PanelEGenerate = {
             difficulty_name: getKeyDifficulty(score?.beatmap),
             bid: score?.beatmap?.id || 0,
             sid: score?.beatmapset?.id || 0,
-            background: await getDiffBackground(score),
+            background: background,
             creator: creators,
         }
     },
@@ -1352,9 +1116,7 @@ const PanelEGenerate = {
     score2componentE7: (score, attr) => {
         const mode = getGameMode(score?.ruleset_id, 1)
 
-        const is_fc = (score?.max_combo / score?.beatmap?.max_combo) > 0.98
-            || mode === 'm'
-            || mode === 't'
+        const is_fc = (score?.max_combo / score?.beatmap?.max_combo) > 0.98 || mode === 'm' || mode === 't'
 
         return {
             pp: score?.pp || 0,
@@ -1375,8 +1137,7 @@ const PanelEGenerate = {
 
     score2componentE8: (score, is_lazer = false) => {
         return {
-            score: is_lazer ? (score?.total_score || 0) : (score?.legacy_total_score || 0),
-            mods: score?.mods ?? [],
+            score: is_lazer ? (score?.total_score || 0) : (score?.legacy_total_score || 0), mods: score?.mods ?? [],
         }
     },
 
@@ -1396,9 +1157,7 @@ const PanelEGenerate = {
         }
 
         return {
-            accuracy: score?.legacy_accuracy,
-            combo: score?.max_combo || 0,
-            max_combo: max_combo,
+            accuracy: score?.legacy_accuracy, combo: score?.max_combo || 0, max_combo: max_combo,
         }
     },
 
@@ -1425,11 +1184,7 @@ const PanelEGenerate = {
             effective_miss_count: attr?.effective_miss_count,
 
             // 仅限 catch 使用
-            statistics_full: (score.ruleset_id !== 2) ? [] : [
-                score.maximum_statistics.great,
-                score.maximum_statistics.large_tick_hit,
-                score.maximum_statistics.small_tick_hit
-            ],
+            statistics_full: (score.ruleset_id !== 2) ? [] : [score.maximum_statistics.great, score.maximum_statistics.large_tick_hit, score.maximum_statistics.small_tick_hit],
 
             // 仅限 mania 使用
             ratio: ratio,
@@ -1452,9 +1207,7 @@ const PanelEGenerate = {
 
             rainbow_rating = (250000 * (score?.max_combo || 0) / (score?.beatmap?.max_combo || 1) + 750000 * Math.pow(score?.accuracy || 0, 3.6)) / 1000000
         } else {
-            rainbow_rating = (score?.total_score_without_mods > 0) ?
-                (score.total_score_without_mods / 1000000) :
-                (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods ?? [], score?.ruleset_id || 0))
+            rainbow_rating = (score?.total_score_without_mods > 0) ? (score.total_score_without_mods / 1000000) : (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods ?? [], score?.ruleset_id || 0))
         }
 
         let rainbow_rank;
@@ -1469,8 +1222,7 @@ const PanelEGenerate = {
                 // 投降
                 rainbow_rank = 'object-score-jimaodan.png'
             }
-        } else if (score.legacy_rank !== 'F' &&
-            ((score?.statistics?.miss === 1) || (score?.statistics?.miss === 0 && score?.statistics?.ok === 1))) {
+        } else if (score.legacy_rank !== 'F' && ((score?.statistics?.miss === 1) || (score?.statistics?.miss === 0 && score?.statistics?.ok === 1))) {
             // liaoxingyao，性歌
             rainbow_rank = 'object-score-sei-rainbow.png'
         } else if (rainbow_rating < 0.6 - 1e-4) {
@@ -1504,9 +1256,7 @@ const PanelEGenerate = {
         }
 
         return {
-            mode: score?.ruleset_id,
-            rainbow_rank: rainbow_rank,
-            rainbow_crown: rainbow_crown
+            mode: score?.ruleset_id, rainbow_rank: rainbow_rank, rainbow_crown: rainbow_crown
         }
     },
 }
@@ -1526,19 +1276,18 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
     const stat_b = stat_number.integer
     const stat_m = stat_number.decimal
 
-    if (isDisplay) return {
-        remark: remark,
-        data_b: stat_b,
-        data_m: stat_m,
-        data_a: hasChanged ? (' [' + floor(original, 1) + ']') : '',
-        bar_progress: progress,
-    }
-    else return {
-        remark: '-',
-        data_b: '-',
-        data_m: '',
-        data_a: '',
-        bar_progress: null,
+    if (isDisplay) {
+        return {
+            remark: remark,
+            data_b: stat_b,
+            data_m: stat_m,
+            data_a: hasChanged ? (' [' + floor(original, 1) + ']') : '',
+            bar_progress: progress,
+        }
+    } else {
+        return {
+            remark: '-', data_b: '-', data_m: '', data_a: '', bar_progress: null,
+        }
     }
 }
 
@@ -1554,11 +1303,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
         switch (m) {
             case 'o': {
                 stats.push({
-                    index: '300',
-                    stat: s.great,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.cyan,
+                    index: '300', stat: s.great, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.cyan,
                 }, {
                     index: '100',
                     stat: s.ok,
@@ -1566,17 +1311,9 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat_color: '#fff',
                     rrect_color: colorArray.light_green,
                 }, {
-                    index: '50',
-                    stat: s.meh,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.yellow,
+                    index: '50', stat: s.meh, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.yellow,
                 }, {
-                    index: '0',
-                    stat: s.miss,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.pink,
+                    index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
                 }, {}, {}, {}, {
                     index: 'TICK',
                     stat: s.large_tick_hit,
@@ -1607,11 +1344,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
 
             case 't': {
                 stats.push({
-                    index: '300',
-                    stat: s.great,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.cyan,
+                    index: '300', stat: s.great, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.cyan,
                 }, {
                     index: '150',
                     stat: s.ok,
@@ -1619,11 +1352,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat_color: '#fff',
                     rrect_color: colorArray.light_green,
                 }, {
-                    index: '0',
-                    stat: s.miss,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.pink,
+                    index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
                 }, {}, {}, {}, {}, {}, {}, {
                     index: 'O+',
                     stat: s.large_bonus,
@@ -1648,11 +1377,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
 
             case 'c': {
                 stats.push({
-                    index: '300',
-                    stat: s.great,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.cyan,
+                    index: '300', stat: s.great, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.cyan,
                 }, {
                     index: '100',
                     stat: s.large_tick_hit,
@@ -1713,23 +1438,11 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat_color: '#fff',
                     rrect_color: colorArray.light_green,
                 }, {
-                    index: '100',
-                    stat: s.ok,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.blue,
+                    index: '100', stat: s.ok, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.blue,
                 }, {
-                    index: '50',
-                    stat: s.meh,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.gray,
+                    index: '50', stat: s.meh, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.gray,
                 }, {
-                    index: '0',
-                    stat: s.miss,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.pink,
+                    index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
                 });
                 break;
             }
@@ -1738,11 +1451,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
         switch (m) {
             case 'o': {
                 stats.push({
-                    index: '300',
-                    stat: s.great,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.cyan,
+                    index: '300', stat: s.great, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.cyan,
                 }, {
                     index: '100',
                     stat: s.ok,
@@ -1750,28 +1459,16 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat_color: '#fff',
                     rrect_color: colorArray.light_green,
                 }, {
-                    index: '50',
-                    stat: s.meh,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.yellow,
+                    index: '50', stat: s.meh, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.yellow,
                 }, {}, {
-                    index: '0',
-                    stat: s.miss,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.pink,
+                    index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
                 });
                 break;
             }
 
             case 't': {
                 stats.push({
-                    index: '300',
-                    stat: s.great,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.cyan,
+                    index: '300', stat: s.great, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.cyan,
                 }, {
                     index: '150',
                     stat: s.ok,
@@ -1779,22 +1476,14 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat_color: '#fff',
                     rrect_color: colorArray.light_green,
                 }, {
-                    index: '0',
-                    stat: s.miss,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.pink,
+                    index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
                 });
                 break;
             }
 
             case 'c': {
                 stats.push({
-                    index: '300',
-                    stat: s.great,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.cyan,
+                    index: '300', stat: s.great, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.cyan,
                 }, {
                     index: '100',
                     stat: s.large_tick_hit,
@@ -1808,11 +1497,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat_color: '#fff',
                     rrect_color: colorArray.yellow,
                 }, {}, {
-                    index: '0',
-                    stat: s.miss,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.pink,
+                    index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
                 }, {
                     index: 'ML',
                     stat: s.small_tick_miss,
@@ -1843,23 +1528,11 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     stat_color: '#fff',
                     rrect_color: colorArray.light_green,
                 }, {
-                    index: '100',
-                    stat: s.ok,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.blue,
+                    index: '100', stat: s.ok, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.blue,
                 }, {
-                    index: '50',
-                    stat: s.meh,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.gray,
+                    index: '50', stat: s.meh, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.gray,
                 }, {
-                    index: '0',
-                    stat: s.miss,
-                    index_color: '#fff',
-                    stat_color: '#fff',
-                    rrect_color: colorArray.pink,
+                    index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
                 });
                 break;
             }
@@ -1886,16 +1559,14 @@ const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false)
                 const bonus = m.large_bonus
                 const spin = m.small_bonus
 
-                return [max, max, max, max, 0, 0,
-                    0, tick, end, 0, bonus, spin]
+                return [max, max, max, max, 0, 0, 0, tick, end, 0, bonus, spin]
             }
             case 't': {
                 const max = m.great
                 const large = m.large_bonus
                 const drumroll = m.small_bonus
                 const spinner = m.ignore_hit
-                return [max, max, max, 0, 0, 0,
-                    0, 0, 0, large, drumroll, spinner]
+                return [max, max, max, 0, 0, 0, 0, 0, 0, large, drumroll, spinner]
             }
             case 'c': {
                 const max = Math.max(m.great, m.large_tick_hit, m.small_tick_hit)
@@ -1903,8 +1574,7 @@ const score2StatisticsMax = (max_statistics, statistics, mode, is_lazer = false)
                 const drop = m.large_tick_hit
                 const droplet = m.small_tick_hit
                 const banana = m.large_bonus
-                return [max, max, max, 0, 0, 0,
-                    0, fruit, droplet, 0, drop, banana]
+                return [max, max, max, 0, 0, 0, 0, fruit, droplet, 0, drop, banana]
             }
             case 'm': {
                 const max = Math.max((s.great + s.perfect), s.good, s.ok, s.meh, s.miss)
@@ -1955,10 +1625,8 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
 
         const color = v.rrect_color;
 
-        const index_text = poppinsBold.getTextPath(index.toString(),
-            index_text_x, text_y, 18, "right baseline", v.index_color);
-        const stat_text = poppinsBold.getTextPath(stat.toString(),
-            stat_text_x, text_y, 18, "left baseline", v.stat_color);
+        const index_text = poppinsBold.getTextPath(index.toString(), index_text_x, text_y, 18, "right baseline", v.index_color);
+        const stat_text = poppinsBold.getTextPath(stat.toString(), stat_text_x, text_y, 18, "left baseline", v.stat_color);
 
         svg += (index_text + stat_text);
 
@@ -2003,10 +1671,8 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
 
             const color = v.rrect_color;
 
-            const index_text = poppinsBold.getTextPath(index,
-                index_text_x, text_y, 18, "right baseline", v.index_color);
-            const stat_text = poppinsBold.getTextPath(stat,
-                stat_text_x, text_y, 18, "left baseline", v.stat_color);
+            const index_text = poppinsBold.getTextPath(index, index_text_x, text_y, 18, "right baseline", v.index_color);
+            const stat_text = poppinsBold.getTextPath(stat, stat_text_x, text_y, 18, "left baseline", v.stat_color);
 
             svg += (index_text + stat_text);
 

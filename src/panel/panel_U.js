@@ -1,11 +1,21 @@
 import {
     exportJPEG,
     getAvatar,
-    getBanner, getFlagPath,
+    getBanner,
+    getFlagPath,
     getGameMode,
     getImage,
-    getImageFromV3, getImageFromV3Cache, getPanelNameSVG, getSvgBody,
-    getTimeDifference, isEmptyString, setImage, setSvgBody, setText, setTexts, thenPush
+    getImageFromV3,
+    getImageFromV3Cache,
+    getPanelNameSVG,
+    getSvgBody,
+    getTimeDifference,
+    isEmptyString,
+    setImage,
+    setSvgBody,
+    setText,
+    setTexts,
+    thenPush
 } from "../util/util.js";
 import {extra, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -483,9 +493,7 @@ function label_U1(data = {
         data?.large || '', data?.small || '', 40, 30, width - 20, 44, 'right baseline'
     )
 
-    const svg = '<g>' + base + rrect + value + title + icon_background + icon + '</g>'
-
-    return svg
+    return '<g>' + base + rrect + value + title + icon_background + icon + '</g>'
 }
 
 
@@ -523,7 +531,5 @@ function label_U2(data = {
 
     const image = data?.image ? `<image width="400" height="370" transform="scale(${direction}, 1) translate(${x} -370)" xlink:href="${data?.image}" style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/>` : ''
 
-    const svg = '<g>' + base + rrect + text + image + '</g>'
-
-    return svg
+    return '<g>' + base + rrect + text + image + '</g>'
 }

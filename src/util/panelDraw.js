@@ -711,5 +711,107 @@ export const PanelDraw = {
         <path d="${d} Z" fill="url(#${gradientID})"/>
         </g>
     `;
+    },
+
+    /**
+     * 生成圆角四边形路径 (视觉近似法，防止锐角过度裁剪)
+     * @param {Array} points - 点的坐标 [{x, y}, ...]
+     * @param {number} r - 目标圆角半径
+     * @param {string} color - 填充颜色
+     * @param {number|string} opacity - 透明度
+     */
+    RoundedPolygon: (points, r, color = '#46393f', opacity = 1) => {
+        if (!points || points.length < 3) return "";
+
+        // 1. 极角排序
+        const center = points.reduce((acc, p) => ({ x: acc.x + p.x / points.length, y: acc.y + p.y / points.length }), { x: 0, y: 0 });
+        const sortedPoints = [...points].sort((a, b) => {
+            return Math.atan2(a.y - center.y, a.x - center.x) - Math.atan2(b.y - center.y, b.x - center.x);
+        });
+
+        // 2. 自动判定手性
+        let area = 0;
+        for (let i = 0; i < sortedPoints.length; i++) {
+            const p1 = sortedPoints[i];
+            const p2 = sortedPoints[(i + 1) % sortedPoints.length];
+            area += (p2.x - p1.x) * (p2.y + p1.y);
+        }
+        // SVG 坐标系下，面积为负代表顺时针。顺时针的凸多边形要让圆角向外凸，sweepFlag 必须为 1
+        const sweepFlag = area < 0 ? 1 : 0;
+
+        // 3. 构建路径
+        let path = "";
+
+        for (let i = 0; i < sortedPoints.length; i++) {
+            const pPrev = sortedPoints[(i + sortedPoints.length - 1) % sortedPoints.length];
+            const pCurr = sortedPoints[i];
+            const pNext = sortedPoints[(i + 1) % sortedPoints.length];
+
+            // 计算向量长度
+            const lenPrev = Math.hypot(pPrev.x - pCurr.x, pPrev.y - pCurr.y);
+            const lenNext = Math.hypot(pNext.x - pCurr.x, pNext.y - pCurr.y);
+
+            if (lenPrev === 0 || lenNext === 0) continue;
+
+            // 安全检查：后退的距离不能超过相邻边长的一半
+            const safeR = Math.min(r, lenPrev / 2, lenNext / 2);
+
+            // 视觉近似法：直接顺着边长后退 safeR (保留原始形状的尖锐度)
+            const startArc = {
+                x: pCurr.x + (pPrev.x - pCurr.x) * (safeR / lenPrev),
+                y: pCurr.y + (pPrev.y - pCurr.y) * (safeR / lenPrev)
+            };
+
+            const endArc = {
+                x: pCurr.x + (pNext.x - pCurr.x) * (safeR / lenNext),
+                y: pCurr.y + (pNext.y - pCurr.y) * (safeR / lenNext)
+            };
+
+            if (path === "") {
+                path += `M ${startArc.x},${startArc.y} `;
+            } else {
+                path += `L ${startArc.x},${startArc.y} `;
+            }
+
+            // 绘制圆弧：使用 safeR 作为半径
+            path += `A ${safeR},${safeR} 0 0 ${sweepFlag} ${endArc.x},${endArc.y} `;
+        }
+
+        // 修复：去掉了 fill 和 opacity 之间的逗号
+        return `<path d="${path.trim()} Z" fill="${color}" opacity="${opacity}"/>`;
+    },
+
+    Shadow: (
+        content = '<g></g>',
+        dx = 2,          // 右偏移
+        dy = 2,          // 下偏移
+        blur = 1,        // 柔和度 (stdDeviation)
+        color = "#000",
+        opacity = 0.5,
+        bleed = 0.5,
+    ) => {
+        const id = getRandomString(6)
+
+        const bleeding = Math.max(Math.round(bleed * 100), 0)
+        const size = bleeding * 2 + 100
+
+        return `
+    <g>
+      <defs>
+        <filter id="shadow-${id}" x="-${bleeding}%" y="-${bleeding}%" width="${size}%" height="${size}%">
+          <feDropShadow 
+            dx="${dx}" 
+            dy="${dy}" 
+            stdDeviation="${blur}" 
+            flood-color="${color}" 
+            flood-opacity="${opacity}" 
+          />
+        </filter>
+      </defs>
+      
+      <g filter="url(#shadow-${id})">
+        ${content}
+      </g>
+    </g>`.trim();
     }
 }

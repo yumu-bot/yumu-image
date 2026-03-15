@@ -339,7 +339,7 @@ export function requireNonNullElse(obj, obj2) {
  * @param maximum_width
  * @return
  */
-export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '', title_unicode = '', artist = null, x = 0, y = 0, y2 = 0, size = 36, size2 = 24, maximum_width = 780, anchor = "center baseline", color = "#fff", color2 = color) {
+export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '', title_unicode = '', artist = null, x = 0, y = 0, y2 = 0, size = 36, size2 = 24, maximum_width = 780, anchor = "center baseline", color = "#fff", color2 = color, x2 = x) {
 
     let title_text;
     let title_unicode_text;
@@ -362,13 +362,13 @@ export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '
         title_text = getTextPath(font, title_cut, x, y, size, anchor, color);
         title_unicode_text = getTextPath(font,
             cutStringTail(font, title_exceed, size2, maximum_width, true),
-            x, y2, size2, anchor, color2);
+            x2, y2, size2, anchor, color2);
     } else {
         const title_str = cutStringTail(font, title, size, maximum_width, true);
         title_text = getTextPath(font, title_str, x, y, size, anchor, color);
 
         const title_unicode_str = cutStringTail(font2, title_unicode, size2, maximum_width, true)
-        title_unicode_text = getTextPath(font2, title_unicode_str, x, y2, size2, anchor, color2);
+        title_unicode_text = getTextPath(font2, title_unicode_str, x2, y2, size2, anchor, color2);
     }
 
     return {
@@ -788,7 +788,7 @@ export async function downloadImage(path = '', bufferPath = '', default_image_pa
 
         data = req.data;
     } catch (e) {
-        console.error("download error", e.message);
+        console.error("download error", e);
         return default_image_path || error;
     }
 
@@ -855,7 +855,7 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
             req = await axios.get(path, {responseType: 'arraybuffer', timeout: 10000});
             data = req.data;
         } catch (e) {
-            console.error("download error", e.message);
+            console.error("download error", e);
             return default_image_path || error;
         }
     }
@@ -1496,6 +1496,23 @@ export function maximumArrayToFixedLength(arr = [0], target_length = 0, directio
         return out;
     }
 }
+
+export const averageArrayToFixedLength = (data, length = 1) => {
+    const result = [];
+    const bucketSize = data.length / length;
+
+    for (let i = 0; i < length; i++) {
+        const start = Math.floor(i * bucketSize);
+        const end = Math.floor((i + 1) * bucketSize);
+
+        // 提取当前桶的数据
+        const bucket = data.slice(start, end);
+        // 计算平均值
+        const avg = bucket.reduce((sum, val) => sum + val, 0) / bucket.length;
+        result.push(avg);
+    }
+    return result;
+};
 
 /**
  * @function 格式化游戏模式
@@ -2659,11 +2676,9 @@ export function getRandomString(length = 6) {
     const randomValues = new Uint32Array(length);
     crypto.getRandomValues(randomValues);
 
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += chars[randomValues[i] % chars.length];
-    }
-    return result;
+    return Array.from(randomValues)
+        .map(v => chars[v % chars.length])
+        .join('');
 }
 
 /**
@@ -2703,4 +2718,22 @@ export function findClosestHundredsWithinBounds(arr) {
         lower_index: lower_index,
         upper_index: upper_index,
     };
+}
+
+export function getGenre(genre_id = 0) {
+    const genres = {
+        2: "video game", 3: "anime", 4: "rock", 5: "pop",
+        6: "other", 7: "novelty", 9: "hip hop", 10: "electronic",
+        11: "metal", 12: "classical", 13: "folk", 14: "jazz"
+    };
+    return genres[genre_id] || "unspecified"
+}
+
+export function getLanguage(language_id = 0) {
+    const languages = {
+        2: "english", 3: "japanese", 4: "chinese", 5: "instrumental",
+        6: "korean", 7: "french", 8: "german", 9: "swedish",
+        10: "spanish", 11: "italian", 12: "russian", 13: "polish", 14: "other"
+    };
+    return languages[language_id] || "unspecified"
 }

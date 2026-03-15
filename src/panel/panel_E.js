@@ -317,7 +317,7 @@ export async function panel_E(
 
     // 卡片定义
     const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
-    const cardE1 = await component_E1(score2CardE1(data.score, calcPP));
+    const cardE1 = await component_E1(score2CardE1(data.score));
     const cardE2 = await component_E2(score2CardE2(data.score, calcPP));
     const cardE3 = await component_E3(await score2CardE3(data.score, calcPP));
     const cardE4 = await component_E4({calcPP: calcPP, statistics: score_statistics});
@@ -336,11 +336,11 @@ export async function panel_E(
     return svg;
 }
 
-function score2CardE1(score, calcPP) {
+function score2CardE1(score) {
     return {
         ranked: score?.beatmap?.ranked ?? 0,
         mode: score?.mode || 'osu',
-        star: calcPP.attr.stars || 0,
+        star: score?.beatmap?.difficulty_rating || 0,
         cover: score?.beatmapset?.covers['list@2x'],
         title: score?.beatmapset?.title || '',
         title_unicode: score?.beatmapset?.title_unicode || '',
@@ -402,7 +402,7 @@ async function score2CardE3(score, calcPP) {
 
         labels: score2Labels(score, calcPP),
         rank: score.rank,
-        star: calcPP.attr.stars,
+        star: score?.beatmap?.difficulty_rating || 0,
         score_progress: score_progress,
     }
 }

@@ -68,7 +68,7 @@ const panelSuffixes = [
     'F', 'F3',
     'H',
     'J', 'J2',
-    'K', 'M', 'N', 'T', 'U',
+    'K', 'M', 'N', 'R', 'T', 'U',
     'Alpha', 'Beta', 'Gamma', 'Delta',
     'Epsilon', 'Epsilon2', 'Zeta',
     'Eta1', 'Eta2', 'Eta3', 'Eta4', 'Theta',

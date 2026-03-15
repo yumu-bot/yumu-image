@@ -304,6 +304,49 @@ export function getStarRatingColors(star = 0) {
     return [start, end];
 }
 
+export function getStarTextColor(star = 0) {
+    if (!star || star < 6.5) return '#000';
+    if (star < 9) return '#F6F05C';
+    if (star >= 12.4) return '#18158E';
+
+    // 定义域：
+    // .domain([9, 9.7, 10.4, 11.1, 11.8, 12.4])
+    // .range(['#F6F05C', '#FF8068', '#FF4E6F', '#C645B8', '#6563DE', '#18158E'])
+    // 由于有 6 个点，但只有 5 个锚点，因此会再做一次线性插值
+
+    const GAMMA = 2.2;
+
+    // 配置表：[阈值, R, G, B]
+    const stops = [
+        [   9, 246, 240,  92],
+        [ 9.9, 255, 120, 105],
+        [10.6, 230,  72, 146],
+        [11.5, 128,  86, 214],
+        [12.4,  24,  21, 142],
+    ];
+
+    // 1. 找到当前 star 落在哪个区间
+    let i = stops.findIndex(stop => star < stop[0]);
+    if (i === -1) i = stops.length - 1;
+
+    const [bottom, r0, g0, b0] = stops[i - 1];
+    const [top, r1, g1, b1] = stops[i];
+
+    // 2. 计算插值比例
+    const s = (star - bottom) / (top - bottom);
+
+    // 3. 伽马校正插值函数
+    const interpolate = (c0, c1) => {
+        const val = Math.pow(
+            (1 - s) * Math.pow(c0, GAMMA) + s * Math.pow(c1, GAMMA),
+            1 / GAMMA
+        );
+        return Math.round(val).toString(16).padStart(2, '0');
+    };
+
+    return `#${interpolate(r0, r1)}${interpolate(g0, g1)}${interpolate(b0, b1)}`;
+}
+
 export function getStarRatingColor(star = 0) {
     if (star < 0.1) return '#AAAAAA';
     if (star >= 9) return '#000000';
@@ -704,6 +747,24 @@ export function getRankColor(rank = 'F') {
     }
 
     return color;
+}
+
+export function getTagCategoryColor(category = 'F') {
+    switch (category) {
+        case 'tech': return '#9922EE';
+        case 'style': return '#FFFF00';
+        case 'streams': return '#B3D465';
+        case 'jumps': return '#22AC38';
+        case 'sliders': return '#00A0E9';
+        case 'skillset': return '#FF9800';
+        case 'reading': return '#E86100';
+        case 'meta': return '#FAFAFA';
+        case 'gimmick': return '#D32F2F';
+        case 'expression': return '#EA68A2';
+        case 'context': return '#BDBDBD';
+        case 'additions': return '#BDBDBD';
+        default: return '#382E32';
+    }
 }
 
 /**
