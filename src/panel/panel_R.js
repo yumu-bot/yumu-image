@@ -390,9 +390,11 @@ const component_R3 = (
 ) => {
     // const playing = Math.max(play_count - quit_sum - retry_sum - pass_count, 0)
 
-    const pass_rate  = play_count > 0 ? (pass_count / play_count) : 0;
-    const retry_rate = play_count > 0 ? (retry_sum / play_count) : 0;
-    const quit_rate  = play_count > 0 ? (quit_sum / play_count) : 0;
+    const maximum = Math.max(play_count, pass_count + retry_sum + quit_sum)
+
+    const pass_rate  = maximum > 0 ? Math.min(1, pass_count / maximum) : 0;
+    const retry_rate = maximum > 0 ? Math.min(1, retry_sum / maximum) : 0;
+    const quit_rate  = maximum > 0 ? Math.min(1, quit_sum / maximum) : 0;
 
     let pass_width = 0
     let retry_width = 0
