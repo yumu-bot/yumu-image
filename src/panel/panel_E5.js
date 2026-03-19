@@ -319,7 +319,7 @@ export async function panel_E5(data = {
     // 6. 批量注入 SVG
     let svg = svgTemplate;
     const regs = {
-        index_plus: /(?<=<g id="Index_Plus">)/,
+        index_plus: /(?<=<g id="IndexPlus">)/,
         index: /(?<=<g id="Index">)/,
         background: /(?<=<g filter="url\(#blur-PE-BG\)" style="clip-path: url\(#clippath-PE-BG\);">)/,
         banner: /(?<=<g style="clip-path: url\(#clippath-PE-BR\);">)/,
@@ -437,8 +437,8 @@ const component_E2 = (data = {}) => {
         ${PanelDraw.Rect(0, 0, 490, 250, 20, '#382e32')}
         ${poppinsBold.getTextPath('Density', 15, 28, 18, 'left baseline', '#fff')}
         ${poppinsBold.getTextPath('Retry & Fail', 15, 138, 18, 'left baseline', '#fff')}
-        ${poppinsBold.getTextPath(`Rating: ${floor(public_rating, 1)} / 10`, 475, 28, 'right baseline', '#fff')}
-        ${poppinsBold.getTextPath(`P & T: ${pass} / ${play} [${pass_percent}%]`, 475, 138, 'right baseline', '#fff')}
+        ${poppinsBold.getTextPath(`User Rating: ${floor(public_rating, 1)} / 10`, 475, 28, 18, 'right baseline', '#fff')}
+        ${poppinsBold.getTextPath(`Pass: ${pass} / ${play} [${pass_percent}%]`, 475, 138, 18, 'right baseline', '#fff')}
         ${PanelDraw.LineChart(density_arr, density_max, 0, 15, 115, 460, 80, color, 1, 0.4, 3)}
         ${progress < 1 ? PanelDraw.Rect(20 + (457 * progress) + 1.5, 35, 3, 80, 1.5, '#ed6c9e') : ''}
         ${PanelDraw.BarChart(rf_arr, rf_max, 0, 15, 235, 460, 80, 2, 0, '#f6d659')}

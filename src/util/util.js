@@ -420,16 +420,11 @@ export function isPicturePng(path = '') {
  * @return {number|number} 文件 Byte，除以 1024 就是 KByte，不是 bit
  */
 export function getFileSize(path = "") {
-    let size;
     try {
-        fs.accessSync(path, fs.constants.F_OK);
-        size = fs.statSync(path).size;
+        return fs.statSync(path).size;
     } catch (e) {
-        // No Such File
         return -1;
     }
-
-    return size;
 }
 
 // 使用示例
