@@ -352,16 +352,19 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
 
     //获取用户组或者玩家组简称
     const group2AbbrText = (g = u?.default_group) => {
+
         switch (g) {
             case "bng": return 'B';
             case "bng_limited": return 'P';
             case "nat": return 'N';
             case "gmt": return 'G';
-            case "alm": return 'A';
+            case "alm":
+            case "alumni": return 'A';
             case "ppy": return 'Y';
             case "bot": return 'T';
             case "dev": return 'D';
-            case "spt": return 'S';
+            case "spt":
+            case "support": return 'S';
             case "lvd": return 'L';
             case "bsc": return 'C';
             default: return '';
