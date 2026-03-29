@@ -1,7 +1,7 @@
 import {
-    exportJPEG, getImageFromV3,
+    exportJPEG, getFormattedTime, getImageFromV3, getNowTimeStamp,
     getPanelNameSVG,
-    getSvgBody,
+    getSvgBody, getTimeDifference,
     readTemplate,
     setImage, setSvgBody,
     setText,
@@ -89,9 +89,17 @@ export async function panel_B4(data = {
     let panel_name
 
     if (is_vs) {
-        panel_name = getPanelNameSVG('ETX Duel Rating (!ymex/!ymev)', 'EV')
+        const myTime = `${getFormattedTime(data.my.updated_at)} (${getTimeDifference(data.my.updated_at)})`;
+        const othersTime = `(${getTimeDifference(data.others.updated_at)})`;
+
+        const request_time = `updated at: ${myTime}, ${othersTime} // request time: ${getNowTimeStamp()}`;
+
+        panel_name = getPanelNameSVG('ETX Duel Rating (!ymex/!ymev)', 'EV', request_time)
     } else {
-        panel_name = getPanelNameSVG('ETX Duel Rating VS (!ymex/!ymev)', 'EX')
+        const myTime = `${getFormattedTime(data.my.updated_at)} (${getTimeDifference(data.my.updated_at)})`;
+        const request_time = `updated at: ${myTime} // request time: ${getNowTimeStamp()}`;
+
+        panel_name = getPanelNameSVG('ETX Duel Rating VS (!ymex/!ymev)', 'EX', request_time)
     }
 
     // 插入文字
