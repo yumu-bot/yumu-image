@@ -122,7 +122,7 @@ export async function panel_B1(data = {
     const reg_left = /(?<=<g id="Left">)/;
     const reg_right = /(?<=<g id="Right">)/;
     const reg_center = /(?<=<g id="Center">)/;
-    const reg_maincard = /(?<=<g id="MainCard">)/;
+    const reg_main = /(?<=<g id="MainCard">)/;
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
 
     const game_mode_path = torus.getTextPath(mode, 960, 614, 60, 'center baseline', '#fff');
@@ -193,7 +193,7 @@ export async function panel_B1(data = {
             max: (is_pm4) ? 101 : 120,
         }, false));
 
-        number_left.push(Math.min(Math.max((data.my[abbr] * scale_left - 0.6), 0.01) / 4 * 10, 1));
+        number_left.push(Math.min(Math.max((value / 100 * scale_left - 0.6), 0.01) / 4 * 10, 1));
     }
     svg = setText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
@@ -211,12 +211,12 @@ export async function panel_B1(data = {
 
     // 我自己的卡片
     const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.users[0]));
-    svg = setSvgBody(svg, 40, 40, cardA1m, reg_maincard);
+    svg = setSvgBody(svg, 40, 40, cardA1m, reg_main);
 
     // 如果是vs，渲染右边的人
     if (is_vs) {
         const cardA1o = await card_A1(await PanelGenerate.user2CardA1(data.users[1]));
-        svg = setSvgBody(svg, 1450, 40, cardA1o, reg_maincard);
+        svg = setSvgBody(svg, 1450, 40, cardA1o, reg_main);
 
         for (let i = 0; i < 6; i++) {
             const abbr = order[i]
@@ -235,7 +235,7 @@ export async function panel_B1(data = {
                 max: (is_pm4) ? 101 : 120,
             }, true));
 
-            number_right.push(Math.min(Math.max((data.others[abbr] * scale_right - 0.6), 0.01) / 4 * 10, 1));
+            number_right.push(Math.min(Math.max((value / 100 * scale_right - 0.6), 0.01) / 4 * 10, 1));
         }
 
         svg = setText(svg, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);

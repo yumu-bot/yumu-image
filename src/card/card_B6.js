@@ -1,5 +1,5 @@
 import {colorArray} from "../util/color.js";
-import {getBody, getSvg, isASCII, isEmptyString, round, rounds, setTexts} from "../util/util.js";
+import {getBody, getImage, getSvg, isASCII, isEmptyString, round, rounds, setTexts} from "../util/util.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 
@@ -146,7 +146,13 @@ export function card_B6(data = {
         bar_position_x = [100, 0]
     }
 
-    const icon = getSvg(getBody(data.icon), icon_x + 10, 30, 60, 60, '#fff', 640, 640)
+    let icon
+
+    if (data.icon != null && data.icon?.toString()?.startsWith('data:image')) {
+        icon = getImage(icon_x + 10, 30, 60, 60, data.icon)
+    } else {
+        icon = getSvg(getBody(data.icon), icon_x + 10, 30, 60, 60, '#fff', 640, 640)
+    }
 
     const icon_base =
         PanelDraw.Rect(icon_x, 20, 80, 80, 10, '#382E32') +

@@ -714,6 +714,95 @@ export const RANK_OPTION = {
     },
 };
 
+export const LABEL_ETX = {
+    SR: {
+        icon: getImageFromV3Cache('Mods', 'td.png'),
+        title: 'DR',
+        left_1: 'Duel Rating',
+        left_2: '星数',
+        min: 4,
+        limit: 7.5,
+        max: 9,
+        colors: colorArray.orange,
+    },
+
+    NM: {
+        icon: getImageFromV3Cache('Mods', 'nm.png'),
+        title: 'NM',
+        left_1: 'No mod',
+        left_2: '无模',
+        min: 4,
+        limit: 7.5,
+        max: 9,
+        colors: colorArray.green,
+    },
+
+    HD: {
+        icon: getImageFromV3Cache('Mods', 'hd.png'),
+        title: 'HD',
+        left_1: 'Hidden',
+        left_2: '隐藏',
+        min: 4,
+        limit: 7.5,
+        max: 9,
+        colors: colorArray.yellow,
+    },
+
+    HR: {
+        icon: getImageFromV3Cache('Mods', 'hr.png'),
+        title: 'HR',
+        left_1: 'Hard Rock',
+        left_2: '硬摇',
+        min: 4,
+        limit: 7.5,
+        max: 9,
+        colors: colorArray.red,
+    },
+
+    DT: {
+        icon: getImageFromV3Cache('Mods', 'dt.png'),
+        title: 'DT',
+        left_1: 'Double Time',
+        left_2: '倍速',
+        min: 4,
+        limit: 7.5,
+        max: 9,
+        colors: colorArray.blue,
+    },
+
+    FM: {
+        icon: getImageFromV3Cache('Mods', 'fi.png'),
+        title: 'FM',
+        left_1: 'Force Mod',
+        left_2: '强模',
+        min: 4,
+        limit: 7.5,
+        max: 9,
+        colors: colorArray.amber,
+    },
+
+    EF: {
+        icon: getImageFromV3Cache('Mods', 'cs.png'),
+        title: 'EF',
+        left_1: 'Effective',
+        left_2: '有效',
+        min: 0,
+        limit: 1,
+        max: 1,
+        colors: colorArray.pink,
+    },
+
+    PE: {
+        icon: getImageFromV3Cache('Mods', 'cl.png'),
+        title: 'PE',
+        left_1: 'Permanent',
+        left_2: '永久',
+        min: 0,
+        limit: 1,
+        max: 1,
+        colors: colorArray.platinum,
+    },
+}
 
 export async function label_C1(data = {
     avatar: '',
