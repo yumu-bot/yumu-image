@@ -31,7 +31,6 @@ import {
 } from "./color.js";
 import {
     getOsuDXRatingStar,
-    getRankBackgroundForI4,
     getScoreTypeImage,
     hasLeaderBoard, rankSS2X,
 } from "./star.js";
@@ -1001,11 +1000,17 @@ export const PanelGenerate = {
         return h2s
     },
 
-    score2CardC: async (s, identifier = 1, load_cover = true) => {
+    score2CardC: async (s, identifier = 1) => {
         const use_cache = hasLeaderBoard(s?.beatmap?.ranked ?? s?.beatmap?.status)
 
-        const cover = load_cover ? await readNetImage(s?.beatmapset?.covers?.list, use_cache) : '';
-        const background = await readNetImage(s?.beatmapset?.covers?.cover, use_cache);
+        const results = await Promise.allSettled([
+            readNetImage(s?.beatmapset?.covers?.list, use_cache),
+            readNetImage(s?.beatmapset?.covers?.cover, use_cache)
+        ]);
+
+        const [cover, background] =
+            results.map(r => r.status === 'fulfilled' ? r.value : null);
+
         const type = getScoreTypeImage(s.is_lazer)
 
         const time_diff = getTimeDifferenceShort(s.ended_at, 0);
@@ -1104,7 +1109,7 @@ export const PanelGenerate = {
 
         const cover = await getAvatar(s?.user?.avatar_url, true);
 
-        const card_C = await PanelGenerate.score2CardC(s, identifier, false)
+        const card_C = await PanelGenerate.score2CardC(s, identifier)
 
         return {
             ...card_C,
@@ -1276,6 +1281,53 @@ export const PanelGenerate = {
             color_label_text: '#fff',
             color_left1_text: '#fff',
             color_left2_text: '#bbb',
+        }
+    },
+
+    score2CardC3: async (score, index = 1, decrypted = false) => {
+        const title = score.beatmapset.title
+        const use_cache = hasLeaderBoard(score?.beatmap?.ranked ?? s?.beatmap?.status)
+
+        const results = await Promise.allSettled([
+            readNetImage(score?.beatmapset?.covers?.list, use_cache),
+            readNetImage(score?.beatmapset?.covers?.cover, use_cache)
+        ]);
+
+        const [cover, background] = results.map(r => r.status === 'fulfilled' ? r.value : null);
+
+        let title_cut = cutStringTail("torus", title, 36, 680, false);
+
+        const index_text = index > 0 ? ('#' + index) : ''
+        const bid_text = score.beatmap.id.toString()
+
+        const artist = score.beatmapset.artist
+        const version = score.beatmap.version
+
+        const star = score.beatmap.difficulty_rating
+        const color = getStarRatingColor(star)
+
+        const text_color = (star < 4) ? '#1c1719' : '#fff'
+
+        return {
+            background: background,
+            cover: decrypted ? cover : null,
+
+            title: title_cut,
+            left1: artist,
+            left2: decrypted ? version : "*",
+
+            label1: index_text,
+            label2: decrypted ? bid_text : null,
+
+            color_rrect: color,
+            color_title_text: '#fff',
+            color_label_rrect1: color,
+            color_label_rrect2: decrypted ? color : '',
+            color_label_text: text_color,
+            color_left1_text: '#fff',
+            color_left2_text: '#bbb',
+
+            blur: decrypted ? 5 : 30,
         }
     },
 

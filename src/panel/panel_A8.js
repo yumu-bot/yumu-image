@@ -1,13 +1,17 @@
 import {
     exportJPEG,
-    getPanelNameSVG,
+    getPanelHeight,
+    getPanelNameSVG, getSvgBody,
+    readTemplate,
+    setImage,
     setSvgBody,
     setText,
-    setCustomBanner, readTemplate, getPanelHeight, thenPush, getSvgBody
+    thenPush
 } from "../util/util.js";
+import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {card_A2} from "../card/card_A2.js";
-import {card_A3} from "../card/card_A3.js";
+import {card_C3} from "../card/card_C3.js";
+import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 export async function router(req, res) {
     try {
@@ -21,7 +25,6 @@ export async function router(req, res) {
     }
     res.end();
 }
-
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
@@ -36,122 +39,85 @@ export async function router_svg(req, res) {
 }
 
 /**
- * 搜索谱面
- * !o
+ * 成绩pr面板
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_A8(
-    data = {
-        beatmapsets: [{
-            offset: 0,
-            source: 'beatmania IIDX',
-            status: 'ranked',
-            title: 'Critical Crystal',
-            video: false,
-            ranked: 1,
-            storyboard: false,
-            tags: '21 spada blue dragon dance speed rizqy',
-            bpm: 191,
-            artist: 'Seiryu',
-            artist_unicode: '青龍',
-            covers: [Object],
-            creator: 'SanadaYukimura',
-            favourite_count: 1851,
-            id: 376340,
-            nsfw: false,
-            play_count: 2899044,
-            preview_url: '//b.ppy.sh/preview/376340.mp3',
-            spotlight: true,
-            title_unicode: 'Critical Crystal',
-            user_id: 2633753,
-            can_be_hyped: false,
-            discussion_locked: false,
-            is_scoreable: true,
-            last_updated: '2016-02-20T15:24:13Z',
-            legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/385198',
-            nominations_summary: [Object],
-            ranked_date: '2016-02-28T03:21:01Z',
-            submitted_date: '2015-11-13T17:04:43Z',
-            availability: [Object],
-            beatmaps: [Array],
-            pack_tags: [Array],
-            has_leader_board: true,
-            top_diff: [Object],
-            public_rating: 0,
-            preview_name: 'Seiryu - Critical Crystal (SanadaYukimura) [376340]'
-        },],
-        total: 2715,
-        cursor_string: 'eyJfc2NvcmUiOjIyOS4zOTAwOCwiaWQiOjE0MDc0NDd9',
-        cursor: {id: 1407447},
-        search: {sort: 'relevance_desc', g: 0, l: 0},
-        result_count: 50,
-    }
-) {
+export async function panel_A8(data = {
+    "user": {
+
+    },
+
+    "scores": [{}],
+    "letters": ['a'],
+    "decrypted": [false],
+}) {
+
     // 导入模板
-    let svg = readTemplate('template/Panel_A2.svg');
+    let svg = readTemplate('template/Panel_A4.svg');
+
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
-    const reg_search_a2 = /(?<=<g id="Search_Card_A2">)/;
-    const reg_card_a3 = /(?<=<g id="Map_Card_A2">)/;
+    const reg_me = /(?<=<g id="Me_Card_A1">)/;
+    const reg_guess_list = /(?<=<g id="List_Card_H">)/;
     const reg_cardheight = '${cardheight}';
     const reg_panelheight = '${panelheight}';
-    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA2-1\);">)/;
+    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA4-1\);">)/;
 
-    // 面板文字
-    const panel_name = getPanelNameSVG('Search Result (!ymo)', 'O');
+    const scores = data.scores ?? []
 
-    // 插入文字
-    svg = setText(svg, panel_name, reg_index);
+    // 导入文字
+    svg = setText(svg, getPanelNameSVG('Guess Songs (!ymg)', 'G'), reg_index);
 
-    // 导入A2卡
-    const beatmap_arr = data?.beatmapsets || [];
-    const result_count = Math.min(data?.result_count || 0, beatmap_arr?.length || 0);
 
-    const search_result = await PanelGenerate.searchResult2CardA2(
-        data.total,
-        data.cursor,
-        data.search,
-        result_count,
-        data.rule || 'Qualified',
-        beatmap_arr[0],
-        beatmap_arr[beatmap_arr.length - 1],
-    );
+    // 导入A1卡
+    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
-    const search_cardA2 = card_A2(search_result);
-    svg = setSvgBody(svg, 40, 40, search_cardA2, reg_search_a2);
-
-    //导入其他卡
-    const cardA3s = []
+    // 导入C3卡
+    const params = []
 
     await Promise.allSettled(
-        beatmap_arr.map((map) => {
-            return card_A3(map)
+        scores.map((v, i) => {
+            return PanelGenerate.score2CardC3(v, i + 1, data.decrypted[i] || false)
         })
-    ).then(results => thenPush(results, cardA3s))
+    ).then(results => thenPush(results, params))
 
-    const string_a3s = cardA3s.map((a3, i) => {
-        // i 在 map 中严格为 Number 类型，计算更直接
-        const x = i % 3;
-        const y = Math.floor(i / 3);
-
-        // 计算坐标：3列布局，横向间距 620，纵向间距 230
-        const posX = 40 + 620 * x;
-        const posY = 330 + 230 * y;
-
-        return getSvgBody(posX, posY, a3);
-    }).join('\n');
-
-    svg = setText(svg, string_a3s, reg_card_a3)
+    const card_C3s = params.map((param) => {
+        return card_C3(param)
+    })
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, null, reg_banner);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+
 
     // 计算面板高度
-    const panel_height = getPanelHeight(result_count, 210, 3, 290, 20);
+    const rowTotal = Math.ceil((card_C3s?.length || 0) / 2);
+
+    const panel_height = getPanelHeight(card_C3s?.length, 110, 2, 290, 40);
     const card_height = panel_height - 290;
 
     svg = setText(svg, panel_height, reg_panelheight);
     svg = setText(svg, card_height, reg_cardheight);
-    return svg;
+
+    //天选之子C卡提出来
+    const luckyDog = (card_C3s.length % 2 === 1) ? card_Cs.pop() : '';
+    svg = setSvgBody(svg, 510, 330 + (rowTotal - 1) * 150, luckyDog, reg_guess_list);
+
+    //插入C卡
+    let string_Cs = []
+
+    for (let i = 0; i < card_C3s.length; i++) {
+        const ix = (i + 1) % 2;
+        const iy = Math.floor(i / 2);
+
+        const x = (ix === 1) ? 40 : 980;
+        const y = 330 + iy * 150;
+
+        string_Cs.push(getSvgBody(x, y, card_C3s[i]))
+    }
+
+    svg = setText(svg, string_Cs.join('\n'), reg_guess_list);
+
+    return svg
 }

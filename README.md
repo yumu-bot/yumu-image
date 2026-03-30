@@ -34,7 +34,7 @@ npm start 也行。
   - A5: 多成绩 PS/RS
   - A6: 帮助和维基 MD/H/W
   - A7: 理论最好成绩 BF
-  - A8: ~~搜索 O~~
+  - A8: 猜歌 G
   - A9: 战队 TM
   - A10: 奖牌 BD
   - A11: 客串谱师 GD
