@@ -1295,7 +1295,7 @@ export const PanelGenerate = {
 
         const [cover, background] = results.map(r => r.status === 'fulfilled' ? r.value : null);
 
-        let title_cut = cutStringTail("torus", title, 36, 680, false);
+        let title_cut = cutStringTail("torus", title, 36, 680, true);
 
         const index_text = index > 0 ? ('#' + index) : ''
         const bid_text = score.beatmap.id.toString()
