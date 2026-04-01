@@ -1300,8 +1300,8 @@ export const PanelGenerate = {
         const index_text = index > 0 ? ('#' + index) : ''
         const bid_text = score.beatmap.id.toString()
 
-        const artist = score.beatmapset.artist
-        const version = score.beatmap.version
+        const artist = score.beatmapset.artist ?? ''
+        const version = score.beatmap.version ?? ''
 
         const star = score.beatmap.difficulty_rating
         const color = getStarRatingColor(star)
@@ -1314,7 +1314,7 @@ export const PanelGenerate = {
 
             title: title_cut,
             left1: artist,
-            left2: decrypted ? version : "*",
+            left2: `[${decrypted ? version : '#'.repeat(version.length)}]`,
 
             label1: index_text,
             label2: decrypted ? bid_text : null,
