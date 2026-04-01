@@ -1,5 +1,5 @@
-import {getRandomString, isNotEmptyString, setImage, setSvgBody, setText, setTexts} from "../util/util.js";
-import {torus, torusBold} from "../util/font.js";
+import {getRandomString, isASCII, isNotEmptyString, setImage, setSvgBody, setText, setTexts} from "../util/util.js";
+import {PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export function card_C3(data = {
@@ -7,6 +7,7 @@ export function card_C3(data = {
     cover: '',
 
     title: '',
+    title2: '',
     left1: '',
     left2: '',
 
@@ -14,6 +15,7 @@ export function card_C3(data = {
     label2: '',
     color_rrect: '#fff',
     color_title_text: '#fff',
+    color_title2_text: '#bbb',
     color_label_rrect1: '',
     color_label_rrect2: '',
     color_label_text: '#fff',
@@ -85,16 +87,41 @@ export function card_C3(data = {
     svg = setTexts(svg, [text_label1, text_label2, rrect_label1, rrect_label2], reg_label);
 
     // 文字定义
-    const text_title = torus.cutStringTail(data.title || '', 36, 680);
+
+    const title = data?.title
+    const title2 = data?.title2
+    const font_t2 = (isASCII(title2)) ? torus : PuHuiTi
+
+    let title_max_width = 680
+    const is_title_not_equal = title !== title2;
+    let title_w = Math.min(title_max_width, torus.getTextWidth(title, 36));
+    let title2_w = title_max_width - title_w - 10;
+
+    // 针对非 ASCII 副标题的预裁切逻辑优化
+    if (is_title_not_equal && isNotEmptyString(title2) && !isASCII(title2.substring(0, 4))) {
+        const t2_prefix_w = font_t2.getTextWidth(title2.substring(0, 3) + '...', 18);
+        if (title2_w < t2_prefix_w) {
+            title_w = title_max_width - t2_prefix_w - 20;
+        }
+    }
+
+    const text_title = torus.cutStringTail(title, 36, title_w);
+    title_w = torus.getTextWidth(text_title, 36);
+    title2_w = title_max_width - title_w - 10;
+
+    const text_title2 = (is_title_not_equal && title2_w > 0) ? font_t2.cutStringTail(title2, 18, title2_w, true) : '';
+
+    const title_path = torus.getTextPath(text_title, 210, 34.754, 36, 'left baseline', '#fff');
+    const title2_path = text_title2 ? font_t2.getTextPath(text_title2, 210 + 10 + title_w, (font_t2 === PuHuiTi ? 33 : 34.754), 18, 'left baseline', data.color_title2_text) : '';
+
     const text_left1 = torus.cutStringTail(data.left1 || '', 24, 680);
     const text_left2 = torus.cutStringTail(data.left2 || '', 24, 680);
 
-    const title = torus.getTextPath(text_title, 210, 34.754, 36, 'left baseline', data?.color_title_text || '#fff');
     const left1 = torus.getTextPath(text_left1, 210, 66.836, 24, 'left baseline', data?.color_left1_text || '#bbb');
     const left2 = torus.getTextPath(text_left2, 210, 96.836, 24, 'left baseline', data?.color_left2_text || '#bbb');
 
     // 插入文字
-    svg = setTexts(svg, [title, left1, left2], reg_text);
+    svg = setTexts(svg, [title_path, title2_path, left1, left2], reg_text);
 
     // 插入图片
     svg = data.cover ? setImage(svg, 20, 0, 176, 110, data.cover, reg_avatar, 1) :

@@ -1285,7 +1285,6 @@ export const PanelGenerate = {
     },
 
     score2CardC3: async (score, index = 1, decrypted = false) => {
-        const title = score.beatmapset.title
         const use_cache = hasLeaderBoard(score?.beatmap?.ranked ?? s?.beatmap?.status)
 
         const results = await Promise.allSettled([
@@ -1295,11 +1294,11 @@ export const PanelGenerate = {
 
         const [cover, background] = results.map(r => r.status === 'fulfilled' ? r.value : null);
 
-        let title_cut = cutStringTail("torus", title, 36, 680, true);
-
         const index_text = index > 0 ? ('#' + index) : ''
         const bid_text = score.beatmap.id.toString()
 
+        const title = score.beatmapset.title ?? ''
+        const title2 = score.beatmapset.title_unicode ?? ''
         const artist = score.beatmapset.artist ?? ''
         const version = score.beatmap.version ?? ''
 
@@ -1312,7 +1311,8 @@ export const PanelGenerate = {
             background: background,
             cover: decrypted ? cover : null,
 
-            title: title_cut,
+            title: title,
+            title2: title2,
             left1: artist,
             left2: `[${decrypted ? version : version.replace(/[a-zA-Z0-9]/g, '#')}]`,
 
@@ -1321,6 +1321,7 @@ export const PanelGenerate = {
 
             color_rrect: color,
             color_title_text: '#fff',
+            color_title2_text: '#bbb',
             color_label_rrect1: color,
             color_label_rrect2: decrypted ? color : '',
             color_label_text: text_color,

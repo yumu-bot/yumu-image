@@ -79,7 +79,7 @@ export async function panel_A8(data = {
 
     await Promise.allSettled(
         scores.map((v, i) => {
-            return PanelGenerate.score2CardC3(v, i + 1, data.decrypted[i] || false)
+            return PanelGenerate.score2CardC3(v, i + 1, (data.decrypted[i] ?? -1) < 0)
         })
     ).then(results => thenPush(results, params))
 
