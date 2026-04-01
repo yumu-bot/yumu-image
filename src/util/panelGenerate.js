@@ -1314,7 +1314,7 @@ export const PanelGenerate = {
 
             title: title_cut,
             left1: artist,
-            left2: `[${decrypted ? version : '#'.repeat(version.length)}]`,
+            left2: `[${decrypted ? version : version.replace(/\S/g, '#')}]`,
 
             label1: index_text,
             label2: decrypted ? bid_text : null,
