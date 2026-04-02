@@ -1307,8 +1307,6 @@ export const PanelGenerate = {
         const color = getStarRatingColor(star)
 
         const text_color = (star < 4) ? '#1c1719' : '#fff'
-        const text_creator = decrypted ? creator : creator.replace(/[a-zA-Z0-9]/g, '#')
-        const text_version = decrypted ? version : version.replace(/[a-zA-Z0-9]/g, '#')
 
         return {
             background: background,
@@ -1316,8 +1314,8 @@ export const PanelGenerate = {
 
             title: title,
             title2: title2,
-            left1: (artist + ' // ' + text_creator),
-            left2: `[${text_version}]`,
+            left1: (artist + ' // ' + creator),
+            left2: `[${version}]`,
 
             label1: index_text,
             label2: decrypted ? bid_text : null,
