@@ -1300,12 +1300,15 @@ export const PanelGenerate = {
         const title = score.beatmapset.title ?? ''
         const title2 = score.beatmapset.title_unicode ?? ''
         const artist = score.beatmapset.artist ?? ''
+        const creator = score.beatmapset.creator ?? ''
         const version = score.beatmap.version ?? ''
 
         const star = score.beatmap.difficulty_rating
         const color = getStarRatingColor(star)
 
         const text_color = (star < 4) ? '#1c1719' : '#fff'
+        const text_creator = decrypted ? creator : creator.replace(/[a-zA-Z0-9]/g, '#')
+        const text_version = decrypted ? version : version.replace(/[a-zA-Z0-9]/g, '#')
 
         return {
             background: background,
@@ -1313,8 +1316,8 @@ export const PanelGenerate = {
 
             title: title,
             title2: title2,
-            left1: artist,
-            left2: `[${decrypted ? version : version.replace(/[a-zA-Z0-9]/g, '#')}]`,
+            left1: (artist + ' // ' + text_creator),
+            left2: `[${text_version}]`,
 
             label1: index_text,
             label2: decrypted ? bid_text : null,
