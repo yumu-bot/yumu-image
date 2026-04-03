@@ -331,7 +331,7 @@ const component_E1 = (
             break;
     }
 
-    const difficulty = (data?.difficulty ?? 0).toString()
+    const difficulty = rounds(data?.difficulty ?? 0).toString()
 
     const text_arr = [
         {
