@@ -51,35 +51,67 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_A9(
-    data = {
-        team: {
-            id: 2789,
-            name: 'sana',
-            abbr: 'sana',
-            formed: 'February 2025',
-            banner: 'https://assets.ppy.sh/teams/header/2789/25c711a5e9a294035cab85a020f27db99156120d68fe982a1c274a069e66878d.jpeg',
-            flag: 'https://assets.ppy.sh/teams/flag/2789/b4c19754b39eeebab2ff7dc3b809450293227248ce41cf46bef2ef172739d917.gif',
-            users: [],
-            ruleset: 'OSU',
-            application: 'Open',
-            available: 0,
-            rank: 5276,
-            pp: 5689,
-            ranked_score: 10003720968,
-            play_count: 29348,
-            members: 1,
-            description: 'sana yuki'
+export async function panel_A9(data = {
+    team: {
+        "flag_url": "https://assets.ppy.sh/teams/flag/1974/74b1ea27b71625df2a7eafb40e612c04cc7f60d48e141061da7f0d742fcbb42d.png",
+        "id": 1974,
+        "name": "girls osu smile",
+        "short_name": "gos",
+        "cover_url": "https://assets.ppy.sh/teams/header/1974/7eae5aede45e482169f3da14605ee63f281b1eb94f82804f4041034c95b2eddc.png",
+        "created_at": "2025-02-20T12:36:48+00:00",
+        "default_ruleset_id": 0,
+        "description": "[heading]欢迎所有女孩子加入owo[/heading]",
+        "is_open": true,
+        "empty_slots": 14,
+        "members": [],
+
+        "leader": {
+            "avatar_url": "https://a.ppy.sh/5179557?1722361511.jpeg",
+            "country_code": "CN",
+            "default_group": "default",
+            "id": 5179557,
+            "is_active": true,
+            "is_bot": false,
+            "is_deleted": false,
+            "is_online": false,
+            "is_supporter": false,
+            "last_visit": "2026-04-03T06:45:59+00:00",
+            "pm_friends_only": false,
+            "profile_colour": null,
+            "username": "Hakumo Shiro",
+            "country": {
+                "code": "CN",
+                "name": "China"
+            },
+            "cover": {
+                "custom_url": "https://assets.ppy.sh/user-profile-covers/5179557/1240f69986d11d3cc337d88ea86fed12b7a81ae36540477d4f7380731e0d8bcd.jpeg",
+                "url": "https://assets.ppy.sh/user-profile-covers/5179557/1240f69986d11d3cc337d88ea86fed12b7a81ae36540477d4f7380731e0d8bcd.jpeg",
+                "id": null
+            },
+            "groups": [],
+            "team": {
+                "flag_url": "https://assets.ppy.sh/teams/flag/1974/74b1ea27b71625df2a7eafb40e612c04cc7f60d48e141061da7f0d742fcbb42d.png",
+                "id": 1974,
+                "name": "girls osu smile",
+                "short_name": "gos"
+            }
         },
-        page: 1,
-        max_page: 1,
-    }
-) {
+        "statistics": {
+            "team_id": 1974,
+            "ruleset_id": 0,
+            "play_count": 723250,
+            "ranked_score": 559993636975,
+            "performance": 83187
+        },
+
+        "markdown_description": ""
+    }, page: 1, max_page: 1,
+}) {
 
     // 提前准备
     const team = data.team
-    const members = team.users.slice(1, 1 + (data.page ?? 1) * 48)
-    const leader = team.users?.[0]
+    const members = team.members.slice(((data.page ?? 1) - 1) * 48, (data.page ?? 1) * 48)
+    const leader = team.leader
 
     // 计算面板高度
     const panel_height = getPanelHeight(members.length, 210, 4, 290, 40, 40) + 250
@@ -131,9 +163,7 @@ export async function panel_A9(
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
 
-    const page = torusBold.getTextPath(
-        'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6
-    )
+    const page = torusBold.getTextPath('page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6)
 
     svg = setText(svg, page, reg_body)
 
@@ -141,8 +171,8 @@ export async function panel_A9(
     svg = setSvgBody(svg, 40, 40, card_A2(await PanelGenerate.team2CardA2(team)), reg_main);
 
     // 介绍
-    if (isNotEmptyString(team?.description)) {
-        const markdown = team.description
+    if (isNotEmptyString(team?.markdown_description)) {
+        const markdown = team.markdown_description
             .replaceAll("<br />", " ")
             .replaceAll(new RegExp("<\/?[\\s\\S]*?\/?>", 'g'), '') // 必须用懒惰，不然等死吧
         const alpha = (markdown.length > 0) ? await component_MD(markdown, 1370, 0) : {}
@@ -153,9 +183,7 @@ export async function panel_A9(
 
          */
 
-        svg = (markdown.length > 0) ?
-            setImage(svg, 510, 320, 1410, Math.min(Math.round(alpha.height * 1410 / 1370), 240), alpha.image, reg_des, 1, 'xMidYMin slice')
-            : svg
+        svg = (markdown.length > 0) ? setImage(svg, 510, 320, 1410, Math.min(Math.round(alpha.height * 1410 / 1370), 240), alpha.image, reg_des, 1, 'xMidYMin slice') : svg
     }
 
     // 队长
@@ -166,20 +194,16 @@ export async function panel_A9(
     // 队员
     const paramA1s = []
 
-    await Promise.allSettled(
-        members.map((member) => {
-            return PanelGenerate.microTeamMember2CardA1(member, false)
-        })
-    ).then(results => thenPush(results, paramA1s))
+    await Promise.allSettled(members.map((member) => {
+        return PanelGenerate.microTeamMember2CardA1(member, false)
+    })).then(results => thenPush(results, paramA1s))
 
 
     const cardA1s = []
 
-    await Promise.allSettled(
-        paramA1s.map((param) => {
-            return card_A1(param)
-        })
-    ).then(results => thenPush(results, cardA1s))
+    await Promise.allSettled(paramA1s.map((param) => {
+        return card_A1(param)
+    })).then(results => thenPush(results, cardA1s))
 
     let stringA1s = ''
     let imageA1s = ''
@@ -219,7 +243,7 @@ export async function panel_A9(
      */
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, await readNetImage(team.banner), reg_banner);
+    svg = setCustomBanner(svg, await readNetImage(team.cover_url), reg_banner);
 
     return svg;
 }

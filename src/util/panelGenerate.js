@@ -257,7 +257,7 @@ export const PanelGenerate = {
         const right1 = '(' + (is_secret ? '?' : getTimeDifference(user?.last_visit)) + ')'
         const left2 = is_leader ? 'leader' : 'member'
         const right2 = 'last visit: ' + (is_secret ? '?' : getFormattedTime(user?.last_visit, 'YYYY-MM-DD HH:mm'))
-        const right3m = (user.is_online === true) ? 'Online' : 'Offline'
+        const right3m = is_secret ? '?' : ((user.is_online === true) ? 'Online' : 'Offline')
 
         return {
             background: background,
@@ -922,19 +922,22 @@ export const PanelGenerate = {
     },
 
     team2CardA2: async (team) => {
-        const background = await readNetImage(team.flag)
+        const background = await readNetImage(team.flag_url)
+
+        const is_open = team?.is_open ? 'Open' : 'Closed'
+        const stats = team.statistics
 
         const title1 = team?.name || 'Team'
-        const title2 = getGameMode(team?.ruleset, 2) + ' // ' + (team?.application?.toLowerCase() || '?') + ' // ' + (team?.available || 0)
-        + ' Spots'
+        const title2 = getGameMode(team?.default_ruleset_id, 2) + ' // ' + (is_open) + ' // ' + (team?.empty_slots || 0)
+        + ' Slots'
 
-        const left1 = 'RKS: ' + round(team?.ranked_score || 0, -4, 0)
-        const left2 = 'PC: ' + Math.round(team?.play_count || 0)
-        const left3 = getFormattedTime(team.formed, "YYYY-MM") // Open Close
+        const left1 = 'RKS: ' + round(stats?.ranked_score || 0, -4, 0)
+        const left2 = 'PC: ' + Math.round(stats?.play_count || 0)
+        const left3 = getFormattedTime(team.created_at, "YYYY-MM") // Open Close
 
-        const right1 = 'TeamID: #' + (team?.id || 0).toString()
-        const right2 = 'Rank: #' + (team.rank || '0')
-        const right3b = Math.round(team?.pp || 0).toString()
+        const right1 = 'TeamID: #' + (stats?.team_id || 0).toString()
+        const right2 = 'Rank: #' + (stats?.rank || '0')
+        const right3b = Math.round(stats?.performance || 0).toString()
         const right3m = 'PP'
 
         return {
