@@ -454,7 +454,7 @@ const component_E3 = (
     const avg_acc = poppinsBold.get2SizeTextPath(acc.integer, acc.decimal + ' %', 48, 30, 300, 190, 'right baseline', '#fff');
 
     const d = (data?.fit ?? 0) - (data?.star ?? 0)
-    const delta = (data?.fit > 0) ? (' (' + getSign(d) + floor(d, 2) + ')') : ''
+    const delta = (data?.fit > 0) ? (' (' + getSign(d) + floor(Math.abs(d), 2) + ')') : ''
 
     const level = rounds(data?.fit, 2)
     const dist_level = getMultipleTextPath(
