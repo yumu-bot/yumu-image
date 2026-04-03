@@ -581,7 +581,7 @@ const component_E6 = async (
         20, 142, 24, 'left baseline', '#fff');
     const bid = poppinsBold.getTextPath((data?.id || 0).toString(), 820 - 20, 142, 24, 'right baseline', '#fff');
 
-    const background = await getMaimaiCover(data?.song_id);
+    const background = await getMaimaiCover(data?.id || 0);
 
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
