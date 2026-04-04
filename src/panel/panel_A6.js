@@ -101,7 +101,7 @@ export async function panel_A6(data = {
 
     // 插入图片和部件（新方法
     svg = setImage(svg, (1920 - width) / 2, 330, width, height, alpha.image, reg_alpha, 1);
-    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
 
     // 导入卡片
     svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);

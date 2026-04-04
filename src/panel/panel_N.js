@@ -146,7 +146,7 @@ export async function panel_N(
 
     // 插入图片和部件（新方法
     const cover = await readNetImage(data?.beatmapset?.covers?.cover, true);
-    svg = setImage(svg, 0, 0, 1920, 320, cover, reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, cover, reg_banner, 0.7);
     svg = setSvgBody(svg, 40, 40, cardA2, reg_beatmap_A2);
     svg = setSvgBody(svg, 60, 350, cardO1, reg_me);
 

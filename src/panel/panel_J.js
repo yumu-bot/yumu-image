@@ -679,7 +679,7 @@ export async function panel_J(data = {
     svg = setTexts(svg, [title_bpd, title_fm, title_rks, title_ms, title_l5, title_t5], reg_index)
 
     const background = getGlobalRankPercentBGFromUser(data?.card_A1);
-    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 
     return svg;

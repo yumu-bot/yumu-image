@@ -337,7 +337,7 @@ export async function panel_E5(data = {
 
     // 注入 Banner
     const isLargeBanner = getFileSize(banner) / 1024 >= 500;
-    svg = setImage(svg, 0, 0, 1920, 320, banner, regs.banner, 0.8, isLargeBanner ? "xMidYMin slice" : undefined);
+    svg = setImage(svg, 0, 0, 1920, 320, banner, regs.banner, 0.7, isLargeBanner ? "xMidYMin slice" : undefined);
 
     // 批量注入所有组件内容 (一次性处理多个 body 字符串)
     svg = setText(svg, components[0], regs.card_a1);

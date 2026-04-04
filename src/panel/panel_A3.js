@@ -116,7 +116,7 @@ export async function panel_A3(data = {
         .then(results => thenPush(results, cardA4s))
 
     // 插入图片和部件
-    svg = setImage(svg, 0, 0, 1920, 320, await getMapBackground(data.beatmap, 'cover'), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, await getMapBackground(data.beatmap, 'cover'), reg_banner, 0.7);
 
     // 计算面板高度
     const row_total = Math.ceil((cardA4s?.length || 0) / 2);

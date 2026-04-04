@@ -131,7 +131,7 @@ export async function panel_B1(data = {
     svg = setText(svg, PanelDraw.HexagonIndex(order, 960,  600, 260, 0), reg_hexagon);
 
     // 插入图片和部件（新方法
-    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
 
     // 面板文字
     let panel_name

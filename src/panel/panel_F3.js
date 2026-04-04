@@ -188,7 +188,7 @@ async function panel_F3(
     svg = setTexts(svg, [score_banner_svg, body_card_svg], reg_bodycard)
 
     // 插入图片和部件（新方法
-    svg = setImage(svg, 0, 0, 1920, 320, await getMapBackground(round?.beatmap, 'cover'), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, await getMapBackground(round?.beatmap, 'cover'), reg_banner, 0.7);
 
     const card_height = is_team_vs ?
         (Math.max(reds.length, blues.length) > 6 ?

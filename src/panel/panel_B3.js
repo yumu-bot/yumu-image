@@ -450,7 +450,7 @@ export async function panel_B3(data = {
     }
 
     // 清算
-    svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.7);
 
     // A2定义
     

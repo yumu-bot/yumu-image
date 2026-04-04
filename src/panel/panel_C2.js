@@ -80,7 +80,7 @@ export async function panel_C2(data = {
     const cardA2 = card_A2(await seriesRating2CardA2(data));
 
     // 插入图片和部件（新方法
-    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
     svg = setSvgBody(svg, 40, 40, cardA2, reg_maincard);
 
     // 导入H卡

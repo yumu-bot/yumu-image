@@ -130,7 +130,7 @@ export async function panel_MF(data = {
     svg = setText(svg, getPanelNameSVG('Maimai Find v2 (!ymmf)', 'MF', request_time), reg_index);
 
     // 导入图片
-    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.7);
 
     // 导入A1卡
     const cardA1 = await card_A1(await PanelGenerate.maiPlayer2CardA1(data.user));

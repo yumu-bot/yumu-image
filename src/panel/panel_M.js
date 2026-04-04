@@ -416,7 +416,7 @@ export async function panel_M(data = {
     svg = setTexts(svg, [favorite_index, playcount_index, comment_index, nominated_index, loved_index, graveyard_index], reg_length);
 
     // 插入图片和部件（新方法
-    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
     svg = setSvgBody(svg, 40, 40, cardA1, reg_me_A1);
     svg = setSvgBody(svg, 60, 350, cardO1, reg_me);
 

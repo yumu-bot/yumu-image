@@ -136,7 +136,7 @@ export async function panel_MV(
     svg = setTexts(svg, [body_a1, body_mv], reg_card_a1);
 
     // 导入图片
-    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath("maimai"), reg_banner, 0.7);
 
     // 临时
     const plate_list = data?.plate_list || []

@@ -103,7 +103,7 @@ export async function card_D2(data = {
         [title, left, right, bottom_left, bottom_right, left_rrect, right_rrect],
         reg_text)
 
-    svg = setImage(svg, 0, 0, 150, 120, data?.background ?? '', reg_background, 0.8)
+    svg = setImage(svg, 0, 0, 150, 120, data?.background ?? '', reg_background, 0.7)
 
     return svg
 }

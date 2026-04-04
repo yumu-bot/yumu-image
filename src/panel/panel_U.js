@@ -282,7 +282,7 @@ export async function panel_U(
     const panel_name = getPanelNameSVG('Cupid Friends (!ymf)', 'F');
     svg = setText(svg, panel_name, reg_index);
 
-    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
 
     const card_a1 = await card_A1(PanelGenerate.user2CardA1(null, null))
 

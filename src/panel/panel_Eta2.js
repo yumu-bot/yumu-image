@@ -317,7 +317,7 @@ export async function panel_Eta2(data = {
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
-    svg = setImage(svg, 330, 225, 260, 630, background, reg_cover, 0.8);
+    svg = setImage(svg, 330, 225, 260, 630, background, reg_cover, 0.7);
 
 
     // 卡片定义

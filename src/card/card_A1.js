@@ -82,7 +82,7 @@ export async function card_A1(data = {}) {
         (await Promise.allSettled([
             toPromise(background, () => getBanner(background, true)),
             toPromise(avatar, () => getAvatar(avatar, true)),
-            getFlagPath(country ?? 'XX', 135, 64, 44),
+            getFlagPath(country, 135, 64, 44),
             readNetImage(team_url ?? '', true, ''),
         ])).map((res) => getImageOrElse(res))
 

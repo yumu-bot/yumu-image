@@ -329,10 +329,21 @@ export function requireNonNullElse(obj, obj2) {
 }
 
 export const toPromise = (source, promise = () => readNetImage(source)) => {
-    if (typeof source === 'string' && source.startsWith('data:image')) {
-        return Promise.resolve(source);
+    if (typeof source === 'string') {
+        // 1. 检查是否是 Base64
+        const isBase64 = source.startsWith('data:image');
+
+        // 2. 检查是否是网络路径 (http:// 或 https:// 或 //)
+        const isRemote = /^(https?:)?\/\//.test(source);
+
+        if (isBase64) {
+            return Promise.resolve(source);
+        } else if (!isRemote) {
+            return Promise.resolve(binary2Base64Text(readFile(source, 'binary')));
+        }
     }
 
+    // 只有在确定是远程 URL 或其他情况时，才执行传入的异步函数
     return promise();
 };
 
@@ -2036,7 +2047,7 @@ export async function getFlagSvg(code = "cn") {
     return flag;
 }
 
-export async function getFlagPath(code = "cn", x, y, h = 30) {
+export async function getFlagPath(code = "cn" || null, x, y, h = 30) {
     if (typeof code != 'string') return '';
 
     //避免腾讯封掉青天白日旗
@@ -2504,11 +2515,11 @@ export function getMatchDuration(match) {
  * @param {string | null} custom
  * @param reg_banner
  */
-export function setCustomBanner(svg, custom = null, reg_banner, custom_opacity = 0.8) {
+export function setCustomBanner(svg, custom = null, reg_banner, custom_opacity = 0.7) {
     if (custom) {
         return setImage(svg, 0, 0, 1920, 320, custom, reg_banner, custom_opacity);
     } else {
-        return setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+        return setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
     }
 }
 

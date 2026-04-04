@@ -302,7 +302,7 @@ export async function panel_T(
     const panel_name = getPanelNameSVG('Popular Beatmap (!ympu)', 'PU', request_time);
     svg = setText(svg, panel_name, reg_index);
 
-    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+    svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
 
     const card_a2 = card_A2(await popularInfo2cardA2(data.info, data.best_performance?.beatmap))
 

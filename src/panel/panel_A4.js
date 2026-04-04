@@ -104,7 +104,7 @@ export async function panel_A4(data = {
         })
 
         // 插入图片和部件（新方法
-        svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+        svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
 
         // 计算面板高度
         // const row_total = Math.ceil((card_Is?.length || 0) / 2);
@@ -144,7 +144,7 @@ export async function panel_A4(data = {
         })
 
         // 插入图片和部件（新方法
-        svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
+        svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
 
         // 计算面板高度
         const rowTotal = Math.ceil((card_Cs?.length || 0) / 2);
