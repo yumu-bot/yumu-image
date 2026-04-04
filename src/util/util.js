@@ -513,6 +513,7 @@ const fileCache = new FileCache();
 // 缓存文件读取结果
 function readFileWithCache(filePath, options = 'binary', expire = 24 * 60 * 60 * 1000) {
     // 先检查缓存
+    console.log("Full Path:", path.resolve(filePath))
     const cached = fileCache.get(filePath);
     if (cached) {
         return cached;
