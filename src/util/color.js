@@ -409,19 +409,23 @@ export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent =
         return colorArray.deep_gray
     }
 
+    /**
+     * https://github.com/ppy/osu-web/blob/6fcd85eb006ce7699d6f747597435c01344b2d2d/resources/js/profile-page/rank.tsx#L19-L46
+     */
+
     if (global_rank <= 100) {
         return colorArray.lustrous
     } else if (global_rank_percent < 0.0005) {
         return colorArray.radiant
-    } else if (global_rank_percent < 0.0025) {
+    } else if (global_rank_percent < 0.0015) {
         return colorArray.rhodium
     } else if (global_rank_percent < 0.005) {
         return colorArray.platinum
-    } else if (global_rank_percent < 0.025) {
+    } else if (global_rank_percent < 0.015) {
         return colorArray.gold
     } else if (global_rank_percent < 0.05) {
         return colorArray.silver
-    } else if (global_rank_percent < 0.25) {
+    } else if (global_rank_percent < 0.15) {
         return colorArray.bronze
     } else if (global_rank_percent < 0.5) {
         return colorArray.iron

@@ -328,6 +328,74 @@ export function requireNonNullElse(obj, obj2) {
     } else return obj
 }
 
+export const toPromise = (source, promise = () => readNetImage(source)) => {
+    if (typeof source === 'string' && source.startsWith('data:image')) {
+        return Promise.resolve(source);
+    }
+
+    return promise();
+};
+
+/**
+ * 获取结果，如果失败则返回默认图片
+ * @param {PromiseSettledResult<string>} result
+ * @param {string} default_image
+ * @returns {string}
+ */
+export const getImageOrElse = (result, default_image = getImageFromV3('error.png')) => {
+    return getOrNull(result) ?? default_image;
+}
+
+/**
+ * 获取 fulfilled 的值，否则返回 null
+ * @param {PromiseSettledResult<*>} result
+ * @returns {*|null}
+ */
+export const getOrNull = (result) => {
+    return result?.status === 'fulfilled' ? result.value : null;
+}
+
+/**
+ * 批量渲染工具函数
+ * @param {Object|String} first - 第一项的数据参数
+ * @param {Array} remains - 剩余项的数据参数数组
+ * @param {Function} renderFn - 渲染函数，接收参数并返回 Promise
+ * @param {Function} renderFn2 - 渲染函数2，如果不填则默认使用 renderFn
+ * @param {String} firstFallback - 第一项失败时的默认值
+ * @param {String} remainFallback - 剩余项失败时的默认值
+ * @return {Promise<[string, string[]]>} 两项，第一个是第一项的结果，第二个是数组，剩余项的结果
+ */
+export const renderInBatch = async (
+    first,
+    remains = [],
+    renderFn = (str) => readNetImage(str),
+    renderFn2 = renderFn,
+    firstFallback = getImageFromV3('error.png'),
+    remainFallback = getImageFromV3('error.png')
+) => {
+    // 1. 构建任务队列
+    const tasks = [
+        // 只有当 first 存在时才启动任务，否则直接 resolve 为 null
+        first ? renderFn(first) : Promise.resolve(null),
+        ...remains.map(item => renderFn2(item))
+    ];
+
+    // 2. 并发执行
+    const results = await Promise.allSettled(tasks);
+
+    // 3. 提取结果
+    // 使用你之前定义的 getImageOrElse，并允许传入不同的默认图
+    const firstResult = first
+        ? getImageOrElse(results[0], firstFallback)
+        : '';
+
+    const remainResults = remains.map((_, i) =>
+        getImageOrElse(results[i + 1], remainFallback)
+    );
+
+    return [firstResult, remainResults];
+};
+
 /**
  * 根据谱面罗马音和原文，返回方便展示的字形
  * @param font
@@ -1025,8 +1093,11 @@ export function getImage(x = 0, y = 0, w = 100, h = 100, image = '', opacity = 1
  * 如果不需要修改位置，用 setText 就行
  */
 export function setSvgBody(base = '', x = 0, y = 0, replace = '', reg = /.*/) {
-    if (x !== 0 || y !== 0) replace = `<g transform="translate(${x} ${y})">` + replace + '</g>';
-    return base.replace(reg, replace);
+    if (x !== 0 || y !== 0) {
+        return base.replace(reg, `<g transform="translate(${x} ${y})">` + replace + '</g>');
+    } else {
+        return setText(base, replace, reg)
+    }
 }
 
 /**

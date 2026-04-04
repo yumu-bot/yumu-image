@@ -256,8 +256,8 @@ export async function panel_B3(data = {
             type = 'PX+'
             panel_name = getPanelNameSVG('PP Plus: User VS (!ympx)', 'PX');
 
-            card_left = await card_A1(await PanelGenerate.user2CardA1(me));
-            card_right = await card_A1(await PanelGenerate.user2CardA1(other));
+            card_left = await card_A1(PanelGenerate.user2CardA1(me));
+            card_right = await card_A1(PanelGenerate.user2CardA1(other));
 
             drawUserPlus(label_left, values, vs_values, levels, abbr, false);
             drawUserPlus(label_right, vs_values, values, vs_levels, abbr, true);
@@ -312,7 +312,7 @@ export async function panel_B3(data = {
 
             panel_name = getPanelNameSVG('PP Plus: User (!ympp)', 'PP', request_time);
 
-            card_left = await card_A1(await PanelGenerate.user2CardA1(me));
+            card_left = await card_A1(PanelGenerate.user2CardA1(me));
 
             drawUserPlus(label_left, values, before_values, levels, abbr, false);
 

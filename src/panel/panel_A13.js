@@ -107,7 +107,7 @@ export async function panel_A13(
     const beatmap_arr = data?.beatmapsets || [];
     const result_count = beatmap_arr?.length ?? 3;
 
-    const user_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const user_a1 = await card_A1(PanelGenerate.user2CardA1(data.user));
     svg = setSvgBody(svg, 40, 40, user_a1, reg_search_a2);
 
     //导入其他卡

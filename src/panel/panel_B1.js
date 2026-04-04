@@ -210,12 +210,12 @@ export async function panel_B1(data = {
     svg = setText(svg, string_b1s, reg_left)
 
     // 我自己的卡片
-    const cardA1m = await card_A1(await PanelGenerate.user2CardA1(data.users[0]));
+    const cardA1m = await card_A1(PanelGenerate.user2CardA1(data.users[0]));
     svg = setSvgBody(svg, 40, 40, cardA1m, reg_main);
 
     // 如果是vs，渲染右边的人
     if (is_vs) {
-        const cardA1o = await card_A1(await PanelGenerate.user2CardA1(data.users[1]));
+        const cardA1o = await card_A1(PanelGenerate.user2CardA1(data.users[1]));
         svg = setSvgBody(svg, 1450, 40, cardA1o, reg_main);
 
         for (let i = 0; i < 6; i++) {

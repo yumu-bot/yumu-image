@@ -278,7 +278,7 @@ export async function panel_E2(data = {
 
 
     // 卡片定义
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const cardA1 = await card_A1(PanelGenerate.user2CardA1(data.user));
     const cardE1 = await component_E1(await beatmap2CardE1(data.beatmap, mode, calcPP));
     const cardE5 = await component_E5(await expect2CardE5(data.expected, rank, mode, data.beatmap.max_combo, calcPP, calcNC, calcFC));
     const cardE3 = await component_E3(await beatmap2CardE3(data.beatmap, rank, calcPP));

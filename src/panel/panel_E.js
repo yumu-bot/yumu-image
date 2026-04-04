@@ -316,7 +316,7 @@ export async function panel_E(
     const banner = await getDiffBackground(data?.score);
 
     // 卡片定义
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const cardA1 = await card_A1(PanelGenerate.user2CardA1(data.user));
     const cardE1 = await component_E1(score2CardE1(data.score));
     const cardE2 = await component_E2(score2CardE2(data.score, calcPP));
     const cardE3 = await component_E3(await score2CardE3(data.score, calcPP));

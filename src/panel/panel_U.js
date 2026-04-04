@@ -284,7 +284,7 @@ export async function panel_U(
 
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.8);
 
-    const card_a1 = await card_A1(await PanelGenerate.user2CardA1(null, null))
+    const card_a1 = await card_A1(PanelGenerate.user2CardA1(null, null))
 
     let u1s = []
 

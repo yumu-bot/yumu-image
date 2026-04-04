@@ -338,27 +338,22 @@ const component_R2 = (host_name, avatar, genre_id, language_id, source = '', tag
 
     const tags_title = PanelDraw.Shadow(poppinsBold.getTextPath('Tags', 295, 535, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
 
-    // 1. 默认先尝试使用 PoppinsBold (20号) 进行裁切
     let currentFont = poppinsBold;
     let currentSize = 20;
 
     let str1 = currentFont.cutStringTail(tags, currentSize, 445, false);
-    let rest = tags?.substring(str1.length) || "";
+    let rest = tags?.substring(str1.length)?.trimStart() || "";
     let str2 = currentFont.cutStringTail(rest, currentSize, 445, true);
 
-    // 2. 检查裁切出的两个字符串是否包含非 ASCII 字符
-    // 如果其中任何一段不是纯英文/符号，则全量切换到 PuHuiTi
     if (!isASCII(str1) || !isASCII(str2)) {
         currentFont = PuHuiTi;
         currentSize = 18;
 
-        // 3. 使用中文字体重新裁切
         str1 = currentFont.cutStringTail(tags, currentSize, 445, false);
         rest = tags?.substring(str1.length)?.trimStart() || "";
         str2 = currentFont.cutStringTail(rest, currentSize, 445, true);
     }
 
-    // 最终使用的变量
     const tags_font = currentFont;
     const tags_size = currentSize;
     const tags_string1 = str1;

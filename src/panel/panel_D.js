@@ -80,7 +80,7 @@ export async function panel_D(data = {
     const mode = data.mode ? getGameMode(data.mode.toLowerCase(), 0) :
         (data.user.mode ? getGameMode(data.user.mode.toLowerCase(), 0) : 'default');
 
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser));
+    const cardA1 = await card_A1(PanelGenerate.user2CardA1(data.user, data.historyUser));
 
     const cardF5 = await component_D5(user2CardF5(data.user, mode, data["bp-times"]));
     const cardF6N = await component_D6N(user2CardF6N(data.user, data.historyUser, mode, data.bonus_pp));

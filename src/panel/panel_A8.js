@@ -71,7 +71,7 @@ export async function panel_A8(data = {
 
 
     // 导入A1卡
-    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const me_card_a1 = await card_A1(PanelGenerate.user2CardA1(data.user));
     svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入C3卡

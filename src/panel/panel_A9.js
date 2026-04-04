@@ -9,9 +9,8 @@ import {
     setImage,
     getImageFromV3,
     isNotEmptyString,
-    thenPush,
     getSvgBody,
-    getImage
+    getImage, renderInBatch
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
@@ -186,24 +185,23 @@ export async function panel_A9(data = {
         svg = (markdown.length > 0) ? setImage(svg, 510, 320, 1410, Math.min(Math.round(alpha.height * 1410 / 1370), 240), alpha.image, reg_des, 1, 'xMidYMin slice') : svg
     }
 
-    // 队长
-    svg = setSvgBody(svg, 40, 330, await card_A1(await PanelGenerate.microTeamMember2CardA1(leader, true)), reg_body)
-
     svg = setImage(svg, 0, 290, 510, 290, getImageFromV3('backlight-golden.png'), reg_body, 1)
 
+
+    // 队长
+    const paramA1 = PanelGenerate.microTeamMember2CardA1(leader, true)
+
     // 队员
-    const paramA1s = []
-
-    await Promise.allSettled(members.map((member) => {
+    const paramA1s = members.map((member) => {
         return PanelGenerate.microTeamMember2CardA1(member, false)
-    })).then(results => thenPush(results, paramA1s))
+    })
 
+    const [leaderA1, cardA1s] = await renderInBatch(
+        paramA1, paramA1s,
+        (data) => card_A1(data),
+    )
 
-    const cardA1s = []
-
-    await Promise.allSettled(paramA1s.map((param) => {
-        return card_A1(param)
-    })).then(results => thenPush(results, cardA1s))
+    svg = setSvgBody(svg, 40, 330, leaderA1, reg_body)
 
     let stringA1s = ''
     let imageA1s = ''

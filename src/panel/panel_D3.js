@@ -232,7 +232,7 @@ export async function panel_D3(
 
     // 卡片定义
     const cardA1 = await card_A1(
-        await PanelGenerate.user2CardA1(user, history)
+        PanelGenerate.user2CardA1(user, history)
     );
     const componentD1 = component_D1(ranking_arr, has_custom_panel, hue)
 

@@ -70,7 +70,7 @@ export async function panel_A15(
     svg = setText(svg, getPanelNameSVG('Top plays (!ymtp)', 'TP', request_time), reg_index);
 
     // 导入A1卡
-    const me_card_a1 = await card_A1(await PanelGenerate.user2CardA1(null));
+    const me_card_a1 = await card_A1(PanelGenerate.user2CardA1(null));
     svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入C卡

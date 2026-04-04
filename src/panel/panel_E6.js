@@ -99,7 +99,7 @@ export async function panel_E6(data = {
     const banner = await getDiffBackground(data.beatmap);
 
     // 卡片定义
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const cardA1 = await card_A1(PanelGenerate.user2CardA1(data.user));
     const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.beatmap, mode));
     const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.beatmap, data.density, rank));
     const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.beatmap, data.original));

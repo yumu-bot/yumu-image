@@ -146,7 +146,7 @@ export async function panel_D2(data = {
 
     // 卡片定义
     const cardA1 = await card_A1(
-        await PanelGenerate.user2CardA1(user, history)
+        PanelGenerate.user2CardA1(user, history)
     );
     const componentD1 = component_D1(PanelDGenerate.user2componentD1(user, history, has_custom_panel, hue));
     const componentD2 = component_D2(await PanelDGenerate.scores2componentD2(scores, has_custom_panel, hue));

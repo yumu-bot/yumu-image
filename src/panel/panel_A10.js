@@ -100,7 +100,7 @@ export async function panel_A10(
     svg = setText(svg, panel_name, reg_index);
 
     // 主卡
-    svg = setSvgBody(svg, 40, 40, await card_A1(await PanelGenerate.user2CardA1(user)), reg_main);
+    svg = setSvgBody(svg, 40, 40, await card_A1(PanelGenerate.user2CardA1(user)), reg_main);
 
     // 牌子
 

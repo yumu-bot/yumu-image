@@ -19,7 +19,7 @@ import {
     floors,
     getFormattedTime,
     getTimeDifferenceShort,
-    getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3Cache, isASCII,
+    getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3Cache, isASCII, getImageOrElse,
 } from "./util.js";
 import {
     colorArray,
@@ -42,7 +42,6 @@ import {
     getMaimaiRankBG,
     getMaimaiRatingBG, getMaimaiType
 } from "./maimai.js";
-import {getRandomBannerPath} from "./mascotBanner.js";
 import {PanelDraw} from "./panelDraw.js";
 import {card_D2} from "../card/card_D2.js";
 import {getLazerModsWidth} from "./mod.js";
@@ -57,7 +56,7 @@ export const PanelGenerate = {
      * @param {{} | null} user
      * @param historyUser
      */
-    user2CardA1: async (user, historyUser) => {
+    user2CardA1: (user, historyUser) => {
         if (isNullOrEmptyObject(user)) return {
             background: getImageFromV3Cache('card-default.png'),
             avatar: getImageFromV3Cache('sticker_qiqi_secretly_observing.png'),
@@ -79,8 +78,8 @@ export const PanelGenerate = {
         /**
          * @type {string}
          */
-        const background = user?.profile?.card || await getBanner(user?.cover_url, true);
-        const avatar = await getAvatar(user?.avatar_url, true);
+        const background = user?.profile?.card || user?.cover_url;
+        const avatar = user?.avatar_url;
 
         const sub_icon1 = user?.is_supporter ? getImageFromV3Cache('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
@@ -136,10 +135,7 @@ export const PanelGenerate = {
         };
     },
 
-    mapper2CardA1: async (user) => {
-        const background = await getBanner(user?.cover_url, true);
-        const avatar = await getAvatar(user?.avatar_url, true);
-
+    mapper2CardA1: (user) => {
         const sub_icon1 = user.is_supporter ? getImageFromV3Cache('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
 
@@ -150,8 +146,8 @@ export const PanelGenerate = {
         const right3m = 'x';
 
         return {
-            background: background,
-            avatar: avatar,
+            background: user?.cover_url,
+            avatar: user?.avatar_url,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',
@@ -167,10 +163,7 @@ export const PanelGenerate = {
         };
     },
 
-    microUser2CardA1: async (user, type = null, show_mutual = false) => {
-        const background = await getBanner(user?.cover?.url, true);
-        const avatar = await getAvatar(user?.avatar_url, true);
-
+    microUser2CardA1: (user, type = null, show_mutual = false) => {
         let sub_icon1 = ''
         let sub_icon2 = ''
 
@@ -223,8 +216,8 @@ export const PanelGenerate = {
         const right3m = isBot ? 'Bot' : (user?.statistics?.pp ? 'PP' : 'AFK');
 
         return {
-            background: background,
-            avatar: avatar,
+            background: user?.cover?.url,
+            avatar: user?.avatar_url,
             sub_icon1: sub_icon1,
             sub_icon2: sub_icon2,
             sub_banner: '',
@@ -243,10 +236,7 @@ export const PanelGenerate = {
         };
     },
 
-    microTeamMember2CardA1: async (user, is_leader = false) => {
-        const background = await getBanner(user?.cover?.url, true);
-        const avatar = await getAvatar(user?.avatar_url, true);
-
+    microTeamMember2CardA1: (user, is_leader = false) => {
         const sub_icon1 = (user.is_supporter) ? getImageFromV3Cache('object-card-supporter.png') : ''
 
         const country = user?.country_code || 'CN';
@@ -260,8 +250,8 @@ export const PanelGenerate = {
         const right3m = is_secret ? '?' : ((user.is_online === true) ? 'Online' : 'Offline')
 
         return {
-            background: background,
-            avatar: avatar,
+            background: user?.cover?.url,
+            avatar: user?.avatar_url,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',
@@ -469,7 +459,7 @@ export const PanelGenerate = {
         };
     },
 
-    guest2CardA1: async (data = {
+    guest2CardA1: (data = {
         user: {
             cover: {
                 url: 'https://assets.ppy.sh/user-profile-covers/416662/ab631986bb61f181551b8dbea87285874d09a920584bd5ff0250410b2b44a9a3.jpeg',
@@ -498,10 +488,6 @@ export const PanelGenerate = {
     }) => {
         const user = data.user
 
-        const background = await readNetImage(user.cover.url, true, getRandomBannerPath());
-        const avatar = await getAvatar(user.avatar_url, true)
-
-
         let sub_icon1 = ''
 
         if (user.is_supporter) {
@@ -518,8 +504,8 @@ export const PanelGenerate = {
 
 
         return {
-            background: background,
-            avatar: avatar,
+            background: user.cover.url,
+            avatar: user.avatar_url,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',
@@ -1295,7 +1281,7 @@ export const PanelGenerate = {
             readNetImage(score?.beatmapset?.covers?.cover, use_cache)
         ]);
 
-        const [cover, background] = results.map(r => r.status === 'fulfilled' ? r.value : null);
+        const [cover, background] = results.map(r => getImageOrElse(r));
 
         const index_text = index > 0 ? ('#' + index) : ''
         const bid_text = score.beatmap.id.toString()

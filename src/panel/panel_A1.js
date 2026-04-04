@@ -2,7 +2,7 @@ import {
     exportJPEG, getPanelHeight, getPanelNameSVG,
     setSvgBody,
     readTemplate, setCustomBanner,
-    setText, getSvgBody, thenPush
+    setText, getSvgBody, renderInBatch
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -220,23 +220,16 @@ export async function panel_A1(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const me_cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.me_card_A1));
+    const meParam = PanelGenerate.user2CardA1(data.me_card_A1);
+    const friendParams = data.friend_card_A1.map(user =>
+        PanelGenerate.microUser2CardA1(user, data?.type, true)
+    );
 
-    const params = []
-
-    await Promise.allSettled(
-        data.friend_card_A1.map((user) => {
-            return PanelGenerate.microUser2CardA1(user, data?.type, true)
-        })
-    ).then(results => thenPush(results, params))
-
-    const friend_cardA1s = []
-
-    await Promise.allSettled(
-        params.map((param) => {
-            return card_A1(param)
-        })
-    ).then(results => thenPush(results, friend_cardA1s))
+    const [me_cardA1, friend_cardA1s] = await renderInBatch(
+        meParam,
+        friendParams,
+        (data) => card_A1(data)
+    )
 
     // 插入图片和部件（新方法
     svg = setCustomBanner(svg, data.me_card_A1?.profile?.banner, reg_banner);

@@ -214,7 +214,7 @@ export async function panel_J2(data = {
     const bests_size = pp_raw_arr?.length || 0
 
     const cardA1 = await card_A1(
-        await PanelGenerate.user2CardA1(user)
+        PanelGenerate.user2CardA1(user)
     );
     const componentJ1 = component_J1(PanelJGenerate.attr2componentJ1(bpm_attr, length_attr, combo_attr, star_attr, client_count, has_custom_panel, hue));
     const componentJ2 = component_J2(await PanelJGenerate.scores2componentJ2(bests, has_custom_panel, hue));

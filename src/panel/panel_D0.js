@@ -282,7 +282,7 @@ export async function panel_D0(data = {
     const mode = data.mode ? getGameMode(data.mode.toLowerCase(), 0) :
         (data.user.mode ? getGameMode(data.user.mode.toLowerCase(), 0) : 'default');
 
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user, data.historyUser));
+    const cardA1 = await card_A1(PanelGenerate.user2CardA1(data.user, data.historyUser));
 
     const cardF1 = await component_D1(user2CardF1(data.user, mode));
     const cardF2 = await component_D2({recent: data["re-list"]});

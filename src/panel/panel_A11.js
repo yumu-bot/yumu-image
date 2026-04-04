@@ -2,10 +2,10 @@ import {
     exportJPEG,
     getPanelHeight,
     getPanelNameSVG, getSvgBody,
-    readNetImage,
+    readNetImage, renderInBatch,
     setCustomBanner,
     setSvgBody,
-    setText, thenPush
+    setText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -135,24 +135,18 @@ export async function panel_A11(data = {
     svg = setText(svg, page, reg_body)
 
     // 主卡
-    svg = setSvgBody(svg, 40, 40, await card_A1(await PanelGenerate.mapper2CardA1(user)), reg_main);
+    const paramA1 = PanelGenerate.mapper2CardA1(user)
 
     // 队员
-    const paramA1s = []
+    const paramA1s = guests.map((guest) => {
+        return PanelGenerate.guest2CardA1(guest)
+    })
 
-    await Promise.allSettled(
-        guests.map((guest) => {
-            return PanelGenerate.guest2CardA1(guest)
-        })
-    ).then(results => thenPush(results, paramA1s))
+    const [cardA1, cardA1s] = await renderInBatch(
+        paramA1, paramA1s, (data) => card_A1(data)
+    )
 
-    const cardA1s = []
-
-    await Promise.allSettled(
-        paramA1s.map((param) => {
-            return card_A1(param)
-        })
-    ).then(results => thenPush(results, cardA1s))
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_main);
 
     const stringA1s = cardA1s.map((a1, i) => {
         const x = i % 4;

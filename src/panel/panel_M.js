@@ -180,7 +180,7 @@ export async function panel_M(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A1
-    const cardA1 = await card_A1(await PanelGenerate.mapper2CardA1(data.user));
+    const cardA1 = await card_A1(PanelGenerate.mapper2CardA1(data.user));
 
     // 导入O1
     const cardO1 = component_IM1(await PanelGenerate.user2CardO1(data.user));

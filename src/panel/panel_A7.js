@@ -298,7 +298,7 @@ export async function panel_A7(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 导入A1卡
-    const a1 = await PanelGenerate.user2CardA1(data?.user)
+    const a1 = PanelGenerate.user2CardA1(data?.user)
 
     // 修改 A1 展示，让测试 PP 在下面
     const theoretical_pp = data?.pp || data?.user?.pp || 0;

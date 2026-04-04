@@ -180,14 +180,14 @@ export async function panel_K(data = {
     svg = setTexts(svg, [panel_name, middle], reg_index);
 
     // A1 定义
-    const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.user));
+    const cardA1 = await card_A1(PanelGenerate.user2CardA1(data.user));
     svg = setSvgBody(svg, 40, 40, cardA1, reg_main);
 
     let string_body = ''
 
     // K 定义，或是 A1
     if (is_vs) {
-        const cardA1 = await card_A1(await PanelGenerate.user2CardA1(data.vs_user));
+        const cardA1 = await card_A1(PanelGenerate.user2CardA1(data.vs_user));
         svg = setSvgBody(svg, 1920 - 470, 40, cardA1, reg_main);
     } else {
         const card_Ks = []
