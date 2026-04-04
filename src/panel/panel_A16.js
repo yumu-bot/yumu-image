@@ -47,7 +47,7 @@ export async function panel_A16(data = {
     "max_page": 1,
 }) {
     // 导入模板
-    let svg = readTemplate('template/panel_A3.svg');
+    let svg = readTemplate('template/Panel_A3.svg');
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
