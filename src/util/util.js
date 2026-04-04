@@ -526,12 +526,9 @@ function readFileWithCache(filePath, options = 'binary', expire = 24 * 60 * 60 *
     }
 
     const content = data.toString();
-    if (!content.includes('<svg')) {
-        console.error(`[Worker ${process.pid}] 检测到非SVG内容: ${filePath}`);
-    }
 
     try {
-        fileCache.set(filePath, data, expire);
+        fileCache.set(filePath, content, expire);
     } catch (e) {
         console.log(`保存缓存文件出现错误: ${e}`)
     }
