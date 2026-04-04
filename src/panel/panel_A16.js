@@ -77,10 +77,10 @@ export async function panel_A16(data = {
 
         let compare_score;
 
-        const is_legacy = s0.legacy_total_score > 0
+        const is_legacy = s.legacy_total_score > 0
 
         if (is_legacy) {
-            const l = s0.legacy_total_score ?? s0.total_score
+            const l = s0.legacy_total_score
 
             if (l > 0) {
                 compare_score = l
