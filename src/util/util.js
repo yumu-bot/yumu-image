@@ -512,17 +512,24 @@ const fileCache = new FileCache();
 
 // 缓存文件读取结果
 function readFileWithCache(filePath, options = 'binary', expire = 24 * 60 * 60 * 1000) {
-    // 先检查缓存
-    console.log("Full Path:", path.resolve(filePath))
+
     const cached = fileCache.get(filePath);
     if (cached) {
         return cached;
     }
 
-    // 缓存不存在，读取文件
-    const data = readFile(filePath, options); // 假设的读取文件函数
+    const data = readFile(filePath, options);
 
-    // 缓存文件内容，设置1小时过期
+    if (!data || data.length < 10) {
+        console.error(`[Worker ${process.pid}] 读取失败或内容过短: ${filePath}`);
+        return ""; // 返回空，让后续逻辑报错更清晰
+    }
+
+    const content = data.toString();
+    if (!content.includes('<svg')) {
+        console.error(`[Worker ${process.pid}] 检测到非SVG内容: ${filePath}`);
+    }
+
     try {
         fileCache.set(filePath, data, expire);
     } catch (e) {
