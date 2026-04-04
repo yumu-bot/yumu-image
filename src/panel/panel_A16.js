@@ -39,6 +39,7 @@ export async function router_svg(req, res) {
  * @return {Promise<string>}
  */
 export async function panel_A16(data = {
+    "user": null,
     "beatmap": {},
     "scores": [],
     "mode": "osu",
