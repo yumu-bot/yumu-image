@@ -2,11 +2,12 @@ import {
     exportJPEG, getPanelHeight,
     getPanelNameSVG,
     setSvgBody, readTemplate,
-    setText, setImage, getMapBackground, getSvgBody, renderInBatch, getNowTimeStamp
+    setText, setImage, getMapBackground, getSvgBody, renderInBatch, getNowTimeStamp, setTexts
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A4} from "../card/card_A4.js";
+import {torusBold} from "../util/font.js";
 
 export async function router(req, res) {
     try {
@@ -136,7 +137,11 @@ export async function panel_A16(data = {
         return getSvgBody(x, y, a4);
     }).join('\n');
 
-    svg = setText(svg, string_a4s, reg_list_n1)
+    const page = torusBold.getTextPath(
+        'page: ' + (data.page || 0) + ' of ' + (data.max_page || 0), 1920 / 2, panel_height - 15, 20, 'center baseline', '#fff', 0.6
+    )
+
+    svg = setTexts(svg, [string_a4s, page], reg_list_n1)
 
     return svg;
 }
