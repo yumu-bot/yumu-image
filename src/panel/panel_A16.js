@@ -2,7 +2,7 @@ import {
     exportJPEG, getPanelHeight,
     getPanelNameSVG,
     setSvgBody, readTemplate,
-    setText, setImage, getMapBackground, getSvgBody, renderInBatch
+    setText, setImage, getMapBackground, getSvgBody, renderInBatch, getNowTimeStamp
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -11,7 +11,7 @@ import {card_A4} from "../card/card_A4.js";
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_A3(data);
+        const svg = await panel_A16(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -23,7 +23,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_A3(data);
+        const svg = await panel_A16(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -34,21 +34,20 @@ export async function router_svg(req, res) {
 }
 
 /**
- * rank图 单图成绩排行
+ * 群内成绩排行
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_A3(data = {
-    "user": null,
+export async function panel_A16(data = {
     "beatmap": {},
     "scores": [],
-    "start": 1,
-    "is_legacy": false,
+    "mode": "osu",
+    "group": 10086,
+    "page": 1,
+    "max_page": 1,
 }) {
     // 导入模板
-    let svg = readTemplate('template/Panel_A3.svg');
-
-    const is_legacy = data?.is_legacy || false
+    let svg = readTemplate('template/panel_A3.svg');
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
@@ -60,16 +59,10 @@ export async function panel_A3(data = {
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PA3-1\);">)/;
 
     // 面板文字
-    let panel_name
 
-    if (is_legacy) {
-        panel_name = getPanelNameSVG('Legacy Leader Board (!ymll)', 'LL')
-    } else {
-        panel_name = getPanelNameSVG('Leader Board (!yml)', 'L')
-    }
-
+    const request_time = 'groupID: ' + (data.group ?? 'unknown') + ' // request time: ' + getNowTimeStamp()
     // 插入文字
-    svg = setText(svg, panel_name, reg_index);
+    svg = setText(svg, getPanelNameSVG('Group Leader Board (!ymlg)', 'LG', request_time), reg_index, );
 
     /**
      * @type {number}
@@ -83,8 +76,11 @@ export async function panel_A3(data = {
         const s = ss[i]
 
         let compare_score;
+
+        const is_legacy = s0.legacy_total_score > 0
+
         if (is_legacy) {
-            const l = s0.legacy_total_score
+            const l = s0.legacy_total_score ?? s0.total_score
 
             if (l > 0) {
                 compare_score = l
@@ -98,13 +94,14 @@ export async function panel_A3(data = {
         const promise_a4 = card_A4({
             bind: bind,
             score: s,
-            score_rank: (i + (data?.start ?? 1)) ?? 0,
+            score_rank: (i + ((data?.page ?? 1) - 1) * 50 + 1) ?? 1,
             compare_score: compare_score,
             is_legacy: is_legacy
         })
 
         promise_a4s.push(promise_a4);
     }
+
 
     // 导入N1卡
     // 导入A2卡

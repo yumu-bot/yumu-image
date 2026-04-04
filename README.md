@@ -42,6 +42,7 @@ npm start 也行。
   - A13: 探索谱面 E
   - A14: 玩家谱面 E
   - A15: 顶流成绩 TP
+  - A16: 群内榜单 LG
 - B: PPM 评分系统 PM
   - B1: PP- PM/PV
   - B2: 骂娘谱面解析 MM
@@ -54,7 +55,7 @@ npm start 也行。
   - D3 新版个人信息 I
 - E: 
   - E5: 新成绩 B/P/R/S
-  - E6: 谱面信息 M
+  - ~~E6: 谱面信息 M~~
   - E7: 对局当前谱面 ST
   - E10: 封面成绩 BW/PW/RW/SW
 - F: 比赛监控 MN

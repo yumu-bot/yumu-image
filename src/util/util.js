@@ -368,13 +368,14 @@ export const getOrNull = (result) => {
 
 /**
  * 批量渲染工具函数
- * @param {Object|String} first - 第一项的数据参数
- * @param {Array} remains - 剩余项的数据参数数组
- * @param {Function} renderFn - 渲染函数，接收参数并返回 Promise
- * @param {Function} renderFn2 - 渲染函数2，如果不填则默认使用 renderFn
- * @param {String} firstFallback - 第一项失败时的默认值
- * @param {String} remainFallback - 剩余项失败时的默认值
- * @return {Promise<[string, string[]]>} 两项，第一个是第一项的结果，第二个是数组，剩余项的结果
+ * @template T, U, R, S
+ * @param {T} first - 第一项的数据参数
+ * @param {U[]} remains - 剩余项的数据参数数组
+ * @param {(data: T) => Promise<R>} renderFn - 渲染函数
+ * @param {(data: U) => Promise<S>} [renderFn2=renderFn] - 渲染函数2
+ * @param {R} [firstFallback] - 第一项失败时的默认值
+ * @param {S} [remainFallback] - 剩余项失败时的默认值
+ * @returns {Promise<[R, S[]]>} 返回一个元组：[第一项结果, 剩余项结果数组]
  */
 export const renderInBatch = async (
     first,
@@ -2022,6 +2023,7 @@ function fixed(i) {
 
 export async function getFlagSvg(code = "cn") {
     code = code.toUpperCase();
+
     let flag;
     let path = `${FLAG_PATH}/${code}`;
     try {
@@ -2048,7 +2050,7 @@ export async function getFlagSvg(code = "cn") {
 }
 
 export async function getFlagPath(code = "cn" || null, x, y, h = 30) {
-    if (typeof code != 'string') return '';
+    if (typeof code != 'string' || isEmptyString(code)) return '';
 
     //避免腾讯封掉青天白日旗
     if (code.toLowerCase() === "tw") {
