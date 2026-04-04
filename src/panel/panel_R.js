@@ -338,19 +338,31 @@ const component_R2 = (host_name, avatar, genre_id, language_id, source = '', tag
 
     const tags_title = PanelDraw.Shadow(poppinsBold.getTextPath('Tags', 295, 535, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
 
-    let tags_font
-    let tags_size
+    // 1. 默认先尝试使用 PoppinsBold (20号) 进行裁切
+    let currentFont = poppinsBold;
+    let currentSize = 20;
 
-    if (isASCII(tags)) {
-        tags_font = poppinsBold
-        tags_size = 20
-    } else {
-        tags_font = PuHuiTi
-        tags_size = 18
+    let str1 = currentFont.cutStringTail(tags, currentSize, 445, false);
+    let rest = tags?.substring(str1.length) || "";
+    let str2 = currentFont.cutStringTail(rest, currentSize, 445, true);
+
+    // 2. 检查裁切出的两个字符串是否包含非 ASCII 字符
+    // 如果其中任何一段不是纯英文/符号，则全量切换到 PuHuiTi
+    if (!isASCII(str1) || !isASCII(str2)) {
+        currentFont = PuHuiTi;
+        currentSize = 18;
+
+        // 3. 使用中文字体重新裁切
+        str1 = currentFont.cutStringTail(tags, currentSize, 445, false);
+        rest = tags?.substring(str1.length)?.trimStart() || "";
+        str2 = currentFont.cutStringTail(rest, currentSize, 445, true);
     }
 
-    const tags_string1 = tags_font.cutStringTail(tags, tags_size, 445, false)
-    const tags_string2 = tags_font.cutStringTail(tags?.substring(tags_string1.length), tags_size, 445, true)
+    // 最终使用的变量
+    const tags_font = currentFont;
+    const tags_size = currentSize;
+    const tags_string1 = str1;
+    const tags_string2 = str2;
 
     const tags_text = PanelDraw.Shadow(tags_font.getTextPath(tags_string1, 295, 565, tags_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719') + PanelDraw.Shadow(tags_font.getTextPath(tags_string2, 295, 595, tags_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719')
 
