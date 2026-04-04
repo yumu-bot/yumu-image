@@ -3,7 +3,7 @@ import {getMultipleTextPath, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiDXStarColor} from "../util/maimai.js";
 import {drawLazerMods} from "../util/mod.js";
-import {colorArray, PanelColor} from "../util/color.js";
+import {colorArray} from "../util/color.js";
 
 // 【优化2】将纯静态的 SVG 头部/定义提取到函数外部，避免每次调用重复创建字符串
 const SVG_DEFS = `
@@ -104,7 +104,7 @@ export function card_I4(data = {}) {
     const stars_path = drawStars(level);
 
     const background_rrect = PanelDraw.LinearGradientRect(
-        0, 0, 350, 130, 20, color_backgrounds, 0.4, [80, 20], [100, 0]
+        0, 0, 350, 130, 20, color_backgrounds, 0.4, [20, 80], [0, 100]
     )
 
     return `
