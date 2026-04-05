@@ -64,7 +64,7 @@ export async function panel_A16(data = {
 
     const request_time = 'groupID: ' + (data.group ?? 'unknown') + ' // request time: ' + getNowTimeStamp()
     // 插入文字
-    svg = setText(svg, getPanelNameSVG('Group Leader Board (!ymgl)', 'GL', request_time), reg_index, );
+    svg = setText(svg, getPanelNameSVG('Group Leader Board (!ymgl)', 'GL', request_time), reg_index);
 
     /**
      * @type {number}

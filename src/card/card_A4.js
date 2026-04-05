@@ -214,7 +214,7 @@ export async function card_A4(data = {
     const stat_full_width = 325;
 
     const stat_arr = getStatArr(data.score, data.score.ruleset_id);
-    const stat_width_arr = getStatWidthArr(data?.score?.total_hit || 0, stat_arr, stat_min_width, stat_full_width, stat_interval);
+    const stat_width_arr = getStatWidthArr(data?.score?.total_hit ?? 0, data?.score?.passed, stat_arr, stat_min_width, stat_full_width, stat_interval);
     const stat_color_arr = getStatColorArr(data.score.ruleset_id);
 
     let width_sum = 0;
@@ -257,11 +257,18 @@ export async function card_A4(data = {
     return svg
 }
 
-function getStatWidthArr(stat_sum = 1, stat_arr = [], minWidth = 10, fullWidth = 325, interval = 5) {
+function getStatWidthArr(stat_sum = 1, passed = true, stat_arr = [], minWidth = 10, fullWidth = 325, interval = 5) {
     let stat_width_arr = [];
     let remain_width = fullWidth;
     let remain_width_calc;
+
+    if (passed) {
+        stat_sum = stat_arr.reduce((a, b) => a + b, 0);
+    }
+
     let stat_sum_calc = stat_sum;
+
+
 
     if (stat_sum > 0) {
 
