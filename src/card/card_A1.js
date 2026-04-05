@@ -104,7 +104,7 @@ export async function card_A1(data = {}) {
     svg = setText(svg, flag_svg, reg.country);
 
     // 合并文本替换，修复原代码的二次覆盖问题
-    svg = setTexts(svg, [paths.t1, paths.t2, paths.l1_base, paths.l1_top, paths.l2, paths.r1, paths.r2, paths.r3], reg.text);
+    svg = setTexts(svg, [paths.t1, paths.t2, paths.l1_top, paths.l1_base, paths.l2, paths.r1, paths.r2, paths.r3], reg.text);
 
     // 图片替换
     svg = setImage(svg, 0, 0, 430, 210, backgrounds, reg.bg, 0.6);
