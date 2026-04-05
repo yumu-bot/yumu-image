@@ -31,7 +31,7 @@ export async function card_A1(data = {}) {
         right3b = '',
         right3m = '',
         left1_stroke = '',
-        left1_stroke_width = 1
+        left1_stroke_width = 0
     } = data;
 
     let svg = readTemplate('template/Card_A1.svg');
