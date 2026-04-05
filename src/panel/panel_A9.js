@@ -185,8 +185,6 @@ export async function panel_A9(data = {
         svg = (markdown.length > 0) ? setImage(svg, 510, 320, 1410, Math.min(Math.round(alpha.height * 1410 / 1370), 240), alpha.image, reg_des, 1, 'xMidYMin slice') : svg
     }
 
-    svg = setImage(svg, 0, 290, 510, 290, getImageFromV3('backlight-golden.png'), reg_body, 1)
-
 
     // 队长
     const paramA1 = PanelGenerate.microTeamMember2CardA1(leader, true)
@@ -202,6 +200,8 @@ export async function panel_A9(data = {
     )
 
     svg = setSvgBody(svg, 40, 330, leaderA1, reg_body)
+
+    svg = setImage(svg, 0, 290, 510, 290, getImageFromV3('backlight-golden.png'), reg_body, 1)
 
     let stringA1s = ''
     let imageA1s = ''

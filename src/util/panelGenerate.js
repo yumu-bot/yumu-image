@@ -265,6 +265,7 @@ export const PanelGenerate = {
             right1: right1,
             right2: right2,
             right3m: right3m,
+            right3b: '',
         }
     },
 
