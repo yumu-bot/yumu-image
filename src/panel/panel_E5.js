@@ -262,7 +262,7 @@ export async function panel_E5(data = {
         original = {},
         attributes = {},
         position = 0,
-        panel: panelType
+        panel: panel_type
     } = data;
 
     const {ended_at, started_at, legacy_rank: rank, passed, is_lazer, type: scoreType} = score;
@@ -275,8 +275,12 @@ export async function panel_E5(data = {
     const score_time = getFormattedTime(timeBase);
     const delta_time = getTimeDifference(timeBase);
 
-    let request_info = (position > 0 && !(position === 1 && (panelType === 'P' || panelType === 'R'))) ? `position: #${position} // ` : '';
-    request_info += `score time: ${score_time} (${delta_time}) // request time: ${getNowTimeStamp()}`;
+    const best_info = (panel_type === 'P' || panel_type === 'R') && data?.score?.type?.toString().includes('best') ?
+        'New Best!! // ' : ''
+
+    const request_info = (position > 0 && !(position === 1 && (panel_type === 'P' || panel_type === 'R'))) ? `position: #${position} // ` : '';
+
+    const request_time = `score time: ${score_time} (${delta_time}) // request time: ${getNowTimeStamp()}`;
 
     // 4. 面板名称映射表 (取代 switch)
     const panelNameMap = {
@@ -289,12 +293,12 @@ export async function panel_E5(data = {
     };
 
     let panel_name_svg;
-    if (panelType === 'MR') {
+    if (panel_type === 'MR') {
         const mrTime = `matchID: ${data.match || 0} // request time: ${getNowTimeStamp()}`;
         panel_name_svg = getPanelNameSVG('Match Recent Score (!ymmr)', 'MR', mrTime);
     } else {
-        const [title, sign] = panelNameMap[panelType] || ['Excellent Score (!ymp / !ymr / !yms)', 'S'];
-        panel_name_svg = getPanelNameSVG(title, sign, request_info);
+        const [title, sign] = panelNameMap[panel_type] || ['Excellent Score (!ymp / !ymr / !yms)', 'S'];
+        panel_name_svg = getPanelNameSVG(title, sign, best_info + request_info + request_time);
     }
 
     // 5. 并行生成复杂的卡片内容
@@ -856,10 +860,12 @@ const component_E9 = (data = {
     const title = poppinsBold.getTextPath('Accuracy', 15, 28, 18, 'left baseline', '#fff');
     const title2 = poppinsBold.getTextPath('Combo', 15, 98, 18, 'left baseline', '#fff');
 
+    const acc = floors((data?.accuracy || 0) * 100, 2)
+
     const accuracy = getMultipleTextPath([{
-        font: 'poppinsBold', text: floors((data?.accuracy || 0) * 100, 2).integer, size: 60,
+        font: 'poppinsBold', text: acc.integer, size: 60,
     }, {
-        font: 'poppinsBold', text: floors((data?.accuracy || 0) * 100, 2).decimal + ' %', size: 36
+        font: 'poppinsBold', text: acc.decimal + ' %', size: 36
     }], 470, 62, 'right baseline')
 
     const combo = getMultipleTextPath([{
