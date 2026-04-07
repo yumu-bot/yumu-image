@@ -209,8 +209,8 @@ export async function panel_B3(data = {
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
     const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PB-1\);">)/;
-    const reg_left = /(?<=<g id="Left">)/;
-    const reg_right = /(?<=<g id="Right">)/;
+    //const reg_left = /(?<=<g id="Left">)/;
+    //const reg_right = /(?<=<g id="Right">)/;
     const reg_center = /(?<=<g id="Center">)/;
     const reg_maincard = /(?<=<g id="MainCard">)/;
     const reg_hexagon = /(?<=<g id="HexagonChart">)/;
@@ -305,7 +305,7 @@ export async function panel_B3(data = {
 
             if (my?.combo > 0) {
                 // 这个是小时
-                request_time = getTimeByDHMS(my?.combo * 60);
+                request_time = 'compare to: ' + getTimeByDHMS(my?.combo * 60 * 60) + ' // request time: ' + getNowTimeStamp()
             } else {
                 request_time = 'request time: ' + getNowTimeStamp()
             }
@@ -319,8 +319,8 @@ export async function panel_B3(data = {
             const value_o1 = my?.performance?.aim;
             //const rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
 
-            const level_o1 = my?.advanced_stats?.index[my?.advanced_stats?.index.length - 1] || 0;
-            const rank_o1 = getRoman(level_o1)
+            //const level_o1 = my?.advanced_stats?.index[my?.advanced_stats?.index.length - 1] || 0;
+            //const rank_o1 = getRoman(level_o1)
 
             const fake_rank_o1 = getRankFromValue(value_o1, [6900, 4900, 3800, 3075, 2525, 1975, 1700, 1300]);
             const icon_colors_o1 = getRankColors(fake_rank_o1);
@@ -337,7 +337,7 @@ export async function panel_B3(data = {
             const value_o2 = my?.performance?.total;
             const level_o2 = my?.advanced_stats?.advanced;
 
-            const rank_o2 = getRoman(level_o2);
+            //const rank_o2 = getRoman(level_o2);
             const fake_rank_o2 = getRankFromValue(level_o2, LV_BOUNDARY);
             const icon_colors_o2 = getRankColors(fake_rank_o2);
 
