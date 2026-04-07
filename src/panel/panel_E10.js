@@ -224,7 +224,7 @@ export async function panel_E10(data = {
             ratings: [Array],
             mappers: [],
             nominators: [],
-            public_rating: 0,
+            rating: 0,
             bpm: 185,
             sid: 1844042,
             artist_unicode: '坏枪',
@@ -990,7 +990,7 @@ const PanelEGenerate = {
     beatmap2componentE3: (beatmap) => {
         return {
             status: beatmap?.status || 'graveyard',
-            rating: beatmap?.beatmapset?.public_rating || 0.0,
+            rating: beatmap?.beatmapset?.rating || 0.0,
         }
     },
 

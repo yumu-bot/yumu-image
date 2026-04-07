@@ -150,7 +150,7 @@ export async function panel_E7(
                 availability: [Object],
                 has_leader_board: true,
                 preview_name: 'Gom (HoneyWorks) - Zen Zen Zense (Antalf) [571547]',
-                public_rating: 9.110088070456365
+                rating: 9.110088070456365
             },
             checksum: '8e39df437bb3de2764ff0a5d1b300b18',
             failtimes: { fail: [Array], exit: [Array] },
@@ -415,7 +415,7 @@ const component_E2 = (
         retry_arr: [],
         fail_arr: [],
 
-        public_rating: 0,
+        rating: 0,
         star: 0,
 
         pass: 0,
@@ -434,7 +434,7 @@ const component_E2 = (
 
     const pass_percent = data?.play > 0 ? Math.round(data?.pass / data?.play * 100) : 0;
 
-    const public_rating = poppinsBold.getTextPath(floor(data?.public_rating, 1) + ' / 10', 475, 28, 18, 'right baseline', '#fff');
+    const rating = poppinsBold.getTextPath(floor(data?.rating, 1) + ' / 10', 475, 28, 18, 'right baseline', '#fff');
     const percent = poppinsBold.getTextPath(data?.pass + ' / ' + data?.play + ' [' + pass_percent + '%]', 475, 138, 18, 'right baseline', '#fff');
 
 
@@ -464,7 +464,7 @@ const component_E2 = (
     const fail = PanelDraw.BarChart(data.fail_arr, rf_max, 0,
         15, 235, 460, 80, 2, 0, '#ed6c9e');
 
-    svg += (density + retry + fail + title1 + title2 + public_rating + percent);
+    svg += (density + retry + fail + title1 + title2 + rating + percent);
 
     return svg;
 };
@@ -873,7 +873,7 @@ const PanelEGenerate = {
 
             star: b?.difficulty_rating || 0,
 
-            public_rating: b?.beatmapset?.public_rating,
+            rating: b?.beatmapset?.rating,
 
             pass: b?.passcount || 0,
             play: b?.playcount || 0,

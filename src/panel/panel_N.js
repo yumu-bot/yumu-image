@@ -108,12 +108,12 @@ export async function panel_N(
     // 插入8号卡标签
     const pack_tags = data?.beatmapset?.pack_tags || []
 
-    const stat_str = '(?) Not Solved ' + (data?.more?.not_solved_count || 0)
-        + ' // (!) Problem ' + (data?.more?.problem_count || 0)
-        + ' // ( ) Suggestion ' + (data?.more?.suggest_count || 0)
-        + ' // (*) Praise ' + (data?.more?.praise_count || 0)
-        + ' // Pack ' + (pack_tags[0] || "null")
-        + ' // Rate ' + floor(data?.beatmapset?.public_rating, 1);
+    const stat_str = '(?) Not Solved: ' + (data?.more?.not_solved_count || 0)
+        + ' // (!) Problem: ' + (data?.more?.problem_count || 0)
+        + ' // ( ) Suggestion: ' + (data?.more?.suggest_count || 0)
+        + ' // (*) Praise: ' + (data?.more?.praise_count || 0)
+        + ' // Pack: ' + (pack_tags[0] || "none")
+        + ' // User Rating: ' + floor(data?.beatmapset?.rating, 1);
 
     const stat = torus.getTextPath(stat_str, 1570, 645, 18, 'right baseline', '#aaa');
 

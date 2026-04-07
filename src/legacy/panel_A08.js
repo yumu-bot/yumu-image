@@ -78,7 +78,7 @@ export async function panel_A08(
             pack_tags: [Array],
             has_leader_board: true,
             top_diff: [Object],
-            public_rating: 0,
+            rating: 0,
             preview_name: 'Seiryu - Critical Crystal (SanadaYukimura) [376340]'
         },],
         total: 2715,

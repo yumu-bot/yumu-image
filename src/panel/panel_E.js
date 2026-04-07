@@ -395,7 +395,7 @@ async function score2CardE3(score, calcPP) {
         retry_arr: score.beatmap.retries || [],
         fail_arr: score.beatmap.fails || [],
 
-        public_rating: score?.beatmap?.beatmapset?.public_rating, // || score2PublicRating(score),
+        rating: score?.beatmap?.beatmapset?.rating, // || score2PublicRating(score),
         pass_percent: pass_arr[0],
         retry_percent: pass_arr[1],
         fail_percent: pass_arr[2],

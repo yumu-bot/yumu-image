@@ -223,7 +223,7 @@ export async function panel_E5(data = {
             ratings: [Array],
             mappers: [],
             nominators: [],
-            public_rating: 0,
+            rating: 0,
             bpm: 185,
             sid: 1844042,
             artist_unicode: '坏枪',
@@ -420,7 +420,7 @@ const component_E1 = (data = {
 const component_E2 = (data = {}) => {
     const {
         density_arr = [], retry_arr = [], fail_arr = [],
-        public_rating = 0, star = 0, pass = 0, play = 0, progress = 1, color = '#fff'
+        rating = 0, star = 0, pass = 0, play = 0, progress = 1, color = '#fff'
     } = data;
 
     const pass_percent = play > 0 ? Math.round(pass / play * 100) : 0;
@@ -441,7 +441,7 @@ const component_E2 = (data = {}) => {
         ${PanelDraw.Rect(0, 0, 490, 250, 20, '#382e32')}
         ${poppinsBold.getTextPath('Density', 15, 28, 18, 'left baseline', '#fff')}
         ${poppinsBold.getTextPath('Retry & Fail', 15, 138, 18, 'left baseline', '#fff')}
-        ${poppinsBold.getTextPath(`User Rating: ${floor(public_rating, 1)} / 10`, 475, 28, 18, 'right baseline', '#fff')}
+        ${poppinsBold.getTextPath(`User Rating: ${floor(rating, 1)} / 10`, 475, 28, 18, 'right baseline', '#fff')}
         ${poppinsBold.getTextPath(`Pass: ${pass} / ${play} [${pass_percent}%]`, 475, 138, 18, 'right baseline', '#fff')}
         ${PanelDraw.LineChart(density_arr, density_max, 0, 15, 115, 460, 80, color, 1, 0.4, 3)}
         ${progress < 1 ? PanelDraw.Rect(20 + (457 * progress) + 1.5, 35, 3, 80, 1.5, '#ed6c9e') : ''}
@@ -958,7 +958,7 @@ const PanelEGenerate = {
 
             star: score?.beatmap?.difficulty_rating || 0,
 
-            public_rating: score?.beatmap?.beatmapset?.public_rating,
+            rating: score?.beatmap?.beatmapset?.rating,
 
             pass: score?.beatmap?.passcount || 0, play: score?.beatmap?.playcount || 0, progress: progress,
 

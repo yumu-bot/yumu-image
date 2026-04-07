@@ -11,7 +11,7 @@ export async function component_E3(data = {
     retry_arr: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 18, 360, 396, 234, 45, 81, 54, 63, 90, 153, 135, 36, 9, 63, 54, 36, 144, 54, 9, 9, 36, 18, 45, 45, 36, 108, 63, 9, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 27, 0, 18, 0, 0, 0, 18, 18, 18, 0, 0, 0, 9, 18, 9, 0, 9, 9, 0, 9, 0, 9, 18, 9, 0, 0, 27, 0, 0, 0, 0, 27, 9, 9, 0, 9, 9, 0, 0, 0, 9, 0, 0, 9, 9, 0, 9],
     fail_arr: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 54, 9, 36, 27, 9, 18, 0, 0, 18, 18, 45, 27, 27, 18, 90, 36, 18, 36, 0, 18, 45, 36, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 45, 27, 9, 0, 18, 90, 9, 0, 0, 9, 9, 9, 27, 0, 9, 27, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 9, 0, 9, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 0],
 
-    public_rating: 9.42,
+    rating: 9.42,
     pass_percent: 56,
     retry_percent: 42,
     fail_percent: 2,
@@ -58,8 +58,8 @@ export async function component_E3(data = {
     // 文字定义
     const density = torus.getTextPath("Density", 20, 32.88, 18, "left baseline", "#aaa");
     const retry_fail = torus.getTextPath("Retry // Fail", 20, 152.63, 18, "left baseline", "#aaa");
-    const public_rating = torus.getTextPath(
-        'Popular Vote: ' + floor(data.public_rating, 1) + ' / 10', 540, 32.88, 18, "right baseline", "#aaa");
+    const rating = torus.getTextPath(
+        'User Rating: ' + floor(data.rating, 1) + ' / 10', 540, 32.88, 18, "right baseline", "#aaa");
     const percent = torus.getTextPath( "P "
         + data.pass_percent
         + "% // R "
@@ -70,7 +70,7 @@ export async function component_E3(data = {
         540, 152.63, 18, "right baseline", "#aaa");
 
     // 导入文字
-    svg = setTexts(svg, [density, retry_fail, public_rating, percent], reg_text);
+    svg = setTexts(svg, [density, retry_fail, rating, percent], reg_text);
 
     // 部件定义
     // 评级或难度分布矩形的缩放，SR1为0.1倍，SR8为1倍

@@ -106,7 +106,7 @@ export async function panel_B3(data = {
             ratings: [Array],
             mappers: [],
             nominators: [],
-            public_rating: 9.444444444444443,
+            rating: 9.444444444444443,
             bpm: 162,
             sid: 1087774,
             artist_unicode: '汪睿',

@@ -225,7 +225,7 @@ export async function panel_Eta3(data = {
             ratings: [Array],
             mappers: [],
             nominators: [],
-            public_rating: 0,
+            rating: 0,
             bpm: 185,
             sid: 1844042,
             artist_unicode: '坏枪',
