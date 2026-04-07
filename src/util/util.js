@@ -55,12 +55,14 @@ export async function getBrowserInstance() {
 
         if (b.isConnected()) {
             const pages = await b.pages();
-            if (pages.length > 10) {
-                console.warn(`检测到异常页面数: ${pages.length}，正在强制清理...`);
 
-                await pages.forEach((p) => {
-                    p.close().catch(e => console.error('关闭页面失败:', e));
-                })
+            const contexts = b.browserContexts();
+
+            if (contexts.length > 50) {
+                console.warn(`正在清理最旧的非默认的 Context: ${pages.length}`);
+                for (let i = 1; i < contexts.length - 5; i++) {
+                    await contexts[i].close();
+                }
             }
 
             return b;
@@ -828,6 +830,7 @@ export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePa
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
             fs.writeFileSync(bufferPath, imageBuffer);
+            console.warn(`下图成功，已存储到：${bufferPath}`);
             return bufferPath;
         }
 
