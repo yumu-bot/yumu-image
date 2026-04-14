@@ -148,23 +148,22 @@ export function isMaimaiMaximumRating(ra = 0, ds = 0) {
     return ra > 0 && ra >= getMaimaiMaximumRating(ds)
 }
 
+export function getMaimaiRatingPlate(rating = 0) {
+    const thresholds = [1000, 2000, 4000, 7000, 10000, 12000, 13000, 14000, 14500, 15000, 16000];
+    const index = thresholds.findIndex(t => rating < t);
+    const background = index === -1 ? '11' : String(index + 1).padStart(2, '0');
+
+    return getImageFromV3('Maimai', 'UI', `UI_CMN_DXRating_${background}.png`);
+}
+
 export function getMaimaiRatingBG(rating = 0) {
-    let background;
+    const thresholds = [1000, 2000, 4000, 7000, 10000, 12000, 13000, 14000, 14500, 15000, 16000];
+    const backgrounds = ['F', 'B', 'A', 'SP', 'D', 'C', 'S', 'SH', 'X', 'XH', 'PF', 'PP'];
 
-    if (rating < 1000) background = 'object-score-backimage-F.jpg'
-    else if (rating < 2000) background = 'object-score-backimage-B.jpg'
-    else if (rating < 4000) background = 'object-score-backimage-A.jpg'
-    else if (rating < 7000) background = 'object-score-backimage-SP.jpg'
-    else if (rating < 10000) background = 'object-score-backimage-D.jpg'
-    else if (rating < 12000) background = 'object-score-backimage-C.jpg'
-    else if (rating < 13000) background = 'object-score-backimage-S.jpg'
-    else if (rating < 14000) background = 'object-score-backimage-SH.jpg'
-    else if (rating < 14500) background = 'object-score-backimage-X.jpg'
-    else if (rating < 15000) background = 'object-score-backimage-XH.jpg'
-    else if (rating < 16000) background = 'object-score-backimage-PF.jpg'
-    else background = 'object-score-backimage-PP.jpg'
+    const index = thresholds.findIndex(t => rating < t);
+    const suffix = index === -1 ? 'PP' : backgrounds[index];
 
-    return getImageFromV3(background);
+    return getImageFromV3(`object-score-backimage-${suffix}.jpg`);
 }
 
 export function getMaimaiType(type = '') {
