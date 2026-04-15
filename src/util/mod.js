@@ -60,6 +60,7 @@ const ModBonusSTD = {
     "NC": 1.1,
     "RX": 0.1,
     "FL": 1.12,
+    "BL": 1.12,
     "SO": 0.9,
     "TP": 0.1,
     "DA": 0.5,

@@ -1205,10 +1205,14 @@ const PanelEGenerate = {
 
         let rainbow_rating
 
-        if (score.type === 'sb_score') {
+        if (score.type === 'sb_score' || !score.is_lazer) {
             // 对于 sb 服的分数，这里近似处理
 
-            rainbow_rating = (250000 * (score?.max_combo || 0) / (score?.beatmap?.max_combo || 1) + 750000 * Math.pow(score?.accuracy || 0, 3.6)) / 1000000
+            const max_combo = Math.max(score?.beatmap?.max_combo ?? (score.max_statistics.great) ?? (score?.statistics?.great + score?.statistics?.ok + score?.statistics?.miss), 1)
+
+            const combo_rate = Math.min(Math.max((score?.max_combo || 0) / max_combo, 0), 1)
+
+            rainbow_rating = (250000 * combo_rate + 750000 * Math.pow(score?.accuracy || 0, 3.6)) / 1000000 + (score?.statistics?.large_bonus ?? 0) * 300
         } else {
             rainbow_rating = (score?.total_score_without_mods > 0) ? (score.total_score_without_mods / 1000000) : (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods ?? [], score?.ruleset_id || 0))
         }
