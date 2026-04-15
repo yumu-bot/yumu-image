@@ -1212,7 +1212,7 @@ const PanelEGenerate = {
 
             const combo_rate = Math.min(Math.max((score?.max_combo || 0) / max_combo, 0), 1)
 
-            rainbow_rating = (250000 * combo_rate + 750000 * Math.pow(score?.accuracy || 0, 3.6)) / 1000000 + (score?.statistics?.large_bonus ?? 0) * 300
+            rainbow_rating = (250000 * combo_rate + 750000 * Math.pow(score?.accuracy || 0, 3.6) + (score?.statistics?.large_bonus ?? 0) * 300) / 1000000
         } else {
             rainbow_rating = (score?.total_score_without_mods > 0) ? (score.total_score_without_mods / 1000000) : (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods ?? [], score?.ruleset_id || 0))
         }
