@@ -1121,16 +1121,33 @@ const PanelEGenerate = {
 
         const is_fc = (score?.max_combo / score?.beatmap?.max_combo) > 0.98 || mode === 'm' || mode === 't'
 
+        /**
+         * C osu 的格式为：
+         * {
+         *   full_pp: 436.8850836253081,
+         *   perfect_pp: 438.52808146035187,
+         *   accuracy: 119.249566408264,
+         *   aim: 261.21521780947194,
+         *   aim_estimated_slider_breaks: 0,
+         *   combo_based_estimated_miss_count: 0,
+         *   effective_miss_count: 0,
+         *   flashlight: 0,
+         *   pp: 436.8850836253081,
+         *   speed: 32.89129279108264,
+         *   speed_deviation: 9.067807610428012,
+         *   speed_estimated_slider_breaks: 0
+         * }
+         */
         return {
             pp: score?.pp || 0,
             full_pp: attr?.full_pp || 0,
             perfect_pp: attr?.perfect_pp || 0,
 
-            aim_pp: attr?.pp_aim || 0,
-            spd_pp: attr?.pp_speed || 0,
-            acc_pp: attr?.pp_acc || 0,
-            fl_pp: attr?.pp_flashlight || 0,
-            diff_pp: attr?.pp_difficulty || 0,
+            aim_pp: attr?.pp_aim ?? attr?.aim ?? 0,
+            spd_pp: attr?.pp_speed ?? attr?.speed ?? 0,
+            acc_pp: attr?.pp_acc ?? attr?.accuracy ?? 0,
+            fl_pp: attr?.pp_flashlight ?? attr?.flashlight ?? 0,
+            diff_pp: attr?.pp_difficulty ?? (mode === 't' ? Math.max((attr?.pp - attr?.accuracy ?? 0), 0) : 0) ?? 0,
 
             is_fc: is_fc,
 
