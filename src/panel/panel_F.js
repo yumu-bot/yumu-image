@@ -104,7 +104,19 @@ export async function panel_F(
 
     // 面板文字
     const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
-    const panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', request_time);
+
+    // 临时的
+    const qp_mode = data?.match?.match?.name?.toString()?.includes("Quick Play Match")
+
+    let panel_name
+
+    if (qp_mode) {
+        panel_name = getPanelNameSVG('Quick Play (!ymqp)', 'QP', request_time);
+    } else {
+        panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', request_time);
+    }
+
+    // const panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', request_time);
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
@@ -227,7 +239,8 @@ async function event2CardF(
     }
 
     async function score2LabelF2(score = {}, easy = 1) {
-        let s = score?.score || score?.legacy_total_score
+        // 如果是 0，则获取 total
+        let s = score?.legacy_total_score || score.total_score
 
         if (matchAnyMods(score?.mods, ["EZ"]) && easy !== 1) {
             s = Math.round(s * easy)
