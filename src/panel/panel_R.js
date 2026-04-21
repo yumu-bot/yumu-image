@@ -757,11 +757,13 @@ const component_R7 = (beatmapset = {
 
         const offset = Math.round(per_height * tan)
 
-        // 后面的 +20 为了让这个难度更加突出
+        // delta +50 为了让这个难度更加突出
+        const delta = 50
+
         if (position > index) {
-            return (position - index) * (20 - offset) + 20
+            return (position - index) * (20 - offset) + delta
         } else if (position < index) {
-            return (index - position) * (15 + offset) + 20
+            return (index - position) * (15 + offset) + delta
         } else {
             return 0
         }
