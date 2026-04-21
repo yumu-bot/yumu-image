@@ -758,7 +758,7 @@ const component_R7 = (beatmapset = {
         const offset = Math.round(per_height * tan)
 
         // delta +50 为了让这个难度更加突出
-        const delta = 50
+        const delta = 100
 
         if (position > index) {
             return (position - index) * (20 - offset) + delta
