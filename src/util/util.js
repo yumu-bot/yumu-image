@@ -14,7 +14,8 @@ import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
 import FileCache from './fileCache.js';
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import {EventEmitter} from 'events';
 
 const VERSION = 'v0.7.6'
@@ -43,6 +44,8 @@ if (process.env.FLAG_PATH != null) {
 } else {
     FLAG_PATH = CACHE_PATH + "/flag";
 }
+
+puppeteer.use(StealthPlugin());
 
 /**
  * @type {Promise<Browser>}
@@ -88,6 +91,8 @@ export async function getBrowserInstance() {
             '--no-zygote',
             '--disable-web-security',
             '--allow-file-access-from-files',
+            '--disable-blink-features=AutomationControlled',
+            '--disable-infobars'
         ]
     }).catch(err => {
         browserPromise = null;
@@ -806,24 +811,43 @@ export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePa
         const browser = await getBrowserInstance();
         page = await browser.newPage();
 
-        // 设置较小的视口减少资源消耗
-        await page.setViewport({ width: 100, height: 100 });
+        await page.setViewport({ width: 800, height: 600 });
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+        await page.setExtraHTTPHeaders({
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
+        });
 
         let imageBuffer = null;
 
-        // 拦截响应
         page.on('response', async (response) => {
-            if (response.url() === url) {
+            // 注意：JS 挑战重定向后，URL 可能会附带查询参数，建议放宽匹配条件
+            if (response.url().includes(url) || url.includes(response.url())) {
                 const contentType = response.headers()['content-type'];
-                // 确保响应是图片格式，避免拿到反爬的 HTML
                 if (contentType && contentType.startsWith('image/')) {
-                    imageBuffer = await response.buffer();
+                    try {
+                        imageBuffer = await response.buffer();
+                    } catch (err) {
+                        // 忽略 buffer 读取错误
+                    }
                 }
             }
         });
 
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+        // 取消 networkidle2，因为 JS 挑战可能会发出大量后台请求导致永远达不到 idle
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+
+        // 如果没有立即拿到图片（说明可能进挑战了），等待一段时间
+        if (!imageBuffer) {
+            try {
+                // 等待页面中出现 img 标签（Chrome 直接打开图片会包裹在 img 标签内）
+                // 或者是给 JS 挑战留出 10 秒钟的自动验证时间
+                await page.waitForSelector('img', { timeout: 10000 });
+                // 此时通常 response 拦截器已经抓到了重定向后的图片
+            } catch (e) {
+                console.warn(`等待 JS 挑战或图片加载超时`);
+            }
+        }
 
         if (imageBuffer) {
             const dir = path.dirname(bufferPath);
@@ -834,7 +858,7 @@ export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePa
             return bufferPath;
         }
 
-        console.warn('捕获失败：可能是因为未通过 JS 挑战或 URL 不匹配');
+        console.warn('捕获失败：仍未通过 JS 挑战或无图片响应');
         return defaultImagePath;
     } catch (e) {
         console.error(`[Puppeteer Error] ${url}:`, e.message);
