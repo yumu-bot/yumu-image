@@ -49,7 +49,27 @@ puppeteer.use(StealthPlugin());
 
 /**
  * @type {Promise<Browser>}
- */let browserPromise = null;
+ */
+let browserPromise = null;
+
+['SIGINT', 'SIGTERM', 'SIGQUIT', 'exit'].forEach(signal => {
+    process.on(signal, async () => {
+        if (browserPromise) {
+            console.log(`[进程清理] 收到 ${signal} 信号，正在关闭后台浏览器...`);
+            await browserPromise.close().catch(() => {});
+            browserPromise = null;
+        }
+        process.exit(0);
+    });
+});
+
+process.on('uncaughtException', async (err) => {
+    console.error('[进程崩溃] 捕获到未处理的异常:', err.message);
+    if (browserPromise) {
+        await browserPromise.close().catch(() => {});
+    }
+    process.exit(1);
+});
 
 export async function getBrowserInstance() {
     // 1. 如果已经有 Promise 了，直接返回（无论它是 pending 还是 resolved）

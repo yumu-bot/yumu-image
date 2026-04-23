@@ -460,7 +460,9 @@ export async function getCHUNITHMCover(song_id = 0) {
     if (fs.existsSync(path)) {
         return path
     } else if (song_id > 0) {
-        return await downloadImageWithPuppeteer(`https://assets2.lxns.net/chunithm/jacket/${song}.png`, path, getImageFromV3('Chunithm', 'Cover', '0.png'))
+        const lxns = `https://assets2.lxns.net/chunithm/jacket/${song}.png`
+
+        return await downloadImageWithPuppeteer(lxns, path, getImageFromV3('Chunithm', 'Cover', '0.png'))
     } else {
         return getImageFromV3('Chunithm', 'Cover', '0.png')
     }
