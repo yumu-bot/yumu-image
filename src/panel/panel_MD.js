@@ -168,9 +168,10 @@ async function maiDistribution2CardI3(dist = {
     const fit_rating = Math.round(dist?.rating || 0)
     const rating = Math.round(dist.score?.ra || 0)
 
-    const too_bright = (dist.score?.level_index || 0) === 4 || (dist.score?.level_index || 0) === 1;
+    const is_utage = dist.score?.level_label?.slice(0, 1) === 'U' || dist.score?.level?.toString().includes('?')
+    const too_bright = Array.of(1, 4).includes(dist.score?.level_index || 0)
 
-    const difficulty_color = getMaimaiDifficultyColor(dist.score?.level_index || 0)
+    const difficulty_color = getMaimaiDifficultyColor(dist.score?.level_index || 0, is_utage)
     const level = (dist.chart.fit_diff > 0) ? ((floor(dist.chart.fit_diff, 2)) + ' [' + dist.score?.ds + ']') : dist.score?.ds
 
     return {

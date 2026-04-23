@@ -418,7 +418,9 @@ export function getMaimaiDifficultyName(index = 0) {
     }
 }
 
-export function getMaimaiDifficultyColor(index = 0) {
+export function getMaimaiDifficultyColor(index = 0, is_utage = false) {
+    if (is_utage) return '#d46da1'
+
     switch (index) {
         case 0: return '#009944'
         case 1: return '#fff100'

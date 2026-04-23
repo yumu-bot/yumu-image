@@ -1384,9 +1384,10 @@ export const PanelGenerate = {
         const rating_max = getMaimaiMaximumRating(score?.ds)
         const rating_max_text = (rating >= rating_max) ? (' [MAX]') : (' [' + rating_max + ']')
 
-        const too_bright = (score?.level_index || 0) === 4 || (score?.level_index || 0) === 1;
+        const is_utage = score?.level_label?.slice(0, 1) === 'U' || score?.level?.toString().includes('?')
+        const too_bright = Array.of(1, 4).includes(score?.level_index || 0)
 
-        const difficulty_color = getMaimaiDifficultyColor(score?.level_index || 0)
+        const difficulty_color = getMaimaiDifficultyColor(score?.level_index || 0, is_utage)
 
         function drawCombo(combo = '') {
             let combo_image
