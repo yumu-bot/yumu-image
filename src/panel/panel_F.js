@@ -106,7 +106,7 @@ export async function panel_F(
     const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
 
     // 临时的
-    const qp_mode = data?.match?.match?.name?.toString()?.includes("Quick Play Match")
+    const qp_mode = data?.match?.match?.name?.toString()?.includes("Quick Play Match") || data?.match?.match?.name?.toString()?.includes("Ranked Play Match")
 
     let panel_name
 
