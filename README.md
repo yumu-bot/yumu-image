@@ -1,10 +1,12 @@
-# 用法
+# 运行环境
+
+## 必需
 
 绘图程序默认会使用端口 `1611`。
 
 请确保端口不被其他程序占用。
 
-## Windows 运行
+### Windows 运行
 
 ```
 chcp 65001
@@ -16,11 +18,29 @@ yarn start
 
 npm start 也行。
 
-## Linux 运行
+### Linux 运行
 
 可以使用 PM2 运行。
 
 你应该能自己解决。
+
+## 可选
+
+简称你必然会踩到的坑
+
+- maimai 和 chunithm 组件的歌曲背景，貌似会在特定情况和环境下，无法通过源站的 js 挑战。
+  - 开发者在 windows 环境下可以正常补充下载，但是 linux 完全不行。
+  - 这样下载到的图片会是挑战本身，而不是真正的歌曲背景。
+  - 如果您要使用类似功能，可以在 ExportFileV3/Maimai/Cover 和 ExportFileV3/Chunithm/Cover 中，存放你获取到的歌曲背景。
+  - release 中不会提供歌曲背景。
+
+# 致谢和版权声明
+
+- [EndfieldByButan.ttf](https://github.com/lhclbt/Endfield_Font)：
+  - [鹰角网络 (HYPERGRYPH)](https://www.hypergryph.com/) 拥有该文字的最终解释权和所有权。
+- 部分美术素材（歌曲封面）：
+  - 来源：[落雪咖啡屋](https://maimai.lxns.net/docs)
+  - 版权归世嘉 (SEGA) 和华立科技 (WAHLAP) 所有。
 
 # 功能对应表
 

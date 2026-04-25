@@ -12,6 +12,75 @@ const textToSVGTahomaRegular = TextToSVG.loadSync("font/ft71.ttf");
 const textToSVGTahomaBold = TextToSVG.loadSync("font/tahomabd.ttf");
 const textToSVGBerlinBold = TextToSVG.loadSync("font/BerlinsansExpert-Bold.ttf");
 
+/*
+const textToSVGTorusSB = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+const textToSVGPuHuiTi = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf"); // 这个不一样
+const textToSVGTorusRegular = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+const textToSVGTorusBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+const textToSVGpoppinsBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+const textToSVGTahomaRegular = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+const textToSVGTahomaBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+const textToSVGBerlinBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+
+ */
+
+function preprocessingText(text = '') {
+    return text.toString()
+
+    // return endfieldMapper(text.toString())
+}
+
+
+// 以下是转换为 Endfield 文字的映射
+function endfieldMapper(text = '') {
+
+    // https://www.bilibili.com/video/BV1PtdyBMEED 01:52 处
+    const mapper = [
+        'g', 'k', 'a', 'm', 'z', 't', 'l', 'b', 'd', 'q', 'i', 'y', 'f', 'u',
+        'c', 'x', 'b', 'h', 's', 'j', 'o', 'p', 'r', 'n', 'w', 'e', 'y', 'g',
+        't', 'j', 'm', 'e', 'v', 'c', 'h', 'd', 'x', 's', 'a', 'n', 'q', 'o',
+        'l', 'k', 'r', 'v', 'w', 'i', 'y', 'p', 'j', 'z', 'q', 'u', 'h', 'e'
+    ]
+
+    const defaultMapper = new Map([
+        [0x23, 0x2E],
+        [0x24, 0x2E],
+        [0x25, 0x2E],
+        [0x26, 0x2E],
+        [0x40, 0x2E],
+        [0x5C, 0x2F],
+        [0x5E, 0x2F],
+        [0x3B, 0x3A],
+        [0x5F, 0x2D],
+        [0x60, 0x5B]
+    ]);
+
+    let result = []
+
+    for (let i = 0; i < text.length; i++) {
+        const code = text.charCodeAt(i)
+
+        if (defaultMapper.has(code)) {
+            result.push(String.fromCharCode(defaultMapper.get(code)))
+        } else if (!isPrivateUse(code) && code >= 0x7B) {
+            result.push(mapper[code % 56] ?? '.')
+        } else {
+            // 情况 3: 其余情况直出原字符
+            result.push(text[i])
+        }
+    }
+
+    return result.join('')
+}
+
+function isPrivateUse(code) {
+    return (code >= 0xE000 && code <= 0xF8FF) ||
+        (code >= 0xF0000 && code <= 0xFFFFF) ||
+        (code >= 0x100000 && code <= 0x10FFFF);
+}
+
 /** 获取多个字体组合成的字形
  * 数组类的组成是：
  * font: torus,
@@ -121,7 +190,7 @@ function getTextPath_BerlinBold(
     stroke_opacity = 1,
 ) {
     return ((shadow === false) ? '' :
-            textToSVGBerlinBold.getPath((text + ""), {
+            textToSVGBerlinBold.getPath(preprocessingText(text), {
                 x: x + 2,
                 y: y + 2,
                 fontSize: size,
@@ -132,7 +201,7 @@ function getTextPath_BerlinBold(
                     fill: '#1c1719'
                 }
             })
-    ) + textToSVGBerlinBold.getPath((text + ""), {
+    ) + textToSVGBerlinBold.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -156,7 +225,7 @@ function getTextMetrics_BerlinBold(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGBerlinBold.getMetrics(text, {
+    return textToSVGBerlinBold.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -175,7 +244,7 @@ function getTextWidth_BerlinBold(
     text = '',
     size = 0,
 ) {
-    return textToSVGBerlinBold.getMetrics((text + ""), {
+    return textToSVGBerlinBold.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -196,6 +265,8 @@ function cutStringTail_BerlinBold(
     maxWidth = 0,
     isDot3Needed = true,
 ) {
+    text = preprocessingText(text)
+
     if (BerlinBold.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
@@ -273,7 +344,7 @@ function getTextPath_TahomaRegular(
     stroke_width = 0,
     stroke_opacity = 1,
 ) {
-    return textToSVGTahomaRegular.getPath((text + ""), {
+    return textToSVGTahomaRegular.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -297,7 +368,7 @@ function getTextMetrics_TahomaRegular(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGTahomaRegular.getMetrics(text, {
+    return textToSVGTahomaRegular.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -316,7 +387,7 @@ function getTextWidth_TahomaRegular(
     text = '',
     size = 0,
 ) {
-    return textToSVGTahomaRegular.getMetrics((text + ""), {
+    return textToSVGTahomaRegular.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -337,6 +408,8 @@ function cutStringTail_TahomaRegular(
     maxWidth = 0,
     isDot3Needed = true,
 ) {
+    text = preprocessingText(text)
+
     if (TahomaRegular.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
@@ -414,7 +487,7 @@ function getTextPath_TahomaBold(
     stroke_width = 0,
     stroke_opacity = 1,
 ) {
-    return textToSVGTahomaBold.getPath((text + ""), {
+    return textToSVGTahomaBold.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -438,7 +511,7 @@ function getTextMetrics_TahomaBold(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGTahomaBold.getMetrics(text, {
+    return textToSVGTahomaBold.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -457,7 +530,7 @@ function getTextWidth_TahomaBold(
     text = '',
     size = 0,
 ) {
-    return textToSVGTahomaBold.getMetrics((text + ""), {
+    return textToSVGTahomaBold.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -478,6 +551,8 @@ function cutStringTail_TahomaBold(
     maxWidth = 0,
     isDot3Needed = true,
 ) {
+    text = preprocessingText(text)
+
     if (TahomaBold.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
@@ -555,7 +630,7 @@ function getTextPath_poppinsBold(
     stroke_width = 0,
     stroke_opacity = 1,
 ) {
-    return textToSVGpoppinsBold.getPath((text + ""), {
+    return textToSVGpoppinsBold.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -579,7 +654,7 @@ function getTextMetrics_poppinsBold(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGpoppinsBold.getMetrics(text, {
+    return textToSVGpoppinsBold.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -598,7 +673,7 @@ function getTextWidth_poppinsBold(
     text = '',
     size = 0,
 ) {
-    return textToSVGpoppinsBold.getMetrics((text + ""), {
+    return textToSVGpoppinsBold.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -619,6 +694,8 @@ function cutStringTail_poppinsBold(
     maxWidth = 0,
     isDot3Needed = true,
 ) {
+    text = preprocessingText(text)
+
     if (poppinsBold.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
@@ -696,7 +773,7 @@ function getTextPath_lineSeedSans(
     stroke_width = 0,
     stroke_opacity = 1,
 ) {
-    return textToSVGlineSeedSansBold.getPath((text + ""), {
+    return textToSVGlineSeedSansBold.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -720,7 +797,7 @@ function getTextMetrics_lineSeedSans(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGlineSeedSansBold.getMetrics(text, {
+    return textToSVGlineSeedSansBold.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -739,7 +816,7 @@ function getTextWidth_lineSeedSans(
     text = '',
     size = 0,
 ) {
-    return textToSVGlineSeedSansBold.getMetrics((text + ""), {
+    return textToSVGlineSeedSansBold.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -760,6 +837,8 @@ function cutStringTail_lineSeedSans(
     maxWidth = 0,
     isDot3Needed = true,
 ) {
+    text = preprocessingText(text)
+
     if (lineSeedSans.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
@@ -837,7 +916,7 @@ function getTextPath_torus(
     stroke_width = 0,
     stroke_opacity = 1,
 ) {
-    return textToSVGTorusSB.getPath((text + ""), {
+    return textToSVGTorusSB.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -861,7 +940,7 @@ function getTextMetrics_torus(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGTorusSB.getMetrics(text, {
+    return textToSVGTorusSB.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -880,7 +959,7 @@ function getTextWidth_torus(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusSB.getMetrics((text + ""), {
+    return textToSVGTorusSB.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -901,6 +980,8 @@ function cutStringTail_torus(
     maxWidth = 0,
     isDot3Needed = true,
 ) {
+    text = preprocessingText(text)
+
     if (torus.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
@@ -979,7 +1060,7 @@ function getTextPath_torusBold(
     stroke_width = 0,
     stroke_opacity = 1,
 ) {
-    return textToSVGTorusBold.getPath((text + ""), {
+    return textToSVGTorusBold.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -1003,7 +1084,7 @@ function getTextMetrics_torusBold(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGTorusBold.getMetrics(text, {
+    return textToSVGTorusBold.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -1022,7 +1103,7 @@ function getTextWidth_torusBold(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusBold.getMetrics((text + ""), {
+    return textToSVGTorusBold.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -1043,6 +1124,8 @@ function cutStringTail_torusBold(
     maxWidth = 0,
     isDot3Needed = true,
 ) {
+    text = preprocessingText(text)
+
     if (torusBold.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
@@ -1121,7 +1204,7 @@ function getTextPath_torusRegular(
     stroke_width = 0,
     stroke_opacity = 1,
 ) {
-    return textToSVGTorusRegular.getPath((text + ""), {
+    return textToSVGTorusRegular.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -1145,7 +1228,7 @@ function getTextMetrics_torusRegular(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGTorusRegular.getMetrics(text, {
+    return textToSVGTorusRegular.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -1164,7 +1247,7 @@ function getTextWidth_torusRegular(
     text = '',
     size = 0,
 ) {
-    return textToSVGTorusRegular.getMetrics((text + ""), {
+    return textToSVGTorusRegular.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -1185,6 +1268,8 @@ function cutStringTail_torusRegular(
     maxWidth = 0,
     isDot3Needed = true,
 ) {
+    text = preprocessingText(text)
+
     if (torusRegular.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
@@ -1262,7 +1347,7 @@ function getTextPath_PuHuiTi(
     stroke_width = 0,
     stroke_opacity = 1,
 ) {
-    return textToSVGPuHuiTi.getPath((text + ""), {
+    return textToSVGPuHuiTi.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -1286,7 +1371,7 @@ function getTextMetrics_PuHuiTi(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGextra.getMetrics(text, {
+    return textToSVGextra.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -1305,7 +1390,7 @@ function getTextWidth_PuHuiTi(
     text = '',
     size = 0,
 ) {
-    return textToSVGPuHuiTi.getMetrics((text + ""), {
+    return textToSVGPuHuiTi.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,
@@ -1326,6 +1411,8 @@ function cutStringTail_PuHuiTi(
     maxWidth = 0,
     isDot3Needed = true,
 ) {
+    text = preprocessingText(text)
+
     if (PuHuiTi.getTextWidth(text, size) <= maxWidth) {
         return text;
     }
@@ -1364,7 +1451,7 @@ function getTextPath_extra(
     stroke_width = 0,
     stroke_opacity = 1,
 ) {
-    return textToSVGextra.getPath((text + ""), {
+    return textToSVGextra.getPath(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -1388,7 +1475,7 @@ function getTextMetrics_extra(
     anchor = 'left baseline',
     fill = '#fff'
 ) {
-    return textToSVGextra.getMetrics(text, {
+    return textToSVGextra.getMetrics(preprocessingText(text), {
         x: x,
         y: y,
         fontSize: size,
@@ -1407,7 +1494,7 @@ function getTextWidth_extra(
     text = '',
     size = 0,
 ) {
-    return textToSVGextra.getMetrics((text + ""), {
+    return textToSVGextra.getMetrics(preprocessingText(text), {
         x: 0,
         y: 0,
         fontSize: size,

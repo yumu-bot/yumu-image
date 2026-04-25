@@ -1,6 +1,6 @@
 import {
     exportJPEG, getPanelHeight, getPanelNameSVG, setSvgBody,
-    readTemplate, setText, getNowTimeStamp, getSvgBody, thenPush, setImage,
+    readTemplate, setText, getNowTimeStamp, getSvgBody, thenPush, setImage, getFormattedTime,
 } from "../util/util.js";
 import {card_C} from "../card/card_C.js";
 import {card_A1} from "../card/card_A1.js";
@@ -75,6 +75,10 @@ export async function panel_A4(data = {
         case "MR": {
             const request_time2 = 'matchID: ' + (data?.match ?? 0) + ' // request time: ' + getNowTimeStamp();
             panel_name = getPanelNameSVG('Match Recent Scores (!ymmr)', 'MR', request_time2);
+        } break;
+        case "BH": {
+            const request_time2 = 'snapshot time: ' + getFormattedTime(data?.created_at) + ' // request time: ' + getNowTimeStamp();
+            panel_name = getPanelNameSVG('Best Snapshot (!ymbh)', 'BH', request_time2);
         } break;
         default: {
             panel_name = getPanelNameSVG('Today BP / BP (!ymt / !ymb)', 'B', request_time);
