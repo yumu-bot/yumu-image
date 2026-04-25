@@ -3,6 +3,7 @@ import {getImageFromV3} from "./util.js";
 
 import { readFileSync } from 'fs';
 import { URL } from 'url';
+import moment from "moment";
 
 // 1. 获取相对于当前文件的正确路径
 // new URL(...) 会根据当前文件的位置自动解析相对路径
@@ -216,9 +217,10 @@ function getMascotIndex(mascot_name = 'pippi') {
  * @return {String} 返回横幅路径
  */
 export function getRandomBannerPath(type = "default", index = 0) {
-    // if (moment().isBefore(moment("2025/02/23 10:00", "YYYY/MM/DD HH:mm"))) {
-    //     return getImageFromV3('Banner', 'a3.png');
-    // }
+    if (moment().isAfter(moment("2026/04/26 00:00:00", "YYYY/MM/DD HH:mm:ss"))
+        && moment().isBefore(moment("2026/04/27 00:00:00", "YYYY/MM/DD HH:mm:ss"))) {
+        return getImageFromV3('Banner', 'a4.png');
+    }
 
     if (type === "maimai") {
         const i = index || getWeightedRandom(maimaiBannerTotal)
