@@ -27,9 +27,9 @@ const textToSVGBerlinBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
  */
 
 function preprocessingText(text = '') {
-    return text + ""
+    return String(text)
 
-    // return endfieldMapper(text + "")
+    // return endfieldMapper(String(text))
 }
 
 
