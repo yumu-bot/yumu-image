@@ -55,10 +55,12 @@ export function component_V(
 
         if (timing.type === 'red') {
             // 渲染 BPM 红线
-            const bpm = rounds(timing.bpm, 2, 3)
+            const bpm = rounds(timing.bpm, 2)
 
-            reds += torusBold.getTextPath(bpm.int.toString(), -2, y + 3, 14, 'right baseline', '#F990AB')
-                + torusBold.getTextPath(bpm.dec.toString().replace('0.', '.'), -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
+            const has_dot = bpm.integer.includes('.')
+
+            reds += torusBold.getTextPath(bpm.integer.replace('.', ''), -2, y + 3, 14, 'right baseline', '#F990AB')
+                + torusBold.getTextPath((has_dot ? '.' : '') + bpm.decimal, -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
             reds += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#D32F2F" stroke-width="2" />`;
         } else if (timing.type === 'bar') {
             // 渲染 普通小节线
