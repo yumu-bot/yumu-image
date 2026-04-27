@@ -98,7 +98,7 @@ export function component_V(
 
             const height = Math.min(max_height, Math.abs(start_y - end_y))
 
-            svg += `<use href="#ln${overlay[key]}" x="${x}" y="${end_y}" width="${line_width}" height="${height}" />`
+            svg += `<use href="#ln${overlay[key]}" x="${x}" y="${end_y}" width="${line_width}" height="${height}" opacity="0.6"/>`
 
             // 2. 只有当 render_start 等于原始 beat 时，才渲染头部的 Note 节点
             // 允许极小的浮点误差 (0.0001)
