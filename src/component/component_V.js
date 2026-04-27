@@ -44,6 +44,11 @@ export function component_V(
     //     }
     // }
 
+    let reds = ''
+    let greens = ''
+    let yellow = ''
+    let others = ''
+
     for (const timing of chunk.timings) {
         const relative = timing.render_beat - chunk.start_bar * 4;
         const y = 710 - ((relative / beats_per_bucket) * 710);
@@ -52,26 +57,28 @@ export function component_V(
             // 渲染 BPM 红线
             const bpm = rounds(timing.bpm, 2, 3)
 
-            svg += torusBold.getTextPath(bpm.int.toString(), -2, y + 3, 14, 'right baseline', '#F990AB')
+            reds += torusBold.getTextPath(bpm.int.toString(), -2, y + 3, 14, 'right baseline', '#F990AB')
                 + torusBold.getTextPath(bpm.dec.toString().replace('0.', '.'), -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
-            svg += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#D32F2F" stroke-width="2" />`;
+            reds += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#D32F2F" stroke-width="2" />`;
         } else if (timing.type === 'bar') {
             // 渲染 普通小节线
-            svg += torusBold.getTextPath(timing.measure_index.toString(), -2, y + 3, 14, 'right baseline', '#ccc')
-            svg += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#ccc" stroke-width="1.5" />`;
+            others += torusBold.getTextPath(timing.measure_index.toString(), -2, y + 3, 14, 'right baseline', '#fff', 0.6)
+            others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#ccc" stroke-width="1.5" />`;
         } else if (timing.type === 'beat') {
             // 渲染 普通拍子线
-            svg += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#666" stroke-width="1" />`;
+            others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#666" stroke-width="1" />`;
         } else if (timing.type === 'preview') {
             // 渲染 预览线
-            svg += torusBold.getTextPath('PV', total_width + 2, y + 3, 14, 'left baseline', '#F6F05C')
-            svg += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#F6F05C" stroke-width="2"/>`;
+            yellow += torusBold.getTextPath('PV', total_width + 2, y + 3, 14, 'left baseline', '#F6F05C')
+            yellow += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#F6F05C" stroke-width="2"/>`;
         } else {
             // 渲染 SV 绿线
-            svg += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
-            svg += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#5EDC5B" stroke-width="1" stroke-dasharray="2,2" />`;
+            greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
+            greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#5EDC5B" stroke-width="1" stroke-dasharray="2,2" />`;
         }
     }
+
+    svg += (others + greens + reds + yellow);
 
     svg += `</g>`;
 
