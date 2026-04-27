@@ -139,7 +139,7 @@ export async function panel_V(
             const chunkStartBeat = pageStartBeat + (c * beats_per_bucket);
             const chunkEndBeat = chunkStartBeat + beats_per_bucket;
 
-            chunks[c].notes.push({
+            chunks[c]?.notes?.push({
                 ...note,
                 beat: beat,
                 end_beat: end_beat,
