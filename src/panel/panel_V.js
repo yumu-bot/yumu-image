@@ -52,6 +52,7 @@ export async function panel_V(
         beatmap: {},
         page: 1,
         mode: 'osu',
+        rows: 5,
     })
 {
 
@@ -77,6 +78,10 @@ export async function panel_V(
     const chunk_width = chunk_gap + key * lane_width;
 
     const bucket = Math.floor(((1920 - chunk_gap) / chunk_width))
+
+    const rows = data?.rows ?? 5
+    const chunks_per_page = bucket * rows;
+
     const bar_per_bucket = 4;
     const beats_per_bucket = bar_per_bucket * 4;
 
@@ -87,17 +92,17 @@ export async function panel_V(
     const total_beats = (last_time - first_time) / beat_length;
 
     // 2. 计算一页总共能显示多少拍
-    const beats_per_page = bucket * beats_per_bucket;
+    const beats_per_page = beats_per_bucket * chunks_per_page;
 
     // 如果 total_beats 是 100，每页能放 32 拍，则需要 ceil(3.125) = 4 页
     const total_pages = Math.max(1, Math.ceil(total_beats / beats_per_page));
 
     // 1. 计算当前页的小节范围
     const page = (data.page || 1);
-    const start_bar = (Math.min(Math.max(page, 1), total_pages) - 1) * bucket * bar_per_bucket;
+    const start_bar = (Math.min(Math.max(page, 1), total_pages) - 1) * chunks_per_page * bar_per_bucket;
 
     // 2. 初始化 x 个切片桶
-    const chunks = Array.from({ length: bucket }, (_, i) => ({
+    const chunks = Array.from({ length: chunks_per_page }, (_, i) => ({
         index: i,
         start_bar: start_bar + (i * bar_per_bucket), // 当前切片起始小节
         notes: [],
@@ -105,7 +110,7 @@ export async function panel_V(
     }));
 
     const pageStartBeat = start_bar * 4;
-    const totalBeatsPerPage = bucket * beats_per_bucket;
+    const totalBeatsPerPage = chunks_per_page * beats_per_bucket;
     // 使用一个很小的 epsilon (1ms 级别对应的 beat 长度)
     const epsilon = 0.005;
 
@@ -128,7 +133,7 @@ export async function panel_V(
             end_chunk = start_chunk;
         } else {
             // end_chunk 保持之前的逻辑，或者也微调 epsilon
-            end_chunk = Math.min(bucket - 1, Math.floor((end_beat - pageStartBeat - epsilon) / beats_per_bucket));
+            end_chunk = Math.min(chunks_per_page - 1, Math.floor((end_beat - pageStartBeat - epsilon) / beats_per_bucket));
         }
 
         // 兜底：确保 end 不小于 start
@@ -225,10 +230,26 @@ export async function panel_V(
         }
     }
 
+    let max_used_chunk_index = -1;
+    // 遍历当前页的所有切片，找出最后一个包含音符或时间线的切片索引
+    for (let i = 0; i < chunks_per_page; i++) {
+        if (chunks[i].notes.length > 0 || chunks[i].timings.length > 0) {
+            max_used_chunk_index = i;
+        }
+    }
+
+    // 如果当前页完全没有内容（例如超出页码或空谱面），默认至少显示 1 行
+    // 否则，根据最大切片索引计算需要几行（索引从 0 开始，除以 bucket 即可算出所在行）
+    const actual_rows = max_used_chunk_index === -1 ? 1 : Math.floor(max_used_chunk_index / bucket) + 1;
+
     // 4. 组装 SVG
 
+    const row_height = 710;
+    const row_gap = 20;
+    const total_height = 290 + 40 + (actual_rows * row_height) + ((actual_rows - 1) * row_gap) + 40;
+
     let svg = `
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="1920" height="1080" viewBox="0 0 1920 1080">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="1920" height="${total_height}" viewBox="0 0 1920 ${total_height}">
 <defs>
   <symbol id="note1" viewBox="0 0 256 150" preserveAspectRatio="none">
     ${getImage(0, 0, 256, 150, getImageFromV3('Component', 'mania-note1.png'), 1, 'none')}
@@ -253,8 +274,8 @@ export async function panel_V(
 </clipPath>
 </defs>
 <g>
-    ${PanelDraw.Rect(0, 0, 1920, 1080, 40, '#2A2226')}
-    ${PanelDraw.Rect(0, 290, 1920, 790, 40, '#382E32')}
+    ${PanelDraw.Rect(0, 0, 1920, total_height, 40, '#2A2226')}
+    ${PanelDraw.Rect(0, 290, 1920, total_height - 290, 40, '#382E32')}
     
     <g clip-path="url(#banner)">
         ${getImage(0, 0, 1920, 320, await getMapBackground(data.beatmap, 'cover'), 0.7)}
@@ -265,16 +286,34 @@ export async function panel_V(
     ${getSvgBody(40, 40, card_A2(await PanelGenerate.beatmap2CardA2(data?.beatmap)))}
     ${getPanelNameSVG('Beatmap View (!ymv)', 'V')}
     ${torusBold.getTextPath(
-        'page: ' + Math.max(1, Math.min(data.page || 1, total_pages)) + ' of ' + (total_pages), 1920 / 2, 1080 - 15, 20, 'center baseline', '#fff', 0.6
+        'page: ' + Math.max(1, Math.min(data.page || 1, total_pages)) + ' of ' + (total_pages), 1920 / 2, total_height - 15, 20, 'center baseline', '#fff', 0.6
     )}
 </g>
 
 `;
 
+    /*
     for (let i = 0; i < bucket; i++) {
         const component = component_V(chunks[i], key, 710, beats_per_bucket, general.special_style);
 
         svg += getSvgBody(i * chunk_width + chunk_x, 290 + 40, component)
+    }
+
+
+     */
+
+    const render_chunks_count = actual_rows * bucket;
+
+    for (let i = 0; i < render_chunks_count; i++) {
+        const component = component_V(chunks[i], key, row_height, beats_per_bucket, general.special_style);
+
+        const r = Math.floor(i / bucket); // 属于第几行
+        const c = i % bucket;             // 属于第几列
+
+        const x = c * chunk_width + chunk_x;
+        const y = 290 + 40 + r * (row_height + row_gap); // 按行数往下推
+
+        svg += getSvgBody(x, y, component);
     }
 
     svg += `</svg>`;
