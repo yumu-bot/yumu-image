@@ -109,11 +109,14 @@ export function component_V(
             }
 
             // 3. 只有当 render_end 等于原始 end_beat 时，才渲染尾部的 Note 节点
+            /*
             if (Math.abs(note.render_end - note.end_beat) < 1) {
                 if (end_y >= 0 && end_y <= 710) {
                     svg += `<use href="#note${overlay[key]}" x="${x}" y="${end_y - note_height / 2}" width="${line_width}" height="${note_height}" />`;
                 }
             }
+
+             */
         }
     }
 
