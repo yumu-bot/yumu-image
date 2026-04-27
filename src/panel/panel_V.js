@@ -57,22 +57,23 @@ export async function panel_V(
 
 
     const path = await getBeatmapFilePath(data.beatmap.id)
-    const {timings, notes, difficulty} = await parseBeatmapFile(path)
+    const {timings, notes, difficulty, general} = await parseBeatmapFile(path)
 
     const key = Math.round(difficulty.cs)
 
     notes.sort((a, b) => a.time - b.time);
-    timings.sort((a, b) => a.time - b.time);
+
+    const only_red = timings.sort((a, b) => a.time - b.time).filter(t => t.type === 'red');
 
     const first_time = notes[0]?.time ?? 0
     const last_time = notes[notes.length - 1]?.time ?? 0
 
     // 算标准bpm
-    const {bpm} = getLongestBPM(timings, last_time)
+    const {bpm} = getLongestBPM(only_red, last_time)
     const beat_length = 60000 / bpm
 
     const lane_width = 10
-    const chunk_gap = 20
+    const chunk_gap = 30
     const chunk_width = chunk_gap + key * lane_width;
 
     const bucket = Math.floor(((1920 - chunk_gap) / chunk_width))
@@ -81,9 +82,6 @@ export async function panel_V(
 
     const chunk_x = (1920 - (bucket * chunk_width - chunk_gap)) / 2
 
-    // 1. 计算当前页的小节范围
-    const page = (data.page || 1);
-    const start_bar = (page - 1) * bucket * bar_per_bucket;
 
     // 1. 计算最后一个音符所在的绝对拍数位置
     const total_beats = (last_time - first_time) / beat_length;
@@ -91,9 +89,12 @@ export async function panel_V(
     // 2. 计算一页总共能显示多少拍
     const beats_per_page = bucket * beats_per_bucket;
 
-    // 3. 估算总页数 (向上取整)
     // 如果 total_beats 是 100，每页能放 32 拍，则需要 ceil(3.125) = 4 页
     const total_pages = Math.max(1, Math.ceil(total_beats / beats_per_page));
+
+    // 1. 计算当前页的小节范围
+    const page = (data.page || 1);
+    const start_bar = (Math.min(Math.max(page, 1), total_pages) - 1) * bucket * bar_per_bucket;
 
     // 2. 初始化 x 个切片桶
     const chunks = Array.from({ length: bucket }, (_, i) => ({
@@ -103,20 +104,21 @@ export async function panel_V(
         timings: []
     }));
 
+    const pageStartBeat = start_bar * 4;
+    const totalBeatsPerPage = bucket * beats_per_bucket;
+    // 使用一个很小的 epsilon (1ms 级别对应的 beat 长度)
+    const epsilon = 0.005;
+
     for (const note of notes) {
         const beat = (note.time - first_time) / beat_length;
         const end_beat = (note.type === 'ln') ? ((note.end_time - first_time) / beat_length) : beat;
 
-        const pageStartBeat = start_bar * 4;
-        const totalBeatsPerPage = bucket * beats_per_bucket;
 
         // 1. 过滤：如果整个音符都在当前页之前或之后，直接跳过
         if (end_beat < pageStartBeat || beat >= pageStartBeat + totalBeatsPerPage) {
             continue;
         }
 
-        // 使用一个很小的 epsilon (1ms 级别对应的 beat 长度)
-        const epsilon = 0.005;
 
         // start_chunk 计算时增加 epsilon，如果是 31.999，会变成 32.004，从而 floor 到 1 而不是 0
         const start_chunk = Math.max(0, Math.floor((beat - pageStartBeat + epsilon) / beats_per_bucket));
@@ -140,16 +142,93 @@ export async function panel_V(
             chunks[c].notes.push({
                 ...note,
                 beat: beat,
+                end_beat: end_beat,
                 render_start: Math.max(beat, chunkStartBeat),
                 render_end: Math.min(end_beat, chunkEndBeat)
             });
         }
     }
 
+    const full_line = []
+
+    for (let i = 0; i < only_red.length; i++) {
+        const current = only_red[i];
+        const nextTime = (i < only_red.length - 1) ? only_red[i + 1].time : last_time;
+
+        // 每一拍的长度
+        const beatDuration = current.beat_length;
+
+        // 从当前红点开始，以“拍”为单位步进
+        for (let time = current.time; time < nextTime; time += beatDuration) {
+
+            // 跳过红线重合点
+            if (Math.abs(time - current.time) < 1) {
+                continue;
+            }
+
+            // 计算当前拍是在这个红线段落里的第几拍
+            const beatIndexInSegment = Math.round((time - current.time) / beatDuration);
+
+            // 如果能被 meter 整除，说明是小节线（Bar Line），否则是拍子线（Beat Line）
+            const isBarLine = (beatIndexInSegment % current.meter) === 0;
+
+            const t = Math.round(time);
+            const logicalBeat = (t - first_time) / beat_length;
+
+            full_line.push({
+                time: t,
+                beat_length: current.beat_length,
+                beat: logicalBeat,
+                sv: -1,
+                measure_index: isBarLine ? (beatIndexInSegment / current.meter) + 1 : null,
+                meter: current.meter,
+                sample: current.sample,
+                sample_group: current.sample_group,
+                volume: current.volume,
+                type: isBarLine ? 'bar' : 'beat',
+                effect: current.effect,
+                bpm: current.bpm,
+            })
+        }
+    }
+
+    timings.forEach(v => full_line.push({
+        ...v,
+        beat: (v.time - first_time) / beat_length
+    }))
+
+    if (general.preview > 0) {
+        full_line.push({
+            time: general.preview,
+            type: 'preview',
+            beat: (general.preview - first_time) / beat_length,
+        })
+    }
+
+    full_line.sort((a, b) => a.time - b.time).forEach(v =>
+        v.render_beat = (v.time - first_time) / beat_length
+    );
+
+    for (const line of full_line) {
+        // 1. 过滤：不在当前页范围内的直接跳过
+        if (line.beat < pageStartBeat || line.beat >= pageStartBeat + totalBeatsPerPage) {
+            continue;
+        }
+
+        // 2. 计算对应的 chunk 索引
+        // 使用与 note 相同的索引计算逻辑
+        const c = Math.floor((line.beat - pageStartBeat + epsilon) / beats_per_bucket);
+
+        // 3. 压入对应 chunk 的 timings 数组
+        if (chunks[c]) {
+            chunks[c].timings.push(line);
+        }
+    }
+
     // 4. 组装 SVG
 
     let svg = `
-<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="1920" height="1080" viewBox="0 0 1920 1080">
 <defs>
   <symbol id="note1" viewBox="0 0 256 150" preserveAspectRatio="none">
     ${getImage(0, 0, 256, 150, getImageFromV3('Component', 'mania-note1.png'), 1, 'none')}
@@ -193,7 +272,7 @@ export async function panel_V(
 `;
 
     for (let i = 0; i < bucket; i++) {
-        const component = component_V(chunks[i], key, 710, beats_per_bucket);
+        const component = component_V(chunks[i], key, 710, beats_per_bucket, general.special_style);
 
         svg += getSvgBody(i * chunk_width + chunk_x, 290 + 40, component)
     }
@@ -231,6 +310,7 @@ async function parseBeatmapFile(filePath) {
     let isTiming = false;
     let isNote = false;
     let isDifficulty = false;
+    let isGeneral = false;
 
     let difficulty = {
         hp: 0,
@@ -239,8 +319,21 @@ async function parseBeatmapFile(filePath) {
         ar: 0
     };
 
+    let general = {
+        mode: 0,
+        preview: 0,
+        stack_leniency: 0,
+        sample: 'default',
+        special_style: false,
+    }
+
     for await (const line of lines) {
         const trimmed = String(line).trim();
+
+        if (trimmed === '[General]') {
+            isGeneral = true;
+            continue;
+        }
 
         if (trimmed === '[TimingPoints]') {
             isTiming = true;
@@ -258,12 +351,20 @@ async function parseBeatmapFile(filePath) {
         }
 
         if ((trimmed.startsWith('[') || trimmed === '')) {
+            if (isGeneral) {
+                isGeneral = false
+            }
+
             if (isTiming) {
                 isTiming = false;
             }
 
             if (isNote) {
                 isNote = false
+            }
+
+            if (isDifficulty) {
+                isDifficulty = false
             }
         }
 
@@ -294,7 +395,7 @@ async function parseBeatmapFile(filePath) {
                 sample: sample,
                 sample_group: parseInt(parts[4]),
                 volume: parseInt(parts[5]),
-                red: red,
+                type: red ? 'red' : 'green',
                 effect: effect,
                 bpm: bpm,
             });
@@ -383,12 +484,25 @@ async function parseBeatmapFile(filePath) {
                 case 'ApproachRate': difficulty.ar = parseFloat(value); break;
             }
         }
+
+        if (isGeneral && trimmed.length > 0 && trimmed.includes(':')) {
+            const [key, value] = trimmed.split(':').map(s => s.trim());
+
+            switch(key) {
+                case 'Mode': general.mode = parseInt(value); break;
+                case 'PreviewTime':  general.preview = parseInt(value); break;
+                case 'StackLeniency': general.stack_leniency = parseFloat(value); break;
+                case 'SampleSet': general.sample = value; break;
+                case 'SpecialStyle': general.special_style = parseInt(value) === 1; break;
+            }
+        }
     }
 
     return {
         timings: timings,
         notes: notes,
         difficulty: difficulty,
+        general: general,
     }
 }
 
@@ -415,15 +529,15 @@ function getBPM(length = 0) {
     return Math.round(60000 * 1000 / length) / 1000
 }
 
-function getLongestBPM(timings = [], last_time = 0) {
+function getLongestBPM(only_red = [], last_time = 0) {
     const bpmMap = new Map();
 
-    for (let i = 0; i < timings.length; i++) {
-        const current = timings[i];
+    for (let i = 0; i < only_red.length; i++) {
+        const current = only_red[i];
 
         // 确定该区间的结束时间
         // 如果是最后一个点，使用传入的 last_time，否则使用下一个点的时间
-        const nextTime = (i < timings.length - 1) ? timings[i + 1].time : last_time;
+        const nextTime = (i < only_red.length - 1) ? only_red[i + 1].time : last_time;
         const duration = nextTime - current.time;
 
         // 排除无效区间
