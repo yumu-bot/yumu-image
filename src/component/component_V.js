@@ -102,7 +102,7 @@ export function component_V(
 
             // 2. 只有当 render_start 等于原始 beat 时，才渲染头部的 Note 节点
             // 允许极小的浮点误差 (0.0001)
-            if (Math.abs(note.render_start - note.beat) < 1) {
+            if (Math.abs(note.render_start - note.beat) < 0.001) {
                 if (start_y >= 0 && start_y <= 710) {
                     svg += `<use href="#note${overlay[key]}" x="${x}" y="${start_y - note_height / 2}" width="${line_width}" height="${note_height}" />`;
                 }
