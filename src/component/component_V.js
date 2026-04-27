@@ -50,10 +50,10 @@ export function component_V(
 
         if (timing.type === 'red') {
             // 渲染 BPM 红线
-            const bpm = rounds(timing.bpm, 2)
+            const bpm = rounds(timing.bpm, 2, 3)
 
-            svg += torusBold.getTextPath(bpm.integer, -2, y + 3, 14, 'right baseline', '#F990AB')
-                + torusBold.getTextPath(bpm.decimal, -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
+            svg += torusBold.getTextPath(bpm.int.toString(), -2, y + 3, 14, 'right baseline', '#F990AB')
+                + torusBold.getTextPath(bpm.dec.toString().replace('0.', '.'), -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
             svg += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#D32F2F" stroke-width="2" />`;
         } else if (timing.type === 'bar') {
             // 渲染 普通小节线
@@ -69,7 +69,6 @@ export function component_V(
         } else {
             // 渲染 SV 绿线
             svg += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
-                + torusBold.getTextPath('x', total_width + 2, y + 3 + 10, 12, 'left baseline', '#CAF881')
             svg += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#5EDC5B" stroke-width="1" stroke-dasharray="2,2" />`;
         }
     }
