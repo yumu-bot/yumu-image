@@ -1,4 +1,12 @@
-import {exportJPEG, getImage, getImageFromV3, getMapBackground, getPanelNameSVG, getSvgBody,} from "../util/util.js";
+import {
+    exportJPEG,
+    getImage,
+    getImageFromV3, getImageOrElse,
+    getMapBackground,
+    getOrNull,
+    getPanelNameSVG,
+    getSvgBody,
+} from "../util/util.js";
 import {component_V} from "../component/component_V.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -67,16 +75,17 @@ export async function panel_V(
     const lane_width = 10
     const chunk_gap = 30
     const chunk_width = chunk_gap + key * lane_width;
+    const max_width = 1920
 
-    const bucket = Math.floor(((1920 - chunk_gap) / chunk_width))
+    const chunk_per_row = Math.floor(((max_width - chunk_gap) / chunk_width))
 
     const rows = data?.rows ?? 5
-    const chunks_per_page = bucket * rows;
+    const chunks_per_page = chunk_per_row * rows;
 
     const bar_per_bucket = 4;
     const beats_per_bucket = bar_per_bucket * 4;
 
-    const chunk_x = (1920 - (bucket * chunk_width - chunk_gap)) / 2
+    const chunk_x = (max_width - (chunk_per_row * chunk_width - chunk_gap)) / 2
 
 
     // 1. 计算最后一个音符所在的绝对拍数位置
@@ -284,13 +293,21 @@ export async function panel_V(
 
     // 如果当前页完全没有内容（例如超出页码或空谱面），默认至少显示 1 行
     // 否则，根据最大切片索引计算需要几行（索引从 0 开始，除以 bucket 即可算出所在行）
-    const actual_rows = max_used_chunk_index === -1 ? 1 : Math.floor(max_used_chunk_index / bucket) + 1;
+    const actual_rows = max_used_chunk_index === -1 ? 1 : Math.floor(max_used_chunk_index / chunk_per_row) + 1;
 
     // 4. 组装 SVG
 
     const row_height = 710;
     const row_gap = 20;
     const total_height = 290 + 40 + (actual_rows * row_height) + ((actual_rows - 1) * row_gap) + 40;
+
+    const [card_a2_deferred, background_deferred] = await Promise.allSettled([
+        PanelGenerate.beatmap2CardA2(data?.beatmap),
+        getMapBackground(data.beatmap, 'cover')
+    ]);
+
+    const card_a2 = getOrNull(card_a2_deferred)
+    const banner = getImageOrElse(background_deferred, getImageFromV3('card-default.png'))
 
     let svg = `
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="1920" height="${total_height}" viewBox="0 0 1920 ${total_height}">
@@ -322,12 +339,12 @@ export async function panel_V(
     ${PanelDraw.Rect(0, 290, 1920, total_height - 290, 40, '#382E32')}
     
     <g clip-path="url(#banner)">
-        ${getImage(0, 0, 1920, 320, await getMapBackground(data.beatmap, 'cover'), 0.7)}
+        ${getImage(0, 0, 1920, 320, banner, 0.7)}
     </g>
     
     ${PanelDraw.Rect(510, 40, 195, 60, 15, '#382E32')}
     
-    ${getSvgBody(40, 40, card_A2(await PanelGenerate.beatmap2CardA2(data?.beatmap)))}
+    ${getSvgBody(40, 40, card_A2(card_a2))}
     ${getPanelNameSVG('Beatmap View (!ymv)', 'V')}
     ${torusBold.getTextPath(
         'page: ' + Math.max(1, Math.min(data.page || 1, total_pages)) + ' of ' + (total_pages), 1920 / 2, total_height - 15, 20, 'center baseline', '#fff', 0.6
@@ -336,13 +353,13 @@ export async function panel_V(
 
 `;
 
-    const render_chunks_count = actual_rows * bucket;
+    const render_chunks_count = actual_rows * chunk_per_row;
 
     for (let i = 0; i < render_chunks_count; i++) {
         const component = component_V(chunks[i], key, row_height, beats_per_bucket, general.special_style);
 
-        const r = Math.floor(i / bucket); // 属于第几行
-        const c = i % bucket;             // 属于第几列
+        const r = Math.floor(i / chunk_per_row); // 属于第几行
+        const c = i % chunk_per_row;             // 属于第几列
 
         const x = c * chunk_width + chunk_x;
         const y = 290 + 40 + r * (row_height + row_gap); // 按行数往下推

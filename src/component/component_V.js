@@ -28,7 +28,7 @@ export function component_V(
 
     let reds = ''
     let greens = ''
-    let yellow = ''
+    let yellows = ''
     let others = ''
 
     for (const timing of chunk.timings) {
@@ -63,8 +63,8 @@ export function component_V(
 
             case 'preview': {
                 // 渲染 预览线
-                yellow += torusBold.getTextPath('PV', total_width + 2, y + 3, 14, 'left baseline', '#F6F05C')
-                yellow += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#F6F05C" stroke-width="2"/>`;
+                yellows += torusBold.getTextPath('PV', total_width + 2, y + 3, 14, 'left baseline', '#F6F05C')
+                yellows += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#F6F05C" stroke-width="2"/>`;
             } break
 
             case 'minute': {
@@ -78,12 +78,12 @@ export function component_V(
             case 'green': {
                 // 渲染 SV 绿线
                 greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
-                greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#5EDC5B" stroke-width="1" stroke-dasharray="2,2" />`;
+                greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#CAF881" stroke-width="1" stroke-dasharray="2,2" />`;
             }
         }
     }
 
-    svg += (others + greens + reds + yellow);
+    svg += (others + greens + reds + yellows);
 
     svg += `</g>`;
 
