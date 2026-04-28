@@ -1,19 +1,10 @@
-import {
-    exportJPEG,
-    getImage,
-    getImageFromV3, getMapBackground, getPanelNameSVG,
-    getSvgBody,
-    OSU_BUFFER_PATH,
-} from "../util/util.js";
-import fs from "fs";
-import readline from "readline";
-import axios from "axios";
+import {exportJPEG, getImage, getImageFromV3, getMapBackground, getPanelNameSVG, getSvgBody,} from "../util/util.js";
 import {component_V} from "../component/component_V.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
 import {torusBold} from "../util/font.js";
-import path from "path";
+import {getBeatmapFilePath, getLongestBPM, parseBeatmapFile} from "../util/file.js";
 
 export async function router(req, res) {
     try {
@@ -111,6 +102,7 @@ export async function panel_V(
 
     const pageStartBeat = start_bar * 4;
     const totalBeatsPerPage = chunks_per_page * beats_per_bucket;
+
     // 使用一个很小的 epsilon (1ms 级别对应的 beat 长度)
     const epsilon = 0.005;
 
@@ -156,15 +148,18 @@ export async function panel_V(
 
     const full_line = []
 
+    // 插入小节和拍子线
     for (let i = 0; i < only_red.length; i++) {
         const current = only_red[i];
-        const nextTime = (i < only_red.length - 1) ? only_red[i + 1].time : last_time;
+        const next = only_red[i + 1];
+
+        const next_time = (i < only_red.length - 1) ? next.time : last_time;
 
         // 每一拍的长度
-        const beatDuration = current.beat_length;
+        const beat_length = current.beat_length;
 
         // 从当前红点开始，以“拍”为单位步进
-        for (let time = current.time; time < nextTime; time += beatDuration) {
+        for (let time = current.time; time < next_time; time += beat_length) {
 
             // 跳过红线重合点
             if (Math.abs(time - current.time) < 1) {
@@ -172,35 +167,50 @@ export async function panel_V(
             }
 
             // 计算当前拍是在这个红线段落里的第几拍
-            const beatIndexInSegment = Math.round((time - current.time) / beatDuration);
+            const beat_index = Math.round((time - current.time) / beat_length);
 
             // 如果能被 meter 整除，说明是小节线（Bar Line），否则是拍子线（Beat Line）
-            const isBarLine = (beatIndexInSegment % current.meter) === 0;
+            const is_bar = (beat_index % current.meter) === 0;
 
             const t = Math.round(time);
-            const logicalBeat = (t - first_time) / beat_length;
+            const beat = (t - first_time) / beat_length;
+
+            const until_next = next_time - time;
+            const is_near_next = next && (until_next < beat_length * 0.1);
 
             full_line.push({
                 time: t,
                 beat_length: current.beat_length,
-                beat: logicalBeat,
+                beat: beat,
                 sv: -1,
-                measure_index: isBarLine ? (beatIndexInSegment / current.meter) + 1 : null,
+                measure_index: is_bar ? (beat_index / current.meter) + 1 : null,
+                is_near_next: is_near_next,
                 meter: current.meter,
                 sample: current.sample,
                 sample_group: current.sample_group,
                 volume: current.volume,
-                type: isBarLine ? 'bar' : 'beat',
+                type: is_bar ? 'bar' : 'beat',
                 effect: current.effect,
                 bpm: current.bpm,
             })
         }
     }
 
-    timings.forEach(v => full_line.push({
-        ...v,
-        beat: (v.time - first_time) / beat_length
-    }))
+    const min_interval = 60000;
+    const last_note_time = notes[notes.length - 1]?.time ?? 0;
+
+    // 插入分钟线
+    for (let t = 0; t <= last_note_time; t += min_interval) {
+        if (t === 0) continue; // 跳过 0ms
+
+        const beat = (t - first_time) / beat_length
+
+        full_line.push({
+            time: t,
+            type: 'minute',
+            beat: beat,
+        });
+    }
 
     if (general.preview > 0) {
         full_line.push({
@@ -210,9 +220,12 @@ export async function panel_V(
         })
     }
 
-    full_line.sort((a, b) => a.time - b.time).forEach(v =>
-        v.render_beat = (v.time - first_time) / beat_length
-    );
+    timings.forEach(v => full_line.push({
+        ...v,
+        beat: (v.time - first_time) / beat_length
+    }))
+
+    full_line.sort((a, b) => a.time - b.time)
 
     for (const line of full_line) {
         // 1. 过滤：不在当前页范围内的直接跳过
@@ -236,6 +249,37 @@ export async function panel_V(
         if (chunks[i].notes.length > 0 || chunks[i].timings.length > 0) {
             max_used_chunk_index = i;
         }
+    }
+
+    // 添加虚拟红线
+    const first_chunk = chunks[0];
+
+    const first_red = only_red?.[0]
+    const first_red_line_time = first_red?.time ?? 0
+    const first_note_time = notes?.[0]?.time ?? 0
+
+    const has_red_line_around_first_note = Math.abs(first_red_line_time - first_note_time) <= beat_length;
+
+    if (!has_red_line_around_first_note && first_chunk.notes.length > 0) {
+        const first = notes[0];
+
+        const virtual = {
+            time: first.time,
+            beat: first.beat,
+            type: 'virtual',
+            bpm: first_red.bpm
+        };
+
+        first_chunk.timings.unshift(virtual);
+
+        // 剔除过于接近虚拟红线的小节拍子线
+        const threshold = 0.5;
+
+        first_chunk.timings = first_chunk.timings.filter(t => {
+            if (t === virtual) return true;
+
+            return !((t.type === 'beat' || t.type === 'bar') && Math.abs(t.beat - virtual.beat) < threshold);
+        });
     }
 
     // 如果当前页完全没有内容（例如超出页码或空谱面），默认至少显示 1 行
@@ -292,16 +336,6 @@ export async function panel_V(
 
 `;
 
-    /*
-    for (let i = 0; i < bucket; i++) {
-        const component = component_V(chunks[i], key, 710, beats_per_bucket, general.special_style);
-
-        svg += getSvgBody(i * chunk_width + chunk_x, 290 + 40, component)
-    }
-
-
-     */
-
     const render_chunks_count = actual_rows * bucket;
 
     for (let i = 0; i < render_chunks_count; i++) {
@@ -319,290 +353,4 @@ export async function panel_V(
     svg += `</svg>`;
 
     return svg;
-}
-
-async function getBeatmapFilePath(beatmap_id) {
-
-    const filePath = path.join(OSU_BUFFER_PATH, `${beatmap_id}.osu`);
-
-    if (fs.existsSync(filePath)) {
-        return filePath
-    }
-
-    const req =
-        await axios.get(`https://osu.ppy.sh/osu/${beatmap_id}`, {responseType: 'arraybuffer', timeout: 10000});
-
-    const file = req.data;
-
-    fs.writeFileSync(filePath, file)
-
-    return filePath
-}
-
-async function parseBeatmapFile(filePath) {
-    const fileStream = fs.createReadStream(filePath);
-    const lines = readline.createInterface({ input: fileStream });
-
-    let timings = [];
-    let notes = [];
-
-    let isTiming = false;
-    let isNote = false;
-    let isDifficulty = false;
-    let isGeneral = false;
-
-    let difficulty = {
-        hp: 0,
-        cs: 0,
-        od: 0,
-        ar: 0
-    };
-
-    let general = {
-        mode: 0,
-        preview: 0,
-        stack_leniency: 0,
-        sample: 'default',
-        special_style: false,
-    }
-
-    for await (const line of lines) {
-        const trimmed = String(line).trim();
-
-        if (trimmed === '[General]') {
-            isGeneral = true;
-            continue;
-        }
-
-        if (trimmed === '[TimingPoints]') {
-            isTiming = true;
-            continue;
-        }
-
-        if (trimmed === '[HitObjects]') {
-            isNote = true;
-            continue;
-        }
-
-        if (trimmed === '[Difficulty]') {
-            isDifficulty = true;
-            continue;
-        }
-
-        if ((trimmed.startsWith('[') || trimmed === '')) {
-            if (isGeneral) {
-                isGeneral = false
-            }
-
-            if (isTiming) {
-                isTiming = false;
-            }
-
-            if (isNote) {
-                isNote = false
-            }
-
-            if (isDifficulty) {
-                isDifficulty = false
-            }
-        }
-
-
-        if (isTiming && trimmed.length > 0) {
-            const parts = trimmed.split(',');
-
-            const red = parseInt(parts[6]) === 1
-
-            const length = red ? parseFloat(parts[1]) : null
-            const sv = red ? null : 100 / (0 - parseFloat(parts[1]))
-            const bpm = getBPM(length)
-
-            const sample = getSample(parseInt(parts[3]))
-
-            const effectMask = parseInt(parts[7])
-
-            const effect = {
-                kiai: (effectMask & 1) !== 0,
-                ignore: (effectMask & 8) !== 0,
-            };
-
-            timings.push({
-                time: parseInt(parts[0]),
-                beat_length: length,
-                sv: sv,
-                meter: parseInt(parts[2]),
-                sample: sample,
-                sample_group: parseInt(parts[4]),
-                volume: parseInt(parts[5]),
-                type: red ? 'red' : 'green',
-                effect: effect,
-                bpm: bpm,
-            });
-        }
-
-        if (isNote && trimmed.length > 0) {
-            const parts = trimmed.split(',');
-
-            const start_time = parseFloat(parts[2])
-
-            const typeMask = parseInt(parts[3])
-
-            let type
-
-            if ((typeMask & (1 << 0)) !== 0) {
-                type = 'circle'
-            } else if ((typeMask & (1 << 1)) !== 0) {
-                type = 'slider'
-            } else if ((typeMask & (1 << 3)) !== 0) {
-                type = 'spinner'
-            } else if ((typeMask & (1 << 7)) !== 0) {
-                type = 'ln'
-            }
-
-            const color_skip = (typeMask >> 4) & 0x07
-
-            const new_combo = (typeMask & (1 << 2)) !== 0
-
-            const hit_sound_mask = parseInt(parts[4])
-
-            const hit_sound = {
-                normal:  (hit_sound_mask & (1 << 0)) !== 0,
-                whistle: (hit_sound_mask & (1 << 1)) !== 0,
-                finish:  (hit_sound_mask & (1 << 2)) !== 0,
-                clap:    (hit_sound_mask & (1 << 3)) !== 0
-            };
-
-            let sample_set
-
-            switch (type) {
-                case 'slider': sample_set = parts[10]; break;
-                default: {
-                    sample_set = parts[5];
-                } break;
-            }
-
-            const sample_parts = sample_set.split(':')
-
-            // mania
-            let end_time
-
-            if (type === 'ln') {
-                end_time = parseInt(sample_parts.shift())
-            } else {
-                end_time = null
-            }
-
-            const sample = {
-                normal: getSample(parseInt(sample_parts[0])),
-                additional: getSample(parseInt(sample_parts[1])),
-                sample_group: parseInt(sample_parts[2]),
-                volume: parseInt(sample_parts[3]),
-                file: sample_parts[4] ?? null
-            }
-
-            notes.push({
-                x: parseInt(parts[0]),
-                y: parseInt(parts[1]),
-                time: start_time,
-                type: type,
-                color_skip: color_skip,
-                new_combo: new_combo,
-                hit_sound: hit_sound,
-                end_time: end_time,
-                sample: sample,
-            });
-        }
-
-        if (isDifficulty && trimmed.length > 0 && trimmed.includes(':')) {
-            const [key, value] = trimmed.split(':').map(s => s.trim());
-
-            switch(key) {
-                case 'HPDrainRate': difficulty.hp = parseFloat(value); break;
-                case 'CircleSize':  difficulty.cs = parseFloat(value); break;
-                case 'OverallDifficulty': difficulty.od = parseFloat(value); break;
-                case 'ApproachRate': difficulty.ar = parseFloat(value); break;
-            }
-        }
-
-        if (isGeneral && trimmed.length > 0 && trimmed.includes(':')) {
-            const [key, value] = trimmed.split(':').map(s => s.trim());
-
-            switch(key) {
-                case 'Mode': general.mode = parseInt(value); break;
-                case 'PreviewTime':  general.preview = parseInt(value); break;
-                case 'StackLeniency': general.stack_leniency = parseFloat(value); break;
-                case 'SampleSet': general.sample = value; break;
-                case 'SpecialStyle': general.special_style = parseInt(value) === 1; break;
-            }
-        }
-    }
-
-    return {
-        timings: timings,
-        notes: notes,
-        difficulty: difficulty,
-        general: general,
-    }
-}
-
-/**
- * @param int
- * @return {string}
- */
-function getSample(int = 0) {
-    let sample
-
-    switch (int) {
-        case 0: sample = 'default'; break;
-        case 1: sample = 'normal'; break;
-        case 2: sample = 'soft'; break;
-        case 3: sample = 'drum'; break;
-    }
-
-    return sample;
-}
-
-function getBPM(length = 0) {
-    if (length == null) return null
-
-    return Math.round(60000 * 1000 / length) / 1000
-}
-
-function getLongestBPM(only_red = [], last_time = 0) {
-    const bpmMap = new Map();
-
-    for (let i = 0; i < only_red.length; i++) {
-        const current = only_red[i];
-
-        // 确定该区间的结束时间
-        // 如果是最后一个点，使用传入的 last_time，否则使用下一个点的时间
-        const nextTime = (i < only_red.length - 1) ? only_red[i + 1].time : last_time;
-        const duration = nextTime - current.time;
-
-        // 排除无效区间
-        if (duration <= 0) continue;
-
-        // 累加到 Map
-        const bpm = current.bpm;
-
-        const currentDuration = bpmMap.get(bpm) || 0;
-
-        bpmMap.set(Math.round(bpm), currentDuration + duration);
-    }
-
-    // 遍历 Map 找出最长的一个
-    let longestBpm = 120;
-    let maxDuration = 0;
-
-    for (const [bpm, duration] of bpmMap.entries()) {
-        if (duration > maxDuration) {
-            maxDuration = duration;
-            longestBpm = bpm;
-        }
-    }
-
-    return {
-        bpm: longestBpm,
-        duration: maxDuration
-    };
 }

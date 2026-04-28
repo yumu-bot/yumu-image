@@ -26,57 +26,60 @@ export function component_V(
     svg += `<line x1="0" y1="0" x2="0" y2="710" stroke="#555" stroke-width="1" />`;
     svg += `<line x1="${total_width}" y1="0" x2="${total_width}" y2="710" stroke="#555" stroke-width="1" />`;
 
-    // --- 绘制 Timing Lines (水平线) ---
-    // for (let i = 0; i <= beats_per_bucket; i++) {
-    //     // 计算当前拍子在桶内的相对 Y 坐标
-    //     // 0 拍在底部 (710), 32 拍在顶部 (0)
-    //     const y = 710 - (i / beats_per_bucket) * 710;
-    //
-    //     // 判断是小节线还是节拍线
-    //     const isBarLine = i % 4 === 0; // 假设是 4/4 拍
-    //
-    //     if (isBarLine) {
-    //         // 小节线：颜色更亮，贯穿整个轨道
-    //         svg += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="rgba(255,0,0,0.8)" stroke-width="1" />`;
-    //     } else {
-    //         // 节拍线：颜色更暗，或者只在轨道中间
-    //         svg += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="rgba(255,255,255,0.2)" stroke-width="0.5" />`;
-    //     }
-    // }
-
     let reds = ''
     let greens = ''
     let yellow = ''
     let others = ''
 
     for (const timing of chunk.timings) {
-        const relative = timing.render_beat - chunk.start_bar * 4;
+        const relative = timing.beat - chunk.start_bar * 4;
         const y = 710 - ((relative / beats_per_bucket) * 710);
 
-        if (timing.type === 'red') {
-            // 渲染 BPM 红线
-            const bpm = rounds(timing.bpm, 2)
+        switch (timing.type) {
+            case 'red': case 'virtual': {
+                // 渲染 BPM 红线
+                const bpm = rounds(timing.bpm, 2)
 
-            const has_dot = bpm.integer.includes('.')
+                const has_dot = bpm.integer.includes('.')
 
-            reds += torusBold.getTextPath(bpm.integer.replace('.', ''), -2, y + 3, 14, 'right baseline', '#F990AB')
-                + torusBold.getTextPath((has_dot ? '.' : '') + bpm.decimal, -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
-            reds += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#D32F2F" stroke-width="2" />`;
-        } else if (timing.type === 'bar') {
-            // 渲染 普通小节线
-            others += torusBold.getTextPath(timing.measure_index.toString(), -2, y + 3, 14, 'right baseline', '#fff', 0.6)
-            others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#ccc" stroke-width="1.5" />`;
-        } else if (timing.type === 'beat') {
-            // 渲染 普通拍子线
-            others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#666" stroke-width="1" />`;
-        } else if (timing.type === 'preview') {
-            // 渲染 预览线
-            yellow += torusBold.getTextPath('PV', total_width + 2, y + 3, 14, 'left baseline', '#F6F05C')
-            yellow += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#F6F05C" stroke-width="2"/>`;
-        } else {
-            // 渲染 SV 绿线
-            greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
-            greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#5EDC5B" stroke-width="1" stroke-dasharray="2,2" />`;
+                reds += torusBold.getTextPath(bpm.integer.replace('.', ''), -2, y + 3, 14, 'right baseline', '#F990AB')
+                    + torusBold.getTextPath((has_dot ? '.' : '') + bpm.decimal, -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
+                reds += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#D32F2F" stroke-width="2" />`;
+            } break
+
+            case 'bar': {
+                // 渲染 普通小节线
+                if (!timing.is_near_next) {
+                    others += torusBold.getTextPath(timing.measure_index.toString(), -2, y + 3, 14, 'right baseline', '#fff', 0.6)
+                }
+
+                others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#ccc" stroke-width="1.5" />`;
+            } break
+
+            case 'beat': {
+                // 渲染 普通拍子线
+                others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#666" stroke-width="1" />`;
+            } break
+
+            case 'preview': {
+                // 渲染 预览线
+                yellow += torusBold.getTextPath('PV', total_width + 2, y + 3, 14, 'left baseline', '#F6F05C')
+                yellow += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#F6F05C" stroke-width="2"/>`;
+            } break
+
+            case 'minute': {
+                // 渲染 时间线
+                const min = Math.round(timing.time / 60000)
+
+                others += torusBold.get2SizeTextPath(min + ':', '00', 14, 10, total_width + 2, y + 3, 'left baseline', '#00B7EE', '#00B7EE')
+                others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#00B7EE" stroke-width="1.5" stroke-dasharray="2,2" />`;
+            } break
+
+            case 'green': {
+                // 渲染 SV 绿线
+                greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
+                greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#5EDC5B" stroke-width="1" stroke-dasharray="2,2" />`;
+            }
         }
     }
 
