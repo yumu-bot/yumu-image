@@ -940,7 +940,7 @@ const component_E10P = (data = {
 // 私有转换方式
 const PanelEGenerate = {
     score2componentE1: (score) => {
-        const sr = score?.beatmap.difficulty_rating || 0;
+        const sr = score?.beatmap?.difficulty_rating ?? 0;
         const mode = score?.mode || 'osu';
         const name = getDifficultyIndex(score?.beatmap?.version, sr, mode, score?.mods)
 
