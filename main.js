@@ -200,15 +200,24 @@ async function start() {
             type: 'AUTH',
             pid: process.pid
         });
+
+        // --- 新增：JS 主动心跳 ---
+        // 每 25 秒主动发一次心跳（略小于服务端的 30s，确保不超时）
+        if (client.heartbeatTimer) {
+            clearInterval(client.heartbeatTimer);
+        }
+
+        client.heartbeatTimer = setInterval(() => {
+            if (client.ws && client.ws.readyState === 1) { // 1 代表 OPEN
+                // 发送一个自定义的心跳包，确保服务端接收并重置超时计数
+                client.send({ type: 'HEARTBEAT', pid: process.pid, timestamp: Date.now() });
+            }
+
+        }, 25000);
     });
 
     client.on('message', async (data) => {
         const msg = JSON.parse(data.toString());
-
-        if (msg.type === 'PING') {
-            client.send({ type: 'PONG' }); // 响应心跳
-            return;
-        }
 
         if (!msg.messageId) return;
 
@@ -231,6 +240,7 @@ async function start() {
     });
 
     client.on('close', () => {
+        if (client.heartbeatTimer) clearInterval(client.heartbeatTimer);
         this.ws.removeAllListeners();
         this.ws = null;
     })
