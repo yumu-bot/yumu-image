@@ -241,8 +241,8 @@ async function start() {
 
     client.on('close', () => {
         if (client.heartbeatTimer) clearInterval(client.heartbeatTimer);
-        this.ws.removeAllListeners();
-        this.ws = null;
+        client.ws.removeAllListeners();
+        client.ws = null;
     })
 }
 

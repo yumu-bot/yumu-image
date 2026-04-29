@@ -10,24 +10,35 @@ export class WsClient extends EventEmitter {
     }
 
     connect() {
+        if (this.ws) {
+            this.ws.removeAllListeners();
+            this.ws.terminate(); // 强行断开
+        }
+
         this.ws = new WebSocket(this.url);
 
+        // 2. 使用标记位防止重复触发重连
+        let hasReconnected = false;
+        const doReconnect = () => {
+            if (!hasReconnected) {
+                hasReconnected = true;
+                this.scheduleReconnect();
+            }
+        };
+
+        this.ws.on('error', (err) => {
+            console.error("连接异常，正在重新连接", err.message);
+            doReconnect()
+        });
+
+        this.ws.on('close', doReconnect);
+
         this.ws.on('open', () => {
-            //console.log("已成功连接到服务端");
             this.emit('open'); // 转发 open 事件
         });
 
         this.ws.on('message', (data) => {
             this.emit('message', data); // 转发 message 事件
-        });
-
-        this.ws.on('error', (err) => {
-            console.error("连接异常，正在重新连接", err.message);
-            this.scheduleReconnect();
-        });
-
-        this.ws.on('close', () => {
-            this.scheduleReconnect();
         });
     }
 
