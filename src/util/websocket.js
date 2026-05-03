@@ -31,14 +31,17 @@ export class WsClient extends EventEmitter {
             doReconnect()
         });
 
-        this.ws.on('close', doReconnect);
-
         this.ws.on('open', () => {
-            this.emit('open'); // 转发 open 事件
+            this.emit('open');
         });
 
         this.ws.on('message', (data) => {
-            this.emit('message', data); // 转发 message 事件
+            this.emit('message', data);
+        });
+
+        this.ws.on('close', () => {
+            this.emit('close');
+            doReconnect();
         });
     }
 

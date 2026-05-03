@@ -155,6 +155,11 @@ async function initPanels() {
 function adaptHandler(originalRouter) {
     return async (payload) => {
         return new Promise(async (resolve, reject) => {
+            // 设置超时熔断器（例如 30 秒）
+            const timer = setTimeout(() => {
+                reject(new Error("渲染任务超时未响应，强制熔断释放内存"));
+            }, 30000);
+
             const req = {
                 body: payload,
                 fields: payload
@@ -163,23 +168,29 @@ function adaptHandler(originalRouter) {
             const res = {
                 set: () => res,
                 setHeader: () => res,
-
                 status: (code) => {
                     if (code >= 400) console.warn(`渲染状态码警报: ${code}`);
                     return res;
                 },
-
-                // 成功返回数据
-                send: (data) => resolve(data),
-                json: (data) => resolve(data),
-
+                // 成功返回数据时，必须清除定时器
+                send: (data) => {
+                    clearTimeout(timer);
+                    resolve(data);
+                },
+                json: (data) => {
+                    clearTimeout(timer);
+                    resolve(data);
+                },
                 end: () => {
+                    clearTimeout(timer);
+                    resolve(null);
                 }
             };
 
             try {
                 await originalRouter(req, res);
             } catch (err) {
+                clearTimeout(timer);
                 reject(err);
             }
         });
@@ -231,7 +242,10 @@ async function start() {
             // 2. 合并：[36字节UUID][图片数据]
             const finalBuffer = Buffer.concat([idBuffer, result]);
 
-            // 3. 直接通过 WebSocket 发送二进制 (ws 库会自动识别 Buffer 为 binary frame)
+            if (client.ws.bufferedAmount > 30 * 1024 * 1024) {
+                console.warn(`[警告] WS 发送队列积压严重: ${(client.ws.bufferedAmount / 1024 / 1024).toFixed(2)} MB`);
+            }
+
             client.ws.send(finalBuffer);
         } catch (err) {
             // 如果出错，依然通过 JSON 发送错误信息
