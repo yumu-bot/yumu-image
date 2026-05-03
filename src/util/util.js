@@ -915,7 +915,7 @@ export async function downloadImage(path = '', bufferPath = '', default_image_pa
 
         data = req.data;
     } catch (e) {
-        console.error("download error", e);
+        console.error("download error", e.message);
         return default_image_path || error;
     }
 
