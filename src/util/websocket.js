@@ -18,7 +18,9 @@ export class WsClient extends EventEmitter {
         this.isReconnecting = false;
 
         console.log(`[WS] 尝试连接: ${this.url}`);
-        this.ws = new WebSocket(this.url);
+        this.ws = new WebSocket(this.url, {
+            maxPayload: 20 * 1024 * 1024 // 同样设为 20MB
+        });
 
         // 设置一个握手超时，防止连接挂死在 CONNECTING 状态
         const handshakeTimeout = setTimeout(() => {
