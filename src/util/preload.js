@@ -90,7 +90,7 @@ export class Preloader {
                 path: bufferPath,
             }
         } catch (e) {
-            console.error("download error", e.message);
+            console.error("预加载：下载失败", e.message);
             return {
                 data: null,
                 status: 400,

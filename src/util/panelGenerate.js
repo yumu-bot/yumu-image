@@ -74,7 +74,6 @@ export const PanelGenerate = {
             right3m: '',
         }
 
-
         /**
          * @type {string}
          */

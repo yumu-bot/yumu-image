@@ -356,7 +356,7 @@ export function requireNonNullElse(obj, obj2) {
 }
 
 export const toPromise = (source, promise = () => readNetImage(source)) => {
-    if (typeof source === 'string') {
+    if (isNotBlankString(source)) {
         // 1. 检查是否是 Base64
         const isBase64 = source.startsWith('data:image');
 
@@ -915,7 +915,7 @@ export async function downloadImage(path = '', bufferPath = '', default_image_pa
 
         data = req.data;
     } catch (e) {
-        console.error("download error", e.message);
+        console.error("下载网图：失败", e.message);
         return default_image_path || error;
     }
 
@@ -982,7 +982,7 @@ export async function readNetImage(path = '', use_cache = true, default_image_pa
             req = await axios.get(path, {responseType: 'arraybuffer', timeout: 10000});
             data = req.data;
         } catch (e) {
-            console.error("download error", e);
+            console.error("网图：下载失败", e.message);
             return default_image_path || error;
         }
     }
