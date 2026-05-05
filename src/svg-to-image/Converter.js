@@ -236,14 +236,23 @@ export default class Converter {
         input = Buffer.isBuffer(input) ? input.toString('utf8') : input;
 
         const { provider } = this;
-        const svg = cheerio.default.html(this[_sanitize](cheerio.load(input, null, false)('svg:first'), options));
+        // const svg = cheerio.default.html(this[_sanitize](cheerio.load(input, null, false)('svg:first'), options));
+
+        // 1. 加载代码，生成实例 $
+        const $ = cheerio.load(input, { xml: false }, false);
+
+        // 2. 选取并清洗节点 (注意：'svg:first' 建议换成 $('svg').first())
+        const sanitizedNode = this[_sanitize]($('svg').first(), options);
+
+        // 3. 将清洗后的节点转回字符串
+        const svg = $.html(sanitizedNode);
 
         if (!svg) {
             throw new Error('SVG element not found in input. Check the SVG input');
         }
 
         const html = `<!DOCTYPE html>
-<html>
+<html lang="">
 <head>
 <base href="${options.baseUrl}">
 <meta charset="utf-8">
