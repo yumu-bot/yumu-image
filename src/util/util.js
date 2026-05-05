@@ -17,6 +17,10 @@ import FileCache from './fileCache.js';
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import {EventEmitter} from 'events';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 const VERSION = 'v0.8.0'
 const VERSION_CODE = 'VS'
@@ -829,6 +833,30 @@ export async function getBanner(link, use_cache = true, default_image_path = get
     }
 }
 
+export async function downloadWithCurl(url, buffer_path, default_image_path) {
+    try {
+        // 使用 curl 下载，模拟一个常见的 User-Agent
+        // -L 跟踪重定向, -s 静默模式, -o 输出到文件
+        const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+        const command = `curl -L -s -H "User-Agent: ${userAgent}" "${url}" -o "${buffer_path}"`;
+
+        await execAsync(command);
+
+        // 简单校验：检查下载的是不是 HTML (如果是 HTML 说明还是被拦截了)
+        const stats = fs.statSync(buffer_path);
+        if (stats.size < 1000) { // 图片通常大于 1KB，挑战页 HTML 往往很小
+            const content = fs.readFileSync(buffer_path, 'utf8');
+            if (content.includes('<script') || content.includes('403')) {
+                throw new Error('Caught by Anti-Bot via Curl');
+            }
+        }
+
+        return buffer_path;
+    } catch (error) {
+        console.error('Curl 下载失败:', error.message);
+        return default_image_path;
+    }
+}
 
 /**
  * 除非 axios 用不了，否则就别用 puppeteer 开浏览器下（真的很重）
@@ -839,10 +867,12 @@ export async function getBanner(link, use_cache = true, default_image_path = get
  */
 export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePath = getImageFromV3('error.png')) {
     const browser = await getBrowserInstance();
-    const context = await browser.createIncognitoBrowserContext();
+    const context = await browser.createBrowserContext();
     const page = await context.newPage();
 
     try {
+
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36');
         // 2. 模拟真实视口和指纹
         await page.setViewport({ width: 1280, height: 720 });
 
@@ -865,6 +895,15 @@ export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePa
         // 3. 关键：尝试通过“首页渗透”绕过 Cloudflare
         const origin = new URL(url).origin;
         await page.goto(origin, { waitUntil: 'networkidle2', timeout: 15000 }).catch(() => {});
+
+        const isChallengePage = await page.evaluate(() => document.body.innerHTML.includes('__tst_status'));
+        if (isChallengePage) {
+            console.log("检测到挑战页，等待执行...");
+            await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 }).catch(() => {});
+        }
+
+        const content2 = await page.content();
+        console.log("挑战结束后的页面标题:", await page.title());
 
         // 4. 正式访问图片
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
