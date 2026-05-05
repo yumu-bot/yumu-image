@@ -19,7 +19,7 @@ export class WsClient extends EventEmitter {
 
         console.log(`[WS] 尝试连接: ${this.url}`);
         this.ws = new WebSocket(this.url, {
-            maxPayload: 20 * 1024 * 1024 // 同样设为 20MB
+            maxPayload: 30 * 1024 * 1024
         });
 
         // 设置一个握手超时，防止连接挂死在 CONNECTING 状态
