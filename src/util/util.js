@@ -72,39 +72,37 @@ process.on('uncaughtException', async (err) => {
 });
 
 export async function getBrowserInstance() {
-    // 1. 如果已经有 Promise 了，直接返回（无论它是 pending 还是 resolved）
     if (browserPromise) {
         const b = await browserPromise;
 
-        if (b.isConnected()) {
-            const pages = await b.pages();
+        // 核心：不仅检查连接，还检查响应活性
+        const responsive = await isBrowserResponsive(b);
 
+        if (responsive) {
             const contexts = b.browserContexts();
-
-            if (contexts.length > 50) {
-                console.warn(`正在清理最旧的非默认的 Context: ${pages.length}`);
-                for (let i = 1; i < contexts.length - 5; i++) {
-                    await contexts[i].close();
+            if (contexts.length > 20) {
+                console.warn(`[资源检查] Context 数量(${contexts.length})较高，清理旧 Context...`);
+                for (let i = 1; i < contexts.length; i++) {
+                    await contexts[i].close().catch(() => {});
                 }
             }
 
             return b;
         } else {
-            await b.close().catch(e => {
-                console.error("单例浏览器：关闭失败：", e);
-            })
+            console.error("[实例侦测] 浏览器已失去响应或断开，准备重启...");
+            // 尝试强制杀死旧实例
+            await b.close().catch(() => {});
+            // 如果 b.process() 还在，可以尝试 process.kill(b.process().pid) (如果有权限)
         }
-
         browserPromise = null;
     }
 
-    // 2. 关键：同步赋值！不要在 launch 前加 await
-    // 这样下一个请求进来时，browserPromise 已经不是 null 了
     console.log('正在启动/重启唯一浏览器实例...');
 
     browserPromise = puppeteer.launch({
         headless: "new",
         args: [
+            '--js-flags="--max-old-space-size=512"',
             '--no-sandbox',
             '--disable-dev-shm-usage',
             '--disable-setuid-sandbox',
@@ -120,6 +118,20 @@ export async function getBrowserInstance() {
     });
 
     return browserPromise;
+}
+
+async function isBrowserResponsive(browser) {
+    try {
+        if (!browser.isConnected()) return false;
+
+        // 尝试在 2 秒内获取浏览器版本，如果获取不到，说明事件循环已卡死
+        return await Promise.race([
+            browser.version(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
+        ]).then(() => true).catch(() => false);
+    } catch (e) {
+        return false;
+    }
 }
 
 
@@ -826,67 +838,65 @@ export async function getBanner(link, use_cache = true, default_image_path = get
  * @returns {Promise<*|string>}
  */
 export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePath = getImageFromV3('error.png')) {
-    let page;
+    const browser = await getBrowserInstance();
+    const context = await browser.createIncognitoBrowserContext();
+    const page = await context.newPage();
+
     try {
-        const browser = await getBrowserInstance();
-        page = await browser.newPage();
-
-        await page.setViewport({ width: 800, height: 600 });
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-
-        await page.setExtraHTTPHeaders({
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
-        });
+        // 2. 模拟真实视口和指纹
+        await page.setViewport({ width: 1280, height: 720 });
 
         let imageBuffer = null;
+        let finished = false;
 
         page.on('response', async (response) => {
-            // 注意：JS 挑战重定向后，URL 可能会附带查询参数，建议放宽匹配条件
-            if (response.url().includes(url) || url.includes(response.url())) {
+            if (finished) return;
+            if (response.url().includes(url.split('?')[0])) {
                 const contentType = response.headers()['content-type'];
-                if (contentType && contentType.startsWith('image/')) {
+                if (contentType?.startsWith('image/')) {
                     try {
                         imageBuffer = await response.buffer();
-                    } catch (err) {
-                        // 忽略 buffer 读取错误
-                    }
+                        finished = true;
+                    } catch (e) {}
                 }
             }
         });
 
-        // 取消 networkidle2，因为 JS 挑战可能会发出大量后台请求导致永远达不到 idle
-        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+        // 3. 关键：尝试通过“首页渗透”绕过 Cloudflare
+        const origin = new URL(url).origin;
+        await page.goto(origin, { waitUntil: 'networkidle2', timeout: 15000 }).catch(() => {});
 
-        // 如果没有立即拿到图片（说明可能进挑战了），等待一段时间
+        // 4. 正式访问图片
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+
+        // 5. 最后的挣扎：如果还没拿到，尝试在页面内找 img
         if (!imageBuffer) {
-            try {
-                // 等待页面中出现 img 标签（Chrome 直接打开图片会包裹在 img 标签内）
-                // 或者是给 JS 挑战留出 10 秒钟的自动验证时间
-                await page.waitForSelector('img', { timeout: 10000 });
-                // 此时通常 response 拦截器已经抓到了重定向后的图片
-            } catch (e) {
-                console.warn(`等待 JS 挑战或图片加载超时`);
-            }
+            console.log("你到底有没有 image 啊")
+            imageBuffer = await page.evaluate(async (targetUrl) => {
+                const img = document.querySelector('img');
+                if (img && img.src.includes(targetUrl)) {
+                    const resp = await fetch(img.src);
+                    const blob = await resp.blob();
+                    return await new Promise(resolve => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                        reader.readAsDataURL(blob);
+                    });
+                }
+                return null;
+            }, url).then(base64 => base64 ? Buffer.from(base64, 'base64') : null).catch(() => null);
         }
 
         if (imageBuffer) {
-            const dir = path.dirname(bufferPath);
-            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
             fs.writeFileSync(bufferPath, imageBuffer);
-            console.warn(`下图成功，已存储到：${bufferPath}`);
             return bufferPath;
         }
 
-        console.warn('捕获失败：仍未通过 JS 挑战或无图片响应');
-        return defaultImagePath;
-    } catch (e) {
-        console.error(`[Puppeteer Error] ${url}:`, e.message);
+        console.log("浏览器下图：失败，正在返回默认图片")
         return defaultImagePath;
     } finally {
-        if (page) {
-            await page.close().catch(e => console.error('浏览器下图：关闭页面失败:', e.message));
-        }
+        await page.close().catch(() => {});
+        await context.close().catch(() => {});
     }
 }
 

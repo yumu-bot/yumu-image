@@ -110,6 +110,11 @@ app.listen(port, () => {
 
  */
 
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('未捕获的 Promise 拒绝:', reason);
+    // 记录日志，但不让进程死掉
+});
+
 
 const port = process.env.PORT ?? 8388
 
@@ -197,6 +202,11 @@ function adaptHandler(originalRouter) {
     };
 }
 
+const MAX_CONCURRENT = 1;
+let currentTasks = 0;
+const taskQueue = [];
+const MAX_QUEUE_SIZE = 10
+
 async function start() {
     // 每个进程都加载渲染器
     await initPanels();
@@ -212,8 +222,6 @@ async function start() {
             pid: process.pid
         });
 
-        // --- 新增：JS 主动心跳 ---
-        // 每 25 秒主动发一次心跳（略小于服务端的 30s，确保不超时）
         if (client.heartbeatTimer) {
             clearInterval(client.heartbeatTimer);
         }
@@ -227,30 +235,47 @@ async function start() {
         }, 25000);
     });
 
-    client.on('message', async (data) => {
-        const msg = JSON.parse(data.toString());
 
-        if (!msg.messageId) return;
+    async function processQueue() {
+        if (currentTasks >= MAX_CONCURRENT || taskQueue.length === 0) return;
+
+        currentTasks++;
+        const { msg } = taskQueue.shift();
 
         try {
             const handler = panelHandlers.get(msg.path);
             const result = await handler(msg.payload);
 
-            // 1. 将 UUID 转为 Buffer (36字节)
+            // 合并 Buffer
             const idBuffer = Buffer.from(msg.messageId, 'utf-8');
-
-            // 2. 合并：[36字节UUID][图片数据]
             const finalBuffer = Buffer.concat([idBuffer, result]);
 
+            // 检查缓冲区压力，如果压力太大则等待
             if (client.ws.bufferedAmount > 30 * 1024 * 1024) {
-                console.warn(`[警告] WS 发送队列积压严重: ${(client.ws.bufferedAmount / 1024 / 1024).toFixed(2)} MB`);
+                console.error("缓冲区过载，丢弃该任务防止崩溃");
+            } else {
+                client.ws.send(finalBuffer);
             }
-
-            client.ws.send(finalBuffer);
         } catch (err) {
-            // 如果出错，依然通过 JSON 发送错误信息
             client.send({ messageId: msg.messageId, status: 'error', error: err.message });
+        } finally {
+            currentTasks--;
+            msg.payload = null;
+            setTimeout(processQueue, 50);
         }
+    }
+
+    client.on('message', (data) => {
+        if (taskQueue.length >= MAX_QUEUE_SIZE) {
+            console.warn("任务队列已满，拒绝接收新任务");
+            return;
+        }
+
+        const msg = JSON.parse(data.toString());
+        if (!msg.messageId) return;
+
+        taskQueue.push({ msg });
+        processQueue();
     });
 
     client.on('close', () => {
