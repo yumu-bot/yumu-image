@@ -19,7 +19,7 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import {EventEmitter} from 'events';
 
 const VERSION = 'v0.8.0'
-const VERSION_CODE = 'GM'
+const VERSION_CODE = 'VS'
 
 const exportsJPEG = new API(new JPEGProvider());
 const exportsPNG = new API(new PNGProvider());
