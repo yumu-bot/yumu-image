@@ -837,16 +837,17 @@ export async function downloadWithCurl(url, buffer_path, default_image_path) {
     try {
         // 使用 curl 下载，模拟一个常见的 User-Agent
         // -L 跟踪重定向, -s 静默模式, -o 输出到文件
-        const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+        const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.57 Safari/537.36';
         const command = `curl -L -s -H "User-Agent: ${userAgent}" "${url}" -o "${buffer_path}"`;
 
         await execAsync(command);
 
         // 简单校验：检查下载的是不是 HTML (如果是 HTML 说明还是被拦截了)
         const stats = fs.statSync(buffer_path);
-        if (stats.size < 1000) { // 图片通常大于 1KB，挑战页 HTML 往往很小
+        if (stats.size < 4000) { // 图片通常大于 1KB，挑战页 HTML 往往很小
             const content = fs.readFileSync(buffer_path, 'utf8');
             if (content.includes('<script') || content.includes('403')) {
+                fs.rmSync(buffer_path);
                 throw new Error('Caught by Anti-Bot via Curl');
             }
         }
@@ -956,7 +957,7 @@ export async function downloadImage(path = '', bufferPath = '', default_image_pa
         req = await axios.get(path, {
             responseType: 'arraybuffer',
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.57 Safari/537.36',
                 'Referer': 'https://www.google.com'
             },
             timeout: 10000
