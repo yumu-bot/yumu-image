@@ -1,7 +1,7 @@
 
 import {CACHE_PATH, IMG_BUFFER_PATH, initPath, OSU_BUFFER_PATH} from "./src/util/util.js";
 import puppeteer from "puppeteer";
-import {WsClient} from "./src/util/websocket.js";
+import {logger, WsClient} from "./src/util/websocket.js";
 import moment from "moment";
 
 initPath();
@@ -110,7 +110,7 @@ app.listen(port, () => {
 
  */
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason) => {
     console.error('未捕获的 Promise 拒绝:', reason);
     // 记录日志，但不让进程死掉
 });
@@ -210,13 +210,13 @@ const MAX_QUEUE_SIZE = 10
 async function start() {
     // 每个进程都加载渲染器
     await initPanels();
-    console.log(`进程 [${process.pid}] 渲染器就绪`);
+    console.log(logger(`进程 [${process.pid}] 渲染器就绪`));
 
     // 每个进程都作为客户端连接 Kotlin
     const client = new WsClient(`ws://localhost:${port}/render-ws`);
 
     client.on('open', () => {
-        console.log(`进程 [${process.pid}] 已连接到 Kotlin 服务端`);
+        console.log(logger(`[WS] 进程 [${process.pid}] 已连接到 Kotlin 服务端`));
         client.send({
             type: 'AUTH',
             pid: process.pid
@@ -227,7 +227,7 @@ async function start() {
         }
 
         client.heartbeatTimer = setInterval(() => {
-            if (client.ws && client.ws.readyState === 1) { // 1 代表 OPEN
+            if (client.ws && client.ws.readyState === 1) {
                 // 发送一个自定义的心跳包，确保服务端接收并重置超时计数
                 client.send({ type: 'HEARTBEAT', pid: process.pid, timestamp: Date.now() });
             }
@@ -252,7 +252,7 @@ async function start() {
 
             // 检查缓冲区压力，如果压力太大则等待
             if (client.ws.bufferedAmount > 30 * 1024 * 1024) {
-                console.error("缓冲区过载，丢弃该任务防止崩溃");
+                console.error(logger("[WS] 缓冲区过载，丢弃该任务防止崩溃"));
             } else {
                 client.ws.send(finalBuffer);
             }
@@ -267,7 +267,7 @@ async function start() {
 
     client.on('message', (data) => {
         if (taskQueue.length >= MAX_QUEUE_SIZE) {
-            console.warn("任务队列已满，拒绝接收新任务");
+            console.warn(logger("[WS] 任务队列已满，拒绝接收新任务"));
             return;
         }
 

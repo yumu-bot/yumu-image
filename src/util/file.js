@@ -241,6 +241,29 @@ export async function parseBeatmapFile(filePath) {
         }
     }
 
+    // 绿线修正：通过记录红线来赋予绿线 beat_length
+    let current_beat_length = 60000 / 120;
+
+    // 如果 timings 数组可能乱序，建议先进行排序
+    timings.sort((a, b) => {
+        if (a.time !== b.time) {
+            return a.time - b.time;
+        }
+        if (a.beat_length != null && b.beat_length == null) return -1;
+        if (a.beat_length == null && b.beat_length != null) return 1;
+        return 0;
+    });
+
+    timings.forEach(line => {
+        if (line.type === 'red') {
+            // 如果是红线，更新当前的基准 beat_length
+            current_beat_length = line.beat_length;
+        } else {
+            // 如果是绿线，将其 beat_length 设定为当前红线的值
+            line.beat_length = current_beat_length;
+        }
+    });
+
     return {
         timings: timings,
         notes: notes,
@@ -309,4 +332,30 @@ export function getLongestBPM(only_red = [], last_time = 0) {
         bpm: longestBpm,
         duration: maxDuration
     };
+}
+
+/**
+ * 将 bpm 限制在 120 - 300 的范围内
+ * @param raw_bpm
+ * @param min 120
+ * @param max 300
+ * @return {number}
+ */
+export function normalizeBpm(raw_bpm, min = 120, max = 300) {
+    let result = raw_bpm;
+
+    if (result < min) {
+        while (result < min) {
+            result *= 2;
+        }
+        if (result > max) result = min;
+    } else if (result > max) {
+        while (result > max) {
+            result /= 2;
+        }
+
+        if (result < min) result = max;
+    }
+
+    return Math.min(Math.max(result, min), max);
 }

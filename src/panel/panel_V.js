@@ -12,7 +12,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
 import {torusBold} from "../util/font.js";
-import {getBeatmapFilePath, getLongestBPM, parseBeatmapFile} from "../util/file.js";
+import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/file.js";
 
 export async function router(req, res) {
     try {
@@ -70,7 +70,8 @@ export async function panel_V(
 
     // 算标准bpm
     const {bpm} = getLongestBPM(only_red, last_time)
-    const beat_length = 60000 / bpm
+    const normalized_bpm = normalizeBpm(bpm)
+    const beat_length = 60000 / normalized_bpm
 
     const lane_width = 10
     const chunk_gap = 30
@@ -119,12 +120,10 @@ export async function panel_V(
         const beat = (note.time - first_time) / beat_length;
         const end_beat = (note.type === 'ln') ? ((note.end_time - first_time) / beat_length) : beat;
 
-
         // 1. 过滤：如果整个音符都在当前页之前或之后，直接跳过
         if (end_beat < pageStartBeat || beat >= pageStartBeat + totalBeatsPerPage) {
             continue;
         }
-
 
         // start_chunk 计算时增加 epsilon，如果是 31.999，会变成 32.004，从而 floor 到 1 而不是 0
         const start_chunk = Math.max(0, Math.floor((beat - pageStartBeat + epsilon) / beats_per_bucket));
@@ -165,10 +164,10 @@ export async function panel_V(
         const next_time = (i < only_red.length - 1) ? next.time : last_time;
 
         // 每一拍的长度
-        const beat_length = current.beat_length;
+        const timing_beat_length = current.beat_length;
 
         // 从当前红点开始，以“拍”为单位步进
-        for (let time = current.time; time < next_time; time += beat_length) {
+        for (let time = current.time; time < next_time; time += timing_beat_length) {
 
             // 跳过红线重合点
             if (Math.abs(time - current.time) < 1) {
@@ -176,22 +175,23 @@ export async function panel_V(
             }
 
             // 计算当前拍是在这个红线段落里的第几拍
-            const beat_index = Math.round((time - current.time) / beat_length);
+            const beat_index = Math.round((time - current.time) / timing_beat_length);
 
             // 如果能被 meter 整除，说明是小节线（Bar Line），否则是拍子线（Beat Line）
             const is_bar = (beat_index % current.meter) === 0;
 
             const t = Math.round(time);
+            // 这里要用全局的那个
             const beat = (t - first_time) / beat_length;
 
             const until_next = next_time - time;
-            const is_near_next = next && (until_next < beat_length * 0.1);
+            const is_near_next = next && (until_next < timing_beat_length * 0.1);
 
             full_line.push({
                 time: t,
                 beat_length: current.beat_length,
                 beat: beat,
-                sv: -1,
+                sv: current.sv,
                 measure_index: is_bar ? (beat_index / current.meter) + 1 : null,
                 is_near_next: is_near_next,
                 meter: current.meter,
@@ -205,11 +205,11 @@ export async function panel_V(
         }
     }
 
-    const min_interval = 60000;
+    const minute_interval = 60000;
     const last_note_time = notes[notes.length - 1]?.time ?? 0;
 
     // 插入分钟线
-    for (let t = 0; t <= last_note_time; t += min_interval) {
+    for (let t = 0; t <= last_note_time; t += minute_interval) {
         if (t === 0) continue; // 跳过 0ms
 
         const beat = (t - first_time) / beat_length
@@ -299,6 +299,7 @@ export async function panel_V(
 
     const row_height = 710;
     const row_gap = 20;
+    const background_bleed = 5
     const total_height = 290 + 40 + (actual_rows * row_height) + ((actual_rows - 1) * row_gap) + 40;
 
     const [card_a2_deferred, background_deferred] = await Promise.allSettled([
@@ -355,6 +356,9 @@ export async function panel_V(
 
     const render_chunks_count = actual_rows * chunk_per_row;
 
+    const components = []
+    const backgrounds = []
+
     for (let i = 0; i < render_chunks_count; i++) {
         const component = component_V(chunks[i], key, row_height, beats_per_bucket, general.special_style);
 
@@ -364,8 +368,15 @@ export async function panel_V(
         const x = c * chunk_width + chunk_x;
         const y = 290 + 40 + r * (row_height + row_gap); // 按行数往下推
 
-        svg += getSvgBody(x, y, component);
+        if (r % 2 !== 0) {
+            // 奇数行，但是从 0 开始
+            backgrounds.push(PanelDraw.Rect(0, y - background_bleed, 1920, row_height + background_bleed * 2, 0, '#46393F'))
+        }
+
+        components.push(getSvgBody(x, y, component))
     }
+
+    svg += backgrounds.join('\n') + components.join('\n');
 
     svg += `</svg>`;
 
