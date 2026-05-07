@@ -61,12 +61,10 @@ export async function panel_V(
 
     const key = Math.round(difficulty.cs)
 
-    notes.sort((a, b) => a.time - b.time);
-
-    const only_red = timings.sort((a, b) => a.time - b.time).filter(t => t.type === 'red');
+    const only_red = timings.filter(t => t.type === 'red');
 
     const first_time = notes[0]?.time ?? 0
-    const last_time = notes[notes.length - 1]?.time ?? 0
+    const last_time = notes[notes.length - 1]?.end_time ?? notes[notes.length - 1]?.time ?? 0
 
     // 算标准bpm
     const {bpm} = getLongestBPM(only_red, last_time)
@@ -234,7 +232,14 @@ export async function panel_V(
         beat: (v.time - first_time) / beat_length
     }))
 
-    full_line.sort((a, b) => a.time - b.time)
+    full_line.sort((a, b) => {
+        if (a.time !== b.time) {
+            return a.time - b.time;
+        }
+        if (a.beat_length != null && b.beat_length == null) return -1;
+        if (a.beat_length == null && b.beat_length != null) return 1;
+        return 0;
+    });
 
     for (const line of full_line) {
         // 1. 过滤：不在当前页范围内的直接跳过

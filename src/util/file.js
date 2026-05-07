@@ -264,6 +264,24 @@ export async function parseBeatmapFile(filePath) {
         }
     });
 
+    // 音符修正：对结束时间排序
+    notes.sort((a, b) => {
+        if (a.time !== b.time) {
+            return a.time - b.time;
+        }
+
+        if (a.end_time === null && b.end_time !== null) return -1;
+        if (a.end_time !== null && b.end_time === null) return 1;
+
+        if (a.end_time !== null && b.end_time !== null) {
+            if (a.end_time !== b.end_time) {
+                return a.end_time - b.end_time;
+            }
+        }
+
+        return a.x - b.x;
+    });
+
     return {
         timings: timings,
         notes: notes,
