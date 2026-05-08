@@ -1,11 +1,12 @@
 import {
     exportJPEG,
     getImage,
-    getImageFromV3, getImageOrElse,
-    getMapBackground,
+    getImageFromV3,
+    getImageOrElse,
+    getMapBackground, getNowTimeStamp,
     getOrNull,
     getPanelNameSVG,
-    getSvgBody,
+    getSvgBody, round,
 } from "../util/util.js";
 import {component_V} from "../component/component_V.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -204,10 +205,9 @@ export async function panel_V(
     }
 
     const minute_interval = 60000;
-    const last_note_time = notes[notes.length - 1]?.time ?? 0;
 
     // 插入分钟线
-    for (let t = 0; t <= last_note_time; t += minute_interval) {
+    for (let t = 0; t <= last_time; t += minute_interval) {
         if (t === 0) continue; // 跳过 0ms
 
         const beat = (t - first_time) / beat_length
@@ -241,6 +241,57 @@ export async function panel_V(
         return 0;
     });
 
+    // 绿线基准速度机制
+    const duration_map = new Map();
+
+    for (let i = 0; i < full_line.length; i++) {
+        const current = full_line[i];
+
+        // 我们只关心绿线的速度表现
+        if (current.beat_length != null && current.sv != null) {
+            const next_time = (i < full_line.length - 1) ? full_line[i + 1].time : last_time;
+            const duration = next_time - current.time;
+
+            if (duration > 0) {
+                // 同样需要四舍五入处理浮点精度，以便归类
+                const speed_val = Math.round((current.beat_length * current.sv) / 10) * 10;
+
+                if (speed_val >= 10) {
+                    const current_total_duration = duration_map.get(speed_val) || 0;
+                    duration_map.set(speed_val, current_total_duration + duration);
+                }
+            }
+        }
+    }
+
+    let significant_speed = 1.0;
+    let max_standard_duration = -1;
+
+    for (const [speed, duration] of duration_map.entries()) {
+        if (duration > max_standard_duration) {
+            max_standard_duration = duration;
+            significant_speed = speed;
+        }
+    }
+
+    let max_sv = -Infinity;
+    let min_sv = Infinity;
+
+
+    // 赋予标准 SV 并记录极值
+    full_line.forEach(current => {
+        if (current.beat_length != null && current.sv != null) {
+            const current_speed = current.beat_length * current.sv;
+            // 计算标准 SV
+            const standard = current_speed / significant_speed;
+            current.standard_sv = standard;
+
+            // 记录最大值和最小值
+            if (standard > max_sv) max_sv = standard;
+            if (standard < min_sv) min_sv = standard;
+        }
+    });
+
     for (const line of full_line) {
         // 1. 过滤：不在当前页范围内的直接跳过
         if (line.beat < pageStartBeat || line.beat >= pageStartBeat + totalBeatsPerPage) {
@@ -257,6 +308,19 @@ export async function panel_V(
         }
     }
 
+    // 假设你之前计算过谱面总拍数
+    for (let i = full_line.length - 1; i >= 0; i--) {
+        const current = full_line[i];
+
+        const next_line = (i === full_line.length - 1) ? null : full_line[i + 1];
+
+        if (current.type === 'green') {
+            current.next_standard_sv = next_line ? next_line.standard_sv : last_time;
+            current.next_beat = next_line ? next_line.beat : total_beats;
+        }
+    }
+
+    // 切片逻辑
     let max_used_chunk_index = -1;
     // 遍历当前页的所有切片，找出最后一个包含音符或时间线的切片索引
     for (let i = 0; i < chunks_per_page; i++) {
@@ -315,6 +379,16 @@ export async function panel_V(
     const card_a2 = getOrNull(card_a2_deferred)
     const banner = getImageOrElse(background_deferred, getImageFromV3('card-default.png'))
 
+    let sv_text = ''
+
+    const sv_mode = min_sv <= 0.2 && max_sv >= 3
+
+    if (sv_mode) {
+        sv_text = `sv: min ${round(min_sv, 2)}x, max ${round(max_sv, 2)}x // `
+    }
+
+    const request_time = sv_text + 'request time: ' + getNowTimeStamp()
+
     let svg = `
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="1920" height="${total_height}" viewBox="0 0 1920 ${total_height}">
 <defs>
@@ -351,7 +425,7 @@ export async function panel_V(
     ${PanelDraw.Rect(510, 40, 195, 60, 15, '#382E32')}
     
     ${getSvgBody(40, 40, card_A2(card_a2))}
-    ${getPanelNameSVG('Beatmap View (!ymv)', 'V')}
+    ${getPanelNameSVG('Beatmap View (!ymv)', 'V', request_time)}
     ${torusBold.getTextPath(
         'page: ' + Math.max(1, Math.min(data.page || 1, total_pages)) + ' of ' + (total_pages), 1920 / 2, total_height - 15, 20, 'center baseline', '#fff', 0.6
     )}
@@ -365,7 +439,7 @@ export async function panel_V(
     const backgrounds = []
 
     for (let i = 0; i < render_chunks_count; i++) {
-        const component = component_V(chunks[i], key, row_height, beats_per_bucket, general.special_style);
+        const component = component_V(chunks[i], key, row_height, beats_per_bucket, general.special_style, max_sv, min_sv);
 
         const r = Math.floor(i / chunk_per_row); // 属于第几行
         const c = i % chunk_per_row;             // 属于第几列

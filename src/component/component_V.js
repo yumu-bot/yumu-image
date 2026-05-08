@@ -1,14 +1,13 @@
 import {torusBold} from "../util/font.js";
 import {round, rounds} from "../util/util.js";
 
-
 export function component_V(
     chunk = {
         index: 1,
         start_bar: 0,
         notes: [],
         timings: []
-    }, total_key = 4, max_height = 710, beats_per_bucket = 32, is_special = false,
+    }, total_key = 4, max_height = 710, beats_per_bucket = 32, is_special = false, max_sv = 1.1, min_sv = 0
 ) {
     const overlay = getKeyOverlay(total_key, is_special)
 
@@ -31,6 +30,10 @@ export function component_V(
     let yellows = ''
     let others = ''
 
+    let green_count = 0
+
+    const sv_mode = min_sv <= 0.2 && max_sv >= 3
+
     for (const timing of chunk.timings) {
         const relative = timing.beat - chunk.start_bar * 4;
         const y = 710 - ((relative / beats_per_bucket) * 710);
@@ -38,12 +41,18 @@ export function component_V(
         switch (timing.type) {
             case 'red': case 'virtual': {
                 // 渲染 BPM 红线
-                const bpm = rounds(timing.bpm, 2)
+                if (timing.bpm < 1000) {
 
-                const has_dot = bpm.integer.includes('.')
+                    const bpm = rounds(timing.bpm, 2)
 
-                reds += torusBold.getTextPath(bpm.integer.replace('.', ''), -2, y + 3, 14, 'right baseline', '#F990AB')
-                    + torusBold.getTextPath((has_dot ? '.' : '') + bpm.decimal, -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
+                    const has_dot = bpm.integer.includes('.')
+
+                    reds += torusBold.getTextPath(bpm.integer.replace('.', ''), -2, y + 3, 14, 'right baseline', '#F990AB')
+                        + torusBold.getTextPath((has_dot ? '.' : '') + bpm.decimal, -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
+                } else {
+                    reds += torusBold.getTextPath('1K+', -2, y + 3, 14, 'right baseline', '#F990AB')
+                }
+
                 reds += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#D32F2F" stroke-width="2" />`;
             } break
 
@@ -76,11 +85,65 @@ export function component_V(
             } break
 
             case 'green': {
+                green_count ++
+
                 // 渲染 SV 绿线
                 greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
-                greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#CAF881" stroke-width="1" stroke-dasharray="2,2" />`;
+
+                if (sv_mode) {
+                    const current_sv = timing.standard_sv || 1.0;
+                    const next_sv = timing.next_standard_sv || 1.0;
+
+                    // 计算当前 SV 的 X 位置
+                    const center_x = total_width / 2
+                    let sv_x;
+                    if (current_sv >= 1.0) {
+                        const range = Math.max(max_sv, 1.01) - 1.0;
+                        sv_x = center_x + (range === 0 ? 0 : ((Math.min(current_sv, 10) - 1.0) / range) * center_x);
+                    } else {
+                        const range = 1.0 - Math.min(min_sv, 0.99);
+                        sv_x = center_x - (range === 0 ? 0 : ((1.0 - Math.max(current_sv, 0)) / range) * center_x);
+                    }
+
+                    let sv_x2;
+                    if (next_sv >= 1.0) {
+                        const range = Math.max(max_sv, 1.01) - 1.0;
+                        sv_x2 = center_x + (range === 0 ? 0 : ((Math.min(next_sv, 10) - 1.0) / range) * center_x);
+                    } else {
+                        const range = 1.0 - Math.min(min_sv, 0.99);
+                        sv_x2 = center_x - (range === 0 ? 0 : ((1.0 - Math.max(next_sv, 0)) / range) * center_x);
+                    }
+
+                    // 计算当前线和下一条线的 Y 坐标
+                    const relative_start = timing.beat - chunk.start_bar * 4;
+                    const relative_end = timing.next_beat - chunk.start_bar * 4; // 直接使用反向遍历存的值
+
+                    const y_start = max_height - ((relative_start / beats_per_bucket) * max_height);
+                    const y_end = max_height - ((relative_end / beats_per_bucket) * max_height);
+
+                    // 绘制竖线：从当前开始位置向上拉到下一条线开始的位置
+                    // 限制在当前 chunk 的高度范围内 (0 - 710)
+                    const draw_y_bottom = Math.min(max_height, Math.max(0, y_start));
+                    const draw_y_top = Math.min(max_height, Math.max(0, y_end));
+
+                    if (draw_y_bottom !== draw_y_top) {
+                        others += `<line x1="${sv_x}" y1="${draw_y_bottom}" x2="${sv_x}" y2="${draw_y_top}" stroke="#CAF881" stroke-width="3" opacity="0.3" />`
+                            + `<line x1="${sv_x}" y1="${draw_y_top}" x2="${sv_x2}" y2="${draw_y_top}" stroke="#CAF881" stroke-width="3" opacity="0.3" />`;
+
+                    }
+                } else {
+                    // 原来的线
+                    greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" opacity="0.8" stroke="#CAF881" stroke-width="1" stroke-dasharray="2,2" />`;
+                }
             }
         }
+    }
+
+    // 太密集，这些线也不能要了
+    if (green_count > 16) {
+        greens = ''
+    } else if (green_count === 0 && chunk.notes?.length > 0 && sv_mode) {
+        greens += `<line x1="${total_width / 2}" y1="${0}" x2="${total_width / 2}" y2="${max_height}" stroke="#CAF881" stroke-width="3" opacity="0.2" />`
     }
 
     svg += (others + greens + reds + yellows);
