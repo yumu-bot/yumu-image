@@ -277,6 +277,9 @@ export async function panel_V(
     let max_sv = -Infinity;
     let min_sv = Infinity;
 
+    // duration_map.forEach((duration, speed) => {
+    //     console.log(`速度值: ${speed}, 总持续时间: ${duration}`);
+    // });
 
     // 赋予标准 SV 并记录极值
     full_line.forEach(current => {
@@ -381,7 +384,7 @@ export async function panel_V(
 
     let sv_text = ''
 
-    const sv_mode = min_sv <= 0.2 && max_sv >= 3
+    const sv_mode = max_sv - min_sv > 8
 
     if (sv_mode) {
         sv_text = `sv: min ${round(min_sv, 2)}x, max ${round(max_sv, 2)}x // `

@@ -32,7 +32,7 @@ export function component_V(
 
     let green_count = 0
 
-    const sv_mode = min_sv <= 0.2 && max_sv >= 3
+    const sv_mode = max_sv - min_sv > 8
 
     for (const timing of chunk.timings) {
         const relative = timing.beat - chunk.start_bar * 4;
@@ -87,9 +87,6 @@ export function component_V(
             case 'green': {
                 green_count ++
 
-                // 渲染 SV 绿线
-                greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
-
                 if (sv_mode) {
                     const current_sv = timing.standard_sv || 1.0;
                     const next_sv = timing.next_standard_sv || 1.0;
@@ -127,12 +124,16 @@ export function component_V(
                     const draw_y_top = Math.min(max_height, Math.max(0, y_end));
 
                     if (draw_y_bottom !== draw_y_top) {
-                        others += `<line x1="${sv_x}" y1="${draw_y_bottom}" x2="${sv_x}" y2="${draw_y_top}" stroke="#CAF881" stroke-width="3" opacity="0.3" />`
-                            + `<line x1="${sv_x}" y1="${draw_y_top}" x2="${sv_x2}" y2="${draw_y_top}" stroke="#CAF881" stroke-width="3" opacity="0.3" />`;
+                        others += `<line x1="${sv_x}" y1="${draw_y_bottom}" x2="${sv_x}" y2="${draw_y_top}" stroke="#CAF881" stroke-width="3" opacity="0.5" />`
+                            + `<line x1="${sv_x}" y1="${draw_y_top}" x2="${sv_x2}" y2="${draw_y_top}" stroke="#CAF881" stroke-width="3" opacity="0.5" />`;
 
                     }
                 } else {
                     // 原来的线
+
+                    // 渲染 SV 绿线
+                    greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
+
                     greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" opacity="0.8" stroke="#CAF881" stroke-width="1" stroke-dasharray="2,2" />`;
                 }
             }
@@ -140,9 +141,7 @@ export function component_V(
     }
 
     // 太密集，这些线也不能要了
-    if (green_count > 16) {
-        greens = ''
-    } else if (green_count === 0 && chunk.notes?.length > 0 && sv_mode) {
+    if (green_count === 0 && chunk.notes?.length > 0 && sv_mode) {
         greens += `<line x1="${total_width / 2}" y1="${0}" x2="${total_width / 2}" y2="${max_height}" stroke="#CAF881" stroke-width="3" opacity="0.2" />`
     }
 
