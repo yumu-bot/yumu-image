@@ -65,7 +65,11 @@ export async function panel_V(
     const only_red = timings.filter(t => t.type === 'red');
 
     const first_time = notes[0]?.time ?? 0
+
+    /** @type {number} */
     const last_time = notes[notes.length - 1]?.end_time ?? notes[notes.length - 1]?.time ?? 0
+    /** @type {number} */
+    const last_timeline_time = timings[timings.length - 1]?.time ?? last_time
 
     // 算标准bpm
     const {bpm} = getLongestBPM(only_red, last_time)
@@ -207,7 +211,7 @@ export async function panel_V(
     const minute_interval = 60000;
 
     // 插入分钟线
-    for (let t = 0; t <= last_time; t += minute_interval) {
+    for (let t = 0; t <= last_timeline_time; t += minute_interval) {
         if (t === 0) continue; // 跳过 0ms
 
         const beat = (t - first_time) / beat_length

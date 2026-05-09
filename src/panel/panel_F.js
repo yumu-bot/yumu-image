@@ -46,48 +46,52 @@ export async function panel_F(
     data = {
         match: {
             match: {
-                id: 0,
+                match: {
+                    id: 0,
+                    start_time: '2024-11-23T13:24:27Z',
+                    end_time: '2024-11-23T14:30:06Z',
+                    name: ''
+                },
+                events: [
+                    [Object], [Object]
+                ],
+                users: [
+                    [Object],
+                ],
+                first_event_id: 2400727928,
+                latest_event_id: 2400743601,
+                name: '',
+                id: 116281503,
                 start_time: '2024-11-23T13:24:27Z',
                 end_time: '2024-11-23T14:30:06Z',
-                name: ''
+                current_game_id: 605701082,
+                is_match_end: true
             },
-            events: [
-                [Object], [Object]
-            ],
-            users: [
-                [Object],
-            ],
-            first_event_id: 2400727928,
-            latest_event_id: 2400743601,
-            name: '',
-            id: 116281503,
-            start_time: '2024-11-23T13:24:27Z',
-            end_time: '2024-11-23T14:30:06Z',
-            current_game_id: 605701082,
-            is_match_end: true
+            player_data_list: [{
+                player: [Object],
+                team: 'red',
+                total: 7131318,
+                era: 2.409392955909547,
+                dra: 3.32713040312523,
+                mra: 2.684714190074252,
+                rws: 0.2635810036318896,
+                ranking: 1,
+                win: 5,
+                lose: 2,
+                player_class: [Object],
+                arc: 7
+            },],
+            round_count: 7,
+            score_count: 56,
+            player_count: 16,
+            first_map_bid: 794779,
+            is_team_vs: true,
+            team_point_map: {red: 5, blue: 2},
+            skip_ignore_map: {skip: 2, ignore: 0, easy: 0.5},
+            average_star: 6.1233713286263605
         },
-        player_data_list: [{
-            player: [Object],
-            team: 'red',
-            total: 7131318,
-            era: 2.409392955909547,
-            dra: 3.32713040312523,
-            mra: 2.684714190074252,
-            rws: 0.2635810036318896,
-            ranking: 1,
-            win: 5,
-            lose: 2,
-            player_class: [Object],
-            arc: 7
-        },],
-        round_count: 7,
-        score_count: 56,
-        player_count: 16,
-        first_map_bid: 794779,
-        is_team_vs: true,
-        team_point_map: {red: 5, blue: 2},
-        skip_ignore_map: {skip: 2, ignore: 0, easy: 0.5},
-        average_star: 6.1233713286263605
+
+        panel: "QP"
     }
 ) {
     // 导入模板
@@ -102,16 +106,18 @@ export async function panel_F(
     let reg_card_c = /(?<=<g id="CardC">)/;
     let reg_card_a2 = /(?<=<g id="CardA2">)/;
 
+    const match = data?.match ?? {}
+
     // 面板文字
-    const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
+    const request_time = 'match time: ' + getMatchDuration(match) + ' // request time: ' + getNowTimeStamp();
 
     // 临时的
-    const qp_mode = data?.match?.match?.name?.toString()?.includes("Quick Play Match") || data?.match?.match?.name?.toString()?.includes("Ranked Play Match")
+    const qp_mode = data?.panel?.includes("RP") ?? false
 
     let panel_name
 
     if (qp_mode) {
-        panel_name = getPanelNameSVG('Quick Play (!ymqp)', 'QP', request_time);
+        panel_name = getPanelNameSVG('(Quick) Ranked Play (!ymrp)', 'RP', request_time);
     } else {
         panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', request_time);
     }
@@ -125,7 +131,7 @@ export async function panel_F(
     svg = setCustomBanner(svg, null, reg_banner);
 
     // 导入成绩卡（C卡\
-    const games = (data?.match?.events || []).filter(value => {
+    const games = (match?.events || []).filter(value => {
         return isNotNull(value.game) && isNotEmptyArray(value.game.scores)
     })
 

@@ -104,13 +104,16 @@ export async function getBrowserInstance() {
     console.log('正在启动/重启唯一浏览器实例...');
 
     browserPromise = puppeteer.launch({
-        headless: "new",
+        pipe: true,
+        headless: true,
         args: [
             '--js-flags="--max-old-space-size=512"',
-            '--no-sandbox',
+            '--disable-breakpad',
             '--disable-dev-shm-usage',
             '--disable-setuid-sandbox',
+            '--no-sandbox',
             '--no-zygote',
+            '--no-first-run',
             '--disable-web-security',
             '--allow-file-access-from-files',
             '--disable-blink-features=AutomationControlled',
