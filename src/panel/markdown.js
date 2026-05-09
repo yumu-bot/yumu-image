@@ -21,8 +21,9 @@ export async function router(req, res) {
  * @return {Promise<{image: Buffer, width:number, height:number}>}
  */
 export async function Markdown(md = "", width = 600) {
-    let browser = await getBrowserInstance()
-    let page = await browser.newPage();
+    const browser = await getBrowserInstance()
+    const context = await browser.createBrowserContext()
+    const page = await context.newPage()
 
     try {
         await page.setViewport({
@@ -39,7 +40,7 @@ export async function Markdown(md = "", width = 600) {
         });
         const body = await page.$('body');
         const box = await body.boundingBox()
-        const buffer = await body.screenshot({type:"png", omitBackground: false, encoding: 'binary'});
+        const buffer = await body.screenshot({type: "png", omitBackground: false, encoding: 'binary'});
 
         await page.evaluate(() => {
             window.setStr(null);
@@ -50,10 +51,11 @@ export async function Markdown(md = "", width = 600) {
             width: box.width,
             height: box.height,
         };
+    } catch (e) {
+        console.error(e => console.error('MD：浏览器错误:', e.message));
     } finally {
-        if (page) {
-            await page.close().catch(e => console.error('MD：关闭页面失败:', e.message));
-        }
+        await page.close().catch(e => console.error('MD：关闭页面失败:', e.message));
+        await context.close().catch(e => console.error('MD：关闭作用域失败:', e.message));
     }
 
 }

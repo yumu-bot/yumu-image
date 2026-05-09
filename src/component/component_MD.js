@@ -53,7 +53,8 @@ function resolveMarkdownImages(markdown = "", markdown_dir = "", template_path =
  */
 export async function component_MD(markdown = "", width = 1080, height = 600, markdown_dir = null) {
     let browser = await getBrowserInstance()
-    let page = await browser.newPage();
+    const context = await browser.createBrowserContext();
+    const page = await context.newPage();
 
     try {
         await page.setViewport({
@@ -111,10 +112,11 @@ export async function component_MD(markdown = "", width = 1080, height = 600, ma
             width: box.width,
             height: box.height,
         };
+    } catch (e) {
+        console.error(e => console.error('组件 MD：浏览器错误:', e.message));
     } finally {
-        if (page) {
-            await page.close().catch(e => console.error('组件 MD：关闭页面失败:', e.message));
-        }
+        await page.close().catch(e => console.error('组件 MD：关闭页面失败:', e.message));
+        await context.close().catch(e => console.error('组件 MD：关闭作用域失败:', e.message));
     }
 
 }
