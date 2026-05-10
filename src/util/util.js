@@ -210,8 +210,30 @@ export function initPath() {
 
 // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
 
-export const exportJPEG = async (svg) => await exportsJPEG.convert(svg, {quality: 100});
-export const exportPNG = async (svg) => await exportsPNG.convert(svg);
+const puppeteer_options = {
+    pipe: true,
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-breakpad',          // 禁用崩溃报告
+        '--disable-crash-reporter',    // 禁用崩溃上报
+        '--disable-dev-shm-usage',     // 关键：防止因共享内存不足导致的崩溃
+        '--disable-gpu',               // 禁用 GPU 加速，减少一个 GPU 进程
+        '--no-zygote',                 // 禁用 zygote 进程，减少进程树层级
+        '--no-first-run',              // 跳过首次运行检查
+        '--single-process',            // (可选) 强制单进程模式，进一步减少进程数
+        '--js-flags="--max-old-space-size=512"' // 限制 V8 引擎内存
+    ]
+};
+
+export const exportJPEG = async (svg) => await exportsJPEG.convert(svg, {
+    quality: 100,
+    puppeteer: puppeteer_options
+});
+
+export const exportPNG = async (svg) => await exportsPNG.convert(svg, {
+    puppeteer: puppeteer_options
+});
 
 const UTF8Encoder = new TextEncoder('utf8');
 

@@ -7,14 +7,30 @@ const _maxTasksPerBrowser = Symbol('maxTasksPerBrowser'); // 新增：重启阈�
 
 function omit(object, props) {
     let o = { ...object}
-    delete o[props];
+
+    const keys = Array.isArray(props) ? props : [props];
+
+    keys.forEach(prop => {
+        if (prop in object) {
+            delete o[prop]
+        }
+    });
+
     return o;
 }
 
 function pick(object, props) {
-    let o = {}
-    if (props in object)o[props] = object[props];
-    return o;
+    let filtered = {};
+
+    const keys = Array.isArray(props) ? props : [props];
+
+    keys.forEach(prop => {
+        if (prop in object) {
+            filtered[prop] = object[prop];
+        }
+    });
+
+    return filtered;
 }
 
 /**
