@@ -41,7 +41,9 @@ export async function router_svg(req, res) {
 }
 
 export async function panel_N(
-    data = {}
+    data = {
+        more: {}
+    }
 ) {
     // 导入模板
     let svg = readTemplate('template/Panel_N.svg');

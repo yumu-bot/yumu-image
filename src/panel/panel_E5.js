@@ -955,7 +955,7 @@ const PanelEGenerate = {
 
             star: score?.beatmap?.difficulty_rating || 0,
 
-            rating: score?.beatmap?.beatmapset?.rating,
+            rating: score?.beatmapset?.rating ?? score?.beatmap?.beatmapset?.rating ?? 0,
 
             pass: score?.beatmap?.passcount || 0, play: score?.beatmap?.playcount || 0, progress: progress,
 
@@ -1092,16 +1092,18 @@ const PanelEGenerate = {
     },
 
     score2componentE6: (score, background) => {
-        let creators = ''
+        /**
+         * @type string
+         */
+        let creators
         const owners = score?.beatmap?.owners || []
+
         if (isEmptyArray(owners)) {
             creators = score?.beatmapset?.creator || ''
         } else {
-            for (const o of owners) {
-                creators += (o?.username || ('U' + (o?.id || '?'))) + ', '
-            }
-
-            creators = creators.slice(0, -2)
+            creators = owners.map(o => {
+                return (o?.username || ('U' + (o?.id || '?')))
+            }).join(", ")
         }
 
         return {

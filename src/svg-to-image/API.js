@@ -1,17 +1,22 @@
 import Converter from './Converter.js';
 
 const _provider = Symbol('provider');
+const _cachedConverter = Symbol('cachedConverter');
+const _taskCount = Symbol('taskCount'); // 新增：任务计数器
+const _maxTasksPerBrowser = Symbol('maxTasksPerBrowser'); // 新增：重启阈值
 
 function omit(object, props) {
     let o = { ...object}
     delete o[props];
     return o;
 }
+
 function pick(object, props) {
     let o = {}
     if (props in object)o[props] = object[props];
     return o;
 }
+
 /**
  * The application programming interface for a SVG converter {@link Provider}.
  *
@@ -22,15 +27,40 @@ export class API {
      * Creates an instance of {@link API} using the specified <code>provider</code>.
      *
      * @param {Provider} provider - the {@link Provider} to be used
+     * @param maxTasks
      * @public
      */
-    constructor(provider) {
+    constructor(provider, maxTasks = 500) {
         this[_provider] = provider;
+        this[_cachedConverter] = null; // 初始化为空
+        this[_taskCount] = 0; // 初始化计数器
+        this[_maxTasksPerBrowser] = maxTasks;
 
         // Workaround for #22 by ensuring all public methods are bound to this instance
         this.convert = this.convert.bind(this);
         this.convertFile = this.convertFile.bind(this);
         this.createConverter = this.createConverter.bind(this);
+    }
+
+    /**
+     * 内部管理方法：获取转换器并处理自动重启逻辑
+     */
+    async _getConverterWithLifecycle(options) {
+        // 1. 检查是否达到重启阈值
+        if (this[_cachedConverter] && this[_taskCount] >= this[_maxTasksPerBrowser]) {
+            console.log(`[图片输出] 已达到 ${this[_taskCount]} 次任务，正在重启浏览器...`);
+            await this.destroy();
+            this[_taskCount] = 0; // 重置计数
+        }
+
+        // 2. 如果实例不存在或已被销毁，创建新实例
+        if (!this[_cachedConverter] || this[_cachedConverter].destroyed) {
+            this[_cachedConverter] = this.createConverter(pick(options, 'puppeteer'));
+        }
+
+        // 3. 增加计数并返回实例
+        this[_taskCount]++;
+        return this[_cachedConverter];
     }
 
     /**
@@ -55,16 +85,9 @@ export class API {
      * @public
      */
     async convert(input, options) {
-        const converter = this.createConverter(pick(options, 'puppeteer'));
-        let output;
-
-        try {
-            output = await converter.convert(input, omit(options, 'puppeteer'));
-        } finally {
-            await converter.destroy();
-        }
-
-        return output;
+        // 修改：使用持久化实例，不再使用 try...finally 销毁
+        const converter = await this._getConverterWithLifecycle(options);
+        return await converter.convert(input, omit(options, 'puppeteer'));
     }
 
     /**
@@ -91,16 +114,20 @@ export class API {
      * @public
      */
     async convertFile(inputFilePath, options) {
-        const converter = this.createConverter(pick(options, 'puppeteer'));
-        let outputFilePath;
+        // 修改：使用持久化实例
+        const converter = this._getConverterWithLifecycle(options);
+        return await converter.convertFile(inputFilePath, omit(options, 'puppeteer'));
+    }
 
-        try {
-            outputFilePath = await converter.convertFile(inputFilePath, omit(options, 'puppeteer'));
-        } finally {
-            await converter.destroy();
+    /**
+     * 手动销毁 API 关联的浏览器实例
+     */
+    async destroy() {
+        if (this[_cachedConverter]) {
+            // 调用 Converter.js 的销毁方法关闭浏览器并清理临时文件
+            await this[_cachedConverter].destroy();
+            this[_cachedConverter] = null;
         }
-
-        return outputFilePath;
     }
 
     /**
@@ -123,24 +150,6 @@ export class API {
         return new Converter(this.provider, options);
     }
 
-    /**
-     * Returns the {@link Provider} for this {@link Converter}.
-     *
-     * @return {Provider} The provider.
-     * @public
-     */
-    get provider() {
-        return this[_provider];
-    }
-
-    /**
-     * Returns the current version of the SVG converter provider.
-     *
-     * @return {string} The version.
-     * @public
-     */
-    get version() {
-        return this.provider.getVersion();
-    }
-
+    get provider() { return this[_provider]; }
+    get version() { return this.provider.getVersion(); }
 }

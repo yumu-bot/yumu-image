@@ -274,7 +274,7 @@ export async function panel_E10(data = {
 
     const componentE1 = await component_E1(await PanelEGenerate.user2componentE1(data.user))
     const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.score))
-    const componentE3 = component_E3(PanelEGenerate.beatmap2componentE3(data.score.beatmap))
+    const componentE3 = component_E3(PanelEGenerate.beatmap2componentE3(data.score.beatmap, data.score.beatmapset))
     const componentE4 = component_E4(PanelEGenerate.score2componentE4(data.score, data.density))
     const componentE5 = component_E5(PanelEGenerate.score2componentE5(data.score))
     const componentE6 = component_E6(PanelEGenerate.score2componentE6(data.score, data.progress))
@@ -987,10 +987,10 @@ const PanelEGenerate = {
         }
     },
 
-    beatmap2componentE3: (beatmap) => {
+    beatmap2componentE3: (beatmap, beatmapset) => {
         return {
-            status: beatmap?.status || 'graveyard',
-            rating: beatmap?.beatmapset?.rating || 0.0,
+            status: beatmap?.status ?? 'graveyard',
+            rating: beatmapset?.rating ?? beatmap?.beatmapset?.rating ?? 0,
         }
     },
 
