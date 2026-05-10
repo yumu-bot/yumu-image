@@ -69,7 +69,7 @@ export async function panel_V(
     /** @type {number} */
     const last_time = notes[notes.length - 1]?.end_time ?? notes[notes.length - 1]?.time ?? 0
     /** @type {number} */
-    const last_timeline_time = timings[timings.length - 1]?.time ?? last_time
+    const last_timeline_time = timings[timings.length - 1]?.time ?? 0
 
     // 算标准bpm
     const {bpm} = getLongestBPM(only_red, last_time)
@@ -210,8 +210,10 @@ export async function panel_V(
 
     const minute_interval = 60000;
 
+    const latest = Math.max(last_timeline_time, last_time)
+
     // 插入分钟线
-    for (let t = 0; t <= last_timeline_time; t += minute_interval) {
+    for (let t = 0; t <= latest; t += minute_interval) {
         if (t === 0) continue; // 跳过 0ms
 
         const beat = (t - first_time) / beat_length
@@ -223,6 +225,23 @@ export async function panel_V(
         });
     }
 
+    // 添加最后的时间点
+    const offset = latest % minute_interval;
+
+    // 只有当偏移量足够大（>= 5秒）时，才添加最后一条线
+    // 注意：如果 offset 很大，说明它离上一条线很远；如果 offset 很小，说明刚过分钟线不久
+    if (offset >= 5000) {
+        // 依然需要向下取秒
+        const last_second = Math.floor(latest / 1000) * 1000;
+
+        full_line.push({
+            time: last_second,
+            type: 'minute_latest',
+            beat: (latest - first_time) / beat_length,
+        });
+    }
+
+    // 添加预览点
     if (general.preview > 0) {
         full_line.push({
             time: general.preview,

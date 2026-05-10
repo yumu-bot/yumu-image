@@ -76,11 +76,21 @@ export function component_V(
                 yellows += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#F6F05C" stroke-width="2"/>`;
             } break
 
-            case 'minute': {
+            case 'minute':  {
                 // 渲染 时间线
-                const min = Math.round(timing.time / 60000)
+                const min = Math.floor(timing.time / 60000)
 
                 others += torusBold.get2SizeTextPath(min + ':', '00', 14, 10, total_width + 2, y + 3, 'left baseline', '#00B7EE', '#00B7EE')
+                others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#00B7EE" stroke-width="1.5" stroke-dasharray="2,2" />`;
+            } break
+
+            case 'minute_latest': {
+                // 渲染 时间线
+                const total = Math.floor(timing.time / 1000);
+                const min = Math.floor(total / 60);
+                const sec = total % 60;
+
+                others += torusBold.get2SizeTextPath(min + ':', sec + '', 14, 10, total_width + 2, y + 3, 'left baseline', '#00B7EE', '#00B7EE')
                 others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#00B7EE" stroke-width="1.5" stroke-dasharray="2,2" />`;
             } break
 
