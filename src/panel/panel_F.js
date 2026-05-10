@@ -109,7 +109,7 @@ export async function panel_F(
     const match = data?.match ?? {}
 
     // 面板文字
-    const request_time = 'match time: ' + getMatchDuration(match) + ' // request time: ' + getNowTimeStamp();
+    const request_time = 'match time: ' + getMatchDuration(match.match) + ' // request time: ' + getNowTimeStamp();
 
     // 临时的
     const qp_mode = data?.panel?.includes("RP") ?? false
@@ -131,11 +131,11 @@ export async function panel_F(
     svg = setCustomBanner(svg, null, reg_banner);
 
     // 导入成绩卡（C卡\
-    const games = (match?.events || []).filter(value => {
+    const games = (match?.match?.events || []).filter(value => {
         return isNotNull(value.game) && isNotEmptyArray(value.game.scores)
     })
 
-    const events = games.slice((data?.skip_ignore_map?.skip || 0), games.length - (data?.skip_ignore_map?.ignore || 0))
+    const events = games.slice((match?.skip_ignore_map?.skip || 0), games.length - (match?.skip_ignore_map?.ignore || 0))
 
     let red_wins_before = 0;
     let blue_wins_before = 0;
@@ -153,7 +153,7 @@ export async function panel_F(
             blue_wins_before++;
         }
 
-        event_Cs.push(event2CardF(v, red_wins_before, blue_wins_before, data?.skip_ignore_map?.easy || 1))
+        event_Cs.push(event2CardF(v, red_wins_before, blue_wins_before, match?.skip_ignore_map?.easy || 1))
 
         // card_Cs.push(await card_C(await event2CardC(v, red_wins_before, blue_wins_before)));
     }
@@ -204,7 +204,7 @@ export async function panel_F(
     svg = setText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(data, beatmap_arr[0]));
+    const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(match, beatmap_arr[0]));
     svg = setSvgBody(svg, 40, 40, matchInfo, reg_maincard);
 
     return svg;
