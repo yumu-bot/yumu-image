@@ -226,10 +226,20 @@ export default class Converter {
             this[_tempFile].cleanup();
             delete this[_tempFile];
         }
+
+        if (this[_page]) {
+            await this[_page].close();
+            delete this[_page];
+        }
+
+        if (this[_context]) {
+            await this[_context].close();
+            delete this[_context];
+        }
+
         if (this[_browser]) {
             await this[_browser].close();
             delete this[_browser];
-            delete this[_page];
         }
     }
 
