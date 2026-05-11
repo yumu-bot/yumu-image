@@ -103,7 +103,11 @@ export class API {
     async convert(input, options) {
         // 修改：使用持久化实例，不再使用 try...finally 销毁
         const converter = await this._getConverterWithLifecycle(options);
-        return await converter.convert(input, omit(options, 'puppeteer'));
+        try {
+            return await converter.convert(input, omit(options, 'puppeteer'));
+        } finally {
+            await converter.close()
+        }
     }
 
     /**
@@ -132,7 +136,11 @@ export class API {
     async convertFile(inputFilePath, options) {
         // 修改：使用持久化实例
         const converter = this._getConverterWithLifecycle(options);
-        return await converter.convertFile(inputFilePath, omit(options, 'puppeteer'));
+        try {
+            return await converter.convertFile(inputFilePath, omit(options, 'puppeteer'));
+        } finally {
+            await converter.close()
+        }
     }
 
     /**

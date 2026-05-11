@@ -13,6 +13,7 @@ const writeFile = util.promisify(fs.writeFile);
 const _allowedAttributeNames = Symbol('allowedAttributeNames');
 const _allowedDeprecatedAttributeNames = Symbol('allowedDeprecatedAttributeNames');
 const _browser = Symbol('browser');
+const _context = Symbol('context');
 const _convert = Symbol('convert');
 const _destroyed = Symbol('destroyed');
 const _getDimensions = Symbol('getDimensions');
@@ -232,6 +233,18 @@ export default class Converter {
         }
     }
 
+    async close() {
+        if (this[_page]) {
+            await this[_page].close().catch(() => {});
+            delete this[_page];
+        }
+
+        if (this[_context]) {
+            await this[_context].close().catch(() => {});
+            delete this[_context];
+        }
+    }
+
     async [_convert](input, options) {
         input = Buffer.isBuffer(input) ? input.toString('utf8') : input;
 
@@ -346,6 +359,10 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
     async [_getPage](html) {
         if (!this[_browser]) {
             this[_browser] = await puppeteer.launch(this[_options].puppeteer);
+        }
+
+        if (!this[_context]) {
+            this[_context] = await this[_browser].createBrowserContext();
             this[_page] = await this[_browser].newPage();
         }
 
