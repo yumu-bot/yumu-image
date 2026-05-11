@@ -35,12 +35,12 @@ export function component_V(
 
     const sv_mode = max_sv - min_sv > 8
 
+    let before_bpm = -1
+    let before_sv = -1
+
     for (const timing of chunk.timings) {
         const relative = timing.beat - chunk.start_bar * 4;
         const y = max_height - ((relative / beats_per_bucket) * max_height);
-
-        let before_bpm = -1
-        let before_sv = -1
 
         switch (timing.type) {
             case 'red': case 'virtual': {

@@ -49,16 +49,18 @@ export function component_V2(
 
     const sv_mode = max_sv - min_sv > 5 || min_sv < 0.05
 
+    let before_bpm = -1
+    let before_sv = -1
+
     for (const timing of chunk.timings) {
         const relative = timing.beat - chunk.start_bar * 4;
         const x = (relative / beats_per_lane) * lane_width;
 
-        let before_bpm = -1
-        let before_sv = -1
-
         switch (timing.type) {
             case 'red': case 'virtual': {
                 // 渲染 BPM 红线
+
+                console.log(timing.bpm - before_bpm)
 
                 if (Math.abs(timing.bpm - before_bpm) < 1e-4) {
                     reds += torusBold.getTextPath('=', x, -4, 16, 'center baseline', '#F990AB')
