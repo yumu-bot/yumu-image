@@ -75,6 +75,24 @@ process.on('uncaughtException', async (err) => {
     process.exit(1);
 });
 
+const puppeteer_options = {
+    pipe: true,
+    headless: true,
+    args: [
+        '--js-flags="--max-old-space-size=512"',
+        '--disable-breakpad',
+        '--disable-dev-shm-usage',
+        '--disable-setuid-sandbox',
+        '--no-sandbox',
+        '--no-zygote',
+        '--no-first-run',
+        '--disable-web-security',
+        '--allow-file-access-from-files',
+        '--disable-blink-features=AutomationControlled',
+        '--disable-infobars'
+    ]
+};
+
 export async function getBrowserInstance() {
     if (browserPromise) {
         const b = await browserPromise;
@@ -103,23 +121,7 @@ export async function getBrowserInstance() {
 
     console.log('正在启动/重启唯一浏览器实例...');
 
-    browserPromise = puppeteer.launch({
-        pipe: true,
-        headless: true,
-        args: [
-            '--js-flags="--max-old-space-size=512"',
-            '--disable-breakpad',
-            '--disable-dev-shm-usage',
-            '--disable-setuid-sandbox',
-            '--no-sandbox',
-            '--no-zygote',
-            '--no-first-run',
-            '--disable-web-security',
-            '--allow-file-access-from-files',
-            '--disable-blink-features=AutomationControlled',
-            '--disable-infobars'
-        ]
-    }).catch(err => {
+    browserPromise = puppeteer.launch(puppeteer_options).catch(err => {
         browserPromise = null;
         throw err;
     });
@@ -209,22 +211,6 @@ export function initPath() {
 }
 
 // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
-
-const puppeteer_options = {
-    pipe: true,
-    args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-breakpad',          // 禁用崩溃报告
-        '--disable-crash-reporter',    // 禁用崩溃上报
-        '--disable-dev-shm-usage',     // 关键：防止因共享内存不足导致的崩溃
-        '--disable-gpu',               // 禁用 GPU 加速，减少一个 GPU 进程
-        '--no-zygote',                 // 禁用 zygote 进程，减少进程树层级
-        '--no-first-run',              // 跳过首次运行检查
-        '--single-process',            // (可选) 强制单进程模式，进一步减少进程数
-        '--js-flags="--max-old-space-size=512"' // 限制 V8 引擎内存
-    ]
-};
 
 export const exportJPEG = async (svg) => await exportsJPEG.convert(svg, {
     quality: 100,
