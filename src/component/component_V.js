@@ -39,10 +39,15 @@ export function component_V(
         const relative = timing.beat - chunk.start_bar * 4;
         const y = max_height - ((relative / beats_per_bucket) * max_height);
 
+        let before_bpm = -1
+
         switch (timing.type) {
             case 'red': case 'virtual': {
                 // 渲染 BPM 红线
-                if (timing.bpm < 1000) {
+
+                if (Math.abs(timing.bpm - before_bpm) < 1e-4) {
+                    reds += torusBold.getTextPath('=', -2, y + 3, 14, 'right baseline', '#F990AB')
+                } else if (timing.bpm < 1000) {
 
                     const bpm = rounds(timing.bpm, 2)
 
@@ -55,6 +60,7 @@ export function component_V(
                 }
 
                 reds += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#D32F2F" stroke-width="2" />`;
+                before_bpm = timing.bpm
             } break
 
             case 'bar': {

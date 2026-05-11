@@ -53,10 +53,15 @@ export function component_V2(
         const relative = timing.beat - chunk.start_bar * 4;
         const x = (relative / beats_per_lane) * lane_width;
 
+        let before_bpm = -1
+
         switch (timing.type) {
             case 'red': case 'virtual': {
                 // 渲染 BPM 红线
-                if (timing.bpm < 1000) {
+
+                if (Math.abs(timing.bpm - before_bpm) < 1e-4) {
+                    reds += torusBold.getTextPath('=', x, -4, 16, 'center baseline', '#F990AB')
+                } else if (timing.bpm < 1000) {
                     const bpm = rounds(timing.bpm, 2)
 
                     reds += torusBold.get2SizeTextPath(bpm.integer, bpm.decimal, 16, 12, x, -4, 'center baseline', '#F990AB')
@@ -65,6 +70,8 @@ export function component_V2(
                 }
 
                 reds += `<line x1="${x}" y1="0" x2="${x}" y2="${lane_height}" stroke="#D32F2F" stroke-width="2" />`;
+
+                before_bpm = timing.bpm
             } break
 
             case 'bar': {
