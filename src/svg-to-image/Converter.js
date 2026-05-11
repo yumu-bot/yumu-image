@@ -363,7 +363,7 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
 
         if (!this[_context]) {
             this[_context] = await this[_browser].createBrowserContext();
-            this[_page] = await this[_browser].newPage();
+            this[_page] = await this[_context].newPage();
         }
 
         const tempFile = await this[_getTempFile]();
