@@ -54,6 +54,7 @@ export function component_V2(
         const x = (relative / beats_per_lane) * lane_width;
 
         let before_bpm = -1
+        let before_sv = -1
 
         switch (timing.type) {
             case 'red': case 'virtual': {
@@ -161,9 +162,14 @@ export function component_V2(
                     // 原来的线
 
                     // 渲染 SV 绿线
-                    greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), x, lane_height + text_under_delta, 14, 'center baseline', '#CAF881')
+                    if (Math.abs(timing.sv - before_sv) < 1e-4) {
+                        greens += torusBold.getTextPath('=', x, lane_height + text_under_delta, 14, 'center baseline', '#CAF881')
+                    } else {
+                        greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), x, lane_height + text_under_delta, 14, 'center baseline', '#CAF881')
+                    }
 
                     greens += `<line x1="${x}" y1="0" x2="${x}" y2="${lane_height}" opacity="0.8" stroke="#CAF881" stroke-width="1" stroke-dasharray="2,2" />`;
+                    before_sv = timing.sv
                 }
             }
         }

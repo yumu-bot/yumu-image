@@ -40,6 +40,7 @@ export function component_V(
         const y = max_height - ((relative / beats_per_bucket) * max_height);
 
         let before_bpm = -1
+        let before_sv = -1
 
         switch (timing.type) {
             case 'red': case 'virtual': {
@@ -150,9 +151,15 @@ export function component_V(
                     // 原来的线
 
                     // 渲染 SV 绿线
-                    greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
+
+                    if (Math.abs(timing.sv - before_sv) < 1e-4) {
+                        greens += torusBold.getTextPath('=', total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
+                    } else {
+                        greens += torusBold.getTextPath(round(timing.sv, 2).replace('0.', '.'), total_width + 2, y + 3, 14, 'left baseline', '#CAF881')
+                    }
 
                     greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" opacity="0.8" stroke="#CAF881" stroke-width="1" stroke-dasharray="2,2" />`;
+                    before_sv = timing.sv
                 }
             }
         }
