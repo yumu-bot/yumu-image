@@ -60,8 +60,6 @@ export function component_V2(
             case 'red': case 'virtual': {
                 // 渲染 BPM 红线
 
-                console.log(timing.bpm - before_bpm)
-
                 if (Math.abs(timing.bpm - before_bpm) < 1e-4) {
                     reds += torusBold.getTextPath('=', x, -4, 16, 'center baseline', '#F990AB')
                 } else if (timing.bpm < 1000) {
