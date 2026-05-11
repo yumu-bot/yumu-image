@@ -221,15 +221,18 @@ export function component_V2(
             const drumroll_height = big ? drumroll_big_height : drumroll_small_height
             const drumroll_width = big ? drumroll_big_width : drumroll_small_width
 
-            let roll_width = Math.min(lane_width, Math.abs(start_x - end_x))
+            const delta_x = Math.abs(start_x - end_x)
 
-            if (roll_width < 0) {
+            let roll_width = Math.max(Math.min(lane_width, delta_x), 0)
+
+            // 移除一些异常的条子
+            if (roll_width < 3) {
                 continue
             }
 
             const y = (lane_height - drumroll_height) / 2
 
-            svg += `<use href="#roll-middle" x="${start_x}" y="${y}" width="${roll_width}" height="${drumroll_height}" opacity="1"/>`
+            svg += `<use href="#roll-middle" x="${start_x}" y="${y}" width="${roll_width}" height="${drumroll_height}" opacity="0.6"/>`
 
             // 3. 只有当 render_end 等于原始 end_beat 时，才渲染尾部的 Note 节点
             if (Math.abs(note.render_end - note.end_beat) < 1) {

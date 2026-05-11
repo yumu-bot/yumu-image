@@ -164,7 +164,7 @@ export async function parseBeatmapFile(filePath) {
 
             if (type === 'slider') {
                 slide_count = parseInt(parts[6])
-                visual_length = Math.abs(parseInt(parts[7]))
+                visual_length = parseInt(parts[7])
             } else {
                 slide_count = null
                 visual_length = null
