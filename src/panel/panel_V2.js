@@ -1,24 +1,23 @@
 import {
-    exportJPEG,
-    getImage,
+    exportJPEG, getImage,
     getImageFromV3,
     getImageOrElse,
-    getMapBackground, getNowTimeStamp,
-    getOrNull,
-    getPanelNameSVG,
-    getSvgBody, round,
+    getMapBackground,
+    getNowTimeStamp,
+    getOrNull, getPanelNameSVG, getSvgBody,
+    round
 } from "../util/util.js";
-import {component_V} from "../component/component_V.js";
-import {PanelDraw} from "../util/panelDraw.js";
-import {PanelGenerate} from "../util/panelGenerate.js";
-import {card_A2} from "../card/card_A2.js";
-import {torusBold} from "../util/font.js";
 import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/file.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
+import {torusBold} from "../util/font.js";
+import {card_A2} from "../card/card_A2.js";
+import {PanelDraw} from "../util/panelDraw.js";
+import {component_V2} from "../component/component_V2.js";
 
 export async function router(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_V(data);
+        const svg = await panel_V2(data);
         res.set('Content-Type', 'image/jpeg');
         res.send(await exportJPEG(svg));
     } catch (e) {
@@ -31,7 +30,7 @@ export async function router(req, res) {
 export async function router_svg(req, res) {
     try {
         const data = req.fields || {};
-        const svg = await panel_V(data);
+        const svg = await panel_V2(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
         res.send(svg);
     } catch (e) {
@@ -47,31 +46,27 @@ export async function router_svg(req, res) {
  * @param data
  * @return {Promise<string>}
  */
-export async function panel_V(
+export async function panel_V2(
     data = {
         beatmap: {},
         page: 1,
-        mode: 'mania',
+        mode: 'taiko',
         rows: 5,
     })
 {
 
-    const lane_width = 10
-    const chunk_gap = 30
-    const max_width = 1920
-    const bar_per_bucket = 4;
-    const beats_per_chunk = bar_per_bucket * 4;
+    const lane_height = 35
+    const lane_gap = 30
+    const lane_per_page = 40
+    const bar_per_lane = 8
+    const beats_per_lane = bar_per_lane * 4;
     const minute_interval = 60000;
-    const rows = data?.rows ?? 5
 
-    const row_height = 710;
-    const row_gap = 20;
-    const background_bleed = 5
+    const max_width = 1920 - 40
+    const background_bleed = 0
 
     const path = await getBeatmapFilePath(data.beatmap.id)
-    const {timings, notes, difficulty, general} = await parseBeatmapFile(path)
-
-    const key = Math.round(difficulty.cs)
+    const {timings, notes, general} = await parseBeatmapFile(path)
 
     const only_red = timings.filter(t => t.type === 'red');
 
@@ -87,33 +82,27 @@ export async function panel_V(
     const {bpm} = getLongestBPM(only_red, last_time)
     const normalized_bpm = normalizeBpm(bpm)
     const beat_length = minute_interval / normalized_bpm
-    const chunk_width = chunk_gap + key * lane_width;
-
-    const chunk_per_row = Math.floor(((max_width - chunk_gap) / chunk_width))
-
-    const chunks_per_page = chunk_per_row * rows;
-
-    const chunk_x = (max_width - (chunk_per_row * chunk_width - chunk_gap)) / 2
-
 
     // 1. 计算最后一个音符所在的绝对拍数位置
     const total_beats = (last_time - first_time) / beat_length;
 
     // 2. 计算一页总共能显示多少拍
-    const beats_per_page = beats_per_chunk * chunks_per_page;
+    const beats_per_page = beats_per_lane * lane_per_page;
+
 
     // 如果 total_beats 是 100，每页能放 32 拍，则需要 ceil(3.125) = 4 页
     const total_pages = Math.max(1, Math.ceil(total_beats / beats_per_page));
 
+
     // 1. 计算当前页的小节范围
     const page = (data.page || 1);
-    const start_bar = (Math.min(Math.max(page, 1), total_pages) - 1) * chunks_per_page * bar_per_bucket;
+    const start_bar = (Math.min(Math.max(page, 1), total_pages) - 1) * lane_per_page * bar_per_lane;
     const page_start_beat = start_bar * 4;
 
     // 2. 初始化 x 个切片桶
-    const chunks = Array.from({ length: chunks_per_page }, (_, i) => ({
+    const chunks = Array.from({ length: lane_per_page }, (_, i) => ({
         index: i,
-        start_bar: start_bar + (i * bar_per_bucket), // 当前切片起始小节
+        start_bar: start_bar + (i * bar_per_lane), // 当前切片起始小节
         notes: [],
         timings: []
     }));
@@ -123,36 +112,36 @@ export async function panel_V(
 
     for (const note of notes) {
         const beat = (note.time - first_time) / beat_length;
-        const end_beat = (note.type === 'ln') ? ((note.end_time - first_time) / beat_length) : beat;
+        const end_beat = (note.type === 'circle') ? beat : ((note.end_time - first_time) / beat_length);
 
         // 1. 过滤：如果整个音符都在当前页之前或之后，直接跳过
         if (end_beat < page_start_beat || beat >= page_start_beat + beats_per_page) {
             continue;
         }
 
-        // start_chunk 计算时增加 epsilon
-        const start_chunk = Math.max(0, Math.floor((beat - page_start_beat + epsilon) / beats_per_chunk));
+        // start_lane 计算时增加 epsilon
+        const start_lane = Math.max(0, Math.floor((beat - page_start_beat + epsilon) / beats_per_lane));
 
-        let end_chunk;
+        let end_lane;
         if (note.type === 'circle') {
-            end_chunk = start_chunk;
+            end_lane = start_lane;
         } else {
-            end_chunk = Math.min(chunks_per_page - 1, Math.floor((end_beat - page_start_beat - epsilon) / beats_per_chunk));
+            end_lane = Math.min(lane_per_page - 1, Math.floor((end_beat - page_start_beat - epsilon) / beats_per_lane));
         }
 
-        end_chunk = Math.max(start_chunk, end_chunk);
+        end_lane = Math.max(start_lane, end_lane);
 
         // 3. 遍历并裁剪
-        for (let c = start_chunk; c <= end_chunk; c++) {
-            const chunk_start_beat = page_start_beat + (c * beats_per_chunk);
-            const chunk_end_beat = chunk_start_beat + beats_per_chunk;
+        for (let c = start_lane; c <= end_lane; c++) {
+            const lane_start_beat = page_start_beat + (c * beats_per_lane);
+            const lane_end_beat = lane_start_beat + beats_per_lane;
 
             chunks[c]?.notes?.push({
                 ...note,
                 beat: beat,
                 end_beat: end_beat,
-                render_start: Math.max(beat, chunk_start_beat),
-                render_end: Math.min(end_beat, chunk_end_beat)
+                render_start: Math.max(beat, lane_start_beat),
+                render_end: Math.min(end_beat, lane_end_beat)
             });
         }
     }
@@ -170,7 +159,7 @@ export async function panel_V(
         const timing_beat_length = current.beat_length;
 
         // 有人在乱搞
-        if (!timing_beat_length || timing_beat_length < 1) {
+        if (!timing_beat_length || timing_beat_length < 2) {
             continue;
         }
 
@@ -212,6 +201,7 @@ export async function panel_V(
             })
         }
     }
+
 
     const latest = Math.max(last_timeline_time, last_time)
 
@@ -258,6 +248,7 @@ export async function panel_V(
         beat: (v.time - first_time) / beat_length
     }))
 
+
     full_line.sort((a, b) => {
         if (a.time !== b.time) {
             return a.time - b.time;
@@ -266,6 +257,7 @@ export async function panel_V(
         if (a.beat_length == null && b.beat_length != null) return 1;
         return 0;
     });
+
 
     // 绿线基准速度机制
     const duration_map = new Map();
@@ -317,6 +309,7 @@ export async function panel_V(
         }
     });
 
+
     for (const line of full_line) {
         // 1. 过滤：不在当前页范围内的直接跳过
         if (line.beat < page_start_beat || line.beat >= page_start_beat + beats_per_page) {
@@ -325,7 +318,7 @@ export async function panel_V(
 
         // 2. 计算对应的 chunk 索引
         // 使用与 note 相同的索引计算逻辑
-        const c = Math.floor((line.beat - page_start_beat + epsilon) / beats_per_chunk);
+        const c = Math.floor((line.beat - page_start_beat + epsilon) / beats_per_lane);
 
         // 3. 压入对应 chunk 的 timings 数组
         if (chunks[c]) {
@@ -345,11 +338,11 @@ export async function panel_V(
     }
 
     // 切片逻辑
-    let max_used_chunk_index = -1;
+    let max_used_lane_index = -1;
     // 遍历当前页的所有切片，找出最后一个包含音符或时间线的切片索引
-    for (let i = 0; i < chunks_per_page; i++) {
+    for (let i = 0; i < lane_per_page; i++) {
         if (chunks[i].notes.length > 0 || chunks[i].timings.length > 0) {
-            max_used_chunk_index = i;
+            max_used_lane_index = i;
         }
     }
 
@@ -384,12 +377,9 @@ export async function panel_V(
         });
     }
 
-    // 如果当前页完全没有内容（例如超出页码或空谱面），默认至少显示 1 行
-    // 否则，根据最大切片索引计算需要几行（索引从 0 开始，除以 bucket 即可算出所在行）
-    const actual_rows = max_used_chunk_index === -1 ? 1 : Math.floor(max_used_chunk_index / chunk_per_row) + 1;
+    const actual_lane_count = Math.max(1, max_used_lane_index + 1);
 
-    // 4. 组装 SVG
-    const total_height = 290 + 40 + (actual_rows * row_height) + ((actual_rows - 1) * row_gap) + 40;
+    const total_height = 290 + 40 + (actual_lane_count * lane_height) + ((actual_lane_count - 1) * lane_gap) + 40;
 
     const [card_a2_deferred, background_deferred] = await Promise.allSettled([
         PanelGenerate.beatmap2CardA2(data?.beatmap),
@@ -399,9 +389,10 @@ export async function panel_V(
     const card_a2 = getOrNull(card_a2_deferred)
     const banner = getImageOrElse(background_deferred, getImageFromV3('card-default.png'))
 
+
     let sv_text = ''
 
-    const sv_mode = max_sv - min_sv > 8
+    const sv_mode = max_sv - min_sv > 5 || min_sv < 0.05
 
     if (sv_mode) {
         sv_text = `sv: min ${round(min_sv, 2)}x, max ${round(max_sv, 2)}x // `
@@ -412,23 +403,80 @@ export async function panel_V(
     let svg = `
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="1920" height="${total_height}" viewBox="0 0 1920 ${total_height}">
 <defs>
-  <symbol id="note1" viewBox="0 0 256 150" preserveAspectRatio="none">
-    ${getImage(0, 0, 256, 150, getImageFromV3('Component', 'mania-note1.png'), 1, 'none')}
+    <filter id="don" x="0" y="0" width="100%" height="100%">
+      <feFlood flood-color="#D32F2F" result="targetColor" />
+      
+      <feComposite in="SourceGraphic" in2="targetColor" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="multipliedBase" />
+      
+      <feImage href="${getImageFromV3('Component', 'taikohitcircleoverlay.png')}" result="overlayImage" 
+               preserveAspectRatio="xMidYMid slice" />
+               
+      <feMerge>
+        <feMergeNode in="multipliedBase" />
+        <feMergeNode in="overlayImage" />
+      </feMerge>
+    </filter>
+    
+    <filter id="ka" x="0" y="0" width="100%" height="100%">
+      <feFlood flood-color="#4FACFE" result="targetColor" />
+      
+      <feComposite in="SourceGraphic" in2="targetColor" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="multipliedBase" />
+      
+      <feImage href="${getImageFromV3('Component', 'taikohitcircleoverlay.png')}" result="overlayImage" 
+               preserveAspectRatio="xMidYMid slice" />
+               
+      <feMerge>
+        <feMergeNode in="multipliedBase" />
+        <feMergeNode in="overlayImage" />
+      </feMerge>
+    </filter>
+    
+   
+    <filter id="don2" x="0" y="0" width="100%" height="100%">
+      <feFlood flood-color="#D32F2F" result="targetColor" />
+      
+      <feComposite in="SourceGraphic" in2="targetColor" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="multipliedBase" />
+      
+      <feImage href="${getImageFromV3('Component', 'taikobigcircleoverlay.png')}" result="overlayImage" 
+               preserveAspectRatio="xMidYMid slice" />
+               
+      <feMerge>
+        <feMergeNode in="multipliedBase" />
+        <feMergeNode in="overlayImage" />
+      </feMerge>
+    </filter>
+    
+    <filter id="ka2" x="0" y="0" width="100%" height="100%">
+      <feFlood flood-color="#4FACFE" result="targetColor" />
+      
+      <feComposite in="SourceGraphic" in2="targetColor" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="multipliedBase" />
+      
+      <feImage href="${getImageFromV3('Component', 'taikobigcircleoverlay.png')}" result="overlayImage" 
+               preserveAspectRatio="xMidYMid slice" />
+               
+      <feMerge>
+        <feMergeNode in="multipliedBase" />
+        <feMergeNode in="overlayImage" />
+      </feMerge>
+    </filter>
+
+  <symbol id="note" viewBox="0 0 128 128" preserveAspectRatio="none">
+    ${getImage(0, 0, 128, 128, getImageFromV3('Component', 'taikohitcircle.png'), 1, 'none')}
   </symbol>
-  <symbol id="note2" viewBox="0 0 256 150" preserveAspectRatio="none">
-    ${getImage(0, 0, 256, 150, getImageFromV3('Component', 'mania-note2.png'), 1, 'none')}
+  <symbol id="big" viewBox="0 0 128 128" preserveAspectRatio="none">
+    ${getImage(0, 0, 128, 128, getImageFromV3('Component', 'taikobigcircle.png'), 1, 'none')}
   </symbol>
-  <symbol id="notes" viewBox="0 0 256 150" preserveAspectRatio="none">
-    ${getImage(0, 0, 256, 150, getImageFromV3('Component', 'mania-noteS.png'), 1, 'none')}
+  <symbol id="roll-end" viewBox="0 0 68 124" preserveAspectRatio="none">
+    ${getImage(0, 0, 68, 124, getImageFromV3('Component', 'taiko-roll-end.png'), 1, 'none')}
   </symbol>
-  <symbol id="ln1" viewBox="0 0 256 64" preserveAspectRatio="none">
-    ${getImage(0, 0, 256, 64, getImageFromV3('Component', 'mania-note1L.png'), 1, 'none')}
+  <symbol id="roll-middle" viewBox="0 0 1 124" preserveAspectRatio="none">
+    ${getImage(0, 0, 1, 124, getImageFromV3('Component', 'taiko-roll-middle.png'), 1, 'none')}
   </symbol>
-  <symbol id="ln2" viewBox="0 0 256 64" preserveAspectRatio="none">
-    ${getImage(0, 0, 256, 64, getImageFromV3('Component', 'mania-note2L.png'), 1, 'none')}
+  <symbol id="spinner-approach" viewBox="0 0 390 390" preserveAspectRatio="none">
+    ${getImage(0, 0, 390, 390, getImageFromV3('Component', 'spinner-approachcircle.png'), 1, 'none')}
   </symbol>
-  <symbol id="lns" viewBox="0 0 256 64" preserveAspectRatio="none">
-    ${getImage(0, 0, 256, 64, getImageFromV3('Component', 'mania-noteSL.png'), 1, 'none')}
+  <symbol id="spinner-circle" viewBox="0 0 32 32" preserveAspectRatio="none">
+    ${getImage(0, 0, 32, 32, getImageFromV3('Component', 'spinner-circle.png'), 1, 'none')}
   </symbol>
   <clipPath id="banner">
     ${PanelDraw.Rect(0, 0, 1920, 290, 40, 'none')}
@@ -450,26 +498,20 @@ export async function panel_V(
         'page: ' + Math.max(1, Math.min(data.page || 1, total_pages)) + ' of ' + (total_pages), 1920 / 2, total_height - 15, 20, 'center baseline', '#fff', 0.6
     )}
 </g>
-
 `;
-
-    const render_chunks_count = actual_rows * chunk_per_row;
 
     const components = []
     const backgrounds = []
 
-    for (let i = 0; i < render_chunks_count; i++) {
-        const component = component_V(chunks[i], key, row_height, beats_per_chunk, general.special_style, max_sv, min_sv);
+    for (let i = 0; i < actual_lane_count; i++) {
+        const component = component_V2(chunks[i], lane_height, max_width, beats_per_lane, max_sv, min_sv);
 
-        const r = Math.floor(i / chunk_per_row); // 属于第几行
-        const c = i % chunk_per_row;             // 属于第几列
+        const x = 20;
+        const y = 290 + 40 + i * (lane_height + lane_gap); // 按行数往下推
 
-        const x = c * chunk_width + chunk_x;
-        const y = 290 + 40 + r * (row_height + row_gap); // 按行数往下推
-
-        if (r % 2 !== 0) {
+        if (i % 2 !== 0) {
             // 奇数行，但是从 0 开始
-            backgrounds.push(PanelDraw.Rect(0, y - background_bleed, 1920, row_height + background_bleed * 2, 0, '#46393F'))
+            backgrounds.push(PanelDraw.Rect(0, y - background_bleed, 1920, lane_height + background_bleed * 2, 0, '#46393F'))
         }
 
         components.push(getSvgBody(x, y, component))

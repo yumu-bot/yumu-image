@@ -96,17 +96,20 @@ export async function parseBeatmapFile(filePath) {
 
             const red = parseInt(parts[6]) === 1
 
-            const length = red ? parseFloat(parts[1]) : null
+            // 有人在这里写 1E-30
+            const length_raw = parseFloat(parts[1]);
+
+            const length = red ? Math.max(length_raw, 1e-10) : null
             const sv = red ? null : 100 / (0 - parseFloat(parts[1]))
             const bpm = getBPM(length)
 
             const sample = getSample(parseInt(parts[3]))
 
-            const effectMask = parseInt(parts[7])
+            const effect_mask = parseInt(parts[7])
 
             const effect = {
-                kiai: (effectMask & 1) !== 0,
-                ignore: (effectMask & 8) !== 0,
+                kiai: (effect_mask & 1) !== 0,
+                ignore: (effect_mask & 8) !== 0,
             };
 
             timings.push({
@@ -128,23 +131,23 @@ export async function parseBeatmapFile(filePath) {
 
             const start_time = parseFloat(parts[2])
 
-            const typeMask = parseInt(parts[3])
+            const type_mask = parseInt(parts[3])
 
             let type
 
-            if ((typeMask & (1 << 0)) !== 0) {
+            if ((type_mask & (1 << 0)) !== 0) {
                 type = 'circle'
-            } else if ((typeMask & (1 << 1)) !== 0) {
+            } else if ((type_mask & (1 << 1)) !== 0) {
                 type = 'slider'
-            } else if ((typeMask & (1 << 3)) !== 0) {
+            } else if ((type_mask & (1 << 3)) !== 0) {
                 type = 'spinner'
-            } else if ((typeMask & (1 << 7)) !== 0) {
+            } else if ((type_mask & (1 << 7)) !== 0) {
                 type = 'ln'
             }
 
-            const color_skip = (typeMask >> 4) & 0x07
+            const color_skip = (type_mask >> 4) & 0x07
 
-            const new_combo = (typeMask & (1 << 2)) !== 0
+            const new_combo = (type_mask & (1 << 2)) !== 0
 
             const hit_sound_mask = parseInt(parts[4])
 
@@ -155,25 +158,39 @@ export async function parseBeatmapFile(filePath) {
                 clap: (hit_sound_mask & (1 << 3)) !== 0
             };
 
+            let slide_count
+
+            let visual_length
+
+            if (type === 'slider') {
+                slide_count = parseInt(parts[6])
+                visual_length = Math.abs(parseInt(parts[7]))
+            } else {
+                slide_count = null
+                visual_length = null
+            }
+
             let sample_set
 
             switch (type) {
                 case 'slider':
-                    sample_set = parts[10];
+                    sample_set = parts[9];
                     break;
                 default: {
                     sample_set = parts[5];
                 }
-                    break;
+                break;
             }
 
-            const sample_parts = sample_set.split(':')
+            const sample_parts = (sample_set ?? "0:0:0:0:").split(':')
 
-            // mania
             let end_time
 
+            // mania
             if (type === 'ln') {
                 end_time = parseInt(sample_parts.shift())
+            } else if (type === 'spinner') {
+                end_time = parseInt(parts[5])
             } else {
                 end_time = null
             }
@@ -196,6 +213,8 @@ export async function parseBeatmapFile(filePath) {
                 hit_sound: hit_sound,
                 end_time: end_time,
                 sample: sample,
+                visual_length: visual_length,
+                slide_count: slide_count
             });
         }
 
@@ -214,6 +233,12 @@ export async function parseBeatmapFile(filePath) {
                     break;
                 case 'ApproachRate':
                     difficulty.ar = parseFloat(value);
+                    break;
+                case 'SliderMultiplier':
+                    difficulty.slider_multiplier = parseFloat(value);
+                    break;
+                case 'SliderTickRate':
+                    difficulty.slider_tick_rate = parseFloat(value);
                     break;
             }
         }
@@ -241,6 +266,7 @@ export async function parseBeatmapFile(filePath) {
         }
     }
 
+
     // 绿线修正：通过记录红线来赋予绿线 beat_length
     let current_beat_length = 60000 / 120;
 
@@ -261,6 +287,35 @@ export async function parseBeatmapFile(filePath) {
         } else {
             // 如果是绿线，将其 beat_length 设定为当前红线的值
             line.beat_length = current_beat_length;
+        }
+    });
+
+    // 滑条修正：计算添加 end_time
+    notes.forEach(note => {
+        if (note.type === 'slider') {
+            let timing = timings[0];
+            for (let i = 0; i < timings.length; i++) {
+                if (timings[i].time <= note.time) {
+                    timing = timings[i];
+                } else {
+                    break;
+                }
+            }
+
+            // 2. 获取 SV (Slider Velocity) 倍率
+            // 如果是红线，SV 默认为 1.0
+            const sv = timing.type === 'green' ? timing.sv : 1.0;
+
+            // 3. 计算单次滑动时长 (毫秒)
+
+            // 单次滑动的时长
+            const slide_time =
+                (note.visual_length * timing.beat_length) /
+                ((difficulty.slider_multiplier ?? 0) * 100 * sv);
+
+            // 4. 计算总时长并赋值 end_time
+            // 总时长 = 单次时长 * 滑动次数 (slide_count)
+            note.end_time = note.time + (slide_time * (note?.slide_count ?? 1));
         }
     });
 
@@ -314,7 +369,7 @@ function getBPM(length = 0) {
 }
 
 export function getLongestBPM(only_red = [], last_time = 0) {
-    const bpmMap = new Map();
+    const bpm_map = new Map();
 
     for (let i = 0; i < only_red.length; i++) {
         const current = only_red[i];
@@ -330,16 +385,20 @@ export function getLongestBPM(only_red = [], last_time = 0) {
         // 累加到 Map
         const bpm = current.bpm;
 
-        const currentDuration = bpmMap.get(bpm) || 0;
+        if (!bpm || bpm < 0.1 || bpm > 10000) {
+            continue;
+        }
 
-        bpmMap.set(Math.round(bpm), currentDuration + duration);
+        const currentDuration = bpm_map.get(bpm) || 0;
+
+        bpm_map.set(Math.round(bpm), currentDuration + duration);
     }
 
     // 遍历 Map 找出最长的一个
     let longestBpm = 120;
     let maxDuration = 0;
 
-    for (const [bpm, duration] of bpmMap.entries()) {
+    for (const [bpm, duration] of bpm_map.entries()) {
         if (duration > maxDuration) {
             maxDuration = duration;
             longestBpm = bpm;
@@ -360,19 +419,22 @@ export function getLongestBPM(only_red = [], last_time = 0) {
  * @return {number}
  */
 export function normalizeBpm(raw_bpm, min = 120, max = 300) {
+    if (!Number.isFinite(raw_bpm)) {
+        return max;
+    } else if (raw_bpm <= 0) {
+        return min;
+    }
+
     let result = raw_bpm;
 
-    if (result < min) {
-        while (result < min) {
-            result *= 2;
-        }
-        if (result > max) result = min;
-    } else if (result > max) {
-        while (result > max) {
-            result /= 2;
-        }
+    if (result > max) {
+        const folds = Math.ceil(Math.log2(result / max));
+        result = result / Math.pow(2, folds);
+    }
 
-        if (result < min) result = max;
+    else if (result < min) {
+        const folds = Math.ceil(Math.log2(min / result));
+        result = result * Math.pow(2, folds);
     }
 
     return Math.min(Math.max(result, min), max);

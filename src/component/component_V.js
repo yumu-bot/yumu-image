@@ -11,7 +11,7 @@ export function component_V(
 ) {
     const overlay = getKeyOverlay(total_key, is_special)
 
-    let svg = `<g class="note-${chunk.index}">`;
+    let svg = '';
 
     const line_width = 10
     const note_height = 5
@@ -22,13 +22,14 @@ export function component_V(
 
     // --- 绘制背景和轨道边界 ---
     // 绘制轨道左右侧的竖线
-    svg += `<line x1="0" y1="0" x2="0" y2="710" stroke="#555" stroke-width="1" />`;
-    svg += `<line x1="${total_width}" y1="0" x2="${total_width}" y2="710" stroke="#555" stroke-width="1" />`;
+    svg += `<line x1="0" y1="0" x2="0" y2="${max_height}" stroke="#555" stroke-width="1" />`;
+    svg += `<line x1="${total_width}" y1="0" x2="${total_width}" y2="${max_height}" stroke="#555" stroke-width="1" />`;
 
     let reds = ''
     let greens = ''
     let yellows = ''
     let others = ''
+    let sv_points = []
 
     let green_count = 0
 
@@ -36,7 +37,7 @@ export function component_V(
 
     for (const timing of chunk.timings) {
         const relative = timing.beat - chunk.start_bar * 4;
-        const y = 710 - ((relative / beats_per_bucket) * 710);
+        const y = max_height - ((relative / beats_per_bucket) * max_height);
 
         switch (timing.type) {
             case 'red': case 'virtual': {
@@ -50,7 +51,7 @@ export function component_V(
                     reds += torusBold.getTextPath(bpm.integer.replace('.', ''), -2, y + 3, 14, 'right baseline', '#F990AB')
                         + torusBold.getTextPath((has_dot ? '.' : '') + bpm.decimal, -2, y + 3 + 10, 12, 'right baseline', '#F990AB')
                 } else {
-                    reds += torusBold.getTextPath('1K+', -2, y + 3, 14, 'right baseline', '#F990AB')
+                    reds += torusBold.getTextPath('+', -2, y + 3, 14, 'right baseline', '#F990AB')
                 }
 
                 reds += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#D32F2F" stroke-width="2" />`;
@@ -90,7 +91,7 @@ export function component_V(
                 const min = Math.floor(total / 60);
                 const sec = total % 60;
 
-                others += torusBold.get2SizeTextPath(min + ':', sec + '', 14, 10, total_width + 2, y + 3, 'left baseline', '#00B7EE', '#00B7EE')
+                others += torusBold.get2SizeTextPath(min + ':', String(sec).padStart(2, '0'), 14, 10, total_width + 2, y + 3, 'left baseline', '#00B7EE', '#00B7EE')
                 others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#00B7EE" stroke-width="1.5" stroke-dasharray="2,2" />`;
             } break
 
@@ -99,27 +100,30 @@ export function component_V(
 
                 if (sv_mode) {
                     const current_sv = timing.standard_sv || 1.0;
-                    const next_sv = timing.next_standard_sv || 1.0;
+                    //const next_sv = timing.next_standard_sv || 1.0;
 
                     // 计算当前 SV 的 X 位置
                     const center_x = total_width / 2
                     let sv_x;
                     if (current_sv >= 1.0) {
                         const range = Math.max(max_sv, 1.01) - 1.0;
-                        sv_x = center_x + (range === 0 ? 0 : ((Math.min(current_sv, 10) - 1.0) / range) * center_x);
+                        sv_x = center_x + (range === 0 ? 0 : ((Math.min(current_sv, 5) - 1.0) / range) * center_x);
                     } else {
                         const range = 1.0 - Math.min(min_sv, 0.99);
                         sv_x = center_x - (range === 0 ? 0 : ((1.0 - Math.max(current_sv, 0)) / range) * center_x);
                     }
 
+                    /*
                     let sv_x2;
                     if (next_sv >= 1.0) {
                         const range = Math.max(max_sv, 1.01) - 1.0;
-                        sv_x2 = center_x + (range === 0 ? 0 : ((Math.min(next_sv, 10) - 1.0) / range) * center_x);
+                        sv_x2 = center_x + (range === 0 ? 0 : ((Math.min(next_sv, 5) - 1.0) / range) * center_x);
                     } else {
                         const range = 1.0 - Math.min(min_sv, 0.99);
                         sv_x2 = center_x - (range === 0 ? 0 : ((1.0 - Math.max(next_sv, 0)) / range) * center_x);
                     }
+
+                     */
 
                     // 计算当前线和下一条线的 Y 坐标
                     const relative_start = timing.beat - chunk.start_bar * 4;
@@ -134,9 +138,7 @@ export function component_V(
                     const draw_y_top = Math.min(max_height, Math.max(0, y_end));
 
                     if (draw_y_bottom !== draw_y_top) {
-                        others += `<line x1="${sv_x}" y1="${draw_y_bottom}" x2="${sv_x}" y2="${draw_y_top}" stroke="#CAF881" stroke-width="3" opacity="0.5" />`
-                            + `<line x1="${sv_x}" y1="${draw_y_top}" x2="${sv_x2}" y2="${draw_y_top}" stroke="#CAF881" stroke-width="3" opacity="0.5" />`;
-
+                        sv_points.push({ x: sv_x,  y: draw_y_bottom }, { x: sv_x, y: draw_y_top })
                     }
                 } else {
                     // 原来的线
@@ -151,13 +153,26 @@ export function component_V(
     }
 
     // 太密集，这些线也不能要了
-    if (green_count === 0 && chunk.notes?.length > 0 && sv_mode) {
+    if (sv_points.length === 0 && chunk.notes?.length > 0 && sv_mode) {
         greens += `<line x1="${total_width / 2}" y1="${0}" x2="${total_width / 2}" y2="${max_height}" stroke="#CAF881" stroke-width="3" opacity="0.2" />`
+    } else {
+        const pointsStr = sv_points.map(p => `${p.x},${p.y}`).join(' ');
+
+        others += `<polyline 
+            points="${pointsStr}" 
+            fill="none" 
+            stroke="#CAF881" 
+            stroke-width="3" 
+            opacity="0.5" 
+            stroke-linejoin="round" 
+            stroke-linecap="round" 
+        />`;
+
     }
 
     svg += (others + greens + reds + yellows);
 
-    svg += `</g>`;
+    svg += `</g>` + `<g class="note-${chunk.index}">`;
 
     // 画 note
     for (const note of chunk.notes) {
@@ -186,7 +201,7 @@ export function component_V(
             // 2. 只有当 render_start 等于原始 beat 时，才渲染头部的 Note 节点
             // 允许极小的浮点误差 (0.0001)
             if (Math.abs(note.render_start - note.beat) < 0.001) {
-                if (start_y >= 0 && start_y <= 710) {
+                if (start_y >= 0 && start_y <= max_height) {
                     svg += `<use href="#note${overlay[key]}" x="${x}" y="${start_y - note_height / 2}" width="${line_width}" height="${note_height}" />`;
                 }
             }
@@ -194,7 +209,7 @@ export function component_V(
             // 3. 只有当 render_end 等于原始 end_beat 时，才渲染尾部的 Note 节点
             /*
             if (Math.abs(note.render_end - note.end_beat) < 1) {
-                if (end_y >= 0 && end_y <= 710) {
+                if (end_y >= 0 && end_y <= max_height) {
                     svg += `<use href="#note${overlay[key]}" x="${x}" y="${end_y - note_height / 2}" width="${line_width}" height="${note_height}" />`;
                 }
             }
