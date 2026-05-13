@@ -7,7 +7,7 @@ import {
     getOrNull, getPanelNameSVG, getSvgBody,
     round
 } from "../util/util.js";
-import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/file.js";
+import {getBeatmapFilePath, getLongestBPM, isSVMode, normalizeBpm, parseBeatmapFile} from "../util/file.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {torusBold} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
@@ -394,7 +394,7 @@ export async function panel_V2(
 
     let sv_text = ''
 
-    const sv_mode = max_sv - min_sv > 5 || min_sv < 0.05
+    const sv_mode = isSVMode(full_line, max_sv, min_sv)
 
     if (sv_mode) {
         sv_text = `sv: min ${round(min_sv, 2)}x, max ${round(max_sv, 2)}x // `
@@ -506,7 +506,7 @@ export async function panel_V2(
     const backgrounds = []
 
     for (let i = 0; i < actual_lane_count; i++) {
-        const component = component_V2(chunks[i], lane_height, max_width, beats_per_lane, max_sv, min_sv);
+        const component = component_V2(chunks[i], lane_height, max_width, beats_per_lane, max_sv, min_sv, sv_mode);
 
         const x = 20;
         // -10 是确保下面不会撞到 page 1 of 2 这样的标识

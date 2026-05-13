@@ -7,7 +7,7 @@ export function component_V(
         start_bar: 0,
         notes: [],
         timings: []
-    }, total_key = 4, max_height = 710, beats_per_bucket = 32, is_special = false, max_sv = 1.1, min_sv = 0
+    }, total_key = 4, max_height = 710, beats_per_bucket = 32, is_special = false, max_sv = 1.1, min_sv = 0, sv_mode = false
 ) {
     const overlay = getKeyOverlay(total_key, is_special)
 
@@ -32,8 +32,6 @@ export function component_V(
     let sv_points = []
 
     let green_count = 0
-
-    const sv_mode = max_sv - min_sv > 8
 
     let before_bpm = -1
     let before_sv = -1

@@ -7,7 +7,7 @@ export function component_V2(
         start_bar: 0,
         notes: [],
         timings: []
-    }, lane_height = 30, lane_width = 1920 - 40, beats_per_lane = 32, max_sv = 1.1, min_sv = 0
+    }, lane_height = 30, lane_width = 1920 - 40, beats_per_lane = 32, max_sv = 1.1, min_sv = 0, sv_mode = false
 ) {
     let svg = '';
 
@@ -46,8 +46,6 @@ export function component_V2(
     let sv_points = []
 
     let green_count = 0
-
-    const sv_mode = max_sv - min_sv > 5 || min_sv < 0.05
 
     let before_bpm = -1
     let before_sv = -1
