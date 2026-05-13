@@ -116,7 +116,8 @@ export async function panel_V(
         index: i,
         start_bar: start_bar + (i * bar_per_bucket), // 当前切片起始小节
         notes: [],
-        timings: []
+        timings: [],
+        initial_sv: 1.0,
     }));
 
     // 使用一个很小的 epsilon (1ms 级别对应的 beat 长度)
@@ -335,16 +336,58 @@ export async function panel_V(
         }
     }
 
+    let after_sv = null;
+    let after_beat = total_beats;
+
+    // 反向
     for (let i = full_line.length - 1; i >= 0; i--) {
         const current = full_line[i];
 
-        const next_line = (i === full_line.length - 1) ? null : full_line[i + 1];
+        if (current.standard_sv != null) {
+            current.next_standard_sv = (after_sv !== null) ? after_sv : current.standard_sv;
+            current.next_beat = after_beat;
 
-        if (current.type === 'green') {
-            current.next_standard_sv = next_line ? next_line.standard_sv : last_time;
-            current.next_beat = next_line ? next_line.beat : total_beats;
+            // 更新状态，供上一个点使用
+            after_sv = current.standard_sv;
+            after_beat = current.beat;
         }
     }
+
+    // 正向
+    const first_timing_point = full_line.find(l => l.standard_sv != null);
+    let before_sv = first_timing_point ? first_timing_point.standard_sv : 1.0;
+    let before_beat = first_timing_point.beat
+
+    for (let i = 0; i < full_line.length; i++) {
+        const line = full_line[i];
+
+        line.prev_standard_sv = before_sv;
+        line.prev_beat = before_beat;
+
+        if (line.standard_sv != null) {
+            before_sv = line.standard_sv;
+        }
+
+        if (line.beat != null) {
+            before_beat = line.beat;
+        }
+    }
+
+    chunks.forEach((chunk, i) => {
+        const chunk_start_beat = start_bar * 4 + i * beats_per_chunk;
+
+        // 寻找在当前 chunk 开始之前的最后一条线
+        let last_point_before = null;
+        for (let j = full_line.length - 1; j >= 0; j--) {
+            // 使用 epsilon 避免浮点误差
+            if (full_line[j].beat <= chunk_start_beat + 0.001) {
+                last_point_before = full_line[j];
+                break;
+            }
+        }
+        // 存储进入本行时的速度
+        chunk.initial_sv = last_point_before ? last_point_before.standard_sv : (first_timing_point?.standard_sv || 1.0);
+    });
 
     // 切片逻辑
     let max_used_chunk_index = -1;
@@ -359,9 +402,12 @@ export async function panel_V(
     const first_chunk = chunks[0];
 
     const first_red = only_red?.[0]
-    const first_red_line_time = first_red?.time ?? 0
 
-    const has_red_line_around_first_note = Math.abs(first_red_line_time - first_note_time) <= beat_length;
+    const closest_red = only_red.find(v => {
+        return Math.abs(v.time - first_note_time) <= beat_length
+    })
+
+    const has_red_line_around_first_note = closest_red != null;
 
     if (!has_red_line_around_first_note && first_chunk.notes.length > 0) {
         const first = notes[0];
@@ -402,7 +448,7 @@ export async function panel_V(
 
     let sv_text = ''
 
-    const sv_mode = isSVMode(full_line, max_sv, min_sv)
+    const sv_mode = isSVMode(full_line)
 
     if (sv_mode) {
         sv_text = `sv: min ${round(min_sv, 2)}x, max ${round(max_sv, 2)}x // `
@@ -460,7 +506,7 @@ export async function panel_V(
     const backgrounds = []
 
     for (let i = 0; i < render_chunks_count; i++) {
-        const component = component_V(chunks[i], key, row_height, beats_per_chunk, general.special_style, max_sv, min_sv);
+        const component = component_V(chunks[i], key, row_height, beats_per_chunk, general.special_style, max_sv, min_sv, sv_mode);
 
         const r = Math.floor(i / chunk_per_row); // 属于第几行
         const c = i % chunk_per_row;             // 属于第几列

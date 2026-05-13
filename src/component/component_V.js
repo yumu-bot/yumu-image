@@ -6,7 +6,8 @@ export function component_V(
         index: 1,
         start_bar: 0,
         notes: [],
-        timings: []
+        timings: [],
+        initial_sv: 1.0
     }, total_key = 4, max_height = 710, beats_per_bucket = 32, is_special = false, max_sv = 1.1, min_sv = 0, sv_mode = false
 ) {
     const overlay = getKeyOverlay(total_key, is_special)
@@ -101,34 +102,14 @@ export function component_V(
             } break
 
             case 'green': {
-                green_count ++
-
                 if (sv_mode) {
                     const current_sv = timing.standard_sv || 1.0;
                     //const next_sv = timing.next_standard_sv || 1.0;
 
                     // 计算当前 SV 的 X 位置
                     const center_x = total_width / 2
-                    let sv_x;
-                    if (current_sv >= 1.0) {
-                        const range = Math.max(max_sv, 1.01) - 1.0;
-                        sv_x = center_x + (range === 0 ? 0 : ((Math.min(current_sv, 5) - 1.0) / range) * center_x);
-                    } else {
-                        const range = 1.0 - Math.min(min_sv, 0.99);
-                        sv_x = center_x - (range === 0 ? 0 : ((1.0 - Math.max(current_sv, 0)) / range) * center_x);
-                    }
 
-                    /*
-                    let sv_x2;
-                    if (next_sv >= 1.0) {
-                        const range = Math.max(max_sv, 1.01) - 1.0;
-                        sv_x2 = center_x + (range === 0 ? 0 : ((Math.min(next_sv, 5) - 1.0) / range) * center_x);
-                    } else {
-                        const range = 1.0 - Math.min(min_sv, 0.99);
-                        sv_x2 = center_x - (range === 0 ? 0 : ((1.0 - Math.max(next_sv, 0)) / range) * center_x);
-                    }
-
-                     */
+                    let sv_x = getX(current_sv, center_x, max_sv, min_sv)
 
                     // 计算当前线和下一条线的 Y 坐标
                     const relative_start = timing.beat - chunk.start_bar * 4;
@@ -141,6 +122,15 @@ export function component_V(
                     // 限制在当前 chunk 的高度范围内 (0 - 710)
                     const draw_y_bottom = Math.min(max_height, Math.max(0, y_start));
                     const draw_y_top = Math.min(max_height, Math.max(0, y_end));
+
+                    // 需要考虑最前面绘制的线
+                    if (green_count === 0 && relative_start > 0 && timing.prev_standard_sv != null) {
+                        const prev_sv = timing.prev_standard_sv ?? 1.0
+
+                        let sv_x0 = getX(prev_sv, center_x, max_sv, min_sv)
+
+                        sv_points.push({ x: sv_x0, y: max_height }, { x: sv_x0, y: draw_y_bottom })
+                    }
 
                     if (draw_y_bottom !== draw_y_top) {
                         sv_points.push({ x: sv_x,  y: draw_y_bottom }, { x: sv_x, y: draw_y_top })
@@ -159,13 +149,28 @@ export function component_V(
                     greens += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" opacity="0.8" stroke="#CAF881" stroke-width="1" stroke-dasharray="2,2" />`;
                     before_sv = timing.sv
                 }
+
+                green_count ++
             }
         }
     }
 
-    // 太密集，这些线也不能要了
+    // 无绿线时
     if (sv_points.length === 0 && chunk.notes?.length > 0 && sv_mode) {
-        greens += `<line x1="${total_width / 2}" y1="${0}" x2="${total_width / 2}" y2="${max_height}" stroke="#CAF881" stroke-width="3" opacity="0.2" />`
+        const sv = chunk.initial_sv ?? 1.0
+        const center_x = total_width / 2
+
+        const x = getX(sv, center_x, max_sv, min_sv)
+
+        let opacity
+
+        if (Math.abs(sv - 1.0) < 1e-4) {
+            opacity = 0.2
+        } else {
+            opacity = 0.5
+        }
+
+        greens += `<line x1="${x}" y1="${0}" x2="${x}" y2="${max_height}" stroke="#CAF881" stroke-width="3" opacity="${opacity}" />`
     } else {
         const pointsStr = sv_points.map(p => `${p.x},${p.y}`).join(' ');
 
@@ -211,7 +216,7 @@ export function component_V(
 
             // 2. 只有当 render_start 等于原始 beat 时，才渲染头部的 Note 节点
             // 允许极小的浮点误差 (0.0001)
-            if (Math.abs(note.render_start - note.beat) < 0.001) {
+            if (Math.abs(note.render_start - note.beat)< 1e-4) {
                 if (start_y >= 0 && start_y <= max_height) {
                     svg += `<use href="#note${overlay[key]}" x="${x}" y="${start_y - note_height / 2}" width="${line_width}" height="${note_height}" />`;
                 }
@@ -267,4 +272,18 @@ function getKeyOverlay(total_key = 4, is_special = false) {
  */
 function getKey(x = 0, total_key = 4) {
     return Math.max(Math.min(Math.floor(x * total_key / 512), total_key - 1), 0)
+}
+
+
+function getX(sv = 1.0, center = 0, max_sv = 1.0, min_sv = 1.0) {
+    let sv_x0;
+    if (sv >= 1.0) {
+        const range = Math.max(max_sv, 1.00) - 1.0;
+        sv_x0 = center + (range === 0 ? 0 : ((Math.min(sv, 5) - 1.0) / range) * center);
+    } else {
+        const range = 1.0 - Math.min(min_sv, 1.0);
+        sv_x0 = center - (range === 0 ? 0 : ((1.0 - Math.max(sv, 0)) / range) * center);
+    }
+
+    return sv_x0;
 }

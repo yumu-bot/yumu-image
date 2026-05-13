@@ -6,7 +6,8 @@ export function component_V2(
         index: 1,
         start_bar: 0,
         notes: [],
-        timings: []
+        timings: [],
+        initial_sv: 1.0
     }, lane_height = 30, lane_width = 1920 - 40, beats_per_lane = 32, max_sv = 1.1, min_sv = 0, sv_mode = false
 ) {
     let svg = '';
@@ -112,34 +113,13 @@ export function component_V2(
             } break
 
             case 'green': {
-                green_count ++
-
                 if (sv_mode) {
                     const current_sv = timing.standard_sv || 1.0;
                     //const next_sv = timing.next_standard_sv || 1.0;
 
                     // 计算当前 SV 的 Y 位置
                     const center_y = lane_height / 2
-                    let sv_y;
-                    if (current_sv >= 1.0) {
-                        const range = Math.max(max_sv, 1.01) - 1.0;
-                        sv_y = center_y + (range === 0 ? 0 : ((Math.min(current_sv, 5) - 1.0) / range) * center_y);
-                    } else {
-                        const range = 1.0 - Math.min(min_sv, 0.99);
-                        sv_y = center_y - (range === 0 ? 0 : ((1.0 - Math.max(current_sv, 0)) / range) * center_y);
-                    }
-
-                    /*
-                    let sv_y2;
-                    if (next_sv >= 1.0) {
-                        const range = Math.max(max_sv, 1.01) - 1.0;
-                        sv_y2 = center_y + (range === 0 ? 0 : ((Math.min(next_sv, 5) * -1.0 - 1.0) / range) * center_y);
-                    } else {
-                        const range = 1.0 - Math.min(min_sv, 0.99);
-                        sv_y2 = center_y - (range === 0 ? 0 : ((1.0 - Math.max(next_sv, 0)) * -1.0 / range) * center_y);
-                    }
-
-                     */
+                    let sv_y = getY(current_sv, center_y, max_sv, min_sv)
 
                     // 计算当前线和下一条线的 Y 坐标
                     const relative_start = timing.beat - chunk.start_bar * 4;
@@ -148,10 +128,17 @@ export function component_V2(
                     const x_start = (relative_start / beats_per_lane) * lane_width
                     const x_end = (relative_end / beats_per_lane) * lane_width
 
-                    // 绘制竖线：从当前开始位置向上拉到下一条线开始的位置
-                    // 限制在当前 chunk 的高度范围内 (0 - 710)
                     const draw_x_left = Math.min(lane_width, Math.max(0, x_start));
                     const draw_x_right = Math.min(lane_width, Math.max(0, x_end));
+
+                    // 需要考虑最前面绘制的线
+                    if (green_count === 0 && relative_start > 0 && timing.prev_standard_sv != null) {
+                        const prev_sv = timing.prev_standard_sv ?? 1.0
+
+                        let sv_y0 = getY(prev_sv, center_y, max_sv, min_sv)
+
+                        sv_points.push({ x: 0, y: sv_y0 }, { x: draw_x_left, y: sv_y0 })
+                    }
 
                     if (draw_x_left !== draw_x_right) {
                         sv_points.push({ x: draw_x_left, y: sv_y }, { x: draw_x_right, y: sv_y })
@@ -169,13 +156,28 @@ export function component_V2(
                     greens += `<line x1="${x}" y1="0" x2="${x}" y2="${lane_height}" opacity="0.8" stroke="#CAF881" stroke-width="1" stroke-dasharray="2,2" />`;
                     before_sv = timing.sv
                 }
+
+                green_count ++
             }
         }
     }
 
-    // 太密集，这些线也不能要了
+    // 无绿线时
     if (sv_points.length === 0 && chunk.notes?.length > 0 && sv_mode) {
-        greens += `<line x1="0" y1="${lane_height / 2}" x2="${lane_width}" y2="${lane_height / 2}" stroke="#CAF881" stroke-width="3" opacity="0.2" />`
+        const sv = chunk.initial_sv ?? 1.0
+        const center_y = lane_height / 2
+
+        const y = getY(sv, center_y, max_sv, min_sv)
+
+        let opacity
+
+        if (Math.abs(sv - 1.0) < 1e-4) {
+            opacity = 0.2
+        } else {
+            opacity = 0.5
+        }
+
+        greens += `<line x1="0" y1="${y}" x2="${lane_width}" y2="${y}" stroke="#CAF881" stroke-width="3" opacity="${opacity}" />`
     } else {
         const pointsStr = sv_points.map(p => `${p.x},${p.y}`).join(' ');
 
@@ -224,8 +226,8 @@ export function component_V2(
             const relative_start = note.render_start - chunk.start_bar * 4;
             const relative_end = note.render_end - chunk.start_bar * 4;
 
-            const start_x = (relative_start / beats_per_lane) * lane_width
-            const end_x = (relative_end / beats_per_lane) * lane_width
+            const start_x = Math.round((relative_start / beats_per_lane) * lane_width)
+            const end_x = Math.round((relative_end / beats_per_lane) * lane_width)
 
             const big = note.hit_sound.finish
 
@@ -248,7 +250,7 @@ export function component_V2(
             // 3. 只有当 render_end 等于原始 end_beat 时，才渲染尾部的 Note 节点
             if (Math.abs(note.render_end - note.end_beat) < 1) {
                 if (end_x >= 0 && end_x <= lane_width) {
-                    svg += `<use href="#roll-end" 
+                    svg += `<use href="#roll-end" shape-rendering="crispEdges" 
                         x="0" 
                         y="0" 
                         width="${drumroll_width}" 
@@ -256,16 +258,16 @@ export function component_V2(
                         transform="translate(${end_x}, ${y}) scale(-1, 1)"
                         />`;
 
-                    svg += `<use href="#roll-end" x="${end_x}" y="${y}" width="${drumroll_width}" height="${drumroll_height}"/>`
+                    svg += `<use href="#roll-end" shape-rendering="crispEdges" x="${end_x}" y="${y}" width="${drumroll_width}" height="${drumroll_height}"/>`
                 }
             }
 
 
             // 2. 只有当 render_start 等于原始 beat 时，才渲染头部的 Note 节点
             // 允许极小的浮点误差 (0.0001)
-            if (Math.abs(note.render_start - note.beat) < 0.001) {
+            if (Math.abs(note.render_start - note.beat)< 1e-4) {
                 if (start_x >= 0 && start_x <= lane_width) {
-                    svg += `<use href="#roll-end" 
+                    svg += `<use href="#roll-end" shape-rendering="crispEdges" 
                         x="0" 
                         y="0" 
                         width="${drumroll_width}" 
@@ -273,7 +275,7 @@ export function component_V2(
                         transform="translate(${start_x}, ${y}) scale(-1, 1)"
                         />`;
 
-                    svg += `<use href="#roll-end" x="${start_x}" y="${y}" width="${drumroll_width}" height="${drumroll_height}"/>`
+                    svg += `<use href="#roll-end" shape-rendering="crispEdges" x="${start_x}" y="${y}" width="${drumroll_width}" height="${drumroll_height}"/>`
                 }
             }
         } else if (note.type === 'spinner') {
@@ -290,4 +292,17 @@ export function component_V2(
 
     return svg;
 
+}
+
+function getY(sv = 1.0, center = 0, max_sv = 1.0, min_sv = 1.0) {
+    let sv_y0;
+    if (sv >= 1.0) {
+        const range = Math.max(max_sv, 1.0) - 1.0;
+        sv_y0 = center + (range === 0 ? 0 : ((Math.min(sv, 5) * -1.0 - 1.0) / range) * center);
+    } else {
+        const range = 1.0 - Math.min(min_sv, 1.0);
+        sv_y0 = center - (range === 0 ? 0 : ((1.0 - Math.max(sv, 0)) * -1.0 / range) * center);
+    }
+
+    return sv_y0
 }

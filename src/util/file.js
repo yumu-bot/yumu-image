@@ -443,12 +443,9 @@ export function normalizeBpm(raw_bpm, min = 120, max = 300) {
 /**
  *
  * @param full_line
- * @param max_sv
- * @param min_sv
- * @param max_index 最大最小值倍率
  * @return {boolean}
  */
-export function isSVMode(full_line, max_sv, min_sv, max_index = 8.0) {
+export function isSVMode(full_line) {
     // 在赋予标准 SV 后计算
     const sv_values = full_line
         .filter(l => l.standard_sv != null)
@@ -460,9 +457,7 @@ export function isSVMode(full_line, max_sv, min_sv, max_index = 8.0) {
         const std_dev = Math.sqrt(variance);
         const cv = std_dev / mean; // 变异系数
 
-        const drastic = Math.sqrt(max_sv / Math.max(min_sv, 1e-4)) > Math.sqrt(max_index);
-
-        return cv > 0.25 || (drastic && max_sv > 2.0);
+        return cv > 0.25;
     }
 
     return false
