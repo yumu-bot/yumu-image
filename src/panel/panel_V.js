@@ -13,7 +13,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
 import {torusBold} from "../util/font.js";
-import {getBeatmapFilePath, getLongestBPM, isSVMode, normalizeBpm, parseBeatmapFile} from "../util/file.js";
+import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/file.js";
 
 export async function router(req, res) {
     try {
@@ -53,6 +53,7 @@ export async function panel_V(
         page: 1,
         mode: 'mania',
         rows: 5,
+        variation: false,
     })
 {
 
@@ -448,7 +449,7 @@ export async function panel_V(
 
     let sv_text = ''
 
-    const sv_mode = isSVMode(full_line)
+    const sv_mode = data.variation === true //isSVMode(full_line)
 
     if (sv_mode) {
         sv_text = `sv: min ${round(min_sv, 2)}x, max ${round(max_sv, 2)}x // `
