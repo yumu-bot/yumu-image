@@ -57,8 +57,8 @@ export async function panel_V2(
 
     const lane_height = 35
     const lane_gap = 30
-    const lane_per_page = 40
-    const bar_per_lane = 8
+    const lane_per_page = 50
+    const bar_per_lane = 4
     const beats_per_lane = bar_per_lane * 4;
     const minute_interval = 60000;
 
@@ -67,6 +67,7 @@ export async function panel_V2(
 
     const path = await getBeatmapFilePath(data.beatmap.id)
     const {timings, notes, general} = await parseBeatmapFile(path)
+    const first_note_time = notes?.[0]?.time ?? 0
 
     const only_red = timings.filter(t => t.type === 'red');
 
@@ -170,6 +171,8 @@ export async function panel_V2(
             if (Math.abs(time - current.time) < 1) {
                 continue;
             }
+
+            if (Math.abs(time - first_note_time) <= 500) continue; // 跳过第一个物件（这里会有 bpm 指示线
 
             // 计算当前拍是在这个红线段落里的第几拍
             const beat_index = Math.round((time - current.time) / timing_beat_length);
@@ -351,7 +354,6 @@ export async function panel_V2(
 
     const first_red = only_red?.[0]
     const first_red_line_time = first_red?.time ?? 0
-    const first_note_time = notes?.[0]?.time ?? 0
 
     const has_red_line_around_first_note = Math.abs(first_red_line_time - first_note_time) <= beat_length;
 
@@ -507,7 +509,8 @@ export async function panel_V2(
         const component = component_V2(chunks[i], lane_height, max_width, beats_per_lane, max_sv, min_sv);
 
         const x = 20;
-        const y = 290 + 40 + i * (lane_height + lane_gap); // 按行数往下推
+        // -10 是确保下面不会撞到 page 1 of 2 这样的标识
+        const y = 290 + 40 + i * (lane_height + lane_gap) - 10
 
         if (i % 2 !== 0) {
             // 奇数行，但是从 0 开始

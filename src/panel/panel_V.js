@@ -70,6 +70,7 @@ export async function panel_V(
 
     const path = await getBeatmapFilePath(data.beatmap.id)
     const {timings, notes, difficulty, general} = await parseBeatmapFile(path)
+    const first_note_time = notes?.[0]?.time ?? 0
 
     const key = Math.round(difficulty.cs)
 
@@ -181,6 +182,7 @@ export async function panel_V(
             if (Math.abs(time - current.time) < 1) {
                 continue;
             }
+            if (Math.abs(time - first_note_time) <= 500) continue; // 跳过第一个物件（这里会有 bpm 指示线
 
             // 计算当前拍是在这个红线段落里的第几拍
             const beat_index = Math.round((time - current.time) / timing_beat_length);
@@ -358,7 +360,6 @@ export async function panel_V(
 
     const first_red = only_red?.[0]
     const first_red_line_time = first_red?.time ?? 0
-    const first_note_time = notes?.[0]?.time ?? 0
 
     const has_red_line_around_first_note = Math.abs(first_red_line_time - first_note_time) <= beat_length;
 
@@ -445,7 +446,7 @@ export async function panel_V(
     ${PanelDraw.Rect(510, 40, 195, 60, 15, '#382E32')}
     
     ${getSvgBody(40, 40, card_A2(card_a2))}
-    ${getPanelNameSVG('Beatmap View (!ymv)', 'V', request_time)}
+    ${getPanelNameSVG('Beatmap View (!ymv) ~ Not even close to donscore', 'V', request_time)}
     ${torusBold.getTextPath(
         'page: ' + Math.max(1, Math.min(data.page || 1, total_pages)) + ' of ' + (total_pages), 1920 / 2, total_height - 15, 20, 'center baseline', '#fff', 0.6
     )}
