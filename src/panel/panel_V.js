@@ -493,7 +493,7 @@ export async function panel_V(
     ${PanelDraw.Rect(510, 40, 195, 60, 15, '#382E32')}
     
     ${getSvgBody(40, 40, card_A2(card_a2))}
-    ${getPanelNameSVG('Beatmap View (!ymv)', 'V', request_time)}
+    ${getPanelNameSVG('Beatmap View (!ymv)', sv_mode ? 'VV' : 'V', request_time)}
     ${torusBold.getTextPath(
         'page: ' + Math.max(1, Math.min(data.page || 1, total_pages)) + ' of ' + (total_pages), 1920 / 2, total_height - 15, 20, 'center baseline', '#fff', 0.6
     )}
