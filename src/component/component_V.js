@@ -87,8 +87,8 @@ export function component_V(
                 // 渲染 时间线
                 const min = Math.floor(timing.time / 60000)
 
-                others += torusBold.get2SizeTextPath(min + ':', '00', 14, 10, total_width + 2, y + 3, 'left baseline', '#00B7EE', '#00B7EE')
-                others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#00B7EE" stroke-width="1.5" stroke-dasharray="2,2" />`;
+                others += torusBold.get2SizeTextPath(min + ':', '00', 14, 10, total_width + 2, y + 3, 'left baseline', '#00F2FE', '#00F2FE')
+                others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#00F2FE" stroke-width="1.5" stroke-dasharray="2,2" />`;
             } break
 
             case 'minute_latest': {
@@ -97,8 +97,8 @@ export function component_V(
                 const min = Math.floor(total / 60);
                 const sec = total % 60;
 
-                others += torusBold.get2SizeTextPath(min + ':', String(sec).padStart(2, '0'), 14, 10, total_width + 2, y + 3, 'left baseline', '#00B7EE', '#00B7EE')
-                others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#00B7EE" stroke-width="1.5" stroke-dasharray="2,2" />`;
+                others += torusBold.get2SizeTextPath(min + ':', String(sec).padStart(2, '0'), 14, 10, total_width + 2, y + 3, 'left baseline', '#00F2FE', '#00F2FE')
+                others += `<line x1="0" y1="${y}" x2="${total_width}" y2="${y}" stroke="#00F2FE" stroke-width="1.5" stroke-dasharray="2,2" />`;
             } break
 
             case 'green': {

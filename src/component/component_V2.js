@@ -98,8 +98,8 @@ export function component_V2(
                 // 渲染 时间线
                 const min = Math.floor(timing.time / 60000)
 
-                others += torusBold.get2SizeTextPath(min + ':', '00', 14, 10, x, lane_height + text_under_delta, 'center baseline', '#00B7EE', '#00B7EE')
-                others += `<line x1="${x}" y1="0" x2="${x}" y2="${lane_height}" stroke="#00B7EE" stroke-width="1.5" stroke-dasharray="2,2" />`;
+                others += torusBold.get2SizeTextPath(min + ':', '00', 14, 10, x, lane_height + text_under_delta, 'center baseline', '#00F2FE', '#00F2FE')
+                others += `<line x1="${x}" y1="0" x2="${x}" y2="${lane_height}" stroke="#00F2FE" stroke-width="1.5" stroke-dasharray="2,2" />`;
             } break
 
             case 'minute_latest': {
@@ -108,8 +108,8 @@ export function component_V2(
                 const min = Math.floor(total / 60);
                 const sec = total % 60;
 
-                others += torusBold.get2SizeTextPath(min + ':', String(sec).padStart(2, '0'), 14, 10, x, lane_height + text_under_delta, 'center baseline', '#00B7EE', '#00B7EE')
-                others += `<line x1="${x}" y1="0" x2="${x}" y2="${lane_height}" stroke="#00B7EE" stroke-width="1.5" stroke-dasharray="2,2" />`;
+                others += torusBold.get2SizeTextPath(min + ':', String(sec).padStart(2, '0'), 14, 10, x, lane_height + text_under_delta, 'center baseline', '#00F2FE', '#00F2FE')
+                others += `<line x1="${x}" y1="0" x2="${x}" y2="${lane_height}" stroke="#00F2FE" stroke-width="1.5" stroke-dasharray="2,2" />`;
             } break
 
             case 'green': {
