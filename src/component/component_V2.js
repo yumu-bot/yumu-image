@@ -12,22 +12,26 @@ export function component_V2(
 ) {
     let svg = '';
 
-    const small_height = 20
-    const small_width = 20
+    const small = Math.round(lane_height * 2 / 3)
+    const medium = Math.round(lane_height * 3 / 4)
+    const big = Math.round(lane_height * 8 / 10)
 
-    const big_height = 28
-    const big_width = 28
+    const small_height = small
+    const small_width = small
 
-    const drumroll_small_height = 20
-    const drumroll_small_width = 20 / 2
+    const big_height = big
+    const big_width = big
 
-    const drumroll_big_height = 28
-    const drumroll_big_width = 28 / 2
+    const drumroll_small_height = small
+    const drumroll_small_width = small / 2
 
-    const spinner_approach_size = 30
-    const spinner_circle_size = 15
+    const drumroll_big_height = medium
+    const drumroll_big_width = medium / 2
 
-    const text_under_delta = 14
+    const spinner_approach_size = Math.round(lane_height * 8 / 10)
+    const spinner_circle_size = Math.round(lane_height / 5)
+
+    const text_under_delta = 13
 
     // 画 timing
     svg += `<g class="timing-${chunk.index}">`;
@@ -197,8 +201,12 @@ export function component_V2(
 
     svg += `</g>` + `<g class="note-${chunk.index}">`;
 
+    const note_array = []
+
     // 画 note
     for (const note of chunk.notes) {
+        let note_body = null
+
         if (note.type === 'circle') {
             const relative = note.render_start - chunk.start_bar * 4;
             const x = (relative / beats_per_lane) * lane_width;
@@ -220,7 +228,7 @@ export function component_V2(
                 filter = (big) ? "don2" : "don"
             }
 
-            svg += `<use href="#${href}" filter="url(#${filter})" x="${x - width / 2}" y="${y}" width="${width}" height="${height}" />`
+            note_body = `<use href="#${href}" filter="url(#${filter})" x="${x - width / 2}" y="${y}" width="${width}" height="${height}" />`
 
         } else if (note.type === 'slider') {
             const relative_start = note.render_start - chunk.start_bar * 4;
@@ -245,12 +253,12 @@ export function component_V2(
 
             const y = (lane_height - drumroll_height) / 2
 
-            svg += `<use href="#roll-middle" x="${start_x}" y="${y}" width="${roll_width}" height="${drumroll_height}" opacity="0.6"/>`
+            note_body = `<use href="#roll-middle" x="${start_x}" y="${y}" width="${roll_width}" height="${drumroll_height}" opacity="0.6"/>`
 
             // 3. 只有当 render_end 等于原始 end_beat 时，才渲染尾部的 Note 节点
             if (Math.abs(note.render_end - note.end_beat) < 1) {
                 if (end_x >= 0 && end_x <= lane_width) {
-                    svg += `<use href="#roll-end" shape-rendering="crispEdges" 
+                    note_body += `<use href="#roll-end" shape-rendering="crispEdges" 
                         x="0" 
                         y="0" 
                         width="${drumroll_width}" 
@@ -258,7 +266,7 @@ export function component_V2(
                         transform="translate(${end_x}, ${y}) scale(-1, 1)"
                         />`;
 
-                    svg += `<use href="#roll-end" shape-rendering="crispEdges" x="${end_x}" y="${y}" width="${drumroll_width}" height="${drumroll_height}"/>`
+                    note_body += `<use href="#roll-end" shape-rendering="crispEdges" x="${end_x}" y="${y}" width="${drumroll_width}" height="${drumroll_height}"/>`
                 }
             }
 
@@ -267,7 +275,7 @@ export function component_V2(
             // 允许极小的浮点误差 (0.0001)
             if (Math.abs(note.render_start - note.beat)< 1e-4) {
                 if (start_x >= 0 && start_x <= lane_width) {
-                    svg += `<use href="#roll-end" shape-rendering="crispEdges" 
+                    note_body += `<use href="#roll-end" shape-rendering="crispEdges" 
                         x="0" 
                         y="0" 
                         width="${drumroll_width}" 
@@ -275,17 +283,38 @@ export function component_V2(
                         transform="translate(${start_x}, ${y}) scale(-1, 1)"
                         />`;
 
-                    svg += `<use href="#roll-end" shape-rendering="crispEdges" x="${start_x}" y="${y}" width="${drumroll_width}" height="${drumroll_height}"/>`
+                    note_body += `<use href="#roll-end" shape-rendering="crispEdges" x="${start_x}" y="${y}" width="${drumroll_width}" height="${drumroll_height}"/>`
                 }
             }
         } else if (note.type === 'spinner') {
             const relative = note.render_start - chunk.start_bar * 4;
             const x = (relative / beats_per_lane) * lane_width;
 
-            svg += `<use href="#spinner-approach" x="${x- spinner_approach_size / 2}" y="${(lane_height - spinner_approach_size) / 2}" width="${spinner_approach_size}" height="${spinner_approach_size}"/>` +
+            note_body = `<use href="#spinner-approach" x="${x- spinner_approach_size / 2}" y="${(lane_height - spinner_approach_size) / 2}" width="${spinner_approach_size}" height="${spinner_approach_size}"/>` +
                 `<use href="#spinner-circle" x="${x - spinner_circle_size / 2}" y="${(lane_height - spinner_circle_size) / 2}" width="${spinner_circle_size}" height="${spinner_circle_size}"/>`
         }
+
+        if (note_body) {
+            note_array.push({
+                body: note_body,
+                type: note.type,
+                time: note.time
+            });
+        }
     }
+
+    note_array.sort((a, b) => {
+        const priority = { 'slider': 1, 'spinner': 2, 'circle': 3 };
+
+        // 1. 首先比较层级优先级
+        if (priority[a.type] !== priority[b.type]) {
+            return priority[a.type] - priority[b.type];
+        }
+
+        return b.time - a.time;
+    });
+
+    svg += note_array.map(item => item.body).join('');
 
     svg += `</g>`;
 

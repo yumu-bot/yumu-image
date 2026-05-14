@@ -7,7 +7,7 @@ import {
     getOrNull, getPanelNameSVG, getSvgBody,
     round
 } from "../util/util.js";
-import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/file.js";
+import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/osuFile.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {torusBold} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
@@ -55,14 +55,15 @@ export async function panel_V2(
     })
 {
 
-    const lane_height = 35
+    const lane_height = 50
     const lane_gap = 30
-    const lane_per_page = 50
+    const lane_per_page = 60
     const bar_per_lane = 4
     const beats_per_lane = bar_per_lane * 4;
     const minute_interval = 60000;
 
-    const max_width = 1920 - 40
+    const padding_width = 40
+    const max_width = 1920 - 2 * padding_width
     const background_bleed = 0
 
     const path = await getBeatmapFilePath(data.beatmap.id)
@@ -554,13 +555,13 @@ export async function panel_V2(
     for (let i = 0; i < actual_lane_count; i++) {
         const component = component_V2(chunks[i], lane_height, max_width, beats_per_lane, max_sv, min_sv, sv_mode);
 
-        const x = 20;
+        const x = padding_width;
         // -10 是确保下面不会撞到 page 1 of 2 这样的标识
         const y = 290 + 40 + i * (lane_height + lane_gap) - 10
 
         if (i % 2 !== 0) {
             // 奇数行，但是从 0 开始
-            backgrounds.push(PanelDraw.Rect(0, y - background_bleed, 1920, lane_height + background_bleed * 2, 0, '#46393F'))
+            backgrounds.push(PanelDraw.Rect(x, y - background_bleed, max_width, lane_height + background_bleed * 2, 0, '#46393F'))
         }
 
         components.push(getSvgBody(x, y, component))

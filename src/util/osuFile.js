@@ -3,6 +3,7 @@ import {OSU_BUFFER_PATH} from "./util.js";
 import fs from "fs";
 import axios from "axios";
 import readline from "readline";
+import {controlPointsToPath, parseControlPoints} from "./sliderPath.js";
 
 export async function getBeatmapFilePath(beatmap_id) {
 
@@ -129,6 +130,10 @@ export async function parseBeatmapFile(filePath) {
         if (isNote && trimmed.length > 0) {
             const parts = trimmed.split(',');
 
+            const x = parseInt(parts[0])
+
+            const y = parseInt(parts[1])
+
             const start_time = parseFloat(parts[2])
 
             const type_mask = parseInt(parts[3])
@@ -158,14 +163,23 @@ export async function parseBeatmapFile(filePath) {
                 clap: (hit_sound_mask & (1 << 3)) !== 0
             };
 
+            let slider_points
             let slide_count
-
             let visual_length
 
             if (type === 'slider') {
+                // 其他模式的控制点不重要
+                if (general.mode === 0 || general.mode === 2) {
+                    const control_points = parseControlPoints(parts[5], x, y)
+
+                    slider_points = controlPointsToPath(control_points, 0.5)
+                } else {
+                    slider_points = null
+                }
                 slide_count = parseInt(parts[6])
                 visual_length = parseInt(parts[7])
             } else {
+                slider_points = null
                 slide_count = null
                 visual_length = null
             }
@@ -204,8 +218,8 @@ export async function parseBeatmapFile(filePath) {
             }
 
             notes.push({
-                x: parseInt(parts[0]),
-                y: parseInt(parts[1]),
+                x: x,
+                y: y,
                 time: start_time,
                 type: type,
                 color_skip: color_skip,
@@ -214,7 +228,8 @@ export async function parseBeatmapFile(filePath) {
                 end_time: end_time,
                 sample: sample,
                 visual_length: visual_length,
-                slide_count: slide_count
+                slide_count: slide_count,
+                slider_points: slider_points,
             });
         }
 

@@ -13,7 +13,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
 import {torusBold} from "../util/font.js";
-import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/file.js";
+import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/osuFile.js";
 
 export async function router(req, res) {
     try {
