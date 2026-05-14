@@ -415,7 +415,7 @@ export async function panel_V(
 
         const virtual = {
             time: first.time,
-            beat: first.beat,
+            beat: first_red.beat,
             type: 'virtual',
             bpm: first_red.bpm
         };

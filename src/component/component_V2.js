@@ -14,7 +14,7 @@ export function component_V2(
 
     const small = Math.round(lane_height * 2 / 3)
     const medium = Math.round(lane_height * 3 / 4)
-    const big = Math.round(lane_height * 8 / 10)
+    const big = Math.round(lane_height * 7 / 8)
 
     const small_height = small
     const small_width = small
