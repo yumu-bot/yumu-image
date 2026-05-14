@@ -43,6 +43,7 @@ export async function panel_A4(data = {
     "history_user": null,
     "scores": [],
     "rank": [1,3,4,5,6],
+    "filtered": 0, // 仅 TBP 有
     "panel": "",
     "compact": false,
 }) {
@@ -63,10 +64,14 @@ export async function panel_A4(data = {
     let panel_name
 
     // 面板文字
-    const request_time = 'scores count: ' + scores.length + ' // request time: ' + getNowTimeStamp();
+    let request_time = 'scores count: ' + scores.length + ' // request time: ' + getNowTimeStamp();
 
     switch (data?.panel) {
         case "T": {
+            const filtered = (data?.filtered ?? 0)
+            if (filtered > 0) {
+                request_time = 'filtered count: ' + filtered + ' // request time: ' + getNowTimeStamp();
+            }
             panel_name = getPanelNameSVG('Today Bests (!ymt)', 'T', request_time);
         } break;
         case "BS": {
