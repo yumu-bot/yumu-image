@@ -19,7 +19,7 @@ import {
     setText,
     setTexts,
     floor,
-    floors, getDiffBackground, rounds, getSvgBody, getImageFromV3Cache
+    floors, getDiffBackground, rounds, getSvgBody, getImageFromV3Cache, removeGuest
 } from "../util/util.js";
 import {getRankBackground} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
@@ -975,23 +975,25 @@ const PanelEGenerate = {
     },
 
     score2componentE6: async (b) => {
-        let creators = ''
+        let creators
+        let difficulty = getKeyDifficulty(b)
         const owners = b?.owners || []
+
         if (isEmptyArray(owners)) {
             creators = b?.beatmapset?.creator || ''
         } else {
-            for (const o of owners) {
-                creators += (o?.username || ('U' + (o?.id || '?'))) + ', '
-            }
+            creators = owners.map(o => {
+                return (o?.username || ('U' + (o?.id || '?')))
+            }).join(", ")
 
-            creators = creators.slice(0, -2)
+            difficulty = removeGuest(difficulty)
         }
 
         return {
             title: b?.beatmapset?.title || '',
             title_unicode: b?.beatmapset?.title_unicode || '',
             artist: b?.beatmapset?.artist || '',
-            difficulty_name: getKeyDifficulty(b) || '',
+            difficulty_name: difficulty,
             bid: b?.id || 0,
             sid: b?.beatmapset?.id || 0,
             background: await getDiffBackground(b),

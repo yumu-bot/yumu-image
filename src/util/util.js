@@ -2718,6 +2718,10 @@ export function getKeyDifficulty(beatmap) {
     return difficulty_text
 }
 
+export function removeGuest(difficulty_name = '') {
+    return (difficulty_name || '').replace(/(\[[0-9]+K]\s*)?[^'\]]+'s?\s*/i, "$1...$2");
+}
+
 export function compileTemplate(path) {
     const template = readTemplate(path);
     const fnBody = "return `" + template.replace(/`/g, '\\`') + "`;";

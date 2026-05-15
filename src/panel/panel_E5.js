@@ -29,7 +29,7 @@ import {
     getSvgBody,
     round,
     getImageFromV3Cache,
-    getRatioString
+    getRatioString, removeGuest
 } from "../util/util.js";
 import {
     getRankBackground, getScoreTypeImage
@@ -1096,6 +1096,7 @@ const PanelEGenerate = {
          * @type string
          */
         let creators
+        let difficulty = getKeyDifficulty(score?.beatmap)
         const owners = score?.beatmap?.owners || []
 
         if (isEmptyArray(owners)) {
@@ -1104,13 +1105,15 @@ const PanelEGenerate = {
             creators = owners.map(o => {
                 return (o?.username || ('U' + (o?.id || '?')))
             }).join(", ")
+
+            difficulty = removeGuest(difficulty)
         }
 
         return {
             title: score?.beatmapset?.title || '',
             title_unicode: score?.beatmapset?.title_unicode || '',
             artist: score?.beatmapset?.artist || '',
-            difficulty_name: getKeyDifficulty(score?.beatmap),
+            difficulty_name: difficulty,
             bid: score?.beatmap?.id || 0,
             sid: score?.beatmapset?.id || 0,
             background: background,

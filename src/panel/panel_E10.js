@@ -10,7 +10,7 @@ import {
     getImageFromV3, getKeyDifficulty,
     getMapStatusImage,
     getSvgBody,
-    getTimeDifference, isEmptyArray, readNetImage,
+    getTimeDifference, isEmptyArray, readNetImage, removeGuest,
     round, rounds,
     setImage,
     setText,
@@ -1346,23 +1346,28 @@ const PanelEGenerate = {
 
 
     score2componentE11: async (score, background) => {
-        let creators = ''
+        /**
+         * @type string
+         */
+        let creators
+        let difficulty = getKeyDifficulty(score?.beatmap)
         const owners = score?.beatmap?.owners || []
+
         if (isEmptyArray(owners)) {
             creators = score?.beatmapset?.creator || ''
         } else {
-            for (const o of owners) {
-                creators += (o?.username || ('U' + (o?.id || '?'))) + ', '
-            }
+            creators = owners.map(o => {
+                return (o?.username || ('U' + (o?.id || '?')))
+            }).join(", ")
 
-            creators = creators.slice(0, -2)
+            difficulty = removeGuest(difficulty)
         }
 
         return {
             title: score?.beatmapset?.title || '',
             title_unicode: score?.beatmapset?.title_unicode || '',
             artist: score?.beatmapset?.artist || '',
-            difficulty_name: getKeyDifficulty(score?.beatmap),
+            difficulty_name: difficulty,
             bid: score?.beatmap?.id || 0,
             background: background,
             creator: creators,
