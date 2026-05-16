@@ -271,20 +271,20 @@ export async function panel_V(
         return 0;
     });
 
-    // 绿线基准速度机制
+    // 基准速度机制
     const duration_map = new Map();
 
     for (let i = 0; i < full_line.length; i++) {
         const current = full_line[i];
 
-        // 我们只关心绿线的速度表现
-        if (current.beat_length != null && current.sv != null) {
+        if (current.beat_length != null) {
+            const sv = current?.sv ?? 1.0
             const next_time = (i < full_line.length - 1) ? full_line[i + 1].time : last_time;
             const duration = next_time - current.time;
 
             if (duration > 0) {
                 // 同样需要四舍五入处理浮点精度，以便归类
-                const speed_val = Math.round((current.beat_length * current.sv) / 10) * 10;
+                const speed_val = Math.round((current.beat_length * sv) / 10) * 10;
 
                 if (speed_val >= 10) {
                     const current_total_duration = duration_map.get(speed_val) || 0;
@@ -309,7 +309,9 @@ export async function panel_V(
 
     // 赋予标准 SV 并记录极值
     full_line.forEach(current => {
-        if (current.beat_length != null && current.sv != null) {
+        if (current.beat_length != null && current.sv == null) {
+            current.standard_sv = current.beat_length * 1.0 / significant_speed;
+        } else if (current.beat_length != null && current.sv != null) {
             const current_speed = current.beat_length * current.sv;
             // 计算标准 SV
             const standard = current_speed / significant_speed;
