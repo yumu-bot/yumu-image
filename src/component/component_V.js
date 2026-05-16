@@ -38,7 +38,7 @@ export function component_V(
     let before_sv = -1
 
     for (const timing of chunk.timings) {
-        const relative = timing.beat - chunk.start_bar * 4;
+        const relative = (timing.beat - chunk.start_bar * 4) ?? 0;
         const y = max_height - ((relative / beats_per_bucket) * max_height);
 
         switch (timing.type) {

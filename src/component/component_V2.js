@@ -56,7 +56,7 @@ export function component_V2(
     let before_sv = -1
 
     for (const timing of chunk.timings) {
-        const relative = timing.beat - chunk.start_bar * 4;
+        const relative = (timing.beat - chunk.start_bar * 4) ?? 0;
         const x = (relative / beats_per_lane) * lane_width;
 
         switch (timing.type) {

@@ -399,18 +399,16 @@ export async function panel_V2(
 
     const first_red = only_red?.[0]
 
-    const closest_red = only_red.find(v => {
+    const has_red_line_around_first_note = only_red.some(v => {
         return Math.abs(v.time - first_note_time) <= beat_length
     })
-
-    const has_red_line_around_first_note = closest_red != null;
 
     if (!has_red_line_around_first_note && first_chunk.notes.length > 0) {
         const first = notes[0];
 
         const virtual = {
             time: first.time,
-            beat: first_red.beat,
+            beat: ((first_red.time ?? first_time) - first_time) / beat_length,
             type: 'virtual',
             bpm: first_red.bpm
         };
