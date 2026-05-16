@@ -156,77 +156,65 @@ export async function panel_MV(
         })
     ).then(results => thenPush(results, data_mv))
 
-    // 假设 offsets = [0, 2, 3]
-    // 含义：跳过 -> 空位 -> 放置 2 个卡片 -> 空位 -> 放置 3 个卡片
-    let offsets = data?.plate_list.map(item => item?.count ?? 0) || [];
-    let offsets_info = data?.plate_list.map(item => {
-        const { progress, ...rest } = item;
-
-        return {
-            ...rest
-        }
-    })
-
-    let mix_pool = [];
-    let data_pool = [...data_mv]; // 复制一份数据池，方便剪切
-
-    // 遍历所有的 offsets 和对应的 info
-    offsets.forEach((count, index) => {
-        if (count === 0) return;
-
-        mix_pool.push({
-            isGap: true,
-            info: offsets_info[index] // 直接把 info 存进去，渲染时更方便
-        });
-
-        if (count > data_pool.length) {
-            return;
-        }
-
-        const splice = data_pool.splice(0, count)
-
-        mix_pool.push(...splice)
-    });
-
-    // 4. 如果 offsets 跑完了，池子里还有剩下的（虽然按逻辑不应该有），也补上去
-    if (data_pool.length > 0) {
-        mix_pool.push(...data_pool);
-    }
-
-    // --- 渲染逻辑 ---
-    const final_length = mix_pool.length;
-    const mv_height = Math.max(Math.ceil(final_length / 12) * 146 - 20, 0);
-
+    // --- 重新设计：按组独立换行的渲染逻辑 ---
     let string_sd = '';
     let base_sd = '';
 
-    mix_pool.forEach((item, i) => {
-        const x = i % 12;
-        const y = Math.floor(i / 12);
+    let current_y = 0; // 全局当前的行数计数器
 
-        // 检查是否是我们标记的“空位”对象
-        if (item && item.isGap) {
-            const info = item.info
+    plate_list.forEach((group) => {
+        const count = group?.count ?? 0;
+        if (count === 0) return; // 如果该难度没有歌曲，直接跳过
 
-            let end_index
-            if (info.star !== "12-") {
-                end_index = i + info.count
-            } else {
-                end_index = i
+        // 获取当前难度对应的未完成歌曲 progress 列表
+        const group_progress = group.progress && Array.isArray(group.progress) ? group.progress : [];
+
+        // 1. 渲染当前组的 Label (比如 14+, 13等)
+        const colors = getLevelColor(group.star);
+        const label_x_pixel = 40;
+        const label_y_pixel = 330 + 146 * current_y;
+
+        const label = getSvgBody(label_x_pixel, label_y_pixel, label_MV({ ...group, colors: colors }));
+
+        // 2. 准备渲染该组下的卡片，卡片从 x = 1 开始排
+        let card_sub_index = 1;
+
+        group_progress.forEach(() => {
+            // 计算当前卡片在网格中的局部 x 和 y
+            const x = card_sub_index % 12;
+            const y_offset = Math.floor(card_sub_index / 12);
+
+            const card_x_pixel = 40 + (135 + 20) * x;
+            const card_y_pixel = 330 + 146 * (current_y + y_offset);
+
+            const card_item = data_mv.shift();
+            if (card_item) {
+                string_sd += getSvgBody(card_x_pixel, card_y_pixel, card_item);
             }
 
-            const colors = getLevelColor(info.star);
+            card_sub_index++;
+        });
 
-            const area = drawArea(i, end_index, colors, 0.4);
-            const label = getSvgBody(40 + (135 + 20) * x, 330 + 146 * y, label_MV({ ...info, colors: colors }));
+        const total_group_slots = 1 + group_progress.length;
+        const group_end_row_offset = Math.floor((total_group_slots - 1) / 12);
 
+        const start_absolute_index = current_y * 12;
+        let end_absolute_index;
 
-            base_sd += (area + label);
-        } else if (item !== null) {
-            // 正常渲染卡片
-            string_sd += getSvgBody(40 + (135 + 20) * x, 330 + 146 * y, item);
+        if (group.star !== "12-") {
+            end_absolute_index = start_absolute_index + total_group_slots - 1;
+        } else {
+            end_absolute_index = start_absolute_index;
         }
+
+        const area = drawArea(start_absolute_index, end_absolute_index, colors, 0.4);
+        base_sd += area + label;
+
+        current_y += (group_end_row_offset + 1);
     });
+
+    // 根据最终对齐后的总行数计算面板高度
+    const mv_height = Math.max(current_y * 146 - 20, 0);
 
     // 计算面板高度
     const card_height = mv_height + 80

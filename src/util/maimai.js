@@ -1,6 +1,5 @@
 import fs from "fs";
 import {
-    downloadImage,
     downloadWithCurl,
     getImageFromV3,
     getImageFromV3Cache,
@@ -140,7 +139,7 @@ export async function getMaimaiPlate(plate_id = 0) {
     if (fs.existsSync(path)) {
         return path
     } else if (plate_id > 0) {
-        return await downloadImage(`https://assets2.lxns.net/maimai/plate/${plate_id}.png`, path, default_path)
+        return await downloadWithCurl(`https://assets2.lxns.net/maimai/plate/${plate_id}.png`, path, default_path)
     } else {
         return default_path
     }
