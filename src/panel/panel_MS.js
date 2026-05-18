@@ -231,7 +231,7 @@ async function applyScore(song = {}, scores = [{}]) {
 }
 
 async function maiScore2CardG(song = {}, index = 0, score = {}) {
-    const has_score = score?.ra > 0
+    const has_score = score?.ra > 0 || score?.achievements > 0;
 
     const background = getMaimaiRankBG(score?.rate || 'd')
     const cover = await getMaimaiCover(song?.song_id || 0)
@@ -282,9 +282,9 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
 
     const rank = has_score ? getImageFromV3('Maimai', `object-score-${score?.rate || 'd'}2.png`) : ''
 
-    const difficulty_name = getMaimaiDifficultyName(index)
+    const difficulty_name = getMaimaiDifficultyName(index, song?.is_utage)
     const difficulty = song?.ds[index]
-    const diff_colors = getMaimaiDifficultyColors(index)
+    const diff_colors = getMaimaiDifficultyColors(index, song?.is_utage)
 
     const achievements = score?.achievements?.toFixed(4) || '0.0000' // rounds(score?.achievements, 4)
 

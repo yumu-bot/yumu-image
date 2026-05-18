@@ -2719,7 +2719,6 @@ export function getKeyDifficulty(beatmap) {
 }
 
 export function removeGuest(difficulty_name = '') {
-    // 注意：[^'\]]+ 后面加了括号，变成了 ('s?)
     return (difficulty_name || '').replace(/(\[[0-9]+K]\s*)?[^'\]]+('s?)/i, "$1...$2");
 }
 

@@ -412,7 +412,9 @@ export function getMaimaiCategory(genre = '') {
     }
 }
 
-export function getMaimaiDifficultyName(index = 0) {
+export function getMaimaiDifficultyName(index = 0, is_utage = false) {
+    if (is_utage) return 'U.TA.GE'
+
     switch (index) {
         case 0: return 'BASIC'
         case 1: return 'ADVANCED'
@@ -438,7 +440,7 @@ export function getMaimaiDifficultyColor(index = 0, is_utage = false) {
 
 
 
-export function getMaimaiDifficultyColors(index = 0) {
+export function getMaimaiDifficultyColors(index = 0, is_utage = false) {
     const colors = [
         colorArray.green,
         colorArray.yellow,
@@ -454,6 +456,8 @@ export function getMaimaiDifficultyColors(index = 0) {
         // ['#f7d8fe', '#fed8ec'],
         // ['#d46da1', '#d46d60'] // 默认颜色
     ]
+
+    if (is_utage) return colors[5]
 
     return colors[index] || colors[5]
 }
