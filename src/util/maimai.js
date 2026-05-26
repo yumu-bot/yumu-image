@@ -34,9 +34,9 @@ export async function getMaimaiCover(song_id = 0) {
     } else if (raw_id > 0) {
         const lxns = `https://assets2.lxns.net/maimai/jacket/${raw_id}.png`
 
-        return await downloadWithCurl(lxns, path, getImageFromV3('Maimai', 'Cover', '00000.png'))
+        return await downloadWithCurl(lxns, path, getImageFromV3('Maimai', 'default.png'))
     } else {
-        return getImageFromV3('Maimai', 'Cover', '00000.png')
+        return getImageFromV3('Maimai', 'default.png')
     }
 }
 
@@ -470,12 +470,12 @@ export async function getCHUNITHMCover(song_id = 0) {
         return path
     } else if (song_id > 0) {
 
-        return getImageFromV3('Chunithm', 'Cover', '0.png')
+        return getImageFromV3('Chunithm', 'default.png')
         const lxns = `https://assets2.lxns.net/chunithm/jacket/${song}.png`
 
-        return await downloadWithCurl(lxns, path, getImageFromV3('Chunithm', 'Cover', '0.png'))
+        return await downloadWithCurl(lxns, path, getImageFromV3('Chunithm', 'default.png'))
     } else {
-        return getImageFromV3('Chunithm', 'Cover', '0.png')
+        return getImageFromV3('Chunithm', 'default.png')
     }
 }
 
