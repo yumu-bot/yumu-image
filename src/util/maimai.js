@@ -463,14 +463,14 @@ export function getMaimaiDifficultyColors(index = 0, is_utage = false) {
 }
 
 export async function getCHUNITHMCover(song_id = 0) {
-    return getImageFromV3('Chunithm', 'Cover', '0.png')
-
     const song = song_id.toString()
     const path = getImageFromV3('Chunithm', 'Cover', `${song}.png`);
 
     if (fs.existsSync(path)) {
         return path
     } else if (song_id > 0) {
+
+        return getImageFromV3('Chunithm', 'Cover', '0.png')
         const lxns = `https://assets2.lxns.net/chunithm/jacket/${song}.png`
 
         return await downloadWithCurl(lxns, path, getImageFromV3('Chunithm', 'Cover', '0.png'))
