@@ -47,7 +47,7 @@ export async function router_svg(req, res) {
         const svg = await panel_Beta(data);
         // 记得修改返回格式 image/svg+xml
         res.set('Content-Type', 'image/svg+xml');
-        res.send(svg);
+        res.send(Buffer.from(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

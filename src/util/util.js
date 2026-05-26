@@ -36,17 +36,17 @@ const MD5 = crypto.createHash("md5");
 export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
 export const SUPER_KEY = process.env.SUPER_KEY || "";
-export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || CACHE_PATH + "/osufile";
-export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || CACHE_PATH + "/buffer";
+export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || path_util.join(CACHE_PATH, "osufile");
+export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || path_util.join(CACHE_PATH, "buffer");
 
 let FLAG_PATH
 
 if (process.env.FLAG_PATH != null) {
     FLAG_PATH = process.env.FLAG_PATH
-} else if (process.env.EXPORT_FILE != null) {
-    FLAG_PATH = EXPORT_FILE_V3 + "/Flags"
+} else if (EXPORT_FILE_V3 != null) {
+    FLAG_PATH = path_util.join(EXPORT_FILE_V3, "Flags")
 } else {
-    FLAG_PATH = CACHE_PATH + "/flag";
+    FLAG_PATH = path_util.join(CACHE_PATH, "flag");
 }
 
 puppeteer.use(StealthPlugin());

@@ -25,7 +25,7 @@ export async function router_svg(req, res) {
         const data = req.fields || {};
         const svg = await panel_A4(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(svg);
+        res.send(Buffer.from(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);
@@ -183,7 +183,6 @@ export async function panel_A4(data = {
 
         svg = setText(svg, string_Cs.join('\n'), reg_bp_list);
     }
-
 
     return svg;
 }

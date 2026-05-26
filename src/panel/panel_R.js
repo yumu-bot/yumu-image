@@ -54,7 +54,7 @@ export async function router_svg(req, res) {
         const data = req.fields || {};
         const svg = await panel_R(data);
         res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(svg);
+        res.send(Buffer.from(svg));
     } catch (e) {
         console.error(e);
         res.status(500).send(e.stack);

@@ -2,6 +2,9 @@ import {IMG_BUFFER_PATH, isPictureIntacted, thenPush} from "./util.js";
 import crypto from "crypto";
 import axios from "axios";
 import fs from "fs";
+import path from "path";
+
+const path_util = path
 
 // 主程序的运算速度足够快，将预加载放在绘图模块中来
 // 几把 js 的 fs 怎么这么慢
@@ -60,7 +63,7 @@ export class Preloader {
     async download(path) {
         const MD5 = crypto.createHash("md5");
         const bufferName = MD5.copy().update(path).digest('hex');
-        const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
+        const bufferPath = path_util.join(IMG_BUFFER_PATH, bufferName);
 
         let size
 
