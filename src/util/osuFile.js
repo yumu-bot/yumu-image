@@ -406,7 +406,7 @@ export function getLongestBPM(only_red = [], last_time = 0) {
 
         const currentDuration = bpm_map.get(bpm) || 0;
 
-        bpm_map.set(Math.round(bpm), currentDuration + duration);
+        bpm_map.set(Math.round(bpm * 100) / 100, currentDuration + duration);
     }
 
     // 遍历 Map 找出最长的一个
