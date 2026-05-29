@@ -1,5 +1,6 @@
 import fs from "fs";
 import {
+    downloadByFetch,
     downloadWithCurl,
     getImageFromV3,
     getImageFromV3Cache,
@@ -65,7 +66,7 @@ export function getMaimaiDXStarLevel(dx = 0, dx_max = 0) {
     } else {
         return 0
     }
-    
+
 }
 
 export function getMaimaiRankBG(rank) {
@@ -139,7 +140,7 @@ export async function getMaimaiPlate(plate_id = 0) {
     if (fs.existsSync(path)) {
         return path
     } else if (plate_id > 0) {
-        return await downloadWithCurl(`https://assets2.lxns.net/maimai/plate/${plate_id}.png`, path, default_path)
+        return await downloadByFetch(`https://assets2.lxns.net/maimai/plate/${plate_id}.png`, path, default_path)
     } else {
         return default_path
     }

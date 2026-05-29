@@ -844,6 +844,23 @@ export async function getBanner(link, use_cache = true, default_image_path = get
     }
 }
 
+export async function downloadByFetch(url, buffer_path, default_image_path) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            console.error(`download error: HTTP ${response.status}: ${response.statusText}`);
+            return default_image_path;
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        await fs.promises.writeFile(buffer_path, Buffer.from(arrayBuffer));
+        return buffer_path;
+    } catch (error) {
+        console.error('download error:', error.message);
+
+        return default_image_path;
+    }
+}
+
 export async function downloadWithCurl(url, buffer_path, default_image_path) {
     try {
         // 使用 curl 下载，模拟一个常见的 User-Agent
