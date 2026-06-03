@@ -111,7 +111,7 @@ export const PanelGenerate = {
 
         const config = {
             'BOT':        { b: '',  m: 'BOT' },
-            'HAS_PP':     { b: Math.round(user.pp).toString(), m: '' },
+            'HAS_PP':     { b: Math.round(user.pp).toString(), m: 'PP' },
             'NOT_PLAYED': { b: '',  m: 'NOT_PLAYED' },
             'ESTIMATED':  { b: Math.round(user.estimate_pp).toString(), m: '?' },
             'AFK':        { b: '',  m: 'AFK' }
