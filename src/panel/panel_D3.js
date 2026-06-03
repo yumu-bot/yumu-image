@@ -765,6 +765,19 @@ const component_D7 = (
 
     const mode_icon = extra.getTextPath(getGameMode(data.mode, -1), 140, 138, 40, 'left baseline')
 
+    let highest_rank_value
+    let highest_rank_time
+
+    if (data?.highest_rank?.rank > 0) {
+        highest_rank_value = Math.max(data.highest_rank.rank ?? 0, 0).toString()
+        highest_rank_time = getTimeDifference(data.highest_rank.time, 'YYYY-MM-DD[T]HH:mm:ss[Z]',
+            moment().subtract(8, "hours"), 2
+        )
+    } else {
+        highest_rank_value = '0'
+        highest_rank_time = '?'
+    }
+
     const highest_rank = getMultipleTextPath(
         [{
             font: poppinsBold,
@@ -773,15 +786,12 @@ const component_D7 = (
             color: '#fff'
         }, {
             font: poppinsBold,
-            text: (data.highest_rank.rank ?? 0).toString(),
+            text: highest_rank_value,
             size: 40,
             color: '#fff'
         }, {
             font: poppinsBold,
-            text: '  [' +
-                getTimeDifference(data.highest_rank.time, 'YYYY-MM-DD[T]HH:mm:ss[Z]',
-                    moment().subtract(8, "hours"), 2
-                ) + ']',
+            text: '  [' + highest_rank_time + ']',
             size: 24,
             color: '#ccc'
         }], 195, 136, 'left baseline'

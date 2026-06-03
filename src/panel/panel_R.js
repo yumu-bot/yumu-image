@@ -244,7 +244,7 @@ async function panel_R(data = {
 
     const body_R6 = component_R6(background, set)
 
-    const body_R7 = component_R7(set, beatmap, avatarMap)
+    const body_R7 = component_R7(set, beatmap, expected?.mode, avatarMap)
 
     svg = setTexts(svg, [body_R1, body_R2, body_R3, body_R4, body_R5, body_R6, body_R7], reg_body)
 
@@ -710,7 +710,7 @@ const component_R6 = (background, beatmapset) => {
 
 const component_R7 = (beatmapset = {
     beatmaps: [{}],
-}, beatmap, avatarMap) => {
+}, beatmap, mode, avatarMap) => {
     const beatmaps = beatmapset?.beatmaps || []
 
     const r3s = []
@@ -735,7 +735,7 @@ const component_R7 = (beatmapset = {
             owners: b.owners || [],
             difficulty_name: b.version,
             is_current: is_current,
-            mode: b.mode,
+            mode: mode,
             avatars: avatars,
         }
 

@@ -1769,63 +1769,65 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
 
     if (modeStr === 'default') return default_mode;
 
+    const m = modeStr?.replaceAll('osu', '')?.slice(0, 1) ?? ''
+
     switch (level) {
         case -2:
-            switch (modeStr) {
-                case 'osu':
+            switch (m) {
+                case 'o':
                     return 0;
-                case 'taiko':
+                case 't':
                     return 1;
-                case 'fruits':
+                case 'f':
                     return 2;
-                case 'catch':
+                case 'c':
                     return 2; //我怀疑现在的接水果给的不是fruits
-                case 'mania':
+                case 'm':
                     return 3;
                 default:
                     return 0;
             }
         case -1:
-            switch (modeStr) {
-                case 'osu':
+            switch (m) {
+                case 'o':
                     return '\uE800';
-                case 'taiko':
+                case 't':
                     return '\uE803';
-                case 'fruits':
+                case 'f':
                     return '\uE801';
-                case 'catch':
+                case 'c':
                     return '\uE801'; //我怀疑现在的接水果给的不是fruits
-                case 'mania':
+                case 'm':
                     return '\uE802';
                 default:
                     return '';
             }
         case 1:
-            switch (modeStr) {
-                case 'osu':
+            switch (m) {
+                case 'o':
                     return 'o';
-                case 'taiko':
+                case 't':
                     return 't';
-                case 'fruits':
+                case 'f':
                     return 'c';
-                case 'catch':
-                    return 'c'; //我怀疑现在的接水果给的不是fruits
-                case 'mania':
+                case 'c':
+                    return 'c';
+                case 'm':
                     return 'm';
                 default:
                     return '?';
             }
         case 2:
-            switch (modeStr) {
-                case 'osu':
+            switch (m) {
+                case 'o':
                     return 'osu!standard';
-                case 'taiko':
+                case 't':
                     return 'osu!taiko';
-                case 'fruits':
+                case 'f':
                     return 'osu!catch';
-                case 'catch':
-                    return 'osu!catch'; //我怀疑现在的接水果给的不是fruits
-                case 'mania':
+                case 'c':
+                    return 'osu!catch';
+                case 'm':
                     return 'osu!mania';
                 default:
                     return 'default';

@@ -101,11 +101,24 @@ export const PanelGenerate = {
         const progress = user?.statistics?.level_progress || 0;
         const acc = floor(user?.statistics?.hit_accuracy, 2) || '0';
         const right2 = isBot ? '' : (isNotPlayed ? (acc + '%') : (acc + '% Lv.' + level + '(' + progress + '%)'))
-        const right3b = isBot ? 'Bot' : (user?.pp ? Math.round(user?.pp).toString() :
-            (hasEstimated ? (Math.round(user?.estimate_pp).toString()) : ''));
-        const right3m = isBot ? '' : (user?.pp ? 'PP' :
-            (isNotPlayed ? 'NOT PLAYED' :
-                (hasEstimated ? '?' : 'AFK')));
+
+        let status = 'AFK';
+
+        if (isBot)              status = 'BOT';
+        else if (user?.pp > 0)  status = 'HAS_PP';
+        else if (isNotPlayed)   status = 'NOT_PLAYED';
+        else if (hasEstimated)  status = 'ESTIMATED';
+
+        const config = {
+            'BOT':        { b: '',  m: 'BOT' },
+            'HAS_PP':     { b: Math.round(user.pp).toString(), m: '' },
+            'NOT_PLAYED': { b: '',  m: 'NOT_PLAYED' },
+            'ESTIMATED':  { b: Math.round(user.estimate_pp).toString(), m: '?' },
+            'AFK':        { b: '',  m: 'AFK' }
+        };
+
+        const right3b = config[status].b;
+        const right3m = config[status].m;
 
         //历史记录功能！
         const pp_d = (historyUser != null) ? Math.round((user.pp - historyUser?.statistics?.pp) * 100) / 100 : 0
