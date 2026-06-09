@@ -1,5 +1,5 @@
 import path from "path";
-import {OSU_BUFFER_PATH} from "./util.js";
+import {accessAsync, OSU_BUFFER_PATH} from "./util.js";
 import fs from "fs";
 import axios from "axios";
 import readline from "readline";
@@ -9,7 +9,7 @@ export async function getBeatmapFilePath(beatmap_id) {
 
     const filePath = path.join(OSU_BUFFER_PATH, `${beatmap_id}.osu`);
 
-    if (fs.existsSync(filePath)) {
+    if (await accessAsync(filePath)) {
         return filePath
     }
 

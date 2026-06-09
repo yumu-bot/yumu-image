@@ -20,6 +20,7 @@ import {EventEmitter} from 'events';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import sharp from "sharp";
+import { LRUCache } from "lru-cache";
 
 const execAsync = promisify(exec);
 
@@ -39,6 +40,24 @@ export const EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
 export const SUPER_KEY = process.env.SUPER_KEY || "";
 export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || path_util.join(CACHE_PATH, "osufile");
 export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || path_util.join(CACHE_PATH, "buffer");
+
+// 10 万条，最大 19.2 MB，存活 7 天
+export const LRU_MAX = Number(process.env.LRU_MAX) || 100000;
+export const LRU_MAX_SIZE = Number(process.env.LRU_MAX_SIZE) || 19200000;
+export const LRU_TIME_TO_LIVE = Number(process.env.LRU_TTL) || 1000 * 60 * 60 * 24 * 7;
+
+const lruCache = new LRUCache({
+    max: LRU_MAX,
+
+    maxSize: LRU_MAX_SIZE,
+
+    sizeCalculation: (value, key) => {
+        return key.length * 2 + 64;
+    },
+
+    ttl: LRU_TIME_TO_LIVE,
+    updateAgeOnGet: true,
+});
 
 let FLAG_PATH
 
@@ -514,6 +533,15 @@ export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '
     }
 }
 
+export async function accessAsync(path) {
+    try {
+        await fs.promises.access(path, fsConstants.F_OK);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
 /**
  * 使用 sharp 测试文件，如果没问题就放行
  * @param path
@@ -750,7 +778,7 @@ export async function getDiffBackground(score = {}, must_full = false) {
         asyncBeatMapFromDatabase(bid, sid);
     }
 
-    if (await isPictureIntact(path)) {
+    if (await accessAsync(path)) {
         return path;
     } else {
         const is_dmca = score?.beatmapset?.availability?.more_information != null
@@ -953,7 +981,7 @@ export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePa
         }
 
         if (imageBuffer) {
-            fs.writeFileSync(bufferPath, imageBuffer);
+            await fs.promises.writeFile(bufferPath, imageBuffer);
             return bufferPath;
         }
 
@@ -968,11 +996,11 @@ export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePa
 /**
  * 下载图片至指定的位置
  * @param path 网络地址
- * @param bufferPath 存储的地址，包括文件名
+ * @param buffer_path 存储的地址，包括文件名
  * @param default_image_path 出错时返回的本地图片
  * @returns {Promise<string>}
  */
-export async function downloadImage(path = '', bufferPath = '', default_image_path = getImageFromV3('beatmap-DLfailBG.jpg')) {
+export async function downloadImage(path = '', buffer_path = '', default_image_path = getImageFromV3('beatmap-DLfailBG.jpg')) {
     const error = getImageFromV3('error.png');
 
     let req;
@@ -1000,8 +1028,8 @@ export async function downloadImage(path = '', bufferPath = '', default_image_pa
     }
 
     if (req && req.status === 200) {
-        fs.writeFileSync(bufferPath, data);
-        return bufferPath;
+        await fs.promises.writeFile(buffer_path, data);
+        return buffer_path;
     } else {
         return default_image_path || error;
     }
@@ -1015,8 +1043,8 @@ export async function saveNetImage(path, buffer, max_width = 1920, max_height = 
     if (!buffer) return getImageFromV3('error.png');
     const buf = Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer, 'binary');
 
-    const bufferName = MD5.copy().update(path).digest('hex');
-    const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
+    const buffer_name = MD5.copy().update(path).digest('hex');
+    const buffer_path = `${IMG_BUFFER_PATH}/${buffer_name}`;
 
     try {
         // pages:1 只保留第一张
@@ -1058,23 +1086,22 @@ export async function saveNetImage(path, buffer, max_width = 1920, max_height = 
         }
 
         if (could_process) {
-            const processedBuffer = await imagePipeline.toBuffer();
-            // 🌟 既然你想等保存完再返回，这里改用同步写盘，确保返回路径时文件已经绝对存在
-            fs.writeFileSync(bufferPath, processedBuffer);
+            const processed_buffer = await imagePipeline.toBuffer();
+
+            await fs.promises.writeFile(buffer_path, processed_buffer);
         } else {
-            // 特殊格式原样同步写盘
-            fs.writeFileSync(bufferPath, buf);
+            await fs.promises.writeFile(buffer_path, buf);
         }
-    } catch (compressErr) {
-        console.error(`[压缩失败，原样保存] ${path}`, compressErr.message);
+    } catch (compress_err) {
+        console.error(`[压缩失败，原样保存] ${path}`, compress_err.message);
         try {
-            fs.writeFileSync(bufferPath, buf);
+            await fs.promises.writeFile(buffer_path, buf);
         } catch (e) {
             return getImageFromV3('error.png');
         }
     }
 
-    return bufferPath;
+    return buffer_path;
 }
 
 /**
@@ -1105,7 +1132,12 @@ export async function readNetImage(
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
-    if (use_cache === true && await isPictureIntact(bufferPath)) {
+    if (use_cache === true && lruCache.has(bufferName)) {
+        return bufferPath;
+    }
+
+    if (use_cache === true && await accessAsync(bufferPath)) {
+        lruCache.set(bufferName, true)
         return bufferPath;
     }
 
@@ -1118,7 +1150,13 @@ export async function readNetImage(
     }
 
     if (req && req.status === 200 && req.data) {
-        return await saveNetImage(path, req.data, max_width, max_height);
+        const image_path = await saveNetImage(path, req.data, max_width, max_height);
+
+        setImmediate(() => {
+            lruCache.set(bufferName, true);
+        });
+
+        return image_path;
     } else {
         return loadDefault();
     }
@@ -2237,7 +2275,7 @@ export async function getFlagPath(code = "cn" || null, x, y, h = 30) {
     if (code.toLowerCase() === "tw") {
         const image = getImageFromV3('flag-TW.png')
 
-        if (fs.existsSync(image)) {
+        if (await accessAsync(image)) {
             return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${image}"
             style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
         } else {

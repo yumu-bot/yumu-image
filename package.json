@@ -15,6 +15,7 @@
     "fast-xml-parser": "5.7.0",
     "file-url": "^4.0.0",
     "image-size": "^1.1.1",
+    "lru-cache": "^11.5.1",
     "moment": "^2.29.4",
     "pollock": "^0.2.1",
     "puppeteer": "^25.1.0",

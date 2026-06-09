@@ -1,9 +1,9 @@
-import fs from "fs";
 import {
+    accessAsync,
     downloadByFetch,
     downloadWithCurl,
     getImageFromV3,
-    isEmptyString, isPictureIntact
+    isEmptyString
 } from "./util.js";
 import {colorArray} from "./color.js";
 
@@ -29,7 +29,7 @@ export async function getMaimaiCover(song_id = 0) {
 
     const path = getImageFromV3('Maimai', 'Cover', `${path_id}.png`);
 
-    if (fs.existsSync(path)) {
+    if (await accessAsync(path)) {
         return path
     } else if (raw_id > 0) {
         const lxns = `https://assets2.lxns.net/maimai/jacket/${raw_id}.png`
@@ -111,16 +111,16 @@ export function getMaimaiRankBG(rank) {
 }
 
 // 图片推荐尺寸：320 * 52，左侧有 50 px 的头像框
-export function getMaimaiPlateLegacy(plate_name = "") {
+export async function getMaimaiPlateLegacy(plate_name = "") {
     if (isEmptyString(plate_name)) return ''
 
     const path = getImageFromV3("Maimai", "Plate", plate_name + ".png")
     const default_path = getImageFromV3("Maimai", "Plate", "default.png")
     const base_path = getImageFromV3("Maimai", "Plate", "0.png")
 
-    if (fs.existsSync(path)) {
+    if (await accessAsync(path)) {
         return path
-    } else if (fs.existsSync(default_path)) {
+    } else if (await accessAsync(default_path)) {
         return default_path
     } else {
         return base_path
@@ -136,7 +136,7 @@ export async function getMaimaiPlate(plate_id = 0) {
     const path = getImageFromV3('Maimai', 'Plate', `${plate_id}.png`);
     const default_path = getImageFromV3('Maimai', 'Plate', '0.png')
 
-    if (fs.existsSync(path)) {
+    if (await accessAsync(path)) {
         return path
     } else if (plate_id > 0) {
         return await downloadByFetch(`https://assets2.lxns.net/maimai/plate/${plate_id}.png`, path, default_path)
@@ -466,7 +466,7 @@ export async function getCHUNITHMCover(song_id = 0) {
     const song = song_id.toString()
     const path = getImageFromV3('Chunithm', 'Cover', `${song}.png`);
 
-    if (await isPictureIntact(path, false)) {
+    if (await accessAsync(path)) {
         return path
     } else if (song_id > 0) {
 
