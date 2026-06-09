@@ -19,6 +19,7 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import {EventEmitter} from 'events';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import sharp from "sharp";
 
 const execAsync = promisify(exec);
 
@@ -93,7 +94,7 @@ const puppeteer_options = {
     ]
 };
 
-export async function getBrowserInstance() {
+export async function getBrowserInstance(initial = false) {
     if (browserPromise) {
         const b = await browserPromise;
 
@@ -119,7 +120,9 @@ export async function getBrowserInstance() {
         browserPromise = null;
     }
 
-    console.log('正在启动/重启唯一浏览器实例...');
+    if (!initial) {
+        console.log('正在启动/重启唯一浏览器实例...');
+    }
 
     browserPromise = puppeteer.launch(puppeteer_options).catch(err => {
         browserPromise = null;
@@ -131,7 +134,7 @@ export async function getBrowserInstance() {
 
 async function isBrowserResponsive(browser) {
     try {
-        if (!browser.isConnected()) return false;
+        if (!browser.connected) return false;
 
         // 尝试在 2 秒内获取浏览器版本，如果获取不到，说明事件循环已卡死
         return await Promise.race([
@@ -1011,66 +1014,124 @@ export async function downloadImage(path = '', bufferPath = '', default_image_pa
 }
 
 /**
- * 下载文件, 并且位于文件系统的绝对路径
- * @return {Promise<string>} 位于文件系统的绝对路径
+ * 保存并压缩图片
+ * @return {Promise<string>} 返回最终保存好的本地绝对路径
  */
-export async function readNetImage(path = '', use_cache = true, default_image_path = getImageFromV3('beatmap-DLfailBG.jpg')) {
-    if (path == null) return default_image_path;
+export async function saveNetImage(path, buffer, max_width = 1920, max_height = null) {
+    if (!buffer) return getImageFromV3('error.png');
+    const buf = Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer, 'binary');
 
-    const error = getImageFromV3('error.png');
+    const bufferName = MD5.copy().update(path).digest('hex');
+    const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
-    if (!path.startsWith("http")) {
+    try {
+        // pages:1 只保留第一张
+        let imagePipeline = sharp(buf, {pages: 1});
+        const meta = await imagePipeline.metadata();
+
+        const src_width = meta.width || 0;
+        const src_height = meta.height || 0;
+
+        let final_width = max_width;
+        let final_height = max_height;
+
+        const aspect_ratio = src_width / Math.max(src_height, 1);
+        if (src_width < 500 && src_height < 500 && aspect_ratio > 0.8 && aspect_ratio < 1.25) {
+            final_width = 128;
+            final_height = 128;
+        }
+
+        const need_resize = (final_width && src_width > final_width) || (final_height && src_height > final_height);
+
+        if (need_resize) {
+            imagePipeline = imagePipeline.resize({
+                width: final_width || undefined,
+                height: final_height || undefined,
+                fit: 'inside',
+                withoutEnlargement: true
+            });
+        }
+
+        let could_process = true;
+        if (meta.format === 'png' || meta.format === 'gif') {
+            imagePipeline = imagePipeline.png({ palette: true, quality: 90, compressionLevel: 6 });
+        } else if (meta.format === 'webp') {
+            imagePipeline = imagePipeline.webp({ quality: 100 });
+        } else if (meta.format === 'jpeg' || meta.format === 'jpg') {
+            imagePipeline = imagePipeline.jpeg({ quality: 100, mozjpeg: true });
+        } else {
+            could_process = false;
+        }
+
+        if (could_process) {
+            const processedBuffer = await imagePipeline.toBuffer();
+            // 🌟 既然你想等保存完再返回，这里改用同步写盘，确保返回路径时文件已经绝对存在
+            fs.writeFileSync(bufferPath, processedBuffer);
+        } else {
+            // 特殊格式原样同步写盘
+            fs.writeFileSync(bufferPath, buf);
+        }
+    } catch (compressErr) {
+        console.error(`[压缩失败，原样保存] ${path}`, compressErr.message);
         try {
-            return fs.readFileSync(path, 'binary');
+            fs.writeFileSync(bufferPath, buf);
         } catch (e) {
-            return '';
+            return getImageFromV3('error.png');
         }
     }
 
+    return bufferPath;
+}
+
+/**
+ * 下载网图或读取本地缓存，统一返回绝对路径字符串
+ * @return {Promise<string>} 图片的本地绝对路径
+ */
+export async function readNetImage(
+    path = '',
+    use_cache = true,
+    default_image_path = getImageFromV3('beatmap-DLfailBG.jpg'),
+    max_width = 1920,
+    max_height = null
+) {
+    const error_path = getImageFromV3('error.png');
+    const loadDefault = () => default_image_path || error_path;
+
+    if (path == null) return loadDefault();
+
+    // 如果本身就是本地路径，直接返回原路径
+    if (!path.startsWith("http")) {
+        return path;
+    }
+
     if (path.endsWith('avatar-guest.png')) {
-        return getImageFromV3Cache('avatar-guest.png');
+        return getImageFromV3('avatar-guest.png');
     }
 
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
     if (use_cache === true) {
-        let size = 0
-
         try {
             fs.accessSync(bufferPath, fs.constants.F_OK);
-            size = fs.statSync(bufferPath).size;
+            if (fs.statSync(bufferPath).size > 4 * 1024 && isPictureIntacted(bufferPath)) {
+                return bufferPath;
+            }
         } catch (e) {
-            use_cache = false;
-        }
-
-        // 尝试仅在使用缓存的时候检测
-        if (use_cache === true && (size > 4 * 1024) && isPictureIntacted(bufferPath)) {
-            return bufferPath;
-        } else {
-            use_cache = false;
+            // 缓存未命中，继续向下
         }
     }
 
-    let req;
-    let data;
-
-    if (use_cache === false) {
-        try {
-            req = await axios.get(path, {responseType: 'arraybuffer', timeout: 10000});
-            data = req.data;
-        } catch (e) {
-            console.error("网图：下载失败", e.message);
-            return default_image_path || error;
+    try {
+        const req = await axios.get(path, { responseType: 'arraybuffer', timeout: 10000 });
+        if (req && req.status === 200 && req.data) {
+            return await saveNetImage(path, req.data, max_width, max_height);
         }
+    } catch (e) {
+        console.error("网图：下载失败", e.message);
     }
 
-    if (req && req.status === 200) {
-        fs.writeFileSync(bufferPath, data, 'binary');
-        return bufferPath;
-    } else {
-        return default_image_path || error;
-    }
+    return loadDefault();
 }
 
 /**

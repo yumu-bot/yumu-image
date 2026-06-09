@@ -1,5 +1,5 @@
 
-import {CACHE_PATH, IMG_BUFFER_PATH, initPath, OSU_BUFFER_PATH} from "./src/util/util.js";
+import {CACHE_PATH, getBrowserInstance, IMG_BUFFER_PATH, initPath, OSU_BUFFER_PATH} from "./src/util/util.js";
 import puppeteer from "puppeteer";
 import {logger, WsClient} from "./src/util/websocket.js";
 import moment from "moment";
@@ -287,6 +287,8 @@ async function start() {
 }
 
 await start();
+
+await getBrowserInstance(true)
 
 console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n当前时间：${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}\nWS 监听端口: ${port}\n`);
 console.log("主缓存目录: ", CACHE_PATH);
