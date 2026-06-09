@@ -13,7 +13,6 @@ import {getRandom, getRandomBannerPath} from "./mascotBanner.js";
 import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
-import FileCache from './fileCache.js';
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import {EventEmitter} from 'events';
@@ -43,10 +42,14 @@ export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || path_util.join(CACHE_P
 
 // 10 万条，最大 19.2 MB，存活 7 天
 export const LRU_MAX = Number(process.env.LRU_MAX) || 100000;
-export const LRU_MAX_SIZE = Number(process.env.LRU_MAX_SIZE) || 19200000;
+export const LRU_MAX_SIZE = Number(process.env.LRU_MAX_SIZE) || 20 * 1024 * 1024;
 export const LRU_TIME_TO_LIVE = Number(process.env.LRU_TTL) || 1000 * 60 * 60 * 24 * 7;
 
-const lruCache = new LRUCache({
+export const LRU_TEMPLATE_MAX = Number(process.env.LRU_TEMPLATE_MAX) || 100;
+export const LRU_TEMPLATE_MAX_SIZE = Number(process.env.LRU_TEMPLATE_MAX_SIZE) || 100 * 40 * 1024;
+export const LRU_TEMPLATE_TIME_TO_LIVE = Number(process.env.LRU_TEMPLATE_TTL) || LRU_TIME_TO_LIVE
+
+const image_lru_cache = new LRUCache({
     max: LRU_MAX,
 
     maxSize: LRU_MAX_SIZE,
@@ -56,6 +59,19 @@ const lruCache = new LRUCache({
     },
 
     ttl: LRU_TIME_TO_LIVE,
+    updateAgeOnGet: true,
+});
+
+const template_lru_cache = new LRUCache({
+    max: LRU_TEMPLATE_MAX,
+
+    maxSize: LRU_TEMPLATE_MAX_SIZE,
+
+    sizeCalculation: (value, key) => {
+        return (key.length * 2) + Buffer.byteLength(value, 'utf8');
+    },
+
+    ttl: LRU_TEMPLATE_TIME_TO_LIVE,
     updateAgeOnGet: true,
 });
 
@@ -586,13 +602,11 @@ export async function isPicturePng(path = '') {
     }
 }
 
-// 使用示例
-const fileCache = new FileCache();
-
 // 缓存文件读取结果
-function readFileWithCache(filePath, options = 'binary', expire = 24 * 60 * 60 * 1000) {
+// 只存小文件 (40 KB)
+function readFileWithLRU(filePath, options = 'binary') {
 
-    const cached = fileCache.get(filePath);
+    const cached = template_lru_cache.get(filePath);
     if (cached) {
         return cached;
     }
@@ -607,12 +621,12 @@ function readFileWithCache(filePath, options = 'binary', expire = 24 * 60 * 60 *
     const content = data.toString();
 
     try {
-        fileCache.set(filePath, content, expire);
+        template_lru_cache.set(filePath, content);
     } catch (e) {
         console.log(`保存缓存文件出现错误: ${e}`)
     }
 
-    return data;
+    return content;
 }
 
 /**
@@ -622,7 +636,7 @@ function readFileWithCache(filePath, options = 'binary', expire = 24 * 60 * 60 *
  * @return {*|string}
  */
 export function readTemplate(path = '', options = 'utf8') {
-    return readFileWithCache(path, options, 24 * 60 * 60 * 1000);
+    return readFileWithLRU(path, options);
 }
 
 /**
@@ -652,13 +666,14 @@ export function readBufferFromV3(...paths) {
 
 /**
  * 获取来自 v3 的图片并缓存。返回的是 base64。
+ * - **已经弃用**，图片要丢给浏览器，你传 base64 效率很低的
  * - 这对于小图片来说很有效。但如果对于较大的图片，还不如让浏览器自己去读取。
  * @param paths
  * @return {string} Base64 图片流，可直接插入 svg
  */
 export function getImageFromV3Cache(...paths) {
     const gi = path_util.join(EXPORT_FILE_V3, ...paths)
-    const cf = readFileWithCache(gi, 'binary')
+    const cf = readFileWithLRU(gi, 'binary')
 
     return binary2Base64Text(cf);
 }
@@ -1132,12 +1147,12 @@ export async function readNetImage(
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
-    if (use_cache === true && lruCache.has(bufferName)) {
+    if (use_cache === true && image_lru_cache.has(bufferName)) {
         return bufferPath;
     }
 
     if (use_cache === true && await accessAsync(bufferPath)) {
-        lruCache.set(bufferName, true)
+        image_lru_cache.set(bufferName, true)
         return bufferPath;
     }
 
@@ -1153,7 +1168,7 @@ export async function readNetImage(
         const image_path = await saveNetImage(path, req.data, max_width, max_height);
 
         setImmediate(() => {
-            lruCache.set(bufferName, true);
+            image_lru_cache.set(bufferName, true);
         });
 
         return image_path;
