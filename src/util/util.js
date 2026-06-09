@@ -1058,7 +1058,7 @@ export async function saveNetImage(path, buffer, max_width = 1920, max_height = 
         let final_height = max_height;
 
         const aspect_ratio = src_width / Math.max(src_height, 1);
-        if (src_width < 500 && src_height < 500 && aspect_ratio > 0.8 && aspect_ratio < 1.25) {
+        if (src_width < 500 && src_height < 500 && aspect_ratio > 0.95 && aspect_ratio < 1.05) {
             final_width = 128;
             final_height = 128;
         }
