@@ -173,7 +173,13 @@ export async function panel_A9(data = {
     if (isNotEmptyString(team?.markdown_description)) {
         const markdown = team.markdown_description
             .replaceAll("<br />", " ")
-            .replaceAll(new RegExp("<\/?[\\s\\S]*?\/?>", 'g'), '') // 必须用懒惰，不然等死吧
+            .replaceAll("<br>", " ")
+
+            // 移除所有剩余的 HTML 标签
+            .replaceAll(new RegExp("<\/?[\\s\\S]*?\/?>", 'g'), '')
+
+            // 移除所有 BBCode 标签
+            .replaceAll(new RegExp("\\[/?[^\\]]+]", 'g'), '');
         const alpha = (markdown.length > 0) ? await component_MD(markdown, 1370, 0) : {}
 
         /*
@@ -203,8 +209,8 @@ export async function panel_A9(data = {
 
     svg = setImage(svg, 0, 290, 510, 290, getImageFromV3('backlight-golden.png'), reg_body, 1)
 
-    let stringA1s = ''
-    let imageA1s = ''
+    let stringA1s = []
+    let imageA1s = []
 
     for (const i in cardA1s) {
         const a1 = cardA1s[i]
@@ -212,33 +218,15 @@ export async function panel_A9(data = {
         const x = i % 4
         const y = Math.floor(i / 4)
 
-        stringA1s += getSvgBody(40 + 470 * x, 330 + 250 + 250 * y, a1)
+        stringA1s.push(getSvgBody(40 + 470 * x, 330 + 250 + 250 * y, a1))
 
         if (members[i]?.is_online === true) {
-            imageA1s += getImage(40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 510, 290, getImageFromV3('backlight-green.png'), 1)
+            imageA1s.push(getImage(40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 510, 290, getImageFromV3('backlight-green.png'), 1))
         }
     }
 
-    svg = setText(svg, stringA1s, reg_body)
-    svg = setText(svg, imageA1s, reg_body)
-
-    /*
-    for (const i in members) {
-        const v = members[i]
-
-        const x = i % 4
-        const y = Math.floor(i / 4)
-
-        const member = await card_A1(await PanelGenerate.microTeamMember2CardA1(v, false))
-
-        svg = setSvgBody(svg, 40 + 470 * x, 330 + 250 + 250 * y, member, reg_body)
-
-        if (v?.is_online === true) {
-            svg = setImage(svg, 40 + 470 * x - 40, 330 + 250 + 250 * y - 40, 510, 290, getImageFromV3('backlight-green.png'), reg_body, 1)
-        }
-    }
-
-     */
+    svg = setText(svg, stringA1s.join('\n'), reg_body)
+    svg = setText(svg, imageA1s.join('\n'), reg_body)
 
     // 插入图片和部件（新方法
     svg = setCustomBanner(svg, await readNetImage(team.cover_url), reg_banner);
