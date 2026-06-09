@@ -1310,7 +1310,7 @@ const stat2label = (stat, remark, progress, original, isDisplay) => {
             remark: remark,
             data_b: stat_b,
             data_m: stat_m,
-            data_a: hasChanged ? (' [' + floor(original, 1) + ']') : '',
+            data_a: hasChanged ? (' [' + round(original, 1) + ']') : '',
             bar_progress: progress,
         }
     } else {
