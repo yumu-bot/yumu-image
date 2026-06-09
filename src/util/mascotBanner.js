@@ -17,7 +17,7 @@ const mascot_data = JSON.parse(readFileSync(mascotConfigUrl, 'utf-8'));
 const mascot_pic_sum_arr = [79, 35, 7, 5, 14, 1, 3, 5, 5, 7]; //吉祥物的对应的照片数量，和随机banner一样的
 const mascot_transparency_sum_arr = [2, 1, 0, 0, 1, 0, 0, 1, 0, 1];
 const defaultBannerTotal = 200; //默认 banner 数量
-const maimaiBannerTotal = 70; //maimai banner 数量
+const maimaiBannerTotal = 84; //maimai banner 数量
 // const mascotBGTotal = 13; //吉祥物 BG 数量
 
 // 导入一些特殊 banner，比如 7 号是潘多拉，11号是 Splash 的改版 Shabi
@@ -43,6 +43,9 @@ export function getMaimaiBannerIndex(song) {
         11820: 64,
         11512: 69,
         11629: 70,
+        227: 71,
+        11711: 78,
+        11026: 83,
     };
 
     // 优先检查特定ID
