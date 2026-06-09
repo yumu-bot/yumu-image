@@ -515,52 +515,46 @@ export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '
 }
 
 /**
- * 读取文件，判断 JPG, PNG, GIF 图片是否完整
- * @param path 位于文件系统的绝对路径
- * @return {boolean}
+ * 使用 sharp 测试文件，如果没问题就放行
+ * @param path
+ * @param fails_delete 如果失败，则删除这个文件
+ * @return {Promise<boolean>}
  */
-export function isPictureIntacted(path = '') {
-    if (isBlankString(path)) return false;
-
-    let f;
+export async function isPictureIntact(path = '', fails_delete = true) {
+    if (!path || typeof path !== 'string' || path.trim() === '') return false;
 
     try {
-        f = fs.readFileSync(path, 'binary');
+        await sharp(path).metadata();
+        return true;
     } catch (e) {
-        // No Such File
+        if (!fails_delete) return false;
+
+        if (e.code === 'ENOENT') {
+            return false;
+        }
+
+        try {
+            await fs.unlink(path);
+        } catch (unlink_error) {
+            console.error(`删除损坏文件失败: ${unlink_error.message}`);
+        }
+
         return false;
     }
 
-    const isJPG = f.startsWith('\xff\xD8') && f.endsWith('\xff\xD9')
-    const isPNG = f.startsWith('\x89\x50\x4E\x47\x0D\x0A\x1A\x0A') && f.endsWith('\x49\x45\x4e\x44\xae\x42\x60\x82')
-    const isGIF = f.endsWith('\x00\x3B') && (f.startsWith('\x47\x49\x46\x38\x39\x61') || f.startsWith('\x47\x49\x46\x38\x37\x61'))
-    const isWEBP = f.startsWith('\x52\x49\x46\x46')
-    const isBMP = f.startsWith('\x42\x4D')
-
-    return isJPG || isPNG || isGIF || isWEBP || isBMP
+    return false;
 }
 
-export function isPicturePng(path = '') {
-    let f;
+export async function isPicturePng(path = '') {
+    if (!path || typeof path !== 'string' || path.trim() === '') return false;
+
     try {
-        f = fs.readFileSync(path, 'binary');
+        const metadata = await sharp(path).metadata();
+        // sharp 会将标准 PNG 和 APNG 都识别为 'png'
+        return metadata.format === 'png';
     } catch (e) {
-        // No Such File
+        // 文件不存在或文件损坏
         return false;
-    }
-    return f.startsWith('\x89\x50\x4E\x47\x0D\x0A\x1A\x0A') // PNG or APNG
-}
-
-/**
- * 判断文件大小
- * @param path 本地文件路径
- * @return {number|number} 文件 Byte，除以 1024 就是 KByte，不是 bit
- */
-export function getFileSize(path = "") {
-    try {
-        return fs.statSync(path).size;
-    } catch (e) {
-        return -1;
     }
 }
 
@@ -625,7 +619,7 @@ export function readFile(path = '', options = 'binary') {
 export function readBufferFromV3(...paths) {
     const gi = path_util.join(EXPORT_FILE_V3, ...paths)
 
-    return readFileWithCache(gi, 'binary');
+    return readFile(gi, 'binary');
 }
 
 /**
@@ -660,7 +654,7 @@ export function getImageFromV3(...paths) {
 export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'list') {
     const covers = beatmap?.beatmapset?.covers || {}
 
-    const default_image_path = getImageFromV3Cache('card-default.png')
+    const default_image_path = getImageFromV3('card-default.png')
 
     let use_cache = hasLeaderBoard(beatmap?.beatmapset?.ranked) || hasLeaderBoard(beatmap?.beatmap?.ranked)
 
@@ -726,7 +720,7 @@ export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'li
  */
 export async function getDiffBackground(score = {}, must_full = false) {
     let path;
-    const default_image_path = getImageFromV3Cache('card-default.png')
+    const default_image_path = getImageFromV3('card-default.png')
 
     const bid = score?.beatmap?.id
     const sid = score?.beatmapset?.id
@@ -756,7 +750,7 @@ export async function getDiffBackground(score = {}, must_full = false) {
         asyncBeatMapFromDatabase(bid, sid);
     }
 
-    if (isPictureIntacted(path)) {
+    if (await isPictureIntact(path)) {
         return path;
     } else {
         const is_dmca = score?.beatmapset?.availability?.more_information != null
@@ -1111,27 +1105,23 @@ export async function readNetImage(
     const bufferName = MD5.copy().update(path).digest('hex');
     const bufferPath = `${IMG_BUFFER_PATH}/${bufferName}`;
 
-    if (use_cache === true) {
-        try {
-            fs.accessSync(bufferPath, fs.constants.F_OK);
-            if (fs.statSync(bufferPath).size > 4 * 1024 && isPictureIntacted(bufferPath)) {
-                return bufferPath;
-            }
-        } catch (e) {
-            // 缓存未命中，继续向下
-        }
+    if (use_cache === true && await isPictureIntact(bufferPath)) {
+        return bufferPath;
     }
 
+    let req
+
     try {
-        const req = await axios.get(path, { responseType: 'arraybuffer', timeout: 10000 });
-        if (req && req.status === 200 && req.data) {
-            return await saveNetImage(path, req.data, max_width, max_height);
-        }
+        req = await axios.get(path, { responseType: 'arraybuffer', timeout: 10000 });
     } catch (e) {
         console.error("网图：下载失败", e.message);
     }
 
-    return loadDefault();
+    if (req && req.status === 200 && req.data) {
+        return await saveNetImage(path, req.data, max_width, max_height);
+    } else {
+        return loadDefault();
+    }
 }
 
 /**
@@ -2245,7 +2235,7 @@ export async function getFlagPath(code = "cn" || null, x, y, h = 30) {
 
     //避免腾讯封掉青天白日旗
     if (code.toLowerCase() === "tw") {
-        const image = getImageFromV3Cache('flag-TW.png')
+        const image = getImageFromV3('flag-TW.png')
 
         if (fs.existsSync(image)) {
             return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${image}"
@@ -2255,7 +2245,7 @@ export async function getFlagPath(code = "cn" || null, x, y, h = 30) {
         }
     } else if (code.toLowerCase() === "xx") {
         // 这不是 svg 文件，这个是 png 文件
-        const xx_image = getImageFromV3Cache('Flags', 'XX')
+        const xx_image = getImageFromV3('Flags', 'XX')
 
         return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${xx_image}"
             style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`

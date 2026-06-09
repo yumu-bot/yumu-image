@@ -4,7 +4,6 @@ import {
     exportJPEG,
     getBeatMapTitlePath,
     getKeyDifficulty, getDifficultyIndex,
-    getFileSize,
     getFormattedTime,
     getGameMode,
     getImageFromV3,
@@ -19,7 +18,7 @@ import {
     setText,
     setTexts,
     floor,
-    floors, getDiffBackground, rounds, getSvgBody, getImageFromV3Cache, removeGuest, round
+    floors, getDiffBackground, rounds, getSvgBody, removeGuest, round
 } from "../util/util.js";
 import {getRankBackground} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
@@ -132,12 +131,7 @@ export async function panel_E6(data = {
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
-
-    if (getFileSize(banner) / 1024 >= 500) {
-        svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.7, "xMidYMin slice");
-    } else {
-        svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.7);
-    }
+    svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.7);
 
     return svg;
 }
@@ -353,8 +347,8 @@ const component_E5 = (
     const pc = poppinsBold.getTextPath(floor(data?.playcount, 1, -1), 78, 47, 16, 'right baseline', '#fff')
 
     svg = setTexts(svg, [fav, pc], reg_text);
-    svg = setImage(svg, 12, 10 - 1, 18, 18, getImageFromV3Cache('object-beatmap-favorite.png'), reg_text, 1);
-    svg = setImage(svg, 12, 32, 18, 18, getImageFromV3Cache('object-beatmap-playcount.png'), reg_text, 1);
+    svg = setImage(svg, 12, 10 - 1, 18, 18, getImageFromV3('object-beatmap-favorite.png'), reg_text, 1);
+    svg = setImage(svg, 12, 32, 18, 18, getImageFromV3('object-beatmap-playcount.png'), reg_text, 1);
     svg = setText(svg, rect, reg_base);
 
     return svg;

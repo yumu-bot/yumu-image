@@ -6,7 +6,6 @@ import {
     getGameMode,
     getImage,
     getImageFromV3,
-    getImageFromV3Cache,
     getPanelNameSVG,
     getSvgBody,
     getTimeDifference,
@@ -369,7 +368,7 @@ async function card_U1(
 
     const mode_icon = extra.getTextPath(getGameMode(user?.mode, -1), 30, 68 - 2, 40, 'left baseline', '#fff')
 
-    const supporter_icon = (user?.is_supporter) ? getImage(460 - 70, 30, 40, 40, getImageFromV3Cache('object-card-supporter.png')) : ''
+    const supporter_icon = (user?.is_supporter) ? getImage(460 - 70, 30, 40, 40, getImageFromV3('object-card-supporter.png')) : ''
 
     const name = torus.getTextPath(
         torus.cutStringTail(user?.username, 60, 460 - 10),

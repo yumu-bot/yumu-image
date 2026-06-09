@@ -19,7 +19,7 @@ import {
     floors,
     getFormattedTime,
     getTimeDifferenceShort,
-    getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3Cache, isASCII, getImageOrElse,
+    getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3, isASCII, getImageOrElse,
 } from "./util.js";
 import {
     colorArray,
@@ -58,8 +58,8 @@ export const PanelGenerate = {
      */
     user2CardA1: (user, historyUser) => {
         if (isNullOrEmptyObject(user)) return {
-            background: getImageFromV3Cache('card-default.png'),
-            avatar: getImageFromV3Cache('sticker_qiqi_secretly_observing.png'),
+            background: getImageFromV3('card-default.png'),
+            avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
             sub_icon1: '',
             sub_icon2: '',
             sub_banner: '',
@@ -80,7 +80,7 @@ export const PanelGenerate = {
         const background = user?.profile?.card || user?.cover_url;
         const avatar = user?.avatar_url;
 
-        const sub_icon1 = user?.is_supporter ? getImageFromV3Cache('object-card-supporter.png') : '';
+        const sub_icon1 = user?.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
 
         const is_team_member = user.team != null
@@ -148,7 +148,7 @@ export const PanelGenerate = {
     },
 
     mapper2CardA1: (user) => {
-        const sub_icon1 = user.is_supporter ? getImageFromV3Cache('object-card-supporter.png') : '';
+        const sub_icon1 = user.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
 
         const left2 = 'U' + user.id;
@@ -182,21 +182,21 @@ export const PanelGenerate = {
         if (show_mutual) {
             if (user.is_mutual) {
                 if (user.is_supporter) {
-                    sub_icon1 = getImageFromV3Cache('object-card-supporter.png')
-                    sub_icon2 = getImageFromV3Cache('object-card-mutual.png')
+                    sub_icon1 = getImageFromV3('object-card-supporter.png')
+                    sub_icon2 = getImageFromV3('object-card-mutual.png')
                 } else {
-                    sub_icon1 = getImageFromV3Cache('object-card-mutual.png')
+                    sub_icon1 = getImageFromV3('object-card-mutual.png')
                 }
             } else {
                 if (user.is_supporter) {
-                    sub_icon1 = getImageFromV3Cache('object-card-supporter.png')
-                    sub_icon2 = getImageFromV3Cache('object-card-follower.png')
+                    sub_icon1 = getImageFromV3('object-card-supporter.png')
+                    sub_icon2 = getImageFromV3('object-card-follower.png')
                 } else {
-                    sub_icon1 = getImageFromV3Cache('object-card-follower.png')
+                    sub_icon1 = getImageFromV3('object-card-follower.png')
                 }
             }
         } else if (user.is_supporter) {
-            sub_icon1 = getImageFromV3Cache('object-card-supporter.png')
+            sub_icon1 = getImageFromV3('object-card-supporter.png')
         }
 
         const country = user?.country_code || 'CN';
@@ -249,7 +249,7 @@ export const PanelGenerate = {
     },
 
     microTeamMember2CardA1: (user, is_leader = false) => {
-        const sub_icon1 = (user.is_supporter) ? getImageFromV3Cache('object-card-supporter.png') : ''
+        const sub_icon1 = (user.is_supporter) ? getImageFromV3('object-card-supporter.png') : ''
 
         const country = user?.country_code || 'CN';
 
@@ -310,7 +310,7 @@ export const PanelGenerate = {
             }
         }
 
-        const background = getImageFromV3Cache(bg_str);
+        const background = getImageFromV3(bg_str);
         const avatar = await getAvatar(score?.user?.avatar_url, false);
         const country = score?.user?.country?.code || 'CN';
         const score_number = floors(player_score, -4)
@@ -327,7 +327,7 @@ export const PanelGenerate = {
         return {
             background: background,
             avatar: avatar,
-            sub_icon1: getImageFromV3Cache(icon_str) ,
+            sub_icon1: getImageFromV3(icon_str) ,
             sub_icon2: '',
             sub_banner: '',
             country: country,
@@ -346,8 +346,8 @@ export const PanelGenerate = {
 
     maiPlayer2CardA1: async (user, statistics = null) => {
         if (isNullOrEmptyObject(user)) return {
-            background: getImageFromV3Cache('card-default.png'),
-            avatar: getImageFromV3Cache('sticker_qiqi_secretly_observing.png'),
+            background: getImageFromV3('card-default.png'),
+            avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
             sub_icon1: '',
             sub_icon2: '',
             sub_banner: '',
@@ -394,7 +394,7 @@ export const PanelGenerate = {
 
             return {
                 background: background,
-                avatar: getImageFromV3Cache('Maimai', 'avatar-guest.png'),
+                avatar: getImageFromV3('Maimai', 'avatar-guest.png'),
                 sub_icon1: '',
                 sub_icon2: '',
                 sub_banner: sub_banner,
@@ -422,7 +422,7 @@ export const PanelGenerate = {
 
             return {
                 background: background,
-                avatar: getImageFromV3Cache('Maimai', 'avatar-guest.png'),
+                avatar: getImageFromV3('Maimai', 'avatar-guest.png'),
                 sub_icon1: '',
                 sub_icon2: '',
                 sub_banner: '',
@@ -454,7 +454,7 @@ export const PanelGenerate = {
 
         return {
             background: background,
-            avatar: getImageFromV3Cache('Chunithm', 'avatar-guest.png'),
+            avatar: getImageFromV3('Chunithm', 'avatar-guest.png'),
             sub_icon1: '',
             sub_icon2: '',
             sub_banner: '',
@@ -504,7 +504,7 @@ export const PanelGenerate = {
         let sub_icon1 = ''
 
         if (user.is_supporter) {
-            sub_icon1 = getImageFromV3Cache('object-card-supporter.png')
+            sub_icon1 = getImageFromV3('object-card-supporter.png')
         }
 
         let right3b = ''
@@ -1412,7 +1412,7 @@ export const PanelGenerate = {
                 default: combo_image = 'clear'; break;
             }
 
-            return PanelDraw.Image(0, 0, 27, 30, getImageFromV3Cache('Maimai', `object-icon-combo-${combo_image}.png`))
+            return PanelDraw.Image(0, 0, 27, 30, getImageFromV3('Maimai', `object-icon-combo-${combo_image}.png`))
         }
 
         function drawSync(sync = '') {
@@ -1426,7 +1426,7 @@ export const PanelGenerate = {
                 default: sync_image = 'solo'; break;
             }
 
-            return PanelDraw.Image(0, 0, 27, 30, getImageFromV3Cache('Maimai', `object-icon-sync-${sync_image}.png`))
+            return PanelDraw.Image(0, 0, 27, 30, getImageFromV3('Maimai', `object-icon-sync-${sync_image}.png`))
         }
 
         let difficulty
@@ -1440,7 +1440,7 @@ export const PanelGenerate = {
         return {
             background: getMaimaiRankBG(score?.rate || ''),
             cover: await getMaimaiCover(score?.song_id || 0),
-            rank: getImageFromV3Cache('Maimai', `object-score-${score?.rate || 'd'}2.png`),
+            rank: getImageFromV3('Maimai', `object-score-${score?.rate || 'd'}2.png`),
             type: getMaimaiType(score?.type),
             level: getMaimaiDXStarLevel(score?.dxScore, score?.max),
 
@@ -1489,7 +1489,7 @@ export const PanelGenerate = {
         const acc = floors((s?.legacy_accuracy * 100), 2)
         const combo = (s.max_combo || 0) + 'x'
 
-        const rank = getImageFromV3Cache('object-score-' + rankSS2X(s?.legacy_rank) + '-small2.png')
+        const rank = getImageFromV3('object-score-' + rankSS2X(s?.legacy_rank) + '-small2.png')
 
         const title2_original_text = (s.beatmapset.title === s.beatmapset.title_unicode) ? '' : (s?.beatmapset?.title_unicode ?? '');
 
@@ -1561,19 +1561,19 @@ export const PanelGenerate = {
             default:
                 return {
                     label1: {
-                        icon: getImageFromV3Cache("object-score-circlesize.png"),
+                        icon: getImageFromV3("object-score-circlesize.png"),
                         icon_title: 'CS',
                         data_b: floors(beatmap.cs, 1).integer,
                         data_m: floors(beatmap.cs, 1).decimal,
                     },
                     label2: {
-                        icon: getImageFromV3Cache("object-score-approachrate.png"),
+                        icon: getImageFromV3("object-score-approachrate.png"),
                         icon_title: 'AR',
                         data_b: floors(beatmap.ar, 1).integer,
                         data_m: floors(beatmap.ar, 1).decimal,
                     },
                     label3: {
-                        icon: getImageFromV3Cache("object-score-overalldifficulty.png"),
+                        icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
                         data_b: floors(beatmap.od, 1).integer,
                         data_m: floors(beatmap.od, 1).decimal,
@@ -1585,7 +1585,7 @@ export const PanelGenerate = {
             case 't' :
                 return {
                     label1: {
-                        icon: getImageFromV3Cache("object-score-overalldifficulty.png"),
+                        icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
                         data_b: floors(beatmap.od, 1).integer,
                         data_m: floors(beatmap.od, 1).decimal
@@ -1597,7 +1597,7 @@ export const PanelGenerate = {
                         data_m: ''
                     },
                     label3: {
-                        icon: getImageFromV3Cache("object-score-healthpoint.png"),
+                        icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
                         data_b: floors(beatmap.hp, 1).integer,
                         data_m: floors(beatmap.hp, 1).decimal
@@ -1609,19 +1609,19 @@ export const PanelGenerate = {
             case 'c':
                 return {
                     label1: {
-                        icon: getImageFromV3Cache("object-score-circlesize.png"),
+                        icon: getImageFromV3("object-score-circlesize.png"),
                         icon_title: 'CS',
                         data_b: floors(beatmap.cs, 1).integer,
                         data_m: floors(beatmap.cs, 1).decimal,
                     },
                     label2: {
-                        icon: getImageFromV3Cache("object-score-approachrate.png"),
+                        icon: getImageFromV3("object-score-approachrate.png"),
                         icon_title: 'AR',
                         data_b: floors(beatmap.ar, 1).integer,
                         data_m: floors(beatmap.ar, 1).decimal,
                     },
                     label3: {
-                        icon: getImageFromV3Cache("object-score-healthpoint.png"),
+                        icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
                         data_b: floors(beatmap.hp, 1).integer,
                         data_m: floors(beatmap.hp, 1).decimal
@@ -1633,19 +1633,19 @@ export const PanelGenerate = {
             case 'm' :
                 return {
                     label1: {
-                        icon: getImageFromV3Cache("object-score-circlesize.png"),
+                        icon: getImageFromV3("object-score-circlesize.png"),
                         icon_title: 'CS',
                         data_b: floors(beatmap.cs, 1).integer,
                         data_m: floors(beatmap.cs, 1).decimal,
                     },
                     label2: {
-                        icon: getImageFromV3Cache("object-score-overalldifficulty.png"),
+                        icon: getImageFromV3("object-score-overalldifficulty.png"),
                         icon_title: 'OD',
                         data_b: floors(beatmap.od, 1).integer,
                         data_m: floors(beatmap.od, 1).decimal,
                     },
                     label3: {
-                        icon: getImageFromV3Cache("object-score-healthpoint.png"),
+                        icon: getImageFromV3("object-score-healthpoint.png"),
                         icon_title: 'HP',
                         data_b: floors(beatmap.hp, 1).integer,
                         data_m: floors(beatmap.hp, 1).decimal

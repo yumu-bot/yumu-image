@@ -1,7 +1,7 @@
 import {
     setImage,
     setSvgBody,
-    setText, floors, getImageFromV3Cache,
+    setText, floors, getImageFromV3,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_D0} from "../card/card_D0.js";
@@ -79,7 +79,7 @@ export async function component_J(data = {
                 index_b_arr.push(minute + ':');
                 index_m_arr.push(second.toString());
             }
-            card_icon = getImageFromV3Cache('object-score-length.png');
+            card_icon = getImageFromV3('object-score-length.png');
         } break;
 
         case 'Combo': {
@@ -91,7 +91,7 @@ export async function component_J(data = {
                 index_b_arr.push(v.toString());
                 index_m_arr.push('x');
             }
-            card_icon = getImageFromV3Cache('object-score-combo.png');
+            card_icon = getImageFromV3('object-score-combo.png');
         } break;
 
         case 'Star Rating': {
@@ -105,7 +105,7 @@ export async function component_J(data = {
                 index_b_arr.push(vn.integer);
                 index_m_arr.push(vn.decimal);
             }
-            card_icon = getImageFromV3Cache('object-score-beatsperminute.png');
+            card_icon = getImageFromV3('object-score-beatsperminute.png');
         } break;
     }
 

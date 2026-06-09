@@ -3,8 +3,7 @@ import {
     downloadByFetch,
     downloadWithCurl,
     getImageFromV3,
-    getImageFromV3Cache,
-    isEmptyString
+    isEmptyString, isPictureIntact
 } from "./util.js";
 import {colorArray} from "./color.js";
 
@@ -175,9 +174,9 @@ export function getMaimaiRatingBG(rating = 0) {
 export function getMaimaiType(type = '') {
     switch (type) {
         case 'DX':
-            return getImageFromV3Cache('Maimai', 'object-type-deluxe.png');
+            return getImageFromV3('Maimai', 'object-type-deluxe.png');
         case 'SD':
-            return getImageFromV3Cache('Maimai', 'object-type-standard.png');
+            return getImageFromV3('Maimai', 'object-type-standard.png');
         default :
             return '';
     }
@@ -467,7 +466,7 @@ export async function getCHUNITHMCover(song_id = 0) {
     const song = song_id.toString()
     const path = getImageFromV3('Chunithm', 'Cover', `${song}.png`);
 
-    if (fs.existsSync(path)) {
+    if (await isPictureIntact(path, false)) {
         return path
     } else if (song_id > 0) {
 

@@ -2,7 +2,6 @@ import {
     exportJPEG,
     getBeatMapTitlePath,
     getGameMode,
-    getImageFromV3,
     getMapStatusImage,
     getNowTimeStamp,
     getPanelNameSVG,
@@ -11,7 +10,6 @@ import {
     readTemplate,
     setText,
     setTexts,
-    getFileSize,
     od2ms,
     ar2ms,
     cs2px,
@@ -28,7 +26,7 @@ import {
     rounds,
     getSvgBody,
     round,
-    getImageFromV3Cache,
+    getImageFromV3,
     getRatioString, removeGuest
 } from "../util/util.js";
 import {
@@ -337,8 +335,7 @@ export async function panel_E5(data = {
     svg = setImage(svg, 0, 0, 1920, 1080, getRankBackground(rank, passed), regs.background, 0.6);
 
     // 注入 Banner
-    const isLargeBanner = getFileSize(banner) / 1024 >= 500;
-    svg = setImage(svg, 0, 0, 1920, 320, banner, regs.banner, 0.7, isLargeBanner ? "xMidYMin slice" : undefined);
+    svg = setImage(svg, 0, 0, 1920, 320, banner, regs.banner, 0.7);
 
     // 批量注入所有组件内容 (一次性处理多个 body 字符串)
     svg = setText(svg, components[0], regs.card_a1);
@@ -513,8 +510,8 @@ const component_E5 = (data = {
     const pc = poppinsBold.getTextPath(floor(data?.playcount, 1, -1), 78, 47, 16, 'right baseline', '#fff')
 
     svg = setTexts(svg, [fav, pc], reg_text);
-    svg = setImage(svg, 12, 10 - 1, 18, 18, getImageFromV3Cache('object-beatmap-favorite.png'), reg_text, 1);
-    svg = setImage(svg, 12, 32, 18, 18, getImageFromV3Cache('object-beatmap-playcount.png'), reg_text, 1);
+    svg = setImage(svg, 12, 10 - 1, 18, 18, getImageFromV3('object-beatmap-favorite.png'), reg_text, 1);
+    svg = setImage(svg, 12, 32, 18, 18, getImageFromV3('object-beatmap-playcount.png'), reg_text, 1);
     svg = setText(svg, rect, reg_base);
 
     return svg;

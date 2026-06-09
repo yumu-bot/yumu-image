@@ -2,7 +2,6 @@ import {
     exportJPEG,
     getImage,
     getImageFromV3,
-    getImageFromV3Cache,
     setImage,
     setText,
     setTexts,
@@ -146,7 +145,7 @@ function drawPlate(rating = 0, x = 0, y = 0) {
 
     for (let i = rating_str.length - 1; i >= 0; i--) {
         const digit = rating_str[i];
-        const digit_image = getImageFromV3Cache('Maimai', 'UI', `UI_NUM_Drating_${digit}.png`);
+        const digit_image = getImageFromV3('Maimai', 'UI', `UI_NUM_Drating_${digit}.png`);
         ratings.push(getImage(current_x, y + 24, 45, 51, digit_image))
         current_x -= offset; // 向左移动
     }

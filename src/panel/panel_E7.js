@@ -5,7 +5,6 @@ import {
     getAvatar,
     getBeatMapTitlePath,
     getKeyDifficulty, getDifficultyIndex,
-    getFileSize,
     getGameMode,
     getImageFromV3,
     getMapStatusImage,
@@ -276,12 +275,7 @@ export async function panel_E7(
 
     // 导入图片
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.6);
-
-    if (getFileSize(banner) / 1024 >= 500) {
-        svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.7, "xMidYMin slice");
-    } else {
-        svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.7);
-    }
+    svg = setImage(svg, 0, 0, 1920, 320, banner, reg_banner, 0.7);
 
     return svg;
 }

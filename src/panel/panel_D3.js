@@ -1,7 +1,7 @@
 import {
     exportJPEG,
     floor, getGameMode, getImage,
-    getImageFromV3, getImageFromV3Cache, getNowTimeStamp, getPanelNameSVG,
+    getImageFromV3, getNowTimeStamp, getPanelNameSVG,
     getSvgBody,
     getTexts, getTimeByDHMS, getTimeDifference, isNotNumber, isNumber, round, rounds, setCustomBanner, setImage,
     setSvgBody, setText,
@@ -526,7 +526,7 @@ const component_D4 = (
         const delta = data.delta[i]
         const x = 15 + i * 90
 
-        const icon = getImageFromV3Cache('object-score-' + rank + '-small.png')
+        const icon = getImageFromV3('object-score-' + rank + '-small.png')
 
         let text;
         let delta_text = getText(delta);
