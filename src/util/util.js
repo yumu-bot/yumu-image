@@ -49,6 +49,8 @@ export const LRU_TEMPLATE_MAX = Number(process.env.LRU_TEMPLATE_MAX) || 100;
 export const LRU_TEMPLATE_MAX_SIZE = Number(process.env.LRU_TEMPLATE_MAX_SIZE) || 100 * 40 * 1024;
 export const LRU_TEMPLATE_TIME_TO_LIVE = Number(process.env.LRU_TEMPLATE_TTL) || LRU_TIME_TO_LIVE
 
+export const OSU_FILE_PROXY = process.env.OSU_FILE_PROXY === 'true';
+
 const image_lru_cache = new LRUCache({
     max: LRU_MAX,
 
