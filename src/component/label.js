@@ -1,6 +1,6 @@
 import {
     getGameMode, setImage, setText, setTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, floors,
-    getImageFromV3, readBufferFromV3,
+    getImageFromV3, readBase64FromV3,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {colorArray, getModColor, getStarRatingColor, getUserRankColor, hex2hsl, PanelColor} from "../util/color.js";
@@ -253,7 +253,7 @@ export const LABEL_PPP = {
     // pp+ 的
 
     JUMP: {
-        icon: readBufferFromV3('Icons', 'road-barrier-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'road-barrier-solid-full.svg'),
         title: 'JP',
         left_1: 'Jump',
         left_2: '跳',
@@ -263,7 +263,7 @@ export const LABEL_PPP = {
         colors: colorArray.green,
     },
     FLOW: {
-        icon: readBufferFromV3('Icons', 'wind-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'wind-solid-full.svg'),
         title: 'FL',
         left_1: 'Flow',
         left_2: '串',
@@ -273,7 +273,7 @@ export const LABEL_PPP = {
         colors: colorArray.blue,
     },
     ACC: {
-        icon: readBufferFromV3('Icons', 'arrows-to-dot-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'arrows-to-dot-solid-full.svg'),
         title: 'AC',
         left_1: 'Accuracy',
         left_2: '准度',
@@ -283,7 +283,7 @@ export const LABEL_PPP = {
         colors: colorArray.purple,
     },
     STA: {
-        icon: readBufferFromV3('Icons', 'heart-circle-bolt-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'heart-circle-bolt-solid-full.svg'),
         title: 'ST',
         left_1: 'Stamina',
         left_2: '耐力',
@@ -293,7 +293,7 @@ export const LABEL_PPP = {
         colors: colorArray.red,
     },
     SPD: {
-        icon: readBufferFromV3('Icons', 'gauge-high-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'gauge-high-solid-full.svg'),
         title: 'SP',
         left_1: 'Speed',
         left_2: '速度',
@@ -303,7 +303,7 @@ export const LABEL_PPP = {
         colors: colorArray.amber,
     },
     PRE: {
-        icon: readBufferFromV3('Icons', 'crosshairs-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'crosshairs-solid-full.svg'),
         title: 'PR',
         left_1: 'Precision',
         left_2: '小圈',
@@ -313,7 +313,7 @@ export const LABEL_PPP = {
         colors: colorArray.yellow,
     },
     OVA: {
-        icon: readBufferFromV3('Icons', 'clipboard-list-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'clipboard-list-solid-full.svg'),
         title: 'ALL',
         left_1: 'Overall',
         left_2: '综合',
@@ -323,7 +323,7 @@ export const LABEL_PPP = {
         colors: colorArray.sakura,
     },
     AIM: {
-        icon: readBufferFromV3('Icons', 'marker-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'marker-solid-full.svg'),
         title: 'AIM',
         left_1: 'Aim',
         left_2: '移动',
@@ -337,7 +337,7 @@ export const LABEL_PPP = {
 export const LABEL_MM = {
 
     RC: {
-        icon: readBufferFromV3('Icons', 'bowl-rice-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'bowl-rice-solid-full.svg'),
         title: 'RC',
         left_1: 'Rice',
         left_2: '米',
@@ -347,7 +347,7 @@ export const LABEL_MM = {
         colors: colorArray.green,
     },
     LN: {
-        icon: readBufferFromV3('Icons', 'chart-simple-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'chart-simple-solid-full.svg'),
         title: 'LN',
         left_1: 'Long Note',
         left_2: '面',
@@ -357,7 +357,7 @@ export const LABEL_MM = {
         colors: colorArray.blue,
     },
     CO: {
-        icon: readBufferFromV3('Icons', 'hand-spock-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'hand-spock-solid-full.svg'),
         title: 'CO',
         left_1: 'Coordinate',
         left_2: '协调',
@@ -367,7 +367,7 @@ export const LABEL_MM = {
         colors: colorArray.yellow,
     },
     ST: {
-        icon: readBufferFromV3('Icons', 'heart-circle-bolt-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'heart-circle-bolt-solid-full.svg'),
         title: 'ST',
         left_1: 'Stamina',
         left_2: '耐力',
@@ -377,7 +377,7 @@ export const LABEL_MM = {
         colors: colorArray.amber,
     },
     SP: {
-        icon: readBufferFromV3('Icons', 'gauge-high-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'gauge-high-solid-full.svg'),
         title: 'SP',
         left_1: 'Speed',
         left_2: '速度',
@@ -387,7 +387,7 @@ export const LABEL_MM = {
         colors: colorArray.red,
     },
     PR: {
-        icon: readBufferFromV3('Icons', 'bullseye-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'bullseye-solid-full.svg'),
         title: 'PR',
         left_1: 'Precision',
         left_2: '彩率',
@@ -397,7 +397,7 @@ export const LABEL_MM = {
         colors: colorArray.purple,
     },
     SV: {
-        icon: readBufferFromV3('Icons', 'spiral-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'spiral-solid-full.svg'),
         title: 'SV',
         left_1: 'S.Variation',
         left_2: '变速',
@@ -408,7 +408,7 @@ export const LABEL_MM = {
     },
 
     DN: {
-        icon: readBufferFromV3('Icons', 'school-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'school-solid-full.svg'),
         title: 'DN',
         left_1: 'Dan Level',
         left_2: '段位',
@@ -419,7 +419,7 @@ export const LABEL_MM = {
     },
 
     RF: {
-        icon: readBufferFromV3('Icons', 'school-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'school-solid-full.svg'),
         title: 'RF',
         left_1: 'Reform Dan',
         left_2: '常规段',
@@ -430,7 +430,7 @@ export const LABEL_MM = {
     },
 
     UJ: {
-        icon: readBufferFromV3('Icons', 'face-grin-squint-regular-full.svg'),
+        icon: readBase64FromV3('Icons', 'face-grin-squint-regular-full.svg'),
         title: 'UJ',
         left_1: 'Underjoy Dan',
         left_2: '长键段',
@@ -441,7 +441,7 @@ export const LABEL_MM = {
     },
 
     RG: {
-        icon: readBufferFromV3('Icons', 'water-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'water-solid-full.svg'),
         title: 'RG',
         left_1: 'J.\'s Regular Dan',
         left_2: '常规段',
@@ -452,7 +452,7 @@ export const LABEL_MM = {
     },
 
     JL: {
-        icon: readBufferFromV3('Icons', 'water-ladder-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'water-ladder-solid-full.svg'),
         title: 'JL',
         left_1: 'Jinjin\'s Ln Dan',
         left_2: '长键段',
@@ -466,7 +466,7 @@ export const LABEL_MM = {
 
 export const LABEL_PPM6 = {
     ACC: {
-        icon: readBufferFromV3('Icons', 'arrows-to-dot-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'arrows-to-dot-solid-full.svg'),
         title: 'ACC',
         left_1: 'Accuracy',
         left_2: '准度',
@@ -476,7 +476,7 @@ export const LABEL_PPM6 = {
         colors: colorArray.green,
     },
     PTT: {
-        icon: readBufferFromV3('Icons', 'arrow-trend-up-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'arrow-trend-up-solid-full.svg'),
         title: 'PTT',
         left_1: 'Potential',
         left_2: '潜力',
@@ -486,7 +486,7 @@ export const LABEL_PPM6 = {
         colors: colorArray.blue,
     },
     STA: {
-        icon: readBufferFromV3('Icons', 'heart-circle-bolt-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'heart-circle-bolt-solid-full.svg'),
         title: 'STA',
         left_1: 'Stamina',
         left_2: '耐力',
@@ -496,7 +496,7 @@ export const LABEL_PPM6 = {
         colors: colorArray.yellow,
     },
     STB: {
-        icon: readBufferFromV3('Icons', 'anchor-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'anchor-solid-full.svg'),
         title: 'STB',
         left_1: 'Stability',
         left_2: '稳定',
@@ -506,7 +506,7 @@ export const LABEL_PPM6 = {
         colors: colorArray.purple,
     },
     PRE: {
-        icon: readBufferFromV3('Icons', 'bullseye-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'bullseye-solid-full.svg'),
         title: 'PRE',
         left_1: 'Precision',
         left_2: '彩率',
@@ -516,7 +516,7 @@ export const LABEL_PPM6 = {
         colors: colorArray.purple,
     },
     EFT: {
-        icon: readBufferFromV3('Icons', 'street-view-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'street-view-solid-full.svg'),
         title: 'EFT',
         left_1: 'Effort',
         left_2: '肝力',
@@ -526,7 +526,7 @@ export const LABEL_PPM6 = {
         colors: colorArray.red,
     },
     STH: {
-        icon: readBufferFromV3('Icons', 'weight-hanging-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'weight-hanging-solid-full.svg'),
         title: 'STR',
         left_1: 'Strength',
         left_2: '强度',
@@ -536,7 +536,7 @@ export const LABEL_PPM6 = {
         colors: colorArray.amber,
     },
     OVA: {
-        icon: readBufferFromV3('Icons', 'clipboard-list-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'clipboard-list-solid-full.svg'),
         title: 'ALL',
         left_1: 'Overall',
         left_2: '综合',
@@ -546,7 +546,7 @@ export const LABEL_PPM6 = {
         colors: colorArray.sakura,
     },
     OII: {
-        icon: readBufferFromV3('Icons', 'dna-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'dna-solid-full.svg'),
         title: 'OII',
         left_1: 'O. Improvement I.',
         left_2: '成长指数',
@@ -557,7 +557,7 @@ export const LABEL_PPM6 = {
     },
 
     SAN: {
-        icon: readBufferFromV3('Icons', 'dna-solid-full.svg'),
+        icon: readBase64FromV3('Icons', 'dna-solid-full.svg'),
         title: 'SAN',
         left_1: 'Sanity',
         left_2: '理智',

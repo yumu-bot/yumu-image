@@ -22,6 +22,7 @@
     "puppeteer": "^25.1.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "redis": "^6.0.0",
     "sharp": "^0.34.5",
     "text-to-svg": "^3.1.5",
     "tmp": "^0.2.1",
