@@ -165,7 +165,7 @@ async function maiDistribution2CardI3(dist = {
 }) {
     const achievement_text = (dist.score?.achievements || 0).toFixed(4).toString()
 
-    const fit_rating = Math.round(dist?.rating || 0)
+    const fit_rating = Math.round(dist?.rating || 0).toString()
     const rating = Math.round(dist.score?.ra || 0)
 
     const is_utage = dist.score?.level_label?.slice(0, 1) === 'U' || dist.score?.level?.toString().includes('?')

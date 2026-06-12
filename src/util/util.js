@@ -330,6 +330,7 @@ export function isEmptyObject(obj) {
  */
 export function isASCII(str) {
     // 确保输入是字符串且不为空
+    if (typeof str === 'number') return true
     if (typeof str !== 'string' || str.length === 0) return false;
 
     for (let i = 0; i < str.length; i++) {
