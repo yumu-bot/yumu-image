@@ -1,14 +1,42 @@
 import { createClient } from "redis";
 import { LRUCache } from "lru-cache";
 
+// 10 万条，最大 19.2 MB，存活 7 天
+export const LRU_MAX = Number(process.env.LRU_MAX) || 100000;
+export const LRU_MAX_SIZE = Number(process.env.LRU_MAX_SIZE) || 20 * 1024 * 1024;
+export const LRU_TIME_TO_LIVE = Number(process.env.LRU_TTL) || 1000 * 60 * 60 * 24 * 7;
+
+export const LRU_TEMPLATE_MAX = Number(process.env.LRU_TEMPLATE_MAX) || 100;
+export const LRU_TEMPLATE_MAX_SIZE = Number(process.env.LRU_TEMPLATE_MAX_SIZE) || 100 * 40 * 1024;
+export const LRU_TEMPLATE_TIME_TO_LIVE = Number(process.env.LRU_TEMPLATE_TTL) || LRU_TIME_TO_LIVE
+
 const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 
 // 1. 初始化本地内存
-const localCache = new LRUCache({
-    max: 50000,
-    maxSize: 20 * 1024 * 1024,
-    sizeCalculation: (value, key) => String(key).length + String(value).length,
-    ttl: 7 * 60 * 60 * 1000
+const image_lru_cache = new LRUCache({
+    max: LRU_MAX,
+
+    maxSize: LRU_MAX_SIZE,
+
+    sizeCalculation: (value, key) => {
+        return key.length * 2 + 64;
+    },
+
+    ttl: LRU_TIME_TO_LIVE,
+    updateAgeOnGet: true,
+});
+
+const template_lru_cache = new LRUCache({
+    max: LRU_TEMPLATE_MAX,
+
+    maxSize: LRU_TEMPLATE_MAX_SIZE,
+
+    sizeCalculation: (value, key) => {
+        return (key.length * 2) + Buffer.byteLength(value, 'utf8');
+    },
+
+    ttl: LRU_TEMPLATE_TIME_TO_LIVE,
+    updateAgeOnGet: true,
 });
 
 let redisClient = null;
@@ -78,11 +106,11 @@ export const cacheManager = {
                 // 运行时单次偶发报错，不打印任何日志，直接静默降级走本地 LRU
             }
         }
-        return localCache.get(key);
+        return image_lru_cache.get(key);
     },
 
     async set(key, value) {
-        localCache.set(key, value);
+        image_lru_cache.set(key, value);
 
         if (useRedis && redisClient?.isOpen) {
             try {
@@ -93,8 +121,8 @@ export const cacheManager = {
         }
     },
 
-    async del(key) {
-        localCache.delete(key);
+    async delete(key) {
+        image_lru_cache.delete(key);
         if (useRedis && redisClient?.isOpen) {
             try {
                 await redisClient.del(key);
@@ -104,3 +132,18 @@ export const cacheManager = {
         }
     }
 };
+
+// 模板直接 LRU
+export const templateManager = {
+    get(key) {
+        return template_lru_cache.get(key);
+    },
+
+    set(key, value) {
+        template_lru_cache.set(key, value);
+    },
+
+    delete(key) {
+        template_lru_cache.delete(key)
+    }
+}

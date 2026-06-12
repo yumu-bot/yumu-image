@@ -20,7 +20,7 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import sharp from "sharp";
 import { LRUCache } from "lru-cache";
-import {cacheManager} from "./cacheManager.js";
+import {cacheManager, templateManager} from "./cacheManager.js";
 
 const execAsync = promisify(exec);
 
@@ -571,11 +571,15 @@ export async function isPicturePng(path = '') {
     }
 }
 
-// 缓存文件读取结果
-// 只存小文件 (40 KB)
-async function readFileWithCache(filePath, options = 'binary') {
+/**
+ * 优化读取模板的方法：存入缓存，读写更高效
+ * @param path
+ * @param options
+ * @return {*|string}
+ */
+export function readTemplate(filePath, options = 'binary') {
 
-    const cached = await cacheManager.get(filePath);
+    const cached = templateManager.get(filePath);
     if (cached) {
         return cached;
     }
@@ -588,22 +592,12 @@ async function readFileWithCache(filePath, options = 'binary') {
     }
 
     try {
-        await cacheManager.set(filePath, content);
+        templateManager.set(filePath, content);
     } catch (e) {
         console.log(`保存缓存文件出现错误: ${e}`)
     }
 
     return content;
-}
-
-/**
- * 优化读取模板的方法：存入缓存，读写更高效
- * @param path
- * @param options
- * @return {*|string}
- */
-export function readTemplate(path = '', options = 'utf8') {
-    return readFile(path, options);
 }
 
 /**
