@@ -603,7 +603,7 @@ async function readFileWithCache(filePath, options = 'binary') {
  * @return {*|string}
  */
 export function readTemplate(path = '', options = 'utf8') {
-    return readFileWithCache(path, options);
+    return readFile(path, options);
 }
 
 /**
