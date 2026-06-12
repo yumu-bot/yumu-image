@@ -1,12 +1,9 @@
 import path from "path";
-import {accessAsync, OSU_BUFFER_PATH, OSU_FILE_PROXY} from "./util.js";
+import {accessAsync, OSU_BUFFER_PATH, PROXY_AGENT} from "./util.js";
 import fs from "fs";
 import axios from "axios";
 import readline from "readline";
 import {controlPointsToPath, parseControlPoints} from "./sliderPath.js";
-import { HttpsProxyAgent } from 'https-proxy-agent';
-
-const proxyAgent = OSU_FILE_PROXY ? new HttpsProxyAgent('http://127.0.0.1:7890') : null;
 
 export async function getBeatmapFilePath(beatmap_id) {
 
@@ -23,8 +20,8 @@ export async function getBeatmapFilePath(beatmap_id) {
 
             // 暂时不用代理——太脏了
             proxy: false,
-            httpsAgent: proxyAgent,
-            httpAgent: proxyAgent
+            httpsAgent: PROXY_AGENT,
+            httpAgent: PROXY_AGENT
         });
 
     const file = req.data;

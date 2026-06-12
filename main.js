@@ -161,10 +161,12 @@ async function initPanels() {
 function adaptHandler(originalRouter) {
     return async (payload) => {
         return new Promise(async (resolve, reject) => {
-            // 设置超时熔断器（例如 30 秒）
             const timer = setTimeout(() => {
                 reject(new Error("渲染任务超时未响应，强制熔断释放内存"));
             }, 30000);
+
+            let isErrorStatus = false;
+            let currentStatusCode = 200; // 记录当前的状态码
 
             const req = {
                 body: payload,
@@ -175,21 +177,38 @@ function adaptHandler(originalRouter) {
                 set: () => res,
                 setHeader: () => res,
                 status: (code) => {
-                    if (code >= 400) console.warn(`渲染状态码警报: ${code}`);
+                    currentStatusCode = code;
+                    if (code >= 400) {
+                        console.warn(`渲染状态码警报: ${code}`);
+                        isErrorStatus = true;
+                    }
                     return res;
                 },
-                // 成功返回数据时，必须清除定时器
                 send: (data) => {
                     clearTimeout(timer);
-                    resolve(data);
+                    if (isErrorStatus) {
+                        const errorMsg = typeof data === 'object' ? (data.message || data.error || JSON.stringify(data)) : String(data);
+                        reject(new Error(`[HTTP ${currentStatusCode}] ${errorMsg}`));
+                    } else {
+                        resolve(data);
+                    }
                 },
                 json: (data) => {
                     clearTimeout(timer);
-                    resolve(data);
+                    if (isErrorStatus) {
+                        const errorMsg = data.message || data.error || JSON.stringify(data);
+                        reject(new Error(`[HTTP ${currentStatusCode}] ${errorMsg}`));
+                    } else {
+                        resolve(data);
+                    }
                 },
                 end: () => {
                     clearTimeout(timer);
-                    resolve(null);
+                    if (isErrorStatus) {
+                        reject(new Error(`[HTTP ${currentStatusCode}] 异常结束且未返回具体数据`));
+                    } else {
+                        resolve(null);
+                    }
                 }
             };
 
@@ -245,13 +264,23 @@ async function start() {
 
         try {
             const handler = panelHandlers.get(msg.path);
-            const result = await handler(msg.payload);
+            if (!handler) throw new Error(`找不到对应的面板路由: ${msg.path}`);
 
-            // 合并 Buffer
+            let result = await handler(msg.payload);
+
+            if (!Buffer.isBuffer(result)) {
+                if (result && typeof result === 'object' && (result.error || result.status !== 'ok')) {
+                    throw new Error(result.error || result.message || JSON.stringify(result));
+                }
+                // 如果是正常的 JSON 响应，将其转换为 Buffer，防止 Buffer.concat 崩溃
+                result = Buffer.from(JSON.stringify(result || {}), 'utf-8');
+            }
+
+            // 合并 Buffer (如果是图片)
             const idBuffer = Buffer.from(msg.messageId, 'utf-8');
             const finalBuffer = Buffer.concat([idBuffer, result]);
 
-            // 检查缓冲区压力，如果压力太大则等待
+            // 检查缓冲区压力
             if (client.ws.bufferedAmount > 30 * 1024 * 1024) {
                 console.error(loggerTime("[WS] 缓冲区过载，丢弃该任务防止崩溃"));
             } else {

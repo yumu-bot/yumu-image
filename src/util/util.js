@@ -20,6 +20,7 @@ import {exec} from 'child_process';
 import {promisify} from 'util';
 import sharp from "sharp";
 import {cacheManager, templateManager} from "./cacheManager.js";
+import {HttpsProxyAgent} from "https-proxy-agent";
 
 const execAsync = promisify(exec);
 
@@ -40,7 +41,9 @@ export const SUPER_KEY = process.env.SUPER_KEY || "";
 export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || path_util.join(CACHE_PATH, "osufile");
 export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || path_util.join(CACHE_PATH, "buffer");
 
-export const OSU_FILE_PROXY = process.env.OSU_FILE_PROXY === 'true';
+export const OSU_PROXY = process.env.OSU_PROXY === 'true';
+export const PROXY_PORT = Number(process.env.PROXY_PORT) || 7890
+export const PROXY_AGENT = OSU_PROXY ? new HttpsProxyAgent(`http://127.0.0.1:${PROXY_PORT}`) : null;
 
 let FLAG_PATH
 
@@ -157,7 +160,7 @@ export function initPath() {
     axios.defaults.retryDelay = 2000;// 1000
     axios.defaults.proxy = {
         host: '127.0.0.1',
-        port: 7890,
+        port: PROXY_PORT,
         protocol: "http",
     }
     // axios 重试策略
@@ -1121,7 +1124,9 @@ export async function readNetImage(
     let req
 
     try {
-        req = await axios.get(path, { responseType: 'arraybuffer', timeout: 10000 });
+        req = await axios.get(path, {
+            responseType: 'arraybuffer', timeout: 10000,
+        });
     } catch (e) {
         console.error("网图：下载失败", e.message);
     }
