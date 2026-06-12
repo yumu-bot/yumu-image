@@ -1,7 +1,7 @@
 
-import {CACHE_PATH, getBrowserInstance, IMG_BUFFER_PATH, initPath, OSU_BUFFER_PATH} from "./src/util/util.js";
+import {CACHE_PATH, getBrowserInstance, IMG_BUFFER_PATH, initPath, loggerTime, OSU_BUFFER_PATH} from "./src/util/util.js";
 import puppeteer from "puppeteer";
-import {logger, WsClient} from "./src/util/websocket.js";
+import {WsClient} from "./src/util/websocket.js";
 import moment from "moment";
 
 initPath();
@@ -211,13 +211,13 @@ const MAX_QUEUE_SIZE = 10
 async function start() {
     // 每个进程都加载渲染器
     await initPanels();
-    console.log(logger(`进程 [${process.pid}] 渲染器就绪`));
+    console.log(loggerTime(`进程 [${process.pid}] 渲染器就绪`));
 
     // 每个进程都作为客户端连接 Kotlin
     const client = new WsClient(`ws://localhost:${port}/render-ws`);
 
     client.on('open', () => {
-        console.log(logger(`[WS] 进程 [${process.pid}] 已连接到 Kotlin 服务端`));
+        console.log(loggerTime(`[WS] 进程 [${process.pid}] 已连接到 Kotlin 服务端`));
         client.send({
             type: 'AUTH',
             pid: process.pid
@@ -253,7 +253,7 @@ async function start() {
 
             // 检查缓冲区压力，如果压力太大则等待
             if (client.ws.bufferedAmount > 30 * 1024 * 1024) {
-                console.error(logger("[WS] 缓冲区过载，丢弃该任务防止崩溃"));
+                console.error(loggerTime("[WS] 缓冲区过载，丢弃该任务防止崩溃"));
             } else {
                 client.ws.send(finalBuffer);
             }
@@ -268,7 +268,7 @@ async function start() {
 
     client.on('message', (data) => {
         if (taskQueue.length >= MAX_QUEUE_SIZE) {
-            console.warn(logger("[WS] 任务队列已满，拒绝接收新任务"));
+            console.warn(loggerTime("[WS] 任务队列已满，拒绝接收新任务"));
             return;
         }
 

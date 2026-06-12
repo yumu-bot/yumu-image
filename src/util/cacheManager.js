@@ -1,5 +1,6 @@
 import { createClient } from "redis";
 import { LRUCache } from "lru-cache";
+import {loggerTime} from "./util.js";
 
 // 10 万条，最大 19.2 MB，存活 7 天
 export const LRU_MAX = Number(process.env.LRU_MAX) || 100000;
@@ -46,7 +47,7 @@ let lastLogStatus = null; // 用于防止重复打印相同日志的标记位
 // 封装一个安静的日志工具，相同状态只打印一次
 function logOnce(status, type, message) {
     if (lastLogStatus !== status) {
-        console[type](message);
+        console[type](loggerTime(message));
         lastLogStatus = status;
     }
 }

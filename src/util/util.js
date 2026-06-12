@@ -16,10 +16,9 @@ import {PanelDraw} from "./panelDraw.js";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import {EventEmitter} from 'events';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import {exec} from 'child_process';
+import {promisify} from 'util';
 import sharp from "sharp";
-import { LRUCache } from "lru-cache";
 import {cacheManager, templateManager} from "./cacheManager.js";
 
 const execAsync = promisify(exec);
@@ -617,12 +616,12 @@ export function readFile(path = '', options = 'binary') {
 /**
  * 获取来自 v3 的图片流
  * @param paths
- * @return {string} Base64 图片流
+ * @return {string} Buffer 图片流
  */
-export async function readBase64FromV3(...paths) {
-    const gi = path_util.join(EXPORT_FILE_V3, ...paths)
+export function readBufferFromV3(...paths) {
+    const gi = path_util.join(EXPORT_FILE_V3, ...paths).trim()
 
-    return binary2Base64Text(readFile(gi, 'binary'));
+    return binary2Base64Text(readFile(gi, 'binary'))
 }
 
 /**
@@ -3015,3 +3014,10 @@ export function getLanguage(language_id = 0) {
     };
     return languages[language_id] || "unspecified"
 }
+
+export const loggerTime = (message) => {
+    const timestamp = moment().format('YYYY-MM-DD HH:mm:ss.SSS'); // 包含毫秒
+    const pid = process.pid; // 获取当前进程 ID
+
+    return `[${timestamp}] [P${pid}] ${message}`
+};

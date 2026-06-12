@@ -1,6 +1,6 @@
-import { WebSocket } from 'ws';
-import { EventEmitter } from 'node:events';
-import moment from "moment";
+import {WebSocket} from 'ws';
+import {EventEmitter} from 'node:events';
+import {loggerTime} from "./util.js";
 
 export class WsClient extends EventEmitter {
     constructor(url) {
@@ -18,7 +18,7 @@ export class WsClient extends EventEmitter {
         this.cleanup();
         this.isReconnecting = false;
 
-        console.log(logger(`[WS] 尝试连接: ${this.url}`));
+        console.log(loggerTime(`[WS] 尝试连接: ${this.url}`));
         this.ws = new WebSocket(this.url, {
             maxPayload: 30 * 1024 * 1024
         });
@@ -26,14 +26,14 @@ export class WsClient extends EventEmitter {
         // 设置一个握手超时，防止连接挂死在 CONNECTING 状态
         const handshakeTimeout = setTimeout(() => {
             if (this.ws && this.ws.readyState !== WebSocket.OPEN) {
-                console.error(logger("[WS] 握手超时，强制关闭"));
+                console.error(loggerTime("[WS] 握手超时，强制关闭"));
                 this.ws.terminate();
             }
         }, 10000);
 
         this.ws.on('open', () => {
             clearTimeout(handshakeTimeout);
-            console.log(logger("[WS] 连接成功"));
+            console.log(loggerTime("[WS] 连接成功"));
             this.startHeartbeat(); // 开启心跳
             this.emit('open');
         });
@@ -43,12 +43,12 @@ export class WsClient extends EventEmitter {
         });
 
         this.ws.on('error', (err) => {
-            console.error(logger("[WS] 连接报错:"), err.message);
+            console.error(loggerTime("[WS] 连接报错:"), err.message);
             // 报错后通常会触发 close，统一在 close 处理重连
         });
 
         this.ws.on('close', (code, reason) => {
-            console.warn(logger(`[WS] 连接关闭 (${code}): ${reason ?? '无原因'}`));
+            console.warn(loggerTime(`[WS] 连接关闭 (${code}): ${reason ?? '无原因'}`));
             this.scheduleReconnect();
         });
 
@@ -80,7 +80,7 @@ export class WsClient extends EventEmitter {
         this.stopHeartbeat();
         this.cleanup();
 
-        console.log(logger("[WS] 5秒后尝试重连..."));
+        console.log(loggerTime("[WS] 5秒后尝试重连..."));
         if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
         this.reconnectTimer = setTimeout(() => {
             this.connect();
@@ -100,7 +100,7 @@ export class WsClient extends EventEmitter {
         if (this.ws?.readyState === WebSocket.OPEN) {
 
             if (this.ws.bufferedAmount > 20 * 1024 * 1024) {
-                console.error(logger("[WS] 发送缓冲区过载，主动断开防止 OOM"));
+                console.error(loggerTime("[WS] 发送缓冲区过载，主动断开防止 OOM"));
                 this.ws.terminate();
                 return;
             }
@@ -109,9 +109,3 @@ export class WsClient extends EventEmitter {
     }
 }
 
-export const logger = (message) => {
-    const timestamp = moment().format('YYYY-MM-DD HH:mm:ss.SSS'); // 包含毫秒
-    const pid = process.pid; // 获取当前进程 ID
-
-    return `[${timestamp}] [P${pid}] ${message}`
-};

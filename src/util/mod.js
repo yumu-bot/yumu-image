@@ -342,7 +342,11 @@ function getLazerModPath(mod = {
 
     const hsl = hex2hsl(mod_color)
 
+    // 增强显示
     const is_dark = hsl.l <= 0.3
+    const is_gray = !is_dark && hsl.l <= 0.6
+
+    let stroke_mod_name = ''
 
     let line_color;
     let background_color;
@@ -377,9 +381,17 @@ function getLazerModPath(mod = {
 
     if (allow_expanded && has_settings) {
         def_mod_name = getMaskFromPath(getLazerModAdditionalPath(getLazerModAdditional(mod), "#fff", scale), `mask-M-Name-${index}`)
+
+        if (is_gray) {
+            stroke_mod_name = getLazerModAdditionalPath(getLazerModAdditional(mod), "#fff", scale, 2)
+        }
     } else if (allow_name) {
         def_mod_name = getMaskFromPath(getLazerModNamePath(mod_name, "#fff", scale),
             `mask-M-Name-${index}`)
+
+        if (is_gray) {
+            stroke_mod_name = getLazerModNamePath(mod_name, "#fff", scale, 2)
+        }
     } else {
         def_mod_name = ''
         show_extender = false
@@ -422,6 +434,7 @@ function getLazerModPath(mod = {
         + def_mod_extender
         + `</defs>`
         + `<g id="Extender_M_${index}" mask="url(#mask-M-Extender-${index})">` + (show_extender ? color_mod_extender : '') + '</g>'
+        + `<g id="Stroke_M_${index}">` + (show_extender ? stroke_mod_name : '') + '</g>'
         + `<g id="Name_M_${index}" mask="url(#mask-M-Name-${index})">` + (show_extender ? color_mod_name : '') + '</g>'
         + `<g id="Base_M_${index}" mask="url(#mask-M-Base-${index})">` + color_mod_base + '</g>'
         + `<g id="Icon_M_${index}" mask="url(#mask-M-Icon-${index})">` + color_icon + '</g>'
@@ -450,15 +463,15 @@ function getLazerModPath(mod = {
     function getLazerModAdditionalPath(additional = {
         large: '',
         small: '',
-    }, color = '#fff', scale = 1) {
+    }, color = '#fff', scale = 1, offset = 0) {
         return torusBold.get2SizeTextPath(
             additional.large, additional.small,
-            48 * scale, 30 * scale, 176 * scale, 66 * scale, 'center baseline', color)
+            48 * scale, 30 * scale, (176 + offset) * scale, (66 + offset) * scale, 'center baseline', color)
     }
 
-    function getLazerModNamePath(name = 'NM', color = '#fff', scale = 1) {
+    function getLazerModNamePath(name = 'NM', color = '#fff', scale = 1, offset = 0) {
         return torusBold.getTextPath(
-            name, 176 * scale, 66 * scale, 48 * scale, 'center baseline', color)
+            name, (176 + offset) * scale, (66 + offset) * scale, 48 * scale, 'center baseline', color)
     }
 }
 

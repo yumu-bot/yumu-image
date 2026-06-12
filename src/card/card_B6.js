@@ -148,10 +148,10 @@ export function card_B6(data = {
 
     let icon
 
-    if (data.icon != null && data.icon?.toString()?.startsWith('data:image')) {
-        icon = getImage(icon_x + 10, 30, 60, 60, data.icon)
-    } else {
+    if (data.icon?.toString()?.startsWith('<svg')) {
         icon = getSvg(getBody(data.icon), icon_x + 10, 30, 60, 60, '#fff', 640, 640)
+    } else {
+        icon = getImage(icon_x + 10, 30, 60, 60, data.icon)
     }
 
     const icon_base =
