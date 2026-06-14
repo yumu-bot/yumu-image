@@ -768,7 +768,7 @@ export async function getDiffBackground(score = {}, must_full = false) {
         if (e.response?.status != undefined) {
             console.warn("本地背景服务超时", e.message);
         } else if (e.response?.status !== 404) {
-            console.warn("本地背景服务异常", e.message);
+            console.warn("本地背景服务异常", e.response?.status, e);
         }
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
