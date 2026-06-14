@@ -765,8 +765,10 @@ export async function getDiffBackground(score = {}, must_full = false) {
             return path
         }
     } catch (e) {
-        if (e.response?.status !== 404) {
-            console.error("本地背景服务异常", e.message);
+        if (e.response?.status != undefined) {
+            console.warn("本地背景服务超时", e.message);
+        } else if (e.response?.status !== 404) {
+            console.warn("本地背景服务异常", e.message);
         }
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
@@ -803,7 +805,7 @@ export async function getBackgroundFromDatabase(bid, sid) {
             "SET_ID": sid,
             "AuthorizationX": SUPER_KEY,
         },
-        timeout: 500,
+        timeout: 1500,
         __no_wait: true,
     });
 }
