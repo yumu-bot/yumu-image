@@ -1,5 +1,5 @@
 import path from "path";
-import {accessAsync, OSU_BUFFER_PATH, PROXY_AGENT} from "./util.js";
+import {accessAsync, getProxyAgent, OSU_BUFFER_PATH} from "./util.js";
 import fs from "fs";
 import axios from "axios";
 import readline from "readline";
@@ -18,10 +18,8 @@ export async function getBeatmapFilePath(beatmap_id) {
             responseType: 'arraybuffer',
             timeout: 10000,
 
-            // 暂时不用代理——太脏了
-            proxy: false,
-            httpsAgent: PROXY_AGENT,
-            httpAgent: PROXY_AGENT
+            httpsAgent: getProxyAgent(),
+            httpAgent: getProxyAgent()
         });
 
     const file = req.data;

@@ -41,9 +41,22 @@ export const SUPER_KEY = process.env.SUPER_KEY || "";
 export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || path_util.join(CACHE_PATH, "osufile");
 export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || path_util.join(CACHE_PATH, "buffer");
 
-export const OSU_PROXY = process.env.OSU_PROXY === 'true';
+export const USE_PROXY = process.env.USE_PROXY === 'true';
 export const PROXY_PORT = Number(process.env.PROXY_PORT) || 7890
-export const PROXY_AGENT = OSU_PROXY ? new HttpsProxyAgent(`http://127.0.0.1:${PROXY_PORT}`) : null;
+
+let cachedAgent = undefined;
+
+export function getProxyAgent() {
+    if (!USE_PROXY) {
+        return undefined;
+    }
+
+    if (!cachedAgent) {
+        cachedAgent = new HttpsProxyAgent(`http://127.0.0.1:${PROXY_PORT}`);
+    }
+
+    return cachedAgent;
+}
 
 let FLAG_PATH
 
@@ -155,14 +168,21 @@ async function isBrowserResponsive(browser) {
 EventEmitter.defaultMaxListeners = 50;
 
 export function initPath() {
-    axios.defaults.timeout = 4000;// 2000
+    // axios.defaults.proxy = {
+    //     host: '127.0.0.1',
+    //     port: PROXY_PORT,
+    //     protocol: "http",
+    // }
+
+    axios.defaults.timeout = 4000;
     axios.defaults.retry = 5;
-    axios.defaults.retryDelay = 2000;// 1000
-    axios.defaults.proxy = {
-        host: '127.0.0.1',
-        port: PROXY_PORT,
-        protocol: "http",
+    axios.defaults.retryDelay = 2000;
+
+    if (typeof USE_PROXY !== 'undefined' && USE_PROXY) {
+        axios.defaults.httpAgent = getProxyAgent();
+        axios.defaults.httpsAgent = getProxyAgent();
     }
+
     // axios 重试策略
     axios.interceptors.response.use((response) => response, (error) => {
         const {config, response} = error;
@@ -1126,6 +1146,9 @@ export async function readNetImage(
     try {
         req = await axios.get(path, {
             responseType: 'arraybuffer', timeout: 10000,
+
+            httpsAgent: getProxyAgent(),
+            httpAgent: getProxyAgent()
         });
     } catch (e) {
         console.error("网图：下载失败", e.message);
