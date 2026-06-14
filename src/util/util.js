@@ -791,6 +791,8 @@ export async function getDiffBackground(score = {}, must_full = false) {
         const res = await getBackgroundFromDatabase(bid, sid);
         path = res.data;
 
+        console.log(res)
+
         if (cacheManager.get(path)) {
             return path
         }
