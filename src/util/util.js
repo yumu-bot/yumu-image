@@ -3,6 +3,7 @@ import os from "os";
 import crypto from 'crypto';
 import axios, {AxiosError} from "axios";
 import https from "https";
+import * as http from "node:http";
 import path from "path";
 import moment from "moment";
 import {cutStringTail, getTextPath, PuHuiTi, torus} from "./font.js";
@@ -45,8 +46,10 @@ export const USE_PROXY = process.env.USE_PROXY === 'true';
 export const OSUFILE_NO_PROXY = process.env.OSUFILE_NO_PROXY === 'true';
 export const PROXY_PORT = Number(process.env.PROXY_PORT) || 7890
 
+const directHttpsAgent = new https.Agent({ keepAlive: true });
+const directHttpAgent = new http.Agent({ keepAlive: true });
 
-
+let cachedDirectAgent = undefined
 let cachedAgent = undefined;
 
 export function getProxyAgent() {
@@ -60,6 +63,33 @@ export function getProxyAgent() {
 
     return cachedAgent;
 }
+
+/**
+ * 获取 agent
+ * @param protocol 协议
+ * @param forceNoProxy 是否一定要直连，默认为真
+ * @return {module:node:https.Agent|module:node:http.Agent|*}
+ */
+export function getAgent(protocol = 'https', forceNoProxy = true) {
+    const isHttps = protocol.toLowerCase() === 'https';
+
+    // 情况 A：明确要求直连，或者全局配置了关闭代理
+    if (forceNoProxy || typeof USE_PROXY === 'undefined' || !USE_PROXY) {
+        return isHttps ? directHttpsAgent : directHttpAgent;
+    }
+
+    return getProxyAgent()
+}
+
+const localAxios = axios.create({
+    responseType: 'arraybuffer',
+    timeout: 10000,
+
+    proxy: false,
+    httpsAgent: getAgent('https'),
+    httpAgent: getAgent('http')
+
+});
 
 let FLAG_PATH
 
@@ -765,7 +795,7 @@ export async function getDiffBackground(score = {}, must_full = false) {
             return path
         }
     } catch (e) {
-        if (e.response?.status != undefined) {
+        if (e.response?.status == undefined) {
             console.warn("本地背景服务超时", e.message);
         } else if (e.response?.status !== 404) {
             console.warn("本地背景服务异常", e.response?.status, e);
@@ -799,13 +829,12 @@ export async function getDiffBackground(score = {}, must_full = false) {
  * @return Promise<string>
  */
 export async function getBackgroundFromDatabase(bid, sid) {
-    return await axios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
-        proxy: {},
+    return await localAxios.get(`http://127.0.0.1:47150/api/file/local/bg/${bid}`, {
         headers: {
             "SET_ID": sid,
             "AuthorizationX": SUPER_KEY,
         },
-        timeout: 1500,
+        timeout: 500,
         __no_wait: true,
     });
 }
@@ -814,8 +843,7 @@ export async function getBackgroundFromDatabase(bid, sid) {
  * 向服务器提交异步任务
  */
 export function asyncBeatMapFromDatabase(bid, sid) {
-    axios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
-        proxy: {},
+    localAxios.get(`http://127.0.0.1:47150/api/file/local/async/${bid}`, {
         headers: {
             "SET_ID": sid,
             "AuthorizationX": SUPER_KEY,
