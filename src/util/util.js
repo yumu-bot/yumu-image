@@ -42,6 +42,7 @@ export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || path_util.join(CACHE
 export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || path_util.join(CACHE_PATH, "buffer");
 
 export const USE_PROXY = process.env.USE_PROXY === 'true';
+export const OSUFILE_NO_PROXY = process.env.OSUFILE_NO_PROXY === 'true';
 export const PROXY_PORT = Number(process.env.PROXY_PORT) || 7890
 
 let cachedAgent = undefined;
