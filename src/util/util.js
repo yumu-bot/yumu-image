@@ -793,7 +793,7 @@ export async function getDiffBackground(score = {}, must_full = false) {
         const textData = Buffer.from(res.data).toString('utf8');
 
         if (textData.includes('"code":404') || textData.includes('Not Found')) {
-            return await getMapBackground(bid, sid);
+            return await getMapBackground(score, cover_type);
         }
         path = res.data;
 
