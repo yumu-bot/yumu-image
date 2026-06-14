@@ -1145,11 +1145,13 @@ export async function readNetImage(
     let req
 
     try {
+        const agent = getProxyAgent()
         req = await axios.get(path, {
             responseType: 'arraybuffer', timeout: 10000,
 
-            httpsAgent: getProxyAgent(),
-            httpAgent: getProxyAgent()
+            proxy: (agent != null) ? false : undefined,
+            httpsAgent: agent,
+            httpAgent: agent
         });
     } catch (e) {
         console.error("网图：下载失败", e.message);

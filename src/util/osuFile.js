@@ -18,6 +18,7 @@ export async function getBeatmapFilePath(beatmap_id) {
             responseType: 'arraybuffer',
             timeout: 10000,
 
+            proxy: OSUFILE_NO_PROXY ? false : undefined,
             httpsAgent: OSUFILE_NO_PROXY ? undefined : getProxyAgent(),
             httpAgent: OSUFILE_NO_PROXY ? undefined : getProxyAgent()
         });
