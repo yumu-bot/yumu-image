@@ -789,13 +789,13 @@ export async function getDiffBackground(score = {}, must_full = false) {
 
     try {
         const res = await getBackgroundFromDatabase(bid, sid);
-        path = res.data;
 
-        const textData = Buffer.from(req.data).toString('utf8');
+        const textData = Buffer.from(res.data).toString('utf8');
 
         if (textData.includes('"code":404') || textData.includes('Not Found')) {
             return await getMapBackground(bid, sid);
         }
+        path = res.data;
 
         if (cacheManager.get(path)) {
             return path
