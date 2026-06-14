@@ -4,6 +4,21 @@ import fs from "fs";
 import axios from "axios";
 import readline from "readline";
 import {controlPointsToPath, parseControlPoints} from "./sliderPath.js";
+import https from "https";
+import * as http from "node:http";
+
+const directHttpsAgent = new https.Agent({ keepAlive: true });
+const directHttpAgent = new http.Agent({ keepAlive: true });
+
+const downloadAxios = axios.create({
+    responseType: 'arraybuffer',
+    timeout: 10000,
+
+    proxy: false,
+    httpsAgent: OSUFILE_NO_PROXY ? directHttpsAgent : getProxyAgent(),
+    httpAgent: OSUFILE_NO_PROXY ? directHttpAgent : getProxyAgent()
+
+});
 
 export async function getBeatmapFilePath(beatmap_id) {
 
@@ -14,14 +29,7 @@ export async function getBeatmapFilePath(beatmap_id) {
     }
 
     const req =
-        await axios.get(`https://osu.ppy.sh/osu/${beatmap_id}`, {
-            responseType: 'arraybuffer',
-            timeout: 10000,
-
-            proxy: false,
-            httpsAgent: OSUFILE_NO_PROXY ? undefined : getProxyAgent(),
-            httpAgent: OSUFILE_NO_PROXY ? undefined : getProxyAgent()
-        });
+        await downloadAxios.get(`https://osu.ppy.sh/osu/${beatmap_id}`);
 
     const file = req.data;
 

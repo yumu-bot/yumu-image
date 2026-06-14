@@ -43,8 +43,11 @@ export class WsClient extends EventEmitter {
         });
 
         this.ws.on('error', (err) => {
-            console.error(loggerTime("[WS] 连接报错:"), err.message);
-            // 报错后通常会触发 close，统一在 close 处理重连
+            const error_msg = err?.message || (err ? String(err) : '');
+
+            if (error_msg.trim().length > 0) {
+                console.error(loggerTime("[WS] 连接报错:"), error_msg);
+            }
         });
 
         this.ws.on('close', (code, reason) => {
