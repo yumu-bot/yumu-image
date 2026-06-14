@@ -541,9 +541,9 @@ export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '
     }
 }
 
-export async function accessAsync(path) {
+export async function accessAsync(local_path) {
     try {
-        await fs.promises.access(path, fsConstants.F_OK);
+        await fs.promises.access(local_path, fsConstants.F_OK);
         return true;
     } catch (e) {
         return false;
@@ -746,47 +746,47 @@ export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'li
  * @returns {Promise<string>}
  */
 export async function getDiffBackground(score = {}, must_full = false) {
-    let path;
-    const default_image_path = getImageFromV3('card-default.png')
+    let path = undefined;
+    const default_image_path = getImageFromV3('card-default.png'); // 应该作为最后的兜底
 
-    const bid = score?.beatmap?.id
-    const sid = score?.beatmapset?.id
+    const bid = score?.beatmap?.id;
+    const sid = score?.beatmapset?.id;
+    const cover_type = must_full ? 'fullsize' : 'cover';
 
-    let cover_type
-
-    if (!must_full) {
-        cover_type = 'cover'
-    } else {
-        cover_type = 'fullsize'
-    }
+    let has_local_bg = false;
 
     try {
-        // data 为背景文件在文件系统中的绝对路径字符串 不是文件本身
-
         const res = await getBackgroundFromDatabase(bid, sid);
         path = res.data;
-    } catch (e) {
-        if (e instanceof AxiosError) {
-            console.error("本地背景读取超时");
-        } else {
-            console.error("本地背景读取失败", e);
-        }
 
-        path = await getMapBackground(score, cover_type);
+        if (cacheManager.get(path)) {
+            return path
+        }
+    } catch (e) {
+        if (e.response?.status !== 404) {
+            console.error("本地背景服务异常", e.message);
+        }
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
     }
 
-    if (await accessAsync(path)) {
+    // 如果本地有，直接返回
+    if (path && await accessAsync(path)) {
+        cacheManager.set(path, true);
         return path;
-    } else {
-        const is_dmca = score?.beatmapset?.availability?.more_information != null
+    }
 
+    // 本地没有（404 或文件不存在），只调用一次远程下载/获取
+    try {
+        const is_dmca = score?.beatmapset?.availability?.more_information != null;
         if (is_dmca === false) {
             deleteBeatMapFromDatabase(bid);
         }
 
-        return await getMapBackground(score, cover_type);
+        path = await getMapBackground(score, cover_type);
+        return path || default_image_path; // 如果线上也拿不到，返回默认图
+    } catch (error) {
+        return default_image_path;
     }
 }
 
