@@ -791,7 +791,11 @@ export async function getDiffBackground(score = {}, must_full = false) {
         const res = await getBackgroundFromDatabase(bid, sid);
         path = res.data;
 
-        console.log(res)
+        const textData = Buffer.from(req.data).toString('utf8');
+
+        if (textData.includes('"code":404') || textData.includes('Not Found')) {
+            return await getMapBackground(bid, sid);
+        }
 
         if (cacheManager.get(path)) {
             return path
@@ -800,7 +804,7 @@ export async function getDiffBackground(score = {}, must_full = false) {
         if (e.response?.status == undefined) {
             console.warn("本地背景服务超时", e.message);
         } else if (e.response?.status !== 404) {
-            console.warn("本地背景服务异常", e.response?.status, e);
+            console.warn("本地背景服务异常", e.response?.status, e.message);
         }
     } finally {
         asyncBeatMapFromDatabase(bid, sid);
