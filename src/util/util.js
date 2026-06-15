@@ -659,7 +659,7 @@ export function readFile(path = '', options = 'binary') {
 export function readBinaryFromV3Cache(...paths) {
     const file_path = path_util.join(EXPORT_FILE_V3, ...paths).trim()
 
-    return templateManager.fetch(file_path, (file_path) => readFile(file_path, 'binary'))
+    return templateManager.fetch(file_path, () => readFile(file_path, 'binary'))
 }
 
 export function readBinaryFromV3(...paths) {
