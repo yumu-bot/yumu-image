@@ -183,89 +183,40 @@ export function getMaimaiType(type = '') {
 }
 
 export function getMaimaiVersionBG(version = '') {
-    let v
+    const versionMap = new Map([
+        ["maimai", 'object-version-maimai.png'],
+        ["maimai PLUS", 'object-version-maimai-plus.png'],
+        ["maimai GreeN", 'object-version-maimai-green.png'],
+        ["maimai GreeN PLUS", 'object-version-maimai-green-plus.png'],
+        ["maimai ORANGE", 'object-version-maimai-orange.png'],
+        ["maimai ORANGE PLUS", 'object-version-maimai-orange-plus.png'],
+        ["maimai PiNK", 'object-version-maimai-pink.png'],
+        ["maimai PiNK PLUS", 'object-version-maimai-pink-plus.png'],
+        ["maimai MURASAKi", 'object-version-maimai-murasaki.png'],
+        ["maimai MURASAKi PLUS", 'object-version-maimai-murasaki-plus.png'],
+        ["maimai MiLK", 'object-version-maimai-milk.png'],
+        ["maimai MiLK PLUS", 'object-version-maimai-milk-plus.png'],
+        ["MiLK PLUS", 'object-version-maimai-milk-plus.png'],
+        ["maimai FiNALE", 'object-version-maimai-finale.png'],
+        ["maimai でらっくす", 'object-version-maimai-dx.png'],
+        ["maimai でらっくす PLUS", 'object-version-maimai-dx-plus.png'],
+        ["maimai でらっくす Splash", 'object-version-maimai-dx-splash.png'],
+        ["maimai でらっくす Splash PLUS", 'object-version-maimai-dx-splash-plus.png'],
+        ["maimai でらっくす UNiVERSE", 'object-version-maimai-dx-universe.png'],
+        ["maimai でらっくす UNiVERSE PLUS", 'object-version-maimai-dx-universe-plus.png'],
+        ["maimai でらっくす FESTiVAL", 'object-version-maimai-dx-festival.png'],
+        ["maimai でらっくす FESTiVAL PLUS", 'object-version-maimai-dx-festival-plus.png'],
+        ["maimai でらっくす BUDDiES", 'object-version-maimai-dx-buddies.png'],
+        ["maimai でらっくす BUDDiES PLUS", 'object-version-maimai-dx-buddies-plus.png'],
+        ["maimai でらっくす PRiSM", 'object-version-maimai-dx-prism.png'],
+        ["maimai でらっくす PRiSM PLUS", 'object-version-maimai-dx-prism-plus.png'],
+        ["maimai でらっくす CiRCLE", 'object-version-maimai-dx-circle.png'],
+        ["maimai でらっくす CiRCLE PLUS", 'object-version-maimai-dx-circle-plus.png'],
+    ]);
 
-    switch (version) {
-        case "maimai":
-            v = 'object-version-maimai.png';
-            break;
-        case "maimai PLUS":
-            v = 'object-version-maimai-plus.png';
-            break;
-        case "maimai GreeN":
-            v = 'object-version-maimai-green.png';
-            break;
-        case "maimai GreeN PLUS":
-            v = 'object-version-maimai-green-plus.png';
-            break;
-        case "maimai ORANGE":
-            v = 'object-version-maimai-orange.png';
-            break;
-        case "maimai ORANGE PLUS":
-            v = 'object-version-maimai-orange-plus.png';
-            break;
-        case "maimai PiNK":
-            v = 'object-version-maimai-pink.png';
-            break;
-        case "maimai PiNK PLUS":
-            v = 'object-version-maimai-pink-plus.png';
-            break;
-        case "maimai MURASAKi":
-            v = 'object-version-maimai-murasaki.png';
-            break;
-        case "maimai MURASAKi PLUS":
-            v = 'object-version-maimai-murasaki-plus.png';
-            break;
-        case "maimai MiLK":
-            v = 'object-version-maimai-milk.png';
-            break;
-        case "maimai MiLK PLUS":
-        case "MiLK PLUS":
-            v = 'object-version-maimai-milk-plus.png';
-            break;
-        case "maimai FiNALE":
-            v = 'object-version-maimai-finale.png';
-            break;
-        case "maimai でらっくす":
-            v = 'object-version-maimai-dx.png';
-            break;
-        case "maimai でらっくす PLUS":
-            v = 'object-version-maimai-dx-plus.png';
-            break;
-        case "maimai でらっくす Splash":
-            v = 'object-version-maimai-dx-splash.png';
-            break;
-        case "maimai でらっくす Splash PLUS":
-            v = 'object-version-maimai-dx-splash-plus.png';
-            break;
-        case "maimai でらっくす UNiVERSE":
-            v = 'object-version-maimai-dx-universe.png';
-            break;
-        case "maimai でらっくす UNiVERSE PLUS":
-            v = 'object-version-maimai-dx-universe-plus.png';
-            break;
-        case "maimai でらっくす FESTiVAL":
-            v = 'object-version-maimai-dx-festival.png';
-            break;
-        case "maimai でらっくす FESTiVAL PLUS":
-            v = 'object-version-maimai-dx-festival-plus.png';
-            break;
-        case "maimai でらっくす BUDDiES":
-            v = 'object-version-maimai-dx-buddies.png';
-            break;
-        case "maimai でらっくす BUDDiES PLUS":
-            v = 'object-version-maimai-dx-buddies-plus.png';
-            break;
-        case "maimai でらっくす PRiSM":
-            v = 'object-version-maimai-dx-prism.png';
-            break;
-        case "maimai でらっくす PRiSM PLUS":
-            return ''
-            //v = 'object-version-maimai-dx-prism-plus.png';
-            //break;
-        default:
-            return ''
-    }
+    // 提取逻辑：
+    let v = versionMap.has(version) ? versionMap.get(version) : '';
+    if (v === '') return '';
 
     return getImageFromV3('Maimai', v)
 }

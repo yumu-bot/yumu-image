@@ -98,6 +98,7 @@ initCache().catch(err => {console.error(err)});
 
 // 3. 统一对外暴露的缓存管理对象
 export const cacheManager = {
+
     async get(key) {
         if (useRedis && redisClient?.isOpen) {
             try {
@@ -131,7 +132,23 @@ export const cacheManager = {
                 // 静默失败，不打日志
             }
         }
-    }
+    },
+
+    async fetch(key, fetchFn = () => { return null }) {
+        const cached = await cacheManager.get(key);
+
+        if (cached != null) {
+            return cached;
+        }
+
+        const fresh = await fetchFn();
+
+        if (fresh != null) {
+            await cacheManager.set(key, fresh);
+        }
+
+        return fresh;
+    },
 };
 
 // 模板直接 LRU
@@ -146,5 +163,21 @@ export const templateManager = {
 
     delete(key) {
         template_lru_cache.delete(key)
+    },
+
+    // 🚀 新增同步 fetch 方法
+    fetch(key, fetchFn = () => { return null }) {
+        const cached = templateManager.get(key);
+        if (cached != null) {
+            return cached;
+        }
+
+        const fresh = fetchFn();
+
+        if (fresh != null) {
+            templateManager.set(key, fresh);
+        }
+
+        return fresh;
     }
 }

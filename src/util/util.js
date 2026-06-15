@@ -632,27 +632,8 @@ export async function isPicturePng(path = '') {
  * @param options
  * @return {*|string}
  */
-export function readTemplate(filePath, options = 'binary') {
-
-    const cached = templateManager.get(filePath);
-    if (cached) {
-        return cached;
-    }
-
-    const content = readFile(filePath, options);
-
-    if (!content || content.length < 10) {
-        console.error(`[Worker ${process.pid}] 读取失败或内容过短: ${filePath}`);
-        return "";
-    }
-
-    try {
-        templateManager.set(filePath, content);
-    } catch (e) {
-        console.log(`保存缓存文件出现错误: ${e}`)
-    }
-
-    return content;
+export function readTemplate(file_path, options = 'binary') {
+    return templateManager.fetch(file_path, () => readFile(file_path, options))
 }
 
 /**
@@ -670,14 +651,21 @@ export function readFile(path = '', options = 'binary') {
 }
 
 /**
- * 获取来自 v3 的图片流
+ * 获取来自 v3 的图片流，会缓存
+ * 可以用于读取 svg 图片
  * @param paths
- * @return {string} Buffer 图片流
+ * @return {string} 二进制图片流
  */
-export function readBufferFromV3(...paths) {
-    const gi = path_util.join(EXPORT_FILE_V3, ...paths).trim()
+export function readBinaryFromV3Cache(...paths) {
+    const file_path = path_util.join(EXPORT_FILE_V3, ...paths).trim()
 
-    return binary2Base64Text(readFile(gi, 'binary'))
+    return templateManager.fetch(file_path, (file_path) => readFile(file_path, 'binary'))
+}
+
+export function readBinaryFromV3(...paths) {
+    const file_path = path_util.join(EXPORT_FILE_V3, ...paths).trim()
+
+    return readFile(file_path, 'binary')
 }
 
 /**
@@ -1169,40 +1157,40 @@ export async function readNetImage(
     const buffer_name = MD5.copy().update(path).digest('hex');
     const buffer_path = `${IMG_BUFFER_PATH}/${buffer_name}`;
 
-    const cache_path = await cacheManager.get(buffer_name)
+    if (use_cache === true) {
+        const cached = await cacheManager.fetch(buffer_name, async () => {
 
-    if (use_cache === true && cache_path != null) {
-        return buffer_path;
-    }
+            if (await accessAsync(buffer_path)) {
+                return buffer_path;
+            }
 
-    if (use_cache === true && await accessAsync(buffer_path)) {
-        await cacheManager.set(buffer_name, true)
-        return buffer_path;
-    }
+            let req;
+            try {
+                req = await axios.get(path, {
+                    responseType: 'arraybuffer',
+                    timeout: 10000,
+                    proxy: false,
+                    httpsAgent: getProxyAgent(),
+                    httpAgent: getProxyAgent()
+                });
+            } catch (e) {
+                console.error("网图：下载失败", e.message);
+            }
 
-    let req
+            if (req && req.status === 200 && req.data) {
+                const image_path = await saveNetImage(path, req.data, max_width, max_height);
+                return image_path;
+            }
 
-    try {
-        req = await axios.get(path, {
-            responseType: 'arraybuffer', timeout: 10000,
-
-            proxy: false,
-            httpsAgent: getProxyAgent(),
-            httpAgent: getProxyAgent()
+            return null;
         });
-    } catch (e) {
-        console.error("网图：下载失败", e.message);
+
+        if (cached) {
+            return cached;
+        }
     }
 
-    if (req && req.status === 200 && req.data) {
-        const image_path = await saveNetImage(path, req.data, max_width, max_height);
-
-        await cacheManager.set(buffer_name, true)
-
-        return image_path;
-    } else {
-        return loadDefault();
-    }
+    return loadDefault();
 }
 
 /**
