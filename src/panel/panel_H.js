@@ -1,37 +1,26 @@
 import {
-    exportJPEG, getKeyDifficulty, getGameMode, getPanelNameSVG,
+    getGameMode,
+    getKeyDifficulty,
+    getMapBackground,
+    getPanelNameSVG,
+    getSvgBody,
+    isNotEmptyArray,
+    readNetImage,
+    readTemplate,
     setImage,
-    setSvgBody, readTemplate,
-    setText, getSvgBody, readNetImage, getMapBackground, isNotEmptyArray, setTexts, thenPush
+    setSvgBody,
+    setText,
+    setTexts,
+    thenPush
 } from "../util/util.js";
 import {card_H} from "../card/card_H.js";
 import {card_A2} from "../card/card_A2.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_H(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_H(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_H);
+export const router_svg = createSvgRouter(panel_H);
 
 /**
  * 图池展示

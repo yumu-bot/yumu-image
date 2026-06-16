@@ -1,12 +1,18 @@
 import {
-    exportJPEG, getAvatar,
+    floor,
+    getAvatar,
+    getGenre,
     getImageFromV3,
+    getLanguage,
     getPanelNameSVG,
-    setImage,
-    setSvgBody, isEmptyArray, readNetImage,
+    getSvgBody,
+    isEmptyArray,
+    readNetImage,
     readTemplate,
+    setImage,
+    setSvgBody,
     setText,
-    setTexts, floor, getSvgBody, getGenre, getLanguage
+    setTexts
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -14,31 +20,11 @@ import {component_IM1} from "../component/component_IM1.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_N(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_N(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_N);
+
+export const router_svg = createSvgRouter(panel_N);
 
 export async function panel_N(
     data = {

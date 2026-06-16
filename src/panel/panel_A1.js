@@ -1,36 +1,19 @@
 import {
-    exportJPEG, getPanelHeight, getPanelNameSVG,
+    getPanelHeight,
+    getPanelNameSVG,
+    getSvgBody,
+    readTemplate,
+    renderInBatch,
+    setCustomBanner,
     setSvgBody,
-    readTemplate, setCustomBanner,
-    setText, getSvgBody, renderInBatch
+    setText
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A1(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A1(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_A1);
+export const router_svg = createSvgRouter(panel_A1);
 
 /**
  * 好友列表

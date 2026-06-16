@@ -1,9 +1,18 @@
 import {
-    exportJPEG, getImageFromV3,
+    ar2ms,
+    cs2px,
+    floors,
     getGameMode,
+    getImageFromV3,
+    getMapBackground,
+    getMatchDuration,
+    getNowTimeStamp,
     getPanelNameSVG,
+    od2ms,
+    readTemplate,
     setImage,
-    setSvgBody, readTemplate, setText, getMatchDuration, getNowTimeStamp, od2ms, ar2ms, cs2px, floors, getMapBackground,
+    setSvgBody,
+    setText,
 } from "../util/util.js";
 import {data2Label, stat2DataM} from "./panel_E.js";
 import {card_A2} from "../card/card_A2.js";
@@ -15,30 +24,10 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod, matchAnyMods} from "../util/mod.js";
 import {rankSS2X} from "../util/star.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E3(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E3(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_E3);
+export const router_svg = createSvgRouter(panel_E3);
 
 /**
  * 对局当前谱面

@@ -1,17 +1,19 @@
 import {
     ar2ms,
     cs2px,
-    exportJPEG,
+    floor,
+    floors,
+    getDiffBackground,
     getFormattedTime,
     getGameMode,
     getNowTimeStamp,
     getPanelNameSVG,
     getTimeDifference,
-    setImage,
-    setSvgBody,
     od2ms,
     readTemplate,
-    setText, floor, floors, getDiffBackground
+    setImage,
+    setSvgBody,
+    setText
 } from "../util/util.js";
 import moment from "moment";
 import {LABELS} from "../component/label.js";
@@ -24,30 +26,10 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
 import {getApproximateRank, getRankBackground} from "../util/star.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_E);
+export const router_svg = createSvgRouter(panel_E);
 
 /**
  * 成绩面板

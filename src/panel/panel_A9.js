@@ -1,16 +1,16 @@
 import {
-    exportJPEG,
-    getPanelNameSVG,
-    setSvgBody,
-    setText,
-    setCustomBanner,
-    getPanelHeight,
-    readNetImage,
-    setImage,
+    getImage,
     getImageFromV3,
-    isNotEmptyString,
+    getPanelHeight,
+    getPanelNameSVG,
     getSvgBody,
-    getImage, renderInBatch
+    isNotEmptyString,
+    readNetImage,
+    renderInBatch,
+    setCustomBanner,
+    setImage,
+    setSvgBody,
+    setText
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
@@ -18,31 +18,11 @@ import {card_A1} from "../card/card_A1.js";
 import {component_MD} from "../component/component_MD.js";
 import {torusBold} from "../util/font.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A9(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A9(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_A9);
+
+export const router_svg = createSvgRouter(panel_A9);
 
 /**
  * 战队信息

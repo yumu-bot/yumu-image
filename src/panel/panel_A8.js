@@ -1,7 +1,7 @@
 import {
-    exportJPEG,
     getPanelHeight,
-    getPanelNameSVG, getSvgBody,
+    getPanelNameSVG,
+    getSvgBody,
     readTemplate,
     setImage,
     setSvgBody,
@@ -13,30 +13,10 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_C3} from "../card/card_C3.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A8(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A8(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_A8);
+export const router_svg = createSvgRouter(panel_A8);
 
 /**
  * 成绩pr面板

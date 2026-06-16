@@ -1,11 +1,11 @@
 import {
-    exportJPEG,
     floor,
     getAvatar,
     getFormattedTime,
     getGameMode,
     getKeyDifficulty,
-    getMapBackground, getNowTimeStamp,
+    getMapBackground,
+    getNowTimeStamp,
     getPanelNameSVG,
     getSvgBody,
     readNetImage,
@@ -26,31 +26,11 @@ import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {getModColor, getStarRatingColor, PanelColor} from "../util/color.js";
 import {label_T} from "../component/label.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_T(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_T(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_T);
+
+export const router_svg = createSvgRouter(panel_T);
 
 /**
  * 流行谱面面板

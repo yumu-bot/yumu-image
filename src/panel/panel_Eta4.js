@@ -1,49 +1,32 @@
 import {
-    exportJPEG,
-    getNowTimeStamp,
-    getPanelNameSVG,
-    getTimeDifference,
-    setImage,
-    setText,
-    setTexts,
     floor,
+    floors,
+    getAvatar,
+    getDiffBackground,
+    getDifficultyIndex,
     getFormattedTime,
     getGameMode,
     getImageFromV3,
     getMapStatus,
-    floors,
-    getDifficultyIndex, isNotEmptyArray, getAvatar, getDiffBackground, rounds
+    getNowTimeStamp,
+    getPanelNameSVG,
+    getTimeDifference,
+    isNotEmptyArray,
+    rounds,
+    setImage,
+    setText,
+    setTexts
 } from "../util/util.js";
 import {poppinsBold, torusRegular} from "../util/font.js";
 import {getMapStatusColor} from "../util/color.js";
 import {drawLazerMods} from "../util/mod.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Eta4(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Eta4(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_Eta4);
+
+export const router_svg = createSvgRouter(panel_Eta4);
 
 /**
  * 千变万化成绩面板：4：Aloic

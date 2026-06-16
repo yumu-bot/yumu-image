@@ -1,46 +1,33 @@
 import {
-    exportJPEG,
+    floor,
     getImageFromV3,
-    getPanelNameSVG, setImage,
-    setSvgBody, isNotBlankString, isNotEmptyArray,
+    getPanelNameSVG,
+    isNotBlankString,
+    isNotEmptyArray,
     readTemplate,
-    setText, floor,
+    setImage,
+    setSvgBody,
+    setText,
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {
     getMaimaiCover,
+    getMaimaiDifficultyColor,
+    getMaimaiDXStarLevel,
+    getMaimaiPlate,
     getMaimaiRankBG,
-    getMaimaiType, getMaimaiDXStarLevel, getMaimaiDifficultyColor, getMaimaiRatingBG, getMaimaiPlate,
+    getMaimaiRatingBG,
+    getMaimaiType,
 } from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {card_I3} from "../card/card_I3.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MD(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MD(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_MD);
+
+export const router_svg = createSvgRouter(panel_MD);
 
 /**
  * maimai 歌曲成绩。

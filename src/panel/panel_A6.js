@@ -1,11 +1,11 @@
 import {
-    exportJPEG,
+    EXPORT_FILE_V3,
+    getNowTimeStamp,
     getPanelNameSVG,
+    readTemplate,
     setImage,
     setSvgBody,
-    readTemplate,
     setText,
-    getNowTimeStamp, EXPORT_FILE_V3,
 } from "../util/util.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {component_MD} from "../component/component_MD.js";
@@ -15,30 +15,10 @@ import path from "path";
 
 const path_util = path
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A6(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A6(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_A6);
+export const router_svg = createSvgRouter(panel_A6);
 
 /**
  * 帮助面板, 新版

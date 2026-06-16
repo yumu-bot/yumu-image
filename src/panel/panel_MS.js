@@ -1,52 +1,43 @@
 import {
-    exportJPEG,
+    floor,
+    floors,
+    getImage,
     getImageFromV3,
     getPanelNameSVG,
-    setImage,
-    setSvgBody,
+    getSvgBody,
+    isASCII,
     isNotEmptyArray,
     readTemplate,
+    setImage,
+    setSvgBody,
     setText,
-    setTexts, floors, thenPush, getSvgBody, isASCII, floor, getImage
+    setTexts,
+    thenPush
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getMaimaiBannerIndex, getRandomBannerPath} from "../util/mascotBanner.js";
 import {
-    getMaimaiCover, getMaimaiDifficultyName, getMaimaiDifficultyColors, getMaimaiMaximumRating,
+    getMaimaiCover,
+    getMaimaiDifficultyColors,
+    getMaimaiDifficultyName,
+    getMaimaiDXStarColor,
+    getMaimaiDXStarLevel,
+    getMaimaiMaximumRating,
     getMaimaiRankBG,
-    getMaimaiType, isMaimaiMaximumRating, getMaimaiDXStarLevel, getMaimaiDXStarColor,
+    getMaimaiType,
+    isMaimaiMaximumRating,
 } from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {poppinsBold, PuHuiTi} from "../util/font.js";
 import {card_MS} from "../card/card_MS.js";
 import {colorArray} from "../util/color.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MS(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MS(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_MS);
+
+export const router_svg = createSvgRouter(panel_MS);
 
 /**
  * maimai 歌曲成绩。

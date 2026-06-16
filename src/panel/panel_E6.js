@@ -1,24 +1,31 @@
 import {
     ar2ms,
     cs2px,
-    exportJPEG,
+    floor,
+    floors,
     getBeatMapTitlePath,
-    getKeyDifficulty, getDifficultyIndex,
+    getDiffBackground,
+    getDifficultyIndex,
     getFormattedTime,
     getGameMode,
     getImageFromV3,
+    getKeyDifficulty,
     getMapStatusImage,
     getNowTimeStamp,
-    getPanelNameSVG, getTimeDifference,
-    setImage,
-    setSvgBody, isEmptyArray,
+    getPanelNameSVG,
+    getSvgBody,
+    getTimeDifference,
+    isEmptyArray,
     isNotEmptyString,
     od2ms,
     readTemplate,
+    removeGuest,
+    round,
+    rounds,
+    setImage,
+    setSvgBody,
     setText,
-    setTexts,
-    floor,
-    floors, getDiffBackground, rounds, getSvgBody, removeGuest, round
+    setTexts
 } from "../util/util.js";
 import {getRankBackground} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
@@ -30,30 +37,10 @@ import {label_E5, LABELS} from "../component/label.js";
 import {drawLazerMods, matchAnyMods} from "../util/mod.js";
 
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E6(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E6(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_E6);
+export const router_svg = createSvgRouter(panel_E6);
 
 export async function panel_E6(data = {
     user: {},

@@ -1,8 +1,14 @@
 import {
-    exportJPEG, getImageFromV3, getGameMode, getPanelNameSVG,
+    getGameMode,
+    getImageFromV3,
+    getPanelNameSVG,
+    maximumArrayToFixedLength,
+    modifyArrayToFixedLength,
+    readTemplate,
     setImage,
-    setSvgBody, maximumArrayToFixedLength, modifyArrayToFixedLength, readTemplate,
-    setText, setTexts
+    setSvgBody,
+    setText,
+    setTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -14,30 +20,10 @@ import {getModColor, getRankColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getGlobalRankPercentBGFromUser, getRandomBannerPath} from "../util/mascotBanner.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_J(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_J(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_J);
+export const router_svg = createSvgRouter(panel_J);
 
 /**
  * 统计 bp 信息

@@ -2,20 +2,34 @@
 
 ## 必需
 
-- NodeJS v22+（老版本会遇到 puppeteer 和 puppeteer-extra 的语法问题
+- NodeJS v22+（老版本会遇到 puppeteer 和 puppeteer-extra 的语法问题）
 
 绘图程序默认会连接端口 `8388`（websocket 客户端）。
 
 请确保端口不被其他程序占用。
 
+## .env 文件配置
+
+绘图模块提供多个环境变量导入，方便您自行调节。
+
+| 变量名称 | 默认值 | 解释 |
+| :-: | :-: | :-: |
+| EXPORT_FILE | /home/spring/work/img/ExportFileV3 | 资源文件的本地路径。**必需** |
+| PORT | 8388 | 与主程序通信的端口。**一般不用改** |
+| SUPER_KEY | - | 绘图模块与文件模块的通信秘钥。**可不填** |
+| OSU_BUFFER_PATH | 缓存路径/osufile | 存储 .osu 文件的地方，可以与主程序相同。 |
+| BUFFER_PATH | 缓存路径/buffer | 存储图像缓存的地方，采用了 sharp 压缩，预期每文件平均占用 70KB。 |
+| USE_PROXY | false | 是否使用本地代理 (127.0.0.1)。 |
+| OSUFILE_NO_PROXY | false | 是否禁用 osu 文件下载时的代理。<br />因为现在 ppy 基本上拦掉了所有主站异常请求。 |
+| PROXY_PORT | 7890 | 你挂 http 代理的端口。 |
+| IMAGE_FORMAT | webp | 绘图模块返回的图片格式。可以使用 webp、jpg、png。 |
+
 ### Windows 运行
 
-```
+```bash
 chcp 65001
 
-set EXPORT_FILE=${你解压素材库的文件路径，比如 D:\ExportFileV3\}
-
-set PORT=8388 // 不管也行
+set EXPORT_FILE="D:\ExportFileV3" <-- 自己改
 
 yarn start
 ```
@@ -24,9 +38,27 @@ npm start 也行。
 
 ### Linux 运行
 
-可以使用 PM2 运行。
+```bash
+export EXPORT_FILE=/home/spring/work/img/ExportFileV3
+export PORT=8388
+export USE_PROXY=true
+export OSUFILE_NO_PROXY=true
 
-你应该能自己解决。
+if pm2 describe main > /dev/null 2>&1
+then
+  echo "重启现有集群"
+  pm2 reload main --update-env
+  #pm2 restart main.js
+else
+  echo "启动新集群"
+  pm2 start main.js --name "main" -i 2
+  #pm2 start main.js
+fi
+```
+
+可以使用 PM2 运行。你应该能自己解决。
+
+不一定要集群运行，你自己运行的时候可直接 pm2 start main.js。
 
 ## 可选
 

@@ -1,8 +1,12 @@
 import {
-    exportJPEG, getGameMode,
-    getImageFromV3, getPanelNameSVG, getSvgBody, rounds,
+    getGameMode,
+    getImageFromV3,
+    getPanelNameSVG,
+    getSvgBody,
+    rounds,
     setImage,
-    setSvgBody, setText,
+    setSvgBody,
+    setText,
     setTexts,
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -17,31 +21,11 @@ import {card_K} from "../card/card_K.js";
 import {card_B6} from "../card/card_B6.js";
 import {card_B7} from "../card/card_B7.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_K(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_K(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_K);
+
+export const router_svg = createSvgRouter(panel_K);
 
 /**
  * USER SKILL 技巧分析

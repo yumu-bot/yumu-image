@@ -1,38 +1,14 @@
-import {
-    exportJPEG, getPanelNameSVG, setImage,
-    setSvgBody, readTemplate,
-    setText, getSvgBody, thenPush
-} from "../util/util.js";
+import {getPanelNameSVG, getSvgBody, readTemplate, setImage, setSvgBody, setText, thenPush} from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {card_I3} from "../card/card_I3.js";
 import {torusBold} from "../util/font.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MI(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MI(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_MI);
+export const router_svg = createSvgRouter(panel_MI);
 
 /**
  * maimai 筛选的多成绩列表。

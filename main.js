@@ -1,4 +1,3 @@
-
 import {
     CACHE_PATH,
     getBrowserInstance,
@@ -150,7 +149,7 @@ const panelSuffixes = [
 const panelHandlers = new Map();
 
 async function initPanels() {
-    for (const suffix of panelSuffixes) {
+    const loadPromises = panelSuffixes.map(async (suffix) => {
         try {
             const module = await import(`./src/panel/panel_${suffix}.js`);
 
@@ -163,7 +162,10 @@ async function initPanels() {
         } catch (error) {
             console.error(`Failed to load panel_${suffix}:`, error);
         }
-    }
+    });
+
+    await Promise.all(loadPromises);
+    console.log(`panel loader succeed! ${panelHandlers.size / 2} loaded.`);
 }
 
 function adaptHandler(originalRouter) {

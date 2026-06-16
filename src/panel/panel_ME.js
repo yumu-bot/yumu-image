@@ -1,14 +1,17 @@
 import {
-    exportJPEG,
+    floor,
+    floors,
     getBeatMapTitlePath,
     getImageFromV3,
     getPanelNameSVG,
-    setImage,
-    setSvgBody,
+    getSign,
     isASCII,
     readTemplate,
+    rounds,
+    setImage,
+    setSvgBody,
     setText,
-    setTexts, floor, floors, getSign, rounds
+    setTexts
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
@@ -23,31 +26,11 @@ import {
     getMaimaiVersionBG
 } from "../util/maimai.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_ME(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_ME(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_ME);
+
+export const router_svg = createSvgRouter(panel_ME);
 
 const RANK_COLORS = ['#848484', '#5eb0ac', '#587ec3', '#5967af',
     '#59519e', '#d56da1', '#d56e74', '#d56e4b',

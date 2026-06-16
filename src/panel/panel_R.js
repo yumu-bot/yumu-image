@@ -2,7 +2,6 @@ import {
     ar2ms,
     averageArrayToFixedLength,
     cs2px,
-    exportJPEG,
     getAvatar,
     getBeatMapTitlePath,
     getGameMode,
@@ -35,31 +34,11 @@ import {
 import {label_E5, LABELS} from "../component/label.js";
 import {drawLazerMods} from "../util/mod.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_R(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_R(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_R);
+
+export const router_svg = createSvgRouter(panel_R);
 
 // 进阶谱面信息 !m
 async function panel_R(data = {

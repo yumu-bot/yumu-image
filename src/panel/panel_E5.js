@@ -1,70 +1,48 @@
 import {
-    exportJPEG,
+    ar2ms,
+    cs2px,
+    floor,
+    floors,
     getBeatMapTitlePath,
+    getDiffBackground,
+    getDifficultyIndex,
+    getFormattedTime,
     getGameMode,
+    getImageFromV3,
+    getKeyDifficulty,
     getMapStatusImage,
     getNowTimeStamp,
     getPanelNameSVG,
+    getRatioString,
+    getSvgBody,
     getTimeDifference,
-    setImage,
-    readTemplate,
-    setText,
-    setTexts,
-    od2ms,
-    ar2ms,
-    cs2px,
+    isEmptyArray,
     isNotBlankString,
     isNotNumber,
-    getKeyDifficulty,
     isNumber,
-    floors,
-    floor,
-    getFormattedTime,
-    isEmptyArray,
-    getDifficultyIndex,
-    getDiffBackground,
-    rounds,
-    getSvgBody,
+    od2ms,
+    readTemplate,
+    removeGuest,
     round,
-    getImageFromV3,
-    getRatioString, removeGuest
+    rounds,
+    setImage,
+    setText,
+    setTexts
 } from "../util/util.js";
-import {
-    getRankBackground, getScoreTypeImage
-} from "../util/star.js";
+import {getRankBackground, getScoreTypeImage} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi} from "../util/font.js";
 import {colorArray, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABELS} from "../component/label.js";
-import {getModMultiplier, drawLazerMods} from "../util/mod.js";
+import {drawLazerMods, getModMultiplier} from "../util/mod.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E5(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E5(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_E5);
+
+export const router_svg = createSvgRouter(panel_E5);
 
 /**
  * 超级成绩面板

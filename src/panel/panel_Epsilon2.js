@@ -1,35 +1,11 @@
-import {
-    exportJPEG, getAvatar, getImageFromV3,
-    setTexts, round, getGameMode, getBanner, setText, isASCII
-} from "../util/util.js";
+import {getAvatar, getBanner, getGameMode, getImageFromV3, isASCII, round, setText, setTexts} from "../util/util.js";
 import {PuHuiTi, TahomaRegular} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Epsilon2(data);
-        res.set('Content-Type', 'image/png');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_Epsilon2);
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Epsilon2(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router_svg = createSvgRouter(panel_Epsilon2);
 
 /**
  * 怀旧头像，2013 年左右的 osu 内卡片

@@ -1,10 +1,12 @@
 import {
-    exportJPEG, getImage,
+    getImage,
     getImageFromV3,
     getImageOrElse,
     getMapBackground,
     getNowTimeStamp,
-    getOrNull, getPanelNameSVG, getSvgBody,
+    getOrNull,
+    getPanelNameSVG,
+    getSvgBody,
     round
 } from "../util/util.js";
 import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/osuFile.js";
@@ -14,31 +16,11 @@ import {card_A2} from "../card/card_A2.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {component_V2} from "../component/component_V2.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_V2(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_V2(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_V2);
+
+export const router_svg = createSvgRouter(panel_V2);
 
 /**
  * 下落式谱面预览面板

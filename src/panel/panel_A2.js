@@ -1,38 +1,22 @@
 import {
-    exportJPEG, getPanelHeight,
-    getPanelNameSVG, setSvgBody,
-    readTemplate, setCustomBanner,
-    setText, thenPush, getSvgBody
+    getPanelHeight,
+    getPanelNameSVG,
+    getSvgBody,
+    readTemplate,
+    setCustomBanner,
+    setSvgBody,
+    setText,
+    thenPush
 } from "../util/util.js";
 import {card_A2} from "../card/card_A2.js";
 import {card_A5} from "../card/card_A5.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {torusBold} from "../util/font.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A2(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A2(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_A2);
+export const router_svg = createSvgRouter(panel_A2);
 
 /**
  * 查询谱面的面板

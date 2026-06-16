@@ -1,5 +1,5 @@
 import {XMLBuilder, XMLParser} from "fast-xml-parser"
-import {exportJPEG, getAvatar, getDiffBackground, readTemplate} from "../util/util.js";
+import {getAvatar, getDiffBackground, readTemplate} from "../util/util.js";
 
 const opt = {
     preserveOrder: false,
@@ -10,30 +10,6 @@ const opt = {
 const parser = new XMLParser(opt);
 const builder = new XMLBuilder(opt);
 
-/*
-Object.prototype.getSvgById = function (e, index = 0) {
-    if (e && typeof e === "string") {
-        return serchObject(this, obj => obj.$id === e, index);
-    }
-}
-
-Object.prototype.setSvgText = function (str) {
-    this["#text"] = str;
-}
- */
-
-export async function router(req, res) {
-    try {
-        const data = req.fields;
-        const svg = await panel_Beta(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
 export function test(){
     let templateStr = readTemplate('template/sp.svg');
     const template = parser.parse(templateStr)
@@ -41,19 +17,12 @@ export function test(){
     const modsBox = getSvgById(svg, "mods");
     console.log(modsBox.$id);
 }
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields;
-        const svg = await panel_Beta(data);
-        // 记得修改返回格式 image/svg+xml
-        res.set('Content-Type', 'image/svg+xml');
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_Beta);
+
+export const router_svg = createSvgRouter(panel_Beta);
 
 /**
  * 帅气逼人的面板, ~~薄纱其他面板~~

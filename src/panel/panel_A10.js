@@ -1,39 +1,21 @@
 import {
-    exportJPEG,
+    getPanelHeight,
     getPanelNameSVG,
+    getSvgBody,
+    readNetImage,
+    setCustomBanner,
     setSvgBody,
-    setText,
-    setCustomBanner, getPanelHeight, readNetImage, getSvgBody
+    setText
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_C2} from "../card/card_C2.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A10(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A10(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_A10);
+
+export const router_svg = createSvgRouter(panel_A10);
 
 /**
  * 主页奖牌

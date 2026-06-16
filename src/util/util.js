@@ -1,15 +1,12 @@
 import fs from 'fs';
 import os from "os";
 import crypto from 'crypto';
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 import https from "https";
 import * as http from "node:http";
 import path from "path";
 import moment from "moment";
 import {cutStringTail, getTextPath, PuHuiTi, torus} from "./font.js";
-import {API} from "../svg-to-image/API.js";
-import JPEGProvider from '../svg-to-image/JPEGProvider.js';
-import PNGProvider from '../svg-to-image/PNGProvider.js';
 import {getRandom, getRandomBannerPath} from "./mascotBanner.js";
 import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
@@ -22,14 +19,12 @@ import {promisify} from 'util';
 import sharp from "sharp";
 import {cacheManager, templateManager} from "./cacheManager.js";
 import {HttpsProxyAgent} from "https-proxy-agent";
+import {PUPPETEER_OPTIONS} from "./image.js";
 
 const execAsync = promisify(exec);
 
 const VERSION = 'v0.8.0'
 const VERSION_CODE = 'VS'
-
-const exportsJPEG = new API(new JPEGProvider());
-const exportsPNG = new API(new PNGProvider());
 
 const path_util = path;
 const MD5 = crypto.createHash("md5");
@@ -127,23 +122,6 @@ process.on('uncaughtException', async (err) => {
     process.exit(1);
 });
 
-const puppeteer_options = {
-    pipe: true,
-    headless: true,
-    args: [
-        '--js-flags="--max-old-space-size=512"',
-        '--disable-breakpad',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
-        '--no-sandbox',
-        '--no-zygote',
-        '--no-first-run',
-        '--disable-web-security',
-        '--allow-file-access-from-files',
-        '--disable-blink-features=AutomationControlled',
-        '--disable-infobars'
-    ]
-};
 
 export async function getBrowserInstance(initial = false) {
     if (browserPromise) {
@@ -175,7 +153,7 @@ export async function getBrowserInstance(initial = false) {
         console.log('正在启动/重启唯一浏览器实例...');
     }
 
-    browserPromise = puppeteer.launch(puppeteer_options).catch(err => {
+    browserPromise = puppeteer.launch(PUPPETEER_OPTIONS).catch(err => {
         browserPromise = null;
         throw err;
     });
@@ -273,14 +251,7 @@ export function initPath() {
 
 // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
 
-export const exportJPEG = async (svg) => await exportsJPEG.convert(svg, {
-    quality: 100,
-    puppeteer: puppeteer_options
-});
 
-export const exportPNG = async (svg) => await exportsPNG.convert(svg, {
-    puppeteer: puppeteer_options
-});
 
 const UTF8Encoder = new TextEncoder('utf8');
 
@@ -776,6 +747,10 @@ export async function getDiffBackground(score = {}, must_full = false) {
     let has_local_bg = false;
 
     try {
+        if (isEmptyString(SUPER_KEY)) {
+            return await getMapBackground(score, cover_type);
+        }
+
         const res = await getBackgroundFromDatabase(bid, sid);
 
         const textData = Buffer.from(res.data).toString('utf8');
@@ -2105,166 +2080,6 @@ export function randomString(e) {
         n = "";
     for (let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a));
     return n
-}
-
-export class SaveFiles {
-    files = [];
-    tmpDir = '';
-
-    constructor() {
-        let tmp = randomString(6);
-        while (fs.existsSync(`${CACHE_PATH}/${tmp}`)) {
-            tmp = randomString(6);
-        }
-        this.tmpDir = `${CACHE_PATH}/${tmp}/`;
-        fs.mkdirSync(this.tmpDir);
-    };
-
-    saveSvgText(text) {
-        let f = randomString(4) + '.svg';
-        while (this.files.includes(f)) {
-            f = randomString(4) + '.svg';
-        }
-        this.files.push(f);
-
-        fs.writeFileSync(this.tmpDir + f, UTF8Encoder.encode(text));
-        return this.tmpDir + f;
-    };
-
-    save(file) {
-        let f = randomString(4);
-        while (this.files.includes(f)) {
-            f = randomString(4);
-        }
-        this.files.push(f);
-        fs.writeFileSync(this.tmpDir + f, file, 'binary');
-        return this.tmpDir + f;
-    };
-
-    move(path) {
-        let f = randomString(4);
-        while (this.files.includes(f)) {
-            f = randomString(4);
-        }
-        this.files.push(f);
-        fs.copyFileSync(path, this.tmpDir + f);
-        fs.rmSync(path);
-        return this.tmpDir + f;
-    }
-
-    getAllPath() {
-        return this.files.map(f => this.tmpDir + f);
-    };
-
-    getDirPath() {
-        return this.tmpDir;
-    };
-
-    remove() {
-        fs.rmSync(this.tmpDir, {force: true, recursive: true});
-    };
-}
-
-function createImage(w, h, x, y, path) {
-    return `<image width="${w}" height="${h}" x="${x}" y="${y}" xlink:href="${path}" />`
-}
-
-export class SVG {
-    svg;
-    tmp_root = [];
-
-    constructor(svg) {
-        this.svg = svg;
-    }
-
-    setTmpPath(path) {
-        this.tmp_root.push(path);
-    }
-
-    setTmpPaths(path) {
-        this.tmp_root.push.apply(this.tmp_root, path);
-    }
-
-    getTmpPath() {
-        return this.tmp_root;
-    }
-
-    getSvgText() {
-        return this.svg;
-    }
-}
-
-export class InsertSvgBuilder {
-    svg;
-    reg = /(?=<\/svg>)/
-    f_util = new SaveFiles();
-
-    constructor(svg = "") {
-        this.svg = svg;
-    }
-
-    check(svg) {
-        if (svg instanceof SVG) {
-            return svg.getSvgText();
-        }
-        return svg;
-    }
-
-    async insertSvg(svg, x, y) {
-        return await this.insertSvgReg(svg, x, y, this.reg);
-    }
-
-    async insertSvgReg(svg, x, y, reg = /^/) {
-        if (svg instanceof SVG) {
-            let path = this.f_util.save(await exportJPEG(svg.getSvgText()));
-            svg.getTmpPath().forEach(dir => fs.rmSync(dir, {force: true, recursive: true}));
-            let w = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
-            let h = parseInt(svg.getSvgText().match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
-            let img = createImage(w, h, x, y, path);
-            this.svg = setText(this.svg, img, reg)
-            return this;
-        }
-
-        let w = parseInt(svg.match(/(?<=<svg[\s\S]+width=")\d+(?=")/)[0]);
-        let h = parseInt(svg.match(/(?<=<svg[\s\S]+height=")\d+(?=")/)[0]);
-        let path = this.f_util.saveSvgText(svg);
-        this.svg = setText(this.svg, createImage(w, h, x, y, path), reg);
-        return this;
-    }
-
-    insertFlag(flag, w, h, x, y) {
-        return this.insertFlagReg(flag, w, h, x, y, this.reg);
-    }
-
-    insertFlagReg(flag, w, h, x, y, reg = /^/) {
-        let path = this.f_util.saveSvgText(flag);
-        this.svg = setText(this.svg, createImage(w, h, x, y, path), reg);
-        return this;
-    }
-
-    insertImage(img, reg = /^/) {
-        let path;
-        if (img.startsWith(CACHE_PATH)) {
-            path = this.f_util.move(img);
-        } else {
-            path = this.f_util.save(img);
-        }
-        this.svg = setText(this.svg, path, reg);
-        return this;
-    }
-
-    async export(reuse = false) {
-        let out;
-        if (reuse) {
-            out = new SVG(this.svg);
-            out.setTmpPaths(this.f_other);
-            out.setTmpPath(this.f_util.getDirPath());
-        } else {
-            out = await exportJPEG(this.svg);
-            this.f_util.remove();
-        }
-        return out;
-    }
 }
 
 function fixed(i) {

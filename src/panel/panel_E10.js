@@ -1,17 +1,23 @@
 import {
-    exportJPEG,
     floor,
     floors,
     getAvatar,
-    getBanner, getBeatMapTitlePath, getDiffBackground,
+    getBanner,
+    getBeatMapTitlePath,
+    getDiffBackground,
     getDifficultyIndex,
     getFlagPath,
     getGameMode,
-    getImageFromV3, getKeyDifficulty,
+    getImageFromV3,
+    getKeyDifficulty,
     getMapStatusImage,
     getSvgBody,
-    getTimeDifference, isEmptyArray, readNetImage, removeGuest,
-    round, rounds,
+    getTimeDifference,
+    isEmptyArray,
+    readNetImage,
+    removeGuest,
+    round,
+    rounds,
     setImage,
     setText,
     setTexts
@@ -23,31 +29,11 @@ import {LABELS} from "../component/label.js";
 import {drawLazerMods} from "../util/mod.js";
 import {getRankBackground} from "../util/star.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E10(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_E10(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_E10);
+
+export const router_svg = createSvgRouter(panel_E10);
 
 /**
  * 封面成绩面板

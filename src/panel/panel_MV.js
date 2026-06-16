@@ -1,9 +1,14 @@
 import {
-    exportJPEG, getImageFromV3,
-    getPanelNameSVG, getSvgBody, isASCII, isNotBlankString,
-    readTemplate, round,
+    getImageFromV3,
+    getPanelNameSVG,
+    getSvgBody,
+    isASCII,
+    isNotBlankString,
+    readTemplate,
+    round,
     setImage,
-    setText, setTexts,
+    setText,
+    setTexts,
     thenPush
 } from "../util/util.js";
 import {colorArray} from "../util/color.js";
@@ -14,31 +19,11 @@ import {BerlinBold, poppinsBold, PuHuiTi, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiCover, getMaimaiDifficultyColors, getMaimaiPlate, getMaimaiRankBG} from "../util/maimai.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MV(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MV(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_MV);
+
+export const router_svg = createSvgRouter(panel_MV);
 
 /**
  * MAIMAI 牌子完成度列表。

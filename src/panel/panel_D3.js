@@ -1,10 +1,22 @@
 import {
-    exportJPEG,
-    floor, getGameMode, getImage,
-    getImageFromV3, getNowTimeStamp, getPanelNameSVG,
+    floor,
+    getGameMode,
+    getImage,
+    getImageFromV3,
+    getNowTimeStamp,
+    getPanelNameSVG,
     getSvgBody,
-    getTexts, getTimeByDHMS, getTimeDifference, isNotNumber, isNumber, round, rounds, setCustomBanner, setImage,
-    setSvgBody, setText,
+    getTexts,
+    getTimeByDHMS,
+    getTimeDifference,
+    isNotNumber,
+    isNumber,
+    round,
+    rounds,
+    setCustomBanner,
+    setImage,
+    setSvgBody,
+    setText,
     setTexts
 } from "../util/util.js";
 import {colorArray, PanelColor} from "../util/color.js";
@@ -12,39 +24,15 @@ import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {extra, getMultipleTextPath, poppinsBold} from "../util/font.js";
-import {
-    getGlobalRankPercentBGFromUser,
-    getMascotBanner,
-    getMascotName
-} from "../util/mascotBanner.js";
+import {getGlobalRankPercentBGFromUser, getMascotBanner, getMascotName} from "../util/mascotBanner.js";
 import {label_D3} from "../component/label.js";
 import moment from "moment";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_D3(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_D3(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_D3);
+
+export const router_svg = createSvgRouter(panel_D3);
 
 /**
  * info v4

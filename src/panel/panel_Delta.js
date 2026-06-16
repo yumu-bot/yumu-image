@@ -1,38 +1,13 @@
-import {
-    getImageFromV3,
-    setImage,
-    setSvgBody, readTemplate,
-    setTexts, floor, getDiffBackground, exportJPEG
-} from "../util/util.js";
+import {floor, getDiffBackground, getImageFromV3, readTemplate, setImage, setSvgBody, setTexts} from "../util/util.js";
 import {lineSeedSans, poppinsBold} from "../util/font.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModInt} from "../util/mod.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Delta(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Delta(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_Delta);
+export const router_svg = createSvgRouter(panel_Delta);
 
 /**
  * 某个比赛的信息展示

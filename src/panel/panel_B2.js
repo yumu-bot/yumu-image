@@ -1,11 +1,15 @@
 import {
-    exportJPEG,
+    floor,
+    floors,
     getImageFromV3,
+    getMapBackground,
     getPanelNameSVG,
+    getSvgBody,
+    readTemplate,
     setImage,
     setSvgBody,
-    readTemplate, setText,
-    setTexts, floor, floors, getMapBackground, getSvgBody
+    setText,
+    setTexts
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A2} from "../card/card_A2.js";
@@ -17,31 +21,11 @@ import {LABEL_MM} from "../component/label.js";
 import {card_B6} from "../card/card_B6.js";
 import {card_B7} from "../card/card_B7.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_B2(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_B2(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_B2);
+
+export const router_svg = createSvgRouter(panel_B2);
 
 /**
  * Skill 信息面板

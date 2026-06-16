@@ -1,48 +1,30 @@
 import {
-    exportJPEG,
     getImageFromV3,
     getPanelNameSVG,
-    setImage,
-    setSvgBody, isNotEmptyArray,
+    getSvgBody,
+    isNotEmptyArray,
     readTemplate,
-    setText, thenPush, getSvgBody, round, rounds, setTexts
+    round,
+    rounds,
+    setImage,
+    setSvgBody,
+    setText,
+    setTexts,
+    thenPush
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {card_I3} from "../card/card_I3.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {
-    getCHUNITHMCover, getCHUNITHMRank,
-    getCHUNITHMRankBG, getCHUNITHMDifficultyColor,
-} from "../util/maimai.js";
+import {getCHUNITHMCover, getCHUNITHMDifficultyColor, getCHUNITHMRank, getCHUNITHMRankBG,} from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {torusBold} from "../util/font.js";
 import {colorArray} from "../util/color.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MA2(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_MA2(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_MA2);
+export const router_svg = createSvgRouter(panel_MA2);
 
 /**
  * CHUNITHM 多成绩列表。

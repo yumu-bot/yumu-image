@@ -1,10 +1,14 @@
 import {
-    exportJPEG,
+    getGameMode,
     getImageFromV3,
-    getGameMode, getPanelNameSVG,
+    getNowTimeStamp,
+    getPanelNameSVG,
+    getSvgBody,
+    readTemplate,
     setImage,
-    setSvgBody, readTemplate,
-    setText, setTexts, getNowTimeStamp, getSvgBody
+    setSvgBody,
+    setText,
+    setTexts
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -17,30 +21,10 @@ import {getRankFromValue} from "../util/star.js";
 import {card_B6} from "../card/card_B6.js";
 import {card_B7} from "../card/card_B7.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_B1(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_B1(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_B1);
+export const router_svg = createSvgRouter(panel_B1);
 
 // ppm 面板
 export async function panel_B1(data = {

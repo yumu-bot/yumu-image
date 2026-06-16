@@ -1,38 +1,28 @@
 import {
-    exportJPEG, getImageFromV3, getPanelNameSVG,
-    setSvgBody, readTemplate, setCustomBanner,
-    setText, getSvgBody, getPanelHeight, getAvatar, getMatchDuration, getNowTimeStamp, floor, floors
+    floor,
+    floors,
+    getAvatar,
+    getImageFromV3,
+    getMatchDuration,
+    getNowTimeStamp,
+    getPanelHeight,
+    getPanelNameSVG,
+    getSvgBody,
+    readTemplate,
+    setCustomBanner,
+    setSvgBody,
+    setText
 } from "../util/util.js";
 import {card_C} from "../card/card_C.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {colorArray, getCompetitorColors} from "../util/color.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_C(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_C(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_C);
+
+export const router_svg = createSvgRouter(panel_C);
 
 /**
  * 木斗力面板 (!ymra)

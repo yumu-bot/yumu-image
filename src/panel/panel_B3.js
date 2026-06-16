@@ -1,7 +1,16 @@
 import {
-    exportJPEG, getImageFromV3, getPanelNameSVG, setImage,
-    setSvgBody, readTemplate,
-    setText, setTexts, getAvatar, readNetImage, getSvgBody, getNowTimeStamp, getTimeByDHMS
+    getAvatar,
+    getImageFromV3,
+    getNowTimeStamp,
+    getPanelNameSVG,
+    getSvgBody,
+    getTimeByDHMS,
+    readNetImage,
+    readTemplate,
+    setImage,
+    setSvgBody,
+    setText,
+    setTexts
 } from "../util/util.js";
 import {poppinsBold} from "../util/font.js";
 import {card_A1} from "../card/card_A1.js";
@@ -14,30 +23,10 @@ import {getRankColors} from "../util/color.js";
 import {card_B6} from "../card/card_B6.js";
 import {card_B7} from "../card/card_B7.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_B3(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_B3(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_B3);
+export const router_svg = createSvgRouter(panel_B3);
 
 /**
  * PP+

@@ -1,31 +1,11 @@
-import {exportJPEG, getSvg} from "../util/util.js";
+import {getSvg} from "../util/util.js";
 
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_M2(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_M2(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_M2);
+
+export const router_svg = createSvgRouter(panel_M2);
 
 /**
  * 麻婆信息面板 v2, 展示麻婆谱面的

@@ -1,10 +1,13 @@
 import {
-    exportJPEG, getGameMode, getNowTimeStamp,
+    getGameMode,
+    getNowTimeStamp,
     getPanelNameSVG,
+    isNumber,
+    readTemplate,
+    setCustomBanner,
     setImage,
     setSvgBody,
-    readTemplate, setCustomBanner,
-    setText, isNumber,
+    setText,
 } from "../util/util.js";
 import {component_D1N} from "../component/component_D1N.js";
 import {card_A1} from "../card/card_A1.js";
@@ -14,30 +17,10 @@ import {component_D7} from "../component/component_D7.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getGlobalRankPercentBGFromUser} from "../util/mascotBanner.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_D(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_D(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_D);
+export const router_svg = createSvgRouter(panel_D);
 
 /**
  * user info 面板

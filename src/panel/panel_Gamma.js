@@ -1,16 +1,18 @@
 import {
-    exportJPEG,
-    getImageFromV3,
-    getGameMode,
-    setImage,
-    readTemplate,
-    setTexts,
+    floor,
+    floors,
     getAvatar,
     getBanner,
+    getGameMode,
+    getImageFromV3,
+    getMapBackground,
     getTimeByDHMS,
     getTimeDifference,
+    isNotEmptyArray,
+    readTemplate,
+    setImage,
     setText,
-    isNotEmptyArray, floor, floors, getMapBackground,
+    setTexts,
 } from "../util/util.js";
 import {extra, torus, torusRegular} from "../util/font.js";
 import {getRankFromValue} from "../util/star.js";
@@ -18,47 +20,25 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {getRankColor} from "../util/color.js";
 import moment from "moment";
 
-export async function router(req, res) {
-    try {
-        let data = {};
-        const classification = req.fields?.panel;
+const data_loader = async (req, res) => {
+    let data = {};
+    const classification = req.fields?.panel;
 
-        switch (classification) {
-            case 'info': data = await PanelGamma.infoVersion(req.fields?.user); break;
-            case 'score': data = await PanelGamma.scoreVersion(req.fields?.score); break;
-            case 'sanity': data = await PanelGamma.sanityVersion(req.fields); break;
-            default: res.status(400).send()
-        }
-
-        const svg = await panel_Gamma(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
+    switch (classification) {
+        case 'info': data = await PanelGamma.infoVersion(req.fields?.user); break;
+        case 'score': data = await PanelGamma.scoreVersion(req.fields?.score); break;
+        case 'sanity': data = await PanelGamma.sanityVersion(req.fields); break;
+        default: res.status(400).send('Invalid panel classification'); return null;
     }
-}
-export async function router_svg(req, res) {
-    try {
-        let data = {};
-        const classification = req.fields?.panel;
 
-        switch (classification) {
-            case 'info': data = await PanelGamma.infoVersion(req.fields?.user); break;
-            case 'score': data = await PanelGamma.scoreVersion(req.fields?.score); break;
-            case 'sanity': data = await PanelGamma.sanityVersion(req.fields); break;
-            default: res.status(400).send()
-        }
-
-        const svg = await panel_Gamma(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
+    return data
 }
+
+import {createImageRouter, createSvgRouter} from "../util/image.js";
+
+export const router = createImageRouter(panel_Gamma, data_loader);
+
+export const router_svg = createSvgRouter(panel_Gamma, data_loader);
 
 /**
  * 简略信息面板, 似乎user info和score info集成在一起

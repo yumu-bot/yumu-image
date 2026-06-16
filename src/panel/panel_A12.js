@@ -1,9 +1,12 @@
 import {
-    exportJPEG,
+    getPanelHeight,
     getPanelNameSVG,
+    getSvgBody,
+    readTemplate,
+    setImage,
     setSvgBody,
     setText,
-    readTemplate, getPanelHeight, thenPush, getSvgBody, setImage
+    thenPush
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A1} from "../card/card_A1.js";
@@ -11,31 +14,11 @@ import {card_C} from "../card/card_C.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {torusBold} from "../util/font.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A12(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_A12(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_A12);
+
+export const router_svg = createSvgRouter(panel_A12);
 
 /**
  最多游玩 E

@@ -1,65 +1,42 @@
 import {
-    exportJPEG,
-    getNowTimeStamp,
-    getPanelNameSVG,
-    setImage,
-    setSvgBody,
-    setCustomBanner,
-    setText,
-    isNumber,
-    getTimeByDHMSLarge,
-    getTimeByDHMSSmall,
-    getTimeByDHMS,
-    setTexts,
-    isNotNumber,
-    getTimeDifference,
-    modifyArrayToFixedLength,
-    isNotEmptyArray,
-    getGameMode,
-    isNotBlankString,
-    isPicturePng,
     floor,
     floors,
-    isNotEmptyString, getSvgBody, getImageFromV3
+    getGameMode,
+    getImageFromV3,
+    getNowTimeStamp,
+    getPanelNameSVG,
+    getSvgBody,
+    getTimeByDHMS,
+    getTimeByDHMSLarge,
+    getTimeByDHMSSmall,
+    getTimeDifference,
+    isNotBlankString,
+    isNotEmptyArray,
+    isNotEmptyString,
+    isNotNumber,
+    isNumber,
+    isPicturePng,
+    modifyArrayToFixedLength,
+    setCustomBanner,
+    setImage,
+    setSvgBody,
+    setText,
+    setTexts
 } from "../util/util.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {
-    getGlobalRankPercentBGFromUser,
-    getMascotName,
-    getRandomMascotTransparentPath
-} from "../util/mascotBanner.js";
+import {getGlobalRankPercentBGFromUser, getMascotName, getRandomMascotTransparentPath} from "../util/mascotBanner.js";
 import {label_D3, label_D4, label_D5, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {poppinsBold} from "../util/font.js";
 import {PanelColor} from "../util/color.js";
 import moment from "moment";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_D2(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_D2(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_D2);
+
+export const router_svg = createSvgRouter(panel_D2);
 
 /**
  * user info 老婆面板

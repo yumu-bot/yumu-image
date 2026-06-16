@@ -1,36 +1,12 @@
-import {
-    exportJPEG, getAvatar, getFlagPath, getImageFromV3,
-    setImage, isNotEmptyArray, setTexts, isASCII
-} from "../util/util.js";
+import {getAvatar, getFlagPath, getImageFromV3, isASCII, isNotEmptyArray, setImage, setTexts} from "../util/util.js";
 import {PuHuiTi, TahomaBold, TahomaRegular} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {hex2hsl} from "../util/color.js";
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Epsilon(data);
-        res.set('Content-Type', 'image/png');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_Epsilon);
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Epsilon(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router_svg = createSvgRouter(panel_Epsilon);
 
 /**
  * 头像, 面积贴图专用

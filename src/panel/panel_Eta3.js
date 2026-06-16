@@ -1,48 +1,30 @@
 import {
-    exportJPEG,
+    floor,
+    getFormattedTime,
+    getGameMode,
+    getImageFromV3,
+    getMapBackground,
     getNowTimeStamp,
     getPanelNameSVG,
     getTimeDifference,
+    isASCII,
     setImage,
     setSvgBody,
     setText,
-    setTexts,
-    floor, getFormattedTime, isASCII, getGameMode, getImageFromV3, getMapBackground
+    setTexts
 } from "../util/util.js";
-import {
-    getRankBackground
-} from "../util/star.js";
+import {getRankBackground} from "../util/star.js";
 import {getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import {colorArray, getRankColor, getStarRatingColor, PanelColor} from "../util/color.js";
 import {drawLazerMods} from "../util/mod.js";
 import {getMascotName, getRandomMascotTransparentPath} from "../util/mascotBanner.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
-export async function router(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Eta3(data);
-        res.set('Content-Type', 'image/jpeg');
-        res.send(await exportJPEG(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export async function router_svg(req, res) {
-    try {
-        const data = req.fields || {};
-        const svg = await panel_Eta3(data);
-        res.set('Content-Type', 'image/svg+xml'); //svg+xml
-        res.send(Buffer.from(svg));
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.stack);
-    }
-    res.end();
-}
+export const router = createImageRouter(panel_Eta3);
+
+export const router_svg = createSvgRouter(panel_Eta3);
 
 /**
  * 千变万化成绩面板：3：pjsk

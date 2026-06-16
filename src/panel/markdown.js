@@ -1,4 +1,3 @@
-
 import {getBrowserInstance} from "../util/util.js";
 
 const path = `${process.cwd()}/template/markDownTemplate/index.html`;
