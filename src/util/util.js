@@ -23,7 +23,7 @@ import {PUPPETEER_OPTIONS} from "./image.js";
 
 const execAsync = promisify(exec);
 
-const VERSION = 'v0.8.0'
+const VERSION = 'v0.8.1'
 const VERSION_CODE = 'VS'
 
 const path_util = path;
