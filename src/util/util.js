@@ -16,10 +16,9 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import {EventEmitter} from 'events';
 import {exec} from 'child_process';
 import {promisify} from 'util';
-import sharp from "sharp";
 import {cacheManager, templateManager} from "./cacheManager.js";
 import {HttpsProxyAgent} from "https-proxy-agent";
-import {PUPPETEER_OPTIONS} from "./image.js";
+import {compressPicture, PUPPETEER_OPTIONS} from "./image.js";
 
 const execAsync = promisify(exec);
 
@@ -554,50 +553,6 @@ export async function accessAsync(local_path) {
 }
 
 /**
- * 使用 sharp 测试文件，如果没问题就放行
- * @param path
- * @param fails_delete 如果失败，则删除这个文件
- * @return {Promise<boolean>}
- */
-export async function isPictureIntact(path = '', fails_delete = true) {
-    if (!path || typeof path !== 'string' || path.trim() === '') return false;
-
-    try {
-        await sharp(path).metadata();
-        return true;
-    } catch (e) {
-        if (!fails_delete) return false;
-
-        if (e.code === 'ENOENT') {
-            return false;
-        }
-
-        try {
-            await fs.unlink(path);
-        } catch (unlink_error) {
-            console.error(`删除损坏文件失败: ${unlink_error.message}`);
-        }
-
-        return false;
-    }
-
-    return false;
-}
-
-export async function isPicturePng(path = '') {
-    if (!path || typeof path !== 'string' || path.trim() === '') return false;
-
-    try {
-        const metadata = await sharp(path).metadata();
-        // sharp 会将标准 PNG 和 APNG 都识别为 'png'
-        return metadata.format === 'png';
-    } catch (e) {
-        // 文件不存在或文件损坏
-        return false;
-    }
-}
-
-/**
  * 优化读取模板的方法：存入缓存，读写更高效
  * @param path
  * @param options
@@ -1030,59 +985,12 @@ export async function saveNetImage(path, buffer, max_width = 1920, max_height = 
     const buffer_name = MD5.copy().update(path).digest('hex');
     const buffer_path = `${IMG_BUFFER_PATH}/${buffer_name}`;
 
+    const buffer_processed = await compressPicture(buf, max_width, max_height)
+
     try {
-        // pages:1 只保留第一张
-        let imagePipeline = sharp(buf, {pages: 1});
-        const meta = await imagePipeline.metadata();
-
-        const src_width = meta.width || 0;
-        const src_height = meta.height || 0;
-
-        let final_width = max_width;
-        let final_height = max_height;
-
-        const aspect_ratio = src_width / Math.max(src_height, 1);
-        if (src_width < 500 && src_height < 500 && aspect_ratio > 0.95 && aspect_ratio < 1.05) {
-            final_width = 128;
-            final_height = 128;
-        }
-
-        const need_resize = (final_width && src_width > final_width) || (final_height && src_height > final_height);
-
-        if (need_resize) {
-            imagePipeline = imagePipeline.resize({
-                width: final_width || undefined,
-                height: final_height || undefined,
-                fit: 'inside',
-                withoutEnlargement: true
-            });
-        }
-
-        let could_process = true;
-        if (meta.format === 'png' || meta.format === 'gif') {
-            imagePipeline = imagePipeline.png({ palette: true, quality: 90, compressionLevel: 6 });
-        } else if (meta.format === 'webp') {
-            imagePipeline = imagePipeline.webp({ quality: 100 });
-        } else if (meta.format === 'jpeg' || meta.format === 'jpg') {
-            imagePipeline = imagePipeline.jpeg({ quality: 100, mozjpeg: true });
-        } else {
-            could_process = false;
-        }
-
-        if (could_process) {
-            const processed_buffer = await imagePipeline.toBuffer();
-
-            await fs.promises.writeFile(buffer_path, processed_buffer);
-        } else {
-            await fs.promises.writeFile(buffer_path, buf);
-        }
-    } catch (compress_err) {
-        console.error(`[压缩失败，原样保存] ${path}`, compress_err.message);
-        try {
-            await fs.promises.writeFile(buffer_path, buf);
-        } catch (e) {
-            return getImageFromV3('error.png');
-        }
+        await fs.promises.writeFile(buffer_path, buffer_processed);
+    } catch (e) {
+        console.warn("保存网络图片：写入文件失败：", e);
     }
 
     return buffer_path;

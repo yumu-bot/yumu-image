@@ -15,7 +15,6 @@ import {
     isNotEmptyString,
     isNotNumber,
     isNumber,
-    isPicturePng,
     modifyArrayToFixedLength,
     setCustomBanner,
     setImage,
@@ -32,7 +31,7 @@ import {poppinsBold} from "../util/font.js";
 import {PanelColor} from "../util/color.js";
 import moment from "moment";
 
-import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {createImageRouter, createSvgRouter, isPicturePng} from "../util/image.js";
 
 export const router = createImageRouter(panel_D2);
 

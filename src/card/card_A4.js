@@ -89,7 +89,7 @@ export async function card_A4(data = {
 
     const name = getMultipleTextPath([{
         font: poppinsBold,
-        text: (user?.username ?? '') + '  ',
+        text: (user?.username ?? 'Unknown') + '  ',
         size: 24,
         color: '#fff'
     }, {
@@ -215,19 +215,19 @@ export async function card_A4(data = {
 
     const stat_arr = getStatArr(data.score, data.score.ruleset_id);
     const stat_width_arr = getStatWidthArr(data?.score?.total_hit ?? 0, data?.score?.passed, stat_arr, stat_min_width, stat_full_width, stat_interval);
-    const stat_color_arr = getStatColorArr(data.score.ruleset_id);
+    const stat_colors_arr = getStatColorsArr(data.score.ruleset_id);
 
     let width_sum = 0;
     for (const i in stat_arr) {
         const stat = stat_arr[i];
         const width = stat_width_arr[i];
-        const color = stat_color_arr[i];
+        const colors = stat_colors_arr[i];
 
         if (stat > 0) {
             const stat_text = torus.getTextPath(stat.toString(),
                 stat_x + width_sum + width / 2,
                 stat_y - 5, 14, 'center baseline', '#fff');
-            const svg_rect = PanelDraw.Rect(stat_x + width_sum, stat_y, width, 10, 5, color);
+            const svg_rect = PanelDraw.LinearGradientRect(stat_x + width_sum, stat_y, width, 10, 5, colors);
 
             stat_svg += stat_text + svg_rect
 
@@ -262,16 +262,19 @@ function getStatWidthArr(stat_sum = 1, passed = true, stat_arr = [], minWidth = 
     let remain_width = fullWidth;
     let remain_width_calc;
 
+    const hit_sum = stat_arr.reduce((a, b) => a + b, 0);
+
+    let sum
+
     if (passed) {
-        stat_sum = stat_arr.reduce((a, b) => a + b, 0);
+        sum = hit_sum
+    } else {
+        sum = Math.max(hit_sum, stat_sum)
     }
 
-    let stat_sum_calc = stat_sum;
+    let stat_sum_calc = sum;
 
-
-
-    if (stat_sum > 0) {
-
+    if (sum > 0) {
         //先减去间距，如果是0就不用考虑这个间距
         remain_width -= (interval * (stat_arr.length - 1));
         for (const v of stat_arr) {
@@ -281,7 +284,7 @@ function getStatWidthArr(stat_sum = 1, passed = true, stat_arr = [], minWidth = 
 
         //筛选出太短的
         for (const v of stat_arr) {
-            if ((v / stat_sum) < (minWidth / remain_width) && v > 0) {
+            if ((v / sum) < (minWidth / remain_width) && v > 0) {
                 stat_sum_calc -= v;
                 remain_width_calc -= minWidth;
             }
@@ -291,7 +294,7 @@ function getStatWidthArr(stat_sum = 1, passed = true, stat_arr = [], minWidth = 
         for (const v of stat_arr) {
             if (v === 0) {
                 stat_width_arr.push(0);
-            } else if ((v / stat_sum) < (minWidth / remain_width)) {
+            } else if ((v / sum) < (minWidth / remain_width)) {
                 stat_width_arr.push(minWidth);
             } else {
                 stat_width_arr.push(v / stat_sum_calc * remain_width_calc);
@@ -320,76 +323,29 @@ function getStatArr(score = {statistics: {
     },}, mode = 0) {
     const s = score.statistics
 
-    let stat_arr = [];
-    switch (mode) {
-        case 0: {
-            stat_arr.push(s.great);
-            stat_arr.push(s.ok);
-            stat_arr.push(s.meh);
-            stat_arr.push(s.miss);
-        } break;
-        case 1: {
-            stat_arr.push(s.great);
-            stat_arr.push(s.ok);
-            stat_arr.push(s.miss);
-        } break;
-        case 2: {
-            stat_arr.push(s.great);
-            stat_arr.push(s.large_tick_hit);
-            stat_arr.push(s.small_tick_hit);
-            stat_arr.push(s.miss);
-            stat_arr.push(s.small_tick_miss);
-        } break;
-        case 3: {
-            stat_arr.push(s.perfect);
-            stat_arr.push(s.great);
-            stat_arr.push(s.good);
-            stat_arr.push(s.ok);
-            stat_arr.push(s.meh);
-            stat_arr.push(s.miss);
-        } break;
-    }
-    return stat_arr;
+    const config = {
+        0: [s.great, s.ok, s.meh, s.miss],
+        1: [s.great, s.ok, s.miss],
+        2: [s.great, s.large_tick_hit, s.small_tick_hit, s.miss, s.small_tick_miss],
+        3: [s.perfect, s.great, s.good, s.ok, s.meh, s.miss]
+    };
+
+    return config[mode] || config[0] ;
 }
 
-function getStatColorArr(mode = 0) {
-    let stat_color_arr = [];
+function getStatColorsArr(mode = 0) {
+    // const colors = [
+    //     ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E'], // mode 0
+    //     ['#8DCEF4', '#79C471', '#ED6C9E'],            // mode 1
+    //     ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E', '#A1A1A1'], // mode 2
+    //     ['#8DCEF4', '#FEF668', '#79C471', '#5E8AC6', '#A1A1A1', '#ED6C9E'] // mode 3
+    // ];
+    const colors = [
+        [colorArray.cyan, colorArray.green, colorArray.yellow, colorArray.pink], // mode 0
+        [colorArray.cyan, colorArray.green, colorArray.pink],            // mode 1
+        [colorArray.cyan, colorArray.green, colorArray.yellow, colorArray.pink, colorArray.gray], // mode 2
+        [colorArray.rainbow, colorArray.yellow, colorArray.green, colorArray.blue, colorArray.gray, colorArray.pink] // mode 3
+    ];
 
-    switch (mode) {
-        case 0:
-            stat_color_arr = [
-                '#8DCEF4',
-                '#79C471',
-                '#FEF668',
-                '#ED6C9E'
-            ];
-            break;
-        case 1:
-            stat_color_arr = [
-                '#8DCEF4',
-                '#79C471',
-                '#ED6C9E'
-            ];
-            break;
-        case 2:
-            stat_color_arr = [
-                '#8DCEF4',
-                '#79C471',
-                '#FEF668',
-                '#ED6C9E',
-                '#A1A1A1'
-            ];
-            break;
-        case 3:
-            stat_color_arr = [
-                '#8DCEF4',
-                '#FEF668',
-                '#79C471',
-                '#5E8AC6',
-                '#A1A1A1',
-                '#ED6C9E'
-            ];
-            break;
-    }
-    return stat_color_arr;
+    return colors[mode] || [];
 }

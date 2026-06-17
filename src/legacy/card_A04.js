@@ -183,14 +183,25 @@ export async function card_A04(data = {
 
     return svg;
 }
-function getStatWidthArr (stat_sum = 1, stat_arr = [], minWidth = 10, fullWidth = 325, interval = 5) {
+
+function getStatWidthArr(stat_sum = 1, passed = true, stat_arr = [], minWidth = 10, fullWidth = 325, interval = 5) {
     let stat_width_arr = [];
     let remain_width = fullWidth;
     let remain_width_calc;
-    let stat_sum_calc = stat_sum;
 
-    if (stat_sum > 0) {
+    const hit_sum = stat_arr.reduce((a, b) => a + b, 0);
 
+    let sum
+
+    if (passed) {
+        sum = hit_sum
+    } else {
+        sum = Math.max(hit_sum, stat_sum)
+    }
+
+    let stat_sum_calc = sum;
+
+    if (sum > 0) {
         //先减去间距，如果是0就不用考虑这个间距
         remain_width -= (interval * (stat_arr.length - 1));
         for (const v of stat_arr) {
@@ -200,7 +211,7 @@ function getStatWidthArr (stat_sum = 1, stat_arr = [], minWidth = 10, fullWidth 
 
         //筛选出太短的
         for (const v of stat_arr) {
-            if ((v / stat_sum) < (minWidth / remain_width) && v > 0) {
+            if ((v / sum) < (minWidth / remain_width) && v > 0) {
                 stat_sum_calc -= v;
                 remain_width_calc -= minWidth;
             }
@@ -210,7 +221,7 @@ function getStatWidthArr (stat_sum = 1, stat_arr = [], minWidth = 10, fullWidth 
         for (const v of stat_arr) {
             if (v === 0) {
                 stat_width_arr.push(0);
-            } else if ((v / stat_sum) < (minWidth / remain_width)) {
+            } else if ((v / sum) < (minWidth / remain_width)) {
                 stat_width_arr.push(minWidth);
             } else {
                 stat_width_arr.push(v / stat_sum_calc * remain_width_calc);

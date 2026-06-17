@@ -95,6 +95,7 @@ export const LABELS = {
         abbr: 'BPM',
         color_remark: '#aaa',
         bar_color: '#A864A8',
+        bar_colors: colorArray.purple,
         bar_min: 90,
         bar_mid: 180,
         bar_max: 270,
@@ -105,6 +106,7 @@ export const LABELS = {
         abbr: 'LEN',
         color_remark: '#aaa',
         bar_color: '#F06EA9',
+        bar_colors: colorArray.peach,
         bar_min: 30,
         bar_mid: 150,
         bar_max: 270,
@@ -114,6 +116,7 @@ export const LABELS = {
         icon_title: 'CS',
         color_remark: '#aaa',
         bar_color: '#00BFF3',
+        bar_colors: colorArray.cyan,
         bar_min: 2,
         bar_mid: 4,
         bar_max: 6,
@@ -123,6 +126,7 @@ export const LABELS = {
         icon_title: 'KEY',
         color_remark: '#aaa',
         bar_color: '#00BFF3',
+        bar_colors: colorArray.cyan,
         bar_min: 2,
         bar_mid: 4,
         bar_max: 6,
@@ -132,6 +136,7 @@ export const LABELS = {
         icon_title: 'AR',
         color_remark: '#aaa',
         bar_color: '#7CC576',
+        bar_colors: colorArray.green,
         bar_min: 7.5,
         bar_mid: 9,
         bar_max: 10.5,
@@ -141,6 +146,7 @@ export const LABELS = {
         icon_title: 'OD',
         color_remark: '#aaa',
         bar_color: '#FFF467',
+        bar_colors: colorArray.yellow,
         bar_min: 6,
         bar_mid: 8,
         bar_max: 10,
@@ -150,6 +156,7 @@ export const LABELS = {
         icon_title: 'HP',
         color_remark: '#aaa',
         bar_color: '#F26C4F',
+        bar_colors: colorArray.pink,
         bar_min: 4,
         bar_mid: 6,
         bar_max: 8,
@@ -1295,6 +1302,7 @@ export function label_E5(data = {
     data_b: '98',
     data_m: '.36%',
     data_a: '',
+    bar_colors: [],
     bar_color: '#fff',
     bar_progress: 1,
     bar_min: 120,
@@ -1345,8 +1353,14 @@ export function label_E5(data = {
 
     const bar_width = data?.bar_progress == null ? 0 : Math.max(10, data?.bar_progress * 154);
 
-    const bar = PanelDraw.Rect(61, 38, bar_width, 10, 5, data?.bar_color || '#fff')
-    const bar_base = PanelDraw.Rect(61, 38, 154, 10, 5, data?.bar_color || '#fff', 0.2)
+    const is_gradient = Array.isArray(data?.bar_colors) && data?.bar_colors?.length === 2;
+
+    const bar = is_gradient ?
+        PanelDraw.LinearGradientRect(61, 38, bar_width, 10, 5, data?.bar_colors, 1) :
+        PanelDraw.Rect(61, 38, bar_width, 10, 5, data?.bar_color || '#fff')
+    const bar_base =  is_gradient ?
+        PanelDraw.LinearGradientRect(61, 38, 154, 10, 5, data?.bar_colors, 0.2) :
+        PanelDraw.Rect(61, 38, 154, 10, 5, data?.bar_color || '#fff', 0.2)
 
     svg = setTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
     svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)

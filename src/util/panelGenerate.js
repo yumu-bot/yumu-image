@@ -56,7 +56,7 @@ export const PanelGenerate = {
      * @param {{} | null} user
      * @param historyUser
      */
-    user2CardA1: (user, historyUser) => {
+    user2CardA1: (user, historyUser = null) => {
         if (isNullOrEmptyObject(user)) return {
             background: getImageFromV3('card-default.png'),
             avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),

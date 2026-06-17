@@ -1,7 +1,10 @@
-import {getSvg} from "../util/util.js";
+import {getPanelNameSVG, getSvg, getSvgBody, setSvgBody, setText, setTexts} from "../util/util.js";
 
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {PanelColor} from "../util/color.js";
+import {card_A1} from "../card/card_A1.js";
+import {PanelGenerate} from "../util/panelGenerate.js";
 
 export const router = createImageRouter(panel_M2);
 
@@ -58,221 +61,6 @@ export async function panel_M2(data = {
         title_unicode: '桃花笑',
         user_id: 7003013,
         video: false
-    }, {
-        anime_cover: true,
-        artist: 'ginkiha',
-        artist_unicode: 'ginkiha',
-        availability: [Object],
-        beatmaps: [Array],
-        bpm: 175,
-        can_be_hyped: false,
-        covers: [Object],
-        creator: 'Muziyami',
-        discussion_locked: false,
-        favourite_count: 276,
-        genre_id: 10,
-        has_leader_board: true,
-        id: 1789653,
-        is_scoreable: true,
-        language_id: 5,
-        last_updated: '2022-10-15T12:39:34+08:00',
-        legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1597442',
-        mappers: [],
-        nominations_summary: [Object],
-        nominators: [],
-        nsfw: false,
-        offset: 0,
-        pack_tags: [Array],
-        play_count: 218230,
-        preview_name: 'ginkiha - Ixia Polystachya (Sentou) (Muziyami)',
-        preview_url: '//b.ppy.sh/preview/1789653.mp3',
-        ranked: 1,
-        ranked_date: '2022-10-22T16:02:46+08:00',
-        rating: 9.56743,
-        ratings: [Array],
-        related_tags: [],
-        source: 'Alice In Cradle',
-        spotlight: false,
-        status: 'ranked',
-        storyboard: false,
-        submitted_date: '2022-06-20T04:29:23+08:00',
-        tags: "アリス イン クレイドル アリクレ arikure 愛麗絲搖籃 摇篮里的爱丽丝 cool_03 moe kotonami kotoki_1_3_3_7 kotoki1337 binfhone [paw]ochikouri aurorae dahkjdas ひなゆあ hinayua 橋野みずは hashino mizuha 依克西娅 波利斯塔基亚 伊夏 波利斯塔切尔 伊庫夏 波利斯塔奇亞 ixia_battle 战斗 noel cornehl 诺艾尔 诺艾儿 柯涅尔 諾艾爾 柯奈爾 original soundtrack ost bgm background music mole's nest snake 土龙巢穴 土竜の巣 土蛇 video game ryona リョナ pixel arpg act action roll playing dnb drum & bass n and japanese electronic future instrumental complextro",
-        title: 'Ixia Polystachya (Sentou)',
-        title_unicode: 'イクシャ・ポリスタキア（戦闘）',
-        user_id: 7003013,
-        video: false
-    }, {
-        anime_cover: false,
-        artist: 'Azuelle',
-        artist_unicode: 'Azuelle',
-        availability: [Object],
-        beatmaps: [Array],
-        bpm: 195,
-        can_be_hyped: false,
-        covers: [Object],
-        creator: 'Muziyami',
-        discussion_locked: false,
-        favourite_count: 287,
-        genre_id: 10,
-        has_leader_board: true,
-        id: 1433130,
-        is_scoreable: true,
-        language_id: 5,
-        last_updated: '2022-01-22T16:28:12+08:00',
-        legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1298703',
-        mappers: [],
-        nominations_summary: [Object],
-        nominators: [],
-        nsfw: false,
-        offset: 0,
-        pack_tags: [Array],
-        play_count: 154931,
-        preview_name: 'Azuelle - iced soda (Muziyami)',
-        preview_url: '//b.ppy.sh/preview/1433130.mp3',
-        ranked: 1,
-        ranked_date: '2022-02-03T08:04:09+08:00',
-        rating: 9.22222,
-        ratings: [Array],
-        related_tags: [],
-        source: '',
-        spotlight: false,
-        status: 'ranked',
-        storyboard: false,
-        submitted_date: '2021-04-15T14:08:16+08:00',
-        tags: 'tjkfred kawaii future bass electronic instrumental edm dance chinese',
-        title: 'iced soda',
-        title_unicode: 'iced soda',
-        user_id: 7003013,
-        video: false
-    }, {
-        anime_cover: true,
-        artist: 'HOYO-MiX',
-        artist_unicode: 'HOYO-MiX',
-        availability: [Object],
-        beatmaps: [Array],
-        bpm: 168,
-        can_be_hyped: false,
-        covers: [Object],
-        creator: 'Muziyami',
-        discussion_locked: false,
-        favourite_count: 534,
-        genre_id: 2,
-        has_leader_board: true,
-        id: 1884753,
-        is_scoreable: true,
-        language_id: 5,
-        last_updated: '2023-07-11T15:44:20+08:00',
-        legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1675223',
-        mappers: [],
-        nominations_summary: [Object],
-        nominators: [],
-        nsfw: false,
-        offset: 0,
-        pack_tags: [Array],
-        play_count: 126690,
-        preview_name: 'HOYO-MiX - Surasthana Fantasia (Muziyami)',
-        preview_url: '//b.ppy.sh/preview/1884753.mp3',
-        ranked: 1,
-        ranked_date: '2023-07-19T19:03:10+08:00',
-        rating: 9.05046,
-        ratings: [Array],
-        related_tags: [],
-        source: '原神',
-        spotlight: false,
-        status: 'ranked',
-        storyboard: false,
-        submitted_date: '2022-11-13T14:52:11+08:00',
-        tags: 'genshin impact yuanshen jing shan de xia ge スラサタンナ幻想曲 boundless bliss nahida na xi da 纳西妲 ナヒーダ 小吉祥草王 クラクサナリデビ クサナリ lesser lord kusanali 布耶尔 buer 白草净华 physic of purity 无垠无忧 無垠無憂 mugen muyuu vgm trailer spoiler 所聞遍計 所闻遍计 한계도 걱정도 없이 나히다 hua ling 花玲 tamura yukari 田村ゆかり 须弥 sumeru スメール ost chinese original sound track soundtrack video game videogame instrumental electronic future bass theme @hoyo-mix 草神 dendro archon sfuture艺术团 sfutureart yu-peng chen 陈宇鹏 陈致逸 yijun jiang 姜以君 the stellar moments vol. 3 album 闪耀的群星3 輝く星々vol.3 volume three patchouli-r kobayakawa sae hngjss [charlie lam] skystar chorus character demo aranara 兰那罗 アランナラ 米哈游 mihoyo hoyoverse',
-        title: 'Surasthana Fantasia',
-        title_unicode: '净善的遐歌',
-        user_id: 7003013,
-        video: true
-    }, {
-        anime_cover: true,
-        artist: 'Dark PHOENiX',
-        artist_unicode: 'Dark PHOENiX',
-        availability: [Object],
-        beatmaps: [Array],
-        bpm: 144,
-        can_be_hyped: false,
-        covers: [Object],
-        creator: 'Muziyami',
-        discussion_locked: false,
-        favourite_count: 161,
-        genre_id: 2,
-        has_leader_board: true,
-        id: 2022219,
-        is_scoreable: true,
-        language_id: 5,
-        last_updated: '2024-02-08T15:42:57+08:00',
-        legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1789565',
-        mappers: [],
-        nominations_summary: [Object],
-        nominators: [],
-        nsfw: false,
-        offset: 0,
-        pack_tags: [Array],
-        play_count: 98508,
-        preview_name: 'Dark PHOENiX - Yuuga ni Sakase, Sumizome no Sakura (Muziyami)',
-        preview_url: '//b.ppy.sh/preview/2022219.mp3',
-        ranked: 1,
-        ranked_date: '2024-02-15T16:42:59+08:00',
-        rating: 9.62371,
-        ratings: [Array],
-        related_tags: [],
-        source: '東方妖々夢　～ Perfect Cherry Blossom.',
-        spotlight: false,
-        status: 'ranked',
-        storyboard: true,
-        submitted_date: '2023-07-07T12:31:36+08:00',
-        tags: '東方project th07 優雅に咲かせ、墨染の桜 ～ border of life touhou zun 西行寺 幽々子 幽幽子 saigyouji yuyuko __ag bloom nobly cherry blossoms sumizome video game metal arrow realize c77 comic market 2009 instrumental arrangement 稲井ゆう inai yuu yu- 玉井祐也 yuya tamai utopialyric 姫川紫音 himekawa shion yhc hidden cup season 3 s3 tiebreaker tb',
-        title: 'Yuuga ni Sakase, Sumizome no Sakura',
-        title_unicode: '幽雅に咲かせ、墨染の桜',
-        user_id: 7003013,
-        video: false
-    }, {
-        anime_cover: true,
-        artist: 'HOYO-MiX',
-        artist_unicode: 'HOYO-MiX',
-        availability: [Object],
-        beatmaps: [Array],
-        bpm: 108,
-        can_be_hyped: false,
-        covers: [Object],
-        creator: 'Muziyami',
-        discussion_locked: false,
-        favourite_count: 101,
-        genre_id: 2,
-        has_leader_board: true,
-        id: 1934236,
-        is_scoreable: true,
-        language_id: 5,
-        last_updated: '2024-03-03T18:42:31+08:00',
-        legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1716445',
-        mappers: [],
-        nominations_summary: [Object],
-        nominators: [],
-        nsfw: false,
-        offset: 0,
-        pack_tags: [Array],
-        play_count: 52656,
-        preview_name: 'HOYO-MiX - Immaculate Ardency (Muziyami)',
-        preview_url: '//b.ppy.sh/preview/1934236.mp3',
-        ranked: 1,
-        ranked_date: '2024-03-11T15:22:28+08:00',
-        rating: 8.09565,
-        ratings: [Array],
-        related_tags: [],
-        source: '原神',
-        spotlight: false,
-        status: 'ranked',
-        storyboard: false,
-        submitted_date: '2023-02-03T16:11:06+08:00',
-        tags: 'genshin impact yuanshen qiong hua ying rui 瑶瑶 瑤瑤 yaoyao ヨォーヨ 요요 仙桂莹澈 仙桂瑩澈 仙桂清澄 sweet clouds 樨馨云外飘 purity of the blossoming osmanthus 순수한 선인의 계화꽃 月桂 yuegui 월계 璃月 liyue リーユェ 리월 chinese 原声带 ost original sound track soundtrack video game videogame instrumental folk electronic 主题曲 theme テーマ yijun jiang 姜以君 the stellar moments vol. 4 album 闪耀的群星4 輝く星々vol.4 volume four chuuwon yamakudzi zhongchujiguang -claris- yorita yoshino character demo 米哈游 mihoyo hoyoverse',
-        title: 'Immaculate Ardency',
-        title_unicode: '琼花映蕊',
-        user_id: 7003013,
-        video: true
     }],
     genre: [232, 85, 17, 35, 106, 5, 13, 1, 102, 7, 3, 40, 1],
     language: [222, 9, 111, 113, 101, 1, 0, 0, 0, 0, 0, 0, 0, 5],
@@ -337,49 +125,6 @@ export async function panel_M2(data = {
         title_unicode: '죽을 만큼 아파서 (feat. 멜로우)',
         user_id: 7003013,
         video: false
-    }, {
-        anime_cover: true,
-        artist: 'Fei Zao Jun',
-        artist_unicode: '肥皂菌',
-        availability: [Object],
-        beatmaps: [Array],
-        bpm: 175,
-        can_be_hyped: false,
-        covers: [Object],
-        creator: 'Muziyami',
-        discussion_locked: false,
-        favourite_count: 80,
-        genre_id: 4,
-        has_leader_board: true,
-        id: 1840959,
-        is_scoreable: true,
-        language_id: 3,
-        last_updated: '2025-07-08T16:33:01+08:00',
-        legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/1639387',
-        mappers: [],
-        nominations_summary: [Object],
-        nominators: [],
-        nsfw: false,
-        offset: 0,
-        pack_tags: [Array],
-        play_count: 50256,
-        preview_name: 'Fei Zao Jun - Ying Zhi Gui Ji (Muziyami)',
-        preview_url: '//b.ppy.sh/preview/1840959.mp3',
-        ranked: 1,
-        ranked_date: '2025-07-16T16:04:47+08:00',
-        rating: 9.12727,
-        ratings: [Array],
-        related_tags: [],
-        source: '',
-        spotlight: false,
-        status: 'ranked',
-        storyboard: false,
-        submitted_date: '2022-09-02T10:35:17+08:00',
-        tags: '鷹のキセキ 鷹の軌跡 taka no kiseki hatsune miku 初音ミク vocaloid 珉珉的猫咪 凌音音乐ascentone windbell burning gyro one ocean 狼 lang chair88 daremo original traditional folk uplifting 燃 asian japanese 和風 和风 warock j-rock rock pop chinese 2016 dahkjdas [paw]ochikouri binfhone',
-        title: 'Ying Zhi Gui Ji',
-        title_unicode: '鹰之轨迹',
-        user_id: 7003013,
-        video: true
     }],
     most_recent_ranked_guest_diff: [{
         anime_cover: false,
@@ -424,49 +169,6 @@ export async function panel_M2(data = {
         title_unicode: '燎原ノ舞',
         user_id: 443031,
         video: false
-    }, {
-        anime_cover: false,
-        artist: 'Kiryu',
-        artist_unicode: '桐生',
-        availability: [Object],
-        beatmaps: [Array],
-        bpm: 184,
-        can_be_hyped: false,
-        covers: [Object],
-        creator: 'Flower',
-        discussion_locked: false,
-        favourite_count: 57,
-        genre_id: 10,
-        has_leader_board: true,
-        id: 213434,
-        is_scoreable: true,
-        language_id: 5,
-        last_updated: '2026-04-22T13:42:11+08:00',
-        legacy_thread_url: 'https://osu.ppy.sh/community/forums/topics/243434',
-        mappers: [],
-        nominations_summary: [Object],
-        nominators: [],
-        nsfw: false,
-        offset: 0,
-        pack_tags: [Array],
-        play_count: 27192,
-        preview_name: 'Kiryu - EVE (Flower)',
-        preview_url: '//b.ppy.sh/preview/213434.mp3',
-        ranked: 1,
-        ranked_date: '2026-04-29T17:22:59+08:00',
-        rating: 9.07692,
-        ratings: [Array],
-        related_tags: [],
-        source: '',
-        spotlight: false,
-        status: 'ranked',
-        storyboard: false,
-        submitted_date: '2014-09-15T21:38:18+08:00',
-        tags: 'niconico indies nni drum and bass dnb instrumental electronic dahkjdas z1085684963 muziyami',
-        title: 'EVE',
-        title_unicode: 'EVE',
-        user_id: 1033017,
-        video: false
     }],
     favorite: 2380,
     playcount: 2340576,
@@ -485,11 +187,158 @@ export async function panel_M2(data = {
     }, {
         user: [Object], received: 0, received_ranked: 0, sent: 4, sent_ranked: 3
     }],
+    guest_bids: [
+        5445153, 5605060, 5347107, 5412734, 4976441, 5278725,
+        5295436, 3387258, 4996446, 5041682, 5031555, 3280425,
+        4646728, 4653954, 3666991, 4642260, 2683150, 4390138,
+        4637992, 4447713, 4362204, 3614185, 3365288, 4170619,
+        2752762, 4005957, 4004662, 3919786, 3464150, 3211104,
+        3672118, 3586860, 3411896, 3141864, 3035869, 3004678,
+        3171783, 2900406, 2887638, 2968832, 2790736, 2640653,
+        2514342, 2432816, 2443502, 2294936, 5638534, 5029351,
+        4770363, 4305343, 4306580, 4170594, 4044309, 4168612,
+        3810792, 3701403, 3637982, 3705697, 3596740, 3538721,
+        3526890, 3549399, 3522611, 3419703, 3469122, 5088732,
+        3210939, 3052527, 3276038, 3509000, 2947743, 2741221,
+        3475819, 2635712, 2637309, 3323143, 2557829, 2438988,
+        2371234, 2711177, 2353856, 2771581, 3096553, 2252242,
+        2260115, 3639969, 2245215
+    ],
     total_gds: 87,
     total_diffs: 479
 }) {
-    console.log(data)
+    // 自设定义
+    const has_custom_panel = false;
+
+    const {
+        user = {},
+        most_popular_beatmap = [],
+        recent_activity = [],
+        most_recent_ranked_beatmap = [],
+        guest_differs = [],
+        favorite = 0,
+        playcount = 0,
+        total_gds = 0,
+        total_diffs = 0,
+        difficulty_arr = [],
+        length_arr = []
+    } = data;
+
+    const hue = user?.profile_hue ?? 342
+
+    let svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080">
+    <defs>
+        <clipPath id="clippath-PM2-1">
+            <rect width="1920" height="320" rx="20" ry="20" style="fill: none;"/>
+        </clipPath>
+        <clipPath id="clippath-PM2-BG">
+        <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: none;"/>
+        </clipPath>
+        <filter id="blur-PM2-BG" height="110%" width="110%" x="-5%" y="-5%" filterUnits="userSpaceOnUse">
+            <feGaussianBlur in="userSpaceOnUse" stdDeviation="15" result="blur"/>
+        </filter>
+    </defs>
+    <g id="BannerBase">
+        <rect width="1920" height="320" rx="20" ry="20" style="fill: ${PanelColor.base(hue)}"/>
+    </g>
+    <g id="Banner">
+        <g style="clip-path: url(#clippath-PM2-1);">
+        </g>
+    </g>
+    <g id="Background">
+        <rect y="290" width="1920" height="790" rx="30" ry="30" style="fill: ${PanelColor.bottom(hue)};"/>
+        <g filter="url(#blur-PM2-BG)" style="clip-path: url(#clippath-PM2-BG);">
+        </g>
+    </g>
+    <g id="Component">
+    </g>
+    <g id="Card_A1">
+    </g>
+    <g id="IndexBase">
+        <rect x="510" y="40" width="195" height="60" rx="15" ry="15" style="fill: ${PanelColor.middle(hue)};"/>
+    </g>
+    <g id="Index">
+    </g>
+</svg>`
+    
+    // 路径定义
+    const reg_index = /(?<=<g id="Index">)/;
+    const reg_banner = /(?<=<g style="clip-path: url\(#clippath-PM2-1\);">)/;
+    const reg_component = /(?<=<g id="Component">)/;
+    const reg_card_a1 = /(?<=<g id="Card_A1">)/
+    const reg_background = /(?<=<g filter="url\(#blur-PM2-BG\)" style="clip-path: url\(#clippath-PM2-BG\);">)/;
+
+    // 面板文字
+    const panel_name = getPanelNameSVG("I'm Mapper v2", 'IM');
+
+    // 插入文字
+    svg = setText(svg, panel_name, reg_index);
+
+    const cardA1 = await card_A1(
+        PanelGenerate.user2CardA1(user)
+    );
+    const componentM1 = component_M1(
+        PanelMGenerate.attr2componentM1(
+        user, total_gds, favorite, playcount, has_custom_panel, hue));
+
+    // 导入卡片
+    svg = setSvgBody(svg, 40, 40, cardA1, reg_card_a1);
+
+    const bodyM1 = getSvgBody(40, 330, componentM1)
+
+    svg = setTexts(svg, [bodyM1], reg_component);
+
+    return svg
+}
+
+// yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
+const component_M1 = (
+    data = {
+        rank: 0,
+        pending: 0,
+        slot: 0,
+        guest: 0,
+        total: 0,
+        favourite: 0,
+        play_count: 0,
+
+        has_custom_panel: false,
+        hue: 342,
+    }
+) => {
+    let svg = `<g id="Component_OM1">
+    </g>`
+
+    return svg
+}
+
+// 私有转换方式
+const PanelMGenerate = {
+    attr2componentM1: (user = {}, guest, total, favourite, play_count, has_custom_panel = false, hue) => {
+        return {
+            rank: user?.ranked_beatmapset_count ?? 0,
+            pending: user?.pending_beatmapset_count ?? 0,
+            slot: getPendingSlot(user?.is_supporter, user?.ranked_beatmapset_count),
+            guest: guest ?? 0,
+            total: total ?? 0,
+            favourite: favourite ?? 0,
+            play_count: play_count ?? 0,
+
+            has_custom_panel: has_custom_panel,
+            hue: hue,
+        }
+    }
+}
 
 
-    return getSvg('<g></g>')
+
+function getPendingSlot(isSupporter = false, ranked = 0) {
+    let slot;
+    if (isSupporter) {
+        slot = 8 + Math.min(ranked, 12);
+    } else {
+        slot = 4 + Math.min(ranked, 4);
+    }
+    return slot;
 }
