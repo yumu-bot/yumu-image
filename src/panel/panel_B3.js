@@ -1,11 +1,10 @@
 import {
     getAvatar,
-    getImageFromV3,
+    getImageFromV3, getMapBackground,
     getNowTimeStamp,
     getPanelNameSVG,
     getSvgBody,
     getTimeByDHMS,
-    readNetImage,
     readTemplate,
     setImage,
     setSvgBody,
@@ -348,7 +347,7 @@ export async function panel_B3(data = {
         const values = order.map(key => my?.difficulty?.[key]);
         const vs_values = order.map(key => others?.difficulty?.[key]);
 
-        banner = await readNetImage(me?.beatmapset?.covers?.cover, true);
+        banner = await getMapBackground(me, 'list');
 
         if (isVs) {
             graph_right = order.map(key =>

@@ -8,20 +8,18 @@ import {
     getGenre,
     getImage,
     getImageFromV3,
-    getLanguage,
+    getLanguage, getMapBackground,
     getPanelNameSVG,
     getRandomString,
     getSvgBody,
     isASCII,
     od2ms,
-    readNetImage,
     round,
     rounds,
     setImage,
     setText,
     setTexts,
 } from "../util/util.js";
-import {hasLeaderBoard} from "../util/star.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {extra, poppinsBold, PuHuiTi} from "../util/font.js";
 import {
@@ -193,7 +191,7 @@ async function panel_R(data = {
     const set = beatmapset
 
     // 图片定义
-    const background = await readNetImage(set?.covers?.fullsize, hasLeaderBoard(set?.ranked))
+    const background = await getMapBackground(set, 'fullsize')
 
     const host_avatar = await getAvatar(set?.user?.avatar_url, true)
 

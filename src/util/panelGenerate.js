@@ -718,7 +718,7 @@ export const PanelGenerate = {
 
 
     beatMapSet2CardA2: async (s) => {
-        const background = await readNetImage(s?.covers?.cover, hasLeaderBoard(s?.ranked));
+        const background = await getMapBackground(s, 'cover');
         const map_status = s?.status;
         const play_count = floors(s?.play_count, 2);
         const title1 = s?.title_unicode;
@@ -750,7 +750,7 @@ export const PanelGenerate = {
     },
 
     matchBeatMap2CardA2: async (b = {}) => {
-        const background = await readNetImage(b?.beatmapset?.covers['cover@2x'], true);
+        const background = await getMapBackground(b, 'list');
 
         const title1 = b?.beatmapset?.title || 'Deleted Beatmap';
         const title2 = b?.beatmapset?.artist || '-';
@@ -850,7 +850,7 @@ export const PanelGenerate = {
 
         const has_leaderboard = hasLeaderBoard(ranked)
 
-        const background = await readNetImage(s?.covers['list@2x'], has_leaderboard);
+        const background = await getMapBackground(s, 'list');
 
         const map_status = s?.status || 'graveyard';
 
@@ -1003,11 +1003,9 @@ export const PanelGenerate = {
     },
 
     score2CardC: async (s, identifier = 1) => {
-        const use_cache = hasLeaderBoard(s?.beatmap?.ranked ?? s?.beatmap?.status)
-
         const results = await Promise.allSettled([
-            readNetImage(s?.beatmapset?.covers?.list, use_cache),
-            readNetImage(s?.beatmapset?.covers?.cover, use_cache)
+            getMapBackground(s, 'list'),
+            getMapBackground(s, 'cover')
         ]);
 
         const [cover, background] =
@@ -1145,10 +1143,8 @@ export const PanelGenerate = {
     },
 
     mostPlayed2CardC: async (mp, identifier = 1) => {
-        const cache = hasLeaderBoard(mp?.status)
-
-        const cover = await readNetImage(mp?.beatmapset?.covers?.list, cache);
-        const background = await readNetImage(mp?.beatmapset?.covers?.cover, cache);
+        const cover = await getMapBackground(mp, 'list');
+        const background = await getMapBackground(mp, 'cover');
 
         const difficulty_name = mp.version ? torus.cutStringTail(
             getKeyDifficulty(mp), 24,
@@ -1287,11 +1283,9 @@ export const PanelGenerate = {
     },
 
     score2CardC3: async (score, index = 1, decrypted = false) => {
-        const use_cache = hasLeaderBoard(score?.beatmap?.ranked ?? s?.beatmap?.status)
-
         const results = await Promise.allSettled([
-            readNetImage(score?.beatmapset?.covers?.list, use_cache),
-            readNetImage(score?.beatmapset?.covers?.cover, use_cache)
+            getMapBackground(score, 'list'),
+            getMapBackground(score, 'cover')
         ]);
 
         const [cover, background] = results.map(r => getImageOrElse(r));
@@ -1479,9 +1473,7 @@ export const PanelGenerate = {
     },
 
     score2CardI4: async (s, identifier = 1) => {
-        const use_cache = hasLeaderBoard(s?.beatmap?.ranked ?? s?.beatmap?.status)
-
-        const cover = await readNetImage(s?.beatmapset?.covers?.list, use_cache)
+        const cover = await getMapBackground(s, 'list')
         // const background = getRankBackgroundForI4(s?.legacy_rank, s?.passed);
         const rank_color = getRankColors(s?.legacy_rank)
         const type = getScoreTypeImage(s.is_lazer)
@@ -1672,7 +1664,7 @@ export const PanelGenerate = {
     beatmap2ComponentIM: async (s) => {
         if (!s) return '';
 
-        const background = await readNetImage(s?.covers?.list, true);
+        const background = await getMapBackground(s, 'list');
         const map_status = s?.status;
         const play_count = floors(s?.play_count, 1)
         const title1 = s?.title_unicode || s?.title;

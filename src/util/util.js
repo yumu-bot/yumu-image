@@ -640,20 +640,6 @@ export function readBinaryFromV3(...paths) {
 }
 
 /**
- * 获取来自 v3 的图片并缓存。返回的是 base64。
- * - **已经弃用**，图片要丢给浏览器，你传 base64 效率很低的
- * - 这对于小图片来说很有效。但如果对于较大的图片，还不如让浏览器自己去读取。
- * @param paths
- * @return {string} Base64 图片流，可直接插入 svg
- */
-// export async function getImageFromV3Cache(...paths) {
-//     const gi = path_util.join(EXPORT_FILE_V3, ...paths)
-//     const cf = await readFileWithCache(gi, 'binary')
-//
-//     return binary2Base64Text(cf);
-// }
-
-/**
  * 获取来自 v3 的图片链接，可用于 SVG 图片插入
  * @param paths
  * @return {string} 图片链接
@@ -661,35 +647,33 @@ export function readBinaryFromV3(...paths) {
 export function getImageFromV3(...paths) {
     return path_util.join(EXPORT_FILE_V3, ...paths);
 }
-
 /**
  * 获取谱面背景 v5
- * @param beatmap 也可以是 score，这两个类结构刚好一样
- * 如果是 beatmapSet，那直接使用 readNetImage，url 输入 beatmapSet.covers.xxxxx...
- * @param cover_type 封面种类，一般用 cover 和 list
+ * @param obj 也可以是 score，这两个类结构刚好一样，也可以是 beatmapset，会自动识别
+ * @param cover_type 封面种类，一般用 cover 和 list，全图用 fullsize
  * @returns {Promise<string>} 返回位于文件系统的绝对路径
  */
-export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'list') {
-    const covers = beatmap?.beatmapset?.covers || {}
+export async function getMapBackground(obj = {}, cover_type = 'cover') {
+    const beatmapset = obj?.beatmapset ? obj.beatmapset : obj;
+
+    const covers = beatmapset?.covers
 
     const default_image_path = getImageFromV3('card-default.png')
 
-    let use_cache = hasLeaderBoard(beatmap?.beatmapset?.ranked) || hasLeaderBoard(beatmap?.beatmap?.ranked)
+    let use_cache = hasLeaderBoard(beatmapset?.ranked) || hasLeaderBoard(obj?.beatmap?.ranked)
 
-    let type
+    const cl = cover_type.toString().toLowerCase().trim();
 
-    const cl = cover_type.toString().toLowerCase().trim()
+    const valid_types = [
+        'cover', 'cover@2x', 'silmcover', 'silmcover@2x',
+        'list', 'list@2x', 'card', 'card@2x', 'raw', 'fullsize'
+    ];
 
-    switch (cl) {
-        case 'cover', 'cover@2x', 'silmcover', 'silmcover@2x', 'list', 'list@2x', 'card', 'card@2x', 'raw', 'fullsize': {
-            type = cl;
-        } break;
-        default: type = 'cover'; break;
-    }
+    const type = valid_types.includes(cl) ? cl : 'cover';
 
     let url
 
-    if (isNotNullOrEmptyObject(covers)) {
+    if (covers != null) {
         switch (type) {
             case 'cover': url = covers.cover; break;
             case 'cover@2x': url = covers['cover@2x']; break;
@@ -708,7 +692,7 @@ export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'li
                         .replaceAll('list', 'fullsize');
                     break;
                 } else {
-                    url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/fullsize.jpg'
+                    url = 'https://assets.ppy.sh/beatmaps/' + obj?.beatmapset?.id + '/covers/fullsize.jpg'
                     use_cache = false
                 } break;
             }
@@ -716,8 +700,8 @@ export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'li
             default: return default_image_path
         }
     } else {
-        if (isNumber(beatmap?.beatmapset?.id)) {
-            url = 'https://assets.ppy.sh/beatmaps/' + beatmap?.beatmapset?.id + '/covers/' + type + '.jpg'
+        if (isNumber(obj?.beatmapset?.id)) {
+            url = 'https://assets.ppy.sh/beatmaps/' + obj?.beatmapset?.id + '/covers/' + type + '.jpg'
             use_cache = true
         } else {
             return default_image_path
@@ -732,23 +716,23 @@ export async function getMapBackground(beatmap = {}, cover_type = 'cover' || 'li
 
 /**
  * 获得难度背景 v5
- * @param score 成绩，也可以是 beatmap，这两个类结构刚好一样
+ * @param obj 成绩，也可以是 beatmap，这两个类结构刚好一样
  * @param must_full 如果为真，则会在失败时，尝试获取 fullsize 的图片
  * @returns {Promise<string>}
  */
-export async function getDiffBackground(score = {}, must_full = false) {
+export async function getDiffBackground(obj = {}, must_full = false) {
     let path = undefined;
     const default_image_path = getImageFromV3('card-default.png'); // 应该作为最后的兜底
 
-    const bid = score?.beatmap?.id;
-    const sid = score?.beatmapset?.id;
+    const bid = obj?.beatmap?.id ?? obj?.beatmap_id;
+    const sid = obj?.beatmapset?.id ?? obj?.beatmapset_id;
     const cover_type = must_full ? 'fullsize' : 'cover';
 
     let has_local_bg = false;
 
     try {
         if (isEmptyString(SUPER_KEY)) {
-            return await getMapBackground(score, cover_type);
+            return await getMapBackground(obj, cover_type);
         }
 
         const res = await getBackgroundFromDatabase(bid, sid);
@@ -756,7 +740,7 @@ export async function getDiffBackground(score = {}, must_full = false) {
         const textData = Buffer.from(res.data).toString('utf8');
 
         if (textData.includes('"code":404') || textData.includes('Not Found')) {
-            return await getMapBackground(score, cover_type);
+            return await getMapBackground(obj, cover_type);
         }
         path = res.data;
 
@@ -781,12 +765,12 @@ export async function getDiffBackground(score = {}, must_full = false) {
 
     // 本地没有（404 或文件不存在），只调用一次远程下载/获取
     try {
-        const is_dmca = score?.beatmapset?.availability?.more_information != null;
+        const is_dmca = obj?.beatmapset?.availability?.more_information != null;
         if (is_dmca === false) {
             deleteBeatMapFromDatabase(bid);
         }
 
-        path = await getMapBackground(score, cover_type);
+        path = await getMapBackground(obj, cover_type);
         return path || default_image_path; // 如果线上也拿不到，返回默认图
     } catch (error) {
         return default_image_path;

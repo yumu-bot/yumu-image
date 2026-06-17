@@ -4,13 +4,11 @@ import {
     getMapStatus,
     setImage,
     isNotBlankString,
-    isNotEmptyArray, readNetImage,
-    setText, setTexts, floor, getSvgBody, getImageFromV3
+    isNotEmptyArray, setText, setTexts, floor, getSvgBody, getImageFromV3, getMapBackground
 } from "../util/util.js";
 import {extra, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMapStatusColor, getStarRatingColor} from "../util/color.js";
-import {hasLeaderBoard} from "../util/star.js";
 
 export async function card_A3(beatmapset = {}) {
     // 读取模板
@@ -98,7 +96,7 @@ export async function card_A3(beatmapset = {}) {
         225, 130, 24, 'left baseline', '#ccc'
     )
 
-    const image = await readNetImage(beatmapset.covers["list@2x"], hasLeaderBoard(beatmapset.ranked))
+    const image = await getMapBackground(beatmapset, 'list')
 
     const fav = label_A8({
         image: getImageFromV3('object-beatmap-favorite.png'),

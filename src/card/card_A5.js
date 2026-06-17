@@ -1,11 +1,10 @@
 import {
     getKeyDifficulty,
-    getImageFromV3, setImage, setText, readNetImage, thenPush, getSvgBody,
+    getImageFromV3, setImage, setText, thenPush, getSvgBody, getMapBackground,
 } from "../util/util.js";
 import {torus} from "../util/font.js";
 import {label_M1, label_M2, label_M3} from "../component/label.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {hasLeaderBoard} from "../util/star.js";
 
 export async function card_A5(s = {
     "artist": "HOYO-MiX",
@@ -358,7 +357,7 @@ export async function card_A5(s = {
 
     //导入背景
 
-    const background = await readNetImage(s.covers?.list, hasLeaderBoard(s.ranked));
+    const background = await getMapBackground(s, 'list');
     svg = setImage(svg, 0, 0, 1370, 210, background, reg_background, 0.5);
 
     return svg;

@@ -19,7 +19,7 @@ export const router = createImageRouter(panel_A8);
 export const router_svg = createSvgRouter(panel_A8);
 
 /**
- * 成绩pr面板
+ * 猜歌面板
  * @param data
  * @return {Promise<string>}
  */

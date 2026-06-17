@@ -8,8 +8,6 @@ import {
     getNowTimeStamp,
     getPanelNameSVG,
     getSvgBody,
-    readNetImage,
-    requireNonNullElse,
     setImage,
     setSvgBody,
     setText,
@@ -18,7 +16,6 @@ import {
 } from "../util/util.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {poppinsBold, torus} from "../util/font.js";
-import {hasLeaderBoard} from "../util/star.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {card_C} from "../card/card_C.js";
 import {card_A2} from "../card/card_A2.js";
@@ -293,7 +290,7 @@ export async function panel_T(
 
     await Promise.allSettled(
         popular_arr.map((v, i) => {
-            return popularBeatmap2cardH(v, i + 1, true)
+            return popularBeatmap2cardH(v, i + 1)
         })
     ).then(results => thenPush(results, popular_params))
 
@@ -599,11 +596,10 @@ async function popularBeatmap2cardH(popular = {
         beatmap: null,
     },
     beatmap: {}
-}, identifier = 1, use_cache = null) {
-    const cache = requireNonNullElse(use_cache, hasLeaderBoard(popular?.beatmap?.ranked ?? popular?.beatmap?.status))
+}, identifier = 1) {
 
-    const cover = await readNetImage(popular?.beatmap?.beatmapset?.covers?.list, cache);
-    const background = await readNetImage(popular?.beatmap?.beatmapset?.covers?.cover, cache);
+    const cover = await getMapBackground(popular?.beatmap, 'list');
+    const background = await getMapBackground(popular?.beatmap, 'list');
 
     const acc = floor((popular?.accuracy * 100), 2) + '%'
     const combo = (popular.combo || 0) + 'x'

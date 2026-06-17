@@ -3,11 +3,10 @@ import {
     getAvatar,
     getGenre,
     getImageFromV3,
-    getLanguage,
+    getLanguage, getMapBackground,
     getPanelNameSVG,
     getSvgBody,
     isEmptyArray,
-    readNetImage,
     readTemplate,
     setImage,
     setSvgBody,
@@ -133,7 +132,7 @@ export async function panel_N(
     svg = setText(svg, genre, reg_genre);
 
     // 插入图片和部件（新方法
-    const cover = await readNetImage(data?.beatmapset?.covers?.cover, true);
+    const cover = await getMapBackground(data, 'cover');
     svg = setImage(svg, 0, 0, 1920, 320, cover, reg_banner, 0.7);
     svg = setSvgBody(svg, 40, 40, cardA2, reg_beatmap_A2);
     svg = setSvgBody(svg, 60, 350, cardO1, reg_me);
