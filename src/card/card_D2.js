@@ -1,4 +1,5 @@
 import {
+    isNotBlankString,
     setImage,
     setTexts
 } from "../util/util.js";
@@ -6,9 +7,11 @@ import {getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_D2(data = {
-    background: '',
+    background: Promise.resolve(''),
     title: '',
     title_m: '',
+
+    sub_title: '',
 
     left: '',
     left_color: '',
@@ -56,6 +59,13 @@ export async function card_D2(data = {
         }], 75, 77, 'center baseline', true
     )
 
+    const has_sub_title = isNotBlankString(data?.sub_title ?? '');
+
+    const sub_title = has_sub_title ? (
+        poppinsBold.getTextPath(data?.sub_title ?? '', 145 + 2, 94 + 2, 14, 'right baseline', '#000', 1) +
+        poppinsBold.getTextPath(data?.sub_title ?? '', 145, 94, 14, 'right baseline', '#fff', 1)
+    ) : ''
+
     const left_width = poppinsBold.getTextWidth(data?.left ?? '', 16)
     const left_rrect_width = Math.max(48, left_width + 20)
 
@@ -100,10 +110,10 @@ export async function card_D2(data = {
     )
 
     svg = setTexts(svg,
-        [title, left, right, bottom_left, bottom_right, left_rrect, right_rrect],
+        [title, sub_title, left, right, bottom_left, bottom_right, left_rrect, right_rrect],
         reg_text)
 
-    svg = setImage(svg, 0, 0, 150, 120, data?.background ?? '', reg_background, 0.7)
+    svg = setImage(svg, 0, 0, 150, 120, await data.background, reg_background, 0.7)
 
     return svg
 }

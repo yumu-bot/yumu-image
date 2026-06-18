@@ -140,6 +140,17 @@ export function hex2rgbColor(hex = '#AAAAAA') {
     return `${rgb.r},${rgb.g},${rgb.b}`
 }
 
+// 返回的结果是 [xxx, xxx, xxx]
+export function hex2rgbArray(hex = '#AAAAAA') {
+    const rgb = hex2rgb(hex);
+
+    return [rgb.r, rgb.g, rgb.b]
+}
+
+/**
+ * @param hex
+ * @return {{r: number, g: number, b: number}}
+ */
 export function hex2rgb(hex = '#AAAAAA') {
     if (isHexColor(hex)) {
         if (hex.length === 7) {
@@ -304,50 +315,90 @@ export function getStarRatingColors(star = 0) {
     return [start, end];
 }
 
+const ratingValues = [
+    1.0, 3.5, 6.0,
+    6.5, 7.0, 7.5, 8.0,
+    8.5, 9, 9.3, 9.6
+];
+
+// 颜色顺序也对应翻转
+const ratingColors = [
+    '#000000', '#18158e', '#6563de',
+    '#c645b8', '#ff4e6f', '#ff6868', '#f6f05c',
+    '#7cff4f', '#4ffffd', '#4fc0ff', '#4290fb'
+];
+
+export const getPlayerRatingColor = createColorInterpolator({
+    values: ratingValues,
+    colors: ratingColors,
+    minBound: 1,
+    minColor: '#000',
+});
+
+
+const textValues = [9, 9.9, 10.6, 11.5, 12.4
+];
+
+// 定义域：
+// .domain([9, 9.7, 10.4, 11.1, 11.8, 12.4])
+// .range(['#F6F05C', '#FF8068', '#FF4E6F', '#C645B8', '#6563DE', '#18158E'])
+// 由于有 6 个点，但只有 5 个锚点，因此会再做一次线性插值
+const textColors = [
+    '#f6f05c', // [246, 240, 92]
+    '#ff7869', // [255, 120, 105]
+    '#e64892', // [230,  72, 146]
+    '#8056d6', // [128,  86, 214]
+    '#18158e'  // [ 24,  21, 142]
+];
+
+const getTextColor = createColorInterpolator({
+    values: textValues,
+    colors: textColors,
+    minBound: 9,
+    minColor: '#f6f05c',
+    maxBound: 12.4,
+    maxColor: '#18158e'
+})
+
 export function getStarTextColor(star = 0) {
     if (!star || star < 6.5) return '#000';
     if (star < 9) return '#F6F05C';
     if (star >= 12.4) return '#18158E';
 
-    // 定义域：
-    // .domain([9, 9.7, 10.4, 11.1, 11.8, 12.4])
-    // .range(['#F6F05C', '#FF8068', '#FF4E6F', '#C645B8', '#6563DE', '#18158E'])
-    // 由于有 6 个点，但只有 5 个锚点，因此会再做一次线性插值
-
-    const GAMMA = 2.2;
-
-    // 配置表：[阈值, R, G, B]
-    const stops = [
-        [   9, 246, 240,  92],
-        [ 9.9, 255, 120, 105],
-        [10.6, 230,  72, 146],
-        [11.5, 128,  86, 214],
-        [12.4,  24,  21, 142],
-    ];
-
-    // 1. 找到当前 star 落在哪个区间
-    let i = stops.findIndex(stop => star < stop[0]);
-    if (i === -1) i = stops.length - 1;
-
-    const [bottom, r0, g0, b0] = stops[i - 1];
-    const [top, r1, g1, b1] = stops[i];
-
-    // 2. 计算插值比例
-    const s = (star - bottom) / (top - bottom);
-
-    // 3. 伽马校正插值函数
-    const interpolate = (c0, c1) => {
-        const val = Math.pow(
-            (1 - s) * Math.pow(c0, GAMMA) + s * Math.pow(c1, GAMMA),
-            1 / GAMMA
-        );
-        return Math.round(val).toString(16).padStart(2, '0');
-    };
-
-    return `#${interpolate(r0, r1)}${interpolate(g0, g1)}${interpolate(b0, b1)}`;
+    return getTextColor(star)
 }
 
-export function getStarRatingColor(star = 0) {
+const starValues = [
+    0.1, 1.25, 2, 2.5,
+    3.3, 4.2, 4.9, 5.8,
+    6.7, 7.7, 9
+];
+
+const starColors = [
+    '#4290fb', // [66,  144, 251]
+    '#4fc0ff', // [79,  192, 255]
+    '#4ffffd', // [79,  255, 213]
+    '#7cff4f', // [124, 255, 79]
+    '#f6f05c', // [246, 240, 92]
+    '#ff6868', // [255, 104, 104]
+    '#ff4e6f', // [255, 78,  111]
+    '#c645b8', // [198, 69,  184]
+    '#6563de', // [101, 99,  222]
+    '#18158e', // [24,  21,  142]
+    '#000000'  // [0,   0,   0]
+];
+
+export const getStarRatingColor = createColorInterpolator({
+    values: starValues,
+    colors: starColors,
+    minBound: 0.1,
+    minColor: '#AAAAAA',
+    maxBound: 9,
+    maxColor: '#000000'
+})
+
+/*
+{
     if (star < 0.1) return '#AAAAAA';
     if (star >= 9) return '#000000';
 
@@ -388,6 +439,75 @@ export function getStarRatingColor(star = 0) {
     };
 
     return `#${interpolate(r0, r1)}${interpolate(g0, g1)}${interpolate(b0, b1)}`;
+}
+
+ */
+
+/**
+ * 创建一个通用的颜色插值器
+ * @param {Object} options 配置项
+ * @param {number[]} options.values 输入值的范围数组，例如 [0.1, 1.25, ...]
+ * @param {string[]} options.colors 与 values 一一对应的 hex
+ * @param {number} [options.minBound] 最小边界（可选）
+ * @param {number} [options.maxBound] 最大边界（可选）
+ * @param {string} [options.minColor] 小于最小边界时的颜色（可选，默认 '#000000'）
+ * @param {string} [options.maxColor] 大于或等于最大边界时的颜色（可选，默认 '#000000'）
+ * @param {number} [options.gamma] 伽马校正值（可选，默认 2.2）
+ */
+export function createColorInterpolator(options) {
+    const {
+        values,
+        colors,
+        minBound,
+        maxBound,
+        minColor = '#000000',
+        maxColor = '#000000',
+        gamma = 2.2
+    } = options;
+
+    if (!values || !colors || values.length !== colors.length || values.length === 0) {
+        throw new Error("values 和 colors 数组长度必须一致且不能为空。");
+    }
+
+    // 1. 解析并组合数据
+    const stops = values
+        .map((val, idx) => ({ val, rgb: hex2rgbArray(colors[idx]) }))
+        .sort((a, b) => a.val - b.val);
+
+    return function (star) {
+        // 2. 处理最小/最大边界
+        if (minBound !== undefined && star < minBound) return minColor;
+        if (maxBound !== undefined && star >= maxBound) return maxColor;
+
+        // 3. 越界兜底
+        const toHex = (rgb) => '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
+        if (star <= stops[0].val) return toHex(stops[0].rgb);
+        if (star >= stops[stops.length - 1].val) return toHex(stops[stops.length - 1].rgb);
+
+        // 4. 寻找区间
+        let i = stops.findIndex(stop => star < stop.val);
+        if (i === -1) i = stops.length - 1;
+
+        const bottomStop = stops[i - 1];
+        const topStop = stops[i];
+
+        // 5. 计算插值比例
+        const s = (star - bottomStop.val) / (topStop.val - bottomStop.val);
+
+        // 6. 伽马校正
+        const interpolate = (c0, c1) => {
+            const val = Math.pow(
+                (1 - s) * Math.pow(c0, gamma) + s * Math.pow(c1, gamma),
+                1 / gamma
+            );
+            return Math.round(val).toString(16).padStart(2, '0');
+        };
+
+        const [r0, g0, b0] = bottomStop.rgb;
+        const [r1, g1, b1] = topStop.rgb;
+
+        return `#${interpolate(r0, r1)}${interpolate(g0, g1)}${interpolate(b0, b1)}`;
+    };
 }
 
 //获取玩家名次的背景色，给一二三名赋予特殊的颜色

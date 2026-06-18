@@ -615,7 +615,7 @@ export async function getMapBackground(obj = {}, cover_type = 'cover') {
 
     const default_image_path = getImageFromV3('card-default.png')
 
-    let use_cache = hasLeaderBoard(beatmapset?.ranked) || hasLeaderBoard(obj?.beatmap?.ranked)
+    let use_cache = hasLeaderBoard(beatmapset?.ranked)
 
     const cl = cover_type.toString().toLowerCase().trim();
 
@@ -654,13 +654,17 @@ export async function getMapBackground(obj = {}, cover_type = 'cover') {
 
             default: return default_image_path
         }
+    } else if (isNumber(beatmapset?.id)) {
+        url = 'https://assets.ppy.sh/beatmaps/' + beatmapset?.id + '/covers/' + type + '.jpg'
+        use_cache = true
     } else {
-        if (isNumber(obj?.beatmapset?.id)) {
-            url = 'https://assets.ppy.sh/beatmaps/' + obj?.beatmapset?.id + '/covers/' + type + '.jpg'
-            use_cache = true
-        } else {
-            return default_image_path
-        }
+        return default_image_path
+    }
+
+    // https://assets.ppy.sh/beatmaps/2436581/covers/list.jpg?1766251529
+    // 这样的结构可以缓存
+    if (url && /\?\d+/.test(url)) {
+        use_cache = true;
     }
 
     const background = await readNetImage(url, use_cache, default_image_path)
@@ -786,6 +790,8 @@ export async function getAvatar(link, use_cache = true, default_image_path = get
         return default_image_path;
     } else if (isNumber(link)) {
         return await readNetImage('https://a.ppy.sh/' + link, use_cache, default_image_path);
+    } else if (!link.startsWith("http")) {
+        return link;
     } else {
         return await readNetImage(link + '', use_cache, default_image_path);
     }
@@ -801,6 +807,8 @@ export async function getAvatar(link, use_cache = true, default_image_path = get
 export async function getBanner(link, use_cache = true, default_image_path = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
     if (isBlankString(link)) {
         return default_image_path;
+    } else if (!link.startsWith("http")) {
+        return link;
     } else if (link.startsWith("https://assets.ppy.sh/beatmaps/")) {
         return await readNetImage(link, use_cache, getImageFromV3('beatmap-DLfailBG.jpg'))
     } else {

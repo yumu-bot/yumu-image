@@ -716,10 +716,10 @@ const component_J8 = async (
 
     if (isNotNull(most_favorite)) {
         // J6 单人版
-        const label = await label_J7({
+        const label = await label_J7(mapper2LabelJ7({
             ...most_favorite,
             index: 1
-        }, data.hue)
+        }), data.hue)
         svg = setText(svg, label, reg)
     }
 
@@ -727,10 +727,10 @@ const component_J8 = async (
         const x = (i - 1) % 2
         const y = Math.floor((i - 1) / 2)
 
-        const label = await label_J6({
+        const label = await label_J6(mapper2LabelJ6({
             ...mappers[i],
             index: i + 1,
-        }, data.hue)
+        }), data.hue)
 
         svg = setSvgBody(svg, 10 + x * 235, 105 + y * 65, label, reg)
     }
@@ -958,4 +958,37 @@ const PanelJGenerate = {
             hue: hue,
         }
     },
+}
+
+const mapper2LabelJ6 = (favourite_mapper = {
+    avatar_url: 'https://a.ppy.sh/1947052?1730218340.png',
+    username: 'Sakaue Nachi',
+    map_count: 2,
+    pp_count: 576.812,
+    index: 1,
+}) => {
+    return {
+        image: favourite_mapper.avatar_url,
+        title: favourite_mapper.username,
+        index: favourite_mapper.index,
+        top: `${Math.round(favourite_mapper.pp_count)} PP [${favourite_mapper.map_count}x]`,
+    }
+}
+
+const mapper2LabelJ7 = (favourite_mapper = {
+    avatar_url: 'https://a.ppy.sh/1947052?1730218340.png',
+    username: 'Sakaue Nachi',
+    map_count: 2,
+    pp_count: 576.812,
+    index: 1,
+}) => {
+    return {
+        image: favourite_mapper.avatar_url,
+        title: favourite_mapper.username,
+        index: favourite_mapper.index,
+        top_b: String(Math.round(favourite_mapper.avatar_url)),
+        top_m: ' PP',
+        bottom_b: String(favourite_mapper.map_count),
+        bottom_m: 'x',
+    }
 }

@@ -19,7 +19,7 @@ export const LABELS = {
         icon: getImageFromV3("object-score-accuracy.png"),
         icon_title: 'Accuracy',
         abbr: 'ACC',
-        bar_color: '#00BFF3',
+        bar_color: '#00B7EE',
         color_remark: '#fff',
     },
     COMBO: {
@@ -115,7 +115,7 @@ export const LABELS = {
         icon: getImageFromV3("object-score-circlesize.png"),
         icon_title: 'CS',
         color_remark: '#aaa',
-        bar_color: '#00BFF3',
+        bar_color: '#00B7EE',
         bar_colors: colorArray.cyan,
         bar_min: 2,
         bar_mid: 4,
@@ -125,7 +125,7 @@ export const LABELS = {
         icon: getImageFromV3("object-score-circlesize.png"),
         icon_title: 'KEY',
         color_remark: '#aaa',
-        bar_color: '#00BFF3',
+        bar_color: '#00B7EE',
         bar_colors: colorArray.cyan,
         bar_min: 2,
         bar_mid: 4,
@@ -183,7 +183,7 @@ export const LABELS = {
         remark: '游玩次数',
         abbr: 'PC',
         color_remark: '#ccc',
-        bar_color: '#00BFF3',
+        bar_color: '#00B7EE',
     },
     PT: {
         icon: getImageFromV3("object-score-length.png"),
@@ -811,6 +811,75 @@ export const LABEL_ETX = {
     },
 }
 
+export const LABEL_IM = {
+    RANK: {
+        icon: getImageFromV3("object-beatmap-ranked.png"),
+        icon_title: 'Rank',
+        abbr: 'Rank',
+        color_remark: '#aaa',
+        bar_color: '#00B7EE',
+        bar_colors: colorArray.cyan,
+        bar_min: 0,
+        bar_mid: 50,
+        bar_max: 100,
+    },
+    PENDING: {
+        icon: getImageFromV3("object-beatmap-unranked.png"),
+        icon_title: 'Pend',
+        abbr: 'Pend',
+        color_remark: '#aaa',
+        bar_color: '#ccc',
+        bar_colors: colorArray.gray,
+        bar_min: 0,
+        bar_mid: 500,
+        bar_max: 1000,
+    },
+    GUEST: {
+        icon: getImageFromV3("object-beatmap-uploaded.png"),
+        icon_title: 'Guest',
+        abbr: 'Guest',
+        color_remark: '#aaa',
+        bar_color: '#FFF467',
+        bar_colors: colorArray.yellow,
+        bar_min: 0,
+        bar_mid: 100,
+        bar_max: 200,
+    },
+    DIFFICULTY: {
+        icon: getImageFromV3("object-beatmap-restored.png"),
+        icon_title: 'Diff',
+        abbr: 'Diff',
+        color_remark: '#aaa',
+        bar_color: '#A864A8',
+        bar_colors: colorArray.purple,
+        bar_min: 0,
+        bar_mid: 500,
+        bar_max: 1000,
+    },
+    FAVOURITE: {
+        icon: getImageFromV3("object-beatmap-loved.png"),
+        icon_title: 'Fav',
+        abbr: 'Fav',
+        color_remark: '#aaa',
+        bar_color: '#F06EA9',
+        bar_colors: colorArray.pink,
+        bar_min: 0,
+        bar_mid: 2500,
+        bar_max: 5000,
+    },
+    PLAY_COUNT: {
+        icon: getImageFromV3("object-beatmap-qualified.png"),
+        icon_title: 'Play',
+        abbr: 'Play',
+        color_remark: '#aaa',
+        bar_color: '#7CC576',
+        bar_colors: colorArray.green,
+        bar_min: 0,
+        bar_mid: 5000000,
+        bar_max: 10000000,
+    },
+}
+
 export async function label_C1(data = {
     avatar: '',
     name: 'Guozi on osu',
@@ -1308,6 +1377,8 @@ export function label_E5(data = {
     bar_min: 120,
     bar_mid: 180,
     bar_max: 240,
+    max_width: undefined,
+    hide: undefined,
 }) {
     let svg = `
         <g id="Icon_LE5">
@@ -1315,6 +1386,10 @@ export function label_E5(data = {
         <g id="Text_LE5">
         </g>
     `;
+
+    const label_width = data?.max_width ?? 215
+    const label_left = 61
+    const progress_width = label_width - label_left
 
     // 正则表达式
     const reg_text = /(?<=<g id="Text_LE5">)/;
@@ -1342,28 +1417,33 @@ export function label_E5(data = {
         color: number_color,
     }]
 
-    const number_data = getMultipleTextPath(number_arr, 61, 32, "left baseline")
+    // 原来 y 是 32，太靠下了
+    const number_data = getMultipleTextPath(number_arr, label_left, 30, "left baseline")
 
-    // 原来是 16，感觉太大了
-    const remark = poppinsBold.getTextPath(data?.remark, 215, 32, 14, "right baseline", '#666');
+    // 原来 y 是 32，太靠下了
+    // 原来 size 是 16，感觉太大了
+    const remark = poppinsBold.getTextPath(data?.remark, label_width, 30, 14, "right baseline", '#666');
 
-    const bar_min = poppinsBold.getTextPath(data?.bar_min, 61, 65, 14, "left baseline", '#666');
-    const bar_mid = poppinsBold.getTextPath(data?.bar_mid, 138, 65, 14, "center baseline", '#666');
-    const bar_max = poppinsBold.getTextPath(data?.bar_max, 215, 65, 14, "right baseline", '#666');
+    const bar_min = poppinsBold.getTextPath(data?.bar_min, label_left, 65, 14, "left baseline", '#666');
+    const bar_mid = poppinsBold.getTextPath(data?.bar_mid, label_left + progress_width / 2, 65, 14, "center baseline", '#666');
+    const bar_max = poppinsBold.getTextPath(data?.bar_max, label_width, 65, 14, "right baseline", '#666');
 
-    const bar_width = data?.bar_progress == null ? 0 : Math.max(10, data?.bar_progress * 154);
+    const bar_width = data?.bar_progress == null ? 0 : Math.max(10, data?.bar_progress * progress_width);
 
     const is_gradient = Array.isArray(data?.bar_colors) && data?.bar_colors?.length === 2;
 
     const bar = is_gradient ?
-        PanelDraw.LinearGradientRect(61, 38, bar_width, 10, 5, data?.bar_colors, 1) :
-        PanelDraw.Rect(61, 38, bar_width, 10, 5, data?.bar_color || '#fff')
+        PanelDraw.LinearGradientRect(label_left, 38, bar_width, 10, 5, data?.bar_colors, 1) :
+        PanelDraw.Rect(label_left, 38, bar_width, 10, 5, data?.bar_color || '#fff')
     const bar_base =  is_gradient ?
-        PanelDraw.LinearGradientRect(61, 38, 154, 10, 5, data?.bar_colors, 0.2) :
-        PanelDraw.Rect(61, 38, 154, 10, 5, data?.bar_color || '#fff', 0.2)
+        PanelDraw.LinearGradientRect(label_left, 38, progress_width, 10, 5, data?.bar_colors, 0.2) :
+        PanelDraw.Rect(label_left, 38, progress_width, 10, 5, data?.bar_color || '#fff', 0.2)
 
     svg = setTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
-    svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
+
+    if (data.hide !== true) {
+        svg = setImage(svg, 0, 0, 50, 50, data.icon, reg_icon, 1)
+    }
 
     return svg;
 }
@@ -1647,11 +1727,10 @@ export function label_J5(data = {
 
 //BPA-J6-新谱师标签
 export async function label_J6(data = {
-    avatar_url: 'https://a.ppy.sh/1947052?1730218340.png',
-    username: 'Sakaue Nachi',
-    map_count: 2,
-    pp_count: 576.812,
+    image: 'https://a.ppy.sh/1947052?1730218340.png',
+    title: 'Sakaue Nachi',
     index: 1,
+    top: '',
 }, hue = 342) {
     let svg = `
     <defs>
@@ -1669,12 +1748,12 @@ export async function label_J6(data = {
     const reg_text = /(?<=<g id="Text_LJ6">)/;
     const reg_avatar = /(?<=<g id="Avatar_LJ6" clip-path="url\(#clippath-LJ6\)">)/;
 
-    const avatar = await getAvatar(data.avatar_url, true)
+    const avatar = await getAvatar(data.image, true)
 
     svg = setImage(svg, 0, 0, 55, 55, avatar, reg_avatar, 1)
 
-    const name = poppinsBold.getTextPath(
-        poppinsBold.cutStringTail(data.username, 22, 160),
+    const title = poppinsBold.getTextPath(
+        poppinsBold.cutStringTail(data.title, 22, 160),
         55 + 10, 46, 22, 'left baseline'
     )
 
@@ -1682,24 +1761,25 @@ export async function label_J6(data = {
         '#' + (data.index || '0'), 55 + 10, 20, 18, 'left baseline'
     )
 
-    const pp_and_count = poppinsBold.getTextPath(
-        Math.round(data.pp_count || '0') + ' PP [' + (data.map_count || '0') + 'x]', 225, 20, 16, 'right baseline'
+    const pp_and_count = poppinsBold.getTextPath(data.top, 225, 20, 16, 'right baseline'
     )
 
     const base = PanelDraw.Rect(0, 0, 55, 55, 10, PanelColor.top(hue))
 
-    svg = setTexts(svg, [name, index, pp_and_count, base], reg_text)
+    svg = setTexts(svg, [title, index, pp_and_count, base], reg_text)
 
     return svg
 }
 
 //BPA-J7-新谱师标签（第一
 export async function label_J7(data = {
-    avatar_url: 'https://a.ppy.sh/1947052?1730218340.png',
-    username: 'Sakaue Nachi',
-    map_count: 2,
-    pp_count: 576.812,
+    image: 'https://a.ppy.sh/1947052?1730218340.png',
+    title: 'Sakaue Nachi',
     index: 1,
+    top_b: '',
+    top_m: '',
+    bottom_b: '',
+    bottom_m: '',
 }, hue = 342) {
     let svg = `
     <defs>
@@ -1717,12 +1797,12 @@ export async function label_J7(data = {
     const reg_text = /(?<=<g id="Text_LJ7">)/;
     const reg_avatar = /(?<=<g id="Avatar_LJ7" clip-path="url\(#clippath-LJ7\)">)/;
 
-    const avatar = await getAvatar(data.avatar_url, true)
+    const avatar = await getAvatar(data.image, true)
 
     svg = setImage(svg, 390, 15, 85, 85, avatar, reg_avatar, 1)
 
-    const name = poppinsBold.getTextPath(
-        poppinsBold.cutStringTail(data.username, 22, 325),
+    const title = poppinsBold.getTextPath(
+        poppinsBold.cutStringTail(data.title, 22, 325),
         15, 94, 36, 'left baseline'
     )
 
@@ -1741,31 +1821,31 @@ export async function label_J7(data = {
         ], 15, 60, 'left baseline'
     )
 
-    const pp = getMultipleTextPath(
+    const top = getMultipleTextPath(
         [{
             font: poppinsBold,
-            text: Math.round(data.pp_count || '0'),
+            text: data.top_b,
             size: 30,
             color: '#fff',
         }, {
             font: poppinsBold,
-            text: ' PP',
-            size: 20,
+            text: data.top_m,
+            size: 24,
             color: '#fff',
         },
         ], 380, 60, 'right baseline'
     )
 
-    const count = getMultipleTextPath(
+    const bottom = getMultipleTextPath(
         [{
             font: poppinsBold,
-            text: (data.map_count || '0'),
+            text: data.bottom_b,
             size: 30,
             color: '#fff',
         }, {
             font: poppinsBold,
-            text: 'x',
-            size: 30, // 这个 20 就太小了
+            text: data.bottom_m,
+            size: 24,
             color: '#fff',
         },
         ], 380, 94, 'right baseline'
@@ -1773,7 +1853,7 @@ export async function label_J7(data = {
 
     const base = PanelDraw.Rect(390, 15, 85, 85, 20, PanelColor.top(hue))
 
-    svg = setTexts(svg, [name, index, pp, count, base], reg_text)
+    svg = setTexts(svg, [title, index, top, bottom, base], reg_text)
 
     return svg
 }

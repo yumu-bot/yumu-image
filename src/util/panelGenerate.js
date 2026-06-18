@@ -55,8 +55,10 @@ export const PanelGenerate = {
      *
      * @param {{} | null} user
      * @param historyUser
+     * @param avatar 如果下好了图片，发这里
+     * @param background 如果下好了图片，发这里
      */
-    user2CardA1: (user, historyUser = null) => {
+    user2CardA1: (user, historyUser = null, avatar = null, background = null) => {
         if (isNullOrEmptyObject(user)) return {
             background: getImageFromV3('card-default.png'),
             avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
@@ -77,8 +79,12 @@ export const PanelGenerate = {
         /**
          * @type {string}
          */
-        const background = user?.profile?.card || user?.cover_url;
-        const avatar = user?.avatar_url;
+        const bg = background ?? user?.profile?.card ?? user?.cover_url;
+
+        /**
+         * @type {string}
+         */
+        const av = avatar ?? user?.avatar_url;
 
         const sub_icon1 = user?.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
@@ -126,8 +132,8 @@ export const PanelGenerate = {
             ((pp_d < 0) ? pp_d + 'PP' : (is_team_member ? '[' + user.team.short_name + ']' : ''))
 
         return {
-            background: background,
-            avatar: avatar,
+            background: bg,
+            avatar: av,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',
@@ -961,8 +967,8 @@ export const PanelGenerate = {
      * @return {Promise<*[]>}
      */
     score2CardD2: async (scores = []) => {
-        let promiseHs = []
-        let h2s = []
+        let promises = []
+        let d2s = []
 
         for (const s of scores) {
             const star = s?.beatmap?.difficulty_rating || 0
@@ -976,7 +982,7 @@ export const PanelGenerate = {
             const time = getTime(s?.beatmap?.total_length)
 
             const data = {
-                background: await getMapBackground(s, 'list'),
+                background: getMapBackground(s, 'list'),
                 title: Math.round(s?.pp).toString() || '0',
                 title_m: 'PP',
 
@@ -988,19 +994,20 @@ export const PanelGenerate = {
                 right_color: rank_text_color,
                 right_rrect_color: rank_rrect_color,
 
-                bottom_left: s?.beatmap_id.toString() || '0',
+                bottom_left: String(s?.beatmap_id ?? 0),
                 bottom_right: time.minute + ":" + time.seconds,
             }
 
-            promiseHs.push(card_D2(data))
+            promises.push(card_D2(data))
         }
 
-        await Promise.allSettled(
-            promiseHs
-        ).then(results => thenPush(results, h2s))
+        await Promise.allSettled(promises)
+            .then(results => thenPush(results, d2s))
 
-        return h2s
+        return d2s
     },
+
+
 
     score2CardC: async (s, identifier = 1) => {
         const results = await Promise.allSettled([

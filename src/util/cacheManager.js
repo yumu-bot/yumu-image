@@ -103,9 +103,12 @@ export const cacheManager = {
         if (useRedis && redisClient?.isOpen) {
             try {
                 const val = await redisClient.get(key);
-                if (val !== null) return val;
+                if (val !== null) {
+                    image_lru_cache.set(key, val);
+                    return val;
+                }
             } catch (e) {
-                // 运行时单次偶发报错，不打印任何日志，直接静默降级走本地 LRU
+
             }
         }
         return image_lru_cache.get(key);
@@ -135,7 +138,7 @@ export const cacheManager = {
     },
 
     async fetch(key, fetchFn = () => { return null }) {
-        const cached = await cacheManager.get(key);
+        const cached = await this.get(key);
 
         if (cached != null) {
             return cached;
@@ -144,7 +147,7 @@ export const cacheManager = {
         const fresh = await fetchFn();
 
         if (fresh != null) {
-            await cacheManager.set(key, fresh);
+            await this.set(key, fresh);
         }
 
         return fresh;
@@ -167,7 +170,7 @@ export const templateManager = {
 
     // 🚀 新增同步 fetch 方法
     fetch(key, fetchFn = () => { return null }) {
-        const cached = templateManager.get(key);
+        const cached = this.get(key);
         if (cached != null) {
             return cached;
         }
@@ -175,7 +178,7 @@ export const templateManager = {
         const fresh = fetchFn();
 
         if (fresh != null) {
-            templateManager.set(key, fresh);
+            this.set(key, fresh);
         }
 
         return fresh;
