@@ -1177,7 +1177,7 @@ const label_M1 = (data = {
             const x = 68 + rrect_length
             const y = 22
 
-            const r = PanelDraw.Rect(x, y, 8, 12, 4, v, opacity)
+            const r = PanelDraw.Rect(x, y, 8, 14, 4, v, opacity)
 
             color_array.push(r)
 
