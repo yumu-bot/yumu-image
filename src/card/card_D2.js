@@ -1,4 +1,5 @@
 import {
+    getImage,
     isNotBlankString,
     setImage,
     setTexts
@@ -8,6 +9,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 
 export async function card_D2(data = {
     background: Promise.resolve(''),
+    top_image: '',
     title: '',
     title_m: '',
 
@@ -66,6 +68,12 @@ export async function card_D2(data = {
         poppinsBold.getTextPath(data?.sub_title ?? '', 145, 94, 14, 'right baseline', '#fff', 1)
     ) : ''
 
+    const has_top_image = isNotBlankString(data?.top_image ?? '');
+
+    const top_image = has_top_image ? (
+        getImage(116, 2, 30, 30, data?.top_image, 1)
+    ) : ''
+
     const left_width = poppinsBold.getTextWidth(data?.left ?? '', 16)
     const left_rrect_width = Math.max(48, left_width + 20)
 
@@ -110,7 +118,7 @@ export async function card_D2(data = {
     )
 
     svg = setTexts(svg,
-        [title, sub_title, left, right, bottom_left, bottom_right, left_rrect, right_rrect],
+        [title, top_image, sub_title, left, right, bottom_left, bottom_right, left_rrect, right_rrect],
         reg_text)
 
     svg = setImage(svg, 0, 0, 150, 120, await data.background, reg_background, 0.7)

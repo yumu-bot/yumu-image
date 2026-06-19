@@ -1,5 +1,5 @@
 import {
-    floor, getAvatar, getBanner, getImage, getImageFromV3, getMapBackground,
+    floor, getAvatar, getBanner, getImage, getImageFromV3, getMapBackground, getMapStatusImage,
     getPanelNameSVG, getRandomString,
     getSvgBody, getTimeDifferenceShort, isBlankString, isNotBlankString, isNotEmptyArray, isNotNull, round,
     rounds, setCustomBanner,
@@ -440,7 +440,7 @@ const component_M3 = (data = {
             'video game', 'anime', 'rock', 'pop',
             'other', 'novelty', 'hip hop', 'electronic',
             'metal', 'classical', 'folk', 'jazz'][i],
-    }));
+    })).filter(item => item.value !== 0);
 
     genre_data.sort((a, b) => b.value - a.value);
 
@@ -543,7 +543,7 @@ const component_M4 = (data = {
             "ko", "fr", "de", "sw",
             "es", "it", "ru", "pl",
             "other"][i],
-    }));
+    })).filter(item => item.value !== 0);
 
     language_data.sort((a, b) => b.value - a.value);
 
@@ -986,6 +986,8 @@ const beatmapset2CardD2s = async (beatmapsets, images) => {
 
         const data = {
             background: background,
+            top_image: getMapStatusImage(s.ranked),
+
             title: play_count.integer,
             title_m: play_count.decimal,
 

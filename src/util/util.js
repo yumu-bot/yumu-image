@@ -1876,54 +1876,33 @@ export function getMapStatus(ranked = 0) {
  * @param {number, String} status 谱面状态，可以是数字可以是字符串
  */
 export function getMapStatusImage(status = 0) {
-    let path;
+    // 1. 统一转换为小写字符串或保留原数字
+    const key = typeof status === 'string' ? status.toLowerCase().trim() : status;
 
-    if (typeof status === 'number') {
-        switch (status) {
-            case -2:
-                path = 'object-beatmap-unranked.png';
-                break; //graveyarded
-            case -1:
-                path = 'object-beatmap-unranked.png';
-                break; //wip也在这里
-            case 0:
-                path = 'object-beatmap-unranked.png';
-                break; //pending在这里
-            case 1:
-                path = 'object-beatmap-ranked.png';
-                break;
-            case 2:
-                path = 'object-beatmap-ranked.png';
-                break; //approved在这里
-            case 3:
-                path = 'object-beatmap-qualified.png';
-                break;
-            case 4:
-                path = 'object-beatmap-loved.png';
-                break;
-            default:
-                path = 'error.png';
-                break;
-        }
-    } else {
-        switch (status.toLowerCase()) {
-            case "ranked":
-            case "approved":
-                path = 'object-beatmap-ranked.png';
-                break;
-            case "qualified":
-                path = 'object-beatmap-qualified.png';
-                break;
-            case "loved":
-                path = 'object-beatmap-loved.png';
-                break;
-            case "":
-                path = 'error.png';
-                break;
-            default:
-                path = 'object-beatmap-unranked.png';
-                break;
-        }
+    // 2. 建立状态与图片名称的映射关系
+    const statusMap = {
+        // 数字状态
+        '-2': 'object-beatmap-unranked.png', // graveyarded
+        '-1': 'object-beatmap-unranked.png', // wip
+        '0': 'object-beatmap-unranked.png', // pending
+        '1': 'object-beatmap-ranked.png',
+        '2': 'object-beatmap-ranked.png',   // approved
+        '3': 'object-beatmap-qualified.png',
+        '4': 'object-beatmap-loved.png',
+
+        // 字符串状态
+        'ranked':    'object-beatmap-ranked.png',
+        'approved':  'object-beatmap-ranked.png',
+        'qualified': 'object-beatmap-qualified.png',
+        'loved':     'object-beatmap-loved.png',
+        '':          'error.png'
+    };
+
+    // 3. 检查是否存在精确映射，否则走兜底逻辑
+    let path = statusMap[key];
+
+    if (path === undefined) {
+        path = typeof status === 'string' ? 'object-beatmap-unranked.png' : 'error.png';
     }
 
     return getImageFromV3(path);
