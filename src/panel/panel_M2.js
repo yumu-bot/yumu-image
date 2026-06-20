@@ -967,7 +967,7 @@ const beatmapset2CardD2s = async (beatmapsets, images) => {
         const pc_value = s?.play_count ?? 0
         let play_count
 
-        if (pc_value >= 200_0000) {
+        if (pc_value >= 2000_0000) {
             play_count = rounds(pc_value, 2)
         } else {
             play_count = rounds(pc_value, -4)
