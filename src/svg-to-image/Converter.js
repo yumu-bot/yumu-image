@@ -253,6 +253,11 @@ export default class Converter {
             await this[_context].close().catch(() => {});
             delete this[_context];
         }
+
+        if (this[_tempFile]) {
+            this[_tempFile].cleanup();
+            delete this[_tempFile];
+        }
     }
 
     async [_convert](input, options) {
