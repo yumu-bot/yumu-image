@@ -811,6 +811,7 @@ export function deleteBeatMapFromDatabase(bid) {
  */
 export async function getAvatar(any, default_image_path = getImageFromV3('avatar-guest.png')) {
     let avatar_url
+    let assume_cache = false
 
     if (any === '' || any === "https://a.ppy.sh/") {
         return default_image_path
@@ -818,6 +819,7 @@ export async function getAvatar(any, default_image_path = getImageFromV3('avatar
 
     if (any?.avatar_url != null && typeof any.avatar_url === 'string') {
         avatar_url = any.avatar_url
+        assume_cache = true
     } else if (isNumber(any)) {
         avatar_url = `https://a.ppy.sh/${any}`
     } else if (isNumber(any?.user_id ?? any?.id)) {
@@ -828,7 +830,7 @@ export async function getAvatar(any, default_image_path = getImageFromV3('avatar
         avatar_url = String(any)
     }
 
-    const use_cache = (avatar_url != null && /\?\d+/.test(avatar_url))
+    const use_cache = assume_cache || (avatar_url != null && /\?\d+/.test(avatar_url))
 
     return await readNetImage(avatar_url, use_cache, default_image_path);
 }
@@ -840,8 +842,9 @@ export async function getAvatar(any, default_image_path = getImageFromV3('avatar
  */
 export async function getBanner(any, default_image_path = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
     const cover_url = any?.cover_url ?? any.cover?.url ?? String(any)
+    const assume_cache = any?.cover_url != null || any?.cover?.url != null;
 
-    const use_cache = (cover_url != null && /\?\d+/.test(cover_url))
+    const use_cache = assume_cache || (cover_url != null && /\?\d+/.test(cover_url))
 
     if (cover_url.startsWith('http')) {
         return await readNetImage(cover_url, use_cache, default_image_path);
