@@ -821,9 +821,8 @@ export async function getAvatar(any, default_image_path = getImageFromV3('avatar
     } else if (isNumber(any)) {
         avatar_url = `https://a.ppy.sh/${any}`
     } else if (isNumber(any?.user_id ?? any?.id)) {
-        avatar_url = `https://a.ppy.sh/${any}`
+        avatar_url = `https://a.ppy.sh/${any?.user_id ?? any?.id}`
     } else if (typeof any === 'string' && !any.startsWith("http")) {
-        console.log(`any false`)
         return any;
     } else {
         avatar_url = String(any)
