@@ -298,3 +298,53 @@ function getExporter(format) {
 
     return exporter;
 }
+
+/**
+ * @param buffer {Buffer}
+ * @return {string}
+ */
+function getMimeType(buffer) {
+    if (!buffer || buffer.length < 4) {
+        return 'image/png'; // 兜底
+    }
+
+    // 转换为十六进制大写字符串
+    const hex = buffer.toString('hex', 0, 4).toUpperCase();
+
+    // 1. 判断 PNG (89 50 4E 47)
+    if (hex.startsWith('89504E47')) return 'image/png';
+
+    // 2. 判断 GIF (47 49 46 38)
+    if (hex.startsWith('47494638')) return 'image/gif';
+
+    // 3. 判断 JPEG/JPG (FF D8 FF)
+    if (hex.startsWith('FFD8FF')) return 'image/jpeg';
+
+    // 4. 判断 BMP (42 4D)
+    if (hex.startsWith('424D')) return 'image/bmp';
+
+    // 5. 判断 WEBP (前4字节为 RIFF '52494646'，且 8-11 字节为 WEBP)
+    if (hex.startsWith('52494646') && buffer.length > 11) {
+        const webpSign = buffer.toString('ascii', 8, 12);
+        if (webpSign === 'WEBP') return 'image/webp';
+    }
+
+    return 'image/png'; // 默认兜底
+}
+
+/**
+ * 转换二进制为带正确 MIME 的 Base64 文本
+ * @param {Buffer|ArrayBuffer|string} buffer
+ */
+export function binary2Base64Text(buffer) {
+    // 确保是 Node.js Buffer
+    const buf = Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer, 'binary');
+
+    // 获取精准的 MIME 类型
+    const mimeType = getMimeType(buf);
+
+    // 转换为 Base64
+    const data = buf.toString('base64');
+
+    return `data:${mimeType};base64,${data}`;
+}

@@ -18,7 +18,7 @@ import {exec} from 'child_process';
 import {promisify} from 'util';
 import {cacheManager, templateManager} from "./cacheManager.js";
 import {HttpsProxyAgent} from "https-proxy-agent";
-import {compressPicture, PUPPETEER_OPTIONS} from "./image.js";
+import {compressPicture, PUPPETEER_OPTIONS, binary2Base64Text} from "./image.js";
 
 const execAsync = promisify(exec);
 
@@ -1098,6 +1098,23 @@ export async function readNetImage(
         if (cached) {
             return cached;
         }
+    } else {
+        let req;
+        try {
+            req = await axios.get(path, {
+                responseType: 'arraybuffer',
+                timeout: 10000,
+                proxy: false,
+                httpsAgent: getProxyAgent(),
+                httpAgent: getProxyAgent()
+            });
+        } catch (e) {
+            console.error("网图：下载失败", e.message);
+        }
+
+        if (req && req.status === 200 && req.data) {
+            return binary2Base64Text(req.data);
+        }
     }
 
     return loadDefault();
@@ -1980,11 +1997,6 @@ export function getMatchNameSplitted(text = '') {
         team1: requireNonNullElse(team1, ''),
         team2: requireNonNullElse(team2, ''),
     }
-}
-
-export function binary2Base64Text(buffer) {
-    let data = Buffer.from(buffer, 'binary').toString('base64');
-    return 'data:image/png;base64,' + data;
 }
 
 export function randomString(e) {
