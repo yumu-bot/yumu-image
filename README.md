@@ -20,9 +20,9 @@
 | OSU_BUFFER_PATH | 缓存路径/osufile | 存储 .osu 文件的地方，可以与主程序相同。 |
 | BUFFER_PATH | 缓存路径/buffer | 存储图像缓存的地方，采用了 sharp 压缩，预期每文件平均占用 70KB。 |
 | USE_PROXY | false | 是否使用本地代理 (127.0.0.1)。 |
-| OSUFILE_NO_PROXY | false | 是否禁用 osu 文件下载时的代理。<br />因为现在 ppy 基本上拦掉了所有主站异常请求。 |
+| OSUFILE_NO_PROXY | false | 是否禁用 osu 文件下载时的代理<br />因为现在 ppy 基本上拦掉了所有主站异常请求。 |
 | PROXY_PORT | 7890 | 你挂 http 代理的端口。 |
-| IMAGE_FORMAT | webp | 绘图模块返回的图片格式。可以使用 webp、jpg、png。 |
+| IMAGE_FORMAT | jpg | 绘图模块返回的图片格式。可以使用 webp、jpg、png。<br />强烈推荐使用 webp，但是某些神秘 qq 客户端会出现预览问题。 |
 
 ### Windows 运行
 

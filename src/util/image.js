@@ -5,7 +5,7 @@ import {API} from "../svg-to-image/API.js";
 import sharp from "sharp";
 import fs from "fs";
 
-const DEFAULT_FORMAT = 'webp'
+const DEFAULT_FORMAT = 'jpeg'
 
 const FORMAT = process.env.IMAGE_FORMAT ?? DEFAULT_FORMAT
 
