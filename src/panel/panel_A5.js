@@ -15,6 +15,7 @@ import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {card_I4} from "../card/card_I4.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {imageDownloader, scores2Task, toTask, user2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_A5);
 export const router_svg = createSvgRouter(panel_A5);
@@ -71,18 +72,33 @@ export async function panel_A5(data = {
     // 导入文字
     svg = setText(svg, panel_name, reg_index);
 
+    const is_compact = data?.compact === true
+
+    const promise_a1s = user2Task(data.user)
+    const promise_ls = scores2Task(data.score, 'list')
+    const promise_cs = is_compact ? [] : scores2Task(data.score, 'cover')
+
+    const tasks = [
+        ...promise_a1s,
+        ...promise_ls,
+        ...promise_cs,
+    ];
+
+    const images = await imageDownloader(tasks);
+
     // 导入A1卡
-    const me_card_a1 = await card_A1(PanelGenerate.user2CardA1(data.user, data?.history_user));
-    svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
+    const me = await card_A1(PanelGenerate.user2CardA1(data.user, data?.history_user, images.get(`avatar_${data.user.id}`), images.get(`banner_${data.user.id}`)));
+    svg = setSvgBody(svg, 40, 40, me, reg_me);
 
     // 导入C或I4卡
 
-    if (data?.compact === true) {
+    if (is_compact) {
         const params = []
 
         await Promise.allSettled(
             scores.map((v, i) => {
-                return PanelGenerate.score2CardI4(v, data.rank[i])
+                const list = images.get(`list_${v.beatmapset_id ?? v.beatmapset.id}`)
+                return PanelGenerate.score2CardI4(v, data.rank[i], list)
             })
         ).then(results => thenPush(results, params))
 
@@ -121,7 +137,10 @@ export async function panel_A5(data = {
 
         await Promise.allSettled(
             scores.map((v, i) => {
-                return PanelGenerate.score2CardC(v, data.rank[i])
+                const list = images.get(`list_${v?.beatmapset_id ?? v?.beatmapset?.id}`)
+                const cover = images.get(`cover_${v?.beatmapset_id ?? v?.beatmapset?.id}`)
+
+                return PanelGenerate.score2CardC(v, data.rank[i], list, cover)
             })
         ).then(results => thenPush(results, params))
 

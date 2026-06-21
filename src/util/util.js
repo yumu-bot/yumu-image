@@ -85,6 +85,16 @@ const localAxios = axios.create({
 
 });
 
+export const osuAxios = axios.create({
+    responseType: 'arraybuffer',
+    timeout: 10000,
+
+    proxy: false,
+    httpsAgent: OSUFILE_NO_PROXY ? getAgent('https') : getProxyAgent(),
+    httpAgent: OSUFILE_NO_PROXY ? getAgent('http') : getProxyAgent()
+
+});
+
 let FLAG_PATH
 
 if (process.env.FLAG_PATH != null) {
@@ -453,6 +463,15 @@ export const getOrNull = (result) => {
 }
 
 /**
+ * 获取 fulfilled 的值，否则返回 null
+ * @param {PromiseSettledResult<*>[]} result
+ * @returns {*|null}
+ */
+export const getIndexOrNull = (result, index = 0) => {
+    return result?.[index]?.status === 'fulfilled' ? result?.[index].value : null;
+}
+
+/**
  * 批量渲染工具函数
  * @template T, U, R, S
  * @param {T} first - 第一项的数据参数
@@ -543,13 +562,19 @@ export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '
     }
 }
 
+/**
+ * @param local_path
+ * @return {Promise<boolean>}
+ */
 export async function accessAsync(local_path) {
     try {
-        await fs.promises.access(local_path, fsConstants.F_OK);
+        await fs.promises.access(local_path, fs.constants.F_OK);
         return true;
     } catch (e) {
         return false;
     }
+
+    return false;
 }
 
 /**
@@ -984,14 +1009,11 @@ export async function downloadImage(path = '', buffer_path = '', default_image_p
 
 /**
  * 保存并压缩图片
- * @return {Promise<string>} 返回最终保存好的本地绝对路径
+ * @return {Promise<boolean>} 返回最终保存好的本地绝对路径
  */
-export async function saveNetImage(path, buffer, max_width = 1920, max_height = null) {
-    if (!buffer) return getImageFromV3('error.png');
+export async function saveNetImage(buffer_path, buffer, max_width = 1920, max_height = null) {
+    if (!buffer) return false
     const buf = Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer, 'binary');
-
-    const buffer_name = MD5.copy().update(path).digest('hex');
-    const buffer_path = `${IMG_BUFFER_PATH}/${buffer_name}`;
 
     const buffer_processed = await compressPicture(buf, max_width, max_height)
 
@@ -999,9 +1021,10 @@ export async function saveNetImage(path, buffer, max_width = 1920, max_height = 
         await fs.promises.writeFile(buffer_path, buffer_processed);
     } catch (e) {
         console.warn("保存网络图片：写入文件失败：", e);
+        return false
     }
 
-    return buffer_path;
+    return true;
 }
 
 /**
@@ -1030,7 +1053,7 @@ export async function readNetImage(
     }
 
     const buffer_name = MD5.copy().update(path).digest('hex');
-    const buffer_path = `${IMG_BUFFER_PATH}/${buffer_name}`;
+    const buffer_path = path_util.join(IMG_BUFFER_PATH, buffer_name);
 
     if (use_cache === true) {
         const cached = await cacheManager.fetch(buffer_name, async () => {
@@ -1053,8 +1076,8 @@ export async function readNetImage(
             }
 
             if (req && req.status === 200 && req.data) {
-                const image_path = await saveNetImage(path, req.data, max_width, max_height);
-                return image_path;
+                await saveNetImage(buffer_path, req.data, max_width, max_height);
+                return buffer_path;
             }
 
             return null;
@@ -1965,60 +1988,89 @@ function fixed(i) {
     return parseFloat(i.toFixed(2));
 }
 
-export async function getFlagSvg(code = "cn") {
-    code = code.toUpperCase();
-
+/**
+ * 如果传入 XX，会返回 XX 对应的路径
+ * @param code
+ * @return {Promise<string|null>}
+ */
+export async function getFlagFile(code = "CN") {
     let flag;
-    let path = `${FLAG_PATH}/${code}`;
-    try {
-        fs.accessSync(path, fs.constants.W_OK);
-    } catch (e) {
-        let bit_flag = 0x1f1e6;
-        let char_code_A = 65;
-        let n_1 = bit_flag + code.charCodeAt(0) - char_code_A;
-        let n_2 = bit_flag + code.charCodeAt(1) - char_code_A;
-        let url = `https://osu.ppy.sh/assets/images/flags/${n_1.toString(16)}-${n_2.toString(16)}.svg`;
+    let flag_path = `${FLAG_PATH}/${code}`;
+    const is_svg = code !== 'XX'
 
-        await new Promise((resolve) => {
-            https.get(url, res => {
-                let out_stream = fs.createWriteStream(path);
-                res.pipe(out_stream);
-                out_stream.on('finish', () => {
-                    resolve();
-                })
-            })
-        })
-    }
-    flag = fs.readFileSync(path, "utf-8");
-    return flag;
+    const cached = await cacheManager.fetch(`flag_${code}`, async () => {
+
+        if (await accessAsync(flag_path)) {
+            return is_svg ? await fs.promises.readFile(flag_path, 'utf-8') : flag_path;
+        }
+
+        const extension = is_svg ? 'svg' : 'png';
+
+        const bit_flag = 0x1f1e6;
+        const char_code_A = 65;
+        const n_1 = bit_flag + code.charCodeAt(0) - char_code_A;
+        const n_2 = bit_flag + code.charCodeAt(1) - char_code_A;
+        const url = `https://osu.ppy.sh/assets/images/flags/${n_1.toString(16)}-${n_2.toString(16)}.${extension}`;
+        let req;
+        try {
+            req = await osuAxios.get(url, { responseType: 'arraybuffer' });
+        } catch (e) {
+            console.error(`国旗：下载失败 [${code}]`, e.message);
+        }
+
+        if (req && req.status === 200 && req.data) {
+            await saveNetImage(flag_path, req.data);
+
+            return is_svg ? req.data.toString('utf-8') : flag_path;
+        }
+
+        return null;
+    });
+
+    return cached || null;
 }
 
-export async function getFlagPath(code = "cn" || null, x, y, h = 30) {
+const TW_IMAGE_PATH = getImageFromV3('flag-TW.png');
+
+let HAS_TW_IMAGE = false;
+
+try {
+    fs.accessSync(TW_IMAGE_PATH);
+    HAS_TW_IMAGE = true;
+} catch {
+    HAS_TW_IMAGE = false;
+    console.info(`[util] 没有找到默认的台湾地区旗: ${TW_IMAGE_PATH}，将默认使用五星红旗`);
+}
+
+export async function getFlagPath(code = "CN", x, y, h = 30) {
     if (typeof code != 'string' || isEmptyString(code)) return '';
 
+    let c = code.toUpperCase();
+
     //避免腾讯封掉青天白日旗
-    if (code.toLowerCase() === "tw") {
+    if (c === "TW") {
         const image = getImageFromV3('flag-TW.png')
 
-        if (await accessAsync(image)) {
-            return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${image}"
-            style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
+        if (HAS_TW_IMAGE) {
+            return getImage(x - 2, y + 4 + 2, (h - 4) * 1.5, h - 4, image, 1, "xMidYMid slice")
         } else {
-            code = "cn"
+            c = "CN"
         }
-    } else if (code.toLowerCase() === "xx") {
-        // 这不是 svg 文件，这个是 png 文件
-        const xx_image = getImageFromV3('Flags', 'XX')
-
-        return `<g transform="translate(${x - 2}, ${y + 4 + 2})"><image width="${(h - 4) * 1.5}" height="${(h - 4)}" xlink:href="${xx_image}"
-            style="opacity: 1" preserveAspectRatio="xMidYMid slice" vector-effect="non-scaling-stroke"/></g>`
     }
 
-    const svg = await getFlagSvg(code);
+    if (c === 'XX') {
+        const xx_path = await getFlagFile('XX');
+        if (!xx_path) return '';
 
-    const len = svg.length;
-    const scale = h / 30;
-    return `<g transform="translate(${x} ${y}) scale(${scale})">` + svg.substring(60, len - 6) + '</g>';
+        return getImage(x - 2, y + 4 + 2, (h - 4) * 1.5, h - 4, xx_path, 1, "xMidYMid slice");
+    } else {
+        const flag_file = await getFlagFile(code);
+        if (!flag_file) return '';
+
+        const len = flag_file.length;
+        const scale = h / 30;
+        return `<g transform="translate(${x} ${y}) scale(${scale})">${flag_file.substring(60, len - 6)}</g>`;
+    }
 }
 
 /**

@@ -186,19 +186,19 @@ export async function panel_M2(data = {
 
     // 下图
 
-    const promise_d2s = ms.map(b => toTask('beatmapset', b.id, () => getMapBackground(b, 'list')))
+    const promise_d2s = ms.map(b => toTask('list', b.id, () => getMapBackground(b, 'list')))
 
-    const promise_d4ss = rr.map(r => toTask('beatmapset', r.id, () => getMapBackground(r, 'list')))
+    const promise_d4ss = rr.map(r => toTask('list', r.id, () => getMapBackground(r, 'list')))
 
-    const promise_d4s = ra.map(a => toTask('beatmapset', a.beatmapset?.id, () => getMapBackground(a?.beatmapset, 'list')))
+    const promise_d4s = ra.map(a => toTask('list', a.beatmapset?.id, () => getMapBackground(a?.beatmapset, 'list')))
 
     const promise_a1 = toTask('avatar', user.id, () => getAvatar(user?.avatar_url))
 
-    const promise_a12 = toTask('cover', user.id, () => getBanner(user?.cover_url))
+    const promise_a12 = toTask('banner', user.id, () => getBanner(user?.cover_url))
 
     const promise_j6s = guest_owners.map(g => toTask('avatar', g.user.id, () => getAvatar(g.user.id)))
 
-    const taskList = [
+    const tasks = [
         ...promise_d2s,
         ...promise_d4ss,
         ...promise_d4s,
@@ -207,10 +207,10 @@ export async function panel_M2(data = {
         ...promise_j6s
     ];
 
-    const images = await imageDownloader(taskList);
+    const images = await imageDownloader(tasks);
 
     const cardA1 = await card_A1(
-        PanelGenerate.user2CardA1(user, null, images.get(`avatar_${user.id}`), images.get(`cover_${user.id}`))
+        PanelGenerate.user2CardA1(user, null, images.get(`avatar_${user.id}`), images.get(`banner_${user.id}`))
     );
 
     const componentM1 = component_M1(
@@ -844,7 +844,7 @@ const PanelMGenerate = {
             const bottom = `${time_diff} // ${full_width ? ActivityConfig.getOperate(type, approval) : ActivityConfig.getAbbreviation(type, approval)}`
 
             const data = {
-                image: images.get(`beatmapset_${id}`),
+                image: images.get(`list_${id}`),
                 top: top,
                 bottom: bottom,
 
@@ -901,7 +901,7 @@ const PanelMGenerate = {
             })
 
             const data = {
-                image: images.get(`beatmapset_${id}`),
+                image: images.get(`list_${id}`),
                 top: top,
                 bottom: undefined,
 
@@ -975,7 +975,7 @@ const beatmapset2CardD2s = async (beatmapsets, images) => {
 
         const favourite = round(s?.favourite_count, 1)
 
-        const cachedBg = images.get(`beatmapset_${s.id}`);
+        const cachedBg = images.get(`list_${s.id}`);
 
         /**
          * @type {Promise<*>}

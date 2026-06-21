@@ -163,7 +163,7 @@ export async function isPictureIntact(path = '', fails_delete = true) {
         }
 
         try {
-            fs.unlink(path, () => {});
+            await fs.promises.unlink(path);
         } catch (unlink_error) {
             console.error(`删除损坏文件失败: ${unlink_error.message}`);
         }
@@ -197,7 +197,7 @@ export async function convertPicture(buffer, target_format = 'webp', from_format
         if (target === 'png' || target === 'gif') {
             pipeline = pipeline.png({ palette: true, quality: 100, compressionLevel: 6 });
         } else if (target === 'webp') {
-            pipeline = pipeline.webp({ quality: 80 });
+            pipeline = pipeline.webp({ quality: 90 });
         } else if (target === 'jpeg' || target === 'jpg') {
             pipeline = pipeline.jpeg({ quality: 90, mozjpeg: true });
         } else {
@@ -268,7 +268,7 @@ export async function compressPicture(buffer, max_width = 1920, max_height = nul
         if (meta.format === 'png' || meta.format === 'gif') {
             pipeline = pipeline.png({ palette: true, quality: 100, compressionLevel: 6 });
         } else if (meta.format === 'webp') {
-            pipeline = pipeline.webp({ quality: 80 });
+            pipeline = pipeline.webp({ quality: 90 });
         } else if (meta.format === 'jpeg' || meta.format === 'jpg') {
             pipeline = pipeline.jpeg({ quality: 90, mozjpeg: true });
         } else {

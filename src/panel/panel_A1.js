@@ -11,6 +11,7 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {imageDownloader, user2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_A1);
 export const router_svg = createSvgRouter(panel_A1);
@@ -21,7 +22,7 @@ export const router_svg = createSvgRouter(panel_A1);
  * @return {Promise<string>}
  */
 export async function panel_A1(data = {
-    me_card_A1: {
+    me: {
         "id": 17064371,
         "pp": 6279.61,
         "username": "-Spring Night-",
@@ -103,7 +104,7 @@ export async function panel_A1(data = {
         },
     },
 
-    friend_card_A1: [{
+    friends: [{
         "id": 17064371,
         "pp": 6279.61,
         "username": "-Spring Night-",
@@ -202,10 +203,24 @@ export async function panel_A1(data = {
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
 
+    const friends = data?.friends ?? []
+    const me = data?.me ?? {}
+
+    const promise_mes = friends.flatMap(f => user2Task(f))
+    const promise_friends_pair = friends.map(f => user2Task(f));
+
+    const tasks = [
+        ...promise_mes,
+        ...promise_friends_pair.map(pair => pair[0]),
+        ...promise_friends_pair.map(pair => pair[1])
+    ];
+
+    const images = await imageDownloader(tasks);
+
     // 导入A1卡
-    const meParam = PanelGenerate.user2CardA1(data.me_card_A1);
-    const friendParams = data.friend_card_A1.map(user =>
-        PanelGenerate.microUser2CardA1(user, data?.type, true)
+    const meParam = PanelGenerate.user2CardA1(me, null, images.get(`avatar_${me.id}`), images.get(`cover_${me.id}`));
+    const friendParams = friends.map(friend =>
+        PanelGenerate.microUser2CardA1(friend, data?.type, true, images.get(`avatar_${friend.id}`), images.get(`cover_${friend.id}`))
     );
 
     const [me_cardA1, friend_cardA1s] = await renderInBatch(
@@ -215,7 +230,7 @@ export async function panel_A1(data = {
     )
 
     // 插入图片和部件（新方法
-    svg = setCustomBanner(svg, data.me_card_A1?.profile?.banner, reg_banner);
+    svg = setCustomBanner(svg, me?.profile?.banner, reg_banner);
 
     svg = setSvgBody(svg, 40, 40, me_cardA1, reg_me_card_a1);
 

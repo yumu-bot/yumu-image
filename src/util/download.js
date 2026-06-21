@@ -1,3 +1,5 @@
+import {getAvatar, getBanner, getMapBackground} from "./util.js";
+
 /**
  *
  * @param type {string}
@@ -15,15 +17,15 @@ export const toTask = (type, id, fn) => {
 
 /**
  * Yumubot 0.8 测试：所有图片使用一个 settled
- * @param taskList {[{type: string, id: number, fn: () => Promise}]}
+ * @param tasks {[{type: string, id: number, fn: () => Promise}]}
  * @return Promise<Map>
  */
-export const imageDownloader = async (taskList = []) => {
+export const imageDownloader = async (tasks = []) => {
     const image = new Map();
     const seenKeys = new Set();
     const uniqueTasks = [];
 
-    taskList.forEach(task => {
+    tasks.forEach(task => {
         if (!task?.id || !task?.type) return;
 
         const uniqueKey = `${task.type}_${task.id}`;
@@ -49,3 +51,17 @@ export const imageDownloader = async (taskList = []) => {
 
     return image;
 };
+
+export const user2Task = (user = {}) => {
+    const task1 = toTask('avatar', user.id, () => getAvatar(user?.avatar_url))
+    const task2 = toTask('banner', user.id, () => getBanner(user?.cover_url ?? user?.cover?.url))
+    return [task1, task2]
+}
+
+export const scores2Task = (scores = [], cover_type = 'list') => {
+    return scores.map(
+        (score) => toTask(cover_type, score.beatmapset_id ?? score?.beatmapset?.id,
+            () => getMapBackground(score, cover_type)
+        )
+    )
+}

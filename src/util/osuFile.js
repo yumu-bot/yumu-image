@@ -1,19 +1,10 @@
 import path from "path";
-import {accessAsync, getAgent, getProxyAgent, OSU_BUFFER_PATH, OSUFILE_NO_PROXY} from "./util.js";
+import {accessAsync, OSU_BUFFER_PATH, osuAxios} from "./util.js";
 import fs from "fs";
-import axios from "axios";
 import readline from "readline";
 import {controlPointsToPath, parseControlPoints} from "./sliderPath.js";
 
-const downloadAxios = axios.create({
-    responseType: 'arraybuffer',
-    timeout: 10000,
-
-    proxy: false,
-    httpsAgent: OSUFILE_NO_PROXY ? getAgent('https') : getProxyAgent(),
-    httpAgent: OSUFILE_NO_PROXY ? getAgent('http') : getProxyAgent()
-
-});
+const downloadAxios = osuAxios
 
 export async function getBeatmapFilePath(beatmap_id) {
 

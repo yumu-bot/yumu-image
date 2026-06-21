@@ -20,6 +20,7 @@ import {
     getFormattedTime,
     getTimeDifferenceShort,
     getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3, isASCII, getImageOrElse,
+    getOrNull, getIndexOrNull,
 } from "./util.js";
 import {
     colorArray,
@@ -80,7 +81,7 @@ export const PanelGenerate = {
         /**
          * @type {string}
          */
-        const bg = background ?? user?.profile?.card ?? user?.cover_url;
+        const bg = background ?? user?.profile?.card ?? user?.cover_url ?? user?.cover?.url;
 
         /**
          * @type {string}
@@ -182,7 +183,7 @@ export const PanelGenerate = {
         };
     },
 
-    microUser2CardA1: (user, type = null, show_mutual = false) => {
+    microUser2CardA1: (user, type = null, show_mutual = false, avatar = null, background = null) => {
         let sub_icon1 = ''
         let sub_icon2 = ''
 
@@ -228,15 +229,28 @@ export const PanelGenerate = {
             case "total_hits": right1 = 'TTH: ' + (user?.statistics?.total_hits || 0) ; break;
 
             case "online": right1 = (user?.is_online === true) ? 'online' : 'offline'; break;
+
+            case "uid": right1 = `U${user?.id ?? 0}`; break;
             default: right1 = ""; break;
         }
+
         const right2 = isBot ? '' : (level + progress > 0 ? (acc + '% Lv.' + level + '(' + progress + '%)') : acc + '%')
         const right3b = isBot ? '' : (user?.statistics?.pp ? Math.round(user.statistics.pp).toString() : '');
         const right3m = isBot ? 'Bot' : (user?.statistics?.pp ? 'PP' : 'AFK');
 
+        /**
+         * @type {string}
+         */
+        const bg = background ?? user?.profile?.card ?? user?.cover_url ?? user?.cover?.url;
+
+        /**
+         * @type {string}
+         */
+        const av = avatar ?? user?.avatar_url;
+
         return {
-            background: user?.cover?.url,
-            avatar: user?.avatar_url,
+            background: bg,
+            avatar: av,
             sub_icon1: sub_icon1,
             sub_icon2: sub_icon2,
             sub_banner: '',
@@ -993,14 +1007,15 @@ export const PanelGenerate = {
 
 
 
-    score2CardC: async (s, identifier = 1) => {
-        const results = await Promise.allSettled([
-            getMapBackground(s, 'list'),
-            getMapBackground(s, 'cover')
-        ]);
+    score2CardC: async (s, identifier = 1, cover = null, background = null) => {
+        const results = (cover === null || background === null)
+            ? await Promise.allSettled([
+                getMapBackground(s, 'list'),
+                getMapBackground(s, 'cover')
+            ]) : [];
 
-        const [cover, background] =
-            results.map(r => r.status === 'fulfilled' ? r.value : null);
+        const cv = cover ?? getIndexOrNull(results, 0)
+        const bg = background ?? getIndexOrNull(results, 1)
 
         const type = getScoreTypeImage(s.is_lazer)
 
@@ -1052,8 +1067,8 @@ export const PanelGenerate = {
         }
 
         return {
-            background: background,
-            cover: cover,
+            background: bg,
+            cover: cv,
             type: type,
 
             title: title,
@@ -1463,9 +1478,9 @@ export const PanelGenerate = {
         }
     },
 
-    score2CardI4: async (s, identifier = 1) => {
-        const cover = await getMapBackground(s, 'list')
-        // const background = getRankBackgroundForI4(s?.legacy_rank, s?.passed);
+    score2CardI4: async (s, identifier = 1, cover = null) => {
+        const cv = cover ?? await getMapBackground(s, 'list')
+
         const rank_color = getRankColors(s?.legacy_rank)
         const type = getScoreTypeImage(s.is_lazer)
 
@@ -1504,7 +1519,7 @@ export const PanelGenerate = {
         const level = getOsuDXRatingStar(s.statistics, s.maximum_statistics, getGameMode(s.mode, 1))
         return {
             // background: background,
-            cover: cover,
+            cover: cv,
             rank: rank,
             type: type,
             level: level,  // 星星数量
