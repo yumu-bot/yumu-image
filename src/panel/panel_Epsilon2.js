@@ -54,7 +54,7 @@ export async function panel_Epsilon2(data = {
         ['#3A3F57', '#0C0E1A'], 1, [0, 100], [0, 100]
     )
 
-    const avatar = PanelDraw.Image(5, 6, 75, 75, await getAvatar(user.avatar_url))
+    const avatar = PanelDraw.Image(5, 6, 75, 75, await getAvatar(user))
 
     const avatar_base = PanelDraw.Rect(5, 6, 75, 75, 0, '#B0F1BB', 1)
 
@@ -107,7 +107,7 @@ export async function panel_Epsilon2(data = {
 
     const rank = TahomaRegular.getTextPath('#' + (user?.statistics?.global_rank ?? 0), 324, 66, 48, 'right baseline', rank_color, 0.3)
 
-    const background = PanelDraw.Image(0, 0, 332, 87, await getBanner(user?.cover_url), 0.5)
+    const background = PanelDraw.Image(0, 0, 332, 87, await getBanner(user), 0.5)
 
     svg = setTexts(svg, [base, avatar_base], reg_base)
     svg = setText(svg, background, reg_background)

@@ -119,7 +119,7 @@ async function playerData2CardH(p = {}) {
     const background = getCompetitorBackground(player_class.color)
     const colors = getCompetitorColors(player_class.color)
 
-    const avatar = await getAvatar(p.player.avatar_url, true);
+    const avatar = await getAvatar(p.player);
     const mra_number = floors(p?.mra, 2)
 
     return {

@@ -805,39 +805,49 @@ export function deleteBeatMapFromDatabase(bid) {
 
 /**
  * 获取玩家头像。如果为空返回 avatar-guest.png
- * @param link
- * @param use_cache 如果用到的是链接，那读缓存也没问题
+ * @param any 可以是数字，可以是链接，可以是 user 类
  * @param default_image_path
  * @return {Promise<string>}
  */
-export async function getAvatar(link, use_cache = true, default_image_path = getImageFromV3('avatar-guest.png')) {
-    if (isBlankString(link) || link === "https://a.ppy.sh/") {
-        return default_image_path;
-    } else if (isNumber(link)) {
-        return await readNetImage('https://a.ppy.sh/' + link, use_cache, default_image_path);
-    } else if (!link.startsWith("http")) {
-        return link;
-    } else {
-        return await readNetImage(link + '', use_cache, default_image_path);
+export async function getAvatar(any, default_image_path = getImageFromV3('avatar-guest.png')) {
+    let avatar_url
+
+    if (any === '' || any === "https://a.ppy.sh/") {
+        return default_image_path
     }
+
+    if (any?.avatar_url != null && typeof any.avatar_url === 'string') {
+        avatar_url = any.avatar_url
+    } else if (isNumber(any)) {
+        avatar_url = `https://a.ppy.sh/${any}`
+    } else if (isNumber(any?.user_id ?? any?.id)) {
+        avatar_url = `https://a.ppy.sh/${any}`
+    } else if (typeof any === 'string' && !any.startsWith("http")) {
+        console.log(`any false`)
+        return any;
+    } else {
+        avatar_url = String(any)
+    }
+
+    const use_cache = (avatar_url != null && /\?\d+/.test(avatar_url))
+
+    return await readNetImage(avatar_url, use_cache, default_image_path);
 }
 
 /**
  * 获取玩家横幅。如果为空返回 Banner/c1-c9.png
- * @param link
- * @param use_cache
- * @param default_image_path
+ * @param any
  * @return {Promise<string>}
  */
-export async function getBanner(link, use_cache = true, default_image_path = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
-    if (isBlankString(link)) {
-        return default_image_path;
-    } else if (!link.startsWith("http")) {
-        return link;
-    } else if (link.startsWith("https://assets.ppy.sh/beatmaps/")) {
-        return await readNetImage(link, use_cache, getImageFromV3('beatmap-DLfailBG.jpg'))
+export async function getBanner(any, default_image_path = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
+    const cover_url = any?.cover_url ?? any.cover?.url ?? String(any)
+
+    const use_cache = (cover_url != null && /\?\d+/.test(cover_url))
+
+    if (cover_url.startsWith('http')) {
+        return await readNetImage(cover_url, use_cache, default_image_path);
     } else {
-        return await readNetImage(link, use_cache, default_image_path);
+        return cover_url
     }
 }
 
@@ -2042,6 +2052,13 @@ try {
     console.info(`[util] 没有找到默认的台湾地区旗: ${TW_IMAGE_PATH}，将默认使用五星红旗`);
 }
 
+/**
+ * @param code {string|null}
+ * @param x
+ * @param y
+ * @param h
+ * @return {Promise<string>}
+ */
 export async function getFlagPath(code = "CN", x, y, h = 30) {
     if (typeof code != 'string' || isEmptyString(code)) return '';
 

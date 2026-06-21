@@ -80,8 +80,8 @@ export async function card_A1(data = {}) {
 
     const [backgrounds, avatars, flag_svg, team_img] =
         (await Promise.allSettled([
-            toPromise(background, () => getBanner(background, true)),
-            toPromise(avatar, () => getAvatar(avatar, true)),
+            toPromise(background, () => getBanner(background)),
+            toPromise(avatar, () => getAvatar(avatar)),
             getFlagPath(country, 135, 64, 44),
             readNetImage(team_url ?? '', true, ''),
         ])).map((res) => getImageOrElse(res))

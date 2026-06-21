@@ -520,7 +520,7 @@ const PanelEta1Generate = {
 
     score2componentEta2: async (user) => {
         return {
-            avatar: await getAvatar(user?.avatar_url),
+            avatar: await getAvatar(user),
             name: user?.username || 'Unknown',
             pp: user?.pp || 0,
         }

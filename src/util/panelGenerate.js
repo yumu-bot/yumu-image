@@ -20,7 +20,7 @@ import {
     getFormattedTime,
     getTimeDifferenceShort,
     getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3, isASCII, getImageOrElse,
-    getOrNull, getIndexOrNull,
+    getIndexOrNull,
 } from "./util.js";
 import {
     colorArray,
@@ -1113,7 +1113,7 @@ export const PanelGenerate = {
 
         const left1 = artist + ' // ' + s?.user?.username
 
-        const cover = await getAvatar(s?.user?.avatar_url, true);
+        const cover = await getAvatar(s?.user);
 
         const card_C = await PanelGenerate.score2CardC(s, identifier)
 
@@ -1655,8 +1655,8 @@ export const PanelGenerate = {
     },
 
     user2CardO1: async (user) => {
-        const background = await getBanner(user?.cover_url, true);
-        const avatar = await getAvatar(user?.avatar_url, true);
+        const background = await getBanner(user);
+        const avatar = await getAvatar(user);
 
         return {
             background,

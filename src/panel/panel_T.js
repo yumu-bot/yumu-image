@@ -379,7 +379,7 @@ const component_T2 = async (best_performance = {
 
     const async = []
 
-    await Promise.allSettled([PanelGenerate.beatmap2CardA2(best_performance.beatmap), getAvatar(best_performance.user.avatar_url, true)])
+    await Promise.allSettled([PanelGenerate.beatmap2CardA2(best_performance.beatmap), getAvatar(best_performance.user)])
         .then(results => thenPush(results, async))
 
     const title = poppinsBold.getTextPath('Best Performance', 20, 32, 18, 'left baseline', '#fff')

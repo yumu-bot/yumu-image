@@ -1,5 +1,5 @@
 import {
-    getAvatar, getBanner,
+    getBanner,
     getImageFromV3, getMapBackground,
     getNowTimeStamp,
     getPanelNameSVG,
@@ -224,7 +224,7 @@ export async function panel_B3(data = {
 
 
     if (isUser) {
-        banner = await getBanner(data?.me?.cover_url, true);
+        banner = await getBanner(data?.me);
 
         const levels = my?.advanced_stats?.index ?? []
         const vs_levels = others?.advanced_stats?.index ?? []

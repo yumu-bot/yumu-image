@@ -45,7 +45,7 @@ export async function panel_Epsilon(data = {
 
     const group = user?.groups?.[0]
 
-    const image = await getAvatar(user?.avatar_url, true);
+    const image = await getAvatar(user);
 
     const name_text = user?.username ?? 'Unknown'
 

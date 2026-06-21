@@ -334,7 +334,7 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LN1\);">)/;
 
     //定义文本
-    const avatar = await getAvatar(u?.avatar_url, true);
+    const avatar = await getAvatar(u);
     const abbr_color = u?.profile_colour || 'none';
 
     //获取用户组或者玩家组简称
@@ -421,7 +421,7 @@ async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row
     svg = setText(svg, label_type, reg_label);
 
     //插入图片
-    const avatar = await getAvatar(u?.avatar_url, true);
+    const avatar = await getAvatar(u);
     svg = setImage(svg, 0, 0, 40, 40, avatar, reg_avatar, 1);
 
     return getSvgBody(x, y, svg.toString());
@@ -453,7 +453,7 @@ async function label_N3(u = {}) {
     svg = setText(svg, label_color, reg_label);
 
     //插入图片
-    const avatar = await getAvatar(u?.avatar_url, true);
+    const avatar = await getAvatar(u);
     svg = setImage(svg, 0, 0, 45, 45, avatar, reg_avatar, 1);
 
     return svg;
@@ -493,7 +493,7 @@ async function label_N4(u = {}) {
     svg = setText(svg, label_color, reg_label);
 
     //插入图片
-    const avatar = await getAvatar(u?.avatar_url, true);
+    const avatar = await getAvatar(u);
     svg = setImage(svg, 13, 0, 70, 70, avatar, reg_avatar, 1);
 
     return svg;

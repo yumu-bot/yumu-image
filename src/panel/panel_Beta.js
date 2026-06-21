@@ -32,13 +32,13 @@ export const router_svg = createSvgRouter(panel_Beta);
  * @return {Promise<any>}
  */
 export async function panel_Beta(score) {
-    const avatar = await getAvatar(score?.user?.avatar_url, true);
+    const avatar = await getAvatar(score?.user);
     const bg = await getDiffBackground(score);
 
-    const mode_int = score.mode_int;
+    // const mode_int = score.mode_int;
     const mods = score.mods;
     const rankStr = score.rank;
-    const statistics = score.statistics;
+    // const statistics = score.statistics;
     const bid = score.beatmap.id;
     const title = score?.beatmapset?.title || ("BID" + bid);
     let star;

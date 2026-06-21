@@ -81,7 +81,7 @@ export async function card_A4(data = {
 
     const rank_colors = getRankColors(data.score.rank);
 
-    const avatar = await getAvatar(user.avatar_url, true);
+    const avatar = await getAvatar(user);
 
     const cover = getRankBackground(data.score.rank, data.score.passed)
 

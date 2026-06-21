@@ -933,8 +933,8 @@ const component_E11 = (
 // 私有转换方式
 const PanelEGenerate = {
     user2componentE1: async (user) => {
-        const background = user?.profile?.card || await getBanner(user?.cover_url, true);
-        const avatar = await getAvatar(user?.avatar_url, true);
+        const background = user?.profile?.card || await getBanner(user);
+        const avatar = await getAvatar(user);
 
         const left = user?.statistics?.global_rank ? (user.statistics.global_rank.toString()) :
             (user?.rank_highest?.rank ?

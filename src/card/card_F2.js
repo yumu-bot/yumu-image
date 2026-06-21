@@ -46,7 +46,7 @@ export async function card_F2(match_score = {}, max_combo = 0, compare_score = 0
     const reg_text = /(?<=<g id="Text_CF1">)/
     const reg_mod = /(?<=<g id="Mod_CF1">)/
 
-    svg = setImage(svg, 65, 55, 300, 300, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id, true), reg_avatar, 1)
+    svg = setImage(svg, 65, 55, 300, 300, await getAvatar(match_score?.user?.avatar_url || match_score?.user_id), reg_avatar, 1)
 
     svg = setImage(svg, 0, 0, 430, 550, getRankBackground(match_score?.rank, match_score?.match?.pass), reg_background, 0.6)
 

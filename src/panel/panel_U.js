@@ -342,8 +342,8 @@ async function card_U1(
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-CU1-1\);" filter="url\(#blur-CU1-1\)">)/;
 
     // 导入背景和头像
-    const background = user?.profile?.card || await getBanner(user?.cover_url, true);
-    const avatar = await getAvatar(user?.avatar_url)
+    const background = user?.profile?.card || await getBanner(user);
+    const avatar = await getAvatar(user)
 
     const mode_icon = extra.getTextPath(getGameMode(user?.mode, -1), 30, 68 - 2, 40, 'left baseline', '#fff')
 

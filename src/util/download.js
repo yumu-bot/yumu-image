@@ -53,8 +53,8 @@ export const imageDownloader = async (tasks = []) => {
 };
 
 export const user2Task = (user = {}) => {
-    const task1 = toTask('avatar', user.id, () => getAvatar(user?.avatar_url))
-    const task2 = toTask('banner', user.id, () => getBanner(user?.cover_url ?? user?.cover?.url))
+    const task1 = toTask('avatar', user.id, () => getAvatar(user))
+    const task2 = toTask('banner', user.id, () => getBanner(user))
     return [task1, task2]
 }
 

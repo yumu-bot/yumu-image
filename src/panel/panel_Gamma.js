@@ -148,8 +148,8 @@ export async function panel_Gamma(data = {
 
 const PanelGamma = {
     infoVersion: async (user) => {
-        const background = await getBanner(user?.cover_url, true);
-        const avatar = await getAvatar(user?.avatar_url, true);
+        const background = await getBanner(user);
+        const avatar = await getAvatar(user);
 
         const join = moment(user?.join_date, 'YYYY-MM-DD[T]HH:mm:ss[Z]').add(8, 'hours');
         const date = user?.join_date ? join.format('YYYY-MM-DD') : 'Unknown';
@@ -260,8 +260,8 @@ const PanelGamma = {
     sanityVersion: async (s = {}) => {
         const user = s?.users ? (s?.users[0] || s?.users) : {};
 
-        const background = await getBanner(user?.cover_url, true);
-        const avatar = await getAvatar(user?.avatar_url, true);
+        const background = await getBanner(user);
+        const avatar = await getAvatar(user);
 
         const sanity = (s?.my?.SAN || 1.2) * 100;
         const sanity_rank = getRankFromValue(sanity, [120, 100, 95, 90, 80, 70, 60, 0], ['?', '++', '+', '-', '--', '!?', '!', '!!', 'X']);

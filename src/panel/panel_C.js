@@ -376,7 +376,7 @@ async function playerData2CardC(p = {}) {
     const color_index = (player_class?.name === "Strongest Marshal" || player_class?.name === "Competent Marshal" || player_class?.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
     const colors = getCompetitorColors(player_class.color)
 
-    const avatar = await getAvatar(p.player.avatar_url, true);
+    const avatar = await getAvatar(p.player);
     const mra_number = floors(p?.mra, 2)
 
     return {

@@ -193,14 +193,14 @@ async function panel_R(data = {
     // 图片定义
     const background = await getMapBackground(set, 'fullsize')
 
-    const host_avatar = await getAvatar(set?.user?.avatar_url, true)
+    const host_avatar = await getAvatar(set?.user)
 
     const users = beatmapset?.related_users || [];
 
     // 1. 并行执行所有 getAvatar 异步请求
     const avatarData = await Promise.all(
         users.map(async (user) => {
-            const processedUrl = await getAvatar(user.avatar_url);
+            const processedUrl = await getAvatar(user);
             return [user.id, processedUrl];
         })
     );

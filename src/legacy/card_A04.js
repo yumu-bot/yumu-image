@@ -9,7 +9,6 @@ import {torus} from "../util/font.js";
 import {label_N, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getScoreTypeImage} from "../util/star.js";
-import {drawLazerMods} from "../util/mod.js";
 
 export async function card_A04(data = {
     score: {},
@@ -52,12 +51,12 @@ export async function card_A04(data = {
     const reg_avatar = /(?<= <g style="clip-path: url\(#clippath-CN-2\);">)/;
     const reg_background = /(?<=<g style="clip-path: url\(#clippath-CN-1\);" filter="url\(#blur-CN-1\)">)/;
     const reg_label = /(?<=<g id="Label_CN_1">)/;
-    const reg_mod = /(?<=<g id="Mod_CN_1">)/;
+    // const reg_mod = /(?<=<g id="Mod_CN_1">)/;
 
     //导入背景和头像
 
     const rank = getImageFromV3(`object-score-${data.score.rank}-small.png`);
-    const avatar = await getAvatar(data.score.user.avatar_url, true);
+    const avatar = await getAvatar(data.score.user);
     const background = getImageFromV3(`object-score-backimage-${data.score.rank}.jpg`);
 
     //await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));
@@ -164,8 +163,8 @@ export async function card_A04(data = {
     });
 
      */
-    const mods_arr = data.score.mods
-    const mods_svg = drawLazerMods(mods_arr, 900, 3, 25, 240, 'right', 4, true).svg
+    // const mods_arr = data.score.mods
+    // const mods_svg = drawLazerMods(mods_arr, 900, 3, 25, 240, 'right', 4, true).svg
 
     const type = getScoreTypeImage(data?.score?.is_lazer)
     svg = setImage(svg, 295, 30, 45, 30, type, reg_label, 1);

@@ -192,9 +192,9 @@ export async function panel_M2(data = {
 
     const promise_d4s = ra.map(a => toTask('list', a.beatmapset?.id, () => getMapBackground(a?.beatmapset, 'list')))
 
-    const promise_a1 = toTask('avatar', user.id, () => getAvatar(user?.avatar_url))
+    const promise_a1 = toTask('avatar', user.id, () => getAvatar(user))
 
-    const promise_a12 = toTask('banner', user.id, () => getBanner(user?.cover_url))
+    const promise_a12 = toTask('banner', user.id, () => getBanner(user))
 
     const promise_j6s = guest_owners.map(g => toTask('avatar', g.user.id, () => getAvatar(g.user.id)))
 

@@ -945,7 +945,7 @@ export async function label_C1(data = {
 
     //插入图片，如果输了就变灰
     const opacity = data?.isWin ? 1 : 0.3;
-    const avatar = await getAvatar(data.avatar, true);
+    const avatar = await getAvatar(data);
 
     svg = setImage(svg, 0, 0, 100, 100, avatar, reg_avatar, opacity);
 
@@ -1006,7 +1006,7 @@ export async function label_C2(data = {
 
     //插入图片，如果输了就变灰
     const opacity = data?.isWin ? 1 : 0.3;
-    const avatar = await getAvatar(data.avatar, true);
+    const avatar = await getAvatar(data);
 
     //插入图片
     svg = setImage(svg, 0, 0, 30, 30, avatar, reg_avatar, opacity);
@@ -1036,7 +1036,7 @@ export async function label_C3(data = {
 
     //插入图片，如果输了就变灰
     const opacity = data?.isWin ? 1 : 0.3;
-    const avatar = await getAvatar(data.avatar, true);
+    const avatar = await getAvatar(data);
 
     svg = setImage(svg, 0, 0, 30, 30, avatar, reg_avatar, opacity);
 
@@ -1533,7 +1533,7 @@ export async function label_J2(data = {
     svg = setText(svg, index, reg_index);
 
     //插入图片
-    const avatar = await getAvatar(data.avatar, true);
+    const avatar = await getAvatar(data);
     svg = setImage(svg, 8, 8, 70, 70, avatar, reg_avatar, 1);
 
     return svg;
@@ -1748,7 +1748,7 @@ export async function label_J6(data = {
     const reg_text = /(?<=<g id="Text_LJ6">)/;
     const reg_avatar = /(?<=<g id="Avatar_LJ6" clip-path="url\(#clippath-LJ6\)">)/;
 
-    const avatar = await getAvatar(data.image, true)
+    const avatar = await getAvatar(data.image)
 
     svg = setImage(svg, 0, 0, 55, 55, avatar, reg_avatar, 1)
 
@@ -1797,7 +1797,7 @@ export async function label_J7(data = {
     const reg_text = /(?<=<g id="Text_LJ7">)/;
     const reg_avatar = /(?<=<g id="Avatar_LJ7" clip-path="url\(#clippath-LJ7\)">)/;
 
-    const avatar = await getAvatar(data.image, true)
+    const avatar = await getAvatar(data.image)
 
     svg = setImage(svg, 390, 15, 85, 85, avatar, reg_avatar, 1)
 
@@ -2046,13 +2046,7 @@ export async function label_M1(data = {
     if (data.has_avatar) {
         mode_icon_path = '';
 
-        let avatar
-
-        if (isNotEmptyString(data?.avatar_url)) {
-            avatar = await getAvatar(data.user_id, false);
-        } else {
-            avatar = await getAvatar(data?.avatar_url, true);
-        }
+        let avatar = await getAvatar(data);
 
         svg = setImage(svg, 8, 7, 36, 36, avatar, reg_avatar, 1);
     }
@@ -2142,12 +2136,7 @@ export async function label_M2(data = {
     //定义文本
     const id = data.guest_id || 0;
 
-    let avatar
-    if (isNotEmptyString(data.avatar_url)) {
-        avatar = await getAvatar(data.avatar_url, true)
-    } else {
-        avatar = await getAvatar(id, false)
-    }
+    let avatar = await getAvatar(data.avatar_url ?? data.guest_id)
 
     let host = 'G';
     let host_color = '#382E32'
