@@ -132,6 +132,7 @@ export async function panel_E5(data = {
             id: 3787814,
             mode: 'osu',
             status: 'graveyard',
+            lazer_only: false,
             retries: [Array],
             fails: [Array],
             convert: false,
@@ -305,7 +306,14 @@ export async function panel_E5(data = {
     };
 
     // 注入装饰图片和文字
-    svg = setImage(svg, 1725, 220, 170, 70, getScoreTypeImage(is_lazer, 2, scoreType), regs.index_plus, 1);
+    const lazer_only = score?.beatmap?.lazer_only === true
+
+    if (!lazer_only) {
+        svg = setImage(svg, 1725, 220, 170, 70, getScoreTypeImage(is_lazer, 2, scoreType), regs.index_plus, 1);
+    } else {
+        svg = setImage(svg, 1615, 220, 280, 70, getScoreTypeImage(is_lazer, '-only'), regs.index_plus, 1);
+    }
+
     svg = setText(svg, panel_name_svg, regs.index);
     svg = setImage(svg, 665, 290, 590, 590, getImageFromV3(`object-score-${rank}2.png`), regs.index, 1);
 
