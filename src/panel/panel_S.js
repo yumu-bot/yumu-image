@@ -62,14 +62,25 @@ export async function panel_S(data = {
         surrounding = [],
         rating: mu_rating = 0,
         total_players = 0,
+        variant = 0
     } = data
+
+    const mm = user?.matchmaking_stats ?? []
+
+    let mm_first
+
+    if (variant > 0) {
+        mm_first = mm?.find(v => v.pool.variant_id === variant) ?? {}
+    } else {
+        mm_first = mm?.[0] ?? {}
+    }
 
     const {
         first_placements = 0,
         plays = 0,
         rank = 0,
         rating: mm_rating = 0,
-    } = user?.matchmaking_stats?.[0] ?? {}
+    } = mm_first
 
     const hue = user?.profile_hue ?? 342
 
