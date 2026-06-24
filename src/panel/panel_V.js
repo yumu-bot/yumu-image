@@ -14,9 +14,16 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A2} from "../card/card_A2.js";
 import {torusBold} from "../util/font.js";
-import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from "../util/osuFile.js";
+import {
+    getBeatmapFilePath,
+    getLongestBPM,
+    normalizeBpm,
+    parseBeatmapFile,
+    removeBeatmapFilePath
+} from "../util/osuFile.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {hasLeaderBoard} from "../util/star.js";
 
 export const router = createImageRouter(panel_V, undefined, 'webp');
 
@@ -49,6 +56,10 @@ export async function panel_V(
     const row_height = 710;
     const row_gap = 20;
     const background_bleed = 5
+
+    if (! hasLeaderBoard(data.beatmap.ranked)) {
+        await removeBeatmapFilePath(data.beatmap.id)
+    }
 
     const path = await getBeatmapFilePath(data.beatmap.id)
     const {timings, notes, difficulty, general} = await parseBeatmapFile(path)
@@ -507,6 +518,10 @@ export async function panel_V(
     svg += backgrounds.join('\n') + components.join('\n');
 
     svg += `</svg>`;
+
+    if (! hasLeaderBoard(data.beatmap.ranked)) {
+        await removeBeatmapFilePath(data.beatmap.id)
+    }
 
     return svg;
 }

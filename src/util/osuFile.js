@@ -6,6 +6,17 @@ import {controlPointsToPath, parseControlPoints} from "./sliderPath.js";
 
 const downloadAxios = osuAxios
 
+export async function removeBeatmapFilePath(beatmap_id) {
+    const filePath = path.join(OSU_BUFFER_PATH, `${beatmap_id}.osu`);
+
+    try {
+        await fs.promises.unlink(filePath)
+        return 1
+    } catch (e) {
+        return 0
+    }
+}
+
 export async function getBeatmapFilePath(beatmap_id) {
 
     const filePath = path.join(OSU_BUFFER_PATH, `${beatmap_id}.osu`);
