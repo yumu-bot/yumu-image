@@ -33,7 +33,10 @@ export const colorArray = {
     // 亮黄色
     light_yellow: ['#FFC86B', '#FFFF00'],
 
-    // 亮绿色 / 草绿色
+    // 白绿色
+    white_green: ['#42EB85', '#38F8D3'],
+
+    // 草绿色
     light_green: ['#5EDC5B', '#CAF881'],
 
     // 普通的绿色

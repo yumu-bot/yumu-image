@@ -820,8 +820,8 @@ export const LABEL_S = {
         bar_color: '#00B7EE',
         bar_colors: colorArray.cyan,
         bar_min: 0,
-        bar_mid: 200,
-        bar_max: 400,
+        bar_mid: 100,
+        bar_max: 200,
     },
     MAP_PC: {
         icon: getImageFromV3("object-score-healthpoint.png"),
@@ -831,8 +831,8 @@ export const LABEL_S = {
         bar_color: '#F06EA9',
         bar_colors: colorArray.pink,
         bar_min: 0,
-        bar_mid: 500,
-        bar_max: 1000,
+        bar_mid: 250,
+        bar_max: 500,
     },
     SR: {
         icon: getImageFromV3("object-score-overalldifficulty.png"),
@@ -841,9 +841,9 @@ export const LABEL_S = {
         color_remark: '#aaa',
         bar_color: '#A864A8',
         bar_colors: colorArray.purple,
-        bar_min: 0,
-        bar_mid: 500,
-        bar_max: 1000,
+        bar_min: 2,
+        bar_mid: 5,
+        bar_max: 8,
     },
     PT: {
         icon: getImageFromV3("object-score-length.png"),
@@ -853,8 +853,8 @@ export const LABEL_S = {
         bar_color: '#7CC576',
         bar_colors: colorArray.green,
         bar_min: 0,
-        bar_mid: 72,
-        bar_max: 144,
+        bar_mid: 24,
+        bar_max: 48,
     },
 
     COMBO: {
@@ -865,8 +865,8 @@ export const LABEL_S = {
         bar_color: '#FFF467',
         bar_colors: colorArray.yellow,
         bar_min: 0,
-        bar_mid: 300,
-        bar_max: 600,
+        bar_mid: 500,
+        bar_max: 1000,
     },
 
     ACC: {
@@ -876,8 +876,8 @@ export const LABEL_S = {
         color_remark: '#aaa',
         bar_color: '#F26C4F',
         bar_colors: colorArray.red,
-        bar_min: 92,
-        bar_mid: 96,
+        bar_min: 90,
+        bar_mid: 95,
         bar_max: 100,
     },
 }
