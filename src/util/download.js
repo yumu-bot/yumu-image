@@ -17,6 +17,7 @@ export const toTask = (type, id, fn) => {
 
 /**
  * Yumubot 0.8 测试：所有图片使用一个 settled
+ * 优先保留前面出现过的 id，复用任务
  * @param tasks {[{type: string, id: number, fn: () => Promise}]}
  * @return Promise<Map>
  */
@@ -62,6 +63,20 @@ export const scores2Task = (scores = [], cover_type = 'list') => {
     return scores.map(
         (score) => toTask(cover_type, score.beatmapset_id ?? score?.beatmapset?.id,
             () => getMapBackground(score, cover_type)
+        )
+    )
+}
+
+/**
+ * 需要传入的对象里有 beatmapset_id
+ * @param beatmapsets
+ * @param cover_type
+ * @return {{type: string, id: number, fn: (function(): Promise)}[]}
+ */
+export const beatmapset2Task = (beatmapsets = [], cover_type = 'list') => {
+    return beatmapsets.map(
+        (set) => toTask(cover_type, set.beatmapset_id ?? set?.beatmapset?.id ?? set?.id,
+            () => getMapBackground(set, cover_type)
         )
     )
 }

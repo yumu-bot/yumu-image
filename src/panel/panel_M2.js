@@ -1,5 +1,5 @@
 import {
-    floor, getAvatar, getBanner, getImage, getImageFromV3, getMapBackground, getMapStatusImage,
+    floor, getAvatar, getImage, getImageFromV3, getMapBackground, getMapStatusImage,
     getPanelNameSVG, getRandomString,
     getSvgBody, getTimeDifferenceShort, isBlankString, isNotBlankString, isNotEmptyArray, isNotNull, round,
     rounds, setCustomBanner,
@@ -15,7 +15,7 @@ import {label_E5, LABEL_IM, label_J4, label_J6, label_J7} from "../component/lab
 import {PanelDraw} from "../util/panelDraw.js";
 import {poppinsBold, torusBold} from "../util/font.js";
 import {card_D2} from "../card/card_D2.js";
-import {imageDownloader, toTask} from "../util/download.js";
+import {imageDownloader, toTask, user2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_M2);
 
@@ -192,9 +192,7 @@ export async function panel_M2(data = {
 
     const promise_d4s = ra.map(a => toTask('list', a.beatmapset?.id, () => getMapBackground(a?.beatmapset, 'list')))
 
-    const promise_a1 = toTask('avatar', user.id, () => getAvatar(user))
-
-    const promise_a12 = toTask('banner', user.id, () => getBanner(user))
+    const promise_a1s = user2Task(user)
 
     const promise_j6s = guest_owners.map(g => toTask('avatar', g.user.id, () => getAvatar(g.user.id)))
 
@@ -202,8 +200,7 @@ export async function panel_M2(data = {
         ...promise_d2s,
         ...promise_d4ss,
         ...promise_d4s,
-        promise_a1,
-        promise_a12,
+        ...promise_a1s,
         ...promise_j6s
     ];
 

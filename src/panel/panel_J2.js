@@ -986,7 +986,7 @@ const mapper2LabelJ7 = (favourite_mapper = {
         image: favourite_mapper.avatar_url,
         title: favourite_mapper.username,
         index: favourite_mapper.index,
-        top_b: String(Math.round(favourite_mapper.avatar_url)),
+        top_b: String(Math.round(favourite_mapper.pp_count)),
         top_m: ' PP',
         bottom_b: String(favourite_mapper.map_count),
         bottom_m: 'x',

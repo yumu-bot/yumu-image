@@ -157,6 +157,35 @@ export const PanelDraw = {
         return `<polygon points="${cs}" style="fill: ${color}; fill-opacity: ${opacity}"/>`
     },
 
+    RoundedArcBar(cx = 0, cy = 0, r1 = 1, r2 = 2, start_angle = -45, end_angle = 135, color = '#fff', opacity = 1) {
+        const pi2 = Math.PI / 180
+        const type = (end_angle - start_angle >= 180) ? 1 : 0
+
+        const lsx = cx - r2 * Math.cos(start_angle / pi2)
+        const lsy = cy - r2 * Math.sin(start_angle / pi2)
+
+        const lex = cx - r2 * Math.cos(end_angle / pi2)
+        const ley = cy - r2 * Math.sin(end_angle / pi2)
+
+        const ssx = cx - r1 * Math.cos(end_angle / pi2)
+        const ssy = cy - r1 * Math.sin(end_angle / pi2)
+
+        const sex = cx - r1 * Math.cos(start_angle / pi2)
+        const sey = cy - r1 * Math.sin(start_angle / pi2)
+
+        const rd = (r2 - r1) / 2
+
+
+        return `<path d="
+M ${lsx} ${lsy} 
+A ${r2} ${r2} 0 ${type} 1 ${lex} ${ley}
+A ${rd} ${rd} 0 1 1 ${ssx} ${ssy}
+A ${r1} ${r1} 0 ${type} 0 ${sex} ${sey}
+A ${rd} ${rd} 0 1 1 ${lsx} ${lsy}
+Z
+" style="fill: ${color}; fill-opacity: ${opacity}"/>`
+    },
+
     /**
      * 绘制圆弧（其实可以画椭圆弧，到时候再说吧
      * @param x
