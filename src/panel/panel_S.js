@@ -767,10 +767,6 @@ const card_S2 = async (data = {
         0, 0, 400, 55, 15, PanelColor.top(data.hue)
     )
 
-    const name = poppinsBold.getTextPath(
-        data.name, 105, 25, 24, 'left baseline', '#fff'
-    )
-
     const sub = poppinsBold.getTextPath(
         `${data.wins} Wins [${data.playcount} Plays]`,
         65, 48, 16, 'left baseline', '#fff'
@@ -781,6 +777,13 @@ const card_S2 = async (data = {
     const rank = poppinsBold.get2SizeTextPath(
         '#', `${data.rank}${provisional}`, 16, 24,
         385, 38, 'right baseline', '#fff'
+    )
+
+    const rank_width = poppinsBold.getTextWidth('#', 16)
+        + poppinsBold.getTextWidth(`${data.rank}${provisional}`, 24)
+
+    const name = poppinsBold.getTextPath(
+        poppinsBold.cutStringTail(data.name, 24, 385 - 105 - rank_width), 105, 25, 24, 'left baseline', '#fff'
     )
 
     return [svg, defs, rrect, avatar, country, name, sub, rank, '</g>'].join('')
