@@ -543,7 +543,7 @@ const RANK_RULES = [
     { limit: 0.5,    name: 'Iron',     color: colorArray.iron },
 ];
 
-export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent = 0) {
+export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent = 0, rank_rules = RANK_RULES) {
     if (global_rank <= 0 && global_rank_percent <= 0) {
         return colorArray.deep_gray;
     }
@@ -552,12 +552,12 @@ export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent =
         return colorArray.lustrous;
     }
 
-    const matched = RANK_RULES.find(rule => global_rank_percent < rule.limit);
+    const matched = rank_rules.find(rule => global_rank_percent < rule.limit);
 
     return matched ? matched.color : colorArray.deep_gray;
 }
 
-export function getGlobalRankPercentName(global_rank = 0, global_rank_percent = 0) {
+export function getGlobalRankPercentName(global_rank = 0, global_rank_percent = 0, rank_rules = RANK_RULES) {
     if (global_rank <= 0 && global_rank_percent <= 0) {
         return 'Rookie';
     }
@@ -566,7 +566,7 @@ export function getGlobalRankPercentName(global_rank = 0, global_rank_percent = 
         return 'Lustrous';
     }
 
-    const matched = RANK_RULES.find(rule => global_rank_percent < rule.limit);
+    const matched = rank_rules.find(rule => global_rank_percent < rule.limit);
 
     return matched ? matched.name : 'Rookie';
 }

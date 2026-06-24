@@ -193,6 +193,16 @@ export async function panel_S(data = {
     return svg
 }
 
+const RANK_RULES = [
+    { limit: 0.0005, name: 'Radiant',  color: colorArray.radiant }, // 前 0.05%
+    { limit: 0.005,  name: 'Rhodium',  color: colorArray.rhodium }, // 前 0.5%
+    { limit: 0.04,   name: 'Platinum', color: colorArray.platinum },// 前 4%
+    { limit: 0.15,   name: 'Gold',     color: colorArray.gold },    // 前 15%
+    { limit: 0.40,   name: 'Silver',   color: colorArray.silver },  // 前 40%
+    { limit: 0.75,   name: 'Bronze',   color: colorArray.bronze },  // 前 75%
+    { limit: 1.0,    name: 'Iron',     color: colorArray.iron },    // 剩余部分
+];
+
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
 const component_S1 = (
     data = {
@@ -209,8 +219,8 @@ const component_S1 = (
 
     const percent = data.rank / Math.max(data.total_players, 1)
 
-    const colors = getGlobalRankPercentColor(data.rank, percent)
-    const ranks = getGlobalRankPercentName(data.rank, percent)
+    const colors = getGlobalRankPercentColor(data.rank, percent, RANK_RULES)
+    const ranks = getGlobalRankPercentName(data.rank, percent, RANK_RULES)
 
     const base = rotateSvgBody(PanelDraw.LinearGradientRect(215 - 80, 150 - 80, 160, 160, 20, colors, 1, [100, 0], [60, 40]), 215,  150, 45)
 
