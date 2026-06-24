@@ -647,7 +647,7 @@ const card_S1 = async (
     } else {
         left_health_text = torusBold.getTextPath(
             String(left_remain_health), 440 - 5 + 8 - left_progress_width, 49, 12,
-            'left baseline', '#fff')
+            'left baseline', PanelColor.base(hue))
     }
 
     if ((1 - right_progress) * progress_width > right_width + 12) {
@@ -657,7 +657,7 @@ const card_S1 = async (
     } else {
         right_health_text = torusBold.getTextPath(
             String(right_remain_health), 440 + 5 - 8 + right_progress_width, 49, 12,
-            'right baseline', '#fff')
+            'right baseline', PanelColor.base(hue))
     }
 
     const vs_text = getMultipleTextPath(
