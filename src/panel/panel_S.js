@@ -658,7 +658,7 @@ const card_S1 = async (
             color: '#fff'
         }, {
             font: poppinsBold,
-            text: ' vs ',
+            text: '  vs  ',
             size: 18,
             color: '#fff'
         }, {
