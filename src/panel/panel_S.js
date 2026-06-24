@@ -670,7 +670,7 @@ const card_S1 = async (
     )
 
     const left_health = PanelDraw.LinearGradientRect(
-        440 - 5 - left_progress_width, 38, left_progress_width, 15, 7.5, colorArray.red, 1, [100, 0]
+        440 - 5 - left_progress_width, 38, left_progress_width, 15, 7.5, colorArray.red, 1, [0, 100]
     )
 
     const right_health = PanelDraw.LinearGradientRect(
