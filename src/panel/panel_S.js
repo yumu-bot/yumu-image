@@ -1,19 +1,19 @@
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 import {colorArray, getGlobalRankPercentColor, getGlobalRankPercentName, PanelColor} from "../util/color.js";
 import {
-    getAvatar, getGameMode,
+    getAvatar, getFlagPath, getGameMode, getImage,
     getPanelNameSVG, getRandomString,
-    getSvgBody,
+    getSvgBody, readNetImage,
     rotateSvgBody, rounds,
     setCustomBanner,
     setSvgBody,
     setText,
-    setTexts
+    setTexts, thenPush
 } from "../util/util.js";
 import {beatmapset2Task, imageDownloader, toTask, user2Task} from "../util/download.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {extra, poppinsBold} from "../util/font.js";
+import {extra, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABEL_S} from "../component/label.js";
 
@@ -587,7 +587,6 @@ export async function panel_S(data = {
 
     const {
         first_placements = 0,
-        is_rating_provisional = 0,
         plays = 0,
         rank = 0,
         rating: mm_rating = 0,
@@ -685,19 +684,25 @@ export async function panel_S(data = {
         PanelSGenerate.stats2componentS3(
             stats, plays, has_custom_panel, hue
         ));
-    const componentS4 = component_S4(
+    const componentS4 = await component_S4(
         PanelSGenerate.recently2componentS4(
-            recently, has_custom_panel, hue
+            recently, user?.id, images, has_custom_panel, hue
         ));
-    const componentS5 = ''
-    const componentS6 = ''
+    const componentS5 = component_S5(
+        PanelSGenerate.rate2componentS5(
+            first_placements, plays, has_custom_panel, hue
+        ));
+    const componentS6 = await component_S6(
+        PanelSGenerate.surrounding2componentS6(
+            surrounding, images, has_custom_panel, hue
+        ));
 
     const bodyS1 = getSvgBody(40, 330, componentS1)
     const bodyS2 = getSvgBody(40, 700, componentS2)
-    const bodyS3 = getSvgBody(550, 330, componentS3)
-    const bodyS4 = getSvgBody(970, 330, componentS4)
-    const bodyS5 = getSvgBody(550, 740, componentS5)
-    const bodyS6 = getSvgBody(1040, 740, componentS6)
+    const bodyS3 = getSvgBody(500, 330, componentS3)
+    const bodyS4 = getSvgBody(500, 560, componentS4)
+    const bodyS5 = getSvgBody(1450, 330, componentS5)
+    const bodyS6 = getSvgBody(1450, 500, componentS6)
 
     svg = setCustomBanner(svg, user?.profile?.banner, reg_banner);
 
@@ -904,10 +909,11 @@ const component_S3 = (
 }
 
 
-
-const component_S4 = (
+const component_S4 = async (
     data = {
         recently: [],
+        me: 7003013,
+        images: new Map(),
 
         has_custom_panel: false,
         hue: 342,
@@ -915,6 +921,417 @@ const component_S4 = (
 ) => {
     let svg = `<g id="Component_S4">`
     const hide = data.has_custom_panel === true
+
+    const recently = (data?.recently ?? [])
+
+    const card_s1s = []
+    const string_s1s = []
+
+    await Promise.allSettled(recently.map((v) => {
+        return card_S1(v, data.me, data.images, data.hue)
+    })).then(results => thenPush(results, card_s1s))
+
+    for (let i = 0; i < 4; i++) {
+        const s1 = card_s1s[i]
+
+        const y = 40 + i * 110
+
+        string_s1s.push(getSvgBody(20, y, s1))
+    }
+
+    const title = hide ? '' : poppinsBold.getTextPath('Match History', 15, 27, 18, 'left baseline', '#fff', 1)
+    const rrect = hide ? '' : PanelDraw.Rect(0, 0, 920, 480, 20, PanelColor.middle(data.hue), 1)
+
+    return [svg, rrect, title, string_s1s.join('\n'), '</g>'].join('')
+}
+
+const component_S5 = (
+    data = {
+        first_placements: 0,
+        plays: 0,
+
+        has_custom_panel: false,
+        hue: 342,
+    }
+) => {
+    let svg = `<g id="Component_S5">`
+    const hide = data.has_custom_panel === true
+
+    const first = data?.first_placements ?? 0
+    const play = data?.plays ?? 0
+
+    const wr = first / Math.max(1, play)
+
+    const wr_round = rounds(wr * 100, 2)
+
+    const text_arr = [{
+        font: "poppinsBold", text: wr_round.integer, size: 84, color: '#fff',
+    }, {
+        font: "poppinsBold", text: wr_round.decimal + '%', size: 48, color: '#fff',
+    }, {
+        font: "poppinsBold", text: ` [${first}/${play}]`, size: 24, color: '#fff',
+    },]
+
+    const progress = wr > 1e-4 ? Math.min(Math.max(wr * 395, 30), 395) : 0
+
+    const win_rate = getMultipleTextPath(text_arr, 20, 88, 'left baseline')
+
+    const win_rrect = PanelDraw.LinearGradientRect(20, 105, progress, 30, 15, colorArray.light_green)
+    const lose_rrect = PanelDraw.LinearGradientRect(20, 105, 395, 30, 15, colorArray.light_green)
+
+    const title = hide ? '' : poppinsBold.getTextPath('Win Rate', 430 - 15, 27, 18, 'right baseline', '#fff', 1)
+    const rrect = hide ? '' : PanelDraw.Rect(0, 0, 430, 150, 20, PanelColor.middle(data.hue), 1)
+
+    return [svg, rrect, title, lose_rrect, win_rrect, win_rate, '</g>'].join('')
+}
+
+const component_S6 = async (
+    data = {
+        surrounding: [],
+        images: new Map(),
+
+        has_custom_panel: false,
+        hue: 342,
+    }
+) => {
+    let svg = `<g id="Component_S6">`
+    const hide = data.has_custom_panel === true
+
+    const surrounding = (data?.surrounding ?? [])
+
+    const card_s2s = []
+    const string_s2s = []
+
+    await Promise.allSettled(surrounding.map((v) => {
+        return card_S2({
+            avatar: data.images.get(`avatar_${v.id}`) ?? getAvatar(v.id),
+            country: v.country?.country_code ?? 'XX',
+            name: v.username ?? 'Unknown',
+            wins: v.wins ?? 0,
+            playcount: v.playcount ?? 0,
+            rank: v.rank ?? 0,
+            provisional: v.provisional ?? false,
+            has_custom_panel: false,
+            hue: 342
+        })
+    })).then(results => thenPush(results, card_s2s))
+
+
+    for (let i = 0; i < 7; i++) {
+        const s2 = card_s2s[i]
+
+        const y = 45 + i * 70
+
+        string_s2s.push(getSvgBody(20, y, s2))
+    }
+
+    const title = hide ? '' : poppinsBold.getTextPath('Your Ranking', 15, 27, 18, 'left baseline', '#fff', 1)
+    const rrect = hide ? '' : PanelDraw.Rect(0, 0, 430, 540, 20, PanelColor.middle(data.hue), 1)
+
+    return [svg, rrect, title, string_s2s.join('\n'), '</g>'].join('')
+}
+
+const card_S1 = async (
+    recent = {
+        duration: 488, room_id: 3056562, players: [7003013, 11925374], wins: [2, 1], names: ["Player1", "Player2"],
+
+        rounds: [],
+    },
+
+    me = 7003013,
+    images = new Map(),
+    hue,
+) => {
+    let svg = `<g id="Card_S1">`
+
+    const left_id = recent?.players?.[0]
+    const right_id = recent?.players?.[1]
+
+    const last_round = recent?.rounds?.[recent?.rounds?.length - 1]
+
+    const left_first = recent?.wins?.[0] ?? 0
+    const right_first = recent?.wins?.[1] ?? 0
+
+    const left_remain_health = last_round?.scores?.[0]?.health
+    const right_remain_health = last_round?.scores?.[1]?.health
+
+    let left_win
+    let left_highlight = left_id === me
+    let right_win
+    let right_highlight = right_id === me
+
+    if (left_remain_health > right_remain_health) {
+        left_win = true
+        right_win = false
+    } else if (left_remain_health < right_remain_health) {
+        left_win = false
+        right_win = true
+    } else {
+        left_win = last_round?.winner === left_id
+        right_win = last_round?.winner === right_id
+    }
+
+    const label_left = getSvgBody(0, 0, label_S1(left_win,
+        ! left_highlight, hue))
+    const label_right = getSvgBody(790, 0, label_S1(right_win,
+        ! right_highlight, hue))
+
+    const rrect = PanelDraw.Rect(
+        110, 0, 660, 90, 20, PanelColor.top(hue)
+    )
+
+    const top = PanelDraw.Rect(
+        110, 0, 660, 60, 20, PanelColor.overlay(hue)
+    )
+
+    const base_health = PanelDraw.Rect(
+        70, 38, 255, 15, 7.5, PanelColor.top(hue)
+    ) + PanelDraw.Rect(
+        335, 38, 255, 15, 7.5, PanelColor.top(hue)
+    )
+
+    const label_s2s = []
+
+    const last7rounds = (recent?.rounds ?? []).slice(-7);
+
+    for (const [i, v] of last7rounds.entries()) {
+        const x = 15 + 81 * i;
+        const y = 65
+
+        const cover = images.get(`list_${v.beatmapset_id}`)
+            ?? await readNetImage(`https://assets.ppy.sh/beatmaps/${v.beatmapset_id}/covers/list.jpg`, false);
+
+        const l = getSvgBody(x, y, label_S2(cover, v?.winner_id === me, hue));
+
+        label_s2s.push(l);
+    }
+
+    const left_progress = (left_remain_health / 1000000) ?? 0
+    const right_progress = (right_remain_health / 1000000) ?? 0
+
+    let left_progress_width
+    let right_progress_width
+
+    if (left_progress < 1e-4) {
+        left_progress_width = 0
+    } else {
+        left_progress_width = Math.max(left_progress * progress_width, 15)
+    }
+
+    if (right_progress < 1e-4) {
+        right_progress_width = 0
+    } else {
+        right_progress_width = Math.max(right_progress * progress_width, 15)
+    }
+
+    const progress_width = 255
+
+    const left_width = torusBold.getTextWidth(String(left_remain_health), 12)
+    const right_width = torusBold.getTextWidth(String(right_remain_health), 12)
+
+    let left_health_text
+    let right_health_text
+
+    if ((1 - left_progress) * progress_width + 20 > left_width) {
+        left_health_text = torusBold.getTextPath(
+            String(left_remain_health), 325 - left_progress_width - 6, 50, 12,
+            'right baseline', '#fff')
+    } else {
+        left_health_text = torusBold.getTextPath(
+            String(left_remain_health), 325 - left_progress_width + 6, 50, 12,
+            'left baseline', '#fff')
+    }
+
+    if ((1 - right_progress) * progress_width + 20 > right_width) {
+        right_health_text = torusBold.getTextPath(
+            String(left_remain_health), 335 + right_progress_width + 6, 50, 12,
+            'left baseline', '#fff')
+    } else {
+        right_health_text = torusBold.getTextPath(
+            String(left_remain_health), 335 + right_progress_width - 6, 50, 12,
+            'right baseline', '#fff')
+    }
+
+    const vs_text = getMultipleTextPath(
+        [{
+            font: poppinsBold,
+            text: String(left_first),
+            size: 30,
+            color: '#fff'
+        }, {
+            font: poppinsBold,
+            text: ' vs ',
+            size: 18,
+            color: '#fff'
+        }, {
+            font: poppinsBold,
+            text: String(right_first),
+            size: 30,
+            color: '#fff'
+        }], 330, 30, 'center baseline'
+    )
+
+    const left_health = PanelDraw.LinearGradientRect(
+        325 - left_progress_width, 38, left_progress_width, 15, 7.5, colorArray.red, 1, [100, 0]
+    )
+
+    const right_health = PanelDraw.LinearGradientRect(
+        345, 38, right_progress_width, 15, 7.5, colorArray.cyan, 1, [100, 0]
+    )
+
+    const left_indicator = PanelDraw.LinearGradientRect(
+        70, 12, 15, 15, 7.5, colorArray.red, 1, [50, 50], [0, 100]
+    )
+
+    const right_indicator = PanelDraw.LinearGradientRect(
+        575, 12, 15, 15, 7.5, colorArray.cyan, 1, [50, 50], [0, 100]
+    )
+
+    const left_name = poppinsBold.getTextPath(
+        recent?.names?.[0] ?? "Unknown", 92, 25, 18, 'left baseline', left_win ? '#fff' : '#aaa'
+    )
+
+    const right_name = poppinsBold.getTextPath(
+        recent?.names?.[1] ?? "Unknown", 677, 25, 18, 'left baseline', right_win ? '#fff' : '#aaa'
+    )
+
+    return [svg, rrect, top, base_health, left_health, right_health, left_indicator, right_indicator,
+        label_left, label_right, label_s2s.join('\n'),
+        left_health_text, right_health_text, vs_text, left_name, right_name,
+        '</g>'].join('')
+}
+
+
+const card_S2 = async (data = {
+    avatar: '',
+    country: 'XX',
+    name: '',
+    wins: 0,
+    playcount: 0,
+    rank: 0,
+    has_custom_panel: false,
+    hue: 342
+}) => {
+    let svg = `<g id="Card_S2">`
+    const hide = data.has_custom_panel === true
+
+    const random = getRandomString(6)
+
+    let defs = `<defs>
+        <clipPath id="Card_S2_${random}">
+            ${PanelDraw.Rect(0, 0, 55, 55, 15, 'none')}
+        </clipPath>
+    </defs>`
+
+    const avatar = `<g clip-path="url(#Card_S2_${random})">
+    ${getImage(0, 0, 55, 55, data.avatar)}
+</g>`
+
+    const country = await getFlagPath(country, 65, 7, 20)
+
+    const rrect = hide ? '' : PanelDraw.Rect(
+        110, 0, 660, 90, 20, PanelColor.top(data.hue)
+    )
+
+    const name = poppinsBold.getTextPath(
+        data.name, 105, 25, 24, 'left baseline', '#fff'
+    )
+
+    const sub = poppinsBold.getTextPath(
+        `${data.wins} Wins [${data.playcount} Plays]`,
+        65, 48, 18, 'left baseline', '#fff'
+    )
+
+    const rank = poppinsBold.get2SizeTextPath(
+        '#', String(data.rank), 16, 24,
+        385, 38, 'right baseline', '#fff'
+    )
+
+    return [svg, defs, rrect, avatar, country, name, sub, rank, '</g>'].join('')
+}
+
+
+
+const label_S1 = (win_condition, not_highlight, hue) => {
+    let svg = `<g id="Label_S1">`
+
+    let colors
+    let char
+    let text
+
+    switch (win_condition) {
+        case true: {
+            colors = colorArray.green
+            char = 'W'
+            text = ' Win!'
+        } break;
+        case false: {
+            colors = colorArray.green
+            char = 'L'
+            text = '  Lose...'
+        } break;
+        default: {
+            colors = colorArray.gray
+            char = 'Q'
+            text = '  Quit...'
+        } break;
+    }
+
+    const texts = torusBold.getTextPath(text, 45, 52, 48, 'center baseline', PanelColor.base(hue))
+
+    const chars = torusBold.getTextPath(char, 45, 75, 16, 'center baseline', PanelColor.base(hue))
+
+    const rrect = PanelDraw.LinearGradientRect(0, 0, 90, 90, 20, colors, 1, [80, 20], [60, 40])
+
+    let overlay = ''
+
+    if (not_highlight) {
+        overlay = PanelDraw.Rect(0, 0, 90, 90, 20, PanelColor.base(hue), 0.2)
+    }
+
+    return [svg, rrect, overlay, texts, chars, '</g>'].join('')
+}
+
+
+const label_S2 = (cover = '', win_condition, hue) => {
+    let svg = `<g id="Label_S2">`
+
+    let colors
+    let char
+
+    const random = getRandomString(6)
+
+    switch (win_condition) {
+        case true: {
+            colors = colorArray.green
+            char = 'W'
+        } break;
+        case false: {
+            colors = colorArray.green
+            char = 'L'
+        } break;
+        default: {
+            colors = colorArray.gray
+            char = 'Q'
+        } break;
+    }
+
+    const defs = `<defs>
+        <clipPath id="clippath-S2-${random}">
+            ${PanelDraw.Rect(0, 0, 40, 20, 5, 'none')}    
+        </clipPath>
+    </defs>`
+
+    const image = `<g clip-path="url(#clippath-S2-${random}">
+        ${PanelDraw.Image(0, 0, 40, 20, cover)}
+    </g>`
+
+    const chars = torusBold.getTextPath(char, 55, 15, 14, 'center baseline', PanelColor.base(hue))
+
+    const rrect = PanelDraw.LinearGradientRect(45, 0, 20, 20, 5, colors, 1, [80, 20], [60, 40])
+
+
+    return [svg, defs, rrect, chars, image, '</g>'].join('')
 }
 
 
@@ -953,15 +1370,37 @@ const PanelSGenerate = {
         }
     },
 
-    recently2componentS4: (recently = [], has_custom_panel = false, hue) => {
+    recently2componentS4: (recently = [], me, images, has_custom_panel = false, hue) => {
 
         return {
             recently: recently,
+            me: me,
+            images: images,
 
             has_custom_panel: has_custom_panel,
             hue: hue
         }
     },
+
+    rate2componentS5: (first_placements, plays, has_custom_panel, hue) => {
+        return {
+            first_placements: first_placements,
+            plays: plays,
+
+            has_custom_panel: has_custom_panel,
+            hue: hue
+        }
+    },
+
+    surrounding2componentS6: (surrounding, images, has_custom_panel, hue) => {
+        return {
+            surrounding: surrounding,
+            images: images,
+
+            has_custom_panel: has_custom_panel,
+            hue: hue
+        }
+    }
 }
 
 
