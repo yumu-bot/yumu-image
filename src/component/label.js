@@ -811,6 +811,77 @@ export const LABEL_ETX = {
     },
 }
 
+export const LABEL_S = {
+    PC: {
+        icon: getImageFromV3("object-score-pp.png"),
+        icon_title: 'PC',
+        abbr: 'PC',
+        color_remark: '#aaa',
+        bar_color: '#00B7EE',
+        bar_colors: colorArray.cyan,
+        bar_min: 0,
+        bar_mid: 200,
+        bar_max: 400,
+    },
+    MAP_PC: {
+        icon: getImageFromV3("object-score-healthpoint.png"),
+        icon_title: 'MAP',
+        abbr: 'MAP',
+        color_remark: '#aaa',
+        bar_color: '#F06EA9',
+        bar_colors: colorArray.pink,
+        bar_min: 0,
+        bar_mid: 500,
+        bar_max: 1000,
+    },
+    SR: {
+        icon: getImageFromV3("object-score-overalldifficulty.png"),
+        icon_title: 'A.SR',
+        abbr: 'A.SR',
+        color_remark: '#aaa',
+        bar_color: '#A864A8',
+        bar_colors: colorArray.purple,
+        bar_min: 0,
+        bar_mid: 500,
+        bar_max: 1000,
+    },
+    PT: {
+        icon: getImageFromV3("object-score-length.png"),
+        icon_title: 'PT',
+        abbr: 'PT',
+        color_remark: '#aaa',
+        bar_color: '#7CC576',
+        bar_colors: colorArray.green,
+        bar_min: 0,
+        bar_mid: 72,
+        bar_max: 144,
+    },
+
+    COMBO: {
+        icon: getImageFromV3("object-score-combo.png"),
+        icon_title: 'A.CB',
+        abbr: 'A.CB',
+        color_remark: '#aaa',
+        bar_color: '#FFF467',
+        bar_colors: colorArray.yellow,
+        bar_min: 0,
+        bar_mid: 300,
+        bar_max: 600,
+    },
+
+    ACC: {
+        icon: getImageFromV3("object-score-accuracy.png"),
+        icon_title: 'A.ACC',
+        abbr: 'A.ACC',
+        color_remark: '#aaa',
+        bar_color: '#F26C4F',
+        bar_colors: colorArray.red,
+        bar_min: 92,
+        bar_mid: 96,
+        bar_max: 100,
+    },
+}
+
 export const LABEL_IM = {
     RANK: {
         icon: getImageFromV3("object-beatmap-ranked.png"),

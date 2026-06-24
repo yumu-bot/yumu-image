@@ -18,7 +18,7 @@ import {component_V2} from "../component/component_V2.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export const router = createImageRouter(panel_V2);
+export const router = createImageRouter(panel_V2, undefined, 'webp');
 
 export const router_svg = createSvgRouter(panel_V2);
 

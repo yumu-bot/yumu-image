@@ -269,7 +269,7 @@ export async function panel_D3(
         top_percent: percentiles,
         achievements_count: user.user_achievements_count ?? 0,
         beatmap_playcounts_count: user.beatmap_playcounts_count ?? 0,
-        matchmaking_rating: user.matchmaking_rating ?? 0,
+        matchmaking_rating: user.matchmaking_stats?.[0]?.rating ?? 0,
         mode: getGameMode(user.mode, 0)
     }, has_custom_panel, hue)
 

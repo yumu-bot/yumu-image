@@ -1,6 +1,6 @@
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export const router = createImageRouter(panel_V3);
+export const router = createImageRouter(panel_V3, undefined, 'webp');
 
 export const router_svg = createSvgRouter(panel_V3);
 

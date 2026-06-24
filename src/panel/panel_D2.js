@@ -193,10 +193,10 @@ const component_D1 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OD1">
+    let svg = `<g id="Component_D1">
     </g>`
 
-    const reg = /(?<=<g id="Component_OD1">)/;
+    const reg = /(?<=<g id="Component_D1">)/;
 
     const hide = data.has_custom_panel
 
@@ -275,10 +275,10 @@ const component_D2 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OD2">
+    let svg = `<g id="Component_D2">
     </g>`
 
-    const reg = /(?<=<g id="Component_OD2">)/;
+    const reg = /(?<=<g id="Component_D2">)/;
 
     const d2s = data?.scores || []
 
@@ -312,10 +312,10 @@ const component_D3 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OD3">
+    let svg = `<g id="Component_D3">
     </g>`
 
-    const reg = /(?<=<g id="Component_OD3">)/;
+    const reg = /(?<=<g id="Component_D3">)/;
 
     let length = 0;
 
@@ -401,7 +401,7 @@ const component_D4 = (
         <clipPath id="clippath-PD2-C4">
         </clipPath>
         </defs>
-        <g id="Component_OD4_Base">
+        <g id="Component_D4_Base">
     </g>
         <g style="clip-path: url(#clippath-PD2-C4);">
     </g>`
@@ -409,7 +409,7 @@ const component_D4 = (
     const clip = /(?<=<clipPath id="clippath-PD2-C4">)/;
 
     const reg = /(?<=<g style="clip-path: url\(#clippath-PD2-C4\);">)/;
-    const reg_base = /(?<=<g id="Component_OD4_Base">)/;
+    const reg_base = /(?<=<g id="Component_D4_Base">)/;
 
     if (data.is_png === true) {
         svg = setText(svg, PanelDraw.Rect(0, 290, 1920, 790, 20, 'none', 1), clip)
@@ -437,10 +437,10 @@ const component_D5 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OD5">
+    let svg = `<g id="Component_D5">
     </g>`
 
-    const reg = /(?<=<g id="Component_OD5">)/;
+    const reg = /(?<=<g id="Component_D5">)/;
 
     const has_highest = (data?.rank_highest?.rank > 0)
 
@@ -513,10 +513,10 @@ const component_D6 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OD6">
+    let svg = `<g id="Component_D6">
     </g>`
 
-    const reg = /(?<=<g id="Component_OD6">)/;
+    const reg = /(?<=<g id="Component_D6">)/;
 
     const arr = modifyArrayToFixedLength(data.bp_time, 90);
 
@@ -573,10 +573,10 @@ const component_D7 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OD7">
+    let svg = `<g id="Component_D7">
     </g>`
 
-    const reg = /(?<=<g id="Component_OD7">)/;
+    const reg = /(?<=<g id="Component_D7">)/;
 
     const arr = data?.pc_time || [];
 
@@ -638,10 +638,10 @@ const component_D8 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OD8">
+    let svg = `<g id="Component_D8">
     </g>`
 
-    const reg = /(?<=<g id="Component_OD8">)/;
+    const reg = /(?<=<g id="Component_D8">)/;
 
     const hide = data.has_custom_panel
 

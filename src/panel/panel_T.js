@@ -325,10 +325,10 @@ export async function panel_T(
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
 const component_T1 = (populars = []) => {
-    let svg = `<g id="Component_OT1">
+    let svg = `<g id="Component_T1">
     </g>`
 
-    const reg = /(?<=<g id="Component_OT1">)/;
+    const reg = /(?<=<g id="Component_T1">)/;
 
     const popular_svg = populars
         .slice(0, 5)
@@ -367,14 +367,14 @@ const component_T2 = async (best_performance = {
             <circle cx="665" cy="120" r="70" style="fill: none;"/>
         </clipPath>
     </defs>
-    <g id="Component_OT2">
+    <g id="Component_T2">
     </g>
     <g id="Avatar_OT2">
         <g clip-path="url(#clippath-OT2-1)"> 
         </g>
     </g>`
 
-    const reg = /(?<=<g id="Component_OT2">)/;
+    const reg = /(?<=<g id="Component_T2">)/;
     const reg_avatar = /(?<=<g clip-path="url\(#clippath-OT2-1\)">)/
 
     const async = []
@@ -400,10 +400,10 @@ const component_T2 = async (best_performance = {
 }
 
 const component_T3 = (attr = [], max_percent = 1) => {
-    let svg = `<g id="Component_OT3">
+    let svg = `<g id="Component_T3">
     </g>`
 
-    const reg = /(?<=<g id="Component_OT3">)/;
+    const reg = /(?<=<g id="Component_T3">)/;
 
     let mod_svg
 
@@ -464,10 +464,10 @@ const component_T3 = (attr = [], max_percent = 1) => {
 }
 
 const component_T4 = (attr = [], max_percent = 1) => {
-    let svg = `<g id="Component_OT4">
+    let svg = `<g id="Component_T4">
     </g>`
 
-    const reg = /(?<=<g id="Component_OT4">)/;
+    const reg = /(?<=<g id="Component_T4">)/;
 
     let pp_svg
 

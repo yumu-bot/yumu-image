@@ -18,7 +18,7 @@ import {getBeatmapFilePath, getLongestBPM, normalizeBpm, parseBeatmapFile} from 
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 
-export const router = createImageRouter(panel_V);
+export const router = createImageRouter(panel_V, undefined, 'webp');
 
 export const router_svg = createSvgRouter(panel_V);
 

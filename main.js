@@ -10,9 +10,16 @@ import {
 import puppeteer from "puppeteer";
 import {WsClient} from "./src/util/websocket.js";
 import moment from "moment";
+import {panel_S} from "./src/panel/panel_S.js";
+import {exportWEBP} from "./src/util/image.js";
+import fs from "fs";
 
 initPath();
 //这里放测试代码
+
+console.time('S')
+fs.writeFileSync("image/out/panel_S.png", await exportWEBP(await panel_S()));
+console.timeEnd('S')
 
 // 覆盖默认的 launch 方法
 const originalLaunch = puppeteer.launch;

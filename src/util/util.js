@@ -124,7 +124,7 @@ let browserPromise = null;
 });
 
 process.on('uncaughtException', async (err) => {
-    console.error('[进程崩溃] 捕获到未处理的异常:', err.message);
+    console.error('[进程崩溃] 捕获到未处理的异常:', err);
     if (browserPromise) {
         await browserPromise.close().catch(() => {});
     }
@@ -1304,6 +1304,20 @@ export function getSvg(body = '', x = 0, y = 0, w = 1920, h = 1080, fill = 'whit
     return `<svg x="${x}" y="${y}" width="${w}" height="${h}" style="fill: ${fill};" viewBox="0 0 ${viewbox_w} ${viewbox_h}">
 ${body}
 </svg>`;
+}
+
+/**
+ * 旋转中心通常是 body 的一半宽高
+ * @param body
+ * @param cx
+ * @param cy
+ * @param angle 角度制
+ * @return {string}
+ */
+export function rotateSvgBody(body = '', cx = 0, cy = 0, angle = 0) {
+    return `<g transform="translate(${cx}, ${cy}) rotate(${angle}) translate(${-cx}, ${-cy})">
+        ${body}
+  </g>`
 }
 
 export function getBody(svg = '') {

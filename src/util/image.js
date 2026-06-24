@@ -107,7 +107,7 @@ export function createImageRouter(panelFn, data_loader = (req) => req.fields || 
 
     return async (req, res) => {
         await handleRouter(res, exporter.mime, async () => {
-            const data = await data_loader(req, res);
+            let data = await data_loader(req, res);
 
             if (data === null) {
                 return;

@@ -277,7 +277,7 @@ const component_M1 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OM1">`
+    let svg = `<g id="Component_M1">`
     const hide = data.has_custom_panel === true
 
     const half_slot = data.slot / 2
@@ -330,7 +330,7 @@ const component_M1 = (
         }
     ]
 
-    const string_e5s = labels.slice(0, 6).map((label, i) => {
+    const string_e5s = labels.map((label, i) => {
         let x, y;
 
         if (i < 4) {
@@ -368,7 +368,7 @@ const component_M2 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OM2">`
+    let svg = `<g id="Component_M2">`
     const hide = data.has_custom_panel === true
 
     const d2s = data?.card_d2s || []
@@ -737,7 +737,7 @@ const component_M9 = async (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OJ9">
+    let svg = `<g id="Component_J9">
     </g>`
     const hide = data.has_custom_panel === true
 

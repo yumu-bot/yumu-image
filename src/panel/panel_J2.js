@@ -241,10 +241,10 @@ const component_J1 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OJ1">
+    let svg = `<g id="Component_J1">
     </g>`
 
-    const reg = /(?<=<g id="Component_OJ1">)/;
+    const reg = /(?<=<g id="Component_J1">)/;
 
     const hide = data.has_custom_panel
 
@@ -285,10 +285,10 @@ const component_J2 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OJ2">
+    let svg = `<g id="Component_J2">
     </g>`
 
-    const reg = /(?<=<g id="Component_OJ2">)/;
+    const reg = /(?<=<g id="Component_J2">)/;
 
     const d2s = data?.scores || []
 
@@ -320,10 +320,10 @@ const component_J3 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OJ3">
+    let svg = `<g id="Component_J3">
     </g>`
 
-    const reg = /(?<=<g id="Component_OJ3">)/;
+    const reg = /(?<=<g id="Component_J3">)/;
 
     const rank = data?.rank_attr || []
 
@@ -415,10 +415,10 @@ const component_J4 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OJ4">
+    let svg = `<g id="Component_J4">
     </g>`
 
-    const reg = /(?<=<g id="Component_OJ4">)/;
+    const reg = /(?<=<g id="Component_J4">)/;
 
     const mods = data?.mods_attr || []
 
@@ -524,10 +524,10 @@ const component_J5 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OJ5">
+    let svg = `<g id="Component_J5">
     </g>`
 
-    const reg = /(?<=<g id="Component_OJ5">)/;
+    const reg = /(?<=<g id="Component_J5">)/;
 
     const mods = data?.mods_arr || [['']]
     const rank = data?.rank_arr || []
@@ -586,10 +586,10 @@ const component_J6 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OJ6">
+    let svg = `<g id="Component_J6">
     </g>`
 
-    const reg = /(?<=<g id="Component_OJ6">)/;
+    const reg = /(?<=<g id="Component_J6">)/;
 
     const arr = modifyArrayToFixedLength(data.pp_raw_arr, 200, false);
 
@@ -644,10 +644,10 @@ const component_J7 = (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OJ7">
+    let svg = `<g id="Component_J7">
     </g>`
 
-    const reg = /(?<=<g id="Component_OJ7">)/;
+    const reg = /(?<=<g id="Component_J7">)/;
 
     const times = data?.time_arr || []
     const dist = data?.time_dist_arr || []
@@ -705,10 +705,10 @@ const component_J8 = async (
         hue: 342,
     }
 ) => {
-    let svg = `<g id="Component_OJ8">
+    let svg = `<g id="Component_J8">
     </g>`
 
-    const reg = /(?<=<g id="Component_OJ8">)/;
+    const reg = /(?<=<g id="Component_J8">)/;
 
     const mappers = data?.favorite_mappers || []
 

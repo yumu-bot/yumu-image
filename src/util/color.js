@@ -524,34 +524,48 @@ export function getUserRankColor(rank = 0) {
     }
 }
 
+/**
+
+ * https://github.com/ppy/osu-web/blob/6fcd85eb006ce7699d6f747597435c01344b2d2d/resources/js/profile-page/rank.tsx#L19-L46
+
+ */
+
+const RANK_RULES = [
+    { limit: 0.0005, name: 'Radiant',  color: colorArray.radiant },
+    { limit: 0.0015, name: 'Rhodium',  color: colorArray.rhodium },
+    { limit: 0.005,  name: 'Platinum', color: colorArray.platinum },
+    { limit: 0.015,  name: 'Gold',     color: colorArray.gold },
+    { limit: 0.05,   name: 'Silver',   color: colorArray.silver },
+    { limit: 0.15,   name: 'Bronze',   color: colorArray.bronze },
+    { limit: 0.5,    name: 'Iron',     color: colorArray.iron },
+];
+
 export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent = 0) {
     if (global_rank <= 0 && global_rank_percent <= 0) {
-        return colorArray.deep_gray
+        return colorArray.deep_gray;
     }
 
-    /**
-     * https://github.com/ppy/osu-web/blob/6fcd85eb006ce7699d6f747597435c01344b2d2d/resources/js/profile-page/rank.tsx#L19-L46
-     */
-
-    if (global_rank <= 100) {
-        return colorArray.lustrous
-    } else if (global_rank_percent < 0.0005) {
-        return colorArray.radiant
-    } else if (global_rank_percent < 0.0015) {
-        return colorArray.rhodium
-    } else if (global_rank_percent < 0.005) {
-        return colorArray.platinum
-    } else if (global_rank_percent < 0.015) {
-        return colorArray.gold
-    } else if (global_rank_percent < 0.05) {
-        return colorArray.silver
-    } else if (global_rank_percent < 0.15) {
-        return colorArray.bronze
-    } else if (global_rank_percent < 0.5) {
-        return colorArray.iron
-    } else {
-        return colorArray.deep_gray
+    if (global_rank > 0 && global_rank <= 100) {
+        return colorArray.lustrous;
     }
+
+    const matched = RANK_RULES.find(rule => global_rank_percent < rule.limit);
+
+    return matched ? matched.color : colorArray.deep_gray;
+}
+
+export function getGlobalRankPercentName(global_rank = 0, global_rank_percent = 0) {
+    if (global_rank <= 0 && global_rank_percent <= 0) {
+        return 'Rookie';
+    }
+
+    if (global_rank > 0 && global_rank <= 100) {
+        return 'Lustrous';
+    }
+
+    const matched = RANK_RULES.find(rule => global_rank_percent < rule.limit);
+
+    return matched ? matched.name : 'Rookie';
 }
 
 /**
