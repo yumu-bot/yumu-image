@@ -573,8 +573,8 @@ const card_S1 = async (
     const left_first = recent?.wins?.[0] ?? 0
     const right_first = recent?.wins?.[1] ?? 0
 
-    const left_remain_health = last_round?.scores?.[0]?.health
-    const right_remain_health = last_round?.scores?.[1]?.health
+    const left_remain_health = last_round?.scores?.[0]?.health ?? 0
+    const right_remain_health = last_round?.scores?.[1]?.health ?? 0
 
     let left_win
     let left_highlight = left_id === me
@@ -587,9 +587,12 @@ const card_S1 = async (
     } else if (left_remain_health < right_remain_health) {
         left_win = false
         right_win = true
-    } else {
+    } else if (last_round?.winner != null) {
         left_win = last_round?.winner === left_id
         right_win = last_round?.winner === right_id
+    } else {
+        left_win = null
+        right_win = null
     }
 
     const label_left = getSvgBody(0, 0, label_S1(left_win,
