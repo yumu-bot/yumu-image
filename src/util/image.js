@@ -228,6 +228,68 @@ export async function convertPicture(buffer, target_format = 'webp', from_format
     }
 }
 
+export async function compressPicture2Webp(buffer, max_width = 1920, max_height = null) {
+    try {
+        let pipeline = sharp(buffer, { pages: 1 });
+        const meta = await pipeline.metadata();
+
+        if (!meta.format || !meta.width || !meta.height) {
+            return buffer;
+        }
+
+        const src_width = meta.width;
+        const src_height = meta.height;
+
+        let final_width = max_width;
+        let final_height = max_height;
+
+        const aspect_ratio = src_width / src_height;
+        if (src_width < 500 && src_height < 500 && aspect_ratio > 0.95 && aspect_ratio < 1.05) {
+            final_width = 128;
+            final_height = 128;
+        }
+
+        const need_resize = (final_width && src_width > final_width) || (final_height && src_height > final_height);
+
+        if (meta.format === 'webp' && !need_resize) {
+            return buffer;
+        }
+
+        if (need_resize) {
+            pipeline = pipeline.resize({
+                width: final_width || undefined,
+                height: final_height || undefined,
+                fit: 'inside',
+                withoutEnlargement: true
+            });
+        }
+
+        const isLosslessFormat = meta.format === 'png' || meta.format === 'gif';
+
+        if (isLosslessFormat) {
+            return await pipeline
+                .webp({
+                    lossless: true,
+                    effort: 6
+                })
+                .toBuffer();
+        } else {
+            return await pipeline
+                .webp({
+                    quality: 80,
+                    effort: 6,
+                    alphaQuality: 80
+                })
+                .toBuffer();
+        }
+
+    } catch (compress_err) {
+        // 如果 sharp 内部处理报错（如动图解析失败等），安全返回原 buffer
+        console.error(`[压缩失败，原样返回]`, compress_err.message);
+        return buffer;
+    }
+}
+
 /**
  * 压缩图片，接近 1比1 的压缩成 128 x 128，其他最长压缩到 1920 px
  * @param buffer {Buffer}

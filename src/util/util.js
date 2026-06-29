@@ -18,7 +18,7 @@ import {exec} from 'child_process';
 import {promisify} from 'util';
 import {cacheManager, templateManager} from "./cacheManager.js";
 import {HttpsProxyAgent} from "https-proxy-agent";
-import {compressPicture, PUPPETEER_OPTIONS, binary2Base64Text} from "./image.js";
+import {compressPicture, PUPPETEER_OPTIONS, binary2Base64Text, compressPicture2Webp} from "./image.js";
 
 const execAsync = promisify(exec);
 
@@ -1027,7 +1027,7 @@ export async function saveNetImage(buffer_path, buffer, max_width = 1920, max_he
     if (!buffer) return false
     const buf = Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer, 'binary');
 
-    const buffer_processed = await compressPicture(buf, max_width, max_height)
+    const buffer_processed = await compressPicture2Webp(buf, max_width, max_height)
 
     try {
         await fs.promises.writeFile(buffer_path, buffer_processed);
