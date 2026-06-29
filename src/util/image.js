@@ -276,7 +276,7 @@ export async function compressPicture2Webp(buffer, max_width = 1920, max_height 
         } else {
             return await pipeline
                 .webp({
-                    quality: 80,
+                    quality: 90,
                     effort: 6,
                     alphaQuality: 80
                 })

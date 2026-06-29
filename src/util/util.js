@@ -18,7 +18,7 @@ import {exec} from 'child_process';
 import {promisify} from 'util';
 import {cacheManager, templateManager} from "./cacheManager.js";
 import {HttpsProxyAgent} from "https-proxy-agent";
-import {compressPicture, PUPPETEER_OPTIONS, binary2Base64Text, compressPicture2Webp} from "./image.js";
+import {PUPPETEER_OPTIONS, binary2Base64Text, compressPicture2Webp} from "./image.js";
 
 const execAsync = promisify(exec);
 
