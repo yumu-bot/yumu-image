@@ -242,12 +242,6 @@ export async function compressPicture2Webp(buffer, max_width = 1920, max_height 
         let final_width = max_width;
         let final_height = max_height;
 
-        const aspect_ratio = src_width / src_height;
-        if (src_width < 500 && src_height < 500 && aspect_ratio > 0.95 && aspect_ratio < 1.05) {
-            final_width = 128;
-            final_height = 128;
-        }
-
         const need_resize = (final_width && src_width > final_width) || (final_height && src_height > final_height);
 
         if (meta.format === 'webp' && !need_resize) {
@@ -307,12 +301,6 @@ export async function compressPicture(buffer, max_width = 1920, max_height = nul
 
         let final_width = max_width;
         let final_height = max_height;
-
-        const aspect_ratio = src_width / Math.max(src_height, 1);
-        if (src_width < 500 && src_height < 500 && aspect_ratio > 0.95 && aspect_ratio < 1.05) {
-            final_width = 128;
-            final_height = 128;
-        }
 
         const need_resize = (final_width && src_width > final_width) || (final_height && src_height > final_height);
 
