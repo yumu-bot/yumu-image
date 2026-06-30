@@ -11,7 +11,7 @@ import {
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {createImageRouter, createSvgRouter} from "../util/image.js";
-import {imageDownloader, user2Task} from "../util/download.js";
+import {imageDownloader, user2Task, users2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_A1);
 export const router_svg = createSvgRouter(panel_A1);
@@ -206,13 +206,12 @@ export async function panel_A1(data = {
     const friends = data?.friends ?? []
     const me = data?.me ?? {}
 
-    const promise_mes = friends.flatMap(f => user2Task(f))
-    const promise_friends_pair = friends.map(f => user2Task(f));
+    const promise_mes = user2Task(me)
+    const promise_friends = users2Task(friends)
 
     const tasks = [
         ...promise_mes,
-        ...promise_friends_pair.map(pair => pair[0]),
-        ...promise_friends_pair.map(pair => pair[1])
+        ...promise_friends
     ];
 
     const images = await imageDownloader(tasks);

@@ -18,6 +18,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {matchAnyMods} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {avatars2Task, beatmapsets2Task, imageDownloader} from "../util/download.js";
 
 export const router = createImageRouter(panel_F);
 
@@ -92,13 +93,26 @@ export async function panel_F(
     let reg_card_c = /(?<=<g id="CardC">)/;
     let reg_card_a2 = /(?<=<g id="CardA2">)/;
 
-    const match = data?.match ?? {}
+    const {
+        match: match, panel
+    } = data ?? {}
+
+    const {
+        // 1. 深度嵌套解构并重命名
+        match: {
+            match: {
+                events: match_events,
+                users: users,
+            }
+        },
+        skip_ignore_map,
+    } = data;
 
     // 面板文字
     const request_time = 'match time: ' + getMatchDuration(match.match) + ' // request time: ' + getNowTimeStamp();
 
     // 临时的
-    const qp_mode = data?.panel?.includes("RP") ?? false
+    const qp_mode = panel?.includes("RP") ?? false
 
     let panel_name
 
@@ -108,8 +122,6 @@ export async function panel_F(
         panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', request_time);
     }
 
-    // const panel_name = getPanelNameSVG('Match Now (!ymmn)', 'MN', request_time);
-
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
 
@@ -117,18 +129,35 @@ export async function panel_F(
     svg = setCustomBanner(svg, null, reg_banner);
 
     // 导入成绩卡（C卡\
-    const games = (match?.match?.events || []).filter(value => {
+    const games = (match_events ?? []).filter(value => {
         return isNotNull(value.game) && isNotEmptyArray(value.game.scores)
     })
 
-    const events = games.slice((match?.skip_ignore_map?.skip || 0), games.length - (match?.skip_ignore_map?.ignore || 0))
+    const events = games.slice((skip_ignore_map?.skip || 0), games.length - (skip_ignore_map?.ignore || 0))
+
+    //导入谱面卡 A2卡
+    const beatmaps = [];
+
+    events.forEach(v => {
+        beatmaps.push(v?.game?.beatmap)
+    });
+
+    // 下载图片
+    const promise_fs = avatars2Task(users)
+    const promise_a2s = beatmapsets2Task(beatmaps)
+
+    const tasks = [
+        ...promise_fs,
+        ...promise_a2s,
+    ];
+
+    const images = await imageDownloader(tasks);
 
     let red_wins_before = 0;
     let blue_wins_before = 0;
 
-    const event_Cs = []
     const param_Fs = []
-    const card_Cs = []
+    const card_Fs = []
 
     for (const v of events) {
         if (v?.game?.winning_team === 'red') {
@@ -139,38 +168,26 @@ export async function panel_F(
             blue_wins_before++;
         }
 
-        event_Cs.push(event2CardF(v, red_wins_before, blue_wins_before, match?.skip_ignore_map?.easy || 1))
-
-        // card_Cs.push(await card_C(await event2CardC(v, red_wins_before, blue_wins_before)));
+        param_Fs.push(event2ParamF(v, red_wins_before, blue_wins_before, skip_ignore_map?.easy || 1, images))
     }
-
-    await Promise.allSettled(
-        event_Cs
-    ).then(results => thenPush(results, param_Fs))
 
     await Promise.allSettled(
         param_Fs.map((p) => {
             return card_F(p)
         })
-    ).then(results => thenPush(results, card_Cs))
+    ).then(results => thenPush(results, card_Fs))
 
-    const stringCs = card_Cs
+    const stringFs = card_Fs
         .map((card, i) => getSvgBody(510, 330 + i * 250, card))
         .join('\n');
 
-    svg = setText(svg, stringCs, reg_card_c)
-
-    //导入谱面卡 A2卡
-    const beatmap_arr = [];
-    events.forEach(v => {
-        beatmap_arr.push(v?.game?.beatmap)
-    });
+    svg = setText(svg, stringFs, reg_card_c)
 
     const card_A2s = []
 
     await Promise.allSettled(
-        beatmap_arr.map((b) => {
-            return PanelGenerate.matchBeatMap2CardA2(b)
+        beatmaps.map((b) => {
+            return PanelGenerate.matchBeatMap2CardA2(b, images)
         })
     ).then(results => thenPush(results, card_A2s))
 
@@ -183,20 +200,22 @@ export async function panel_F(
 
     svg = setText(svg, stringA2s, reg_card_a2)
 
-    const panel_height = getPanelHeight(beatmap_arr?.length, 210, 1, 290, 40, 40)
+    const panel_height = getPanelHeight(beatmaps?.length, 210, 1, 290, 40, 40)
     const background_height = panel_height - 290;
 
     svg = setText(svg, panel_height, reg_panelheight);
     svg = setText(svg, background_height, reg_height);
 
     // 导入比赛简介卡（A2卡
-    const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(match, beatmap_arr[0]));
-    svg = setSvgBody(svg, 40, 40, matchInfo, reg_maincard);
+    const first_beatmap = beatmaps?.[0]
+
+    const info_a2 = card_A2(await PanelGenerate.matchRating2CardA2(match, first_beatmap, false, images.get(`list_${first_beatmap?.beatmapset?.id}`)));
+    svg = setSvgBody(svg, 40, 40, info_a2, reg_maincard);
 
     return svg;
 }
 
-async function event2CardF(
+function event2ParamF(
     event = {
         id: 0,
         detail: {
@@ -208,14 +227,14 @@ async function event2CardF(
         type: '',
         text: ''
     }
-    , red_before = 0, blue_before = 0, easy = 1) {
+    , red_before = 0, blue_before = 0, easy = 1, images = new Map()) {
     const round = event?.game || {}
     const scores = round?.scores || []
 
     let red_arr = [], blue_arr = [], none_arr = [];
 
     for (const v of scores) {
-        const f = await score2LabelF2(v, easy);
+        const f = score2LabelF2(v, easy, images);
 
         switch (v?.match?.team) {
             case 'red':
@@ -230,7 +249,7 @@ async function event2CardF(
         }
     }
 
-    async function score2LabelF2(score = {}, easy = 1) {
+    function score2LabelF2(score = {}, easy = 1, images = new Map()) {
         // 如果是 0，则获取 total
         let s = score?.legacy_total_score || score.total_score
 
@@ -238,26 +257,28 @@ async function event2CardF(
             s = Math.round(s * easy)
         }
 
+        const user = score?.user
+
         return {
-            player_name: score?.user?.username, //妈的 为什么get match不给用户名啊
-            player_avatar: score?.user?.avatar_url,
+            player_name: user?.username,
+            player_avatar: images.get(`avatar_${user.id}`) ?? user?.avatar_url,
             player_score: s,
             player_mods: score.mods,
-            player_rank: score.ranking, //一局比赛里的分数排名，1v1或者team都一样
+            player_rank: score.ranking,
         }
     }
 
     return {
         statistics: {
-            is_team_vs: round.team_type === 'team-vs', // TFF表示平局，当然，这个很少见
-            is_team_red_win: round.winning_team === 'red', //如果不是team vs，这个值默认false
-            is_team_blue_win: round.winning_team === 'blue', //如果不是team vs，这个值默认false
+            is_team_vs: round.team_type === 'team-vs',
+            is_team_red_win: round.winning_team === 'red',
+            is_team_blue_win: round.winning_team === 'blue',
 
             score_team_red: round.red_team_score,
             score_team_blue: round.blue_team_score,
             score_total: round.total_team_score,
-            wins_team_red_before: red_before, //这局之前红赢了几局？从0开始，不是 team vs 默认0
-            wins_team_blue_before: blue_before,//这局之前蓝赢了几局？从0开始，不是 team vs 默认0
+            wins_team_red_before: red_before,
+            wins_team_blue_before: blue_before,
         },
         red: red_arr,
         blue: blue_arr,

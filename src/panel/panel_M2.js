@@ -1,5 +1,5 @@
 import {
-    floor, getAvatar, getImage, getImageFromV3, getMapBackground, getMapStatusImage,
+    floor, getImage, getImageFromV3, getMapBackground, getMapStatusImage,
     getPanelNameSVG, getRandomString,
     getSvgBody, getTimeDifferenceShort, isBlankString, isNotBlankString, isNotEmptyArray, isNotNull, round,
     rounds, setCustomBanner,
@@ -15,7 +15,7 @@ import {label_E5, LABEL_IM, label_J4, label_J6, label_J7} from "../component/lab
 import {PanelDraw} from "../util/panelDraw.js";
 import {poppinsBold, torusBold} from "../util/font.js";
 import {card_D2} from "../card/card_D2.js";
-import {imageDownloader, toTask, user2Task} from "../util/download.js";
+import {avatars2Task, imageDownloader, beatmapsets2Task, user2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_M2);
 
@@ -185,16 +185,13 @@ export async function panel_M2(data = {
     svg = setText(svg, panel_name, reg_index);
 
     // 下图
-
-    const promise_d2s = ms.map(b => toTask('list', b.id, () => getMapBackground(b, 'list')))
-
-    const promise_d4ss = rr.map(r => toTask('list', r.id, () => getMapBackground(r, 'list')))
-
-    const promise_d4s = ra.map(a => toTask('list', a.beatmapset?.id, () => getMapBackground(a?.beatmapset, 'list')))
+    const promise_d2s = beatmapsets2Task(ms)
+    const promise_d4ss = beatmapsets2Task(rr)
+    const promise_d4s = beatmapsets2Task(ra)
 
     const promise_a1s = user2Task(user)
 
-    const promise_j6s = guest_owners.map(g => toTask('avatar', g.user.id, () => getAvatar(g.user.id)))
+    const promise_j6s = avatars2Task(guest_owners)
 
     const tasks = [
         ...promise_d2s,

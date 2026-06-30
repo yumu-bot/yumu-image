@@ -10,7 +10,7 @@ import {
     setText,
     setTexts, thenPush
 } from "../util/util.js";
-import {beatmapset2Task, imageDownloader, toTask, user2Task} from "../util/download.js";
+import {avatars2Task, beatmapsets2Task, imageDownloader, toTask, user2Task} from "../util/download.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {extra, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
@@ -135,15 +135,14 @@ export async function panel_S(data = {
     // 下图
     const promised_a1s = user2Task(user)
 
-    const promise_s2s = beatmapset2Task(recently.flatMap(r => r.rounds), 'list')
+    const promise_s2s = beatmapsets2Task(recently.flatMap(r => r.rounds))
 
-    const promise_s1s = recently.flatMap(
+    const users = recently.flatMap(
         r => r.rounds
             .flatMap(rs => rs.scores)
             .map(ss => ss?.user ?? {}))
-        .map(u => toTask('avatar', u.id,
-            () => getAvatar(u))
-        )
+
+    const promise_s1s = avatars2Task(users)
 
     const promise_s3s = surrounding.map(u => toTask('avatar', u.id,
         () => getAvatar(u.id))
@@ -205,13 +204,13 @@ export async function panel_S(data = {
 }
 
 const RANK_RULES = [
-    { limit: 0.0005, name: 'Radiant',  color: colorArray.radiant }, // 前 0.05%
-    { limit: 0.005,  name: 'Rhodium',  color: colorArray.rhodium }, // 前 0.5%
-    { limit: 0.04,   name: 'Platinum', color: colorArray.platinum },// 前 4%
-    { limit: 0.15,   name: 'Gold',     color: colorArray.gold },    // 前 15%
-    { limit: 0.40,   name: 'Silver',   color: colorArray.silver },  // 前 40%
-    { limit: 0.75,   name: 'Bronze',   color: colorArray.bronze },  // 前 75%
-    { limit: 1.0,    name: 'Iron',     color: colorArray.iron },    // 剩余部分
+    { limit: 0.001,  name: 'Radiant',  color: colorArray.radiant }, // 前 0.1% （顶级王者）
+    { limit: 0.015,  name: 'Rhodium',  color: colorArray.rhodium }, // 前 1.5% （大师/宗师，放宽到顶尖高手圈）
+    { limit: 0.12,   name: 'Platinum', color: colorArray.platinum },// 前 12%  （钻石/翡翠，高级玩家）
+    { limit: 0.35,   name: 'Gold',     color: colorArray.gold },    // 前 35%  （高阶中游，黄金核心区顶端）
+    { limit: 0.65,   name: 'Silver',   color: colorArray.silver },  // 前 65%  （中游大肚皮，白银/黄金中坚力量）
+    { limit: 0.90,   name: 'Bronze',   color: colorArray.bronze },  // 前 90%  （中下游，青铜）
+    { limit: 1.0,    name: 'Iron',     color: colorArray.iron },    // 剩余 10% （底层保底，黑铁）
 ];
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域

@@ -599,7 +599,7 @@ export const PanelGenerate = {
         };
     },
 
-    matchRating2CardA2: async (match = {}, beatmap = null, is_match_start = false) => {
+    matchRating2CardA2: async (match = {}, beatmap = null, is_match_start = false, beatmap_background = null) => {
         const red_wins = match?.team_point_map?.red || 0;
         const blue_wins = match?.team_point_map?.blue || 0;
 
@@ -608,8 +608,8 @@ export const PanelGenerate = {
         const star = floor(match?.average_star || 0, 2);
 
         const sid = match?.first_map_sid || beatmap?.beatmapset?.id || 0
-        const background = beatmap != null ? await getDiffBackground(beatmap) :
-            await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list.jpg', true)
+        const background = beatmap_background ?? (beatmap != null ? await getDiffBackground(beatmap) :
+            await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list.jpg', true))
 
         const split = getMatchNameSplitted(stat?.name)
 
@@ -753,12 +753,14 @@ export const PanelGenerate = {
         };
     },
 
-    matchBeatMap2CardA2: async (b = {}) => {
-        const background = await getMapBackground(b, 'list');
+    matchBeatMap2CardA2: async (b = {}, images = new Map()) => {
+        const set = b?.beatmapset ?? {}
 
-        const title1 = b?.beatmapset?.title || 'Deleted Beatmap';
-        const title2 = b?.beatmapset?.artist || '-';
-        const title3 = b?.beatmapset?.creator || '-';
+        const background = images.get(`list_${set.id}`) ?? await getMapBackground(b, 'list');
+
+        const title1 = set?.title || 'Deleted Beatmap';
+        const title2 = set?.artist || '-';
+        const title3 = set?.creator || '-';
         const left2 = b?.version || '-';
         const left3 = 'b' + (b?.id || 0);
 

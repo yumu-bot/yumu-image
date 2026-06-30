@@ -1016,7 +1016,7 @@ export async function label_C1(data = {
 
     //插入图片，如果输了就变灰
     const opacity = data?.isWin ? 1 : 0.3;
-    const avatar = await getAvatar(data);
+    const avatar = await getAvatar(data.avatar);
 
     svg = setImage(svg, 0, 0, 100, 100, avatar, reg_avatar, opacity);
 
