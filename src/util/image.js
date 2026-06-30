@@ -5,9 +5,9 @@ import {API} from "../svg-to-image/API.js";
 import sharp from "sharp";
 import fs from "fs";
 
-const DEFAULT_FORMAT = 'jpeg'
+const DEFAULT_BASE_FORMAT = 'jpeg'
 
-const FORMAT = process.env.IMAGE_FORMAT ?? DEFAULT_FORMAT
+export const DEFAULT_IMAGE_FORMAT = process.env.IMAGE_FORMAT ?? DEFAULT_BASE_FORMAT
 
 const exportsJPEG = new API(new JPEGProvider());
 const exportsPNG = new API(new PNGProvider());
@@ -95,14 +95,13 @@ async function handleRouter(res, contentType, callback) {
         }
     }
 }
-
 /**
  * 图像路由工厂
  * @param {Function} panelFn - 对应的面板生成函数，如 panel_B1, panel_A2 等
  * @param {Function} [data_loader] - 可选的闭包/回调函数，用于自定义如何从 req 中提取数据
  * @param {string} format - 格式，支持 jpeg，png，webp
  */
-export function createImageRouter(panelFn, data_loader = (req) => req.fields || {}, format = FORMAT) {
+export function createImageRouter(panelFn, data_loader = (req) => req.fields || {}, format = DEFAULT_IMAGE_FORMAT) {
     const exporter = getExporter(format)
 
     return async (req, res) => {
@@ -354,8 +353,8 @@ function getExporter(format) {
     let exporter = EXPORTERS[fmt];
 
     if (!exporter) {
-        console.warn(`Unsupported image format: ${format}. Available formats: jpeg, png, webp. using ${DEFAULT_FORMAT} instead.`);
-        exporter = EXPORTERS[DEFAULT_FORMAT?.toLowerCase()]
+        console.warn(`Unsupported image format: ${format}. Available formats: jpeg, png, webp. using ${DEFAULT_BASE_FORMAT} instead.`);
+        exporter = EXPORTERS[DEFAULT_BASE_FORMAT?.toLowerCase()]
     }
 
     return exporter;

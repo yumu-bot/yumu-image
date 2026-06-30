@@ -2,7 +2,7 @@
 
 ## 必需
 
-- NodeJS v22+（老版本会遇到 puppeteer 和 puppeteer-extra 的语法问题）
+- NodeJS v22+（老版本会遇到 puppeteer 和 puppeteer-extra 的语法兼容问题）
 
 绘图程序默认会连接端口 `8388`（websocket 客户端）。
 
@@ -12,17 +12,19 @@
 
 绘图模块提供多个环境变量导入，方便您自行调节。
 
+缓存路径：node 获取您操作系统的缓存文件夹下的 n-bot 文件夹。如果您配置好了下面的环境变量，则不用考虑这个。
+
 | 变量名称 | 默认值 | 解释 |
 | :-: | :-: | :-: |
 | EXPORT_FILE | /home/spring/work/img/ExportFileV3 | 资源文件的本地路径。**必需** |
 | PORT | 8388 | 与主程序通信的端口。**一般不用改** |
 | SUPER_KEY | - | 绘图模块与文件模块的通信秘钥。**可不填** |
 | OSU_BUFFER_PATH | 缓存路径/osufile | 存储 .osu 文件的地方，可以与主程序相同。 |
-| BUFFER_PATH | 缓存路径/buffer | 存储图像缓存的地方，采用了 sharp 压缩，预期每文件平均占用 70KB。 |
+| BUFFER_PATH | 缓存路径/buffer | 存储图像缓存的地方，采用了 sharp 压缩，预期每文件平均占用 70~200KB。<br />会默认存储 webp，保证存储空间和质量。不受 IMAGE_FORMAT 变量影响。 |
 | USE_PROXY | false | 是否使用本地代理 (127.0.0.1)。 |
-| OSUFILE_NO_PROXY | false | 是否禁用 osu 文件下载时的代理<br />因为现在 ppy 基本上拦掉了所有主站异常请求。 |
-| PROXY_PORT | 7890 | 你挂 http 代理的端口。 |
-| IMAGE_FORMAT | jpg | 绘图模块返回的图片格式。可以使用 webp、jpg、png。<br />强烈推荐使用 webp，但是某些神秘 qq 客户端会出现预览问题。 |
+| OSUFILE_NO_PROXY | false | 是否禁用 osu 文件下载时的代理。<br />因为现在 ppy 基本上拦掉了所有主站异常请求。 |
+| PROXY_PORT | 7890 | 挂 http 代理的端口。 |
+| IMAGE_FORMAT | jpg | 绘图模块返回的图片格式。可以使用 webp、jpg、png。<br />强烈推荐使用 webp，但是某些神秘 qq 客户端会出现缩略图预览问题。<br />部分需要玩家点开的超大面板（无需考虑缩略图预览问题时），会自动使用 webp 格式。 |
 
 ### Windows 运行
 

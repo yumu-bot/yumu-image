@@ -30,7 +30,7 @@ const MD5 = crypto.createHash("md5");
 /**
  * 文件路径初始化
  */
-export const CACHE_PATH = path_util.join(os.tmpdir(), "/n-bot");
+export const CACHE_PATH = path_util.join(os.tmpdir(), "n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
 export const SUPER_KEY = process.env.SUPER_KEY || "";
 export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || path_util.join(CACHE_PATH, "osufile");

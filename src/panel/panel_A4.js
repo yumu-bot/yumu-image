@@ -19,7 +19,31 @@ import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 import {imageDownloader, scores2Task, user2Task} from "../util/download.js";
 
-export const router = createImageRouter(panel_A4);
+const createDynamicImageRouter = (panelFn) => {
+    return (...args) => {
+        // 获取原始数据
+        const req = args[0] || {};
+        const fields = req.fields || {};
+
+        // 默认的格式
+        let targetFormat = undefined; // 传 undefined 会走默认的 DEFAULT_IMAGE_FORMAT
+
+        // 核心逻辑：如果 compact 为 true
+        if (fields.compact === true) {
+            fields.compact = false;
+            targetFormat = 'webp';
+        }
+
+        // 动态生成真正的路由
+        // 这里的 data_loader 直接返回我们修改后的 fields 即可
+        const realRouter = createImageRouter(panelFn, () => fields, targetFormat);
+
+        // 执行生成的路由
+        return realRouter(...args);
+    };
+};
+
+export const router = createDynamicImageRouter(panel_A4);
 export const router_svg = createSvgRouter(panel_A4);
 
 /**
@@ -66,9 +90,8 @@ export async function panel_A4(data = {
         case "BS": {
             panel_name = getPanelNameSVG('Best Scores (!ymbs)', 'BS', request_time);
         } break;
-        case "MR": {
-            const request_time2 = 'matchID: ' + (data?.match ?? 0) + ' // request time: ' + getNowTimeStamp();
-            panel_name = getPanelNameSVG('Match Recent Scores (!ymmr)', 'MR', request_time2);
+        case "RB": {
+            panel_name = getPanelNameSVG('Recent Bests (!ymrb)', 'RB');
         } break;
         case "BH": {
             const request_time2 = 'snapshot time: ' + getFormattedTime(data?.created_at) + ' // request time: ' + getNowTimeStamp();
