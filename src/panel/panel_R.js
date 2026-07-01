@@ -8,7 +8,7 @@ import {
     getGenre,
     getImage,
     getImageFromV3,
-    getLanguage, getMapBackground,
+    getLanguage, getMapBackground, getMapStatusImage,
     getPanelNameSVG,
     getRandomString,
     getSvgBody,
@@ -33,6 +33,7 @@ import {label_E5, LABELS} from "../component/label.js";
 import {drawLazerMods} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {getScoreTypeImage} from "../util/star.js";
 
 export const router = createImageRouter(panel_R);
 
@@ -208,7 +209,7 @@ async function panel_R(data = {
     // 2. 将结果存入 Map 供后续 O(1) 查询
     const avatarMap = new Map(avatarData);
 
-    const body_R1 = component_R1(background, expected.mods);
+    const body_R1 = component_R1(background, expected.mods, expected.is_lazer, beatmap.lazer_only, beatmap.ranked);
 
     const body_R2 = component_R2(set?.user?.username, host_avatar, set?.genre_id, set?.language_id, set?.source, set?.tags, set?.related_tags);
 
@@ -235,7 +236,7 @@ async function panel_R(data = {
     return svg
 }
 
-const component_R1 = (background, mods = []) => {
+const component_R1 = (background, mods = [], is_lazer = false, lazer_only = false, ranked = 0) => {
     const polygon = PanelDraw.RoundedPolygon([{x: -30, y: 40}, {x: 848, y: 40}, {x: 786, y: 400}, {
         x: -30,
         y: 400
@@ -244,6 +245,10 @@ const component_R1 = (background, mods = []) => {
     const shadowed = PanelDraw.Shadow(polygon, 10, 10, 5, '#1c1719', 0.2)
 
     const image = getImage(0, 40, 850, 360, background)
+
+    const status = getImage(10, 50, 50, 50, getMapStatusImage(ranked))
+
+    const lazer = lazer_only ? getImage(540, 50, 280, 70, getScoreTypeImage(true, '-only')) : (is_lazer ? getImage(540 + 110, 50, 170, 70, getScoreTypeImage(is_lazer, 2)) : '')
 
     const mod_svg = drawLazerMods(mods, 770, 320, 70, 750, 'right', 8, true, true)
 
@@ -261,6 +266,8 @@ const component_R1 = (background, mods = []) => {
     ${image}
 </g>
 <g>
+    ${status}
+    ${lazer}
     ${mod_svg.svg}
 </g>
 </g>
