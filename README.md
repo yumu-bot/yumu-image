@@ -25,7 +25,8 @@
 | USE_PROXY | false | 是否使用本地代理 (127.0.0.1)。 |
 | OSUFILE_NO_PROXY | false | 是否禁用 osu 文件下载时的代理。<br />因为现在 ppy 基本上拦掉了所有主站异常请求。 |
 | PROXY_PORT | 7890 | 挂 http 代理的端口。 |
-| IMAGE_FORMAT | jpg | 绘图模块返回的图片格式。可以使用 webp、jpg、png。<br />强烈推荐使用 webp，但是某些神秘 qq 客户端会出现缩略图预览问题。<br />部分需要玩家点开的超大面板（无需考虑缩略图预览问题时），会自动使用 webp 格式。 |
+| IMAGE_FORMAT | jpg | 绘图模块返回的图片格式。可以使用 webp、jpg、png。<br />强烈推荐使用 webp，但是某些神秘 qq 客户端会出现缩略图预览问题。 |
+| ADVANCED_FORMAT | webp | 部分需要玩家点开的超大面板（无需考虑缩略图预览问题时），会自动使用这个格式。**一般不用改** |
 
 ### Windows 运行
 

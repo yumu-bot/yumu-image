@@ -22,10 +22,10 @@ import {
     removeBeatmapFilePath
 } from "../util/osuFile.js";
 
-import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {ADVANCED_IMAGE_FORMAT, createImageRouter, createSvgRouter} from "../util/image.js";
 import {hasLeaderBoard} from "../util/star.js";
 
-export const router = createImageRouter(panel_V, undefined, 'webp');
+export const router = createImageRouter(panel_V, undefined, ADVANCED_IMAGE_FORMAT);
 
 export const router_svg = createSvgRouter(panel_V);
 

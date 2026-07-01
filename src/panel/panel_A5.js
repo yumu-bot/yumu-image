@@ -15,7 +15,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 import {card_I4} from "../card/card_I4.js";
 
-import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {ADVANCED_IMAGE_FORMAT, createImageRouter, createSvgRouter} from "../util/image.js";
 import {imageDownloader, scores2Task, user2Task} from "../util/download.js";
 
 const createDynamicImageRouter = (panelFn) => {
@@ -30,7 +30,7 @@ const createDynamicImageRouter = (panelFn) => {
         // 核心逻辑：如果 compact 为 true
         if (fields.compact === true) {
             fields.compact = false;
-            targetFormat = 'webp';
+            targetFormat = ADVANCED_IMAGE_FORMAT;
         }
 
         // 动态生成真正的路由

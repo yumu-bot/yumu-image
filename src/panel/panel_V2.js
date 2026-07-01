@@ -22,10 +22,10 @@ import {card_A2} from "../card/card_A2.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {component_V2} from "../component/component_V2.js";
 
-import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {ADVANCED_IMAGE_FORMAT, createImageRouter, createSvgRouter} from "../util/image.js";
 import {hasLeaderBoard} from "../util/star.js";
 
-export const router = createImageRouter(panel_V2, undefined, 'webp');
+export const router = createImageRouter(panel_V2, undefined, ADVANCED_IMAGE_FORMAT);
 
 export const router_svg = createSvgRouter(panel_V2);
 

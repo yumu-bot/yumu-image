@@ -7,7 +7,11 @@ import fs from "fs";
 
 const DEFAULT_BASE_FORMAT = 'jpeg'
 
+const DEFAULT_ADVANCED_FORMAT = 'webp'
+
 export const DEFAULT_IMAGE_FORMAT = process.env.IMAGE_FORMAT ?? DEFAULT_BASE_FORMAT
+
+export const ADVANCED_IMAGE_FORMAT = process.env.ADVANCED_FORMAT ?? DEFAULT_ADVANCED_FORMAT
 
 const exportsJPEG = new API(new JPEGProvider());
 const exportsPNG = new API(new PNGProvider());

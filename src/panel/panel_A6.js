@@ -12,12 +12,11 @@ import {component_MD} from "../component/component_MD.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import path from "path";
+import {ADVANCED_IMAGE_FORMAT, createImageRouter, createSvgRouter} from "../util/image.js";
 
 const path_util = path
 
-import {createImageRouter, createSvgRouter} from "../util/image.js";
-
-export const router = createImageRouter(panel_A6);
+export const router = createImageRouter(panel_A6, undefined, ADVANCED_IMAGE_FORMAT);
 export const router_svg = createSvgRouter(panel_A6);
 
 /**
