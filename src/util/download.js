@@ -72,6 +72,10 @@ export const users2Task = (users = []) => {
     return (users ?? []).flatMap(user => user2Task(user))
 }
 
+/**
+ * @param user
+ * @return {[{type: string, id: number, fn: (function(): Promise)}, {type: string, id: number, fn: (function(): Promise)}]}
+ */
 export const user2Task = (user = {}) => {
     const task1 = toTask('avatar', user.id, () => getAvatar(user))
     const task2 = toTask('banner', user.id, () => getBanner(user))

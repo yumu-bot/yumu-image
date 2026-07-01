@@ -204,7 +204,7 @@ export async function panel_M2(data = {
     const images = await imageDownloader(tasks);
 
     const cardA1 = await card_A1(
-        PanelGenerate.user2CardA1(user, null, images.get(`avatar_${user.id}`), images.get(`banner_${user.id}`))
+        PanelGenerate.mapper2CardA1(user, images.get(`avatar_${user.id}`), images.get(`banner_${user.id}`))
     );
 
     const componentM1 = component_M1(

@@ -155,7 +155,7 @@ export const PanelGenerate = {
         };
     },
 
-    mapper2CardA1: (user) => {
+    mapper2CardA1: (user, avatar = null, background = null) => {
         const sub_icon1 = user.is_supporter ? getImageFromV3('object-card-supporter.png') : '';
         const country = user?.country?.code || 'CN';
 
@@ -165,9 +165,12 @@ export const PanelGenerate = {
         const right3b = user.mapping_follower_count ? user.mapping_follower_count.toString() : '0';
         const right3m = 'x';
 
+        const av = avatar ?? user?.avatar_url;
+        const bg = background ?? user?.profile?.card ?? user?.cover_url ?? user?.cover?.url;
+
         return {
-            background: user?.cover_url,
-            avatar: user?.avatar_url,
+            background: bg,
+            avatar: av,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',
