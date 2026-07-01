@@ -191,7 +191,7 @@ export async function panel_M2(data = {
 
     const promise_a1s = user2Task(user)
 
-    const promise_j6s = avatars2Task(guest_owners)
+    const promise_j6s = avatars2Task(guest_owners.map(g => g.user))
 
     const tasks = [
         ...promise_d2s,
