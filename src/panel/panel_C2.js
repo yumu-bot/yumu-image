@@ -227,18 +227,18 @@ function getCompetitorBackground(color) {
     let bg;
 
     switch (color) {
-        case "#FFF100": bg = 'object-score-backimage-X.jpg'; break;
-        case "#FF9800": bg = 'object-score-backimage-S.jpg'; break;
-        case "#22AC38": bg = 'object-score-backimage-A.jpg'; break;
-        case "#B3D465": bg = 'object-score-backimage-A.jpg'; break;
-        case "#0068B7": bg = 'object-score-backimage-B.jpg'; break;
-        case "#BDBDBD": bg = 'object-score-backimage-XH.jpg'; break;
-        case "#00A0E9": bg = 'object-score-backimage-B.jpg'; break;
-        case "#9922EE": bg = 'object-score-backimage-C.jpg'; break;
-        case "#E4007F": bg = 'object-score-backimage-C.jpg'; break;
-        case "#EB6877": bg = 'object-score-backimage-D.jpg'; break;
-        case "#D32F2F": bg = 'object-score-backimage-D.jpg'; break;
-        default: bg = 'object-score-backimage-F.jpg'; break;
+        case "#FFF100": bg = 'object-score-backimage-X.webp'; break;
+        case "#FF9800": bg = 'object-score-backimage-S.webp'; break;
+        case "#22AC38": bg = 'object-score-backimage-A.webp'; break;
+        case "#B3D465": bg = 'object-score-backimage-A.webp'; break;
+        case "#0068B7": bg = 'object-score-backimage-B.webp'; break;
+        case "#BDBDBD": bg = 'object-score-backimage-XH.webp'; break;
+        case "#00A0E9": bg = 'object-score-backimage-B.webp'; break;
+        case "#9922EE": bg = 'object-score-backimage-C.webp'; break;
+        case "#E4007F": bg = 'object-score-backimage-C.webp'; break;
+        case "#EB6877": bg = 'object-score-backimage-D.webp'; break;
+        case "#D32F2F": bg = 'object-score-backimage-D.webp'; break;
+        default: bg = 'object-score-backimage-F.webp'; break;
     }
 
     return getImageFromV3(bg);

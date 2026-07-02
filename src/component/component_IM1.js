@@ -3,7 +3,7 @@ import {torus} from "../util/font.js";
 import {label_O} from "./label.js";
 
 export function component_IM1(data = {
-    background: getImageFromV3('card-default.png'),
+    background: getImageFromV3('card-default.webp'),
     avatar: getImageFromV3('avatar-guest.png'),
 
     name: 'Who',

@@ -8,7 +8,7 @@ import {
 import {torus, PuHuiTi} from "../util/font.js";
 
 export function card_A2(data = {
-    background: getImageFromV3('card-default.png'),
+    background: getImageFromV3('card-default.webp'),
     map_status: '',
 
     title1: '',
@@ -88,7 +88,7 @@ export function card_A2(data = {
 
     // 插入谱面状态
     const status = getMapStatusImage(data.map_status ?? '');
-    const background = data.background || getImageFromV3('beatmap-DLfailBG.jpg');
+    const background = data.background || getImageFromV3('beatmap-DLfailBG.webp');
 
     svg = setImage(svg, 0, 0, 430, 210, background, reg_background, 0.6);
     svg = data.map_status ? setImage(svg, 370, 10, 50, 50, status, reg_top_icons, 1) : svg;

@@ -73,37 +73,37 @@ export function getMaimaiRankBG(rank) {
 
     switch (rank) {
         case 'sssp':
-            out = 'object-score-backimage-PF.jpg';
+            out = 'object-score-backimage-PF.webp';
             break;
         case 'sss':
-            out = 'object-score-backimage-SSS.jpg';
+            out = 'object-score-backimage-SSS.webp';
             break;
         case 'ssp':
         case 'ss':
-            out = 'object-score-backimage-X.jpg';
+            out = 'object-score-backimage-X.webp';
             break;
         case 'sp':
         case 's':
-            out = 'object-score-backimage-S.jpg';
+            out = 'object-score-backimage-S.webp';
             break;
         case 'aaa':
         case 'aa':
         case 'a':
-            out = 'object-score-backimage-D.jpg';
+            out = 'object-score-backimage-D.webp';
             break;
         case 'bbb':
         case 'bb':
         case 'b':
-            out = 'object-score-backimage-B.jpg';
+            out = 'object-score-backimage-B.webp';
             break;
         case 'c':
-            out = 'object-score-backimage-A.jpg';
+            out = 'object-score-backimage-A.webp';
             break;
         case 'd':
-            out = 'object-score-backimage-F.jpg';
+            out = 'object-score-backimage-F.webp';
             break;
         default:
-            out = 'object-score-backimage-F.jpg';
+            out = 'object-score-backimage-F.webp';
             break;
     }
 
@@ -168,7 +168,7 @@ export function getMaimaiRatingBG(rating = 0) {
     const index = thresholds.findIndex(t => rating < t);
     const suffix = index === -1 ? 'PP' : backgrounds[index];
 
-    return getImageFromV3(`object-score-backimage-${suffix}.jpg`);
+    return getImageFromV3(`object-score-backimage-${suffix}.webp`);
 }
 
 export function getMaimaiType(type = '') {
@@ -435,37 +435,37 @@ export function getCHUNITHMRankBG(score = 0) {
 
     switch (getCHUNITHMRank(score)) {
         case 'sssp':
-            out = 'object-score-backimage-PP.jpg';
+            out = 'object-score-backimage-PP.webp';
             break;
         case 'sss':
-            out = 'object-score-backimage-PF.jpg';
+            out = 'object-score-backimage-PF.webp';
             break;
         case 'ssp':
         case 'ss':
-            out = 'object-score-backimage-SSS.jpg';
+            out = 'object-score-backimage-SSS.webp';
             break;
         case 'sp':
         case 's':
-            out = 'object-score-backimage-X.jpg';
+            out = 'object-score-backimage-X.webp';
             break;
         case 'aaa':
         case 'aa':
         case 'a':
-            out = 'object-score-backimage-S.jpg';
+            out = 'object-score-backimage-S.webp';
             break;
         case 'bbb':
         case 'bb':
         case 'b':
-            out = 'object-score-backimage-B.jpg';
+            out = 'object-score-backimage-B.webp';
             break;
         case 'c':
-            out = 'object-score-backimage-A.jpg';
+            out = 'object-score-backimage-A.webp';
             break;
         case 'd':
-            out = 'object-score-backimage-F.jpg';
+            out = 'object-score-backimage-F.webp';
             break;
         default:
-            out = 'object-score-backimage-SH.jpg';
+            out = 'object-score-backimage-SH.webp';
             break;
     }
 
@@ -512,16 +512,16 @@ export function getCHUNITHMRank(score = 0) {
 export function getCHUNITHMRatingBG(rating = 0) {
     let background;
 
-    if (rating < 4) background = 'object-score-backimage-A.jpg'
-    else if (rating < 7) background = 'object-score-backimage-SP.jpg'
-    else if (rating < 10) background = 'object-score-backimage-D.jpg'
-    else if (rating < 12) background = 'object-score-backimage-C.jpg'
-    else if (rating < 13.25) background = 'object-score-backimage-S.jpg'
-    else if (rating < 14.5) background = 'object-score-backimage-SH.jpg'
-    else if (rating < 15.25) background = 'object-score-backimage-X.jpg'
-    else if (rating < 16) background = 'object-score-backimage-XH.jpg'
-    else if (rating < 17) background = 'object-score-backimage-PF.jpg'
-    else background = 'object-score-backimage-PP.jpg'
+    if (rating < 4) background = 'object-score-backimage-A.webp'
+    else if (rating < 7) background = 'object-score-backimage-SP.webp'
+    else if (rating < 10) background = 'object-score-backimage-D.webp'
+    else if (rating < 12) background = 'object-score-backimage-C.webp'
+    else if (rating < 13.25) background = 'object-score-backimage-S.webp'
+    else if (rating < 14.5) background = 'object-score-backimage-SH.webp'
+    else if (rating < 15.25) background = 'object-score-backimage-X.webp'
+    else if (rating < 16) background = 'object-score-backimage-XH.webp'
+    else if (rating < 17) background = 'object-score-backimage-PF.webp'
+    else background = 'object-score-backimage-PP.webp'
 
     return getImageFromV3(background);
 }

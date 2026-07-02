@@ -37,7 +37,7 @@ export async function card_B2(data = {
     const number_text = torus.get2SizeTextPath(number_b, number_m,60, 36, 160, 140, 'center baseline', '#fff');
 
     svg = setTexts(svg, [rank_text, number_text], reg_text);
-    svg = setImage(svg, 0, 0, 320, 160, data?.background || getImageFromV3('object-score-backimage-F.jpg'), reg_background, 0.3);
+    svg = setImage(svg, 0, 0, 320, 160, data?.background || getImageFromV3('object-score-backimage-F.webp'), reg_background, 0.3);
 
     return svg;
 }

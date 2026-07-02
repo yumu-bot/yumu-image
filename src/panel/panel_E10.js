@@ -303,7 +303,7 @@ export async function panel_E10(data = {
 const component_E1 = async (
     // 这个是 Card A1 的另一个版本
     data = {
-        background: getImageFromV3('card-default.png'),
+        background: getImageFromV3('card-default.webp'),
         avatar: getImageFromV3('avatar-guest.png'),
 
         country: null,

@@ -343,17 +343,17 @@ async function playerData2CardC(p = {}) {
     switch (p?.team) {
         case 'red':
             team_color = colorArray.red // '#D32F2F';
-            player_background = getImageFromV3('card-red.png');
+            player_background = getImageFromV3('card-red.webp');
             isTeamVS = true;
             break;
         case 'blue':
             team_color = colorArray.blue // '#00A0E9';
-            player_background = getImageFromV3('card-blue.png');
+            player_background = getImageFromV3('card-blue.webp');
             isTeamVS = true;
             break;
         default:
             team_color = colorArray.gray // '#aaa';
-            player_background = getImageFromV3('card-gray.png');
+            player_background = getImageFromV3('card-gray.webp');
             isTeamVS = false;
             break;
     }

@@ -141,15 +141,15 @@ export async function panel_U(
         // mutual 模式
         background_blur = getImage(
             0, 290, 1920, 1080 - 290,
-            getImageFromV3('object-score-backimage-S.jpg'), 0.6)
+            getImageFromV3('object-score-backimage-S.webp'), 0.6)
 
         background_silk = getImage(
             0, 474, 1920, 388,
-            getImageFromV3('online-background-silk.png'))
+            getImageFromV3('online-background-silk.webp'))
 
         mutual_pippi = getImage(
             (1920 - 528) / 2, 1080 - 750, 528, 750,
-            getImageFromV3('online-supporter-pippi.png'))
+            getImageFromV3('online-supporter-pippi.webp'))
 
         center_label = getSvgBody(760, 960, label_U2({
             image: null,
@@ -194,24 +194,24 @@ export async function panel_U(
         let right_text_color = '#fff'
 
         if (stat.is_following === true) {
-            left_image = getImageFromV3('online-supporter-required.png')
+            left_image = getImageFromV3('online-supporter-required.webp')
             left_color1 = '#49F9D7'
             left_color2 = '#54EC8B'
             left_text = 'Following'
-            left_background = getImageFromV3('object-score-backimage-A.jpg')
+            left_background = getImageFromV3('object-score-backimage-A.webp')
         } else if (stat.is_following === false) {
-            left_image = getImageFromV3('online-not-found.png')
+            left_image = getImageFromV3('online-not-found.webp')
             left_color1 = '#22DCFD'
             left_color2 = '#5865B9'
             left_text = 'Not Following'
-            left_background = getImageFromV3('object-score-backimage-B.jpg')
+            left_background = getImageFromV3('object-score-backimage-B.webp')
         } else {
-            left_image = getImageFromV3('online-avatar-guest.png')
+            left_image = getImageFromV3('online-avatar-guest.webp')
             left_color1 = '#507DA0'
             left_color2 = '#253A4B'
             left_text = 'Unknown'
             left_text_color = '#aaa'
-            left_background = getImageFromV3('object-score-backimage-F.jpg')
+            left_background = getImageFromV3('object-score-backimage-F.webp')
         }
         
         left_label = getSvgBody(540, 960, label_U2({
@@ -225,24 +225,24 @@ export async function panel_U(
         }))
 
         if (stat.is_followed === true) {
-            right_image = getImageFromV3('online-supporter-required.png')
+            right_image = getImageFromV3('online-supporter-required.webp')
             right_color1 = '#49F9D7'
             right_color2 = '#54EC8B'
             right_text = 'Following'
-            right_background = getImageFromV3('object-score-backimage-A.jpg')
+            right_background = getImageFromV3('object-score-backimage-A.webp')
         } else if (stat.is_followed === false) {
-            right_image = getImageFromV3('online-not-found.png')
+            right_image = getImageFromV3('online-not-found.webp')
             right_color1 = '#22DCFD'
             right_color2 = '#5865B9'
             right_text = 'Not Following'
-            right_background = getImageFromV3('object-score-backimage-B.jpg')
+            right_background = getImageFromV3('object-score-backimage-B.webp')
         } else {
-            right_image = getImageFromV3('online-avatar-guest.png')
+            right_image = getImageFromV3('online-avatar-guest.webp')
             right_color1 = '#507DA0'
             right_color2 = '#253A4B'
             right_text = 'Unknown'
             right_text_color = '#aaa'
-            right_background = getImageFromV3('object-score-backimage-F.jpg')
+            right_background = getImageFromV3('object-score-backimage-F.webp')
         }
 
         right_label = getSvgBody(980, 960, label_U2({

@@ -57,7 +57,7 @@ export async function card_A04(data = {
 
     const rank = getImageFromV3(`object-score-${data.score.rank}-small.png`);
     const avatar = await getAvatar(data.score.user);
-    const background = getImageFromV3(`object-score-backimage-${data.score.rank}.jpg`);
+    const background = getImageFromV3(`object-score-backimage-${data.score.rank}.webp`);
 
     //await readNetImage(data.score.user.cover.url, getExportFileV3Path('avatar-guest.png'));
     const name = torus.get2SizeTextPath(

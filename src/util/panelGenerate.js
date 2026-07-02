@@ -62,7 +62,7 @@ export const PanelGenerate = {
      */
     user2CardA1: (user, historyUser = null, avatar = null, background = null) => {
         if (isNullOrEmptyObject(user)) return {
-            background: getImageFromV3('card-default.png'),
+            background: getImageFromV3('card-default.webp'),
             avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
             sub_icon1: '',
             sub_icon2: '',
@@ -322,7 +322,7 @@ export const PanelGenerate = {
 
         const mods_arr = score?.mods ?? [];
         const rank = rankSS2X(getApproximateRank(score, true));
-        const bg_str = 'object-score-backimage-' + rank + '.jpg';
+        const bg_str = 'object-score-backimage-' + rank + '.webp';
         const icon_str = (!score.match.team || score.match.team === 'none') ? 'object-card-headtohead.png'
             : 'object-card-team' + score.match.team + '.png';
 
@@ -370,7 +370,7 @@ export const PanelGenerate = {
 
     maiPlayer2CardA1: async (user, statistics = null) => {
         if (isNullOrEmptyObject(user)) return {
-            background: getImageFromV3('card-default.png'),
+            background: getImageFromV3('card-default.webp'),
             avatar: getImageFromV3('sticker_qiqi_secretly_observing.png'),
             sub_icon1: '',
             sub_icon2: '',

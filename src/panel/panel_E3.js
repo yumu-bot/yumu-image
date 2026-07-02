@@ -94,7 +94,7 @@ export async function panel_E3(data = {
     svg = setSvgBody(svg, 880, 770, cardE3, reg_card_e3);
 
     // 图片定义
-    const background = getImageFromV3(`object-score-backimage-${rank}.jpg`);
+    const background = getImageFromV3(`object-score-backimage-${rank}.webp`);
     const banner = await getMapBackground(data.beatmap, 'cover');
 
     // 导入图片

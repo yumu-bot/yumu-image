@@ -437,7 +437,7 @@ export async function panel_V(
     ]);
 
     const card_a2 = getOrNull(card_a2_deferred)
-    const banner = getImageOrElse(background_deferred, getImageFromV3('card-default.png'))
+    const banner = getImageOrElse(background_deferred, getImageFromV3('card-default.webp'))
 
     let sv_text = ''
 

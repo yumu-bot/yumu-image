@@ -83,7 +83,7 @@ export function getMascotBanner(
     const y = Math.max(0, offset * h - (window_height / 2))
 
     return {
-        mascot: getImageFromV3('Mascots', `${mascot_name}_${index}.png`),
+        mascot: getImageFromV3('Mascots', `${mascot_name}_${index}.webp`),
         y: -y
     }
 }
@@ -173,7 +173,7 @@ export function getMascotName(mode = 'osu') {
 export function getMascotPath(mascot_name = 'pippi') {
     let index = getMascotIndex(mascot_name);
 
-    return getImageFromV3('Mascots', `${mascot_name}_${index}.png`);
+    return getImageFromV3('Mascots', `${mascot_name}_${index}.webp`);
 }
 
 function getMascotIndex(mascot_name = 'pippi') {
@@ -222,15 +222,15 @@ function getMascotIndex(mascot_name = 'pippi') {
 export function getRandomBannerPath(type = "default", index = 0) {
     if (moment().isAfter(moment("2026/04/26 00:00:00", "YYYY/MM/DD HH:mm:ss"))
         && moment().isBefore(moment("2026/04/27 00:00:00", "YYYY/MM/DD HH:mm:ss"))) {
-        return getImageFromV3('Banner', 'a4.png');
+        return getImageFromV3('Banner', 'a4.webp');
     }
 
     if (type === "maimai") {
         const i = index || getWeightedRandom(maimaiBannerTotal)
-        return getImageFromV3('Banner', `d${i}.png`);
+        return getImageFromV3('Banner', `d${i}.webp`);
     } else {
         const i = index || getWeightedRandom(defaultBannerTotal)
-        return getImageFromV3('Banner', `b${i}.png`);
+        return getImageFromV3('Banner', `b${i}.webp`);
     }
 }
 
@@ -265,7 +265,7 @@ function getWeightedRandom(max = 1, first_weight = 1, last_weight = 3) {
  */
 // export function getRandomMascotBGPath() {
 //     const i = getRandom(mascotBGTotal)
-//     return getImageFromV3('Background', `${i}.png`);
+//     return getImageFromV3('Background', `${i}.webp`);
 // }
 
 /**
@@ -317,7 +317,7 @@ export function getRandomMascotTransparentPath(mascot_name = 'pippi') {
     }
     path = getRandom(Math.max(1, mascot_transparency_sum_arr[i]));
 
-    return getImageFromV3('Mascots', 'Transparent', `${name}_${path}.png`)
+    return getImageFromV3('Mascots', 'Transparent', `${name}_${path}.webp`)
 }
 
 /**
@@ -362,7 +362,7 @@ function getGlobalRankPercentBG(global_rank = 0, global_rank_percent = 1.0) {
         rank = 'F'
     }
 
-    return getImageFromV3(`object-score-backimage-${rank}.jpg`);
+    return getImageFromV3(`object-score-backimage-${rank}.webp`);
 }
 
 //通过 PP 获取玩家颜色（的背景图！pp2Rank，最后一个是默认的
@@ -381,7 +381,7 @@ export function pp2UserBG(pp = 0, boundary = [], ranks = []) {
         }
     }
 
-    return getImageFromV3(`object-score-backimage-${rank}.jpg`);
+    return getImageFromV3(`object-score-backimage-${rank}.webp`);
 }
 
 /**

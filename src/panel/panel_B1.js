@@ -30,7 +30,7 @@ export const router_svg = createSvgRouter(panel_B1);
 export async function panel_B1(data = {
     // A1卡
     users: [{
-        background: getImageFromV3('card-default.png'),
+        background: getImageFromV3('card-default.webp'),
         avatar: getImageFromV3('avatar-guest.png'),
         sub_icon1: null,
         sub_icon2: 2,

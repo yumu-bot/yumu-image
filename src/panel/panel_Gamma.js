@@ -46,7 +46,7 @@ export const router_svg = createSvgRouter(panel_Gamma, data_loader);
  * @return {Promise<string>}
  */
 export async function panel_Gamma(data = {
-    background: getImageFromV3('card-default.png'),
+    background: getImageFromV3('card-default.webp'),
     avatar: getImageFromV3('avatar-guest.png'),
     mode: '',
     left1: '',
@@ -176,7 +176,7 @@ const PanelGamma = {
     },
 
     scoreVersion: async (score) => {
-        const background = getImageFromV3('object-score-backimage-' + score.rank + '.jpg');
+        const background = getImageFromV3('object-score-backimage-' + score.rank + '.webp');
         const avatar = await getMapBackground(score, "list");
 
         /*

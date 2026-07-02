@@ -315,7 +315,7 @@ export const getRankBackground = (rank = 'F', passed = true) => {
     if (rank === 'S+') convert = 'S';
     if (rank === 'EX') convert = 'PF';
 
-    return getImageFromV3(`object-score-backimage-${convert}.jpg`)
+    return getImageFromV3(`object-score-backimage-${convert}.webp`)
 }
 
 export const getRankBackgroundForI4 = (rank = 'F', passed = true) => {
@@ -326,7 +326,7 @@ export const getRankBackgroundForI4 = (rank = 'F', passed = true) => {
     if (rank === 'S+') convert = 'S';
     if (rank === 'S') convert = 'X';
 
-    return getImageFromV3(`object-score-backimage-${convert}.jpg`)
+    return getImageFromV3(`object-score-backimage-${convert}.webp`)
 }
 
 // 从数字获得评级。默认是获取星数的评级，也可以自定义边界或评级名字。如果想跳过某评级（比如 S+），将其所在位（比如这里是 3 号位）的数字设置为和前一位等同。SS 和 D 无法跳过。

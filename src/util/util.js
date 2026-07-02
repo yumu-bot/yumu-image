@@ -22,7 +22,7 @@ import {PUPPETEER_OPTIONS, binary2Base64Text, compressPicture2Webp} from "./imag
 
 const execAsync = promisify(exec);
 
-const VERSION = 'v0.8.1'
+const VERSION = 'v0.8.2'
 const VERSION_CODE = 'VS'
 
 const path_util = path;
@@ -638,7 +638,7 @@ export async function getMapBackground(obj = {}, cover_type = 'cover') {
 
     const covers = beatmapset?.covers
 
-    const default_image_path = getImageFromV3('card-default.png')
+    const default_image_path = getImageFromV3('card-default.webp')
 
     let use_cache = hasLeaderBoard(beatmapset?.ranked)
 
@@ -706,7 +706,7 @@ export async function getMapBackground(obj = {}, cover_type = 'cover') {
  */
 export async function getDiffBackground(obj = {}, must_full = false) {
     let path = undefined;
-    const default_image_path = getImageFromV3('card-default.png'); // 应该作为最后的兜底
+    const default_image_path = getImageFromV3('card-default.webp'); // 应该作为最后的兜底
 
     const bid = obj?.beatmap?.id ?? obj?.beatmap_id;
     const sid = obj?.beatmapset?.id ?? obj?.beatmapset_id;
@@ -836,11 +836,11 @@ export async function getAvatar(any, default_image_path = getImageFromV3('avatar
 }
 
 /**
- * 获取玩家横幅。如果为空返回 Banner/c1-c9.png
+ * 获取玩家横幅。如果为空返回 Banner/c1-c9.webp
  * @param any
  * @return {Promise<string>}
  */
-export async function getBanner(any, default_image_path = getImageFromV3("Banner/c" + getRandom(8) + ".png")) {
+export async function getBanner(any, default_image_path = getImageFromV3(path.join("Banner", "c" + getRandom(8) + ".webp"))) {
     const cover_url = any?.cover_url ?? any.cover?.url ?? String(any)
     const assume_cache = any?.cover_url != null || any?.cover?.url != null;
 
@@ -984,7 +984,7 @@ export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePa
  * @param default_image_path 出错时返回的本地图片
  * @returns {Promise<string>}
  */
-export async function downloadImage(path = '', buffer_path = '', default_image_path = getImageFromV3('beatmap-DLfailBG.jpg')) {
+export async function downloadImage(path = '', buffer_path = '', default_image_path = getImageFromV3('beatmap-DLfailBG.webp')) {
     const error = getImageFromV3('error.png');
 
     let req;
@@ -1046,7 +1046,7 @@ export async function saveNetImage(buffer_path, buffer, max_width = 1920, max_he
 export async function readNetImage(
     path = '',
     use_cache = true,
-    default_image_path = getImageFromV3('beatmap-DLfailBG.jpg'),
+    default_image_path = getImageFromV3('beatmap-DLfailBG.webp'),
     max_width = 1920,
     max_height = null
 ) {

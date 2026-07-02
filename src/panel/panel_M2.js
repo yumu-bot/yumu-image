@@ -1110,7 +1110,7 @@ function getPendingSlot(isSupporter = false, ranked = 0) {
 }
 
 const label_M1 = (data = {
-    image: getImageFromV3('beatmap-DLfailBG.jpg'),
+    image: getImageFromV3('beatmap-DLfailBG.webp'),
     top: '',
     bottom: '',
 

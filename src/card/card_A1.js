@@ -15,7 +15,7 @@ import {PuHuiTi, torus} from "../util/font.js";
 export async function card_A1(data = {}) {
     // 1. 初始化默认值与基础设置
     const {
-        background = getImageFromV3('card-default.png'),
+        background = getImageFromV3('card-default.webp'),
         avatar = getImageFromV3('avatar-guest.png'),
         sub_icon1 = getImageFromV3('object-card-supporter.png'),
         sub_icon2 = '',

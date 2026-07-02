@@ -69,7 +69,7 @@ export async function card_B1(data = {
 
     const reg_bg = (at_right) ? reg_bg2 : reg_bg1;
 
-    svg = setImage(svg, card_x, 0, 390, 95, data?.background || getImageFromV3('object-score-backimage-F.jpg'), reg_bg, 0.3);
+    svg = setImage(svg, card_x, 0, 390, 95, data?.background || getImageFromV3('object-score-backimage-F.webp'), reg_bg, 0.3);
 
     return svg;
 }
