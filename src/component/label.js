@@ -3,7 +3,14 @@ import {
     getImageFromV3, readBinaryFromV3Cache,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
-import {colorArray, getModColor, getStarRatingColor, getUserRankColor, hex2hsl, PanelColor} from "../util/color.js";
+import {
+    colorArray,
+    getModColor,
+    getStarRatingColor,
+    getUserRankColor,
+    hex2OKLabBrightness,
+    PanelColor
+} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModCirclePath, getModFullName} from "../util/mod.js";
 
@@ -1692,7 +1699,7 @@ export function label_J4(data = {
     // 正则表达式
     const reg_text = /(?<=<g id="Text_LJ4">)/;
 
-    const is_dark_mode = (hex2hsl(data.bar_color).l <= 0.2)
+    const is_dark_mode = (hex2OKLabBrightness(data.bar_color) <= 0.2)
     const is_too_short = data?.max_width <= 120
 
     const title_max_width = data?.max_width - 20 - 10 - poppinsBold.getTextWidth(data?.remark, 16)
@@ -2038,7 +2045,7 @@ export function label_T(data = {
     const reg_text = /(?<=<g id="Text_T">)/;
 
     const is_too_short =  data?.max_width - poppinsBold.getTextWidth(data?.icon_title, 16) < 30
-    const is_dark_mode = (hex2hsl(data.bar_color).l <= 0.2)
+    const is_dark_mode = (hex2OKLabBrightness(data.bar_color) <= 0.2)
 
     const title_str = poppinsBold.cutStringTail(
         is_too_short ? data.abbr : data.icon_title, 16, data?.max_width - 20 - 10

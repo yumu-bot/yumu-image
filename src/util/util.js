@@ -2797,14 +2797,14 @@ export function getSign(number = 0) {
 // 使用加密安全的随机数生成器
 export function getRandomString(length = 6) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-    const randomValues = new Uint32Array(length);
+    const randomValues = new Uint8Array(length);
     crypto.getRandomValues(randomValues);
 
     return Array.from(randomValues)
-        .map(v => chars[v % chars.length])
+        // 64 的二进制是 2^6，所以用 & 63 (00111111) 过滤，完美均匀分布，且比模除更高效
+        .map(v => chars[v & 63])
         .join('');
 }
-
 /**
  *
  * 用于绘制上下表格

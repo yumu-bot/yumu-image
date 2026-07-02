@@ -1,7 +1,7 @@
 import {getAvatar, getFlagPath, getImageFromV3, isASCII, isNotEmptyArray, setImage, setTexts} from "../util/util.js";
 import {PuHuiTi, TahomaBold, TahomaRegular} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {hex2hsl} from "../util/color.js";
+import {hex2OKLabBrightness} from "../util/color.js";
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 
 export const router = createImageRouter(panel_Epsilon);
@@ -84,7 +84,7 @@ export async function panel_Epsilon(data = {
 
     const group_name = TahomaBold.getTextPath(group_name_text, 230, 482, 28, 'center baseline', group_name_color)
 
-    const group_name_shadow = (hex2hsl(group_name_color).l >= 0.7) ?
+    const group_name_shadow = (hex2OKLabBrightness(group_name_color) >= 0.7) ?
         TahomaBold.getTextPath(group_name_text, 230 + 1, 482 + 1, 28, 'center baseline', '#000')
         : ''
 

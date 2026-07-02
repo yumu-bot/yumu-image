@@ -23,7 +23,7 @@ import {
 import {PanelDraw} from "../util/panelDraw.js";
 import {extra, poppinsBold, PuHuiTi} from "../util/font.js";
 import {
-    changeHexLightness,
+    changeHexOKLabLightnessProgressive,
     colorArray,
     getStarRatingColor,
     getStarTextColor,
@@ -248,7 +248,7 @@ const component_R1 = (background, mods = [], is_lazer = false, lazer_only = fals
 
     const status = getImage(10, 50, 50, 50, getMapStatusImage(ranked))
 
-    const lazer = lazer_only ? getImage(540, 50, 280, 70, getScoreTypeImage(true, '-only')) : (is_lazer ? getImage(540 + 110, 50, 170, 70, getScoreTypeImage(is_lazer, 2)) : '')
+    const lazer = lazer_only ? getImage(540, 50, 280, 70, getScoreTypeImage(true, '-only')) : getImage(540 + 110, 50, 170, 70, getScoreTypeImage(is_lazer, 2))
 
     const mod_svg = drawLazerMods(mods, 770, 320, 70, 750, 'right', 8, true, true)
 
@@ -924,7 +924,7 @@ const card_R3 = (data = {
     const text_color = data.is_current ? '#fff' : '#ccc'
     const title_color = data.is_current ? '#aaa' : '#888'
 
-    const rating_brighter = changeHexLightness(rating_color, 0.2)
+    const rating_brighter = changeHexOKLabLightnessProgressive(rating_color, 0.2)
 
     const star_cover = PanelDraw.RoundedPolygon([{x: 22, y: 0}, {x: max_width + 30, y: 0}, {
         x: max_width + 30,

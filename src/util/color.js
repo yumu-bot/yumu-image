@@ -121,18 +121,137 @@ export const PanelColor = {
     },
 }
 
-export function changeHexLightness(hex = '#AAAAAA', difference = 0) {
-    const hsl = hex2hsl(hex)
+/**
+ * 核心函数：在 OKLab 空间下完美增减颜色亮度
+ * @param {string} hex - 输入的 Hex 颜色 (例如 '#000000')
+ * @param {number} difference - 想要改变的知觉亮度变化量 (例如 0.2)
+ */
+export function changeHexOKLabLightness(hex = '#AAAAAA', difference = 0) {
+    // 1. Hex -> sRGB (0-1)
+    const { r: r255, g: g255, b: b255 } = hex2rgb(hex);
+    let r = r255 / 255, g = g255 / 255, b = b255 / 255;
 
-    hsl.l = clamp01(hsl.l + difference)
+    // 2. sRGB -> 线性 RGB
+    const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+    r = toLinear(r); g = toLinear(g); b = toLinear(b);
 
-    return hsl2hex(hsl.h, hsl.s, hsl.l)
+    // 3. 线性 RGB -> LMS 空间
+    let l_space = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
+    let m_space = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b;
+    let s_space = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b;
+
+    // 4. LMS -> 模拟人眼非线性
+    let l_cubic = Math.cbrt(l_space);
+    let m_cubic = Math.cbrt(m_space);
+    let s_cubic = Math.cbrt(s_space);
+
+    // 5. 得到 Oklab 的 L, a, b
+    let L = 0.2104542553 * l_cubic + 0.7936177850 * m_cubic - 0.0040720468 * s_cubic;
+    let a = 1.9779984951 * l_cubic - 2.4285922050 * m_cubic + 0.4505937099 * s_cubic;
+    let b_val = 0.0259040371 * l_cubic + 0.7827717662 * m_cubic - 0.8086757660 * s_cubic;
+
+    // 6. 【核心步骤】在知觉均匀的 L 上增加亮度，并限制在 0-1 之间
+    L = Math.max(0, Math.min(1, L + difference));
+
+    // 7. 逆向转换：Oklab -> LMS
+    let l_cubic_inv = L + 0.3963377774 * a + 0.2158037573 * b_val;
+    let m_cubic_inv = L - 0.1055613458 * a - 0.0638541728 * b_val;
+    let s_cubic_inv = L - 0.0894841775 * a - 1.2914855480 * b_val;
+
+    let l_space_inv = Math.pow(l_cubic_inv, 3);
+    let m_space_inv = Math.pow(m_cubic_inv, 3);
+    let s_space_inv = Math.pow(s_cubic_inv, 3);
+
+    // 8. LMS -> 线性 RGB
+    let r_linear = +4.0767416621 * l_space_inv - 3.3077115913 * m_space_inv + 0.2309699292 * s_space_inv;
+    let g_linear = -1.2684380046 * l_space_inv + 2.6093323202 * m_space_inv - 0.3413342856 * s_space_inv;
+    let b_linear = -0.0041960863 * l_space_inv - 0.7034186147 * m_space_inv + 1.7076147010 * s_space_inv;
+
+    // 9. 线性 RGB -> sRGB
+    const toSRGB = (c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+    let r_srgb = Math.round(toSRGB(r_linear) * 255);
+    let g_srgb = Math.round(toSRGB(g_linear) * 255);
+    let b_srgb = Math.round(toSRGB(b_linear) * 255);
+
+    // 10. 返回最终的 Hex
+    return rgb2hex(r_srgb, g_srgb, b_srgb);
 }
 
-export function changeHexLightnessTo(hex = '#AAAAAA', lightness = 0) {
-    const hsl = hex2hsl(hex)
+/**
+ * 使用更激进的策略：亮部改变颜色较少，暗部改变较多，更符合直觉
+ * @param {string} hex - 输入的 Hex 颜色 (例如 '#000000')
+ * @param {number} difference - 想要改变的知觉亮度变化量 (例如 0.2)
+ * @return {string}
+ */
+export function changeHexOKLabLightnessProgressive(hex = '#AAAAAA', difference = 0) {
+    // 1. Hex -> sRGB -> 线性 RGB
+    const num = parseInt(hex.replace('#', ''), 16);
+    let r = ((num >> 16) & 255) / 255;
+    let g = ((num >> 8) & 255) / 255;
+    let b = (num & 255) / 255;
 
-    return hsl2hex(hsl.h, hsl.s, lightness)
+    const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+    r = toLinear(r); g = toLinear(g); b = toLinear(b);
+
+    // 2. 线性 RGB -> LMS -> Oklab (L, a, b)
+    let l_space = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
+    let m_space = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b;
+    let s_space = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b;
+
+    let l_cubic = Math.cbrt(l_space);
+    let m_cubic = Math.cbrt(m_space);
+    let s_cubic = Math.cbrt(s_space);
+
+    const originalL = 0.2104542553 * l_cubic + 0.7936177850 * m_cubic - 0.0040720468 * s_cubic;
+    let a = 1.9779984951 * l_cubic - 2.4285922050 * m_cubic + 0.4505937099 * s_cubic;
+    let b_val = 0.0259040371 * l_cubic + 0.7827717662 * m_cubic - 0.8086757660 * s_cubic;
+
+    // ==========================================
+    // 【核心改进：智能动态步长算法】
+    // ==========================================
+    let adjustedDifference = difference;
+
+    if (difference > 0) {
+        // 当用户想要“变亮”时：
+        if (originalL < 0.15) {
+            // 暗部补偿：原色越接近纯黑，越要下猛药，强行帮它跨过屏幕死区
+            // 纯黑(0)时，增量会放大 1.8 倍（0.2 变成 0.36，肉眼清晰可见）
+            const darkBoost = 1.0 + Math.pow((0.15 - originalL) / 0.15, 2) * 0.8;
+            adjustedDifference *= darkBoost;
+        } else if (originalL > 0.6) {
+            // 亮部刹车：原色越亮，留给它上升的空间越小，按比例压缩增量，防止爆出
+            const remainingSpace = 1.0 - originalL;
+            adjustedDifference *= (remainingSpace / 0.4); // 线性收缩
+        }
+    } else if (difference < 0) {
+        // 当用户想要“变暗”时（同理反向操作）：
+        if (originalL > 0.85) {
+            const lightBoost = 1.0 + Math.pow((originalL - 0.85) / 0.15, 2) * 0.8;
+            adjustedDifference *= lightBoost;
+        } else if (originalL < 0.4) {
+            adjustedDifference *= (originalL / 0.4);
+        }
+    }
+
+    // 应用调整后的亮度
+    let L = Math.max(0, Math.min(1, originalL + adjustedDifference));
+    // ==========================================
+
+    // 3. 逆向转换：Oklab -> LMS -> 线性 RGB -> sRGB
+    let l_cubic_inv = L + 0.3963377774 * a + 0.2158037573 * b_val;
+    let m_cubic_inv = L - 0.1055613458 * a - 0.0638541728 * b_val;
+    let s_cubic_inv = L - 0.0894841775 * a - 1.2914855480 * b_val;
+
+    let r_linear = +4.0767416621 * Math.pow(l_cubic_inv, 3) - 3.3077115913 * Math.pow(m_cubic_inv, 3) + 0.2309699292 * Math.pow(s_cubic_inv, 3);
+    let g_linear = -1.2684380046 * Math.pow(l_cubic_inv, 3) + 2.6093323202 * Math.pow(m_cubic_inv, 3) - 0.3413342856 * Math.pow(s_cubic_inv, 3);
+    let b_linear = -0.0041960863 * Math.pow(l_cubic_inv, 3) - 0.7034186147 * Math.pow(m_cubic_inv, 3) + 1.7076147010 * Math.pow(s_cubic_inv, 3);
+
+    const toSRGB = (c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+    let r_srgb = Math.round(toSRGB(r_linear) * 255);
+    let g_srgb = Math.round(toSRGB(g_linear) * 255);
+    let b_srgb = Math.round(toSRGB(b_linear) * 255);
+
+    return rgb2hex(r_srgb, g_srgb, b_srgb);
 }
 
 
@@ -178,6 +297,11 @@ export function hex2rgb(hex = '#AAAAAA') {
     return {
         r: 0, g: 0, b: 0
     }
+}
+
+function rgb2hex(r, g, b) {
+    const toHex = (x) => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, '0');
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
 }
 
 export function hex2hsl(hex = '#AAAAAA') {
@@ -273,6 +397,55 @@ function Hue2RGB(v1, v2, vH)
     if (3.0 * vH < 2) return v1 + (v2 - v1) * ((2.0 / 3.0) - vH) * 6.0;
     return (v1);
 }
+
+/**
+ * 使用优秀的模型来拟合人眼能感受到的亮度
+ * @param hex
+ * @return {number}
+ */
+export function hex2OKLabBrightness(hex = '#000') {
+    const {r, g, b} = hex2rgb(hex)
+
+    return rgb2OKLabBrightness(r, g, b)
+}
+
+/**
+ * 使用优秀的模型来拟合人眼能感受到的亮度
+ * @param r
+ * @param g
+ * @param b
+ * @return {number}
+ */
+export function rgb2OKLabBrightness(r, g, b) {
+    // 1. 将 0-255 的 RGB 归一化到 0-1
+    let r_linear = r / 255;
+    let g_linear = g / 255;
+    let b_linear = b / 255;
+
+    // 2. 解除 sRGB 的伽马校正 (转换到线性 RGB)
+    const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+    r_linear = toLinear(r_linear);
+    g_linear = toLinear(g_linear);
+    b_linear = toLinear(b_linear);
+
+    // 3. 线性 RGB 转换到近似锥体响应空间 (LMS 空间)
+    let l_space = 0.4122214708 * r_linear + 0.5363325363 * g_linear + 0.0514459929 * b_linear;
+    let m_space = 0.2119034982 * r_linear + 0.6806995451 * g_linear + 0.1073969566 * b_linear;
+    let s_space = 0.0883024619 * r_linear + 0.2817188376 * g_linear + 0.6299787005 * b_linear;
+
+    // 4. 计算非线性感知非均匀性（立方根）
+    let l_cubic = Math.cbrt(l_space);
+    let m_cubic = Math.cbrt(m_space);
+    let s_cubic = Math.cbrt(s_space);
+
+    // 5. 最终投影得到 Oklab 的 L (感知亮度)
+    return 0.2104542553 * l_cubic + 0.7936177850 * m_cubic - 0.0040720468 * s_cubic; // 返回值在 0.0 (纯黑) 到 1.0 (纯白) 之间
+
+    // === 测试对比 ===
+    // console.log(getOklabBrightness(255, 255, 0)); // 纯黄色: ~0.968 (体感非常亮)
+    // console.log(getOklabBrightness(0, 0, 255));   // 纯蓝色: ~0.452 (体感明显暗得多)
+}
+
 
 
 /**
@@ -1027,13 +1200,5 @@ export function getBadgeColor(badge_name = '') {
     } else {
         return '#1c1719'
     }
-}
-
-function clamp01(number = 0) {
-    return clamp(number, 1, 0)
-}
-
-function clamp(number = 0, max = number, min = number) {
-    return Math.min(Math.max(number, min), max)
 }
 

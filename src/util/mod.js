@@ -5,12 +5,11 @@ import {
     isNumber,
     floor,
     rounds,
-    floors, isNotEmptyArray, getImageFromV3
+    floors, isNotEmptyArray, getImageFromV3, getRandomString
 } from "./util.js";
-import {getModColor, hex2hsl, hsl2hex} from "./color.js";
+import {getModColor, hex2hsl, hex2OKLabBrightness, hsl2hex} from "./color.js";
 import {torus, torusBold} from "./font.js";
 import {PanelDraw} from "./panelDraw.js";
-import moment from "moment";
 
 const ModInt = {
     null: 0,
@@ -338,15 +337,14 @@ function getLazerModPath(mod = {
     const mod_color = mod?.color || getModColor(mod_name)
 
     // 避免重名
-    const index = mod_name + Math.floor(Math.random() * 1000000) + moment().toDate().getMilliseconds()
+    const index = getRandomString(6)
 
     const hsl = hex2hsl(mod_color)
 
-    // 增强显示
-    const is_dark = hsl.l <= 0.3
-    const is_gray = !is_dark && hsl.l <= 0.6
+    const okLabBrightness = hex2OKLabBrightness(mod_color)
 
-    let stroke_mod_name = ''
+    // 增强显示
+    const is_dark = okLabBrightness <= 0.4
 
     let line_color;
     let background_color;
@@ -381,17 +379,9 @@ function getLazerModPath(mod = {
 
     if (allow_expanded && has_settings) {
         def_mod_name = getMaskFromPath(getLazerModAdditionalPath(getLazerModAdditional(mod), "#fff", scale), `mask-M-Name-${index}`)
-
-        if (is_gray) {
-            stroke_mod_name = getLazerModAdditionalPath(getLazerModAdditional(mod), "#fff", scale, 2)
-        }
     } else if (allow_name) {
         def_mod_name = getMaskFromPath(getLazerModNamePath(mod_name, "#fff", scale),
             `mask-M-Name-${index}`)
-
-        if (is_gray) {
-            stroke_mod_name = getLazerModNamePath(mod_name, "#fff", scale, 2)
-        }
     } else {
         def_mod_name = ''
         show_extender = false
@@ -434,7 +424,6 @@ function getLazerModPath(mod = {
         + def_mod_extender
         + `</defs>`
         + `<g id="Extender_M_${index}" mask="url(#mask-M-Extender-${index})">` + (show_extender ? color_mod_extender : '') + '</g>'
-        + `<g id="Stroke_M_${index}">` + (show_extender ? stroke_mod_name : '') + '</g>'
         + `<g id="Name_M_${index}" mask="url(#mask-M-Name-${index})">` + (show_extender ? color_mod_name : '') + '</g>'
         + `<g id="Base_M_${index}" mask="url(#mask-M-Base-${index})">` + color_mod_base + '</g>'
         + `<g id="Icon_M_${index}" mask="url(#mask-M-Icon-${index})">` + color_icon + '</g>'
