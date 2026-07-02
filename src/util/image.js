@@ -37,7 +37,7 @@ if (process.platform === 'win32') {
     // Windows 环境：本地测试，强行注入 NVIDIA/ANGLE 独显参数，享受无横线超高速
     base_args.push(
         '--use-gl=angle',
-        '--use-angle=gles'
+        '--use-angle=default'
     );
 } else {
     // Linux 生产环境：为了绝对安全防闪退，使用默认配置（通常会自动跌落到系统的软渲染）
