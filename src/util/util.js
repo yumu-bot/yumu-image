@@ -7,7 +7,7 @@ import * as http from "node:http";
 import path from "path";
 import moment from "moment";
 import {cutStringTail, getTextPath, PuHuiTi, torus} from "./font.js";
-import {getRandom, getRandomBannerPath} from "./mascotBanner.js";
+import {getBannerLocal, getRandom, getRandomBannerPath} from "./mascotBanner.js";
 import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
@@ -840,7 +840,7 @@ export async function getAvatar(any, default_image_path = getImageFromV3('avatar
  * @param any
  * @return {Promise<string>}
  */
-export async function getBanner(any, default_image_path = getImageFromV3(path.join("Banner", "c" + getRandom(8) + ".webp"))) {
+export async function getBanner(any, default_image_path = getBannerLocal()) {
     const cover_url = any?.cover_url ?? any.cover?.url ?? String(any)
     const assume_cache = any?.cover_url != null || any?.cover?.url != null;
 
@@ -851,6 +851,17 @@ export async function getBanner(any, default_image_path = getImageFromV3(path.jo
     } else {
         return cover_url
     }
+}
+
+/**
+ * @param num {*}
+ * @param max
+ * @param min
+ * @return {number}
+ */
+export function clamp(num = 0, max = 0, min = 0) {
+    if (typeof num !== 'number') return 0
+    return Math.max(min, Math.min(max, num));
 }
 
 export async function downloadByFetch(url, buffer_path, default_image_path) {

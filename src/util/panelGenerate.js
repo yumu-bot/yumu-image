@@ -46,7 +46,7 @@ import {
 import {PanelDraw} from "./panelDraw.js";
 import {card_D2} from "../card/card_D2.js";
 import {getLazerModsWidth} from "./mod.js";
-import {getRandom} from "./mascotBanner.js";
+import {getBannerLocal} from "./mascotBanner.js";
 
 //公用方法
 //把参数变成面板能读懂的数据
@@ -505,7 +505,7 @@ export const PanelGenerate = {
         received_ranked: 0,
         sent: 5,
         sent_ranked: 5,
-    }) => {
+    }, images = new Map()) => {
         const user = data.user
 
         let sub_icon1 = ''
@@ -522,10 +522,11 @@ export const PanelGenerate = {
             right3m = ' [' + (data?.received_ranked || '0') + ']'
         }
 
+        const avatar = images.get(`avatar_${user.id}`) ?? ('https://a.ppy.sh/' + (user.id ?? ''))
 
         return {
-            background: getImageFromV3("Banner/c" + getRandom(8) + ".png"),
-            avatar: 'https://a.ppy.sh/' + (user.id ?? ''),
+            background: getBannerLocal(),
+            avatar: avatar,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',

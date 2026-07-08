@@ -13,6 +13,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {torusBold} from "../util/font.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {avatars2Task, imageDownloader, user2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_A11);
 
@@ -115,12 +116,22 @@ export async function panel_A11(data = {
 
     svg = setText(svg, page, reg_body)
 
+    const promise_a1s = avatars2Task(guests.map(g => g.user))
+    const promise_a1 = user2Task(user)
+
+    const tasks = [
+        ...promise_a1,
+        ...promise_a1s,
+    ];
+
+    const images = await imageDownloader(tasks);
+
     // 主卡
-    const paramA1 = PanelGenerate.mapper2CardA1(user)
+    const paramA1 = PanelGenerate.mapper2CardA1(user, images.get(`avatar_${user.id}`), images.get(`banner_${user.id}`))
 
     // 队员
     const paramA1s = guests.map((guest) => {
-        return PanelGenerate.guest2CardA1(guest)
+        return PanelGenerate.guest2CardA1(guest, images)
     })
 
     const [cardA1, cardA1s] = await renderInBatch(
