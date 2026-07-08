@@ -36,8 +36,16 @@ const base_args = [
 if (process.platform === 'win32') {
     // Windows 环境：本地测试，强行注入 NVIDIA/ANGLE 独显参数，享受无横线超高速
     base_args.push(
-        '--use-gl=angle',
-        '--use-angle=default'
+        '--disable-gpu',                  // 禁用 GPU 硬件加速（最核心的开关）
+        '--disable-gpu-compositing',      // 禁用 GPU 合成，强制页面图层混色也走 CPU
+        '--use-gl=swiftshader',           // 强制将 WebGL 和 3D 渲染降级为 CPU 软渲染器（SwiftShader）
+        '--window-position=-32000,-32000',
+        '--disable-features=CalculateNativeWinOcclusion', // 关闭原生窗口遮挡计算（防止检测桌面状态）
+        '--disable-features=TabHoverCardImages',          // 关闭标签卡预览图生成（防止后台隐蔽生成UI图层）
+        '--disable-backgrounding-occluded-windows',       // 关闭被遮挡窗口的后台化逻辑（强制保持无UI逻辑）
+        '--disable-renderer-backgrounding',               // 关闭渲染器后台化
+        '--no-pings',                                     // 关掉所有内置的链路打点检测
+        '--mute-audio'                                    // 彻底关闭音频（有时音频通道初始化也会触发系统音频合成器的窗体通知）
     );
 } else {
     // Linux 生产环境：为了绝对安全防闪退，使用默认配置（通常会自动跌落到系统的软渲染）

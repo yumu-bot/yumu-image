@@ -7,7 +7,11 @@ import {
     rounds,
     floors, isNotEmptyArray, getImageFromV3, getRandomString
 } from "./util.js";
-import {getModColor, hex2hsl, hex2OKLabBrightness, hsl2hex} from "./color.js";
+import {
+    changeHexOKLabLightnessProgressive,
+    getModColor,
+    hex2OKLabBrightness,
+} from "./color.js";
 import {torus, torusBold} from "./font.js";
 import {PanelDraw} from "./panelDraw.js";
 
@@ -339,22 +343,20 @@ function getLazerModPath(mod = {
     // 避免重名
     const index = getRandomString(6)
 
-    const hsl = hex2hsl(mod_color)
-
     const okLabBrightness = hex2OKLabBrightness(mod_color)
 
     // 增强显示
-    const is_dark = okLabBrightness <= 0.4
+    const is_dark = okLabBrightness <= 0.5
 
-    let line_color;
-    let background_color;
+    let base_color;
+    let icon_color;
 
     if (is_dark) {
-        line_color = hsl2hex(hsl.h, hsl.s, 0.1)
-        background_color = hsl2hex(hsl.h, hsl.s, 0.9)
+        base_color = mod_color // hsl2hex(hsl.h, hsl.s, 0.1)
+        icon_color = changeHexOKLabLightnessProgressive(mod_color, 0.4) // hsl2hex(hsl.h, hsl.s, 0.9)
     } else {
-        line_color = hsl2hex(hsl.h, hsl.s, Math.max(hsl.l, 0.5))
-        background_color = hsl2hex(hsl.h, hsl.s, 0.2)
+        base_color = mod_color //hsl2hex(hsl.h, hsl.s, Math.max(hsl.l, 0.5))
+        icon_color = changeHexOKLabLightnessProgressive(mod_color, -0.4) //hsl2hex(hsl.h, hsl.s, 0.2)
     }
 
     const has_settings = mod.settings != null
@@ -377,8 +379,17 @@ function getLazerModPath(mod = {
 
     let show_extender = true
 
+    // 确保含有属性时的可视程度
+    let name_color = base_color
+
     if (allow_expanded && has_settings) {
         def_mod_name = getMaskFromPath(getLazerModAdditionalPath(getLazerModAdditional(mod), "#fff", scale), `mask-M-Name-${index}`)
+
+        if (is_dark) {
+            name_color = changeHexOKLabLightnessProgressive(base_color, -0.2)
+        } else {
+            name_color = changeHexOKLabLightnessProgressive(base_color, 0.2)
+        }
     } else if (allow_name) {
         def_mod_name = getMaskFromPath(getLazerModNamePath(mod_name, "#fff", scale),
             `mask-M-Name-${index}`)
@@ -396,22 +407,22 @@ function getLazerModPath(mod = {
     }
 
     // g 这里放色块
-    const color_settings = PanelDraw.Rect(91 * scale, 2 * scale, 40 * scale, 28 * scale, 0, line_color, 1)
-    const color_icon = PanelDraw.Rect(7.5 * scale, 8 * scale, 120 * scale, 84 * scale, 0, background_color, 1)
-    const color_mod_base = PanelDraw.Rect(0, 3 * scale, 135 * scale, 97 * scale, 0, line_color, 1)
+    const color_settings = PanelDraw.Rect(91 * scale, 2 * scale, 40 * scale, 28 * scale, 0, base_color, 1)
+    const color_icon = PanelDraw.Rect(7.5 * scale, 8 * scale, 120 * scale, 84 * scale, 0, icon_color, 1)
+    const color_mod_base = PanelDraw.Rect(0, 3 * scale, 135 * scale, 97 * scale, 0, base_color, 1)
     const color_mod_name = show_extender ?
-        PanelDraw.Rect(130 * scale, 0, 105 * scale, 100 * scale, 0, line_color, 1)
+        PanelDraw.Rect(130 * scale, 0, 105 * scale, 100 * scale, 0, name_color, 1)
         : ''
     const color_mod_extender = show_extender ?
-        PanelDraw.Rect(100 * scale, 17 * scale, 135 * scale, 68 * scale, 0, background_color, 1)
+        PanelDraw.Rect(100 * scale, 17 * scale, 135 * scale, 68 * scale, 0, icon_color, 1)
         : ''
 
     const settings_base = (has_settings) ?
-        PanelDraw.Circle((95 + 16) * scale, 16 * scale, 16 * scale, background_color)
+        PanelDraw.Circle((95 + 16) * scale, 16 * scale, 16 * scale, icon_color)
         : ''
 
     const side_name = (!show_extender && allow_side_name) ? `<g transform="rotate(-60 ${92 * scale} ${72 * scale})">`
-        + torusBold.getTextPath(mod?.acronym || '', 92 * scale, 72 * scale, 20 * scale, 'left top', background_color)
+        + torusBold.getTextPath(mod?.acronym || '', 92 * scale, 72 * scale, 20 * scale, 'left top', icon_color)
         + '</g>' : ''
 
     // 拼合 svg
