@@ -60,7 +60,7 @@ export const imageDownloader = async (tasks = []) => {
  * @param idFn {Function}
  * @return {{type: string, id: number, fn: (function(): Promise)}[]}
  */
-export const avatars2Task = (users = [], idFn = (user) => user.id) => {
+export const avatars2Task = (users = [], idFn = (user) => user.user_id ?? user.id) => {
     return (users ?? []).map(user => toTask('avatar', idFn(user), () => getAvatar(user)))
 }
 
@@ -77,12 +77,12 @@ export const users2Task = (users = []) => {
  * @return {[{type: string, id: number, fn: (function(): Promise)}, {type: string, id: number, fn: (function(): Promise)}]}
  */
 export const user2Task = (user = {}) => {
-    const task1 = toTask('avatar', user.id, () => getAvatar(user))
-    const task2 = toTask('banner', user.id, () => getBanner(user))
+    const task1 = toTask('avatar', user.user_id ?? user.id, () => getAvatar(user))
+    const task2 = toTask('banner', user.user_id ?? user.id, () => getBanner(user))
     return [task1, task2]
 }
 
-const beatmapset2Task = (
+export const beatmapset2Task = (
     beatmapset = {},
     id,
     targetSet,

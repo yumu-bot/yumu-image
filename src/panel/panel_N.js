@@ -20,6 +20,7 @@ import {PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {avatars2Task, beatmapset2Task, imageDownloader, user2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_N);
 
@@ -27,7 +28,21 @@ export const router_svg = createSvgRouter(panel_N);
 
 export async function panel_N(
     data = {
-        more: {}
+        more: {
+            "host_count": 0,
+            "guest_count": 0,
+            "total_count": 0,
+            "max_star": 0,
+            "min_star": 0,
+            "stars": 0,
+            "total_length": 0,
+            "tags": 0,
+            "problem_count": 0,
+            "suggest_count": 0,
+            "not_solved_count": 0,
+            "hype_count": 0,
+            "praise_count": 0,
+        }
     }
 ) {
     // 导入模板
@@ -53,11 +68,49 @@ export async function panel_N(
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
 
+    const {
+        beatmapset,
+        more,
+        hype,
+        users,
+        discussion
+    } = data
+
+    const {
+        user: host,
+        mappers,
+        genre,
+        language,
+        recent_favourites,
+        nominators,
+    } = beatmapset
+
+    // 下载图片
+    const promise_im1 = user2Task(host)
+    const promise_ns = avatars2Task((nominators ?? []))
+    const promise_a2 = beatmapset2Task(beatmapset, beatmapset.id, beatmapset, 'cover')
+    const promise_os = avatars2Task(mappers)
+    const promise_fs = avatars2Task((recent_favourites ?? []).slice(0, 20))
+    const promise_ds = avatars2Task((discussion ?? []).slice(0, 14))
+    const promise_hs = avatars2Task((hype ?? []).slice(0, 6))
+
+    const tasks = [
+        ...promise_im1,
+        ...promise_ns,
+        promise_a2,
+        ...promise_os,
+        ...promise_fs,
+        ...promise_ds,
+        ...promise_hs,
+    ]
+
+    const images = await imageDownloader(tasks);
+
     // 导入A1
-    const cardA2 = card_A2(await PanelGenerate.beatMapSet2CardA2(data?.beatmapset));
+    const cardA2 = card_A2(await PanelGenerate.beatmapset2CardA2(beatmapset, images.get(`cover_${beatmapset.id}`)));
 
     // 导入O1
-    const cardO1 = component_IM1(await PanelGenerate.user2CardO1(data?.beatmapset?.user));
+    const cardO1 = component_IM1(await PanelGenerate.user2CardO1(host, images.get(`avatar_${host.id}`), images.get(`banner_${host.id}`)));
 
     // 导入一些标签
     const guest_title = torus.getTextPath('Guest Mappers', 60, 730, 30, 'left baseline', '#fff');
@@ -70,17 +123,17 @@ export async function panel_N(
     svg = setTexts(svg, [favorite_title, tag_title, progress_title, discussion_title, guest_title, genre_title], reg_index);
 
     // 插入1号卡标签
-    const total_length = data?.more?.total_length || 0;
+    const total_length = more?.total_length || 0;
 
-    const diff_str_b = data?.more?.host_count.toString() || '0';
-    const diff_str_m = data?.more?.total_count.toString() || '0';
-    const star_str_b = data?.more?.min_star || '0';
-    const star_str_m = data?.more?.max_star || '0';
+    const diff_str_b = more?.host_count.toString() || '0';
+    const diff_str_m = more?.total_count.toString() || '0';
+    const star_str_b = more?.min_star || '0';
+    const star_str_m = more?.max_star || '0';
     const length_str_b = Math.floor(total_length / 60).toString();
     const length_str_m = (total_length % 60).toString().padStart(2, "0");
 
     const diff = torus.get2SizeTextPath(diff_str_b, '/' + diff_str_m, 42, 30, 120, 616, 'center baseline', '#fff');
-    const star = (data?.more?.min_star !== "") ? torus.get2SizeTextPath(star_str_b, '~' + star_str_m, 42, 30, 255, 616, 'center baseline', '#fff') :
+    const star = (more?.min_star !== "") ? torus.get2SizeTextPath(star_str_b, '~' + star_str_m, 42, 30, 255, 616, 'center baseline', '#fff') :
         torus.getTextPath(star_str_m,255, 616, 42,'center baseline', '#fff')
     ;
     const length = torus.get2SizeTextPath(length_str_b, ':' + length_str_m, 42, 30, 390, 616, 'center baseline', '#fff');
@@ -93,43 +146,39 @@ export async function panel_N(
     svg = setTexts(svg, [diff_index, star_index, length_index], reg_index);
 
     // 插入8号卡标签
-    const pack_tags = data?.beatmapset?.pack_tags || []
+    const pack_tags = beatmapset?.pack_tags || []
 
-    const stat_str = '(?) Not Solved: ' + (data?.more?.not_solved_count || 0)
-        + ' // (!) Problem: ' + (data?.more?.problem_count || 0)
-        + ' // ( ) Suggestion: ' + (data?.more?.suggest_count || 0)
-        + ' // (*) Praise: ' + (data?.more?.praise_count || 0)
+    const stat_str = '(?) Not Solved: ' + (more?.not_solved_count || 0)
+        + ' // (!) Problem: ' + (more?.problem_count || 0)
+        + ' // ( ) Suggestion: ' + (more?.suggest_count || 0)
+        + ' // (*) Praise: ' + (more?.praise_count || 0)
         + ' // Pack: ' + (pack_tags[0] || "none")
-        + ' // User Rating: ' + floor(data?.beatmapset?.rating, 1);
+        + ' // User Rating: ' + floor(beatmapset?.rating, 1);
 
     const stat = torus.getTextPath(stat_str, 1570, 645, 18, 'right baseline', '#aaa');
 
     svg = setTexts(svg, [stat], reg_discussion);
 
     // 导入 Tag
-    const tag = getTagPanel(data?.more?.tags, 60, 940);
+    const tag = getTagPanel(more?.tags, 60, 940);
 
     // 导入 Guest
-    const guest = await getGuestPanel(data?.beatmapset?.mappers, 54, 745);
+    const guest = await getGuestPanel(mappers, images, 54, 745);
 
-    // 导入 Progress
-    const progress = await getRankingProgressPanel(data?.beatmapset, data?.hype, data?.users, data?.more, 490, 330)
+    const progress = await getRankingProgressPanel(beatmapset, hype, users, images, more, 490, 330)
 
-    // 导入 Favorite
-    const favorite = await getFavoritePanel(data?.beatmapset?.recent_favourites, 1620, 660);
+    const favorite = await getFavoritePanel(recent_favourites, images, 1620, 660);
 
-    // 导入 Discussion
-    const discussion = await getDiscussionPanel(data?.discussion, data?.users, 510, 660);
+    const discussions = await getDiscussionPanel(discussion, users, images, 510, 660);
 
-    // 导入 Favorite
-    const genre = getGenrePanel(data?.beatmapset?.genre, data?.beatmapset?.language);
+    const category = getGenrePanel(genre, language);
 
     svg = setText(svg, tag, reg_tag);
     svg = setText(svg, guest, reg_guest);
     svg = setText(svg, progress, reg_progress);
     svg = setText(svg, favorite, reg_favorite);
-    svg = setText(svg, discussion, reg_discussion);
-    svg = setText(svg, genre, reg_genre);
+    svg = setText(svg, discussions, reg_discussion);
+    svg = setText(svg, category, reg_genre);
 
     // 插入图片和部件（新方法
     const cover = await getMapBackground(data, 'cover');
@@ -171,13 +220,13 @@ function getTagPanel(tags = [""], x, y, size = 18, color = '#3399CC', max_width 
     return out;
 }
 
-async function getGuestPanel(guest = [], x = 54, y = 745) {
-    let out = "";
+async function getGuestPanel(guest = [], images = new Map(), x = 54, y = 745) {
+    let out = [];
 
     if (isEmptyArray(guest)) {
         //摆烂机制
-        out += PanelDraw.Image(180, -5, 80, 80, getImageFromV3('sticker_qiqi_oh.png'))
-        out += torus.getTextPath('Solo Set!', 215, 100, 18, 'center baseline', '#fff')
+        out.push(PanelDraw.Image(180, -5, 80, 80, getImageFromV3('sticker_qiqi_oh.png')))
+        out.push(torus.getTextPath('Solo Set!', 215, 100, 18, 'center baseline', '#fff'))
     } else if (guest.length > 4) {
         //常规：N3
         for (const i in guest) {
@@ -187,7 +236,7 @@ async function getGuestPanel(guest = [], x = 54, y = 745) {
             const dx = (i % 8) * 51;
             const dy = Math.floor(i / 8) * 51;
 
-            out += (`<g transform="translate(${dx} ${dy})">` + await label_N3(u) + '</g>');
+            out.push(getSvgBody(dx, dy, await label_N3(u, images.get(`avatar_${u.id}`))))
         }
     } else {
         //小图：N4
@@ -195,14 +244,14 @@ async function getGuestPanel(guest = [], x = 54, y = 745) {
             const u = guest[i];
             const dx = i * 102;
 
-            out += (`<g transform="translate(${dx} 0)">` + await label_N4(u) + '</g>');
+            out.push(getSvgBody(dx, 0, await label_N4(u, images.get(`avatar_${u.id}`))))
         }
     }
 
-    return getSvgBody(x, y, out);
+    return getSvgBody(x, y, out.join('\n'));
 }
 
-async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 490, y = 330) {
+async function getRankingProgressPanel(s = {}, hype = [], users = [], images = new Map(), more, x = 490, y = 330) {
     const hype_count = s?.hype?.current || more?.hype_count || 0;
     let hype_slot = 615 / 185; // 一般来说是 hype 相比于正常一格的长度比
 
@@ -249,7 +298,7 @@ async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 
     rrect += drawHype(x_hype, y_rrect, hype_slot * hype_width, hype_slot);
     rrect += drawRRect(nom_count, nom_slot, x_nom, y_rrect, slot_length - 5, '#B3FD66');
 
-    const nominator = await drawNominators(x_nom, y_nominator, s?.nominators, slot_length)
+    const nominator = await drawNominators(x_nom, y_nominator, s?.nominators, images, slot_length)
 
     if (s?.ranked === 2) {
         //特殊上架 approved
@@ -272,18 +321,20 @@ async function getRankingProgressPanel(s = {}, hype = [], users = [], more, x = 
             drawIcons(rnk_count >= 1, x_rnk + (slot_length - 5) / 2 - 25, y_nominator, 'object-beatmap-ranked.png');
     }
 
-    const hype_arr = await renderDiscussion(hype, users, 510, 435, 1, 145, hype_slot);
+    const hype_arr = await renderDiscussion(hype, users, images, 510, 435, 1, 145, hype_slot);
 
     return (index + rrect + nominator + icon + hype_arr);
 
 }
 
-async function getDiscussionPanel(discussion, user, x, y) {
-    return await renderDiscussion(discussion, user, x, y, 4, 360, 1060);
+async function getDiscussionPanel(discussion, users, images, x, y) {
+    return await renderDiscussion(discussion, users, images, x, y, 4, 360, 1060);
 }
 
-async function getFavoritePanel(fav = [], x = 1620, y = 660) {
+async function getFavoritePanel(fav = [], images = new Map(), x = 1620, y = 660) {
     let svg = "<g>";
+
+    let n3s = []
 
     for (const i in fav) {
         if (i >= 20) break;
@@ -292,11 +343,10 @@ async function getFavoritePanel(fav = [], x = 1620, y = 660) {
         const dx = (i % 5) * 51 + x;
         const dy = Math.floor(i / 5) * 51 + y;
 
-        svg += (`<g transform="translate(${dx} ${dy})">` + await label_N3(u) + '</g>');
+        n3s.push(getSvgBody(dx, dy, await label_N3(u, images.get(`avatar_${u.id}`))))
     }
 
-    svg += '</g>';
-    return svg;
+    return svg + n3s.join('\n') + '</g>';
 }
 
 function getGenrePanel(genre, language) {
@@ -309,7 +359,7 @@ function getGenrePanel(genre, language) {
 }
 
 // label
-async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
+async function label_N1(x = 0, y = 0, u = {}, avatar = null, max_width = 100) {
     //导入模板
     let svg = `  <defs>
     <clipPath id="clippath-LN1">
@@ -334,7 +384,7 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
     const reg_avatar = /(?<=<g style="clip-path: url\(#clippath-LN1\);">)/;
 
     //定义文本
-    const avatar = await getAvatar(u);
+    const av = avatar ?? await getAvatar(u);
     const abbr_color = u?.profile_colour || 'none';
 
     //获取用户组或者玩家组简称
@@ -367,7 +417,7 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
     const uid = torus.getTextPath(u?.id.toString(), 50, 138, 16, 'center baseline', '#fff');
 
     //插入文本
-    svg = setImage(svg, 0, 0, 100, 100, avatar, reg_avatar, 1);
+    svg = setImage(svg, 0, 0, 100, 100, av, reg_avatar, 1);
     svg = setText(svg, abbr, reg_text);
     svg = setText(svg, abbr_rrect, reg_label);
     svg = setText(svg, name, reg_text);
@@ -376,7 +426,7 @@ async function label_N1(x = 0, y = 0, u = {}, max_width = 100) {
     return getSvgBody(x, y, svg);
 }
 
-async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row = 1) {
+async function label_N2(u = {}, avatar = null, p = {}, x, y, max_width = 100, lines = [""], row = 1) {
 
     //导入模板
     let svg = `  <defs>
@@ -421,13 +471,13 @@ async function label_N2(u = {}, p = {}, x, y, max_width = 100, lines = [""], row
     svg = setText(svg, label_type, reg_label);
 
     //插入图片
-    const avatar = await getAvatar(u);
-    svg = setImage(svg, 0, 0, 40, 40, avatar, reg_avatar, 1);
+    const av = avatar ?? await getAvatar(u);
+    svg = setImage(svg, 0, 0, 40, 40, av, reg_avatar, 1);
 
     return getSvgBody(x, y, svg.toString());
 }
 
-async function label_N3(u = {}) {
+async function label_N3(u = {}, avatar = null) {
     //导入模板
     let svg = `  <defs>
     <clipPath id="clippath-LN3-1">
@@ -453,13 +503,13 @@ async function label_N3(u = {}) {
     svg = setText(svg, label_color, reg_label);
 
     //插入图片
-    const avatar = await getAvatar(u);
-    svg = setImage(svg, 0, 0, 45, 45, avatar, reg_avatar, 1);
+    const av = avatar ?? await getAvatar(u);
+    svg = setImage(svg, 0, 0, 45, 45, av, reg_avatar, 1);
 
     return svg;
 }
 
-async function label_N4(u = {}) {
+async function label_N4(u = {}, avatar = null) {
     //导入模板
     let svg = `  <defs>
     <clipPath id="clippath-LN4-1">
@@ -493,8 +543,8 @@ async function label_N4(u = {}) {
     svg = setText(svg, label_color, reg_label);
 
     //插入图片
-    const avatar = await getAvatar(u);
-    svg = setImage(svg, 13, 0, 70, 70, avatar, reg_avatar, 1);
+    const av = avatar ?? await getAvatar(u);
+    svg = setImage(svg, 13, 0, 70, 70, av, reg_avatar, 1);
 
     return svg;
 }
@@ -611,7 +661,7 @@ function renderMessage(x = 0, y = 0, size = 18, lines = [""], row = 1, color = '
 }
 
 //N2+ hype maxrow 是 1， 145， 300
-async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_row = 4, max_height = 360, max_width = 1060) {
+async function renderDiscussion(discussion = [], users = [], images = new Map(), x = 0, y = 0, max_row = 4, max_height = 360, max_width = 1060) {
     let out = "";
     let sum_x = 0;
     let sum_y = 0;
@@ -621,9 +671,11 @@ async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_ro
 
     for (const d of discussion) {
         let u = null;
-        for (const us of user) {
+        let a = null;
+        for (const us of users) {
             if (us.id === d.user_id) {
                 u = us;
+                a = images.get(`avatar_${d.user_id}`)
                 break;
             }
         }
@@ -659,7 +711,7 @@ async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_ro
         label_max_width = Math.max(label_max_width, split.font_width + 46 + 15); //46是头像和空隙，15是label之间的空隙
 
         //15是图片
-        out += await label_N2(u, d, sum_x, sum_y, label_max_width, text_lines, remain_row)
+        out += await label_N2(u, a, d, sum_x, sum_y, label_max_width, text_lines, remain_row)
 
         // 分段函数，row 和 高度 对应关系：1-50,2-65,3-85,4-105
         sum_y += (text_row <= 2) ? (35 + 15 * text_row) : (25 + 20 * text_row);
@@ -680,18 +732,18 @@ async function renderDiscussion(discussion = [], user = [], x = 0, y = 0, max_ro
 }
 
 //细分方法
-async function drawNominators(x, y, bn = [], slot_length) {
-    let out = "";
+async function drawNominators(x, y, bn = [], images, slot_length) {
+    let out = [];
     const half = (slot_length - 5) / 2;
 
     for (const i in bn) {
         const u = bn[i];
         const dx = x + (i * slot_length) + half - 50;
 
-        out += await label_N1(dx, y, u, slot_length);
+        out.push(await label_N1(dx, y, u, images.get(`avatar_${u.id}`), slot_length))
     }
 
-    return out;
+    return out.join('\n');
 }
 
 function drawIcons(isDraw = true, x, y, link) {

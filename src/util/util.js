@@ -1304,7 +1304,7 @@ export function setSvgBody(base = '', x = 0, y = 0, replace = '', reg = /.*/) {
  * 设置 svg 块。
  */
 export function getSvgBody(x = 0, y = 0, body = '') {
-    return `<g transform="translate(${x} ${y})">` + body + '</g>';
+    return `<g transform="translate(${x} ${y})">${body}</g>`;
 }
 
 export function getSvg(body = '', x = 0, y = 0, w = 1920, h = 1080, fill = 'white', viewbox_w = w, viewbox_h = h) {

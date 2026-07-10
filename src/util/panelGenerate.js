@@ -725,8 +725,8 @@ export const PanelGenerate = {
     },
 
 
-    beatMapSet2CardA2: async (s) => {
-        const background = await getMapBackground(s, 'cover');
+    beatmapset2CardA2: async (s, background = null) => {
+        const b = background ?? await getMapBackground(s, 'cover');
         const map_status = s?.status;
         const play_count = floors(s?.play_count, 2);
         const title1 = s?.title_unicode;
@@ -741,7 +741,7 @@ export const PanelGenerate = {
         const right3m = play_count.decimal
 
         return {
-            background: background,
+            background: b,
             map_status: map_status,
 
             title1: title1,
@@ -754,6 +754,9 @@ export const PanelGenerate = {
             right2: right2,
             right3b: right3b,
             right3m: right3m,
+
+            right3b_size: 60,
+            right3m_size: 48,
         };
     },
 
@@ -1660,13 +1663,13 @@ export const PanelGenerate = {
         }
     },
 
-    user2CardO1: async (user) => {
-        const background = await getBanner(user);
-        const avatar = await getAvatar(user);
+    user2CardO1: async (user, avatar = null, background = null) => {
+        const b = background ?? await getBanner(user);
+        const a = avatar ?? await getAvatar(user);
 
         return {
-            background,
-            avatar,
+            background: b,
+            avatar: a,
 
             name: user?.username || (user?.id ? "ID: " + user?.id : "Unknown"),
             groups: user?.groups || [],

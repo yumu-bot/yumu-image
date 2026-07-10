@@ -54,31 +54,32 @@ function endfieldMapper(text = '') {
         [0x5E, 0x2F],
         [0x3B, 0x3A],
         [0x5F, 0x2D],
-        [0x60, 0x5B]
+        [0x60, 0x5B],
+
+        [0x3000, 0x20], // space
+
     ]);
 
     let result = []
 
     for (let i = 0; i < text.length; i++) {
-        const code = text.charCodeAt(i)
+        let code = text.charCodeAt(i)
+
+        if (code >= 0xFF01 && code <= 0xFF5E) {
+            code -= 0xFEE0;
+        }
 
         if (defaultMapper.has(code)) {
             result.push(String.fromCharCode(defaultMapper.get(code)))
-        } else if (!isPrivateUse(code) && code >= 0x7B) {
+        } else if (code >= 0x7B) {
             result.push(mapper[code % 56] ?? '.')
         } else {
             // 情况 3: 其余情况直出原字符
-            result.push(text[i])
+            result.push(String.fromCharCode(code))
         }
     }
 
     return result.join('')
-}
-
-function isPrivateUse(code) {
-    return (code >= 0xE000 && code <= 0xF8FF) ||
-        (code >= 0xF0000 && code <= 0xFFFFF) ||
-        (code >= 0x100000 && code <= 0x10FFFF);
 }
 
 /** 获取多个字体组合成的字形
