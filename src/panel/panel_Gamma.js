@@ -177,7 +177,7 @@ const PanelGamma = {
 
     scoreVersion: async (score) => {
         const background = getImageFromV3('object-score-backimage-' + score.rank + '.webp');
-        const avatar = await getMapBackground(score, "list");
+        const avatar = await getMapBackground(score, "list@2x");
 
         /*
         // 成绩重计算

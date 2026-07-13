@@ -316,7 +316,7 @@ export async function panel_M(data = {
                 approval: v.approval,
                 title: v.beatmapset.title,
                 time: delta_time,
-                background: v.beatmapset?.covers?.list || ('https://assets.ppy.sh/beatmaps/' + v.beatmapset.id + '/covers/list.jpg'),
+                background: v.beatmapset?.covers?.['list@2x']  || ('https://assets.ppy.sh/beatmaps/' + v.beatmapset.id + '/covers/list@2x.jpg'),
             })
         })
     ).then(results => thenPush(results, cardO4s))

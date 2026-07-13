@@ -347,7 +347,7 @@ export async function panel_B3(data = {
         const values = order.map(key => my?.difficulty?.[key]);
         const vs_values = order.map(key => others?.difficulty?.[key]);
 
-        banner = await getMapBackground(me, 'list');
+        banner = await getMapBackground(me, 'list@2x');
 
         if (isVs) {
             graph_right = order.map(key =>

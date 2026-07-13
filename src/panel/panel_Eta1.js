@@ -557,7 +557,7 @@ const component_Eta2 = (data = {
 const PanelEta1Generate = {
     score2componentEta1: async (score) => {
         return {
-            cover: await getMapBackground(score, 'list'),
+            cover: await getMapBackground(score, 'list@2x'),
 
             title: score?.beatmapset?.title,
             title_unicode: score?.beatmapset?.title_unicode,

@@ -86,7 +86,7 @@ export const beatmapset2Task = (
     beatmapset = {},
     id,
     targetSet,
-    type = 'list',
+    type = 'list@2x',
 ) => {
     const finalID = id ?? (beatmapset.beatmapset_id ?? beatmapset?.beatmapset?.id ?? beatmapset?.id);
     const finalSet = targetSet ?? beatmapset;
@@ -108,14 +108,14 @@ export const beatmapsets2Task = (
     beatmapsets = [],
     idFn = (set) => set.beatmapset_id ?? set?.beatmapset?.id ?? set?.id,
     setFn = (set) => set?.beatmapset ?? set,
-    type = 'list',
+    type = 'list@2x',
 ) => {
     return (beatmapsets ?? []).map(set =>
         beatmapset2Task(set, idFn(set), setFn(set), type)
     );
 };
 
-export const scores2Task = (scores = [], cover_type = 'list') => {
+export const scores2Task = (scores = [], cover_type = 'list@2x') => {
     return scores.map(
         (score) => toTask(cover_type, score.beatmapset_id ?? score?.beatmapset?.id,
             () => getMapBackground(score, cover_type)

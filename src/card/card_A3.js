@@ -96,7 +96,7 @@ export async function card_A3(beatmapset = {}) {
         225, 130, 24, 'left baseline', '#ccc'
     )
 
-    const image = await getMapBackground(beatmapset, 'list')
+    const image = await getMapBackground(beatmapset, 'list@2x')
 
     const fav = label_A8({
         image: getImageFromV3('object-beatmap-favorite.png'),

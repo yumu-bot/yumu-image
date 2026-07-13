@@ -148,7 +148,7 @@ const bp2CardK = async (bp, bp_ranking = 1) => {
     //随便搞个颜色，就不需要去获取一遍谱面了
 
     return {
-        map_background: await getMapBackground(bp, 'list'),
+        map_background: await getMapBackground(bp, 'list@2x'),
         star_rating: bp?.beatmap?.difficulty_rating || 0,
         score_rank: bp?.rank || 0,
         bp_ranking: bp_ranking, //感觉暂时不使用这个也可以

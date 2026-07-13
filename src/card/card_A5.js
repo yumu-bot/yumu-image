@@ -357,7 +357,7 @@ export async function card_A5(s = {
 
     //导入背景
 
-    const background = await getMapBackground(s, 'list');
+    const background = await getMapBackground(s, 'list@2x');
     svg = setImage(svg, 0, 0, 1370, 210, background, reg_background, 0.5);
 
     return svg;

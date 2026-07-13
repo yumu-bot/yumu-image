@@ -13,6 +13,8 @@ export const DEFAULT_IMAGE_FORMAT = process.env.IMAGE_FORMAT ?? DEFAULT_BASE_FOR
 
 export const ADVANCED_IMAGE_FORMAT = process.env.ADVANCED_FORMAT ?? DEFAULT_ADVANCED_FORMAT
 
+const FILE_SIZE_THRESHOLD = 64 * 1024;
+
 const exportsJPEG = new API(new JPEGProvider());
 const exportsPNG = new API(new PNGProvider());
 const exportsWEBP = new API(new WEBPProvider());
@@ -239,37 +241,49 @@ export async function convertPicture(buffer, target_format = 'webp', from_format
     }
 }
 
-export async function compressPicture2Webp(buffer, max_width = 1920, max_height = null) {
+/**
+ * 大文件尝试压缩到 webp，小文件不做压缩
+ * @param buffer
+ * @param max_width
+ * @param max_height
+ * @param max_file_size {number}
+ * @return {Promise<*>}
+ */
+export async function compressLargePicture2Webp(buffer, max_width = 1920, max_height = null, max_file_size = FILE_SIZE_THRESHOLD) {
     try {
-        let pipeline = sharp(buffer, { pages: 1 });
+        if (buffer.length <= max_file_size) {
+            return buffer;
+        }
+
+        let pipeline = sharp(buffer, { animated: true });
         const meta = await pipeline.metadata();
 
         if (!meta.format || !meta.width || !meta.height) {
-            return buffer;
+            return buffer; // 无效图片，返回原图
         }
 
+        // 3. 判断是否需要缩放
         const src_width = meta.width;
         const src_height = meta.height;
 
-        let final_width = max_width;
-        let final_height = max_height;
+        const over_dimensions = (max_width && src_width > max_width) ||
+            (max_height && src_height > max_height);
 
-        const need_resize = (final_width && src_width > final_width) || (final_height && src_height > final_height);
-
-        if (meta.format === 'webp' && !need_resize) {
+        if (meta.format === 'webp' && !over_dimensions) {
             return buffer;
-        }
-
-        if (need_resize) {
+        } else if (over_dimensions) {
             pipeline = pipeline.resize({
-                width: final_width || undefined,
-                height: final_height || undefined,
+                width: max_width || undefined,
+                height: max_width || undefined,
                 fit: 'inside',
                 withoutEnlargement: true
             });
         }
 
-        const isLosslessFormat = meta.format === 'png' || meta.format === 'gif';
+        const isLosslessFormat =
+            meta.format === 'png'
+            || meta.format === 'gif'
+            || (meta.format === 'webp' && isLosslessWebP(buffer));
 
         if (isLosslessFormat) {
             return await pipeline
@@ -391,6 +405,26 @@ function getMimeType(buffer) {
     }
 
     return 'image/png'; // 默认兜底
+}
+
+function isLosslessWebP(imageBuffer) {
+    try {
+        // 将 Buffer 前 12 个字节转为字符串以便检查
+        const header = imageBuffer.slice(0, 12).toString('ASCII');
+
+        // 检查是否为 WebP 格式
+        if (!header.startsWith('RIFF') || !header.endsWith('WEBP')) {
+            return false; // 不是 WebP 格式
+        }
+
+        // 关键一步：检查第 12 个字节（索引 12）开始的 4 个字符
+        // 如果是 'VP8L' 则为无损，如果是 'VP8 ' 则为有损
+        const chunkType = imageBuffer.slice(12, 16).toString('ascii');
+        return chunkType === 'VP8L';
+    } catch (error) {
+        console.error('检测 WebP 格式失败:', error);
+        return false;
+    }
 }
 
 /**

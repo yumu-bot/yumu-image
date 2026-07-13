@@ -157,7 +157,7 @@ async function playerData2CardH(p = {}) {
 async function seriesRating2CardA2(sr){
     const star = floor(sr?.average_star || 0, 2);
 
-    const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + sr?.first_map_sid + '/covers/list.jpg', true);
+    const background = await readNetImage('https://assets.ppy.sh/beatmaps/' + sr?.first_map_sid + '/covers/list@2x.jpg', true);
 
     const title = sr?.statistics?.name || "";
     let title1, title2;

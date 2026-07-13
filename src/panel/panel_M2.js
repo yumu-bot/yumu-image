@@ -838,7 +838,7 @@ const PanelMGenerate = {
             const bottom = `${time_diff} // ${full_width ? ActivityConfig.getOperate(type, approval) : ActivityConfig.getAbbreviation(type, approval)}`
 
             const data = {
-                image: images.get(`list_${id}`),
+                image: images.get(`list@2x${id}`),
                 top: top,
                 bottom: bottom,
 
@@ -895,7 +895,7 @@ const PanelMGenerate = {
             })
 
             const data = {
-                image: images.get(`list_${id}`),
+                image: images.get(`list@2x${id}`),
                 top: top,
                 bottom: undefined,
 
@@ -969,14 +969,14 @@ const beatmapset2CardD2s = async (beatmapsets, images) => {
 
         const favourite = round(s?.favourite_count, 1)
 
-        const cachedBg = images.get(`list_${s.id}`);
+        const cachedBg = images.get(`list@2x${s.id}`);
 
         /**
          * @type {Promise<*>}
          */
         const background = cachedBg
             ? Promise.resolve(cachedBg)
-            : getMapBackground(s, 'list');
+            : getMapBackground(s, 'list@2x');
 
         const data = {
             background: background,

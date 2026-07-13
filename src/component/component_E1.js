@@ -61,7 +61,7 @@ export async function component_E1(data = {
     // 图片定义
     const hexagon = getImageFromV3('object-beatmap-hexagon.png');
     // const cover = await readNetImage(data.cover, hasLeaderBoard(data.ranked));
-    // const cover = await getDiffBG(data.bid, data.sid, 'list', hasLeaderBoard(data.ranked));
+    // const cover = await getDiffBG(data.bid, data.sid, 'list@2x', hasLeaderBoard(data.ranked));
     const cover = await readNetImage(data.cover, hasLeaderBoard(data.ranked));
     const status = getMapStatusImage(data.status);
 

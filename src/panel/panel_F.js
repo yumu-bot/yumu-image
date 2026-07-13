@@ -209,7 +209,7 @@ export async function panel_F(
     // 导入比赛简介卡（A2卡
     const first_beatmap = beatmaps?.[0]
 
-    const info_a2 = card_A2(await PanelGenerate.matchRating2CardA2(match, first_beatmap, false, images.get(`list_${first_beatmap?.beatmapset?.id}`)));
+    const info_a2 = card_A2(await PanelGenerate.matchRating2CardA2(match, first_beatmap, false, images.get(`list@2x${first_beatmap?.beatmapset?.id}`)));
     svg = setSvgBody(svg, 40, 40, info_a2, reg_maincard);
 
     return svg;

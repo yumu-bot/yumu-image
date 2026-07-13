@@ -528,7 +528,7 @@ const component_T4 = (attr = [], max_percent = 1) => {
 }
 
 async function popularInfo2cardA2(info = {}, beatmap = {}) {
-    const background = await getMapBackground(beatmap, 'list')
+    const background = await getMapBackground(beatmap, 'list@2x')
     const right3b = (info?.player_count || 0).toString()
 
     return {
@@ -598,8 +598,8 @@ async function popularBeatmap2cardH(popular = {
     beatmap: {}
 }, identifier = 1) {
 
-    const cover = await getMapBackground(popular?.beatmap, 'list');
-    const background = await getMapBackground(popular?.beatmap, 'list');
+    const cover = await getMapBackground(popular?.beatmap, 'list@2x');
+    const background = await getMapBackground(popular?.beatmap, 'list@2x');
 
     const acc = floor((popular?.accuracy * 100), 2) + '%'
     const combo = (popular.combo || 0) + 'x'

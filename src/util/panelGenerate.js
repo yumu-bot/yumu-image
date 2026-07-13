@@ -613,7 +613,7 @@ export const PanelGenerate = {
 
         const sid = match?.first_map_sid || beatmap?.beatmapset?.id || 0
         const background = beatmap_background ?? (beatmap != null ? await getDiffBackground(beatmap) :
-            await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list.jpg', true))
+            await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list@2x.jpg', true))
 
         const split = getMatchNameSplitted(stat?.name)
 
@@ -672,7 +672,7 @@ export const PanelGenerate = {
     },
 
     beatmap2CardA2: async (b) => {
-        const background = await getMapBackground(b, 'list');
+        const background = await getMapBackground(b, 'list@2x');
         const map_status = b.status;
         const sr = floors(b.difficulty_rating, 2)
         const title1 = b.beatmapset.title;
@@ -763,7 +763,7 @@ export const PanelGenerate = {
     matchBeatMap2CardA2: async (b = {}, images = new Map()) => {
         const set = b?.beatmapset ?? {}
 
-        const background = images.get(`list_${set.id}`) ?? await getMapBackground(b, 'list');
+        const background = images.get(`list@2x${set.id}`) ?? await getMapBackground(b, 'list@2x');
 
         const title1 = set?.title || 'Deleted Beatmap';
         const title2 = set?.artist || '-';
@@ -822,7 +822,7 @@ export const PanelGenerate = {
     searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset, last_beatmapset) => {
         const background = cursor ?
             await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor?.id + '/covers/list.jpg', true) :
-            await readNetImage(first_beatmapset?.covers?.list || last_beatmapset?.covers?.list, true);
+            await readNetImage(first_beatmapset?.covers?.['list@2x'] || last_beatmapset?.covers?.['list@2x'] , true);
         const map_status = rule;
         const title1 = 'Search:';
         const title2 = search ? 'Sort: ' + search.sort : "Sort: Default";
@@ -863,7 +863,7 @@ export const PanelGenerate = {
 
         const has_leaderboard = hasLeaderBoard(ranked)
 
-        const background = await getMapBackground(s, 'list');
+        const background = await getMapBackground(s, 'list@2x');
 
         const map_status = s?.status || 'graveyard';
 
@@ -989,7 +989,7 @@ export const PanelGenerate = {
             const time = getTime(s?.beatmap?.total_length)
 
             const data = {
-                background: getMapBackground(s, 'list'),
+                background: getMapBackground(s, 'list@2x'),
                 title: Math.round(s?.pp).toString() || '0',
                 title_m: 'PP',
 
@@ -1019,7 +1019,7 @@ export const PanelGenerate = {
     score2CardC: async (s, identifier = 1, cover = null, background = null) => {
         const results = (cover === null || background === null)
             ? await Promise.allSettled([
-                getMapBackground(s, 'list'),
+                getMapBackground(s, 'list@2x'),
                 getMapBackground(s, 'cover')
             ]) : [];
 
@@ -1158,7 +1158,7 @@ export const PanelGenerate = {
     },
 
     mostPlayed2CardC: async (mp, identifier = 1) => {
-        const cover = await getMapBackground(mp, 'list');
+        const cover = await getMapBackground(mp, 'list@2x');
         const background = await getMapBackground(mp, 'cover');
 
         const difficulty_name = mp.version ? torus.cutStringTail(
@@ -1299,7 +1299,7 @@ export const PanelGenerate = {
 
     score2CardC3: async (score, index = 1, decrypted = false) => {
         const results = await Promise.allSettled([
-            getMapBackground(score, 'list'),
+            getMapBackground(score, 'list@2x'),
             getMapBackground(score, 'cover')
         ]);
 
@@ -1345,7 +1345,7 @@ export const PanelGenerate = {
     },
 
     skill2CardK: async (skill = {score: {}, skill: []}) => {
-        const background = await getMapBackground(skill.score, 'list');
+        const background = await getMapBackground(skill.score, 'list@2x');
 
         return {
             background: background,
@@ -1360,7 +1360,7 @@ export const PanelGenerate = {
     },
 
     bp2ComponentJ: async (bp) => {
-        const background = await getMapBackground(bp, 'list');
+        const background = await getMapBackground(bp, 'list@2x');
 
         return {
             cover: background,
@@ -1488,7 +1488,7 @@ export const PanelGenerate = {
     },
 
     score2CardI4: async (s, identifier = 1, cover = null) => {
-        const cv = cover ?? await getMapBackground(s, 'list')
+        const cv = cover ?? await getMapBackground(s, 'list@2x')
 
         const rank_color = getRankColors(s?.legacy_rank)
         const type = getScoreTypeImage(s.is_lazer)
@@ -1679,7 +1679,7 @@ export const PanelGenerate = {
     beatmap2ComponentIM: async (s) => {
         if (!s) return '';
 
-        const background = await getMapBackground(s, 'list');
+        const background = await getMapBackground(s, 'list@2x');
         const map_status = s?.status;
         const play_count = floors(s?.play_count, 1)
         const title1 = s?.title_unicode || s?.title;
