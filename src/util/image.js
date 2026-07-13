@@ -255,7 +255,11 @@ export async function compressLargePicture2Webp(buffer, max_width = 1920, max_he
             return buffer;
         }
 
-        let pipeline = sharp(buffer, { animated: true });
+        let pipeline = sharp(buffer, {
+            animated: true,
+            pages: -1,
+            limitInputPixels: true
+        });
         const meta = await pipeline.metadata();
 
         if (!meta.format || !meta.width || !meta.height) {
@@ -274,31 +278,45 @@ export async function compressLargePicture2Webp(buffer, max_width = 1920, max_he
         } else if (over_dimensions) {
             pipeline = pipeline.resize({
                 width: max_width || undefined,
-                height: max_width || undefined,
+                height: max_height || undefined,
                 fit: 'inside',
                 withoutEnlargement: true
             });
         }
 
-        const isLosslessFormat =
-            meta.format === 'png'
-            || meta.format === 'gif'
-            || (meta.format === 'webp' && isLosslessWebP(buffer));
+        const isLosslessFormat = meta.format === 'gif' || meta.format === 'png'  || (meta.format === 'webp' && isLosslessWebP(buffer));
 
         if (isLosslessFormat) {
+            const options = {
+                lossless: true,
+                effort: 6,
+                loop: meta.loop || 0  // 保持循环设置
+            };
+
+
+            // 只有在有延迟数据时才设置
+            if (meta.delay) {
+                options.delay = Array.isArray(meta.delay) ? meta.delay : [meta.delay];
+            }
+
             return await pipeline
-                .webp({
-                    lossless: true,
-                    effort: 6
-                })
+                .webp(options)
                 .toBuffer();
         } else {
+            const options = {
+                quality: 90,
+                effort: 6,
+                alphaQuality: 80,
+                loop: meta.loop || 0
+            };
+
+            // 只有在有延迟数据时才设置
+            if (meta.delay) {
+                options.delay = Array.isArray(meta.delay) ? meta.delay : [meta.delay];
+            }
+
             return await pipeline
-                .webp({
-                    quality: 90,
-                    effort: 6,
-                    alphaQuality: 80
-                })
+                .webp(options)
                 .toBuffer();
         }
 
