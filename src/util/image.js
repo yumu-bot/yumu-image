@@ -220,15 +220,37 @@ export async function isPictureIntact(path = '', fails_delete = true) {
     }
 }
 
+const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
+
+/**
+ * 通过读取文件头（前8字节）判断是否为 PNG/APNG
+ * 此方法不依赖任何图像处理库，只检查文件签名
+ *
+ */
 export async function isPicturePng(path = '') {
-    if (!path || typeof path !== 'string' || path.trim() === '') return false;
+    if (!path || typeof path !== 'string' || path.trim() === '') {
+        return false;
+    }
 
     try {
-        const metadata = await sharp(path).metadata();
-        // sharp 会将标准 PNG 和 APNG 都识别为 'png'
-        return metadata.format === 'png';
+        // 只读取前8个字节就够了
+        const fileHandle = await fs.promises.open(path, 'r');
+        try {
+            const buffer = Buffer.alloc(8);
+            const { bytesRead } = await fileHandle.read(buffer, 0, 8, 0);
+
+            // 如果文件 小于8字节，肯定不是合法PNG
+            if (bytesRead < 8) {
+                return false;
+            }
+
+            // 比较文件签名
+            return buffer.equals(PNG_SIGNATURE);
+        } finally {
+            await fileHandle.close();
+        }
     } catch (e) {
-        // 文件不存在或文件损坏
+        // 文件不存在、无权限或其他IO错误
         return false;
     }
 }
@@ -297,6 +319,11 @@ export async function compressLargePicture2Webp(buffer, max_width = 1920, max_he
         });
         const meta = await pipeline.metadata();
 
+        // sharp 对 apng 的支持不好
+        if (meta.format === 'png' && await isApng(buffer)) {
+            return buffer
+        }
+
         if (!meta.format || !meta.width || !meta.height) {
             return buffer; // 无效图片，返回原图
         }
@@ -319,7 +346,7 @@ export async function compressLargePicture2Webp(buffer, max_width = 1920, max_he
             });
         }
 
-        const isLosslessFormat = meta.format === 'gif' || meta.format === 'png'  || (meta.format === 'webp' && isLosslessWebP(buffer));
+        const isLosslessFormat = meta.format === 'gif' || (meta.format === 'webp' && isLosslessWebP(buffer));
 
         if (isLosslessFormat) {
             const options = {
@@ -415,6 +442,13 @@ export async function compressPicture(buffer, max_width = 1920, max_height = nul
 
 }
 
+/**
+ *
+ * @param background 背景图片，需要大一点
+ * @param animated 放在前面的动态图
+ * @param options 设置动态图的位置宽高，以及成图的质量
+ * @return {Promise<*>}
+ */
 export async function compositeToWebP(background, animated, options = {}) {
     const {
         x = 0,
@@ -430,34 +464,33 @@ export async function compositeToWebP(background, animated, options = {}) {
     const background_buffer = await sharp(background).toBuffer();
 
     // 2. 先获取 animated 的基础元数据
-    const animated_metadata = await sharp(animated, { animated: true }).metadata();
-
-    let pages = animated_metadata.pages ?? 1;
-    let delays = animated_metadata.delay || Array(pages).fill(100);
     let apng_frames = null;
 
     // 3. 核心修正：如果格式是 PNG，通过 upng-js 重新验证它是否为 APNG
-    if (animated_metadata.format === 'png') {
+    let animated_buffer;
+
+    function streamToBuffer(stream) {
+        return new Promise((resolve, reject) => {
+            const chunks = [];
+            stream.on('data', (chunk) => chunks.push(chunk));
+            stream.on('end', () => resolve(Buffer.concat(chunks)));
+            stream.on('error', (err) => reject(err));
+        });
+    }
+
+    if (Buffer.isBuffer(animated)) {
+        animated_buffer = animated;
+    } else if (typeof animated === 'string') {
+        animated_buffer = await fs.promises.readFile(animated);
+    } else if (animated && typeof animated.pipe === 'function') {
+        animated_buffer = await streamToBuffer(animated);
+    }
+
+    let pages
+    let delays
+
+    if (isApngFromBuffer(animated_buffer)) {
         // 确保转换为 Buffer 供 UPNG 解码
-        let animated_buffer;
-
-        function streamToBuffer(stream) {
-            return new Promise((resolve, reject) => {
-                const chunks = [];
-                stream.on('data', (chunk) => chunks.push(chunk));
-                stream.on('end', () => resolve(Buffer.concat(chunks)));
-                stream.on('error', (err) => reject(err));
-            });
-        }
-
-        if (Buffer.isBuffer(animated)) {
-            animated_buffer = animated;
-        } else if (typeof animated === 'string') {
-            animated_buffer = await fs.promises.readFile(animated);
-        } else if (animated && typeof animated.pipe === 'function') {
-            animated_buffer = await streamToBuffer(animated);
-        }
-
         const img = UPNG.decode(animated_buffer);
 
         // 如果 upng 解出来帧数大于 1，说明这确实是一个 APNG
@@ -476,6 +509,12 @@ export async function compositeToWebP(background, animated, options = {}) {
                 }).png();
             });
         }
+    } else {
+        // 原来的获取
+        const animated_metadata = await sharp(animated, { animated: true }).metadata();
+
+        pages = animated_metadata.pages ?? 1;
+        delays = animated_metadata.delay || Array(pages).fill(100);
     }
 
     await WebP.Image.initLib();
@@ -600,6 +639,73 @@ function isLosslessWebP(imageBuffer) {
         console.error('检测 WebP 格式失败:', error);
         return false;
     }
+}
+
+/**
+ * 通过读取 PNG 内部数据块，判断是否为 APNG
+ * @param input {string | Buffer}
+ * @returns true 表示是 APNG，false 表示是静态 PNG 或非 PNG
+ */
+export async function isApng(input) {
+    let buffer;
+
+    if (typeof input === 'string') {
+        // 读取整个文件，但只解析到找到 acTL 为止
+        // 实际上我们可以只读取前 1MB，因为 acTL 通常在文件开头
+        const fileHandle = await fs.promises.open(input, 'r');
+        try {
+            // 读取前 1MB 足够，acTL 通常在前几个数据块中
+            buffer = Buffer.alloc(1024 * 1024);
+            const { bytesRead } = await fileHandle.read(buffer, 0, buffer.length, 0);
+            buffer = buffer.subarray(0, bytesRead);
+        } finally {
+            await fileHandle.close();
+        }
+    } else {
+        buffer = input;
+    }
+
+    return isApngFromBuffer(buffer);
+}
+
+/**
+ *
+ * 从 Buffer 判断是否为 APNG
+ * 通过查找 PNG 数据块中的 acTL（动画控制块）
+ * @param buffer {Buffer}
+ */
+export function isApngFromBuffer(buffer) {
+    // 1. 检查 PNG 签名 (8字节)
+    const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
+    if (!buffer.subarray(0, 8).equals(PNG_SIGNATURE)) {
+        return false; // 不是 PNG
+    }
+
+    // 2. 从第 8 字节开始解析数据块
+    let offset = 8;
+
+    while (offset + 12 <= buffer.length) {
+        // 每个数据块结构: [长度:4] [类型:4] [数据:长度] [CRC:4]
+        const chunkLength = buffer.readUInt32BE(offset);
+        const chunkType = buffer.subarray(offset + 4, offset + 8).toString('ascii');
+
+        // 3. 如果找到 acTL 块，说明是 APNG
+        if (chunkType === 'acTL') {
+            return true;
+        }
+
+        // 4. 如果遇到 IEND 块，还没有 acTL，说明是静态 PNG
+        if (chunkType === 'IEND') {
+            return false;
+        }
+
+        // 5. 移动到下一个数据块（长度 + 类型 + 数据 + CRC）
+        // 注意：数据块长度 = chunkLength，加上 4(长度) + 4(类型) + 4(CRC) = 12 字节头部/尾部
+        offset += 12 + chunkLength;
+    }
+
+    // 如果扫描完还没找到 acTL，默认不是 APNG
+    return false;
 }
 
 /**

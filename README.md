@@ -58,7 +58,7 @@ export USE_PROXY=true
 export OSUFILE_NO_PROXY=true
 
 echo "安装依赖..."
-npm install --production
+npm install --omit=dev
 echo "依赖安装完成"
 
 if pm2 describe main > /dev/null 2>&1
