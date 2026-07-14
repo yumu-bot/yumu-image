@@ -602,6 +602,30 @@ export function readFile(path = '', options = 'binary') {
 }
 
 /**
+ *
+ * @param pathOrBufferLike {String | Buffer}
+ */
+export function getBuffer(pathOrBufferLike) {
+    if (Buffer.isBuffer(pathOrBufferLike)) {
+        return pathOrBufferLike;
+    }
+
+    if (typeof pathOrBufferLike === 'string') {
+        if (pathOrBufferLike.startsWith('data:')) {
+            const base64Data = pathOrBufferLike.split(',')[1];
+            if (base64Data) {
+                return Buffer.from(base64Data, 'base64');
+            }
+            throw new Error('Invalid base64 data URL');
+        }
+
+        return readFile(pathOrBufferLike, 'binary');
+    }
+
+    throw new Error('参数必须是 Buffer 或字符串');
+}
+
+/**
  * 获取来自 v3 的图片流，会缓存
  * 可以用于读取 svg 图片
  * @param paths

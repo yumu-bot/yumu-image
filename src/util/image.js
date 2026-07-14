@@ -4,6 +4,7 @@ import WEBPProvider from '../svg-to-image/WEBPProvider.js';
 import {API} from "../svg-to-image/API.js";
 import sharp from "sharp";
 import fs from "fs";
+import WebP from "node-webpmux";
 
 const DEFAULT_BASE_FORMAT = 'jpeg'
 
@@ -113,6 +114,35 @@ async function handleRouter(res, contentType, callback) {
         }
     }
 }
+
+
+
+
+/**
+ * 图像路由工厂
+ * @param {Function} panelFn - 对应的面板生成函数，如 panel_B1, panel_A2 等
+ * @param {Function} [data_loader] - 可选的闭包/回调函数，用于自定义如何从 req 中提取数据
+ * @param {string} format - 格式，支持 jpeg，png，webp
+ */
+export function createBufferRouter(panelFn, data_loader = (req) => req.fields || {}, format = 'webp') {
+    const mime = getExporter(format).mime
+
+    return async (req, res) => {
+        await handleRouter(res, mime, async () => {
+            let data = await data_loader(req, res);
+
+            if (data === null) {
+                return;
+            }
+
+            const buffer = await panelFn(data);
+
+            res.set('Content-Type', mime);
+            res.send(buffer);
+        });
+    };
+}
+
 /**
  * 图像路由工厂
  * @param {Function} panelFn - 对应的面板生成函数，如 panel_B1, panel_A2 等
@@ -383,6 +413,74 @@ export async function compressPicture(buffer, max_width = 1920, max_height = nul
     }
 
 }
+
+export async function compositeToWebP(background, animated, options = {}) {
+    const {
+        x = 0,
+        y = 0,
+        width = null,
+        height = null,
+        quality = 90,
+        loop = 0
+    } = options;
+
+    // 1. 获取动图与背景的元数据
+    const animated_metadata = await sharp(animated, { animated: true }).metadata();
+    const bg_metadata = await sharp(background).metadata();
+
+    const pages = animated_metadata.pages ?? 1;
+    const delays = animated_metadata.delay || Array(pages).fill(100);
+
+    const background_buffer = await sharp(background).toBuffer();
+
+    await WebP.Image.initLib();
+
+    const frames = [];
+
+    for (let i = 0; i < pages; i++) {
+        let frame_pipeline = sharp(animated, {
+            animated: true,
+            page: i,
+            pages: 1
+        });
+
+        if (width || height) {
+            frame_pipeline = frame_pipeline.resize({
+                width: width || undefined,
+                height: height || undefined,
+                fit: 'inside'
+            });
+        }
+
+        const frame_buffer = await frame_pipeline.webp({ lossless: true }).toBuffer();
+
+        const composite_webp_buffer = await sharp(background_buffer)
+            .composite([{ input: frame_buffer, left: x, top: y }])
+            .webp({ quality: quality })
+            .toBuffer();
+
+        const current_delay = Array.isArray(delays) ? (delays[i] || 100) : delays;
+
+        const frame_generated = await WebP.Image.generateFrame({
+            buffer: composite_webp_buffer,
+            delay: current_delay,
+            x: 0,
+            y: 0,
+            blend: true,
+            dispose: false
+        });
+
+        frames.push(frame_generated);
+    }
+
+    return await WebP.Image.save(null, {
+        width: bg_metadata.width,
+        height: bg_metadata.height,
+        frames: frames,
+        loops: loop
+    });
+}
+
 
 function getExporter(format) {
     const fmt = format.toLowerCase();

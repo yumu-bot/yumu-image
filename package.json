@@ -18,6 +18,7 @@
     "image-size": "^1.1.1",
     "lru-cache": "^11.5.1",
     "moment": "^2.29.4",
+    "node-webpmux": "^3.2.1",
     "pollock": "^0.2.1",
     "puppeteer": "^25.1.0",
     "puppeteer-extra": "^3.3.6",
