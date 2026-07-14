@@ -5,6 +5,7 @@ import {API} from "../svg-to-image/API.js";
 import sharp from "sharp";
 import fs from "fs";
 import WebP from "node-webpmux";
+import UPNG from 'upng-js';
 
 const DEFAULT_BASE_FORMAT = 'jpeg'
 
@@ -424,26 +425,79 @@ export async function compositeToWebP(background, animated, options = {}) {
         loop = 0
     } = options;
 
-    // 1. 获取动图与背景的元数据
-    const animated_metadata = await sharp(animated, { animated: true }).metadata();
+    // 1. 获取背景的元数据和 Buffer
     const bg_metadata = await sharp(background).metadata();
-
-    const pages = animated_metadata.pages ?? 1;
-    const delays = animated_metadata.delay || Array(pages).fill(100);
-
     const background_buffer = await sharp(background).toBuffer();
 
-    await WebP.Image.initLib();
+    // 2. 先获取 animated 的基础元数据
+    const animated_metadata = await sharp(animated, { animated: true }).metadata();
 
+    let pages = animated_metadata.pages ?? 1;
+    let delays = animated_metadata.delay || Array(pages).fill(100);
+    let apng_frames = null;
+
+    // 3. 核心修正：如果格式是 PNG，通过 upng-js 重新验证它是否为 APNG
+    if (animated_metadata.format === 'png') {
+        // 确保转换为 Buffer 供 UPNG 解码
+        let animated_buffer;
+
+        function streamToBuffer(stream) {
+            return new Promise((resolve, reject) => {
+                const chunks = [];
+                stream.on('data', (chunk) => chunks.push(chunk));
+                stream.on('end', () => resolve(Buffer.concat(chunks)));
+                stream.on('error', (err) => reject(err));
+            });
+        }
+
+        if (Buffer.isBuffer(animated)) {
+            animated_buffer = animated;
+        } else if (typeof animated === 'string') {
+            animated_buffer = await fs.promises.readFile(animated);
+        } else if (animated && typeof animated.pipe === 'function') {
+            animated_buffer = await streamToBuffer(animated);
+        }
+
+        const img = UPNG.decode(animated_buffer);
+
+        // 如果 upng 解出来帧数大于 1，说明这确实是一个 APNG
+        if (img.frames && img.frames.length > 1) {
+            pages = img.frames.length;
+            delays = img.frames.map(f => f.delay);
+
+            // 将 APNG 的每帧 RGBA 像素数据包装为 sharp 认识的单帧 PNG
+            apng_frames = UPNG.toRGBA8(img).map((rgba8Frame) => {
+                return sharp(Buffer.from(rgba8Frame), {
+                    raw: {
+                        width: img.width,
+                        height: img.height,
+                        channels: 4
+                    }
+                }).png();
+            });
+        }
+    }
+
+    await WebP.Image.initLib();
     const frames = [];
 
+    // 4. 逐帧合成
     for (let i = 0; i < pages; i++) {
-        let frame_pipeline = sharp(animated, {
-            animated: true,
-            page: i,
-            pages: 1
-        });
+        let frame_pipeline;
 
+        if (apng_frames) {
+            // APNG 分支：直接使用 upng-js 拆解出来的单帧 sharp 实例
+            frame_pipeline = apng_frames[i];
+        } else {
+            // GIF / WebP 分支：使用 sharp 原生的逐帧读取
+            frame_pipeline = sharp(animated, {
+                animated: true,
+                page: i,
+                pages: 1
+            });
+        }
+
+        // 尺寸缩放
         if (width || height) {
             frame_pipeline = frame_pipeline.resize({
                 width: width || undefined,
@@ -454,6 +508,7 @@ export async function compositeToWebP(background, animated, options = {}) {
 
         const frame_buffer = await frame_pipeline.webp({ lossless: true }).toBuffer();
 
+        // 与背景合成
         const composite_webp_buffer = await sharp(background_buffer)
             .composite([{ input: frame_buffer, left: x, top: y }])
             .webp({ quality: quality })

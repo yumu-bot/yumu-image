@@ -43,10 +43,23 @@ npm start 也行。
 ### Linux 运行
 
 ```bash
+#!/usr/bin/zsh
+
+set -e
+
+cd /home/spring/code/nowbot_image/ || {
+    echo "无法访问 image 目录"
+    exit 1
+}
+
 export EXPORT_FILE=/home/spring/work/img/ExportFileV3
 export PORT=8388
 export USE_PROXY=true
 export OSUFILE_NO_PROXY=true
+
+echo "安装依赖..."
+npm install --production
+echo "依赖安装完成"
 
 if pm2 describe main > /dev/null 2>&1
 then
