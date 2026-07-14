@@ -2101,11 +2101,12 @@ export async function label_M1(data = {
     const reg_avatar = /(?<=<g id="Avatar_LM1" style="clip-path: url\(#clippath-LM1\);">)/;
 
     //定义文本
-    const diff_name_path = torus.getTextPath(
-        torus.cutStringTail(data.difficulty_name, 18, data.max_width - 50 - 10, true),
+    const diff_name_path = torusBold.getTextPath(
+        torusBold.cutStringTail(data.difficulty_name, 18, data.max_width - 50 - 10, true),
         50, 20, 18, 'left baseline', '#fff');
     const sr_number = floors(data.star_rating, 2)
-    const star_rating_path = torus.get2SizeTextPath(
+    const star_rating_width = torusBold.getTextWidth(sr_number.integer, 24) + torusBold.getTextWidth(sr_number.decimal, 18)
+    const star_rating_path = torusBold.get2SizeTextPath(
         sr_number.integer,
         sr_number.decimal,
         24,
@@ -2139,7 +2140,7 @@ export async function label_M1(data = {
     let sr_m_scale = Math.pow(sr.dec, 0.8);
 
     //超宽处理
-    const dot3 = torus.getTextPath('...',data.max_width - 18 ,44 ,18,'right baseline', '#BE2CFA');
+    const dot3 = torusBold.getTextPath('...',data.max_width - 18 ,44 ,18,'right baseline', '#BE2CFA');
 
     if (sr_b >= 10) {
         sr_b = 10;
@@ -2152,16 +2153,17 @@ export async function label_M1(data = {
         svg = setText(svg, dot3, reg_icon);
     }
 
+    const sr_offset = star_rating_width + 50 + 4
 
     for (let i = 1; i <= sr_b; i++) {
         let sr_b_svg = `<g style="clip-path: url(#clippath-PE-R${i});">
-            <image id="M1Label${i}Star" width="18" height="18" transform="translate(${15 * (i - 1) + 90} 26)" xlink:href="${data.star}"/>
+            <image id="M1Label${i}Star" width="18" height="18" transform="translate(${15 * (i - 1) + sr_offset} 26)" xlink:href="${data.star}"/>
         </g>`;
         svg = setText(svg, sr_b_svg, reg_icon);
     }
 
     const sr_m_svg = `<g style="clip-path: url(#clippath-PE-R${sr_b + 1});">
-        <image id="M1Label${sr_b + 1}Star" width="18" height="18" transform="translate(${15 * sr_b + 90} 26) translate(${9 * (1 - sr_m_scale)} ${9 * (1 - sr_m_scale)}) scale(${sr_m_scale})" xlink:href="${data.star}"/>
+        <image id="M1Label${sr_b + 1}Star" width="18" height="18" transform="translate(${15 * sr_b + sr_offset} 26) translate(${9 * (1 - sr_m_scale)} ${9 * (1 - sr_m_scale)}) scale(${sr_m_scale})" xlink:href="${data.star}"/>
         </g>`;
 
     svg = setText(svg, sr_m_svg, reg_icon);
@@ -2226,7 +2228,7 @@ export async function label_M2(data = {
         host_rrect_color = '#382E32';
     }
 
-    const host_text = torus.getTextPath(host, 15, 15.877, 18, 'center baseline', host_color);
+    const host_text = torusBold.getTextPath(host, 15, 15.877, 18, 'center baseline', host_color);
     const host_rrect = PanelDraw.Rect(0, 0, 30, 20, 10, host_rrect_color);
 
     // const name_width = torus.getTextWidth(data.uid, 18);
@@ -2279,11 +2281,11 @@ export async function label_M3(data = {
     const label3_x = hasLabel2 ? (interval + (label_width / 2)) : (interval / 2);
 
     //定义文本
-    const label1_text = torus.get2SizeTextPath(
+    const label1_text = torusBold.get2SizeTextPath(
         data.label1.data_b, data.label1.data_m, 24, 18, 30 + label1_x, 20, 'left baseline', '#fff');
-    const label2_text = torus.get2SizeTextPath(
+    const label2_text = torusBold.get2SizeTextPath(
         data.label2.data_b, data.label2.data_m, 24, 18, 30 + label2_x, 20, 'left baseline', '#fff');
-    const label3_text = torus.get2SizeTextPath(
+    const label3_text = torusBold.get2SizeTextPath(
         data.label3.data_b, data.label3.data_m, 24, 18, 30 + label3_x, 20, 'left baseline', '#fff');
 
     svg = setTexts(svg, [label1_text, label2_text, label3_text], reg_text);

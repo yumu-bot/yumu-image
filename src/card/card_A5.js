@@ -98,7 +98,7 @@ export async function card_A5(s = {
         },
     ],
     "pack_tags": []
-}) {
+}, images = new Map()) {
     // 读取模板
     let svg =`   <defs>
             <clipPath id="clippath-CM-1">
@@ -147,6 +147,7 @@ export async function card_A5(s = {
                     star: getImageFromV3('object-beatmap-star.png'),
                     has_avatar: false,
                     uid: v.user_id,
+                    avatar_url: images.get(`avatar_${v.user_id}`),
                 });
             })
         ).then(results => thenPush(results, labelM1s))
@@ -156,7 +157,7 @@ export async function card_A5(s = {
                 return label_M2({
                     host_id: s.user_id,
                     guest_id: v.user_id,
-                    avatar_url: v.user?.avatar_url,
+                    avatar_url: images.get(`avatar_${v.user_id}`),
                 });
             })
         ).then(results => thenPush(results, labelM2s))
@@ -220,7 +221,7 @@ export async function card_A5(s = {
                     star: getImageFromV3('object-beatmap-star.png'),
                     has_avatar: true,
                     user_id: v.user_id,
-                    avatar_url: v.user?.avatar_url,
+                    avatar_url: images.get(`avatar_${v.user_id}`),
                 });
             })
         ).then(results => thenPush(results, labelM1c))
@@ -238,7 +239,7 @@ export async function card_A5(s = {
                     star: getImageFromV3('object-beatmap-star.png'),
                     has_avatar: true,
                     user_id: v.user_id,
-                    avatar_url: v.user?.avatar_url,
+                    avatar_url: images.get(`avatar_${v.user_id}`),
                 });
             })
         ).then(results => thenPush(results, labelM1r))
@@ -257,6 +258,7 @@ export async function card_A5(s = {
                     star: getImageFromV3('object-beatmap-star.png'),
                     has_avatar: false,
                     uid: v.user_id,
+                    avatar_url: images.get(`avatar_${v.user_id}`),
                 });
             })
         ).then(results => thenPush(results, labelM1s))
@@ -266,7 +268,7 @@ export async function card_A5(s = {
                 return label_M2({
                     host_id: s.user_id,
                     guest_id: v.user_id,
-                    avatar_url: v.user?.avatar_url,
+                    avatar_url: images.get(`avatar_${v.user_id}`),
                 });
             })
         ).then(results => thenPush(results, labelM2s))

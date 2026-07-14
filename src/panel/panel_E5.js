@@ -252,7 +252,11 @@ export async function panel_E5(data = {
     const score_time = getFormattedTime(timeBase);
     const delta_time = getTimeDifference(timeBase);
 
-    const request_info = (position > 0 && !(position === 1 && (panel_type === 'P' || panel_type === 'R'))) ? `position: #${position} // ` : '';
+    const is_recently = panel_type === 'P' || panel_type === 'R'
+
+    const best_info = (score?.best_id > 0 && is_recently) ? 'Personal Best! // ' : ''
+
+    const request_info = (position > 0 && !(position === 1 && is_recently)) ? `position: #${position} // ` : '';
 
     const request_time = `score time: ${score_time} (${delta_time}) // request time: ${getNowTimeStamp()}`;
 
@@ -272,7 +276,7 @@ export async function panel_E5(data = {
         panel_name_svg = getPanelNameSVG('Match Recent Score (!ymmr)', 'MR', mrTime);
     } else {
         const [title, sign] = panelNameMap[panel_type] || ['Excellent Score (!ymp / !ymr / !yms)', 'S'];
-        panel_name_svg = getPanelNameSVG(title, sign, request_info + request_time);
+        panel_name_svg = getPanelNameSVG(title, sign, best_info + request_info + request_time);
     }
 
     // 5. 并行生成复杂的卡片内容

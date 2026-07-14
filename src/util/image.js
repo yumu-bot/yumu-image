@@ -21,45 +21,49 @@ const exportsWEBP = new API(new WEBPProvider());
 
 // 1. 基础的、通用的 Puppeteer 参数
 const base_args = [
-    '--js-flags="--max-old-space-size=512"',
+    '--no-sandbox',
     '--disable-breakpad',
     '--disable-dev-shm-usage',
     '--disable-setuid-sandbox',
-    '--no-sandbox',
+    '--js-flags="--max-old-space-size=1024"',
+    '--disable-gpu-compositing',        // 所有平台都禁用合成阶段的 GPU（规避显存同步冲突）
+    '--disable-features=UseSkiaRenderer', // 强制 GPU 加速渲染
+    '--ignore-gpu-blocklist',            // 无视黑名单
+    '--disable-breakpad',
     '--no-zygote',
     '--no-first-run',
-    '--disable-web-security',
-    '--allow-file-access-from-files',
-    '--disable-blink-features=AutomationControlled',
-    '--disable-infobars'
+    '--disable-backgrounding-occluded-windows',
+    '--disable-renderer-backgrounding',
 ];
 
 // 2. 根据操作系统，动态追加硬件加速参数
 if (process.platform === 'win32') {
-    // Windows 环境：本地测试，强行注入 NVIDIA/ANGLE 独显参数，享受无横线超高速
+    // Windows：强制 ANGLE + 独显
     base_args.push(
-        '--disable-gpu',                  // 禁用 GPU 硬件加速（最核心的开关）
-        '--disable-gpu-compositing',      // 禁用 GPU 合成，强制页面图层混色也走 CPU
-        '--use-gl=swiftshader',           // 强制将 WebGL 和 3D 渲染降级为 CPU 软渲染器（SwiftShader）
+        '--use-angle=angle',            // 使用 ANGLE 层
+        '--use-angle=default',          // 让 ANGLE 自动选 D3D11
+        '--disable-gpu-sandbox',         // 允许 GPU 进程访问硬件
+
         '--window-position=-32000,-32000',
         '--disable-features=CalculateNativeWinOcclusion', // 关闭原生窗口遮挡计算（防止检测桌面状态）
         '--disable-features=TabHoverCardImages',          // 关闭标签卡预览图生成（防止后台隐蔽生成UI图层）
         '--disable-backgrounding-occluded-windows',       // 关闭被遮挡窗口的后台化逻辑（强制保持无UI逻辑）
         '--disable-renderer-backgrounding',               // 关闭渲染器后台化
         '--no-pings',                                     // 关掉所有内置的链路打点检测
-        '--mute-audio'                                    // 彻底关闭音频（有时音频通道初始化也会触发系统音频合成器的窗体通知）
+        '--mute-audio'
+);
+} else if (process.platform === 'linux') {
+    base_args.push(
+        '--use-gl=egl',                 // 使用 EGL 后端
+        '--enable-features=Vulkan',     // 启用 Vulkan 加速
+        '--disable-gpu-sandbox',        // Linux headless 必须
+        '--enable-features=WebGL2ComputeContext'
     );
 } else {
-    // Linux 生产环境：为了绝对安全防闪退，使用默认配置（通常会自动跌落到系统的软渲染）
-    // 如果你以后在 Linux 上配置好了 AMD 驱动，可以在这里单独给 Linux 加别的参数
-
-    // 如果你发现 Linux 默认依然闪退，可以取消下面这行的注释，强制它走 CPU 软渲染
-    // base_args.push('--use-angle=swiftshader');
+    // macOS（如果你以后要部署）
     base_args.push(
-        '--use-gl=egl',                // 使用 EGL 作为图形渲染后端
-        '--enable-features=Vulkan',     // 强烈建议开启 Vulkan，AMD 在 Linux 上的 Vulkan 性能极佳
-        '--ignore-gpu-blocklist',       // 强制无视 Chromium 对服务器 GPU 的黑名单限制
-        '--disable-gpu-sandbox'         // 必须禁用 GPU 沙盒，否则 headless 模式下浏览器无权访问显卡硬件
+        '--use-gl=angle',               // macOS 用 ANGLE 的 Metal 后端
+        '--enable-features=UseMetal'
     );
 }
 
@@ -247,7 +251,7 @@ export async function convertPicture(buffer, target_format = 'webp', from_format
  * @param max_width
  * @param max_height
  * @param max_file_size {number}
- * @return {Promise<*>}
+ * @return {Promise<Buffer>}
  */
 export async function compressLargePicture2Webp(buffer, max_width = 1920, max_height = null, max_file_size = FILE_SIZE_THRESHOLD) {
     try {

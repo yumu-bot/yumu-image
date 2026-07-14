@@ -819,9 +819,8 @@ export const PanelGenerate = {
         };
     },
 
-    searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset, last_beatmapset) => {
-        const background = cursor ?
-            await readNetImage('https://assets.ppy.sh/beatmaps/' + cursor?.id + '/covers/list.jpg', true) :
+    searchResult2CardA2: async (total, cursor, search, result_count, rule, first_beatmapset, last_beatmapset, background) => {
+        const bg = background ??
             await readNetImage(first_beatmapset?.covers?.['list@2x'] || last_beatmapset?.covers?.['list@2x'] , true);
         const map_status = rule;
         const title1 = 'Search:';
@@ -840,7 +839,7 @@ export const PanelGenerate = {
         const right3m = 'x';
 
         return {
-            background: background,
+            background: bg,
             map_status: map_status,
 
             title1: title1,
@@ -856,14 +855,14 @@ export const PanelGenerate = {
         };
     },
 
-    searchMap2CardA2: async (s, rank) => {
+    searchMap2CardA2: async (s, rank, background) => {
         const ranked_date = s.ranked_date || '';
         const submitted_date = s.submitted_date || '';
         const ranked = s?.ranked ?? -2;
 
         const has_leaderboard = hasLeaderBoard(ranked)
 
-        const background = await getMapBackground(s, 'list@2x');
+        const bg = background ?? await getMapBackground(s, 'list@2x');
 
         const map_status = s?.status || 'graveyard';
 
@@ -917,7 +916,7 @@ export const PanelGenerate = {
         }
 
         return {
-            background: background,
+            background: bg,
             map_status: map_status,
 
             title1: title1,

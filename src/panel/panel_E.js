@@ -853,8 +853,8 @@ const score2PassPercents = (score) => {
     const pc = score?.beatmap?.playcount || 0;
     const pass = score?.beatmap?.passcount || 0;
 
-    const fail_sum = score?.beatmap?.fails ? score?.beatmap?.fails.reduce((s, v) => s + v) : 0;
-    const retry_sum = score?.beatmap?.retries ? score?.beatmap?.retries.reduce((s, v) => s + v) : 0;
+    const fail_sum = score?.beatmap?.fail ?? 0;
+    const retry_sum = score?.beatmap?.retry ?? 0;
     const not_pass_sum = fail_sum + retry_sum; //虚假的未通过人数
     const not_pass_real_percent = (pc !== 0) ? ((pc - pass) / pc) : 0; //真实的未通过率
 
