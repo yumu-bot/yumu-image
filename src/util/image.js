@@ -23,49 +23,42 @@ const exportsWEBP = new API(new WEBPProvider());
 
 // 1. 基础的、通用的 Puppeteer 参数
 const base_args = [
-    '--no-sandbox',
+    '--js-flags=--max-old-space-size=512',  // 去掉引号
     '--disable-breakpad',
     '--disable-dev-shm-usage',
     '--disable-setuid-sandbox',
-    '--js-flags="--max-old-space-size=1024"',
-    '--disable-gpu-compositing',        // 所有平台都禁用合成阶段的 GPU（规避显存同步冲突）
-    '--disable-features=UseSkiaRenderer', // 强制 GPU 加速渲染
-    '--ignore-gpu-blocklist',            // 无视黑名单
-    '--disable-breakpad',
+    '--no-sandbox',
     '--no-zygote',
     '--no-first-run',
+    '--disable-web-security',                    // 恢复
+    '--allow-file-access-from-files',           // 恢复
+    '--disable-blink-features=AutomationControlled', // 恢复
+    '--disable-infobars',                       // 恢复
     '--disable-backgrounding-occluded-windows',
     '--disable-renderer-backgrounding',
+    // 移除 --disable-gpu-compositing
+    // 移除 --disable-features=UseSkiaRenderer
+    // 移除 --ignore-gpu-blocklist (后面会根据平台添加)
 ];
 
-// 2. 根据操作系统，动态追加硬件加速参数
 if (process.platform === 'win32') {
-    // Windows：强制 ANGLE + 独显
     base_args.push(
-        '--use-angle=angle',            // 使用 ANGLE 层
-        '--use-angle=default',          // 让 ANGLE 自动选 D3D11
-        '--disable-gpu-sandbox',         // 允许 GPU 进程访问硬件
-
+        '--disable-gpu',               // 明确禁用 GPU（之前版本有用）
+        '--use-gl=swiftshader',        // 使用 CPU 软渲染（之前版本有用）
         '--window-position=-32000,-32000',
-        '--disable-features=CalculateNativeWinOcclusion', // 关闭原生窗口遮挡计算（防止检测桌面状态）
-        '--disable-features=TabHoverCardImages',          // 关闭标签卡预览图生成（防止后台隐蔽生成UI图层）
-        '--disable-backgrounding-occluded-windows',       // 关闭被遮挡窗口的后台化逻辑（强制保持无UI逻辑）
-        '--disable-renderer-backgrounding',               // 关闭渲染器后台化
-        '--no-pings',                                     // 关掉所有内置的链路打点检测
+        '--disable-features=CalculateNativeWinOcclusion',
+        '--disable-features=TabHoverCardImages',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+        '--no-pings',
         '--mute-audio'
-);
+    );
 } else if (process.platform === 'linux') {
     base_args.push(
-        '--use-gl=egl',                 // 使用 EGL 后端
-        '--enable-features=Vulkan',     // 启用 Vulkan 加速
-        '--disable-gpu-sandbox',        // Linux headless 必须
-        '--enable-features=WebGL2ComputeContext'
-    );
-} else {
-    // macOS（如果你以后要部署）
-    base_args.push(
-        '--use-gl=angle',               // macOS 用 ANGLE 的 Metal 后端
-        '--enable-features=UseMetal'
+        '--use-gl=egl',
+        '--enable-features=Vulkan',
+        '--ignore-gpu-blocklist',
+        '--disable-gpu-sandbox'
     );
 }
 
