@@ -1296,13 +1296,26 @@ export const PanelGenerate = {
         }
     },
 
-    score2CardC3: async (score, index = 1, decrypted = false) => {
-        const results = await Promise.allSettled([
-            getMapBackground(score, 'list@2x'),
-            getMapBackground(score, 'cover')
-        ]);
+    score2CardC3: async (score, index = 1, decrypted = false, list = null, cover = null) => {
+        const tasks = [];
 
-        const [cover, background] = results.map(r => getImageOrElse(r));
+        // 只有当 list 为 null 时才执行默认的获取逻辑
+        if (list === null) {
+            tasks.push(getMapBackground(score, 'list@2x'));
+        } else {
+            tasks.push(Promise.resolve(list));
+        }
+
+        // 只有当 cover 为 null 时才执行默认的获取逻辑
+        if (cover === null) {
+            tasks.push(getMapBackground(score, 'cover'));
+        } else {
+            tasks.push(Promise.resolve(cover));
+        }
+
+        const results = await Promise.allSettled(tasks);
+
+        const [cv, bg] = results.map(r => getImageOrElse(r));
 
         const index_text = index > 0 ? ('#' + index) : ''
         const bid_text = score.beatmap.id.toString()
@@ -1319,8 +1332,8 @@ export const PanelGenerate = {
         const text_color = (star < 4) ? '#1c1719' : '#fff'
 
         return {
-            background: background,
-            cover: decrypted ? cover : null,
+            background: bg,
+            cover: decrypted ? cv : null,
 
             title: title,
             title2: title2,

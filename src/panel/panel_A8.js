@@ -14,6 +14,7 @@ import {card_C3} from "../card/card_C3.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {beatmapsets2Task, imageDownloader, user2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_A8);
 export const router_svg = createSvgRouter(panel_A8);
@@ -49,9 +50,20 @@ export async function panel_A8(data = {
     // 导入文字
     svg = setText(svg, getPanelNameSVG('Guess Songs (!ymg)', 'G'), reg_index);
 
+    const promise_a1s = user2Task(data.user)
+    const promise_c3s = beatmapsets2Task(scores.map(s => s.beatmapset))
+    const promise_c3ss = beatmapsets2Task(scores.map(s => s.beatmapset), undefined, undefined, 'cover')
+
+    const tasks = [
+        ...promise_a1s,
+        ...promise_c3s,
+        ...promise_c3ss
+    ]
+
+    const images = await imageDownloader(tasks);
 
     // 导入A1卡
-    const me_card_a1 = await card_A1(PanelGenerate.user2CardA1(data.user));
+    const me_card_a1 = await card_A1(PanelGenerate.user2CardA1(data.user, null, images.get(`avatar_${data.user.id}`), images.get(`banner_${data.user.id}`)));
     svg = setSvgBody(svg, 40, 40, me_card_a1, reg_me);
 
     // 导入C3卡
@@ -59,7 +71,15 @@ export async function panel_A8(data = {
 
     await Promise.allSettled(
         scores.map((v, i) => {
-            return PanelGenerate.score2CardC3(v, i + 1, (data.decrypted[i] ?? -1) < 0)
+            const si = v.beatmapset.id
+
+            return PanelGenerate.score2CardC3(
+                v,
+                i + 1,
+                (data.decrypted[i] ?? -1) < 0,
+                images.get(`list@2x_${si}`),
+                images.get(`cover_${si}`)
+            )
         })
     ).then(results => thenPush(results, params))
 
