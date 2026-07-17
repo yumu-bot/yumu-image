@@ -60,13 +60,22 @@ export class API {
 
     /**
      * 内部管理方法：获取转换器并处理自动重启逻辑
+     * @return Converter
      */
     async _getConverterWithLifecycle(options) {
         // 1. 检查是否达到重启阈值
         if (this[_cachedConverter] && this[_taskCount] >= this[_maxTasksPerBrowser]) {
             console.log(`[图片输出] 已达到 ${this[_taskCount]} 次任务，正在重启浏览器...`);
-            await this.destroy();
-            this[_taskCount] = 0; // 重置计数
+
+            try {
+                await this.destroy();
+            } catch (err) {
+                console.error('[图片输出] 重启期间销毁旧浏览器失败:', err);
+            } finally {
+                // 无论销毁成功与否，必须重置计数并丢弃旧实例，防止死循环
+                this[_taskCount] = 0;
+                this[_cachedConverter] = null;
+            }
         }
 
         // 2. 如果实例不存在或已被销毁，创建新实例
@@ -135,7 +144,7 @@ export class API {
      */
     async convertFile(inputFilePath, options) {
         // 修改：使用持久化实例
-        const converter = this._getConverterWithLifecycle(options);
+        const converter = await this._getConverterWithLifecycle(options);
         try {
             return await converter.convertFile(inputFilePath, omit(options, 'puppeteer'));
         } finally {

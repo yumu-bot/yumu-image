@@ -1,3 +1,4 @@
+import * as v8 from "node:v8";
 import fs from 'fs';
 import os from "os";
 import crypto from 'crypto';
@@ -121,6 +122,17 @@ let browserPromise = null;
         }
         process.exit(0);
     });
+});
+
+process.on('SIGUSR2', () => {
+    console.log('接收到 SIGUSR2 信号，准备生成堆快照...');
+    try {
+        const filename = `heap-${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}.heapsnapshot`;
+        v8.writeHeapSnapshot(filename);
+        console.log(`堆快照已成功写入当前目录下的: ${filename}`);
+    } catch (err) {
+        console.error('信号触发堆快照失败:', err);
+    }
 });
 
 process.on('uncaughtException', async (err) => {

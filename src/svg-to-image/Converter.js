@@ -1,14 +1,10 @@
 import * as cheerio from 'cheerio';
 
 import fileUrl from 'file-url';
-import fs from "fs";
 import path from "path";
 import puppeteer from "puppeteer";
 import tmp from "tmp";
-import * as util from "util";
-
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
+import { readFile, writeFile } from 'fs/promises';
 
 const _allowedAttributeNames = Symbol('allowedAttributeNames');
 const _allowedDeprecatedAttributeNames = Symbol('allowedDeprecatedAttributeNames');
@@ -222,23 +218,44 @@ export default class Converter {
 
         this[_destroyed] = true;
 
+        // 清理临时文件
         if (this[_tempFile]) {
-            this[_tempFile].cleanup();
+            try {
+                this[_tempFile].cleanup();
+            } catch (e) {
+                console.error('[Destroy] 清理临时文件失败:', e.message);
+            }
             delete this[_tempFile];
         }
 
+        // 关闭 Page
         if (this[_page]) {
-            await this[_page].close();
+            try {
+                await this[_page].close();
+            } catch (e) {
+                console.warn('[Destroy] 关闭页面失败或页面已关闭:', e.message);
+            }
             delete this[_page];
         }
 
+        // 关闭 Context
         if (this[_context]) {
-            await this[_context].close();
+            try {
+                await this[_context].close();
+            } catch (e) {
+                console.warn('[Destroy] 关闭上下文失败:', e.message);
+            }
             delete this[_context];
         }
 
+        // 最关键的一步：确保浏览器绝对被关闭
         if (this[_browser]) {
-            await this[_browser].close();
+            try {
+                await this[_browser].close();
+                console.log('[Destroy] Chromium 浏览器实例已成功关闭');
+            } catch (e) {
+                console.error('[Destroy] 强关浏览器进程失败! 可能会产生僵尸进程:', e.message);
+            }
             delete this[_browser];
         }
     }
@@ -298,7 +315,7 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
 
         const dimensions = await this[_getDimensions](page, options);
 
-        if (options.scale !== 1) {
+        if (options.scale !== 1 && options.scale > 0) {
             dimensions.height *= options.scale;
             dimensions.width *= options.scale;
 
@@ -391,18 +408,12 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
     }
 
     [_getTempFile]() {
-        if (this[_tempFile]) {
-            return Promise.resolve(this[_tempFile]);
-        }
-
         return new Promise((resolve, reject) => {
             tmp.file({ prefix: 'convert-svg-', postfix: '.html' }, (error, filePath, fd, cleanup) => {
                 if (error) {
                     reject(error);
                 } else {
-                    this[_tempFile] = { path: filePath, cleanup };
-
-                    resolve(this[_tempFile]);
+                    resolve({ path: filePath, cleanup });
                 }
             });
         });
