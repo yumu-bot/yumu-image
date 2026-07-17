@@ -2,10 +2,14 @@ import {getMultipleTextPath, poppinsBold, torus, torusBold} from "../util/font.j
 import {colorArray, getRankColors} from "../util/color.js";
 import {
     getAvatar,
-    getFlagPath, getSvgBody,
+    getFlagPath,
+    getSvgBody,
     getTimeDifferenceShort,
     round,
-    rounds, setImage, setText, setTexts
+    rounds,
+    setImage,
+    setText,
+    setTexts
 } from "../util/util.js";
 import {label_N2, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -61,31 +65,74 @@ export async function card_A4(data = {
     const reg_mod = /(?<=<g id="Mod_CN_2">)/;
 
     //导入背景和头像
-    const user = data.score.user || {}
+
+    const {
+        bind,
+        score,
+        is_legacy,
+        compare_score,
+        score_rank
+    } = data
+
+    const {
+        user,
+        rank: lazer_rank,
+        legacy_rank: stable_rank,
+        passed,
+        ended_at,
+        accuracy,
+        max_combo,
+        pp,
+        is_perfect_combo,
+        total_hit,
+        ruleset_id,
+        beatmap,
+        is_lazer,
+        mods
+    } = score
+
+    let total_score
+    let rank
+
+    if (is_legacy) {
+        const l = score.legacy_total_score
+
+        if (l > 0) {
+            total_score = l
+        } else {
+            total_score = score.total_score
+        }
+
+        rank = stable_rank
+    } else {
+        total_score = score.total_score
+        rank = lazer_rank
+    }
 
     /**
      * @type {string[]}
      */
-    const ranks = data.score.rank
+    const ranks = rank
         ?.replaceAll("X", "SS")
         ?.replaceAll("H", "")
         ?.split("") ?? [];
-    let rank
+
+    let rank_text
 
     if (ranks.length === 2) {
-        rank = torusBold.getTextPath(ranks[0], 884 - 8, 44, 40, 'center baseline', "#2A2226", 1) +
+        rank_text = torusBold.getTextPath(ranks[0], 884 - 8, 44, 40, 'center baseline', "#2A2226", 1) +
             torusBold.getTextPath(ranks[1], 884 + 8, 44, 40, 'center baseline', "#2A2226", 0.8)
     } else {
-        rank = torusBold.getTextPath(ranks[0]?.toString() ?? 'F', 884, 44, 40, 'center baseline', "#2A2226", 1)
+        rank_text = torusBold.getTextPath(ranks[0]?.toString() ?? 'F', 884, 44, 40, 'center baseline', "#2A2226", 1)
     }
 
-    const rank_colors = getRankColors(data.score.rank);
+    const rank_colors = getRankColors(rank);
 
     const avatar = await getAvatar(user);
 
-    const cover = getRankBackground(data.score.rank, data.score.passed)
+    const cover = getRankBackground(rank, passed)
 
-    const time_difference = getTimeDifferenceShort(data.score.ended_at, 2)
+    const time_difference = getTimeDifferenceShort(ended_at, 2)
 
     const name = getMultipleTextPath([{
         font: poppinsBold,
@@ -105,32 +152,19 @@ export async function card_A4(data = {
     const flag_svg = await getFlagPath(user.country_code, 138, 8 - 2, 20)
 
     // 导入N1标签
-    const acc = data.score.accuracy * 100;
-    const combo = data.score.max_combo;
-    const pp = Math.round(data.score.pp ?? 0)
+    const acc = (accuracy ?? 0) * 100;
+    const combo = max_combo ?? 0;
+    const performance = Math.round(pp ?? 0)
 
-    let score
-    if (data?.is_legacy) {
-        const l = data.score.legacy_total_score
-
-        if (l > 0) {
-            score = l
-        } else {
-            score = data.score.total_score
-        }
-    } else {
-        score = data.score.total_score
-    }
-
-    const delta_score = (data.compare_score - score !== 0) ? ((score - data.compare_score)) : 0;
+    const delta_score = (compare_score - total_score !== 0) ? ((total_score - compare_score)) : 0;
 
     const acc_number = rounds(acc, 2)
 
     let combo_index = ''
 
-    if (data.score.rank === 'XH' || data.score.rank === 'X') {
+    if (rank === 'XH' || rank === 'X') {
         combo_index = ' [PF]'
-    } else if (data.score.is_perfect_combo || (data.score.beatmap.max_combo === data.score.max_combo)) {
+    } else if (is_perfect_combo || (ruleset_id === 3 && beatmap.max_combo >= max_combo) || (beatmap.max_combo === max_combo)) {
         combo_index = ' [FC]'
     }
 
@@ -149,7 +183,7 @@ export async function card_A4(data = {
 
     const pp_text = getMultipleTextPath([{
         font: poppinsBold,
-        text: pp,
+        text: performance,
         size: 28,
         color: '#fff'
     }, {
@@ -159,7 +193,7 @@ export async function card_A4(data = {
         color: '#fff'
     }], 834, 31, 'right baseline')
 
-    const score_width = poppinsBold.getTextWidth(delta_score + '  ', 12) + poppinsBold.getTextWidth(score, 18)
+    const score_width = poppinsBold.getTextWidth(delta_score + '  ', 12) + poppinsBold.getTextWidth(total_score, 18)
 
     let delta_score_text
 
@@ -180,7 +214,7 @@ export async function card_A4(data = {
         color: '#aaa'
     }, {
         font: poppinsBold,
-        text: score,
+        text: total_score,
         size: 18,
         color: '#aaa'
     }], 834, 53, 'right baseline')
@@ -188,14 +222,14 @@ export async function card_A4(data = {
     let ranking_color
     let version_colors
 
-    if (data.bind != null && data.bind === data.score.user_id) {
+    if (bind != null && bind === score.user_id) {
         ranking_color = '#2A2226'
-        if (data?.score?.is_lazer) {
+        if (is_lazer) {
             version_colors = colorArray.light_yellow
         } else {
             version_colors = colorArray.cyan
         }
-    } else if (data?.score?.is_lazer) {
+    } else if (is_lazer) {
         ranking_color = '#FFF'
         version_colors = colorArray.amber
     } else {
@@ -203,7 +237,7 @@ export async function card_A4(data = {
         version_colors = colorArray.blue
     }
 
-    const ranking = poppinsBold.getTextPath(data.score_rank, 32 + 2, 38, 20, 'center baseline', ranking_color)
+    const ranking = poppinsBold.getTextPath((score_rank ?? 0).toString(), 32 + 2, 38, 20, 'center baseline', ranking_color)
 
     // 导入评价，x和y是矩形的左上角
     let stat_svg = ''
@@ -213,9 +247,9 @@ export async function card_A4(data = {
     const stat_min_width = 10;
     const stat_full_width = 325;
 
-    const stat_arr = getStatArr(data.score, data.score.ruleset_id);
-    const stat_width_arr = getStatWidthArr(data?.score?.total_hit ?? 0, data?.score?.passed, stat_arr, stat_min_width, stat_full_width, stat_interval);
-    const stat_colors_arr = getStatColorsArr(data.score.ruleset_id);
+    const stat_arr = getStatArr(score, ruleset_id);
+    const stat_width_arr = getStatWidthArr(total_hit ?? 0, passed, stat_arr, stat_min_width, stat_full_width, stat_interval);
+    const stat_colors_arr = getStatColorsArr(ruleset_id);
 
     let width_sum = 0;
     for (const i in stat_arr) {
@@ -237,9 +271,7 @@ export async function card_A4(data = {
     }
 
     // 插入模组，因为先插的在上面，所以从左边插
-    const mods_arr = data.score.mods
-
-    const mods_svg = drawLazerMods(mods_arr, 690, 3, 25, 510 - name_width, 'right', 4, true).svg
+    const mods_svg = drawLazerMods(mods, 690, 3, 25, 510 - name_width, 'right', 4, true).svg
 
     const rank_rrect = PanelDraw.LinearGradientRect(810, 0, 105, 62, 20,
         rank_colors, 1, [0, 100], [20, 80])
@@ -252,7 +284,7 @@ export async function card_A4(data = {
     svg = setText(svg, mods_svg, reg_mod)
     svg = setText(svg, stat_svg, reg_label)
     svg = setTexts(svg, [rank_rrect, version_rrect], reg_rank)
-    svg = setTexts(svg, [name, flag_svg, n2_combo, n2_acc, pp_text, score_text, ranking, rank], reg_text)
+    svg = setTexts(svg, [name, flag_svg, n2_combo, n2_acc, pp_text, score_text, ranking, rank_text], reg_text)
 
     return svg
 }
