@@ -314,7 +314,7 @@ export async function compressLargePicture2Webp(buffer, max_width = 1920, max_he
 
         // sharp 对 apng 的支持不好
         if (meta.format === 'png' && await isApng(buffer)) {
-            return buffer
+            return apng2WebP(buffer)
         }
 
         if (!meta.format || !meta.width || !meta.height) {
@@ -361,7 +361,7 @@ export async function compressLargePicture2Webp(buffer, max_width = 1920, max_he
             const options = {
                 quality: 90,
                 effort: 6,
-                alphaQuality: 80,
+                alphaQuality: 90,
                 loop: meta.loop || 0
             };
 
@@ -436,6 +436,69 @@ export async function compressPicture(buffer, max_width = 1920, max_height = nul
 }
 
 /**
+ * @param buffer {Buffer|string|import('node:stream').Readable}
+ * @param loop
+ * @return {Promise<Buffer>}
+ */
+export async function apng2WebP(buffer, loop = 0) {
+    let animated_buffer;
+
+    if (Buffer.isBuffer(buffer)) {
+        animated_buffer = buffer;
+    } else if (typeof buffer === 'string') {
+        animated_buffer = await fs.promises.readFile(buffer);
+    } else if (buffer && typeof buffer.pipe === 'function') {
+        animated_buffer = await streamToBuffer(buffer);
+    } else {
+        throw new Error('Unsupported buffer input type');
+    }
+
+    const metadata = await sharp(animated_buffer).metadata();
+    const img = UPNG.decode(animated_buffer);
+
+    if (img.frames && img.frames.length > 1) {
+        const pages = img.frames.length;
+        const delays = img.frames.map(f => f.delay);
+
+        const rgba8Frames = UPNG.toRGBA8(img);
+
+        await WebP.Image.initLib();
+        const frames = [];
+
+        for (let i = 0; i < pages; i++) {
+            const rawBuffer = Buffer.from(new Uint8Array(rgba8Frames[i]));
+
+            const frame_buffer = await sharp(rawBuffer, {
+                raw: {
+                    width: img.width,
+                    height: img.height,
+                    channels: 4
+                }
+            }).webp({
+                quality: 90,
+                alphaQuality: 90
+            }).toBuffer();
+
+            frames.push({
+                buffer: frame_buffer,
+                delay: delays[i],
+                blend: false,
+                dispose: true
+            });
+        }
+
+        return await WebP.Image.save(null, {
+            width: metadata.width,
+            height: metadata.height,
+            frames: frames,
+            loops: metadata.loop ?? loop
+        });
+    } else {
+        return buffer;
+    }
+}
+
+/**
  *
  * @param background 背景图片，需要大一点
  * @param animated 放在前面的动态图
@@ -461,15 +524,6 @@ export async function compositeToWebP(background, animated, options = {}) {
 
     // 3. 核心修正：如果格式是 PNG，通过 upng-js 重新验证它是否为 APNG
     let animated_buffer;
-
-    function streamToBuffer(stream) {
-        return new Promise((resolve, reject) => {
-            const chunks = [];
-            stream.on('data', (chunk) => chunks.push(chunk));
-            stream.on('end', () => resolve(Buffer.concat(chunks)));
-            stream.on('error', (err) => reject(err));
-        });
-    }
 
     if (Buffer.isBuffer(animated)) {
         animated_buffer = animated;
@@ -553,8 +607,8 @@ export async function compositeToWebP(background, animated, options = {}) {
             delay: current_delay,
             x: 0,
             y: 0,
-            blend: true,
-            dispose: false
+            blend: false,
+            dispose: true
         });
 
         frames.push(frame_generated);
@@ -634,6 +688,16 @@ function isLosslessWebP(imageBuffer) {
     }
 }
 
+
+function streamToBuffer(stream) {
+    return new Promise((resolve, reject) => {
+        const chunks = [];
+        stream.on('data', (chunk) => chunks.push(chunk));
+        stream.on('end', () => resolve(Buffer.concat(chunks)));
+        stream.on('error', (err) => reject(err));
+    });
+}
+
 /**
  * 通过读取 PNG 内部数据块，判断是否为 APNG
  * @param input {string | Buffer}
@@ -707,7 +771,18 @@ export function isApngFromBuffer(buffer) {
  */
 export function binary2Base64Text(buffer) {
     // 确保是 Node.js Buffer
-    const buf = Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer, 'binary');
+
+    let buf
+
+    if (Buffer.isBuffer(buffer)) {
+        buf = buffer;
+    } else if (typeof buffer === 'string') {
+        // 只有确定是 string 时，才传入第二个参数 'binary'
+        buf = Buffer.from(buffer, 'binary');
+    } else {
+        // 如果是 ArrayBuffer 或其他，只传入 1 个参数
+        buf = Buffer.from(buffer);
+    }
 
     // 获取精准的 MIME 类型
     const mimeType = getMimeType(buf);
