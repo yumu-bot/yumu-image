@@ -78,13 +78,13 @@ export function card_I4(data = {}) {
     const left2_path = left2_font.getTextPath(left2_font.cutStringTail(left2, left2_size, left2_width), 155, 66, left2_size, 'left baseline', '#fff');
 
     const left3_path = getMultipleTextPath([
-        { font: left3_font, text: left3, size: left3_size, color: color_text },
-        { font: left4_font, text: left4, size: left4_size, color: color_text }
+        {font: left3_font, text: left3, size: left3_size, color: color_text},
+        {font: left4_font, text: left4, size: left4_size, color: color_text}
     ], left3_is_right ? 342 : 155, 90, left3_is_right ? 'right baseline' : 'left baseline');
 
     const index_path = getMultipleTextPath([
-        { font: "torus", text: index_b, size: index_b_size, color: color_text },
-        { font: "torus", text: index_m, size: index_m_size, color: color_text }
+        {font: "torus", text: index_b, size: index_b_size, color: color_text},
+        {font: "torus", text: index_m, size: index_m_size, color: color_text}
     ], 342, 120, 'right baseline');
 
     // 图片与组件预生成

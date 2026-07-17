@@ -440,24 +440,22 @@ const component_E3 = (
     const delta = (data?.fit > 0) ? (' (' + getSign(d) + floor(Math.abs(d), 2) + ')') : ''
 
     const level = rounds(data?.fit, 2)
-    const dist_level = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: level.integer,
-            size: 48,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: level.decimal,
-            size: 30,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: delta,
-            size: 20,
-            color: '#fff'
-        }], 300, 245, 'right baseline'
-    )
+    const dist_level = getMultipleTextPath([{
+        font: poppinsBold,
+        text: level.integer,
+        size: 48,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: level.decimal,
+        size: 30,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: delta,
+        size: 20,
+        color: '#fff'
+    }], 300, 245, 'right baseline')
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
@@ -717,32 +715,30 @@ const component_E9 = (
 
     const achievement_number = floors(a, 4)
     const achievement = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: achievement_number.integer,
-                size: 60,
-            },
-            {
-                font: 'poppinsBold',
-                text: achievement_number.decimal + ' %',
-                size: 36
-            }
-        ],
-        470, 62, 'right baseline')
+        {
+            font: 'poppinsBold',
+            text: achievement_number.integer,
+            size: 60,
+        },
+        {
+            font: 'poppinsBold',
+            text: achievement_number.decimal + ' %',
+            size: 36
+        }
+    ], 470, 62, 'right baseline')
 
     const combo = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: data?.dx || 0,
-                size: 60,
-            },
-            {
-                font: 'poppinsBold',
-                text: ' / ' + data?.max || 0,
-                size: 36,
-            }
-        ],
-        470, 132, 'right baseline')
+        {
+            font: 'poppinsBold',
+            text: data?.dx || 0,
+            size: 60,
+        },
+        {
+            font: 'poppinsBold',
+            text: ' / ' + data?.max || 0,
+            size: 36,
+        }
+    ], 470, 132, 'right baseline')
 
     const rect = PanelDraw.Rect(0, 0, 490, 150, 20, '#382e32', 1);
 

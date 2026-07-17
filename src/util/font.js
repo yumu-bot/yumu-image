@@ -1,31 +1,223 @@
+import * as path_util from 'path';
 import TextToSVG from "text-to-svg";
 import {isEmptyArray} from "./util.js";
 
-const textToSVGTorusSB = TextToSVG.loadSync("font/Torus-SemiBold.ttf");
-const textToSVGPuHuiTi = TextToSVG.loadSync("font/AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.3.ttf");
-const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf");
-const textToSVGTorusRegular = TextToSVG.loadSync("font/Torus-Regular.ttf");
-const textToSVGTorusBold = TextToSVG.loadSync("font/Torus-Bold.ttf");
-const textToSVGpoppinsBold = TextToSVG.loadSync("font/Poppins-Bold.ttf");
-const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/LINESeedSans_Bd.ttf");
-const textToSVGTahomaRegular = TextToSVG.loadSync("font/ft71.ttf");
-const textToSVGTahomaBold = TextToSVG.loadSync("font/tahomabd.ttf");
-const textToSVGBerlinBold = TextToSVG.loadSync("font/BerlinsansExpert-Bold.ttf");
+class FontInstance {
+    constructor(file, family) {
+        this.name = family;
+        const font_path = path_util.resolve('font', file);
+        this.font = TextToSVG.loadSync(font_path);
+
+        // 绑定方法，确保 this 指向正确，同时方便外部直接解构
+        this.getTextPath = this.getTextPath.bind(this);
+        this.getTextMetrics = this.getTextMetrics.bind(this);
+        this.getTextWidth = this.getTextWidth.bind(this);
+        this.cutStringTail = this.cutStringTail.bind(this);
+    }
+
+    getTextPath(
+        text = '',
+        x = 0,
+        y = 0,
+        size = 36,
+        anchor = 'left baseline',
+        fill = '#fff',
+        opacity = 1,
+        shadow = false,
+        stroke = 'none',
+        stroke_width = 0,
+        stroke_opacity = 1,
+    ) {
+        /**
+         * @type {String}
+         */
+        let shadow_path
+
+        if (shadow === false) {
+            shadow_path = ''
+        } else {
+            const shadow_options = {
+                x: x + 2,
+                y: y + 2,
+                fontSize: size,
+                anchor: anchor,
+                fontFamily: this.name,
+                kerning: true,
+                attributes: {
+                    fill: '#1c1719'
+                }
+            }
+
+            shadow_path = this.font.getPath(preprocessingText(text), shadow_options)
+        }
+
+        const options = {
+            x: x,
+            y: y,
+            fontSize: size,
+            anchor: anchor,
+            fontFamily: this.name,
+            kerning: true,
+            attributes: {
+                "fill": fill,
+                "fill-opacity": opacity,
+                "stroke": stroke,
+                "stroke-width": stroke_width,
+                "stroke-opacity": stroke_opacity,
+            }
+        }
+
+        const path = this.font.getPath(preprocessingText(text), options)
+
+        return shadow_path.concat(path)
+    }
+
+    /**
+     * 获取大小双字号混排的 SVG 路径（内置于类中）
+     * @return {String}
+     */
+    get2SizeTextPath(
+        largerText,
+        smallerText,
+        largeSize,
+        smallSize,
+        x,
+        y,
+        anchor = 'center baseline',
+        color = '#fff'
+    ) {
+        let out = '';
+
+        if (anchor === "left baseline") {
+            const width_b = this.getTextWidth(largerText, largeSize);
+
+            out = this.getTextPath(largerText, x, y, largeSize, anchor, color) +
+                this.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+
+        } else if (anchor === "right baseline") {
+            const width_m = this.getTextWidth(smallerText, smallSize);
+
+            out = this.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+                this.getTextPath(smallerText, x, y, smallSize, anchor, color);
+
+        } else if (anchor === "center baseline") {
+            const width_b = this.getTextWidth(largerText, largeSize);
+            const width_m = this.getTextWidth(smallerText, smallSize);
+
+            const width_a = (width_b + width_m) / 2; // 全长的一半长
+
+            out = this.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
+                this.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+        }
+
+        return out;
+    }
+
+    getTextMetrics(text = '', x = 0, y = 0, size = 36, anchor = 'left baseline', fill = '#fff') {
+        return this.font.getMetrics(preprocessingText(text), {
+            x: x,
+            y: y,
+            fontSize: size,
+            anchor: anchor,
+            fontFamily: this.name,
+            attributes: {
+                fill: fill
+            }
+        })
+    }
+
+    getTextWidth(text = '', size = 0) {
+        return this.font.getWidth(text, {
+            fontSize: size,
+        });
+    }
+
+    /**
+     * 智能文本裁切（二分法优化版）
+     * @param {string} text - 输入文本
+     * @param {number} size - 字体大小
+     * @param {number} max_width - 最大限制宽度
+     * @param {boolean} is_dot3_needed - 超长时是否需要追加 "..."
+     * @return {string}
+     */
+    cutStringTail(text = '', size = 36, max_width = 100, is_dot3_needed = true) {
+        // 1. 如果整行文本本身就没超宽，直接返回原文本
+        if (this.getTextWidth(text, size) <= max_width) {
+            return text;
+        }
+
+        const dot3 = '...';
+        // 2. 根据是否需要 "..." 动态计算留给文本的实际目标宽度
+        const dot3_width = is_dot3_needed ? this.getTextWidth(dot3, size) : 0;
+        const target_width = max_width - dot3_width;
+
+        // 3. 极端边界：如果扣除 "..." 后连 1 像素都不剩了，直接返回 "..." 或空
+        if (target_width <= 0) {
+            return is_dot3_needed ? dot3 : '';
+        }
+
+        let low = 0;
+        let high = text.length;
+        let best = 0;
+
+        // 4. 二分查找：寻找能塞进 targetWidth 的最大字符截取长度
+        while (low <= high) {
+            const mid = Math.floor((low + high) / 2);
+            const current_width = this.getTextWidth(text.substring(0, mid), size);
+
+            if (current_width <= target_width) {
+                best = mid;   // 记录当前最稳妥的截取字符数
+                low = mid + 1;      // 尝试往右探测，看能不能塞下更多字符
+            } else {
+                high = mid - 1;     // 超宽了，向左收缩查找范围
+            }
+        }
+
+        // 5. 组装最终结果
+        const sliced = text.substring(0, best);
+        return is_dot3_needed ? sliced + dot3 : sliced;
+    }
+}
+
+export const torus = new FontInstance("Torus-SemiBold.ttf", "Torus");
+export const PuHuiTi = new FontInstance("AlibabaPuHuiTi3.0-75SemiBold-CJKTGv4.3.ttf", "PuHuiTi");
+export const extra = new FontInstance("extra.gamemode.ttf", "Extra");
+export const torusRegular = new FontInstance("Torus-Regular.ttf", "TorusRegular");
+export const torusBold = new FontInstance("Torus-Bold.ttf", "TorusBold");
+export const poppinsBold = new FontInstance("Poppins-Bold.ttf", "PoppinsBold");
+export const lineSeedSans = new FontInstance("LINESeedSans_Bd.ttf", "LineSeedSansBold");
+export const TahomaRegular = new FontInstance("ft71.ttf", "TahomaRegular");
+export const TahomaBold = new FontInstance("tahomabd.ttf", "TahomaBold");
+export const BerlinBold = new FontInstance("BerlinsansExpert-Bold.ttf", "BerlinBold");
 
 /*
-const textToSVGTorusSB = TextToSVG.loadSync("font/EndfieldByButan.ttf");
-const textToSVGPuHuiTi = TextToSVG.loadSync("font/EndfieldByButan.ttf");
-const textToSVGextra = TextToSVG.loadSync("font/extra.gamemode.ttf"); // 这个不一样
-const textToSVGTorusRegular = TextToSVG.loadSync("font/EndfieldByButan.ttf");
-const textToSVGTorusBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
-const textToSVGpoppinsBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
-const textToSVGlineSeedSansBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
-const textToSVGTahomaRegular = TextToSVG.loadSync("font/EndfieldByButan.ttf");
-const textToSVGTahomaBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
-const textToSVGBerlinBold = TextToSVG.loadSync("font/EndfieldByButan.ttf");
+// 统一使用 EndfieldByButan.ttf 的备用定义方式
 
+// 1. 创建唯一的 Endfield 实例
+const endfieldInstance = new FontInstance("EndfieldByButan.ttf", "EndfieldByButan");
+
+// 2. 其余常量直接引用这个实例
+// 这样在代码中调用 torus.getTextWidth() 时，实际上调用的是同一个实例的方法
+export const torus = endfieldInstance;
+export const PuHuiTi = endfieldInstance;
+export const torusRegular = endfieldInstance;
+export const torusBold = endfieldInstance;
+export const poppinsBold = endfieldInstance;
+export const lineSeedSans = endfieldInstance;
+export const TahomaRegular = endfieldInstance;
+export const TahomaBold = endfieldInstance;
+export const BerlinBold = endfieldInstance;
+
+// 3. 额外处理 extra（因为它使用不同的文件）
+export const extra = new FontInstance("extra.gamemode.ttf", "Extra");
+
+*/
+
+/**
+ *
+ * @param text {number|string}
+ * @return {string}
  */
-
 function preprocessingText(text = '') {
     return String(text)
 
@@ -82,1482 +274,158 @@ function endfieldMapper(text = '') {
     return result.join('')
 }
 
-/** 获取多个字体组合成的字形
- * 数组类的组成是：
- * font: torus,
- * text: '',
- * size: 24,
- * color: '#fff',
- * @param array
- * @param x
- * @param y
- * @param anchor
- * @param shadow
- * @return {string}
+const font_map = {
+    // 键名为小写或特定缩写，值指向你导出的 FontInstance 实例
+    "torus": torus,
+    "torusregular": torusRegular,
+    "torusbold": torusBold,
+    "tahomaregular": TahomaRegular,
+    "tahomabold": TahomaBold,
+    "puhuiti": PuHuiTi,
+    "extra": extra,
+    "poppinsbold": poppinsBold,
+    "lineseedsans": lineSeedSans,
+    "berlinbold": BerlinBold
+};
+
+const default_font = PuHuiTi
+
+/**
+ * @param font
+ * @return {FontInstance}
+ */
+function getFontInstance(font) {
+    if (!font) return default_font;
+
+    if (typeof font === 'object' && typeof font.getTextWidth === 'function') {
+        return font;
+    }
+
+    let name;
+
+    // 2. 如果传入的是旧版的 `{ torus: torus }` 形式的对象
+    if (typeof font === "object") {
+        const value = Object.values(font)[0];
+        name = value?.name || (value ? value.toString() : '');
+    } else {
+        // 3. 如果传入的是字符串
+        name = font.toString();
+    }
+
+    const lookupKey = name.toLowerCase();
+
+    return font_map[lookupKey] || default_font;
+}
+
+/**
+ * 获取多个字体组合成的字形路径
+ * @param {Array} array - 字体片段数组
+ * @param {number} x - 起点 X
+ * @param {number} y - 起点 Y
+ * @param {string} anchor - 对齐方式 ('center baseline' | 'left baseline' | 'right baseline')
+ * @param {number} opacity
+ * @param {boolean} shadow - 是否开启阴影
+ * @return {String}
  */
 export function getMultipleTextPath(array = [{
-    font: "torus" || torus,
+    font: "torus",
     text: '',
     size: 24,
     color: '#fff',
-}], x = 0, y = 0, anchor = "center baseline", shadow = false) {
+}], x = 0, y = 0, anchor = "center baseline", opacity = 1, shadow = false) {
     if (isEmptyArray(array)) return '';
 
     let width_array = []; // 累计宽度
     let total_width = 0;
 
-    // 获取宽度
-
-    for (const i in array) {
-        const v = array[i];
-
-        const font = v.font;
-        const text = v.text;
+    // 1. 获取并累加每个片段的物理宽度
+    for (const v of array) {
+        const instance = getFontInstance(v.font);
+        const text = v.text || '';
         const size = v?.size || 24;
 
-        const width = getTextWidth(font, text, size);
+        const width = instance.getTextWidth(text, size);
 
         total_width += width;
         width_array.push(total_width);
     }
 
-    // 全部往后移一位，前面加 0
-    total_width = width_array.pop();
+    // 2. 全部往后移一位，前面加 0 (计算每个片段的相对 X 轴偏移量)
+    total_width = width_array.pop() || 0;
     width_array.unshift(0);
 
     let out = '';
 
-    for (const i in array) {
+    const parts = anchor.split(/\s+/).filter(Boolean);
+    const horizon = parts[0] || "center";
+    const vertical = parts[1] || "baseline";
+
+    // 3. 循环拼接路径
+    for (let i = 0; i < array.length; i++) {
         const v = array[i];
         const w = width_array[i];
 
-        const font = v.font;
-        const text = v.text;
+        const instance = getFontInstance(v.font);
+        const text = v.text || '';
         const size = v?.size ?? 24;
         const color = v?.color || '#fff';
 
-        switch (anchor) {
-            case "center baseline": {
-                if (shadow !== false) {
-                    out += getTextPath(font, text, x - (total_width / 2) + w + 2, y + 2, size, "left baseline", '#1c1719');
-                }
-                out += getTextPath(font, text, x - (total_width / 2) + w, y, size, "left baseline", color);
+        let offset_x = 0;
+
+        switch (horizon) {
+            case "center":
+                offset_x = x - (total_width / 2) + w;
                 break;
-            }
-            case "left baseline": {
-                if (shadow !== false) {
-                    out += getTextPath(font, text, x + w + 2, y + 2, size, "left baseline", '#1c1719');
-                }
-                out += getTextPath(font, text, x + w, y, size, "left baseline", color);
+            case "left":
+                offset_x = x + w;
                 break;
-            }
-            case "right baseline": {
-                if (shadow !== false) {
-                    out += getTextPath(font, text, x - total_width + w + 2, y + 2, size, "left baseline", '#1c1719');
-                }
-                out += getTextPath(font, text, x - total_width + w, y, size, "left baseline", color);
+            case "right":
+                offset_x = x - total_width + w;
                 break;
-            }
+            default:
+                offset_x = x + w;
+                break;
         }
+
+        out += instance.getTextPath(text, offset_x, y, size, `left ${vertical}`, color, opacity, shadow);
     }
 
     return out;
 }
 
-
-export const BerlinBold = {};
-
-BerlinBold.name = "BerlinBold";
-BerlinBold.getTextPath = getTextPath_BerlinBold;
-BerlinBold.get2SizeTextPath = get2SizeTextPath_BerlinBold;
-BerlinBold.getTextMetrics = getTextMetrics_BerlinBold;
-BerlinBold.getTextWidth = getTextWidth_BerlinBold;
-BerlinBold.cutStringTail = cutStringTail_BerlinBold;
-
 /**
- * @return {string}
- */
-function getTextPath_BerlinBold(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    shadow = false,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return ((shadow === false) ? '' :
-            textToSVGBerlinBold.getPath(preprocessingText(text), {
-                x: x + 2,
-                y: y + 2,
-                fontSize: size,
-                anchor: anchor,
-                fontFamily: "BerlinBold",
-                kerning: true,
-                attributes: {
-                    fill: '#1c1719'
-                }
-            })
-    ) + textToSVGBerlinBold.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "BerlinBold",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_BerlinBold(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGBerlinBold.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "BerlinBold",
-        attributes: {
-            fill: fill
-        }
-    })
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_BerlinBold(
-    text = '',
-    size = 0,
-) {
-    return textToSVGBerlinBold.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "BerlinBold",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-/**
- * @return {string}
- */
-function cutStringTail_BerlinBold(
-    text = '',
-    size = 36,
-    maxWidth = 0,
-    isDot3Needed = true,
-) {
-    text = preprocessingText(text)
-
-    if (BerlinBold.getTextWidth(text, size) <= maxWidth) {
-        return text;
-    }
-
-    let dot3 = '...';
-    let dot3_width = isDot3Needed ? BerlinBold.getTextWidth(dot3, size) : 0;
-    let out_text = '';
-    maxWidth -= dot3_width;
-
-    for (let i = 0; BerlinBold.getTextWidth(out_text, size) < maxWidth; i++) {
-        out_text += text.slice(i, i + 1);
-    }
-
-    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
-}
-
-
-/**
- * @function 获取大小文本的 BerlinBold 字体 SVG 路径
- * @return {String}
- * @param largerText {String} 较大的文本
- * @param smallerText {String} 较小的文本
- * @param largeSize {Number} 大文本尺寸
- * @param smallSize {Number} 小文本尺寸
- * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点纵坐标
- * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
- * @param color {String} 十六进制颜色，#FFF
- */
-
-function get2SizeTextPath_BerlinBold(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
-    let width_b = BerlinBold.getTextWidth(largerText, largeSize);
-    let width_m = BerlinBold.getTextWidth(smallerText, smallSize);
-    let width_a = (width_b + width_m) / 2; // 全长的一半长
-
-    let out;
-
-    if (anchor === "left baseline") {
-        out = BerlinBold.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            BerlinBold.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
-
-    } else if (anchor === "right baseline") {
-        out = BerlinBold.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            BerlinBold.getTextPath(smallerText, x, y, smallSize, anchor, color);
-
-    } else if (anchor === "center baseline") {
-        out = BerlinBold.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            BerlinBold.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
-    }
-
-    return out;
-}
-
-export const TahomaRegular = {};
-
-TahomaRegular.name = "TahomaRegular"
-TahomaRegular.getTextPath = getTextPath_TahomaRegular;
-TahomaRegular.get2SizeTextPath = get2SizeTextPath_TahomaRegular;
-TahomaRegular.getTextMetrics = getTextMetrics_TahomaRegular;
-TahomaRegular.getTextWidth = getTextWidth_TahomaRegular;
-TahomaRegular.cutStringTail = cutStringTail_TahomaRegular;
-
-/**
- * @return {string}
- */
-function getTextPath_TahomaRegular(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return textToSVGTahomaRegular.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "TahomaRegular",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_TahomaRegular(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGTahomaRegular.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "TahomaRegular",
-        attributes: {
-            fill: fill
-        }
-    })
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_TahomaRegular(
-    text = '',
-    size = 0,
-) {
-    return textToSVGTahomaRegular.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "TahomaRegular",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-/**
- * @return {string}
- */
-function cutStringTail_TahomaRegular(
-    text = '',
-    size = 36,
-    maxWidth = 0,
-    isDot3Needed = true,
-) {
-    text = preprocessingText(text)
-
-    if (TahomaRegular.getTextWidth(text, size) <= maxWidth) {
-        return text;
-    }
-
-    let dot3 = '...';
-    let dot3_width = isDot3Needed ? TahomaRegular.getTextWidth(dot3, size) : 0;
-    let out_text = '';
-    maxWidth -= dot3_width;
-
-    for (let i = 0; TahomaRegular.getTextWidth(out_text, size) < maxWidth; i++) {
-        out_text += text.slice(i, i + 1);
-    }
-
-    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
-}
-
-
-/**
- * @function 获取大小文本的 TahomaRegular 字体 SVG 路径
- * @return {String}
- * @param largerText {String} 较大的文本
- * @param smallerText {String} 较小的文本
- * @param largeSize {Number} 大文本尺寸
- * @param smallSize {Number} 小文本尺寸
- * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点纵坐标
- * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
- * @param color {String} 十六进制颜色，#FFF
- */
-
-function get2SizeTextPath_TahomaRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
-    let width_b = TahomaRegular.getTextWidth(largerText, largeSize);
-    let width_m = TahomaRegular.getTextWidth(smallerText, smallSize);
-    let width_a = (width_b + width_m) / 2; // 全长的一半长
-
-    let out;
-
-    if (anchor === "left baseline") {
-        out = TahomaRegular.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            TahomaRegular.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
-
-    } else if (anchor === "right baseline") {
-        out = TahomaRegular.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            TahomaRegular.getTextPath(smallerText, x, y, smallSize, anchor, color);
-
-    } else if (anchor === "center baseline") {
-        out = TahomaRegular.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            TahomaRegular.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
-    }
-
-    return out;
-}
-
-export const TahomaBold = {};
-
-TahomaBold.name = "TahomaBold"
-TahomaBold.getTextPath = getTextPath_TahomaBold;
-TahomaBold.get2SizeTextPath = get2SizeTextPath_TahomaBold;
-TahomaBold.getTextMetrics = getTextMetrics_TahomaBold;
-TahomaBold.getTextWidth = getTextWidth_TahomaBold;
-TahomaBold.cutStringTail = cutStringTail_TahomaBold;
-
-/**
- * @return {string}
- */
-function getTextPath_TahomaBold(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return textToSVGTahomaBold.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "TahomaBold",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_TahomaBold(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGTahomaBold.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "TahomaBold",
-        attributes: {
-            fill: fill
-        }
-    })
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_TahomaBold(
-    text = '',
-    size = 0,
-) {
-    return textToSVGTahomaBold.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "TahomaBold",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-/**
- * @return {string}
- */
-function cutStringTail_TahomaBold(
-    text = '',
-    size = 36,
-    maxWidth = 0,
-    isDot3Needed = true,
-) {
-    text = preprocessingText(text)
-
-    if (TahomaBold.getTextWidth(text, size) <= maxWidth) {
-        return text;
-    }
-
-    let dot3 = '...';
-    let dot3_width = isDot3Needed ? TahomaBold.getTextWidth(dot3, size) : 0;
-    let out_text = '';
-    maxWidth -= dot3_width;
-
-    for (let i = 0; TahomaBold.getTextWidth(out_text, size) < maxWidth; i++) {
-        out_text += text.slice(i, i + 1);
-    }
-
-    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
-}
-
-
-/**
- * @function 获取大小文本的 TahomaBold 字体 SVG 路径
- * @return {String}
- * @param largerText {String} 较大的文本
- * @param smallerText {String} 较小的文本
- * @param largeSize {Number} 大文本尺寸
- * @param smallSize {Number} 小文本尺寸
- * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点纵坐标
- * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
- * @param color {String} 十六进制颜色，#FFF
- */
-
-function get2SizeTextPath_TahomaBold(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
-    let width_b = TahomaBold.getTextWidth(largerText, largeSize);
-    let width_m = TahomaBold.getTextWidth(smallerText, smallSize);
-    let width_a = (width_b + width_m) / 2; // 全长的一半长
-
-    let out;
-
-    if (anchor === "left baseline") {
-        out = TahomaBold.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            TahomaBold.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
-
-    } else if (anchor === "right baseline") {
-        out = TahomaBold.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            TahomaBold.getTextPath(smallerText, x, y, smallSize, anchor, color);
-
-    } else if (anchor === "center baseline") {
-        out = TahomaBold.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            TahomaBold.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
-    }
-
-    return out;
-}
-
-export const poppinsBold = {};
-
-poppinsBold.name = "poppinsBold"
-poppinsBold.getTextPath = getTextPath_poppinsBold;
-poppinsBold.get2SizeTextPath = get2SizeTextPath_poppinsBold;
-poppinsBold.getTextMetrics = getTextMetrics_poppinsBold;
-poppinsBold.getTextWidth = getTextWidth_poppinsBold;
-poppinsBold.cutStringTail = cutStringTail_poppinsBold;
-
-/**
- * @return {string}
- */
-function getTextPath_poppinsBold(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return textToSVGpoppinsBold.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "poppinsBold",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_poppinsBold(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGpoppinsBold.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "poppinsBold",
-        attributes: {
-            fill: fill
-        }
-    })
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_poppinsBold(
-    text = '',
-    size = 0,
-) {
-    return textToSVGpoppinsBold.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "poppinsBold",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-/**
- * @return {string}
- */
-function cutStringTail_poppinsBold(
-    text = '',
-    size = 36,
-    maxWidth = 0,
-    isDot3Needed = true,
-) {
-    text = preprocessingText(text)
-
-    if (poppinsBold.getTextWidth(text, size) <= maxWidth) {
-        return text;
-    }
-
-    let dot3 = '...';
-    let dot3_width = isDot3Needed ? poppinsBold.getTextWidth(dot3, size) : 0;
-    let out_text = '';
-    maxWidth -= dot3_width;
-
-    for (let i = 0; poppinsBold.getTextWidth(out_text, size) < maxWidth; i++) {
-        out_text += text.slice(i, i + 1);
-    }
-
-    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
-}
-
-
-/**
- * @function 获取大小文本的 poppinsBold 字体 SVG 路径
- * @return {String}
- * @param largerText {String} 较大的文本
- * @param smallerText {String} 较小的文本
- * @param largeSize {Number} 大文本尺寸
- * @param smallSize {Number} 小文本尺寸
- * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点纵坐标
- * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
- * @param color {String} 十六进制颜色，#FFF
- */
-
-function get2SizeTextPath_poppinsBold(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
-    let width_b = poppinsBold.getTextWidth(largerText, largeSize);
-    let width_m = poppinsBold.getTextWidth(smallerText, smallSize);
-    let width_a = (width_b + width_m) / 2; // 全长的一半长
-
-    let out;
-
-    if (anchor === "left baseline") {
-        out = poppinsBold.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            poppinsBold.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
-
-    } else if (anchor === "right baseline") {
-        out = poppinsBold.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            poppinsBold.getTextPath(smallerText, x, y, smallSize, anchor, color);
-
-    } else if (anchor === "center baseline") {
-        out = poppinsBold.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            poppinsBold.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
-    }
-
-    return out;
-}
-
-export const lineSeedSans = {};
-
-lineSeedSans.name = "lineSeedSans"
-lineSeedSans.getTextPath = getTextPath_lineSeedSans;
-lineSeedSans.get2SizeTextPath = get2SizeTextPath_lineSeedSans;
-lineSeedSans.getTextMetrics = getTextMetrics_lineSeedSans;
-lineSeedSans.getTextWidth = getTextWidth_lineSeedSans;
-lineSeedSans.cutStringTail = cutStringTail_lineSeedSans;
-
-/**
- * @return {string}
- */
-function getTextPath_lineSeedSans(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return textToSVGlineSeedSansBold.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "lineSeedSans",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_lineSeedSans(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGlineSeedSansBold.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "lineSeedSans",
-        attributes: {
-            fill: fill
-        }
-    })
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_lineSeedSans(
-    text = '',
-    size = 0,
-) {
-    return textToSVGlineSeedSansBold.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "lineSeedSans",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-/**
- * @return {string}
- */
-function cutStringTail_lineSeedSans(
-    text = '',
-    size = 36,
-    maxWidth = 0,
-    isDot3Needed = true,
-) {
-    text = preprocessingText(text)
-
-    if (lineSeedSans.getTextWidth(text, size) <= maxWidth) {
-        return text;
-    }
-
-    let dot3 = '...';
-    let dot3_width = isDot3Needed ? lineSeedSans.getTextWidth(dot3, size) : 0;
-    let out_text = '';
-    maxWidth -= dot3_width;
-
-    for (let i = 0; lineSeedSans.getTextWidth(out_text, size) < maxWidth; i++) {
-        out_text += text.slice(i, i + 1);
-    }
-
-    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
-}
-
-
-/**
- * @function 获取大小文本的 lineSeedSans 字体 SVG 路径
- * @return {String}
- * @param largerText {String} 较大的文本
- * @param smallerText {String} 较小的文本
- * @param largeSize {Number} 大文本尺寸
- * @param smallSize {Number} 小文本尺寸
- * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点纵坐标
- * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
- * @param color {String} 十六进制颜色，#FFF
- */
-
-function get2SizeTextPath_lineSeedSans(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
-    let width_b = lineSeedSans.getTextWidth(largerText, largeSize);
-    let width_m = lineSeedSans.getTextWidth(smallerText, smallSize);
-    let width_a = (width_b + width_m) / 2; // 全长的一半长
-
-    let out;
-
-    if (anchor === "left baseline") {
-        out = lineSeedSans.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            lineSeedSans.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
-
-    } else if (anchor === "right baseline") {
-        out = lineSeedSans.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            lineSeedSans.getTextPath(smallerText, x, y, smallSize, anchor, color);
-
-    } else if (anchor === "center baseline") {
-        out = lineSeedSans.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            lineSeedSans.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
-    }
-
-    return out;
-}
-
-export const torus = {};
-
-torus.name = "torus"
-torus.getTextPath = getTextPath_torus;
-torus.get2SizeTextPath = get2SizeTextPath_torus;
-torus.getTextMetrics = getTextMetrics_torus;
-torus.getTextWidth = getTextWidth_torus;
-torus.cutStringTail = cutStringTail_torus;
-
-/**
- * @return {string}
- */
-function getTextPath_torus(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return textToSVGTorusSB.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "Torus",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_torus(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGTorusSB.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "Torus",
-        attributes: {
-            fill: fill
-        }
-    })
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_torus(
-    text = '',
-    size = 0,
-) {
-    return textToSVGTorusSB.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "Torus",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-/**
- * @return {string}
- */
-function cutStringTail_torus(
-    text = '',
-    size = 36,
-    maxWidth = 0,
-    isDot3Needed = true,
-) {
-    text = preprocessingText(text)
-
-    if (torus.getTextWidth(text, size) <= maxWidth) {
-        return text;
-    }
-
-    let dot3 = '...';
-    let dot3_width = isDot3Needed ? torus.getTextWidth(dot3, size) : 0;
-    let out_text = '';
-    maxWidth -= dot3_width;
-
-    for (let i = 0; torus.getTextWidth(out_text, size) < maxWidth; i++) {
-        out_text += text.slice(i, i + 1);
-    }
-
-    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
-}
-
-
-/**
- * @function 获取大小文本的 torus 字体 SVG 路径
- * @return {String}
- * @param largerText {String} 较大的文本
- * @param smallerText {String} 较小的文本
- * @param largeSize {Number} 大文本尺寸
- * @param smallSize {Number} 小文本尺寸
- * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点纵坐标
- * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
- * @param color {String} 十六进制颜色，#FFF
- * @param color2 {String} 十六进制颜色，#FFF，可不输入
- */
-
-function get2SizeTextPath_torus(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'left baseline', color = '#fff', color2 = color) {
-    let width_b = torus.getTextWidth(largerText, largeSize);
-    let width_m = torus.getTextWidth(smallerText, smallSize);
-    let width_a = (width_b + width_m) / 2; // 全长的一半长
-
-    let out;
-
-    if (anchor === "left baseline") {
-        out = torus.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            torus.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color2);
-
-    } else if (anchor === "right baseline") {
-        out = torus.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            torus.getTextPath(smallerText, x, y, smallSize, anchor, color2);
-
-    } else if (anchor === "center baseline") {
-        out = torus.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            torus.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color2);
-    }
-
-    return out;
-}
-
-export const torusBold = {};
-
-torusBold.name = "torusBold"
-torusBold.getTextPath = getTextPath_torusBold;
-torusBold.get2SizeTextPath = get2SizeTextPath_torusBold;
-torusBold.getTextMetrics = getTextMetrics_torusBold;
-torusBold.getTextWidth = getTextWidth_torusBold;
-torusBold.cutStringTail = cutStringTail_torusBold;
-
-/**
- * @return {string}
- */
-function getTextPath_torusBold(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return textToSVGTorusBold.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "TorusBold",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_torusBold(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGTorusBold.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "TorusBold",
-        attributes: {
-            fill: fill
-        }
-    })
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_torusBold(
-    text = '',
-    size = 0,
-) {
-    return textToSVGTorusBold.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "TorusBold",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-/**
- * @return {string}
- */
-function cutStringTail_torusBold(
-    text = '',
-    size = 36,
-    maxWidth = 0,
-    isDot3Needed = true,
-) {
-    text = preprocessingText(text)
-
-    if (torusBold.getTextWidth(text, size) <= maxWidth) {
-        return text;
-    }
-
-    let dot3 = '...';
-    let dot3_width = isDot3Needed ? torusBold.getTextWidth(dot3, size) : 0;
-    let out_text = '';
-    maxWidth -= dot3_width;
-
-    for (let i = 0; torusBold.getTextWidth(out_text, size) < maxWidth; i++) {
-        out_text += text.slice(i, i + 1);
-    }
-
-    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
-}
-
-
-/**
- * @function 获取大小文本的 torusBold 字体 SVG 路径
- * @return {String}
- * @param largerText {String} 较大的文本
- * @param smallerText {String} 较小的文本
- * @param largeSize {Number} 大文本尺寸
- * @param smallSize {Number} 小文本尺寸
- * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点纵坐标
- * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
- * @param color {String} 十六进制颜色，#FFF
- * @param color2 {String} 十六进制颜色，#FFF，可不输入
- */
-
-function get2SizeTextPath_torusBold(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'left baseline', color = '#fff', color2 = color) {
-    let width_b = torusBold.getTextWidth(largerText, largeSize);
-    let width_m = torusBold.getTextWidth(smallerText, smallSize);
-    let width_a = (width_b + width_m) / 2; // 全长的一半长
-
-    let out;
-
-    if (anchor === "left baseline") {
-        out = torusBold.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            torusBold.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color2);
-
-    } else if (anchor === "right baseline") {
-        out = torusBold.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            torusBold.getTextPath(smallerText, x, y, smallSize, anchor, color2);
-
-    } else if (anchor === "center baseline") {
-        out = torusBold.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            torusBold.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color2);
-    }
-
-    return out;
-}
-
-export const torusRegular = {};
-
-torusRegular.name = "torusRegular"
-torusRegular.getTextPath = getTextPath_torusRegular;
-torusRegular.get2SizeTextPath = get2SizeTextPath_torusRegular;
-torusRegular.getTextMetrics = getTextMetrics_torusRegular;
-torusRegular.getTextWidth = getTextWidth_torusRegular;
-torusRegular.cutStringTail = cutStringTail_torusRegular;
-
-/**
- * @return {string}
- */
-function getTextPath_torusRegular(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return textToSVGTorusRegular.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "TorusRegular",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_torusRegular(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGTorusRegular.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "TorusRegular",
-        attributes: {
-            fill: fill
-        }
-    })
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_torusRegular(
-    text = '',
-    size = 0,
-) {
-    return textToSVGTorusRegular.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "TorusRegular",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-/**
- * @return {string}
- */
-function cutStringTail_torusRegular(
-    text = '',
-    size = 36,
-    maxWidth = 0,
-    isDot3Needed = true,
-) {
-    text = preprocessingText(text)
-
-    if (torusRegular.getTextWidth(text, size) <= maxWidth) {
-        return text;
-    }
-
-    let dot3 = '...'
-    let dot3_width = torusRegular.getTextWidth(dot3, size);
-    let out_text = '';
-    maxWidth -= dot3_width;
-
-    for (let i = 0; torusRegular.getTextWidth(out_text, size) < maxWidth; i++) {
-        out_text += text.slice(i, i + 1);
-    }
-
-    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
-}
-
-
-/**
- * @function 获取大小文本的 torusRegular 字体 SVG 路径
- * @return {String}
- * @param largerText {String} 较大的文本
- * @param smallerText {String} 较小的文本
- * @param largeSize {Number} 大文本尺寸
- * @param smallSize {Number} 小文本尺寸
- * @param x {Number} 锚点横坐标
- * @param y {Number} 锚点纵坐标
- * @param anchor {String} 锚点种类。目前只支持left baseline right baseline center baseline。
- * @param color {String} 十六进制颜色，#FFF
- */
-
-function get2SizeTextPath_torusRegular(largerText, smallerText, largeSize, smallSize, x, y, anchor = 'center baseline', color = '#fff') {
-    let width_b = torusRegular.getTextWidth(largerText, largeSize);
-    let width_m = torusRegular.getTextWidth(smallerText, smallSize);
-    let width_a = (width_b + width_m) / 2; // 全长的一半长
-
-    let out;
-
-    if (anchor === "left baseline") {
-        out = torusRegular.getTextPath(largerText, x, y, largeSize, anchor, color) +
-            torusRegular.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
-
-    } else if (anchor === "right baseline") {
-        out = torusRegular.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-            torusRegular.getTextPath(smallerText, x, y, smallSize, anchor, color);
-
-    } else if (anchor === "center baseline") {
-        out = torusRegular.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-            torusRegular.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
-    }
-
-    return out;
-}
-
-
-export const PuHuiTi = {};
-
-PuHuiTi.name = "PuHuiTi"
-PuHuiTi.getTextPath = getTextPath_PuHuiTi;
-PuHuiTi.getTextMetrics = getTextMetrics_PuHuiTi;
-PuHuiTi.getTextWidth = getTextWidth_PuHuiTi;
-PuHuiTi.cutStringTail = cutStringTail_PuHuiTi;
-
-/**
- * @return {string}
- */
-function getTextPath_PuHuiTi(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return textToSVGPuHuiTi.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "PuHuiTi",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_PuHuiTi(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGextra.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "PuHuiTi",
-        attributes: {
-            fill: fill
-        }
-    });
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_PuHuiTi(
-    text = '',
-    size = 0,
-) {
-    return textToSVGPuHuiTi.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "PuHuiTi",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-/**
- * @return {string}
- */
-function cutStringTail_PuHuiTi(
-    text = '',
-    size = 36,
-    maxWidth = 0,
-    isDot3Needed = true,
-) {
-    text = preprocessingText(text)
-
-    if (PuHuiTi.getTextWidth(text, size) <= maxWidth) {
-        return text;
-    }
-
-    let dot3 = '...'
-    let dot3_width = PuHuiTi.getTextWidth(dot3, size);
-    let out_text = '';
-    maxWidth -= dot3_width;
-
-    for (let i = 0; PuHuiTi.getTextWidth(out_text, size) < maxWidth; i++) {
-        out_text += text.slice(i, i + 1);
-    }
-
-    return isDot3Needed ? out_text.slice(0, -1) + dot3 : out_text.slice(0, -1); //因为超长才能跳出，所以裁去超长的那个字符
-}
-
-export const extra = {};
-
-extra.name = "extra"
-extra.getTextPath = getTextPath_extra;
-extra.getTextMetrics = getTextMetrics_extra;
-extra.getTextWidth = getTextWidth_extra;
-
-/**
- * @return {string}
- */
-function getTextPath_extra(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff',
-    opacity = 1,
-    stroke = 'none',
-    stroke_width = 0,
-    stroke_opacity = 1,
-) {
-    return textToSVGextra.getPath(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "extra",
-        attributes: {
-            "fill": fill,
-            "fill-opacity": opacity,
-            "stroke": stroke,
-            "stroke-width": stroke_width,
-            "stroke-opacity": stroke_opacity,
-        }
-    })
-}
-
-function getTextMetrics_extra(
-    text = '',
-    x = 0,
-    y = 0,
-    size = 36,
-    anchor = 'left baseline',
-    fill = '#fff'
-) {
-    return textToSVGextra.getMetrics(preprocessingText(text), {
-        x: x,
-        y: y,
-        fontSize: size,
-        anchor: anchor,
-        fontFamily: "extra",
-        attributes: {
-            fill: fill
-        }
-    })
-}
-
-/**
- * @return {number}
- */
-function getTextWidth_extra(
-    text = '',
-    size = 0,
-) {
-    return textToSVGextra.getMetrics(preprocessingText(text), {
-        x: 0,
-        y: 0,
-        fontSize: size,
-        anchor: 'center baseline',
-        fontFamily: "extra",
-        attributes: {
-            fill: '#fff'
-        }
-    }).width
-}
-
-function getFontName(font = torus) {
-    if (typeof font == "object") return Object.values(font)[0]
-    else return font?.toString()
-}
-
-/**
+ * 3. 重写：高能获取文本宽度
+ * @param font {FontInstance | String}
+ * @param text {String | Number}
+ * @param size {Number}
  * @return {number}
  */
 export function getTextWidth(font = "torus", text = '', size = 24) {
-    const name = getFontName(font)
-
-    if (name === "torus") return torus.getTextWidth(text, size);
-    if (name === "torusRegular") return torusRegular.getTextWidth(text, size);
-    if (name === "torusBold") return torusBold.getTextWidth(text, size);
-    if (name === "TahomaRegular") return TahomaRegular.getTextWidth(text, size);
-    if (name === "TahomaBold") return TahomaBold.getTextWidth(text, size);
-    if (name === "PuHuiTi") return PuHuiTi.getTextWidth(text, size);
-    if (name === "extra") return extra.getTextWidth(text, size);
-    if (name === "poppinsBold") return poppinsBold.getTextWidth(text, size);
-    if (name === "lineSeedSans") return lineSeedSans.getTextWidth(text, size);
-    if (name === "BerlinBold") return BerlinBold.getTextWidth(text, size);
-    return 0;
+    const instance = getFontInstance(font);
+    return instance.getTextWidth(text, size);
 }
 
-export function getTextPath(font = "torus", text = '', x, y, size = 24, anchor, fill) {
-    const name = getFontName(font)
-
-    if (name === "torus") return torus.getTextPath(text, x, y, size, anchor, fill);
-    if (name === "torusRegular") return torusRegular.getTextPath(text, x, y, size, anchor, fill);
-    if (name === "torusBold") return torusBold.getTextPath(text, x, y, size, anchor, fill);
-    if (name === "TahomaRegular") return TahomaRegular.getTextPath(text, x, y, size, anchor, fill);
-    if (name === "TahomaBold") return TahomaBold.getTextPath(text, x, y, size, anchor, fill);
-    if (name === "PuHuiTi") return PuHuiTi.getTextPath(text, x, y, size, anchor, fill);
-    if (name === "extra") return extra.getTextPath(text, x, y, size, anchor, fill);
-    if (name === "poppinsBold") return poppinsBold.getTextPath(text, x, y, size, anchor, fill);
-    if (name === "lineSeedSans") return lineSeedSans.getTextPath(text, x, y, size, anchor, fill);
-    if (name === "BerlinBold") return BerlinBold.getTextPath(text, x, y, size, anchor, fill);
-    return '';
+/**
+ * 4. 重写：获取 SVG 路径
+ * @param font {FontInstance | String}
+ * @param text {String | Number}
+ * @param x {Number}
+ * @param y {Number}
+ * @param size {Number}
+ * @param anchor {String}
+ * @param fill {String}
+ * @return {String}
+ */
+export function getTextPath(font = "torus", text = '', x = 0, y = 0, size = 24, anchor = 'left baseline', fill = '#fff') {
+    const instance = getFontInstance(font);
+    return instance.getTextPath(text, x, y, size, anchor, fill);
 }
 
+/**
+ * 5. 重写：高性能二分法文本裁剪
+ * @return {string}
+ */
 export function cutStringTail(font = "torus", text = '', size = 24, max_width = 0, is_dot3_needed = true) {
-    const name = getFontName(font)
-
-    if (name === "torus") return torus.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (name === "torusRegular") return torusRegular.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (name === "torusBold") return torusBold.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (name === "TahomaRegular") return TahomaRegular.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (name === "TahomaBold") return TahomaBold.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (name === "PuHuiTi") return PuHuiTi.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (name === "extra") return extra.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (name === "poppinsBold") return poppinsBold.cutStringTail(text, size, max_width, is_dot3_needed);
-    if (name === "lineSeedSans") return lineSeedSans.cutStringTail(text, size, max_width, is_dot3_needed);
-    return text;
+    const instance = getFontInstance(font);
+    return instance.cutStringTail(text, size, max_width, is_dot3_needed);
 }

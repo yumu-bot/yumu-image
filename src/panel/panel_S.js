@@ -673,24 +673,22 @@ const card_S1 = async (
             'right baseline', PanelColor.base(hue))
     }
 
-    const vs_text = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: String(left_first),
-            size: 30,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: '  vs  ',
-            size: 18,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: String(right_first),
-            size: 30,
-            color: '#fff'
-        }], 440, 30, 'center baseline'
-    )
+    const vs_text = getMultipleTextPath([{
+        font: poppinsBold,
+        text: String(left_first),
+        size: 30,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: '  vs  ',
+        size: 18,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: String(right_first),
+        size: 30,
+        color: '#fff'
+    }], 440, 30, 'center baseline')
 
     const left_health = PanelDraw.LinearGradientRect(
         440 - 5 - left_progress_width, 38, left_progress_width, 15, 7.5, colorArray.red, 1, [100, 0]

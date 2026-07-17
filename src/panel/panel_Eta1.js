@@ -371,19 +371,17 @@ const component_Eta1 = (
     const title2_width = 1080 - poppinsBold.getTextWidth(title_text, 72);
     const title2_font = isASCII(data?.title_unicode) ? poppinsBold : PuHuiTi
 
-    const title = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: title_text + ' ',
-            size: 72,
-            color: '#fff'
-        }, {
-            font: title2_font,
-            text: data?.title === data?.title_unicode ? '' : title2_font.cutStringTail(data?.title_unicode, 24, title2_width),
-            size: 24,
-            color: '#fff'
-        }], 340, 85, 'left baseline'
-    )
+    const title = getMultipleTextPath([{
+        font: poppinsBold,
+        text: title_text + ' ',
+        size: 72,
+        color: '#fff'
+    }, {
+        font: title2_font,
+        text: data?.title === data?.title_unicode ? '' : title2_font.cutStringTail(data?.title_unicode, 24, title2_width),
+        size: 24,
+        color: '#fff'
+    }], 340, 85, 'left baseline')
 
     const difficulty_text = poppinsBold.cutStringTail(data?.difficulty_name, 48, 460)
     const remain_text = '    BPM ' + floor(data?.bpm, 2)
@@ -392,19 +390,17 @@ const component_Eta1 = (
         + '    OD ' + floor(data?.od, 1)
         + '    HP ' + floor(data?.hp, 1)
 
-    const difficulty = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: difficulty_text,
-            size: 48,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: remain_text,
-            size: 36,
-            color: '#aaa'
-        }], 340, 165, 'left baseline'
-    )
+    const difficulty = getMultipleTextPath([{
+        font: poppinsBold,
+        text: difficulty_text,
+        size: 48,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: remain_text,
+        size: 36,
+        color: '#aaa'
+    }], 340, 165, 'left baseline')
 
     const star = poppinsBold.getTextPath('b/' + data?.beatmap_id + '   *' + floor(data.star_rating, 2), 1840 - 80, 85, 36, 'right baseline', '#aaa')
 

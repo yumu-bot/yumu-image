@@ -63,8 +63,8 @@ export function card_C(data = {}) {
 
     // 4. 指数区域 (Index) 计算
     const index_path = getMultipleTextPath([
-            { font: torus, text: index_b, size: index_b_size, color: color_index },
-            { font: torus, text: index_m, size: index_m_size, color: color_index },
+            {font: torus, text: index_b, size: index_b_size, color: color_index},
+            {font: torus, text: index_m, size: index_m_size, color: color_index},
         ], 815, 73.672, 'center baseline') +
         (index_l ? torus.getTextPath(index_l, 815, 33.672, index_l_size, 'center baseline', color_index) : '');
 

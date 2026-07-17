@@ -57,21 +57,18 @@ export async function card_F3(match_score = {}, max_combo = 0, compare_score = 0
     const name = poppinsBold.getTextPath(poppinsBold.cutStringTail(match_score?.user?.username, 36, 270), 160, 48, 36, 'left baseline', '#fff')
 
     const ranking = PanelDraw.Rect(15, 15, 50, 25, 12.5, getUserRankColor(match_score?.ranking))
-        + getMultipleTextPath(
-            [{
-                font: poppinsBold,
-                text: (match_score?.ranking || 0).toString(),
-                size: 24,
-                color: '#fff'
-            }, {
-                font: poppinsBold,
-                text: getOrdinal(match_score?.ranking || 0),
-                size: 16,
-                color: '#fff'
-            }
-            ],
-            40, 36, 'center baseline'
-        )
+        + getMultipleTextPath([{
+            font: poppinsBold,
+            text: (match_score?.ranking || 0).toString(),
+            size: 24,
+            color: '#fff'
+        }, {
+            font: poppinsBold,
+            text: getOrdinal(match_score?.ranking || 0),
+            size: 16,
+            color: '#fff'
+        }
+        ], 40, 36, 'center baseline')
 
     const rank = getImageFromV3(`object-score-${match_score?.rank}2.png`)
 

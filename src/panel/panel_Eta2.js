@@ -360,45 +360,41 @@ const component_Eta1 = (data = {
     const title2_width = 940 - torus.getTextWidth(title_text, 60);
     const title2_font = isASCII(data?.title_unicode) ? torus : PuHuiTi
 
-    const title = getMultipleTextPath(
-        [{
-            font: torus,
-            text: title_text + ' ',
-            size: 60,
-            color: '#fff'
-        }, {
-            font: title2_font,
-            text: data?.title === data?.title_unicode ? '' : title2_font.cutStringTail(data?.title_unicode, 24, title2_width),
-            size: 24,
-            color: '#aaa'
-        }], 310, 85, 'left baseline'
-    )
+    const title = getMultipleTextPath([{
+        font: torus,
+        text: title_text + ' ',
+        size: 60,
+        color: '#fff'
+    }, {
+        font: title2_font,
+        text: data?.title === data?.title_unicode ? '' : title2_font.cutStringTail(data?.title_unicode, 24, title2_width),
+        size: 24,
+        color: '#aaa'
+    }], 310, 85, 'left baseline')
 
     const sc = floors(data?.score || 0, -4, 1)
 
-    const score = getMultipleTextPath(
-        [{
-            font: torus,
-            text: sc.integer,
-            size: 96,
-            color: '#fff'
-        }, {
-            font: torus,
-            text: sc.decimal + ' ',
-            size: 72,
-            color: '#fff'
-        }, {
-            font: torus,
-            text: floor((data?.accuracy || 0) * 100, 2),
-            size: 60,
-            color: '#aaa'
-        }, {
-            font: torus,
-            text: '% (' + data?.rank + ')',
-            size: 48,
-            color: '#aaa'
-        }], 310, 220, 'left baseline'
-    )
+    const score = getMultipleTextPath([{
+        font: torus,
+        text: sc.integer,
+        size: 96,
+        color: '#fff'
+    }, {
+        font: torus,
+        text: sc.decimal + ' ',
+        size: 72,
+        color: '#fff'
+    }, {
+        font: torus,
+        text: floor((data?.accuracy || 0) * 100, 2),
+        size: 60,
+        color: '#aaa'
+    }, {
+        font: torus,
+        text: '% (' + data?.rank + ')',
+        size: 48,
+        color: '#aaa'
+    }], 310, 220, 'left baseline')
 
     const mode = torus.getTextPath(getGameMode(data?.mode, 2), 310, 280, 36, 'left baseline')
     const mods = drawLazerMods(data.mods, 1130 + 90, 535 - 6, 70, 470, 'left', 6).svg;

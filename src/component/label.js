@@ -1884,50 +1884,44 @@ export async function label_J7(data = {
         15, 94, 36, 'left baseline'
     )
 
-    const index = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: '#',
-            size: 20,
-            color: '#fff',
-        }, {
-            font: poppinsBold,
-            text: (data.index || '0'),
-            size: 30,
-            color: '#fff',
-        },
-        ], 15, 60, 'left baseline'
-    )
+    const index = getMultipleTextPath([{
+        font: poppinsBold,
+        text: '#',
+        size: 20,
+        color: '#fff',
+    }, {
+        font: poppinsBold,
+        text: (data.index || '0'),
+        size: 30,
+        color: '#fff',
+    },
+    ], 15, 60, 'left baseline')
 
-    const top = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: data.top_b,
-            size: 30,
-            color: '#fff',
-        }, {
-            font: poppinsBold,
-            text: data.top_m,
-            size: 24,
-            color: '#fff',
-        },
-        ], 380, 60, 'right baseline'
-    )
+    const top = getMultipleTextPath([{
+        font: poppinsBold,
+        text: data.top_b,
+        size: 30,
+        color: '#fff',
+    }, {
+        font: poppinsBold,
+        text: data.top_m,
+        size: 24,
+        color: '#fff',
+    },
+    ], 380, 60, 'right baseline')
 
-    const bottom = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: data.bottom_b,
-            size: 30,
-            color: '#fff',
-        }, {
-            font: poppinsBold,
-            text: data.bottom_m,
-            size: 24,
-            color: '#fff',
-        },
-        ], 380, 94, 'right baseline'
-    )
+    const bottom = getMultipleTextPath([{
+        font: poppinsBold,
+        text: data.bottom_b,
+        size: 30,
+        color: '#fff',
+    }, {
+        font: poppinsBold,
+        text: data.bottom_m,
+        size: 24,
+        color: '#fff',
+    },
+    ], 380, 94, 'right baseline')
 
     const base = PanelDraw.Rect(390, 15, 85, 85, 20, PanelColor.top(hue))
 
@@ -1982,16 +1976,16 @@ export function label_J8(data = {
 
     const number_color = (progress_after - progress_before < 0) ? '#666' : '#fff';
     const number_data = getMultipleTextPath([{
-        font: poppinsBold,
-        text: (data.data_min_b || '0'),
-        size: data?.data_b_size || 40,
-        color: number_color,
-    }, {
-        font: poppinsBold,
-        text: (data.data_min_m || ''),
-        size: data?.data_m_size || 30,
-        color: number_color,
-    }], 65, 52, 'left baseline')
+            font: poppinsBold,
+            text: (data.data_min_b || '0'),
+            size: data?.data_b_size || 40,
+            color: number_color,
+        }, {
+            font: poppinsBold,
+            text: (data.data_min_m || ''),
+            size: data?.data_m_size || 30,
+            color: number_color,
+        }], 65, 52, 'left baseline')
         + getMultipleTextPath([{
             font: poppinsBold,
             text: (data.data_mid_b || '0'),

@@ -691,32 +691,30 @@ const component_E9 = (
     const title2 = poppinsBold.getTextPath('Combo', 15, 98, 18, 'left baseline', '#fff');
 
     const accuracy = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: floors((data?.accuracy || 0) * 100, 2).integer,
-                size: 60,
-            },
-            {
-                font: 'poppinsBold',
-                text: floors((data?.accuracy || 0) * 100, 2).decimal + ' %',
-                size: 36
-            }
-        ],
-        470, 62, 'right baseline')
+        {
+            font: 'poppinsBold',
+            text: floors((data?.accuracy || 0) * 100, 2).integer,
+            size: 60,
+        },
+        {
+            font: 'poppinsBold',
+            text: floors((data?.accuracy || 0) * 100, 2).decimal + ' %',
+            size: 36
+        }
+    ], 470, 62, 'right baseline')
 
     const combo = getMultipleTextPath([
-            {
-                font: 'poppinsBold',
-                text: data?.combo || 0,
-                size: 60,
-            },
-            {
-                font: 'poppinsBold',
-                text: ' / ' + data?.max_combo || 0,
-                size: 36,
-            }
-        ],
-        470, 132, 'right baseline')
+        {
+            font: 'poppinsBold',
+            text: data?.combo || 0,
+            size: 60,
+        },
+        {
+            font: 'poppinsBold',
+            text: ' / ' + data?.max_combo || 0,
+            size: 36,
+        }
+    ], 470, 132, 'right baseline')
 
     const rect = PanelDraw.Rect(0, 0, 490, 150, 20, '#382e32', 1);
 

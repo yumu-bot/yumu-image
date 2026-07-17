@@ -377,42 +377,38 @@ const component_Eta1 = (
     const title2_width = 530 + 220 - poppinsBold.getTextWidth(title_text, 60);
     const title2_font = isASCII(data?.title_unicode) ? poppinsBold : PuHuiTi
 
-    const title = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: title_text + ' ',
-            size: 48,
-            color: '#2A2226'
-        }, {
-            font: title2_font,
-            text: data?.title === data?.title_unicode ? '' : title2_font.cutStringTail(data?.title_unicode, 24, title2_width),
-            size: 24,
-            color: '#2A2226'
-        }], 200, 70, 'left baseline'
-    )
+    const title = getMultipleTextPath([{
+        font: poppinsBold,
+        text: title_text + ' ',
+        size: 48,
+        color: '#2A2226'
+    }, {
+        font: title2_font,
+        text: data?.title === data?.title_unicode ? '' : title2_font.cutStringTail(data?.title_unicode, 24, title2_width),
+        size: 24,
+        color: '#2A2226'
+    }], 200, 70, 'left baseline')
 
     const di = getDiffIndex(data?.star_rating)
     const difficulty = poppinsBold.getTextPath(di, 295, 140, 36, 'center baseline', '#fff')
 
     const sr = floor(data?.star_rating, 2)
-    const star_rating = getMultipleTextPath(
-        [{
-            font: PuHuiTi,
-            text: '樂曲',
-            size: 24,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: 'SR. ',
-            size: 24,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: sr,
-            size: 36,
-            color: '#fff'
-        }], 665 - 180, 140, 'center baseline'
-    )
+    const star_rating = getMultipleTextPath([{
+        font: PuHuiTi,
+        text: '樂曲',
+        size: 24,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: 'SR. ',
+        size: 24,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: sr,
+        size: 36,
+        color: '#fff'
+    }], 665 - 180, 140, 'center baseline')
 
     const progress = PanelDraw.Rect(833, 77, getProgressWidth(data?.accuracy, data?.rank), 30, 15, 'none')
 
@@ -490,63 +486,55 @@ const component_Eta2 = (data = {
         + poppinsBold.getTextPath('PP.', 650, 772, 40, 'left baseline', '#fff')
         + poppinsBold.getTextPath('COMBO', 670, 1016, 36, 'left baseline', '#fff')
 
-    const score = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: padStart(data?.score, 8),
-            size: 120,
-            color: '#aaa'
-        }, {
-            font: poppinsBold,
-            text: data?.score?.toString(),
-            size: 120,
-            color: '#F06B87'
-        }], 1000, 500, 'right baseline'
-    )
+    const score = getMultipleTextPath([{
+        font: poppinsBold,
+        text: padStart(data?.score, 8),
+        size: 120,
+        color: '#aaa'
+    }, {
+        font: poppinsBold,
+        text: data?.score?.toString(),
+        size: 120,
+        color: '#F06B87'
+    }], 1000, 500, 'right baseline')
 
-    const accuracy = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: floor((data?.accuracy || 0) * 100, 2),
-            size: 48,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: '%',
-            size: 30,
-            color: '#fff'
-        }], 1000, 576, 'right baseline'
-    )
+    const accuracy = getMultipleTextPath([{
+        font: poppinsBold,
+        text: floor((data?.accuracy || 0) * 100, 2),
+        size: 48,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: '%',
+        size: 30,
+        color: '#fff'
+    }], 1000, 576, 'right baseline')
 
-    const pp = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: padStart(Math.round(data?.pp), 4),
-            size: 72,
-            color: '#aaa'
-        }, {
-            font: poppinsBold,
-            text: Math.round(data?.pp)?.toString(),
-            size: 72,
-            color: '#fff'
-        }], 1000, 784, 'right baseline'
-    )
+    const pp = getMultipleTextPath([{
+        font: poppinsBold,
+        text: padStart(Math.round(data?.pp), 4),
+        size: 72,
+        color: '#aaa'
+    }, {
+        font: poppinsBold,
+        text: Math.round(data?.pp)?.toString(),
+        size: 72,
+        color: '#fff'
+    }], 1000, 784, 'right baseline')
 
     const max_pp = poppinsBold.get2SizeTextPath('/ ', Math.round(data?.perfect_pp).toString(), 30, 36, 1000, 826, 'right baseline')
 
-    const combo = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: padStart(data?.combo, 4),
-            size: 36,
-            color: '#aaa'
-        }, {
-            font: poppinsBold,
-            text: data?.combo?.toString(),
-            size: 36,
-            color: '#fff'
-        }], 960, 1016, 'right baseline'
-    )
+    const combo = getMultipleTextPath([{
+        font: poppinsBold,
+        text: padStart(data?.combo, 4),
+        size: 36,
+        color: '#aaa'
+    }, {
+        font: poppinsBold,
+        text: data?.combo?.toString(),
+        size: 36,
+        color: '#fff'
+    }], 960, 1016, 'right baseline')
 
     let pp_title = ''
     let pp_value = ''
@@ -641,19 +629,17 @@ const component_Eta2 = (data = {
             judges = poppinsBold.getTextPath('PERFECT', 235, 770, 40, 'left baseline', '#8DCFF4')
                 + poppinsBold.getTextPath('GREAT', 235, 770 + 65, 40, 'left baseline', '#79C471')
                 + poppinsBold.getTextPath('GOOD', 235, 770 + 130, 40, 'left baseline', '#FEF668')
-                + getMultipleTextPath(
-                    [{
-                        font: poppinsBold,
-                        text: 'OK&',
-                        size: 40,
-                        color: '#5E8AC6'
-                    }, {
-                        font: poppinsBold,
-                        text: 'MEH',
-                        size: 40,
-                        color: '#A1A1A1'
-                    }], 235, 770 + 195, 'left baseline'
-                )
+                + getMultipleTextPath([{
+                    font: poppinsBold,
+                    text: 'OK&',
+                    size: 40,
+                    color: '#5E8AC6'
+                }, {
+                    font: poppinsBold,
+                    text: 'MEH',
+                    size: 40,
+                    color: '#A1A1A1'
+                }], 235, 770 + 195, 'left baseline')
                 + poppinsBold.getTextPath('MISS', 235, 770 + 260, 40, 'left baseline', '#ED6C9E')
 
                 + getPadPath(data.statistics?.perfect, 560, 770)
@@ -786,19 +772,17 @@ function getProgressWidth(accuracy = 0, rank = 'F') {
 }
 
 function getPadPath(number = 0, x = 0, y = 0, digit = 4, size = 40, anchor = 'right baseline', color1 = '#aaa', color2 = '#fff') {
-    return getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: padStart(number, digit),
-            size: size,
-            color: color1
-        }, {
-            font: poppinsBold,
-            text: number?.toString(),
-            size: size,
-            color: color2
-        }], x, y, anchor
-    )
+    return getMultipleTextPath([{
+        font: poppinsBold,
+        text: padStart(number, digit),
+        size: size,
+        color: color1
+    }, {
+        font: poppinsBold,
+        text: number?.toString(),
+        size: size,
+        color: color2
+    }], x, y, anchor)
 }
 
 function padStart(number = 0, digit = 8) {

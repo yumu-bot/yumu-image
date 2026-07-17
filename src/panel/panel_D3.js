@@ -766,24 +766,22 @@ const component_D7 = (
         highest_rank_time = '?'
     }
 
-    const highest_rank = getMultipleTextPath(
-        [{
-            font: poppinsBold,
-            text: '#',
-            size: 30,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: highest_rank_value,
-            size: 40,
-            color: '#fff'
-        }, {
-            font: poppinsBold,
-            text: '  [' + highest_rank_time + ']',
-            size: 24,
-            color: '#ccc'
-        }], 195, 136, 'left baseline'
-    )
+    const highest_rank = getMultipleTextPath([{
+        font: poppinsBold,
+        text: '#',
+        size: 30,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: highest_rank_value,
+        size: 40,
+        color: '#fff'
+    }, {
+        font: poppinsBold,
+        text: '  [' + highest_rank_time + ']',
+        size: 24,
+        color: '#ccc'
+    }], 195, 136, 'left baseline')
 
     const overlay = PanelColor.overlay(hue)
     const top = PanelColor.top(hue)
