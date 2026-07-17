@@ -1,6 +1,5 @@
 import * as path_util from 'path';
 import TextToSVG from "text-to-svg";
-import {isEmptyArray} from "./util.js";
 
 class FontInstance {
     constructor(file, family) {
@@ -132,15 +131,21 @@ class FontInstance {
         })
     }
 
+    /**
+     *
+     * @param text {string | number}
+     * @param size {number}
+     * @return {number}
+     */
     getTextWidth(text = '', size = 0) {
-        return this.font.getWidth(text, {
+        return this.font.getWidth(preprocessingText(text), {
             fontSize: size,
-        });
+        }) ?? 0;
     }
 
     /**
      * 智能文本裁切（二分法优化版）
-     * @param {string} text - 输入文本
+     * @param {string | number} text - 输入文本
      * @param {number} size - 字体大小
      * @param {number} max_width - 最大限制宽度
      * @param {boolean} is_dot3_needed - 超长时是否需要追加 "..."
@@ -151,6 +156,8 @@ class FontInstance {
         if (this.getTextWidth(text, size) <= max_width) {
             return text;
         }
+
+        const safe_text = preprocessingText(text)
 
         const dot3 = '...';
         // 2. 根据是否需要 "..." 动态计算留给文本的实际目标宽度
@@ -163,13 +170,13 @@ class FontInstance {
         }
 
         let low = 0;
-        let high = text.length;
+        let high = safe_text.length;
         let best = 0;
 
         // 4. 二分查找：寻找能塞进 targetWidth 的最大字符截取长度
         while (low <= high) {
             const mid = Math.floor((low + high) / 2);
-            const current_width = this.getTextWidth(text.substring(0, mid), size);
+            const current_width = this.getTextWidth(safe_text.substring(0, mid), size);
 
             if (current_width <= target_width) {
                 best = mid;   // 记录当前最稳妥的截取字符数
@@ -180,7 +187,7 @@ class FontInstance {
         }
 
         // 5. 组装最终结果
-        const sliced = text.substring(0, best);
+        const sliced = safe_text.substring(0, best);
         return is_dot3_needed ? sliced + dot3 : sliced;
     }
 }
@@ -225,7 +232,8 @@ export const extra = new FontInstance("extra.gamemode.ttf", "Extra");
  * @return {string}
  */
 function preprocessingText(text = '') {
-    return String(text)
+    const safe_text = text ?? '';
+    return typeof safe_text === 'string' ? safe_text : String(safe_text);
 
     // return endfieldMapper(String(text))
 }
@@ -340,61 +348,45 @@ export function getMultipleTextPath(array = [{
     size: 24,
     color: '#fff',
 }], x = 0, y = 0, anchor = "center baseline", opacity = 1, shadow = false) {
-    if (isEmptyArray(array)) return '';
+    if (!array || array.length === 0) return '';
 
-    let width_array = []; // 累计宽度
+    // 1. 先纯粹地计算出总宽度
     let total_width = 0;
-
-    // 1. 获取并累加每个片段的物理宽度
     for (const v of array) {
         const instance = getFontInstance(v.font);
-        const text = v.text || '';
+        const text = preprocessingText(v.text);
         const size = v?.size || 24;
-
-        const width = instance.getTextWidth(text, size);
-
-        total_width += width;
-        width_array.push(total_width);
+        total_width += instance.getTextWidth(text, size);
     }
 
-    // 2. 全部往后移一位，前面加 0 (计算每个片段的相对 X 轴偏移量)
-    total_width = width_array.pop() || 0;
-    width_array.unshift(0);
-
-    let out = '';
-
+    // 2. 根据对齐方式，确定整行文本的起始绝对 X 坐标
     const parts = anchor.split(/\s+/).filter(Boolean);
     const horizontal = parts[0] || "center";
     const vertical = parts[1] || "baseline";
 
-    // 3. 循环拼接路径
-    for (let i = 0; i < array.length; i++) {
-        const v = array[i];
-        const w = width_array[i];
+    let start_x = x;
+    if (horizontal === "center") {
+        start_x = x - (total_width / 2);
+    } else if (horizontal === "right") {
+        start_x = x - total_width;
+    } // left 情况下 start_x 就等于 x
 
+    let out = '';
+    let current_x = start_x; // 当前片段的起点 X 坐标
+
+    // 3. 顺序拼接每个片段
+    for (const v of array) {
         const instance = getFontInstance(v.font);
         const text = v.text || '';
         const size = v?.size ?? 24;
         const color = v?.color || '#fff';
 
-        let offset_x = 0;
+        // 每一个片段本身，相对于它自己的起始点，依然是 "left" 对齐
+        out += instance.getTextPath(text, current_x, y, size, `left ${vertical}`, color, opacity, shadow);
 
-        switch (horizontal) {
-            case "center":
-                offset_x = x - (total_width / 2) + w;
-                break;
-            case "left":
-                offset_x = x + w;
-                break;
-            case "right":
-                offset_x = x - total_width + w;
-                break;
-            default:
-                offset_x = x + w;
-                break;
-        }
-
-        out += instance.getTextPath(text, offset_x, y, size, `left ${vertical}`, color, opacity, shadow);
+        // 移动到下一个片段的起点
+        const width = instance.getTextWidth(text, size);
+        current_x += width;
     }
 
     return out;
