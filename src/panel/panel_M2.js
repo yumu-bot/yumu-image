@@ -8,7 +8,7 @@ import {
     setTexts, thenPush
 } from "../util/util.js";
 import {createImageRouter, createSvgRouter} from "../util/image.js";
-import {getPlayerRatingColor, getStarRatingColor, PanelColor} from "../util/color.js";
+import {colorArray, getPlayerRatingColor, getStarRatingColor, PanelColor} from "../util/color.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {label_E5, LABEL_IM, label_J4, label_J6, label_J7} from "../component/label.js";
@@ -664,10 +664,7 @@ const component_M7 = (data = {
     let svg = '<g id="Component_M7">'
     const hide = data.has_custom_panel === true
 
-    const chart = PanelDraw.BarChart(data.difficulty, 0, 0, 15, 40 + 120, 460, 115, 4, 4, [
-        '#4ffffd', '#7cff4f', '#f6f05c', '#ff6868',
-        '#ff4e6f', '#c645b8', '#6563de', '#18158e'
-    ], 0, 2, null, 0.8)
+    const chart = PanelDraw.BarChart(data.difficulty, 0, 0, 15, 40 + 120, 460, 115, 4, 4, colorArray.rating, 0, 2, null, 0.8)
 
     let star_text = []
 
@@ -698,10 +695,7 @@ const component_M8 = (data = {
     let svg = '<g id="Component_M8">'
     const hide = data.has_custom_panel === true
 
-    const chart = PanelDraw.BarChart(data.length, 0, 0, 15, 40 + 120, 460, 115, 4, 4, [
-        '#4ffffd', '#7cff4f', '#f6f05c', '#ff6868',
-        '#ff4e6f', '#c645b8', '#6563de', '#18158e'
-    ], 0, 2, null, 0.8)
+    const chart = PanelDraw.BarChart(data.length, 0, 0, 15, 40 + 120, 460, 115, 4, 4, colorArray.rating, 0, 2, null, 0.8)
 
     let lengths = []
 
@@ -838,7 +832,7 @@ const PanelMGenerate = {
             const bottom = `${time_diff} // ${full_width ? ActivityConfig.getOperate(type, approval) : ActivityConfig.getAbbreviation(type, approval)}`
 
             const data = {
-                image: images.get(`list@2x${id}`),
+                image: images.get(`list@2x_${id}`),
                 top: top,
                 bottom: bottom,
 
@@ -895,7 +889,7 @@ const PanelMGenerate = {
             })
 
             const data = {
-                image: images.get(`list@2x${id}`),
+                image: images.get(`list@2x_${id}`),
                 top: top,
                 bottom: undefined,
 
@@ -969,11 +963,8 @@ const beatmapset2CardD2s = async (beatmapsets, images) => {
 
         const favourite = round(s?.favourite_count, 1)
 
-        const cachedBg = images.get(`list@2x${s.id}`);
+        const cachedBg = images.get(`list@2x_${s.id}`);
 
-        /**
-         * @type {Promise<*>}
-         */
         const background = cachedBg
             ? Promise.resolve(cachedBg)
             : getMapBackground(s, 'list@2x');

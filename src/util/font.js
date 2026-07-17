@@ -86,28 +86,34 @@ class FontInstance {
         anchor = 'center baseline',
         color = '#fff'
     ) {
-        let out = '';
+        let out;
 
-        if (anchor === "left baseline") {
-            const width_b = this.getTextWidth(largerText, largeSize);
+        const parts = anchor.split(/\s+/).filter(Boolean);
+        const horizontal = parts[0] || "center";
+        const vertical = parts[1] || "baseline";
 
-            out = this.getTextPath(largerText, x, y, largeSize, anchor, color) +
-                this.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+        switch (horizontal.slice(0, 1)) {
+            case 'l': {
+                const width_b = this.getTextWidth(largerText, largeSize);
 
-        } else if (anchor === "right baseline") {
-            const width_m = this.getTextWidth(smallerText, smallSize);
+                out = this.getTextPath(largerText, x, y, largeSize, anchor, color) +
+                    this.getTextPath(smallerText, x + width_b, y, smallSize, anchor, color);
+            } break
+            case 'r': {
+                const width_m = this.getTextWidth(smallerText, smallSize);
 
-            out = this.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
-                this.getTextPath(smallerText, x, y, smallSize, anchor, color);
+                out = this.getTextPath(largerText, x - width_m, y, largeSize, anchor, color) +
+                    this.getTextPath(smallerText, x, y, smallSize, anchor, color);
+            } break
+            default: {
+                const width_b = this.getTextWidth(largerText, largeSize);
+                const width_m = this.getTextWidth(smallerText, smallSize);
 
-        } else if (anchor === "center baseline") {
-            const width_b = this.getTextWidth(largerText, largeSize);
-            const width_m = this.getTextWidth(smallerText, smallSize);
+                const width_a = (width_b + width_m) / 2; // 全长的一半长
 
-            const width_a = (width_b + width_m) / 2; // 全长的一半长
-
-            out = this.getTextPath(largerText, x - width_a, y, largeSize, "left baseline", color) +
-                this.getTextPath(smallerText, x + width_a, y, smallSize, "right baseline", color);
+                out = this.getTextPath(largerText, x - width_a, y, largeSize, `left ${vertical}`, color) +
+                    this.getTextPath(smallerText, x + width_a, y, smallSize, `right ${vertical}`, color);
+            } break
         }
 
         return out;
@@ -224,33 +230,34 @@ function preprocessingText(text = '') {
     // return endfieldMapper(String(text))
 }
 
+const char_mapper = [
+    'g', 'k', 'a', 'm', 'z', 't', 'l', 'b', 'd', 'q', 'i', 'y', 'f', 'u',
+    'c', 'x', 'b', 'h', 's', 'j', 'o', 'p', 'r', 'n', 'w', 'e', 'y', 'g',
+    't', 'j', 'm', 'e', 'v', 'c', 'h', 'd', 'x', 's', 'a', 'n', 'q', 'o',
+    'l', 'k', 'r', 'v', 'w', 'i', 'y', 'p', 'j', 'z', 'q', 'u', 'h', 'e'
+]
+
+const default_mapper = new Map([
+    [0x23, 0x2E],
+    [0x24, 0x2E],
+    [0x25, 0x2E],
+    [0x26, 0x2E],
+    [0x40, 0x2E],
+    [0x5C, 0x2F],
+    [0x5E, 0x2F],
+    [0x3B, 0x3A],
+    [0x5F, 0x2D],
+    [0x60, 0x5B],
+
+    [0x3000, 0x20], // space
+
+]);
 
 // 以下是转换为 Endfield 文字的映射
 function endfieldMapper(text = '') {
 
     // https://www.bilibili.com/video/BV1PtdyBMEED 01:52 处
-    const mapper = [
-        'g', 'k', 'a', 'm', 'z', 't', 'l', 'b', 'd', 'q', 'i', 'y', 'f', 'u',
-        'c', 'x', 'b', 'h', 's', 'j', 'o', 'p', 'r', 'n', 'w', 'e', 'y', 'g',
-        't', 'j', 'm', 'e', 'v', 'c', 'h', 'd', 'x', 's', 'a', 'n', 'q', 'o',
-        'l', 'k', 'r', 'v', 'w', 'i', 'y', 'p', 'j', 'z', 'q', 'u', 'h', 'e'
-    ]
 
-    const defaultMapper = new Map([
-        [0x23, 0x2E],
-        [0x24, 0x2E],
-        [0x25, 0x2E],
-        [0x26, 0x2E],
-        [0x40, 0x2E],
-        [0x5C, 0x2F],
-        [0x5E, 0x2F],
-        [0x3B, 0x3A],
-        [0x5F, 0x2D],
-        [0x60, 0x5B],
-
-        [0x3000, 0x20], // space
-
-    ]);
 
     let result = []
 
@@ -261,10 +268,10 @@ function endfieldMapper(text = '') {
             code -= 0xFEE0;
         }
 
-        if (defaultMapper.has(code)) {
-            result.push(String.fromCharCode(defaultMapper.get(code)))
+        if (default_mapper.has(code)) {
+            result.push(String.fromCharCode(default_mapper.get(code)))
         } else if (code >= 0x7B) {
-            result.push(mapper[code % 56] ?? '.')
+            result.push(char_mapper[code % 56] ?? '.')
         } else {
             // 情况 3: 其余情况直出原字符
             result.push(String.fromCharCode(code))
@@ -357,7 +364,7 @@ export function getMultipleTextPath(array = [{
     let out = '';
 
     const parts = anchor.split(/\s+/).filter(Boolean);
-    const horizon = parts[0] || "center";
+    const horizontal = parts[0] || "center";
     const vertical = parts[1] || "baseline";
 
     // 3. 循环拼接路径
@@ -372,7 +379,7 @@ export function getMultipleTextPath(array = [{
 
         let offset_x = 0;
 
-        switch (horizon) {
+        switch (horizontal) {
             case "center":
                 offset_x = x - (total_width / 2) + w;
                 break;

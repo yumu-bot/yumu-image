@@ -763,7 +763,7 @@ export const PanelGenerate = {
     matchBeatMap2CardA2: async (b = {}, images = new Map()) => {
         const set = b?.beatmapset ?? {}
 
-        const background = images.get(`list@2x${set.id}`) ?? await getMapBackground(b, 'list@2x');
+        const background = images.get(`list@2x_${set.id}`) ?? await getMapBackground(b, 'list@2x');
 
         const title1 = set?.title || 'Deleted Beatmap';
         const title2 = set?.artist || '-';

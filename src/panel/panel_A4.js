@@ -130,7 +130,7 @@ export async function panel_A4(data = {
 
         await Promise.allSettled(
             scores.map((v, i) => {
-                const list = images.get(`list@2x${v.beatmapset_id ?? v.beatmapset.id}`)
+                const list = images.get(`list@2x_${v.beatmapset_id ?? v.beatmapset.id}`)
                 return PanelGenerate.score2CardI4(v, data.rank[i], list)
             })
         ).then(results => thenPush(results, params))
@@ -171,7 +171,7 @@ export async function panel_A4(data = {
 
         await Promise.allSettled(
             scores.map((v, i) => {
-                const list = images.get(`list@2x${v?.beatmapset_id ?? v?.beatmapset?.id}`)
+                const list = images.get(`list@2x_${v?.beatmapset_id ?? v?.beatmapset?.id}`)
                 const cover = images.get(`cover_${v?.beatmapset_id ?? v?.beatmapset?.id}`)
 
                 return PanelGenerate.score2CardC(v, data.rank[i], list, cover)

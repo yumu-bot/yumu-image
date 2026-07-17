@@ -621,7 +621,7 @@ const card_S1 = async (
         const x = 125 + 81 * i;
         const y = 65
 
-        const cover = images.get(`list@2x${v.beatmapset_id}`)
+        const cover = images.get(`list@2x_${v.beatmapset_id}`)
             ?? await readNetImage(`https://assets.ppy.sh/beatmaps/${v.beatmapset_id}/covers/list@2x.jpg`, false);
 
         const l = getSvgBody(x, y, label_S2(cover, v?.winner === me, hue));

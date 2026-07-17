@@ -83,6 +83,11 @@ export const colorArray = {
 
     iridescent: ['#FF4E6F', '#F6F05C', '#7CFF4F', '#00F2FE'],
 
+    rating: [
+        '#4ffffd', '#7cff4f', '#f6f05c', '#ff6868',
+        '#ff4e6f', '#c645b8', '#6563de', '#18158e'
+    ],
+
     dark_red: ['#4A0B1E', '#6E1818'],
     dark_blue: ['#0E1045', '#004275'],
     dark_gray: ['#4D4D4D', '#737373']
