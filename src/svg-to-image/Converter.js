@@ -4,10 +4,11 @@ import fileUrl from 'file-url';
 import path from "path";
 import puppeteer from "puppeteer";
 import tmp from "tmp";
-import { readFile, writeFile } from 'fs/promises';
+import {readFile, writeFile} from 'fs/promises';
 
 const _allowedAttributeNames = Symbol('allowedAttributeNames');
 const _allowedDeprecatedAttributeNames = Symbol('allowedDeprecatedAttributeNames');
+const _browserPromise = Symbol('browserPromise');
 const _browser = Symbol('browser');
 const _context = Symbol('context');
 const _convert = Symbol('convert');
@@ -228,7 +229,6 @@ export default class Converter {
             delete this[_tempFile];
         }
 
-        // 关闭 Page
         if (this[_page]) {
             try {
                 await this[_page].close();
@@ -238,7 +238,6 @@ export default class Converter {
             delete this[_page];
         }
 
-        // 关闭 Context
         if (this[_context]) {
             try {
                 await this[_context].close();
@@ -248,15 +247,24 @@ export default class Converter {
             delete this[_context];
         }
 
-        // 最关键的一步：确保浏览器绝对被关闭
         if (this[_browser]) {
             try {
                 await this[_browser].close();
-                console.log('[Destroy] Chromium 浏览器实例已成功关闭');
+                console.log('[Destroy] Chromium 浏览器已成功关闭');
             } catch (e) {
-                console.error('[Destroy] 强关浏览器进程失败! 可能会产生僵尸进程:', e.message);
+                console.error('[Destroy] 强关浏览器失败! 可能会产生僵尸进程:', e.message);
             }
             delete this[_browser];
+        }
+
+        if (this[_browserPromise]) {
+            try {
+                await this[_browserPromise].close();
+                console.log('[Destroy] Chromium 浏览器实例已成功关闭');
+            } catch (e) {
+                console.error('[Destroy] 强关浏览器实例失败! 可能会产生僵尸进程:', e.message);
+            }
+            delete this[_browserPromise];
         }
     }
 
@@ -309,25 +317,29 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
 <body>${svg}</body>
 </html>`;
 
-        const page = await this[_getPage](html);
+        const { page, context } = await this[_getPage](html);
 
-        await this[_setDimensions](page, options);
+        try {
+            await this[_setDimensions](page, options);
+            const dimensions = await this[_getDimensions](page, options);
 
-        const dimensions = await this[_getDimensions](page, options);
+            if (options.scale > 0 && options.scale !== 1 ) {
+                dimensions.height *= options.scale;
+                dimensions.width *= options.scale;
+                await this[_setDimensions](page, dimensions);
+            }
 
-        if (options.scale !== 1 && options.scale > 0) {
-            dimensions.height *= options.scale;
-            dimensions.width *= options.scale;
+            await page.setViewport(dimensions);
 
-            await this[_setDimensions](page, dimensions);
+            return await page.screenshot(Object.assign({
+                type: provider.getType(),
+                clip: Object.assign({x: 0, y: 0}, dimensions)
+            }, provider.getScreenshotOptions(options)));
+        } finally {
+            if (context) {
+                await context.close().catch(() => {});
+            }
         }
-
-        await page.setViewport(dimensions);
-
-        return await page.screenshot(Object.assign({
-            type: provider.getType(),
-            clip: Object.assign({ x: 0, y: 0 }, dimensions)
-        }, provider.getScreenshotOptions(options)));
     }
 
     async [_getDimensions](page, options) {
@@ -390,21 +402,28 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
 
     async [_getPage](html) {
         if (!this[_browser]) {
-            this[_browser] = await puppeteer.launch(this[_options].puppeteer);
+            if (!this[_browserPromise]) {
+                this[_browserPromise] = puppeteer.launch(this[_options].puppeteer).then(b => {
+                    this[_browser] = b;
+                    return b;
+                });
+            }
+            await this[_browserPromise];
         }
 
-        if (!this[_context]) {
-            this[_context] = await this[_browser].createBrowserContext();
-            this[_page] = await this[_context].newPage();
+        const context = await this[_browser].createBrowserContext();
+        const page = await context.newPage();
+
+        try {
+            const tempFile = await this[_getTempFile]();
+            await writeFile(tempFile.path, html);
+            await page.goto(fileUrl(tempFile.path));
+
+            return { page, context };
+        } catch (error) {
+            await context.close();
+            throw error;
         }
-
-        const tempFile = await this[_getTempFile]();
-
-        await writeFile(tempFile.path, html);
-
-        await this[_page].goto(fileUrl(tempFile.path));
-
-        return this[_page];
     }
 
     [_getTempFile]() {

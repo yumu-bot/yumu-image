@@ -67,19 +67,18 @@ export class API {
         if (this[_cachedConverter] && this[_taskCount] >= this[_maxTasksPerBrowser]) {
             console.log(`[图片输出] 已达到 ${this[_taskCount]} 次任务，正在重启浏览器...`);
 
-            try {
-                await this.destroy();
-            } catch (err) {
-                console.error('[图片输出] 重启期间销毁旧浏览器失败:', err);
-            } finally {
-                // 无论销毁成功与否，必须重置计数并丢弃旧实例，防止死循环
-                this[_taskCount] = 0;
-                this[_cachedConverter] = null;
+            const old = this[_cachedConverter];
+            this[_cachedConverter] = null;
+            this[_taskCount] = 0;
+
+            if (old) {
+                old.destroy().catch(err => {
+                    console.error('[图片输出] 后台销毁旧浏览器失败:', err);
+                });
             }
         }
 
-        // 2. 如果实例不存在或已被销毁，创建新实例
-        if (!this[_cachedConverter] || this[_cachedConverter].destroyed) {
+        if (!this[_cachedConverter]) {
             this[_cachedConverter] = this.createConverter(pick(options, 'puppeteer'));
         }
 
