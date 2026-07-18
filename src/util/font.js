@@ -371,7 +371,10 @@ export function getMultipleTextPath(array = [{
         start_x = x - total_width;
     } // left 情况下 start_x 就等于 x
 
-    let out = '';
+    /**
+     * @type {string[]}
+     */
+    let out = [];
     let current_x = start_x; // 当前片段的起点 X 坐标
 
     // 3. 顺序拼接每个片段
@@ -382,14 +385,14 @@ export function getMultipleTextPath(array = [{
         const color = v?.color || '#fff';
 
         // 每一个片段本身，相对于它自己的起始点，依然是 "left" 对齐
-        out += instance.getTextPath(text, current_x, y, size, `left ${vertical}`, color, opacity, shadow);
+        out.push(instance.getTextPath(text, current_x, y, size, `left ${vertical}`, color, opacity, shadow));
 
         // 移动到下一个片段的起点
         const width = instance.getTextWidth(text, size);
         current_x += width;
     }
 
-    return out;
+    return out.join('\n');
 }
 
 /**

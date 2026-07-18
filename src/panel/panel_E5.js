@@ -853,9 +853,9 @@ const component_E9 = (data = {
     }], 470, 62, 'right baseline')
 
     const combo = getMultipleTextPath([{
-        font: 'poppinsBold', text: (data?.combo || 0), size: 60,
+        font: 'poppinsBold', text: (data?.combo || 0).toString(), size: 60,
     }, {
-        font: 'poppinsBold', text: ' / ' + (data?.max_combo || 0), size: 36,
+        font: 'poppinsBold', text: ' / ' + (data?.max_combo || 0).toString(), size: 36,
     }], 470, 132, 'right baseline')
 
     const rect = PanelDraw.Rect(0, 0, 490, 150, 20, '#382e32', 1);

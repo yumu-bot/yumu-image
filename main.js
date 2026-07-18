@@ -155,10 +155,10 @@ async function initPanels() {
             const module = await import(`./src/panel/panel_${suffix}.js`);
 
             if (module.router) {
-                panelHandlers.set(`panel_${suffix}`, adaptHandler(module.router));
+                panelHandlers.set(`panel_${suffix}`, adaptHandler(module.router, suffix));
             }
             if (module.router_svg) {
-                panelHandlers.set(`panel_${suffix}/svg`, adaptHandler(module.router_svg));
+                panelHandlers.set(`panel_${suffix}/svg`, adaptHandler(module.router_svg, suffix));
             }
         } catch (error) {
             console.error(`Failed to load panel_${suffix}:`, error);
@@ -169,11 +169,11 @@ async function initPanels() {
     console.log(`panel loader succeed! ${panelHandlers.size / 2} loaded.`);
 }
 
-function adaptHandler(originalRouter) {
+function adaptHandler(originalRouter, suffix) {
     return async (payload) => {
         return new Promise(async (resolve, reject) => {
             const timer = setTimeout(() => {
-                reject(new Error("渲染任务超时未响应，强制熔断释放内存"));
+                reject(new Error(`${suffix}：渲染任务超时未响应，强制熔断释放内存`));
             }, 30000);
 
             let isErrorStatus = false;
@@ -190,7 +190,7 @@ function adaptHandler(originalRouter) {
                 status: (code) => {
                     currentStatusCode = code;
                     if (code >= 400) {
-                        console.warn(`渲染状态码警报: ${code}`);
+                        console.warn(`${suffix}：渲染状态码警报: ${code}`);
                         isErrorStatus = true;
                     }
                     return res;
@@ -199,7 +199,7 @@ function adaptHandler(originalRouter) {
                     clearTimeout(timer);
                     if (isErrorStatus) {
                         const errorMsg = typeof data === 'object' ? (data.message || data.error || JSON.stringify(data)) : String(data);
-                        reject(new Error(`[HTTP ${currentStatusCode}] ${errorMsg}`));
+                        reject(new Error(`${suffix}：[HTTP ${currentStatusCode}] ${errorMsg}`));
                     } else {
                         resolve(data);
                     }
@@ -208,7 +208,7 @@ function adaptHandler(originalRouter) {
                     clearTimeout(timer);
                     if (isErrorStatus) {
                         const errorMsg = data.message || data.error || JSON.stringify(data);
-                        reject(new Error(`[HTTP ${currentStatusCode}] ${errorMsg}`));
+                        reject(new Error(`${suffix}：[HTTP ${currentStatusCode}] ${errorMsg}`));
                     } else {
                         resolve(data);
                     }
@@ -216,7 +216,7 @@ function adaptHandler(originalRouter) {
                 end: () => {
                     clearTimeout(timer);
                     if (isErrorStatus) {
-                        reject(new Error(`[HTTP ${currentStatusCode}] 异常结束且未返回具体数据`));
+                        reject(new Error(`${suffix}：[HTTP ${currentStatusCode}] 异常结束且未返回具体数据`));
                     } else {
                         resolve(null);
                     }
