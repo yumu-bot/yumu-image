@@ -23,7 +23,7 @@ import {PUPPETEER_OPTIONS, binary2Base64Text, compressLargePicture2Webp} from ".
 
 const execAsync = promisify(exec);
 
-const VERSION = 'v0.8.2'
+const VERSION = 'v0.8.3'
 const VERSION_CODE = 'VS'
 
 const path_util = path;
