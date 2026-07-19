@@ -317,7 +317,7 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
 <body>${svg}</body>
 </html>`;
 
-        const { page, context } = await this[_getPage](html);
+        const { page, context, cleanup } = await this[_getPage](html);
 
         try {
             await this[_setDimensions](page, options);
@@ -336,6 +336,10 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
                 clip: Object.assign({x: 0, y: 0}, dimensions)
             }, provider.getScreenshotOptions(options)));
         } finally {
+            if (cleanup) {
+                try { cleanup(); } catch (e) { console.error("临时文件删除失败:", e); }
+            }
+
             if (context) {
                 await context.close().catch(() => {});
             }
@@ -414,18 +418,24 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
         const context = await this[_browser].createBrowserContext();
         const page = await context.newPage();
 
+        let tempFile
+
         try {
-            const tempFile = await this[_getTempFile]();
+            tempFile = await this[_getTempFile]();
             await writeFile(tempFile.path, html);
             await page.goto(fileUrl(tempFile.path));
 
-            return { page, context };
+            return { page, context, cleanup: tempFile.cleanup }
         } catch (error) {
+            if (tempFile && tempFile.cleanup) tempFile.cleanup();
             await context.close();
             throw error;
         }
     }
 
+    /**
+     * @return {Promise<File>}
+     */
     [_getTempFile]() {
         return new Promise((resolve, reject) => {
             tmp.file({ prefix: 'convert-svg-', postfix: '.html' }, (error, filePath, fd, cleanup) => {
