@@ -425,10 +425,19 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
             await writeFile(tempFile.path, html);
             await page.goto(fileUrl(tempFile.path));
 
-            return { page, context, cleanup: tempFile.cleanup }
+            return { page, context, cleanup: tempFile?.cleanup }
         } catch (error) {
-            if (tempFile && tempFile.cleanup) tempFile.cleanup();
-            await context.close();
+
+            try {
+                await context.close();
+            } catch (e) {}
+
+            if (tempFile && tempFile.cleanup) {
+                try {
+                    tempFile.cleanup()
+                } catch(e) {}
+            }
+
             throw error;
         }
     }
@@ -438,11 +447,11 @@ html { background-color: ${provider.getBackgroundColor(options)}; }
      */
     [_getTempFile]() {
         return new Promise((resolve, reject) => {
-            tmp.file({ prefix: 'convert-svg-', postfix: '.html' }, (error, filePath, fd, cleanup) => {
+            tmp.file({ prefix: 'convert-svg-', postfix: '.html', discardDescriptor: true }, (error, filePath, fd, cleanup) => {
                 if (error) {
                     reject(error);
                 } else {
-                    resolve({ path: filePath, cleanup });
+                    resolve({ path: filePath, cleanup: cleanup });
                 }
             });
         });
