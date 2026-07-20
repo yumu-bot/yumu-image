@@ -150,6 +150,7 @@ export async function panel_E5(data = {
             previewName: 'MixBadGun - NMDB to the Black World (Muziyami) [H*rd]',
             beatmapset_id: 1844042,
             difficulty_rating: 2.8238842,
+            original_rating: 2.8238842,
             total_length: 37,
             user_id: 7003013,
             version: 'H*rd',
@@ -337,7 +338,7 @@ export async function panel_E5(data = {
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
 const component_E1 = (data = {
-    name: '', star: 0, mode: ''
+    name: '', star: 0, original: 0, mode: ''
 }) => {
 
     // 读取模板
@@ -394,7 +395,11 @@ const component_E1 = (data = {
 
     const texts = getMultipleTextPath(text_arr, 105, 88, "left baseline");
 
-    const title = poppinsBold.getTextPath('Star Rating', 475, 28, 18, 'right baseline', '#fff')
+    const show_original = (data.original > 0 && Math.abs(data.original - data.star) > 1e-4)
+
+    const sr_title = (show_original ? `(${floor(data.original, 2)}) ` : '') + 'Star Rating'
+
+    const title = poppinsBold.getTextPath(sr_title, 475, 28, 18, 'right baseline', '#fff')
 
     svg = setText(svg, star_rrect, reg_star)
     svg = setTexts(svg, [ruleset, texts, title], reg_text);
@@ -948,11 +953,12 @@ const component_E10P = (data = {
 const PanelEGenerate = {
     score2componentE1: (score) => {
         const sr = score?.beatmap?.difficulty_rating ?? 0;
+        const original = score?.beatmap?.original_rating ?? 0;
         const mode = score?.mode || 'osu';
         const name = getDifficultyIndex(score?.beatmap?.version, sr, mode, score?.mods)
 
         return {
-            name: name, star: sr, mode: mode,
+            name: name, star: sr, original: original, mode: mode,
         }
     },
 
