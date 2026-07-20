@@ -57,7 +57,7 @@ export async function panel_D2(data = {
     },
 
     // 比对自几天前
-    history_days: 1,
+    history_day: 1,
 
     history_user: null,
 
@@ -72,7 +72,7 @@ export async function panel_D2(data = {
     const user = data?.user
     const scores = data?.scores
     const history = data?.history_user
-    const days = data?.history_days
+    const days = data?.history_day
     const best_time = data?.best_time || []
 
     const hue = user?.profile_hue ?? 342
@@ -132,7 +132,7 @@ export async function panel_D2(data = {
     const componentD4 = component_D4(PanelDGenerate.mascot2componentD4(user, getGameMode(data?.mode, 0).toLowerCase(), has_custom_mascot, hue));
     const componentD5 = component_D5(PanelDGenerate.user2componentD5(user?.rank_history?.data || [], user?.rank_highest || {}, has_custom_panel, hue));
     const componentD6 = component_D6(PanelDGenerate.user2componentD6(best_time, has_custom_panel, hue));
-    const componentD7 = component_D7(PanelDGenerate.user2componentD7(user.monthly_playcounts || [{start_date: 0}], has_custom_panel, hue));
+    const componentD7 = component_D7(PanelDGenerate.user2componentD7(user.monthly_playcounts || [{start_date: '2007-10-01', count: 0}], has_custom_panel, hue));
     const componentD8 = component_D8(PanelDGenerate.user2componentD8(user, history, has_custom_panel, hue));
 
     // 导入卡片
