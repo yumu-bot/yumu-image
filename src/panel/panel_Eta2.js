@@ -43,7 +43,7 @@ export async function panel_Eta2(data = {
     attributes: {
         effective_miss_count: 1.0078382838283828,
         pp: 201.40540077771928,
-        pp_acc: 51.6400779167333,
+        pp_accuracy: 51.6400779167333,
         pp_aim: 85.3547123277813,
         pp_flashlight: 0,
         pp_speed: 56.031742770816585,

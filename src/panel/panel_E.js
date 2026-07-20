@@ -655,9 +655,9 @@ const score2AccIndex = (score) => {
         switch (rank) {
             case 'F' : return '~ ' + getApproximateRank(score);
             default : {
-                const pp_acc = (nGeki * 320 + n300 * 300 + nKatu * 200 + n100 * 100 + n50 * 50) / ((nGeki + n300 + nKatu + n100 + n50 + n0) * 320);
+                const pp_accuracy = (nGeki * 320 + n300 * 300 + nKatu * 200 + n100 * 100 + n50 * 50) / ((nGeki + n300 + nKatu + n100 + n50 + n0) * 320);
 
-                return pp_acc < 1 ? floor(pp_acc * 100, 2) : 'AP';
+                return pp_accuracy < 1 ? floor(pp_accuracy * 100, 2) : 'AP';
             }
         }
     }

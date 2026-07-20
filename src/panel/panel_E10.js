@@ -50,7 +50,7 @@ export async function panel_E10(data = {
     attributes: {
         effective_miss_count: 1.0078382838283828,
         pp: 201.40540077771928,
-        pp_acc: 51.6400779167333,
+        pp_accuracy: 51.6400779167333,
         pp_aim: 85.3547123277813,
         pp_flashlight: 0,
         pp_speed: 56.031742770816585,
@@ -1149,7 +1149,7 @@ const PanelEGenerate = {
 
             aim_pp: attr?.pp_aim || 0,
             spd_pp: attr?.pp_speed || 0,
-            acc_pp: attr?.pp_acc || 0,
+            acc_pp: attr?.pp_accuracy || 0,
             fl_pp: attr?.pp_flashlight || 0,
             diff_pp: attr?.pp_difficulty || 0,
 

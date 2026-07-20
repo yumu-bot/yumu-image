@@ -56,9 +56,10 @@ export async function panel_E5(data = {
     density: {}, progress: 1, original: {}, attributes: {
         effective_miss_count: 1.0078382838283828,
         pp: 201.40540077771928,
-        pp_acc: 51.6400779167333,
+        pp_accuracy: 51.6400779167333,
         pp_aim: 85.3547123277813,
         pp_flashlight: 0,
+        pp_reading: 0,
         pp_speed: 56.031742770816585,
         pp_difficulty: 0,
         stars: 5.359699675204284,
@@ -549,7 +550,7 @@ const component_E6 = (data = {
 const component_E7 = (data = {
     pp: 0, full_pp: 0, perfect_pp: 0,
 
-    aim_pp: 0, spd_pp: 0, acc_pp: 0, fl_pp: 0, diff_pp: 0,
+    aim_pp: 0, spd_pp: 0, acc_pp: 0, reading_pp: 0, fl_pp: 0, diff_pp: 0,
 
     is_fc: true,
 
@@ -580,6 +581,10 @@ const component_E7 = (data = {
             <linearGradient id="grad-OE7-16" x1="0%" y1="50%" x2="100%" y2="50%">
                 <stop offset="0%" style="stop-color:rgb(79,172,254); stop-opacity:1" />
                 <stop offset="100%" style="stop-color:rgb(0,242,254); stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="grad-OE7-20" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" style="stop-color:rgb(99,99,99); stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgb(204,204,204); stop-opacity:1" />
             </linearGradient>
           </defs>
           <g id="Base_OE7">
@@ -710,28 +715,32 @@ const component_E7 = (data = {
 
     switch (data.mode) {
         case 'o': {
-            const sum = data?.aim_pp + data?.spd_pp + data?.acc_pp + data?.fl_pp || 0;
+            const sum = (data?.aim_pp + data?.spd_pp + data?.acc_pp + data?.reading_pp + data?.fl_pp) ?? 0;
 
             const aim_width = getChildPPWidth(data?.aim_pp, sum, data?.pp, reference_pp);
             const spd_width = getChildPPWidth(data?.spd_pp, sum, data?.pp, reference_pp);
             const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
+            const reading_width = getChildPPWidth(data?.reading_pp, sum, data?.pp, reference_pp);
             const fl_width = getChildPPWidth(data?.fl_pp, sum, data?.pp, reference_pp);
 
             const aim_rect = PanelDraw.Rect(15, 105, aim_width, 30, 15, "url(#grad-OE7-12)", 1);
             const spd_rect = PanelDraw.Rect(15, 105, aim_width + spd_width, 30, 15, "url(#grad-OE7-13)", 1);
             const acc_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width, 30, 15, "url(#grad-OE7-14)", 1);
-            const fl_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width + fl_width, 30, 15, "url(#grad-OE7-15)", 1);
+            const reading_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width + reading_width, 30, 15, "url(#grad-OE7-15)", 1);
+            const fl_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width + reading_width + fl_width, 30, 15, "url(#grad-OE7-20)", 1);
 
             const aim_text = getChildPPPath(data?.aim_pp, 15, 128, 24, aim_width, aim_width, 10);
             const spd_text = getChildPPPath(data?.spd_pp, 15, 128, 24, aim_width + spd_width, spd_width, 10);
             const acc_text = getChildPPPath(data?.acc_pp, 15, 128, 24, aim_width + spd_width + acc_width, acc_width, 10);
-            const fl_text = getChildPPPath(data?.fl_pp, 15, 128, 24, aim_width + spd_width + acc_width + fl_width, fl_width, 10);
+            const reading_text = getChildPPPath(data?.reading_pp, 15, 128, 24, aim_width + spd_width + acc_width + reading_width, reading_width, 10)
+            const fl_text = getChildPPPath(data?.fl_pp, 15, 128, 24, aim_width + spd_width + acc_width + reading_width + fl_width, fl_width, 10);
 
             svg = setText(svg, aim_rect, reg_clip2);
             svg = setText(svg, spd_rect, reg_clip3);
             svg = setText(svg, acc_rect, reg_clip4);
-            svg = setText(svg, fl_rect, reg_clip5);
-            svg = setTexts(svg, [aim_text, spd_text, acc_text, fl_text], reg_text);
+            svg = setText(svg, reading_rect, reg_clip5);
+            svg = setText(svg, fl_rect, reg_clip6);
+            svg = setTexts(svg, [aim_text, spd_text, acc_text, reading_text, fl_text], reg_text);
             break;
         }
 
@@ -1137,7 +1146,8 @@ const PanelEGenerate = {
 
             aim_pp: attr?.pp_aim ?? attr?.aim ?? 0,
             spd_pp: attr?.pp_speed ?? attr?.speed ?? 0,
-            acc_pp: attr?.pp_acc ?? attr?.accuracy ?? 0,
+            acc_pp: attr?.pp_accuracy ?? attr?.accuracy ?? 0,
+            reading_pp: attr?.pp_reading ?? attr?.reading ?? 0,
             fl_pp: attr?.pp_flashlight ?? attr?.flashlight ?? 0,
             diff_pp: attr?.pp_difficulty ?? (mode === 't' ? Math.max((attr?.pp - attr?.accuracy ?? 0), 0) : 0) ?? 0,
 
