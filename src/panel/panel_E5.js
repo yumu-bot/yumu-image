@@ -730,6 +730,7 @@ const component_E7 = (data = {
 
             skill_config.forEach(({ key, grad, clip }) => {
                 const val = data?.[key];
+                if (!val || val < 1e-4) return;
                 const width = getChildPPWidth(val, sum, data?.pp, reference_pp);
                 accumulated_width += width;
 
@@ -757,6 +758,7 @@ const component_E7 = (data = {
 
             skill_config.forEach(({ key, grad, clip }) => {
                 const val = data?.[key];
+                if (!val || val < 1e-4) return;
                 const width = getChildPPWidth(val, sum, data?.pp, reference_pp);
                 accumulated_width += width;
 
