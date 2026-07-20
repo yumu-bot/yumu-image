@@ -2393,6 +2393,7 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
 
     let name
 
+// 1. 依然 split 变成数组，这样可以规避无关文本的干扰
     const difficulties = (difficulty_name || "")
         .replaceAll("0", "o")
         .replaceAll("1", "i")
@@ -2402,81 +2403,73 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
         .replaceAll("6", "b")
         .replaceAll("7", "t")
         .replaceAll("9", "g")
-        .toUpperCase().split(/\s+/)
+        .toUpperCase()
+        .trim()
+        .split(/\s+/)
 
-    const iidx = ["Beginner", "Normal", "Hyper", "Another", "Black Another", "Leggendaria"]
-
+    const iidx = ["Black Another", "Beginner", "Normal", "Hyper", "Another", "Leggendaria"]
     const sdvx = ["Basic", "Novice", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "ULTIMATE", "Exceed"]
     const sdvx_short = ["BSC", "NOV", "ADV", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "ULT", "XCD"]
 
     const standard = ["Easy", "Normal", "Hard", "Insane", "Lunatic", "Extra", "Extreme", "Expert", "Master", "Ultra"]
-    const taiko = ["Kantan", "Futsuu", "Muzukashii", "Inner Oni", "Ura Oni", "Hell Oni", "Oni"]
+
+    // 注意：有组合词的（Inner Oni）依旧放在单字（Oni）前面优先匹配
+    const taiko = ["Inner Oni", "Ura Oni", "Hell Oni", "Kantan", "Futsuu", "Muzukashii", "Oni"]
     const fruits = ["Cup", "Salad", "Platter", "Rain", "Overdose", "Deluge"]
     const mania = ["EZ", "NM", "HD", "MX", "SC", "SHD"]
 
-    /*
-    const arcaea = ["Past", "Present", "Future", "Eternal", "Beyond"]
-    const arcaea_short = ["PST", "PRS", "FTR", "ETR", "BYD"]
-
-     */
-
-    // 如果有会导致星数大幅变化的模组，则不走特殊匹配方式
-    if (matchAnyMods(mods, ['DT', 'NC', 'HT', 'DC']) === false) {
-        for (const d of iidx) {
+    // 2. 抽取一个通用的数组匹配函数，支持多单词难度
+    function findMatch(diffList, wordsArray) {
+        for (const d of diffList) {
             const du = d.toUpperCase()
+            const dWords = du.split(' ') // 看看这个难度自己由几个词组成，比如 "INNER ONI" 拆成 ["INNER", "ONI"]
 
-            if (difficulties.includes(du)) {
-                return du
+            // 在切分好的输入数组里寻找这个片段
+            for (let i = 0; i <= wordsArray.length - dWords.length; i++) {
+                // 截取和目标难度相同长度的连续单词，拼起来对比
+                const segment = wordsArray.slice(i, i + dWords.length).join(' ')
+                if (segment === du) {
+                    return du
+                }
             }
         }
+        return null
+    }
 
+    if (matchAnyMods(mods, ['DT', 'NC', 'HT', 'DC']) === false) {
+        // 1. IIDX 匹配 (支持 Black Another)
+        const iidxRes = findMatch(iidx, difficulties)
+        if (iidxRes) return iidxRes
+
+        // 2. SDVX 匹配
         for (const i in sdvx) {
             const su = sdvx[i].toUpperCase()
             const tu = sdvx_short[i].toUpperCase()
-
-            if (difficulties.includes(su) || difficulties.includes(" " + su)) {
+            // 考虑到 sdvx 都是单字，直接用原有的逻辑或者统一用 findMatch 都可以
+            if (findMatch([sdvx[i]], difficulties)) {
                 return tu
             }
         }
 
-        for (const d of standard) {
-            if (m !== 'o') break
-
-            const du = d.toUpperCase()
-
-            if (difficulties.includes(du)) {
-                return du
-            }
+        // 3. 各模式专属匹配
+        if (m === 'o') {
+            const res = findMatch(standard, difficulties)
+            if (res) return res
         }
 
-        for (const d of taiko) {
-            if (m !== 't') break
-
-            const du = d.toUpperCase()
-
-            if (difficulties.includes(du)) {
-                return du
-            }
+        if (m === 't') {
+            const res = findMatch(taiko, difficulties)
+            if (res) return res // 此时能完美识别出 INNER ONI
         }
 
-        for (const d of fruits) {
-            if (m !== 'c') break
-
-            const du = d.toUpperCase()
-
-            if (difficulties.includes(du)) {
-                return du
-            }
+        if (m === 'c') {
+            const res = findMatch(fruits, difficulties)
+            if (res) return res
         }
 
-        for (const d of mania) {
-            if (m !== 'm') break
-
-            const du = d.toUpperCase()
-
-            if (difficulties.includes(du)) {
-                return du
-            }
+        if (m === 'm') {
+            const res = findMatch(mania, difficulties)
+            if (res) return res
         }
     }
 

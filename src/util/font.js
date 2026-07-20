@@ -306,7 +306,7 @@ const font_map = {
 const default_font = PuHuiTi
 
 /**
- * @param font
+ * @param font {FontInstance | Object | String}
  * @return {FontInstance}
  */
 function getFontInstance(font) {
