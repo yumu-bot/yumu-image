@@ -715,50 +715,59 @@ const component_E7 = (data = {
 
     switch (data.mode) {
         case 'o': {
-            const sum = (data?.aim_pp + data?.spd_pp + data?.acc_pp + data?.reading_pp + data?.fl_pp) ?? 0;
+            const skill_config = [
+                { key: 'aim_pp',     grad: 'url(#grad-OE7-12)', clip: reg_clip2 },
+                { key: 'spd_pp',     grad: 'url(#grad-OE7-13)', clip: reg_clip3 },
+                { key: 'reading_pp', grad: 'url(#grad-OE7-14)', clip: reg_clip4 },
+                { key: 'fl_pp',      grad: 'url(#grad-OE7-20)', clip: reg_clip5 },
+                { key: 'acc_pp',     grad: 'url(#grad-OE7-15)', clip: reg_clip6 },
+            ];
 
-            const aim_width = getChildPPWidth(data?.aim_pp, sum, data?.pp, reference_pp);
-            const spd_width = getChildPPWidth(data?.spd_pp, sum, data?.pp, reference_pp);
-            const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
-            const reading_width = getChildPPWidth(data?.reading_pp, sum, data?.pp, reference_pp);
-            const fl_width = getChildPPWidth(data?.fl_pp, sum, data?.pp, reference_pp);
+            const sum = skill_config.reduce((acc, skill) => acc + (data?.[skill.key] ?? 0), 0);
 
-            const aim_rect = PanelDraw.Rect(15, 105, aim_width, 30, 15, "url(#grad-OE7-12)", 1);
-            const spd_rect = PanelDraw.Rect(15, 105, aim_width + spd_width, 30, 15, "url(#grad-OE7-13)", 1);
-            const acc_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width, 30, 15, "url(#grad-OE7-14)", 1);
-            const reading_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width + reading_width, 30, 15, "url(#grad-OE7-15)", 1);
-            const fl_rect = PanelDraw.Rect(15, 105, aim_width + spd_width + acc_width + reading_width + fl_width, 30, 15, "url(#grad-OE7-20)", 1);
+            let accumulated_width = 0;
+            const texts = [];
 
-            const aim_text = getChildPPPath(data?.aim_pp, 15, 128, 24, aim_width, aim_width, 10);
-            const spd_text = getChildPPPath(data?.spd_pp, 15, 128, 24, aim_width + spd_width, spd_width, 10);
-            const acc_text = getChildPPPath(data?.acc_pp, 15, 128, 24, aim_width + spd_width + acc_width, acc_width, 10);
-            const reading_text = getChildPPPath(data?.reading_pp, 15, 128, 24, aim_width + spd_width + acc_width + reading_width, reading_width, 10)
-            const fl_text = getChildPPPath(data?.fl_pp, 15, 128, 24, aim_width + spd_width + acc_width + reading_width + fl_width, fl_width, 10);
+            skill_config.forEach(({ key, grad, clip }) => {
+                const val = data?.[key];
+                const width = getChildPPWidth(val, sum, data?.pp, reference_pp);
+                accumulated_width += width;
 
-            svg = setText(svg, aim_rect, reg_clip2);
-            svg = setText(svg, spd_rect, reg_clip3);
-            svg = setText(svg, acc_rect, reg_clip4);
-            svg = setText(svg, reading_rect, reg_clip5);
-            svg = setText(svg, fl_rect, reg_clip6);
-            svg = setTexts(svg, [aim_text, spd_text, acc_text, reading_text, fl_text], reg_text);
+                const rect = PanelDraw.Rect(15, 105, accumulated_width, 30, 15, grad, 1);
+                svg = setText(svg, rect, clip);
+
+                const text_path = getChildPPPath(val, 15, 128, 24, accumulated_width, width, 10);
+                texts.push(text_path);
+            });
+
+            svg = setTexts(svg, texts, reg_text);
             break;
         }
 
         case 't': {
-            const sum = data?.diff_pp + data?.acc_pp || 0;
+            const skill_config = [
+                { key: 'diff_pp', grad: 'url(#grad-OE7-13)', clip: reg_clip3 },
+                { key: 'acc_pp',  grad: 'url(#grad-OE7-15)', clip: reg_clip4 }
+            ];
 
-            const diff_width = getChildPPWidth(data?.diff_pp, sum, data?.pp, reference_pp);
-            const acc_width = getChildPPWidth(data?.acc_pp, sum, data?.pp, reference_pp);
+            const sum = skill_config.reduce((acc, skill) => acc + (data?.[skill.key] ?? 0), 0);
 
-            const diff_rect = PanelDraw.Rect(15, 105, diff_width, 30, 15, "url(#grad-OE7-13)", 1);
-            const acc_rect = PanelDraw.Rect(15, 105, diff_width + acc_width, 30, 15, "url(#grad-OE7-14)", 1);
+            let accumulated_width = 0;
+            const texts = [];
 
-            const diff_text = getChildPPPath(data?.diff_pp, 15, 128, 24, diff_width, diff_width, 10);
-            const acc_text = getChildPPPath(data?.acc_pp, 15, 128, 24, diff_width + acc_width, acc_width, 10);
+            skill_config.forEach(({ key, grad, clip }) => {
+                const val = data?.[key];
+                const width = getChildPPWidth(val, sum, data?.pp, reference_pp);
+                accumulated_width += width;
 
-            svg = setText(svg, diff_rect, reg_clip3);
-            svg = setText(svg, acc_rect, reg_clip4);
-            svg = setTexts(svg, [diff_text, acc_text], reg_text);
+                const rect = PanelDraw.Rect(15, 105, accumulated_width, 30, 15, grad, 1);
+                svg = setText(svg, rect, clip);
+
+                const text_path = getChildPPPath(val, 15, 128, 24, accumulated_width, width, 10);
+                texts.push(text_path);
+            });
+
+            svg = setTexts(svg, texts, reg_text);
             break;
         }
     }
