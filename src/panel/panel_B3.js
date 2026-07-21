@@ -494,7 +494,14 @@ const getRoman = (level = 0) => {
         return '-'
     } else if (level < 1) {
         // 0 - 1
-        return '.' + Math.round(level * 100);
+        if (level < 0.25) {
+            return '-III'
+        } else if (level < 0.75) {
+            return '-II'
+        }
+        return '-I'
+
+        // return '.' + Math.round(level * 100);
     } else if (level < 11) {
         // 1 - 10
         return roman[Math.round(level - 1)]
@@ -558,6 +565,7 @@ function drawUserPlus(svgs, values, vs_values = [], levels = [], abbr_arr, at_ri
                 data_b: (vs_value == null) ? null : rank,
                 data_m: (vs_value == null) ? null : '',
                 delta: (vs_value == null) ? null : (value - vs_value),
+                delta_top: value,
                 icon_colors: colors,
                 round_level: -6,
             }, at_right)

@@ -1,6 +1,6 @@
 import {
     getGameMode, setImage, setText, setTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, floors,
-    getImageFromV3, readBinaryFromV3Cache,
+    getImageFromV3, readBinaryFromV3Cache, clamp,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {
@@ -1506,7 +1506,7 @@ export function label_E5(data = {
     const bar_mid = poppinsBold.getTextPath(data?.bar_mid, label_left + progress_width / 2, 65, 14, "center baseline", '#666');
     const bar_max = poppinsBold.getTextPath(data?.bar_max, label_width, 65, 14, "right baseline", '#666');
 
-    const bar_width = data?.bar_progress == null ? 0 : Math.max(10, data?.bar_progress * progress_width);
+    const bar_width = clamp((data?.bar_progress ?? 0) * progress_width, 10, 0)
 
     const is_gradient = Array.isArray(data?.bar_colors) && data?.bar_colors?.length === 2;
 

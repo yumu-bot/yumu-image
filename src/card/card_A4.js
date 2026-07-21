@@ -164,7 +164,7 @@ export async function card_A4(data = {
 
     if (rank === 'XH' || rank === 'X') {
         combo_index = ' [PF]'
-    } else if (is_perfect_combo || (ruleset_id === 3 && beatmap.max_combo >= max_combo && max_combo > 0) || (beatmap.max_combo === max_combo && max_combo > 0)) {
+    } else if (is_perfect_combo || (ruleset_id === 3 && beatmap.max_combo >= combo && combo > 0) || (beatmap.max_combo === combo && combo > 0)) {
         combo_index = ' [FC]'
     }
 

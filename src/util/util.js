@@ -424,6 +424,36 @@ export function isNotNumber(str = '') {
 }
 
 /**
+ * 将数值限制在 [min, max] 范围内并取整，若原始值 <= 0 则直接返回 0
+ * @param {number|string} val - 原始数值 (如 raw_width)
+ * @param {number} max - 最大值限制
+ * @param {number} min - 最小值限制
+ * @returns {number}
+ */
+export function clampToInteger(val, max = 1, min = 0) {
+    if (!val || val <= 0) return 0;
+    return Math.round(Math.min(max, Math.max(min, val)));
+}
+
+export function clamp(val, max = 1, min = 0) {
+    if (!val || val <= 0) return 0;
+    return Math.min(max, Math.max(min, val));
+}
+
+/**
+ * 规范化
+ * @param {number} val 当前数值
+ * @param {number} min 最小值/下限
+ * @param {number} max 最大值/上限
+ * @param {number} range 需要映射的范围（默认1，就是0-1）
+ */
+export function normalize(val, max, min, range = 1) {
+    if (val <= min || min === max) return 0;
+
+    return (val - min) / (max - min) * range;
+}
+
+/**
  * @param obj
  * @param obj2
  * @returns {*}
@@ -887,17 +917,6 @@ export async function getBanner(any, default_image_path = getBannerLocal()) {
     } else {
         return cover_url
     }
-}
-
-/**
- * @param num {*}
- * @param max
- * @param min
- * @return {number}
- */
-export function clamp(num = 0, max = 0, min = 0) {
-    if (typeof num !== 'number') return 0
-    return Math.max(min, Math.min(max, num));
 }
 
 export async function downloadByFetch(url, buffer_path, default_image_path) {
@@ -1367,6 +1386,10 @@ export function rotateSvgBody(body = '', cx = 0, cy = 0, angle = 0) {
   </g>`
 }
 
+/**
+ * @param {null|string} svg
+ * @return {string}
+ */
 export function getBody(svg = '') {
     const contentMatch = svg.match(/<svg[^>]*>([\s\S]*?)<\/svg>/i);
 
