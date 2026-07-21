@@ -81,7 +81,7 @@ export const PanelGenerate = {
         /**
          * @type {string}
          */
-        const bg = background ?? user?.profile?.card ?? user?.cover_url ?? user?.cover?.url;
+        const bg = background ?? user?.profile?.card ?? user?.cover_url ?? user?.cover?.url
 
         /**
          * @type {string}
@@ -102,7 +102,8 @@ export const PanelGenerate = {
         const left2 = country + (user?.statistics?.country_rank ? ('#' + user.statistics.country_rank) : '');
 
         const isBot = user?.is_bot;
-        const isNotPlayed = user?.statistics?.level_current === 1 && user?.statistics?.level_progress === 0
+
+        const isNotPlayed = user?.statistics?.level_current <= 1 && user?.statistics?.level_progress === 0
         const hasEstimated = user?.estimate_pp > 0
 
         const level = user?.statistics?.level_current || 0;
@@ -134,7 +135,7 @@ export const PanelGenerate = {
             ((pp_d < 0) ? pp_d + 'PP' : (is_team_member ? '[' + user.team.short_name + ']' : ''))
 
         return {
-            background: bg,
+            background: (isNotEmptyString(bg)) ? bg : getBannerLocal(),
             avatar: av,
             sub_icon1: sub_icon1,
             sub_icon2: '',
