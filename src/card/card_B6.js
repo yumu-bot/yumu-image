@@ -211,7 +211,7 @@ export function card_B6(data = {}, to_left = false) {
     ) : '';
 
     const delta_top_path = (delta_top ?? 0) !== 0 ? poppinsBold.getTextPath(
-        Math.round(delta_top).toString(), delta_x, 28, 18, delta_anchor, '#fff'
+        Math.round(delta_top).toString(), delta_x, 34, 18, delta_anchor, '#fff'
     ) : '';
 
 
