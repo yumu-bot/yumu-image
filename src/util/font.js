@@ -232,8 +232,7 @@ export const extra = new FontInstance("extra.gamemode.ttf", "Extra");
  * @return {string}
  */
 function preprocessingText(text = '') {
-    const safe_text = text ?? '';
-    return typeof safe_text === 'string' ? safe_text : String(safe_text);
+    return String(text ?? '');
 
     // return endfieldMapper(String(text))
 }
