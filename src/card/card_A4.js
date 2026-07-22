@@ -164,7 +164,7 @@ export async function card_A4(data = {
 
     if (rank === 'XH' || rank === 'X') {
         combo_index = ' [PF]'
-    } else if (is_perfect_combo || (ruleset_id === 3 && beatmap.max_combo >= combo && combo > 0) || (beatmap.max_combo === combo && combo > 0)) {
+    } else if (is_perfect_combo || (ruleset_id === 3 && beatmap.max_combo <= combo && combo > 0) || (beatmap.max_combo === combo && combo > 0)) {
         combo_index = ' [FC]'
     }
 
@@ -366,12 +366,6 @@ function getStatArr(score = {statistics: {
 }
 
 function getStatColorsArr(mode = 0) {
-    // const colors = [
-    //     ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E'], // mode 0
-    //     ['#8DCEF4', '#79C471', '#ED6C9E'],            // mode 1
-    //     ['#8DCEF4', '#79C471', '#FEF668', '#ED6C9E', '#A1A1A1'], // mode 2
-    //     ['#8DCEF4', '#FEF668', '#79C471', '#5E8AC6', '#A1A1A1', '#ED6C9E'] // mode 3
-    // ];
     const colors = [
         [colorArray.cyan, colorArray.green, colorArray.yellow, colorArray.pink], // mode 0
         [colorArray.cyan, colorArray.green, colorArray.pink],            // mode 1

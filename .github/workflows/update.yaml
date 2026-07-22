@@ -8,28 +8,18 @@ jobs:
   update:
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1  # 只需要最新的commit
-
-      - name: Check commit message
-        id: check_commit
+      - name: Fast local pull
         run: |
-          set -e
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-          echo "Commit message: $COMMIT_MSG"
-          
-          if echo "$COMMIT_MSG" | grep -qiE "\[npm\]|\[install\]|\[i\]"; then
-            echo "install_needed=true" >> $GITHUB_OUTPUT
-          else
-            echo "install_needed=false" >> $GITHUB_OUTPUT
-          fi
+          git fetch origin master --depth=1
+          git reset --hard origin/master
 
       - name: Update or Install
         run: |
           set -e
-          if [ "${{ steps.check_commit.outputs.install_needed }}" == "true" ]; then
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          echo "Commit message: $COMMIT_MSG"
+          
+          if echo "$COMMIT_MSG" | grep -qiE "\[npm\]|\[install\]|\[i\]"; then
             ~/sh/install_node_object.sh
           else
             ~/sh/update_node_object.sh

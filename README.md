@@ -23,9 +23,11 @@
 | SUPER_KEY | - | 绘图模块与文件模块的通信秘钥。**可不填** |
 | OSU_BUFFER_PATH | 缓存路径/osufile | 存储 .osu 文件的地方，可以与主程序相同。 |
 | BUFFER_PATH | 缓存路径/buffer | 存储图像缓存的地方，采用了 sharp 压缩，预期每文件平均占用 70~200KB。<br />会默认存储 webp，保证存储空间和质量。不受 IMAGE_FORMAT 变量影响。 |
-| USE_PROXY | false | 是否使用本地代理 (127.0.0.1)。 |
-| OSUFILE_NO_PROXY | false | 是否禁用 osu 文件下载时的代理。<br />因为现在 ppy 基本上拦掉了所有主站异常请求。 |
-| PROXY_PORT | 7890 | 挂 http 代理的端口。 |
+| USE_PROXY | false | 是否使用代理。 |
+| OSUFILE_NO_PROXY | false | 是否禁用 osu 文件下载时的代理。<br />因为现在 ppy 拦掉了所有主站异常请求，所以您可能无法使用节点污染严重的代理下载 osu 文件。<br />此时需要设为 true。 |
+| PROXY_SCHEME | http | 代理的协议类型。 |
+| PROXY_IP | 127.0.0.1 | 代理的地址。 |
+| PROXY_PORT | 7890 | 代理的端口。 |
 | IMAGE_FORMAT | jpg | 绘图模块返回的图片格式。可以使用 webp、jpg、png。<br />强烈推荐使用 webp，但是某些神秘 qq 客户端会出现缩略图预览问题。 |
 | ADVANCED_FORMAT | webp | 部分需要玩家点开的超大面板（无需考虑缩略图预览问题时），会自动使用这个格式。**一般不用改** |
 

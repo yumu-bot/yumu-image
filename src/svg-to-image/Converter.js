@@ -257,13 +257,20 @@ export default class Converter {
             delete this[_browser];
         }
 
-        if (this[_browserPromise]) {
-            try {
-                await this[_browserPromise].close();
-                console.log('[Destroy] Chromium 浏览器实例已成功关闭');
-            } catch (e) {
-                console.error('[Destroy] 强关浏览器实例失败! 可能会产生僵尸进程:', e.message);
+        try {
+            /**
+             * @type {Browser|null}
+             */
+            const browser = this[_browser] || (this[_browserPromise] ? await this[_browserPromise].catch(() => null) : null);
+
+            if (browser && browser.connected) {
+                await browser.close();
+                console.log('[Destroy] Chromium 浏览器已成功关闭');
             }
+        } catch (e) {
+            console.error('[Destroy] 强关浏览器失败! 可能会产生僵尸进程:', e.message);
+        } finally {
+            delete this[_browser];
             delete this[_browserPromise];
         }
     }

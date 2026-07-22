@@ -39,6 +39,9 @@ export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || path_util.join(CACHE_P
 
 export const USE_PROXY = process.env.USE_PROXY === 'true';
 export const OSUFILE_NO_PROXY = process.env.OSUFILE_NO_PROXY === 'true';
+
+export const PROXY_SCHEME = process.env.PROXY_SCHEME || 'http';
+export const PROXY_IP = process.env.PROXY_IP || '127.0.0.1';
 export const PROXY_PORT = Number(process.env.PROXY_PORT) || 7890
 
 const directHttpsAgent = new https.Agent({ keepAlive: true });
@@ -53,7 +56,7 @@ export function getProxyAgent() {
     }
 
     if (!cachedAgent) {
-        cachedAgent = new HttpsProxyAgent(`http://127.0.0.1:${PROXY_PORT}`);
+        cachedAgent = new HttpsProxyAgent(`${PROXY_SCHEME}://${PROXY_IP}:${PROXY_PORT}`);
     }
 
     return cachedAgent;
