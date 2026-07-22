@@ -29,6 +29,7 @@
     "tmp": "^0.2.1",
     "upng-js": "^2.1.0",
     "ws": "^8.21.0"
+    "dotenv": "^17.2.0"
   },
   "allowScripts": {
     "puppeteer@25.3.0": true,

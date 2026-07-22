@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import {
     CACHE_PATH,
     getBrowserInstance,
