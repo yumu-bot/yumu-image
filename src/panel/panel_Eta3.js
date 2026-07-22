@@ -7,7 +7,7 @@ import {
     getNowTimeStamp,
     getPanelNameSVG,
     getTimeDifference,
-    isASCII,
+    isASCII, normalize,
     setImage,
     setSvgBody,
     setText,
@@ -766,7 +766,7 @@ function getProgressWidth(accuracy = 0, rank = 'F') {
     }
 
     const acc = (accuracy || 0) * 100
-    const index =  Math.min(1, Math.max(0, (acc - min_acc) / (max_acc - min_acc)))
+    const index = normalize(acc, max_acc, min_acc);
 
     return min + (max - min) * index
 }

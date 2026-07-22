@@ -446,11 +446,16 @@ export function clamp(val, max = 1, min = 0) {
  * @param {number} min 最小值/下限
  * @param {number} max 最大值/上限
  * @param {number} range 需要映射的范围（默认1，就是0-1）
+ * @param {number} bottom 保底最小 (默认 0)，设为 1e-4可以确保在 0 的时候有值
  */
-export function normalize(val, max, min, range = 1) {
+export function normalize(val, max, min, range = 1, bottom = 0) {
     if (val <= min || min === max) return 0;
 
-    return (val - min) / (max - min) * range;
+    // 2. 限制最大值不越界，并乘以 range
+    const clamped = Math.min(val, max);
+    const progress = ((clamped - min) / (max - min)) * range;
+
+    return Math.max(progress, bottom);
 }
 
 /**

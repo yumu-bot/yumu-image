@@ -1,4 +1,5 @@
 import {
+    clamp,
     getFormattedTime,
     getImageFromV3,
     getNowTimeStamp,
@@ -123,7 +124,7 @@ export async function panel_B4(data = {
             round_level: 2,
         }, false));
 
-        number_left.push(Math.min(Math.max((value - 4), 0.01) / 3.5, 1));
+        number_left.push(clamp((value - 4) / 3.5, 1, 0.01))
     }
 
     svg = setText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
@@ -166,7 +167,7 @@ export async function panel_B4(data = {
                 round_level: 1,
             }, true));
 
-            number_right.push(Math.min(Math.max((value - 4), 0.01) / 3.5, 1));
+            number_right.push(clamp((value - 4) / 3.5, 1, 0.01))
         }
 
         svg = setText(svg, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);

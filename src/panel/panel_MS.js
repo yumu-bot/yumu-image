@@ -1,4 +1,5 @@
 import {
+    clamp,
     floor,
     floors,
     getImage,
@@ -366,7 +367,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
         additional_b_size: 24,
         additional_m_size: 14,
 
-        rrect1_percent: Math.min(Math.max(0, percent), 1),
+        rrect1_percent: clamp(percent, 1, 0),
         rrect1_color1: rrect1_color1,
         rrect1_color2: rrect1_color2,
         rrect1_base_opacity: rrect1_base_opacity,

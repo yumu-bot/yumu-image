@@ -1,6 +1,6 @@
 import {
     ar2ms,
-    averageArrayToFixedLength,
+    averageArrayToFixedLength, clampToInteger,
     cs2px,
     getAvatar,
     getBeatMapTitlePath,
@@ -379,27 +379,16 @@ const component_R3 = (
 ) => {
     // const playing = Math.max(play_count - quit_sum - retry_sum - pass_count, 0)
 
-    const maximum = Math.max(play_count, pass_count + retry_sum + quit_sum)
+    // 1. 计算三者的实际总和
+    const total = Math.max(pass_count + retry_sum + quit_sum, 1);
 
-    const pass_rate  = maximum > 0 ? Math.min(1, pass_count / maximum) : 0;
-    const retry_rate = maximum > 0 ? Math.min(1, retry_sum / maximum) : 0;
-    const quit_rate  = maximum > 0 ? Math.min(1, quit_sum / maximum) : 0;
+    const pass_rate  = pass_count / total
+    const retry_rate = retry_sum / total
+    const quit_rate  = quit_sum / total
 
-    let pass_width = 0
-    let retry_width = 0
-    let quit_width = 0
-
-    if (pass_rate > 0) {
-        pass_width = Math.max(pass_rate * 220, 20)
-    }
-
-    if (retry_rate > 0) {
-        retry_width = Math.max(retry_rate * 220, 20)
-    }
-
-    if (quit_rate > 0) {
-        quit_width = Math.max(quit_rate * 220, 20)
-    }
+    let pass_width = clampToInteger(pass_rate * 220, 220, 20)
+    let retry_width = clampToInteger(retry_rate * 220, 220, 20)
+    let quit_width = clampToInteger(quit_rate * 220, 220, 20)
 
     const titles = PanelDraw.Shadow(poppinsBold.getTextPath('Pass', 15, 667, 20, 'left baseline', '#aaa') + poppinsBold.getTextPath('Retry', 255, 667, 20, 'left baseline', '#aaa') + poppinsBold.getTextPath('Quit', 495, 667, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
 
@@ -438,12 +427,12 @@ const component_R4 = (beatmap, expected_mode, original) => {
     const bpm_r = (beatmap?.bpm > 0) ? (60000 / beatmap?.bpm).toFixed(0) + 'ms' : '-';
     const bpm_b = bpm.integer
     const bpm_m = bpm.decimal
-    const bpm_p = getProgress(beatmap?.bpm, 90, 270);
+    const bpm_p = normalize(beatmap?.bpm, 270, 90);
 
     const length_r = Math.floor(beatmap?.total_length / 60) + ':' + (beatmap?.total_length % 60).toFixed(0).padStart(2, '0');
     const length_b = Math.floor(beatmap?.hit_length / 60) + ':';
     const length_m = (beatmap?.hit_length % 60).toFixed(0).padStart(2, '0');
-    const length_p = getProgress(beatmap?.hit_length, 30, 270);
+    const length_p = normalize(beatmap?.hit_length, 270, 30);
 
     let isDisplayCS = true;
     let isDisplayAR = true;
@@ -504,22 +493,22 @@ const component_R4 = (beatmap, expected_mode, original) => {
     }, {
         ...LABELS.LENGTH, remark: length_r, data_b: length_b, data_m: length_m, data_a: '', bar_progress: length_p,
     }, {
-        ...((mode === 'm') ? LABELS.KEY : LABELS.CS), ...stat2label(beatmap?.cs, cs2px(beatmap?.cs, mode), getProgress(beatmap?.cs, cs_min, cs_max), original?.cs ?? 0, isDisplayCS),
+        ...((mode === 'm') ? LABELS.KEY : LABELS.CS), ...stat2label(beatmap?.cs, cs2px(beatmap?.cs, mode), normalize(beatmap?.cs, cs_max, cs_min), original?.cs ?? 0, isDisplayCS),
         bar_min: cs_min,
         bar_mid: cs_mid,
         bar_max: cs_max,
     }, {
-        ...LABELS.AR, ...stat2label(beatmap?.ar, ar2ms(beatmap?.ar, mode), getProgress(beatmap?.ar, ar_min, ar_max), original?.ar ?? 0, isDisplayAR),
+        ...LABELS.AR, ...stat2label(beatmap?.ar, ar2ms(beatmap?.ar, mode), normalize(beatmap?.ar, ar_max, ar_min), original?.ar ?? 0, isDisplayAR),
         bar_min: ar_min,
         bar_mid: ar_mid,
         bar_max: ar_max,
     }, {
-        ...LABELS.OD, ...stat2label(beatmap?.od, od2ms(beatmap?.od, mode), getProgress(beatmap?.od, od_min, od_max), original?.od ?? 0, isDisplayOD),
+        ...LABELS.OD, ...stat2label(beatmap?.od, od2ms(beatmap?.od, mode), normalize(beatmap?.od, od_max, od_min), original?.od ?? 0, isDisplayOD),
         bar_min: od_min,
         bar_mid: od_mid,
         bar_max: od_max,
     }, {
-        ...LABELS.HP, ...stat2label(beatmap?.hp, '-', getProgress(beatmap?.hp, hp_min, hp_max), original?.hp ?? 0, true),
+        ...LABELS.HP, ...stat2label(beatmap?.hp, '-', normalize(beatmap?.hp, hp_max, hp_min), original?.hp ?? 0, true),
         bar_min: hp_min,
         bar_mid: hp_mid,
         bar_max: hp_max,
@@ -803,13 +792,6 @@ const component_R7 = (beatmapset = {
             return getSvgBody(x, y, card);
         }).join('\n');
     }
-}
-
-// bottom: 保底
-const getProgress = (x, min, max, bottom = 1 / 16) => {
-    const result = (Math.min(Math.max(x, min), max) - min) / (max - min)
-
-    return Math.max(result, bottom);
 }
 
 const stat2label = (stat, remark, progress, original, isDisplay) => {

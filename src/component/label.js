@@ -1,6 +1,6 @@
 import {
     getGameMode, setImage, setText, setTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, floors,
-    getImageFromV3, readBinaryFromV3Cache, clamp,
+    getImageFromV3, readBinaryFromV3Cache, clampToInteger, normalize,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {
@@ -1506,7 +1506,7 @@ export function label_E5(data = {
     const bar_mid = poppinsBold.getTextPath(data?.bar_mid, label_left + progress_width / 2, 65, 14, "center baseline", '#666');
     const bar_max = poppinsBold.getTextPath(data?.bar_max, label_width, 65, 14, "right baseline", '#666');
 
-    const bar_width = clamp((data?.bar_progress ?? 0) * progress_width, progress_width, 10)
+    const bar_width = clampToInteger((data?.bar_progress ?? 0) * progress_width, progress_width, 10)
 
     const is_gradient = Array.isArray(data?.bar_colors) && data?.bar_colors?.length === 2;
 
@@ -1679,18 +1679,19 @@ export async function label_J3(data = {
 }
 
 //BA-J4-模组评级标签
-export function label_J4(data = {
-    icon_title: 'Play Count',
-    remark: '3946 PP',
-    data_b: '024',
-    abbr: 'PC',
-
-    bar_progress: 0,
-    bar_color: 'none',
-    max_width: 120,
-    hide: false,
-    hue: 342,
-}) {
+export function label_J4(
+    {
+        icon_title = 'Play Count',
+        remark = '3946 PP',
+        data_b = '024',
+        abbr = 'PC',
+        bar_progress = 0,
+        bar_color = 'none',
+        max_width = 120,
+        hide = false,
+        hue = 342,
+    } = {}
+) {
     let svg = `
         <g id="Text_LJ4">
         </g>
@@ -1699,28 +1700,29 @@ export function label_J4(data = {
     // 正则表达式
     const reg_text = /(?<=<g id="Text_LJ4">)/;
 
-    const is_dark_mode = (hex2OKLabBrightness(data.bar_color) <= 0.2)
-    const is_too_short = data?.max_width <= 120
+    const is_dark_mode = (hex2OKLabBrightness(bar_color) <= 0.2);
+    const is_too_short = max_width <= 120;
 
-    const title_max_width = data?.max_width - 20 - 10 - poppinsBold.getTextWidth(data?.remark, 16)
+    const title_max_width = max_width - 20 - 10 - poppinsBold.getTextWidth(remark, 16);
     const title_str = poppinsBold.cutStringTail(
-        is_too_short ? data.abbr : data.icon_title, 16, title_max_width
-    )
+        is_too_short ? abbr : icon_title, 16, title_max_width
+    );
 
-    const icon_title = poppinsBold.getTextPath(title_str, 8, 20, 16, 'left baseline', '#fff');
-    const number_data = poppinsBold.getTextPath(data.data_b, 8, 52, 30, "left baseline", data.bar_color)
-    const remark = poppinsBold.getTextPath(data?.remark, data?.max_width - 20 + 2, 20, 16, "right baseline", '#fff');
+    const icon_title_path = poppinsBold.getTextPath(title_str, 8, 20, 16, 'left baseline', '#fff');
+    const number_data = poppinsBold.getTextPath(data_b, 8, 52, 30, "left baseline", bar_color);
 
-    const progress = data?.bar_progress || 0
-    const bar_width = progress === 0 ? 0 : Math.max(20, progress * data?.max_width);
+    const remark_path = poppinsBold.getTextPath(remark, max_width - 18, 20, 16, "right baseline", '#fff');
 
-    const bar = PanelDraw.Rect(0, 0, bar_width, 60, 10, data?.bar_color || '#fff', 0.2)
-    const bar_base = PanelDraw.Rect(0, 0, data?.max_width, 60, 10,
-        is_dark_mode ? PanelColor.bright(data.hue) : PanelColor.top(data.hue),
-        1)
-    const bar_side = PanelDraw.Rect(data?.max_width - 12, 8, 4, 44, 2, data?.bar_color || '#fff', 1)
+    const bar_width = clampToInteger(bar_progress * max_width, max_width, 20);
 
-    svg = setTexts(svg, [icon_title, number_data, remark, bar_side, bar, bar_base], reg_text)
+    const bar = PanelDraw.Rect(0, 0, bar_width, 60, 10, bar_color, 0.2);
+    const bar_base = PanelDraw.Rect(0, 0, max_width, 60, 10,
+        is_dark_mode ? PanelColor.bright(hue) : PanelColor.top(hue),
+        1
+    );
+    const bar_side = PanelDraw.Rect(max_width - 12, 8, 4, 44, 2, bar_color, 1);
+
+    svg = setTexts(svg, [icon_title_path, number_data, remark_path, bar_side, bar, bar_base], reg_text);
 
     return svg;
 }
@@ -1762,8 +1764,8 @@ export function label_J5(data = {
     // 原来是 16，感觉太大了，length 会超出
     const icon_title = poppinsBold.getTextPath(data.abbr, 25, 65, 14, 'center baseline', '#fff');
 
-    const progress_before = Math.min(Math.max(data.min - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 0
-    const progress_after = Math.min(Math.max(data.max - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 1
+    const progress_before = normalize(data.min, data.bar_max, data.bar_min);
+    const progress_after  = normalize(data.max, data.bar_max, data.bar_min);
 
     const number_color =
         (progress_after - progress_before < 0) ? '#666' : '#fff';
@@ -1792,7 +1794,7 @@ export function label_J5(data = {
     const bar_mid = poppinsBold.getTextPath(data?.bar_mid_text || data?.bar_mid?.toString(), 255, 65, 14, "center baseline", '#666');
     const bar_max = poppinsBold.getTextPath(data?.bar_max_text || data?.bar_max?.toString(), 450, 65, 14, "right baseline", '#666');
 
-    const bar_width = Math.max(10, (progress_after - progress_before) * 390);
+    const bar_width= clampToInteger((progress_after - progress_before) * 390, 390, 10)
 
     const bar = PanelDraw.Rect(60 + 390 * progress_before, 38, bar_width, 10, 5, data?.bar_color || '#fff')
     const bar_base = PanelDraw.Rect(60, 38, 390, 10, 5, data?.bar_color || '#fff', 0.2)
@@ -1967,8 +1969,8 @@ export function label_J8(data = {
     // 原来是 16，感觉太大了，length 会超出
     const icon_title = poppinsBold.getTextPath(data.icon_title, 25, 65, 14, 'center baseline', '#fff');
 
-    const progress_before = Math.min(Math.max(data.min - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 0
-    const progress_after = Math.min(Math.max(data.max - data.bar_min, 0) / (data.bar_max - data.bar_min), 1) || 1
+    const progress_before = normalize(data.min, data.bar_max, data.bar_min)
+    const progress_after = normalize(data.max, data.bar_max, data.bar_min)
 
     const index_data = poppinsBold.getTextPath("Min", 65, 15, 18, 'left baseline', '#666')
         + poppinsBold.getTextPath("Mid", 255, 15, 18, 'center baseline', '#666')
@@ -2009,7 +2011,7 @@ export function label_J8(data = {
             color: number_color,
         }], 445, 52, 'right baseline')
 
-    const bar_width = Math.max(10, (progress_after - progress_before) * 390);
+    const bar_width= clampToInteger((progress_after - progress_before) * 390, 390, 10)
 
     const bar = PanelDraw.Rect(60 + 390 * progress_before, 58, bar_width, 10, 5, data?.bar_color || '#fff')
     const bar_base = PanelDraw.Rect(60, 58, 390, 10, 5, data?.bar_color || '#fff', 0.2)
@@ -2051,7 +2053,7 @@ export function label_T(data = {
     const number_data = poppinsBold.getTextPath(data.data_b, (data.max_width - 10), 20, 16, "right baseline", data.bar_color)
 
     const progress = data?.bar_progress || 0
-    const bar_width = progress === 0 ? 0 : Math.max(36, progress * data?.max_width);
+    const bar_width = clampToInteger(progress * data?.max_width, data?.max_width, 30)
 
     const bar = PanelDraw.Rect(0, 0, bar_width, 30, 15, data?.bar_color || '#fff', 0.2)
     const bar_base = PanelDraw.Rect(0, 0, data?.max_width, 30, 15,

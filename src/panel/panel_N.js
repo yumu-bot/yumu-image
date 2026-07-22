@@ -1,4 +1,5 @@
 import {
+    clampToInteger,
     floor,
     getAvatar,
     getGenre,
@@ -702,8 +703,13 @@ async function renderDiscussion(discussion = [], users = [], images = new Map(),
 
         const remain_row = height2Row(remain_height, max_row);
 
-        const split = splitMessage(d?.starting_post?.message, 18,
-            Math.max(Math.min((max_width / 2) - 25, max_width - sum_x - column * 25), 0), remain_row); //宽度实时变化，取最小值
+        const available_width = (max_width / 2) - 25;
+        const remaining_width = max_width - sum_x - (column * 25);
+
+        const target_width = clampToInteger(remaining_width, available_width, 0);
+        const split = splitMessage(d?.starting_post?.message, 18, target_width, remain_row);
+
+        //宽度实时变化，取最小值
         //25是头像
 
         const text_lines = split.lines;

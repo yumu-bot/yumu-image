@@ -1,7 +1,7 @@
 import {
     floor, getImage, getImageFromV3, getMapBackground, getMapStatusImage,
     getPanelNameSVG, getRandomString,
-    getSvgBody, getTimeDifferenceShort, isBlankString, isNotBlankString, isNotEmptyArray, isNotNull, round,
+    getSvgBody, getTimeDifferenceShort, isBlankString, isNotBlankString, isNotEmptyArray, isNotNull, normalize, round,
     rounds, setCustomBanner,
     setSvgBody,
     setText,
@@ -287,7 +287,7 @@ const component_M1 = (
             ...LABEL_IM.RANK,
             data_b: String(data.rank),
             data_m: '',
-            bar_progress: getProgress(data.rank, LABEL_IM.RANK.bar_min, LABEL_IM.RANK.bar_max),
+            bar_progress: normalize(data.rank, LABEL_IM.RANK.bar_max, LABEL_IM.RANK.bar_min),
             hide: hide
         }, {
             ...LABEL_IM.PENDING,
@@ -296,33 +296,33 @@ const component_M1 = (
             bar_min: LABEL_IM.RANK.bar_min,
             bar_mid: half_slot,
             bar_max: data.slot,
-            bar_progress: getProgress(data.pending, LABEL_IM.RANK.bar_min, data.slot),
+            bar_progress: normalize(data.pending, data.slot, LABEL_IM.RANK.bar_min),
             hide: hide
         }, {
             ...LABEL_IM.GUEST,
             data_b: String(data.guest_ranked),
             data_m: ` [${data.guest}]`,
-            bar_progress: getProgress(data.guest_ranked, LABEL_IM.GUEST.bar_min, LABEL_IM.GUEST.bar_max),
+            bar_progress: normalize(data.guest_ranked, LABEL_IM.GUEST.bar_max, LABEL_IM.GUEST.bar_min),
             hide: hide
         }, {
             ...LABEL_IM.DIFFICULTY,
             data_b: String(data.difficulty),
             data_m: '',
-            bar_progress: getProgress(data.difficulty, LABEL_IM.DIFFICULTY.bar_min, LABEL_IM.DIFFICULTY.bar_max),
+            bar_progress: normalize(data.difficulty, LABEL_IM.DIFFICULTY.bar_max, LABEL_IM.DIFFICULTY.bar_min),
             hide: hide
         }, {
             ...LABEL_IM.FAVOURITE,
             data_b: fav.integer,
             data_m: fav.decimal,
             max_width: 450,
-            bar_progress: getProgress(data.favourite, LABEL_IM.FAVOURITE.bar_min, LABEL_IM.FAVOURITE.bar_max),
+            bar_progress: normalize(data.favourite, LABEL_IM.FAVOURITE.bar_max, LABEL_IM.FAVOURITE.bar_min),
             hide: hide
         }, {
             ...LABEL_IM.PLAY_COUNT,
             data_b: pc.integer,
             data_m: pc.decimal,
             max_width: 450,
-            bar_progress: getProgress(data.play_count, LABEL_IM.PLAY_COUNT.bar_min, LABEL_IM.PLAY_COUNT.bar_max),
+            bar_progress: normalize(data.play_count, LABEL_IM.PLAY_COUNT.bar_max, LABEL_IM.PLAY_COUNT.bar_min),
             hide: hide
         }
     ]
@@ -341,7 +341,7 @@ const component_M1 = (
         return getSvgBody(x, y, label_E5(label));
     }).join('');
 
-    const rating_progress = getProgress(data.average_rating, 0, 10, 0)
+    const rating_progress = normalize(data.average_rating, 10, 0)
 
     const count_base = PanelDraw.Rect(20, 368, 450, 10, 5, PanelColor.top(data.hue))
 
@@ -1083,16 +1083,9 @@ const ActivityConfig = {
     }
 };
 
-// bottom: 保底
-const getProgress = (x, min, max, bottom = 1 / 16) => {
-    const result = (Math.min(Math.max(x, min), max) - min) / (max - min)
-
-    return Math.max(result, bottom);
-}
-
-function getPendingSlot(isSupporter = false, ranked = 0) {
+function getPendingSlot(is_supporter = false, ranked = 0) {
     let slot;
-    if (isSupporter) {
+    if (is_supporter) {
         slot = 8 + Math.min(ranked, 12);
     } else {
         slot = 4 + Math.min(ranked, 4);

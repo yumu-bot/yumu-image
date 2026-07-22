@@ -1,4 +1,5 @@
 import {
+    clamp,
     getGameMode,
     getImageFromV3,
     getNowTimeStamp,
@@ -177,7 +178,7 @@ export async function panel_B1(data = {
             max: (is_pm4) ? 101 : 120,
         }, false));
 
-        number_left.push(Math.min(Math.max((value / 100 * scale_left - 0.6), 0.01) / 4 * 10, 1));
+        number_left.push(clamp((value / 100 * scale_left - 0.6) / 4 * 10, 1, 0.01));
     }
     svg = setText(svg, PanelDraw.HexagonChart(number_left, 960, 600, 230, '#00A8EC'), reg_hexagon);
 
@@ -219,7 +220,7 @@ export async function panel_B1(data = {
                 max: (is_pm4) ? 101 : 120,
             }, true));
 
-            number_right.push(Math.min(Math.max((value / 100 * scale_right - 0.6), 0.01) / 4 * 10, 1));
+            number_right.push(clamp((value / 100 * scale_right - 0.6) / 4 * 10, 1, 0.01));
         }
 
         svg = setText(svg, PanelDraw.HexagonChart(number_right, 960, 600, 230, '#FF0000'), reg_hexagon);

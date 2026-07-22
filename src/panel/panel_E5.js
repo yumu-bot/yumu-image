@@ -1,5 +1,5 @@
 import {
-    ar2ms,
+    ar2ms, clamp, clampToInteger,
     cs2px,
     floor,
     floors,
@@ -19,7 +19,7 @@ import {
     isEmptyArray,
     isNotBlankString,
     isNotNumber,
-    isNumber,
+    isNumber, normalize,
     od2ms,
     readTemplate,
     removeGuest,
@@ -379,7 +379,7 @@ const component_E1 = (data = {
     const reg_star = /(?<=<clipPath id="clippath-OE1-2">)/;
 
     const star = data?.star || 0;
-    const star_rrect = PanelDraw.Rect(15, 105, Math.max((Math.min((star / 9), 1) * 460), 20), 30, 15, 'none')
+    const star_rrect = PanelDraw.Rect(15, 105, clampToInteger((star / 9) * 460, 460, 20), 30, 15, 'none')
 
     const ruleset = extra.getTextPath(getGameMode(data.mode, -1), 20 - 2, 88 - 10, 72, 'left baseline', getStarRatingColor(star))
 
@@ -983,12 +983,12 @@ const PanelEGenerate = {
         const bpm_r = (score?.beatmap?.bpm > 0) ? (60000 / score?.beatmap?.bpm).toFixed(0) + 'ms' : '-';
         const bpm_b = bpm.integer
         const bpm_m = bpm.decimal
-        const bpm_p = getProgress(score?.beatmap?.bpm, 90, 270);
+        const bpm_p = normalize(score?.beatmap?.bpm, 270, 90, 1, 1e-4);
 
         const length_r = Math.floor(score?.beatmap?.total_length / 60) + ':' + (score?.beatmap?.total_length % 60).toFixed(0).padStart(2, '0');
         const length_b = Math.floor(score?.beatmap?.hit_length / 60) + ':';
         const length_m = (score?.beatmap?.hit_length % 60).toFixed(0).padStart(2, '0');
-        const length_p = getProgress(score?.beatmap?.hit_length, 30, 270);
+        const length_p = normalize(score?.beatmap?.hit_length, 270, 30, 1, 1e-4);
 
         let isDisplayCS = true;
         let isDisplayAR = true;
@@ -1067,22 +1067,26 @@ const PanelEGenerate = {
                 data_a: '',
                 bar_progress: length_p,
             }, {
-                ...((mode === 'm') ? LABELS.KEY : LABELS.CS), ...stat2label(score?.beatmap?.cs, cs2px(score?.beatmap?.cs, mode), getProgress(score?.beatmap?.cs, cs_min, cs_max), original?.cs ?? 0, isDisplayCS),
+                ...((mode === 'm') ? LABELS.KEY : LABELS.CS),
+                ...stat2label(score?.beatmap?.cs, cs2px(score?.beatmap?.cs, mode), normalize(score?.beatmap?.cs, cs_max, cs_min, 1, 1e-4), original?.cs ?? 0, isDisplayCS),
                 bar_min: cs_min,
                 bar_mid: cs_mid,
                 bar_max: cs_max,
             }, {
-                ...LABELS.AR, ...stat2label(score?.beatmap?.ar, ar2ms(score?.beatmap?.ar, mode), getProgress(score?.beatmap?.ar, ar_min, ar_max), original?.ar ?? 0, isDisplayAR),
+                ...LABELS.AR,
+                ...stat2label(score?.beatmap?.ar, ar2ms(score?.beatmap?.ar, mode), normalize(score?.beatmap?.ar, ar_max, ar_min, 1, 1e-4), original?.ar ?? 0, isDisplayAR),
                 bar_min: ar_min,
                 bar_mid: ar_mid,
                 bar_max: ar_max,
             }, {
-                ...LABELS.OD, ...stat2label(score?.beatmap?.od, od2ms(score?.beatmap?.od, mode), getProgress(score?.beatmap?.od, od_min, od_max), original?.od ?? 0, isDisplayOD),
+                ...LABELS.OD,
+                ...stat2label(score?.beatmap?.od, od2ms(score?.beatmap?.od, mode), normalize(score?.beatmap?.od, od_max, od_min, 1, 1e-4), original?.od ?? 0, isDisplayOD),
                 bar_min: od_min,
                 bar_mid: od_mid,
                 bar_max: od_max,
             }, {
-                ...LABELS.HP, ...stat2label(score?.beatmap?.hp, '-', getProgress(score?.beatmap?.hp, hp_min, hp_max), original?.hp ?? 0, true),
+                ...LABELS.HP,
+                ...stat2label(score?.beatmap?.hp, '-', normalize(score?.beatmap?.hp, hp_max, hp_min, 1, 1e-4), original?.hp ?? 0, true),
                 bar_min: hp_min,
                 bar_mid: hp_mid,
                 bar_max: hp_max,
@@ -1246,7 +1250,7 @@ const PanelEGenerate = {
 
             const max_combo = Math.max(score?.beatmap?.max_combo ?? (score.max_statistics.great) ?? (score?.statistics?.great + score?.statistics?.ok + score?.statistics?.miss), 1)
 
-            const combo_rate = Math.min(Math.max((score?.max_combo || 0) / max_combo, 0), 1)
+            const combo_rate = clamp((score?.max_combo ?? 0) / (max_combo ?? 1), 0, 1);
 
             rainbow_rating = (250000 * combo_rate + 750000 * Math.pow(score?.accuracy || 0, 3.6) + (score?.statistics?.large_bonus ?? 0) * 300) / 1000000
         } else {
@@ -1302,13 +1306,6 @@ const PanelEGenerate = {
             mode: score?.ruleset_id, rainbow_rank: rainbow_rank, rainbow_crown: rainbow_crown
         }
     },
-}
-
-// bottom: 保底
-const getProgress = (x, min, max, bottom = 1 / 16) => {
-    const result = (Math.min(Math.max(x, min), max) - min) / (max - min)
-
-    return Math.max(result, bottom);
 }
 
 const stat2label = (stat, remark, progress, original, isDisplay) => {

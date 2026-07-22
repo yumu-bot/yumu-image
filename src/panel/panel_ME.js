@@ -1,4 +1,5 @@
 import {
+    clampToInteger,
     floor,
     floors,
     getBeatMapTitlePath,
@@ -292,7 +293,8 @@ const component_E1 = (
     const reg_text = /(?<=<g id="Text_OE1">)/;
     const reg_difficulty = /(?<=<clipPath id="clippath-OE1-2">)/;
 
-    const difficulty_rrect = PanelDraw.Rect(15, 105, Math.max((Math.min((data?.difficulty / 15), 1) * 460), 20), 30, 15, 'none')
+    const rrect_width = clampToInteger((data?.difficulty / 15) * 460, 460, 20)
+    const difficulty_rrect = PanelDraw.Rect(15, 105, rrect_width, 30, 15, 'none')
 
     let circle_text
 

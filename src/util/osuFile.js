@@ -1,5 +1,5 @@
 import path from "path";
-import {accessAsync, OSU_BUFFER_PATH, osuAxios} from "./util.js";
+import {accessAsync, clamp, OSU_BUFFER_PATH, osuAxios} from "./util.js";
 import fs from "fs";
 import readline from "readline";
 import {controlPointsToPath, parseControlPoints} from "./sliderPath.js";
@@ -464,7 +464,7 @@ export function normalizeBpm(raw_bpm, min = 120, max = 300) {
         result = result * Math.pow(2, folds);
     }
 
-    return Math.min(Math.max(result, min), max);
+    return clamp(result, max, min);
 }
 
 /**

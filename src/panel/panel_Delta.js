@@ -1,4 +1,13 @@
-import {floor, getDiffBackground, getImageFromV3, readTemplate, setImage, setSvgBody, setTexts} from "../util/util.js";
+import {
+    clamp,
+    floor,
+    getDiffBackground,
+    getImageFromV3,
+    readTemplate,
+    setImage,
+    setSvgBody,
+    setTexts
+} from "../util/util.js";
 import {lineSeedSans, poppinsBold} from "../util/font.js";
 import {getModColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
@@ -93,10 +102,11 @@ export async function panel_Delta(data = {
 
     // 插入图片和部件（新方法
     const mod_rrect = PanelDraw.Rect(1360, 100, 186, 82, 0, mod_color);
-    const sr_rrect = PanelDraw.Rect(1010, 674, 336 * Math.max(Math.min(attr.stars, 11), 0) / 11, 8, 4, nijika_color);
-    const cs_rrect = PanelDraw.Rect(1010, 766, 336 * Math.max(Math.min(attr.cs, 11), 0) / 11, 8, 4, kita_color);
-    const ar_rrect = PanelDraw.Rect(1010, 858, 336 * Math.max(Math.min(attr.ar, 11), 0) / 11, 8, 4, ryou_color);
-    const od_rrect = PanelDraw.Rect(1010, 950, 336 * Math.max(Math.min(attr.od, 11), 0) / 11, 8, 4, hitori_color);
+
+    const sr_rrect = PanelDraw.Rect(1010, 674, clamp(attr.stars, 11, 0) * 336, 8, 4, nijika_color);
+    const cs_rrect = PanelDraw.Rect(1010, 766, clamp(attr.cs, 11, 0) * 336,    8, 4, kita_color);
+    const ar_rrect = PanelDraw.Rect(1010, 858, clamp(attr.ar, 11, 0) * 336,    8, 4, ryou_color);
+    const od_rrect = PanelDraw.Rect(1010, 950, clamp(attr.od, 11, 0) * 336,    8, 4, hitori_color);
 
     const length_pie = PanelDraw.Pie(1662.5, 797.5, 200,
         Math.min(length_num / 600, 1), 0, mod_color);

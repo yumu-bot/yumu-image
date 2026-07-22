@@ -1,6 +1,6 @@
 //把数组变成可视化的图表
 import {torusBold} from "./font.js";
-import {getRandomString, getTexts, isEmptyArray, isNumber, round, setText} from "./util.js";
+import {clamp, getRandomString, getTexts, isEmptyArray, isNumber, round, setText} from "./util.js";
 import {hex2rgbColor} from "./color.js";
 
 export const PanelDraw = {
@@ -533,7 +533,7 @@ Z
         let circle = '';
 
         for (let i = 0; i < 6; i++) {
-            const std_data = Math.min(Math.max(data[i], 0), 1);
+            const std_data = clamp(data[i], 1, 0);
 
             const x = cx - r * Math.cos(PI_3 * i + offset) * std_data;
             const y = cy - r * Math.sin(PI_3 * i + offset) * std_data;

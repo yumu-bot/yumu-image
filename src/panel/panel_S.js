@@ -1,9 +1,10 @@
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 import {colorArray, getGlobalRankPercentColor, getGlobalRankPercentName, PanelColor} from "../util/color.js";
 import {
+    clamp, clampToInteger,
     getAvatar, getFlagPath, getGameMode, getImage,
     getPanelNameSVG, getRandomString,
-    getSvgBody, readNetImage,
+    getSvgBody, normalize, readNetImage,
     rotateSvgBody, rounds,
     setCustomBanner,
     setSvgBody,
@@ -349,42 +350,42 @@ const component_S3 = (
             ...LABEL_S.PC,
             data_b: String(data.playcounts),
             data_m: '',
-            bar_progress: getProgress(data.playcounts, LABEL_S.PC.bar_min, LABEL_S.PC.bar_max),
+            bar_progress: normalize(data.playcounts, LABEL_S.PC.bar_max, LABEL_S.PC.bar_min),
             hide: hide,
             max_width: 280,
         }, {
             ...LABEL_S.MAP_PC,
             data_b: String(data.count),
             data_m: '',
-            bar_progress: getProgress(data.count, LABEL_S.MAP_PC.bar_min, LABEL_S.MAP_PC.bar_max),
+            bar_progress: normalize(data.count, LABEL_S.MAP_PC.bar_max, LABEL_S.MAP_PC.bar_min),
             hide: hide,
             max_width: 280,
         },{
             ...LABEL_S.SR,
             data_b: sr.integer,
             data_m: sr.decimal,
-            bar_progress: getProgress(data.difficulty, LABEL_S.SR.bar_min, LABEL_S.SR.bar_max),
+            bar_progress: normalize(data.difficulty, LABEL_S.SR.bar_max, LABEL_S.SR.bar_min),
             hide: hide,
             max_width: 280,
         },{
             ...LABEL_S.PT,
             data_b: `${hours}h`,
             data_m: ` ${minutes}m ${seconds}s`,
-            bar_progress: getProgress(hours, LABEL_S.PT.bar_min, LABEL_S.PT.bar_max),
+            bar_progress: normalize(hours, LABEL_S.PT.bar_max, LABEL_S.PT.bar_min),
             hide: hide,
             max_width: 280,
         },{
             ...LABEL_S.COMBO,
             data_b: String(data.combo),
             data_m: '',
-            bar_progress: getProgress(data.combo, LABEL_S.COMBO.bar_min, LABEL_S.COMBO.bar_max),
+            bar_progress: normalize(data.combo, LABEL_S.COMBO.bar_max, LABEL_S.COMBO.bar_min),
             hide: hide,
             max_width: 280,
         },{
             ...LABEL_S.ACC,
             data_b: acc.integer,
             data_m: `${acc.decimal}%`,
-            bar_progress: getProgress((data?.accuracy ?? 0) * 100, LABEL_S.ACC.bar_min, LABEL_S.ACC.bar_max),
+            bar_progress: normalize((data?.accuracy ?? 0) * 100, LABEL_S.ACC.bar_max, LABEL_S.ACC.bar_min),
             hide: hide,
             max_width: 280,
         },
@@ -629,23 +630,11 @@ const card_S1 = async (
         label_s2s.push(l);
     }
 
-    const left_progress = Math.min(Math.max((left_remain_health / 1000000) ?? 0, 0), 1)
-    const right_progress = Math.min(Math.max((right_remain_health / 1000000) ?? 0, 0), 1)
+    const left_progress = clamp(left_remain_health / 1000000, 1, 0)
+    const right_progress = clamp(right_remain_health / 1000000, 1, 0)
 
-    let left_progress_width
-    let right_progress_width
-
-    if (left_progress < 1e-4) {
-        left_progress_width = 0
-    } else {
-        left_progress_width = Math.max(left_progress * progress_width, 15)
-    }
-
-    if (right_progress < 1e-4) {
-        right_progress_width = 0
-    } else {
-        right_progress_width = Math.max(right_progress * progress_width, 15)
-    }
+    let left_progress_width = clampToInteger(left_progress * progress_width, progress_width, 15)
+    let right_progress_width = clampToInteger(right_progress * progress_width, progress_width, 15)
 
     const left_width = torusBold.getTextWidth(String(left_remain_health), 12)
     const right_width = torusBold.getTextWidth(String(right_remain_health), 12)
@@ -943,12 +932,4 @@ const PanelSGenerate = {
             hue: hue
         }
     }
-}
-
-
-// bottom: 保底
-const getProgress = (x, min, max, bottom = 1 / 16) => {
-    const result = (Math.min(Math.max(x, min), max) - min) / (max - min)
-
-    return Math.max(result, bottom);
 }

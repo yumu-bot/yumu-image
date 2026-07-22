@@ -1,7 +1,7 @@
 import {
     setImage,
     setSvgBody, readTemplate,
-    setText, setTexts,
+    setText, setTexts, clampToInteger,
 } from "../util/util.js";
 import {torus, torusBold, torusRegular} from "../util/font.js";
 import {label_C1, label_C3} from "../component/label.js";
@@ -117,7 +117,9 @@ export async function card_F(data = {
         }
 
         // 上左右分数
-        const mid_x = isTeamVs ? Math.min(Math.max((red_score / total_score * 1330), 400), 930) + 20 + 5 : 0;
+
+        const raw_x = (red_score / total_score) * 1330;
+        const mid_x = isTeamVs ? clampToInteger(raw_x, 930, 400) + 25 : 0;
         let red_font;
         let blue_font;
 
@@ -456,7 +458,7 @@ export async function card_F(data = {
         const isTeamVs = data?.statistics?.is_team_vs;
         const total_score = data?.statistics?.score_total;
 
-        let teamMinWidth;
+        let team_min_width;
         let playerMinWidth;
 
         if (!data[team]) return [];
@@ -468,21 +470,21 @@ export async function card_F(data = {
         if (isTeamVs) {
             if (isLess4) {
                 team_score = data.statistics[`score_team_${team}`];
-                teamMinWidth = 400;
+                team_min_width = 400;
                 playerMinWidth = 100;
             } else {
                 team_score = data.statistics[`score_team_${team}`];
-                teamMinWidth = 20;
+                team_min_width = 20;
                 playerMinWidth = 20;
             }
         } else {
             if (isLess4 && data[team]?.length > 2) {
                 team_score = total_score;
-                teamMinWidth = 0;
+                team_min_width = 0;
                 playerMinWidth = 100;
             } else {
                 team_score = total_score;
-                teamMinWidth = 0;
+                team_min_width = 0;
                 playerMinWidth = 0;
             }
         }
@@ -494,7 +496,8 @@ export async function card_F(data = {
         }
 
         //获取每个人需要的宽度、用于计算的值
-        let team_width_calc = Math.min(Math.max(team_score / total_score * 1330, teamMinWidth), 1330 - teamMinWidth);
+        const raw_width = (team_score / total_score) * 1330;
+        let team_width_calc = clampToInteger(raw_width, 1330 - team_min_width, team_min_width);
         let team_score_calc = team_score;
 
         for (const i of team_score_arr) {

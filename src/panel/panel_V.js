@@ -1,4 +1,5 @@
 import {
+    clamp,
     getImage,
     getImageFromV3,
     getImageOrElse,
@@ -100,8 +101,9 @@ export async function panel_V(
     const total_pages = Math.max(1, Math.ceil(total_beats / beats_per_page));
 
     // 1. 计算当前页的小节范围
-    const page = (data.page || 1);
-    const start_bar = (Math.min(Math.max(page, 1), total_pages) - 1) * chunks_per_page * bar_per_bucket;
+    const valid_page = clamp((data.page || 1), total_pages, 1);
+    const start_bar = (valid_page - 1) * chunks_per_page * bar_per_bucket;
+
     const page_start_beat = start_bar * 4;
 
     // 2. 初始化 x 个切片桶
