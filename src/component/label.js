@@ -1506,7 +1506,7 @@ export function label_E5(data = {
     const bar_mid = poppinsBold.getTextPath(data?.bar_mid, label_left + progress_width / 2, 65, 14, "center baseline", '#666');
     const bar_max = poppinsBold.getTextPath(data?.bar_max, label_width, 65, 14, "right baseline", '#666');
 
-    const bar_width = clamp((data?.bar_progress ?? 0) * progress_width, 10, 0)
+    const bar_width = clamp((data?.bar_progress ?? 0) * progress_width, progress_width, 10)
 
     const is_gradient = Array.isArray(data?.bar_colors) && data?.bar_colors?.length === 2;
 
