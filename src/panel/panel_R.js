@@ -12,7 +12,7 @@ import {
     getPanelNameSVG,
     getRandomString,
     getSvgBody,
-    isASCII,
+    isASCII, normalize,
     od2ms,
     round,
     rounds,
@@ -291,13 +291,13 @@ const component_R2 = (host_name, avatar, genre_id, language_id, source = '', tag
     const g = getGenre(genre_id)
 
     const genre = getSvgBody(295, 445, card_R1({
-        image: getImageFromV3(`object-genre-${normalize(g)}2.png`), title: 'Genre', content: capitalize(g)
+        image: getImageFromV3(`object-genre-${spaceToUnderline(g)}2.png`), title: 'Genre', content: capitalize(g)
     }, 230))
 
     const l = getLanguage(language_id)
 
     const language = getSvgBody(535, 445, card_R1({
-        image: getImageFromV3(`object-language-${normalize(l)}.png`), title: 'Language', content: capitalize(l)
+        image: getImageFromV3(`object-language-${spaceToUnderline(l)}.png`), title: 'Language', content: capitalize(l)
     }, 220))
 
     const source_title = PanelDraw.Shadow(poppinsBold.getTextPath('Source', 15, 535, 20, 'left baseline', '#aaa'), 2, 2, 2, '#1c1719')
@@ -1044,4 +1044,4 @@ const card_R3 = (data = {
 
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-const normalize = (s) => s.replaceAll(" ", "_")
+const spaceToUnderline = (s) => s.replaceAll(" ", "_")
