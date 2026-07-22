@@ -41,7 +41,7 @@ export const USE_PROXY = process.env.USE_PROXY === 'true';
 export const OSUFILE_NO_PROXY = process.env.OSUFILE_NO_PROXY === 'true';
 
 export const PROXY_SCHEME = process.env.PROXY_SCHEME || 'http';
-export const PROXY_IP = process.env.PROXY_IP || '127.0.0.1';
+export const PROXY_HOST = process.env.PROXY_HOST || '127.0.0.1';
 export const PROXY_PORT = Number(process.env.PROXY_PORT) || 7890
 
 const directHttpsAgent = new https.Agent({ keepAlive: true });
@@ -56,7 +56,7 @@ export function getProxyAgent() {
     }
 
     if (!cachedAgent) {
-        cachedAgent = new HttpsProxyAgent(`${PROXY_SCHEME}://${PROXY_IP}:${PROXY_PORT}`);
+        cachedAgent = new HttpsProxyAgent(`${PROXY_SCHEME}://${PROXY_HOST}:${PROXY_PORT}`);
     }
 
     return cachedAgent;
