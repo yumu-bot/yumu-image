@@ -369,9 +369,9 @@ export function normalize(val, max, min, range = 1, bottom = 0) {
 }
 
 /**
- * @param obj
- * @param obj2
- * @returns {*}
+ * @param obj {null|Object}
+ * @param obj2 {Object}
+ * @return {Object}
  */
 export function requireNonNullElse(obj, obj2) {
     if (isNull(obj)) {

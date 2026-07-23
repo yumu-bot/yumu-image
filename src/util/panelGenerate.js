@@ -21,7 +21,7 @@ import {
 } from "./util.js";
 import {
     colorArray,
-    getBadgeColor, getGlobalRankPercentColor,
+    getBadgeColor, getGlobalRankPercentColor, getPlayerClassBackground, getPlayerClassColors,
     getRankColor,
     getRankColors,
     getStarRatingColor,
@@ -603,35 +603,50 @@ export const PanelGenerate = {
     },
 
     matchRating2CardA2: async (match = {}, beatmap = null, is_match_start = false, beatmap_background = null) => {
-        const red_wins = match?.team_point_map?.red || 0;
-        const blue_wins = match?.team_point_map?.blue || 0;
+        const {
+            match: stat,
+            team_point_map: {
+                red = 0,
+                blue = 0,
+            },
+            is_team_vs = false,
+            average_star = 0,
+            first_map_sid,
 
-        const stat = match?.match
-        const is_team_vs = match?.is_team_vs;
-        const star = floor(match?.average_star || 0, 2);
+            round_count = 0,
+            player_count = 0,
+            score_count = 0,
 
-        const sid = match?.first_map_sid || beatmap?.beatmapset?.id || 0
+            is_skipping = false,
+        } = match
+
+        const star = floor(average_star, 2);
+
+        const sid = first_map_sid ?? beatmap?.beatmapset?.id ?? beatmap?.beatmapset?.beatmapset_id ?? 0
         const background = beatmap_background ?? (beatmap != null ? await getDiffBackground(beatmap) :
-            await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list@2x.jpg', true))
+            await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list@2x.jpg', false))
 
-        const split = splitMatchName(stat?.name)
+        const {
+            name: title1,
+            team1,
+            team2
+        } = splitMatchName(stat?.name)
 
         let title2;
-        const title1 = split.name;
-        if (isNotEmptyString(split.team1)) {
-            title2 = split.team1 + ' vs ' + split.team2;
+        if (isNotEmptyString(team1)) {
+            title2 = team1 + ' vs ' + team2;
         } else {
             title2 = '';
         }
 
-        const left1 = 'Round: ' + match?.round_count;
-        const left2 = 'Player: ' + match?.player_count;
-        const left3 = 'Score: ' + match?.score_count;
+        const left1 = 'Round: ' + round_count;
+        const left2 = 'Player: ' + player_count;
+        const left3 = 'Score: ' + score_count;
 
         const right1 = 'Average Star ' + star + '*';
         const right2 = 'MID ' + stat?.id || 0;
 
-        if (match.is_skipping === true) {
+        if (is_skipping === true) {
             return {
                 background: background,
                 map_status: '',
@@ -649,8 +664,8 @@ export const PanelGenerate = {
             };
         }
 
-        const right3b = is_team_vs ? ((red_wins + blue_wins <= 0) ? 'TeamVs' : (red_wins + ' : ' + blue_wins)) :
-            (match?.round_count + (is_match_start ? 1 : 0)).toString()
+        const right3b = is_team_vs ? ((red + blue <= 0) ? 'TeamVs' : (red + ' : ' + blue)) :
+            (round_count + (is_match_start ? 1 : 0)).toString()
         const right3m = is_team_vs ? '' : 'x';
 
         return {
@@ -1249,6 +1264,107 @@ export const PanelGenerate = {
         }
     },
 
+    // 0.8.3 方法
+    matchPlayer2CardC: (
+        player = {},
+        is_team_vs = false,
+        images = new Map(),
+        use_team_color = true,
+        show_associated_round = false
+    ) => {
+        const {
+            win = 0,
+            lose = 0,
+            rws = 0,
+            mra = 0,
+            ranking = 0,
+            total = 0,
+            arc = 0,
+            player_class = {},
+            team = '',
+            player: user,
+        } = player
+
+        const {
+            english,
+            chinese,
+            // color,
+            category
+        } = player_class
+
+        const {
+            id,
+            username,
+            country_code
+        } = user
+
+        const config = TEAM_CONFIG[team] || TEAM_CONFIG.default
+
+        const team_color = config.color
+        const player_background = use_team_color ? getImageFromV3(config.bg) : getPlayerClassBackground(category)
+
+        const rws_100 = Math.round(rws * 10000) / 100
+
+        const total_count = win + lose
+
+        const win_rate = Math.round((win / Math.max(total_count, 1)) * 100)
+
+        const total_score_floor = floor(total, 2)
+
+        const left1 = `${total_score_floor} // ${
+            is_team_vs
+                ? `${win}W-${lose}L (${win_rate}%)`
+                : `${win}W-${total_count}P`
+        }`;
+
+        let associated = ''
+
+        if (show_associated_round) {
+            const associated_rate = Math.round((total_count / Math.max(arc, 1)) * 100)
+
+            associated = ` // ${total_count}P-${arc}T (${associated_rate}%)`
+        }
+
+        const left2 = `#${ranking} (${rws_100})${associated}`;
+
+        const color_index = (category === 'BC') ? "#2A2226" : "#FFF";
+        const colors = getPlayerClassColors(category)
+
+        const avatar = images.get(`avatar_${id}`) ?? getImageFromV3('avatar-guest.png')
+        const mra_floor = floors(mra, 2)
+
+        return {
+            background: player_background,
+            cover: avatar,
+            title: username ?? ('UID:' + id),
+            title2: country_code ?? '',
+            left1: left1,
+            left2: left2,
+            index_b: mra_floor.integer,
+            index_m: mra_floor.decimal,
+            index_b_size: 48,
+            index_m_size: 36,
+            label1: '',
+            label2: '',
+            label3: english,
+            label4: chinese,
+            mods_arr: [],
+
+            color_title2: '#aaa',
+            color_right: colors,
+            color_left: team_color.toReversed(),
+            color_index: color_index,
+            color_label1: '',
+            color_label2: '',
+            color_label3: '#382E32',
+            color_label4: '#382E32',
+            color_left12: '#bbb', //左下两排字的颜色
+
+            font_title2: 'torus',
+            font_label4: 'PuHuiTi',
+        }
+    },
+
     badge2CardC2: async (badge = {
         "awarded_at": "2022-07-03T15:23:25+00:00",
         "description": "osu!catch World Cup 2022 3rd Place (China)",
@@ -1717,3 +1833,9 @@ export const PanelGenerate = {
         };
     },
 }
+
+const TEAM_CONFIG = {
+    red:  { color: colorArray.red,  bg: 'card-red.webp' },
+    blue: { color: colorArray.blue, bg: 'card-blue.webp' },
+    default: { color: colorArray.gray, bg: 'card-gray.webp' }
+};

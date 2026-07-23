@@ -1,8 +1,4 @@
 import {
-    floor,
-    floors,
-    getAvatar,
-    getImageFromV3,
     getMatchDuration,
     getNowTimeStamp,
     getPanelHeight,
@@ -16,11 +12,10 @@ import {
 import {card_C} from "../card/card_C.js";
 import {card_A2} from "../card/card_A2.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {colorArray, getCompetitorColors} from "../util/color.js";
+import {ADVANCED_IMAGE_FORMAT, createImageRouter, createSvgRouter} from "../util/image.js";
+import {avatars2Task, beatmapset2Task, imageDownloader} from "../util/download.js";
 
-import {createImageRouter, createSvgRouter} from "../util/image.js";
-
-export const router = createImageRouter(panel_C);
+export const router = createImageRouter(panel_C, undefined, ADVANCED_IMAGE_FORMAT);
 
 export const router_svg = createSvgRouter(panel_C);
 
@@ -88,149 +83,14 @@ export async function panel_C(
                 ranking: 0,
                 win: 60,
                 lose: 96,
-                player_class: [Object],
+                player_class: {
+                    english: '',
+                    chinese: '',
+                    color: '',
+                    category: ''
+                },
                 arc: 13
             },
-            {
-                player: [Object],
-                team: 'red',
-                total: 5931781,
-                era: 1.602831307466496,
-                dra: 1.8968876038306823,
-                mra: 1.6910481963757518,
-                rws: 0.28895869270118807,
-                ranking: 0,
-                win: 96,
-                lose: 60,
-                player_class: [Object],
-                arc: 13
-            },
-            {
-                player: [Object],
-                team: 'red',
-                total: 6117850,
-                era: 1.4337745766925736,
-                dra: 1.6230915779855204,
-                mra: 1.4905696770804575,
-                rws: 0.32511577364068933,
-                ranking: 0,
-                win: 88,
-                lose: 55,
-                player_class: [Object],
-                arc: 13
-            },
-            {
-                player: [Object],
-                team: 'blue',
-                total: 3056718,
-                era: 1.2134904285274843,
-                dra: 1.0707662005066485,
-                mra: 1.1706731601212335,
-                rws: 0.0824295694221074,
-                ranking: 0,
-                win: 40,
-                lose: 64,
-                player_class: [Object],
-                arc: 13
-            },
-            {
-                player: [Object],
-                team: 'red',
-                total: 4213115,
-                era: 1.0475938549218036,
-                dra: 1.3587446453878695,
-                mra: 1.1409390920616234,
-                rws: 0.2238940383733162,
-                ranking: 0,
-                win: 88,
-                lose: 55,
-                player_class: [Object],
-                arc: 13
-            },
-            {
-                player: [Object],
-                team: 'blue',
-                total: 3607347,
-                era: 0.8827840945691331,
-                dra: 1.1326633693450312,
-                mra: 0.9577478770019026,
-                rws: 0.07782256916500134,
-                ranking: 0,
-                win: 50,
-                lose: 80,
-                player_class: [Object],
-                arc: 13
-            },
-            {
-                player: [Object],
-                team: 'blue',
-                total: 1493278,
-                era: 0.8653558260789316,
-                dra: 0.3365453932922233,
-                mra: 0.706712696242919,
-                rws: 0.10738337660851119,
-                ranking: 0,
-                win: 15,
-                lose: 24,
-                player_class: [Object],
-                arc: 13
-            },
-            {
-                player: [Object],
-                team: 'blue',
-                total: 824972,
-                era: 0.6325713596452961,
-                dra: 0.29308774190421083,
-                mra: 0.5307262743229705,
-                rws: 0.05932470642939672,
-                ranking: 0,
-                win: 15,
-                lose: 24,
-                player_class: [Object],
-                arc: 13
-            },
-            {
-                player: [Object],
-                team: 'red',
-                total: 718575,
-                era: 0.6229456903875666,
-                dra: 0.2912907621255022,
-                mra: 0.5234492119089473,
-                rws: 0.14001763895717406,
-                ranking: 1,
-                win: 24,
-                lose: 15,
-                player_class: [Object],
-                arc: 13
-            },
-            {
-                player: [Object],
-                team: 'red',
-                total: 795730,
-                era: 0.2953528058013916,
-                dra: 0.306844914431696,
-                mra: 0.2988004383904829,
-                rws: 0.11628873379333274,
-                ranking: 0,
-                win: 32,
-                lose: 20,
-                player_class: [Object],
-                arc: 13
-            },
-            {
-                player: [Object],
-                team: 'blue',
-                total: 1113317,
-                era: 0.2208780140154365,
-                dra: 0.36038378115329717,
-                mra: 0.2627297441567947,
-                rws: 0.04803596062983229,
-                ranking: 0,
-                win: 25,
-                lose: 40,
-                player_class: [Object],
-                arc: 13
-            }
         ],
         is_team_vs: true,
         average_star: 5.223287765796368,
@@ -242,176 +102,124 @@ export async function panel_C(
     // 导入模板
     let svg = readTemplate('template/Panel_C.svg');
 
+    const {
+        match,
+        skip_ignore_map: {
+            skip,
+            ignore,
+        },
+        player_data_list = [],
+        is_team_vs,
+    } = data;
+
+    const {
+        events = [],
+        users = [],
+    } = match
+
+    const first_set = events.find(e => e.beatmap_id != null)?.beatmap?.beatmapset ?? {}
+
     // 路径定义
-    let reg_cardheight = '${cardheight}'
-    let reg_panelheight = '${panelheight}'
-    let reg_maincard = /(?<=<g id="MainCard">)/;
+    let reg_card_height = '${cardheight}'
+    let reg_panel_height = '${panelheight}'
+    let reg_main_card = /(?<=<g id="MainCard">)/;
     let reg_index = /(?<=<g id="Index">)/;
     let reg_banner = /(?<=<g style="clip-path: url\(#clippath-PC-1\);">)/;
 
     // 面板文字
-    const request_time = 'match time: ' + getMatchDuration(data?.match) + ' // request time: ' + getNowTimeStamp();
+    const skip_text = skip > 0 ? `skip: ${skip} // ` : ''
+    const ignore_text = ignore > 0 ? `ignore: ${ignore} // ` : ''
+
+    const request_time = skip_text + ignore_text + 'match time: ' + getMatchDuration(match) + ' // request time: ' + getNowTimeStamp();
     const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'RA', request_time);
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
 
-    // 导入A2卡
-    const matchInfo = card_A2(await PanelGenerate.matchRating2CardA2(data));
+    // 预加载
+    const promise_a2 = beatmapset2Task(first_set)
+    const promise_cs = avatars2Task(users)
 
-    // 插入图片和部件（新方法
+    const tasks = [
+        promise_a2,
+        ...promise_cs
+    ];
+
+    const images = await imageDownloader(tasks);
+
+    const stat_a2 = card_A2(await PanelGenerate.matchRating2CardA2(data, images.get(`list@2x_${first_set.id}`)));
+
     svg = setCustomBanner(svg, null, reg_banner);
-    svg = setSvgBody(svg, 40, 40, matchInfo, reg_maincard);
+    svg = setSvgBody(svg, 40, 40, stat_a2, reg_main_card);
 
-    // 导入H卡
-    let cardHs = [];
+    let card_cs = [];
 
-    const isTeamVS = data?.is_team_vs;
-    const playerData = data?.player_data_list;
+    let red_arr = [];
+    let blue_arr = [];
+    let none_arr = [];
 
-    let redArr = [];
-    let blueArr = [];
-    let noneArr = [];
-
-    for (let p of playerData) {
+    for (let p of player_data_list) {
 
         switch (p?.team) {
             case "red":
-                redArr.push(p);
+                red_arr.push(p);
                 break;
             case "blue":
-                blueArr.push(p);
+                blue_arr.push(p);
                 break;
             default :
-                noneArr.push(p);
+                none_arr.push(p);
                 break;
         }
     }
 
-
-    const rowVS = Math.max(redArr.length, blueArr.length) || 0;
+    const vs_row = Math.max(red_arr.length, blue_arr.length) || 0;
     //后面天选之子会修改 noneArr，所以在这里调出
-    const rowTotal = rowVS + Math.ceil(noneArr.length / 2);
+    const total_row = vs_row + Math.ceil(none_arr.length / 2);
 
-    if (isTeamVS) {
+    if (is_team_vs) {
         //渲染红队
-        for (let i = 0; i < redArr.length; i++) {
-            cardHs.push(
-                drawCardH(await playerData2CardC(redArr[i]), i + 1, 1, 2));
+        for (let i = 0; i < red_arr.length; i++) {
+            card_cs.push(
+                cardC2Svg(PanelGenerate.matchPlayer2CardC(red_arr[i], true, images), i + 1, 1, 2));
         }
         //渲染蓝队
-        for (let i = 0; i < blueArr.length; i++) {
-            cardHs.push(
-                drawCardH(await playerData2CardC(blueArr[i]), i + 1, 2, 2));
+        for (let i = 0; i < blue_arr.length; i++) {
+            card_cs.push(
+                cardC2Svg(PanelGenerate.matchPlayer2CardC(blue_arr[i], true, images), i + 1, 2, 2));
         }
     } else {
         //渲染不在队伍（无队伍）
-        const rowFull = Math.floor(noneArr.length / 2) + 1;
-        const luckyDog = (noneArr.length % 2 === 1) ? noneArr.pop() : null;
+        const none_row = Math.floor(none_arr.length / 2) + 1;
+        const lucky_dog = (none_arr.length % 2 === 1) ? none_arr.pop() : null;
 
-        for (let i = 0; i < noneArr.length; i += 2) {
+        for (let i = 0; i < none_arr.length; i += 2) {
             for (let j = 0; j < 2; j++) {
-                cardHs.push(
-                    drawCardH(await playerData2CardC(noneArr[i + j]), rowVS + i / 2 + 1, j + 1, 2));
+                card_cs.push(
+                    cardC2Svg(PanelGenerate.matchPlayer2CardC(none_arr[i + j], false, images), vs_row + i / 2 + 1, j + 1, 2));
             }
         }
 
-        if (luckyDog != null) {
-            cardHs.push(
-                drawCardH(await playerData2CardC(luckyDog), rowVS + rowFull, 1, 1));
+        if (lucky_dog) {
+            card_cs.push(
+                cardC2Svg(PanelGenerate.matchPlayer2CardC(lucky_dog, false, images), vs_row + none_row, 1, 1));
         }
     }
 
-    svg = setText(svg, cardHs, reg_maincard);
+    svg = setText(svg, card_cs.join('\n'), reg_main_card);
 
     // 计算面板高度
 
-    const panelHeight = getPanelHeight(rowTotal * 2, 110, 2, 290, 40, 40);
-    const cardHeight = panelHeight - 290;
+    const panel_height = getPanelHeight(total_row * 2, 110, 2, 290, 40, 40);
+    const card_height = panel_height - 290;
 
-    svg = setText(svg, panelHeight, reg_panelheight);
-    svg = setText(svg, cardHeight, reg_cardheight);
+    svg = setText(svg, panel_height, reg_panel_height);
+    svg = setText(svg, card_height, reg_card_height);
 
     return svg;
 }
 
-async function playerData2CardC(p = {}) {
-    let team_color;
-    let player_background;
-    let isTeamVS;
-
-    switch (p?.team) {
-        case 'red':
-            team_color = colorArray.red // '#D32F2F';
-            player_background = getImageFromV3('card-red.webp');
-            isTeamVS = true;
-            break;
-        case 'blue':
-            team_color = colorArray.blue // '#00A0E9';
-            player_background = getImageFromV3('card-blue.webp');
-            isTeamVS = true;
-            break;
-        default:
-            team_color = colorArray.gray // '#aaa';
-            player_background = getImageFromV3('card-gray.webp');
-            isTeamVS = false;
-            break;
-    }
-
-    const rws = Math.round(p?.rws * 10000) / 100;
-
-    let left1;
-    if (isTeamVS) {
-        left1 = floor(p?.total, 2) +
-            ' // ' + p?.win + 'W-' + p?.lose + 'L (' +
-            Math.round((p?.win / (p?.win + p?.lose)) * 100) + '%)';
-    } else {
-        left1 = floor(p?.total, 2) +
-            ' // ' + p?.win + 'W-' + (p?.win + p?.lose) + 'P';
-    }
-
-    const left2 = '#' + (p?.ranking || 0) + ' (' + rws + ')';
-
-    const player_class = p?.player_class;
-    const color_index = (player_class?.name === "Strongest Marshal" || player_class?.name === "Competent Marshal" || player_class?.name === "Indomitable Marshal") ? "#2A2226" : "#FFF";
-    const colors = getCompetitorColors(player_class.color)
-
-    const avatar = await getAvatar(p.player);
-    const mra_number = floors(p?.mra, 2)
-
-    return {
-        background: player_background,
-        cover: avatar,
-        title: p?.player?.username || ('UID:' + p.player.id),
-        title2: p?.player?.country?.country_code || '',
-        left1: left1,
-        left2: left2,
-        index_b: mra_number.integer,
-        index_m: mra_number.decimal,
-        index_b_size: 48,
-        index_m_size: 36,
-        label1: '',
-        label2: '',
-        label3: player_class?.name,
-        label4: player_class?.name_cn,
-        mods_arr: [],
-
-        color_title2: '#aaa',
-        color_right: colors,
-        color_left: team_color.toReversed(),
-        color_index: color_index,
-        color_label1: '',
-        color_label2: '',
-        color_label3: '#382E32',
-        color_label4: '#382E32',
-        color_left12: '#bbb', //左下两排字的颜色
-
-        font_title2: 'torus',
-        font_label4: 'PuHuiTi',
-    };
-}
-
-function drawCardH(data = {}
+function cardC2Svg(data = {}
     , row = 1, column = 1, maxColumn = 2) {
     let x;
     let y;

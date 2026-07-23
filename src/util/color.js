@@ -1,6 +1,7 @@
 
 import {getModName} from "./mod.js";
 import {isHexColor, isNotBlankString} from "./text.js";
+import {getImageFromV3} from "./util.js";
 
 // 颜色数组，方便生成带有色彩渐变属性的图块
 export const colorArray = {
@@ -453,29 +454,35 @@ export function rgb2OKLabBrightness(r, g, b) {
 }
 
 
+// 1. 定义 category 到 colorArray 颜色的映射关系表
+const CATEGORY_COLOR_MAP = {
+    BC: { color: colorArray.light_yellow, grade: 'X' },
+    CA: { color: colorArray.amber,        grade: 'S' },
+    MF: { color: colorArray.green,        grade: 'A' },
+    SP: { color: colorArray.light_green,  grade: 'A' },
+    WF: { color: colorArray.deep_blue,    grade: 'B' },
+    GE: { color: colorArray.gray,         grade: 'XH' },
+    GU: { color: colorArray.blue,         grade: 'B' },
+    SU: { color: colorArray.purple,       grade: 'C' },
+    SG: { color: colorArray.magenta,      grade: 'C' },
+    NO: { color: colorArray.pink,         grade: 'D' },
+    FU: { color: colorArray.red,          grade: 'D' },
+    DEFAULT: { color: colorArray.deep_gray, grade: 'F' }
+};
 
 /**
  * 颜色扩展。
+ * @param {string} category 选手类别编码 (如 'BC', 'CA' 等)
  */
-export function getCompetitorColors(color) {
-    let cs;
-
-    switch (color) {
-        case "#FFF100": cs = colorArray.light_yellow; break;
-        case "#FF9800": cs = colorArray.amber; break;
-        case "#22AC38": cs = colorArray.green; break;
-        case "#B3D465": cs = colorArray.light_green; break;
-        case "#0068B7": cs = colorArray.deep_blue; break;
-        case "#BDBDBD": cs = colorArray.gray; break;
-        case "#00A0E9": cs = colorArray.blue; break;
-        case "#9922EE": cs = colorArray.purple; break;
-        case "#E4007F": cs = colorArray.magenta; break;
-        case "#EB6877": cs = colorArray.pink; break;
-        case "#D32F2F": cs = colorArray.red; break;
-        default: cs = colorArray.deep_gray; break;
-    }
+export function getPlayerClassColors(category) {
+    const cs = CATEGORY_COLOR_MAP[category]?.color ?? CATEGORY_COLOR_MAP.DEFAULT.color;
 
     return cs.toReversed();
+}
+
+export function getPlayerClassBackground(category) {
+    const grade = CATEGORY_COLOR_MAP[category]?.grade ?? CATEGORY_COLOR_MAP.DEFAULT.grade;
+    return getImageFromV3(`object-score-backimage-${grade}.webp`);
 }
 
 /**

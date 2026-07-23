@@ -1,6 +1,5 @@
 import {getTextWidth} from "./font.js";
 import crypto from "crypto";
-import {isNull, requireNonNullElse} from "./util.js";
 
 /**
  * 计算 stat 文本的 x 坐标，防止重叠
@@ -172,39 +171,52 @@ export function randomString(e) {
     return n
 }
 
-// 使用加密安全的随机数生成器
 /**
  * @function 获取分割好的比赛名字
  * @param text 输入比赛名字
+ * @return {{name: string, team1: string, team2: string}}
  */
 export function splitMatchName(text = '') {
-
-    if (isNull(text)) return {
-        name: '',
-        team1: '',
-        team2: '',
+    // 基础防空校验
+    if (!text || typeof text !== 'string') {
+        return { name: '', team1: '', team2: '' }
     }
 
-    const reg = /(?<name>[^:：]*)?[:：]\s*([(（]?(?<team1>[^()（）]*)[)）]?)?\s*[Vv][Ss]\s*([(（]?(?<team2>[^()（）]*)[)）])?/
+    // 清理杂质的工具函数：移除所有全半角括号，并去除首尾空格
+    const sanitize = (str = '') => str.replace(/[()（）\[\]【】{}]/g, '').trim()
 
-    const capture_groups = reg.exec(text)?.groups
+    // 步骤 1：用英文/中文冒号切第一刀
+    // search 支持正则，同时匹配半角 ':' 和全角 '：'
+    const colonIndex = text.search(/[:：]/)
 
-    const name = capture_groups?.name || ''
-    const team1 = capture_groups?.team1 || ''
-    const team2 = capture_groups?.team2 || ''
-
-    //转换失败的保底机制
-    if (isEmptyString(team1) || isEmptyString(team2)) {
-        return {
-            name: requireNonNullElse(text, ''),
-            team1: '',
-            team2: '',
-        }
-    } else return {
-        name: requireNonNullElse(name, ''),
-        team1: requireNonNullElse(team1, ''),
-        team2: requireNonNullElse(team2, ''),
+    // 如果没有冒号，匹配失败，走到保底机制
+    if (colonIndex === -1) {
+        return { name: sanitize(text), team1: '', team2: '' }
     }
+
+    // 得到冒号前后的原始字符串
+    const rawName = text.slice(0, colonIndex)
+    const rawTeams = text.slice(colonIndex + 1)
+
+    // 步骤 2：用 VS 切第二刀（忽略大小写）
+    const teamParts = rawTeams.split(/[Vv][Ss]/)
+
+    // 如果冒号后面没有 VS，无法拆出两队，走保底
+    if (teamParts.length < 2) {
+        return { name: sanitize(text), team1: '', team2: '' }
+    }
+
+    // 步骤 3：统一去除各部分的杂质（空格、括号）
+    const name = sanitize(rawName)
+    const team1 = sanitize(teamParts[0])
+    const team2 = sanitize(teamParts[1])
+
+    // 转换失败的保底机制（队名为空时）
+    if (!team1 || !team2) {
+        return { name: sanitize(text), team1: '', team2: '' }
+    }
+
+    return { name, team1, team2 }
 }
 
 export function getRandomString(length = 6) {
