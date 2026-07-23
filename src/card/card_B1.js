@@ -1,10 +1,10 @@
 import {
     getImageFromV3,
-    setImage, setSvgBody, isNumber,
-    readTemplate, setText, setTexts, floor, floors
+    setImage, setSvgBody, readTemplate, setText, setTexts, floor, floors
 } from "../util/util.js";
 import {torus, torusBold} from "../util/font.js";
 import {label_E, LABELS} from "../component/label.js";
+import {isNumber} from "../util/text.js";
 
 export async function card_B1(data = {
     label: null,

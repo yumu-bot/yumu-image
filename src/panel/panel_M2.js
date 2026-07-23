@@ -1,7 +1,6 @@
 import {
     floor, getImage, getImageFromV3, getMapBackground, getMapStatusImage,
-    getPanelNameSVG, getRandomString,
-    getSvgBody, getTimeDifferenceShort, isBlankString, isNotBlankString, isNotEmptyArray, isNotNull, normalize, round,
+    getPanelNameSVG, getSvgBody, getTimeDifferenceShort, isNotEmptyArray, isNotNull, normalize, round,
     rounds, setCustomBanner,
     setSvgBody,
     setText,
@@ -16,6 +15,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {poppinsBold, torusBold} from "../util/font.js";
 import {card_D2} from "../card/card_D2.js";
 import {avatars2Task, imageDownloader, beatmapsets2Task, user2Task} from "../util/download.js";
+import {getRandomString, isBlankString, isNotBlankString} from "../util/text.js";
 
 export const router = createImageRouter(panel_M2);
 

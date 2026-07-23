@@ -1,9 +1,10 @@
 import {
-    setImage, isNotEmptyString, setText,
+    setImage, setText,
     setTexts
 } from "../util/util.js";
 import {torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {isNotEmptyString} from "../util/text.js";
 
 export function card_C2(data = {
     background: '',

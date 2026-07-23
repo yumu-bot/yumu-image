@@ -1,7 +1,8 @@
-import {getImageFromV3, setImage, setSvgBody, isASCII, setTexts, isNotEmptyString, getImage} from "../util/util.js";
+import {getImageFromV3, setImage, setSvgBody, setTexts, getImage} from "../util/util.js";
 import {BerlinBold, getMultipleTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {colorArray} from "../util/color.js";
+import {isASCII, isNotEmptyString} from "../util/text.js";
 
 export function card_MS(data = {
     background: getImageFromV3('card-default.webp'),

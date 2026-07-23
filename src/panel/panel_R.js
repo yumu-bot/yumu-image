@@ -10,9 +10,8 @@ import {
     getImageFromV3,
     getLanguage, getMapBackground, getMapStatusImage,
     getPanelNameSVG,
-    getRandomString,
     getSvgBody,
-    isASCII, normalize,
+    normalize,
     od2ms,
     round,
     rounds,
@@ -34,6 +33,7 @@ import {drawLazerMods} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 import {getScoreTypeImage} from "../util/star.js";
+import {getRandomString, isASCII} from "../util/text.js";
 
 export const router = createImageRouter(panel_R);
 

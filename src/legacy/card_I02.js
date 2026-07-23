@@ -1,9 +1,10 @@
 import {
-    setImage, setSvgBody, isASCII, isNotBlankString, setText, setTexts,
+    setImage, setSvgBody, setText, setTexts,
 } from "../util/util.js";
 import {getMultipleTextPath, PuHuiTi, torus} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiDXStarColor} from "../util/maimai.js";
+import {isASCII, isNotBlankString} from "../util/text.js";
 
 // maimai / CHUNITHM 多成绩面板
 export function card_I02(data = {

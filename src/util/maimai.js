@@ -2,10 +2,10 @@ import {
     accessAsync,
     downloadByFetch,
     downloadWithCurl,
-    getImageFromV3,
-    isEmptyString
+    getImageFromV3
 } from "./util.js";
 import {colorArray} from "./color.js";
+import {isEmptyString} from "./text.js";
 
 /**
  *

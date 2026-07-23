@@ -3,23 +3,20 @@ import moment from "moment";
 import {
     getGameMode,
     getMapStatus,
-    getMatchNameSplitted,
     getTimeDifference,
     readNetImage,
     getAvatar,
     getBanner,
     isNullOrEmptyObject,
-    isNotBlankString,
     isNotNull,
     isNotEmptyArray,
     getTimeByDHMS,
     getKeyDifficulty,
-    isNotEmptyString,
     floor,
     floors,
     getFormattedTime,
     getTimeDifferenceShort,
-    getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3, isASCII, getImageOrElse,
+    getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3, getImageOrElse,
     getIndexOrNull,
 } from "./util.js";
 import {
@@ -47,6 +44,7 @@ import {PanelDraw} from "./panelDraw.js";
 import {card_D2} from "../card/card_D2.js";
 import {getLazerModsWidth} from "./mod.js";
 import {getBannerLocal} from "./mascotBanner.js";
+import {splitMatchName, isASCII, isNotBlankString, isNotEmptyString} from "./text.js";
 
 //公用方法
 //把参数变成面板能读懂的数据
@@ -616,7 +614,7 @@ export const PanelGenerate = {
         const background = beatmap_background ?? (beatmap != null ? await getDiffBackground(beatmap) :
             await readNetImage('https://assets.ppy.sh/beatmaps/' + sid + '/covers/list@2x.jpg', true))
 
-        const split = getMatchNameSplitted(stat?.name)
+        const split = splitMatchName(stat?.name)
 
         let title2;
         const title1 = split.name;

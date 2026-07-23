@@ -1,11 +1,11 @@
 import {
     getImageFromV3,
     getMapStatusImage,
-    setImage, isASCII,
-    readTemplate,
+    setImage, readTemplate,
     setTexts,
 } from "../util/util.js";
 import {torus, PuHuiTi} from "../util/font.js";
+import {isASCII} from "../util/text.js";
 
 export function card_A2(data = {
     background: getImageFromV3('card-default.webp'),

@@ -6,7 +6,6 @@ import {
     getImageFromV3,
     getPanelNameSVG,
     getSvgBody,
-    isASCII,
     isNotEmptyArray,
     readTemplate,
     setImage,
@@ -35,6 +34,7 @@ import {card_MS} from "../card/card_MS.js";
 import {colorArray} from "../util/color.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isASCII} from "../util/text.js";
 
 export const router = createImageRouter(panel_MS);
 

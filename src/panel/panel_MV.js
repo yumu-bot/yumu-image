@@ -2,8 +2,6 @@ import {
     getImageFromV3,
     getPanelNameSVG,
     getSvgBody,
-    isASCII,
-    isNotBlankString,
     readTemplate,
     round,
     setImage,
@@ -20,6 +18,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiCover, getMaimaiDifficultyColors, getMaimaiPlate, getMaimaiRankBG} from "../util/maimai.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isASCII, isNotBlankString} from "../util/text.js";
 
 export const router = createImageRouter(panel_MV);
 

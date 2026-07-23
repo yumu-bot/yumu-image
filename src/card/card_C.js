@@ -1,8 +1,9 @@
-import { getImage, isASCII, isNotEmptyString } from "../util/util.js";
+import { getImage } from "../util/util.js";
 import { torus, PuHuiTi, torusBold, getMultipleTextPath } from "../util/font.js";
 import { PanelDraw } from "../util/panelDraw.js";
 import { drawLazerMods } from "../util/mod.js";
 import { PanelColor } from "../util/color.js";
+import {isASCII, isNotEmptyString} from "../util/text.js";
 
 // 【优化】静态 SVG 定义与基础底座外提
 const SVG_DEFS_C = `

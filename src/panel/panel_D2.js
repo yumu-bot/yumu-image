@@ -10,11 +10,7 @@ import {
     getTimeByDHMSLarge,
     getTimeByDHMSSmall,
     getTimeDifference,
-    isNotBlankString,
     isNotEmptyArray,
-    isNotEmptyString,
-    isNotNumber,
-    isNumber,
     modifyArrayToFixedLength,
     setCustomBanner,
     setImage,
@@ -32,6 +28,7 @@ import {PanelColor} from "../util/color.js";
 import moment from "moment";
 
 import {createImageRouter, createSvgRouter, isPicturePng} from "../util/image.js";
+import {isNotBlankString, isNotEmptyString, isNotNumber, isNumber} from "../util/text.js";
 
 export const router = createImageRouter(panel_D2);
 

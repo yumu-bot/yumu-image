@@ -9,7 +9,6 @@ import {
     getNowTimeStamp,
     getPanelNameSVG,
     getTimeDifference,
-    isASCII,
     rounds,
     setImage,
     setSvgBody,
@@ -24,6 +23,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {matchAnyMod} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isASCII} from "../util/text.js";
 
 export const router = createImageRouter(panel_Eta1);
 

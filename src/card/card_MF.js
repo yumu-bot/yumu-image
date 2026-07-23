@@ -1,6 +1,6 @@
 import {
     setImage,
-    setSvgBody, isASCII, isNotBlankString, setText,
+    setSvgBody, setText,
     setTexts,
     getSvgBody, isNotEmptyArray, getImageFromV3
 } from "../util/util.js";
@@ -13,6 +13,7 @@ import {
     getMaimaiVersionBG, getMaimaiVersionColor
 } from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {isASCII, isNotBlankString} from "../util/text.js";
 
 export async function card_MF(song = {
     "id": "8",

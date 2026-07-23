@@ -1,7 +1,8 @@
 import {colorArray} from "../util/color.js";
-import {getBody, getImage, getSvg, isASCII, isEmptyString, rounds, setTexts, normalize, clampToInteger} from "../util/util.js";
+import {getBody, getImage, getSvg, rounds, setTexts, normalize, clampToInteger} from "../util/util.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
+import {isASCII, isEmptyString} from "../util/text.js";
 
 export function card_B7(data = {}, to_left = false) {
     const {

@@ -1,7 +1,8 @@
-import { getImage, isASCII, isNotBlankString } from "../util/util.js";
+import { getImage } from "../util/util.js";
 import { getMultipleTextPath, PuHuiTi, torus, torusBold } from "../util/font.js";
 import { PanelDraw } from "../util/panelDraw.js";
 import { getMaimaiDXStarColor } from "../util/maimai.js";
+import {isASCII, isNotBlankString} from "../util/text.js";
 
 // 【优化】静态 SVG 定义外提
 const SVG_DEFS_I3 = `

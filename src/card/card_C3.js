@@ -1,6 +1,7 @@
-import {getRandomString, isASCII, isNotEmptyString, setImage, setSvgBody, setText, setTexts} from "../util/util.js";
+import {setImage, setSvgBody, setText, setTexts} from "../util/util.js";
 import {PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {getRandomString, isASCII, isNotEmptyString} from "../util/text.js";
 
 export function card_C3(data = {
     background: null,

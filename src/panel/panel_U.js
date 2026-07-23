@@ -8,7 +8,6 @@ import {
     getPanelNameSVG,
     getSvgBody,
     getTimeDifference,
-    isEmptyString,
     setImage,
     setSvgBody,
     setText,
@@ -22,6 +21,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {card_A1} from "../card/card_A1.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isEmptyString} from "../util/text.js";
 
 export const router = createImageRouter(panel_U);
 

@@ -1,5 +1,6 @@
-import {isHexColor, isNotBlankString} from "./util.js";
+
 import {getModName} from "./mod.js";
+import {isHexColor, isNotBlankString} from "./text.js";
 
 // 颜色数组，方便生成带有色彩渐变属性的图块
 export const colorArray = {

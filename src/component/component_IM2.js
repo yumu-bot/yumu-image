@@ -1,5 +1,6 @@
-import {getMapStatusImage, setImage, isASCII, setTexts} from "../util/util.js";
+import {getMapStatusImage, setImage, setTexts} from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
+import {isASCII} from "../util/text.js";
 
 export function component_IM2(data = {
     background: '',

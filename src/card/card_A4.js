@@ -15,6 +15,7 @@ import {label_N2, LABELS} from "../component/label.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {drawLazerMods} from "../util/mod.js";
 import {getRankBackground} from "../util/star.js";
+import {layoutStatTexts} from "../util/text.js";
 
 export async function card_A4(data = {
     bind: 0,
@@ -240,9 +241,13 @@ export async function card_A4(data = {
     const ranking = poppinsBold.getTextPath((score_rank ?? 0).toString(), 32 + 2, 38, 20, 'center baseline', ranking_color)
 
     // 导入评价，x和y是矩形的左上角
-    let stat_svg = ''
+
+    /**
+     * @type {string[]}
+     */
+    const stat_svg = [];
     const stat_interval = 5;
-    const stat_x = 360
+    const stat_x = 360;
     const stat_y = 46;
     const stat_min_width = 10;
     const stat_full_width = 325;
@@ -251,6 +256,7 @@ export async function card_A4(data = {
     const stat_width_arr = getStatWidthArr(total_hit ?? 0, passed, stat_arr, stat_min_width, stat_full_width, stat_interval);
     const stat_colors_arr = getStatColorsArr(ruleset_id);
 
+    // 1. 先绘制底部的彩色柱状图 (Rect)
     let width_sum = 0;
     for (const i in stat_arr) {
         const stat = stat_arr[i];
@@ -258,16 +264,26 @@ export async function card_A4(data = {
         const colors = stat_colors_arr[i];
 
         if (stat > 0) {
-            const stat_text = torus.getTextPath(stat.toString(),
-                stat_x + width_sum + width / 2,
-                stat_y - 5, 14, 'center baseline', '#fff');
             const svg_rect = PanelDraw.LinearGradientRect(stat_x + width_sum, stat_y, width, 10, 5, colors);
+            stat_svg.push(svg_rect);
 
-            stat_svg += stat_text + svg_rect
-
-            //结算
+            // 结算
             width_sum += (width + stat_interval);
         }
+    }
+
+    const text_layout = layoutStatTexts(stat_arr, stat_width_arr, stat_x, stat_interval, torus, 14, 3);
+
+    for (const item of text_layout) {
+        const stat_text = torus.getTextPath(
+            item.text,
+            item.x,
+            stat_y - 5,
+            14,
+            'center baseline',
+            '#fff'
+        );
+        stat_svg.push(stat_text)
     }
 
     // 插入模组，因为先插的在上面，所以从左边插
@@ -282,7 +298,7 @@ export async function card_A4(data = {
     svg = setImage(svg, 65, 0, 62, 62, avatar, reg_avatar)
     svg = setImage(svg, 65, 0, 790, 62, cover, reg_background, 0.2)
     svg = setText(svg, mods_svg, reg_mod)
-    svg = setText(svg, stat_svg, reg_label)
+    svg = setText(svg, stat_svg.join('\n'), reg_label)
     svg = setTexts(svg, [rank_rrect, version_rrect], reg_rank)
     svg = setTexts(svg, [name, flag_svg, n2_combo, n2_acc, pp_text, score_text, ranking, rank_text], reg_text)
 

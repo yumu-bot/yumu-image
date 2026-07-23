@@ -7,7 +7,7 @@ import {
     getNowTimeStamp,
     getPanelNameSVG,
     getTimeDifference,
-    isASCII, normalize,
+    normalize,
     setImage,
     setSvgBody,
     setText,
@@ -21,6 +21,7 @@ import {getMascotName, getRandomMascotTransparentPath} from "../util/mascotBanne
 import {PanelDraw} from "../util/panelDraw.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isASCII} from "../util/text.js";
 
 export const router = createImageRouter(panel_Eta3);
 

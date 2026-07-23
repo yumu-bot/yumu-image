@@ -2,15 +2,14 @@ import {
     getAvatar,
     getBanner,
     getFlagPath,
-    getImageFromV3, getImageOrElse, getRandomString,
-    isASCII,
-    readNetImage,
+    getImageFromV3, getImageOrElse, readNetImage,
     readTemplate,
     setImage,
     setText,
     setTexts, toPromise,
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
+import {getRandomString, isASCII} from "../util/text.js";
 
 export async function card_A1(data = {}) {
     // 1. 初始化默认值与基础设置

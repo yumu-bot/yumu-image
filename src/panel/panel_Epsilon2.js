@@ -1,7 +1,8 @@
-import {getAvatar, getBanner, getGameMode, getImageFromV3, isASCII, round, setText, setTexts} from "../util/util.js";
+import {getAvatar, getBanner, getGameMode, getImageFromV3, round, setText, setTexts} from "../util/util.js";
 import {PuHuiTi, TahomaRegular} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isASCII} from "../util/text.js";
 
 export const router = createImageRouter(panel_Epsilon2);
 

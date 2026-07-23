@@ -395,7 +395,7 @@ export function getMultipleTextPath(array = [{
 }
 
 /**
- * 3. 重写：高能获取文本宽度
+ * 3. 重写：获取文本宽度
  * @param font {FontInstance | String}
  * @param text {String | Number}
  * @param size {Number}

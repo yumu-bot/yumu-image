@@ -2,7 +2,6 @@ import {
     getAvatar,
     getFlagPath,
     getImageFromV3,
-    isASCII,
     isNotEmptyArray,
     setImage,
     setTexts
@@ -11,6 +10,7 @@ import {PuHuiTi, TahomaBold, TahomaRegular} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {hex2OKLabBrightness} from "../util/color.js";
 import {compositeToWebP, createBufferRouter, createSvgRouter, exportWEBP} from "../util/image.js";
+import {isASCII} from "../util/text.js";
 
 export const router = createBufferRouter(panel_Epsilon);
 

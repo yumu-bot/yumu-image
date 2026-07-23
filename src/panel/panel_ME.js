@@ -6,7 +6,6 @@ import {
     getImageFromV3,
     getPanelNameSVG,
     getSign,
-    isASCII,
     readTemplate,
     rounds,
     setImage,
@@ -28,6 +27,7 @@ import {
 } from "../util/maimai.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isASCII} from "../util/text.js";
 
 export const router = createImageRouter(panel_ME);
 

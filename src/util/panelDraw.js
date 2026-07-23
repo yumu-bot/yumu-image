@@ -1,7 +1,8 @@
 //把数组变成可视化的图表
 import {torusBold} from "./font.js";
-import {clamp, getRandomString, getTexts, isEmptyArray, isNumber, round, setText} from "./util.js";
+import {clamp, getTexts, isEmptyArray, round, setText} from "./util.js";
 import {hex2rgbColor} from "./color.js";
+import {getRandomString, isNumber} from "./text.js";
 
 export const PanelDraw = {
     Image: (x = 0, y = 0, w = 100, h = 100, link = '', opacity = 1, ratio = "xMidYMid slice") => {

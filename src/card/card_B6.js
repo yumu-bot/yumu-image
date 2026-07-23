@@ -4,14 +4,14 @@ import {
     getBody,
     getImage,
     getSvg,
-    isASCII,
-    isEmptyString, normalize,
+    normalize,
     round,
     rounds,
     setTexts
 } from "../util/util.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getTextPath, poppinsBold, PuHuiTi} from "../util/font.js";
+import {isASCII, isEmptyString} from "../util/text.js";
 
 export function card_B6(data = {}, to_left = false) {
     // 1. 使用解构赋值统一设置变量和默认值

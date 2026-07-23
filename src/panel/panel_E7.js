@@ -13,7 +13,6 @@ import {
     getMapStatusImage,
     getPanelNameSVG,
     getSvgBody,
-    isBlankString,
     isEmptyArray,
     isNotEmptyArray, normalize,
     od2ms,
@@ -36,6 +35,7 @@ import {label_E5, LABELS} from "../component/label.js";
 import {drawLazerMods} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isBlankString} from "../util/text.js";
 
 export const router = createImageRouter(panel_E7);
 

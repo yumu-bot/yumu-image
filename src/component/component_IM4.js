@@ -1,5 +1,6 @@
-import {getImageFromV3, isBlankString, readNetImage, setImage, setText} from "../util/util.js";
+import {getImageFromV3, readNetImage, setImage, setText} from "../util/util.js";
 import {torus} from "../util/font.js";
+import {isBlankString} from "../util/text.js";
 
 export async function component_IM4(data = {
     type: '',

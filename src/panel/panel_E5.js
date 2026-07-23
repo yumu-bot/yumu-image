@@ -17,9 +17,7 @@ import {
     getSvgBody,
     getTimeDifference,
     isEmptyArray,
-    isNotBlankString,
-    isNotNumber,
-    isNumber, normalize,
+    normalize,
     od2ms,
     readTemplate,
     removeGuest,
@@ -39,6 +37,7 @@ import {label_E5, LABELS} from "../component/label.js";
 import {drawLazerMods, getModMultiplier} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isNotBlankString, isNotNumber, isNumber} from "../util/text.js";
 
 export const router = createImageRouter(panel_E5);
 

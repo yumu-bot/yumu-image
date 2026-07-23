@@ -9,8 +9,6 @@ import {
     getTexts,
     getTimeByDHMS,
     getTimeDifference,
-    isNotNumber,
-    isNumber,
     round,
     rounds,
     setCustomBanner,
@@ -29,6 +27,7 @@ import {label_D3} from "../component/label.js";
 import moment from "moment";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isNotNumber, isNumber} from "../util/text.js";
 
 export const router = createImageRouter(panel_D3);
 

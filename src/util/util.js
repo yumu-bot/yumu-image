@@ -8,7 +8,7 @@ import * as http from "node:http";
 import path from "path";
 import moment from "moment";
 import {cutStringTail, getTextPath, PuHuiTi, torus} from "./font.js";
-import {getBannerLocal, getRandom, getRandomBannerPath} from "./mascotBanner.js";
+import {getBannerLocal, getRandomBannerPath} from "./mascotBanner.js";
 import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
@@ -19,7 +19,8 @@ import {exec} from 'child_process';
 import {promisify} from 'util';
 import {cacheManager, templateManager} from "./cacheManager.js";
 import {HttpsProxyAgent} from "https-proxy-agent";
-import {PUPPETEER_OPTIONS, binary2Base64Text, compressLargePicture2Webp} from "./image.js";
+import {binary2Base64Text, compressLargePicture2Webp, PUPPETEER_OPTIONS} from "./image.js";
+import {isEmptyString, isNotBlankString, isNotNumber, isNumber} from "./text.js";
 
 const execAsync = promisify(exec);
 
@@ -282,32 +283,6 @@ const UTF8Encoder = new TextEncoder('utf8');
 /**
  * @return boolean
  */
-export function isBlankString(val) {
-    if (val == null) return true;
-
-    if (typeof val === 'string') {
-        return val.length === 0;
-    }
-
-    return String(val).length === 0;
-}
-
-/**
- * @return boolean
- */
-export function isEmptyString(val) {
-    if (val == null) return true;
-
-    if (typeof val === 'string') {
-        return val.trim().length === 0;
-    }
-
-    return String(val).trim().length === 0;
-}
-
-/**
- * @return boolean
- */
 export function isEmptyArray(arr) {
     return !Array.isArray(arr) || arr.length === 0;
 }
@@ -336,52 +311,6 @@ export function isEmptyObject(obj) {
         Object.keys(obj).length === 0;
 }
 
-/**
- * @return boolean
- */
-/**
- * 判断字符串是否仅包含 ASCII 字符
- * @param {any} str
- * @returns {boolean}
- */
-export function isASCII(str) {
-    // 确保输入是字符串且不为空
-    if (typeof str === 'number') return true
-    if (typeof str !== 'string' || str.length === 0) return false;
-
-    for (let i = 0; i < str.length; i++) {
-        // ASCII 码点范围是 0 - 127
-        // 直接检查字符编码是否超过 382 (0x17E)
-        // 这个是 torus 支持的编码范围
-        if (str.charCodeAt(i) > 382) {
-            return false;
-        }
-    }
-    return true;
-}
-
-/**
- * @return boolean
- */
-export function isNumber(num) {
-    if (typeof num == "number") {
-        return !Number.isNaN(num)
-    } else if (typeof num == "string") {
-        const pattern = /^\s*(-?[0-9]+[.]?[0-9]*)\s*$/;
-        return pattern.test(num?.toString());
-    } else {
-        return false
-    }
-}
-
-// 'none' 不包括在内
-/**
- * @return boolean
- */
-export function isHexColor(str) {
-    return isNotBlankString(str) && (str?.toString()?.slice(0, 1) === '#' || str?.toString()?.toUpperCase() === "NONE")
-}
-
 // {} 和 [] 不为空
 /**
  * @return boolean
@@ -400,30 +329,8 @@ export function isNotNullOrEmptyObject(object) {
 /**
  * @return boolean
  */
-export function isNotBlankString(str = "") {
-    return !isBlankString(str)
-}
-
-/**
- * @return boolean
- */
-export function isNotEmptyString(str = "") {
-    return !isEmptyString(str)
-}
-
-/**
- * @return boolean
- */
 export function isNotEmptyArray(arr = []) {
     return !isEmptyArray(arr)
-}
-
-/**
- * @param str {number|string|null}
- * @return boolean
- */
-export function isNotNumber(str = '') {
-    return !isNumber(str)
 }
 
 /**
@@ -2057,49 +1964,6 @@ export function getNowTimeStamp() {
     return moment().format("YYYY-MM-DD HH:mm:ss[ +8]");
 }
 
-/**
- * @function 获取分割好的比赛名字
- * @param text 输入比赛名字
- */
-export function getMatchNameSplitted(text = '') {
-
-    if (isNull(text)) return {
-        name: '',
-        team1: '',
-        team2: '',
-    }
-
-    const reg = /(?<name>[^:：]*)?[:：]\s*([(（]?(?<team1>[^()（）]*)[)）]?)?\s*[Vv][Ss]\s*([(（]?(?<team2>[^()（）]*)[)）])?/
-
-    const capture_groups = reg.exec(text)?.groups
-
-    const name = capture_groups?.name || ''
-    const team1 = capture_groups?.team1 || ''
-    const team2 = capture_groups?.team2 || ''
-
-    //转换失败的保底机制
-    if (isEmptyString(team1) || isEmptyString(team2)) {
-        return {
-            name: requireNonNullElse(text, ''),
-            team1: '',
-            team2: '',
-        }
-    } else return {
-        name: requireNonNullElse(name, ''),
-        team1: requireNonNullElse(team1, ''),
-        team2: requireNonNullElse(team2, ''),
-    }
-}
-
-export function randomString(e) {
-    e = e || 32;
-    var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678",
-        a = t.length,
-        n = "";
-    for (let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a));
-    return n
-}
-
 function fixed(i) {
     return parseFloat(i.toFixed(2));
 }
@@ -2865,17 +2729,6 @@ export function getSign(number = 0) {
     else return ''
 }
 
-// 使用加密安全的随机数生成器
-export function getRandomString(length = 6) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-    const randomValues = new Uint8Array(length);
-    crypto.getRandomValues(randomValues);
-
-    return Array.from(randomValues)
-        // 64 的二进制是 2^6，所以用 & 63 (00111111) 过滤，完美均匀分布，且比模除更高效
-        .map(v => chars[v & 63])
-        .join('');
-}
 /**
  *
  * 用于绘制上下表格

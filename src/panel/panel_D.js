@@ -2,7 +2,6 @@ import {
     getGameMode,
     getNowTimeStamp,
     getPanelNameSVG,
-    isNumber,
     readTemplate,
     setCustomBanner,
     setImage,
@@ -18,6 +17,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {getGlobalRankPercentBGFromUser} from "../util/mascotBanner.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isNumber} from "../util/text.js";
 
 export const router = createImageRouter(panel_D);
 export const router_svg = createSvgRouter(panel_D);

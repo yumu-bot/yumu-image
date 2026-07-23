@@ -1,11 +1,9 @@
 import {
     getGameMode,
     isEmptyArray,
-    isEmptyString,
-    isNumber,
     floor,
     rounds,
-    floors, isNotEmptyArray, getImageFromV3, getRandomString
+    floors, isNotEmptyArray, getImageFromV3
 } from "./util.js";
 import {
     changeHexOKLabLightnessProgressive,
@@ -14,6 +12,7 @@ import {
 } from "./color.js";
 import {torus, torusBold} from "./font.js";
 import {PanelDraw} from "./panelDraw.js";
+import {getRandomString, isEmptyString, isNumber} from "./text.js";
 
 const ModInt = {
     null: 0,

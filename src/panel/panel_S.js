@@ -3,8 +3,7 @@ import {colorArray, getGlobalRankPercentColor, getGlobalRankPercentName, PanelCo
 import {
     clamp, clampToInteger,
     getAvatar, getFlagPath, getGameMode, getImage,
-    getPanelNameSVG, getRandomString,
-    getSvgBody, normalize, readNetImage,
+    getPanelNameSVG, getSvgBody, normalize, readNetImage,
     rotateSvgBody, rounds,
     setCustomBanner,
     setSvgBody,
@@ -17,6 +16,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {extra, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {label_E5, LABEL_S} from "../component/label.js";
+import {getRandomString} from "../util/text.js";
 
 export const router = createImageRouter(panel_S);
 

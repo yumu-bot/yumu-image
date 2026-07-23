@@ -3,12 +3,12 @@ import {
     getGameMode,
     getMapStatus,
     setImage,
-    isNotBlankString,
     isNotEmptyArray, setText, setTexts, floor, getSvgBody, getImageFromV3, getMapBackground
 } from "../util/util.js";
 import {extra, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMapStatusColor, getStarRatingColor} from "../util/color.js";
+import {isNotBlankString} from "../util/text.js";
 
 export async function card_A3(beatmapset = {}) {
     // 读取模板

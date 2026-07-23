@@ -1,9 +1,10 @@
-import {getImage, isASCII, isNotBlankString} from "../util/util.js";
+import {getImage} from "../util/util.js";
 import {getMultipleTextPath, PuHuiTi, torus, torusBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiDXStarColor} from "../util/maimai.js";
 import {drawLazerMods} from "../util/mod.js";
 import {colorArray} from "../util/color.js";
+import {isASCII, isNotBlankString} from "../util/text.js";
 
 // 【优化2】将纯静态的 SVG 头部/定义提取到函数外部，避免每次调用重复创建字符串
 const SVG_DEFS = `

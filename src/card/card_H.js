@@ -1,10 +1,11 @@
 import {
     setImage,
     readTemplate,
-    setText, setTexts, floors, isHexColor
+    setText, setTexts, floors
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
 import {getColorInSpectrum, getModColor} from "../util/color.js";
+import {isHexColor} from "../util/text.js";
 
 export async function card_H(data = {
     background: '',

@@ -2,7 +2,6 @@ import {
     floor,
     getImageFromV3,
     getPanelNameSVG,
-    isNotBlankString,
     isNotEmptyArray,
     readTemplate,
     setImage,
@@ -24,6 +23,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {card_I3} from "../card/card_I3.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isNotBlankString} from "../util/text.js";
 
 export const router = createImageRouter(panel_MD);
 

@@ -16,7 +16,7 @@ import {
     getSvgBody,
     getTimeDifference,
     isEmptyArray,
-    isNotEmptyString, normalize,
+    normalize,
     od2ms,
     readTemplate,
     removeGuest,
@@ -38,6 +38,7 @@ import {drawLazerMods, matchAnyMods} from "../util/mod.js";
 
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isNotEmptyString} from "../util/text.js";
 
 export const router = createImageRouter(panel_E6);
 export const router_svg = createSvgRouter(panel_E6);

@@ -8,7 +8,6 @@ import {
     getNowTimeStamp,
     getPanelNameSVG,
     getTimeDifference,
-    isASCII,
     setImage,
     setSvgBody,
     setText,
@@ -20,6 +19,7 @@ import {PanelColor} from "../util/color.js";
 import {drawLazerMods} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isASCII} from "../util/text.js";
 
 export const router = createImageRouter(panel_Eta2);
 

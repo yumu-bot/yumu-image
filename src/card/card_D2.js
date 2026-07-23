@@ -1,11 +1,11 @@
 import {
     getImage,
-    isNotBlankString,
     setImage,
     setTexts
 } from "../util/util.js";
 import {getMultipleTextPath, poppinsBold} from "../util/font.js";
 import {PanelDraw} from "../util/panelDraw.js";
+import {isNotBlankString} from "../util/text.js";
 
 export async function card_D2(data = {
     background: Promise.resolve(''),

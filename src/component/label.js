@@ -1,5 +1,5 @@
 import {
-    getGameMode, setImage, setText, setTexts, getAvatar, isASCII, isHexColor, isNotEmptyString, floors,
+    getGameMode, setImage, setText, setTexts, getAvatar, floors,
     getImageFromV3, readBinaryFromV3Cache, clampToInteger, normalize,
 } from "../util/util.js";
 import {extra, torus, PuHuiTi, getMultipleTextPath, poppinsBold, torusBold} from "../util/font.js";
@@ -13,6 +13,7 @@ import {
 } from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModCirclePath, getModFullName} from "../util/mod.js";
+import {isASCII, isHexColor, isNotEmptyString} from "../util/text.js";
 
 export const LABELS = {
     UNDEFINED: {

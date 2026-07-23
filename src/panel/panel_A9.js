@@ -4,7 +4,6 @@ import {
     getPanelHeight,
     getPanelNameSVG,
     getSvgBody,
-    isNotEmptyString,
     readNetImage,
     renderInBatch,
     setCustomBanner,
@@ -19,6 +18,7 @@ import {component_MD} from "../component/component_MD.js";
 import {torusBold} from "../util/font.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {isNotEmptyString} from "../util/text.js";
 
 export const router = createImageRouter(panel_A9);
 
