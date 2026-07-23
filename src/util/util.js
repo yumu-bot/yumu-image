@@ -359,7 +359,7 @@ export function clamp(val, max = 1, min = 0) {
  * @param {number} bottom 保底最小 (默认 0)，设为 1e-4可以确保在 0 的时候有值
  */
 export function normalize(val, max, min, range = 1, bottom = 0) {
-    if (val <= min || min === max) return 0;
+    if (val <= min || min === max) return bottom;
 
     // 2. 限制最大值不越界，并乘以 range
     const clamped = Math.min(val, max);
@@ -1768,117 +1768,49 @@ export const averageArrayToFixedLength = (data, length = 1) => {
     return result;
 };
 
+const NUM_TO_MODE = {
+    '-1': 'default',
+    '0': 'osu',
+    '1': 'taiko',
+    '2': 'catch',
+    '3': 'mania'
+};
+
+const MAPPING_BY_LEVEL = {
+    '-2': { osu: 0, taiko: 1, fruits: 2, catch: 2, mania: 3, _default: 0 },
+    '-1': { osu: '\uE800', taiko: '\uE803', fruits: '\uE801', catch: '\uE801', mania: '\uE802', _default: '' },
+    '1':  { osu: 'o', taiko: 't', fruits: 'c', catch: 'c', mania: 'm', _default: '?' },
+    '2':  { osu: 'osu!standard', taiko: 'osu!taiko', fruits: 'osu!catch', catch: 'osu!catch', mania: 'osu!mania', _default: 'default' }
+};
+
 /**
  * @function 格式化游戏模式
- * @return {String|Number} 游戏模式
- * @param mode 将被格式化的游戏模式，osu taiko catch mania
+ * @return {number|string} 游戏模式
+ * @param {number|string} mode 将被格式化的游戏模式，osu taiko catch mania
  * @param level 等级，0为不变，2为全写 osu!standard，-1为获取他们的unicode字符 \uE801，1为简写 o t m c，-2 获取他们的 mode int
  * @param default_mode
  */
 export function getGameMode(mode = '', level = 0, default_mode = 'default') {
-    let modeStr;
+    let mode_str;
 
-    //如果是输入数字，则修改
-    if (typeof mode === "number") {
+    if (typeof mode === 'number') {
         if (level === -2) return mode;
-        switch (mode) {
-            case -1: {
-                modeStr = 'default';
-                break;
-            }
-            case 0: {
-                modeStr = 'osu';
-                break;
-            }
-            case 1: {
-                modeStr = 'taiko';
-                break;
-            }
-            case 2: {
-                modeStr = 'catch';
-                break;
-            }
-            case 3: {
-                modeStr = 'mania';
-                break;
-            }
-            default: {
-                modeStr = 'osu';
-                break;
-            }
-        }
-    } else if (typeof mode == "string") {
-        modeStr = mode.toString().toLowerCase();
+        mode_str = NUM_TO_MODE[mode] || 'osu';
+    } else if (typeof mode === 'string') {
+        mode_str = mode.toLowerCase();
     } else {
         return default_mode;
     }
 
-    if (modeStr === 'default') return default_mode;
+    if (mode_str === 'default') return default_mode;
 
-    switch (level) {
-        case -2:
-            switch (modeStr) {
-                case 'osu':
-                    return 0;
-                case 'taiko':
-                    return 1;
-                case 'fruits':
-                    return 2;
-                case 'catch':
-                    return 2; //我怀疑现在的接水果给的不是fruits
-                case 'mania':
-                    return 3;
-                default:
-                    return 0;
-            }
-        case -1:
-            switch (modeStr) {
-                case 'osu':
-                    return '\uE800';
-                case 'taiko':
-                    return '\uE803';
-                case 'fruits':
-                    return '\uE801';
-                case 'catch':
-                    return '\uE801'; //我怀疑现在的接水果给的不是fruits
-                case 'mania':
-                    return '\uE802';
-                default:
-                    return '';
-            }
-        case 1:
-            switch (modeStr) {
-                case 'osu':
-                    return 'o';
-                case 'taiko':
-                    return 't';
-                case 'fruits':
-                    return 'c';
-                case 'catch':
-                    return 'c'; //我怀疑现在的接水果给的不是fruits
-                case 'mania':
-                    return 'm';
-                default:
-                    return '?';
-            }
-        case 2:
-            switch (modeStr) {
-                case 'osu':
-                    return 'osu!standard';
-                case 'taiko':
-                    return 'osu!taiko';
-                case 'fruits':
-                    return 'osu!catch';
-                case 'catch':
-                    return 'osu!catch'; //我怀疑现在的接水果给的不是fruits
-                case 'mania':
-                    return 'osu!mania';
-                default:
-                    return 'default';
-            }
-        default:
-            return modeStr;
+    const level_map = MAPPING_BY_LEVEL[level];
+
+    if (level_map) {
+        return level_map[mode_str] ?? level_map._default;
     }
+
+    return mode_str;
 }
 
 /**
@@ -2501,10 +2433,18 @@ export function setCustomBanner(svg, custom = null, reg_banner, custom_opacity =
     }
 }
 
-export const cs2px = (cs, mode = 'o') => {
+export const cs2px = (cs, ruleset_id = 0) => {
+    let mode
+
+    if (typeof ruleset_id === 'number') {
+        mode = ruleset_id
+    } else {
+        mode = getGameMode(ruleset_id, -2)
+    }
+
     switch (mode) {
-        case 'o':
-        case 'c': {
+        case 0:
+        case 2: {
             const osupixel = round(54.4 - 4.48 * cs, 2);
             return osupixel + 'px';
         }
@@ -2514,10 +2454,18 @@ export const cs2px = (cs, mode = 'o') => {
     }
 }
 
-export const ar2ms = (ar, mode = 'o') => {
+export const ar2ms = (ar, ruleset_id = 0) => {
+    let mode
+
+    if (typeof ruleset_id === 'number') {
+        mode = ruleset_id
+    } else {
+        mode = getGameMode(ruleset_id, -2)
+    }
+
     switch (mode) {
-        case 'o':
-        case 'c': {
+        case 0:
+        case 2: {
             if (ar > 5) {
                 if (ar > 11) return '300ms';
                 else return Math.round(1200 - (150 * (ar - 5))) + 'ms';
@@ -2531,23 +2479,34 @@ export const ar2ms = (ar, mode = 'o') => {
     }
 }
 
-export const od2ms = (od, mode = 'o') => {
+export const od2ms = (od, ruleset_id = 0) => {
+    let mode
+
+    if (typeof ruleset_id === 'number') {
+        mode = ruleset_id
+    } else {
+        mode = getGameMode(ruleset_id, -2)
+    }
+
     let ms;
     switch (mode) {
-        case 'o': {
+        case 0: {
             if (od > 11) return '14ms';
             ms = Math.round(80 - (6 * od)).toString();
             break;
         }
-        case 't': {
+
+        case 1: {
             if (od > 10) return '17ms';
             ms = Math.round(50 - (3 * od)).toString();
             break;
         }
-        case 'c': {
+
+        case 2: {
             return '-';
         }
-        case 'm': {
+
+        case 3: {
             if (od > 11) return '31ms';
             if (od < 0) return '64ms';
             ms = Math.round(64 - (3 * od)).toString();

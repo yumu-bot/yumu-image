@@ -995,7 +995,7 @@ export function delMod(modInt = 0, mod = '') {
 /**
  * 获取模组倍率 (lazer 基准)
  * @param mods
- * @param game_mode
+ * @param game_mode {number|string}
  * @returns {number} 倍率
  */
 export function getModMultiplier(mods = [{acronym: ''}], game_mode = 'o') {

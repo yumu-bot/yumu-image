@@ -17,7 +17,7 @@ import {
     getFormattedTime,
     getTimeDifferenceShort,
     getMapBackground, getDiffBackground, getTime, thenPush, round, rounds, getImageFromV3, getImageOrElse,
-    getIndexOrNull,
+    getIndexOrNull, normalize, getRatioString, od2ms, ar2ms, cs2px,
 } from "./util.js";
 import {
     colorArray,
@@ -45,6 +45,7 @@ import {card_D2} from "../card/card_D2.js";
 import {getLazerModsWidth} from "./mod.js";
 import {getBannerLocal} from "./mascotBanner.js";
 import {splitMatchName, isASCII, isNotBlankString, isNotEmptyString} from "./text.js";
+import {LABELS} from "../component/label.js";
 
 //公用方法
 //把参数变成面板能读懂的数据
@@ -1832,6 +1833,136 @@ export const PanelGenerate = {
             right2m: right2m,
         };
     },
+
+
+    beatmap2componentE3: (beatmap, original, ruleset_id = 0) => {
+
+        const {
+            bpm = 0,
+            total_length = 0,
+            hit_length = 0,
+            count_circles: circles = 0,
+            count_sliders: sliders = 0,
+            cs, ar, od, hp
+        } = beatmap;
+
+        const bpm_rounds = rounds(bpm, 2);
+        const bpm_r = bpm > 0 ? `${(60000 / bpm).toFixed(0)}ms` : '-';
+        const bpm_b = bpm_rounds.integer;
+        const bpm_m = bpm_rounds.decimal;
+        const bpm_p = normalize(bpm, 270, 90, 1, 1e-4);
+
+        const length_r = `${Math.floor(total_length / 60)}:${(total_length % 60).toFixed(0).padStart(2, '0')}`;
+        const length_b = `${Math.floor(hit_length / 60)}:`;
+        const length_m = (hit_length % 60).toFixed(0).padStart(2, '0');
+        const length_p = normalize(hit_length, 270, 30, 1, 1e-4);
+
+        let display_cs = true;
+        let display_ar = true;
+        let display_od = true;
+
+        // 默认配置 (std / ruleset_id: 0)
+        let cs_config = { min: 2, mid: 4, max: 6 };
+        let ar_config = { min: 7.5, mid: 9, max: 10.5 };
+        let od_config = { min: 5.5, mid: 8, max: 10.5 };
+        let hp_config = { min: 4, mid: 6, max: 8 };
+
+        let index = '';
+        const ratio = getRatioString(circles / sliders);
+
+        // 根据模式调整配置
+        switch (ruleset_id) {
+            case 0:
+                index = `CR & SL: ${circles} / ${sliders} [${ratio}]`;
+                break;
+
+            case 1: // Taiko
+                cs_config = { min: 0, mid: 0, max: 0 };
+                ar_config = { min: 0, mid: 0, max: 0 };
+                od_config = { min: 4, mid: 6, max: 8 };
+                display_ar = false;
+                display_cs = false;
+                break;
+
+            case 2: // Catch
+                od_config = { min: 0, mid: 0, max: 0 };
+                display_od = false;
+                break;
+
+            case 3: // Mania
+                cs_config = { min: 4, mid: 6, max: 8 };
+                ar_config = { min: 0, mid: 0, max: 0 };
+                hp_config = { min: 7, mid: 8, max: 9 };
+                display_ar = false;
+                index = `RC & LN: ${circles} / ${sliders} [${ratio}]`;
+                break;
+        }
+
+        // 4. 解构 original 的数据
+        const {
+            cs: original_cs = 0,
+            ar: original_ar = 0,
+            od: original_od = 0,
+            hp: original_hp = 0
+        } = original ?? {};
+
+        // 5. 导出统一格式的对象
+        return {
+            labels: [
+                {
+                    ...LABELS.BPM,
+                    remark: bpm_r,
+                    data_b: bpm_b,
+                    data_m: bpm_m,
+                    data_a: '',
+                    bar_progress: bpm_p,
+                },
+                {
+                    ...LABELS.LENGTH,
+                    remark: length_r,
+                    data_b: length_b,
+                    data_m: length_m,
+                    data_a: '',
+                    bar_progress: length_p,
+                },
+                {
+                    ...((ruleset_id === 3) ? LABELS.KEY : LABELS.CS),
+                    ...stat2label(cs, cs2px(cs, ruleset_id),
+                        normalize(cs, cs_config.max, cs_config.min, 1, 1e-4),
+                        original_cs, display_cs),
+                    bar_min: cs_config.min,
+                    bar_mid: cs_config.mid,
+                    bar_max: cs_config.max,
+                },
+                {
+                    ...LABELS.AR,
+                    ...stat2label(ar, ar2ms(ar, ruleset_id), normalize(ar, ar_config.max, ar_config.min, 1, 1e-4), original_ar, display_ar),
+                    bar_min: ar_config.min,
+                    bar_mid: ar_config.mid,
+                    bar_max: ar_config.max,
+                },
+                {
+                    ...LABELS.OD,
+                    ...stat2label(od, od2ms(od, ruleset_id), normalize(od, od_config.max, od_config.min, 1, 1e-4), original_od, display_od),
+                    bar_min: od_config.min,
+                    bar_mid: od_config.mid,
+                    bar_max: od_config.max,
+                },
+                {
+                    ...LABELS.HP,
+                    ...stat2label(hp, '-', normalize(hp, hp_config.max, hp_config.min, 1, 1e-4), original_hp, true),
+                    bar_min: hp_config.min,
+                    bar_mid: hp_config.mid,
+                    bar_max: hp_config.max,
+                }
+            ],
+            index
+        };
+    },
+
+    score2componentE3: (score, original) => {
+        return PanelGenerate.beatmap2componentE3(score.beatmap, original, score.ruleset_id)
+    },
 }
 
 const TEAM_CONFIG = {
@@ -1839,3 +1970,26 @@ const TEAM_CONFIG = {
     blue: { color: colorArray.blue, bg: 'card-blue.webp' },
     default: { color: colorArray.gray, bg: 'card-gray.webp' }
 };
+
+const stat2label = (stat, remark, progress, original, is_display = true) => {
+    const changed = Math.abs(original - stat) > 0.1;
+
+    const stat_number = rounds(stat, 1)
+
+    const stat_b = stat_number.integer
+    const stat_m = stat_number.decimal
+
+    if (is_display) {
+        return {
+            remark: remark,
+            data_b: stat_b,
+            data_m: stat_m,
+            data_a: changed ? (' [' + round(original, 1) + ']') : '',
+            bar_progress: progress,
+        }
+    } else {
+        return {
+            remark: '-', data_b: '-', data_m: '', data_a: '', bar_progress: null,
+        }
+    }
+}

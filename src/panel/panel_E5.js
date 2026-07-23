@@ -1,6 +1,5 @@
 import {
-    ar2ms, clamp, clampToInteger,
-    cs2px,
+    clamp, clampToInteger,
     floor,
     floors,
     getBeatMapTitlePath,
@@ -17,8 +16,6 @@ import {
     getSvgBody,
     getTimeDifference,
     isEmptyArray,
-    normalize,
-    od2ms,
     readTemplate,
     removeGuest,
     round,
@@ -33,7 +30,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi} from "../util/font.js";
 import {colorArray, getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
-import {label_E5, LABELS} from "../component/label.js";
+import {label_E5} from "../component/label.js";
 import {drawLazerMods, getModMultiplier} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
@@ -336,9 +333,13 @@ export async function panel_E5(data = {
 }
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
-const component_E1 = (data = {
-    name: '', star: 0, original: 0, mode: ''
-}) => {
+const component_E1 = (data) => {
+    const {
+        name = '',
+        star = 0,
+        original = 0,
+        ruleset_id = 0
+    } = data
 
     // 读取模板
     let svg = `   <defs>
@@ -377,10 +378,9 @@ const component_E1 = (data = {
     const reg_text = /(?<=<g id="Text_OE1">)/;
     const reg_star = /(?<=<clipPath id="clippath-OE1-2">)/;
 
-    const star = data?.star || 0;
     const star_rrect = PanelDraw.Rect(15, 105, clampToInteger((star / 9) * 460, 460, 20), 30, 15, 'none')
 
-    const ruleset = extra.getTextPath(getGameMode(data.mode, -1), 20 - 2, 88 - 10, 72, 'left baseline', getStarRatingColor(star))
+    const ruleset_path = extra.getTextPath(getGameMode(ruleset_id, -1), 20 - 2, 88 - 10, 72, 'left baseline', getStarRatingColor(star))
 
     const star_floor = floors(star, 2)
 
@@ -389,19 +389,19 @@ const component_E1 = (data = {
     }, {
         font: "poppinsBold", text: star_floor.decimal, size: 48, color: '#fff',
     }, {
-        font: "poppinsBold", text: ' / ' + data?.name, size: 24, color: '#fff',
+        font: "poppinsBold", text: ' / ' + name, size: 24, color: '#fff',
     },]
 
     const texts = getMultipleTextPath(text_arr, 105, 88, "left baseline");
 
-    const show_original = (data.original > 0 && Math.abs(data.original - data.star) > 1e-4)
+    const show_original = (original > 0 && Math.abs(original - star) > 1e-4)
 
-    const sr_title = (show_original ? `(${floor(data.original, 2)}) ` : '') + 'Star Rating'
+    const sr_title = (show_original ? `(${floor(original, 2)}) ` : '') + 'Star Rating'
 
     const title = poppinsBold.getTextPath(sr_title, 475, 28, 18, 'right baseline', '#fff')
 
     svg = setText(svg, star_rrect, reg_star)
-    svg = setTexts(svg, [ruleset, texts, title], reg_text);
+    svg = setTexts(svg, [ruleset_path, texts, title], reg_text);
 
     return svg;
 };
@@ -422,6 +422,9 @@ const component_E2 = (data = {}) => {
     // 使用 ... 展开运算符获取最大值
     const density_max = (density_arr.length ? Math.max(...density_arr) : 0) / density_scale;
 
+    /**
+     * @type {number[]}
+     */
     const rf_arr = fail_arr.map((v, i) => v + (retry_arr[i] || 0));
     const rf_max = rf_arr.length ? Math.max(...rf_arr) : 0;
 
@@ -439,20 +442,21 @@ const component_E2 = (data = {}) => {
     `;
 };
 
-const component_E3 = (data = {
-    labels: [], index: '',
-}) => {
+const component_E3 = (data) => {
     let svg = `
         <g id="Labels_OE3">
         </g>
     `;
 
-    const labels = data?.labels || [];
+    const {
+        labels = [], index = ''
+    } = data
+
     const reg_label = /(?<=<g id="Labels_OE3">)/;
 
-    const title = poppinsBold.getTextPath('Statistics', 15, 28, 18, 'left baseline', '#fff');
+    const title_path = poppinsBold.getTextPath('Statistics', 15, 28, 18, 'left baseline', '#fff');
 
-    const index = poppinsBold.getTextPath(data?.index ?? '', 475, 28, 18, 'right baseline', '#fff')
+    const index_path = poppinsBold.getTextPath(index, 475, 28, 18, 'right baseline', '#fff')
 
     const string_e5s = labels.slice(0, 6).map((label, i) => {
         const x = 15 + 235 * (i % 2);
@@ -462,7 +466,7 @@ const component_E3 = (data = {
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    svg = setTexts(svg, [string_e5s, title, index, rect], reg_label);
+    svg = setTexts(svg, [string_e5s, title_path, index_path, rect], reg_label);
 
     return svg;
 }
@@ -512,9 +516,7 @@ const component_E5 = (data = {
     return svg;
 }
 
-const component_E6 = (data = {
-    title: '', title_unicode: '', artist: '', difficulty_name: '', creator: '', bid: 0, sid: 0, background: '',
-}) => {
+const component_E6 = (data) => {
     let svg = `   <defs>
             <clipPath id="clippath-OE6-1">
                 <rect id="BG_Base" x="0" y="0" width="820" height="160" rx="20" ry="20" style="fill: none;"/>
@@ -528,38 +530,39 @@ const component_E6 = (data = {
         </g>
     `;
 
+    const {
+        title = '',
+        title_unicode = '',
+        artist = '',
+        difficulty_name = '',
+        creator = '',
+        bid = 0,
+        // sid = 0,
+        background = '',
+    } = data
+
     const reg_label = /(?<=<g id="Labels_OE6">)/;
     const reg_background = /(?<=<g id="Background_OE6" style="clip-path: url\(#clippath-OE6-1\);">)/;
     const reg_base = /(?<=<g id="Base_OE6">)/;
 
-    const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi", data?.title || '', data?.title_unicode || '', data?.artist || '', 820 / 2, 55, 98, 48, 24, 820 - 20);
+    const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi", title, title_unicode, artist, 820 / 2, 55, 98, 48, 24, 820 - 20);
 
-    const diff_text = poppinsBold.cutStringTail(data?.difficulty_name || '', 30, 820 - 40 - 10 - 2 * Math.max(poppinsBold.getTextWidth(poppinsBold.cutStringTail(data?.creator || '', 24, 240, true), 24), poppinsBold.getTextWidth('b' + (data?.bid || 0), 24)), true)
+    const diff_text = poppinsBold.cutStringTail(difficulty_name, 30, 820 - 40 - 10 - 2 * Math.max(poppinsBold.getTextWidth(poppinsBold.cutStringTail(creator, 24, 240, true), 24), poppinsBold.getTextWidth('b' + bid, 24)), true)
 
     const diff = poppinsBold.getTextPath(diff_text, 820 / 2, 142, 30, 'center baseline', '#fff');
-    const creator = poppinsBold.getTextPath(poppinsBold.cutStringTail(data?.creator || '', 24, 240, true), 20, 142, 24, 'left baseline', '#fff');
-    const bid = poppinsBold.getTextPath('b' + (data?.bid || 0), 820 - 20, 142, 24, 'right baseline', '#fff');
-
-    const background = data?.background;
+    const creator_path = poppinsBold.getTextPath(poppinsBold.cutStringTail(creator, 24, 240, true), 20, 142, 24, 'left baseline', '#fff');
+    const bid_path = poppinsBold.getTextPath('b' + bid, 820 - 20, 142, 24, 'right baseline', '#fff');
 
     const rect = PanelDraw.Rect(0, 0, 820, 160, 20, '#382e32', 1);
 
-    svg = setTexts(svg, [t.title, t.title_unicode, bid, creator, diff], reg_label);
+    svg = setTexts(svg, [t.title, t.title_unicode, bid_path, creator_path, diff], reg_label);
     svg = setImage(svg, 0, 0, 820, 160, background, reg_background, 0.4);
     svg = setText(svg, rect, reg_base);
 
     return svg;
 }
 
-const component_E7 = (data = {
-    pp: 0, full_pp: 0, perfect_pp: 0,
-
-    aim_pp: 0, spd_pp: 0, acc_pp: 0, reading_pp: 0, fl_pp: 0, diff_pp: 0,
-
-    is_fc: true,
-
-    mode: 'osu',
-}) => {
+const component_E7 = (data) => {
 
     // 读取模板
     let svg = `   <defs>
@@ -615,6 +618,22 @@ const component_E7 = (data = {
           <g id="Text_OE7">
           </g>`;
 
+    const {
+        pp = 0,
+        full_pp = 0,
+        perfect_pp = 0,
+        // aim_pp = 0,
+        // spd_pp = 0,
+        // acc_pp = 0,
+        // reading_pp = 0,
+        // fl_pp = 0,
+        // diff_pp = 0,
+        is_fc = true,
+        ruleset_id = 0,
+    } = data
+
+    let fc = is_fc
+
     const reg_text = /(?<=<g id="Text_OE7">)/;
     const reg_clip2 = /(?<=<g id="Clip_OE7-2" style="clip-path: url\(#clippath-OE7-1\);">)/;
     const reg_clip3 = /(?<=<g id="Clip_OE7-3" style="clip-path: url\(#clippath-OE7-1\);">)/;
@@ -622,13 +641,11 @@ const component_E7 = (data = {
     const reg_clip5 = /(?<=<g id="Clip_OE7-5" style="clip-path: url\(#clippath-OE7-1\);">)/;
     const reg_clip6 = /(?<=<g id="Clip_OE7-6" style="clip-path: url\(#clippath-OE7-1\);">)/; //181,100,217 | 238,96,156
 
-    const pf_percent = data?.perfect_pp > 0 ? (data?.pp / data?.perfect_pp) : 1;
-    const fc_percent = data?.full_pp > 0 ? (data?.pp / data?.full_pp) : 1;
+    const pf_percent = perfect_pp > 0 ? (pp / perfect_pp) : 1;
+    const fc_percent = full_pp > 0 ? (pp / full_pp) : 1;
 
-    let is_fc = data?.is_fc;
-
-    const over = 460 - poppinsBold.getTextWidth(Math.round(data?.perfect_pp || 0).toString(), 24) - 30 < (460 * fc_percent);
-    if (over) is_fc = true;
+    const over = 460 - poppinsBold.getTextWidth(Math.round(perfect_pp || 0).toString(), 24) - 30 < (460 * fc_percent);
+    if (over) fc = true;
 
     let reference_pp; // 参考 PP，有时是 FC PP，有时是 SS PP
 
@@ -637,32 +654,33 @@ const component_E7 = (data = {
     let fc_pp_text;
     let percent_type;
 
-    if (data.mode === 'm' && fc_percent < 0.95 && pf_percent < 0.95) {
+    if (ruleset_id === 3 && fc_percent < 0.95 && pf_percent < 0.95) {
         // mania 的争取 FC 模式
-        reference_pp = data?.full_pp;
+        reference_pp = full_pp;
 
         percent = fc_percent;
         percent_type = 'FC'
-        fc_pp_text = Math.round(data?.perfect_pp || 0);
-    } else if (is_fc) {
-        reference_pp = data?.perfect_pp;
+        fc_pp_text = Math.round(perfect_pp || 0);
+    } else if (fc) {
+        reference_pp = perfect_pp;
 
         percent = pf_percent;
-        if (data.mode === 'm') {
+        if (ruleset_id === 3) {
             percent_type = 'PF'
         } else {
             percent_type = 'SS'
         }
         fc_pp_text = '';
     } else {
-        reference_pp = data?.full_pp;
+        reference_pp = full_pp;
 
         percent = fc_percent;
         percent_type = 'FC'
-        fc_pp_text = Math.round(data?.perfect_pp || 0);
+        fc_pp_text = Math.round(perfect_pp);
     }
 
-    const is_perfect = (percent_type === 'SS' && Math.round(percent * 100) > 100 - 1e-7) || (Math.round(data?.perfect_pp || 0) - Math.round(data?.pp || 0)) < 1e-4
+    const is_perfect = (percent_type === 'SS' && Math.round(percent * 100) > 100 - 1e-7)
+        || (Math.round(perfect_pp) - Math.round(pp)) < 1e-4
 
     if (is_perfect) {
         reference_pp_text = ' / PERFECT';
@@ -672,7 +690,7 @@ const component_E7 = (data = {
 
     const fc_pp = poppinsBold.getTextPath(fc_pp_text, 475 - 15, 128, 24, 'right baseline', '#fff')
 
-    const pp_text = Math.round(data?.pp || 0).toString()
+    const pp_text = Math.round(pp).toString()
 
     const max_width = poppinsBold.getTextWidth(pp_text, 84) + poppinsBold.getTextWidth(' PP', 48) + poppinsBold.getTextWidth(reference_pp_text, 24)
 
@@ -687,7 +705,7 @@ const component_E7 = (data = {
             font: "poppinsBold", text: reference_pp_text, size: 24, color: '#fff',
         },]
     } else {
-        const pp_round = rounds(data?.pp || 0, -4)
+        const pp_round = rounds(pp, -4)
 
         const mid_width = poppinsBold.getTextWidth(pp_round.integer, 84) + poppinsBold.getTextWidth(pp_round.decimal + ' PP', 48) + poppinsBold.getTextWidth(reference_pp_text, 24)
 
@@ -717,8 +735,8 @@ const component_E7 = (data = {
 
     svg = setTexts(svg, [texts, title, fc_pp], reg_text);
 
-    switch (data.mode) {
-        case 'o': {
+    switch (ruleset_id) {
+        case 0: {
             const skill_config = [
                 { key: 'aim_pp',     grad: 'url(#grad-OE7-12)', clip: reg_clip2 },
                 { key: 'spd_pp',     grad: 'url(#grad-OE7-13)', clip: reg_clip3 },
@@ -735,13 +753,16 @@ const component_E7 = (data = {
             skill_config.forEach(({ key, grad, clip }) => {
                 const val = data?.[key];
                 if (!val || val < 1e-4) return;
-                const width = getChildPPWidth(val, sum, data?.pp, reference_pp);
+
+                const pp_str = Math.round(val).toString()
+
+                const width = getChildPPWidth(val, sum, pp, reference_pp);
                 accumulated_width += width;
 
                 const rect = PanelDraw.Rect(15, 105, accumulated_width, 30, 15, grad, 1);
                 svg = setText(svg, rect, clip);
 
-                const text_path = getChildPPPath(val, 15, 128, 24, accumulated_width, width, 10);
+                const text_path = getChildPPPath(pp_str, 15, 128, 24, accumulated_width, width, 10);
                 texts.push(text_path);
             });
 
@@ -749,7 +770,7 @@ const component_E7 = (data = {
             break;
         }
 
-        case 't': {
+        case 1: {
             const skill_config = [
                 { key: 'diff_pp', grad: 'url(#grad-OE7-13)', clip: reg_clip3 },
                 { key: 'acc_pp',  grad: 'url(#grad-OE7-15)', clip: reg_clip4 }
@@ -763,7 +784,7 @@ const component_E7 = (data = {
             skill_config.forEach(({ key, grad, clip }) => {
                 const val = data?.[key];
                 if (!val || val < 1e-4) return;
-                const width = getChildPPWidth(val, sum, data?.pp, reference_pp);
+                const width = getChildPPWidth(val, sum, pp, reference_pp);
                 accumulated_width += width;
 
                 const rect = PanelDraw.Rect(15, 105, accumulated_width, 30, 15, grad, 1);
@@ -779,7 +800,7 @@ const component_E7 = (data = {
     }
 
     // 保底 PP
-    const pp_width = (reference_pp > 0) ? ((data?.pp / reference_pp) * 460) : 460;
+    const pp_width = (reference_pp > 0) ? ((pp / reference_pp) * 460) : 460;
     const pp_rect = PanelDraw.Rect(15, 105, pp_width, 30, 15, "url(#grad-OE7-16)", 1);
     svg = setText(svg, pp_rect, reg_clip6);
 
@@ -793,22 +814,23 @@ const component_E7 = (data = {
         return (child_pp > 0) ? Math.max(min_width, child_pp_width) : 0;
     }
 
-    function getChildPPPath(child_pp = 0, x = 0, y = 0, size = 24, offset = 30, width = 30, interval = 0, max_width = 460) {
-        const pp_str = Math.round(child_pp).toString();
-        const shown = isTextShown('poppinsBold', child_pp, size, width, interval);
-        const slight = isTextSlightlyWider('poppinsBold', child_pp, size, width, interval);
+    function getChildPPPath(pp_str = '', x = 0, y = 0, size = 24, offset = 30, width = 30, interval = 0, max_width = 460) {
+        const shown = isTextShown('poppinsBold', pp_str, size, width, interval);
+        const slight = isTextSlightlyWider('poppinsBold', pp_str, size, width, interval);
 
-        return shown ? poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - interval, y, size, 'right baseline', '#382c32') : (slight ? poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - (1 / 2 * width), y, size, 'center baseline', '#382c32') : '');
+        return shown ?
+            poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - interval, y, size, 'right baseline', '#382c32') :
+            (slight ? poppinsBold.getTextPath(pp_str, x + Math.min(offset, max_width) - (1 / 2 * width), y, size, 'center baseline', '#382c32') : '');
     }
 
     // 宽度大于最大宽 + 2x 间距
-    function isTextShown(font = 'poppinsBold', pp = 0, size = 24, width = 0, interval = 0) {
-        return typeof pp === "number" && width > 0 && (width - 2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
+    function isTextShown(font = 'poppinsBold', pp_str = '', size = 24, width = 0, interval = 0) {
+        return isNotBlankString(pp_str) && width > 0 && (width - 2 * interval >= getTextWidth(font, pp_str, size));
     }
 
     // 宽度大于最大宽 - 1/2x 间距
-    function isTextSlightlyWider(font = 'poppinsBold', pp = 0, size = 24, width = 0, interval = 0) {
-        return typeof pp === "number" && width > 0 && (width + 1 / 2 * interval >= getTextWidth(font, Math.round(pp).toString(), size));
+    function isTextSlightlyWider(font = 'poppinsBold', pp_str = '', size = 24, width = 0, interval = 0) {
+        return isNotBlankString(pp_str) && width > 0 && (width + 1 / 2 * interval >= getTextWidth(font, pp_str, size));
     }
 };
 
@@ -890,11 +912,16 @@ const component_E9 = (data = {
     return svg;
 }
 
-const component_E10 = (data = {
-    statistics: [], statistics_max: [], statistics_full: [],
+const component_E10 = (data) => {
+    const {
+        statistics = [],
+        statistics_max = [],
+        statistics_full = [],
+        effective_miss_count = 0,
+        ratio = 0,
+        ruleset_id = 0
+    } = data;
 
-    effective_miss_count: 0, ratio: 0, mode: '',
-}) => {
     let svg = `
         <g id="Base_OE10">
         </g>
@@ -909,40 +936,45 @@ const component_E10 = (data = {
 
     const rect = PanelDraw.Rect(0, 0, 490, 270, 20, '#382e32', 1);
 
-    const statistics = getStatisticsSVG(data.statistics, data.statistics_max, data.statistics_full, 64, 45, 360, 20, 16, 16) // 345
+    const statistics_svg = getStatisticsSVG(statistics, statistics_max, statistics_full, 64, 45, 360, 20, 16, 16) // 345
 
-    let ratio_text = getRatioString(data.ratio);
+    let ratio_text = getRatioString(ratio);
 
-    const perfect_great_ratio = (getGameMode(data?.mode, 1) === 'm') ? poppinsBold.getTextPath('MAX : 300 = ' + ratio_text, 475, 28, 18, 'right baseline', '#fff') : ''
+    const perfect_great_ratio = (ruleset_id === 3) ? poppinsBold.getTextPath('MAX : 300 = ' + ratio_text, 475, 28, 18, 'right baseline', '#fff') : ''
 
-    const is_effective_miss_shown = (getGameMode(data?.mode, 1) === 'o' || getGameMode(data?.mode, 1) === 't') && isNumber(data?.effective_miss_count) && (Math.abs(data?.effective_miss_count - Math.round(data?.effective_miss_count)) > 1e-3)
+    const is_effective_miss_shown = (ruleset_id === 0 || ruleset_id === 1) && isNumber(effective_miss_count) && (Math.abs(effective_miss_count - Math.round(effective_miss_count)) > 1e-3)
 
-    const effective_miss_text = 'equivalent miss: ' + floor(data?.effective_miss_count || 0, 2)
+    const effective_miss_text = 'equivalent miss: ' + floor(effective_miss_count || 0, 2)
 
     const effective_miss = is_effective_miss_shown ? poppinsBold.getTextPath(effective_miss_text, 475, 28, 18, 'right baseline', '#fff') : ''
 
-    svg = setTexts(svg, [title, statistics, perfect_great_ratio, effective_miss], reg_text);
+    svg = setTexts(svg, [title, statistics_svg, perfect_great_ratio, effective_miss], reg_text);
     svg = setText(svg, rect, reg_base);
 
     return svg;
 }
 
-const component_E10P = (data = {
-    mode: '', rainbow_rank: '', rainbow_crown: ''
-}) => {
+const component_E10P = (data) => {
     let svg = `
         <g id="Crown_OE11">
         </g>
         <g id="Rank_OE11">
         </g>
     `;
-    if (data?.mode !== 1) return ''
+
+    const {
+        ruleset_id = 0,
+        rainbow_rank = '',
+        rainbow_crown = ''
+    } = data
+
+    if (ruleset_id !== 1) return ''
 
     const reg_rank = /(?<=<g id="Rank_OE11">)/;
     const reg_crown = /(?<=<g id="Crown_OE11">)/;
 
-    svg = isNotBlankString(data?.rainbow_rank) ? setImage(svg, 20, 160, 100, 100, getImageFromV3(data?.rainbow_rank), reg_rank, 1) : setImage(svg, 20, 160, 100, 100, getImageFromV3(data?.rainbow_crown), reg_crown, 1)
-    svg = isNotBlankString(data?.rainbow_rank) ? setImage(svg, 140, 160, 100, 100, getImageFromV3(data?.rainbow_crown), reg_crown, 1) : svg
+    svg = isNotBlankString(rainbow_rank) ? setImage(svg, 20, 160, 100, 100, getImageFromV3(rainbow_rank), reg_rank, 1) : setImage(svg, 20, 160, 100, 100, getImageFromV3(rainbow_crown), reg_crown, 1)
+    svg = isNotBlankString(rainbow_rank) ? setImage(svg, 140, 160, 100, 100, getImageFromV3(rainbow_crown), reg_crown, 1) : svg
 
     return svg;
 }
@@ -975,125 +1007,7 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE3: (score, original) => {
-        const mode = getGameMode(score?.ruleset_id, 1);
-
-        const bpm = rounds(score?.beatmap?.bpm, 2)
-        const bpm_r = (score?.beatmap?.bpm > 0) ? (60000 / score?.beatmap?.bpm).toFixed(0) + 'ms' : '-';
-        const bpm_b = bpm.integer
-        const bpm_m = bpm.decimal
-        const bpm_p = normalize(score?.beatmap?.bpm, 270, 90, 1, 1e-4);
-
-        const length_r = Math.floor(score?.beatmap?.total_length / 60) + ':' + (score?.beatmap?.total_length % 60).toFixed(0).padStart(2, '0');
-        const length_b = Math.floor(score?.beatmap?.hit_length / 60) + ':';
-        const length_m = (score?.beatmap?.hit_length % 60).toFixed(0).padStart(2, '0');
-        const length_p = normalize(score?.beatmap?.hit_length, 270, 30, 1, 1e-4);
-
-        let isDisplayCS = true;
-        let isDisplayAR = true;
-        let isDisplayOD = true;
-
-        let cs_min = 2;
-        let cs_mid = 4;
-        let cs_max = 6;
-        let ar_min = 7.5;
-        let ar_mid = 9;
-        let ar_max = 10.5;
-        let od_min = 5.5;
-        let od_mid = 8;
-        let od_max = 10.5;
-        let hp_min = 4;
-        let hp_mid = 6;
-        let hp_max = 8;
-
-        let index = ''
-        const circles = score.beatmap?.count_circles ?? 0
-        const sliders = score.beatmap?.count_sliders ?? 0
-
-        const ratio = getRatioString(circles / sliders)
-
-        switch (mode) {
-            case 'o': {
-                index = `CR & SL: ${circles} / ${sliders} [${ratio}]`
-            }
-                break;
-
-            case 't' : {
-                cs_min = 0;
-                cs_mid = 0;
-                cs_max = 0;
-                ar_min = 0;
-                ar_mid = 0;
-                ar_max = 0;
-                od_min = 4;
-                od_mid = 6;
-                od_max = 8;
-                isDisplayAR = false;
-                isDisplayCS = false;
-            }
-                break;
-            case 'c' : {
-                od_min = 0;
-                od_mid = 0;
-                od_max = 0;
-                isDisplayOD = false;
-            }
-                break;
-            case 'm' : {
-                cs_min = 4;
-                cs_mid = 6;
-                cs_max = 8;
-                ar_min = 0;
-                ar_mid = 0;
-                ar_max = 0;
-                hp_min = 7;
-                hp_mid = 8;
-                hp_max = 9;
-                isDisplayAR = false;
-                index = `RC & LN: ${circles} / ${sliders} [${ratio}]`
-            }
-                break;
-        }
-
-        return {
-            labels: [{
-                ...LABELS.BPM, remark: bpm_r, data_b: bpm_b, data_m: bpm_m, data_a: '', bar_progress: bpm_p,
-            }, {
-                ...LABELS.LENGTH,
-                remark: length_r,
-                data_b: length_b,
-                data_m: length_m,
-                data_a: '',
-                bar_progress: length_p,
-            }, {
-                ...((mode === 'm') ? LABELS.KEY : LABELS.CS),
-                ...stat2label(score?.beatmap?.cs, cs2px(score?.beatmap?.cs, mode), normalize(score?.beatmap?.cs, cs_max, cs_min, 1, 1e-4), original?.cs ?? 0, isDisplayCS),
-                bar_min: cs_min,
-                bar_mid: cs_mid,
-                bar_max: cs_max,
-            }, {
-                ...LABELS.AR,
-                ...stat2label(score?.beatmap?.ar, ar2ms(score?.beatmap?.ar, mode), normalize(score?.beatmap?.ar, ar_max, ar_min, 1, 1e-4), original?.ar ?? 0, isDisplayAR),
-                bar_min: ar_min,
-                bar_mid: ar_mid,
-                bar_max: ar_max,
-            }, {
-                ...LABELS.OD,
-                ...stat2label(score?.beatmap?.od, od2ms(score?.beatmap?.od, mode), normalize(score?.beatmap?.od, od_max, od_min, 1, 1e-4), original?.od ?? 0, isDisplayOD),
-                bar_min: od_min,
-                bar_mid: od_mid,
-                bar_max: od_max,
-            }, {
-                ...LABELS.HP,
-                ...stat2label(score?.beatmap?.hp, '-', normalize(score?.beatmap?.hp, hp_max, hp_min, 1, 1e-4), original?.hp ?? 0, true),
-                bar_min: hp_min,
-                bar_mid: hp_mid,
-                bar_max: hp_max,
-            }],
-
-            index: index
-        };
-    },
+    score2componentE3: (score, original) => PanelGenerate.score2componentE3(score, original),
 
     score2componentE4: (score) => {
         return {
@@ -1108,39 +1022,68 @@ const PanelEGenerate = {
     },
 
     score2componentE6: (score, background) => {
+        const {
+            beatmap = {},
+            beatmapset = {},
+        } = score
+
+        const {
+            owners = [],
+            id: bid = 0
+        } = beatmap
+
+        const {
+            title = '',
+            title_unicode = '',
+            artist = '',
+            creator = '',
+            id: sid = 0
+        } = beatmapset
+
         /**
          * @type string
          */
         let creators
-        let difficulty = getKeyDifficulty(score?.beatmap)
-        const owners = score?.beatmap?.owners || []
+        let difficulty = getKeyDifficulty(beatmap)
 
         if (isEmptyArray(owners)) {
-            creators = score?.beatmapset?.creator || ''
+            creators = creator
         } else {
             creators = owners.map(o => {
-                return (o?.username || ('U' + (o?.id || '?')))
+                return (o?.username ?? ('U' + (o?.id ?? '?')))
             }).join(", ")
 
             difficulty = removeGuest(difficulty)
         }
 
         return {
-            title: score?.beatmapset?.title || '',
-            title_unicode: score?.beatmapset?.title_unicode || '',
-            artist: score?.beatmapset?.artist || '',
+            title: title,
+            title_unicode: title_unicode,
+            artist: artist,
             difficulty_name: difficulty,
-            bid: score?.beatmap?.id || 0,
-            sid: score?.beatmapset?.id || 0,
+            bid: bid,
+            sid: sid,
             background: background,
             creator: creators,
         }
     },
 
     score2componentE7: (score, attr) => {
-        const mode = getGameMode(score?.ruleset_id, 1)
+        const {
+            ruleset_id = 0,
+            max_combo: combo = 0,
+            beatmap: {
+                max_combo = 0,
+            },
+            pp = 0
+        } = score
 
-        const is_fc = (score?.max_combo / score?.beatmap?.max_combo) > 0.98 || mode === 'm' || mode === 't'
+        const {
+            full_pp = 0,
+            perfect_pp = 0
+        } = attr ?? {}
+
+        const is_fc = (max_combo > 0 && (combo / max_combo) > 0.98) || ruleset_id === 1 || ruleset_id === 3
 
         /**
          * C osu 的格式为：
@@ -1160,42 +1103,62 @@ const PanelEGenerate = {
          * }
          */
         return {
-            pp: score?.pp || 0,
-            full_pp: attr?.full_pp || 0,
-            perfect_pp: attr?.perfect_pp || 0,
+            pp: pp,
+            full_pp: full_pp,
+            perfect_pp: perfect_pp,
 
             aim_pp: attr?.pp_aim ?? attr?.aim ?? 0,
             spd_pp: attr?.pp_speed ?? attr?.speed ?? 0,
             acc_pp: attr?.pp_accuracy ?? attr?.accuracy ?? 0,
             reading_pp: attr?.pp_reading ?? attr?.reading ?? 0,
             fl_pp: attr?.pp_flashlight ?? attr?.flashlight ?? 0,
-            diff_pp: attr?.pp_difficulty ?? (mode === 't' ? Math.max((attr?.pp - attr?.accuracy ?? 0), 0) : 0) ?? 0,
+            diff_pp: attr?.pp_difficulty ?? (ruleset_id === 1 ? Math.max((attr?.pp - attr?.accuracy ?? 0), 0) : 0) ?? 0,
 
             is_fc: is_fc,
 
-            mode: mode,
+            ruleset_id: ruleset_id,
         }
     },
 
     score2componentE8: (score, is_lazer = false) => {
+        const {
+            total_score = 0,
+            legacy_total_score = 0,
+            mods = []
+        } = score
+
         return {
-            score: is_lazer ? (score?.total_score || 0) : (score?.legacy_total_score || 0), mods: score?.mods ?? [],
+            score: is_lazer ? total_score : legacy_total_score, mods: mods,
         }
     },
 
     score2componentE9: (score) => {
+        const {
+            maximum_statistics: {
+                perfect = 0,
+                legacy_combo_increase = 0
+            },
+
+            ruleset_id = 0,
+            beatmap: {
+                max_combo: beatmap_combo = 0,
+                count_spinners = 0,
+                convert = false
+            }
+        } = score
+
         /**
          * @type {number}
          */
         let max_combo;
 
-        if (score?.ruleset_id === 3) {
-            max_combo = (score?.maximum_statistics?.perfect ?? 0) + (score?.maximum_statistics?.legacy_combo_increase ?? 0)
-        } else if (score?.beatmap?.convert === true && score?.ruleset_id === 2) {
+        if (ruleset_id === 3) {
+            max_combo = perfect + legacy_combo_increase
+        } else if (convert === true && ruleset_id === 2) {
             // 老 bug，standard 转 catch 的谱面，转盘会被当成 1 个连击，但其实没有连击
-            max_combo = (score?.beatmap?.max_combo ?? 0) - (score?.beatmap?.count_spinners ?? 0)
+            max_combo = beatmap_combo - count_spinners
         } else {
-            max_combo = (score?.beatmap?.max_combo ?? 0)
+            max_combo = beatmap_combo
         }
 
         return {
@@ -1204,61 +1167,108 @@ const PanelEGenerate = {
     },
 
     score2componentE10: (score, attr, progress, is_lazer = false) => {
+        const {
+            statistics,
+            maximum_statistics,
+            ruleset_id = 0
+        } = score
+
+        const {
+            perfect = 0,
+            great = 0
+        } = statistics
+
+        const {
+            effective_miss_count = null
+        } = attr
+
+
         let ratio;
 
-        if (score.statistics.great === 0) {
-            if (score.statistics.perfect === 0) {
+        if (great === 0) {
+            if (perfect === 0) {
                 ratio = 0;
             } else {
                 ratio = Infinity;
             }
-        } else if (score.statistics.perfect === 0) {
+        } else if (perfect === 0) {
             ratio = 0;
         } else {
-            ratio = score.statistics.perfect / score.statistics.great
+            ratio = perfect / great
         }
 
         return {
-            statistics: score2Statistics(score.statistics, score.ruleset_id, is_lazer),
-            statistics_max: score2StatisticsMax(score.maximum_statistics, score.statistics, score.ruleset_id, is_lazer),
+            statistics: score2Statistics(statistics, ruleset_id, is_lazer),
+            statistics_max: score2StatisticsMax(maximum_statistics, statistics, ruleset_id, is_lazer),
 
             // 仅限 standard, taiko 使用
-            effective_miss_count: attr?.effective_miss_count,
+            effective_miss_count: effective_miss_count,
 
             // 仅限 catch 使用
-            statistics_full: (score.ruleset_id !== 2) ? [] : [score.maximum_statistics.great, score.maximum_statistics.large_tick_hit, score.maximum_statistics.small_tick_hit],
+            statistics_full: (ruleset_id !== 2)
+                ? []
+                : [maximum_statistics.great, maximum_statistics.large_tick_hit, maximum_statistics.small_tick_hit],
 
             // 仅限 mania 使用
             ratio: ratio,
-            mode: score.ruleset_id,
+            ruleset_id: ruleset_id,
         }
     },
 
     score2componentE10P: (score, progress) => {
-        /*
-        const s = score.statistics
-        const m = score.maximum_statistics
+        const {
+            type = '',
+            is_lazer = false,
+            max_statistics = {},
+            statistics = {},
+            mods = [],
+            total_score_without_mods = 0,
+            total_score = 0,
+            legacy_total_score = 0,
+            ruleset_id = 0,
+            legacy_rank = 'F',
+            passed = false,
+            max_combo: combo = 0,
+            accuracy = 0,
+            beatmap: {
+                max_combo = 0
+            }
+        } = score
 
-        const rainbow_rating = ((1100 * (s?.great || 0) + 550 * (s?.ok || 0) + 100 * ((s?.small_bonus || 0) + (s?.ignore_hit || 0))) / (1100 * (m?.great || 1))) * ((score?.rank !== 'F') ? 1 : (progress || 1))
-         */
+        if (ruleset_id !== 1) {
+            return {
+                ruleset_id: ruleset_id, rainbow_rank: '', rainbow_crown: ''
+            }
+        }
+
+        const {
+            great = 0,
+            ok = 0,
+            meh = 0,
+            miss = 0,
+            large_bonus = 0
+        } = statistics
+
+        const {
+            great: max_great = 0,
+        } = max_statistics
 
         let rainbow_rating
 
-        if (score.type === 'sb_score' || !score.is_lazer) {
+        if (type === 'sb_score' || !is_lazer) {
             // 对于 sb 服的分数，这里近似处理
+            const similar_combo = Math.max(max_combo ?? (max_great) ?? (great + ok + miss), 1)
 
-            const max_combo = Math.max(score?.beatmap?.max_combo ?? (score.max_statistics.great) ?? (score?.statistics?.great + score?.statistics?.ok + score?.statistics?.miss), 1)
+            const combo_rate = clamp((combo ?? 0) / (similar_combo ?? 1), 0, 1);
 
-            const combo_rate = clamp((score?.max_combo ?? 0) / (max_combo ?? 1), 0, 1);
-
-            rainbow_rating = (250000 * combo_rate + 750000 * Math.pow(score?.accuracy || 0, 3.6) + (score?.statistics?.large_bonus ?? 0) * 300) / 1000000
+            rainbow_rating = (250000 * combo_rate + 750000 * Math.pow(accuracy, 3.6) + large_bonus * 300) / 1000000
         } else {
-            rainbow_rating = (score?.total_score_without_mods > 0) ? (score.total_score_without_mods / 1000000) : (score?.total_score || score?.legacy_total_score || 0) / (1000000 * getModMultiplier(score?.mods ?? [], score?.ruleset_id || 0))
+            rainbow_rating = (total_score_without_mods > 0) ? (total_score_without_mods / 1000000) : (total_score || legacy_total_score || 0) / (1000000 * getModMultiplier(mods ?? [], ruleset_id || 0))
         }
 
         let rainbow_rank;
 
-        if (score.legacy_rank === 'X' || score.legacy_rank === 'XH') {
+        if (legacy_rank === 'X' || legacy_rank === 'XH') {
             rainbow_rank = 'object-score-kiwami-rainbow.png'
         } else if (rainbow_rating < 0.5 - 1e-4) {
             if (progress >= 0.98) {
@@ -1268,7 +1278,7 @@ const PanelEGenerate = {
                 // 投降
                 rainbow_rank = 'object-score-jimaodan.png'
             }
-        } else if (score.legacy_rank !== 'F' && ((score?.statistics?.miss === 1) || (score?.statistics?.miss === 0 && score?.statistics?.ok === 1))) {
+        } else if (legacy_rank !== 'F' && ((miss === 1) || (miss === 0 && ok === 1) || (miss === 0 && meh === 1))) {
             // liaoxingyao，性歌
             rainbow_rank = 'object-score-sei-rainbow.png'
         } else if (rainbow_rating < 0.6 - 1e-4) {
@@ -1289,10 +1299,10 @@ const PanelEGenerate = {
 
         let rainbow_crown;
 
-        if (score?.passed !== true || score.legacy_rank === 'F') {
+        if (passed !== true || legacy_rank === 'F') {
             rainbow_crown = 'object-score-don-failed.png'
-        } else if (score?.statistics?.miss === 0) {
-            if (score?.statistics?.ok === 0) {
+        } else if (miss === 0) {
+            if (ok === 0) {
                 rainbow_crown = 'object-score-crown-rainbow.png'
             } else {
                 rainbow_crown = 'object-score-crown-gold.png'
@@ -1302,32 +1312,9 @@ const PanelEGenerate = {
         }
 
         return {
-            mode: score?.ruleset_id, rainbow_rank: rainbow_rank, rainbow_crown: rainbow_crown
+            ruleset_id: ruleset_id, rainbow_rank: rainbow_rank, rainbow_crown: rainbow_crown
         }
     },
-}
-
-const stat2label = (stat, remark, progress, original, isDisplay) => {
-    const hasChanged = Math.abs(original - stat) > 0.1;
-
-    const stat_number = rounds(stat, 1)
-
-    const stat_b = stat_number.integer
-    const stat_m = stat_number.decimal
-
-    if (isDisplay) {
-        return {
-            remark: remark,
-            data_b: stat_b,
-            data_m: stat_m,
-            data_a: hasChanged ? (' [' + round(original, 1) + ']') : '',
-            bar_progress: progress,
-        }
-    } else {
-        return {
-            remark: '-', data_b: '-', data_m: '', data_a: '', bar_progress: null,
-        }
-    }
 }
 
 //老面板的newJudge

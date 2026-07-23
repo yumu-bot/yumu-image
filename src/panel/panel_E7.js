@@ -1,6 +1,5 @@
 import {
-    ar2ms, clampToInteger,
-    cs2px,
+    clampToInteger,
     floor,
     floors,
     getAvatar,
@@ -14,12 +13,9 @@ import {
     getPanelNameSVG,
     getSvgBody,
     isEmptyArray,
-    isNotEmptyArray, normalize,
-    od2ms,
+    isNotEmptyArray,
     readTemplate,
     removeGuest,
-    round,
-    rounds,
     setImage,
     setSvgBody,
     setText,
@@ -31,7 +27,7 @@ import {PanelGenerate} from "../util/panelGenerate.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {extra, getMultipleTextPath, poppinsBold, torus} from "../util/font.js";
 import {getRankColor, getStarRatingColor} from "../util/color.js";
-import {label_E5, LABELS} from "../component/label.js";
+import {label_E5} from "../component/label.js";
 import {drawLazerMods} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
@@ -229,16 +225,16 @@ export async function panel_E7(
 
     // 卡片定义
     const cardA2 = card_A2(await PanelGenerate.matchRating2CardA2(data.match, data.beatmap, true));
-    const componentE1 = component_E1(PanelEGenerate.score2componentE1(data.beatmap, mode));
-    const componentE2 = component_E2(PanelEGenerate.score2componentE2(data.beatmap, data.density, rank));
-    const componentE3 = component_E3(PanelEGenerate.score2componentE3(data.beatmap, data.original));
-    const componentE4 = component_E4(PanelEGenerate.score2componentE4(data.beatmap));
-    const componentE5 = component_E5(PanelEGenerate.score2componentE5(data.beatmap));
-    const componentE6 = component_E6(await PanelEGenerate.score2componentE6(data.beatmap));
-    const componentE8 = component_E8(PanelEGenerate.score2componentE8(data.mods));
-    const componentE11 = component_E11(await PanelEGenerate.score2componentE11(data.beatmap));
-    const componentE12 = component_E12(PanelEGenerate.score2componentE12(last_round, length));
-    const componentE13 = await component_E13(PanelEGenerate.score2componentE13(players));
+    const componentE1 = component_E1(PanelEGenerate.beatmap2componentE1(data.beatmap, mode));
+    const componentE2 = component_E2(PanelEGenerate.beatmap2componentE2(data.beatmap, data.density, rank));
+    const componentE3 = component_E3(PanelEGenerate.beatmap2componentE3(data.beatmap, data.original, mode));
+    const componentE4 = component_E4(PanelEGenerate.beatmap2componentE4(data.beatmap));
+    const componentE5 = component_E5(PanelEGenerate.beatmap2componentE5(data.beatmap));
+    const componentE6 = component_E6(await PanelEGenerate.beatmap2componentE6(data.beatmap));
+    const componentE8 = component_E8(PanelEGenerate.beatmap2componentE8(data.mods));
+    const componentE11 = component_E11(await PanelEGenerate.beatmap2componentE11(data.beatmap));
+    const componentE12 = component_E12(PanelEGenerate.beatmap2componentE12(last_round, length));
+    const componentE13 = await component_E13(PanelEGenerate.beatmap2componentE13(players));
 
 
     // 导入卡片
@@ -833,7 +829,7 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE1: (b, mode) => {
+    beatmap2componentE1: (b, mode) => {
         const sr = b?.difficulty_rating || 0;
         const name = getDifficultyIndex(b?.version, sr, mode)
 
@@ -844,7 +840,7 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE2: (b, density = [], rank) => {
+    beatmap2componentE2: (b, density = [], rank) => {
         return {
             density_arr: density,
             retry_arr: b?.retries || [],
@@ -862,127 +858,23 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE3: (b, original) => {
-        const mode = getGameMode(b.mode, 1);
+    beatmap2componentE3: (b, original, mode) =>
+        PanelGenerate.beatmap2componentE3(b, original, getGameMode(mode, -2)),
 
-        const bpm = floors(b?.bpm, 2)
-        const bpm_r = (b?.bpm > 0) ? (60000 / b?.bpm).toFixed(0) + 'ms' : '-';
-        const bpm_b = bpm.integer
-        const bpm_m = bpm.decimal
-        const bpm_p = normalize(b?.bpm, 270, 90, 1, 1e-4);
-
-        const length_r = Math.floor(b?.total_length / 60) + ':' + (b?.total_length % 60).toFixed(0).padStart(2, '0');
-        const length_b = Math.floor(b?.hit_length / 60) + ':';
-        const length_m = (b?.hit_length % 60).toFixed(0).padStart(2, '0');
-        const length_p = normalize(b?.hit_length, 270, 30, 1, 1e-4);
-
-        let isDisplayCS = true;
-        let isDisplayAR = true;
-        let isDisplayOD = true;
-
-        let cs_min = 2;
-        let cs_mid = 4;
-        let cs_max = 6;
-        let ar_min = 7.5;
-        let ar_mid = 9;
-        let ar_max = 10.5;
-        let od_min = 5.5;
-        let od_mid = 8;
-        let od_max = 10.5;
-        let hp_min = 4;
-        let hp_mid = 6;
-        let hp_max = 8;
-
-        switch (mode) {
-            case 't' : {
-                cs_min = 0;
-                cs_mid = 0;
-                cs_max = 0;
-                ar_min = 0;
-                ar_mid = 0;
-                ar_max = 0;
-                od_min = 4;
-                od_mid = 6;
-                od_max = 8;
-                isDisplayAR = false;
-                isDisplayCS = false;
-            }
-                break;
-            case 'c' : {
-                od_min = 0;
-                od_mid = 0;
-                od_max = 0;
-                isDisplayOD = false;
-            }
-                break;
-            case 'm' : {
-                cs_min = 4;
-                cs_mid = 6;
-                cs_max = 8;
-                ar_min = 0;
-                ar_mid = 0;
-                ar_max = 0;
-                hp_min = 7;
-                hp_mid = 8;
-                hp_max = 9;
-                isDisplayAR = false;
-            }
-                break;
-        }
-
-        return {
-            labels: [{
-                ...LABELS.BPM,
-                remark: bpm_r,
-                data_b: bpm_b,
-                data_m: bpm_m,
-                data_a: '',
-                bar_progress: bpm_p,
-            }, {
-                ...LABELS.LENGTH,
-                remark: length_r,
-                data_b: length_b,
-                data_m: length_m,
-                data_a: '',
-                bar_progress: length_p,
-            }, {
-                ...((mode === 'm') ? LABELS.KEY : LABELS.CS), ...stat2label(b?.cs, cs2px(b?.cs, mode), normalize(b?.cs, cs_max, cs_min, 1, 1e-4), original?.cs ?? 0, isDisplayCS),
-                bar_min: cs_min,
-                bar_mid: cs_mid,
-                bar_max: cs_max,
-            }, {
-                ...LABELS.AR, ...stat2label(b?.ar, ar2ms(b?.ar, mode), normalize(b?.ar, ar_max, ar_min, 1, 1e-4), original?.ar ?? 0, isDisplayAR),
-                bar_min: ar_min,
-                bar_mid: ar_mid,
-                bar_max: ar_max,
-            }, {
-                ...LABELS.OD, ...stat2label(b?.od, od2ms(b?.od, mode), normalize(b?.od, od_max, od_min, 1, 1e-4), original?.od ?? 0, isDisplayOD),
-                bar_min: od_min,
-                bar_mid: od_mid,
-                bar_max: od_max,
-            }, {
-                ...LABELS.HP, ...stat2label(b?.hp, '-', normalize(b?.hp, hp_max, hp_min, 1, 1e-4), original?.hp ?? 0, true),
-                bar_min: hp_min,
-                bar_mid: hp_mid,
-                bar_max: hp_max,
-            }],
-        };
-    },
-
-    score2componentE4: (b) => {
+    beatmap2componentE4: (b) => {
         return {
             image: getMapStatusImage(b?.ranked)
         }
     },
 
-    score2componentE5: (b) => {
+    beatmap2componentE5: (b) => {
         return {
             favorite: b?.beatmapset?.favourite_count || 0,
             playcount: b?.beatmapset?.play_count || 0,
         }
     },
 
-    score2componentE6: async (b) => {
+    beatmap2componentE6: async (b) => {
         let creators
         let difficulty = getKeyDifficulty(b)
         const owners = b?.owners || []
@@ -1009,19 +901,19 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE8: (mods) => {
+    beatmap2componentE8: (mods) => {
         return {
             mods: mods,
         }
     },
 
-    score2componentE11: async (b) => {
+    beatmap2componentE11: async (b) => {
         return {
             background: await getDiffBackground(b),
         }
     },
 
-    score2componentE12: (event = {}, player_count = 1) => {
+    beatmap2componentE12: (event = {}, player_count = 1) => {
         let scoring_type;
         switch (event?.game?.scoring_type) {
             case "score":
@@ -1074,33 +966,9 @@ const PanelEGenerate = {
         }
     },
 
-    score2componentE13: (players) => {
+    beatmap2componentE13: (players) => {
         return {
             players: players
         }
     },
-}
-
-const stat2label = (stat, remark, progress, original, isDisplay) => {
-    const hasChanged = Math.abs(original - stat) > 0.1;
-
-    const stat_number = rounds(stat, 1)
-
-    const stat_b = stat_number.integer
-    const stat_m = stat_number.decimal
-
-    if (isDisplay) return {
-        remark: remark,
-        data_b: stat_b,
-        data_m: stat_m,
-        data_a: hasChanged ? (' [' + round(original, 1) + ']') : '',
-        bar_progress: progress,
-    }
-    else return {
-        remark: '-',
-        data_b: '-',
-        data_m: '',
-        data_a: '',
-        bar_progress: null,
-    }
 }
