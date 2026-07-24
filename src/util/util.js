@@ -2215,12 +2215,29 @@ const _getTimeByDHMS = (seconds = 0, has_whitespace = false) => {
     }
 }
 
-export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode = 'osu', mods = []) {
-    const m = getGameMode(mode, 1)
+const iidx = ["Black Another", "Beginner", "Normal", "Hyper", "Another", "Leggendaria"]
+const sdvx = ["Basic", "Novice", "Advanced", "Exhaust", "Infinite", "Maximum", "Ultimate", "Gravity", "Heavenly", "Vivid", "Exceed", "Nabla"]
+const sdvx_short = ["BSC", "NOV", "ADV", "EXH", "INF", "MXM", "ULT", "GRV", "HVN", "VVD", "XCD", "NBL"]
+
+const standard = ["Easy", "Normal", "Hard", "Insane", "Lunatic", "Extra", "Extreme", "Expert", "Master", "Ultra"]
+
+const taiko = ["Inner Oni", "Ura Oni", "RASHOMON", "Hell Oni", "Kantan", "Futsuu", "Muzukashii", "Oni"]
+const fruits = ["Cup", "Salad", "Platter", "Rain", "Overdose", "Deluge", "Cataclysm"]
+const mania = ["EZ", "NM", "HD", "MX", "SC", "SHD"]
+
+/**
+ * 获取难度指引
+ * @param difficulty_name
+ * @param star_rating
+ * @param ruleset_id
+ * @param mods
+ * @return {*|string}
+ */
+export function getDifficultyIndex(difficulty_name = '', star_rating = 0, ruleset_id = 0, mods = []) {
+    const ruleset = getGameMode(ruleset_id, -2)
 
     let name
 
-// 1. 依然 split 变成数组，这样可以规避无关文本的干扰
     const difficulties = (difficulty_name || "")
         .replaceAll("0", "o")
         .replaceAll("1", "i")
@@ -2233,17 +2250,6 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
         .toUpperCase()
         .trim()
         .split(/\s+/)
-
-    const iidx = ["Black Another", "Beginner", "Normal", "Hyper", "Another", "Leggendaria"]
-    const sdvx = ["Basic", "Novice", "Advanced", "Exhaust", "Infinite", "Gravity", "Maximum", "Heavenly", "Vivid", "ULTIMATE", "Exceed"]
-    const sdvx_short = ["BSC", "NOV", "ADV", "EXH", "INF", "GRV", "MXM", "HVN", "VVD", "ULT", "XCD"]
-
-    const standard = ["Easy", "Normal", "Hard", "Insane", "Lunatic", "Extra", "Extreme", "Expert", "Master", "Ultra"]
-
-    // 注意：有组合词的（Inner Oni）依旧放在单字（Oni）前面优先匹配
-    const taiko = ["Inner Oni", "Ura Oni", "Hell Oni", "Kantan", "Futsuu", "Muzukashii", "Oni"]
-    const fruits = ["Cup", "Salad", "Platter", "Rain", "Overdose", "Deluge"]
-    const mania = ["EZ", "NM", "HD", "MX", "SC", "SHD"]
 
     // 2. 抽取一个通用的数组匹配函数，支持多单词难度
     function findMatch(diffList, wordsArray) {
@@ -2279,89 +2285,48 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, mode =
         }
 
         // 3. 各模式专属匹配
-        if (m === 'o') {
-            const res = findMatch(standard, difficulties)
-            if (res) return res
-        }
-
-        if (m === 't') {
-            const res = findMatch(taiko, difficulties)
-            if (res) return res // 此时能完美识别出 INNER ONI
-        }
-
-        if (m === 'c') {
-            const res = findMatch(fruits, difficulties)
-            if (res) return res
-        }
-
-        if (m === 'm') {
-            const res = findMatch(mania, difficulties)
-            if (res) return res
-        }
+        const ruleset_map = [standard, taiko, fruits, mania];
+        const res = findMatch(ruleset_map[ruleset], difficulties);
+        if (res) return res;
     }
 
-    /*
-
-    for (const i in arcaea) {
-        if (difficulty.includes(arcaea[i].toUpperCase()) || difficulty.includes(arcaea_short[i].toUpperCase()) {
-            return arcaea_short[i].toUpperCase()
-        }
-    }
-
-     */
-
-    switch (m) {
-        case "t": {
-            if (star_rating < 0.1) name = 'NEW';
-            else if (star_rating < 2) name = 'KANTAN';
-            else if (star_rating < 2.8) name = 'FUTSUU';
-            else if (star_rating < 4) name = 'MUZUKASHII';
-            else if (star_rating < 5.3) name = 'ONI';
-            else if (star_rating < 6.5) name = 'INNER ONI';
-            else if (star_rating < 8) name = 'URA ONI';
-            else if (star_rating >= 8) name = 'HELL ONI';
-            else name = 'UNKNOWN';
-            break;
-        }
-        case "c": {
-            if (star_rating < 0.1) name = 'NEW';
-            else if (star_rating < 1.8) name = 'CUP';
-            else if (star_rating < 2.5) name = 'SALAD';
-            else if (star_rating < 3.5) name = 'PLATTER';
-            else if (star_rating < 4.6) name = 'RAIN';
-            else if (star_rating < 6) name = 'OVERDOSE';
-            else if (star_rating < 8) name = 'DELUGE';
-            else if (star_rating >= 8) name = 'DELUGE';
-            else name = 'UNKNOWN';
-            break;
-        }
-        case "m": {
-            if (star_rating < 0.1) name = 'NEW';
-            else if (star_rating < 2) name = 'EZ';
-            else if (star_rating < 2.8) name = 'NM';
-            else if (star_rating < 4) name = 'HD';
-            else if (star_rating < 5.3) name = 'MX';
-            else if (star_rating < 6.5) name = 'SC';
-            else if (star_rating < 8) name = 'SHD';
-            else if (star_rating >= 8) name = 'EX';
-            else name = 'UNKNOWN';
-            break;
-        }
-        default: {
-            if (star_rating < 0.1) name = 'NEW';
-            else if (star_rating < 2) name = 'EASY';
-            else if (star_rating < 2.8) name = 'NORMAL';
-            else if (star_rating < 4) name = 'HARD';
-            else if (star_rating < 5.3) name = 'INSANE';
-            else if (star_rating < 6.5) name = 'EXPERT';
-            else if (star_rating < 8) name = 'MASTER';
-            else if (star_rating >= 8) name = 'ULTRA';
-            else name = 'UNKNOWN';
-            break;
-        }
-    }
+    name = getRatingName(ruleset, star_rating);
 
     return name
+}
+
+const RULESETS = {
+    // case 1: Taiko 难度
+    1: {
+        thresholds: [0.1, 1.2, 2.0, 2.8, 4.0, 5.3, 6.5, 8.0],
+        names: ['-', 'SHOKYUU', 'KANTAN', 'FUTSUU', 'MUZUKASHII', 'ONI', 'INNER ONI', 'HELL ONI', 'RASHOMON']
+    },
+    // case 2: Catch 难度 (区间阈值不同)
+    2: {
+        thresholds: [0.1, 1.0, 1.8, 2.5, 3.5, 4.6, 6.0, 8.0],
+        names: ['-', 'SEED', 'CUP', 'SALAD', 'PLATTER', 'RAIN', 'OVERDOSE', 'DELUGE', 'CATACLYSM']
+    },
+    // case 3: Mania 难度
+    3: {
+        thresholds: [0.1, 1.2, 2.0, 2.8, 4.0, 5.3, 6.5, 8.0],
+        names: ['-', 'BG', 'EZ', 'NM', 'HD', 'MX', 'SC', 'SHD', 'EX']
+    },
+    // default: Standard 难度
+    default: {
+        thresholds: [0.1, 1.2, 2.0, 2.8, 4.0, 5.3, 6.5, 8.0],
+        names: ['-', 'BEGINNER', 'EASY', 'NORMAL', 'HARD', 'INSANE', 'EXPERT', 'EXTREME', 'ULTIMATE']
+    }
+};
+
+function getRatingName(ruleset_id = 0, star_rating = 0) {
+    if (isNaN(star_rating)) return 'UNKNOWN';
+
+    const config = RULESETS[ruleset_id] || RULESETS.default;
+    const { thresholds, names } = config;
+
+    const index = thresholds.findIndex(t => star_rating < t);
+
+    return index === -1 ? names[names.length - 1] : names[index];
 }
 
 /**

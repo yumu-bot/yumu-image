@@ -387,25 +387,27 @@ const component_E1 = async (
     return svg;
 }
 
-const component_E2 = (
-    data = {
-        name: 'insane',
-        star: 0.0,
-        mode: 'osu',
-    }
-) => {
+const component_E2 = (data) => {
     let svg = `
           <g id="Text_OE2">
           </g>
     `
 
+    const {
+        name = '',
+        star = 0.0,
+        ruleset_id = 0,
+    } = data
+
     const reg_text = /(?<=<g id="Text_OE2">)/;
 
     const rrect = PanelDraw.Rect(0, 0, 420, 80, 40, '#382E32', 1)
 
-    const ruleset = extra.getTextPath(getGameMode(data.mode, -1), 12 - 2, 70 - 6, 68, 'left baseline', getStarRatingColor(data.star))
+    const ruleset_unicode = getGameMode(ruleset_id, -1)
 
-    const star_floor = floors(data.star, 2)
+    const ruleset = extra.getTextPath(ruleset_unicode, 12 - 2, 70 - 6, 68, 'left baseline', getStarRatingColor(star))
+
+    const star_floor = floors(star, 2)
 
     const text_arr = [
         {
@@ -422,7 +424,7 @@ const component_E2 = (
         },
         {
             font: "poppinsBold",
-            text: ' / ' + data?.name,
+            text: ' / ' + name,
             size: 30,
             color: '#fff',
         },
@@ -962,14 +964,23 @@ const PanelEGenerate = {
     },
 
     score2componentE2: (score) => {
-        const sr = score?.beatmap.difficulty_rating || 0;
-        const mode = score?.mode || 'osu';
-        const name = getDifficultyIndex(score?.beatmap?.version, sr, mode, score?.mods)
+        const {
+            beatmap,
+            ruleset_id = 0,
+            mods = []
+        } = score
+
+        const {
+            difficulty_rating = 0,
+            version = ''
+        } = beatmap
+
+        const name = getDifficultyIndex(version, difficulty_rating, ruleset_id, mods)
 
         return {
             name: name,
-            star: sr,
-            mode: mode,
+            star: difficulty_rating,
+            ruleset_id: ruleset_id,
         }
     },
 

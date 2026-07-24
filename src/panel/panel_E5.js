@@ -983,27 +983,55 @@ const component_E10P = (data) => {
 // 私有转换方式
 const PanelEGenerate = {
     score2componentE1: (score) => {
-        const sr = score?.beatmap?.difficulty_rating ?? 0;
-        const original = score?.beatmap?.original_rating ?? 0;
-        const mode = score?.mode || 'osu';
-        const name = getDifficultyIndex(score?.beatmap?.version, sr, mode, score?.mods)
+        const {
+            mods = [],
+            beatmap = {},
+            ruleset_id = 0
+        } = score
+
+        const {
+            difficulty_rating = 0,
+            original_rating = 0,
+            version = ""
+        } = beatmap
+
+        const name = getDifficultyIndex(version, difficulty_rating, ruleset_id, mods)
 
         return {
-            name: name, star: sr, original: original, mode: mode,
+            name: name, star: difficulty_rating, original: original_rating, ruleset_id: ruleset_id,
         }
     },
 
-    score2componentE2: (score, density = [], progress = 0) => {
+    score2componentE2: (score, density, progress) => {
+        // 先解构出需要的值，设置默认值
+        const {
+            beatmap = {},
+            beatmapset = {}
+        } = score || {};
+
+        const {
+            retries = [],
+            fails = [],
+            difficulty_rating: star = 0,
+            passcount: pass = 0,
+            playcount: play = 0,
+            rating: rating_from_beatmap = 0
+        } = beatmap;
+
+        const {
+            rating = 0
+        } = beatmapset;
+
         return {
-            density_arr: density, retry_arr: score?.beatmap?.retries || [], fail_arr: score?.beatmap?.fails || [],
-
-            star: score?.beatmap?.difficulty_rating || 0,
-
-            rating: score?.beatmapset?.rating ?? score?.beatmap?.beatmapset?.rating ?? 0,
-
-            pass: score?.beatmap?.passcount || 0, play: score?.beatmap?.playcount || 0, progress: progress,
-
-            color: getRankColor(score.legacy_rank),
+            density_arr: density ?? [],
+            retry_arr: retries,
+            fail_arr: fails,
+            star,
+            rating: rating || rating_from_beatmap || 0,
+            pass,
+            play,
+            progress: progress ?? 0,
+            color: getRankColor(score?.legacy_rank || ''),
         }
     },
 

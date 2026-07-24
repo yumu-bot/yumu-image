@@ -796,12 +796,16 @@ const component_E11 = (
 // 私有转换方式
 const PanelEGenerate = {
     beatmap2componentE1: (b, mode) => {
-        const sr = b?.difficulty_rating || 0;
-        const name = getDifficultyIndex(b?.version, sr, mode)
+        const {
+            difficulty_rating = 0,
+            version = ""
+        } = b
+
+        const name = getDifficultyIndex(version, difficulty_rating, mode)
 
         return {
             name: name,
-            star: sr,
+            star: difficulty_rating,
             mode: mode,
         }
     },
