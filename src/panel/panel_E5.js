@@ -790,7 +790,7 @@ const component_E7 = (data) => {
                 const rect = PanelDraw.Rect(15, 105, accumulated_width, 30, 15, grad, 1);
                 svg = setText(svg, rect, clip);
 
-                const text_path = getChildPPPath(val, 15, 128, 24, accumulated_width, width, 10);
+                const text_path = getChildPPPath(pp_str, 15, 128, 24, accumulated_width, width, 10);
                 texts.push(text_path);
             });
 
