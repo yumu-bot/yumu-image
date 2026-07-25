@@ -334,6 +334,24 @@ export function isNotEmptyArray(arr = []) {
 }
 
 /**
+ * 将数值限制在 [min, max] 范围内，若原始值 <= 0 则直接返回 0
+ * @param {number|string} val - 原始数值 (如 raw_width)
+ * @param {number} max - 最大值限制
+ * @param {number} min - 最小值限制
+ * @returns {number}
+ */
+export function clamp(val, max = 1, min = 0) {
+    const num = Number(val);
+    if (isNaN(num)) return 0;
+
+    // 自动矫正最大值和最小值（确保 min <= max）
+    const real_min = Math.min(max, min);
+    const real_max = Math.max(max, min);
+
+    return Math.min(real_max, Math.max(real_min, num));
+}
+
+/**
  * 将数值限制在 [min, max] 范围内并取整，若原始值 <= 0 则直接返回 0
  * @param {number|string} val - 原始数值 (如 raw_width)
  * @param {number} max - 最大值限制
@@ -341,13 +359,7 @@ export function isNotEmptyArray(arr = []) {
  * @returns {number}
  */
 export function clampToInteger(val, max = 1, min = 0) {
-    if (!val || val <= 0) return 0;
-    return Math.round(Math.min(max, Math.max(min, val)));
-}
-
-export function clamp(val, max = 1, min = 0) {
-    if (!val || val <= 0) return 0;
-    return Math.min(max, Math.max(min, val));
+    return Math.round(clamp(val, max, min));
 }
 
 /**

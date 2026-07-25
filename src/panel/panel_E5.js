@@ -1290,7 +1290,7 @@ const PanelEGenerate = {
             // 对于 sb 服的分数，这里近似处理
             const similar_combo = Math.max(max_combo ?? (max_great) ?? (great + ok + miss), 1)
 
-            const combo_rate = clamp((combo ?? 0) / (similar_combo ?? 1), 0, 1);
+            const combo_rate = clamp((combo ?? 0) / (similar_combo ?? 1), 1, 0);
 
             rainbow_rating = (250000 * combo_rate + 750000 * Math.pow(accuracy, 3.6) + large_bonus * 300) / 1000000
         } else {
