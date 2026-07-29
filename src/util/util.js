@@ -1780,6 +1780,23 @@ export const averageArrayToFixedLength = (data, length = 1) => {
     return result;
 };
 
+const MODE_TO_RULESET_ID = {
+    'osu': 0,
+    'o': 0,
+    '0': 0,
+    'taiko': 1,
+    't': 1,
+    '1': 1,
+    'catch': 2,
+    'fruits': 2,  // catch 的别名
+    'c': 2,
+    'f': 2,
+    '2': 2,
+    'mania': 3,
+    'm': 3,
+    '3': 3,
+};
+
 const NUM_TO_MODE = {
     '-1': 'default',
     '0': 'osu',
@@ -1809,7 +1826,9 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
         if (level === -2) return mode;
         mode_str = NUM_TO_MODE[mode] || 'osu';
     } else if (typeof mode === 'string') {
-        mode_str = mode.toLowerCase();
+        const ruleset_id = (MODE_TO_RULESET_ID[mode] ?? -1)
+
+        mode_str = NUM_TO_MODE[ruleset_id] ?? mode.toLowerCase();
     } else {
         return default_mode;
     }
