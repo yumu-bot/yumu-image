@@ -1,6 +1,6 @@
 # 必读
 
-**你配置 EXPORT_FILE 了吗？**
+**你配置 [EXPORT_FILE](https://github.com/yumu-bot/yumu-image/releases/download/v0.8.2/ExportFileV3.zip) 了吗？**
 
 **下载解压 release 里提供的 ExportFileV3.zip，并解压到任意一个目录，并在启动的时候给程序指定它的位置！**
 
