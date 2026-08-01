@@ -2307,8 +2307,8 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, rulese
 
         // 2. SDVX 匹配
         for (const i in sdvx) {
-            const su = sdvx[i].toUpperCase()
-            const tu = sdvx_short[i].toUpperCase()
+            const su = sdvx[i]?.toUpperCase()
+            const tu = sdvx_short[i]?.toUpperCase()
             // 考虑到 sdvx 都是单字，直接用原有的逻辑或者统一用 findMatch 都可以
             if (findMatch([sdvx[i]], difficulties)) {
                 return tu
