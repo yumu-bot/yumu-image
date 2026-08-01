@@ -6,7 +6,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {getMaimaiDXStarColor} from "../util/maimai.js";
 import {isASCII, isNotBlankString} from "../util/text.js";
 
-// maimai / CHUNITHM 多成绩面板
+// maimai / Chunithm 多成绩面板
 export function card_I02(data = {
     background: '',
     cover: '',

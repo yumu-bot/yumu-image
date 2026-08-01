@@ -16,7 +16,7 @@ import {card_A1} from "../card/card_A1.js";
 import {card_I3} from "../card/card_I3.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {getRandomBannerPath} from "../util/mascotBanner.js";
-import {getCHUNITHMCover, getCHUNITHMDifficultyColor, getCHUNITHMRank, getCHUNITHMRankBG,} from "../util/maimai.js";
+import {getChunithmCover, getChunithmDifficultyColor, getChunithmRank, getChunithmRankBG,} from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {torusBold} from "../util/font.js";
 import {colorArray} from "../util/color.js";
@@ -27,7 +27,7 @@ export const router = createImageRouter(panel_MA2);
 export const router_svg = createSvgRouter(panel_MA2);
 
 /**
- * CHUNITHM 多成绩列表。
+ * Chunithm 多成绩列表。
  * @param data
  * @return {Promise<string>}
  */
@@ -219,12 +219,12 @@ export async function panel_MA2(data = {
 
 /*
 async function chuScore2CardI(score) {
-    const rate = getCHUNITHMRank(score?.score || 0)
+    const rate = getChunithmRank(score?.score || 0)
 
     const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
     const score_text = position + (score?.score || 0).toString()
 
-    const difficulty_color = getCHUNITHMDifficultyColor(score?.level_index)
+    const difficulty_color = getChunithmDifficultyColor(score?.level_index)
 
     const rating_max = (score?.ds || 0) + 2.15
     const rating_max_text = score?.score >= 1009000 ? ('') : ('[' + getRoundedNumberStr(rating_max, 3) + '] ')
@@ -232,8 +232,8 @@ async function chuScore2CardI(score) {
     const too_bright = (score?.level_index || 0) === 1;
 
     return {
-        background: getCHUNITHMRankBG(score?.score || 0),
-        cover: await getCHUNITHMCover(score?.mid || 0),
+        background: getChunithmRankBG(score?.score || 0),
+        cover: await getChunithmCover(score?.mid || 0),
         rank: getImageFromV3('Chunithm', `object-score-${rate}2.png`),
         type: '',
 
@@ -264,12 +264,12 @@ async function chuScore2CardI(score) {
 }
 
 async function chuScore2CardI2(score) {
-    const rate = getCHUNITHMRank(score?.score || 0)
+    const rate = getChunithmRank(score?.score || 0)
 
     const position = score?.position >= 1 ? ('#' + score.position + ' // ') : ''
     const score_text = (score?.score || 0).toString()
 
-    const difficulty_color = getCHUNITHMDifficultyColor(score?.level_index)
+    const difficulty_color = getChunithmDifficultyColor(score?.level_index)
 
     const rating = score?.ra || 0
     const rating_max = (score?.ds || 0) + 2.15
@@ -280,8 +280,8 @@ async function chuScore2CardI2(score) {
     const too_bright = (score?.level_index || 0) === 1;
 
     return {
-        background: getCHUNITHMRankBG(score?.score || 0),
-        cover: await getCHUNITHMCover(score?.mid || 0),
+        background: getChunithmRankBG(score?.score || 0),
+        cover: await getChunithmCover(score?.mid || 0),
         rank: getImageFromV3('Chunithm', `object-score-${rate}2.png`),
         type: '',
         level: 0,
@@ -331,11 +331,11 @@ async function chuScore2CardI3(score = {
     title: 'TECHNOPOLIS 2085',
     alias: '2085'
 }) {
-    const rate = getCHUNITHMRank(score?.score || 0)
+    const rate = getChunithmRank(score?.score || 0)
 
     const score_round = rounds(score?.score || 0, -4, 0)
 
-    const difficulty_color = getCHUNITHMDifficultyColor(score?.level_index)
+    const difficulty_color = getChunithmDifficultyColor(score?.level_index)
 
     const rating = score?.ra || 0
     const rating_max = (score?.ds || 0) + 2.15
@@ -352,8 +352,8 @@ async function chuScore2CardI3(score = {
     const too_bright = (score?.level_index || 0) === 1;
 
     return {
-        background: getCHUNITHMRankBG(score?.score || 0),
-        cover: await getCHUNITHMCover(score?.mid || 0),
+        background: getChunithmRankBG(score?.score || 0),
+        cover: await getChunithmCover(score?.mid || 0),
         rank: getImageFromV3('Chunithm', `object-score-${rate}2.png`),
         type: '',
         level: 0,

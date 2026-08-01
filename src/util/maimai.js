@@ -376,44 +376,67 @@ export function getMaimaiDifficultyName(index = 0, is_utage = false) {
     }
 }
 
+const difficulty_color = [
+    '#009944',
+    '#fff100',
+    '#d32f2f',
+    '#9922ee',
+    '#f7d8fe'
+]
+
+const difficulty_colors = [
+    colorArray.green,
+    colorArray.yellow,
+    colorArray.red,
+    colorArray.purple,
+    colorArray.sakura,
+    colorArray.magenta
+
+    // ['#009944', '#109900'],
+    // ['#fff100', '#ffbb00'],
+    // ['#f44336', '#f43681'],
+    // ['#9922ee', '#cc22ee'],
+    // ['#f7d8fe', '#fed8ec'],
+    // ['#d46da1', '#d46d60'] // 默认颜色
+]
+
+const utage_color = '#d46da1'
+
 export function getMaimaiDifficultyColor(index = 0, is_utage = false) {
-    if (is_utage) return '#d46da1'
-
-    switch (index) {
-        case 0: return '#009944'
-        case 1: return '#fff100'
-        case 2: return '#d32f2f'
-        case 3: return '#9922ee'
-        case 4: return '#f7d8fe'
-        default: return '#d46da1'
-    }
+    return is_utage ? utage_color : (difficulty_color[index] ?? utage_color)
 }
-
-
 
 export function getMaimaiDifficultyColors(index = 0, is_utage = false) {
-    const colors = [
-        colorArray.green,
-        colorArray.yellow,
-        colorArray.red,
-        colorArray.purple,
-        colorArray.sakura,
-        colorArray.magenta
 
-        // ['#009944', '#109900'],
-        // ['#fff100', '#ffbb00'],
-        // ['#f44336', '#f43681'],
-        // ['#9922ee', '#cc22ee'],
-        // ['#f7d8fe', '#fed8ec'],
-        // ['#d46da1', '#d46d60'] // 默认颜色
-    ]
+    if (is_utage) return difficulty_colors[5]
 
-    if (is_utage) return colors[5]
-
-    return colors[index] || colors[5]
+    return difficulty_colors[index] || difficulty_colors[5]
 }
 
-export async function getCHUNITHMCover(song_id = 0) {
+const thresholds = [
+    { min: 100.5, rank: 'sssp' },
+    { min: 100.0, rank: 'sss' },
+    { min: 99.0, rank: 'ssp' },
+    { min: 98.0, rank: 'ss' },
+    { min: 97.0, rank: 'sp' },
+    { min: 94.0, rank: 's' },
+    { min: 90.0, rank: 'aaa' },
+    { min: 85.0, rank: 'aa' },
+    { min: 80.0, rank: 'a' },
+    { min: 75.0, rank: 'bbb' },
+    { min: 70.0, rank: 'bb' },
+    { min: 65.0, rank: 'b' },
+    { min: 60.0, rank: 'c' },
+    { min: 0, rank: 'd' },
+]
+
+export function getMaimaiRankFromAchievements(achievements = 101) {
+    const rate = Math.min(Math.max(achievements, 0), 101)
+
+    return thresholds.find(t => rate >= t.min)?.rank ?? 'd'
+}
+
+export async function getChunithmCover(song_id = 0) {
     const song = song_id.toString()
     const path = getImageFromV3('Chunithm', 'Cover', `${song}.png`);
 
@@ -421,7 +444,7 @@ export async function getCHUNITHMCover(song_id = 0) {
         return path
     } else if (song_id > 0) {
 
-        return getImageFromV3('Chunithm', 'default.png')
+        //return getImageFromV3('Chunithm', 'default.png')
         const lxns = `https://assets2.lxns.net/chunithm/jacket/${song}.png`
 
         return await downloadWithCurl(lxns, path, getImageFromV3('Chunithm', 'default.png'))
@@ -430,10 +453,10 @@ export async function getCHUNITHMCover(song_id = 0) {
     }
 }
 
-export function getCHUNITHMRankBG(score = 0) {
+export function getChunithmRankBG(score = 0) {
     let out;
 
-    switch (getCHUNITHMRank(score)) {
+    switch (getChunithmRank(score)) {
         case 'sssp':
             out = 'object-score-backimage-PP.webp';
             break;
@@ -472,7 +495,7 @@ export function getCHUNITHMRankBG(score = 0) {
     return getImageFromV3(out)
 }
 
-export function getCHUNITHMRating(score = 0, difficulty = 0) {
+export function getChunithmRating(score = 0, difficulty = 0) {
     if (typeof score != "number") return 0
 
     let rating
@@ -491,7 +514,7 @@ export function getCHUNITHMRating(score = 0, difficulty = 0) {
     return Math.floor(Math.max(rating, 0) * 100) / 100
 }
 
-export function getCHUNITHMRank(score = 0) {
+export function getChunithmRank(score = 0) {
     if (typeof score != "number") return 'd'
 
     if (score >= 1009000) return 'sssp'
@@ -509,7 +532,7 @@ export function getCHUNITHMRank(score = 0) {
     else return 'd'
 }
 
-export function getCHUNITHMRatingBG(rating = 0) {
+export function getChunithmRatingBG(rating = 0) {
     let background;
 
     if (rating < 4) background = 'object-score-backimage-A.webp'
@@ -527,7 +550,7 @@ export function getCHUNITHMRatingBG(rating = 0) {
 }
 
 
-export function getCHUNITHMDifficultyColor(index = 0) {
+export function getChunithmDifficultyColor(index = 0) {
     switch (index) {
         case 1: return '#fff100'
         case 2: return '#d32f2f'

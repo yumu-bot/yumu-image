@@ -24,7 +24,7 @@ import {
     getMaimaiDXStarColor,
     getMaimaiDXStarLevel,
     getMaimaiMaximumRating,
-    getMaimaiRankBG,
+    getMaimaiRankBG, getMaimaiRankFromAchievements,
     getMaimaiType,
     isMaimaiMaximumRating,
 } from "../util/maimai.js";
@@ -223,11 +223,16 @@ async function applyScore(song = {}, scores = [{}]) {
 }
 
 async function maiScore2CardG(song = {}, index = 0, score = {}) {
-    const has_score = score?.ra > 0 || score?.achievements > 0;
+    const has_score = score?.achievements > 0;
 
-    const background = getMaimaiRankBG(score?.rate || 'd')
+    const double_cabinet = score?.title?.toString().includes('[協]') === true
+    const double = double_cabinet ? 2 : 1
+
+    const rank = getMaimaiRankFromAchievements((score?.achievements ?? 0) / double)
+
+    const background = getMaimaiRankBG(rank)
     const cover = await getMaimaiCover(song?.song_id || 0)
-    const overlay = score?.rate === "sssp" ? getImageFromV3('avatar-foil.png') : ''
+    const overlay = rank === "sssp" ? getImageFromV3('avatar-foil.png') : ''
 
     const type = getMaimaiType(song?.type)
 
@@ -272,7 +277,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     }
     sync = getImageFromV3('Maimai', sync)
 
-    const rank = has_score ? getImageFromV3('Maimai', `object-score-${score?.rate || 'd'}2.png`) : ''
+    const rank_image = has_score ? getImageFromV3('Maimai', `object-score-${rank}2.png`) : ''
 
     const difficulty_name = getMaimaiDifficultyName(index, song?.is_utage)
     const difficulty = song?.ds[index]
@@ -290,7 +295,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     const additional_b = has_score ? rating.toString() : ''
     const additional_m = has_score ? (isMaimaiMaximumRating(rating, difficulty) ? '' : ' [' + max_rating + ']') : '[' + max_rating + ']'
 
-    const div = (score?.dxScore || 0) / (score?.max || 1)
+    const div = (score?.dxScore || 0) / (score?.max || 1) / double
 
     let rrect1_color1
     let rrect1_color2
@@ -329,9 +334,9 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
         rrect1_base_opacity = 0.1
     }
 
-    const stars = drawStars(score?.dxScore, score?.max)
+    const stars = drawStars(score?.dxScore, score?.max * double)
 
-    const component = component_G1(song?.charts[index]?.notes, score?.achievements, score?.fc)
+    const component = component_G1(song?.charts[index]?.notes, score?.achievements, score?.fc, double_cabinet)
 
     return {
         background: background,
@@ -340,7 +345,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
         type: type, //dx 图片
         icon1: combo,
         icon2: sync,
-        icon3: rank,
+        icon3: rank_image,
 
         label1: difficulty_name,
         label1_size: 36,
@@ -377,7 +382,7 @@ async function maiScore2CardG(song = {}, index = 0, score = {}) {
     }
 }
 
-const component_G1 = (notes = [], achievements = 0, fc = "") => {
+const component_G1 = (notes = [], achievements = 0, fc = "", double_cabinet = false) => {
     let svg = `
         <g id="Base_LG1">
         </g>
@@ -409,12 +414,14 @@ const component_G1 = (notes = [], achievements = 0, fc = "") => {
 
     let equivalent_text
 
+    const double = (double_cabinet ? 2 : 1)
+
     if (fc === 'app') {
         equivalent_text = '= AP+'
     } else if (fc === 'ap') {
-        equivalent_text = '= ' + getApproximateGreatString((101 - achievements) / (0.25 / note?.break_), 1) + ' BREAK PF.'
+        equivalent_text = '= ' + getApproximateGreatString((double * 101 - achievements) / (0.25 / note?.break_), 1) + ' BREAK PF.'
     } else if (achievements > 0) {
-        const great = getApproximateGreatString((101 - achievements) / 100 / (0.2 / base_score_sum), 1)
+        const great = getApproximateGreatString((double * 101 - achievements) / 100 / (0.2 / base_score_sum), 1)
 
         if (great.includes(".")) {
             equivalent_text = '≈ ' + great + ' GR.'
@@ -489,37 +496,37 @@ const component_G1 = (notes = [], achievements = 0, fc = "") => {
     // const width = 270 / sum
 
     let colors
-    if (achievements >= 100.5) {
+    if (achievements >= double * 100.5) {
         colors = colorArray.rainbow
-    } else if (achievements >= 100) {
+    } else if (achievements >= double * 100) {
         colors = colorArray.iridescent
-    } else if (achievements >= 99) {
+    } else if (achievements >= double * 99) {
         colors = colorArray.yellow
-    } else if (achievements >= 97) {
+    } else if (achievements >= double * 97) {
         colors = colorArray.amber
-    } else if (achievements >= 80) {
+    } else if (achievements >= double * 80) {
         colors = colorArray.pink
-    } else if (achievements >= 60) {
+    } else if (achievements >= double * 60) {
         colors = colorArray.indigo
-    } else if (achievements >= 50) {
+    } else if (achievements >= double * 50) {
         colors = colorArray.green
     } else {
         colors = colorArray.deep_gray
     }
 
     let rrect_width
-    if (achievements >= 100.5) {
-        rrect_width = 270 * 0.9 + 27 * (achievements - 100.5) / 0.5
-    } else if (achievements >= 100) {
-        rrect_width = 270 * 0.7 + 27 * (achievements - 100) / 0.5
-    } else if (achievements >= 99.5) {
-        rrect_width = 270 * 0.5 + 27 * (achievements - 99.5) / 0.5
-    } else if (achievements >= 99) {
-        rrect_width = 270 * 0.3 + 27 * (achievements - 99) / 0.5
-    } else if (achievements >= 98) {
-        rrect_width = 270 * 0.1 + 27 * (achievements - 98)
+    if (achievements >= double * 100.5) {
+        rrect_width = 270 * 0.9 + 27 * (achievements / double - 100.5) / 0.5
+    } else if (achievements >= double * 100) {
+        rrect_width = 270 * 0.7 + 27 * (achievements / double - 100) / 0.5
+    } else if (achievements >= double * 99.5) {
+        rrect_width = 270 * 0.5 + 27 * (achievements / double - 99.5) / 0.5
+    } else if (achievements >= double * 99) {
+        rrect_width = 270 * 0.3 + 27 * (achievements / double - 99) / 0.5
+    } else if (achievements >= double * 98) {
+        rrect_width = 270 * 0.1 + 27 * (achievements / double - 98)
     } else if (achievements > 0) {
-        rrect_width = Math.max(27 * (achievements - 95) / 3, 10)
+        rrect_width = Math.max(27 * (achievements / double - 95) / 3, 10)
     } else {
         rrect_width = 0
     }

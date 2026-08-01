@@ -33,7 +33,7 @@ import {
     hasLeaderBoard, rankSS2X,
 } from "./star.js";
 import {
-    getCHUNITHMRatingBG,
+    getChunithmRatingBG,
     getMaimaiCategory,
     getMaimaiCover, getMaimaiDifficultyColor, getMaimaiDXStarLevel,
     getMaimaiMaximumRating, getMaimaiPlate,
@@ -473,7 +473,7 @@ export const PanelGenerate = {
         additional: 4.12,
         average: 12.65
     }) => {
-        const background = getCHUNITHMRatingBG(user.rating);
+        const background = getChunithmRatingBG(user.rating);
         const rating = rounds(user.rating, 2)
 
         return {

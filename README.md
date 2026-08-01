@@ -94,7 +94,7 @@ fi
 简称你必然会踩到的坑
 
 - 你配置 EXPORT_FILE 了吗？
-- maimai 和 chunithm 组件的歌曲背景，貌似会在特定情况和环境下，无法通过源站的 js 挑战。
+- maimai 和 Chunithm 组件的歌曲背景，貌似会在特定情况和环境下，无法通过源站的 js 挑战。
   - 开发者在 windows 环境下可以正常补充下载，但是 linux 完全不行。
   - 这样下载到的图片会是挑战本身，而不是真正的歌曲背景。
   - 如果您要使用类似功能，可以在 ExportFileV3/Maimai/Cover 和 ExportFileV3/Chunithm/Cover 中，存放你获取到的歌曲背景。
