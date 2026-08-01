@@ -2301,18 +2301,20 @@ export function getDifficultyIndex(difficulty_name = '', star_rating = 0, rulese
     }
 
     if (matchAnyMods(mods, ['DT', 'NC', 'HT', 'DC']) === false) {
-        // 1. IIDX 匹配 (支持 Black Another)
+        // 1. IIDX 匹配
         const iidxRes = findMatch(iidx, difficulties)
         if (iidxRes) return iidxRes
 
-        // 2. SDVX 匹配
-        for (const i in sdvx) {
-            const su = sdvx[i]?.toUpperCase()
-            const tu = sdvx_short[i]?.toUpperCase()
-            // 考虑到 sdvx 都是单字，直接用原有的逻辑或者统一用 findMatch 都可以
-            if (findMatch([sdvx[i]], difficulties)) {
-                return tu
+        // 2. SDVX 匹配 - 直接使用 findMatch
+        const sdvxRes = findMatch(sdvx, difficulties)
+
+        if (sdvxRes) {
+            // 找到对应的短名称
+            const index = sdvx.findIndex(d => d.toUpperCase() === sdvxRes)
+            if (index !== -1) {
+                return sdvx_short[index].toUpperCase()
             }
+            return sdvxRes
         }
 
         // 3. 各模式专属匹配
