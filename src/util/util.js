@@ -2747,3 +2747,23 @@ export const loggerTime = (message) => {
 
     return `[${timestamp}] [P${pid}] ${message}`
 };
+
+Array.prototype.binarySearch = function(target, compareFn) {
+    let left = 0
+    let right = this.length - 1
+
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2)
+        const comparison = compareFn ? compareFn(this[mid], target) : this[mid] - target
+
+        if (comparison === 0) {
+            return mid
+        } else if (comparison < 0) {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+
+    return -1
+}

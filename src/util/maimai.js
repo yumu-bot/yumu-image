@@ -453,46 +453,27 @@ export async function getChunithmCover(song_id = 0) {
     }
 }
 
+const RANK_BG_MAP = {
+    'sssp': 'PP',
+    'sss': 'PF',
+    'ssp': 'SSS',
+    'ss': 'SSS',
+    'sp': 'X',
+    's': 'X',
+    'aaa': 'S',
+    'aa': 'S',
+    'a': 'S',
+    'bbb': 'B',
+    'bb': 'B',
+    'b': 'B',
+    'c': 'A',
+    'd': 'F',
+}
+
 export function getChunithmRankBG(score = 0) {
-    let out;
-
-    switch (getChunithmRank(score)) {
-        case 'sssp':
-            out = 'object-score-backimage-PP.webp';
-            break;
-        case 'sss':
-            out = 'object-score-backimage-PF.webp';
-            break;
-        case 'ssp':
-        case 'ss':
-            out = 'object-score-backimage-SSS.webp';
-            break;
-        case 'sp':
-        case 's':
-            out = 'object-score-backimage-X.webp';
-            break;
-        case 'aaa':
-        case 'aa':
-        case 'a':
-            out = 'object-score-backimage-S.webp';
-            break;
-        case 'bbb':
-        case 'bb':
-        case 'b':
-            out = 'object-score-backimage-B.webp';
-            break;
-        case 'c':
-            out = 'object-score-backimage-A.webp';
-            break;
-        case 'd':
-            out = 'object-score-backimage-F.webp';
-            break;
-        default:
-            out = 'object-score-backimage-SH.webp';
-            break;
-    }
-
-    return getImageFromV3(out)
+    const rank = getChunithmRank(score)
+    const bg = RANK_BG_MAP[rank] ?? 'SH'
+    return getImageFromV3(`object-score-backimage-${bg}.webp`)
 }
 
 export function getChunithmRating(score = 0, difficulty = 0) {
@@ -532,30 +513,32 @@ export function getChunithmRank(score = 0) {
     else return 'd'
 }
 
+const RATING_BG_MAP = [
+    [4, 'A'],
+    [7, 'SP'],
+    [10, 'D'],
+    [12, 'C'],
+    [13.25, 'S'],
+    [14.5, 'SH'],
+    [15.25, 'X'],
+    [16, 'XH'],
+    [17, 'PF'],
+    [Infinity, 'PP'],
+]
+
 export function getChunithmRatingBG(rating = 0) {
-    let background;
-
-    if (rating < 4) background = 'object-score-backimage-A.webp'
-    else if (rating < 7) background = 'object-score-backimage-SP.webp'
-    else if (rating < 10) background = 'object-score-backimage-D.webp'
-    else if (rating < 12) background = 'object-score-backimage-C.webp'
-    else if (rating < 13.25) background = 'object-score-backimage-S.webp'
-    else if (rating < 14.5) background = 'object-score-backimage-SH.webp'
-    else if (rating < 15.25) background = 'object-score-backimage-X.webp'
-    else if (rating < 16) background = 'object-score-backimage-XH.webp'
-    else if (rating < 17) background = 'object-score-backimage-PF.webp'
-    else background = 'object-score-backimage-PP.webp'
-
-    return getImageFromV3(background);
+    const bg = RATING_BG_MAP.find(([max]) => rating < max)?.[1] ?? 'PP'
+    return getImageFromV3(`object-score-backimage-${bg}.webp`)
 }
 
+const chunithm_difficulty_color = [
+    '#009944',
+    '#fff100',
+    '#d32f2f',
+    '#9922ee',
+    '#000000'
+]
 
 export function getChunithmDifficultyColor(index = 0) {
-    switch (index) {
-        case 1: return '#fff100'
-        case 2: return '#d32f2f'
-        case 3: return '#9922ee'
-        case 4: return '#000000'
-        default: return '#009944'
-    }
+    return chunithm_difficulty_color[index] ?? chunithm_difficulty_color[0]
 }
