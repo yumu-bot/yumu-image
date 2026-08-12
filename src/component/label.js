@@ -542,7 +542,7 @@ export const LABEL_PPM6 = {
     },
     STH: {
         icon: readBinaryFromV3Cache('Icons', 'weight-hanging-solid-full.svg'),
-        title: 'STR',
+        title: 'STH',
         left_1: 'Strength',
         left_2: '强度',
         min: 60,
