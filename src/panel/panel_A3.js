@@ -29,11 +29,12 @@ export async function panel_A3(data = {
     "scores": [],
     "start": 1,
     "is_legacy": false,
+    "type": "pp",
 }) {
     // 导入模板
     let svg = readTemplate('template/Panel_A3.svg');
 
-    const is_legacy = data?.is_legacy || false
+    const is_legacy = (data?.is_legacy) || data?.type === 'score'
 
     // 路径定义
     const reg_index = /(?<=<g id="Index">)/;
