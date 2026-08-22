@@ -35,7 +35,7 @@ const MD5 = crypto.createHash("md5");
 export const CACHE_PATH = path_util.join(os.tmpdir(), "n-bot");
 export const EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
 export const SUPER_KEY = process.env.SUPER_KEY || "";
-export const OSU_BUFFER_PATH = process.env.OSU_FILE_PATH || path_util.join(CACHE_PATH, "osufile");
+export const OSU_BUFFER_PATH = process.env.OSU_BUFFER_PATH || process.env.OSU_FILE_PATH || path_util.join(CACHE_PATH, "osufile");
 export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || path_util.join(CACHE_PATH, "buffer");
 
 export const USE_PROXY = process.env.USE_PROXY === 'true';
