@@ -187,7 +187,7 @@ export async function panel_B3(data = {
     const LV_BOUNDARY = [11, 9, 7, 5, 3, 1, 0.75, 0.25];
 
     const isUser = data?.isUser;
-    const isVs = data?.isVs;
+    const is_vs = data?.isVs;
 
     const me = data?.me || [];
     const my = data?.my || [];
@@ -237,7 +237,7 @@ export async function panel_B3(data = {
         graph_left = order.map((key, index) =>
             Math.pow(my?.performance?.[key] / GRAPH_MAX[index], 0.8));
 
-        if (isVs) {
+        if (is_vs) {
             graph_right = order.map((key, index) =>
                 Math.pow(others?.performance?.[key] / GRAPH_MAX[index], 0.8));
 
@@ -349,7 +349,7 @@ export async function panel_B3(data = {
 
         banner = await getMapBackground(me, 'list@2x');
 
-        if (isVs) {
+        if (is_vs) {
             graph_right = order.map(key =>
                 Math.pow(others?.difficulty?.[key] / 5, 0.8));
 
@@ -562,8 +562,8 @@ function drawUserPlus(svgs, values, vs_values = [], levels = [], abbr_arr, at_ri
                 ...LABEL_PPP[abbr],
 
                 value: value,
-                data_b: (vs_value == null) ? null : rank,
-                data_m: (vs_value == null) ? null : '',
+                data_b: rank,
+                data_m: '',
                 delta: (vs_value == null) ? null : (value - vs_value),
                 delta_top: value,
                 icon_colors: colors,
