@@ -1,4 +1,4 @@
-import { getImage } from "../util/util.js";
+import {clampToInteger, getImage} from "../util/util.js";
 import { torus, PuHuiTi, torusBold, getMultipleTextPath } from "../util/font.js";
 import { PanelDraw } from "../util/panelDraw.js";
 import { drawLazerMods } from "../util/mod.js";
@@ -33,7 +33,7 @@ export function card_C(data = {}) {
         color_label1 = 'none', color_label2 = 'none', color_label3 = 'none',
         color_label4 = 'none', color_label5 = 'none',
         color_label12 = '#fff', color_left12 = '#fff',
-        font_title2 = 'torus', font_label4 = 'torus'
+        font_title2 = 'torus', font_label4 = 'torus', progress = 1
     } = data;
 
     // 1. 处理模组与宽度限制
@@ -74,9 +74,11 @@ export function card_C(data = {}) {
         ? PanelDraw.LinearGradientRect(0, 0, 60, 110, 20, color_left, 1, [40, 60], [0, 100])
         : PanelDraw.Rect(0, 0, 60, 110, 20, isNotEmptyString(color_left) ? color_left : PanelColor.top(342), 1);
 
+    const rrect_right_width = clampToInteger(50 + 170 * progress, 220, 40)
+
     const rrect_right_svg = Array.isArray(color_right)
-        ? PanelDraw.LinearGradientRect(680, 0, 220, 110, 20, color_right, 1, [0, 100], [20, 80])
-        : PanelDraw.Rect(680, 0, 220, 110, 20, isNotEmptyString(color_right) ? color_right : PanelColor.top(342), 1);
+        ? PanelDraw.LinearGradientRect(680, 0, rrect_right_width, 110, 20, color_right, 1, [0, 100], [20, 80])
+        : PanelDraw.Rect(680, 0, rrect_right_width, 110, 20, isNotEmptyString(color_right) ? color_right : PanelColor.top(342), 1);
 
     // 6. 标题与副标题动态权衡
     let title_max_width = 500 - (Math.max(mods_data.width, label3_width - 10));

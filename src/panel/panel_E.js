@@ -23,8 +23,8 @@ import {component_E2} from "../component/component_E2.js";
 import {component_E3} from "../component/component_E3.js";
 import {component_E4} from "../component/component_E4.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {getModInt, hasAnyMod, hasMod} from "../util/mod.js";
-import {getApproximateRank, getRankBackground} from "../util/star.js";
+import {getModInt, hasAnyMod, hasMod, matchAnyMods} from "../util/mod.js";
+import {getRankBackground} from "../util/star.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 
@@ -294,7 +294,7 @@ export async function panel_E(
         //await calcPerformancePoints(data.score.beatmap.id, score_statistics, data.score.mode, hasLeaderBoard(data.score.beatmap.ranked));
 
     // 图片定义
-    const background = getRankBackground((data?.score?.rank || getApproximateRank(data?.score)));
+    const background = getRankBackground((data?.score?.rank || getApproximateRankLegacy(data?.score)));
     const banner = await getDiffBackground(data?.score);
 
     // 卡片定义
@@ -520,7 +520,7 @@ const score2AccIndex = (score) => {
                     return 'miss?'
                 }
             default :
-                return '~ ' + getApproximateRank(score);
+                return '~ ' + getApproximateRankLegacy(score);
         }
     }
 
@@ -607,7 +607,7 @@ const score2AccIndex = (score) => {
                 } else {
                     return 'miss?'
                 }
-            default : return '~ ' + getApproximateRank(score);
+            default : return '~ ' + getApproximateRankLegacy(score);
         }
     }
 
@@ -631,7 +631,7 @@ const score2AccIndex = (score) => {
                 case 'D' :
                     return '-' + floor(Math.ceil(0.8501 * nTotal - nNotMiss), 1, -1) + ' C';
                 default :
-                    return '~ ' + getApproximateRank(score);
+                    return '~ ' + getApproximateRankLegacy(score);
             }
         } else {
             switch (rank) {
@@ -646,14 +646,14 @@ const score2AccIndex = (score) => {
                 case 'D' :
                     return "-MD SS";
                 default :
-                    return '~ ' + getApproximateRank(score);
+                    return '~ ' + getApproximateRankLegacy(score);
             }
         }
     }
 
     function getIndexMania() {
         switch (rank) {
-            case 'F' : return '~ ' + getApproximateRank(score);
+            case 'F' : return '~ ' + getApproximateRankLegacy(score);
             default : {
                 const pp_accuracy = (nGeki * 320 + n300 * 300 + nKatu * 200 + n100 * 100 + n50 * 50) / ((nGeki + n300 + nKatu + n100 + n50 + n0) * 320);
 
@@ -962,3 +962,114 @@ export const data2Label = (remark, data_b, data_m, isDisplay = true) => {
     }
 }
 
+const getApproximateRankLegacy = (score = {
+    statistics: {
+        count_50: 0,
+        count_100: 0,
+        count_300: 0,
+        count_geki: 0,
+        count_katu: 0,
+        count_miss: 0
+    },
+    mode: 'osu',
+    mods: ['']
+}, showFailed = false) => {
+    if (!score.passed && showFailed) return 'F';
+
+    let rank = 'F';
+    let nTotal;
+
+    const n300 = score.statistics.count_300;
+    const n100 = score.statistics.count_100;
+    const n50 = score.statistics.count_50;
+    const n0 = score.statistics.count_miss;
+    const nG = score.statistics.count_geki;
+    const nK = score.statistics.count_katu;
+    const acc = score.accuracy;
+    const hasMiss = (n0 > 0);
+
+    switch (getGameMode(score.mode, 1)) {
+        case 'o' : {
+            nTotal = n300 + n100 + n50 + n0;
+
+            const is50over1p = (n50 / nTotal > 0.01);
+
+            if (n300 === nTotal) {
+                rank = 'SS';
+            } else if (n300 / nTotal >= 0.9) {
+                rank = hasMiss ? 'A' : (is50over1p ? 'A' : 'S');
+            } else if (n300 / nTotal >= 0.8) {
+                rank = hasMiss ? 'B' : 'A';
+            } else if (n300 / nTotal >= 0.7) {
+                rank = hasMiss ? 'C' : 'B';
+            } else if (n300 / nTotal >= 0.6) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+
+        case 't' : {
+            nTotal = n300 + n100 + n0;
+
+            if (n300 === nTotal) {
+                rank = 'SS';
+            } else if (n300 / nTotal >= 0.9) {
+                rank = hasMiss ? 'A' : 'S';
+            } else if (n300 / nTotal >= 0.8) {
+                rank = hasMiss ? 'B' : 'A';
+            } else if (n300 / nTotal >= 0.7) {
+                rank = hasMiss ? 'C' : 'B';
+            } else if (n300 / nTotal >= 0.6) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+
+        case 'c' : {
+            const alt_acc = acc || (n300 + n100 + n50) / (n300 + n100 + n50 + nK + n0);
+
+            if (acc === 1) {
+                rank = 'SS';
+            } else if (alt_acc > 0.98) {
+                rank = 'S';
+            } else if (alt_acc > 0.94) {
+                rank = 'A';
+            } else if (alt_acc > 0.90) {
+                rank = 'B';
+            } else if (alt_acc > 0.85) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+
+        case 'm' : {
+            const alt_acc = acc || (nG + n300 + nK * 2 / 3 + n100 / 3 + n50 / 6) / (nG + n300 + n100 + n50 + nK + n0);
+
+            if (alt_acc === 1) {
+                rank = 'SS';
+            } else if (alt_acc >= 0.95) {
+                rank = 'S';
+            } else if (alt_acc >= 0.90) {
+                rank = 'A';
+            } else if (alt_acc >= 0.80) {
+                rank = 'B';
+            } else if (alt_acc >= 0.70) {
+                rank = 'C';
+            } else {
+                rank = 'D';
+            }
+        }
+            break;
+    }
+
+    const isSilver = matchAnyMods(score.mods, ['HD', 'FI', 'FL', 'BL'])
+    if ((rank === 'SS' || rank === 'S') && isSilver) rank += 'H';
+
+    return rank;
+}

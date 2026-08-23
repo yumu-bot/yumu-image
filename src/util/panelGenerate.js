@@ -1030,71 +1030,96 @@ export const PanelGenerate = {
 
 
 
-    score2CardC: async (s, identifier = 1, cover = null, background = null) => {
+    score2CardC: async (score, identifier = 1, cover = null, background = null) => {
         const results = (cover === null || background === null)
             ? await Promise.allSettled([
-                getMapBackground(s, 'list@2x'),
-                getMapBackground(s, 'cover')
+                getMapBackground(score, 'list@2x'),
+                getMapBackground(score, 'cover')
             ]) : [];
+
+        const {
+            is_lazer = true,
+            ended_at,
+            mods = [],
+            legacy_accuracy = 0,
+            max_combo = 0,
+            beatmap = {},
+            beatmapset = {},
+            legacy_rank: rank = 'F',
+            pp = 0,
+            score_hit = 0,
+            total_hit = 0,
+            passed = false,
+            approximate_rank = null
+        } = score
+
+        const {
+            version: diff = '',
+            id = 0,
+            difficulty_rating: star = 0
+        } = beatmap
+
+        const {
+            artist = '',
+            creator = '',
+            title = '',
+            title_unicode = ''
+        } = beatmapset
 
         const cv = cover ?? getIndexOrNull(results, 0)
         const bg = background ?? getIndexOrNull(results, 1)
 
-        const type = getScoreTypeImage(s.is_lazer)
+        const type = getScoreTypeImage(is_lazer)
 
-        const time_diff = getTimeDifferenceShort(s.ended_at, 0);
+        const time_diff = getTimeDifferenceShort(ended_at, 0);
 
-        const mods_width = getLazerModsWidth(s?.mods, 60, 160, 'right', 6, true, false)
+        const mods_width = getLazerModsWidth(mods, 60, 160, 'right', 6, true, false)
 
-        const acc = floor((s?.legacy_accuracy * 100), 2) + '%'
-        const combo = (s.max_combo || 0) + 'x'
+        const acc = floor((legacy_accuracy * 100), 2) + '%'
+        const combo = `${max_combo}x`
 
-        const difficulty_name = s.beatmap.version ? torus.cutStringTail(
-            getKeyDifficulty(s.beatmap), 24,
+        const difficulty_name = diff ? torus.cutStringTail(
+            getKeyDifficulty(beatmap), 24,
             500 - 10 - mods_width - torus.getTextWidth('[] -   ()' + acc + combo + time_diff, 24), true) : '';
 
-        const rank = s?.legacy_rank
-        const color_index = (rank === 'SSH' || rank === 'SS' || rank === 'XH' || rank === 'X') ? '#2A2226' : '#fff';
+        const color_index = DARK_COLORS[rank] ? '#2A2226' : '#fff';
 
-        const artist = torus.cutStringTail(s.beatmapset.artist, 24,
-            500 - 10 - mods_width - torus.getTextWidth(' // ' + s.beatmapset.creator, 24), true);
+        const artist2 = torus.cutStringTail(artist, 24,
+            500 - 10 - mods_width - torus.getTextWidth(' // ' + creator, 24), true);
 
-        const title2 = (s?.beatmapset?.title === s?.beatmapset?.title_unicode) ? '' : (s?.beatmapset?.title_unicode || '');
-        const index_b = (s?.pp <= 10000) ? Math.round(s?.pp).toString() : floor(s?.pp, 1, -1);
+        const title2 = (title === title_unicode) ? '' : title_unicode;
+        const index_b = (pp <= 10000) ? String(Math.round(pp)) : floor(pp, 1, -1);
 
         // 这是大概的进度
-        const approximate_progress = (s?.total_hit > 0) ? (s?.score_hit / s?.total_hit) : 1
-        const index_l = (s?.passed === false || rank === 'F') ? Math.round(approximate_progress * 100) + '%' : ''
+        const not_passed = passed === false || rank === 'F'
+        const approximate_progress = (total_hit > 0) ? (score_hit / total_hit) : 1
+        const approximate_percent = Math.round(approximate_progress * 100)
 
-        const star = s?.beatmap?.difficulty_rating || 0
+        const index_ll = approximate_rank != null ? ` [${approximate_rank}]` : ''
+        const index_l = not_passed ? `${approximate_percent}%${index_ll}` : ''
+
         const star_color = getStarRatingColor(star)
         const star2_color = getStarRatingColors(star)
         const rank2_color = getRankColors(rank)
 
         const color_label12 = (star < 4) ? '#1c1719' : '#fff'
 
-        const label2 = s?.beatmap_id?.toString() ?? s?.beatmap?.id?.toString() ?? ''
+        const label2 = String(id) ?? ''
 
-        let left1
-        let left2
-        let title
+        const not_deleted = creator != null && star > 0
 
-        if (s.beatmapset?.creator != null && star > 0) {
-            title = s?.beatmapset?.title ?? ''
-            left1 = artist + ' // ' + (s.beatmapset?.creator ?? '')
-            left2 = '[' + difficulty_name + '] - ' + acc + ' ' + combo + ' (' + time_diff + ')'
-        } else {
-            title = 'Deleted Beatmap'
-            left1 = ''
-            left2 = acc + ' ' + combo + ' (' + time_diff + ')'
-        }
+        const title1 = not_deleted ? title : 'Deleted Beatmap';
+        const left1 = not_deleted ? `${artist2} // ${creator}` : '';
+        const left2 = not_deleted
+            ? `[${difficulty_name}] - ${acc} ${combo} (${time_diff})`
+            : `${acc} ${combo} (${time_diff})`;
 
         return {
             background: bg,
             cover: cv,
             type: type,
 
-            title: title,
+            title: title1,
             title2: title2,
             left1: left1,
             left2: left2,
@@ -1109,7 +1134,7 @@ export const PanelGenerate = {
             label3: '',
             label4: '',
             label5: '#' + identifier,
-            mods_arr: s.mods ?? [],
+            mods_arr: mods,
 
             color_title2: '#bbb',
             color_right: rank2_color,
@@ -1125,6 +1150,8 @@ export const PanelGenerate = {
 
             font_title2: 'PuHuiTi',
             font_label4: 'torus',
+
+            progress: not_passed ? approximate_progress : 1,
         }
     },
 
@@ -1262,6 +1289,8 @@ export const PanelGenerate = {
 
             font_title2: 'PuHuiTi',
             font_label4: 'torus',
+
+            progress: 1,
         }
     },
 
@@ -1969,6 +1998,13 @@ const TEAM_CONFIG = {
     red:  { color: colorArray.red,  bg: 'card-red.webp' },
     blue: { color: colorArray.blue, bg: 'card-blue.webp' },
     default: { color: colorArray.gray, bg: 'card-gray.webp' }
+};
+
+const DARK_COLORS = {
+    SSH: true,
+    SS: true,
+    XH: true,
+    X: true
 };
 
 const stat2label = (stat, remark, progress, original, is_display = true) => {
