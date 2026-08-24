@@ -24,7 +24,7 @@ import {
     setText,
     setTexts
 } from "../util/util.js";
-import {getRankBackground, getScoreTypeImage} from "../util/star.js";
+import {getRankBackground, getScoreTypeImage, hasLeaderBoard} from "../util/star.js";
 import {card_A1} from "../card/card_A1.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
 import {extra, getMultipleTextPath, getTextWidth, poppinsBold, PuHuiTi} from "../util/font.js";
@@ -409,7 +409,7 @@ const component_E1 = (data) => {
 const component_E2 = (data = {}) => {
     const {
         density_arr = [], retry_arr = [], fail_arr = [],
-        rating = 0, star = 0, pass = 0, play = 0, progress = 1, color = '#fff'
+        rating = 0, star = 0, pass = 0, play = 0, progress = 1, color = '#fff', has_leaderboard = false
     } = data;
 
     const pass_percent = play > 0 ? Math.round(pass / play * 100) : 0;
@@ -428,12 +428,14 @@ const component_E2 = (data = {}) => {
     const rf_arr = fail_arr.map((v, i) => v + (retry_arr[i] || 0));
     const rf_max = rf_arr.length ? Math.max(...rf_arr) : 0;
 
+    const public_rating = (has_leaderboard) ? String(floor(rating, 1)) : '-'
+
     // 组合 SVG 字符串
     return `
         ${PanelDraw.Rect(0, 0, 490, 250, 20, '#382e32')}
         ${poppinsBold.getTextPath('Density', 15, 28, 18, 'left baseline', '#fff')}
         ${poppinsBold.getTextPath('Retry & Fail', 15, 138, 18, 'left baseline', '#fff')}
-        ${poppinsBold.getTextPath(`P. Rating: ${floor(rating, 1)}`, 475, 28, 18, 'right baseline', '#fff')}
+        ${poppinsBold.getTextPath(`P. Rating: ${public_rating}`, 475, 28, 18, 'right baseline', '#fff')}
         ${poppinsBold.getTextPath(`Pass: ${pass} / ${play} [${pass_percent}%]`, 475, 138, 18, 'right baseline', '#fff')}
         ${PanelDraw.LineChart(density_arr, density_max, 0, 15, 115, 460, 80, color, 1, 0.4, 3)}
         ${progress < 1 ? PanelDraw.Rect(20 + (457 * progress) + 1.5, 35, 3, 80, 1.5, '#ed6c9e') : ''}
@@ -1009,7 +1011,8 @@ const PanelEGenerate = {
         // 先解构出需要的值，设置默认值
         const {
             beatmap = {},
-            beatmapset = {}
+            beatmapset = {},
+            legacy_rank = '',
         } = score || {};
 
         const {
@@ -1018,7 +1021,8 @@ const PanelEGenerate = {
             difficulty_rating: star = 0,
             passcount: pass = 0,
             playcount: play = 0,
-            rating: rating_from_beatmap = 0
+            rating: rating_from_beatmap = 0,
+            ranked = 0,
         } = beatmap;
 
         const {
@@ -1034,7 +1038,8 @@ const PanelEGenerate = {
             pass,
             play,
             progress: progress ?? 0,
-            color: getRankColor(score?.legacy_rank || ''),
+            color: getRankColor(legacy_rank),
+            has_leaderboard: hasLeaderBoard(ranked),
         }
     },
 
