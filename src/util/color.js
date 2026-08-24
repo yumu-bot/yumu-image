@@ -469,25 +469,25 @@ const CATEGORY_COLOR_MAP = {
     DEFAULT: { color: colorArray.deep_gray, grade: 'F' }
 };
 
-const RANK_COLOR_MAP = new Map([
-    ["PF", colorArray.white],
-    ["XH", colorArray.white],
-    ["SSH", colorArray.white],
-    ["EX", colorArray.white],
-    ["X+", colorArray.white],
-    ["X", colorArray.light_yellow],
-    ["SS", colorArray.light_yellow],
-    ["SH", colorArray.gray],
-    ["SP", colorArray.orange],
-    ["S+", colorArray.orange],
-    ["S", colorArray.amber],
-    ["A", colorArray.green],
-    ["B", colorArray.blue],
-    ["C", colorArray.purple],
-    ["D", colorArray.red],
-    ["F", colorArray.deep_gray],
-    ["FC", colorArray.cyan]
-]);
+const RANK_COLOR_MAP = {
+    "PF": colorArray.white,
+    "XH": colorArray.white,
+    "SSH": colorArray.white,
+    "EX": colorArray.white,
+    "X+": colorArray.white,
+    "X": colorArray.light_yellow,
+    "SS": colorArray.light_yellow,
+    "SH": colorArray.gray,
+    "SP": colorArray.orange,
+    "S+": colorArray.orange,
+    "S": colorArray.amber,
+    "A": colorArray.green,
+    "B": colorArray.blue,
+    "C": colorArray.purple,
+    "D": colorArray.red,
+    "F": colorArray.deep_gray,
+    "FC": colorArray.cyan
+};
 
 const TAG_COLOR_MAP = {
     tech: '#9922EE',
@@ -1008,7 +1008,7 @@ export function getMapStatusColor(ranked = null) {
 export function getRankColors(rank = 'F', darken = false) {
     if (!rank || typeof rank !== 'string') return DEFAULT_COLOR;
 
-    const colors = RANK_COLOR_MAP.get(rank.toUpperCase()) || DEFAULT_COLOR;
+    const colors = RANK_COLOR_MAP?.[rank.toUpperCase()] ?? DEFAULT_COLOR;
 
     if (darken) {
         return [colors.toReversed()[0], colorArray.deep_gray[0]]
@@ -1025,8 +1025,8 @@ export function getRankColors(rank = 'F', darken = false) {
  */
 export function getRankColor(rank = 'F') {
     if (typeof rank !== 'string') return 'none';
-    // 直接使用 Map.get 查找，查找性能接近 O(1)
-    return RANK_COLOR_MAP.get(rank.toUpperCase()) ?? 'none';
+
+    return RANK_COLOR_MAP?.[rank.toUpperCase()] ?? DEFAULT_COLOR;
 }
 
 /**

@@ -1903,7 +1903,7 @@ export const PanelGenerate = {
         // 根据模式调整配置
         switch (ruleset_id) {
             case 0:
-                index = `CR & SL: ${circles} / ${sliders} [${ratio}]`;
+                index = `CIR & SLD: ${circles} / ${sliders} [${ratio}]`;
                 break;
 
             case 1: // Taiko

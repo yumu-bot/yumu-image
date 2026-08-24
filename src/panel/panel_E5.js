@@ -433,7 +433,7 @@ const component_E2 = (data = {}) => {
         ${PanelDraw.Rect(0, 0, 490, 250, 20, '#382e32')}
         ${poppinsBold.getTextPath('Density', 15, 28, 18, 'left baseline', '#fff')}
         ${poppinsBold.getTextPath('Retry & Fail', 15, 138, 18, 'left baseline', '#fff')}
-        ${poppinsBold.getTextPath(`User Rating: ${floor(rating, 1)} / 10`, 475, 28, 18, 'right baseline', '#fff')}
+        ${poppinsBold.getTextPath(`P. Rating: ${floor(rating, 1)}`, 475, 28, 18, 'right baseline', '#fff')}
         ${poppinsBold.getTextPath(`Pass: ${pass} / ${play} [${pass_percent}%]`, 475, 138, 18, 'right baseline', '#fff')}
         ${PanelDraw.LineChart(density_arr, density_max, 0, 15, 115, 460, 80, color, 1, 0.4, 3)}
         ${progress < 1 ? PanelDraw.Rect(20 + (457 * progress) + 1.5, 35, 3, 80, 1.5, '#ed6c9e') : ''}

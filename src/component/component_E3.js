@@ -59,7 +59,7 @@ export async function component_E3(data = {
     const density = torus.getTextPath("Density", 20, 32.88, 18, "left baseline", "#aaa");
     const retry_fail = torus.getTextPath("Retry // Fail", 20, 152.63, 18, "left baseline", "#aaa");
     const rating = torus.getTextPath(
-        'User Rating: ' + floor(data.rating, 1) + ' / 10', 540, 32.88, 18, "right baseline", "#aaa");
+        'P. Rating: ' + floor(data.rating, 1), 540, 32.88, 18, "right baseline", "#aaa");
     const percent = torus.getTextPath( "P "
         + data.pass_percent
         + "% // R "
