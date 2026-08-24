@@ -469,7 +469,7 @@ const CATEGORY_COLOR_MAP = {
     DEFAULT: { color: colorArray.deep_gray, grade: 'F' }
 };
 
-const RANK_COLOR_MAP = {
+const RANK_COLORS_MAP = {
     "PF": colorArray.white,
     "XH": colorArray.white,
     "SSH": colorArray.white,
@@ -487,6 +487,26 @@ const RANK_COLOR_MAP = {
     "D": colorArray.red,
     "F": colorArray.deep_gray,
     "FC": colorArray.cyan
+};
+
+const RANK_COLOR_MAP = {
+    "PF": '#FAFAFA',
+    "XH": '#FAFAFA',
+    "SSH": '#FAFAFA',
+    "EX": '#FAFAFA',
+    "X+": '#FAFAFA',
+    "X": '#FFFF00',
+    "SS": '#FFFF00',
+    "SH": '#BDBDBD',
+    "SP": '#E86100',
+    "S+": '#E86100',
+    "S": '#FF9800',
+    "A": '#22AC38',
+    "B": '#00A0E9',
+    "C": '#9922EE',
+    "D": '#D32F2F',
+    "F": '#616161',
+    "FC": '#7ECEF4'
 };
 
 const TAG_COLOR_MAP = {
@@ -1008,7 +1028,7 @@ export function getMapStatusColor(ranked = null) {
 export function getRankColors(rank = 'F', darken = false) {
     if (!rank || typeof rank !== 'string') return DEFAULT_COLOR;
 
-    const colors = RANK_COLOR_MAP?.[rank.toUpperCase()] ?? DEFAULT_COLOR;
+    const colors = RANK_COLORS_MAP?.[rank.toUpperCase()] ?? DEFAULT_COLOR;
 
     if (darken) {
         return [colors.toReversed()[0], colorArray.deep_gray[0]]
@@ -1016,7 +1036,6 @@ export function getRankColors(rank = 'F', darken = false) {
         return colors.toReversed();
     }
 }
-
 
 /**
  * @function 获取评级颜色
@@ -1026,7 +1045,7 @@ export function getRankColors(rank = 'F', darken = false) {
 export function getRankColor(rank = 'F') {
     if (typeof rank !== 'string') return 'none';
 
-    return RANK_COLOR_MAP?.[rank.toUpperCase()] ?? DEFAULT_COLOR;
+    return RANK_COLOR_MAP?.[rank.toUpperCase()] ?? 'none';
 }
 
 /**
