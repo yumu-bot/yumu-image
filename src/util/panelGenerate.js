@@ -1094,13 +1094,14 @@ export const PanelGenerate = {
         const not_passed = passed === false || rank === 'F'
         const approximate_progress = (total_hit > 0) ? (score_hit / total_hit) : 1
         const approximate_percent = Math.round(approximate_progress * 100)
-
-        const index_ll = approximate_rank != null ? ` [${approximate_rank}]` : ''
-        const index_l = not_passed ? `${approximate_percent}%${index_ll}` : ''
+        const index_l = not_passed ? `${approximate_percent}%` : ''
 
         const star_color = getStarRatingColor(star)
         const star2_color = getStarRatingColors(star)
-        const rank2_color = getRankColors(rank)
+
+        const color_right = (not_passed && approximate_rank != null) ?
+            getRankColors(approximate_rank, true) :
+            getRankColors(rank)
 
         const color_label12 = (star < 4) ? '#1c1719' : '#fff'
 
@@ -1137,7 +1138,7 @@ export const PanelGenerate = {
             mods_arr: mods,
 
             color_title2: '#bbb',
-            color_right: rank2_color,
+            color_right: color_right,
             color_left: star2_color,
             color_index: color_index,
             color_label1: star_color,

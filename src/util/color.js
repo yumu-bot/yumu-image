@@ -454,7 +454,6 @@ export function rgb2OKLabBrightness(r, g, b) {
 }
 
 
-// 1. 定义 category 到 colorArray 颜色的映射关系表
 const CATEGORY_COLOR_MAP = {
     BC: { color: colorArray.light_yellow, grade: 'X' },
     CA: { color: colorArray.amber,        grade: 'S' },
@@ -469,6 +468,43 @@ const CATEGORY_COLOR_MAP = {
     FU: { color: colorArray.red,          grade: 'D' },
     DEFAULT: { color: colorArray.deep_gray, grade: 'F' }
 };
+
+const RANK_COLOR_MAP = new Map([
+    ["PF", colorArray.white],
+    ["XH", colorArray.white],
+    ["SSH", colorArray.white],
+    ["EX", colorArray.white],
+    ["X+", colorArray.white],
+    ["X", colorArray.light_yellow],
+    ["SS", colorArray.light_yellow],
+    ["SH", colorArray.gray],
+    ["SP", colorArray.orange],
+    ["S+", colorArray.orange],
+    ["S", colorArray.amber],
+    ["A", colorArray.green],
+    ["B", colorArray.blue],
+    ["C", colorArray.purple],
+    ["D", colorArray.red],
+    ["F", colorArray.deep_gray],
+    ["FC", colorArray.cyan]
+]);
+
+const TAG_COLOR_MAP = {
+    tech: '#9922EE',
+    style: '#FFFF00',
+    streams: '#B3D465',
+    jumps: '#22AC38',
+    sliders: '#00A0E9',
+    skillset: '#FF9800',
+    reading: '#E86100',
+    meta: '#FAFAFA',
+    gimmick: '#D32F2F',
+    expression: '#EA68A2',
+    context: '#BDBDBD',
+    additions: '#BDBDBD'
+};
+
+const DEFAULT_COLOR = ['none', 'none'];
 
 /**
  * 颜色扩展。
@@ -669,7 +705,7 @@ export function createColorInterpolator(options) {
         if (maxBound !== undefined && star >= maxBound) return maxColor;
 
         // 3. 越界兜底
-        const toHex = (rgb) => '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
+        const toHex = (rgb = [0, 0, 0]) => '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
         if (star <= stops[0].val) return toHex(stops[0].rgb);
         if (star >= stops[stops.length - 1].val) return toHex(stops[stops.length - 1].rgb);
 
@@ -965,133 +1001,43 @@ export function getMapStatusColor(ranked = null) {
 
 /**
  * 获取评级颜色组，后一个颜色更亮更鲜艳（主色）
- * @param rank
+ * @param rank {string | null}
+ * @param darken 是否需要暗化，默认 false
  * @return {[string, string]}
  */
-export function getRankColors(rank = 'F') {
-    if (typeof rank !== 'string') return ['none', 'none'];
+export function getRankColors(rank = 'F', darken = false) {
+    if (!rank || typeof rank !== 'string') return DEFAULT_COLOR;
 
-    let colors
+    const colors = RANK_COLOR_MAP.get(rank.toUpperCase()) || DEFAULT_COLOR;
 
-    switch (rank.toString().toUpperCase()) {
-        case "PF":
-        case "XH":
-        case "SSH":
-        case "EX":
-        case "X+":
-            colors = colorArray.white
-            break;
-        case "X":
-        case "SS":
-            colors = colorArray.light_yellow
-            break;
-        case "SH":
-            colors = colorArray.gray
-            break;
-        case "SP":
-        case "S+":
-            colors = colorArray.orange // S+
-            break;
-        case "S":
-            colors = colorArray.amber
-            break;
-        case "A":
-            colors = colorArray.green
-            break;
-        case "B":
-            colors = colorArray.blue
-            break;
-        case "C":
-            colors = colorArray.purple
-            break;
-        case "D":
-            colors = colorArray.red
-            break;
-        case "F":
-            colors = colorArray.deep_gray
-            break;
-        case "FC":
-            colors = colorArray.cyan
-            break;
-        default:
-            colors = ['none', 'none'];
+    if (darken) {
+        return [colors.toReversed()[0], colorArray.deep_gray[0]]
+    } else {
+        return colors.toReversed();
     }
-
-    return colors.toReversed()
 }
+
 
 /**
  * @function 获取评级颜色
+ * @param {string} [rank='F'] 输入评级
  * @return {string} 返回色彩
- * @param rank 输入评级
  */
 export function getRankColor(rank = 'F') {
     if (typeof rank !== 'string') return 'none';
-    let color;
-    switch (rank.toString().toUpperCase()) {
-        case "PF":
-        case "XH":
-        case "SSH":
-        case "EX":
-        case "X+":
-            color = '#FAFAFA';
-            break;
-        case "X":
-        case "SS":
-            color = '#FFFF00';
-            break;
-        case "SH":
-            color = '#BDBDBD';
-            break;
-        case "SP":
-        case "S+":
-            color = '#E86100';
-            break; // S+
-        case "S":
-            color = '#FF9800';
-            break;
-        case "A":
-            color = '#22AC38';
-            break;
-        case "B":
-            color = '#00A0E9';
-            break;
-        case "C":
-            color = '#9922EE';
-            break;
-        case "D":
-            color = '#D32F2F';
-            break;
-        case "F":
-            color = '#616161';
-            break;
-        case "FC":
-            color = '#7ECEF4';
-            break;
-        default:
-            color = 'none';
-            break;
-    }
-
-    return color;
+    // 直接使用 Map.get 查找，查找性能接近 O(1)
+    return RANK_COLOR_MAP.get(rank.toUpperCase()) ?? 'none';
 }
 
+/**
+ * @function 获取分类颜色
+ * @param {string} [category='F'] 输入分类
+ * @return {string} 返回色彩
+ */
 export function getTagCategoryColor(category = 'F') {
-    switch (category) {
-        case 'tech': return '#9922EE';
-        case 'style': return '#FFFF00';
-        case 'streams': return '#B3D465';
-        case 'jumps': return '#22AC38';
-        case 'sliders': return '#00A0E9';
-        case 'skillset': return '#FF9800';
-        case 'reading': return '#E86100';
-        case 'meta': return '#FAFAFA';
-        case 'gimmick': return '#D32F2F';
-        case 'expression': return '#EA68A2';
-        case 'context': return '#BDBDBD';
-        case 'additions': return '#BDBDBD';
-        default: return '#382E32';
-    }
+    if (typeof category !== 'string') return '#382E32';
+    // 普通对象查表，无法命中时回退到默认颜色
+    return TAG_COLOR_MAP[category] ?? '#382E32';
 }
 
 /**
