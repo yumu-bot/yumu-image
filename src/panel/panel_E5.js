@@ -1376,7 +1376,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     index: '50', stat: s.meh, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.yellow,
                 }, {
                     index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
-                }, {}, {}, {}, {
+                }, null, null, null, {
                     index: 'TICK',
                     stat: s.large_tick_hit,
                     index_color: '#fff',
@@ -1388,7 +1388,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     index_color: '#fff',
                     stat_color: '#fff',
                     rrect_color: colorArray.blue,
-                }, {}, {
+                }, null, {
                     index: 'O+',
                     stat: s.large_bonus,
                     index_color: '#fff',
@@ -1415,7 +1415,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     rrect_color: colorArray.light_green,
                 }, {
                     index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
-                }, {}, {}, {}, {}, {}, {}, {
+                }, null, null, null, null, null, null, {
                     index: 'O+',
                     stat: s.large_bonus,
                     index_color: '#fff',
@@ -1452,9 +1452,9 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     index_color: '#fff',
                     stat_color: '#fff',
                     rrect_color: colorArray.yellow,
-                }, {}, {}, {}, {}, {
+                }, null, null, null, null, {
                     index: 'MF',
-                    stat: s.miss - s.large_tick_miss,
+                    stat: s.miss,
                     index_color: '#fff',
                     stat_color: '#fff',
                     rrect_color: colorArray.pink,
@@ -1464,7 +1464,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     index_color: '#fff',
                     stat_color: '#fff',
                     rrect_color: colorArray.gray,
-                }, {}, {
+                }, null, {
                     index: 'MD',
                     stat: s.large_tick_miss,
                     index_color: '#fff',
@@ -1522,7 +1522,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     rrect_color: colorArray.light_green,
                 }, {
                     index: '50', stat: s.meh, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.yellow,
-                }, {}, {
+                }, null, {
                     index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
                 });
                 break;
@@ -1558,7 +1558,7 @@ const score2Statistics = (statistics, mode, is_lazer = false) => {
                     index_color: '#fff',
                     stat_color: '#fff',
                     rrect_color: colorArray.yellow,
-                }, {}, {
+                }, null, {
                     index: '0', stat: s.miss, index_color: '#fff', stat_color: '#fff', rrect_color: colorArray.pink,
                 }, {
                     index: 'ML',
@@ -1675,7 +1675,7 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
         const v = statistics[i]
         const m = max_statistics[i]
 
-        if (isNotNumber(v.stat)) continue
+        if (v == null || isNotNumber(v?.stat)) continue
 
         const rrect_y = y + i * (height + interval);
         const text_y = rrect_y + font_h;
@@ -1718,7 +1718,7 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
             const v = statistics[i]
             const m = max_statistics[i]
 
-            if (isNotNumber(v.stat)) continue
+            if (v == null || isNotNumber(v?.stat)) continue
 
             const deluxe_width = (w / 2) - 50
             const deluxe_x = (i < 9) ? x : (x + (w / 2) + 50)

@@ -275,6 +275,11 @@ function endfieldMapper(text = '') {
             code -= 0xFEE0;
         }
 
+        if (code >= 0xE000 && code <= 0xF8FF) {
+            result.push(String.fromCharCode(code))
+            continue
+        }
+
         if (default_mapper.has(code)) {
             result.push(String.fromCharCode(default_mapper.get(code)))
         } else if (code >= 0x7B) {
