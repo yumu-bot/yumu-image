@@ -1522,8 +1522,9 @@ function floorOrRound(input = 0, level = 0, sub_level = 0, is_round = false) {
             int_str = int.toString()
             dec_str = dec.toString().slice(2, 2 + level)
 
+            // 修复：必须重新赋值 dec_str 否则遇到 0 结尾会死循环
             while (dec_str.length > 0 && dec_str.charAt(dec_str.length - 1) === '0') {
-                dec_str.slice(0, dec_str.length - 1)
+                dec_str = dec_str.slice(0, dec_str.length - 1)
             }
 
             if (dec_str.length > 0) {
@@ -1533,18 +1534,22 @@ function floorOrRound(input = 0, level = 0, sub_level = 0, is_round = false) {
                 dec_str = u
             }
         } else {
-            int_str = sign + '.' + dec.toString().slice(2, 2 + level)
-            dec_str = ''
+            // sub_level === -2 且 整数部分为 0 的情况
+            let dec_val = dec.toString().slice(2, 2 + level)
 
-            while (int_str.length > 0 && int_str.charAt(int_str.length - 1) === '0') {
-                int_str.slice(0, int_str.length - 1)
+            // 修复：必须重新赋值，避免死循环
+            while (dec_val.length > 0 && dec_val.charAt(dec_val.length - 1) === '0') {
+                dec_val = dec_val.slice(0, dec_val.length - 1)
             }
 
-            if (int_str.length > 0) {
-                int_str = '.' + int_str
+            // 修复：正确处理小数点和负号
+            if (dec_val.length > 0) {
+                int_str = sign + '.' + dec_val
+            } else {
+                int_str = sign + '0'
             }
 
-            dec_str += u
+            dec_str = u
         }
     } else {
         const str = (sub_level === 1) ? Math.floor(number).toString().padStart(7, '0') : Math.floor(number).toString()
@@ -1602,7 +1607,7 @@ function floorOrRound(input = 0, level = 0, sub_level = 0, is_round = false) {
 
 /**
  * 重写了获取单位的逻辑
- * @param num 数字
+ * @param number 数字
  * @param pattern 种类，0 常规，-1 缩短，1 中文语境
  * @returns {string}
  */

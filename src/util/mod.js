@@ -480,9 +480,9 @@ function getLazerModPath(mod = {
  * @return {{large: string, small: string}}
  */
 function getLazerModAdditional(mod = {}) {
-    const s = mod?.settings;
+    const settings = mod?.settings;
 
-    if (s == null || typeof mod === "string") return {
+    if (settings == null || typeof mod === "string") return {
         large: mod?.acronym?.toString() || mod?.toString() || '',
         small: '',
     }
@@ -490,44 +490,44 @@ function getLazerModAdditional(mod = {}) {
     let large = ''
     let small = ''
 
-    if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(s?.speed_change)) {
-        const r = rounds(s.speed_change, 2, -2)
+    if (matchAnyMod(mod, ['DT', 'NC', 'HT', 'DC']) && isNumber(settings?.speed_change)) {
+        const r = rounds(settings.speed_change, 2, -2)
 
         large = r.integer
         small = r.decimal + 'x'
-    } else if (matchAnyMod(mod, ['WU', 'WD']) && isNumber(s?.final_rate)) {
-        const r = rounds(s.final_rate, 2, -2)
+    } else if (matchAnyMod(mod, ['WU', 'WD']) && isNumber(settings?.final_rate)) {
+        const r = rounds(settings.final_rate, 2, -2)
 
         large = r.integer
         small = r.decimal + 'x'
-    } else if (matchMod(mod, 'EZ') && isNumber(s?.extra_lives)) {
-        large = s.extra_lives
-        small = '+'
-    } else if (matchMod(mod, 'AS') && isNumber(s?.initial_rate)) {
-        const r = rounds(s.initial_rate, 2, -2)
+    } else if (matchMod(mod, 'EZ') && isNumber(settings?.extra_lives)) {
+        large = settings.extra_lives
+        small = 'UP'
+    } else if (matchMod(mod, 'AS') && isNumber(settings?.initial_rate)) {
+        const r = rounds(settings.initial_rate, 2, -2)
 
         large = r.integer
         small = r.decimal + 'x'
     } else if (matchMod(mod, 'AC')) {
 
-        if (isNumber(s?.minimum_accuracy)) {
-            large += Math.round(s?.minimum_accuracy * 100).toString()
+        if (isNumber(settings?.minimum_accuracy)) {
+            large += Math.round(settings?.minimum_accuracy * 100).toString()
         } else {
             large += '90'
         }
 
-        if (s?.accuracy_judge_mode === "1") {
+        if (settings?.accuracy_judge_mode === "1") {
             small = '+'
         } else {
             small = '%'
         }
 
     } else if (matchMod(mod, 'SR')) {
-        if (s?.one_sixth_conversion === false) {
-            if (s?.one_eighth_conversion === true) {
+        if (settings?.one_sixth_conversion === false) {
+            if (settings?.one_eighth_conversion === true) {
                 large = '-1'
                 small = '/8'
-            } else if (s?.one_third_conversion === true) {
+            } else if (settings?.one_third_conversion === true) {
                 large = '-1'
                 small = '/3'
             }
@@ -537,14 +537,14 @@ function getLazerModAdditional(mod = {}) {
             small = '/6'
         }
     } else if (matchMod(mod, 'DA')) {
-        if (s?.extended_limits === true) {
-            large += '<>'
-        } else if (isNumber(s?.scroll_speed)) {
-            const f = floors(s?.scroll_speed, 1, -2)
+        if (settings?.extended_limits === true) {
+            large += 'DA+'
+        } else if (isNumber(settings?.scroll_speed)) {
+            const f = floors(settings?.scroll_speed, 1, -2)
 
             large = 'v' + f.integer
             small = f.decimal+ 'x'
-        } else if (s?.hard_rock_offsets === true) {
+        } else if (settings?.hard_rock_offsets === true) {
             large = 'HR'
         } else {
             large = 'DA'
