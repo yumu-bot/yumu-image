@@ -409,15 +409,15 @@ const component_E1 = (data) => {
 const component_E2 = (data = {}) => {
     const {
         density_arr = [], retry_arr = [], fail_arr = [],
-        rating = 0, star = 0, pass = 0, play = 0, progress = 1, color = '#fff', has_leaderboard = false
+        rating = 0, base_star = 0, pass = 0, play = 0, progress = 1, color = '#fff', has_leaderboard = false
     } = data;
 
     const pass_percent = play > 0 ? Math.round(pass / play * 100) : 0;
 
     // 计算缩放比例
     let density_scale = 1;
-    if (star <= 1) density_scale = 0.1;
-    else if (star <= 8) density_scale = Math.sqrt(((star - 1) / 7 * 0.9) + 0.1);
+    if (base_star <= 1) density_scale = 0.1;
+    else if (base_star <= 8) density_scale = Math.sqrt(((base_star - 1) / 7 * 0.9) + 0.1);
 
     // 使用 ... 展开运算符获取最大值
     const density_max = (density_arr.length ? Math.max(...density_arr) : 0) / density_scale;
@@ -1019,6 +1019,7 @@ const PanelEGenerate = {
             retries = [],
             fails = [],
             difficulty_rating: star = 0,
+            original_rating: original_star = 0,
             passcount: pass = 0,
             playcount: play = 0,
             rating: rating_from_beatmap = 0,
@@ -1033,7 +1034,7 @@ const PanelEGenerate = {
             density_arr: density ?? [],
             retry_arr: retries,
             fail_arr: fails,
-            star,
+            base_star: original_star || star,
             rating: rating || rating_from_beatmap || 0,
             pass,
             play,
