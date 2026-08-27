@@ -365,8 +365,8 @@ export function clampToInteger(val, max = 1, min = 0) {
 /**
  * 规范化
  * @param {number} val 当前数值
- * @param {number} min 最小值/下限
  * @param {number} max 最大值/上限
+ * @param {number} min 最小值/下限
  * @param {number} range 需要映射的范围（默认1，就是0-1）
  * @param {number} bottom 保底最小 (默认 0)，设为 1e-4可以确保在 0 的时候有值
  */

@@ -46,7 +46,7 @@ export function card_B7(data = {}, to_left = false) {
     const base_opacity = is_limit_break ? 0.8 : 0.2;
     const bar_colors = is_limit_break ? (limit_break_colors ?? colorArray.radiant) : colors;
 
-    const raw_width = normalize(value, low, high, 320);
+    const raw_width = normalize(value, high, low, 320);
     const bar_width = clampToInteger(raw_width, 30, 320);
 
     let icon_x;
@@ -77,7 +77,7 @@ export function card_B7(data = {}, to_left = false) {
 
     let parsed_icon;
 
-    if (icon?.toString()?.startsWith('<svg')) {
+    if (icon != null && icon?.toString()?.startsWith('<svg')) {
         parsed_icon = getSvg(getBody(icon), icon_x + 10, 10, 60, 60, '#fff', 640, 640);
     } else {
         parsed_icon = getImage(icon_x + 10, 10, 60, 60, icon);
