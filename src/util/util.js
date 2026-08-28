@@ -24,7 +24,7 @@ import {isEmptyString, isNotBlankString, isNotNumber, isNumber} from "./text.js"
 
 const execAsync = promisify(exec);
 
-const VERSION = 'v0.8.3'
+const VERSION = 'v0.8.4'
 const VERSION_CODE = 'VS'
 
 const path_util = path;
@@ -371,6 +371,10 @@ export function clampToInteger(val, max = 1, min = 0) {
  * @param {number} bottom 保底最小 (默认 0)，设为 1e-4可以确保在 0 的时候有值
  */
 export function normalize(val, max, min, range = 1, bottom = 0) {
+    if (max < min) {
+        [min, max] = [max, min];
+    }
+
     if (val <= min || min === max) return bottom;
 
     // 2. 限制最大值不越界，并乘以 range
