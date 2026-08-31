@@ -219,13 +219,14 @@ export function splitMatchName(text = '') {
     return { name, team1, team2 }
 }
 
+const RANDOM_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+
 export function getRandomString(length = 6) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
     const randomValues = new Uint8Array(length);
     crypto.getRandomValues(randomValues);
 
     return Array.from(randomValues)
         // 64 的二进制是 2^6，所以用 & 63 (00111111) 过滤，完美均匀分布，且比模除更高效
-        .map(v => chars[v & 63])
+        .map(v => RANDOM_CHARS[v & 63])
         .join('');
 }

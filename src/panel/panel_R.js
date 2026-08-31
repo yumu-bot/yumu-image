@@ -150,6 +150,18 @@ async function panel_R(data = {
         219.5492609283136, 189.09453024152134, 167.83665464688332, 142.32408577885963, 127.17856557740535, 116.7276379369499,
 
         219.5492609283136, 189.09453024152134, 167.83665464688332, 142.32408577885963, 127.17856557740535, 116.7276379369499],
+
+    pp_distribution: {
+        effective_miss_count: 0,
+        pp: 249.10131702764113,
+        pp_accuracy: 63.227215537741685,
+        pp_aim: 121.716026198395,
+        pp_flashlight: 0,
+        pp_reading: 1.5546438304355858,
+        pp_speed: 58.42657705046036,
+        stars: 5.670435049741286
+    }
+    ,
     original: {cs: 4, ar: 9.3, od: 8, hp: 6, bpm: 160, drain: 189, total: 192}
 }) {
     // 导入模板
@@ -186,7 +198,7 @@ async function panel_R(data = {
     const reg_body = /(?<=<g id="BodyCard">)/;
 
     const {
-        beatmapset = {}, beatmap = {}, expected = {}, pp_list = [0], original = {}
+        beatmapset = {}, beatmap = {}, expected = {}, pp_list = [0], pp_distribution = {}, original = {}
     } = data
 
     const set = beatmapset
@@ -209,26 +221,30 @@ async function panel_R(data = {
     // 2. 将结果存入 Map 供后续 O(1) 查询
     const avatarMap = new Map(avatarData);
 
+    const mode = getGameMode(expected?.mode, 1)
+
     const body_R1 = component_R1(background, expected.mods, expected.is_lazer, beatmap.lazer_only, beatmap.ranked);
 
     const body_R2 = component_R2(set?.user?.username, host_avatar, set?.genre_id, set?.language_id, set?.source, set?.tags, set?.related_tags);
 
     const body_R3 = component_R3(beatmap?.passcount, beatmap?.playcount, beatmap?.retry, beatmap?.fail, beatmap?.retries, beatmap?.fails)
 
-    const body_R4 = component_R4(beatmap, expected?.mode, original)
+    const body_R4 = component_R4(beatmap, mode, original)
 
-    const body_R5 = component_R5(expected, pp_list, beatmap?.max_combo)
+    const body_R5 = component_R5(beatmap, mode)
 
     const body_R6 = component_R6(background, set)
 
-    const body_R7 = component_R7(set, beatmap, expected?.mode, avatarMap)
+    const body_R7 = component_R7(set, beatmap, mode, avatarMap)
 
-    svg = setTexts(svg, [body_R1, body_R2, body_R3, body_R4, body_R5, body_R6, body_R7], reg_body)
+    const body_R8 = component_R8(pp_list, pp_distribution, mode)
+
+    svg = setTexts(svg, [body_R1, body_R2, body_R3, body_R4, body_R5, body_R6, body_R8, body_R7], reg_body)
 
     svg = setImage(svg, 0, 0, 1920, 1080, background, reg_background, 0.4)
 
     // 卡片定义
-    const panel_name = getPanelNameSVG('Map Statistics v2 (!ymm)', '');
+    const panel_name = getPanelNameSVG('Map Statistics v2.1 (!ymm)', '');
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
@@ -237,20 +253,19 @@ async function panel_R(data = {
 }
 
 const component_R1 = (background, mods = [], is_lazer = false, lazer_only = false, ranked = 0) => {
-    const polygon = PanelDraw.RoundedPolygon([{x: -30, y: 40}, {x: 848, y: 40}, {x: 786, y: 400}, {
-        x: -30,
-        y: 400
-    }], 20, '#382e32', 1)
+    const polygon = PanelDraw.RoundedPolygon(
+        [{x: -30, y: 40}, {x: 848, y: 40}, {x: 787, y: 390}, {x: -30, y: 390}],
+        20, '#382e32', 1)
 
     const shadowed = PanelDraw.Shadow(polygon, 10, 10, 5, '#1c1719', 0.2)
 
-    const image = getImage(0, 40, 850, 360, background)
+    const image = getImage(0, 40, 850, 350, background)
 
     const status = getImage(10, 50, 50, 50, getMapStatusImage(ranked))
 
     const lazer = lazer_only ? getImage(540, 50, 280, 70, getScoreTypeImage(true, '-only')) : getImage(540 + 110, 50, 170, 70, getScoreTypeImage(is_lazer, 2))
 
-    const mod_svg = drawLazerMods(mods, 770, 320, 70, 750, 'right', 8, true, true)
+    const mod_svg = drawLazerMods(mods, 770, 310, 70, 750, 'right', 8, true, true)
 
     return `
     <g>
@@ -281,26 +296,23 @@ const component_R2 = (host_name, avatar, genre_id, language_id, source = '', tag
         image: avatar, title: 'Host', content: host_name
     }, 270))
 
-    const polygon = PanelDraw.RoundedPolygon([{x: -30, y: 430}, {x: 780, y: 430}, {x: 747, y: 610}, {
-        x: -30,
-        y: 610
-    }], 20, '#382e32', 0.6)
+    const polygon = PanelDraw.RoundedPolygon([{x: -30, y: 420}, {x: 780, y: 420}, {x: 747, y: 600}, {x: -30, y: 600}], 20, '#382e32', 0.6)
 
     const shadowed = PanelDraw.Shadow(polygon, 10, 10, 5, '#1c1719', 0.2)
 
     const g = getGenre(genre_id)
 
-    const genre = getSvgBody(295, 445, card_R1({
+    const genre = getSvgBody(295, 435, card_R1({
         image: getImageFromV3(`object-genre-${spaceToUnderline(g)}2.png`), title: 'Genre', content: capitalize(g)
     }, 230))
 
     const l = getLanguage(language_id)
 
-    const language = getSvgBody(535, 445, card_R1({
+    const language = getSvgBody(535, 435, card_R1({
         image: getImageFromV3(`object-language-${spaceToUnderline(l)}.png`), title: 'Language', content: capitalize(l)
     }, 220))
 
-    const source_title = PanelDraw.Shadow(poppinsBold.getTextPath('Source', 15, 535, 20, 'left baseline', '#aaa'), 2, 2, 2, '#1c1719')
+    const source_title = PanelDraw.Shadow(poppinsBold.getTextPath('Source', 15, 525, 20, 'left baseline', '#aaa'), 2, 2, 2, '#1c1719')
 
     let source_font
     let source_size
@@ -316,9 +328,10 @@ const component_R2 = (host_name, avatar, genre_id, language_id, source = '', tag
     const source_string1 = source_font.cutStringTail(source, source_size, 265, false)
     const source_string2 = source_font.cutStringTail(source?.substring(source_string1.length), source_size, 265, true)
 
-    const source_text = PanelDraw.Shadow(source_font.getTextPath(source_string1, 15, 565, source_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719') + PanelDraw.Shadow(source_font.getTextPath(source_string2, 15, 595, source_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719')
+    const source_text = PanelDraw.Shadow(source_font.getTextPath(source_string1, 15, 555, source_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719') +
+        PanelDraw.Shadow(source_font.getTextPath(source_string2, 15, 585, source_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719')
 
-    const tags_title = PanelDraw.Shadow(poppinsBold.getTextPath('Tags', 295, 535, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
+    const tags_title = PanelDraw.Shadow(poppinsBold.getTextPath('Tags', 295, 525, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
 
     let currentFont = poppinsBold;
     let currentSize = 20;
@@ -341,7 +354,8 @@ const component_R2 = (host_name, avatar, genre_id, language_id, source = '', tag
     const tags_string1 = str1;
     const tags_string2 = str2;
 
-    const tags_text = PanelDraw.Shadow(tags_font.getTextPath(tags_string1, 295, 565, tags_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719') + PanelDraw.Shadow(tags_font.getTextPath(tags_string2, 295, 595, tags_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719')
+    const tags_text = PanelDraw.Shadow(tags_font.getTextPath(tags_string1, 295, 555, tags_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719') +
+        PanelDraw.Shadow(tags_font.getTextPath(tags_string2, 295, 585, tags_size, 'left baseline', '#B8D3E0'), 2, 2, 1, '#1c1719')
 
     let width_remain = 390
 
@@ -361,9 +375,9 @@ const component_R2 = (host_name, avatar, genre_id, language_id, source = '', tag
             break
         } else {
 
-            const text = poppinsBold.getTextPath(capitalize(type), 360 + width_remain - rrect_width / 2, 533, 18, 'center baseline', '#fff')
+            const text = poppinsBold.getTextPath(capitalize(type), 360 + width_remain - rrect_width / 2, 523, 18, 'center baseline', '#fff')
 
-            const rrect = PanelDraw.Rect(360 + width_remain - rrect_width, 515, rrect_width, 25, 12.5, '#382E32') +  PanelDraw.Rect(360 + width_remain - rrect_width, 515, rrect_width, 25, 12.5, color, 0.2)
+            const rrect = PanelDraw.Rect(360 + width_remain - rrect_width, 505, rrect_width, 25, 12.5, '#382E32') +  PanelDraw.Rect(360 + width_remain - rrect_width, 505, rrect_width, 25, 12.5, color, 0.2)
 
             related.push((rrect + text))
 
@@ -390,13 +404,13 @@ const component_R3 = (
     let retry_width = clampToInteger(retry_rate * 220, 220, 20)
     let quit_width = clampToInteger(quit_rate * 220, 220, 20)
 
-    const titles = PanelDraw.Shadow(poppinsBold.getTextPath('Pass', 15, 667, 20, 'left baseline', '#aaa') + poppinsBold.getTextPath('Retry', 255, 667, 20, 'left baseline', '#aaa') + poppinsBold.getTextPath('Quit', 495, 667, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
+    const titles = PanelDraw.Shadow(poppinsBold.getTextPath('Pass', 15, 657, 20, 'left baseline', '#aaa') + poppinsBold.getTextPath('Retry', 255, 657, 20, 'left baseline', '#aaa') + poppinsBold.getTextPath('Quit', 495, 657, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
 
-    const bases = PanelDraw.Rect(15, 680, 220, 20, 10, '#382E32') + PanelDraw.Rect(255, 680, 220, 20, 10, '#382E32') + PanelDraw.Rect(495, 680, 220, 20, 10, '#382E32')
+    const bases = PanelDraw.Rect(15, 670, 220, 20, 10, '#382E32') + PanelDraw.Rect(255, 670, 220, 20, 10, '#382E32') + PanelDraw.Rect(495, 670, 220, 20, 10, '#382E32')
 
-    const progresses = PanelDraw.LinearGradientRect(15, 680, pass_width, 20, 10, colorArray.light_green) + PanelDraw.LinearGradientRect(255, 680, retry_width, 20, 10, colorArray.yellow) + PanelDraw.LinearGradientRect(495, 680, quit_width, 20, 10, colorArray.red)
+    const progresses = PanelDraw.LinearGradientRect(15, 670, pass_width, 20, 10, colorArray.light_green) + PanelDraw.LinearGradientRect(255, 670, retry_width, 20, 10, colorArray.yellow) + PanelDraw.LinearGradientRect(495, 670, quit_width, 20, 10, colorArray.red)
 
-    const rates = PanelDraw.Shadow(poppinsBold.getTextPath(Math.round(100 * pass_rate) + '%', 230, 667, 20, 'right baseline', '#fff') + poppinsBold.getTextPath(Math.round(100 * retry_rate) + '%', 470, 667, 20, 'right baseline', '#fff') + poppinsBold.getTextPath(Math.round(100 * quit_rate) + '%', 710, 667, 20, 'right baseline', '#fff'), 2, 2, 1, '#1c1719')
+    const rates = PanelDraw.Shadow(poppinsBold.getTextPath(Math.round(100 * pass_rate) + '%', 230, 657, 20, 'right baseline', '#fff') + poppinsBold.getTextPath(Math.round(100 * retry_rate) + '%', 470, 657, 20, 'right baseline', '#fff') + poppinsBold.getTextPath(Math.round(100 * quit_rate) + '%', 710, 657, 20, 'right baseline', '#fff'), 2, 2, 1, '#1c1719')
 
     const retry_draw_arr = averageArrayToFixedLength(retry_arr, 36)
     const quit_draw_arr = averageArrayToFixedLength(quit_arr, 36)
@@ -407,21 +421,19 @@ const component_R3 = (
     })
     const retry_fail_sum_arr_max = Math.max.apply(Math, retry_fail_sum_arr);
 
-    const retry_graph = PanelDraw.BarChart(retry_fail_sum_arr, retry_fail_sum_arr_max, 0, 15, 715 + 55, 690, 55, 4, 4, '#f6d659');
-    const fail_graph = PanelDraw.BarChart(quit_draw_arr, retry_fail_sum_arr_max, 0, 15, 715 + 55, 690, 55, 4, 4, '#ed6c9e');
+    const retry_graph = PanelDraw.BarChart(retry_fail_sum_arr, retry_fail_sum_arr_max, 0, 15, 705 + 55, 690, 55, 4, 4, '#f6d659');
+    const fail_graph = PanelDraw.BarChart(quit_draw_arr, retry_fail_sum_arr_max, 0, 15, 705 + 55, 690, 55, 4, 4, '#ed6c9e');
 
-    const polygon = PanelDraw.RoundedPolygon([{x: -30, y: 640}, {x: 742, y: 640}, {x: 714, y: 785}, {
-        x: -30,
-        y: 785
-    }], 20, '#382e32', 0.6)
+    const polygon = PanelDraw.RoundedPolygon(
+        [{x: -30, y: 630}, {x: 741, y: 630}, {x: 715, y: 775}, {x: -30, y: 775}],
+        20, '#382e32', 0.6)
 
     const shadowed = PanelDraw.Shadow(polygon, 10, 10, 5, '#1c1719', 0.2)
 
     return shadowed + bases + progresses + rates + titles + retry_graph + fail_graph
 }
 
-const component_R4 = (beatmap, expected_mode, original) => {
-    const mode = getGameMode(expected_mode, 1);
+const component_R4 = (beatmap, mode, original) => {
 
     const bpm = rounds(beatmap?.bpm, 2)
     const bpm_r = (beatmap?.bpm > 0) ? (60000 / beatmap?.bpm).toFixed(0) + 'ms' : '-';
@@ -516,108 +528,64 @@ const component_R4 = (beatmap, expected_mode, original) => {
 
     const string_e5s = labels.slice(0, 6).map((label, i) => {
         const x = 15 + 235 * (i % 2);
-        const y = 830 + 76 * Math.floor(i / 2);
+        const y = 820 + 76 * Math.floor(i / 2);
         return getSvgBody(x, y, label_E5(label));
     }).join('');
 
 
-    const polygon = PanelDraw.RoundedPolygon([{x: -30, y: 815}, {x: 526, y: 815}, {x: 481, y: 1060}, {
-        x: -30,
-        y: 1060
-    }], 20, '#382e32', 0.6)
+    const polygon = PanelDraw.RoundedPolygon(
+        [{x: -30, y: 805}, {x: 526, y: 805}, {x: 482, y: 1050}, {x: -30, y: 1050}],
+        20, '#382e32', 0.6)
 
     const shadowed = PanelDraw.Shadow(polygon, 10, 10, 5, '#1c1719', 0.2)
 
     return shadowed + string_e5s
 }
 
-const component_R5 = (expected, pp_list = [0], max_combo) => {
+const component_R5 = (beatmap, mode) => {
 
-    function getPP(pp) {
-        if ((pp || 0) > 10000) {
-            return round(pp || 0, -1).toString()
-        } else {
-            return Math.round(pp || 0).toString()
-        }
+    const circles = beatmap?.count_circles ?? 0
+    const sliders = beatmap?.count_sliders ?? 0
+    const spinners = beatmap?.count_spinners ?? 0
+
+    let value1_str = String(circles)
+    let value2_str = String(sliders)
+    let value3_str = String(spinners)
+
+    const MODE_TITLES = {
+        o: ['Circles', 'Sliders', 'Spinners'],
+        t: ['Hits', 'Drumrolls', 'Swells'],
+        c: ['Fruits', 'Juice S.', 'Banana S.'],
+        m: ['Notes', 'Hold Notes', 'LN%'],
+    };
+
+    const [title1_str, title2_str, title3_str] = MODE_TITLES[mode] ?? [];
+
+    if (mode === 'm') {
+        const total = circles + sliders;
+        const ratio = total > 0 ? (sliders / total) * 100 : 0;
+        value3_str = `${Math.round(ratio)}%`;
     }
 
-    const current = pp_list[0] || 0
-    const perfect = pp_list[1] || 0
+    const title1_shadow = PanelDraw.Shadow(poppinsBold.getTextPath(title1_str, 565, 838, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
 
-    const percent99 = pp_list[2] || 0
-    const percent98 = pp_list[3] || 0
-    const percent96 = pp_list[4] || 0
-    const percent94 = pp_list[5] || 0
-    const percent92 = pp_list[6] || 0
+    const value1_shadow = PanelDraw.Shadow(poppinsBold.getTextPath(value1_str, 618, 878, 36, 'center baseline', '#fff'), 2, 2, 1, '#1c1719')
 
-    const exp_combo = (expected?.combo || 0)
+    const title2_shadow = PanelDraw.Shadow(poppinsBold.getTextPath(title2_str, 555, 914, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
 
-    let title1_str
-    let pp1_str
-    let title2_str
-    let pp2_str
+    const value2_shadow = PanelDraw.Shadow(poppinsBold.getTextPath(value2_str, 608, 954, 36, 'center baseline', '#fff'), 2, 2, 1, '#1c1719')
 
-    if (current >= perfect - 0.5) {
-        // 默认的设定
+    const title3_shadow = PanelDraw.Shadow(poppinsBold.getTextPath(title3_str, 545, 990, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
 
-        title1_str = 'SS'
-        pp1_str = getPP(perfect)
-        title2_str = '98% FC'
-        pp2_str = getPP(percent98)
-    } else if (exp_combo >= max_combo * 0.9) {
-        // 全连
-        title1_str = 'SS'
-        pp1_str = getPP(perfect)
-        title2_str = 'You'
-        pp2_str = getPP(current)
-    } else if (current >= percent98 - 0.5) {
-        title1_str = '99% FC'
-        pp1_str = getPP(percent99)
-        title2_str = 'You'
-        pp2_str = getPP(current)
-    } else if (current >= percent96 - 0.5) {
-        title1_str = '98% FC'
-        pp1_str = getPP(percent98)
-        title2_str = 'You'
-        pp2_str = getPP(current)
-    } else if (current >= percent94 - 0.5) {
-        title1_str = '96% FC'
-        pp1_str = getPP(percent96)
-        title2_str = 'You'
-        pp2_str = getPP(current)
-    } else if (current >= percent92 - 0.5) {
-        title1_str = '94% FC'
-        pp1_str = getPP(percent94)
-        title2_str = 'You'
-        pp2_str = getPP(current)
-    } else {
-        title1_str = '92% FC'
-        pp1_str = getPP(percent92)
-        title2_str = 'You'
-        pp2_str = getPP(current)
-    }
+    const value3_shadow = PanelDraw.Shadow(poppinsBold.getTextPath(value3_str, 598, 1030, 36, 'center baseline', '#fff'), 2, 2, 1, '#1c1719')
 
-
-    const title1 = PanelDraw.Shadow(poppinsBold.getTextPath(title1_str, 565, 848, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
-
-    const pp1 = PanelDraw.Shadow(poppinsBold.get2SizeTextPath(pp1_str, 'PP', 36, 24, 618, 888, 'center baseline', '#fff'), 2, 2, 1, '#1c1719')
-
-    const title2 = PanelDraw.Shadow(poppinsBold.getTextPath(title2_str, 555, 924, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
-
-    const pp2 = PanelDraw.Shadow(poppinsBold.get2SizeTextPath(pp2_str, 'PP', 36, 24, 608, 964, 'center baseline', '#fff'), 2, 2, 1, '#1c1719')
-
-    const combo_title = PanelDraw.Shadow(poppinsBold.getTextPath('Combo', 545, 1000, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
-
-    const combo = PanelDraw.Shadow(poppinsBold.get2SizeTextPath(max_combo?.toString() || '0', 'x', 36, 24, 598, 1040, 'center baseline', '#fff'), 2, 2, 1, '#1c1719')
-
-    const polygon = PanelDraw.RoundedPolygon([{x: 550, y: 815}, {x: 708, y: 815}, {x: 666, y: 1060}, {
-        x: 508,
-        y: 1060
-    }], 20, '#382e32', 0.6)
+    const polygon = PanelDraw.RoundedPolygon(
+        [{x: 552, y: 805}, {x: 709, y: 805}, {x: 664, y: 1050}, {x: 507, y: 1050}],
+        20, '#382e32', 0.6)
 
     const shadowed = PanelDraw.Shadow(polygon, 10, 10, 5, '#1c1719', 0.2)
 
-    return shadowed + combo_title + combo + title2 + pp2 + title1 + pp1
+    return shadowed + title3_shadow + value3_shadow + title2_shadow + value2_shadow + title1_shadow + value1_shadow
 }
 
 const component_R6 = (background, beatmapset) => {
@@ -792,6 +760,188 @@ const component_R7 = (beatmapset = {
             return getSvgBody(x, y, card);
         }).join('\n');
     }
+}
+
+const component_R8 = (pp_list = [0], pp_distribution, mode) => {
+    const polygon = PanelDraw.RoundedPolygon(
+        [{x: 713, y: 945}, {x: 1950, y: 945}, {x: 1950, y: 1050}, {x: 688, y: 1050}],
+        20, '#382e32', 0.6)
+
+    const shadowed = PanelDraw.Shadow(polygon, 10, 10, 5, '#1c1719', 0.2)
+
+    const percent99 = Math.round(pp_list[2] || 0)
+    const percent98 = Math.round(pp_list[3] || 0)
+    const percent96 = Math.round(pp_list[4] || 0)
+    const percent94 = Math.round(pp_list[5] || 0)
+
+    const perfect_pp = pp_list[0] ?? 0
+
+    // const percent92 = pp_list[6] || 0
+
+    const r2s = [
+        card_R2({
+            ...LABEL_R2s["99"],
+            value: percent99 + ' PP',
+            max_width: 182
+        }),
+        card_R2({
+            ...LABEL_R2s["98"],
+            value: percent98 + ' PP',
+            max_width: 182
+        }),
+        card_R2({
+            ...LABEL_R2s["96"],
+            value: percent96 + ' PP',
+            max_width: 182
+        }),
+        card_R2({
+            ...LABEL_R2s["94"],
+            value: percent94 + ' PP',
+            max_width: 182
+        }),
+    ]
+
+    const r2_svg = r2s.map((v, i) => {
+        const x = Math.floor(i / 2) * 215 + 730
+        const y = i % 2 * 40 + 965
+
+        return getSvgBody(x, y, v)
+    }).join('\n')
+
+    let r22_svg
+    let r22_rrect_svg
+    let r22_base = PanelDraw.Rect(1160, 1008, 740, 20, 10, '#46393F', 1)
+
+    switch (mode) {
+        case 'o': {
+            const skill_config = ['pp_aim', 'pp_speed', 'pp_accuracy', 'pp_reading', 'pp_flashlight'];
+
+            const { total_pp, skill_count } = skill_config.reduce((acc, skill) => {
+                const pp = pp_distribution?.[skill] ?? 0;
+
+                return {
+                    total_pp: acc.total_pp + pp,
+                    skill_count: acc.skill_count + (pp >= 1e-4 ? 1 : 0) // 条件计数
+                };
+            }, { total_pp: 0, skill_count: 0 });
+
+            const maximum_pp = Math.max(total_pp, perfect_pp)
+
+            const interval = 15
+            const skill_width = Math.floor((740 + 10) / skill_count) - 10
+
+            const r22s = []
+            const r22_rects = []
+
+            let accumulated_width = 0;
+            skill_config.forEach((skill) => {
+                const val = pp_distribution?.[skill];
+                if (!val || val < 1e-4) return;
+
+                const width = normalize(val, maximum_pp, 0, 740, 20)
+
+                r22s.push(card_R2({
+                    ...LABEL_R2s[skill],
+                    value: Math.round(val) + 'PP',
+                    max_width: skill_width
+                }))
+
+                r22_rects.push(
+                    PanelDraw.LinearGradientRect(1160 + Math.max(0, accumulated_width - 40), 1008, width + 40, 20, 10, LABEL_R2s[skill].colors, 1, [20, 80], [50, 50])
+                )
+
+                accumulated_width += normalize(val, maximum_pp, 0, 740, 0);
+
+            });
+
+            r22_svg = r22s.map((v, i) => {
+                const x = 1160 + i * skill_width + Math.max(0, i * interval)
+
+                return getSvgBody(x, 965, v)
+            })
+
+            r22_rrect_svg = r22_rects.reverse().join('\n')
+        } break
+
+        case 't': {
+            const skill_config = ['pp_difficulty', 'pp_accuracy'];
+
+            const { total_pp, skill_count } = skill_config.reduce((acc, skill) => {
+                const pp = pp_distribution?.[skill] ?? 0;
+
+                return {
+                    total_pp: acc.total_pp + pp,
+                    skill_count: acc.skill_count + (pp >= 1e-4 ? 1 : 0) // 条件计数
+                };
+            }, { total_pp: 0, skill_count: 0 });
+
+            const maximum_pp = Math.max(total_pp, perfect_pp)
+
+            const interval = 15
+            const skill_width = Math.floor((740 + 10) / skill_count) - 10
+
+            const r22s = []
+            const r22_rects = []
+
+            let accumulated_width = 0;
+
+            skill_config.forEach((skill) => {
+                const val = pp_distribution?.[skill];
+                if (!val || val < 1e-4) return;
+
+                const width = normalize(val, maximum_pp, 0, 740, 20)
+
+                r22s.push(card_R2({
+                    ...LABEL_R2s[skill],
+                    value: Math.round(val) + ' PP',
+                    max_width: skill_width
+                }))
+
+                r22_rects.push(
+                    PanelDraw.LinearGradientRect(1160 + Math.max(0, accumulated_width - 40), 1008, width + 40, 20, 10, LABEL_R2s[skill].colors, 1, [20, 80], [50, 50])
+                )
+
+                accumulated_width += normalize(val, maximum_pp, 0, 740, 0);
+
+            });
+
+            r22_svg = r22s.map((v, i) => {
+                const x = 1190 + i * skill_width + Math.max(0, i * interval)
+
+                return getSvgBody(x, 965, v)
+            })
+
+            r22_rrect_svg = r22_rects.reverse().join('\n')
+        } break
+
+        default: {
+            const val = pp_distribution.pp
+
+            r22_svg = getSvgBody(1160, 965, card_R2({
+                ...LABEL_R2s['max'],
+                value: Math.round(val) + ' PP',
+                max_width: 182
+            }))
+
+            // const maximum_pp = Math.max(val, perfect_pp)
+            // const width = normalize(val, maximum_pp, 0, 740, 20)
+
+            r22_rrect_svg = '' // PanelDraw.LinearGradientRect(1160, 1008, Math.round(width), 20, 10, LABEL_R2s['max'].colors, 1, [20, 80], [50, 50])
+            r22_base = ''
+        }
+    }
+
+    return `
+    <g>
+<g>
+    ${shadowed}
+    ${r2_svg}
+    ${r22_base}
+    ${r22_rrect_svg}
+    ${r22_svg}
+</g>
+</g>
+`
 }
 
 const stat2label = (stat, remark, progress, original, isDisplay) => {
@@ -1041,6 +1191,120 @@ const card_R3 = (data = {
     `
 }
 
+const LABEL_R2s = {
+    '99': {
+        colors: colorArray.amber,
+        title: '99%',
+        title_abbr: '99.',
+        title_minimum: '9',
+    },
+    '98': {
+        colors: colorArray.green,
+        title: '98%',
+        title_abbr: '98.',
+        title_minimum: '8',
+    },
+    '96': {
+        colors: colorArray.blue,
+        title: '96%',
+        title_abbr: '96.',
+        title_minimum: '6',
+    },
+    '94': {
+        colors: colorArray.purple,
+        title: '94%',
+        title_abbr: '94.',
+        title_minimum: '4',
+    },
+
+    'pp_aim': {
+        colors: colorArray.cyan,
+        title: 'aiming',
+        title_abbr: 'aim',
+        title_minimum: 'a.',
+    },
+
+    'pp_speed': {
+        colors: colorArray.light_green,
+        title: 'speed',
+        title_abbr: 'spd',
+        title_minimum: 's.',
+    },
+
+    'pp_difficulty': {
+        colors: colorArray.light_green,
+        title: 'difficulty',
+        title_abbr: 'diff',
+        title_minimum: 'd.',
+    },
+
+    'pp_reading': {
+        colors: colorArray.light_yellow,
+        title: 'reading',
+        title_abbr: 'read',
+        title_minimum: 'r.',
+    },
+
+    'pp_accuracy': {
+        colors: colorArray.red,
+        title: 'accuracy',
+        title_abbr: 'acc',
+        title_minimum: 'c.',
+    },
+
+    'pp_flashlight': {
+        colors: colorArray.gray,
+        title: 'flashlight',
+        title_abbr: 'fl',
+        title_minimum: 'f.',
+    },
+
+    'max': {
+        colors: colorArray.cyan,
+        title: 'maximum',
+        title_abbr: 'max',
+        title_minimum: 'x.',
+    },
+}
+
+const card_R2 = (data = {
+    colors: colorArray.gray,
+    title: '',
+    title_abbr: '',
+    title_minimum: '',
+
+    value: 0,
+    max_width: 0,
+}) => {
+    const random = getRandomString(6)
+
+    const rrect = PanelDraw.LinearGradientRect(0, 0, 10, 25, 5, data.colors,
+        1, [50, 50], [100, 0])
+
+    const value_width = poppinsBold.getTextWidth(String(data.value), 24)
+    const value_svg = poppinsBold.getTextPath(String(data.value), data.max_width, 21, 24, 'right baseline', '#fff')
+
+    const remain_width = data.max_width - value_width - 30;
+
+    const candidate_titles = [
+        data.title,
+        data.title_abbr,
+        data.title_minimum
+    ];
+
+    const selected_title = candidate_titles.find((title) => {
+        if (!title) return false;
+        return poppinsBold.getTextWidth(String(title), 24) <= remain_width;
+    });
+
+    const title_svg = poppinsBold.getTextPath(String(selected_title ?? data.title_minimum), 20, 21, 24, 'left baseline', '#fff');
+
+    return `<g id="card_R2_${random}">
+    ${rrect}
+    ${title_svg}
+    ${value_svg}
+</g>`
+}
 
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
