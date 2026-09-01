@@ -3,7 +3,7 @@ import {
     averageArrayToFixedLength, clampToInteger,
     cs2px,
     getAvatar,
-    getBeatMapTitlePath,
+    getBeatMapTitlePath, getConvertedMode,
     getGameMode,
     getGenre,
     getImage,
@@ -265,7 +265,7 @@ const component_R1 = (background, mods = [], is_lazer = false, lazer_only = fals
 
     const lazer = lazer_only ? getImage(540, 50, 280, 70, getScoreTypeImage(true, '-only')) : getImage(540 + 110, 50, 170, 70, getScoreTypeImage(is_lazer, 2))
 
-    const mod_svg = drawLazerMods(mods, 770, 310, 70, 750, 'right', 8, true, true)
+    const mod_svg = drawLazerMods(mods.reverse(), 770, 310, 70, 750, 'right', 8, true, true)
 
     return `
     <g>
@@ -669,13 +669,15 @@ const component_R7 = (beatmapset = {
 
         const avatars = ids.map(id => avatarMap.get(id));
 
+        const map_mode = getGameMode(b.mode, 1)
+
         const r3 = {
             id: b.id,
             star: b.difficulty_rating,
             owners: b.owners || [],
             difficulty_name: b.version,
             is_current: is_current,
-            mode: mode,
+            mode: getConvertedMode(mode, map_mode),
             avatars: avatars,
         }
 
@@ -763,22 +765,35 @@ const component_R7 = (beatmapset = {
 }
 
 const component_R8 = (pp_list = [0], pp_distribution, mode) => {
+
+    let offset
+
+    if (mode === 'o' || mode === 't') {
+        offset = 0
+    } else {
+        offset = 760
+    }
+
     const polygon = PanelDraw.RoundedPolygon(
-        [{x: 713, y: 945}, {x: 1950, y: 945}, {x: 1950, y: 1050}, {x: 688, y: 1050}],
+        [{x: 713 + offset, y: 945}, {x: 1950 + offset, y: 945}, {x: 1950 + offset, y: 1050}, {x: 688 + offset, y: 1050}],
         20, '#382e32', 0.6)
 
     const shadowed = PanelDraw.Shadow(polygon, 10, 10, 5, '#1c1719', 0.2)
-
+    const percent100 = Math.round(pp_list[1] || 0)
     const percent99 = Math.round(pp_list[2] || 0)
     const percent98 = Math.round(pp_list[3] || 0)
     const percent96 = Math.round(pp_list[4] || 0)
-    const percent94 = Math.round(pp_list[5] || 0)
 
     const perfect_pp = pp_list[0] ?? 0
 
     // const percent92 = pp_list[6] || 0
 
     const r2s = [
+        card_R2({
+            ...LABEL_R2s["100"],
+            value: percent100 + ' PP',
+            max_width: 182
+        }),
         card_R2({
             ...LABEL_R2s["99"],
             value: percent99 + ' PP',
@@ -794,15 +809,10 @@ const component_R8 = (pp_list = [0], pp_distribution, mode) => {
             value: percent96 + ' PP',
             max_width: 182
         }),
-        card_R2({
-            ...LABEL_R2s["94"],
-            value: percent94 + ' PP',
-            max_width: 182
-        }),
     ]
 
     const r2_svg = r2s.map((v, i) => {
-        const x = Math.floor(i / 2) * 215 + 730
+        const x = Math.floor(i / 2) * 215 + 730 + offset
         const y = i % 2 * 40 + 965
 
         return getSvgBody(x, y, v)
@@ -915,13 +925,15 @@ const component_R8 = (pp_list = [0], pp_distribution, mode) => {
         } break
 
         default: {
-            const val = pp_distribution.pp
+            // const val = pp_distribution.pp
 
-            r22_svg = getSvgBody(1160, 965, card_R2({
-                ...LABEL_R2s['max'],
-                value: Math.round(val) + ' PP',
-                max_width: 182
-            }))
+            // r22_svg = getSvgBody(1160, 965, card_R2({
+            //     ...LABEL_R2s['max'],
+            //     value: Math.round(val) + ' PP',
+            //     max_width: 182
+            // }))
+
+            r22_svg = ''
 
             // const maximum_pp = Math.max(val, perfect_pp)
             // const width = normalize(val, maximum_pp, 0, 740, 20)
@@ -1192,6 +1204,12 @@ const card_R3 = (data = {
 }
 
 const LABEL_R2s = {
+    '100': {
+        colors: colorArray.yellow,
+        title: '100%',
+        title_abbr: '100.',
+        title_minimum: '1',
+    },
     '99': {
         colors: colorArray.amber,
         title: '99%',
@@ -1239,7 +1257,7 @@ const LABEL_R2s = {
     },
 
     'pp_reading': {
-        colors: colorArray.light_yellow,
+        colors: colorArray.yellow,
         title: 'reading',
         title_abbr: 'read',
         title_minimum: 'r.',

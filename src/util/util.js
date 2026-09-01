@@ -48,7 +48,6 @@ export const PROXY_PORT = Number(process.env.PROXY_PORT) || 7890
 const directHttpsAgent = new https.Agent({ keepAlive: true });
 const directHttpAgent = new http.Agent({ keepAlive: true });
 
-let cachedDirectAgent = undefined
 let cachedAgent = undefined;
 
 export function getProxyAgent() {
@@ -275,10 +274,6 @@ export function initPath() {
 }
 
 // pippi、Mocha, Aiko, Alisa, Chirou, Tama, Taikonator, Yuzu, Mani, Mari
-
-
-
-const UTF8Encoder = new TextEncoder('utf8');
 
 /**
  * @return boolean
@@ -546,13 +541,11 @@ export async function accessAsync(local_path) {
     } catch (e) {
         return false;
     }
-
-    return false;
 }
 
 /**
  * 优化读取模板的方法：存入缓存，读写更高效
- * @param path
+ * @param file_path
  * @param options
  * @return {*|string}
  */
@@ -660,7 +653,7 @@ export async function getMapBackground(obj = {}, cover_type = 'cover') {
             case 'list@2x': url = covers['list@2x']; break;
             case 'card': url = covers.card; break;
             case 'card@2x': url = covers['card@2x']; break;
-            case 'raw', 'fullsize': {
+            case 'raw': case 'fullsize': {
                 if (covers.fullsize != null) {
                     url = covers.fullsize
                 } else if (covers?.list != null) {
@@ -689,9 +682,7 @@ export async function getMapBackground(obj = {}, cover_type = 'cover') {
         use_cache = true;
     }
 
-    const background = await readNetImage(url, use_cache, default_image_path)
-
-    return background
+    return await readNetImage(url, use_cache, default_image_path)
 }
 
 
@@ -709,8 +700,6 @@ export async function getDiffBackground(obj = {}, must_full = false) {
     const sid = obj?.beatmapset?.id ?? obj?.beatmapset_id;
     const cover_type = must_full ? 'fullsize' : 'cover';
 
-    let has_local_bg = false;
-
     try {
         if (isEmptyString(SUPER_KEY)) {
             return await getMapBackground(obj, cover_type);
@@ -725,11 +714,11 @@ export async function getDiffBackground(obj = {}, must_full = false) {
         }
         path = res.data;
 
-        if (cacheManager.get(path)) {
+        if (await cacheManager.get(path)) {
             return path
         }
     } catch (e) {
-        if (e.response?.status == undefined) {
+        if (e.response?.status == null) {
             console.warn("本地背景服务超时", e.message);
         } else if (e.response?.status !== 404) {
             console.warn("本地背景服务异常", e.response?.status, e.message);
@@ -835,6 +824,7 @@ export async function getAvatar(any, default_image_path = getImageFromV3('avatar
 /**
  * 获取玩家横幅。如果为空返回 Banner/c1-c9.webp
  * @param any
+ * @param default_image_path
  * @return {Promise<string>}
  */
 export async function getBanner(any, default_image_path = getBannerLocal()) {
@@ -937,7 +927,6 @@ export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePa
             await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 }).catch(() => {});
         }
 
-        const content2 = await page.content();
         console.log("挑战结束后的页面标题:", await page.title());
 
         // 4. 正式访问图片
@@ -1120,7 +1109,7 @@ export async function readNetImage(
 /**
  * 在搜索字符串的末尾位置插入
  * @param {string} base 模板
- * @param {string} replace 要插入的内容
+ * @param {string} insert 要插入的内容
  * @param {string} search 要查找的内容
  * @return {string}
  */
@@ -1137,7 +1126,7 @@ function insertAfter(base, insert, search) {
  * - 这样能尽量少地使用正则匹配大量字符
  * - 这里是插入在“要查找的内容”之后（如果输入的正则是零宽正向回顾断言，(?<=）
  * @param {string} base 模板
- * @param {string | number} replace 要插入的内容
+ * @param {string | number} insert 要插入的内容
  * @param {string | RegExp} search 要查找的内容
  * @return {string}
  */
@@ -1853,6 +1842,18 @@ export function getGameMode(mode = '', level = 0, default_mode = 'default') {
     return mode_str;
 }
 
+export function getConvertedMode(mode = '', beatmap_mode = '') {
+    const cm = MODE_TO_RULESET_ID?.[mode] ?? 0
+
+    const bm = MODE_TO_RULESET_ID?.[beatmap_mode] ?? 0
+
+    if (bm === 0) {
+        return cm
+    } else {
+        return bm
+    }
+}
+
 /**
  * @function 拆分svg头尾，只保留身体，方便插入
  */
@@ -1946,7 +1947,6 @@ function fixed(i) {
  * @return {Promise<string|null>}
  */
 export async function getFlagFile(code = "CN") {
-    let flag;
     let flag_path = `${FLAG_PATH}/${code}`;
     const is_svg = code !== 'XX'
 
@@ -2177,6 +2177,7 @@ export const getTime = (seconds = 0) => {
 /**
  * 获取从秒转换成dhms的时间，如果要获取 分:秒 的格式，请使用 getTime
  * @param seconds 秒
+ * @param has_whitespace
  * @return {string} 时间字符串，比如 3d5h20m 只有到 minute 的等级时才会有 s
  */
 export const getTimeByDHMS = (seconds = 0, has_whitespace = false) => {
@@ -2431,6 +2432,7 @@ export function getMatchDuration(match) {
  * @param svg
  * @param {string | null} custom
  * @param reg_banner
+ * @param custom_opacity
  */
 export function setCustomBanner(svg, custom = null, reg_banner, custom_opacity = 0.7) {
     if (custom) {
@@ -2561,6 +2563,7 @@ export function compileTemplate(path) {
  * promise then 方法，将结果压入数组
  * @param {Array<PromiseSettledResult<Awaited<Promise<Object>>>>} results
  * @param {Array<Object>} array
+ * @param default_value
  */
 export function thenPush(results, array, default_value = {}) {
     results.forEach((result) => {
