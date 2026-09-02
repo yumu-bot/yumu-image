@@ -829,15 +829,15 @@ export async function getAvatar(any, default_image_path = getImageFromV3('avatar
  */
 export async function getBanner(any, default_image_path = getBannerLocal()) {
     const cover_url = any?.cover_url ?? any.cover?.url ?? String(any)
-    const assume_cache = any?.cover_url != null || any?.cover?.url != null;
 
-    const use_cache = assume_cache || (cover_url != null && /\?\d+/.test(cover_url))
-
-    if (cover_url.startsWith('http')) {
-        return await readNetImage(cover_url, use_cache, default_image_path);
-    } else {
+    if (!cover_url.startsWith('http')) {
         return cover_url
     }
+
+    const assume_cache = any?.cover_url != null || any?.cover?.url != null
+    const use_cache = assume_cache || /\?\d+/.test(cover_url)
+
+    return await readNetImage(cover_url, use_cache, default_image_path);
 }
 
 export async function downloadByFetch(url, buffer_path, default_image_path) {

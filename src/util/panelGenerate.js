@@ -272,7 +272,7 @@ export const PanelGenerate = {
         };
     },
 
-    microTeamMember2CardA1: (user, is_leader = false) => {
+    microTeamMember2CardA1: (user, is_leader = false, avatar = null, banner = null) => {
         const sub_icon1 = (user.is_supporter) ? getImageFromV3('object-card-supporter.png') : ''
 
         const country = user?.country_code || 'CN';
@@ -286,8 +286,8 @@ export const PanelGenerate = {
         const right3m = is_secret ? '?' : ((user.is_online === true) ? 'Online' : 'Offline')
 
         return {
-            background: user?.cover?.url,
-            avatar: user?.avatar_url,
+            background: banner ?? user?.cover?.url,
+            avatar: avatar ?? user?.avatar_url,
             sub_icon1: sub_icon1,
             sub_icon2: '',
             sub_banner: '',

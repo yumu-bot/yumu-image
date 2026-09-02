@@ -19,6 +19,7 @@ import {torusBold} from "../util/font.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 import {isNotEmptyString} from "../util/text.js";
+import {imageDownloader, user2Task, users2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_A9);
 
@@ -172,12 +173,24 @@ export async function panel_A9(data = {
     }
 
 
+    const promise_a1 = user2Task(leader)
+    const promise_a1s = users2Task(members)
+
+    const tasks = [
+        ...promise_a1,
+        ...promise_a1s,
+    ];
+
+    const images = await imageDownloader(tasks);
+
     // 队长
-    const paramA1 = PanelGenerate.microTeamMember2CardA1(leader, true)
+    const paramA1 = PanelGenerate.microTeamMember2CardA1(leader, true,
+        images.get(`avatar_${leader.id}`), images.get(`banner_${leader.id}`))
 
     // 队员
     const paramA1s = members.map((member) => {
-        return PanelGenerate.microTeamMember2CardA1(member, false)
+        return PanelGenerate.microTeamMember2CardA1(member, false,
+            images.get(`avatar_${member.id}`), images.get(`banner_${member.id}`))
     })
 
     const [leaderA1, cardA1s] = await renderInBatch(
