@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>loading</title>
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+    #stage { width: 100%; height: 100%; }
+    #stage svg { display: block; width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script type="module">
+    (async () => {
+      const key = new URLSearchParams(location.search).get("key");
+      const res = await fetch("/svg/" + encodeURIComponent(key ?? ""));
+      const text = await res.text();
+      document.getElementById("stage").innerHTML = text;
+
+      // 若 SVG 里有 <image>, 等它们加载完
+      const imgs = Array.from(document.querySelectorAll("#stage image"));
+      if (imgs.length) {
+        await Promise.all(imgs.map((el) =>
+          new Promise((resolve) => {
+            el.addEventListener("load", resolve, { once: true });
+            el.addEventListener("error", resolve, { once: true });
+          }),
+        ));
+      }
+      document.title = "loaded";
+    })();
+  </script>
+</body>
+</html>

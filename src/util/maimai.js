@@ -1,7 +1,6 @@
 import {
     accessAsync,
     downloadByFetch,
-    downloadWithCurl,
     getImageFromV3
 } from "./util.js";
 import {colorArray} from "./color.js";
@@ -34,7 +33,7 @@ export async function getMaimaiCover(song_id = 0) {
     } else if (raw_id > 0) {
         const lxns = `https://assets2.lxns.net/maimai/jacket/${raw_id}.png`
 
-        return await downloadWithCurl(lxns, path, getImageFromV3('Maimai', 'default.png'))
+        return await downloadByFetch(lxns, path, getImageFromV3('Maimai', 'default.png'))
     } else {
         return getImageFromV3('Maimai', 'default.png')
     }
@@ -447,7 +446,7 @@ export async function getChunithmCover(song_id = 0) {
         //return getImageFromV3('Chunithm', 'default.png')
         const lxns = `https://assets2.lxns.net/chunithm/jacket/${song}.png`
 
-        return await downloadWithCurl(lxns, path, getImageFromV3('Chunithm', 'default.png'))
+        return await downloadByFetch(lxns, path, getImageFromV3('Chunithm', 'default.png'))
     } else {
         return getImageFromV3('Chunithm', 'default.png')
     }

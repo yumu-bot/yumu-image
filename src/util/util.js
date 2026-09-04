@@ -1,4 +1,3 @@
-import * as v8 from "node:v8";
 import fs from 'fs';
 import os from "os";
 import crypto from 'crypto';
@@ -12,17 +11,11 @@ import {getBannerLocal, getRandomBannerPath} from "./mascotBanner.js";
 import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
-import puppeteer from "puppeteer-extra";
-import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import {EventEmitter} from 'events';
-import {exec} from 'child_process';
-import {promisify} from 'util';
 import {cacheManager, templateManager} from "./cacheManager.js";
 import {HttpsProxyAgent} from "https-proxy-agent";
-import {binary2Base64Text, compressLargePicture2Webp, PUPPETEER_OPTIONS} from "./image.js";
+import {binary2Base64Text, compressLargePicture2Webp} from "./image.js";
 import {isEmptyString, isNotBlankString, isNotNumber, isNumber} from "./text.js";
-
-const execAsync = promisify(exec);
 
 const VERSION = 'v0.8.4'
 const VERSION_CODE = 'VS'
@@ -38,6 +31,10 @@ export const SUPER_KEY = process.env.SUPER_KEY || "";
 export const OSU_BUFFER_PATH = process.env.OSU_BUFFER_PATH || process.env.OSU_FILE_PATH || path_util.join(CACHE_PATH, "osufile");
 export const IMG_BUFFER_PATH = process.env.BUFFER_PATH || path_util.join(CACHE_PATH, "buffer");
 
+export const HTTP_EXPORT_FILE_V3 = "/EXPORT_FILE_V3";
+export const HTTP_IMG_BUFFER_PATH = "/IMG_BUFFER_PATH";
+export const HTTP_OTHER_PATH = "/OTHER_PATH";
+
 export const USE_PROXY = process.env.USE_PROXY === 'true';
 export const OSUFILE_NO_PROXY = process.env.OSUFILE_NO_PROXY === 'true';
 
@@ -45,8 +42,8 @@ export const PROXY_SCHEME = process.env.PROXY_SCHEME || 'http';
 export const PROXY_HOST = process.env.PROXY_HOST || '127.0.0.1';
 export const PROXY_PORT = Number(process.env.PROXY_PORT) || 7890
 
-const directHttpsAgent = new https.Agent({ keepAlive: true });
-const directHttpAgent = new http.Agent({ keepAlive: true });
+const directHttpsAgent = new https.Agent({keepAlive: true});
+const directHttpAgent = new http.Agent({keepAlive: true});
 
 let cachedAgent = undefined;
 
@@ -109,96 +106,10 @@ if (process.env.FLAG_PATH != null) {
     FLAG_PATH = path_util.join(CACHE_PATH, "flag");
 }
 
-puppeteer.use(StealthPlugin());
-
-/**
- * @type {Promise<Browser>}
- */
-let browserPromise = null;
-
-['SIGINT', 'SIGTERM', 'SIGQUIT', 'exit'].forEach(signal => {
-    process.on(signal, async () => {
-        if (browserPromise) {
-            console.log(`[进程清理] 收到 ${signal} 信号，正在关闭后台浏览器...`);
-            await browserPromise.close().catch(() => {});
-            browserPromise = null;
-        }
-        process.exit(0);
-    });
-});
-
-process.on('SIGUSR2', () => {
-    console.log('接收到 SIGUSR2 信号，准备生成堆快照...');
-    try {
-        const filename = `heap-${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}.heapsnapshot`;
-        v8.writeHeapSnapshot(filename);
-        console.log(`堆快照已成功写入当前目录下的: ${filename}`);
-    } catch (err) {
-        console.error('信号触发堆快照失败:', err);
-    }
-});
-
-process.on('uncaughtException', async (err) => {
+process.on('uncaughtException', (err) => {
     console.error('[进程崩溃] 捕获到未处理的异常:', err);
-    if (browserPromise) {
-        await browserPromise.close().catch(() => {});
-    }
     process.exit(1);
 });
-
-
-export async function getBrowserInstance(initial = false) {
-    if (browserPromise) {
-        const b = await browserPromise;
-
-        // 核心：不仅检查连接，还检查响应活性
-        const responsive = await isBrowserResponsive(b);
-
-        if (responsive) {
-            const contexts = b.browserContexts();
-            if (contexts.length > 20) {
-                console.warn(`[资源检查] Context 数量(${contexts.length})较高，清理旧 Context...`);
-                for (let i = 1; i < contexts.length; i++) {
-                    await contexts[i].close().catch(() => {});
-                }
-            }
-
-            return b;
-        } else {
-            console.error("[实例侦测] 浏览器已失去响应或断开，准备重启...");
-            // 尝试强制杀死旧实例
-            await b.close().catch(() => {});
-            // 如果 b.process() 还在，可以尝试 process.kill(b.process().pid) (如果有权限)
-        }
-        browserPromise = null;
-    }
-
-    if (!initial) {
-        console.log('正在启动/重启唯一浏览器实例...');
-    }
-
-    browserPromise = puppeteer.launch(PUPPETEER_OPTIONS).catch(err => {
-        browserPromise = null;
-        throw err;
-    });
-
-    return browserPromise;
-}
-
-async function isBrowserResponsive(browser) {
-    try {
-        if (!browser.connected) return false;
-
-        // 尝试在 2 秒内获取浏览器版本，如果获取不到，说明事件循环已卡死
-        return await Promise.race([
-            browser.version(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
-        ]).then(() => true).catch(() => false);
-    } catch (e) {
-        return false;
-    }
-}
-
 
 EventEmitter.defaultMaxListeners = 50;
 
@@ -237,11 +148,21 @@ export function initPath() {
         } else if (error.code === 'ECONNABORTED' && !config.__no_wait && config.__errTime <= config.retry) {
             let method
             switch (config.method?.toUpperCase()) {
-                case 'GET': method = "获取"; break
-                case 'POST': method = "发布"; break
-                case 'DEL': method = "删除"; break
-                case 'PUT': method = "修改"; break
-                default: method = "操作"; break
+                case 'GET':
+                    method = "获取";
+                    break
+                case 'POST':
+                    method = "发布";
+                    break
+                case 'DEL':
+                    method = "删除";
+                    break
+                case 'PUT':
+                    method = "修改";
+                    break
+                default:
+                    method = "操作";
+                    break
             }
 
             console.log(`${method} ${config.url} 超时，重试次数：${config.__errTime}`);
@@ -610,13 +531,14 @@ export function readBinaryFromV3(...paths) {
 }
 
 /**
- * 获取来自 v3 的图片链接，可用于 SVG 图片插入
+ * 获取来自 v3 的图片链接，可用于 SVG 图片插入, 服务器通过路由来响应正确的图片
  * @param paths
  * @return {string} 图片链接
  */
 export function getImageFromV3(...paths) {
-    return path_util.join(EXPORT_FILE_V3, ...paths);
+    return path_util.join(HTTP_EXPORT_FILE_V3, ...paths);
 }
+
 /**
  * 获取谱面背景 v5
  * @param obj 也可以是 score，这两个类结构刚好一样，也可以是 beatmapset，会自动识别
@@ -641,19 +563,36 @@ export async function getMapBackground(obj = {}, cover_type = 'cover') {
 
     const type = valid_types.includes(cl) ? cl : 'cover';
 
-    let url
+    let url = ""
 
     if (covers != null) {
         switch (type) {
-            case 'cover': url = covers.cover; break;
-            case 'cover@2x': url = covers['cover@2x']; break;
-            case 'silmcover': url = covers.cover; break;
-            case 'silmcover@2x': url = covers['silmcover@2x']; break;
-            case 'list': url = covers.list; break;
-            case 'list@2x': url = covers['list@2x']; break;
-            case 'card': url = covers.card; break;
-            case 'card@2x': url = covers['card@2x']; break;
-            case 'raw': case 'fullsize': {
+            case 'cover':
+                url = covers.cover;
+                break;
+            case 'cover@2x':
+                url = covers['cover@2x'];
+                break;
+            case 'silmcover':
+                url = covers.cover;
+                break;
+            case 'silmcover@2x':
+                url = covers['silmcover@2x'];
+                break;
+            case 'list':
+                url = covers.list;
+                break;
+            case 'list@2x':
+                url = covers['list@2x'];
+                break;
+            case 'card':
+                url = covers.card;
+                break;
+            case 'card@2x':
+                url = covers['card@2x'];
+                break;
+            case 'raw':
+            case 'fullsize': {
                 if (covers.fullsize != null) {
                     url = covers.fullsize
                 } else if (covers?.list != null) {
@@ -664,10 +603,12 @@ export async function getMapBackground(obj = {}, cover_type = 'cover') {
                 } else {
                     url = 'https://assets.ppy.sh/beatmaps/' + obj?.beatmapset?.id + '/covers/fullsize.jpg'
                     use_cache = false
-                } break;
+                }
+                break;
             }
 
-            default: return default_image_path
+            default:
+                return default_image_path
         }
     } else if (isNumber(beatmapset?.id)) {
         url = 'https://assets.ppy.sh/beatmaps/' + beatmapset?.id + '/covers/' + type + '.jpg'
@@ -681,7 +622,7 @@ export async function getMapBackground(obj = {}, cover_type = 'cover') {
     if (url && /\?\d+/.test(url)) {
         use_cache = true;
     }
-
+    if (url === "") url = 'https://assets.ppy.sh/beatmaps/' + beatmapset?.id + '/covers/' + type + '.jpg'
     return await readNetImage(url, use_cache, default_image_path)
 }
 
@@ -702,7 +643,8 @@ export async function getDiffBackground(obj = {}, must_full = false) {
 
     try {
         if (isEmptyString(SUPER_KEY)) {
-            return await getMapBackground(obj, cover_type);
+            const bg = await getMapBackground(obj, cover_type);
+            return bg;
         }
 
         const res = await getBackgroundFromDatabase(bid, sid);
@@ -857,154 +799,6 @@ export async function downloadByFetch(url, buffer_path, default_image_path) {
     }
 }
 
-export async function downloadWithCurl(url, buffer_path, default_image_path) {
-    try {
-        // 使用 curl 下载，模拟一个常见的 User-Agent
-        // -L 跟踪重定向, -s 静默模式, -o 输出到文件
-        const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.57 Safari/537.36';
-        const command = `curl -L -s -H "User-Agent: ${userAgent}" "${url}" -o "${buffer_path}"`;
-
-        await execAsync(command);
-
-        // 简单校验：检查下载的是不是 HTML (如果是 HTML 说明还是被拦截了)
-        const stats = fs.statSync(buffer_path);
-        if (stats.size < 4000) { // 图片通常大于 1KB，挑战页 HTML 往往很小
-            const content = fs.readFileSync(buffer_path, 'utf8');
-            if (content.includes('<script') || content.includes('403')) {
-                fs.rmSync(buffer_path);
-                throw new Error('Caught by Anti-Bot via Curl');
-            }
-        }
-
-        return buffer_path;
-    } catch (error) {
-        console.error('Curl 下载失败:', error.message);
-        return default_image_path;
-    }
-}
-
-/**
- * 除非 axios 用不了，否则就别用 puppeteer 开浏览器下（真的很重）
- * @param url
- * @param bufferPath
- * @param defaultImagePath
- * @returns {Promise<*|string>}
- */
-export async function downloadImageWithPuppeteer(url, bufferPath, defaultImagePath = getImageFromV3('error.png')) {
-    const browser = await getBrowserInstance();
-    const context = await browser.createBrowserContext();
-    const page = await context.newPage();
-
-    try {
-
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36');
-        // 2. 模拟真实视口和指纹
-        await page.setViewport({ width: 1280, height: 720 });
-
-        let imageBuffer = null;
-        let finished = false;
-
-        page.on('response', async (response) => {
-            if (finished) return;
-            if (response.url().includes(url.split('?')[0])) {
-                const contentType = response.headers()['content-type'];
-                if (contentType?.startsWith('image/')) {
-                    try {
-                        imageBuffer = await response.buffer();
-                        finished = true;
-                    } catch (e) {}
-                }
-            }
-        });
-
-        // 3. 关键：尝试通过“首页渗透”绕过 Cloudflare
-        const origin = new URL(url).origin;
-        await page.goto(origin, { waitUntil: 'networkidle2', timeout: 15000 }).catch(() => {});
-
-        const isChallengePage = await page.evaluate(() => document.body.innerHTML.includes('__tst_status'));
-        if (isChallengePage) {
-            console.log("检测到挑战页，等待执行...");
-            await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 }).catch(() => {});
-        }
-
-        console.log("挑战结束后的页面标题:", await page.title());
-
-        // 4. 正式访问图片
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
-
-        // 5. 最后的挣扎：如果还没拿到，尝试在页面内找 img
-        if (!imageBuffer) {
-            console.log("你到底有没有 image 啊")
-            imageBuffer = await page.evaluate(async (targetUrl) => {
-                const img = document.querySelector('img');
-                if (img && img.src.includes(targetUrl)) {
-                    const resp = await fetch(img.src);
-                    const blob = await resp.blob();
-                    return await new Promise(resolve => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => resolve(reader.result.split(',')[1]);
-                        reader.readAsDataURL(blob);
-                    });
-                }
-                return null;
-            }, url).then(base64 => base64 ? Buffer.from(base64, 'base64') : null).catch(() => null);
-        }
-
-        if (imageBuffer) {
-            await fs.promises.writeFile(bufferPath, imageBuffer);
-            return bufferPath;
-        }
-
-        console.log("浏览器下图：失败，正在返回默认图片")
-        return defaultImagePath;
-    } finally {
-        await page.close().catch(() => {});
-        await context.close().catch(() => {});
-    }
-}
-
-/**
- * 下载图片至指定的位置
- * @param path 网络地址
- * @param buffer_path 存储的地址，包括文件名
- * @param default_image_path 出错时返回的本地图片
- * @returns {Promise<string>}
- */
-export async function downloadImage(path = '', buffer_path = '', default_image_path = getImageFromV3('beatmap-DLfailBG.webp')) {
-    const error = getImageFromV3('error.png');
-
-    let req;
-    let data;
-
-    try {
-        req = await axios.get(path, {
-            responseType: 'arraybuffer',
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.57 Safari/537.36',
-                'Referer': 'https://www.google.com'
-            },
-            timeout: 10000
-        });
-
-        data = req.data;
-    } catch (e) {
-        console.error("下载网图：失败", e.message);
-        return default_image_path || error;
-    }
-
-    if (data.slice(0, 10).toString().includes('<')) {
-        console.error("Caught by Anti-Bot: Received HTML instead of Image");
-        return default_image_path || error;
-    }
-
-    if (req && req.status === 200) {
-        await fs.promises.writeFile(buffer_path, data);
-        return buffer_path;
-    } else {
-        return default_image_path || error;
-    }
-}
-
 /**
  * 保存并压缩图片
  * @return {Promise<boolean>} 返回最终保存好的本地绝对路径
@@ -1026,8 +820,45 @@ export async function saveNetImage(buffer_path, buffer, max_width = 1920, max_he
 }
 
 /**
- * 下载网图或读取本地缓存，统一返回绝对路径字符串
- * @return {Promise<string>} 图片的本地绝对路径
+ * 把本地绝对路径转换为 HTTP_ 前缀路径(SVG 渲染服务据此解析回本地文件)。
+ * - 已是 data:/http(s):/HTTP_ 前缀的资源直接返回,避免二次加前缀;
+ * - 去掉 base 末尾斜杠后再切片,确保相对路径保留前导 /,修正"缺斜杠"问题。
+ */
+function toHttpImagePath(path) {
+    if (typeof path !== 'string' || path.length === 0) {
+        return path;
+    }
+
+    // 已可直接嵌入 SVG 的资源(数据 URI / 网络地址 / HTTP_ 前缀)原样返回
+    if (
+        path.startsWith('data:') ||
+        path.startsWith('http://') ||
+        path.startsWith('https://') ||
+        path.startsWith(HTTP_EXPORT_FILE_V3) ||
+        path.startsWith(HTTP_IMG_BUFFER_PATH) ||
+        path.startsWith(HTTP_OTHER_PATH)
+    ) {
+        return path;
+    }
+
+    const exportBase = EXPORT_FILE_V3 && EXPORT_FILE_V3.replace(/\/+$/, '');
+    if (exportBase && path.startsWith(exportBase + '/')) {
+        return HTTP_EXPORT_FILE_V3 + path.slice(exportBase.length);
+    }
+
+    const imgBase = IMG_BUFFER_PATH && IMG_BUFFER_PATH.replace(/\/+$/, '');
+    if (imgBase && path.startsWith(imgBase + '/')) {
+        return HTTP_IMG_BUFFER_PATH + path.slice(imgBase.length);
+    }
+
+    return HTTP_OTHER_PATH + path;
+}
+
+/**
+ * 下载网图或读取本地缓存，统一返回可直接嵌入 SVG 的图片地址。
+ * 本地文件映射为 HTTP_ 前缀路径(由 SVG 渲染服务解析回本地文件),
+ * 网络地址 / data URI 原样返回。
+ * @return {Promise<string>} 图片地址(data: / http(s): / HTTP_ 前缀路径)
  */
 export async function readNetImage(
     path = '',
@@ -1035,6 +866,17 @@ export async function readNetImage(
     default_image_path = getImageFromV3('beatmap-DLfailBG.webp'),
     max_width = 1920,
     max_height = null
+) {
+    path = await readNetImageWrapper(path, use_cache, default_image_path, max_width, max_height);
+    return toHttpImagePath(path);
+}
+
+async function readNetImageWrapper(
+    path,
+    use_cache,
+    default_image_path,
+    max_width,
+    max_height
 ) {
     const error_path = getImageFromV3('error.png');
     const loadDefault = () => default_image_path || error_path;
@@ -1497,11 +1339,11 @@ function floorOrRound(input = 0, level = 0, sub_level = 0, is_round = false) {
             dec = Math.round(Math.abs(number - int) * Math.pow(10, level)) / Math.pow(10, level)
 
             // 1.95 ->lv.1-> 1 / 1, 因此需要进位
-            if (Math.abs(dec) >= 1 - Math.pow(10, - level)) {
+            if (Math.abs(dec) >= 1 - Math.pow(10, -level)) {
                 if (int < 0) {
-                    int --
+                    int--
                 } else {
-                    int ++
+                    int++
                 }
                 dec = 0
             }
@@ -1915,11 +1757,11 @@ export function getMapStatusImage(status = 0) {
         '4': 'object-beatmap-loved.png',
 
         // 字符串状态
-        'ranked':    'object-beatmap-ranked.png',
-        'approved':  'object-beatmap-ranked.png',
+        'ranked': 'object-beatmap-ranked.png',
+        'approved': 'object-beatmap-ranked.png',
         'qualified': 'object-beatmap-qualified.png',
-        'loved':     'object-beatmap-loved.png',
-        '':          'error.png'
+        'loved': 'object-beatmap-loved.png',
+        '': 'error.png'
     };
 
     // 3. 检查是否存在精确映射，否则走兜底逻辑
@@ -1965,7 +1807,7 @@ export async function getFlagFile(code = "CN") {
         const url = `https://osu.ppy.sh/assets/images/flags/${n_1.toString(16)}-${n_2.toString(16)}.${extension}`;
         let req;
         try {
-            req = await osuAxios.get(url, { responseType: 'arraybuffer' });
+            req = await osuAxios.get(url, {responseType: 'arraybuffer'});
         } catch (e) {
             console.error(`国旗：下载失败 [${code}]`, e.message);
         }
@@ -2043,7 +1885,6 @@ export async function getFlagPath(code = "CN", x, y, h = 30) {
 export function getFormattedTime(time = '', format_to = 'YYYY-MM-DD HH:mm:ss [+8]', format_from = 'YYYY-MM-DD[T]HH:mm:ss[Z]', delta_hours = 8) {
     return moment(time, format_from).add(delta_hours, 'hours').format(format_to);
 }
-
 
 
 /**
@@ -2365,7 +2206,7 @@ function getRatingName(ruleset_id = 0, star_rating = 0) {
     if (isNaN(star_rating)) return 'UNKNOWN';
 
     const config = RULESETS[ruleset_id] || RULESETS.default;
-    const { thresholds, names } = config;
+    const {thresholds, names} = config;
 
     const index = thresholds.findIndex(t => star_rating < t);
 

@@ -6,7 +6,7 @@ import {getRandomString, isNumber} from "./text.js";
 
 export const PanelDraw = {
     Image: (x = 0, y = 0, w = 100, h = 100, link = '', opacity = 1, ratio = "xMidYMid slice") => {
-        return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" xlink:href="${link}" style="opacity: ${opacity};" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`;
+        return `<image width="${w}" height="${h}" transform="translate(${x} ${y})" href="${link}" style="opacity: ${opacity};" preserveAspectRatio="${ratio}" vector-effect="non-scaling-stroke"/>`;
     },
 
     Rect: (x = 0, y = 0, w = 0, h = 0, r = 0, color = '#fff', opacity = 1) => {

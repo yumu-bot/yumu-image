@@ -1,29 +1,16 @@
-import 'dotenv/config';
 import {
     CACHE_PATH,
-    getBrowserInstance,
     getProxyAgent,
     IMG_BUFFER_PATH,
     initPath,
     loggerTime,
     OSU_BUFFER_PATH
 } from "./src/util/util.js";
-import puppeteer from "puppeteer";
 import {WsClient} from "./src/util/websocket.js";
 import moment from "moment";
 
 initPath();
 //这里放测试代码
-
-// 覆盖默认的 launch 方法
-const originalLaunch = puppeteer.launch;
-puppeteer.launch = function(options = {}) {
-    const newOptions = {
-        ...options,
-        headless: options.headless === undefined ? 'new' : options.headless
-    };
-    return originalLaunch.call(this, newOptions);
-};
 
 process.on('unhandledRejection', (reason) => {
     console.error('未捕获的 Promise 拒绝:', reason);
@@ -226,17 +213,9 @@ async function start() {
         taskQueue.push({ msg });
         processQueue();
     });
-
-    client.on('close', () => {
-        if (client.heartbeatTimer) clearInterval(client.heartbeatTimer);
-        client.ws.removeAllListeners();
-        client.ws = null;
-    })
 }
 
 await start();
-
-await getBrowserInstance(true)
 
 console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n当前时间：${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}\nWS 监听端口: ${port}\n`);
 console.log("主缓存目录: ", CACHE_PATH);

@@ -1,7 +1,4 @@
-import JPEGProvider from '../svg-to-image/JPEGProvider.js';
-import PNGProvider from '../svg-to-image/PNGProvider.js';
-import WEBPProvider from '../svg-to-image/WEBPProvider.js';
-import {API} from "../svg-to-image/API.js";
+import {renderSvg} from "./svgRenderer.js";
 import sharp from "sharp";
 import fs from "fs";
 import WebP from "node-webpmux";
@@ -17,70 +14,11 @@ export const ADVANCED_IMAGE_FORMAT = process.env.ADVANCED_FORMAT ?? DEFAULT_ADVA
 
 const FILE_SIZE_THRESHOLD = 64 * 1024;
 
-const exportsJPEG = new API(new JPEGProvider());
-const exportsPNG = new API(new PNGProvider());
-const exportsWEBP = new API(new WEBPProvider());
+export const exportJPEG = async (svg) => await renderSvg(svg, { format: 'jpeg', quality: 90 });
 
-// 1. 基础的、通用的 Puppeteer 参数
-const base_args = [
-    '--js-flags=--max-old-space-size=512',  // 去掉引号
-    '--disable-breakpad',
-    '--disable-dev-shm-usage',
-    '--disable-setuid-sandbox',
-    '--no-sandbox',
-    '--no-zygote',
-    '--no-first-run',
-    '--disable-web-security',                    // 恢复
-    '--allow-file-access-from-files',           // 恢复
-    '--disable-blink-features=AutomationControlled', // 恢复
-    '--disable-infobars',                       // 恢复
-    '--disable-backgrounding-occluded-windows',
-    '--disable-renderer-backgrounding',
-    // 移除 --disable-gpu-compositing
-    // 移除 --disable-features=UseSkiaRenderer
-    // 移除 --ignore-gpu-blocklist (后面会根据平台添加)
-];
+export const exportPNG = async (svg) => await renderSvg(svg, { format: 'png' });
 
-if (process.platform === 'win32') {
-    base_args.push(
-        '--disable-gpu',               // 明确禁用 GPU（之前版本有用）
-        '--use-gl=swiftshader',        // 使用 CPU 软渲染（之前版本有用）
-        '--window-position=-32000,-32000',
-        '--disable-features=CalculateNativeWinOcclusion',
-        '--disable-features=TabHoverCardImages',
-        '--disable-backgrounding-occluded-windows',
-        '--disable-renderer-backgrounding',
-        '--no-pings',
-        '--mute-audio'
-    );
-} else if (process.platform === 'linux') {
-    base_args.push(
-        '--use-gl=egl',
-        '--enable-features=Vulkan',
-        '--ignore-gpu-blocklist',
-        '--disable-gpu-sandbox'
-    );
-}
-
-export const PUPPETEER_OPTIONS = {
-    pipe: true,
-    headless: true,
-    args: base_args
-};
-
-export const exportJPEG = async (svg) => await exportsJPEG.convert(svg, {
-    quality: 90,
-    puppeteer: PUPPETEER_OPTIONS
-});
-
-export const exportPNG = async (svg) => await exportsPNG.convert(svg, {
-    puppeteer: PUPPETEER_OPTIONS
-});
-
-export const exportWEBP = async (svg) => await exportsWEBP.convert(svg, {
-    quality: 90,
-    puppeteer: PUPPETEER_OPTIONS
-});
+export const exportWEBP = async (svg) => await renderSvg(svg, { format: 'webp', quality: 90 });
 
 const EXPORTERS = {
     jpeg: { fn: exportJPEG, mime: 'image/jpeg', format: 'jpeg' },

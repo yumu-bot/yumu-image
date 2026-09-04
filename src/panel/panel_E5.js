@@ -218,8 +218,8 @@ export async function panel_E5(data = {
             availability: [Object]
         },
 
-        legacy_rank: 'F',
-        legacy_accuracy: 0.0,
+        legacy_rank: 'A',
+        legacy_accuracy: 50.5,
 
         user: {},
     },
