@@ -1612,8 +1612,7 @@ export async function label_J2(data = {
     svg = setText(svg, index, reg_index);
 
     //插入图片
-    const avatar = await getAvatar(data);
-    svg = setImage(svg, 8, 8, 70, 70, avatar, reg_avatar, 1);
+    svg = setImage(svg, 8, 8, 70, 70, data.avatar, reg_avatar, 1);
 
     return svg;
 }

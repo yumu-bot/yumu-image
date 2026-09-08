@@ -1,5 +1,5 @@
 import {
-    clamp, clampToInteger,
+    clamp, clampToInteger, getAvatar,
     getGameMode,
     getImageFromV3,
     getPanelNameSVG,
@@ -500,7 +500,7 @@ export async function panel_J(data = {
 
         const h = await label_J2({
             index: parseInt(i) + 1 || 0,
-            avatar: v?.avatar_url || "https://a.ppy.sh/" , //await readNetImage(, false, getExportFileV3Path('avatar-guest.png')),
+            avatar: await getAvatar(v?.avatar_url || "https://a.ppy.sh/"),
             name: v?.username || 'Unknown',
             count: v?.map_count || 0,
             pp: v?.pp_count || 0,
