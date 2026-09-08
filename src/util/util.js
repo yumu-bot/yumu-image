@@ -17,8 +17,22 @@ import {HttpsProxyAgent} from "https-proxy-agent";
 import {binary2Base64Text, compressLargePicture2Webp} from "./image.js";
 import {isEmptyString, isNotBlankString, isNotNumber, isNumber} from "./text.js";
 
-const VERSION = 'v0.8.4'
-const VERSION_CODE = 'VS'
+let VERSION = 'v0.0.0'
+let VERSION_CODE = 'UN'
+
+const pkgPath = path.resolve(process.cwd(), 'package.json');
+
+try {
+    let pack = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+
+    VERSION = 'v' + (pack.version ?? '0.0.0');
+    VERSION_CODE = pack?.["version-code"] ?? 'UN'
+
+    console.log(`当前版本号：${VERSION} ${VERSION_CODE}`);
+} catch (error) {
+    console.warn("没有找到版本号。");
+}
+
 
 const path_util = path;
 const MD5 = crypto.createHash("md5");
@@ -187,10 +201,6 @@ export function initPath() {
     fs.access(IMG_BUFFER_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
     fs.access(FLAG_PATH, fs.constants.F_OK, (e) => !e || fs.mkdirSync(e.path, {recursive: true}));
 
-    Number.prototype.fixed = function () {
-        return fixed(this);
-    }
-
     return path;
 }
 
@@ -315,20 +325,16 @@ export function requireNonNullElse(obj, obj2) {
 
 export const toPromise = (source, promise = () => readNetImage(source)) => {
     if (isNotBlankString(source)) {
-        // 1. 检查是否是 Base64
         const isBase64 = source.startsWith('data:image');
-
-        // 2. 检查是否是网络路径 (http:// 或 https:// 或 //)
         const isRemote = /^(https?:)?\/\//.test(source);
 
-        if (isBase64) {
+        if (isBase64 || !isRemote) {
             return Promise.resolve(source);
-        } else if (!isRemote) {
-            return Promise.resolve(binary2Base64Text(readFile(source, 'binary')));
         }
+
+        //Promise.resolve(binary2Base64Text(readFile(source, 'binary')));
     }
 
-    // 只有在确定是远程 URL 或其他情况时，才执行传入的异步函数
     return promise();
 };
 
@@ -560,6 +566,20 @@ export function getImageFromV3(...paths) {
     return path_util.join(HTTP_EXPORT_FILE_V3, ...paths);
 }
 
+export function getLocalPathFromV3(...paths) {
+    return path_util.join(EXPORT_FILE_V3, ...paths);
+}
+
+export function testImageFromV3(...paths) {
+    const path = getLocalPathFromV3(...paths);
+    try {
+        fs.accessSync(path);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 /**
  * 获取谱面背景 v5
  * @param obj 也可以是 score，这两个类结构刚好一样，也可以是 beatmapset，会自动识别
@@ -664,8 +684,7 @@ export async function getDiffBackground(obj = {}, must_full = false) {
 
     try {
         if (isEmptyString(SUPER_KEY)) {
-            const bg = await getMapBackground(obj, cover_type);
-            return bg;
+            return await getMapBackground(obj, cover_type);
         }
 
         const res = await getBackgroundFromDatabase(bid, sid);
@@ -1849,16 +1868,10 @@ export async function getFlagFile(code = "CN") {
     return cached || null;
 }
 
-const TW_IMAGE_PATH = getImageFromV3('flag-TW.png');
+const HAS_TW_IMAGE = testImageFromV3('flag-TW.png');
 
-let HAS_TW_IMAGE = false;
-
-try {
-    fs.accessSync(TW_IMAGE_PATH);
-    HAS_TW_IMAGE = true;
-} catch {
-    HAS_TW_IMAGE = false;
-    console.info(`[util] 没有找到默认的台湾地区旗: ${TW_IMAGE_PATH}，将默认使用五星红旗`);
+if (!HAS_TW_IMAGE) {
+    console.info(`[util] 没有找到默认的台湾地区旗: ${getLocalPathFromV3('flag-TW.png')}，将默认使用五星红旗`);
 }
 
 /**

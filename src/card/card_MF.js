@@ -10,7 +10,7 @@ import {
     getMaimaiCategory,
     getMaimaiCover,
     getMaimaiType,
-    getMaimaiVersionBG, getMaimaiVersionColor
+    getMaimaiVersionBG
 } from "../util/maimai.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {isASCII, isNotBlankString} from "../util/text.js";
@@ -82,6 +82,7 @@ export async function card_MF(song = {
         "bpm": 150,
         "release_date": "",
         "from": "maimai",
+        "color": "#7ECEF4",
         "is_new": false
     },
     "alias": "爱歌",
@@ -184,7 +185,7 @@ export async function card_MF(song = {
         color: '#1c1719',
     })
 
-    const base = PanelDraw.Rect(0, 0, 445, 210, 20, getMaimaiVersionColor(song.basic_info.from), 0.3)
+    const base = PanelDraw.Rect(0, 0, 445, 210, 20, song.basic_info?.color ?? 'none', 0.3)
         + PanelDraw.Rect(0, 0, 445, 175, 20, '#382E32', 1) // 背景图片层底板
 
     svg = setSvgBody(svg, 15, 175, difficulty, reg_label)

@@ -129,7 +129,7 @@ function safeFile(base, rel) {
 
 // —— SVG 注入页(截图入口)。background 由 ?bg= 控制 ——
 const INJECTOR_HTML = `<!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>loading</title>
@@ -148,8 +148,8 @@ const INJECTOR_HTML = `<!doctype html>
       const bg = params.get("bg");
       if (bg) document.body.style.background = bg;
       const res = await fetch("/svg/" + encodeURIComponent(key ?? ""));
-      const text = await res.text();
-      document.getElementById("stage").innerHTML = text;
+      
+      document.getElementById("stage").innerHTML = await res.text();
 
       // 若 SVG 里有 <image>, 等它们加载完
       const imgs = Array.from(document.querySelectorAll("#stage image"));
@@ -344,7 +344,11 @@ export async function renderSvg(svg, options = {}) {
  * @return {Promise<{image: Buffer, width: number, height: number}>}
  */
 export async function renderMarkdown(markdown, options = {}) {
-    const { templateDir, width = 1080, height = 600, format = "png", quality } = options;
+    let { templateDir, width = 1080, height = 600, format = "png", quality } = options;
+
+    // 1. 高度和宽度兜底，防止出现 Height = 0 的 RangeError
+    width = Math.max(1, Number(width) || 1080);
+    height = Math.max(1, Number(height) || 600);
 
     const { pool, origin } = await ensureServer();
     const prefix = mountStatic(templateDir);
@@ -360,23 +364,45 @@ export async function renderMarkdown(markdown, options = {}) {
             throw new Error(`等待 window.setStr 超时`);
         }
 
-        await view.evaluate(`window.setStr(${JSON.stringify(markdown)});`);
+        // 2. 传递 markdown 字符串：安全使用 JSON.stringify 传参并用 IIFE 包裹
+        await view.evaluate(`(() => { window.setStr(${JSON.stringify(markdown)}); })()`);
 
         if (!(await waitFor(view, `!!document.querySelector('article')`, LOAD_TIMEOUT_MS))) {
             throw new Error(`等待 article 超时`);
         }
 
-        // 等待 article 内的图片加载完成
-        await view.evaluate(`Promise.all(Array.from(document.querySelectorAll('article img')).map((el) => new Promise((r) => { el.addEventListener('load', r, { once: true }); el.addEventListener('error', r, { once: true }); }))).then(() => true)`);
+        // 3. 修复前一步的 SyntaxError：用 IIFE 包裹 Promise 表达式
+        await view.evaluate(`(async () => {
+            const imgs = Array.from(document.querySelectorAll('article img'));
+            await Promise.all(imgs.map(img => {
+                if (img.complete) return Promise.resolve();
+                return new Promise(resolve => {
+                    img.addEventListener('load', resolve, { once: true });
+                    img.addEventListener('error', resolve, { once: true });
+                });
+            }));
+            return true;
+        })()`);
 
-        const dims = await view.evaluate(`(() => { const r = document.body.getBoundingClientRect(); return { width: Math.max(1, Math.ceil(r.width)), height: Math.max(1, Math.ceil(r.height)) }; })()`);
+        // 4. 获取实际渲染的高度并调整尺寸
+        const dims = await view.evaluate(`(() => {
+            const r = document.body.getBoundingClientRect();
+            return {
+                width: Math.max(1, Math.ceil(r.width)),
+                height: Math.max(1, Math.ceil(r.height))
+            };
+        })()`);
 
         await view.resize(dims.width, dims.height);
-        await view.evaluate(`document.documentElement.style.background = "#FFFFFF"; document.body.style.background = "#FFFFFF";`);
+
+        await view.evaluate(`(() => {
+            document.documentElement.style.background = "#FFFFFF";
+            document.body.style.background = "#FFFFFF";
+        })()`);
 
         const image = await view.screenshot({ encoding: "buffer", format, quality });
 
-        await view.evaluate(`window.setStr(null);`);
+        await view.evaluate(`(() => { window.setStr(null); })()`);
 
         return { image, width: dims.width, height: dims.height };
     } finally {

@@ -1,6 +1,7 @@
 {
   "name": "yumu-image",
-  "version": "0.8.4",
+  "version": "0.9.0",
+  "version-code": "WV",
   "main": "index.js",
   "license": "MIT",
   "type": "module",

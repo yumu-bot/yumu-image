@@ -1,6 +1,5 @@
 import {
-    CACHE_PATH,
-    getProxyAgent,
+    CACHE_PATH, EXPORT_FILE_V3, getProxyAgent,
     IMG_BUFFER_PATH,
     initPath,
     loggerTime,
@@ -218,6 +217,7 @@ async function start() {
 await start();
 
 console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n当前时间：${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}\nWS 监听端口: ${port}\n`);
+console.log("静态资源目录: ", EXPORT_FILE_V3);
 console.log("主缓存目录: ", CACHE_PATH);
 console.log("图像缓存: ", IMG_BUFFER_PATH);
 console.log("谱面文件缓存: ", OSU_BUFFER_PATH);
