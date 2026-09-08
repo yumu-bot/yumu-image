@@ -46,7 +46,7 @@ export async function card_A4(data = {
             </g>
           </g>
           <g id="Avatar_CN_2">
-            <rect x="65" width="62" height="62" rx="20" ry="20" style="fill: #382E32;"/>
+            <rect x="65" width="62" height="62" rx="10" ry="10" style="fill: #382E32;"/>
             <g style="clip-path: url(#clippath-CN2-2);">
             </g>
           </g>
@@ -199,10 +199,14 @@ export async function card_A4(data = {
     let delta_score_text
 
     if (score_width > 146) {
-        delta_score_text = round(delta_score, 2)
+        if (delta_score > 0) {
+            delta_score_text = '+' + round(delta_score, 2)
+        } else {
+            delta_score_text = round(delta_score, 2)
+        }
     } else {
-        if (Math.abs(delta_score) <= 1e-4) {
-            delta_score_text = '-0'
+        if (delta_score > 0) {
+            delta_score_text = '+' + delta_score.toString()
         } else {
             delta_score_text = delta_score.toString()
         }
