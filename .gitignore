@@ -2,3 +2,4 @@
 node_modules
 image/out
 pboss.config.js
+.env

@@ -10,8 +10,7 @@
 
 ## 必需
 
-
-- NodeJS v22+（老版本会遇到 puppeteer 和 puppeteer-extra 的语法兼容问题）
+- bun v1.4.2
 
 绘图程序默认会连接端口 `8388`（websocket 客户端）。
 
