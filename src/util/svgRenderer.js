@@ -3,12 +3,9 @@ import { tmpdir } from "node:os";
 import { randomUUID } from "node:crypto";
 
 /**
- * 基于 Bun.WebView 的 SVG / HTML 渲染模块(长驻 + WebView 池化)。
+ * 基于 Bun.WebView 的 SVG / HTML 渲染模块
  */
 
-// —— 与 src/util/util.js 保持一致的路径配置 ——
-// util.js 中: EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
-//             IMG_BUFFER_PATH  = process.env.BUFFER_PATH || join(tmpdir(), "n-bot", "buffer");
 const EXPORT_FILE_V3 = process.env.EXPORT_FILE || "";
 const IMG_BUFFER_PATH = process.env.BUFFER_PATH || join(tmpdir(), "n-bot", "buffer");
 

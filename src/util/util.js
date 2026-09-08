@@ -475,6 +475,27 @@ export function readTemplate(file_path, options = 'binary') {
 }
 
 /**
+ * 将 HTTP_ 前缀的 web 路径还原为本地文件路径(toHttpImagePath 的反向映射)。
+ * @param path
+ * @return {string}
+ */
+function resolveHttpPath(path) {
+    if (typeof path !== 'string' || path.length === 0) {
+        return path;
+    }
+    if (path.startsWith(HTTP_EXPORT_FILE_V3)) {
+        return path_util.join(EXPORT_FILE_V3, path.slice(HTTP_EXPORT_FILE_V3.length+1));
+    }
+    if (path.startsWith(HTTP_IMG_BUFFER_PATH)) {
+        return path_util.join(IMG_BUFFER_PATH, path.slice(HTTP_IMG_BUFFER_PATH.length).replace(/^\/+/, ''));
+    }
+    if (path.startsWith(HTTP_OTHER_PATH)) {
+        return path.slice(HTTP_OTHER_PATH.length);
+    }
+    return path;
+}
+
+/**
  *
  * @param path
  * @param options 可输入 binary, utf8
@@ -482,7 +503,7 @@ export function readTemplate(file_path, options = 'binary') {
  */
 export function readFile(path = '', options = 'binary') {
     try {
-        return fs.readFileSync(path, options);
+        return fs.readFileSync(resolveHttpPath(path), options);
     } catch (e) {
         return '';
     }
@@ -741,8 +762,12 @@ export async function getAvatar(any, default_image_path = getImageFromV3('avatar
     let avatar_url
     let assume_cache = false
 
-    if (any === '' || any === "https://a.ppy.sh/") {
-        return default_image_path
+    if (!any || any === '' ) {
+        return default_image_path;
+    }
+
+    if (any === "https://a.ppy.sh/") {
+        return default_image_path;
     }
 
     if (any?.avatar_url != null && typeof any.avatar_url === 'string') {
