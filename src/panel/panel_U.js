@@ -206,7 +206,7 @@ export async function panel_U(
             left_text = 'Not Following'
             left_background = getImageFromV3('object-score-backimage-B.webp')
         } else {
-            left_image = getImageFromV3('online-avatar-guest.webp')
+            left_image = getImageFromV3('online-avatar-guest.png')
             left_color1 = '#507DA0'
             left_color2 = '#253A4B'
             left_text = 'Unknown'
@@ -237,7 +237,7 @@ export async function panel_U(
             right_text = 'Not Following'
             right_background = getImageFromV3('object-score-backimage-B.webp')
         } else {
-            right_image = getImageFromV3('online-avatar-guest.webp')
+            right_image = getImageFromV3('online-avatar-guest.png')
             right_color1 = '#507DA0'
             right_color2 = '#253A4B'
             right_text = 'Unknown'
