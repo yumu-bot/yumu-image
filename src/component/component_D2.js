@@ -125,7 +125,7 @@ export async function component_D2(data = {
     // 导入J卡
     let card_Js = [];
     for (const j of data.recent) {
-        card_Js.push(await card_D(await score2CardJ(j)));
+        card_Js.push(card_D(await score2CardJ(j)));
     }
 
     if (card_Js < 1) {

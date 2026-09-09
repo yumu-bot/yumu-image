@@ -1,6 +1,5 @@
 import {
-    clamp, clampToInteger, getAvatar,
-    getGameMode,
+    clamp, clampToInteger, getGameMode,
     getImageFromV3,
     getPanelNameSVG,
     maximumArrayToFixedLength,
@@ -22,6 +21,7 @@ import {PanelDraw} from "../util/panelDraw.js";
 import {getGlobalRankPercentBGFromUser, getRandomBannerPath} from "../util/mascotBanner.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
+import {avatars2Task, beatmapsets2Task, imageDownloader, user2Task} from "../util/download.js";
 
 export const router = createImageRouter(panel_J);
 export const router_svg = createSvgRouter(panel_J);
@@ -394,6 +394,23 @@ export async function panel_J(data = {
 
 
 }) {
+    const {
+        bpTop5: tops = [],
+        bpLast5: lasts = [],
+        card_A1: me = {},
+
+        mods_attr = [],
+        rank_attr = [],
+        rank_arr = [],
+        bp_length_arr = [],
+        rank_elect_arr = [],
+        favorite_mappers = [],
+        favorite_mappers_count = 0,
+        pp = 0,
+        pp_raw = 0,
+        game_mode = 'osu'
+    } = data
+
     let svg = readTemplate('template/Panel_J.svg');
 
     // 路径定义
@@ -415,12 +432,12 @@ export async function panel_J(data = {
     // 面板文字
     const panel_name = getPanelNameSVG('BP Analysis v2 (!ymba)', 'BA');
 
-    const pp = data.pp.toFixed(0) || 0;
-    const pp_raw = data.pp_raw.toFixed(0) || 0;
-    const pp_bonus = Math.max(pp - pp_raw, 0).toFixed(0);
-    const game_mode = getGameMode(data.game_mode.toString(), 2);
-    const pp_path = torus.get2SizeTextPath(pp.toString(),
-        ' PP (' + pp_raw + '+' + pp_bonus + ')',
+    const pp_fixed = pp?.toFixed(0) || '0';
+    const pp_raw_fixed = pp_raw?.toFixed(0) || '0';
+    const pp_bonus = Math.max(pp_fixed - pp_raw_fixed, 0).toFixed(0);
+    const mode = getGameMode(game_mode, 2);
+    const pp_path = torus.get2SizeTextPath(pp_fixed.toString(),
+        ' PP (' + pp_raw_fixed + '+' + pp_bonus + ')',
         36,
         24,
         1860,
@@ -428,10 +445,10 @@ export async function panel_J(data = {
         'right baseline',
         '#fff');
 
-    const game_mode_path = torus.getTextPath(game_mode, 1860, 401.836, 24, 'right baseline', '#fff');
+    const game_mode_path = torus.getTextPath(mode, 1860, 401.836, 24, 'right baseline', '#fff');
 
     const mappers_count_path = torus.get2SizeTextPath(
-        data.favorite_mappers_count.toString(),
+        favorite_mappers_count.toString(),
         ' mappers',
         36,
         24,
@@ -441,26 +458,44 @@ export async function panel_J(data = {
         '#aaa'
     )
 
-    const mods_attr = data?.mods_attr || []
-    const rank_attr = data?.rank_attr || []
-
     // 插入文字
     svg = setTexts(svg, [panel_name, pp_path, game_mode_path, mappers_count_path], reg_index);
 
+    // 下载图片
+    const promise_a1 = user2Task(me)
+    const promise_ds = beatmapsets2Task(tops)
+    const promise_dss = beatmapsets2Task(lasts)
+    const promise_j2s = avatars2Task(favorite_mappers.slice(0, 6), (v) => v.username)
+
+    const tasks = [
+        ...promise_a1,
+        ...promise_ds,
+        ...promise_dss,
+        ...promise_j2s
+    ]
+
+    const images = await imageDownloader(tasks)
+
     // A1卡构建
-    const cardA1 = await card_A1(PanelGenerate.user2CardA1(data.card_A1));
+    const cardA1 = await card_A1(PanelGenerate.user2CardA1(me, null, images.get(`avatar_${me.id}`), images.get(`banner_${me.id}`)));
 
     // J卡构建
     let cardJs_top = [];
     let cardJs_last = [];
 
-    for (const i in data.bpTop5) {
-        const h = await card_D(await PanelGenerate.bp2ComponentJ(data.bpTop5[i]));
+    for (let i = 0; i < Math.max(tops.length, 5); i++) {
+        const v = tops[i];
+        if (!v) continue;
+
+        const h = card_D(await PanelGenerate.bp2ComponentJ(v, images.get(`list@2x_${v.id}`)));
         cardJs_top.push(h);
     }
 
-    for (const i in data.bpLast5) {
-        const h = await card_D(await PanelGenerate.bp2ComponentJ(data.bpLast5[i]));
+    for (let i = 0; i < Math.max(lasts.length, 5); i++) {
+        const v = lasts[i];
+        if (!v) continue;
+
+        const h = card_D(await PanelGenerate.bp2ComponentJ(v, images.get(`list@2x_${v.id}`)));
         cardJs_last.push(h);
     }
 
@@ -495,16 +530,21 @@ export async function panel_J(data = {
 
     let labelJ2s = [];
 
-    for (const i in data.favorite_mappers) {
-        const v = data.favorite_mappers[i];
+    for (let i = 0; i < 6; i++) {
+        const v = favorite_mappers[i];
+        if (!v) continue;
+
+        const {
+            username = 'Unknown', map_count = 0, pp_count = 0
+        } = v;
 
         const h = await label_J2({
-            index: parseInt(i) + 1 || 0,
-            avatar: await getAvatar(v?.avatar_url || "https://a.ppy.sh/"),
-            name: v?.username || 'Unknown',
-            count: v?.map_count || 0,
-            pp: v?.pp_count || 0,
-        });
+            index: i + 1,
+            avatar: images.get(`avatar_${username}`) ?? getImageFromV3('avatar-guest.png'),
+            name: username,
+            count: map_count,
+            pp: pp_count,
+        })
 
         labelJ2s.push(h);
     }
@@ -550,29 +590,28 @@ export async function panel_J(data = {
     // 绘制bp长度矩形，并且获取长度的优先值。需要给这些bp扩充到100，不然比例会有问题
 
     // 导入数据
-    let bp_length_100_arr = data.bp_length_arr;
-    let rank_100_arr = data.rank_arr;
+    let bp_length_100_arr = bp_length_arr;
+    let rank_100_arr = rank_arr;
 
-    for (let i = data.bp_length_arr.length; i < 100; i++) {
+    for (let i = bp_length_arr.length; i < 100; i++) {
         bp_length_100_arr.push(0);
         rank_100_arr.push('F');
     }
 
-    const bp_length_arr = maximumArrayToFixedLength(bp_length_100_arr, 39, false);
+    const bp_length_arr_fixed = maximumArrayToFixedLength(bp_length_100_arr, 39, false);
 
     //根据优先值获取颜色数组
-    const rank_elect_arr = data.rank_elect_arr;
     const color_elect_arr = getBarChartColorArray(rank_100_arr, rank_elect_arr, 39, '#616161'); //这是F的颜色
 
     //矩形绘制
-    const bp_length_max = Math.max.apply(Math, bp_length_arr);
-    const bp_length_min = Math.min.apply(Math, bp_length_arr);
+    const bp_length_max = Math.max.apply(Math, bp_length_arr_fixed);
+    const bp_length_min = Math.min.apply(Math, bp_length_arr_fixed);
     const bp_length_delta = clamp(bp_length_max - bp_length_min, 360, 0.1) //最大六分钟
     const start_y = 610 + 10; // 下移 10
 
     let svg_rrect = '';
 
-    bp_length_arr.forEach((v, i) => {
+    bp_length_arr_fixed.forEach((v, i) => {
         const height = clampToInteger((v - bp_length_min) / bp_length_delta * 90, 90, 16);
         svg_rrect += PanelDraw.Rect(1042 + 20 * i, start_y - height, 16, height, 8, color_elect_arr[i]);
     });
@@ -584,7 +623,7 @@ export async function panel_J(data = {
     const bp_length_max_m = (bp_length_max % 60) < 10 ? '0' + (bp_length_max % 60) : (bp_length_max % 60).toString();
 
     const bp_length_text = torus.getTextPath(`${bp_length_max_b}:${bp_length_max_m}`,
-        1050 + bp_length_arr.findIndex((v) => v === bp_length_max) * 20,
+        1050 + bp_length_arr_fixed.findIndex((v) => v === bp_length_max) * 20,
         515 + 90 - Math.min(bp_length_max, 5) / 5 * 90 + 10, // 下移 10
         16,
         'center baseline',
@@ -665,7 +704,7 @@ export async function panel_J(data = {
 
     svg = setTexts(svg, [title_bpd, title_fm, title_rks, title_ms, title_l5, title_t5], reg_index)
 
-    const background = getGlobalRankPercentBGFromUser(data?.card_A1);
+    const background = getGlobalRankPercentBGFromUser(me);
     svg = setImage(svg, 0, 0, 1920, 320, getRandomBannerPath(), reg_banner, 0.7);
     svg = setImage(svg, 0, 280, 1920, 1080, background, reg_background, 0.6);
 

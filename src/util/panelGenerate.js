@@ -1517,12 +1517,12 @@ export const PanelGenerate = {
         }
     },
 
-    bp2ComponentJ: async (bp) => {
-        const background = await getMapBackground(bp, 'list@2x');
+    bp2ComponentJ: async (bp, background = null) => {
+        const cover = background ?? await getMapBackground(bp, 'list@2x');
 
         return {
-            cover: background,
-            background: background,
+            cover: cover,
+            background: cover,
             type: getScoreTypeImage(bp.is_lazer),
 
             title: bp.beatmapset ? bp.beatmapset.title : 'Unknown Title',

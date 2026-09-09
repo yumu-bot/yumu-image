@@ -7,7 +7,7 @@ import {getRankColor, getStarRatingColor} from "../util/color.js";
 import {PanelDraw} from "../util/panelDraw.js";
 import {getModCirclePath} from "../util/mod.js";
 
-export async function card_D(data = {
+export function card_D(data = {
     cover: getImageFromV3('beatmap-defaultBG.webp'),
     background: getImageFromV3('beatmap-defaultBG.webp'),
     type: '',
