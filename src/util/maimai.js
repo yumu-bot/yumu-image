@@ -1,7 +1,7 @@
 import {
     accessAsync,
     downloadByFetch,
-    getImageFromV3
+    getImageFromV3, getLocalPathFromV3
 } from "./util.js";
 import {colorArray} from "./color.js";
 import {isEmptyString} from "./text.js";
@@ -26,14 +26,14 @@ export async function getMaimaiCover(song_id = 0) {
         path_id = song_id.toString().padStart(5, '0')
     }
 
-    const path = getImageFromV3('Maimai', 'Cover', `${path_id}.png`);
+    const path = getLocalPathFromV3('Maimai', 'Cover', `${path_id}.png`);
 
     if (await accessAsync(path)) {
         return path
     } else if (raw_id > 0) {
         const lxns = `https://assets2.lxns.net/maimai/jacket/${raw_id}.png`
 
-        return await downloadByFetch(lxns, path, getImageFromV3('Maimai', 'default.png'))
+        return await downloadByFetch(lxns, path, getLocalPathFromV3('Maimai', 'default.png'))
     } else {
         return getImageFromV3('Maimai', 'default.png')
     }
@@ -333,7 +333,7 @@ export function getMaimaiRankFromAchievements(achievements = 101) {
 
 export async function getChunithmCover(song_id = 0) {
     const song = song_id.toString()
-    const path = getImageFromV3('Chunithm', 'Cover', `${song}.png`);
+    const path = getLocalPathFromV3('Chunithm', 'Cover', `${song}.png`);
 
     if (await accessAsync(path)) {
         return path
@@ -342,7 +342,7 @@ export async function getChunithmCover(song_id = 0) {
         //return getImageFromV3('Chunithm', 'default.png')
         const lxns = `https://assets2.lxns.net/chunithm/jacket/${song}.png`
 
-        return await downloadByFetch(lxns, path, getImageFromV3('Chunithm', 'default.png'))
+        return await downloadByFetch(lxns, path, getLocalPathFromV3('Chunithm', 'default.png'))
     } else {
         return getImageFromV3('Chunithm', 'default.png')
     }
