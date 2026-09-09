@@ -29,7 +29,7 @@ export async function getMaimaiCover(song_id = 0) {
     const path = getLocalPathFromV3('Maimai', 'Cover', `${path_id}.png`);
 
     if (await accessAsync(path)) {
-        return path
+        return getImageFromV3('Maimai', 'Cover', `${path_id}.png`)
     } else if (raw_id > 0) {
         const lxns = `https://assets2.lxns.net/maimai/jacket/${raw_id}.png`
 
@@ -336,7 +336,7 @@ export async function getChunithmCover(song_id = 0) {
     const path = getLocalPathFromV3('Chunithm', 'Cover', `${song}.png`);
 
     if (await accessAsync(path)) {
-        return path
+        return getImageFromV3('Chunithm', 'Cover', `${song}.png`);
     } else if (song_id > 0) {
 
         //return getImageFromV3('Chunithm', 'default.png')
