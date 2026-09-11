@@ -485,7 +485,7 @@ export function readTemplate(file_path, options = 'binary') {
  * @param path
  * @return {string}
  */
-function resolveHttpPath(path) {
+export function resolveHttpPath(path) {
     if (typeof path !== 'string' || path.length === 0) {
         return path;
     }

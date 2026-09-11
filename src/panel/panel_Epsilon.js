@@ -2,7 +2,7 @@ import {
     getAvatar,
     getFlagPath,
     getImageFromV3,
-    isNotEmptyArray,
+    isNotEmptyArray, resolveHttpPath,
     setImage,
     setTexts
 } from "../util/util.js";
@@ -47,7 +47,7 @@ export async function panel_Epsilon(data = {
 
     const group = user?.groups?.[0]
 
-    const image = await getAvatar(user);
+    const image = resolveHttpPath(await getAvatar(user));
 
     const name_text = user?.username ?? 'Unknown'
 

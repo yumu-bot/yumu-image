@@ -348,7 +348,7 @@ export async function renderMarkdown(markdown, options = {}) {
 
     // 1. 高度和宽度兜底，防止出现 Height = 0 的 RangeError
     width = Math.max(1, Number(width) || 1080);
-    height = Math.max(1, Number(height) || 600);
+    height = Math.max(1, Number(height) || 3840);
 
     const { pool, origin } = await ensureServer();
     const prefix = mountStatic(templateDir);
