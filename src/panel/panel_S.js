@@ -4,7 +4,7 @@ import {
     clamp, clampToInteger,
     getAvatar, getFlagPath, getGameMode, getImage,
     getPanelNameSVG, getSvgBody, normalize, readNetImage,
-    rotateSvgBody, rounds,
+    rotateSvgBody, round, rounds,
     setCustomBanner,
     setSvgBody,
     setText,
@@ -30,7 +30,17 @@ export const router_svg = createSvgRouter(panel_S);
  * @return {Promise<string>}
  */
 export async function panel_S(data = {
-    user: {}, recently: [],
+    user: {
+        matchmaking_stats: [
+            {
+                recent_history: [
+                    {
+                        elo_after: 0
+                    }
+                ]
+            }
+        ]
+    }, recently: [],
 
     stats: {
         play_time: 6424,
@@ -81,7 +91,27 @@ export async function panel_S(data = {
         plays = 0,
         rank = 0,
         rating: mm_rating = 0,
+        rank_percent = 1.0,
+        is_rating_provisional = false,
+        recent_history = []
     } = mm_first
+
+    const history = recent_history.map((item, index, array) => {
+        // 当前 Elo
+        const current = item.elo_after ?? 0;
+
+        const is_last = index === array.length - 1;
+        const previous = is_last ? current : array[index + 1].elo_after;
+
+        // 计算 Elo 差值
+        const delta = current - previous;
+
+        return {
+            elo: current,
+            delta: delta,
+            result: item.result
+        };
+    });
 
     const hue = user?.profile_hue ?? 342
 
@@ -164,7 +194,7 @@ export async function panel_S(data = {
 
     const componentS1 = component_S1(
         PanelSGenerate.rank2componentS1(
-             rank, total_players, mode, has_custom_panel, hue
+             rank, total_players, mode, rank_percent, is_rating_provisional, has_custom_panel, hue
         ));
     const componentS2 = component_S2(
         PanelSGenerate.rating2componentS2(
@@ -176,7 +206,7 @@ export async function panel_S(data = {
         ));
     const componentS4 = await component_S4(
         PanelSGenerate.recently2componentS4(
-            recently, user?.id, images, has_custom_panel, hue
+            recently, user?.id, images, history, has_custom_panel, hue
         ));
     const componentS5 = component_S5(
         PanelSGenerate.rate2componentS5(
@@ -204,14 +234,15 @@ export async function panel_S(data = {
     return svg
 }
 
+// https://github.com/ppy/osu-web/pull/13110/changes
 const RANK_RULES = [
-    { limit: 0.001,  name: 'Radiant',  color: colorArray.radiant }, // 前 0.1% （顶级王者）
-    { limit: 0.015,  name: 'Rhodium',  color: colorArray.rhodium }, // 前 1.5% （大师/宗师，放宽到顶尖高手圈）
-    { limit: 0.12,   name: 'Platinum', color: colorArray.platinum },// 前 12%  （钻石/翡翠，高级玩家）
-    { limit: 0.35,   name: 'Gold',     color: colorArray.gold },    // 前 35%  （高阶中游，黄金核心区顶端）
-    { limit: 0.65,   name: 'Silver',   color: colorArray.silver },  // 前 65%  （中游大肚皮，白银/黄金中坚力量）
-    { limit: 0.90,   name: 'Bronze',   color: colorArray.bronze },  // 前 90%  （中下游，青铜）
-    { limit: 1.0,    name: 'Iron',     color: colorArray.iron },    // 剩余 10% （底层保底，黑铁）
+    { limit: 0.05,  name: 'Radiant',  color: colorArray.radiant },
+    { limit: 0.2,  name: 'Rhodium',  color: colorArray.rhodium },
+    { limit: 0.5,   name: 'Platinum', color: colorArray.platinum },
+    { limit: 0.75,   name: 'Gold',     color: colorArray.gold },
+    { limit: 0.95,   name: 'Silver',   color: colorArray.silver },
+    { limit: 1.0,   name: 'Bronze',   color: colorArray.bronze },
+    // { limit: 1.0,    name: 'Iron',     color: colorArray.iron },
 ];
 
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
@@ -220,6 +251,8 @@ const component_S1 = (
         rank: 0,
         total_players: 0,
         mode: 'osu',
+        percent: 1.0,
+        is_rating_provisional: false,
 
         has_custom_panel: false,
         hue: 342,
@@ -239,6 +272,10 @@ const component_S1 = (
 
     const title = hide ? '' : poppinsBold.getTextPath('Rank', 15, 27, 18, 'left baseline', '#fff', 1)
     const rrect = hide ? '' : PanelDraw.Rect(0, 0, 430, 340, 20, PanelColor.middle(data.hue), 1)
+
+    const provisional = data?.is_rating_provisional ? ' (provisional)' : ''
+    const top = poppinsBold.getTextPath(`Top ${round((data.percent ?? 1.0) * 100, 2)}%` + provisional,
+        415, 27, 18, 'right baseline', '#fff')
 
     const mode = extra.getTextPath(
         getGameMode(data.mode, -1), 215, 205 - 10, 128, 'center baseline', '#fff'
@@ -263,6 +300,7 @@ const component_S1 = (
     </g>
     ${rank}
     ${title}
+    ${top}
 `
 
     return svg;
@@ -413,6 +451,7 @@ const component_S4 = async (
         recently: [],
         me: 7003013,
         images: new Map(),
+        history: [],
 
         has_custom_panel: false,
         hue: 342,
@@ -426,8 +465,10 @@ const component_S4 = async (
     const card_s1s = []
     const string_s1s = []
 
-    const results = await Promise.allSettled(recently.map((v) => {
-        return card_S1(v, data.me, data.images, data.hue)
+    const results = await Promise.allSettled(recently.map((v, i) => {
+        const h = data.history?.[i]
+
+        return card_S1(v, h, data.me, data.images, data.hue)
     }))
 
     thenPush(results, card_s1s)
@@ -539,6 +580,11 @@ const card_S1 = async (
 
         rounds: [],
     },
+    history = {
+        elo: 0,
+        delta: 0,
+        result: 'win'
+    },
 
     me = 7003013,
     images = new Map(),
@@ -577,9 +623,9 @@ const card_S1 = async (
     const right_remain_health = last_round?.scores?.[1]?.health ?? 0
 
     let left_win
-    let left_highlight = left_id === me
+    let left_me = left_id === me
     let right_win
-    let right_highlight = right_id === me
+    let right_me = right_id === me
 
     if (left_remain_health > right_remain_health) {
         left_win = true
@@ -596,9 +642,9 @@ const card_S1 = async (
     }
 
     const label_left = getSvgBody(0, 0, label_S1(left_win,
-        ! left_highlight, hue))
+        ! left_me, hue))
     const label_right = getSvgBody(790, 0, label_S1(right_win,
-        ! right_highlight, hue))
+        ! right_me, hue))
 
     const rrect = PanelDraw.Rect(
         110, 0, 660, 90, 20, PanelColor.top(hue)
@@ -702,6 +748,27 @@ const card_S1 = async (
     const right_name = poppinsBold.getTextPath(
         recent?.names?.[1] ?? "Unknown", 676, 25, 18, 'right baseline', right_win ? '#fff' : '#aaa'
     )
+    //
+    // const left_name_width = poppinsBold.getTextWidth(recent?.names?.[0] ?? "Unknown", 18)
+    // const right_name_width = poppinsBold.getTextWidth(recent?.names?.[1] ?? "Unknown", 18)
+    //
+    // function getElo(history, is_me = true) {
+    //     if (!is_me) return ''
+    //
+    //     let delta
+    //
+    //     if (history.delta === 0) {
+    //         delta = ''
+    //     } else {
+    //         delta = ' (' + getSignNumber(history.delta) + ')'
+    //     }
+    //
+    //     return (history.elo ?? 0) + delta
+    // }
+    //
+    // const left_rating = poppinsBold.getTextPath(getElo(history, left_me), 204 + 8 + left_name_width, 25, 14, 'left baseline', left_win ? '#fff' : '#aaa')
+    //
+    // const right_rating = poppinsBold.getTextPath(getElo(history, right_me), 676 - 8 - right_name_width, 25, 14, 'right baseline', right_win ? '#fff' : '#aaa')
 
     const left_a = images.get(`avatar_${left_id}`) ?? await getAvatar(left_id)
     const right_a = images.get(`avatar_${right_id}`) ?? await getAvatar(right_id)
@@ -719,7 +786,6 @@ const card_S1 = async (
         left_health_text, right_health_text, vs_text, left_name, right_name,
         '</g>'].join('')
 }
-
 
 const card_S2 = async (data = {
     avatar: '',
@@ -867,11 +933,13 @@ const label_S2 = (cover = '', win_condition, hue) => {
 
 
 const PanelSGenerate = {
-    rank2componentS1: (rank = 0, total_players = 0, mode = 'osu', has_custom_panel = false, hue) => {
+    rank2componentS1: (rank = 0, total_players = 0, mode = 'osu', percent = 1.0, is_rating_provisional = false, has_custom_panel = false, hue) => {
         return {
             rank: rank,
             total_players: total_players,
             mode: mode,
+            percent: percent,
+            is_rating_provisional: is_rating_provisional,
             has_custom_panel: has_custom_panel,
             hue: hue
         }
@@ -901,12 +969,13 @@ const PanelSGenerate = {
         }
     },
 
-    recently2componentS4: (recently = [], me, images, has_custom_panel = false, hue) => {
+    recently2componentS4: (recently = [], me, images, history = [], has_custom_panel = false, hue) => {
 
         return {
             recently: recently,
             me: me,
             images: images,
+            history: history,
 
             has_custom_panel: has_custom_panel,
             hue: hue

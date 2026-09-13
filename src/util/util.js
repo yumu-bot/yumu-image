@@ -268,7 +268,7 @@ export function isNotEmptyArray(arr = []) {
  */
 export function clamp(val, max = 1, min = 0) {
     const num = Number(val);
-    if (isNaN(num)) return 0;
+    if (isNaN(num) || num < 1e-4 && num > -1e-4) return 0;
 
     // 自动矫正最大值和最小值（确保 min <= max）
     const real_min = Math.min(max, min);
@@ -2565,7 +2565,15 @@ export function ManiaAimingAccuracy2Stats(aimingAcc = 1, stat = {
 
 }
 
-export function getSign(number = 0) {
+export function getSignNumber(number = 0, number_fn = (num) => { return String(Math.abs(num)) }, interval = '') {
+    if (typeof number !== 'number') {
+        return ''
+    }
+
+    return getSign(number) + interval + number_fn(number)
+}
+
+function getSign(number = 0) {
     if (typeof number !== 'number') {
         return ''
     }
