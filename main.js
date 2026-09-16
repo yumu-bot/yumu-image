@@ -7,6 +7,55 @@ import {
 } from "./src/util/util.js";
 import {WsClient} from "./src/util/websocket.js";
 import moment from "moment";
+import { readdirSync, rmSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+
+function cleanBunChromeProfiles() {
+    const tmp = tmpdir();
+
+    try {
+        for (const file of readdirSync(tmp)) {
+            if (!file.endsWith(".bun-chrome")) {
+                continue;
+            }
+
+            try {
+                rmSync(join(tmp, file), {
+                    recursive: true,
+                    force: true,
+                });
+            } catch {
+                // 不管他
+            }
+        }
+    } catch {
+        // 没 tmp 就不删
+    }
+}
+
+function gracefulExit(code = 0) {
+    cleanBunChromeProfiles();
+    process.exit(code);
+}
+
+// 启动时清理历史残留
+cleanBunChromeProfiles();
+
+// Bun / PM2 停止、重启
+process.on("SIGINT", () => gracefulExit(0));
+process.on("SIGTERM", () => gracefulExit(0));
+
+// 崩溃兜底
+process.on("uncaughtException", (err) => {
+    console.error("Uncaught Exception:", err);
+    gracefulExit(1);
+});
+
+process.on("unhandledRejection", (err) => {
+    console.error("Unhandled Rejection:", err);
+    gracefulExit(1);
+});
 
 initPath();
 //这里放测试代码
