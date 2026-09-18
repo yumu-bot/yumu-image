@@ -372,7 +372,7 @@ const component_J3 = (
             bar_progress: (v?.percent || 0),
             bar_color: getRankColor(v?.index),
             max_width: max_width,
-            hide: data.has_custom_panel,
+            // hide: data.has_custom_panel,
             hue: data.hue,
         })
 

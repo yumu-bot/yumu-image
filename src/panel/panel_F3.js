@@ -210,15 +210,9 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
         const left_opacity = (winning_team === 'red') ? 1 : 0.2
         const right_opacity = (winning_team === 'blue') ? 1 : 0.2
 
-        left_rrect = PanelDraw.LinearGradientRect(-40, 0, 980, 120, 20,
-           ["#801D34", "#E50050"],
-            left_opacity,
-        )
+        left_rrect = PanelDraw.LinearGradientRect(-40, 0, 980, 120, 20, ["#801D34", "#E50050"], [0, 100], [0, 0], left_opacity)
 
-        right_rrect = PanelDraw.LinearGradientRect(980, 0, 980, 120, 20,
-            ["#00A0E9", "#006899"],
-            right_opacity,
-        )
+        right_rrect = PanelDraw.LinearGradientRect(980, 0, 980, 120, 20, ["#00A0E9", "#006899"], [0, 100], [0, 0], right_opacity)
 
         left_text = poppinsBold.getTextPath((winning_team === 'red') ? 'WIN!' : ((winning_team === null) ? 'TIE...' : 'LOSE...'),
             40, 84, 72, 'left baseline', '#fff', 0.5)
@@ -266,16 +260,10 @@ function drawScoreBanner(round = {}, is_team_vs = false) {
         ], 1020, 85, 'left baseline')
 
     } else {
-        left_rrect = PanelDraw.LinearGradientRect(-40, 0, 980, 120, 20,
-            ["#ccc", "#fff"],
-            0.6,
-        )
+        left_rrect = PanelDraw.LinearGradientRect(-40, 0, 980, 120, 20, ["#ccc", "#fff"], [0, 100], [0, 0], 0.6)
 
 
-        right_rrect = PanelDraw.LinearGradientRect(980, 0, 980, 120, 20,
-            ["#fff", "#ccc"],
-            0.8,
-        )
+        right_rrect = PanelDraw.LinearGradientRect(980, 0, 980, 120, 20, ["#fff", "#ccc"], [0, 100], [0, 0], 0.8)
 
         left_text = poppinsBold.getTextPath('TOTAL', 40, 84, 72, 'left baseline', '#fff', 0.5)
         right_text = poppinsBold.getTextPath('AVERAGE', 1880, 84, 72, 'right baseline', '#fff', 0.5)

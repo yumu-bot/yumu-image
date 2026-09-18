@@ -187,24 +187,20 @@ export async function panel_MA2(data = {
     if (b30_height > 0) {
         b30_title = torusBold.getTextPath('Best 30', 960, 290 + 40 - 15,
             18, 'center baseline')
-        b30_rrect = PanelDraw.LinearGradientRect(0, 290, 1920, card_height, 20,
-            colorArray.dark_blue,
-            1, [100, 0], [80, 20])
+        b30_rrect = PanelDraw.LinearGradientRect(0, 290, 1920, card_height, 20, colorArray.dark_blue, [100, 0], [80, 20], 1)
     }
 
     if (n20_height > 0) {
         n20_title = torusBold.getTextPath('New 20', 960, 290 + 40 + b30_height + bn_offset - 15,
             18, 'center baseline')
-        n20_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + b30_height + bn_offset - 40, 1920, n20_height + ns_offset + s10_height + 80, 20, colorArray.dark_red,
-            1, [100, 0], [80, 20])
+        n20_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + b30_height + bn_offset - 40, 1920, n20_height + ns_offset + s10_height + 80, 20, colorArray.dark_red, [100, 0], [80, 20], 1)
     }
 
     if (s10_height > 0) {
         s10_title = torusBold.getTextPath('Selection 10', 960,
             290 + 40 + b30_height + bn_offset + n20_height + ns_offset - 15,
             18, 'center baseline')
-        s10_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + b30_height + bn_offset + n20_height + ns_offset - 40, 1920, s10_height + 80, 20, colorArray.dark_gray,
-            1, [100, 0], [80, 20])
+        s10_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + b30_height + bn_offset + n20_height + ns_offset - 40, 1920, s10_height + 80, 20, colorArray.dark_gray, [100, 0], [80, 20], 1)
     }
 
     svg = setTexts(svg, [b30_title, n20_title, s10_title, s10_rrect, n20_rrect, b30_rrect], reg_card_i)

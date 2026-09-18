@@ -1707,7 +1707,7 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
         const back_rrect_width = isNumber(f) ? Math.min(f, w) : w
 
         if (Array.isArray(color)) {
-            svg += PanelDraw.LinearGradientRect(x, rrect_y, back_rrect_width, height, height / 2, color, 0.1);
+            svg += PanelDraw.LinearGradientRect(x, rrect_y, back_rrect_width, height, height / 2, color, [0, 100], [0, 0], 0.1);
         } else {
             svg += PanelDraw.Rect(x, rrect_y, back_rrect_width, height, height / 2, color, 0.1);
         }
@@ -1744,14 +1744,14 @@ function getStatisticsSVG(statistics = [], max_statistics = [], full_statistics 
                 // 这些附加数据不要太亮
 
                 if (Array.isArray(color)) {
-                    svg += PanelDraw.LinearGradientRect(deluxe_x, rrect_y, Math.max(rect_width, height), height, height / 2, color, 0.4);
+                    svg += PanelDraw.LinearGradientRect(deluxe_x, rrect_y, Math.max(rect_width, height), height, height / 2, color, [0, 100], [0, 0], 0.4);
                 } else {
                     svg += PanelDraw.Rect(deluxe_x, rrect_y, Math.max(rect_width, height), height, height / 2, color, 0.4);
                 }
             }
 
             if (Array.isArray(color)) {
-                svg += PanelDraw.LinearGradientRect(deluxe_x, rrect_y, deluxe_width, height, height / 2, color, 0.1);
+                svg += PanelDraw.LinearGradientRect(deluxe_x, rrect_y, deluxe_width, height, height / 2, color, [0, 100], [0, 0], 0.1);
             } else {
                 svg += PanelDraw.Rect(deluxe_x, rrect_y, deluxe_width, height, height / 2, color, 0.1);
             }

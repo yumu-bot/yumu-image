@@ -189,17 +189,13 @@ export async function panel_MA(data = {
     if (sd_height > 0 && data?.panel === 'MB') {
         sd_title = torusBold.getTextPath('Best 35', 960, 290 + 40 - 15,
             18, 'center baseline')
-        sd_rrect = PanelDraw.LinearGradientRect(0, 290, 1920, card_height,
-            20, colorArray.dark_blue,
-            1, [100, 0], [80, 20])
+        sd_rrect = PanelDraw.LinearGradientRect(0, 290, 1920, card_height, 20, colorArray.dark_blue, [100, 0], [80, 20], 1)
     }
 
     if (dx_height > 0 && data?.panel === 'MB') {
         dx_title = torusBold.getTextPath('New 15', 960, 290 + 40 + sd_height + dx_offset - 15,
             18, 'center baseline')
-        dx_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + sd_height + dx_offset - 40, 1920, dx_height + 80,
-            20, colorArray.dark_red,
-            1, [100, 0], [80, 20])
+        dx_rrect = PanelDraw.LinearGradientRect(0, 290 + 40 + sd_height + dx_offset - 40, 1920, dx_height + 80, 20, colorArray.dark_red, [100, 0], [80, 20], 1)
     }
 
     svg = setTexts(svg, [dx_title, sd_title, dx_rrect, sd_rrect], reg_card_i)

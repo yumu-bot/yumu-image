@@ -85,18 +85,11 @@ export function card_B7(data = {}, to_left = false) {
 
     const icon_base =
         PanelDraw.Rect(icon_x, 0, 80, 80, 10, '#382E32') +
-        PanelDraw.LinearGradientRect(
-            icon_x, 0, 80, 80, 10,
-            icon_colors, 0.4,
-            [0, 100], [20, 80]);
+        PanelDraw.LinearGradientRect(icon_x, 0, 80, 80, 10, icon_colors, [0, 100], [20, 80], 0.4);
 
-    const bar_base = PanelDraw.LinearGradientRect(
-        0, 95, 320, 30, 15, colors ?? bar_colors, base_opacity, bar_position_x, [55, 45]
-    );
+    const bar_base = PanelDraw.LinearGradientRect(0, 95, 320, 30, 15, colors ?? bar_colors, bar_position_x, [55, 45], base_opacity);
 
-    const bar = PanelDraw.LinearGradientRect(
-        bar_x, 95, bar_width, 30, 15, bar_colors, 1, bar_position_x, [55, 45]
-    );
+    const bar = PanelDraw.LinearGradientRect(bar_x, 95, bar_width, 30, 15, bar_colors, bar_position_x, [55, 45], 1);
 
     const text_anchor = to_left ? 'right baseline' : 'left baseline';
 

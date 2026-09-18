@@ -51,9 +51,7 @@ export async function panel_Epsilon2(data = {
     const reg_overlay = /(?<=<g id="Overlay">)/;
     const reg_progress = /(?<=<clipPath id="clippath-progress">)/;
 
-    const base = PanelDraw.LinearGradientRect(0, 0, 332, 87, 0,
-        ['#3A3F57', '#0C0E1A'], 1, [0, 100], [0, 100]
-    )
+    const base = PanelDraw.LinearGradientRect(0, 0, 332, 87, 0, ['#3A3F57', '#0C0E1A'], [0, 100], [0, 100], 1)
 
     const avatar = PanelDraw.Image(5, 6, 75, 75, await getAvatar(user))
 

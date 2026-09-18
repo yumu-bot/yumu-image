@@ -266,7 +266,7 @@ const component_S1 = (
     const colors = getGlobalRankPercentColor(data.rank, percent, RANK_RULES)
     const ranks = getGlobalRankPercentName(data.rank, percent, RANK_RULES)
 
-    const base = rotateSvgBody(PanelDraw.LinearGradientRect(215 - 80, 150 - 80, 160, 160, 20, colors, 1, [100, 0], [60, 40]), 215,  150, 45)
+    const base = rotateSvgBody(PanelDraw.LinearGradientRect(215 - 80, 150 - 80, 160, 160, 20, colors, [100, 0], [60, 40], 1), 215,  150, 45)
 
     const random = getRandomString(6)
 
@@ -281,9 +281,7 @@ const component_S1 = (
         getGameMode(data.mode, -1), 215, 205 - 10, 128, 'center baseline', '#fff'
     )
 
-    const mode_base = PanelDraw.LinearGradientRect(
-        215 - 60, 150 - 60, 60 * 2, 60 * 2, 0, [PanelColor.base(data.hue), PanelColor.middle(data.hue)], 1, [80, 20], [60, 40]
-    )
+    const mode_base = PanelDraw.LinearGradientRect(215 - 60, 150 - 60, 60 * 2, 60 * 2, 0, [PanelColor.base(data.hue), PanelColor.middle(data.hue)], [80, 20], [60, 40], 1)
 
     const rank = poppinsBold.getTextPath(ranks, 215, 305, 30, 'center baseline', '#fff', 1)
 
@@ -725,21 +723,13 @@ const card_S1 = async (
         color: '#fff'
     }], 440, 30, 'center baseline')
 
-    const left_health = PanelDraw.LinearGradientRect(
-        440 - 5 - left_progress_width, 38, left_progress_width, 15, 7.5, colorArray.red, 1, [100, 0]
-    )
+    const left_health = PanelDraw.LinearGradientRect(440 - 5 - left_progress_width, 38, left_progress_width, 15, 7.5, colorArray.red, [100, 0], [0, 0], 1)
 
-    const right_health = PanelDraw.LinearGradientRect(
-        440 + 5, 38, right_progress_width, 15, 7.5, colorArray.cyan, 1, [0, 100]
-    )
+    const right_health = PanelDraw.LinearGradientRect(440 + 5, 38, right_progress_width, 15, 7.5, colorArray.cyan, [0, 100], [0, 0], 1)
 
-    const left_indicator = PanelDraw.LinearGradientRect(
-        180, 12, 15, 15, 7.5, colorArray.red, 1, [50, 50], [100, 0]
-    )
+    const left_indicator = PanelDraw.LinearGradientRect(180, 12, 15, 15, 7.5, colorArray.red, [50, 50], [100, 0], 1)
 
-    const right_indicator = PanelDraw.LinearGradientRect(
-        685, 12, 15, 15, 7.5, colorArray.cyan, 1, [50, 50], [100, 0]
-    )
+    const right_indicator = PanelDraw.LinearGradientRect(685, 12, 15, 15, 7.5, colorArray.cyan, [50, 50], [100, 0], 1)
 
     const left_name = poppinsBold.getTextPath(
         recent?.names?.[0] ?? "Unknown", 204, 25, 18, 'left baseline', left_win ? '#fff' : '#aaa'
@@ -883,7 +873,7 @@ const label_S1 = (win_condition, not_highlight, hue) => {
         opacity = 0.2
     }
 
-    const color = PanelDraw.LinearGradientRect(0, 0, 90, 90, 20, colors, opacity, [80, 20], [60, 40])
+    const color = PanelDraw.LinearGradientRect(0, 0, 90, 90, 20, colors, [80, 20], [60, 40], opacity)
 
 
     return [svg, base, color, texts, chars, '</g>'].join('')
@@ -925,7 +915,7 @@ const label_S2 = (cover = '', win_condition, hue) => {
 
     const chars = torusBold.getTextPath(char, 55, 15, 14, 'center baseline', PanelColor.base(hue))
 
-    const rrect = PanelDraw.LinearGradientRect(45, 0, 20, 20, 5, colors, 1, [80, 20], [60, 40])
+    const rrect = PanelDraw.LinearGradientRect(45, 0, 20, 20, 5, colors, [80, 20], [60, 40], 1)
 
 
     return [svg, defs, rrect, chars, image, '</g>'].join('')

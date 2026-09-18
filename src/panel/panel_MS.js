@@ -532,7 +532,7 @@ const component_G1 = (notes = [], achievements = 0, fc = "", double_cabinet = fa
     }
 
     const progress_rrect = achievements > 0 ? PanelDraw.LinearGradientRect(10, 80, rrect_width, 10, 5, colors) : ''
-    const progress_base_rrect = PanelDraw.LinearGradientRect(10, 80, 270, 10, 5, colors, 0.2)
+    const progress_base_rrect = PanelDraw.LinearGradientRect(10, 80, 270, 10, 5, colors, [0, 100], [0, 0], 0.2)
 
     // 基础分：PF 500, GR 400, GD 250, MS 0, Hold x2, Slide x3, Break x5~
     // 绝赞基础分：CP~PF2 2500, GR1 2000, GR2 1500, GR3 1250, GD 1000, MS 0,

@@ -293,11 +293,9 @@ export async function card_A4(data = {
     // 插入模组，因为先插的在上面，所以从左边插
     const mods_svg = drawLazerMods(mods, 690, 3, 25, 510 - name_width, 'right', 4, true).svg
 
-    const rank_rrect = PanelDraw.LinearGradientRect(810, 0, 105, 62, 20,
-        rank_colors, 1, [0, 100], [20, 80])
+    const rank_rrect = PanelDraw.LinearGradientRect(810, 0, 105, 62, 20, rank_colors, [0, 100], [20, 80], 1)
 
-    const version_rrect = PanelDraw.LinearGradientRect(0, 0, 65 + 62, 62, 20,
-        version_colors, 1, [100, 0], [80, 20])
+    const version_rrect = PanelDraw.LinearGradientRect(0, 0, 65 + 62, 62, 20, version_colors, [100, 0], [80, 20], 1)
 
     svg = setImage(svg, 65, 0, 62, 62, avatar, reg_avatar)
     svg = setImage(svg, 65, 0, 790, 62, cover, reg_background, 0.2)

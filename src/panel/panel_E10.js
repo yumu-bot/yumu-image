@@ -1388,11 +1388,11 @@ const label_E10S = (data = {
     const percent = data?.stat / (data?.max_stat || 1)
 
     const progress = is_linear_radiant ?
-        PanelDraw.LinearGradientRect((315 - 80) * (1 - percent), 0, (315 - 80) * percent + 80, 40, 20, data?.rrect_color?.toReversed(), 0.4)
+        PanelDraw.LinearGradientRect((315 - 80) * (1 - percent), 0, (315 - 80) * percent + 80, 40, 20, data?.rrect_color?.toReversed(), [0, 100], [0, 0], 0.4)
         : PanelDraw.Rect((315 - 80) * (1 - percent), 0, (315 - 80) * percent + 80, 40, 20, data?.rrect_color, 0.4)
 
     const top = is_linear_radiant ?
-        PanelDraw.LinearGradientRect(315 - 80, 0, 80, 40, 20, data?.rrect_color?.toReversed(), 1)
+        PanelDraw.LinearGradientRect(315 - 80, 0, 80, 40, 20, data?.rrect_color?.toReversed(), [0, 100], [0, 0], 1)
         : PanelDraw.Rect(315 - 80, 0, 80, 40, 20, data?.rrect_color, 1)
 
     const index = poppinsBold.getTextPath(data?.index, 315 - 40, 30, 30, 'center baseline', data?.index_color)
@@ -1416,11 +1416,11 @@ const label_E10D = (data = {
     svg += PanelDraw.Rect(0, 0, 150, 40, 20, '#382E32')
 
     svg += is_linear_radiant ?
-        PanelDraw.LinearGradientRect(0, 0, 150, 40, 20, data.bar_color, is_not_display ? 0 : 0.2)
+        PanelDraw.LinearGradientRect(0, 0, 150, 40, 20, data.bar_color, [0, 100], [0, 0], is_not_display ? 0 : 0.2)
         : PanelDraw.Rect(0, 0, 150, 40, 20, data.bar_color, is_not_display ? 0 : 0.2)
 
     svg += is_linear_radiant ?
-        PanelDraw.LinearGradientRect(0, 0, 80, 40, 20, data.bar_color, is_not_display ? 0.2 : 1)
+        PanelDraw.LinearGradientRect(0, 0, 80, 40, 20, data.bar_color, [0, 100], [0, 0], is_not_display ? 0.2 : 1)
         : PanelDraw.Rect(0, 0, 80, 40, 20, data.bar_color, is_not_display ? 0.2 : 1)
 
     const text_color = is_not_display ? '#aaa' : '#fff'

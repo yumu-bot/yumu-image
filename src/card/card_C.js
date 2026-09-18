@@ -71,13 +71,13 @@ export function card_C(data = {}) {
 
     // 5. 左右装饰矩形渲染逻辑
     const rrect_left_svg = Array.isArray(color_left)
-        ? PanelDraw.LinearGradientRect(0, 0, 60, 110, 20, color_left, 1, [40, 60], [0, 100])
+        ? PanelDraw.LinearGradientRect(0, 0, 60, 110, 20, color_left, [40, 60], [0, 100], 1)
         : PanelDraw.Rect(0, 0, 60, 110, 20, isNotEmptyString(color_left) ? color_left : PanelColor.top(342), 1);
 
     const rrect_right_width = clampToInteger(50 + 170 * progress, 220, 40)
 
     const rrect_right_svg = Array.isArray(color_right)
-        ? PanelDraw.LinearGradientRect(680, 0, rrect_right_width, 110, 20, color_right, 1, [0, 100], [20, 80])
+        ? PanelDraw.LinearGradientRect(680, 0, rrect_right_width, 110, 20, color_right, [0, 100], [20, 80], 1)
         : PanelDraw.Rect(680, 0, rrect_right_width, 110, 20, isNotEmptyString(color_right) ? color_right : PanelColor.top(342), 1);
 
     // 6. 标题与副标题动态权衡

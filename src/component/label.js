@@ -1512,10 +1512,10 @@ export function label_E5(data = {
     const is_gradient = Array.isArray(data?.bar_colors) && data?.bar_colors?.length === 2;
 
     const bar = is_gradient ?
-        PanelDraw.LinearGradientRect(label_left, 38, bar_width, 10, 5, data?.bar_colors, 1) :
+        PanelDraw.LinearGradientRect(label_left, 38, bar_width, 10, 5, data?.bar_colors, [0, 100], [0, 0], 1) :
         PanelDraw.Rect(label_left, 38, bar_width, 10, 5, data?.bar_color || '#fff')
     const bar_base =  is_gradient ?
-        PanelDraw.LinearGradientRect(label_left, 38, progress_width, 10, 5, data?.bar_colors, 0.2) :
+        PanelDraw.LinearGradientRect(label_left, 38, progress_width, 10, 5, data?.bar_colors, [0, 100], [0, 0], 0.2) :
         PanelDraw.Rect(label_left, 38, progress_width, 10, 5, data?.bar_color || '#fff', 0.2)
 
     svg = setTexts(svg, [icon_title, number_data, remark, bar_min, bar_mid, bar_max, bar_base, bar], reg_text)
@@ -1688,7 +1688,7 @@ export function label_J4(
         bar_progress = 0,
         bar_color = 'none',
         max_width = 120,
-        hide = false,
+        // hide = false,
         hue = 342,
     } = {}
 ) {

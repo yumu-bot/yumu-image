@@ -125,12 +125,7 @@ export async function card_F(data = {
 
         //上底色、左右的分数和最亮的那个得点
         if (data.statistics.is_team_red_win) {
-            const rrect = PanelDraw.LinearGradientRect(
-                0, 0, 1380, 210, 20,
-                ['#CB3554', '#382E32'],
-                0.6,
-                [20, 100]
-            )
+            const rrect = PanelDraw.LinearGradientRect(0, 0, 1380, 210, 20, ['#CB3554', '#382E32'], [20, 100], [0, 0], 0.6)
 
             svg = setText(svg, rrect, reg_backcolor)
 
@@ -140,12 +135,7 @@ export async function card_F(data = {
             svg = setSvgBody(svg, 30 + 16 * Math.max((data.statistics.wins_team_red_before - 1), 0), 176, red_point_plus, reg_pluspoint);
 
         } else if (data.statistics.is_team_blue_win) {
-            const rrect = PanelDraw.LinearGradientRect(
-                0, 0, 1380, 210, 20,
-                ['#382E32', '#008FE3'],
-                0.6,
-                [0, 80]
-            )
+            const rrect = PanelDraw.LinearGradientRect(0, 0, 1380, 210, 20, ['#382E32', '#008FE3'], [0, 80], [0, 0], 0.6)
 
             svg = setText(svg, rrect, reg_backcolor)
 

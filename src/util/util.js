@@ -360,6 +360,7 @@ export const getOrNull = (result) => {
 /**
  * 获取 fulfilled 的值，否则返回 null
  * @param {PromiseSettledResult<*>[]} result
+ * @param index
  * @returns {*|null}
  */
 export const getIndexOrNull = (result, index = 0) => {
@@ -414,9 +415,17 @@ export const renderInBatch = async (
  * @param font2
  * @param title
  * @param title_unicode
+ * @param artist
+ * @param x
+ * @param y
+ * @param y2
  * @param size
  * @param size2
  * @param maximum_width
+ * @param anchor
+ * @param color
+ * @param color2
+ * @param x2
  * @return
  */
 export function getBeatMapTitlePath(font = "torus", font2 = "PuHuiTi", title = '', title_unicode = '', artist = null, x = 0, y = 0, y2 = 0, size = 36, size2 = 24, maximum_width = 780, anchor = "center baseline", color = "#fff", color2 = color, x2 = x) {
@@ -1823,10 +1832,6 @@ export function getNowTimeStamp() {
     return moment().format("YYYY-MM-DD HH:mm:ss[ +8]");
 }
 
-function fixed(i) {
-    return parseFloat(i.toFixed(2));
-}
-
 /**
  * 如果传入 XX，会返回 XX 对应的路径
  * @param code
@@ -2648,3 +2653,76 @@ export const loggerTime = (message) => {
 
     return `[${timestamp}] [P${pid}] ${message}`
 };
+
+/**
+ * 根据数据计算对应的矩形长度，大于等于0小于min_length视作min_length，否则视为0
+ * @param data
+ * @param max_length
+ * @param min_length
+ * @returns {number[]}
+ */
+export const calculateRectangleLength = (data = [0], max_length = 100, min_length = 10) => {
+    // 小于等于 0 的值视作 0
+    const safe_data = (data ?? [0]).map((item) => {
+        const value = Number(item)
+        return Number.isFinite(value) && value > 0 ? value : 0
+    })
+
+    const sum = safe_data.reduce((prev, curr) => prev + curr, 0)
+
+    if (sum <= 0) return []
+
+    const valid_indexes = safe_data
+        .map((value, index) => (value > 0 ? index : -1))
+        .filter((index) => index !== -1)
+
+    // 如果总长度连每个有效项的最小长度都保证不了，只能让有效项均分 max_length
+    if (valid_indexes.length * min_length > max_length) {
+        const avg = max_length / valid_indexes.length
+        return safe_data.map((value) => (value > 0 ? avg : 0))
+    }
+
+    // 先按 data 占比计算理论长度
+    const raw_lengths = safe_data.map((value) =>
+        value > 0 ? (value / sum) * max_length : 0
+    )
+
+    /**
+     * @type {number[]}
+     */
+    const short_indexes = []
+    /**
+     * @type {number[]}
+     */
+    const long_indexes = []
+
+    valid_indexes.forEach((index) => {
+        if (raw_lengths[index] < min_length) {
+            short_indexes.push(index)
+        } else {
+            long_indexes.push(index)
+        }
+    })
+
+    // 没有低于 min 的项，直接返回按占比分配结果
+    if (short_indexes.length === 0) {
+        return raw_lengths
+    }
+
+    const result = safe_data.map(() => 0)
+
+    // 低于 min 的有效项，保底为 min
+    short_indexes.forEach((index) => {
+        result[index] = min_length
+    })
+
+    // 剩余长度平分给理论长度不低于 min 的“长项”
+    const remaining = max_length - short_indexes.length * min_length
+    const avg = long_indexes.length > 0 ? remaining / long_indexes.length : 0
+
+    long_indexes.forEach((index) => {
+        result[index] = avg
+    })
+
+    return result
+}

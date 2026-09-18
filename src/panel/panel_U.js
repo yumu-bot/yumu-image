@@ -458,10 +458,7 @@ function label_U1(data = {
 
     const base = PanelDraw.Rect(0, 0, width, 60, 30, '#46393F')
 
-    const rrect = PanelDraw.LinearGradientRect(0, 0, width, 60, 30,
-        [data?.color1, data?.color2], 0.6,
-        [0, 100], [40, 60]
-    )
+    const rrect = PanelDraw.LinearGradientRect(0, 0, width, 60, 30, [data?.color1, data?.color2], [0, 100], [40, 60], 0.6)
 
     const icon_background = PanelDraw.Circle(31, 30, 22, '#54454C', 1)
 
@@ -489,10 +486,7 @@ function label_U2(data = {
 }) {
     const base = PanelDraw.Rect(0, 0, 400, 80, 40, '#382E32')
 
-    const rrect = PanelDraw.LinearGradientRect(0, 0, 400, 80, 40,
-        [data?.color1, data?.color2], 1,
-        [0, 100], [40, 60]
-    )
+    const rrect = PanelDraw.LinearGradientRect(0, 0, 400, 80, 40, [data?.color1, data?.color2], [0, 100], [40, 60], 1)
 
     const text = torusBold.getTextPath(data?.text || '', data?.center || '200', 56, 48, 'center baseline', data?.text_color || '#fff')
 

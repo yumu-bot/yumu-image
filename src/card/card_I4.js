@@ -104,9 +104,7 @@ export function card_I4(data = {}) {
 
     const stars_path = drawStars(level);
 
-    const background_rrect = PanelDraw.LinearGradientRect(
-        0, 0, 350, 130, 20, color_backgrounds, 0.4, [20, 80], [0, 100]
-    )
+    const background_rrect = PanelDraw.LinearGradientRect(0, 0, 350, 130, 20, color_backgrounds, [20, 80], [0, 100], 0.4)
 
     return `
     ${SVG_DEFS}

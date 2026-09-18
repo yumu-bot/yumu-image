@@ -563,7 +563,7 @@ const component_D4 = (
         const w = rrect_lengths[rrect_lengths.length - 1 - i]
         const c = rrect_colors[rrect_lengths.length - 1 - i]
 
-        rrects += PanelDraw.LinearGradientRect(15, 75, w, 15, 7.5, c, 1)
+        rrects += PanelDraw.LinearGradientRect(15, 75, w, 15, 7.5, c, [0, 100], [0, 0], 1)
     }
 
     const base_rrect = PanelDraw.Rect(15, 75, 460, 15, 7.5, PanelColor.top(hue), 1)
@@ -1017,17 +1017,9 @@ function label_D6(
     const text = poppinsBold.get2SizeTextPath(data.text_b ?? '0', data.text_m ?? '', 36, 28, 110, 72, 'left baseline', '#fff')
 
     const percent_rrect = (data.percent >= 0) ?
-        PanelDraw.LinearGradientRect(
-            400, 18 + (1 - data.percent) * 78,
-            15, data.percent > 0 ? Math.max(data.percent * 78, 15) : 0,
-            7.5,
-            data.colors ?? colorArray.deep_gray, 1, [0, 0], [80, 20])
+        PanelDraw.LinearGradientRect(400, 18 + (1 - data.percent) * 78, 15, data.percent > 0 ? Math.max(data.percent * 78, 15) : 0, 7.5, data.colors ?? colorArray.deep_gray, [0, 0], [80, 20], 1)
         :
-        PanelDraw.LinearGradientRect(
-            400, 18,
-            15, 78,
-            7.5,
-            data.colors ?? colorArray.deep_gray, 1, [0, 0], [20, 80])
+        PanelDraw.LinearGradientRect(400, 18, 15, 78, 7.5, data.colors ?? colorArray.deep_gray, [0, 0], [20, 80], 1)
 
     const top = (data.percent >= 0) ? poppinsBold.getTextPath(
         'Top ' + round(100 - (data.percent ?? 0) * 100, 2) + '%', 395, 96, 14, 'right baseline', '#aaa'

@@ -85,15 +85,11 @@ export function card_MS(data = {
 
     // 导入文字
     const label1_width = BerlinBold.getTextWidth(data?.label1, 36)
-    const label1_rrect = PanelDraw.LinearGradientRect(20, 20, label1_width + 40, 50, 25,
-        data.label1_colors, 1, [100, 0], [80, 20]
-    )
+    const label1_rrect = PanelDraw.LinearGradientRect(20, 20, label1_width + 40, 50, 25, data.label1_colors, [100, 0], [80, 20], 1)
     const label1 = BerlinBold.getTextPath(data?.label1, 20 + (label1_width + 40) / 2, 56, 36, 'center baseline', '#fff', 1, true)
 
     const label2_width = BerlinBold.getTextWidth(data?.label2, 48)
-    const label2_rrect = PanelDraw.LinearGradientRect(310 - label2_width - 40, 255, label2_width + 40, 50, 25,
-        data.label2_colors, 1, [100, 0], [80, 20]
-    )
+    const label2_rrect = PanelDraw.LinearGradientRect(310 - label2_width - 40, 255, label2_width + 40, 50, 25, data.label2_colors, [100, 0], [80, 20], 1)
     const label2 = BerlinBold.getTextPath(data?.label2, 310 - (label2_width + 40) / 2, 290, 48, 'center baseline', '#fff', 1, true)
 
     const base1 = PanelDraw.Rect(30, 30, 290, 310, 20, '#46393f', 1)
@@ -143,8 +139,7 @@ export function card_MS(data = {
     const rrect1_top = data?.rrect1_percent > 0 ?
         PanelDraw.LinearGradientRect(130, 450, Math.max(180 * (data?.rrect1_percent || 0), 10), 10, 5, color_array)
         : ''
-    const rrect1_base = PanelDraw.LinearGradientRect(130, 450, 180, 10, 5, color_array,
-        data?.rrect1_base_opacity || 0.1)
+    const rrect1_base = PanelDraw.LinearGradientRect(130, 450, 180, 10, 5, color_array, [0, 100], [0, 0], data?.rrect1_base_opacity || 0.1)
 
     const base2 = PanelDraw.Rect(30, 350, 290, 120, 20, '#46393f', 1)
 

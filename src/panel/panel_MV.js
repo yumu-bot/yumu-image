@@ -445,7 +445,7 @@ function drawArea(start_index, end_index, colors = ['none'], opacity = 1, positi
         const w = step_x * (end_x - start_x + 1)
         const h = step_y * (end_y - start_y + 1)
 
-        return PanelDraw.LinearGradientRect(x, y, w, h, r, colors, opacity, position_x, position_y)
+        return PanelDraw.LinearGradientRect(x, y, w, h, r, colors, position_x, position_y, opacity)
     } else if (start_x === 0) {
         // 只有右下角缺
         const notches = {
@@ -519,11 +519,9 @@ function label_MV(data = {
     const percent = poppinsBold.getTextPath(percent_text, 64 + 1, 104 + 1, 16, 'center baseline', '#1C1719') + poppinsBold.getTextPath(percent_text, 64, 104, 16, 'center baseline', '#fff')
 
     const percent_colors = getProgressColor(percent_value)
-    const percent_rrect = PanelDraw.LinearGradientRect(108, 20 + 85 - percent_value * 85, 10, percent_value * 85, 5, percent_colors, 1,
-        [50, 50], [100, 0])
+    const percent_rrect = PanelDraw.LinearGradientRect(108, 20 + 85 - percent_value * 85, 10, percent_value * 85, 5, percent_colors, [50, 50], [100, 0], 1)
 
-    const background_rrect = PanelDraw.LinearGradientRect(10, 10, 115, 106, 10, data?.colors, 0.8,
-        [100, 0], [80, 20])
+    const background_rrect = PanelDraw.LinearGradientRect(10, 10, 115, 106, 10, data?.colors, [100, 0], [80, 20], 0.8)
 
     svg = setText(svg, background_rrect, reg_background)
     svg = setTexts(svg, [level, ratio, percent, percent_rrect], reg_text)
@@ -602,15 +600,13 @@ async function card_MV(data = {
     const left1_rrect_width = Math.max(40, left1_width + 10)
     const left1 = torusBold.getTextPath(data?.left1_text, -5 + (left1_rrect_width / 2), 10, 16,
         'center baseline', '#fff')
-    const left1_rrect = PanelDraw.LinearGradientRect(-5, -5, left1_rrect_width, 20, 10, data?.left1_colors, 1,
-        [100, 0], [80, 20])
+    const left1_rrect = PanelDraw.LinearGradientRect(-5, -5, left1_rrect_width, 20, 10, data?.left1_colors, [100, 0], [80, 20], 1)
 
     const left2_width = torusBold.getTextWidth(data?.left2_text, 16)
     const left2_rrect_width = Math.max(40, left2_width + 10)
     const left2 = torusBold.getTextPath(data?.left2_text, -5 + (left2_rrect_width / 2), 35, 16,
         'center baseline', data?.left2_text_color || '#fff')
-    const left2_rrect = PanelDraw.LinearGradientRect(-5, 20, left2_rrect_width, 20, 10, data?.left2_colors, 1,
-        [100, 0], [80, 20])
+    const left2_rrect = PanelDraw.LinearGradientRect(-5, 20, left2_rrect_width, 20, 10, data?.left2_colors, [100, 0], [80, 20], 1)
 
     const rank = getMaimaiRankBG(data.rank)
 

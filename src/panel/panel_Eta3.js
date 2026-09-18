@@ -539,8 +539,7 @@ const component_Eta2 = (data = {
 
     let pp_title = ''
     let pp_value = ''
-    let pp_progress = PanelDraw.LinearGradientRect(670, 915, 290,
-        40, 20, colorArray.yellow)
+    let pp_progress = PanelDraw.LinearGradientRect(670, 915, 290, 40, 20, colorArray.yellow)
 
     switch (mode) {
         case 'o': {
@@ -555,12 +554,9 @@ const component_Eta2 = (data = {
             const pp_sum = data?.aim_pp + data?.spd_pp + data?.acc_pp
 
             pp_progress =
-                PanelDraw.LinearGradientRect(670, 915, 290,
-                    40, 20, colorArray.yellow)
-                + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.aim_pp + data?.spd_pp) / pp_sum * 290),
-                    40, 20, colorArray.light_green)
-                + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.aim_pp) / pp_sum * 290),
-                    40, 20, colorArray.cyan)
+                PanelDraw.LinearGradientRect(670, 915, 290, 40, 20, colorArray.yellow)
+                + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.aim_pp + data?.spd_pp) / pp_sum * 290), 40, 20, colorArray.light_green)
+                + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.aim_pp) / pp_sum * 290), 40, 20, colorArray.cyan)
 
         } break;
 
@@ -574,10 +570,8 @@ const component_Eta2 = (data = {
             const pp_sum = data?.diff_pp + data?.acc_pp
 
             pp_progress =
-                PanelDraw.LinearGradientRect(670, 915, 290,
-                    40, 20, colorArray.yellow)
-                + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.diff_pp) / pp_sum * 290),
-                    40, 20, colorArray.light_green)
+                PanelDraw.LinearGradientRect(670, 915, 290, 40, 20, colorArray.yellow)
+                + PanelDraw.LinearGradientRect(670, 915, Math.round((data?.diff_pp) / pp_sum * 290), 40, 20, colorArray.light_green)
         } break;
 
         case 'm': {
@@ -585,8 +579,7 @@ const component_Eta2 = (data = {
 
             pp_value = poppinsBold.getTextPath(Math.round(data?.diff_pp).toString(), 960 - 20, 947, 30, 'right baseline')
 
-            pp_progress = PanelDraw.LinearGradientRect(670, 915, 290,
-                    40, 20, colorArray.yellow)
+            pp_progress = PanelDraw.LinearGradientRect(670, 915, 290, 40, 20, colorArray.yellow)
         } break;
     }
 

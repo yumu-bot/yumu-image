@@ -9,7 +9,7 @@ import {
     getImage,
     getImageFromV3,
     getLanguage, getMapBackground, getMapStatusImage,
-    getPanelNameSVG,
+    getPanelNameSVG, calculateRectangleLength,
     getSvgBody,
     normalize,
     od2ms,
@@ -406,9 +406,15 @@ const component_R3 = (
 
     const titles = PanelDraw.Shadow(poppinsBold.getTextPath('Pass', 15, 657, 20, 'left baseline', '#aaa') + poppinsBold.getTextPath('Retry', 255, 657, 20, 'left baseline', '#aaa') + poppinsBold.getTextPath('Quit', 495, 657, 20, 'left baseline', '#aaa'), 2, 2, 1, '#1c1719')
 
-    const bases = PanelDraw.Rect(15, 670, 220, 20, 10, '#382E32') + PanelDraw.Rect(255, 670, 220, 20, 10, '#382E32') + PanelDraw.Rect(495, 670, 220, 20, 10, '#382E32')
+    const bases =
+        PanelDraw.RoundedParallelogram(15, 670, 220, 20, 6, 0, 8, '#382E32') +
+        PanelDraw.RoundedParallelogram(255, 670, 220, 20, 6, 0, 8, '#382E32') +
+        PanelDraw.RoundedParallelogram(495, 670, 220, 20, 6, 0, 8, '#382E32')
 
-    const progresses = PanelDraw.LinearGradientRect(15, 670, pass_width, 20, 10, colorArray.light_green) + PanelDraw.LinearGradientRect(255, 670, retry_width, 20, 10, colorArray.yellow) + PanelDraw.LinearGradientRect(495, 670, quit_width, 20, 10, colorArray.red)
+    const progresses =
+        PanelDraw.LinearGradientParallelogram(15, 670, pass_width, 20, 6, 0, 8, colorArray.light_green) +
+        PanelDraw.LinearGradientParallelogram(255, 670, retry_width, 20, 6, 0, 8, colorArray.yellow) +
+        PanelDraw.LinearGradientParallelogram(495, 670, quit_width, 20, 6, 0, 8, colorArray.red)
 
     const rates = PanelDraw.Shadow(poppinsBold.getTextPath(Math.round(100 * pass_rate) + '%', 230, 657, 20, 'right baseline', '#fff') + poppinsBold.getTextPath(Math.round(100 * retry_rate) + '%', 470, 657, 20, 'right baseline', '#fff') + poppinsBold.getTextPath(Math.round(100 * quit_rate) + '%', 710, 657, 20, 'right baseline', '#fff'), 2, 2, 1, '#1c1719')
 
@@ -712,7 +718,6 @@ const component_R7 = (beatmapset = {
 
     }
 
-
     if (r3s.length <= 8) {
         // 可完全展示
 
@@ -764,6 +769,15 @@ const component_R7 = (beatmapset = {
     }
 }
 
+const SKILL_CASE_CONFIG = {
+    o: {
+        skills: ['pp_aim', 'pp_speed', 'pp_accuracy', 'pp_reading', 'pp_flashlight']
+    },
+    t: {
+        skills: ['pp_difficulty', 'pp_accuracy']
+    }
+}
+
 const component_R8 = (pp_list = [0], pp_distribution, mode) => {
 
     let offset
@@ -783,10 +797,6 @@ const component_R8 = (pp_list = [0], pp_distribution, mode) => {
     const percent99 = Math.round(pp_list[2] || 0)
     const percent98 = Math.round(pp_list[3] || 0)
     const percent96 = Math.round(pp_list[4] || 0)
-
-    const perfect_pp = pp_list[0] ?? 0
-
-    // const percent92 = pp_list[6] || 0
 
     const r2s = [
         card_R2({
@@ -822,123 +832,89 @@ const component_R8 = (pp_list = [0], pp_distribution, mode) => {
     let r22_rrect_svg
     let r22_base = PanelDraw.Rect(1160, 1008, 740, 20, 10, '#46393F', 1)
 
+    // svgX 和 suffix 统一用 o 的值
+    const svg_x = 1160
+    const suffix = 'PP'
+
+    const drawSkillRects = (cfg) => {
+        const { skills } = cfg
+
+        // 1. 统计有效技能
+        const { skill_count } = skills.reduce((acc, skill) => {
+            const pp = pp_distribution?.[skill] ?? 0
+            return {
+                total_pp: acc.total_pp + pp,
+                skill_count: acc.skill_count + (pp >= 1e-4 ? 1 : 0)
+            }
+        }, { total_pp: 0, skill_count: 0 })
+
+        // const maximum_pp = Math.max(total_pp, perfect_pp)
+        const interval = 15
+        const skill_width = Math.floor((740 + 10) / skill_count) - 10
+
+        // 2. 抽出有效技能，一次性算长度
+        const valid_skills = skills.filter(
+            (skill) => (pp_distribution?.[skill] ?? 0) >= 1e-4
+        )
+        const valid_data = valid_skills.map((skill) => pp_distribution[skill])
+
+        const lengths = calculateRectangleLength(valid_data, 740, 15)
+
+        // 3. 生成卡片 + 矩形（左端对齐，右端累加延伸）
+        const r22s = []
+        const r22_rects = []
+
+        let accumulated_width = 0
+
+        valid_skills.forEach((skill, i) => {
+            const val = pp_distribution[skill]
+            accumulated_width += lengths[i]
+
+            r22s.push(card_R2({
+                ...LABEL_R2s[skill],
+                value: Math.round(val) + suffix,
+                max_width: skill_width
+            }))
+
+            r22_rects.push(
+                PanelDraw.LinearGradientParallelogram(
+                    1160,
+                    1008,
+                    accumulated_width,
+                    20,
+                    6, 0,
+                    5,
+                    LABEL_R2s[skill].colors,
+                    [20, 80],
+                    [50, 50],
+                    1
+                )
+            )
+        })
+
+        const r22_svg = r22s.map((v, i) => {
+            const x = svg_x + i * skill_width + Math.max(0, i * interval)
+            return getSvgBody(x, 965, v)
+        })
+
+        const r22_rrect_svg = r22_rects.reverse().join('\n')
+
+        return { r22_svg, r22_rrect_svg }
+    }
+
     switch (mode) {
-        case 'o': {
-            const skill_config = ['pp_aim', 'pp_speed', 'pp_accuracy', 'pp_reading', 'pp_flashlight'];
-
-            const { total_pp, skill_count } = skill_config.reduce((acc, skill) => {
-                const pp = pp_distribution?.[skill] ?? 0;
-
-                return {
-                    total_pp: acc.total_pp + pp,
-                    skill_count: acc.skill_count + (pp >= 1e-4 ? 1 : 0) // 条件计数
-                };
-            }, { total_pp: 0, skill_count: 0 });
-
-            const maximum_pp = Math.max(total_pp, perfect_pp)
-
-            const interval = 15
-            const skill_width = Math.floor((740 + 10) / skill_count) - 10
-
-            const r22s = []
-            const r22_rects = []
-
-            let accumulated_width = 0;
-            skill_config.forEach((skill) => {
-                const val = pp_distribution?.[skill];
-                if (!val || val < 1e-4) return;
-
-                const width = normalize(val, maximum_pp, 0, 740, 20)
-
-                r22s.push(card_R2({
-                    ...LABEL_R2s[skill],
-                    value: Math.round(val) + 'PP',
-                    max_width: skill_width
-                }))
-
-                r22_rects.push(
-                    PanelDraw.LinearGradientRect(1160 + Math.max(0, accumulated_width - 40), 1008, width + 40, 20, 10, LABEL_R2s[skill].colors, 1, [20, 80], [50, 50])
-                )
-
-                accumulated_width += normalize(val, maximum_pp, 0, 740, 0);
-
-            });
-
-            r22_svg = r22s.map((v, i) => {
-                const x = 1160 + i * skill_width + Math.max(0, i * interval)
-
-                return getSvgBody(x, 965, v)
-            })
-
-            r22_rrect_svg = r22_rects.reverse().join('\n')
-        } break
-
+        case 'o':
         case 't': {
-            const skill_config = ['pp_difficulty', 'pp_accuracy'];
+            const { r22_svg: svg, r22_rrect_svg: rrect } =
+                drawSkillRects(SKILL_CASE_CONFIG[mode])
 
-            const { total_pp, skill_count } = skill_config.reduce((acc, skill) => {
-                const pp = pp_distribution?.[skill] ?? 0;
-
-                return {
-                    total_pp: acc.total_pp + pp,
-                    skill_count: acc.skill_count + (pp >= 1e-4 ? 1 : 0) // 条件计数
-                };
-            }, { total_pp: 0, skill_count: 0 });
-
-            const maximum_pp = Math.max(total_pp, perfect_pp)
-
-            const interval = 15
-            const skill_width = Math.floor((740 + 10) / skill_count) - 10
-
-            const r22s = []
-            const r22_rects = []
-
-            let accumulated_width = 0;
-
-            skill_config.forEach((skill) => {
-                const val = pp_distribution?.[skill];
-                if (!val || val < 1e-4) return;
-
-                const width = normalize(val, maximum_pp, 0, 740, 20)
-
-                r22s.push(card_R2({
-                    ...LABEL_R2s[skill],
-                    value: Math.round(val) + ' PP',
-                    max_width: skill_width
-                }))
-
-                r22_rects.push(
-                    PanelDraw.LinearGradientRect(1160 + Math.max(0, accumulated_width - 40), 1008, width + 40, 20, 10, LABEL_R2s[skill].colors, 1, [20, 80], [50, 50])
-                )
-
-                accumulated_width += normalize(val, maximum_pp, 0, 740, 0);
-
-            });
-
-            r22_svg = r22s.map((v, i) => {
-                const x = 1190 + i * skill_width + Math.max(0, i * interval)
-
-                return getSvgBody(x, 965, v)
-            })
-
-            r22_rrect_svg = r22_rects.reverse().join('\n')
+            r22_svg = svg
+            r22_rrect_svg = rrect
         } break
 
         default: {
-            // const val = pp_distribution.pp
-
-            // r22_svg = getSvgBody(1160, 965, card_R2({
-            //     ...LABEL_R2s['max'],
-            //     value: Math.round(val) + ' PP',
-            //     max_width: 182
-            // }))
-
             r22_svg = ''
-
-            // const maximum_pp = Math.max(val, perfect_pp)
-            // const width = normalize(val, maximum_pp, 0, 740, 20)
-
-            r22_rrect_svg = '' // PanelDraw.LinearGradientRect(1160, 1008, Math.round(width), 20, 10, LABEL_R2s['max'].colors, 1, [20, 80], [50, 50])
+            r22_rrect_svg = ''
             r22_base = ''
         }
     }
@@ -1104,7 +1080,7 @@ const card_R3 = (data = {
 
     const star_components = getSvgBody(24 + rating_rrect_width + 10 - 5, 54 - 5, getStarSVGs(getImageFromV3('overall-difficulty.png'), star.int, star.dec))
 
-    const rating_gradient = PanelDraw.LinearGradientRect(20, 50, max_width - 30, 30, 0, [rating_color, rating_brighter], 1, [50, 50], [100, 0])
+    const rating_gradient = PanelDraw.LinearGradientRect(20, 50, max_width - 30, 30, 0, [rating_color, rating_brighter], [50, 50], [100, 0], 1)
 
     const multiple = (data?.owners?.length > 1) ? '...' : ''
 
@@ -1296,8 +1272,7 @@ const card_R2 = (data = {
 }) => {
     const random = getRandomString(6)
 
-    const rrect = PanelDraw.LinearGradientRect(0, 0, 10, 25, 5, data.colors,
-        1, [50, 50], [100, 0])
+    const rrect = PanelDraw.LinearGradientRect(0, 0, 10, 25, 5, data.colors, [50, 50], [100, 0], 1)
 
     const value_width = poppinsBold.getTextWidth(String(data.value), 24)
     const value_svg = poppinsBold.getTextPath(String(data.value), data.max_width, 21, 24, 'right baseline', '#fff')

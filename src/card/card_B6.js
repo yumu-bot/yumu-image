@@ -157,26 +157,15 @@ export function card_B6(data = {}, to_left = false) {
 
     const icon_base =
         PanelDraw.Rect(icon_x, 20, 80, 80, 10, '#382E32') +
-        PanelDraw.LinearGradientRect(
-            icon_x, 20, 80, 80, 10,
-            icon_colors, 0.4,
-            [0, 100], [20, 80]);
+        PanelDraw.LinearGradientRect(icon_x, 20, 80, 80, 10, icon_colors, [0, 100], [20, 80], 0.4);
 
-    const bar_base = PanelDraw.LinearGradientRect(
-        bar_base_x, 70, 390, 30, 15, colors ?? bar_colors, base_opacity, bar_position_x, [55, 45]
-    );
+    const bar_base = PanelDraw.LinearGradientRect(bar_base_x, 70, 390, 30, 15, colors ?? bar_colors, bar_position_x, [55, 45], base_opacity);
 
-    const bar = PanelDraw.LinearGradientRect(
-        bar_x, 70, real_bar_width, 30, 15, bar_colors, 1, bar_position_x, [55, 45]
-    );
+    const bar = PanelDraw.LinearGradientRect(bar_x, 70, real_bar_width, 30, 15, bar_colors, bar_position_x, [55, 45], 1);
 
-    const bar_red = PanelDraw.LinearGradientRect(
-        bar_red_x, 70, red_width, 30, 15, colorArray.dark_red, 1, bar_position_x, [55, 45]
-    );
+    const bar_red = PanelDraw.LinearGradientRect(bar_red_x, 70, red_width, 30, 15, colorArray.dark_red, bar_position_x, [55, 45], 1);
 
-    const bar_green = PanelDraw.LinearGradientRect(
-        bar_green_x, 70, green_width, 30, 15, colorArray.light_green, 1, bar_position_x, [55, 45]
-    );
+    const bar_green = PanelDraw.LinearGradientRect(bar_green_x, 70, green_width, 30, 15, colorArray.light_green, bar_position_x, [55, 45], 1);
 
     const text_anchor = to_left ? 'right baseline' : 'left baseline';
 

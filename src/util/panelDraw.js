@@ -31,6 +31,45 @@ export const PanelDraw = {
     },
 
     /**
+     * 渐变的定义由内部生成（id = grad${name}），
+     * 被染色的形状由外部 body 决定，body 直接放在 defs 之后。
+     *
+     * @param {string} body      任意 SVG 片段，通常是被 <g>…</g> 包住的形状，fill 必须设为 inherit，否则渐变不生效
+     * @param {Array}  colors    渐变 stop 列表
+     * @param {Object} position  渐变方向 {x1,y1,x2,y2}
+     * @param {number} opacity   整体不透明度
+     */
+    GradientBody: (body, colors = [
+        {
+            offset: "0%",
+            color: "#FFF",
+            opacity: 1,
+        }
+    ], position = {
+        x1: "0%",
+        y1: "0%",
+        x2: "100%",
+        y2: "0%",
+    }, opacity = 1) => {
+
+        const gid = `grad${getRandomString(6)}`;
+
+        let out = `<g><defs>
+            <linearGradient id="${gid}" x1="${position.x1}" y1="${position.y1}" x2="${position.x2}" y2="${position.y2}">`;
+
+        for (const c of colors) {
+            out += `<stop offset="${c.offset}" style="stop-color:rgb(${hex2rgbColor(c.color)});stop-opacity:${c.opacity}" />`;
+        }
+
+        out += `</linearGradient>
+        </defs>
+        <g fill="url(#${gid})" fill-opacity="${opacity}">${body}</g>
+        </g>`;
+
+        return out;
+    },
+
+    /**
      * 如果你不需要精细调整颜色，请使用 LinearGradientRect
      * @param x
      * @param y
@@ -81,13 +120,13 @@ export const PanelDraw = {
      * @param h
      * @param r
      * @param colors 颜色数组，数量应大于等于 2 个
-     * @param opacity 透明度，默认为 1
      * @param position_x 传播方向默认从左到右，就是 0 100
      * @param position_y 传播方向默认从左到右，就是 0 0
+     * @param opacity 透明度，默认为 1
      * @return {string}
      * @constructor
      */
-    LinearGradientRect: (x = 0, y = 0, w = 0, h = 0, r = 0, colors = ['#fff'], opacity = 1, position_x = [0, 100], position_y = [0, 0]) => {
+    LinearGradientRect: (x = 0, y = 0, w = 0, h = 0, r = 0, colors = ['#fff'], position_x = [0, 100], position_y = [0, 0], opacity = 1) => {
         const color_array = []
 
         if (Array.isArray(colors) && colors?.length > 1) {
@@ -756,7 +795,7 @@ Z
     },
 
     /**
-     * 生成圆角四边形路径 (视觉近似法，防止锐角过度裁剪)
+     * 生成圆角四边形/多边形路径 (精准几何圆弧法)
      * @param {Array} points - 点的坐标 [{x, y}, ...]
      * @param {number} r - 目标圆角半径
      * @param {string} color - 填充颜色
@@ -771,14 +810,13 @@ Z
             return Math.atan2(a.y - center.y, a.x - center.x) - Math.atan2(b.y - center.y, b.x - center.x);
         });
 
-        // 2. 自动判定手性
+        // 2. 自动判定手性 (确定 SVG 弧线方向 sweepFlag)
         let area = 0;
         for (let i = 0; i < sortedPoints.length; i++) {
             const p1 = sortedPoints[i];
             const p2 = sortedPoints[(i + 1) % sortedPoints.length];
             area += (p2.x - p1.x) * (p2.y + p1.y);
         }
-        // SVG 坐标系下，面积为负代表顺时针。顺时针的凸多边形要让圆角向外凸，sweepFlag 必须为 1
         const sweepFlag = area < 0 ? 1 : 0;
 
         // 3. 构建路径
@@ -789,24 +827,46 @@ Z
             const pCurr = sortedPoints[i];
             const pNext = sortedPoints[(i + 1) % sortedPoints.length];
 
-            // 计算向量长度
-            const lenPrev = Math.hypot(pPrev.x - pCurr.x, pPrev.y - pCurr.y);
-            const lenNext = Math.hypot(pNext.x - pCurr.x, pNext.y - pCurr.y);
+            // 顶点到前后邻居点的向量
+            const vPrev = { x: pPrev.x - pCurr.x, y: pPrev.y - pCurr.y };
+            const vNext = { x: pNext.x - pCurr.x, y: pNext.y - pCurr.y };
+
+            // 边长
+            const lenPrev = Math.hypot(vPrev.x, vPrev.y);
+            const lenNext = Math.hypot(vNext.x, vNext.y);
 
             if (lenPrev === 0 || lenNext === 0) continue;
 
-            // 安全检查：后退的距离不能超过相邻边长的一半
-            const safeR = Math.min(r, lenPrev / 2, lenNext / 2);
+            // 3.1 计算顶点的内角 theta 与 halfAngleTan = tan(theta / 2)
+            const dot = vPrev.x * vNext.x + vPrev.y * vNext.y;
+            // 防范浮点数误差超界 [-1, 1]
+            const cosTheta = Math.max(-1, Math.min(1, dot / (lenPrev * lenNext)));
+            const angle = Math.acos(cosTheta); // 内角 (弧度)
+            const halfAngleTan = Math.tan(angle / 2);
 
-            // 视觉近似法：直接顺着边长后退 safeR (保留原始形状的尖锐度)
+            // 防御极端情况（如三点共线或重合，tan(0)会导致除以零）
+            if (halfAngleTan <= 0.0001) {
+                path += (path === "" ? `M ${pCurr.x},${pCurr.y} ` : `L ${pCurr.x},${pCurr.y} `);
+                continue;
+            }
+
+            // 3.2 安全检查：切点退后距离 d 不能超过相邻边长的一半
+            // 根据 d = R / tan(theta/2)，推导出最大可允许半径 maxR
+            const maxR = Math.min(lenPrev, lenNext) / 2 * halfAngleTan;
+            const safeR = Math.min(r, maxR); // 最终实际使用的圆弧半径
+
+            // 3.3 计算切点在边上的实际退后距离 d
+            const d = safeR / halfAngleTan;
+
+            // 3.4 算得起点与终点（切点坐标）
             const startArc = {
-                x: pCurr.x + (pPrev.x - pCurr.x) * (safeR / lenPrev),
-                y: pCurr.y + (pPrev.y - pCurr.y) * (safeR / lenPrev)
+                x: pCurr.x + vPrev.x * (d / lenPrev),
+                y: pCurr.y + vPrev.y * (d / lenPrev)
             };
 
             const endArc = {
-                x: pCurr.x + (pNext.x - pCurr.x) * (safeR / lenNext),
-                y: pCurr.y + (pNext.y - pCurr.y) * (safeR / lenNext)
+                x: pCurr.x + vNext.x * (d / lenNext),
+                y: pCurr.y + vNext.y * (d / lenNext)
             };
 
             if (path === "") {
@@ -815,12 +875,100 @@ Z
                 path += `L ${startArc.x},${startArc.y} `;
             }
 
-            // 绘制圆弧：使用 safeR 作为半径
+            // 3.5 绘制标准圆弧：使用精准相切的 safeR 作为半径
             path += `A ${safeR},${safeR} 0 0 ${sweepFlag} ${endArc.x},${endArc.y} `;
         }
 
-        // 修复：去掉了 fill 和 opacity 之间的逗号
         return `<path d="${path.trim()} Z" fill="${color}" opacity="${opacity}"/>`;
+    },
+
+    /**
+     * 快速生成渐变圆角平行四边形
+     * @param x 左上角
+     * @param y 左上角
+     * @param w
+     * @param h
+     * @param skew_w 如果为正，则上边向右偏移（此时左上角离开了原点），如果为负，则下边向右偏移它的绝对值
+     * @param skew_h 如果为正，则左边向下偏移（此时左上角离开了原点），如果为负，则右边向下偏移它的绝对值
+     * @param r
+     * @param colors
+     * @param position_x
+     * @param position_y
+     * @param opacity
+     * @returns {string}
+     * @constructor
+     */
+    LinearGradientParallelogram: (x = 0, y = 0, w = 0, h = 0, skew_w = 0, skew_h = 0, r = 0, colors = ['#fff', '#fff'], position_x = [0, 100], position_y = [0, 0], opacity = 1) => {
+        const color_array = []
+
+        if (Array.isArray(colors) && colors?.length > 1) {
+            for (const i in colors) {
+                // 前后 10% 留空
+                const pos = 10 + Math.round(i / (colors.length - 1) * 80)
+
+                const color = {
+                    offset: pos + "%",
+                    color: colors[i],
+                    opacity: 1,
+                }
+
+                color_array.push(color)
+            }
+        } else {
+            return PanelDraw.RoundedParallelogram(x, y, w, h, skew_w, skew_h, r, colors?.[0] ?? '#fff', opacity)
+        }
+
+        const body = PanelDraw.RoundedParallelogram(x, y, w, h, skew_w, skew_h, r, 'inherit', 1);
+
+        const position = {
+            x1: `${position_x?.[0] ?? 0}%`,
+            y1: `${position_y?.[0] ?? 0}%`,
+            x2: `${position_x?.[1] ?? 100}%`,
+            y2: `${position_y?.[1] ?? 0}%`,
+        }
+
+        return PanelDraw.GradientBody(body, color_array, position, opacity)
+    },
+
+    /**
+     * 快速生成圆角平行四边形
+     * @param x 左上角
+     * @param y 左上角
+     * @param w
+     * @param h
+     * @param skew_w 如果为正，则上边向右偏移（此时左上角离开了原点），如果为负，则下边向右偏移它的绝对值
+     * @param skew_h 如果为正，则左边向下偏移（此时左上角离开了原点），如果为负，则右边向下偏移它的绝对值
+     * @param r
+     * @param color
+     * @param opacity
+     * @returns {string}
+     * @constructor
+     */
+    RoundedParallelogram: (x = 0, y = 0, w = 0, h = 0, skew_w = 0, skew_h = 0, r = 0, color = '#46393f', opacity = 1) => {
+        let skew_top = 0, skew_bottom = 0, skew_left = 0, skew_right = 0
+
+        if (skew_w >= 0) {
+            skew_top = skew_w
+        } else {
+            skew_bottom = -skew_w
+        }
+
+        if (skew_h >= 0) {
+            skew_left = skew_h
+        } else {
+            skew_right = -skew_h
+        }
+
+
+
+        const points = [
+            {x: x + skew_top,        y : y + skew_left},
+            {x: x + w + skew_top,    y : y + skew_right},
+            {x: x + w + skew_bottom, y : y + h + skew_right},
+            {x: x + skew_bottom,     y : y + h + skew_left},
+        ]
+
+        return PanelDraw.RoundedPolygon(points, r, color, opacity);
     },
 
     Shadow: (
