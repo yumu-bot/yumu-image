@@ -70,23 +70,23 @@ echo "安装依赖..."
 npm install --omit=dev
 echo "依赖安装完成"
 
-if pm2 describe main > /dev/null 2>&1
+if pboss describe main > /dev/null 2>&1
 then
   echo "重启现有集群"
-  pm2 reload main --update-env
-  #pm2 restart main.js
+  pboss reload main --update-env
+  #pboss restart main.js
 else
   echo "启动新集群"
-  pm2 start main.js --name "main" -i 2
-  #pm2 start main.js
+  pboss start main.js --name "main" -i 2
+  #pboss start main.js
 fi
 ```
 
 你配置 EXPORT_FILE 了吗？我刚刚好像没有提到。
 
-可以使用 PM2 运行。你应该能自己解决。
+可以使用 pboss 运行。你应该能自己解决。
 
-不一定要集群运行，你自己运行的时候可直接 pm2 start main.js。
+不一定要集群运行，你自己运行的时候可直接 pboss start main.js。
 
 ## 可选
 

@@ -1881,8 +1881,11 @@ export async function label_J7(data = {
 
     svg = setImage(svg, 390, 15, 85, 85, avatar, reg_avatar, 1)
 
+    const bottom_width = poppinsBold.getTextWidth(data.bottom_b, 30) +
+        poppinsBold.getTextWidth(data.bottom_m, 24)
+
     const title = poppinsBold.getTextPath(
-        poppinsBold.cutStringTail(data.title, 22, 325),
+        poppinsBold.cutStringTail(data.title, 22, 390 - bottom_width - 20),
         15, 94, 36, 'left baseline'
     )
 
