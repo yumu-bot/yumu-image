@@ -466,7 +466,14 @@ export async function compositeToWebP(background, animated, options = {}) {
     if (Buffer.isBuffer(animated)) {
         animated_buffer = animated;
     } else if (typeof animated === 'string') {
-        animated_buffer = await fs.promises.readFile(animated);
+        if (animated.startsWith('data:image/')) {
+            const base64Data = animated.replace(/^data:image\/\w+;base64,/, '');
+            animated_buffer = Buffer.from(base64Data, 'base64');
+        }
+        // 否则作为本地文件路径处理
+        else {
+            animated_buffer = await fs.promises.readFile(animated);
+        }
     } else if (animated && typeof animated.pipe === 'function') {
         animated_buffer = await streamToBuffer(animated);
     }
