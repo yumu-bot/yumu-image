@@ -469,13 +469,13 @@ export async function compositeToWebP(background, animated, options = {}) {
         if (animated.startsWith('data:image/')) {
             const base64Data = animated.replace(/^data:image\/\w+;base64,/, '');
             animated_buffer = Buffer.from(base64Data, 'base64');
-        }
-        // 否则作为本地文件路径处理
-        else {
+        } else {
             animated_buffer = await fs.promises.readFile(animated);
         }
     } else if (animated && typeof animated.pipe === 'function') {
         animated_buffer = await streamToBuffer(animated);
+    } else {
+        throw new TypeError('animated must be a Buffer, base64/data URL string, file path, or readable stream');
     }
 
     let pages
@@ -503,7 +503,7 @@ export async function compositeToWebP(background, animated, options = {}) {
         }
     } else {
         // 原来的获取
-        const animated_metadata = await sharp(animated, { animated: true }).metadata();
+        const animated_metadata = await sharp(animated_buffer, { animated: true }).metadata();
 
         pages = animated_metadata.pages ?? 1;
         delays = animated_metadata.delay || Array(pages).fill(100);
