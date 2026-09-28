@@ -15,10 +15,10 @@ export const router_svg = createSvgRouter(panel_Zeta);
  * @returns {Promise<String>}
  */
 async function panel_Zeta(data) {
-    data.avatar = resolveHttpPath(await getAvatar(data.avatar));
-    data.banner = resolveHttpPath(await readNetImage(data.banner));
+    data.avatar = await getAvatar(data.avatar);
+    data.banner = await readNetImage(data.banner);
 
-    const banner_data = await fs.promises.readFile(data.banner);
+    const banner_data = await fs.promises.readFile(resolveHttpPath(data.banner));
 
     const color = call_core(new Uint8Array(banner_data), 5);
     data.color = color[0].to_hex();

@@ -63,6 +63,7 @@ class FontInstance {
                 "stroke": stroke,
                 "stroke-width": stroke_width,
                 "stroke-opacity": stroke_opacity,
+                "stroke-linejoin": "round"
             }
         }
 

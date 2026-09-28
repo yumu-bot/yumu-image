@@ -633,11 +633,10 @@ export const PanelGenerate = {
             team2
         } = splitMatchName(stat?.name)
 
-        let title2;
+        let title2 = '';
+
         if (isNotEmptyString(team1)) {
-            title2 = team1 + ' vs ' + team2;
-        } else {
-            title2 = '';
+            title2 = String(team1 + ' vs ' + team2);
         }
 
         const left1 = 'Round: ' + round_count;

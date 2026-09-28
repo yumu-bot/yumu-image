@@ -772,45 +772,76 @@ export function getUserRankColor(rank = 0) {
 /**
 
  * https://github.com/ppy/osu-web/blob/6fcd85eb006ce7699d6f747597435c01344b2d2d/resources/js/profile-page/rank.tsx#L19-L46
+ *
+ * https://github.com/ppy/osu-web/pull/13123/changes#diff-f0c663607ab9fd91cfdb77782530b575d56ca860d05291c356df75f286106c4fR15-R71
 
  */
 
 const RANK_RULES = [
-    { limit: 0.0005, name: 'Radiant',  color: colorArray.radiant },
-    { limit: 0.0015, name: 'Rhodium',  color: colorArray.rhodium },
-    { limit: 0.005,  name: 'Platinum', color: colorArray.platinum },
-    { limit: 0.015,  name: 'Gold',     color: colorArray.gold },
-    { limit: 0.05,   name: 'Silver',   color: colorArray.silver },
-    { limit: 0.15,   name: 'Bronze',   color: colorArray.bronze },
-    { limit: 0.5,    name: 'Iron',     color: colorArray.iron },
+    // Radiant 阶梯 (<= 5%)
+    { limit: 0.01,  name: 'Radiant III',  color: colorArray.radiant },
+    { limit: 0.025, name: 'Radiant II',   color: colorArray.radiant },
+    { limit: 0.05,  name: 'Radiant I',    color: colorArray.radiant },
+
+    // Rhodium 阶梯 (<= 20%)
+    { limit: 0.1,   name: 'Rhodium III',  color: colorArray.rhodium },
+    { limit: 0.15,  name: 'Rhodium II',   color: colorArray.rhodium },
+    { limit: 0.2,   name: 'Rhodium I',    color: colorArray.rhodium },
+
+    // Platinum 阶梯 (<= 50%)
+    { limit: 0.3,   name: 'Platinum III', color: colorArray.platinum },
+    { limit: 0.4,   name: 'Platinum II',  color: colorArray.platinum },
+    { limit: 0.5,   name: 'Platinum I',   color: colorArray.platinum },
+
+    // Gold 阶梯 (<= 75%)
+    { limit: 0.55,  name: 'Gold III',     color: colorArray.gold },
+    { limit: 0.65,  name: 'Gold II',      color: colorArray.gold },
+    { limit: 0.75,  name: 'Gold I',       color: colorArray.gold },
+
+    // Silver 阶梯 (<= 95%)
+    { limit: 0.8,   name: 'Silver III',   color: colorArray.silver },
+    { limit: 0.875, name: 'Silver II',    color: colorArray.silver },
+    { limit: 0.95,  name: 'Silver I',     color: colorArray.silver },
+
+    // Bronze 阶梯 (<= 98% ~ 100%)
+    { limit: 0.96,  name: 'Bronze III',   color: colorArray.bronze },
+    { limit: 0.98,  name: 'Bronze II',    color: colorArray.bronze },
+    { limit: 1.0,   name: 'Bronze I',     color: colorArray.bronze },
 ];
 
-export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent = 0, rank_rules = RANK_RULES) {
+/**
+ * 内部辅助函数：统一获取匹配到的段位规则对象
+ */
+function getMatchedRankRule(global_rank = 0, global_rank_percent = 0, rank_rules = RANK_RULES) {
     if (global_rank <= 0 && global_rank_percent <= 0) {
-        return colorArray.deep_gray;
+        return null;
     }
 
     if (global_rank > 0 && global_rank <= 100) {
-        return colorArray.lustrous;
+        return {
+            name: 'Lustrous',
+            color: colorArray.lustrous
+        };
     }
 
-    const matched = rank_rules.find(rule => global_rank_percent < rule.limit);
+    // 匹配第一个满足 percent <= rule.limit 的规则
+    return rank_rules.find(rule => global_rank_percent <= rule.limit) || null;
+}
 
+/**
+ * 获取段位颜色
+ */
+export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent = 0, rank_rules = RANK_RULES) {
+    const matched = getMatchedRankRule(global_rank, global_rank_percent, rank_rules);
     return matched ? matched.color : colorArray.deep_gray;
 }
 
+/**
+ * 获取段位名称 (包含子段位如 "Bronze III")
+ */
 export function getGlobalRankPercentName(global_rank = 0, global_rank_percent = 0, rank_rules = RANK_RULES) {
-    if (global_rank <= 0 && global_rank_percent <= 0) {
-        return 'Rookie';
-    }
-
-    if (global_rank > 0 && global_rank <= 100) {
-        return 'Lustrous';
-    }
-
-    const matched = rank_rules.find(rule => global_rank_percent < rule.limit);
-
-    return matched ? matched.name : 'Rookie';
+    const matched = getMatchedRankRule(global_rank, global_rank_percent, rank_rules);
+    return matched ? matched.name : 'Peppy';
 }
 
 /**

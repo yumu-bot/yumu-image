@@ -2726,3 +2726,10 @@ export const calculateRectangleLength = (data = [0], max_length = 100, min_lengt
 
     return result
 }
+
+/**
+ * @returns {number}
+ */
+export const calculateTan = (height = 0, angle = 0) => {
+    return Math.round(height * Math.tan((angle * Math.PI) / 180));
+};

@@ -521,7 +521,7 @@ export async function compositeToWebP(background, animated, options = {}) {
             frame_pipeline = apng_frames[i];
         } else {
             // GIF / WebP 分支：使用 sharp 原生的逐帧读取
-            frame_pipeline = sharp(animated, {
+            frame_pipeline = sharp(animated_buffer, {
                 animated: true,
                 page: i,
                 pages: 1

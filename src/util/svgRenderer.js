@@ -1,6 +1,7 @@
 import { isAbsolute, join, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { randomUUID } from "node:crypto";
+import sharp from "sharp";
 
 /**
  * 基于 Bun.WebView 的 SVG / HTML 渲染模块
@@ -57,7 +58,9 @@ class WebViewPool {
         if (this.total < this.max) {
             this.total++;
             try {
-                return new Bun.WebView();
+                return new Bun.WebView(
+                    { backend: "chrome" }
+                );
             } catch (err) {
                 this.total--;
                 throw err;
@@ -323,6 +326,17 @@ export async function renderSvg(svg, options = {}) {
         const loaded = await waitFor(view, `document.title === "loaded"`, LOAD_TIMEOUT_MS);
         if (!loaded) {
             console.warn(`[SVG] 加载超时,仍尝试截图 (key=${key})`);
+        }
+
+        if (format === "webp") {
+            try {
+                return await view.screenshot({ encoding: "buffer", format: "webp", quality });
+            } catch (err) {
+                console.warn(`[SVG] 后端不支持 webp，降级`);
+
+                const png = await view.screenshot({ encoding: "buffer", format: "png" });
+                return await sharp(png).webp({ quality: quality ?? 80 }).toBuffer();
+            }
         }
 
         return await view.screenshot({ encoding: "buffer", format, quality });
