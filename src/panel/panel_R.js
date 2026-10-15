@@ -9,7 +9,7 @@ import {
     getImage,
     getImageFromV3,
     getLanguage, getMapBackground, getMapStatusImage,
-    getPanelNameSVG, calculateRectangleLength,
+    getPanelNameSVG, getRectWidth,
     getSvgBody,
     normalize,
     od2ms,
@@ -615,11 +615,12 @@ const component_R6 = (background, beatmapset) => {
 
     const lighten = PanelDraw.Shadow(white, 0, 0, 10, '#fff', 0.6)
 
-
     const image = getImage(880, 40, 1920 - 880, 210 - 40, background, 0.4)
 
+    const aliases = beatmapset?.aliases ?? []
+    const title_unicode_str = (aliases.length > 1) ? String(aliases[0]) : (beatmapset?.title_unicode || '')
 
-    const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi", beatmapset?.title || '', beatmapset?.title_unicode || '', null, 955, 95, 144, 48, 30, 960, 'left baseline', '#fff', '#ccc', 948);
+    const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi", beatmapset?.title || '', title_unicode_str, null, 955, 95, 144, 48, 30, 960, 'left baseline', '#fff', '#ccc', 948);
 
     const title = PanelDraw.Shadow(t.title, 4, 4, 4, '#1c1719')
 
@@ -858,7 +859,7 @@ const component_R8 = (pp_list = [0], pp_distribution, mode) => {
         )
         const valid_data = valid_skills.map((skill) => pp_distribution[skill])
 
-        const lengths = calculateRectangleLength(valid_data, 740, 15)
+        const lengths = getRectWidth(valid_data, 740, 15)
 
         // 3. 生成卡片 + 矩形（左端对齐，右端累加延伸）
         const r22s = []

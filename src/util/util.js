@@ -2654,14 +2654,22 @@ export const loggerTime = (message) => {
     return `[${timestamp}] [P${pid}] ${message}`
 };
 
+
 /**
- * 根据数据计算对应的矩形长度，大于等于0小于min_length视作min_length，否则视为0
- * @param data
- * @param max_length
- * @param min_length
- * @returns {number[]}
+ * 计算矩形宽度
+ * @param {number[]} data - 数据数组
+ * @param {number} max_length - 总最大长度
+ * @param {number} min_length - 单个矩形最小长度保底
+ * @param {boolean} is_cumulative - 是否为累积长度（true: 逐个累加，false: 各自独立宽度）
+ * @param {number} gap - 矩形之间的间距
  */
-export const calculateRectangleLength = (data = [0], max_length = 100, min_length = 10) => {
+export const getRectWidth = (
+    data = [0],
+    max_length = 100,
+    min_length = 10,
+    is_cumulative = false,
+    gap = 0
+) => {
     // 小于等于 0 的值视作 0
     const safe_data = (data ?? [0]).map((item) => {
         const value = Number(item)
@@ -2676,55 +2684,86 @@ export const calculateRectangleLength = (data = [0], max_length = 100, min_lengt
         .map((value, index) => (value > 0 ? index : -1))
         .filter((index) => index !== -1)
 
-    // 如果总长度连每个有效项的最小长度都保证不了，只能让有效项均分 max_length
-    if (valid_indexes.length * min_length > max_length) {
-        const avg = max_length / valid_indexes.length
-        return safe_data.map((value) => (value > 0 ? avg : 0))
+    const valid_count = valid_indexes.length
+    if (valid_count === 0) return safe_data.map(() => 0)
+
+    // 计算总间距（n 个有效矩形之间有 n - 1 个间距）
+    const total_gap = valid_count > 1 ? (valid_count - 1) * gap : 0
+    // 扣除间距后的总可用长度
+    const available_length = Math.max(0, max_length - total_gap)
+
+    // 如果可用长度为 0 或负数，直接返回全 0
+    if (available_length <= 0) {
+        return safe_data.map(() => 0)
     }
 
-    // 先按 data 占比计算理论长度
-    const raw_lengths = safe_data.map((value) =>
-        value > 0 ? (value / sum) * max_length : 0
-    )
+    let raw_lengths = []
 
-    /**
-     * @type {number[]}
-     */
-    const short_indexes = []
-    /**
-     * @type {number[]}
-     */
-    const long_indexes = []
+    // 如果总长度连每个有效项的最小长度都保证不了，只能让有效项均分 available_length
+    if (valid_count * min_length > available_length) {
+        const avg = available_length / valid_count
+        raw_lengths = safe_data.map((value) => (value > 0 ? avg : 0))
+    } else {
+        // 先按 data 占比计算理论长度（基于扣除间距后的 available_length）
+        const calculated_lengths = safe_data.map((value) =>
+            value > 0 ? (value / sum) * available_length : 0
+        )
 
-    valid_indexes.forEach((index) => {
-        if (raw_lengths[index] < min_length) {
-            short_indexes.push(index)
+        /** @type {number[]} */
+        const short_indexes = []
+        /** @type {number[]} */
+        const long_indexes = []
+
+        valid_indexes.forEach((index) => {
+            if (calculated_lengths[index] < min_length) {
+                short_indexes.push(index)
+            } else {
+                long_indexes.push(index)
+            }
+        })
+
+        // 没有低于 min 的项，直接使用计算结果
+        if (short_indexes.length === 0) {
+            raw_lengths = calculated_lengths
         } else {
-            long_indexes.push(index)
-        }
-    })
+            raw_lengths = safe_data.map(() => 0)
 
-    // 没有低于 min 的项，直接返回按占比分配结果
-    if (short_indexes.length === 0) {
+            // 低于 min 的有效项，保底为 min
+            short_indexes.forEach((index) => {
+                raw_lengths[index] = min_length
+            })
+
+            // 剩余长度平分给理论长度不低于 min 的“长项”
+            const remaining = available_length - short_indexes.length * min_length
+            const avg = long_indexes.length > 0 ? remaining / long_indexes.length : 0
+
+            long_indexes.forEach((index) => {
+                raw_lengths[index] = avg
+            })
+        }
+    }
+
+    // 如果不需要累积，直接返回各自的独立宽度
+    if (!is_cumulative) {
         return raw_lengths
     }
 
-    const result = safe_data.map(() => 0)
+    // 如果需要累积（逐个增加，并把 gap 计算在内）
+    const result = [...raw_lengths]
+    let cumulative = 0
+    let valid_so_far = 0
 
-    // 低于 min 的有效项，保底为 min
-    short_indexes.forEach((index) => {
-        result[index] = min_length
+    return result.map((width, index) => {
+        if (safe_data[index] <= 0) return 0
+
+        valid_so_far++
+        cumulative += width
+        // 如果不是第一项，累加时需要把前面累积的 gap 也加上
+        if (valid_so_far > 1) {
+            cumulative += gap
+        }
+        return cumulative
     })
-
-    // 剩余长度平分给理论长度不低于 min 的“长项”
-    const remaining = max_length - short_indexes.length * min_length
-    const avg = long_indexes.length > 0 ? remaining / long_indexes.length : 0
-
-    long_indexes.forEach((index) => {
-        result[index] = avg
-    })
-
-    return result
 }
 
 /**

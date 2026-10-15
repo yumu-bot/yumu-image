@@ -274,7 +274,7 @@ export async function panel_E10(data = {
     })
     const componentE10 = component_E10(PanelEGenerate.score2componentE10(data.score))
 
-    const componentE11 = component_E11(await PanelEGenerate.score2componentE11(data.score, background))
+    const componentE11 = component_E11(PanelEGenerate.score2componentE11(data.score, background))
 
     const bodyE1 = getSvgBody(275, 35, componentE1)
     const bodyE2 = getSvgBody(275, 295, componentE2)
@@ -1341,35 +1341,53 @@ const PanelEGenerate = {
         }
     },
 
+    score2componentE11: (score, background) => {
+        const {
+            beatmap = {},
+            beatmapset = {},
+        } = score
 
-    score2componentE11: async (score, background) => {
+        const {
+            owners = [],
+            id: bid = 0
+        } = beatmap
+
+        const {
+            title = '',
+            title_unicode = '',
+            artist = '',
+            creator = '',
+            id: sid = 0,
+            aliases = []
+        } = beatmapset
+
         /**
          * @type string
          */
         let creators
-        let difficulty = getKeyDifficulty(score?.beatmap)
-        const owners = score?.beatmap?.owners || []
+        let difficulty = getKeyDifficulty(beatmap)
 
         if (isEmptyArray(owners)) {
-            creators = score?.beatmapset?.creator || ''
+            creators = creator
         } else {
             creators = owners.map(o => {
-                return (o?.username || ('U' + (o?.id || '?')))
+                return (o?.username ?? ('U' + (o?.id ?? '?')))
             }).join(", ")
 
             difficulty = removeGuest(difficulty)
         }
 
         return {
-            title: score?.beatmapset?.title || '',
-            title_unicode: score?.beatmapset?.title_unicode || '',
-            artist: score?.beatmapset?.artist || '',
+            title: title,
+            title_unicode: (aliases.length > 1) ? String(aliases[0]) : title_unicode,
+            artist: artist,
             difficulty_name: difficulty,
-            bid: score?.beatmap?.id || 0,
+            bid: bid,
+            sid: sid,
             background: background,
             creator: creators,
         }
-    }
+    },
 }
 
 const label_E10S = (data = {

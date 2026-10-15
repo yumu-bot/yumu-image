@@ -1074,7 +1074,8 @@ const PanelEGenerate = {
             title_unicode = '',
             artist = '',
             creator = '',
-            id: sid = 0
+            id: sid = 0,
+            aliases = []
         } = beatmapset
 
         /**
@@ -1095,7 +1096,7 @@ const PanelEGenerate = {
 
         return {
             title: title,
-            title_unicode: title_unicode,
+            title_unicode: (aliases.length > 1) ? String(aliases[0]) : title_unicode,
             artist: artist,
             difficulty_name: difficulty,
             bid: bid,
