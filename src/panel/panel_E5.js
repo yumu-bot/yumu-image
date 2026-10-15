@@ -1096,7 +1096,7 @@ const PanelEGenerate = {
 
         return {
             title: title,
-            title_unicode: (aliases.length > 1) ? String(aliases[0]) : title_unicode,
+            title_unicode: (aliases.length > 0) ? String(aliases[0]) : title_unicode,
             artist: artist,
             difficulty_name: difficulty,
             bid: bid,

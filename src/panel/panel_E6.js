@@ -860,7 +860,7 @@ const PanelEGenerate = {
         }
 
         const aliases = b?.beatmapset?.aliases ?? []
-        const title_unicode = (aliases.length > 1) ? String(aliases[0]) : (b?.beatmapset?.title_unicode ?? '')
+        const title_unicode = (aliases.length > 0) ? String(aliases[0]) : (b?.beatmapset?.title_unicode ?? '')
 
         return {
             title: b?.beatmapset?.title || '',

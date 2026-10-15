@@ -618,7 +618,7 @@ const component_R6 = (background, beatmapset) => {
     const image = getImage(880, 40, 1920 - 880, 210 - 40, background, 0.4)
 
     const aliases = beatmapset?.aliases ?? []
-    const title_unicode_str = (aliases.length > 1) ? String(aliases[0]) : (beatmapset?.title_unicode || '')
+    const title_unicode_str = (aliases.length > 0) ? String(aliases[0]) : (beatmapset?.title_unicode || '')
 
     const t = getBeatMapTitlePath("poppinsBold", "PuHuiTi", beatmapset?.title || '', title_unicode_str, null, 955, 95, 144, 48, 30, 960, 'left baseline', '#fff', '#ccc', 948);
 
