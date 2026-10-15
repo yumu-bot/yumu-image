@@ -62,8 +62,10 @@ export async function card_A3(beatmapset = {}) {
 
      */
 
+    const aliases = beatmapset.aliases ?? []
+
     const titles = getBeatMapTitlePath("torus", "PuHuiTi",
-        beatmapset?.title ?? '', beatmapset?.title_unicode ?? '', null,
+        beatmapset?.title ?? '', (aliases.length > 1) ? String(aliases[0]) : (beatmapset?.title_unicode ?? ''), null,
         225, 40 - 2, 70 - 2, 36, 18, 390 - 20, 'left baseline', '#fff', '#aaa');
 
     const artist = torus.getTextPath(

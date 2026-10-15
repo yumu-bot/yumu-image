@@ -859,9 +859,12 @@ const PanelEGenerate = {
             difficulty = removeGuest(difficulty)
         }
 
+        const aliases = b?.beatmapset?.aliases ?? []
+        const title_unicode = (aliases.length > 1) ? String(aliases[0]) : (b?.beatmapset?.title_unicode ?? '')
+
         return {
             title: b?.beatmapset?.title || '',
-            title_unicode: b?.beatmapset?.title_unicode || '',
+            title_unicode: title_unicode,
             artist: b?.beatmapset?.artist || '',
             difficulty_name: difficulty,
             bid: b?.id || 0,
