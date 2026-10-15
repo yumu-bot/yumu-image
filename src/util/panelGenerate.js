@@ -1062,7 +1062,8 @@ export const PanelGenerate = {
             artist = '',
             creator = '',
             title = '',
-            title_unicode = ''
+            title_unicode = '',
+            aliases = []
         } = beatmapset
 
         const cv = cover ?? getIndexOrNull(results, 0)
@@ -1086,7 +1087,7 @@ export const PanelGenerate = {
         const artist2 = torus.cutStringTail(artist, 24,
             500 - 10 - mods_width - torus.getTextWidth(' // ' + creator, 24), true);
 
-        const title2 = (title === title_unicode) ? '' : title_unicode;
+        const title2 = (aliases.length > 0) ? String(aliases[0]) : (title === title_unicode) ? '' : title_unicode;
         const index_b = (pp <= 10000) ? String(Math.round(pp)) : floor(pp, 1, -1);
 
         // 这是大概的进度
