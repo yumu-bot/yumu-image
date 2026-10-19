@@ -777,7 +777,33 @@ export function getUserRankColor(rank = 0) {
 
  */
 
-const RANK_RULES = [
+const GLOBAL_RULES = [
+    // Lustrous 阶梯 (Rank <= 100)
+    // { rank: 100, name: 'Lustrous', color: colorArray.lustrous },
+
+    // Radiant 阶梯 (< 0.05%)
+    { limit: 0.0005,  name: 'Radiant',   color: colorArray.radiant },
+
+    // Rhodium 阶梯 (< 0.25%)
+    { limit: 0.0025,  name: 'Rhodium',   color: colorArray.rhodium },
+
+    // Platinum 阶梯 (< 0.5%)
+    { limit: 0.005,   name: 'Platinum',  color: colorArray.platinum },
+
+    // Gold 阶梯 (< 2.5%)
+    { limit: 0.025,   name: 'Gold',      color: colorArray.gold },
+
+    // Silver 阶梯 (< 5%)
+    { limit: 0.05,    name: 'Silver',    color: colorArray.silver },
+
+    // Bronze 阶梯 (< 25%)
+    { limit: 0.25,    name: 'Bronze',    color: colorArray.bronze },
+
+    // Iron 阶梯 (< 50%)
+    { limit: 0.5,     name: 'Iron',      color: colorArray.iron },
+];
+
+const RANKED_PLAY_RULES = [
     // Radiant 阶梯 (<= 5%)
     { limit: 0.01,  name: 'Radiant III',  color: colorArray.radiant },
     { limit: 0.025, name: 'Radiant II',   color: colorArray.radiant },
@@ -809,10 +835,17 @@ const RANK_RULES = [
     { limit: 1.0,   name: 'Bronze I',     color: colorArray.bronze },
 ];
 
+function getRankRule(rule = '') {
+    switch (rule) {
+        case "ranked_play": return RANKED_PLAY_RULES
+        default: return GLOBAL_RULES
+    }
+}
+
 /**
  * 内部辅助函数：统一获取匹配到的段位规则对象
  */
-function getMatchedRankRule(global_rank = 0, global_rank_percent = 0, rank_rules = RANK_RULES) {
+function getMatchedRankRule(global_rank = 0, global_rank_percent = 0, rank_rules = 'rp') {
     if (global_rank <= 0 && global_rank_percent <= 0) {
         return null;
     }
@@ -825,13 +858,13 @@ function getMatchedRankRule(global_rank = 0, global_rank_percent = 0, rank_rules
     }
 
     // 匹配第一个满足 percent <= rule.limit 的规则
-    return rank_rules.find(rule => global_rank_percent <= rule.limit) || null;
+    return getRankRule(rank_rules).find(rule => global_rank_percent <= rule.limit) || null;
 }
 
 /**
  * 获取段位颜色
  */
-export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent = 0, rank_rules = RANK_RULES) {
+export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent = 0, rank_rules = 'ranked_play') {
     const matched = getMatchedRankRule(global_rank, global_rank_percent, rank_rules);
     return matched ? matched.color : colorArray.deep_gray;
 }
@@ -839,7 +872,7 @@ export function getGlobalRankPercentColor(global_rank = 0, global_rank_percent =
 /**
  * 获取段位名称 (包含子段位如 "Bronze III")
  */
-export function getGlobalRankPercentName(global_rank = 0, global_rank_percent = 0, rank_rules = RANK_RULES) {
+export function getGlobalRankPercentName(global_rank = 0, global_rank_percent = 0, rank_rules = 'ranked_play') {
     const matched = getMatchedRankRule(global_rank, global_rank_percent, rank_rules);
     return matched ? matched.name : 'Peppy';
 }

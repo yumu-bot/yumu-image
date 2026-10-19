@@ -234,17 +234,6 @@ export async function panel_S(data = {
     return svg
 }
 
-// https://github.com/ppy/osu-web/pull/13110/changes
-const RANK_RULES = [
-    { limit: 0.05,  name: 'Radiant',  color: colorArray.radiant },
-    { limit: 0.2,  name: 'Rhodium',  color: colorArray.rhodium },
-    { limit: 0.5,   name: 'Platinum', color: colorArray.platinum },
-    { limit: 0.75,   name: 'Gold',     color: colorArray.gold },
-    { limit: 0.95,   name: 'Silver',   color: colorArray.silver },
-    { limit: 1.0,   name: 'Bronze',   color: colorArray.bronze },
-    // { limit: 1.0,    name: 'Iron',     color: colorArray.iron },
-];
-
 // yumu v4.0 规范，一切与面板强相关，并且基本不考虑复用的元素归类为组件，不占用卡片命名区域
 const component_S1 = (
     data = {
@@ -263,8 +252,8 @@ const component_S1 = (
 
     const percent = data.rank / Math.max(data.total_players, 1)
 
-    const colors = getGlobalRankPercentColor(data.rank, percent, RANK_RULES)
-    const ranks = getGlobalRankPercentName(data.rank, percent, RANK_RULES)
+    const colors = getGlobalRankPercentColor(data.rank, percent, 'ranked_play')
+    const ranks = getGlobalRankPercentName(data.rank, percent, 'ranked_play')
 
     const base = rotateSvgBody(PanelDraw.LinearGradientRect(215 - 80, 150 - 80, 160, 160, 20, colors, [100, 0], [60, 40], 1), 215,  150, 45)
 

@@ -92,7 +92,7 @@ export const PanelGenerate = {
 
         const is_team_member = user.team != null
 
-        let left1_colors = getGlobalRankPercentColor(user?.statistics?.global_rank, user?.statistics?.global_rank_percent)
+        let left1_colors = getGlobalRankPercentColor(user?.statistics?.global_rank, user?.statistics?.global_rank_percent, 'global')
 
         const left1 = user?.statistics?.global_rank ? ('#' + user.statistics.global_rank) :
             (user?.rank_highest?.rank ?
