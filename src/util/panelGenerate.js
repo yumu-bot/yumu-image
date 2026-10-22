@@ -1210,7 +1210,9 @@ export const PanelGenerate = {
         const artist = torus.cutStringTail(mp.beatmapset.artist, 24,
             500 - 10, true);
 
-        const title2 = (mp.beatmapset.title === mp.beatmapset.title_unicode) ? '' : (mp?.beatmapset?.title_unicode || '');
+        const aliases = mp.beatmapset?.aliases ?? []
+
+        const title2 = aliases.length > 0 ? aliases[0] : (mp.beatmapset.title === mp.beatmapset.title_unicode) ? '' : (mp?.beatmapset?.title_unicode || '');
 
         let color_index = '#fff'
         let rank2_color
