@@ -89,10 +89,15 @@ export function card_C(data = {}) {
     let title2_w = title_max_width - title_w - 10;
 
     // 针对非 ASCII 副标题的预裁切逻辑优化
-    if (is_title_not_equal && isNotEmptyString(title2) && !isASCII(title2.substring(0, 4))) {
-        const t2_prefix_w = font_t2.getTextWidth(title2.substring(0, 3) + '...', 18);
+    // 灰色副标题（标题后的 title2）至少保留 MIN_TITLE2_CHARS 个字，空间不足时优先压缩主标题
+    const MIN_TITLE2_CHARS = 5;
+    const title2_head = isNotEmptyString(title2) ? title2.substring(0, MIN_TITLE2_CHARS) : '';
+    if (is_title_not_equal && isNotEmptyString(title2) && !isASCII(title2_head)) {
+        // 副标题本身比下限短时不需要为省略号额外留位置
+        const t2_prefix_w = font_t2.getTextWidth(
+            title2_head + (title2.length > MIN_TITLE2_CHARS ? '...' : ''), 18);
         if (title2_w < t2_prefix_w) {
-            title_w = title_max_width - t2_prefix_w - 20;
+            title_w = Math.max(0, title_max_width - t2_prefix_w - 20);
         }
     }
 
