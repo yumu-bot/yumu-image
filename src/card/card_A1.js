@@ -9,7 +9,7 @@ import {
     setTexts, toPromise,
 } from "../util/util.js";
 import {PuHuiTi, torus} from "../util/font.js";
-import {getRandomString, isASCII} from "../util/text.js";
+import {getRandomString, isASCII, isNotBlankString} from "../util/text.js";
 
 export async function card_A1(data = {}) {
     // 1. 初始化默认值与基础设置
@@ -25,6 +25,7 @@ export async function card_A1(data = {}) {
         top2 = '',
         left1 = '',
         left2 = '',
+        right0 = '',
         right1 = '',
         right2 = '',
         right3b = '',
@@ -40,6 +41,9 @@ export async function card_A1(data = {}) {
     const font_top1 = isTop1ASCII ? torus : PuHuiTi;
     const font_left1 = isASCII(left1) ? torus : PuHuiTi;
     const font_left2 = isASCII(left2) ? torus : PuHuiTi;
+    // 新增的右侧首行（可为空），字体/字号与 right1 保持一致
+    const font_right0 = isASCII(right0) ? torus : PuHuiTi;
+    const size_right0 = isASCII(right0) ? 24 : 22;
 
     const size_left1 = isASCII(left1) ? 24 : 22;
     const size_left2 = isASCII(left2) ? 24 : 22;
@@ -48,6 +52,8 @@ export async function card_A1(data = {}) {
     if (!isTop1ASCII) top1_size -= 4;
 
     const right_width = torus.getTextWidth(right3b, 60) + torus.getTextWidth(right3m, 48);
+    // 右侧文字（共用一个右对齐锚点）的最大可用宽度：420 右侧留 10px 边距
+    const right_maxWidth = 410;
 
     // 3. 处理渐变色 (使用短路运算符更简洁)
     const colors = (Array.isArray(data.left1_colors) && data.left1_colors.length > 1)
@@ -70,8 +76,13 @@ export async function card_A1(data = {}) {
         l1_top: font_left1.getTextPath(font_left1.cutStringTail(left1, size_left1, 390 - right_width), 20, 165.836, size_left1, "left baseline", `url(#${grad_id})`, 1),
         l2: font_left2.getTextPath(font_left2.cutStringTail(left2, size_left2, 390 - right_width), 20, 191.836, size_left2, "left baseline", "#fff"),
 
-        r1: torus.getTextPath(right1, 420, 112.836, 24, 'right baseline', '#fff'),
-        r2: torus.getTextPath(right2, 420, 141.836, 24, "right baseline", "#fff"),
+        // right0 位于右侧最上方，为空时不绘制任何内容
+        r0: isNotBlankString(right0)
+            ? font_right0.getTextPath(font_right0.cutStringTail(right0, size_right0, right_maxWidth), 420, 83.836, size_right0, "right baseline", "#fff")
+            : '',
+
+        r1: torus.getTextPath(torus.cutStringTail(right1, 24, right_maxWidth), 420, 112.836, 24, 'right baseline', '#fff'),
+        r2: torus.getTextPath(torus.cutStringTail(right2, 24, right_maxWidth), 420, 141.836, 24, "right baseline", "#fff"),
         r3: torus.get2SizeTextPath(right3b, right3m, 60, 48, 420, 191.59, 'right baseline', '#fff')
     };
 
@@ -103,7 +114,7 @@ export async function card_A1(data = {}) {
     svg = setText(svg, flag_svg, reg.country);
 
     // 合并文本替换，修复原代码的二次覆盖问题
-    svg = setTexts(svg, [paths.t1, paths.t2, paths.l1_top, paths.l1_base, paths.l2, paths.r1, paths.r2, paths.r3], reg.text);
+    svg = setTexts(svg, [paths.t1, paths.t2, paths.l1_top, paths.l1_base, paths.l2, paths.r0, paths.r1, paths.r2, paths.r3], reg.text);
 
     // 图片替换
     svg = setImage(svg, 0, 0, 430, 210, backgrounds, reg.bg, 0.6);

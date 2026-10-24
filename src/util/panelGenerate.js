@@ -133,6 +133,17 @@ export const PanelGenerate = {
         const right1 = (pp_d > 0) ? '+' + pp_d + 'PP' :
             ((pp_d < 0) ? pp_d + 'PP' : (is_team_member ? '[' + user.team.short_name + ']' : ''))
 
+        // 右侧靠上小字 right0：globalRank 提升差值（数值减少才算提升，且自身 rank 不能为 0）
+        let right0 = '';
+
+        if (historyUser != null) {
+            const curRank = Number(user?.statistics?.global_rank);
+            const hisRank = Number(historyUser?.statistics?.global_rank);
+            if (Number.isFinite(curRank) && Number.isFinite(hisRank) && curRank > 0 && hisRank > 0 && hisRank > curRank) {
+                right0 = `#+${hisRank - curRank}`;
+            }
+        }
+
         return {
             background: (isNotEmptyString(bg)) ? bg : getBannerLocal(),
             avatar: av,
@@ -148,6 +159,7 @@ export const PanelGenerate = {
             left1_stroke: '#fff',
             left1_stroke_width: 2,
             left2: left2,
+            right0: right0,
             right1: right1,
             right2: right2,
             right3b: right3b,
