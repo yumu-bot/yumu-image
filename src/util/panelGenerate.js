@@ -130,7 +130,7 @@ export const PanelGenerate = {
 
         //历史记录功能！
         const pp_d = (historyUser != null) ? Math.round((user.pp - historyUser?.statistics?.pp) * 100) / 100 : 0
-        const right1 = (pp_d > 0) ? '+' + pp_d + 'PP' :
+        let right1 = (pp_d > 0) ? '+' + pp_d + 'PP' :
             ((pp_d < 0) ? pp_d + 'PP' : (is_team_member ? '[' + user.team.short_name + ']' : ''))
 
         // 右侧靠上小字 right0：globalRank 提升差值（数值减少才算提升，且自身 rank 不能为 0）
@@ -140,8 +140,14 @@ export const PanelGenerate = {
             const curRank = Number(user?.statistics?.global_rank);
             const hisRank = Number(historyUser?.statistics?.global_rank);
             if (Number.isFinite(curRank) && Number.isFinite(hisRank) && curRank > 0 && hisRank > 0 && hisRank > curRank) {
-                right0 = `#+${hisRank - curRank}`;
+                right0 = `+#${hisRank - curRank}`;
             }
+        }
+
+        // +xxPP(right1) 为空时，提升值放到 right1 那一行，不单独占 right0 行
+        if (right0 !== '' && right1.trim() === '') {
+            right1 = right0;
+            right0 = '';
         }
 
         return {
