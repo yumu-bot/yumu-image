@@ -59,7 +59,10 @@ class WebViewPool {
             this.total++;
             try {
                 return new Bun.WebView(
-                    { backend: "chrome" }
+                    {
+                        backend: "chrome",
+                        argv: ["--no-sandbox", "--disable-setuid-sandbox"],
+                    }
                 );
             } catch (err) {
                 this.total--;
