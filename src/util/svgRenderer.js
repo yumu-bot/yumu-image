@@ -316,7 +316,22 @@ export async function renderSvg(svg, options = {}) {
 
     const url = `${origin}/__injector?key=${key}&bg=${encodeURIComponent(bg)}`;
 
-    const view = await pool.acquire();
+    let view;
+    try {
+        view = await pool.acquire();
+        // 探测：如果已关闭，这一步会抛错
+        await view.navigate("about:blank");
+    } catch (err) {
+        if (err.code === "ERR_INVALID_STATE") {
+            // 丢弃死连接，创建新 view 后重试
+            pool.discard(view);
+            view = await pool.create();
+            await view.navigate("about:blank");
+        } else {
+            throw err;
+        }
+    }
+
     try {
         // 先导航一次建立会话,再把视口精确设成 SVG 尺寸
         await view.navigate("about:blank");
