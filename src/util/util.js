@@ -120,11 +120,6 @@ if (process.env.FLAG_PATH != null) {
     FLAG_PATH = path_util.join(CACHE_PATH, "flag");
 }
 
-process.on('uncaughtException', (err) => {
-    console.error('[进程崩溃] 捕获到未处理的异常:', err);
-    process.exit(1);
-});
-
 EventEmitter.defaultMaxListeners = 50;
 
 export function initPath() {

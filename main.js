@@ -6,69 +6,18 @@ import {
     OSU_BUFFER_PATH
 } from "./src/util/util.js";
 import {WsClient} from "./src/util/websocket.js";
+import {closeRenderer} from "./src/util/svgRenderer.js";
+import {getChromeProfileRoot, cleanupStaleChromeProfiles} from "./src/util/chromeProfile.js";
 import moment from "moment";
-// import { readdirSync, rmSync } from "node:fs";
-// import { join } from "node:path";
-// import { tmpdir } from "node:os";
-
-// function cleanBunChromeProfiles() {
-//     const tmp = tmpdir();
-
-//     try {
-//         for (const file of readdirSync(tmp)) {
-//             if (!file.endsWith(".bun-chrome")) {
-//                 continue;
-//             }
-
-//             try {
-//                 rmSync(join(tmp, file), {
-//                     recursive: true,
-//                     force: true,
-//                 });
-//             } catch {
-//                 // 不管他
-//             }
-//         }
-//     } catch {
-//         // 没 tmp 就不删
-//     }
-// }
-
-// function gracefulExit(code = 0) {
-//     cleanBunChromeProfiles();
-//     process.exit(code);
-// }
-
-// // 启动时清理历史残留
-// cleanBunChromeProfiles();
-
-// // Bun / PM2 停止、重启
-// process.on("SIGINT", () => gracefulExit(0));
-// process.on("SIGTERM", () => gracefulExit(0));
-
-// // 崩溃兜底
-// process.on("uncaughtException", (err) => {
-//     console.error("Uncaught Exception:", err);
-//     gracefulExit(1);
-// });
-
-// process.on("unhandledRejection", (err) => {
-//     console.error("Unhandled Rejection:", err);
-//     gracefulExit(1);
-// });
 
 initPath();
-//这里放测试代码
 
 process.on('unhandledRejection', (reason) => {
     console.error('未捕获的 Promise 拒绝:', reason);
-    // 记录日志，但不让进程死掉
 });
-
 
 const port = process.env.PORT ?? 8388
 
-// 定义所有面板后缀
 const panelSuffixes = [
     'A1', 'A2', 'A3', 'A4', 'A5',
     'A6', 'A7', 'A8', 'A9', 'A10',
@@ -120,7 +69,7 @@ function adaptHandler(originalRouter, suffix) {
             }, 30000);
 
             let isErrorStatus = false;
-            let currentStatusCode = 200; // 记录当前的状态码
+            let currentStatusCode = 200;
 
             const req = {
                 body: payload,
@@ -176,20 +125,111 @@ function adaptHandler(originalRouter, suffix) {
     };
 }
 
-const MAX_CONCURRENT = 1;
+const MAX_CONCURRENT = Math.max(1, Number(process.env.MAX_CONCURRENT) || 1);
+const MAX_QUEUE_SIZE = Math.max(1, Number(process.env.MAX_QUEUE_SIZE) || 10);
+const SHUTDOWN_DRAIN_TIMEOUT_MS = Math.max(1000, Number(process.env.SHUTDOWN_DRAIN_TIMEOUT) || 15000);
+const SHUTDOWN_CLOSE_TIMEOUT_MS = Math.max(1000, Number(process.env.SHUTDOWN_CLOSE_TIMEOUT) || 15000);
+
 let currentTasks = 0;
 const taskQueue = [];
-const MAX_QUEUE_SIZE = 10
+let wsClient = null;
+let shuttingDown = false;
+let shutdownPromise = null;
+
+async function gracefulShutdown(code = 0, reason = "unknown") {
+    if (shutdownPromise) return shutdownPromise;
+
+    shuttingDown = true;
+    console.log(loggerTime(`[退出] 收到 ${reason}，停止接收新任务...`));
+
+    shutdownPromise = (async () => {
+        let exitCode = code;
+
+        try {
+            while (taskQueue.length > 0) {
+                const {msg} = taskQueue.shift();
+                try {
+                    wsClient?.send({
+                        messageId: msg.messageId,
+                        status: 'error',
+                        error: '服务正在退出，任务已取消',
+                    });
+                } catch {}
+            }
+
+            const deadline = Date.now() + SHUTDOWN_DRAIN_TIMEOUT_MS;
+            while (currentTasks > 0 && Date.now() < deadline) {
+                await Bun.sleep(50);
+            }
+
+            if (currentTasks > 0) {
+                console.warn(loggerTime(`[退出] 等待在途任务超时，仍有 ${currentTasks} 个任务未结束`));
+            }
+
+            try {
+                if (wsClient?.heartbeatTimer) {
+                    clearInterval(wsClient.heartbeatTimer);
+                    wsClient.heartbeatTimer = null;
+                }
+                wsClient?.close();
+            } catch (err) {
+                console.warn(loggerTime(`[退出] 关闭 WS 失败: ${err?.message || err}`));
+            }
+            wsClient = null;
+
+            const closeResult = await Promise.race([
+                closeRenderer()
+                    .then(() => "closed")
+                    .catch((err) => {
+                        console.error(loggerTime(`[退出] 关闭渲染器失败: ${err?.stack || err}`));
+                        return "closed";
+                    }),
+                Bun.sleep(SHUTDOWN_CLOSE_TIMEOUT_MS).then(() => "timeout"),
+            ]);
+
+            if (closeResult === "timeout") {
+                console.warn(loggerTime(`[退出] 关闭渲染器超时 (${SHUTDOWN_CLOSE_TIMEOUT_MS}ms)，强制退出`));
+            }
+        } catch (err) {
+            console.error(loggerTime(`[退出] 清理过程异常: ${err?.stack || err}`));
+            if (exitCode === 0) exitCode = 1;
+        } finally {
+            console.log(loggerTime(`[退出] 进程 [${process.pid}] 退出，退出码 ${exitCode}`));
+            process.exit(exitCode);
+        }
+    })();
+
+    return shutdownPromise;
+}
+
+process.on('SIGINT', () => {
+    void gracefulShutdown(0, 'SIGINT');
+});
+process.on('SIGTERM', () => {
+    void gracefulShutdown(0, 'SIGTERM');
+});
+process.on('uncaughtException', (err) => {
+    console.error(loggerTime('[进程崩溃] 捕获到未处理的异常:'), err);
+    void gracefulShutdown(1, 'uncaughtException');
+});
 
 async function start() {
-    // 每个进程都加载渲染器
+    cleanupStaleChromeProfiles();
+    if (shuttingDown) return;
+
     await initPanels();
+    if (shuttingDown) return;
+
     console.log(loggerTime(`进程 [${process.pid}] 渲染器就绪`));
 
-    // 每个进程都作为客户端连接 Kotlin
-    const client = new WsClient(`ws://localhost:${port}/render-ws`);
+    const client = wsClient = new WsClient(`ws://localhost:${port}/render-ws`);
 
     client.on('open', () => {
+        if (shuttingDown) {
+            client.close();
+            return;
+        }
+
         console.log(loggerTime(`[WS] 进程 [${process.pid}] 已连接到 Kotlin 服务端`));
         client.send({
             type: 'AUTH',
@@ -201,20 +241,20 @@ async function start() {
         }
 
         client.heartbeatTimer = setInterval(() => {
-            if (client.ws && client.ws.readyState === 1) {
-                // 发送一个自定义的心跳包，确保服务端接收并重置超时计数
-                client.send({ type: 'HEARTBEAT', pid: process.pid, timestamp: Date.now() });
+            if (shuttingDown) return;
+
+            if (client.ws && client.ws.readyState === WebSocket.OPEN) {
+                client.send({type: 'HEARTBEAT', pid: process.pid, timestamp: Date.now()});
             }
 
         }, 25000);
     });
 
-
     async function processQueue() {
-        if (currentTasks >= MAX_CONCURRENT || taskQueue.length === 0) return;
+        if (shuttingDown || currentTasks >= MAX_CONCURRENT || taskQueue.length === 0) return;
 
         currentTasks++;
-        const { msg } = taskQueue.shift();
+        const {msg} = taskQueue.shift();
 
         try {
             const handler = panelHandlers.get(msg.path);
@@ -226,48 +266,68 @@ async function start() {
                 if (result && typeof result === 'object' && (result.error || result.status !== 'ok')) {
                     throw new Error(result.error || result.message || JSON.stringify(result));
                 }
-                // 如果是正常的 JSON 响应，将其转换为 Buffer，防止 Buffer.concat 崩溃
                 result = Buffer.from(JSON.stringify(result || {}), 'utf-8');
             }
 
-            // 合并 Buffer (如果是图片)
             const idBuffer = Buffer.from(msg.messageId, 'utf-8');
             const finalBuffer = Buffer.concat([idBuffer, result]);
 
-            // 检查缓冲区压力
-            if (client.ws.bufferedAmount > 30 * 1024 * 1024) {
+            const ws = client.ws;
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                console.error(loggerTime("[WS] 连接已断开，丢弃该任务结果"));
+            } else if (ws.bufferedAmount > 30 * 1024 * 1024) {
                 console.error(loggerTime("[WS] 缓冲区过载，丢弃该任务防止崩溃"));
             } else {
-                client.ws.send(finalBuffer);
+                ws.send(finalBuffer);
             }
         } catch (err) {
-            client.send({ messageId: msg.messageId, status: 'error', error: err.message });
+            client.send({messageId: msg.messageId, status: 'error', error: err.message});
         } finally {
             currentTasks--;
             msg.payload = null;
-            setTimeout(processQueue, 50);
+            if (!shuttingDown) {
+                setTimeout(processQueue, 50);
+            }
         }
     }
 
     client.on('message', (data) => {
-        if (taskQueue.length >= MAX_QUEUE_SIZE) {
-            console.warn(loggerTime("[WS] 任务队列已满，拒绝接收新任务"));
+        if (shuttingDown) return;
+
+        let msg;
+        try {
+            msg = JSON.parse(data.toString());
+        } catch (err) {
+            console.warn(loggerTime(`[WS] 无法解析消息: ${err?.message || err}`));
             return;
         }
 
-        const msg = JSON.parse(data.toString());
-        if (!msg.messageId) return;
+        if (!msg?.messageId) return;
 
-        taskQueue.push({ msg });
+        if (taskQueue.length >= MAX_QUEUE_SIZE) {
+            console.warn(loggerTime("[WS] 任务队列已满，拒绝接收新任务"));
+            client.send({messageId: msg.messageId, status: 'error', error: '任务队列已满，请稍后重试'});
+            return;
+        }
+
+        taskQueue.push({msg});
         processQueue();
     });
 }
 
-await start();
+try {
+    await start();
+} catch (err) {
+    console.error(loggerTime(`[启动] 初始化失败: ${err?.stack || err}`));
+    await gracefulShutdown(1, 'startup');
+}
 
-console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n当前时间：${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}\nWS 监听端口: ${port}\n`);
-console.log("静态资源目录: ", EXPORT_FILE_V3);
-console.log("主缓存目录: ", CACHE_PATH);
-console.log("图像缓存: ", IMG_BUFFER_PATH);
-console.log("谱面文件缓存: ", OSU_BUFFER_PATH);
-console.log("当前代理: ", getProxyAgent()?.proxy?.host ?? 'undefined');
+if (!shuttingDown) {
+    console.log(`\n== YumuBot 绘图模块初始化成功。 ==\n当前时间：${moment(moment.now()).format("YYYY-MM-DD HH-mm-ss")}\nWS 监听端口: ${port}\n`);
+    console.log("静态资源目录: ", EXPORT_FILE_V3);
+    console.log("主缓存目录: ", CACHE_PATH);
+    console.log("图像缓存: ", IMG_BUFFER_PATH);
+    console.log("谱面文件缓存: ", OSU_BUFFER_PATH);
+    console.log("Chromium profile 根目录: ", getChromeProfileRoot());
+    console.log("当前代理: ", getProxyAgent()?.proxy?.host ?? 'undefined');
+}

@@ -36,6 +36,14 @@
 | PROXY_PORT | 7890 | 代理的端口。 |
 | IMAGE_FORMAT | jpg | 绘图模块返回的图片格式。可以使用 webp、jpg、png。<br />强烈推荐使用 webp，但是某些神秘 qq 客户端会出现缩略图预览问题。 |
 | ADVANCED_FORMAT | webp | 部分需要玩家点开的超大面板（无需考虑缩略图预览问题时），会自动使用这个格式。**一般不用改** |
+| CHROME_PROFILE_ROOT | ~/.cache/yumu-image/chrome-profiles | 每个 Bun 进程独享的 Chromium profile 根目录。**多进程部署建议指到服务数据盘**，不要放在 /tmp。 |
+| SVG_RENDER_POOL_SIZE | 1 | 每个 Bun 进程的 WebView 页面池大小。主程序 `MAX_CONCURRENT` 为 1 时保持 1 即可。 |
+| SVG_IDLE_KEEP | 1 | 空闲时最多保留的页面数，多余的页面会被关闭。 |
+| SVG_IDLE_TIMEOUT | 60000 | 空闲页面保留多久后关闭（毫秒）。 |
+| SVG_RENDER_TIMEOUT | 20000 | 单次渲染任务总超时（毫秒），应小于主程序的 30s 熔断。 |
+| SVG_CHROME_ARGS | - | 追加给 Chromium 的启动参数（空格分隔），用于减少缓存写入等调优。 |
+| SHUTDOWN_DRAIN_TIMEOUT | 15000 | 退出时等待在途任务结束的超时（毫秒）。 |
+| SHUTDOWN_CLOSE_TIMEOUT | 15000 | 退出时等待关闭浏览器/profile 的总超时（毫秒）。 |
 
 ### Windows 运行
 
@@ -87,6 +95,17 @@ fi
 可以使用 pboss 运行。你应该能自己解决。
 
 不一定要集群运行，你自己运行的时候可直接 pboss start main.js。
+
+### 多进程部署
+
+Bun 的 chrome backend **每个 Bun 进程启动一个 Chromium 主进程**。本项目通过 `backend.url: false` 强制各进程使用自己的浏览器，避免自动连接到同一个 Chrome。生产环境起多个进程时：
+
+- 每个进程会自动使用独立的 Chromium profile（`instance-<pid>-<随机串>`），互不干扰；
+- 启动时只清理 `CHROME_PROFILE_ROOT` 下已退出或过期的实例，不会扫描或删除 `/tmp` 里其他实例的 `.bun-chrome`；
+- profile 默认在 `~/.cache/yumu-image/chrome-profiles`，建议用 `CHROME_PROFILE_ROOT` 指到服务数据盘；
+- 减少 Chromium 主进程数量的根本方式是减少 Bun 进程数；`SVG_RENDER_POOL_SIZE` 只影响每个进程里的页面/渲染进程数量；
+- 如果改为单 Bun 进程 + 更高并发，可同时调大 `MAX_CONCURRENT` 和 `SVG_RENDER_POOL_SIZE`；
+- 进程收到 `SIGINT` / `SIGTERM` 时会停止接收新任务、等待在途任务、关闭页面和 Chromium，并释放自己的 profile。
 
 ## 可选
 
