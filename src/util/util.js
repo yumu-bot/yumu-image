@@ -12,6 +12,8 @@ import {matchAnyMods} from "./mod.js";
 import {hasLeaderBoard} from "./star.js";
 import {PanelDraw} from "./panelDraw.js";
 import {EventEmitter} from 'events';
+import dns from "node:dns";
+import net from "node:net";
 import {cacheManager, templateManager} from "./cacheManager.js";
 import {HttpsProxyAgent} from "https-proxy-agent";
 import {binary2Base64Text, compressLargePicture2Webp} from "./image.js";
@@ -56,8 +58,76 @@ export const PROXY_SCHEME = process.env.PROXY_SCHEME || 'http';
 export const PROXY_HOST = process.env.PROXY_HOST || '127.0.0.1';
 export const PROXY_PORT = Number(process.env.PROXY_PORT) || 7890
 
-const directHttpsAgent = new https.Agent({keepAlive: true});
-const directHttpAgent = new http.Agent({keepAlive: true});
+/**
+ * 强制出站连接只使用 IPv4。
+ * 部分代理节点/中转没有 IPv6 出口：当目标域名同时有 A/AAAA 记录时，
+ * 代理侧的 DNS 可能优先返回 AAAA，导致 CONNECT 一直超时。
+ * 开启后：
+ * 1. 本进程 DNS 结果改为 IPv4 优先（影响 fetch / 直连）；
+ * 2. 通过代理的请求会先在本地把域名解析成 IPv4，再让代理 CONNECT 该 IP，
+ *    并保留原始 SNI/Host，避免代理自己解析到 IPv6。
+ * 可用 FORCE_IPV4=false 关闭。
+ */
+export const FORCE_IPV4 = process.env.FORCE_IPV4 !== 'false';
+
+if (FORCE_IPV4) {
+    try {
+        dns.setDefaultResultOrder('ipv4first');
+    } catch (err) {
+        console.warn("设置 IPv4 优先解析失败:", err?.message || err);
+    }
+}
+
+const IPV4_CACHE_TTL_MS = 5 * 60 * 1000;
+const IPV4_CACHE_MAX = 256;
+const ipv4Cache = new Map();
+
+async function resolveIPv4(hostname) {
+    const cached = ipv4Cache.get(hostname);
+    if (cached && cached.expires > Date.now()) {
+        return cached.address;
+    }
+
+    const {address, family} = await dns.promises.lookup(hostname, {family: 4});
+    if (family !== 4) {
+        throw new Error(`没有解析到 IPv4 地址: ${hostname}`);
+    }
+
+    if (ipv4Cache.size >= IPV4_CACHE_MAX) {
+        ipv4Cache.delete(ipv4Cache.keys().next().value);
+    }
+    ipv4Cache.set(hostname, {address, expires: Date.now() + IPV4_CACHE_TTL_MS});
+
+    return address;
+}
+
+/**
+ * 在交给代理前先本地解析目标域名的 IPv4 地址。
+ * HttpsProxyAgent 默认把域名原样放进 CONNECT，由代理侧解析；
+ * 这里改成 CONNECT IPv4 地址，同时保留 servername（SNI）和请求的 Host 头。
+ */
+class IPv4HttpsProxyAgent extends HttpsProxyAgent {
+    async connect(req, opts) {
+        if (FORCE_IPV4 && opts?.host && net.isIP(opts.host) === 0) {
+            const hostname = opts.host;
+            try {
+                opts = {
+                    ...opts,
+                    host: await resolveIPv4(hostname),
+                    servername: opts.servername ?? hostname,
+                };
+            } catch (err) {
+                // 解析失败时退回让代理解析，避免直接断网
+                console.warn(`IPv4 解析失败，交由代理处理: ${hostname}`, err?.message || err);
+            }
+        }
+
+        return super.connect(req, opts);
+    }
+}
+
+const directHttpsAgent = new https.Agent({keepAlive: true, ...(FORCE_IPV4 ? {family: 4} : {})});
+const directHttpAgent = new http.Agent({keepAlive: true, ...(FORCE_IPV4 ? {family: 4} : {})});
 
 let cachedAgent = undefined;
 
@@ -67,7 +137,10 @@ export function getProxyAgent() {
     }
 
     if (!cachedAgent) {
-        cachedAgent = new HttpsProxyAgent(`${PROXY_SCHEME}://${PROXY_HOST}:${PROXY_PORT}`);
+        cachedAgent = new IPv4HttpsProxyAgent(
+            `${PROXY_SCHEME}://${PROXY_HOST}:${PROXY_PORT}`,
+            FORCE_IPV4 ? {family: 4} : undefined
+        );
     }
 
     return cachedAgent;

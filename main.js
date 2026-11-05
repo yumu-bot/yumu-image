@@ -1,5 +1,5 @@
 import {
-    CACHE_PATH, EXPORT_FILE_V3, getProxyAgent,
+    CACHE_PATH, EXPORT_FILE_V3, FORCE_IPV4, getProxyAgent,
     IMG_BUFFER_PATH,
     initPath,
     loggerTime,
@@ -330,4 +330,5 @@ if (!shuttingDown) {
     console.log("谱面文件缓存: ", OSU_BUFFER_PATH);
     console.log("Chromium profile 根目录: ", getChromeProfileRoot());
     console.log("当前代理: ", getProxyAgent()?.proxy?.host ?? 'undefined');
+    console.log("强制 IPv4: ", FORCE_IPV4 ? '开启' : '关闭');
 }

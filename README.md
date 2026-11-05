@@ -34,6 +34,7 @@
 | PROXY_SCHEME | http | 代理的协议类型。 |
 | PROXY_HOST | 127.0.0.1 | 代理的地址。 |
 | PROXY_PORT | 7890 | 代理的端口。 |
+| FORCE_IPV4 | true | 是否强制出站流量只使用 IPv4。<br />适用于代理节点/中转没有 IPv6 出口、目标域名同时有 AAAA 记录时一直超时的情况。<br />开启后通过代理的请求会先在本地解析成 IPv4 再 CONNECT，并保留原始 SNI/Host；设为 false 可关闭。 |
 | IMAGE_FORMAT | jpg | 绘图模块返回的图片格式。可以使用 webp、jpg、png。<br />强烈推荐使用 webp，但是某些神秘 qq 客户端会出现缩略图预览问题。 |
 | ADVANCED_FORMAT | webp | 部分需要玩家点开的超大面板（无需考虑缩略图预览问题时），会自动使用这个格式。**一般不用改** |
 | CHROME_PROFILE_ROOT | ~/.cache/yumu-image/chrome-profiles | 每个 Bun 进程独享的 Chromium profile 根目录。**多进程部署建议指到服务数据盘**，不要放在 /tmp。 |
