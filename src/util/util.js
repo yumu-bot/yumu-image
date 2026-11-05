@@ -51,7 +51,8 @@ export const HTTP_EXPORT_FILE_V3 = "/EXPORT_FILE_V3";
 export const HTTP_IMG_BUFFER_PATH = "/IMG_BUFFER_PATH";
 export const HTTP_OTHER_PATH = "/OTHER_PATH";
 
-export const USE_PROXY = process.env.USE_PROXY === 'true';
+// 我改了 环境变量, .env, pboss.config.js 都没生效
+export const USE_PROXY = false;
 export const OSUFILE_NO_PROXY = process.env.OSUFILE_NO_PROXY === 'true';
 
 export const PROXY_SCHEME = process.env.PROXY_SCHEME || 'http';
