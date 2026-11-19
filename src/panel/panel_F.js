@@ -15,7 +15,6 @@ import {
 import {card_A2} from "../card/card_A2.js";
 import {card_F} from "../card/card_F.js";
 import {PanelGenerate} from "../util/panelGenerate.js";
-import {matchAnyMods} from "../util/mod.js";
 
 import {createImageRouter, createSvgRouter} from "../util/image.js";
 import {avatars2Task, beatmapsets2Task, imageDownloader} from "../util/download.js";
@@ -98,15 +97,14 @@ export async function panel_F(
     } = data ?? {}
 
     const {
-        // 1. 深度嵌套解构并重命名
+        // MatchRating.match 是 Match（对局本体），events / users 挂在它上面
         match: {
-            match: {
-                events: match_events,
-                users: users,
-            }
+            events: match_events,
+            users: users,
         },
+        // skip / ignore / easy 在 MatchRating 上，不在最外层的面板参数里
         skip_ignore_map,
-    } = data;
+    } = match ?? {}
 
     // 面板文字
     const request_time = 'match time: ' + getMatchDuration(match.match) + ' // request time: ' + getNowTimeStamp();
@@ -168,7 +166,7 @@ export async function panel_F(
             blue_wins_before++;
         }
 
-        param_Fs.push(event2ParamF(v, red_wins_before, blue_wins_before, skip_ignore_map?.easy || 1, images))
+        param_Fs.push(event2ParamF(v, red_wins_before, blue_wins_before, images))
     }
 
     await Promise.allSettled(
@@ -227,14 +225,14 @@ function event2ParamF(
         type: '',
         text: ''
     }
-    , red_before = 0, blue_before = 0, easy = 1, images = new Map()) {
+    , red_before = 0, blue_before = 0, images = new Map()) {
     const round = event?.game || {}
     const scores = round?.scores || []
 
     let red_arr = [], blue_arr = [], none_arr = [];
 
     for (const v of scores) {
-        const f = score2LabelF2(v, easy, images);
+        const f = score2LabelF2(v, images);
 
         switch (v?.match?.team) {
             case 'red':
@@ -249,13 +247,11 @@ function event2ParamF(
         }
     }
 
-    function score2LabelF2(score = {}, easy = 1, images = new Map()) {
-        // 如果是 0，则获取 total
-        let s = score?.legacy_total_score || score.total_score
-
-        if (matchAnyMods(score?.mods, ["EZ"]) && easy !== 1) {
-            s = Math.round(s * easy)
-        }
+    function score2LabelF2(score = {}, images = new Map()) {
+        // 后端 MatchRating 已经把 easy 倍率乘进带 EZ 的成绩的 total_score 里了，
+        // 这里直接用它（legacy_total_score 不会被调整，且 lazer 成绩的 legacy 是 0）。
+        // 再乘一次会让 EZ 成绩偏小，和已按倍率计算的总分柱子对不上。
+        const s = score?.total_score || score?.legacy_total_score || 0
 
         const user = score?.user
 
