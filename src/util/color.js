@@ -454,19 +454,21 @@ export function rgb2OKLabBrightness(r, g, b) {
 }
 
 
-const CATEGORY_COLOR_MAP = {
-    BC: { color: colorArray.light_yellow, grade: 'X' },
-    CA: { color: colorArray.amber,        grade: 'S' },
-    MF: { color: colorArray.green,        grade: 'A' },
-    SP: { color: colorArray.light_green,  grade: 'A' },
-    WF: { color: colorArray.deep_blue,    grade: 'B' },
-    GE: { color: colorArray.gray,         grade: 'XH' },
-    GU: { color: colorArray.blue,         grade: 'B' },
-    SU: { color: colorArray.purple,       grade: 'C' },
-    SG: { color: colorArray.magenta,      grade: 'C' },
-    NO: { color: colorArray.pink,         grade: 'D' },
-    FU: { color: colorArray.red,          grade: 'D' },
-    DEFAULT: { color: colorArray.deep_gray, grade: 'F' }
+// 选手类别对应的背景等级。
+// 类别颜色由主程序通过 player_class.color 传入，这里不再维护颜色表。
+const CATEGORY_GRADE_MAP = {
+    BC: 'X',
+    CA: 'S',
+    MF: 'A',
+    SP: 'A',
+    WR: 'B',
+    OR: 'XH',
+    CO: 'B',
+    SU: 'C',
+    LI: 'SP',
+    NO: 'D',
+    EB: 'D',
+    DEFAULT: 'F'
 };
 
 const RANK_COLORS_MAP = {
@@ -527,17 +529,11 @@ const TAG_COLOR_MAP = {
 const DEFAULT_COLOR = ['none', 'none'];
 
 /**
- * 颜色扩展。
+ * 选手类别背景。
  * @param {string} category 选手类别编码 (如 'BC', 'CA' 等)
  */
-export function getPlayerClassColors(category) {
-    const cs = CATEGORY_COLOR_MAP[category]?.color ?? CATEGORY_COLOR_MAP.DEFAULT.color;
-
-    return cs.toReversed();
-}
-
 export function getPlayerClassBackground(category) {
-    const grade = CATEGORY_COLOR_MAP[category]?.grade ?? CATEGORY_COLOR_MAP.DEFAULT.grade;
+    const grade = CATEGORY_GRADE_MAP[category] ?? CATEGORY_GRADE_MAP.DEFAULT;
     return getImageFromV3(`object-score-backimage-${grade}.webp`);
 }
 

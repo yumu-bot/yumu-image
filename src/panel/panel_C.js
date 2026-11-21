@@ -131,7 +131,7 @@ export async function panel_C(
     const ignore_text = ignore > 0 ? `ignore: ${ignore} // ` : ''
 
     const request_time = skip_text + ignore_text + 'match time: ' + getMatchDuration(match) + ' // request time: ' + getNowTimeStamp();
-    const panel_name = getPanelNameSVG('Yumu Rating v3.5 (!ymra)', 'RA', request_time);
+    const panel_name = getPanelNameSVG('Yumu Rating v4.0 (!ymra)', 'RA', request_time);
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);

@@ -21,7 +21,7 @@ import {
 } from "./util.js";
 import {
     colorArray,
-    getBadgeColor, getGlobalRankPercentColor, getPlayerClassBackground, getPlayerClassColors,
+    getBadgeColor, getGlobalRankPercentColor, getPlayerClassBackground,
     getRankColor,
     getRankColors,
     getStarRatingColor,
@@ -1339,7 +1339,8 @@ export const PanelGenerate = {
         const {
             english,
             chinese,
-            // color,
+            color,
+            colors,
             category
         } = player_class
 
@@ -1379,7 +1380,11 @@ export const PanelGenerate = {
         const left2 = `#${ranking} (${rws_100})${associated}`;
 
         const color_index = (category === 'BC') ? "#2A2226" : "#FFF";
-        const colors = getPlayerClassColors(category)
+        const has_color_group = Array.isArray(colors) && colors.length > 1;
+        const class_color = isNotEmptyString(color)
+            ? color
+            : (has_color_group ? colors[0] : '#999');
+        const class_colors = has_color_group ? colors : class_color;
 
         const avatar = images.get(`avatar_${id}`) ?? getImageFromV3('avatar-guest.png')
         const mra_floor = floors(mra, 2)
@@ -1402,7 +1407,7 @@ export const PanelGenerate = {
             mods_arr: [],
 
             color_title2: '#aaa',
-            color_right: colors,
+            color_right: class_colors,
             color_left: team_color.toReversed(),
             color_index: color_index,
             color_label1: '',

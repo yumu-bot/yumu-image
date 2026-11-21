@@ -108,7 +108,7 @@ export async function panel_C2(data = {
     const end_time = getFormattedTime(data?.statistics?.end_time, 'YYYY/MM/DD HH:mm')
     const request_time = 'series duration: ' + start_time + ' - ' + end_time + ' // request time: ' + getNowTimeStamp();
 
-    const panel_name = getPanelNameSVG('Yumu Series Rating v3.5 (!ymsa)', 'SA', request_time);
+    const panel_name = getPanelNameSVG('Yumu Series Rating v4.0 (!ymsa)', 'SA', request_time);
 
     // 插入文字
     svg = setText(svg, panel_name, reg_index);
